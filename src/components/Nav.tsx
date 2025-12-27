@@ -1,3 +1,5 @@
+import SheroLogo from '../assets/logo/shero.svg'
+import SheroLogoFull from '../assets/logo/shero-full.svg'
 import { useEffect, useState } from "react";
 import { ToggleTheme } from "./toggle-theme";
 import { NavLink } from "react-router-dom";
@@ -51,12 +53,12 @@ const Nav = () => {
         {/* <div className="max-w-11/12"> */}
         <NavLink to={`/`} className="logo">
           <img
-            src="../../public/shero.svg"
+            src={SheroLogo}
             alt="SHERO"
             className="w-10 md:hidden block"
           />
           <img
-            src="../../public/shero-full.svg"
+            src={SheroLogoFull}
             alt="SHERO"
             className="w-32 hidden md:block"
           />

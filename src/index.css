@@ -3,7 +3,8 @@
 
 @font-face {
   font-family: 'Rancho';
-  src: url('/public/fonts/rancho-regular.woff2') format('woff2');
+  src: url('/public/fonts/Rancho/Rancho.woff2') format('woff2'),
+    url('/public/fonts/Rancho/Rancho.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -11,7 +12,8 @@
 
 @font-face {
   font-family: 'Share tech';
-  src: url('/public/fonts/share-tech-regular.woff2') format('woff2');
+  src: url('/public/fonts/ShareTechMono/ShareTechMono.woff2') format('woff2'),
+    url('/public/fonts/ShareTechMono/ShareTechMono.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -19,7 +21,8 @@
 
 @font-face {
   font-family: 'Space Mono';
-  src: url('/public/fonts/space-mono-regular.woff2') format('woff2');
+  src: url('/public/fonts/SpaceMono/SpaceMono.woff2') format('woff2'),
+    url('/public/fonts/SpaceMono/SpaceMono.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -27,12 +30,21 @@
 
 @font-face {
   font-family: 'JetBrains Mono';
-  src: url('/public/fonts/jetbrains-mono-regular.woff2') format('woff2');
+  src: url('/public/fonts/JetBrainsMono/fonts/variable/JetBrainsMono[wght].ttf') format('woff2'),
+    url('/public/fonts/JetBrainsMono/fonts/variable/JetBrainsMono[wght].woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Architype Aubette W90";
+  src: url('/public/fonts/ArchitypeAubette/ArchitypeAubetteW90.woff2') format('woff2'),
+    url('/public/fonts/ArchitypeAubette/ArchitypeAubetteW90.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -158,9 +170,11 @@
 
 @theme {
   --color-primary: oklch(0.3487 0.1456 261.27);
+  --color-primaryDark: oklch(34.729% 0.11376 255.983);
   --color-secondary: oklch(0.495 0.0961 170.62);
 
   /* Font */
+  --font-logo: 'Architype Aubette W90', 'sans-serif';
   --font-header: 'Rancho', 'cursive';
   --font-primary: 'JetBrains Mono', 'system-ui', 'sans-serif';
   --font-sans: 'Share Tech', 'system-ui', 'sans-serif';

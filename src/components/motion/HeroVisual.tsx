@@ -1,30 +1,83 @@
+import { useState, useEffect } from "react";
 import * as motion from "motion/react-client";
+import { easeInOut } from "motion";
 
-const HeroVisual = () => {
-  const starVariants = {
-    animate: (i: number) => ({
-      opacity: [1],
-      scale: [0.8, 1.2, 0.8],
-      transition: {
-        duration: 2 + i,
-        repeat: Infinity,
-        ease: "easeInOut" as const,
-        delay: i * 0.2,
-      },
-    }),
-  };
+// Animation Configuration
+const ANIMATION_CONFIG = {
+  STAR_BASE_DURATION: 2,
+  STAR_DELAY_MULTIPLIER: 0.2,
+  FLOAT_DURATION: 4,
+  LOGO_FLOAT_DURATION: 5,
+  MAIN_ROTATION_DURATION: 7,
+  PULSE_DURATION: 4,
+} as const;
 
-  const floatVariants = {
-    animate: {
-      y: [0, 2, 0],
-      x: [0, 5, 0],
-      transition: {
-        duration: 4,
-        repeat: Infinity,
-        ease: "easeInOut" as const,
-      },
+// Animation Variants (extracted outside component)
+const starVariants = {
+  animate: (i: number) => ({
+    opacity: [1],
+    scale: [0.8, 1.2, 0.8],
+    transition: {
+      duration: ANIMATION_CONFIG.STAR_BASE_DURATION + i,
+      repeat: Infinity,
+      ease: "easeInOut" as const,
+      delay: i * ANIMATION_CONFIG.STAR_DELAY_MULTIPLIER,
     },
-  };
+  }),
+  static: {
+    opacity: 1,
+    scale: 1,
+  },
+};
+
+const floatVariants = {
+  animate: {
+    y: [0, 2, 0],
+    x: [0, 5, 0],
+    transition: {
+      duration: ANIMATION_CONFIG.FLOAT_DURATION,
+      repeat: Infinity,
+      ease: "easeInOut" as const,
+    },
+  },
+  static: {
+    y: 0,
+    x: 0,
+  },
+};
+
+const pulseVariants = {
+  animate: {
+    scale: [1, 1.15, 1],
+    transition: {
+      duration: ANIMATION_CONFIG.PULSE_DURATION,
+      repeat: Infinity,
+      ease: easeInOut,
+    },
+  },
+  static: {
+    scale: 1,
+  },
+};
+
+const HeroVisual: React.FC = () => {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      : false
+  );
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const handler = (e: MediaQueryListEvent) =>
+      setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
+
+  // Animation state based on user preference
+  const animationState = prefersReducedMotion ? "static" : "animate";
 
   return (
     <motion.svg
@@ -33,30 +86,48 @@ const HeroVisual = () => {
       viewBox="0 0 824 549"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={`drop-shadow-2xl overflow-visible`}
+      className="drop-shadow-2xl overflow-visible"
+      role="img"
+      aria-label="Animated decorative geometric design with floating shapes"
+      focusable="false"
     >
+      <title>Hero Visual Animation</title>
+      <desc>
+        Decorative animated geometric shapes including circles, stars, and
+        curved paths representing innovation and technology
+      </desc>
+
       <motion.g
         clipPath="url(#clip0_5_34500)"
         className="stroke-slate-500 dark:stroke-slate-400"
       >
+        {/* Main Curved Paths Group with Rotation */}
         <motion.g
           style={{
             transformOrigin: "412px 350px",
           }}
-          animate={{
-            rotate: [-2, 2, -2],
-            y: [0, -5, 0],
-          }}
+          animate={
+            prefersReducedMotion
+              ? {}
+              : {
+                  rotate: [-2, 2, -2],
+                  y: [0, -5, 0],
+                }
+          }
           transition={{
-            duration: 7,
+            duration: ANIMATION_CONFIG.MAIN_ROTATION_DURATION,
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          whileHover={{
-            rotate: 5, // Tilts more when hovered
-            scale: 1.02, // Subtle zoom
-            transition: { duration: 0.4 },
-          }}
+          whileHover={
+            prefersReducedMotion
+              ? {}
+              : {
+                  rotate: 5,
+                  scale: 1.02,
+                  transition: { duration: 0.4 },
+                }
+          }
         >
           <path
             d="M455.261 255.443C526.208 295.686 587.094 338.325 628.18 374.722C648.726 392.923 664.299 409.546 673.706 423.512C678.41 430.496 681.557 436.793 683.021 442.272C684.485 447.748 684.259 452.365 682.284 456.048C680.309 459.73 676.631 462.39 671.346 464.039C666.058 465.688 659.2 466.309 650.947 465.943C634.441 465.211 612.461 460.532 586.53 452.37C534.676 436.049 467.125 405.836 396.178 365.593C325.23 325.35 264.345 282.711 223.259 246.314C202.713 228.112 187.139 211.49 177.731 197.523C173.027 190.54 169.881 184.243 168.416 178.764C166.952 173.287 167.179 168.67 169.154 164.987C171.129 161.305 174.806 158.645 180.091 156.997C185.38 155.348 192.237 154.726 200.491 155.093C216.997 155.825 238.977 160.504 264.909 168.665C316.763 184.986 384.313 215.2 455.261 255.443Z"
@@ -71,9 +142,11 @@ const HeroVisual = () => {
             strokeWidth="2"
           />
         </motion.g>
+
+        {/* Floating Ellipses */}
         <motion.ellipse
           variants={floatVariants}
-          animate="animate"
+          animate={animationState}
           cx="227.317"
           cy="160.399"
           rx="16.0679"
@@ -81,10 +154,8 @@ const HeroVisual = () => {
           fill="#043873"
         />
         <motion.ellipse
-          animate={{
-            scale: [1, 1.15, 1], // Pulse effect
-          }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          variants={pulseVariants}
+          animate={animationState}
           cx="526.366"
           cy="522.66"
           rx="10.3664"
@@ -93,7 +164,7 @@ const HeroVisual = () => {
         />
         <motion.ellipse
           variants={floatVariants}
-          animate="animate"
+          animate={animationState}
           cx="235.361"
           cy="249.051"
           rx="24.361"
@@ -102,7 +173,7 @@ const HeroVisual = () => {
         />
         <motion.ellipse
           variants={floatVariants}
-          animate="animate"
+          animate={animationState}
           custom={1}
           cx="676"
           cy="449.5"
@@ -110,9 +181,11 @@ const HeroVisual = () => {
           ry="16.5"
           fill="#043873"
         />
+
+        {/* Animated Stars */}
         <motion.g
           variants={starVariants}
-          animate="animate"
+          animate={animationState}
           custom={1}
           clipPath="url(#clip1_5_34500)"
         >
@@ -124,7 +197,7 @@ const HeroVisual = () => {
         </motion.g>
         <motion.path
           variants={starVariants}
-          animate="animate"
+          animate={animationState}
           custom={3}
           d="M263.418 366.601L287.018 379.824L263.418 393.153L250.508 417.368L237.598 393.153L213.998 379.824L237.598 366.601L250.508 342.279L263.418 366.601Z"
           fill="#043873"
@@ -132,7 +205,7 @@ const HeroVisual = () => {
         />
         <motion.path
           variants={starVariants}
-          animate="animate"
+          animate={animationState}
           custom={2}
           d="M689.146 191.344L703.065 199.143L689.146 207.004L681.532 221.285L673.918 207.004L660 199.143L673.918 191.344L681.532 177L689.146 191.344Z"
           fill="#068C5E"
@@ -140,21 +213,27 @@ const HeroVisual = () => {
         />
         <motion.path
           variants={starVariants}
-          animate="animate"
+          animate={animationState}
           custom={4}
           d="M659.888 251.327L666.998 255.31L659.888 259.326L655.999 266.621L652.11 259.326L645 255.31L652.11 251.327L655.999 244L659.888 251.327Z"
           fill="#043873"
           strokeMiterlimit="10"
         />
+
+        {/* Logo/Main Element with Float */}
         <motion.g
-          style={{ transformOrigin: "480px 200px" }} // Sets pivot near the visual center of the logo
-          animate={{
-            y: [8, -5, 8], // Moves down, then floats up, then down
-          }}
+          style={{ transformOrigin: "480px 200px" }}
+          animate={
+            prefersReducedMotion
+              ? {}
+              : {
+                  y: [8, -5, 8],
+                }
+          }
           transition={{
-            duration: 5, // 5 seconds = Slow, heavy float
+            duration: ANIMATION_CONFIG.LOGO_FLOAT_DURATION,
             repeat: Infinity,
-            ease: "easeInOut", // Smooth braking at top and bottom (Sine wave)
+            ease: "easeInOut",
           }}
         >
           <mask
