@@ -101,6 +101,7 @@ const AnimatedText = ({
     <span
       className={`
         relative inline-grid place-items-start
+        
         min-w-[0.5em] 
         ${className}
       `}
@@ -124,7 +125,7 @@ const AnimatedText = ({
             duration: ANIMATION_CONFIG.DURATION,
             ease: ANIMATION_CONFIG.EASING,
           }}
-          className="col-start-1 row-start-1 whitespace-nowrap"
+          className="col-start-1 row-start-1 whitespace-nowrap bg-linear-to-r from-secondary from-10% via-blue-500 via-30% to-indigo-500 bg-clip-text text-transparent"
         >
           {words[index]}
         </motion.span>

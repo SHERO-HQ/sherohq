@@ -41,8 +41,8 @@ const NAV_LINK_STYLES = {
     "text-slate-700 dark:text-slate-400",
     "font-normal",
     // Hover states for inactive
-    "hover:bg-accent/90",
-    "hover:border-slate-300 dark:hover:border-slate-700 border-dashed",
+    "hover:bg-slate-200/90 dark:hover:bg-slate-800/90",
+    "hover:border-slate-400 dark:hover:border-slate-700 border-dashed",
     'hover:rounded-none',
     "hover:text-slate-900 dark:hover:text-slate-100",
   ],
@@ -110,7 +110,7 @@ export function navLinkClassVariant(
       active: ["bg-primary", "text-white", "font-semibold"],
       inactive: [
         "text-slate-700 dark:text-slate-400",
-        "hover:bg-accent",
+        "hover:bg-slate-200 dark:hover:bg-slate-800",
         "hover:text-slate-900 dark:hover:text-slate-100",
       ],
     },

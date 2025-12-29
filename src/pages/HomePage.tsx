@@ -1,8 +1,8 @@
-import ChooseUs from '@/components/Pillars';
 import HeroHeader from '@/components/HeroHeader'
 import WhoWeAre from '@/components/WhoWeAre';
 import { useTitle } from '@/hooks/useTitle';
 import Footer from '@/components/Footer';
+import Pillars from '@/components/Pillars';
 
 const HomePage = () => {
     useTitle("Home");
@@ -11,7 +11,7 @@ const HomePage = () => {
     <HeroHeader />
     {/* <div className='border-t-2'/> */}
     <WhoWeAre />
-    <ChooseUs />
+    <Pillars />
     <Footer />
     </>
   )

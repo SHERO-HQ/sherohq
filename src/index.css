@@ -2,24 +2,6 @@
 @import "tw-animate-css";
 
 @font-face {
-  font-family: 'Rancho';
-  src: url('/public/fonts/Rancho/Rancho.woff2') format('woff2'),
-    url('/public/fonts/Rancho/Rancho.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Share tech';
-  src: url('/public/fonts/ShareTechMono/ShareTechMono.woff2') format('woff2'),
-    url('/public/fonts/ShareTechMono/ShareTechMono.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: 'Space Mono';
   src: url('/public/fonts/SpaceMono/SpaceMono.woff2') format('woff2'),
     url('/public/fonts/SpaceMono/SpaceMono.woff') format('woff');
@@ -37,13 +19,25 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: "Architype Aubette W90";
-  src: url('/public/fonts/ArchitypeAubette/ArchitypeAubetteW90.woff2') format('woff2'),
-    url('/public/fonts/ArchitypeAubette/ArchitypeAubetteW90.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+/* Thin Scrollbar */
+* {
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
+  scrollbar-color: rgb(100, 100, 100, .4) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgb(100, 100, 100, .4);
+  border-radius: 9999px;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -174,9 +168,7 @@
   --color-secondary: oklch(0.495 0.0961 170.62);
 
   /* Font */
-  --font-logo: 'Architype Aubette W90', 'sans-serif';
-  --font-header: 'Rancho', 'cursive';
   --font-primary: 'JetBrains Mono', 'system-ui', 'sans-serif';
-  --font-sans: 'Share Tech', 'system-ui', 'sans-serif';
   --font-mono: 'Space Mono', 'monospace';
 }
+

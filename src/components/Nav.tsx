@@ -1,5 +1,5 @@
-import SheroLogo from '../assets/logo/shero.svg'
-import SheroLogoFull from '../assets/logo/shero-full.svg'
+import SheroLogo from "../assets/logo/shero.svg";
+import SheroLogoFull from "../assets/logo/shero-full.svg";
 import { useEffect, useState } from "react";
 import { ToggleTheme } from "./toggle-theme";
 import { NavLink } from "react-router-dom";
@@ -8,6 +8,7 @@ import { AnimatePresence, easeIn, easeOut, motion } from "motion/react"; // Ensu
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   // Animation variants for the menu container
   const menuVars = {
@@ -35,28 +36,38 @@ const Nav = () => {
   };
 
   useEffect(() => {
-  if (isOpen) {
-    document.body.style.overflow = 'hidden';
-  } else {
-    document.body.style.overflow = 'unset';
-  }
-}, [isOpen]);
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = isOpen ? "0.5rem" : "";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [isOpen]);
+
+  // Scroll effect for nav background
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20); // change threshold as needed
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <nav
-      className="bg-slate-50 dark:bg-black fixed top-0 w-full border-b-2 border-blue-950/30 dark:border-slate-900 shadow z-50"
+      className={`fixed top-0 w-full z-50
+         ${isOpen ? "bg-slate-200 dark:bg-[#020617]" : scrolled ? "backdrop-blur-md bg-slate-200/10 dark:bg-[#20617]" : "bg-transparent"}
+  transition-all duration-300 ease-in-out`}
       aria-label="main"
       id="nav-menu"
     >
-      <div className="container mx-auto w-full flex justify-between p-5 relative z-50 bg-slate-50 dark:bg-black">
+      <div
+        className={`container mx-auto w-full flex justify-between p-5 relative z-50  transition-all duration-300`}
+      >
         {/* logo */}
         {/* <div className="max-w-11/12"> */}
         <NavLink to={`/`} className="logo">
-          <img
-            src={SheroLogo}
-            alt="SHERO"
-            className="w-10 md:hidden block"
-          />
+          <img src={SheroLogo} alt="SHERO" className="w-10 md:hidden block" />
           <img
             src={SheroLogoFull}
             alt="SHERO"
@@ -66,7 +77,7 @@ const Nav = () => {
 
         {/* Mobile Actions (Theme + Burger) */}
         <div className="flex items-center lg:hidden">
-          <div className="theme me-3">
+          <div className=" me-2">
             <ToggleTheme />
           </div>
 
@@ -74,8 +85,8 @@ const Nav = () => {
             className={` ${
               isOpen
                 ? "text-red-500 border-red-300"
-                : "dark:text-slate-200 text-slate-800"
-            } border rounded-md p-1 cursor-pointer transition-colors duration-300`}
+                : "dark:text-slate-200 text-slate-800 bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-700"
+            } border rounded-md p-[0.2rem] cursor-pointer transition-colors duration-300`}
             type="button"
             title="menu"
             onClick={() => setIsOpen(!isOpen)}
@@ -84,7 +95,7 @@ const Nav = () => {
           >
             <div className="relative size-7 flex justify-center items-center">
               {/* Animated Icon Switching */}
-              <motion.div
+              {/* <motion.div
                 animate={{ rotate: isOpen ? 90 : 0, opacity: isOpen ? 1 : 0 }}
                 className="absolute inset-0"
               >
@@ -112,7 +123,28 @@ const Nav = () => {
                     strokeLinejoin="round"
                   />
                 </svg>
-              </motion.div>
+              </motion.div> */}
+
+              <motion.svg
+                width={28}
+                height={28}
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                animate={{ rotate: isOpen ? 90 : 0 }}
+              >
+                <motion.path
+
+                  d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18"
+                  animate={
+                    isOpen
+                      ? { d: "M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" }
+                      : { d: "M5 17H13M5 12H19M11 7H19" }
+                  }
+                />
+              </motion.svg>
             </div>
           </button>
         </div>
@@ -132,7 +164,7 @@ const Nav = () => {
         </ul>
 
         {/* Desktop Actions */}
-        <div className="theme me-3 hidden lg:flex items-center gap-5">
+        <div className="me-2 hidden lg:flex items-center gap-5">
           <div className="explore flex items-center">
             <NavLink
               className="inline-flex items-center gap-2 text-gray-100 bg-secondary px-6 py-1 rounded hover:bg-secondary/90 hover:shadow-lg hover:gap-3 active:translate-y-0 transition-all duration-500 ease-in-out"
@@ -163,19 +195,19 @@ const Nav = () => {
       <AnimatePresence>
         {isOpen && (
           <>
-          <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={() => setIsOpen(false)}
-        className="fixed inset-0 top-25 bg-slate-900/40 dark:bg-black/60 backdrop-blur-md lg:hidden z-30" 
-      />
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 top-22 bg-white/40 dark:bg-black/30 backdrop-blur-md lg:hidden z-30"
+            />
             <motion.div
               variants={menuVars}
               initial="initial"
               animate="animate"
               exit="exit"
-              className="fixed top-24 left-0 w-full bg-slate-50 dark:bg-black border-b-2 border-blue-950/10 dark:border-slate-800 shadow-xl overflow-hidden origin-top lg:hidden z-50"
+              className="fixed top-22 left-0 w-full bg-slate-200 dark:bg-[#020617] border-b-2 border-blue-950/10 dark:border-slate-800 shadow-xl overflow-hidden origin-top lg:hidden z-50"
               id="mobile-nav-menu"
             >
               <div className="container mx-auto p-6 flex flex-col gap-6">
@@ -216,7 +248,7 @@ const Nav = () => {
                   <NavLink
                     to="/explore"
                     onClick={() => setIsOpen(false)}
-                    className="flex w-full items-center justify-center gap-2 text-gray-100 bg-secondary px-6 py-2 rounded-lg hover:bg-secondary/90 transition-all"
+                    className="flex w-full items-center justify-center gap-2 text-gray-100 bg-secondary px-6 py-2 rounded hover:bg-secondary/90 transition-all"
                   >
                     Explore Services
                     <svg
@@ -234,7 +266,6 @@ const Nav = () => {
                 </motion.div>
               </div>
             </motion.div>
-            
           </>
         )}
       </AnimatePresence>
