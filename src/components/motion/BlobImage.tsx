@@ -1,5 +1,3 @@
-import React from "react";
-
 const BlobImage = () => {
   return (
     <svg

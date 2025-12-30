@@ -2,7 +2,6 @@ import * as motion from "motion/react-client";
 // import { NavLink } from "react-router-dom";
 import FadeInView from "./motion/AnimateSection";
 import { fadeIn } from "./motion/heroMotion";
-// import PillarsVisual from "./motion/PillarsVisual";
 import {
   AcademicCapIcon,
   CpuChipIcon,
