@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ToggleTheme } from "./toggle-theme";
 import { NavLink } from "react-router-dom";
 import { navLinkClass } from "@/lib/utils";
-import { AnimatePresence, easeIn, easeOut, motion } from "motion/react"; // Ensure correct import for your version
+import { AnimatePresence, easeIn, easeOut, motion } from "motion/react";
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);

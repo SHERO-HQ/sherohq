@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
 // Type Definitions
@@ -28,31 +28,18 @@ const AnimatedText = ({
 }: AnimatedTextProps) => {
   const [index, setIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(
-    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Check for reduced motion preference
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-    const handler = (e: MediaQueryListEvent) =>
-      setPrefersReducedMotion(e.matches);
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
-  }, []);
+  // Check prefers-reduced-motion once on mount (memoized)
+  const prefersReducedMotion = useMemo(
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    []
+  );
 
   // Handle text rotation with pause support
   useEffect(() => {
-    // Guard: Empty array
-    if (words.length === 0) return;
-
-    // If reduced motion, stop rotation
-    if (prefersReducedMotion) return;
-
-    // If paused, don't start timer
-    if (isPaused) return;
+    // Guard: Empty array or reduced motion or paused
+    if (words.length === 0 || prefersReducedMotion || isPaused) return;
 
     timerRef.current = setInterval(() => {
       setIndex((prev) => (prev + 1) % words.length);
@@ -66,9 +53,7 @@ const AnimatedText = ({
   }, [words, interval, isPaused, prefersReducedMotion]);
 
   // Guard: Return null if no words
-  if (words.length === 0) {
-    return null;
-  }
+  if (words.length === 0) return null;
 
   // If reduced motion, show first word without animation
   if (prefersReducedMotion) {
@@ -85,25 +70,16 @@ const AnimatedText = ({
   }
 
   const handleMouseEnter = () => {
-    if (pauseOnHover) {
-      setIsPaused(true);
-    }
+    if (pauseOnHover) setIsPaused(true);
   };
 
   const handleMouseLeave = () => {
-    if (pauseOnHover) {
-      setIsPaused(false);
-    }
+    if (pauseOnHover) setIsPaused(false);
   };
 
   return (
     <span
-      className={`
-        relative inline-grid place-items-start
-        
-        min-w-[0.5em] 
-        ${className}
-      `}
+      className={`relative inline-grid place-items-start min-w-[0.5em] ${className}`}
       aria-live={ariaLive}
       aria-atomic={ariaAtomic}
       role="status"
@@ -124,7 +100,7 @@ const AnimatedText = ({
             duration: ANIMATION_CONFIG.DURATION,
             ease: ANIMATION_CONFIG.EASING,
           }}
-          className="col-start-1 row-start-1 whitespace-nowrap bg-linear-to-r from-secondary from-10% via-blue-500 via-30% to-indigo-500 bg-clip-text text-transparent"
+          className="col-start-1 row-start-1 whitespace-nowrap"
         >
           {words[index]}
         </motion.span>

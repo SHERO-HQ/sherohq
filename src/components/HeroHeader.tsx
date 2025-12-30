@@ -2,7 +2,6 @@ import { NavLink } from "react-router-dom";
 import AnimatedText from "./motion/AnimatedText";
 import { motion } from "motion/react";
 import { fadeUp } from "../components/motion/heroMotion";
-// import HeroVisual from "./motion/HeroVisual";
 import { useEffect, useState } from "react";
 import BlobImage from "./motion/BlobImage";
 import { RocketLaunchIcon } from "@/assets/icons/icons";
@@ -135,7 +134,7 @@ const HeroHeader: React.FC = () => {
               variants={prefersReducedMotion ? {} : fadeUp}
               className="
             dark:text-blue-700 text-primary font-mono font-bold w-full
-            text-[clamp(1.4rem,5.5vw,4rem)]
+            text-[clamp(1.2rem,5.3vw,4rem)]
             leading-tight text-balance
             text-center
           "
