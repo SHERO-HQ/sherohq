@@ -2,11 +2,10 @@ import { NavLink } from "react-router-dom";
 import SheroLight from "../assets/logo/shero-light.svg";
 import { navLinkClassVariant } from "@/lib/utils";
 import { Link } from "react-router-dom";
-import { Globe } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="lg:max-w-11/12 w-full rounded-t-[4rem] mx-auto bg-secondary">
+    <footer className="w-full mx-auto bg-primaryDark">
       <div className="container mx-auto max-w-11/12 lg:w-full">
         <div className="container flex lg:flex-row flex-col justify-around items-start text-start text-white pt-10 pb-14">
           <div className="logo mt-8">
@@ -23,7 +22,7 @@ const Footer = () => {
             </p>
           </div>
           <div className="company">
-            <h3 className="font-bold mt-8 mb-4 text-xl">Company</h3>
+            <h3 className="font-bold mt-8 mb-4 text-xl text-emerald-400">Company</h3>
             <ul className="lg:flex flex-col gap-5">
               {["About Us", "Solutions", "Services", "Contact Us"].map(
                 (item) => (
@@ -42,7 +41,7 @@ const Footer = () => {
             </ul>
           </div>
           <div className="resources">
-            <h3 className="font-bold mt-8 mb-4 text-xl">Resources</h3>
+            <h3 className="font-bold mt-8 mb-4 text-xl text-emerald-400">Resources</h3>
             <ul className="lg:flex flex-col gap-5">
               {["About Us", "Solutions", "Services", "Contact Us"].map(
                 (item) => (
@@ -61,9 +60,9 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-                  <div className="grid grid-cols-1 mb-2 items-center text-slate-300 text-sm gap-3 lg:hidden">
-            <div className="flex items-center gap-1">
+                  <div className="flex mb-2 items-center text-slate-300 text-sm gap-3 lg:hidden">
               {/* Language */}
+             {/* <div className="flex items-center gap-1">
               <Globe className="size-4" aria-label="language icon" />
               <select className="languages flex items-center gap-1 cursor-pointer">
                 <option
@@ -94,78 +93,76 @@ const Footer = () => {
                   Chinese
                 </option>
               </select>
+            </div>  */}
+            <div className="flex items-center gap-3">
+              <Link to="terms-privacy" aria-label="Terms & Privacy">
+                Terms & Privacy
+              </Link>
+<div className="bg-slate-400 h-4 w-0.5"/>
+              <Link to="terms-privacy" aria-label="Terms & Privacy">
+                Security
+              </Link>
+              {/* <span className="text-2xl">&#8226;</span>{" "} */}
+            
             </div>
+          </div>
+        <hr className="lg:max-w-10/12 mx-auto bg-secondary" />
+        <div className="text-sm text-slate-300 py-6 max-w-10/12 mx-auto flex justify-between items-center flex-row gap-5">
+          <div className="lg:flex items-center w-full gap-5 hidden text-slate-300 text-sm">
+              {/* Language */}
+            {/* <div className="flex items-center gap-1">
+              <Globe className="size-4" aria-label="language icon" />
+              <select className="languages flex items-center gap-1 cursor-pointer">
+                <option
+                  value="en"
+                  className="bg-slate-800"
+                  aria-label="english"
+                >
+                  English
+                </option>
+                <option
+                  value="es"
+                  className="bg-slate-800"
+                  aria-label="spanish"
+                >
+                  Spanish
+                </option>
+                <option value="fr" className="bg-slate-800" aria-label="french">
+                  French
+                </option>
+                <option value="de" className="bg-slate-800" aria-label="german">
+                  German
+                </option>
+                <option
+                  value="zh"
+                  className="bg-slate-800"
+                  aria-label="chinese"
+                >
+                  Chinese
+                </option>
+              </select>
+            </div> */}
             {/* <span className="text-2xl">&#8226;</span>{" "} */}
             <div className="flex items-center gap-8">
               <Link to="terms-privacy" aria-label="Terms & Privacy">
                 Terms & Privacy
               </Link>
+              <div className="bg-slate-400 h-4 w-0.5"/>
               <Link to="terms-privacy" aria-label="Terms & Privacy">
                 Security
               </Link>
-              {/* <span className="text-2xl">&#8226;</span>{" "} */}
-              <p
-                className="flex items-center gap-2 text-slate-300"
-                aria-label="Footer Copyright Notice"
-              >
-                &copy; {new Date().getFullYear()} Shero Group.
-              </p>
+         
             </div>
           </div>
-        <hr className="max-w-10/12 mx-auto bg-primary" />
-        <div className="text-sm text-slate-300 py-6 max-w-10/12 mx-auto flex justify-between items-center flex-row gap-5">
-          <div className="lg:flex items-center gap-5 hidden text-slate-300 text-sm">
-            <div className="flex items-center gap-1">
-              {/* Language */}
-              <Globe className="size-4" aria-label="language icon" />
-              <select className="languages flex items-center gap-1 cursor-pointer">
-                <option
-                  value="en"
-                  className="bg-slate-800"
-                  aria-label="english"
-                >
-                  English
-                </option>
-                <option
-                  value="es"
-                  className="bg-slate-800"
-                  aria-label="spanish"
-                >
-                  Spanish
-                </option>
-                <option value="fr" className="bg-slate-800" aria-label="french">
-                  French
-                </option>
-                <option value="de" className="bg-slate-800" aria-label="german">
-                  German
-                </option>
-                <option
-                  value="zh"
-                  className="bg-slate-800"
-                  aria-label="chinese"
-                >
-                  Chinese
-                </option>
-              </select>
-            </div>
-            <span className="text-2xl">&#8226;</span>{" "}
-            <div className="flex items-center gap-8">
-              <Link to="terms-privacy" aria-label="Terms & Privacy">
-                Terms & Privacy
-              </Link>
-              <Link to="terms-privacy" aria-label="Terms & Privacy">
-                Security
-              </Link>
-              <span className="text-2xl">&#8226;</span>{" "}
+          <div className="socials flex items-center justify-between gap-6 text-slate-30 w-full" aria-label="Shero social media links">
               <p
-                className="flex items-center gap-2 text-slate-300"
+                className="flex items-center text-slate-300"
                 aria-label="Footer Copyright Notice"
               >
-                &copy; {new Date().getFullYear()} Shero Group.
+                &copy;{new Date().getFullYear()} Shero Group.
               </p>
-            </div>
-          </div>
-          <div className="socials flex items-center justify-center gap-6 text-slate-300 lg:w-auto w-full " aria-label="Shero social media links">
+
+              <div className="flex items-center gap-5">
             {/* Social media links can be added here in the future */}
             <Link
               className="hover:text-slate-200 transition-all duration-300 ease-in-out"
@@ -211,6 +208,7 @@ const Footer = () => {
             </Link>
           </div>
         </div>
+      </div>
       </div>
     </footer>
   );

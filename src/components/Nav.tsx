@@ -25,6 +25,8 @@ const Nav = () => {
     },
   };
 
+  const navLinks = ["About Us", "Solutions", "Resources", "Services",]
+
   // Animation for individual links to stagger in
   const linkVars = {
     initial: { y: 20, opacity: 0 },
@@ -151,7 +153,7 @@ const Nav = () => {
 
         {/* Desktop Menu */}
         <ul className="lg:flex items-center gap-5 hidden">
-          {["About Us", "Solutions", "Resources", "Services"].map((item) => (
+          {navLinks.map((item) => (
             <li key={item}>
               <NavLink
                 className={({ isActive }) => navLinkClass(isActive)}
@@ -212,7 +214,7 @@ const Nav = () => {
             >
               <div className="container mx-auto p-6 flex flex-col gap-6">
                 <ul className="flex flex-col gap-3  font-medium">
-                  {["About Us", "Solutions", "Resources", "Services"].map(
+                  {navLinks.map(
                     (item, i) => (
                       <motion.li
                         key={item}

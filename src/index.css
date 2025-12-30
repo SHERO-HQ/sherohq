@@ -1,23 +1,9 @@
 @import 'tailwindcss';
 @import "tw-animate-css";
-
-@font-face {
-  font-family: 'Space Mono';
-  src: url('/public/fonts/SpaceMono/SpaceMono.woff2') format('woff2'),
-    url('/public/fonts/SpaceMono/SpaceMono.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'JetBrains Mono';
-  src: url('/public/fonts/JetBrainsMono/fonts/variable/JetBrainsMono[wght].ttf') format('woff2'),
-    url('/public/fonts/JetBrainsMono/fonts/variable/JetBrainsMono[wght].woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/jetbrains-mono';
+@import '@fontsource/space-mono/400.css';
+@import '@fontsource/space-mono/700.css';
 
 /* Thin Scrollbar */
 * {
@@ -168,7 +154,8 @@
   --color-secondary: oklch(0.495 0.0961 170.62);
 
   /* Font */
-  --font-primary: 'JetBrains Mono', 'system-ui', 'sans-serif';
+  --font-primary: 'JetBrains Mono Variable', 'JetBrains Mono', 'monospace', 'system-ui';
   --font-mono: 'Space Mono', 'monospace';
+  --font-inter: 'Inter Variable', 'Inter', 'system-ui', 'sans-serif',
 }
 

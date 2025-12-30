@@ -3,7 +3,6 @@ import AnimatedText from "./motion/AnimatedText";
 import { motion } from "motion/react";
 import { fadeUp } from "../components/motion/heroMotion";
 import { useEffect, useState } from "react";
-import BlobImage from "./motion/BlobImage";
 import { RocketLaunchIcon } from "@/assets/icons/icons";
 import { easeInOut } from "motion/react";
 
@@ -76,7 +75,6 @@ const HeroHeader: React.FC = () => {
       aria-label="Hero section - Company mission statement"
     >
       {/* BLOB IMAGE background */}
-      <BlobImage />
       <div className="container lg:w-11/12 w-full mx-auto flex items-center justify-center relative z-10">
         {/* TEXT CONTENT COLUMN */}
 
@@ -133,7 +131,7 @@ const HeroHeader: React.FC = () => {
             <motion.h1
               variants={prefersReducedMotion ? {} : fadeUp}
               className="
-            dark:text-blue-700 text-primary font-mono font-bold w-full
+            dark:text-blue-700 text-primary font-inter font-bold w-full
             text-[clamp(1.2rem,5.3vw,4rem)]
             leading-tight text-balance
             text-center
@@ -145,7 +143,7 @@ const HeroHeader: React.FC = () => {
 
               <span
                 className="
-              text-secondary inline-flex flex-wrap items-center gap-x-4 mt-5 font-bold
+              text-secondary font-inter inline-flex flex-wrap items-center gap-x-4 mt-5 font-bold
               text-[clamp(1.6rem,8.3vw,5.8rem)]
               leading-tight
             "
