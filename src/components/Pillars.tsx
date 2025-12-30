@@ -1,4 +1,4 @@
-import * as motion from "motion/react-client";
+import { motion, easeInOut } from "motion/react";
 // import { NavLink } from "react-router-dom";
 import FadeInView from "./motion/AnimateSection";
 import { fadeIn } from "./motion/heroMotion";
@@ -10,7 +10,6 @@ import {
   SeedSprout,
 } from "@/assets/icons/icons";
 import type React from "react";
-import { easeInOut } from "motion/react";
 
 // Type definitions
 interface PillarsProps {
@@ -28,27 +27,26 @@ const containerVariants = {
     transition: {
       staggerChildren: 0.15,
       delayChildren: 0.1,
-    }
-  }
+    },
+  },
 };
 
 const cardVariants = {
-  hidden: { 
-    opacity: 0, 
+  hidden: {
+    opacity: 0,
     y: 30,
-    scale: 0.95
+    scale: 0.95,
   },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
     scale: 1,
     transition: {
       duration: 0.5,
-      ease: easeInOut
-    }
-  }
+      ease: easeInOut,
+    },
+  },
 };
-
 
 const PILLARS: PillarsProps[] = [
   {
@@ -87,7 +85,7 @@ const Pillars = () => {
   return (
     <motion.section
       initial="hidden"
-        whileInView="visible"
+      whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       className="relative w-full py-10 border-slate-300 dark:border-slate-700 dark:bg-slate-950"
     >
@@ -104,8 +102,7 @@ const Pillars = () => {
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-    
+              viewport={{ once: true, amount: 0.1 }}
               className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-6 mt-6"
             >
               {PILLARS.map((pillar) => {

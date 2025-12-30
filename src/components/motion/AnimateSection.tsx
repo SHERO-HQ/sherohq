@@ -1,4 +1,4 @@
-import * as motion from "motion/react-client";
+import { motion } from "motion/react";
 import type { Variants } from "motion/react";
 import type { ReactNode } from "react";
 
@@ -22,13 +22,13 @@ interface ContainerProps {
 /**
  * FadeInView: Standard "Scroll into View" for single blocks
  */
-export const FadeInView = ({ 
-  children, 
-  delay = 0, 
-  direction = "up", 
+export const FadeInView = ({
+  children,
+  delay = 0,
+  direction = "up",
   fullWidth = true,
   threshold = 0.1,
-  once = true 
+  once = true,
 }: Props) => {
   const directions = {
     up: { y: 60, x: 0 },
@@ -44,10 +44,10 @@ export const FadeInView = ({
       whileInView={{ opacity: 1, x: 0, y: 0 }}
       // 'amount' determines what % of the element must be in view to start
       viewport={{ once, amount: threshold, margin: "0px 0px -50px 0px" }}
-      transition={{ 
-        duration: 0.9, 
-        delay, 
-        ease: [0.16, 1, 0.3, 1] 
+      transition={{
+        duration: 0.9,
+        delay,
+        ease: [0.16, 1, 0.3, 1],
       }}
       className={fullWidth ? "w-full" : ""}
     >
@@ -59,12 +59,12 @@ export const FadeInView = ({
 /**
  * StaggerContainer: Orchestrates children as the parent scrolls into view
  */
-export const StaggerContainer = ({ 
-  children, 
-  gap = "gap-6", 
+export const StaggerContainer = ({
+  children,
+  gap = "gap-6",
   className = "",
   staggerDelay = 0.15,
-  once = true
+  once = true,
 }: ContainerProps) => {
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -97,15 +97,15 @@ export const StaggerContainer = ({
 export const StaggerItem = ({ children }: { children: ReactNode }) => {
   const itemVariants: Variants = {
     hidden: { opacity: 0, y: 30, scale: 0.94 },
-    show: { 
-      opacity: 1, 
-      y: 0, 
+    show: {
+      opacity: 1,
+      y: 0,
       scale: 1,
-      transition: { 
-        duration: 0.7, 
-        ease: [0.16, 1, 0.3, 1] 
-      } 
-    }
+      transition: {
+        duration: 0.7,
+        ease: [0.16, 1, 0.3, 1],
+      },
+    },
   };
 
   return <motion.div variants={itemVariants}>{children}</motion.div>;

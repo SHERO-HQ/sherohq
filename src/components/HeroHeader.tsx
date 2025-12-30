@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import AnimatedText from "./motion/AnimatedText";
-import * as motion from "motion/react-client";
+import { motion } from "motion/react";
 import { fadeUp } from "../components/motion/heroMotion";
 // import HeroVisual from "./motion/HeroVisual";
 import { useEffect, useState } from "react";
@@ -100,7 +100,7 @@ const HeroHeader: React.FC = () => {
               transition={{
                 duration: 5,
                 repeat: Infinity,
-                ease: 'linear'
+                ease: "linear",
               }}
             />
 

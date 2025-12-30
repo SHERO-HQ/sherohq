@@ -1,6 +1,5 @@
-import * as motion from "motion/react-client";
 import { NavLink } from "react-router-dom";
-import { easeInOut } from "motion/react";
+import { motion, easeInOut } from "motion/react";
 
 const WhoWeAre = () => {
   const containerVariants = {
@@ -42,18 +41,17 @@ const WhoWeAre = () => {
             <h2 className="lg:text-6xl md:text-5xl text-4xl text-primary font-mono font-bold relative z-10">
               Who We Are
             </h2>
-                   <div className=" absolute lg:w-54 lg:left-40 lg:-mt-4 md:w-46 left-32 md:-mt-3 w-40 -mt-3">
-            </div>
+            <div className=" absolute lg:w-54 lg:left-40 lg:-mt-4 md:w-46 left-32 md:-mt-3 w-40 -mt-3"></div>
           </motion.header>
 
           <motion.div variants={itemVariants} className="text mt-5">
-            <p className="lg:text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+            <p className="lg:text-lg leading-relaxed text-slate-600 dark:text-slate-400 text-balance">
               <span className="dark:text-blue-500 text-primary font-bold font-mono">
                 SHERO
               </span>{" "}
               builds solutions across software, fin-tech, hardware, and
-              humanitarian impact. <br />
-              We empower individuals, businesses, and communities to{" "}
+              humanitarian impact. We empower individuals, businesses, and
+              communities to{" "}
               <span className="text-secondary dark:text-emerald-500 font-extrabold font-mono">
                 Redefine Possible
               </span>

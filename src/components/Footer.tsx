@@ -6,17 +6,17 @@ import { Globe } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="lg:max-w-11/12 w-full rounded-t-[4rem] mx-auto bg-secondary pt-16">
+    <footer className="lg:max-w-11/12 w-full rounded-t-[4rem] mx-auto bg-secondary">
       <div className="container mx-auto max-w-11/12 lg:w-full">
-        <div className="container flex lg:flex-row flex-col justify-around items-start text-white pt-10 pb-14">
-          <div className="logo">
+        <div className="container flex lg:flex-row flex-col justify-around items-start text-start text-white pt-10 pb-14">
+          <div className="logo mt-8">
             <img
               src={SheroLight}
               alt="Shero Logo"
               className="h-12 mb-4"
               aria-label="Shero Logo Light"
             />
-            <p className="max-w-sm" aria-label="Shero values">
+            <p className="max-w-sm text-balance text-sm" aria-label="Shero values">
               Technology, Finance, Hardware, and humanity. One mission, many
               impacts to <span className="font-bold">Redefine possible</span>{" "}
               for the world.
