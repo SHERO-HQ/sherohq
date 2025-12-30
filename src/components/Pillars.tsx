@@ -93,7 +93,7 @@ const Pillars = () => {
         <div className="w-full mx-auto mt-10 lg:mt-0">
           <FadeInView direction="up">
             <motion.header className="mx-auto relative" variants={fadeIn}>
-              <h2 className="lg:text-6xl md:text-5xl text-4xl dark:text-emerald-500 text-secondary font-mono font-bold relative z-10">
+              <h2 className="lg:text-6xl md:text-5xl text-4xl dark:text-emerald-500 text-secondary font-inter font-bold relative z-10">
                 Our Pillars
               </h2>
               <div className=" absolute lg:w-56 lg:left-38 lg:-mt-4 md:w-46 left-24 md:-mt-3 w-46 -mt-3"></div>
@@ -113,13 +113,13 @@ const Pillars = () => {
                     className={`rounded w-full h-full border border-slate-300 dark:border-slate-800 p-4 space-y-3 shadow-sm`}
                   >
                     <div className="content space-y-3 inline-flex items-center space-x-2">
-                      <div className="icon size-10 p-1 border border-slate-300 dark:border-slate-800 shadow-sm drop-shadow-2xl text-primary/90 dark:text-emerald-400 rounded flex self-center">
+                      <div className="icon size-12 p-1.5 border border-slate-300 dark:border-slate-800 shadow-sm drop-shadow-2xl text-primary/80 bg-blue-200/40 dark:text-secondary dark:bg-emerald-200/10 rounded flex self-center">
                         <span aria-label="pillar icon" className="size-10">
                           {pillar.icon}
                         </span>
                       </div>
                       <h2
-                        className="md:text-3xl text-2xl font-mono font-bold text-primary dark:text-emerald-400 flex items-center"
+                        className="md:text-3xl text-2xl font-bold text-primary dark:text-emerald-400 flex items-center"
                         aria-label="pillar header"
                       >
                         {pillar.header}

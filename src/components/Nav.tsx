@@ -57,14 +57,14 @@ const Nav = () => {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50
-         ${isOpen ? "bg-slate-200 dark:bg-[#020617]" : scrolled ? "backdrop-blur-md bg-slate-200/10 dark:bg-[#20617]" : "bg-transparent"}
+      className={`fixed top-0 w-full z-50 
+         ${isOpen ? "bg-slate-200 dark:bg-slate-900" : scrolled ? "bg-slate-200 dark:bg-slate-900" : "bg-transparent"}
   transition-all duration-300 ease-in-out`}
       aria-label="main"
       id="nav-menu"
     >
       <div
-        className={`container mx-auto w-full flex justify-between p-5 relative z-50  transition-all duration-300`}
+        className={`container mx-auto w- max-w-11/12 flex justify-between py-2 relative z-50  transition-all duration-300`}
       >
         {/* logo */}
         {/* <div className="max-w-11/12"> */}
@@ -84,7 +84,7 @@ const Nav = () => {
           </div>
 
           <button
-            className={` ${
+            className={`size-9 ${
               isOpen
                 ? "text-red-500 border-red-300"
                 : "dark:text-slate-200 text-slate-800 bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-700"
@@ -95,7 +95,7 @@ const Nav = () => {
             aria-expanded={isOpen}
             aria-controls="mobile-nav-menu"
           >
-            <div className="relative size-7 flex justify-center items-center">
+            {/* <div className="relative size-7 flex justify-center items-center"> */}
               {/* Animated Icon Switching */}
               {/* <motion.div
                 animate={{ rotate: isOpen ? 90 : 0, opacity: isOpen ? 1 : 0 }}
@@ -138,8 +138,7 @@ const Nav = () => {
                 animate={{ rotate: isOpen ? 90 : 0 }}
               >
                 <motion.path
-
-                  d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18"
+                 initial={{ d: "M5 17H13M5 12H19M11 7H19" }}
                   animate={
                     isOpen
                       ? { d: "M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" }
@@ -147,7 +146,7 @@ const Nav = () => {
                   }
                 />
               </motion.svg>
-            </div>
+            {/* </div> */}
           </button>
         </div>
 
@@ -202,14 +201,14 @@ const Nav = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 top-22 bg-white/40 dark:bg-black/30 backdrop-blur-md lg:hidden z-30"
+              className="fixed inset-0 top-18 bg-white/40 dark:bg-black/30 backdrop-blur-md lg:hidden z-30"
             />
             <motion.div
               variants={menuVars}
               initial="initial"
               animate="animate"
               exit="exit"
-              className="fixed top-22 left-0 w-full bg-slate-200 dark:bg-[#020617] border-b-2 border-blue-950/10 dark:border-slate-800 shadow-xl overflow-hidden origin-top lg:hidden z-50"
+              className="fixed top-16 left-0 w-full bg-slate-200 dark:bg-slate-900 border-b-2 border-blue-950/10 dark:border-slate-800 shadow-xl overflow-hidden origin-top lg:hidden z-50"
               id="mobile-nav-menu"
             >
               <div className="container mx-auto p-6 flex flex-col gap-6">

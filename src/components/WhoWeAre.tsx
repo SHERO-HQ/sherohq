@@ -38,7 +38,7 @@ const WhoWeAre = () => {
           className="w-full lg:w-1/2"
         >
           <motion.header variants={itemVariants} className="relative">
-            <h2 className="lg:text-6xl md:text-5xl text-4xl text-primary font-mono font-bold relative z-10">
+            <h2 className="lg:text-6xl md:text-5xl text-4xl text-primary font-inter font-extrabold relative z-10">
               Who We Are
             </h2>
             <div className=" absolute lg:w-54 lg:left-40 lg:-mt-4 md:w-46 left-32 md:-mt-3 w-40 -mt-3"></div>
@@ -46,13 +46,13 @@ const WhoWeAre = () => {
 
           <motion.div variants={itemVariants} className="text mt-5">
             <p className="lg:text-lg leading-relaxed text-slate-600 dark:text-slate-400 text-balance">
-              <span className="dark:text-blue-500 text-primary font-bold font-mono">
+              <span className="dark:text-blue-500 text-primary font-bold">
                 SHERO
               </span>{" "}
               builds solutions across software, fin-tech, hardware, and
               humanitarian impact. We empower individuals, businesses, and
               communities to{" "}
-              <span className="text-secondary dark:text-emerald-500 font-extrabold font-mono">
+              <span className="text-secondary dark:text-emerald-500 font-extrabold">
                 Redefine Possible
               </span>
               .

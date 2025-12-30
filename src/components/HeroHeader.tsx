@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import AnimatedText from "./motion/AnimatedText";
+// import AnimatedText from "./motion/AnimatedText";
 import { motion } from "motion/react";
 import { fadeUp } from "../components/motion/heroMotion";
 import { useEffect, useState } from "react";
@@ -10,7 +10,7 @@ import { easeInOut } from "motion/react";
 interface HeroContent {
   mainHeader: string;
   subHeader: string;
-  animatedWords: readonly string[];
+  animatedWords?: readonly string[];
 }
 
 type SmallText = {
@@ -20,16 +20,16 @@ type SmallText = {
 
 // Constants
 const HERO_CONTENT: HeroContent = {
-  mainHeader: "Redefining What's Possible",
+  mainHeader: "Redefine",
   subHeader:
-    "Solutions that empower people, businesses, and communities across technology, finance, innovation, and humanity",
-  animatedWords: [
-    "Technology.",
-    "Finance.",
-    "Investment.",
-    "Education.",
-    "Humanity.",
-  ] as const,
+    "Innovative solutions that scales to ELEVATE people, businesses, and communities.",
+  // animatedWords: [
+  //   "Technology.",
+  //   "Finance.",
+  //   "Investment.",
+  //   "Education.",
+  //   "Humanity.",
+  // ] as const,
 } as const;
 
 const ANIMATION_TIMINGS = {
@@ -61,7 +61,7 @@ const HeroHeader: React.FC = () => {
   return (
     <header
       className={`
-    relative min-h-screen lg:min-h-screen w-full overflow-hidden
+    relative max-h-[80vh] h-[60vh] lg:h-screen w-full overflow-hidden
     bg-slate-200 dark:bg-[#020617]
     /* backdrop-blur-md blur-in-xl */
     flex items-center justify-center
@@ -69,11 +69,18 @@ const HeroHeader: React.FC = () => {
     before:content-[''] before:absolute before:inset-0 
     before:bg-[linear-gradient(to_right,#80808012_2px,transparent_2px),linear-gradient(to_bottom,#80808012_2px,transparent_2px)] 
     before:bg-[size:40px_40px]
-    before:[mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_100%)]
+    before:[mask-image:radial-gradient(ellipse_90%_60%_at_60%_0%,#000_80%,transparent_90%)]
       `}
       role="banner"
       aria-label="Hero section - Company mission statement"
     >
+      <div className="absolute inset-0 -z-10">
+        <div
+          className="absolute left-1/2 top-0 h-150 w-150
+         -translate-x-1/2 rounded-full blur-3xl 
+         bg-linear-to-r from-blue-500/12 to-emerald-400/12 "
+        />
+      </div>
       {/* BLOB IMAGE background */}
       <div className="container lg:w-11/12 w-full mx-auto flex items-center justify-center relative z-10">
         {/* TEXT CONTENT COLUMN */}
@@ -131,15 +138,14 @@ const HeroHeader: React.FC = () => {
             <motion.h1
               variants={prefersReducedMotion ? {} : fadeUp}
               className="
-            dark:text-blue-700 text-primary font-inter font-bold w-full
-            text-[clamp(1.2rem,5.3vw,4rem)]
-            leading-tight text-balance
+            bg-linear-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% bg-clip-text text-transparent font-extrabold w-full
+            text-[clamp(2rem,6vw,8rem)]
+            leading-tight text-balance font-sora
             text-center
           "
             >
-              {HERO_CONTENT.mainHeader}
-
-              <br />
+              {HERO_CONTENT.mainHeader} <span className="">Possible</span>
+              {/* <br />
 
               <span
                 className="
@@ -161,7 +167,7 @@ const HeroHeader: React.FC = () => {
                     aria-atomic
                   />
                 </span>
-              </span>
+              </span> */}
             </motion.h1>
 
             {/* SUBTEXT */}
@@ -170,9 +176,7 @@ const HeroHeader: React.FC = () => {
               transition={{ delay: ANIMATION_TIMINGS.PARAGRAPH_DELAY }}
               className="
             text-slate-600 dark:text-slate-400
-            text-[clamp(0.9rem,2vw,1.25rem)]
-            leading-relaxed md:w-11/12 lg:w-9/12 mx-auto
-            text-balance text-center
+            text-[clamp(0.85rem,1.8vw,1.15rem)] text-center
           "
             >
               {HERO_CONTENT.subHeader}
@@ -191,7 +195,7 @@ const HeroHeader: React.FC = () => {
               to="/explore"
               className="
             group inline-flex items-center justify-center gap-3 
-            text-white text-base bg-secondary px-8 py-2 rounded 
+            text-white bg-secondary px-8 py-2 rounded 
             transition-all duration-300 
             shadow-lg shadow-secondary/20 hover:shadow-secondary/40
             hover:bg-secondary/90 focus:bg-secondary/90
