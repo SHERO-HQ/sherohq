@@ -1,12 +1,13 @@
 import { NavLink } from "react-router-dom";
 import { motion, easeInOut } from "motion/react";
+import { Info } from "lucide-react";
 
 const WhoWeAre = () => {
   const containerVariants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.2, delayChildren: 0.1 },
+      transition: { staggerChildren: 0.15, delayChildren: 0.2 },
     },
   };
 
@@ -15,74 +16,207 @@ const WhoWeAre = () => {
     show: {
       opacity: 1,
       y: 0,
+      transition: { duration: 0.6, ease: easeInOut },
+    },
+  };
+
+  const imageVariants = {
+    hidden: { opacity: 0, scale: 0.95, x: 50 },
+    show: {
+      opacity: 1,
+      scale: 1,
+      x: 0,
       transition: { duration: 0.8, ease: easeInOut },
     },
   };
 
+  // Stats data
+  const stats = [
+    { value: "500+", label: "Projects Delivered" },
+    { value: "50+", label: "Global Partners" },
+    { value: "10+", label: "Years Experience" },
+  ];
+
   return (
-    <section className="relative w-full pb-20 overflow-hidden">
-      {/* Background Blob */}
-      <img
-        src="/blob.svg"
-        alt=""
-        className="opacity-10 absolute -left-20 top-20 rotate-12 w-80 pointer-events-none"
-      />
+    <section className="relative w-full py-20 lg:py-28 overflow-hidden bg-white dark:bg-slate-950">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 via-transparent to-blue-50/50 dark:from-emerald-950/20 dark:via-transparent dark:to-blue-950/20 pointer-events-none" />
 
-      <div className="container lg:max-w-10/12 max-w-11/12 mx-auto flex flex-col-reverse lg:flex-row gap-10 items-center pt-10">
-        {/* TEXT CONTENT (Staggered) */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.3 }}
-          className="w-full lg:w-1/2"
-        >
-          <motion.header variants={itemVariants} className="relative">
-            <h2 className="lg:text-6xl md:text-5xl text-4xl text-primary font-inter font-extrabold relative z-10">
-              Who We Are
-            </h2>
-            <div className=" absolute lg:w-54 lg:left-40 lg:-mt-4 md:w-46 left-32 md:-mt-3 w-40 -mt-3"></div>
-          </motion.header>
-
-          <motion.div variants={itemVariants} className="text mt-5">
-            <p className="lg:text-lg leading-relaxed text-slate-600 dark:text-slate-400 text-balance">
-              <span className="dark:text-blue-500 text-primary font-bold">
-                SHERO
-              </span>{" "}
-              builds solutions across software, fin-tech, hardware, and
-              humanitarian impact. We empower individuals, businesses, and
-              communities to{" "}
-              <span className="text-secondary dark:text-emerald-500 font-extrabold">
-                Redefine Possible
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
+          {/* TEXT CONTENT */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.3 }}
+            className="w-full lg:w-1/2 space-y-8"
+          >
+            {/* Header */}
+            <motion.div variants={itemVariants}>
+              <span className="inline-flex items-center px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
+                <Info className="rounded-full me-2 size-4" />
+                About Us
               </span>
-              .
-            </p>
-          </motion.div>
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-slate-200">
+                Who We Are
+              </h2>
+            </motion.div>
 
-          <motion.div variants={itemVariants} className="mt-8">
-            <NavLink
-              className="inline-flex items-center justify-center gap-2 text-white bg-secondary px-8 py-2 rounded hover:bg-secondary/90 transition-all duration-300 shadow-lg shadow-secondary/20"
-              to="explore"
+            {/* Description */}
+            <motion.div variants={itemVariants} className="space-y-4">
+              <p className="text-lg leading-relaxed text-slate-700 dark:text-slate-300">
+                <span className="text-blue-600 dark:text-blue-400 font-bold">
+                  SHERO
+                </span>{" "}
+                builds solutions across software, fin-tech, hardware, and
+                humanitarian impact. We empower individuals, businesses, and
+                communities to{" "}
+                <span className="text-emerald-600 dark:text-emerald-400 font-bold">
+                  Redefine Possible
+                </span>
+                .
+              </p>
+
+              <p className="text-base text-slate-600 dark:text-slate-400">
+                Through innovation and dedication, we transform challenges into
+                opportunities, creating lasting impact across technology,
+                finance, education, and humanity.
+              </p>
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div
+              variants={itemVariants}
+              className="grid grid-cols-3 gap-6 py-6"
             >
-              Explore Impact
-            </NavLink>
-          </motion.div>
-        </motion.div>
+              {stats.map((stat, index) => (
+                <div key={index} className="text-center lg:text-left">
+                  <div className="text-3xl md:text-4xl font-bold text-emerald-600 dark:text-emerald-400">
+                    {stat.value}
+                  </div>
+                  <div className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </motion.div>
 
-        {/* IMAGE CONTENT */}
-        {/* <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-          className="relative w-full lg:w-1/2 flex justify-center"
-        >
-          <img
-            src={String(WhoWeAreImage)}
-            alt="Who We Are"
-            className="cover lg:rotate-6 shadow-2xl h-92 lg:h-112.5 w-full max-w-md"
-          />
-        </motion.div> */}
+            {/* CTA Button */}
+            <motion.div variants={itemVariants}>
+              <NavLink
+                className="inline-flex items-center justify-center gap-3 
+                         text-slate-900 bg-emerald-600 dark:bg-emerald-500
+                         px-8 py-2 rounded font-semibold
+                         hover:bg-emerald-700 dark:hover:bg-emerald-600
+                         hover:shadow-xl hover:shadow-emerald-500/25
+                         hover:-translate-y-0.5
+                         transition-all duration-300
+                         group"
+                to="/explore"
+              >
+                Explore Impact
+                <svg
+                  className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </NavLink>
+            </motion.div>
+          </motion.div>
+
+          {/* IMAGE/VISUAL CONTENT */}
+          <motion.div
+            variants={imageVariants}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.3 }}
+            className="w-full lg:w-1/2 relative"
+          >
+            {/* Option 1: Decorative Card Grid */}
+            <div className="grid grid-cols-2 gap-4 lg:gap-6">
+              {/* Card 1 - Technology */}
+              <motion.div
+                whileHover={{ y: -8 }}
+                className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-xl"
+              >
+                <div className="text-4xl mb-3">💻</div>
+                <h3 className="font-bold text-lg mb-2">Technology</h3>
+                <p className="text-sm opacity-90">
+                  Scalable software solutions
+                </p>
+              </motion.div>
+
+              {/* Card 2 - Finance */}
+              <motion.div
+                whileHover={{ y: -8 }}
+                className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl p-6 text-white shadow-xl mt-8"
+              >
+                <div className="text-4xl mb-3">💰</div>
+                <h3 className="font-bold text-lg mb-2">Finance</h3>
+                <p className="text-sm opacity-90">Innovative fin-tech</p>
+              </motion.div>
+
+              {/* Card 3 - Education */}
+              <motion.div
+                whileHover={{ y: -8 }}
+                className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white shadow-xl"
+              >
+                <div className="text-4xl mb-3">🎓</div>
+                <h3 className="font-bold text-lg mb-2">Education</h3>
+                <p className="text-sm opacity-90">Empowering learning</p>
+              </motion.div>
+
+              {/* Card 4 - Humanity */}
+              <motion.div
+                whileHover={{ y: -8 }}
+                className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-6 text-white shadow-xl mt-8"
+              >
+                <div className="text-4xl mb-3">🤝</div>
+                <h3 className="font-bold text-lg mb-2">Humanity</h3>
+                <p className="text-sm opacity-90">Social impact</p>
+              </motion.div>
+            </div>
+
+            {/* Decorative blob background */}
+            <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full">
+              <div className="absolute inset-0 bg-gradient-to-br from-emerald-200/20 to-blue-200/20 dark:from-emerald-500/10 dark:to-blue-500/10 rounded-full blur-3xl" />
+            </div>
+          </motion.div>
+
+          {/* Option 2: Replace decorative cards with actual image when available */}
+          {/* Uncomment and use this when you have an image */}
+          {/* 
+          <motion.div
+            variants={imageVariants}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.3 }}
+            className="w-full lg:w-1/2 relative"
+          >
+            <div className="relative">
+              <img
+                src="/path-to-your-image.jpg"
+                alt="SHERO Team"
+                className="rounded-2xl shadow-2xl w-full h-auto object-cover"
+              />
+              
+              <div className="absolute -bottom-6 -right-6 bg-emerald-500 text-white rounded-2xl p-6 shadow-xl">
+                <div className="text-3xl font-bold">10+</div>
+                <div className="text-sm">Years of Excellence</div>
+              </div>
+            </div>
+          </motion.div>
+          */}
+        </div>
       </div>
     </section>
   );

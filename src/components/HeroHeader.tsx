@@ -1,8 +1,7 @@
 import { NavLink } from "react-router-dom";
-// import AnimatedText from "./motion/AnimatedText";
 import { motion } from "motion/react";
 import { fadeUp } from "../components/motion/heroMotion";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { RocketLaunchIcon } from "@/assets/icons/icons";
 import { easeInOut } from "motion/react";
 
@@ -10,7 +9,6 @@ import { easeInOut } from "motion/react";
 interface HeroContent {
   mainHeader: string;
   subHeader: string;
-  animatedWords?: readonly string[];
 }
 
 type SmallText = {
@@ -20,23 +18,14 @@ type SmallText = {
 
 // Constants
 const HERO_CONTENT: HeroContent = {
-  mainHeader: "Redefine",
+  mainHeader: "Redefine Possible",
   subHeader:
-    "Innovative solutions that scales to ELEVATE people, businesses, and communities.",
-  // animatedWords: [
-  //   "Technology.",
-  //   "Finance.",
-  //   "Investment.",
-  //   "Education.",
-  //   "Humanity.",
-  // ] as const,
+    "Innovative solutions that scale to ELEVATE people, businesses, and communities.",
 } as const;
 
 const ANIMATION_TIMINGS = {
-  TEXT_ROTATION_INTERVAL: 3000,
-  PARAGRAPH_DELAY: 0.2,
-  CTA_DELAY: 0.3,
-  VISUAL_DURATION: 1,
+  PARAGRAPH_DELAY: 0.15,
+  CTA_DELAY: 0.25,
 } as const;
 
 const TopText: SmallText = {
@@ -45,183 +34,198 @@ const TopText: SmallText = {
 };
 
 const HeroHeader: React.FC = () => {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(
-    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  // Check reduced motion once on mount
+  const prefersReducedMotion = useMemo(
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    []
   );
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-
-    const handler = (e: MediaQueryListEvent) =>
-      setPrefersReducedMotion(e.matches);
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
-  }, []);
 
   return (
     <header
-      className={`
-    relative max-h-[80vh] h-[60vh] lg:h-screen w-full overflow-hidden
-    bg-slate-200 dark:bg-[#020617]
-    /* backdrop-blur-md blur-in-xl */
-    flex items-center justify-center
-    /* GRID */
-    before:content-[''] before:absolute before:inset-0 
-    before:bg-[linear-gradient(to_right,#80808012_2px,transparent_2px),linear-gradient(to_bottom,#80808012_2px,transparent_2px)] 
-    before:bg-[size:40px_40px]
-    before:[mask-image:radial-gradient(ellipse_90%_60%_at_60%_0%,#000_80%,transparent_90%)]
-      `}
+      className="relative min-h-[70vh] lg:min-h-screen w-full overflow-hidden
+                 bg-linear-to-b from-slate-200 to-slate-100 
+                 dark:from-slate-950 dark:to-slate-900
+                 flex items-center justify-center"
       role="banner"
       aria-label="Hero section - Company mission statement"
     >
-      <div className="absolute inset-0 -z-10">
-        <div
-          className="absolute left-1/2 top-0 h-150 w-150
-         -translate-x-1/2 rounded-full blur-3xl 
-         bg-linear-to-r from-blue-500/12 to-emerald-400/12 "
-        />
+      {/* Animated Grid Background */}
+      <div className="absolute inset-0 
+                    bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] 
+                    bg-[size:40px_40px]
+                    [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_70%,transparent_100%)]" 
+      />
+
+      {/* Gradient Orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-500/20 dark:bg-blue-500/10 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-emerald-500/20 dark:bg-emerald-500/10 rounded-full blur-3xl" />
       </div>
-      {/* BLOB IMAGE background */}
-      <div className="container lg:w-11/12 w-full mx-auto flex items-center justify-center relative z-10">
-        {/* TEXT CONTENT COLUMN */}
 
-        <div
-          className="flex flex-col justify-center items-center gap-8 w-full"
-          role="main"
-        >
-          <div className="relative group overflow-hidden rounded-full p-0.5">
-            {/* Framer Motion Gradient Layer */}
-            <motion.div
-              className="absolute top-1/2 left-1/2 w-full h-[800%]"
-              // Positioning the oversized square so it centers correctly while spinning
-              style={{
-                translateX: "-50%",
-                translateY: "-50%",
-                background:
-                  "conic-gradient(from 0deg, #10b981 10%, #0ea5e9 30%, #6366f1 90%, #10b981 100%)",
-              }}
-              animate={{ rotate: 360 }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-            />
-
-            {/* Inner Content (The Mask) */}
-            <div className="relative smallText text-slate-500 bg-slate-100 dark:bg-slate-900 px-4 py-2 rounded-full">
-              <div className="flex items-center gap-2">
-                {/* Your previous Framer Motion icon animation */}
-                <motion.span
-                  initial={{ y: 0, x: 0 }}
-                  animate={{ y: [0, -3, 0], x: [0, 5, 0] }}
-                  transition={{
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: easeInOut,
-                  }}
-                  className="size-4 rounded-full"
-                >
-                  {TopText.icon}
-                </motion.span>
-                <span className="lg:text-sm text-xs">{TopText.text}</span>
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="flex flex-col justify-center items-center gap-10 w-full py-20">
+          
+          {/* Top Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="relative group"
+          >
+            <div className="relative overflow-hidden rounded-full p-[2px] bg-gradient-to-r from-emerald-500 via-blue-500 to-indigo-500">
+              {/* Rotating gradient border */}
+              <motion.div
+                className="absolute inset-0"
+                style={{
+                  background: "conic-gradient(from 0deg, #10b981 0%, #0ea5e9 33%, #6366f1 66%, #10b981 100%)",
+                }}
+                animate={{ rotate: 360 }}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              />
+              
+              {/* Inner content */}
+              <div className="relative bg-slate-50 dark:bg-slate-900 px-5 py-2.5 rounded-full">
+                <div className="flex items-center gap-2.5">
+                  <motion.span
+                    animate={{ 
+                      y: [0, -3, 0],
+                      x: [0, 3, 0],
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: easeInOut,
+                    }}
+                    className="w-4 h-4 text-emerald-600 dark:text-emerald-400"
+                  >
+                    {TopText.icon}
+                  </motion.span>
+                  <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                    {TopText.text}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
+          {/* Main Content */}
           <motion.div
             initial="hidden"
             animate="visible"
-            className="space-y-6 mx-auto flex flex-col items-center justify-center w-full max-w-11/12"
+            className="space-y-8 mx-auto flex flex-col items-center justify-center w-full max-w-5xl"
           >
-            {/* HEADLINE */}
+            {/* Headline */}
             <motion.h1
               variants={prefersReducedMotion ? {} : fadeUp}
-              className="
-            bg-linear-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% bg-clip-text text-transparent font-extrabold w-full
-            text-[clamp(2rem,6vw,8rem)]
-            leading-tight text-balance font-sora
-            text-center
-          "
+              className="text-center font-extrabold leading-tight"
             >
-              {HERO_CONTENT.mainHeader} <span className="">Possible</span>
-              {/* <br />
-
-              <span
-                className="
-              text-secondary font-inter inline-flex flex-wrap items-center gap-x-4 mt-5 font-bold
-              text-[clamp(1.6rem,8.3vw,5.8rem)]
-              leading-tight
-            "
-              >
-                <span className="text-center">Across</span>
-                <span className="inline-block w-[10ch] text-left">
-                  <AnimatedText
-                    words={HERO_CONTENT.animatedWords}
-                    interval={
-                      prefersReducedMotion
-                        ? 0
-                        : ANIMATION_TIMINGS.TEXT_ROTATION_INTERVAL
-                    }
-                    aria-live="polite"
-                    aria-atomic
-                  />
-                </span>
-              </span> */}
+              <span className="block text-[clamp(2.5rem,6vw,7rem)] 
+                             bg-linear-to-r from-indigo-600 via-blue-500 to-emerald-500 
+                             bg-clip-text text-transparent font-sora">
+                {HERO_CONTENT.mainHeader}
+              </span>
+           
             </motion.h1>
 
-            {/* SUBTEXT */}
+            {/* Subheading */}
             <motion.p
               variants={prefersReducedMotion ? {} : fadeUp}
               transition={{ delay: ANIMATION_TIMINGS.PARAGRAPH_DELAY }}
-              className="
-            text-slate-600 dark:text-slate-400
-            text-[clamp(0.85rem,1.8vw,1.15rem)] text-center
-          "
+              className="text-lg md:text-xl text-slate-600 dark:text-slate-400 
+                       text-center max-w-2xl leading-relaxed"
             >
               {HERO_CONTENT.subHeader}
             </motion.p>
+
+            {/* CTA Buttons */}
+            <motion.div
+              variants={prefersReducedMotion ? {} : fadeUp}
+              transition={{ delay: ANIMATION_TIMINGS.CTA_DELAY }}
+              className="flex flex-col sm:flex-row items-center gap-4 pt-4"
+            >
+              <NavLink
+                to="/explore"
+                className="group inline-flex items-center justify-center gap-3 
+                         dark:text-slate-900 text-slate-100 bg-emerald-600 dark:bg-emerald-500
+                         px-8 py-2 rounded font-semibold text-base
+                         hover:bg-emerald-700 dark:hover:bg-emerald-600
+                         hover:shadow-2xl hover:shadow-emerald-500/30
+                         hover:-translate-y-1
+                         transition-all duration-300
+                         w-full sm:w-auto"
+                aria-label="Explore our potential and services"
+              >
+                <span>Explore Potential</span>
+                <svg
+                  aria-hidden="true"
+                  className="w-5 h-5 transform group-hover:translate-x-1 transition-transform"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <path
+                    d="M5 12H19M19 12L13 6M19 12L13 18"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </NavLink>
+
+              <NavLink
+                to="/contact"
+                className="group inline-flex items-center justify-center gap-3 
+                         text-slate-700 dark:text-slate-300
+                         border-2 border-slate-300 dark:border-slate-700
+                         bg-transparent
+                         px-8 py-2 rounded font-semibold text-base
+                         hover:border-emerald-500 dark:hover:border-emerald-500
+                         hover:text-emerald-600 dark:hover:text-emerald-400
+                         hover:shadow-lg
+                         transition-all duration-300
+                         w-full sm:w-auto"
+              >
+                <span>Get in Touch</span>
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                  />
+                </svg>
+              </NavLink>
+            </motion.div>
           </motion.div>
 
-          {/* CTA */}
+          {/* Trust Indicators */}
           <motion.div
-            variants={prefersReducedMotion ? {} : fadeUp}
-            initial="hidden"
-            animate="visible"
-            transition={{ delay: ANIMATION_TIMINGS.CTA_DELAY }}
-            className="flex items-center justify-center w-full max-w-11/12 lg:max-w-8/12 md:max-w-10/12 mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="flex flex-wrap items-center justify-center gap-8 pt-8 text-sm text-slate-600 dark:text-slate-400"
           >
-            <NavLink
-              to="/explore"
-              className="
-            group inline-flex items-center justify-center gap-3 
-            text-white bg-secondary px-8 py-2 rounded 
-            transition-all duration-300 
-            shadow-lg shadow-secondary/20 hover:shadow-secondary/40
-            hover:bg-secondary/90 focus:bg-secondary/90
-            active:scale-95
-            focus:outline-none focus:ring-4 focus:ring-secondary/30
-            w-full md:w-auto
-          
-          "
-              aria-label="Explore our potential and services"
-            >
-              <span>Explore Potential</span>
-              <svg
-                aria-hidden="true"
-                className="size-5 transform group-hover:translate-x-1 transition-transform"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path
-                  d="M5 12H19M19 12L13 6M19 12L13 18"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </NavLink>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+              <span>500+ Projects Delivered</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+              <span>50+ Global Partners</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
+              <span>10+ Years Experience</span>
+            </div>
           </motion.div>
         </div>
       </div>

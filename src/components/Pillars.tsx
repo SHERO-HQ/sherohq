@@ -1,5 +1,4 @@
 import { motion, easeInOut } from "motion/react";
-// import { NavLink } from "react-router-dom";
 import FadeInView from "./motion/AnimateSection";
 import { fadeIn } from "./motion/heroMotion";
 import {
@@ -10,6 +9,7 @@ import {
   SeedSprout,
 } from "@/assets/icons/icons";
 import type React from "react";
+import { Crosshair } from "lucide-react";
 
 // Type definitions
 interface PillarsProps {
@@ -19,13 +19,13 @@ interface PillarsProps {
   feature?: boolean;
 }
 
-// Framer
+// Animation variants
 const containerVariants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15,
+      staggerChildren: 0.12,
       delayChildren: 0.1,
     },
   },
@@ -34,15 +34,15 @@ const containerVariants = {
 const cardVariants = {
   hidden: {
     opacity: 0,
-    y: 30,
-    scale: 0.95,
+    y: 20,
+    scale: 0.98,
   },
   visible: {
     opacity: 1,
     y: 0,
     scale: 1,
     transition: {
-      duration: 0.5,
+      duration: 0.4,
       ease: easeInOut,
     },
   },
@@ -87,51 +87,141 @@ const Pillars = () => {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
-      className="relative w-full py-10 border-slate-300 dark:border-slate-700 dark:bg-slate-950"
+      className="relative w-full py-20 bg-slate-50 dark:bg-slate-950"
     >
-      <div className="container lg:max-w-10/12 max-w-11/12 w-full mx-auto flex lg:flex-row flex-col justify-between gap-5 items-center">
-        <div className="w-full mx-auto mt-10 lg:mt-0">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full">
           <FadeInView direction="up">
-            <motion.header className="mx-auto relative" variants={fadeIn}>
-              <h2 className="lg:text-6xl md:text-5xl text-4xl dark:text-emerald-500 text-secondary font-inter font-bold relative z-10">
-                Our Pillars
+            {/* Header */}
+            <motion.header 
+              className="text-center mb-16" 
+              variants={fadeIn}
+            >
+              <span className="inline-flex items-center px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
+              <Crosshair  className="me-2 size-4"/>
+                Our Focus Areas
+              </span>
+              <h2 className="text-5xl lg:text-6xl font-bold text-slate-900 dark:text-slate-200 mb-4">
+                What We Do
               </h2>
-              <div className=" absolute lg:w-56 lg:left-38 lg:-mt-4 md:w-46 left-24 md:-mt-3 w-46 -mt-3"></div>
+              <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                Transforming industries through innovation and expertise
+              </p>
             </motion.header>
+
+            {/* Cards Grid - 2 rows: 3 top, 2 bottom centered */}
             <motion.div
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.1 }}
-              className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-6 mt-6"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
             >
-              {PILLARS.map((pillar) => {
+              {PILLARS.slice(0, 3).map((pillar) => {
                 return (
                   <motion.div
                     variants={cardVariants}
                     key={pillar.header}
-                    className={`rounded w-full h-full border border-slate-300 dark:border-slate-800 p-4 space-y-3 shadow-sm`}
+                    whileHover={{ 
+                      y: -8,
+                      transition: { duration: 0.3 }
+                    }}
+                    className="group relative bg-white dark:bg-slate-900 rounded-2xl p-8 
+                             border border-slate-200 dark:border-slate-800 
+                             hover:border-emerald-500 dark:hover:border-emerald-500
+                             hover:shadow-xl hover:shadow-emerald-500/10
+                             transition-all duration-300"
                   >
-                    <div className="content space-y-3 inline-flex items-center space-x-2">
-                      <div className="icon size-12 p-1.5 border border-slate-300 dark:border-slate-800 shadow-sm drop-shadow-2xl text-primary/80 bg-blue-200/40 dark:text-secondary dark:bg-emerald-200/10 rounded flex self-center">
-                        <span aria-label="pillar icon" className="size-10">
+                    {/* Icon */}
+                    <div className="mb-6">
+                      <div className="inline-flex items-center justify-center 
+                                    w-16 h-16 rounded-xl
+                                    bg-gradient-to-br from-emerald-500/10 to-blue-500/10
+                                    dark:from-emerald-500/20 dark:to-blue-500/20
+                                    border border-emerald-500/20 dark:border-emerald-500/30
+                                    group-hover:scale-110 group-hover:rotate-3
+                                    transition-transform duration-300">
+                        <span className="w-8 h-8 text-emerald-600 dark:text-emerald-400">
                           {pillar.icon}
                         </span>
                       </div>
-                      <h2
-                        className="md:text-3xl text-2xl font-bold text-primary dark:text-emerald-400 flex items-center"
-                        aria-label="pillar header"
-                      >
-                        {pillar.header}
-                      </h2>
                     </div>
 
-                    <p
-                      className="text-slate-900 dark:text-slate-400 leading-relaxed"
-                      aria-label="pillar content"
-                    >
+                    {/* Content */}
+                    <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3
+                                 group-hover:text-emerald-600 dark:group-hover:text-emerald-400
+                                 transition-colors duration-300">
+                      {pillar.header}
+                    </h3>
+
+                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
                       {pillar.content}
                     </p>
+
+                    {/* Decorative element */}
+                    <div className="absolute top-0 right-0 w-32 h-32 
+                                  bg-gradient-to-br from-emerald-500/5 to-transparent 
+                                  rounded-bl-full opacity-0 group-hover:opacity-100 
+                                  transition-opacity duration-300 -z-10" />
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+
+            {/* Bottom Row - 2 Cards Centered */}
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.1 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 lg:gap-8 mt-6 lg:mt-8 lg:max-w-3xl lg:mx-auto"
+            >
+              {PILLARS.slice(3, 5).map((pillar) => {
+                return (
+                  <motion.div
+                    variants={cardVariants}
+                    key={pillar.header}
+                    whileHover={{ 
+                      y: -8,
+                      transition: { duration: 0.3 }
+                    }}
+                    className="group relative bg-white dark:bg-slate-900 rounded-2xl p-8 
+                             border border-slate-200 dark:border-slate-800 
+                             hover:border-emerald-500 dark:hover:border-emerald-500
+                             hover:shadow-xl hover:shadow-emerald-500/10
+                             transition-all duration-300"
+                  >
+                    {/* Icon */}
+                    <div className="mb-6">
+                      <div className="inline-flex items-center justify-center 
+                                    w-16 h-16 rounded-xl
+                                    bg-gradient-to-br from-emerald-500/10 to-blue-500/10
+                                    dark:from-emerald-500/20 dark:to-blue-500/20
+                                    border border-emerald-500/20 dark:border-emerald-500/30
+                                    group-hover:scale-110 group-hover:rotate-3
+                                    transition-transform duration-300">
+                        <span className="w-8 h-8 text-emerald-600 dark:text-emerald-400">
+                          {pillar.icon}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3
+                                 group-hover:text-emerald-600 dark:group-hover:text-emerald-400
+                                 transition-colors duration-300">
+                      {pillar.header}
+                    </h3>
+
+                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
+                      {pillar.content}
+                    </p>
+
+                    {/* Decorative element */}
+                    <div className="absolute top-0 right-0 w-32 h-32 
+                                  bg-gradient-to-br from-emerald-500/5 to-transparent 
+                                  rounded-bl-full opacity-0 group-hover:opacity-100 
+                                  transition-opacity duration-300 -z-10" />
                   </motion.div>
                 );
               })}

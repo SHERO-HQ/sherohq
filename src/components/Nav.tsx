@@ -3,14 +3,14 @@ import SheroLogoFull from "../assets/logo/shero-full.svg";
 import { useEffect, useState } from "react";
 import { ToggleTheme } from "./toggle-theme";
 import { NavLink } from "react-router-dom";
-import { navLinkClass } from "@/lib/utils";
+// import { navLinkClass } from "@/lib/utils";
 import { AnimatePresence, easeIn, easeOut, motion } from "motion/react";
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Animation variants for the menu container
+  // Animation variants
   const menuVars = {
     initial: { scaleY: 0, opacity: 0 },
     animate: {
@@ -25,31 +25,32 @@ const Nav = () => {
     },
   };
 
-  const navLinks = ["About Us", "Solutions", "Resources", "Services",]
+  const navLinks = ["About Us", "Solutions", "Resources", "Services"];
 
-  // Animation for individual links to stagger in
   const linkVars = {
     initial: { y: 20, opacity: 0 },
     animate: (i: number) => ({
       y: 0,
       opacity: 1,
-      transition: { delay: 0.1 * i },
+      transition: { delay: 0.1 * i, duration: 0.3 },
     }),
   };
 
+  // Lock body scroll when menu open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
-      document.body.style.paddingRight = isOpen ? "0.5rem" : "";
+      document.body.style.paddingRight = "0.5rem";
     } else {
       document.body.style.overflow = "unset";
+      document.body.style.paddingRight = "";
     }
   }, [isOpen]);
 
   // Scroll effect for nav background
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20); // change threshold as needed
+      setScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -57,203 +58,194 @@ const Nav = () => {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 
-         ${isOpen ? "bg-slate-200 dark:bg-slate-900" : scrolled ? "bg-slate-200 dark:bg-slate-900" : "bg-transparent"}
-  transition-all duration-300 ease-in-out`}
-      aria-label="main"
+      className={`fixed top-0 w-full z-50 transition-all duration-300
+        ${isOpen || scrolled 
+          ? "bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg shadow-lg border-b border-slate-200 dark:border-slate-800" 
+          : "bg-transparent"
+        }`}
+      aria-label="main navigation"
       id="nav-menu"
     >
-      <div
-        className={`container mx-auto w- max-w-11/12 flex justify-between py-2 relative z-50  transition-all duration-300`}
-      >
-        {/* logo */}
-        {/* <div className="max-w-11/12"> */}
-        <NavLink to={`/`} className="logo">
-          <img src={SheroLogo} alt="SHERO" className="w-10 md:hidden block" />
-          <img
-            src={SheroLogoFull}
-            alt="SHERO"
-            className="w-32 hidden md:block"
-          />
-        </NavLink>
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16 lg:h-20">
+          
+          {/* Logo */}
+          <NavLink to="/" className="flex items-center z-50">
+            <img 
+              src={SheroLogo} 
+              alt="SHERO" 
+              className="h-10 w-auto md:hidden" 
+            />
+            <img
+              src={SheroLogoFull}
+              alt="SHERO"
+              className="h-10 w-auto hidden md:block"
+            />
+          </NavLink>
 
-        {/* Mobile Actions (Theme + Burger) */}
-        <div className="flex items-center lg:hidden">
-          <div className=" me-2">
+          {/* Desktop Menu */}
+          <ul className="hidden lg:flex items-center gap-8">
+            {navLinks.map((item) => (
+              <li key={item}>
+                <NavLink
+                  className={({ isActive }) => 
+                    `text-sm font-medium transition-colors duration-200
+                    ${isActive 
+                      ? "text-emerald-600 dark:text-emerald-400" 
+                      : "text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400"
+                    }`
+                  }
+                  to={`/${item.toLowerCase().replace(" ", "-")}`}
+                >
+                  {item}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+
+          {/* Desktop Actions */}
+          <div className="hidden lg:flex items-center gap-4">
+            <NavLink
+              to="/explore"
+              className="group inline-flex items-center gap-2 
+                       text-slate-200 dark:text-slate-800 bg-emerald-600 dark:bg-emerald-500
+                       px-6 py-2 rounded font-semibold text-sm
+                       hover:bg-emerald-700 dark:hover:bg-emerald-600 
+                       hover:shadow-lg hover:shadow-emerald-500/25
+                       hover:gap-3
+                       transition-all duration-300"
+            >
+              <span>Explore</span>
+              <svg
+                className="w-4 h-4 transition-transform"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M5 12H19M19 12L13 6M19 12L13 18" />
+              </svg>
+            </NavLink>
             <ToggleTheme />
           </div>
 
-          <button
-            className={`size-9 ${
-              isOpen
-                ? "text-red-500 border-red-300"
-                : "dark:text-slate-200 text-slate-800 bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-700"
-            } border rounded-md p-[0.2rem] cursor-pointer transition-colors duration-300`}
-            type="button"
-            title="menu"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-expanded={isOpen}
-            aria-controls="mobile-nav-menu"
-          >
-            {/* <div className="relative size-7 flex justify-center items-center"> */}
-              {/* Animated Icon Switching */}
-              {/* <motion.div
-                animate={{ rotate: isOpen ? 90 : 0, opacity: isOpen ? 1 : 0 }}
-                className="absolute inset-0"
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor" className="size-7">
-                  <path
-                    d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </motion.div>
-
-              <motion.div
-                animate={{ rotate: isOpen ? -90 : 0, opacity: isOpen ? 0 : 1 }}
-                className="absolute inset-0"
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor" className="size-7">
-                  <path
-                    d="M5 17H13M5 12H19M11 7H19"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </motion.div> */}
-
+          {/* Mobile Actions */}
+          <div className="flex items-center gap-3 lg:hidden">
+            <ToggleTheme />
+            
+            {/* Hamburger Button */}
+            <button
+              className={`relative w-10 h-10 rounded-lg flex items-center justify-center
+                       transition-colors duration-200 cursor-pointer
+                       ${isOpen
+                         ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border border-red-400"
+                         : "bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-300 border"
+                       }`}
+              type="button"
+              onClick={() => setIsOpen(!isOpen)}
+              aria-expanded={isOpen}
+              aria-controls="mobile-nav-menu"
+              aria-label="Toggle menu"
+            >
               <motion.svg
-                width={28}
-                height={28}
+                width={25}
+                height={25}
                 viewBox="0 0 24 24"
                 stroke="currentColor"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
+                fill="none"
                 animate={{ rotate: isOpen ? 90 : 0 }}
+                transition={{ duration: 0.5 }}
               >
+
                 <motion.path
-                 initial={{ d: "M5 17H13M5 12H19M11 7H19" }}
                   animate={
                     isOpen
-                      ? { d: "M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18" }
+                      ? { d: "M18 6L6 18M6 6L18 18" }
                       : { d: "M5 17H13M5 12H19M11 7H19" }
                   }
+                  transition={{ duration: 0.3 }}
                 />
               </motion.svg>
-            {/* </div> */}
-          </button>
-        </div>
-
-        {/* Desktop Menu */}
-        <ul className="lg:flex items-center gap-5 hidden">
-          {navLinks.map((item) => (
-            <li key={item}>
-              <NavLink
-                className={({ isActive }) => navLinkClass(isActive)}
-                to={`/${item.toLowerCase().replace(" ", "-")}`}
-              >
-                {item}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-
-        {/* Desktop Actions */}
-        <div className="me-2 hidden lg:flex items-center gap-5">
-          <div className="explore flex items-center">
-            <NavLink
-              className="inline-flex items-center gap-2 text-gray-100 bg-secondary px-6 py-1 rounded hover:bg-secondary/90 hover:shadow-lg hover:gap-3 active:translate-y-0 transition-all duration-500 ease-in-out"
-              to="explore"
-            >
-              Explore
-              <svg
-                className="size-5"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M5 12H19M19 12L13 6M19 12L13 18"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </NavLink>
+            </button>
           </div>
-          <ToggleTheme />
         </div>
       </div>
 
-      {/* --- MOBILE MENU OVERLAY --- */}
+      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isOpen && (
           <>
+            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 top-18 bg-white/40 dark:bg-black/30 backdrop-blur-md lg:hidden z-30"
+              className="fixed inset-0 top-16 bg-black/20 dark:bg-black/40 backdrop-blur-sm lg:hidden z-40"
             />
+            
+            {/* Menu Panel */}
             <motion.div
               variants={menuVars}
               initial="initial"
               animate="animate"
               exit="exit"
-              className="fixed top-16 left-0 w-full bg-slate-200 dark:bg-slate-900 border-b-2 border-blue-950/10 dark:border-slate-800 shadow-xl overflow-hidden origin-top lg:hidden z-50"
+              className="fixed top-16 left-0 w-full 
+                       bg-white dark:bg-slate-900 
+                       border-b border-slate-200 dark:border-slate-800
+                       shadow-2xl overflow-hidden origin-top lg:hidden z-50"
               id="mobile-nav-menu"
             >
-              <div className="container mx-auto p-6 flex flex-col gap-6">
-                <ul className="flex flex-col gap-3  font-medium">
-                  {navLinks.map(
-                    (item, i) => (
-                      <motion.li
-                        key={item}
-                        custom={i}
-                        variants={linkVars}
-                        initial="initial"
-                        animate="animate"
+              <div className="container max-w-7xl mx-auto px-4 py-8">
+                {/* Nav Links */}
+                <ul className="space-y-1 mb-8">
+                  {navLinks.map((item, i) => (
+                    <motion.li
+                      key={item}
+                      custom={i}
+                      variants={linkVars}
+                      initial="initial"
+                      animate="animate"
+                    >
+                      <NavLink
+                        className={({ isActive }) =>
+                          `block py-3 px-4 rounded-lg text-base font-medium transition-colors
+                          ${isActive
+                            ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400"
+                            : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                          }`
+                        }
+                        to={`/${item.toLowerCase().replace(" ", "-")}`}
+                        onClick={() => setIsOpen(false)}
                       >
-                        <NavLink
-                          className={({ isActive }) =>
-                            `block py-2 px-3 rounded-md hover:bg-slate-200 dark:hover:bg-slate-900 transition-colors ${
-                              isActive
-                                ? "text-secondary font-bold"
-                                : "text-slate-600 dark:text-slate-300"
-                            }`
-                          }
-                          to={`/${item.toLowerCase().replace(" ", "-")}`}
-                          onClick={() => setIsOpen(false)} // Close menu on click
-                        >
-                          {item}
-                        </NavLink>
-                      </motion.li>
-                    )
-                  )}
+                        {item}
+                      </NavLink>
+                    </motion.li>
+                  ))}
                 </ul>
 
-                {/* Mobile Explore Button */}
+                {/* Mobile CTA */}
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0, transition: { delay: 0.4 } }}
-                  className=" border-slate-200 dark:border-slate-800"
                 >
                   <NavLink
                     to="/explore"
                     onClick={() => setIsOpen(false)}
-                    className="flex w-full items-center justify-center gap-2 text-gray-100 bg-secondary px-6 py-2 rounded hover:bg-secondary/90 transition-all"
+                    className="flex w-full items-center justify-center gap-2 
+                             text-slate-800 bg-emerald-600 dark:bg-emerald-500
+                             px-6 py-2 rounded font-semibold
+                             hover:bg-emerald-700 dark:hover:bg-emerald-600 hover:text-slate-100
+                             transition-all duration-300"
                   >
-                    Explore Services
+                    <span>Explore Services</span>
                     <svg
-                      className="size-5"
+                      className="w-5 h-5"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -261,7 +253,7 @@ const Nav = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     >
-                      <path d="M5 12h14M12 5l7 7-7 7" />
+                      <path d="M5 12H19M19 12L13 6M19 12L13 18" />
                     </svg>
                   </NavLink>
                 </motion.div>
