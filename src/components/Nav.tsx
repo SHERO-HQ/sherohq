@@ -5,6 +5,7 @@ import { ToggleTheme } from "./toggle-theme";
 import { NavLink } from "react-router-dom";
 // import { navLinkClass } from "@/lib/utils";
 import { AnimatePresence, easeIn, easeOut, motion } from "motion/react";
+import { navLinkClass } from "@/lib/utils";
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -88,13 +89,7 @@ const Nav = () => {
             {navLinks.map((item) => (
               <li key={item}>
                 <NavLink
-                  className={({ isActive }) => 
-                    `text-sm font-medium transition-colors duration-200
-                    ${isActive 
-                      ? "text-emerald-600 dark:text-emerald-400" 
-                      : "text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400"
-                    }`
-                  }
+                  className={({ isActive }) =>  navLinkClass(isActive)}
                   to={`/${item.toLowerCase().replace(" ", "-")}`}
                 >
                   {item}

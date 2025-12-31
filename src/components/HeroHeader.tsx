@@ -135,7 +135,7 @@ const HeroHeader: React.FC = () => {
             <motion.p
               variants={prefersReducedMotion ? {} : fadeUp}
               transition={{ delay: ANIMATION_TIMINGS.PARAGRAPH_DELAY }}
-              className="text-lg md:text-xl text-slate-600 dark:text-slate-400 
+              className="text-slate-600 dark:text-slate-400 
                        text-center max-w-2xl leading-relaxed"
             >
               {HERO_CONTENT.subHeader}

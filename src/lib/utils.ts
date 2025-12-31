@@ -26,25 +26,26 @@ const NAV_LINK_STYLES = {
     "dark:focus:ring-offset-slate-900",
   ],
   active: [
-    "border-2",
-    "border-primary",
+    "border-b-2",
+    "border-emerald-500",
     "bg-transparent",
-    "text-slate-900 dark:text-slate-100",
+    "text-emerald-900 dark:text-emerald-500",
     "font-medium",
+    "rounded-none",
     // Hover states for active
-    "hover:bg-primary/10",
-    "hover:border-primary",
+    "hover:bg-emerald-500/10",
+    "hover:border-secondary",
   ],
   inactive: [
-    "border-2",
+    "border-b-2",
     "border-transparent", // Prevent layout shift
     "text-slate-700 dark:text-slate-400",
     "font-normal",
     // Hover states for inactive
-    "hover:bg-slate-200/90 dark:hover:bg-slate-800/90",
-    "hover:border-slate-400 dark:hover:border-slate-700 border-dashed",
+    "hover:bg-emerald-500/10 dark:hover:bg-emerald-500/10",
+    "hover:border-emerald-500 dark:hover:border-emerald-700 border-dashed",
     'hover:rounded-none',
-    "hover:text-slate-900 dark:hover:text-slate-100",
+    "hover:text-emerald-900 dark:hover:text-emerald-300",
   ],
 } as const;
 
@@ -105,7 +106,7 @@ export function navLinkClassVariant(
         "rounded-xs",
         "w-full",
         "transition-colors duration-200",
-        "focus:outline-none focus:ring-2 focus:ring-primary",
+        "focus:outline-none focus:border-b-2 focus:border-emerald-500",
       ],
       active: ["bg-primary", "text-white", "font-semibold"],
       inactive: [

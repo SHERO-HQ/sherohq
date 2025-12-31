@@ -1,214 +1,164 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import SheroLight from "../assets/logo/shero-light.svg";
-import { navLinkClassVariant } from "@/lib/utils";
-import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const companyLinks = ["About Us", "Solutions", "Services", "Contact Us"];
+  const resourceLinks = ["Blog", "Case Studies", "Documentation", "Support"];
+  
+  const socialLinks = [
+    {
+      name: "Twitter",
+      url: "https://twitter.com",
+      icon: (
+        <path d="M453.2 112L523.8 112L369.6 288.2L551 528L409 528L297.7 382.6L170.5 528L99.8 528L264.7 339.5L90.8 112L236.4 112L336.9 244.9L453.2 112zM428.4 485.8L467.5 485.8L215.1 152L173.1 152L428.4 485.8z" />
+      ),
+    },
+    {
+      name: "LinkedIn",
+      url: "https://linkedin.com",
+      icon: (
+        <path d="M196.3 512L103.4 512L103.4 212.9L196.3 212.9L196.3 512zM149.8 172.1C120.1 172.1 96 147.5 96 117.8C96 103.5 101.7 89.9 111.8 79.8C121.9 69.7 135.6 64 149.8 64C164 64 177.7 69.7 187.8 79.8C197.9 89.9 203.6 103.6 203.6 117.8C203.6 147.5 179.5 172.1 149.8 172.1zM543.9 512L451.2 512L451.2 366.4C451.2 331.7 450.5 287.2 402.9 287.2C354.6 287.2 347.2 324.9 347.2 363.9L347.2 512L254.4 512L254.4 212.9L343.5 212.9L343.5 253.7L344.8 253.7C357.2 230.2 387.5 205.4 432.7 205.4C526.7 205.4 544 267.3 544 347.7L544 512L543.9 512z" />
+      ),
+    },
+    {
+      name: "Facebook",
+      url: "https://facebook.com",
+      icon: (
+        <path d="M240 363.3L240 576L356 576L356 363.3L442.5 363.3L460.5 265.5L356 265.5L356 230.9C356 179.2 376.3 159.4 428.7 159.4C445 159.4 458.1 159.8 465.7 160.6L465.7 71.9C451.4 68 416.4 64 396.2 64C289.3 64 240 114.5 240 223.4L240 265.5L174 265.5L174 363.3L240 363.3z" />
+      ),
+    },
+  ];
+
   return (
-    <footer className="w-full mx-auto bg-primaryDark">
-      <div className="container mx-auto max-w-11/12 lg:w-full">
-        <div className="container flex lg:flex-row flex-col justify-around items-start text-start text-white pt-10 pb-14">
-          <div className="logo mt-8">
-            <img
-              src={SheroLight}
-              alt="Shero Logo"
-              className="h-12 mb-4"
-              aria-label="Shero Logo Light"
-            />
-            <p className="max-w-sm text-balance text-sm" aria-label="Shero values">
+    <footer className="w-full bg-slate-900 border-t border-slate-800">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 py-16">
+          {/* Brand Section */}
+          <div className="lg:col-span-2">
+            <NavLink to="/" className="inline-block mb-6">
+              <img
+                src={SheroLight}
+                alt="Shero Logo"
+                className="h-10 w-auto"
+              />
+            </NavLink>
+            <p className="text-slate-400 text-sm leading-relaxed max-w-md mb-6">
               Technology, Finance, Hardware, and humanity. One mission, many
-              impacts to <span className="font-bold">Redefine possible</span>{" "}
+              impacts to{" "}
+              <span className="text-emerald-400 font-semibold">
+                Redefine Possible
+              </span>{" "}
               for the world.
             </p>
-          </div>
-          <div className="company">
-            <h3 className="font-bold mt-8 mb-4 text-xl text-emerald-400">Company</h3>
-            <ul className="lg:flex flex-col gap-5">
-              {["About Us", "Solutions", "Services", "Contact Us"].map(
-                (item) => (
-                  <li key={item}>
-                    <NavLink
-                      className={({ isActive }) =>
-                        navLinkClassVariant(isActive, "footer")
-                      }
-                      to={`/${item.toLowerCase().replace(" ", "-")}`}
-                    >
-                      {item}
-                    </NavLink>
-                  </li>
-                )
-              )}
-            </ul>
-          </div>
-          <div className="resources">
-            <h3 className="font-bold mt-8 mb-4 text-xl text-emerald-400">Resources</h3>
-            <ul className="lg:flex flex-col gap-5">
-              {["About Us", "Solutions", "Services", "Contact Us"].map(
-                (item) => (
-                  <li key={item}>
-                    <NavLink
-                      className={({ isActive }) =>
-                        navLinkClassVariant(isActive, "footer")
-                      }
-                      to={`/${item.toLowerCase().replace(" ", "-")}`}
-                    >
-                      {item}
-                    </NavLink>
-                  </li>
-                )
-              )}
-            </ul>
-          </div>
-        </div>
-                  <div className="flex mb-2 items-center text-slate-300 text-sm gap-3 lg:hidden">
-              {/* Language */}
-             {/* <div className="flex items-center gap-1">
-              <Globe className="size-4" aria-label="language icon" />
-              <select className="languages flex items-center gap-1 cursor-pointer">
-                <option
-                  value="en"
-                  className="bg-slate-800"
-                  aria-label="english"
-                >
-                  English
-                </option>
-                <option
-                  value="es"
-                  className="bg-slate-800"
-                  aria-label="spanish"
-                >
-                  Spanish
-                </option>
-                <option value="fr" className="bg-slate-800" aria-label="french">
-                  French
-                </option>
-                <option value="de" className="bg-slate-800" aria-label="german">
-                  German
-                </option>
-                <option
-                  value="zh"
-                  className="bg-slate-800"
-                  aria-label="chinese"
-                >
-                  Chinese
-                </option>
-              </select>
-            </div>  */}
-            <div className="flex items-center gap-3">
-              <Link to="terms-privacy" aria-label="Terms & Privacy">
-                Terms & Privacy
-              </Link>
-<div className="bg-slate-400 h-4 w-0.5"/>
-              <Link to="terms-privacy" aria-label="Terms & Privacy">
-                Security
-              </Link>
-              {/* <span className="text-2xl">&#8226;</span>{" "} */}
             
+            {/* Social Links */}
+            <div className="flex items-center gap-4">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded bg-slate-800 hover:bg-emerald-600 
+                           text-slate-400 hover:text-white
+                           flex items-center justify-center
+                           transition-all duration-300
+                           hover:scale-110"
+                  aria-label={`Visit our ${social.name}`}
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 640 640"
+                  >
+                    {social.icon}
+                  </svg>
+                </a>
+              ))}
             </div>
           </div>
-        <hr className="lg:max-w-10/12 mx-auto bg-secondary" />
-        <div className="text-sm text-slate-300 py-6 max-w-10/12 mx-auto flex justify-between items-center flex-row gap-5">
-          <div className="lg:flex items-center w-full gap-5 hidden text-slate-300 text-sm">
-              {/* Language */}
-            {/* <div className="flex items-center gap-1">
-              <Globe className="size-4" aria-label="language icon" />
-              <select className="languages flex items-center gap-1 cursor-pointer">
-                <option
-                  value="en"
-                  className="bg-slate-800"
-                  aria-label="english"
-                >
-                  English
-                </option>
-                <option
-                  value="es"
-                  className="bg-slate-800"
-                  aria-label="spanish"
-                >
-                  Spanish
-                </option>
-                <option value="fr" className="bg-slate-800" aria-label="french">
-                  French
-                </option>
-                <option value="de" className="bg-slate-800" aria-label="german">
-                  German
-                </option>
-                <option
-                  value="zh"
-                  className="bg-slate-800"
-                  aria-label="chinese"
-                >
-                  Chinese
-                </option>
-              </select>
-            </div> */}
-            {/* <span className="text-2xl">&#8226;</span>{" "} */}
-            <div className="flex items-center gap-8">
-              <Link to="terms-privacy" aria-label="Terms & Privacy">
-                Terms & Privacy
-              </Link>
-              <div className="bg-slate-400 h-4 w-0.5"/>
-              <Link to="terms-privacy" aria-label="Terms & Privacy">
-                Security
-              </Link>
-         
-            </div>
-          </div>
-          <div className="socials flex items-center justify-between gap-6 text-slate-30 w-full" aria-label="Shero social media links">
-              <p
-                className="flex items-center text-slate-300"
-                aria-label="Footer Copyright Notice"
-              >
-                &copy;{new Date().getFullYear()} Shero Group.
-              </p>
 
-              <div className="flex items-center gap-5">
-            {/* Social media links can be added here in the future */}
-            <Link
-              className="hover:text-slate-200 transition-all duration-300 ease-in-out"
-              to="https://twitter.com"
-              aria-label="Link to Shero's Twitter"
-            >
-              <svg
-                className="size-5"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 640 640"
-              >
-                <path d="M453.2 112L523.8 112L369.6 288.2L551 528L409 528L297.7 382.6L170.5 528L99.8 528L264.7 339.5L90.8 112L236.4 112L336.9 244.9L453.2 112zM428.4 485.8L467.5 485.8L215.1 152L173.1 152L428.4 485.8z" />
-              </svg>
-            </Link>
-            <Link
-              className="hover:text-slate-200 transition-all duration-300 ease-in-out"
-              to="https://linkedin.com"
-              aria-label="Link to Shero's LinkedIn"
-            >
-              <svg
-                className="size-5"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 640 640"
-              >
-                <path d="M196.3 512L103.4 512L103.4 212.9L196.3 212.9L196.3 512zM149.8 172.1C120.1 172.1 96 147.5 96 117.8C96 103.5 101.7 89.9 111.8 79.8C121.9 69.7 135.6 64 149.8 64C164 64 177.7 69.7 187.8 79.8C197.9 89.9 203.6 103.6 203.6 117.8C203.6 147.5 179.5 172.1 149.8 172.1zM543.9 512L451.2 512L451.2 366.4C451.2 331.7 450.5 287.2 402.9 287.2C354.6 287.2 347.2 324.9 347.2 363.9L347.2 512L254.4 512L254.4 212.9L343.5 212.9L343.5 253.7L344.8 253.7C357.2 230.2 387.5 205.4 432.7 205.4C526.7 205.4 544 267.3 544 347.7L544 512L543.9 512z" />
-              </svg>
-            </Link>
-            <Link
-              className="hover:text-slate-200 transition-all duration-300 ease-in-out"
-              to="https://facebook.com"
-              aria-label="Link to Shero's Facebook"
-            >
-              <svg
-                className="size-5"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 640 640"
-              >
-                <path d="M240 363.3L240 576L356 576L356 363.3L442.5 363.3L460.5 265.5L356 265.5L356 230.9C356 179.2 376.3 159.4 428.7 159.4C445 159.4 458.1 159.8 465.7 160.6L465.7 71.9C451.4 68 416.4 64 396.2 64C289.3 64 240 114.5 240 223.4L240 265.5L174 265.5L174 363.3L240 363.3z" />
-              </svg>
-            </Link>
+          {/* Company Links */}
+          <div>
+            <h3 className="text-white font-bold text-lg mb-6">Company</h3>
+            <ul className="space-y-3">
+              {companyLinks.map((item) => (
+                <li key={item}>
+                  <NavLink
+                    to={`/${item.toLowerCase().replace(" ", "-")}`}
+                    className={({ isActive }) =>
+                      `text-sm transition-colors duration-200 ${
+                        isActive
+                          ? "text-emerald-400 font-medium underline"
+                          : "text-slate-400 hover:text-white"
+                      }`
+                    }
+                  >
+                    {item}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Resources Links */}
+          <div>
+            <h3 className="text-white font-bold text-lg mb-6">Resources</h3>
+            <ul className="space-y-3">
+              {resourceLinks.map((item) => (
+                <li key={item}>
+                  <NavLink
+                    to={`/${item.toLowerCase().replace(" ", "-")}`}
+                    className={({ isActive }) =>
+                      `text-sm transition-colors duration-200 ${
+                        isActive
+                          ? "text-emerald-400 font-medium underline"
+                          : "text-slate-400 hover:text-white"
+                      }`
+                    }
+                  >
+                    {item}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
-      </div>
+
+        {/* Footer Bottom */}
+        <div className="border-t border-slate-800 py-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            {/* Copyright */}
+            <p className="text-slate-400 text-sm">
+              &copy; {new Date().getFullYear()} Shero Group. All rights reserved.
+            </p>
+
+            {/* Legal Links */}
+            <div className="flex items-center gap-6 text-sm">
+              <Link
+                to="/terms-privacy"
+                className="text-slate-400 hover:text-white transition-colors"
+              >
+                Terms & Privacy
+              </Link>
+              <div className="w-px h-4 bg-slate-700" />
+              <Link
+                to="/security"
+                className="text-slate-400 hover:text-white transition-colors"
+              >
+                Security
+              </Link>
+              <div className="w-px h-4 bg-slate-700" />
+              <Link
+                to="/cookies"
+                className="text-slate-400 hover:text-white transition-colors"
+              >
+                Cookies
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </footer>
   );
