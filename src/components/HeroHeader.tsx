@@ -72,7 +72,7 @@ const HeroHeader: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="relative group"
           >
-            <div className="relative overflow-hidden rounded-full p-[2px] bg-gradient-to-r from-emerald-500 via-blue-500 to-indigo-500">
+            <div className="relative overflow-hidden rounded-full p-0.5 bg-linear-to-r from-emerald-500 via-blue-500 to-indigo-500">
               {/* Rotating gradient border */}
               <motion.div
                 className="absolute inset-0"
@@ -116,14 +116,14 @@ const HeroHeader: React.FC = () => {
           <motion.div
             initial="hidden"
             animate="visible"
-            className="space-y-8 mx-auto flex flex-col items-center justify-center w-full max-w-5xl"
+            className="space-y-5 mx-auto flex flex-col items-center justify-center w-full max-w-5xl"
           >
             {/* Headline */}
             <motion.h1
               variants={prefersReducedMotion ? {} : fadeUp}
               className="text-center font-extrabold leading-tight"
             >
-              <span className="block text-[clamp(2.5rem,6vw,7rem)] 
+              <span className="block text-[clamp(2rem,6vw,7rem)] 
                              bg-linear-to-r from-indigo-600 via-blue-500 to-emerald-500 
                              bg-clip-text text-transparent font-sora">
                 {HERO_CONTENT.mainHeader}
@@ -135,8 +135,8 @@ const HeroHeader: React.FC = () => {
             <motion.p
               variants={prefersReducedMotion ? {} : fadeUp}
               transition={{ delay: ANIMATION_TIMINGS.PARAGRAPH_DELAY }}
-              className="text-slate-600 dark:text-slate-400 
-                       text-center max-w-2xl leading-relaxed"
+              className="text-slate-600 dark:text-slate-400 lg:text-base text-sm
+                       text-center max-w-2xl leading-relaxed lg:text-balance"
             >
               {HERO_CONTENT.subHeader}
             </motion.p>
@@ -151,7 +151,7 @@ const HeroHeader: React.FC = () => {
                 to="/explore"
                 className="group inline-flex items-center justify-center gap-3 
                          dark:text-slate-900 text-slate-100 bg-emerald-600 dark:bg-emerald-500
-                         px-8 py-2 rounded font-semibold text-base
+                         px-8 py-2 rounded font-semibold text-sm
                          hover:bg-emerald-700 dark:hover:bg-emerald-600
                          hover:shadow-2xl hover:shadow-emerald-500/30
                          hover:-translate-y-1
@@ -182,7 +182,7 @@ const HeroHeader: React.FC = () => {
                          text-slate-700 dark:text-slate-300
                          border-2 border-slate-300 dark:border-slate-700
                          bg-transparent
-                         px-8 py-2 rounded font-semibold text-base
+                         px-8 py-2 rounded font-semibold text-sm
                          hover:border-emerald-500 dark:hover:border-emerald-500
                          hover:text-emerald-600 dark:hover:text-emerald-400
                          hover:shadow-lg
@@ -212,7 +212,7 @@ const HeroHeader: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="flex flex-wrap items-center justify-center gap-8 pt-8 text-sm text-slate-600 dark:text-slate-400"
+            className="flex flex-wrap items-center justify-center lg:gap-8 md:gap-5 gap-3 pt-8 text-sm text-slate-600 dark:text-slate-400"
           >
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />

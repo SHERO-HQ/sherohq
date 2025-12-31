@@ -21,10 +21,9 @@ const Partners = () => {
 
   return (
     <section className="w-full py-10 bg-slate-50 dark:bg-slate-950/50 border-y border-slate-200 dark:border-slate-800">
-      <div className="">
         {/* Header */}
-        <div className="text-center mb-8">
-          <p className="text-xs inline-block items-center mb-2 font-semibold text-emerald-600 dark:text-emerald-400 rounded-full uppercase tracking-wider">
+        <div className="text-center mb-5">
+          <p className="text-xs inline-block items-center mb-1 font-semibold text-emerald-600 dark:text-emerald-400 rounded-full uppercase tracking-wider">
             Trusted By
           </p>
           <h2 className="text- font-bold text-slate-700 dark:text-slate-300">
@@ -53,8 +52,8 @@ const Partners = () => {
               <div
                 key={idx}
                 className="shrink-0 flex flex-col items-center justify-center 
-                         w-24 h-24 bg-white dark:bg-slate-900 
-                         rounded-xl border border-slate-200 dark:border-slate-800
+                         w-22 h-22 bg-white dark:bg-slate-900 
+                         rounded border border-slate-200 dark:border-slate-800
                          hover:border-emerald-500 dark:hover:border-emerald-500
                          hover:shadow-lg hover:shadow-emerald-500/10
                          transition-all duration-300
@@ -71,10 +70,9 @@ const Partners = () => {
           </motion.div>
 
           {/* Optional: Fade edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-slate-50 dark:from-slate-950/50 to-transparent pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-slate-50 dark:from-slate-950/50 to-transparent pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-20 bg-linear-to-r from-slate-50 dark:from-slate-950/50 to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-20 bg-linear-to-l from-slate-50 dark:from-slate-950/50 to-transparent pointer-events-none" />
         </div>
-      </div>
     </section>
   );
 };

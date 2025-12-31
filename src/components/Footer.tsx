@@ -44,7 +44,7 @@ const Footer = () => {
               />
             </NavLink>
             <p className="text-slate-400 text-sm leading-relaxed max-w-md mb-6">
-              Technology, Finance, Hardware, and humanity. One mission, many
+              Technology, Finance, Education, and humanity. One mission, many
               impacts to{" "}
               <span className="text-emerald-400 font-semibold">
                 Redefine Possible
