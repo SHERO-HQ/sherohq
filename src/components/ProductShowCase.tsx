@@ -20,7 +20,7 @@ const ProductShowcase = () => {
       id: "1",
       name: "Wireless Earbuds Pro",
       category: "Accessories",
-      price: 19,
+      price: 400,
       image: "🎧",
       rating: 4.8,
       badge: "Best Seller",
@@ -29,7 +29,7 @@ const ProductShowcase = () => {
       id: "2",
       name: "USB-C Hub 7-in-1",
       category: "Accessories",
-      price: 49,
+      price: 200,
       image: "🔌",
       rating: 4.6,
     },
@@ -37,7 +37,7 @@ const ProductShowcase = () => {
       id: "3",
       name: "Mechanical Keyboard",
       category: "Accessories",
-      price: 19,
+      price: 350,
       image: "⌨️",
       rating: 4.9,
       badge: "New Arrival",
@@ -46,7 +46,7 @@ const ProductShowcase = () => {
       id: "4",
       name: "Laptop Stand Aluminum",
       category: "Accessories",
-      price: 79,
+      price: 120,
       image: "💻",
       rating: 4.7,
     },
@@ -54,7 +54,7 @@ const ProductShowcase = () => {
       id: "5",
       name: "Wireless Mouse",
       category: "Accessories",
-      price: 69,
+      price: 100,
       image: "🖱️",
       rating: 4.5,
     },
@@ -62,7 +62,7 @@ const ProductShowcase = () => {
       id: "6",
       name: "Phone Case Premium",
       category: "Mobile",
-      price: 29,
+      price: 8000,
       image: "📱",
       rating: 4.4,
     },
@@ -242,11 +242,11 @@ const ProductShowcase = () => {
                   </div>
 
                   {/* Price & CTA */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl font-bold font-sora text-slate-900 dark:text-slate-100">
-                      GH₵{product.price}
+                  <div className="flex flex-col gap-3">
+                    <span className="text-xl font-bold font-sora text-slate-900 dark:text-slate-100 text-right">
+                      GH₵{(product.price).toFixed(2)}
                     </span>
-                    <button className="inline-flex items-center gap-2 px-4 py-2 rounded
+                    <button className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded
                                      bg-emerald-600 hover:bg-emerald-700
                                      text-white font-semibold text-sm
                                      transition-all duration-300
@@ -278,7 +278,7 @@ const ProductShowcase = () => {
         >
           <NavLink
             to="/shop"
-            className="inline-flex items-center gap-3 px-8 py-4 rounded
+            className="inline-flex items-center gap-3 px-8 py-3 rounded
                      border-2 border-slate-300 dark:border-slate-700
                      text-slate-700 dark:text-slate-300 font-semibold
                      hover:border-emerald-500 dark:hover:border-emerald-500

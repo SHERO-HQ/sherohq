@@ -212,7 +212,7 @@ const ComingSoonServices = () => {
               {/* CTA Button */}
               <button
                 onClick={() => setSelectedService(service.title)}
-                className={`w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded
+                className={`w-full inline-flex items-center justify-center gap-2 px-6 py-2 rounded
                          bg-linear-to-r ${service.gradient} text-slate-200 font-semibold cursor-pointer
                          hover:shadow-lg hover:gap-3
                          transition-all duration-300`}
@@ -240,7 +240,7 @@ const ComingSoonServices = () => {
       
           <div className="relative rounded p-8 dark:text-slate-200 text-slate-700 shadow">
                         <div
-            className="absolute inset-0 bg-linear-to-br from-emerald-500/5 to-blue-500/5"
+            className="absolute inset-0 bg-linear-to-br from-emerald-500/5 to-blue-500/5 -z-10"
           />
             <div className="text-center mb-6">
               <h3 className="text-2xl md:text-3xl font-bold mb-3">
@@ -256,15 +256,14 @@ const ComingSoonServices = () => {
               onSubmit={handleEarlyAccess}
               className="flex flex-col sm:flex-row gap-3"
             >
-              <div className="focus:outline-none border-2 border-slate-500 dark:border-slate-400 focus:ring-2 focus:ring-emerald-500/30 p-1 rounded w-full flex justify-between">
+              {/* <div className="focus:outline-none border-2 border-slate-500 dark:border-slate-400 focus:ring-2 focus:ring-emerald-500/30 p-1 rounded w-full flex justify-between"> */}
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
                   required
-                  className="flex-1 text-slate-900 dark:text-slate-200 border-2 ps-1
-                border-none outline-none
+                  className="flex-1 text-slate-900 dark:text-slate-200 border-2 px-4 py-2 rounded focus:outline-none focus:border-emerald-500
                 transition-all"
                 />
                 <button
@@ -276,7 +275,7 @@ const ComingSoonServices = () => {
                 >
                   Notify Me
                 </button>
-              </div>
+              {/* </div> */}
             </form>
 
             {selectedService && (
