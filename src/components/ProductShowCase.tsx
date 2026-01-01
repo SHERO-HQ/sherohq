@@ -72,16 +72,16 @@ const ProductShowcase = () => {
   const [activeCategory, setActiveCategory] = useState<string>("All");
 
   // Debug logs
-  console.log("Component rendered with activeCategory:", activeCategory);
+//   console.log("Component rendered with activeCategory:", activeCategory);
 
   // Simple, clean filter function
   const getFilteredProducts = () => {
-    console.log("Filtering products for category:", activeCategory);
+    // console.log("Filtering products for category:", activeCategory);
     if (activeCategory === "All") {
       return products;
     }
     const filtered = products.filter((product) => product.category === activeCategory);
-    console.log("Filtered result:", filtered.length, "products");
+    // console.log("Filtered result:", filtered.length, "products");
     return filtered;
   };
 
@@ -147,10 +147,10 @@ const ProductShowcase = () => {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log("Button clicked:", category);
-                console.log("Current state:", activeCategory);
+                // console.log("Button clicked:", category);
+                // console.log("Current state:", activeCategory);
                 setActiveCategory(category);
-                console.log("Should now be:", category);
+                // console.log("Should now be:", category);
               }}
               className={`px-5 py-2 rounded text-sm font-medium transition-all duration-300 cursor-pointer
                 ${activeCategory === category
@@ -168,7 +168,7 @@ const ProductShowcase = () => {
           {/* {console.log("Rendering grid with", filteredProducts.length, "products")} */}
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => {
-              console.log("Rendering product:", product.name);
+            //   console.log("Rendering product:", product.name);
               return (
                 <motion.div
                   key={product.id}
