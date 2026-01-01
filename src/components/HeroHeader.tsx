@@ -51,7 +51,7 @@ const HeroHeader: React.FC = () => {
     >
       {/* Animated Grid Background */}
       <div className="absolute inset-0 
-                    bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] 
+                    bg-[linear-gradient(to_right,#80808012_2px,transparent_2px),linear-gradient(to_bottom,#80808012_2px,transparent_2px)] 
                     bg-[size:40px_40px]
                     [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_70%,transparent_100%)]" 
       />
@@ -216,15 +216,15 @@ const HeroHeader: React.FC = () => {
           >
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-              <span>500+ Projects Delivered</span>
+              <span>500+ Products Delivered</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-              <span>50+ Global Partners</span>
+              <span>5+ Partners</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
-              <span>10+ Years Experience</span>
+              <span>3+ Years Experience</span>
             </div>
           </motion.div>
         </div>

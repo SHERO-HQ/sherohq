@@ -32,9 +32,9 @@ const WhoWeAre = () => {
 
   // Stats data
   const stats = [
-    { value: "500+", label: "Projects Delivered" },
-    { value: "50+", label: "Global Partners" },
-    { value: "10+", label: "Years Experience" },
+    { value: "500+", label: "Products Delivered" },
+    { value: "5+", label: "Partners" },
+    { value: "3+", label: "Years Experience" },
   ];
 
   return (
@@ -55,7 +55,7 @@ const WhoWeAre = () => {
             {/* Header */}
             <motion.div variants={itemVariants}>
               <span className="inline-flex items-center px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
-                <Info className="rounded-full me-2 size-4" />
+                <Info className="me-2 size-4" />
                 About Us
               </span>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-slate-200">
@@ -146,7 +146,7 @@ const WhoWeAre = () => {
               {/* Card 1 - Technology */}
               <motion.div
                 whileHover={{ y: -8 }}
-                className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-xl"
+                className="bg-gradient-to-br from-blue-500 to-blue-600 rounded p-6 text-white shadow-xl"
               >
                 <div className="text-4xl mb-3">💻</div>
                 <h3 className="font-bold text-lg mb-2">Technology</h3>
@@ -158,7 +158,7 @@ const WhoWeAre = () => {
               {/* Card 2 - Finance */}
               <motion.div
                 whileHover={{ y: -8 }}
-                className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl p-6 text-white shadow-xl mt-8"
+                className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded p-6 text-white shadow-xl mt-8"
               >
                 <div className="text-4xl mb-3">💰</div>
                 <h3 className="font-bold text-lg mb-2">Finance</h3>
@@ -168,7 +168,7 @@ const WhoWeAre = () => {
               {/* Card 3 - Education */}
               <motion.div
                 whileHover={{ y: -8 }}
-                className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white shadow-xl"
+                className="bg-gradient-to-br from-purple-500 to-purple-600 rounded p-6 text-white shadow-xl"
               >
                 <div className="text-4xl mb-3">🎓</div>
                 <h3 className="font-bold text-lg mb-2">Education</h3>
@@ -178,7 +178,7 @@ const WhoWeAre = () => {
               {/* Card 4 - Humanity */}
               <motion.div
                 whileHover={{ y: -8 }}
-                className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-6 text-white shadow-xl mt-8"
+                className="bg-gradient-to-br from-orange-500 to-orange-600 rounded p-6 text-white shadow-xl mt-8"
               >
                 <div className="text-4xl mb-3">🤝</div>
                 <h3 className="font-bold text-lg mb-2">Humanity</h3>
@@ -206,7 +206,7 @@ const WhoWeAre = () => {
               <img
                 src="/path-to-your-image.jpg"
                 alt="SHERO Team"
-                className="rounded-2xl shadow-2xl w-full h-auto object-cover"
+                className="rounded shadow-2xl w-full h-auto object-cover"
               />
               
               <div className="absolute -bottom-6 -right-6 bg-emerald-500 text-white rounded-2xl p-6 shadow-xl">

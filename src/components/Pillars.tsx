@@ -126,7 +126,7 @@ const Pillars = () => {
                       y: -8,
                       transition: { duration: 0.3 }
                     }}
-                    className="group relative bg-white dark:bg-slate-900 rounded-2xl p-8 
+                    className="group relative bg-white dark:bg-slate-900 rounded p-8 
                              border border-slate-200 dark:border-slate-800 
                              hover:border-emerald-500 dark:hover:border-emerald-500
                              hover:shadow-xl hover:shadow-emerald-500/10
@@ -135,7 +135,7 @@ const Pillars = () => {
                     {/* Icon */}
                     <div className="mb-6">
                       <div className="inline-flex items-center justify-center 
-                                    w-16 h-16 rounded-xl
+                                    w-16 h-16 rounded
                                     bg-gradient-to-br from-emerald-500/10 to-blue-500/10
                                     dark:from-emerald-500/20 dark:to-blue-500/20
                                     border border-emerald-500/20 dark:border-emerald-500/30
@@ -185,7 +185,7 @@ const Pillars = () => {
                       y: -8,
                       transition: { duration: 0.3 }
                     }}
-                    className="group relative bg-white dark:bg-slate-900 rounded-2xl p-8 
+                    className="group relative bg-white dark:bg-slate-900 rounded p-8 
                              border border-slate-200 dark:border-slate-800 
                              hover:border-emerald-500 dark:hover:border-emerald-500
                              hover:shadow-xl hover:shadow-emerald-500/10
@@ -194,7 +194,7 @@ const Pillars = () => {
                     {/* Icon */}
                     <div className="mb-6">
                       <div className="inline-flex items-center justify-center 
-                                    w-16 h-16 rounded-xl
+                                    w-16 h-16 rounded
                                     bg-gradient-to-br from-emerald-500/10 to-blue-500/10
                                     dark:from-emerald-500/20 dark:to-blue-500/20
                                     border border-emerald-500/20 dark:border-emerald-500/30
