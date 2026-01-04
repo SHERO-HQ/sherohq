@@ -2,14 +2,17 @@ import { motion, easeInOut } from "motion/react";
 import FadeInView from "./motion/AnimateSection";
 import { fadeIn } from "./motion/heroMotion";
 import {
-  AcademicCapIcon,
-  CpuChipIcon,
-  FinanceChart,
+  // AcademicCapIcon,
+  // CpuChipIcon,
+  // FinanceChart,
   Handshake,
-  SeedSprout,
+  // SeedSprout,
 } from "@/assets/icons/icons";
 import type React from "react";
-import { Crosshair } from "lucide-react";
+
+import { Crosshair, ShoppingBag } from "lucide-react";
+import { MessageSquare } from "lucide-react";
+import { Code } from "lucide-react";
 
 // Type definitions
 interface PillarsProps {
@@ -50,34 +53,28 @@ const cardVariants = {
 
 const PILLARS: PillarsProps[] = [
   {
-    header: "Technology",
+    header: "Shop Products",
     content:
-      "We design and build scalable software, SaaS platforms, hardware and digital systems that solve real world problems and power modern businesses.",
-    icon: <CpuChipIcon />,
+      "Premium tech accessories and hardware curated for professionals, businesses, and tech enthusiasts. Quality products that enhance your digital lifestyle.",
+    icon: <ShoppingBag className="w-8 h-8" />,
   },
   {
-    header: "Finance",
+    header: "Consultation Services",
     content:
-      "We design and build scalable software, SaaS platforms, hardware and digital systems that solve real world problems and power modern businesses.",
-    icon: <FinanceChart />,
+      "Expert tech advisory covering digital transformation, IT infrastructure planning, tech stack selection, and product development strategy.",
+    icon: <MessageSquare className="w-8 h-8" />,
   },
   {
-    header: "Investment",
+    header: "Strategic Partnerships",
     content:
-      "We design and build scalable software, SaaS platforms, hardware and digital systems that solve real world problems and power modern businesses.",
-    icon: <SeedSprout />,
+      "Collaborate with us through tech integration partnerships, referral programs, or investment opportunities. Let's grow together.",
+    icon: <Handshake className="w-8 h-8" />,
   },
   {
-    header: "Education",
+    header: "Software & IT Solutions",
     content:
-      "We design and build scalable software, SaaS platforms, hardware and digital systems that solve real world problems and power modern businesses.",
-    icon: <AcademicCapIcon />,
-  },
-  {
-    header: "Humanity",
-    content:
-      "We design and build scalable software, SaaS platforms, hardware and digital systems that solve real world problems and power modern businesses.",
-    icon: <Handshake />,
+      "Custom web and mobile apps, SaaS development, IT support, managed services, and API integration tailored to your business needs.",
+    icon: <Code className="w-8 h-8" />,
   },
 ];
 
@@ -97,27 +94,27 @@ const Pillars = () => {
               className="text-center mb-16" 
               variants={fadeIn}
             >
-              <span className="inline-flex items-center px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
-              <Crosshair  className="me-2 size-4"/>
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
+              <Crosshair className="size-5" />
                 Our Focus Areas
               </span>
-              <h2 className="text-5xl lg:text-6xl font-bold text-slate-900 dark:text-slate-200 mb-4">
+              <h2 className="text-5xl lg:text-6xl font-sora font-bold text-slate-900 dark:text-slate-100 mb-4">
                 What We Do
               </h2>
-              <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
                 Transforming industries through innovation and expertise
               </p>
             </motion.header>
 
-            {/* Cards Grid - 2 rows: 3 top, 2 bottom centered */}
+            {/* Cards Grid - 2x2 layout */}
             <motion.div
               variants={containerVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.1 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto"
             >
-              {PILLARS.slice(0, 3).map((pillar) => {
+              {PILLARS.map((pillar) => {
                 return (
                   <motion.div
                     variants={cardVariants}
@@ -168,64 +165,6 @@ const Pillars = () => {
               })}
             </motion.div>
 
-            {/* Bottom Row - 2 Cards Centered */}
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.1 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 lg:gap-8 mt-6 lg:mt-8 lg:max-w-3xl lg:mx-auto"
-            >
-              {PILLARS.slice(3, 5).map((pillar) => {
-                return (
-                  <motion.div
-                    variants={cardVariants}
-                    key={pillar.header}
-                    whileHover={{ 
-                      y: -8,
-                      transition: { duration: 0.3 }
-                    }}
-                    className="group relative bg-white dark:bg-slate-900 rounded p-8 
-                             border border-slate-200 dark:border-slate-800 
-                             hover:border-emerald-500 dark:hover:border-emerald-500
-                             hover:shadow-xl hover:shadow-emerald-500/10
-                             transition-all duration-300"
-                  >
-                    {/* Icon */}
-                    <div className="mb-6">
-                      <div className="inline-flex items-center justify-center 
-                                    w-16 h-16 rounded
-                                    bg-gradient-to-br from-emerald-500/10 to-blue-500/10
-                                    dark:from-emerald-500/20 dark:to-blue-500/20
-                                    border border-emerald-500/20 dark:border-emerald-500/30
-                                    group-hover:scale-110 group-hover:rotate-3
-                                    transition-transform duration-300">
-                        <span className="w-8 h-8 text-emerald-600 dark:text-emerald-400">
-                          {pillar.icon}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3
-                                 group-hover:text-emerald-600 dark:group-hover:text-emerald-400
-                                 transition-colors duration-300">
-                      {pillar.header}
-                    </h3>
-
-                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">
-                      {pillar.content}
-                    </p>
-
-                    {/* Decorative element */}
-                    <div className="absolute top-0 right-0 w-32 h-32 
-                                  bg-gradient-to-br from-emerald-500/5 to-transparent 
-                                  rounded-bl-full opacity-0 group-hover:opacity-100 
-                                  transition-opacity duration-300 -z-10" />
-                  </motion.div>
-                );
-              })}
-            </motion.div>
           </FadeInView>
         </div>
       </div>

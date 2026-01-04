@@ -2,8 +2,8 @@ import { NavLink, Link } from "react-router-dom";
 import SheroLight from "../assets/logo/shero-light.svg";
 
 const Footer = () => {
-  const companyLinks = ["About Us", "Solutions", "Services", "Contact Us"];
-  const resourceLinks = ["Blog", "Case Studies", "Documentation", "Support"];
+  const companyLinks = ["About Us", "Shop", "Solutions", "Contact Us"];
+  const resourceLinks = ["Consultation", "Partners", "Support", "FAQ"];
   
   const socialLinks = [
     {
@@ -44,12 +44,13 @@ const Footer = () => {
               />
             </NavLink>
             <p className="text-slate-400 text-sm leading-relaxed max-w-md mb-6">
-              Technology, Finance, Education, and humanity. One mission, many
-              impacts to{" "}
+              A technology company delivering innovative solutions through premium 
+              tech products, strategic consultation, partnerships, and custom software 
+              development. One mission:{" "}
               <span className="text-emerald-400 font-semibold">
                 Redefine Possible
               </span>{" "}
-              for the world.
+              through technology.
             </p>
             
             {/* Social Links */}
@@ -60,7 +61,7 @@ const Footer = () => {
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded bg-slate-800 hover:bg-emerald-600 
+                  className="w-10 h-10 rounded-lg bg-slate-800 hover:bg-emerald-600 
                            text-slate-400 hover:text-white
                            flex items-center justify-center
                            transition-all duration-300
@@ -90,7 +91,7 @@ const Footer = () => {
                     className={({ isActive }) =>
                       `text-sm transition-colors duration-200 ${
                         isActive
-                          ? "text-emerald-400 font-medium underline"
+                          ? "text-emerald-400 font-medium"
                           : "text-slate-400 hover:text-white"
                       }`
                     }
@@ -113,7 +114,7 @@ const Footer = () => {
                     className={({ isActive }) =>
                       `text-sm transition-colors duration-200 ${
                         isActive
-                          ? "text-emerald-400 font-medium underline"
+                          ? "text-emerald-400 font-medium"
                           : "text-slate-400 hover:text-white"
                       }`
                     }

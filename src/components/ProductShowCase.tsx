@@ -125,10 +125,10 @@ const ProductShowcase = () => {
             <ShoppingCart className="mr-2 w-4 h-4" />
             Featured Products
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-slate-200 mb-4">
+          <h2 className="text-4xl md:text-5xl font-sora font-bold text-slate-900 dark:text-slate-200 mb-4">
             Premium Tech Accessories
           </h2>
-          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+          <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
             Discover our curated collection of high-quality tech products designed to enhance your digital lifestyle
           </p>
         </motion.div>

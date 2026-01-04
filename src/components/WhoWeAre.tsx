@@ -32,8 +32,8 @@ const WhoWeAre = () => {
 
   // Stats data
   const stats = [
-    { value: "500+", label: "Products Delivered" },
-    { value: "5+", label: "Partners" },
+    { value: "500+", label: "Projects Delivered" },
+    { value: "5+", label: "Global Partners" },
     { value: "3+", label: "Years Experience" },
   ];
 
@@ -41,9 +41,10 @@ const WhoWeAre = () => {
     <section className="relative w-full py-20 lg:py-28 overflow-hidden bg-white dark:bg-slate-950">
       {/* Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 via-transparent to-blue-50/50 dark:from-emerald-950/20 dark:via-transparent dark:to-blue-950/20 pointer-events-none" />
-
+      
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
+          
           {/* TEXT CONTENT */}
           <motion.div
             variants={containerVariants}
@@ -54,11 +55,11 @@ const WhoWeAre = () => {
           >
             {/* Header */}
             <motion.div variants={itemVariants}>
-              <span className="inline-flex items-center px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
-                <Info className="me-2 size-4" />
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
+              <Info className="size-5" />
                 About Us
               </span>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-slate-200">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-sora font-bold text-slate-900 dark:text-slate-100">
                 Who We Are
               </h2>
             </motion.div>
@@ -69,24 +70,24 @@ const WhoWeAre = () => {
                 <span className="text-blue-600 dark:text-blue-400 font-bold">
                   SHERO
                 </span>{" "}
-                builds solutions across software, fin-tech, hardware, and
-                humanitarian impact. We empower individuals, businesses, and
-                communities to{" "}
+                is a technology company building cutting-edge solutions that empower 
+                individuals, businesses, and communities. From premium tech accessories 
+                to custom software development, we deliver innovation that drives growth.
+              </p>
+              
+              <p className="text-base text-slate-600 dark:text-slate-400">
+                We specialize in four core areas: retail tech products, strategic consultation, 
+                partnership programs, and comprehensive software & IT solutions. Our mission is 
+                to help you{" "}
                 <span className="text-emerald-600 dark:text-emerald-400 font-bold">
                   Redefine Possible
-                </span>
-                .
-              </p>
-
-              <p className="text-base text-slate-600 dark:text-slate-400">
-                Through innovation and dedication, we transform challenges into
-                opportunities, creating lasting impact across technology,
-                finance, education, and humanity.
+                </span>{" "}
+                through technology.
               </p>
             </motion.div>
 
             {/* Stats */}
-            <motion.div
+            <motion.div 
               variants={itemVariants}
               className="grid grid-cols-3 gap-6 py-6"
             >
@@ -106,8 +107,8 @@ const WhoWeAre = () => {
             <motion.div variants={itemVariants}>
               <NavLink
                 className="inline-flex items-center justify-center gap-3 
-                         text-slate-900 bg-emerald-600 dark:bg-emerald-500
-                         px-8 py-2 rounded font-semibold
+                         text-white bg-emerald-600 dark:bg-emerald-500
+                         px-8 py-3 rounded font-semibold
                          hover:bg-emerald-700 dark:hover:bg-emerald-600
                          hover:shadow-xl hover:shadow-emerald-500/25
                          hover:-translate-y-0.5
@@ -116,18 +117,13 @@ const WhoWeAre = () => {
                 to="/explore"
               >
                 Explore Impact
-                <svg
-                  className="w-5 h-5 group-hover:translate-x-1 transition-transform"
-                  fill="none"
-                  stroke="currentColor"
+                <svg 
+                  className="w-5 h-5 group-hover:translate-x-1 transition-transform" 
+                  fill="none" 
+                  stroke="currentColor" 
                   viewBox="0 0 24 24"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17 8l4 4m0 0l-4 4m4-4H3"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </NavLink>
             </motion.div>
@@ -143,46 +139,44 @@ const WhoWeAre = () => {
           >
             {/* Option 1: Decorative Card Grid */}
             <div className="grid grid-cols-2 gap-4 lg:gap-6">
-              {/* Card 1 - Technology */}
-              <motion.div
+              {/* Card 1 - Shop Products */}
+              <motion.div 
                 whileHover={{ y: -8 }}
                 className="bg-gradient-to-br from-blue-500 to-blue-600 rounded p-6 text-white shadow-xl"
               >
-                <div className="text-4xl mb-3">💻</div>
-                <h3 className="font-bold text-lg mb-2">Technology</h3>
-                <p className="text-sm opacity-90">
-                  Scalable software solutions
-                </p>
+                <div className="text-4xl mb-3">🛍️</div>
+                <h3 className="font-bold text-lg mb-2">Shop Products</h3>
+                <p className="text-sm opacity-90">Premium tech accessories</p>
               </motion.div>
 
-              {/* Card 2 - Finance */}
-              <motion.div
+              {/* Card 2 - Consultation */}
+              <motion.div 
                 whileHover={{ y: -8 }}
                 className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded p-6 text-white shadow-xl mt-8"
               >
-                <div className="text-4xl mb-3">💰</div>
-                <h3 className="font-bold text-lg mb-2">Finance</h3>
-                <p className="text-sm opacity-90">Innovative fin-tech</p>
+                <div className="text-4xl mb-3">💬</div>
+                <h3 className="font-bold text-lg mb-2">Consultation</h3>
+                <p className="text-sm opacity-90">Expert tech advisory</p>
               </motion.div>
 
-              {/* Card 3 - Education */}
-              <motion.div
+              {/* Card 3 - Partnerships */}
+              <motion.div 
                 whileHover={{ y: -8 }}
                 className="bg-gradient-to-br from-purple-500 to-purple-600 rounded p-6 text-white shadow-xl"
               >
-                <div className="text-4xl mb-3">🎓</div>
-                <h3 className="font-bold text-lg mb-2">Education</h3>
-                <p className="text-sm opacity-90">Empowering learning</p>
+                <div className="text-4xl mb-3">🤝</div>
+                <h3 className="font-bold text-lg mb-2">Partnerships</h3>
+                <p className="text-sm opacity-90">Strategic collaborations</p>
               </motion.div>
 
-              {/* Card 4 - Humanity */}
-              <motion.div
+              {/* Card 4 - Software & IT */}
+              <motion.div 
                 whileHover={{ y: -8 }}
-                className="bg-gradient-to-br from-orange-500 to-orange-600 rounded p-6 text-white shadow-xl mt-8"
+                className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded p-6 text-white shadow-xl mt-8"
               >
-                <div className="text-4xl mb-3">🤝</div>
-                <h3 className="font-bold text-lg mb-2">Humanity</h3>
-                <p className="text-sm opacity-90">Social impact</p>
+                <div className="text-4xl mb-3">💻</div>
+                <h3 className="font-bold text-lg mb-2">Software & IT</h3>
+                <p className="text-sm opacity-90">Custom development</p>
               </motion.div>
             </div>
 
@@ -209,7 +203,7 @@ const WhoWeAre = () => {
                 className="rounded shadow-2xl w-full h-auto object-cover"
               />
               
-              <div className="absolute -bottom-6 -right-6 bg-emerald-500 text-white rounded-2xl p-6 shadow-xl">
+              <div className="absolute -bottom-6 -right-6 bg-emerald-500 text-white rounded p-6 shadow-xl">
                 <div className="text-3xl font-bold">10+</div>
                 <div className="text-sm">Years of Excellence</div>
               </div>

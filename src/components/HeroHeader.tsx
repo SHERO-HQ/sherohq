@@ -42,8 +42,8 @@ const HeroHeader: React.FC = () => {
 
   return (
     <header
-      className="relative min-h-[70vh] lg:min-h-screen w-full overflow-hidden
-                 bg-linear-to-b from-slate-200 to-slate-100 
+      className="relative min-h-[85vh] lg:min-h-screen w-full overflow-hidden
+                 bg-gradient-to-b from-slate-50 to-white 
                  dark:from-slate-950 dark:to-slate-900
                  flex items-center justify-center"
       role="banner"
@@ -51,7 +51,7 @@ const HeroHeader: React.FC = () => {
     >
       {/* Animated Grid Background */}
       <div className="absolute inset-0 
-                    bg-[linear-gradient(to_right,#80808012_2px,transparent_2px),linear-gradient(to_bottom,#80808012_2px,transparent_2px)] 
+                    bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] 
                     bg-[size:40px_40px]
                     [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_70%,transparent_100%)]" 
       />
@@ -62,7 +62,7 @@ const HeroHeader: React.FC = () => {
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-emerald-500/20 dark:bg-emerald-500/10 rounded-full blur-3xl" />
       </div>
 
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-10">
         <div className="flex flex-col justify-center items-center gap-10 w-full py-20">
           
           {/* Top Badge */}
@@ -72,7 +72,7 @@ const HeroHeader: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="relative group"
           >
-            <div className="relative overflow-hidden rounded-full p-0.5 bg-linear-to-r from-emerald-500 via-blue-500 to-indigo-500">
+            <div className="relative overflow-hidden rounded-full p-[2px] bg-gradient-to-r from-emerald-500 via-blue-500 to-indigo-500">
               {/* Rotating gradient border */}
               <motion.div
                 className="absolute inset-0"
@@ -104,7 +104,7 @@ const HeroHeader: React.FC = () => {
                   >
                     {TopText.icon}
                   </motion.span>
-                  <span className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
                     {TopText.text}
                   </span>
                 </div>
@@ -116,27 +116,24 @@ const HeroHeader: React.FC = () => {
           <motion.div
             initial="hidden"
             animate="visible"
-            className="space-y-5 mx-auto flex flex-col items-center justify-center w-full max-w-5xl"
+            className="space-y-8 mx-auto flex flex-col items-center justify-center w-full max-w-5xl"
           >
             {/* Headline */}
             <motion.h1
               variants={prefersReducedMotion ? {} : fadeUp}
-              className="text-center font-extrabold leading-tight"
+              className="text-center font-sora font-extrabold leading-tight block text-[clamp(2rem,6vw,7rem)] 
+                             bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% 
+                             bg-clip-text text-transparent"
             >
-              <span className="block text-[clamp(2rem,6vw,7rem)] 
-                             bg-linear-to-r from-indigo-600 via-blue-500 to-emerald-500 
-                             bg-clip-text text-transparent font-sora">
                 {HERO_CONTENT.mainHeader}
-              </span>
-           
             </motion.h1>
 
             {/* Subheading */}
             <motion.p
               variants={prefersReducedMotion ? {} : fadeUp}
               transition={{ delay: ANIMATION_TIMINGS.PARAGRAPH_DELAY }}
-              className="text-slate-600 dark:text-slate-400 lg:text-base text-sm
-                       text-center max-w-2xl leading-relaxed lg:text-balance"
+              className="text-sm md:text-xl text-slate-600 dark:text-slate-400 
+                       text-center max-w-2xl leading-relaxed"
             >
               {HERO_CONTENT.subHeader}
             </motion.p>
@@ -150,8 +147,8 @@ const HeroHeader: React.FC = () => {
               <NavLink
                 to="/explore"
                 className="group inline-flex items-center justify-center gap-3 
-                         dark:text-slate-900 text-slate-100 bg-emerald-600 dark:bg-emerald-500
-                         px-8 py-2 rounded font-semibold text-sm
+                         text-white bg-emerald-600 dark:bg-emerald-500
+                         px-8 py-3 rounded font-semibold text-base
                          hover:bg-emerald-700 dark:hover:bg-emerald-600
                          hover:shadow-2xl hover:shadow-emerald-500/30
                          hover:-translate-y-1
@@ -182,7 +179,7 @@ const HeroHeader: React.FC = () => {
                          text-slate-700 dark:text-slate-300
                          border-2 border-slate-300 dark:border-slate-700
                          bg-transparent
-                         px-8 py-2 rounded font-semibold text-sm
+                         px-8 py-3 rounded font-semibold text-base
                          hover:border-emerald-500 dark:hover:border-emerald-500
                          hover:text-emerald-600 dark:hover:text-emerald-400
                          hover:shadow-lg
@@ -212,19 +209,19 @@ const HeroHeader: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="flex flex-wrap items-center justify-center lg:gap-8 md:gap-5 gap-3 pt-8 text-sm text-slate-600 dark:text-slate-400"
+            className="flex flex-wrap items-center justify-center gap-8 pt-8 text-sm text-slate-600 dark:text-slate-400"
           >
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-              <span>500+ Products Delivered</span>
+              <span>1500+ Projects Delivered</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-              <span>5+ Partners</span>
+              <span>3+ Global Partners</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
-              <span>3+ Years Experience</span>
+              <span>10+ Years Experience</span>
             </div>
           </motion.div>
         </div>

@@ -1,4 +1,4 @@
-import { easeOut, motion, useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { HeartPlus } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
@@ -12,24 +12,24 @@ interface Stat {
 const Stats = () => {
   const stats: Stat[] = [
     {
-      value: "500",
-      suffix: "+",
-      label: "Products Delivered",
-    },
-    {
       value: "1000",
       suffix: "+",
       label: "Happy Customers",
     },
     {
-      value: "3",
+      value: "1500",
       suffix: "+",
-      label: "Partner Brands",
+      label: "Products Delivered",
     },
     {
-      value: "1",
+      value: "3",
       suffix: "+",
-      label: "Countries Served",
+      label: "Tech Partners",
+    },
+    {
+      value: "100",
+      suffix: "%",
+      label: "Client Satisfaction",
     },
   ];
 
@@ -51,16 +51,16 @@ const Stats = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: easeOut,
+        ease: "easeOut",
       },
     },
   };
 
   return (
-    <section className="relative w-full py-20 bg-linear-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 overflow-hidden">
+    <section className="relative w-full py-20 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-30 dark:opacity-10">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size[40px_40px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]" />
       </div>
 
       {/* Gradient Orbs */}
@@ -77,14 +77,14 @@ const Stats = () => {
           className="text-center mb-16"
         >
           <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
-          <HeartPlus className="size-4" />
+          <HeartPlus className="size-5"/>
             Our Impact
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-slate-200 mb-4">
-            Numbers That Matter
+          <h2 className="text-3xl md:text-5xl font-sora font-bold text-slate-900 dark:text-slate-100 mb-4">
+            Growing Together
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Building trust through consistent delivery and customer satisfaction
+          <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+            Trusted by businesses and individuals who believe in the power of technology
           </p>
         </motion.div>
 
@@ -94,7 +94,7 @@ const Stats = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-8"
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
           {stats.map((stat, index) => (
             <StatCard key={index} stat={stat} index={index} variants={itemVariants} />
@@ -108,7 +108,7 @@ const Stats = () => {
 // Separate component for animated counter
 const StatCard = ({ 
   stat, 
-  // index, 
+  index, 
   variants 
 }: { 
   stat: Stat; 
@@ -149,21 +149,21 @@ const StatCard = ({
         scale: 1.05,
         transition: { duration: 0.2 }
       }}
-      className="group relative bg-white dark:bg-slate-900 rounded p-8 
+      className="group relative bg-slate-100 dark:bg-slate-900 rounded p-8 
                border border-slate-200 dark:border-slate-800
                hover:border-emerald-500 dark:hover:border-emerald-500
                hover:shadow-2xl hover:shadow-emerald-500/10
                transition-all duration-300"
     >
       {/* Gradient background on hover */}
-      <div className="absolute inset-0 bg-linear-to-br from-emerald-500/5 to-blue-500/5 
-                    opacity-0 group-hover:opacity-100 rounded transition-opacity duration-300" />
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-blue-500/5 
+                    opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300" />
 
       {/* Content */}
       <div className="relative text-center">
         {/* Number */}
         <div className="mb-3">
-          <span className="text-5xl md:text-6xl font-bold bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400 bg-clip-text text-transparent">
+          <span className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400 bg-clip-text text-transparent">
             {stat.prefix}
             {count.toLocaleString()}
             {stat.suffix}
