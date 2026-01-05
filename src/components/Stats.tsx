@@ -1,4 +1,4 @@
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, easeInOut } from "motion/react";
 import { HeartPlus } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
@@ -51,7 +51,7 @@ const Stats = () => {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut",
+        ease: easeInOut,
       },
     },
   };
@@ -107,8 +107,7 @@ const Stats = () => {
 
 // Separate component for animated counter
 const StatCard = ({ 
-  stat, 
-  index, 
+  stat,  
   variants 
 }: { 
   stat: Stat; 
