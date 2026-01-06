@@ -1,13 +1,13 @@
-import { motion } from "framer-motion";
+import { easeInOut, motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, WandSparkles } from "lucide-react";
 
 const FinalCTA = () => {
   return (
     <section className="relative w-full py-20 overflow-hidden">
       {/* Gradient Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-emerald-600 to-indigo-600 dark:from-blue-700 dark:via-emerald-700 dark:to-indigo-700" />
-      
+
       {/* Animated Pattern Overlay */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff20_1px,transparent_1px),linear-gradient(to_bottom,#ffffff20_1px,transparent_1px)] bg-[size:40px_40px]" />
@@ -34,7 +34,7 @@ const FinalCTA = () => {
         transition={{
           duration: 10,
           repeat: Infinity,
-          ease: "easeInOut",
+          ease: easeInOut,
           delay: 1,
         }}
         className="absolute bottom-10 right-10 w-96 h-96 bg-white/10 rounded-full blur-3xl"
@@ -58,7 +58,7 @@ const FinalCTA = () => {
                      bg-white/20 backdrop-blur-sm border border-white/30 
                      text-white text-sm font-semibold mb-8"
           >
-            <Sparkles className="w-4 h-4" />
+            <WandSparkles className="w-4 h-4" />
             <span>Let's Make It Happen</span>
           </motion.div>
 
@@ -83,8 +83,9 @@ const FinalCTA = () => {
             transition={{ delay: 0.4, duration: 0.8 }}
             className="text-white/90 mb-12 max-w-2xl mx-auto leading-relaxed"
           >
-            Join forward-thinking businesses who trust SHERO for premium tech products, 
-            expert consultation, strategic partnerships, and custom software solutions.
+            Join forward-thinking businesses who trust SHERO for premium tech
+            products, expert consultation, strategic partnerships, and custom
+            software solutions.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -136,21 +137,43 @@ const FinalCTA = () => {
             transition={{ delay: 0.7, duration: 0.8 }}
             className="mt-12 flex flex-wrap items-center justify-center gap-8 text-white/80 text-sm"
           >
-            <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <div className="flex items-center gap-1">
+              <svg
+                className="w-5 h-5 text-white"
+                fill="currentColor"
+                // stroke="currentColor"
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+              >
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
               <span>1000+ Happy Customers</span>
             </div>
-            <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div className="flex items-center gap-1">
+              <svg
+                className="w-6 h-6 text-white"
+                fill="currentColor"
+                // stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  clip-rule="evenodd"
+                  d="M16.403 12.652a3 3 0 0 0 0-5.304 3 3 0 0 0-3.75-3.751 3 3 0 0 0-5.305 0 3 3 0 0 0-3.751 3.75 3 3 0 0 0 0 5.305 3 3 0 0 0 3.75 3.751 3 3 0 0 0 5.305 0 3 3 0 0 0 3.751-3.75Zm-2.546-4.46a.75.75 0 0 0-1.214-.883l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
+                  fill-rule="evenodd"
+                ></path>{" "}
               </svg>
               <span>Quality Guaranteed</span>
             </div>
-            <div className="flex items-center gap-2">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            <div className="flex items-center gap-1">
+              <svg
+                className="w-5 h-5 text-white"
+                fill="currentColor"
+                // stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path d="M11.983 1.907a.75.75 0 0 0-1.292-.657l-8.5 9.5A.75.75 0 0 0 2.75 12h6.572l-1.305 6.093a.75.75 0 0 0 1.292.657l8.5-9.5A.75.75 0 0 0 17.25 8h-6.572l1.305-6.093Z"></path>
               </svg>
               <span>Fast Turnaround</span>
             </div>
