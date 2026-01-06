@@ -2,8 +2,9 @@ import { NavLink } from "react-router-dom";
 import { motion } from "motion/react";
 import { fadeUp } from "../components/motion/heroMotion";
 import { useMemo } from "react";
-import { RocketLaunchIcon } from "@/assets/icons/icons";
+import { Handshake, RocketLaunchIcon } from "@/assets/icons/icons";
 import { easeInOut } from "motion/react";
+import { Layers, ShieldCheck } from "lucide-react";
 
 // Type Definitions
 interface HeroContent {
@@ -50,10 +51,11 @@ const HeroHeader: React.FC = () => {
       aria-label="Hero section - Company mission statement"
     >
       {/* Animated Grid Background */}
-      <div className="absolute inset-0 
+      <div
+        className="absolute inset-0 
                     bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] 
                     bg-[size:40px_40px]
-                    [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_70%,transparent_100%)]" 
+                    [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_70%,transparent_100%)]"
       />
 
       {/* Gradient Orbs */}
@@ -64,7 +66,6 @@ const HeroHeader: React.FC = () => {
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-10">
         <div className="flex flex-col justify-center items-center gap-10 w-full py-20">
-          
           {/* Top Badge */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -77,7 +78,8 @@ const HeroHeader: React.FC = () => {
               <motion.div
                 className="absolute inset-0"
                 style={{
-                  background: "conic-gradient(from 0deg, #10b981 0%, #0ea5e9 33%, #6366f1 66%, #10b981 100%)",
+                  background:
+                    "conic-gradient(from 0deg, #10b981 0%, #0ea5e9 33%, #6366f1 66%, #10b981 100%)",
                 }}
                 animate={{ rotate: 360 }}
                 transition={{
@@ -86,12 +88,12 @@ const HeroHeader: React.FC = () => {
                   ease: "linear",
                 }}
               />
-              
+
               {/* Inner content */}
               <div className="relative bg-slate-50 dark:bg-slate-900 px-5 py-2.5 rounded-full">
                 <div className="flex items-center gap-2.5">
                   <motion.span
-                    animate={{ 
+                    animate={{
                       y: [0, -3, 0],
                       x: [0, 3, 0],
                     }}
@@ -125,7 +127,7 @@ const HeroHeader: React.FC = () => {
                              bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% 
                              bg-clip-text text-transparent"
             >
-                {HERO_CONTENT.mainHeader}
+              {HERO_CONTENT.mainHeader}
             </motion.h1>
 
             {/* Subheading */}
@@ -212,16 +214,20 @@ const HeroHeader: React.FC = () => {
             className="flex flex-wrap items-center justify-center gap-8 pt-8 text-sm text-slate-600 dark:text-slate-400"
           >
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+              {/* <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" /> */}
+              <Layers className="w-4 h-4 text-emerald-500 animate-pulse" />
               <span>1500+ Projects Delivered</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-              <span>3+ Global Partners</span>
+              {/* <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" /> */}
+              <Handshake className="w-4 h-4 text-blue-500 animate-pulse" />
+
+              <span>3+ Partners</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" />
-              <span>10+ Years Experience</span>
+              {/* <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" /> */}
+              <ShieldCheck className="w-4 h-4 text-indigo-500 animate-pulse" />
+              <span>4+ Years Experience</span>
             </div>
           </motion.div>
         </div>

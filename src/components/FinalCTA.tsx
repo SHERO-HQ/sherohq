@@ -114,7 +114,7 @@ const FinalCTA = () => {
 
             {/* Secondary CTA */}
             <NavLink
-              to="/shop"
+              to="/products"
               className="group inline-flex items-center gap-3 
                        px-8 py-3 rounded
                        bg-transparent text-white

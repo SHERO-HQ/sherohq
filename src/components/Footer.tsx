@@ -2,7 +2,7 @@ import { NavLink, Link } from "react-router-dom";
 import SheroLight from "../assets/logo/shero-light.svg";
 
 const Footer = () => {
-  const companyLinks = ["About Us", "Shop", "Solutions", "Contact Us"];
+  const companyLinks = ["Products", "Solutions", "About Us", "Contact Us"];
   const resourceLinks = ["Consultation", "Partners", "Support", "FAQ"];
   
   const socialLinks = [

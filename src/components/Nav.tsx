@@ -26,7 +26,7 @@ const Nav = () => {
     },
   };
 
-  const navLinks = ["About Us", "Shop", "Solutions", "Consultation"];
+  const navLinks = ["Products", "Solutions", "Consultation", "About Us",];
   const linkVars = {
     initial: { y: 20, opacity: 0 },
     animate: (i: number) => ({

@@ -10,7 +10,7 @@ const MainCTA = () => {
       title: "Shop Products",
       description: "Browse our curated collection of premium tech accessories and hardware.",
       cta: "Browse Store",
-      link: "/shop",
+      link: "/products",
       gradient: "from-blue-500 to-blue-600",
       hoverGradient: "hover:from-blue-600 hover:to-blue-700",
       iconBg: "bg-blue-100 dark:bg-blue-900/30",

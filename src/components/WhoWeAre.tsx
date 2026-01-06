@@ -32,9 +32,9 @@ const WhoWeAre = () => {
 
   // Stats data
   const stats = [
-    { value: "500+", label: "Projects Delivered" },
-    { value: "5+", label: "Global Partners" },
-    { value: "3+", label: "Years Experience" },
+    { value: "1500+", label: "Projects Delivered" },
+    { value: "3+", label: "Partners" },
+    { value: "4+", label: "Years Experience" },
   ];
 
   return (
@@ -135,47 +135,47 @@ const WhoWeAre = () => {
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.3 }}
-            className="w-full lg:w-1/2 relative"
+            className="w-full lg:w-1/2"
           >
             {/* Option 1: Decorative Card Grid */}
-            <div className="grid grid-cols-2 gap-4 lg:gap-6">
+            <div className="relative grid grid-cols-2 gap-4 lg:gap-6 mt-5 md:mt-auto">
               {/* Card 1 - Shop Products */}
               <motion.div 
                 whileHover={{ y: -8 }}
-                className="bg-gradient-to-br from-blue-500 to-blue-600 rounded p-6 text-white shadow-xl"
+                className="relative flex flex-col justify-center bg-gradient-to-br from-blue-500 to-blue-600 rounded p-6 text-white shadow-xl"
               >
-                <div className="text-4xl mb-3">🛍️</div>
-                <h3 className="font-bold text-lg mb-2">Shop Products</h3>
+                <div className="text-7xl -top-9 absolute">🛍️</div>
+                <h3 className="font-bold text-lg mb-2 mt-4">Shop Products</h3>
                 <p className="text-sm opacity-90">Premium tech accessories</p>
               </motion.div>
 
               {/* Card 2 - Consultation */}
               <motion.div 
                 whileHover={{ y: -8 }}
-                className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded p-6 text-white shadow-xl mt-8"
+                className="relative bg-gradient-to-br from-emerald-500 to-emerald-600 rounded p-6 text-white shadow-xl mt-8"
               >
-                <div className="text-4xl mb-3">💬</div>
-                <h3 className="font-bold text-lg mb-2">Consultation</h3>
+                <div className="text-6xl -top-9 absolute">💬</div>
+                <h3 className="font-bold text-lg mb-2 mt-4">Consultation</h3>
                 <p className="text-sm opacity-90">Expert tech advisory</p>
               </motion.div>
 
               {/* Card 3 - Partnerships */}
               <motion.div 
                 whileHover={{ y: -8 }}
-                className="bg-gradient-to-br from-purple-500 to-purple-600 rounded p-6 text-white shadow-xl"
+                className="relative bg-gradient-to-br from-purple-500 to-purple-600 rounded p-8 text-white shadow-xl mt-8"
               >
-                <div className="text-4xl mb-3">🤝</div>
-                <h3 className="font-bold text-lg mb-2">Partnerships</h3>
+                <div className="text-7xl -top-9 absolute">🤝</div>
+                <h3 className="font-bold text-lg mb-2 mt-4">Partnerships</h3>
                 <p className="text-sm opacity-90">Strategic collaborations</p>
               </motion.div>
 
               {/* Card 4 - Software & IT */}
               <motion.div 
                 whileHover={{ y: -8 }}
-                className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded p-6 text-white shadow-xl mt-8"
+                className="relative bg-gradient-to-br from-indigo-500 to-indigo-600 rounded px-6 py-4 text-white shadow-xl mt-14"
               >
-                <div className="text-4xl mb-3">💻</div>
-                <h3 className="font-bold text-lg mb-2">Software & IT</h3>
+                <div className="text-7xl -top-9 absolute">💻</div>
+                <h3 className="font-bold text-lg mb-2 mt-10">Software & IT</h3>
                 <p className="text-sm opacity-90">Custom development</p>
               </motion.div>
             </div>
