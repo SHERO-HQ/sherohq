@@ -57,7 +57,7 @@ const Stats = () => {
   };
 
   return (
-    <section className="relative w-full py-20 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 overflow-hidden">
+    <section className="relative w-full py-20 bg-linear-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950 overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-30 dark:opacity-10">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px]" />
@@ -77,14 +77,15 @@ const Stats = () => {
           className="text-center mb-16"
         >
           <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
-          <HeartPlus className="size-5"/>
+            <HeartPlus className="size-5" />
             Our Impact
           </span>
           <h2 className="text-3xl md:text-5xl font-sora font-bold text-slate-900 dark:text-slate-100 mb-4">
             Growing Together
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Trusted by businesses and individuals who believe in the power of technology
+            Trusted by businesses and individuals who believe in the power of
+            technology
           </p>
         </motion.div>
 
@@ -97,7 +98,12 @@ const Stats = () => {
           className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
           {stats.map((stat, index) => (
-            <StatCard key={index} stat={stat} index={index} variants={itemVariants} />
+            <StatCard
+              key={index}
+              stat={stat}
+              index={index}
+              variants={itemVariants}
+            />
           ))}
         </motion.div>
       </div>
@@ -106,12 +112,12 @@ const Stats = () => {
 };
 
 // Separate component for animated counter
-const StatCard = ({ 
-  stat,  
-  variants 
-}: { 
-  stat: Stat; 
-  index: number; 
+const StatCard = ({
+  stat,
+  variants,
+}: {
+  stat: Stat;
+  index: number;
   variants: any;
 }) => {
   const [count, setCount] = useState(0);
@@ -144,9 +150,9 @@ const StatCard = ({
     <motion.div
       ref={ref}
       variants={variants}
-      whileHover={{ 
+      whileHover={{
         scale: 1.05,
-        transition: { duration: 0.2 }
+        transition: { duration: 0.2 },
       }}
       className="group relative bg-slate-100 dark:bg-slate-900 rounded p-8 
                border border-slate-200 dark:border-slate-800
@@ -155,14 +161,16 @@ const StatCard = ({
                transition-all duration-300"
     >
       {/* Gradient background on hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-blue-500/5 
-                    opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300" />
+      <div
+        className="absolute inset-0 bg-linear-to-br from-emerald-500/5 to-blue-500/5 
+                    opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-300"
+      />
 
       {/* Content */}
       <div className="relative text-center">
         {/* Number */}
         <div className="mb-3">
-          <span className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400 bg-clip-text text-transparent">
+          <span className="text-5xl md:text-6xl font-bold bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400 bg-clip-text text-transparent">
             {stat.prefix}
             {count.toLocaleString()}
             {stat.suffix}
@@ -176,8 +184,10 @@ const StatCard = ({
       </div>
 
       {/* Decorative dot */}
-      <div className="absolute top-4 right-4 w-2 h-2 bg-emerald-500 rounded-full 
-                    opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div
+        className="absolute top-4 right-4 w-2 h-2 bg-emerald-500 rounded-full 
+                    opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+      />
     </motion.div>
   );
 };

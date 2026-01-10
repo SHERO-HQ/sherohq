@@ -44,7 +44,7 @@ const HeroHeader: React.FC = () => {
   return (
     <header
       className="relative min-h-[85vh] lg:min-h-screen w-full overflow-hidden
-                 bg-gradient-to-b from-slate-50 to-white 
+                 bg-linear-to-b from-slate-50 to-white 
                  dark:from-slate-950 dark:to-slate-900
                  flex items-center justify-center"
       role="banner"
@@ -73,7 +73,7 @@ const HeroHeader: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="relative group"
           >
-            <div className="relative overflow-hidden rounded-full p-[2px] bg-gradient-to-r from-emerald-500 via-blue-500 to-indigo-500">
+            <div className="relative overflow-hidden rounded-full p-0.5 bg-linear-to-r from-emerald-500 via-blue-500 to-indigo-500">
               {/* Rotating gradient border */}
               <motion.div
                 className="absolute inset-0"
@@ -124,7 +124,7 @@ const HeroHeader: React.FC = () => {
             <motion.h1
               variants={prefersReducedMotion ? {} : fadeUp}
               className="text-center font-sora font-extrabold leading-tight block text-[clamp(2rem,6vw,7rem)] 
-                             bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% 
+                             bg-linear-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% 
                              bg-clip-text text-transparent"
             >
               {HERO_CONTENT.mainHeader}

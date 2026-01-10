@@ -6,7 +6,7 @@ const FinalCTA = () => {
   return (
     <section className="relative w-full py-20 overflow-hidden">
       {/* Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-emerald-600 to-indigo-600 dark:from-blue-700 dark:via-emerald-700 dark:to-indigo-700" />
+      <div className="absolute inset-0 bg-linear-to-br from-blue-600 via-emerald-600 to-indigo-600 dark:from-blue-700 dark:via-emerald-700 dark:to-indigo-700" />
 
       {/* Animated Pattern Overlay */}
       <div className="absolute inset-0 opacity-10">

@@ -40,11 +40,10 @@ const WhoWeAre = () => {
   return (
     <section className="relative w-full py-20 lg:py-28 overflow-hidden bg-white dark:bg-slate-950">
       {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-50/50 via-transparent to-blue-50/50 dark:from-emerald-950/20 dark:via-transparent dark:to-blue-950/20 pointer-events-none" />
-      
+      <div className="absolute inset-0 bg-linear-to-br from-emerald-50/50 via-transparent to-blue-50/50 dark:from-emerald-950/20 dark:via-transparent dark:to-blue-950/20 pointer-events-none" />
+
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
-          
           {/* TEXT CONTENT */}
           <motion.div
             variants={containerVariants}
@@ -56,7 +55,7 @@ const WhoWeAre = () => {
             {/* Header */}
             <motion.div variants={itemVariants}>
               <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
-              <Info className="size-5" />
+                <Info className="size-5" />
                 About Us
               </span>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-sora font-bold text-slate-900 dark:text-slate-100">
@@ -70,15 +69,16 @@ const WhoWeAre = () => {
                 <span className="text-blue-600 dark:text-blue-400 font-bold">
                   SHERO
                 </span>{" "}
-                is a technology company building cutting-edge solutions that empower 
-                individuals, businesses, and communities. From premium tech accessories 
-                to custom software development, we deliver innovation that drives growth.
+                is a technology company building cutting-edge solutions that
+                empower individuals, businesses, and communities. From premium
+                tech accessories to custom software development, we deliver
+                innovation that drives growth.
               </p>
-              
+
               <p className="text-base text-slate-600 dark:text-slate-400">
-                We specialize in four core areas: retail tech products, strategic consultation, 
-                partnership programs, and comprehensive software & IT solutions. Our mission is 
-                to help you{" "}
+                We specialize in four core areas: retail tech products,
+                strategic consultation, partnership programs, and comprehensive
+                software & IT solutions. Our mission is to help you{" "}
                 <span className="text-emerald-600 dark:text-emerald-400 font-bold">
                   Redefine Possible
                 </span>{" "}
@@ -87,7 +87,7 @@ const WhoWeAre = () => {
             </motion.div>
 
             {/* Stats */}
-            <motion.div 
+            <motion.div
               variants={itemVariants}
               className="grid grid-cols-3 gap-6 py-6"
             >
@@ -117,13 +117,18 @@ const WhoWeAre = () => {
                 to="/explore"
               >
                 Explore Impact
-                <svg 
-                  className="w-5 h-5 group-hover:translate-x-1 transition-transform" 
-                  fill="none" 
-                  stroke="currentColor" 
+                <svg
+                  className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
                 </svg>
               </NavLink>
             </motion.div>
@@ -140,9 +145,9 @@ const WhoWeAre = () => {
             {/* Option 1: Decorative Card Grid */}
             <div className="relative grid grid-cols-2 gap-4 lg:gap-6 mt-5 md:mt-auto">
               {/* Card 1 - Shop Products */}
-              <motion.div 
+              <motion.div
                 whileHover={{ y: -8 }}
-                className="relative flex flex-col justify-center bg-gradient-to-br from-blue-500 to-blue-600 rounded p-6 text-white shadow-xl"
+                className="relative flex flex-col justify-center bg-linear-to-br from-blue-500 to-blue-600 rounded p-6 text-white shadow-xl"
               >
                 <div className="text-7xl -top-9 absolute">🛍️</div>
                 <h3 className="font-bold text-lg mb-2 mt-4">Shop Products</h3>
@@ -150,9 +155,9 @@ const WhoWeAre = () => {
               </motion.div>
 
               {/* Card 2 - Consultation */}
-              <motion.div 
+              <motion.div
                 whileHover={{ y: -8 }}
-                className="relative bg-gradient-to-br from-emerald-500 to-emerald-600 rounded p-6 text-white shadow-xl mt-8"
+                className="relative bg-linear-to-br from-emerald-500 to-emerald-600 rounded p-6 text-white shadow-xl mt-8"
               >
                 <div className="text-6xl -top-9 absolute">💬</div>
                 <h3 className="font-bold text-lg mb-2 mt-4">Consultation</h3>
@@ -160,9 +165,9 @@ const WhoWeAre = () => {
               </motion.div>
 
               {/* Card 3 - Partnerships */}
-              <motion.div 
+              <motion.div
                 whileHover={{ y: -8 }}
-                className="relative bg-gradient-to-br from-purple-500 to-purple-600 rounded p-8 text-white shadow-xl mt-8"
+                className="relative bg-linear-to-br from-purple-500 to-purple-600 rounded p-8 text-white shadow-xl mt-8"
               >
                 <div className="text-7xl -top-9 absolute">🤝</div>
                 <h3 className="font-bold text-lg mb-2 mt-4">Partnerships</h3>
@@ -170,9 +175,9 @@ const WhoWeAre = () => {
               </motion.div>
 
               {/* Card 4 - Software & IT */}
-              <motion.div 
+              <motion.div
                 whileHover={{ y: -8 }}
-                className="relative bg-gradient-to-br from-indigo-500 to-indigo-600 rounded px-6 py-4 text-white shadow-xl mt-14"
+                className="relative bg-linear-to-br from-indigo-500 to-indigo-600 rounded px-6 py-4 text-white shadow-xl mt-14"
               >
                 <div className="text-7xl -top-9 absolute">💻</div>
                 <h3 className="font-bold text-lg mb-2 mt-10">Software & IT</h3>
@@ -182,7 +187,7 @@ const WhoWeAre = () => {
 
             {/* Decorative blob background */}
             <div className="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-200/20 to-blue-200/20 dark:from-emerald-500/10 dark:to-blue-500/10 rounded-full blur-3xl" />
+              <div className="absolute inset-0 bg-linear-to-br from-emerald-200/20 to-blue-200/20 dark:from-emerald-500/10 dark:to-blue-500/10 rounded-full blur-3xl" />
             </div>
           </motion.div>
 

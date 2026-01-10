@@ -1,11 +1,15 @@
-import ProductGrid from '@/components/ProductsGrid'
-import ProductHero from '@/components/ProductsHero'
+// import ProductHero from '@/components/ProductsHero'
+
+import Footer from "@/components/Footer"
+import ShopPage from "@/components/ShopPage"
 
 const Products = () => {
   return (
     <>
-    <ProductHero/>
+    {/* <ProductHero/> */}
     {/* <ProductGrid /> */}
+    <ShopPage />
+    <Footer/>
     </>
   )
 }

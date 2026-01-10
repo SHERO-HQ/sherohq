@@ -1,6 +1,12 @@
 import { NavLink } from "react-router-dom";
 import { easeOut, motion } from "motion/react";
-import { ShoppingBag, MessageSquare, Handshake, Code, Route } from "lucide-react";
+import {
+  ShoppingBag,
+  MessageSquare,
+  Handshake,
+  Code,
+  Route,
+} from "lucide-react";
 
 const MainCTA = () => {
   const paths = [
@@ -8,7 +14,8 @@ const MainCTA = () => {
       icon: <ShoppingBag className="w-8 h-8" />,
       label: "For Everyone",
       title: "Shop Products",
-      description: "Browse our curated collection of premium tech accessories and hardware.",
+      description:
+        "Browse our curated collection of premium tech accessories and hardware.",
       cta: "Browse Store",
       link: "/products",
       gradient: "from-blue-500 to-blue-600",
@@ -20,7 +27,8 @@ const MainCTA = () => {
       icon: <MessageSquare className="w-8 h-8" />,
       label: "For Businesses",
       title: "Get Consultation",
-      description: "Expert tech advisory on strategy, infrastructure, and digital transformation.",
+      description:
+        "Expert tech advisory on strategy, infrastructure, and digital transformation.",
       cta: "Book Consultation",
       link: "/consultation",
       gradient: "from-emerald-500 to-emerald-600",
@@ -32,7 +40,8 @@ const MainCTA = () => {
       icon: <Handshake className="w-8 h-8" />,
       label: "For Partners",
       title: "Join Our Network",
-      description: "Collaborate through tech integration, referrals, or investment opportunities.",
+      description:
+        "Collaborate through tech integration, referrals, or investment opportunities.",
       cta: "Become a Partner",
       link: "/partners",
       gradient: "from-indigo-500 to-indigo-600",
@@ -44,7 +53,8 @@ const MainCTA = () => {
       icon: <Code className="w-8 h-8" />,
       label: "For Enterprises",
       title: "Software & IT Solutions",
-      description: "Custom development, SaaS platforms, IT services, and API integration.",
+      description:
+        "Custom development, SaaS platforms, IT services, and API integration.",
       cta: "Request Quote",
       link: "/solutions",
       gradient: "from-purple-500 to-purple-600",
@@ -80,8 +90,8 @@ const MainCTA = () => {
   return (
     <section className="relative w-full py-20 bg-white dark:bg-slate-950 overflow-hidden">
       {/* Background decoration */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900/50 dark:to-slate-950 pointer-events-none" />
-      
+      <div className="absolute inset-0 bg-linear-to-b from-slate-50 to-white dark:from-slate-900/50 dark:to-slate-950 pointer-events-none" />
+
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <motion.div
@@ -92,15 +102,16 @@ const MainCTA = () => {
           className="text-center mb-16"
         >
           <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
-          <Route className="size-5" />
+            <Route className="size-5" />
             Choose Your Path
           </span>
           <h2 className="text-4xl md:text-5xl font-sora font-bold text-slate-900 dark:text-slate-100 mb-4">
             How Can We Help You?
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Whether you're shopping for tech, seeking partnerships, or need expert consultation,
-            we're here to help you redefine what's possible.
+            Whether you're shopping for tech, seeking partnerships, or need
+            expert consultation, we're here to help you redefine what's
+            possible.
           </p>
         </motion.div>
 
@@ -120,21 +131,26 @@ const MainCTA = () => {
               className="group relative"
             >
               {/* Card */}
-              <div className="relative h-full bg-white dark:bg-slate-900 rounded-2xl p-8 
+              <div
+                className="relative h-full bg-white dark:bg-slate-900 rounded-2xl p-8 
                             border-2 border-slate-200 dark:border-slate-800
                             hover:border-transparent
                             shadow-lg hover:shadow-2xl
-                            transition-all duration-300 overflow-hidden">
-                
+                            transition-all duration-300 overflow-hidden"
+              >
                 {/* Gradient border on hover */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${path.gradient} 
-                              opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10`} />
-                <div className="absolute inset-[2px] bg-white dark:bg-slate-900 rounded-2xl -z-10" />
+                <div
+                  className={`absolute inset-0 bg-linear-to-br ${path.gradient} 
+                              opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10`}
+                />
+                <div className="absolute inset-0.5 bg-white dark:bg-slate-900 rounded-2xl -z-10" />
 
                 {/* Icon */}
-                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-xl
+                <div
+                  className={`inline-flex items-center justify-center w-16 h-16 rounded-xl
                               ${path.iconBg} ${path.iconColor} mb-6
-                              group-hover:scale-110 transition-transform duration-300`}>
+                              group-hover:scale-110 transition-transform duration-300`}
+                >
                   {path.icon}
                 </div>
 
@@ -157,7 +173,7 @@ const MainCTA = () => {
                 <NavLink
                   to={path.link}
                   className={`inline-flex items-center justify-center gap-2 w-full
-                           text-white bg-gradient-to-r ${path.gradient}
+                           text-white bg-linear-to-r ${path.gradient}
                            ${path.hoverGradient}
                            px-6 py-3 rounded-lg font-semibold
                            shadow-lg shadow-black/10
@@ -181,8 +197,10 @@ const MainCTA = () => {
                 </NavLink>
 
                 {/* Decorative corner */}
-                <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${path.gradient}
-                              opacity-0 group-hover:opacity-5 rounded-bl-full transition-opacity duration-300`} />
+                <div
+                  className={`absolute top-0 right-0 w-32 h-32 bg-linear-to-br ${path.gradient}
+                              opacity-0 group-hover:opacity-5 rounded-bl-full transition-opacity duration-300`}
+                />
               </div>
             </motion.div>
           ))}
@@ -198,7 +216,10 @@ const MainCTA = () => {
         >
           <p className="text-sm text-slate-500 dark:text-slate-400">
             Not sure which path is right for you?{" "}
-            <NavLink to="/contact" className="text-emerald-600 dark:text-emerald-400 font-semibold hover:underline">
+            <NavLink
+              to="/contact"
+              className="text-emerald-600 dark:text-emerald-400 font-semibold hover:underline"
+            >
               Contact us
             </NavLink>{" "}
             and we'll help you get started.

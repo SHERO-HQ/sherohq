@@ -90,12 +90,9 @@ const Pillars = () => {
         <div className="w-full">
           <FadeInView direction="up">
             {/* Header */}
-            <motion.header 
-              className="text-center mb-16" 
-              variants={fadeIn}
-            >
+            <motion.header className="text-center mb-16" variants={fadeIn}>
               <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
-              <Crosshair className="size-5" />
+                <Crosshair className="size-5" />
                 Our Focus Areas
               </span>
               <h2 className="text-5xl lg:text-6xl font-sora font-bold text-slate-900 dark:text-slate-100 mb-4">
@@ -119,9 +116,9 @@ const Pillars = () => {
                   <motion.div
                     variants={cardVariants}
                     key={pillar.header}
-                    whileHover={{ 
+                    whileHover={{
                       y: -8,
-                      transition: { duration: 0.3 }
+                      transition: { duration: 0.3 },
                     }}
                     className="group relative bg-white dark:bg-slate-900 rounded p-8 
                              border border-slate-200 dark:border-slate-800 
@@ -131,13 +128,15 @@ const Pillars = () => {
                   >
                     {/* Icon */}
                     <div className="mb-6">
-                      <div className="inline-flex items-center justify-center 
+                      <div
+                        className="inline-flex items-center justify-center 
                                     w-16 h-16 rounded
-                                    bg-gradient-to-br from-emerald-500/10 to-blue-500/10
+                                    bg-linear-to-br from-emerald-500/10 to-blue-500/10
                                     dark:from-emerald-500/20 dark:to-blue-500/20
                                     border border-emerald-500/20 dark:border-emerald-500/30
                                     group-hover:scale-110 group-hover:rotate-3
-                                    transition-transform duration-300">
+                                    transition-transform duration-300"
+                      >
                         <span className="w-8 h-8 text-emerald-600 dark:text-emerald-400">
                           {pillar.icon}
                         </span>
@@ -145,9 +144,11 @@ const Pillars = () => {
                     </div>
 
                     {/* Content */}
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3
+                    <h3
+                      className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3
                                  group-hover:text-emerald-600 dark:group-hover:text-emerald-400
-                                 transition-colors duration-300">
+                                 transition-colors duration-300"
+                    >
                       {pillar.header}
                     </h3>
 
@@ -156,15 +157,16 @@ const Pillars = () => {
                     </p>
 
                     {/* Decorative element */}
-                    <div className="absolute top-0 right-0 w-32 h-32 
-                                  bg-gradient-to-br from-emerald-500/5 to-transparent 
+                    <div
+                      className="absolute top-0 right-0 w-32 h-32 
+                                  bg-linear-to-br from-emerald-500/5 to-transparent 
                                   rounded-bl-full opacity-0 group-hover:opacity-100 
-                                  transition-opacity duration-300 -z-10" />
+                                  transition-opacity duration-300 -z-10"
+                    />
                   </motion.div>
                 );
               })}
             </motion.div>
-
           </FadeInView>
         </div>
       </div>

@@ -17,7 +17,7 @@ const ProductHero: React.FC<ProductHeroProps> = ({ onSearch }) => {
   };
 
   return (
-    <section className="relative w-full py-16 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950">
+    <section className="relative w-full py-16 bg-linear-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <motion.div

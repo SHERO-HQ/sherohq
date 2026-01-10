@@ -24,7 +24,7 @@ const ProductCategories: React.FC<ProductCategoriesProps> = ({
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+          <h2 className="text-2xl font-sora font-bold text-slate-900 dark:text-slate-100">
             Categories
           </h2>
           <span className="text-sm text-slate-600 dark:text-slate-400">
@@ -33,7 +33,7 @@ const ProductCategories: React.FC<ProductCategoriesProps> = ({
         </div>
 
         {/* Categories Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
           {categories.map((category, index) => (
             <motion.button
               key={category.id}
@@ -41,7 +41,7 @@ const ProductCategories: React.FC<ProductCategoriesProps> = ({
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
               onClick={() => onCategoryChange(category.id)}
-              className={`group relative flex flex-col items-center gap-3 p-4 rounded-xl
+              className={`group relative flex flex-col items-center gap-2 p-4 rounded
                        border-2 transition-all duration-300
                        ${
                          activeCategory === category.id
@@ -51,7 +51,7 @@ const ProductCategories: React.FC<ProductCategoriesProps> = ({
             >
               {/* Icon */}
               <div
-                className={`w-12 h-12 rounded-lg flex items-center justify-center
+                className={`w-8 h-8 rounded flex items-center justify-center
                          transition-all duration-300
                          ${
                            activeCategory === category.id

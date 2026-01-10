@@ -21,16 +21,18 @@ interface ProductCardProps {
   onQuickView?: (product: Product) => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ 
-  product, 
+const ProductCard: React.FC<ProductCardProps> = ({
+  product,
   onAddToCart,
-  onQuickView 
+  onQuickView,
 }) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const discount = product.originalPrice
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    ? Math.round(
+        ((product.originalPrice - product.price) / product.originalPrice) * 100
+      )
     : 0;
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -62,20 +64,26 @@ const ProductCard: React.FC<ProductCardProps> = ({
       {/* Badges */}
       <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
         {product.badge && (
-          <span className="px-3 py-1 rounded text-xs font-semibold
-                         bg-emerald-600 text-white">
+          <span
+            className="px-3 py-1 rounded text-xs font-semibold
+                         bg-emerald-600 text-white"
+          >
             {product.badge}
           </span>
         )}
         {discount > 0 && (
-          <span className="px-3 py-1 rounded text-xs font-semibold
-                         bg-red-600 text-white">
+          <span
+            className="px-3 py-1 rounded text-xs font-semibold
+                         bg-red-600 text-white"
+          >
             -{discount}%
           </span>
         )}
         {!product.inStock && (
-          <span className="px-3 py-1 rounded text-xs font-semibold
-                         bg-slate-600 text-white">
+          <span
+            className="px-3 py-1 rounded text-xs font-semibold
+                         bg-slate-600 text-white"
+          >
             Out of Stock
           </span>
         )}
@@ -101,12 +109,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </button>
 
       {/* Image Container */}
-      <div className="relative h-64 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700
-                    overflow-hidden">
+      <div
+        className="relative h-64 bg-linear-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700
+                    overflow-hidden"
+      >
         {/* Placeholder/Loading */}
         {!imageLoaded && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-12 h-12 border-4 border-slate-300 dark:border-slate-600 border-t-emerald-500 rounded animate-spin" />
+            <div className="w-12 h-12 border-4 border-slate-400 border-t-emerald-500 rounded-full animate-spin" />
           </div>
         )}
 
@@ -116,13 +126,17 @@ const ProductCard: React.FC<ProductCardProps> = ({
           alt={product.name}
           onLoad={() => setImageLoaded(true)}
           className={`w-full h-full object-cover transition-all duration-300
-                   group-hover:scale-110 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                   group-hover:scale-110 ${
+                     imageLoaded ? "opacity-100" : "opacity-0"
+                   }`}
         />
 
         {/* Quick View Overlay */}
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100
+        <div
+          className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100
                       flex items-center justify-center gap-3
-                      transition-opacity duration-300">
+                      transition-opacity duration-300"
+        >
           <button
             onClick={handleQuickView}
             className="flex items-center gap-2 px-6 py-3 rounded
@@ -145,9 +159,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </span>
 
         {/* Product Name */}
-        <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-2 mb-3
+        <h3
+          className="text-lg font-bold text-slate-900 dark:text-slate-100 mt-2 mb-3
                      group-hover:text-emerald-600 dark:group-hover:text-emerald-400
-                     transition-colors duration-300 line-clamp-2">
+                     transition-colors duration-300 line-clamp-2"
+        >
           {product.name}
         </h3>
 
@@ -171,10 +187,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
 
         {/* Price & CTA */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-              GH₵{product.price}
+            <span className="text-2xl font-sora font-bold text-slate-900 dark:text-slate-100">
+              GH₵{product.price.toFixed(2)}
             </span>
             {product.originalPrice && (
               <span className="text-sm text-slate-500 dark:text-slate-400 line-through">
@@ -186,14 +202,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
           {product.inStock ? (
             <button
               onClick={handleAddToCart}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded
+              className="inline-flex justify-center items-center gap-2 px-4 py-2 rounded
                        bg-emerald-600 hover:bg-emerald-700
                        text-white font-semibold text-sm
                        transition-all duration-300
                        group-hover:gap-3"
             >
+              <span className="">Add</span>
               <ShoppingCart className="w-4 h-4" />
-              <span className="hidden sm:inline">Add</span>
             </button>
           ) : (
             <button
