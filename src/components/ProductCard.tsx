@@ -66,7 +66,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {product.badge && (
           <span
             className="px-3 py-1 rounded text-xs font-semibold
-                         bg-emerald-600 text-white"
+                         bg-emerald-600 text-white w-fit"
           >
             {product.badge}
           </span>
@@ -74,7 +74,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {discount > 0 && (
           <span
             className="px-3 py-1 rounded text-xs font-semibold
-                         bg-red-600 text-white"
+                         bg-red-600 text-white w-fit"
           >
             -{discount}%
           </span>
@@ -82,7 +82,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {!product.inStock && (
           <span
             className="px-3 py-1 rounded text-xs font-semibold
-                         bg-slate-600 text-white"
+                         bg-slate-600 text-white w-fit"
           >
             Out of Stock
           </span>
