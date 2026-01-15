@@ -92,7 +92,7 @@ const SolutionsHero = () => {
           >
             <a
               href="#request-quote"
-              className="inline-flex items-center gap-2 px-8 py-3 rounded
+              className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded
                        bg-emerald-600 text-white font-semibold
                        hover:bg-emerald-700 hover:shadow-xl hover:shadow-emerald-500/30
                        hover:-translate-y-1
@@ -116,13 +116,13 @@ const SolutionsHero = () => {
             </a>
             <a
               href="#services"
-              className="inline-flex items-center gap-2 px-8 py-3 rounded
+              className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded
                        border-2 border-slate-300 dark:border-slate-700
                        text-slate-700 dark:text-slate-300 font-semibold
                        hover:border-emerald-500 dark:hover:border-emerald-500
                        hover:text-emerald-600 dark:hover:text-emerald-400
                        transition-all duration-300
-                       w-full sm:w-auto"
+                       w-full sm:w-auto text-center"
             >
               <span>View Services</span>
             </a>

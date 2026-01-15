@@ -3,6 +3,7 @@ import HomePage from "@/pages/HomePage";
 import About from "@/pages/About";
 import Products from "@/pages/Products";
 import Solutions from "@/pages/Solutions";
+import NotFound from "@/pages/NotFound";
 
 const AppRoutes = () => {
   return (
@@ -11,6 +12,7 @@ const AppRoutes = () => {
       <Route path="products" element={<Products />} />
       <Route path="solutions" element={<Solutions />} />
       <Route path="about-us" element={<About />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

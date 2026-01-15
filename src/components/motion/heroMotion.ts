@@ -1,5 +1,4 @@
-import type { Variants } from "framer-motion";
-import { useState, useEffect } from "react";
+import type { Variants } from "motion/react";
 
 /**
  * Animation Configuration Constants
@@ -26,7 +25,7 @@ export const CUSTOM_EASINGS = {
 /**
  * Fade Up Animation Variant
  * Used for staggered entry animations in hero sections
- * 
+ *
  * @example
  * ```tsx
  * <motion.div
@@ -39,9 +38,9 @@ export const CUSTOM_EASINGS = {
  * ```
  */
 export const fadeUp: Variants = {
-  hidden: { 
-    opacity: 0, 
-    y: ANIMATION_CONFIG.FADE_UP.Y_OFFSET 
+  hidden: {
+    opacity: 0,
+    y: ANIMATION_CONFIG.FADE_UP.Y_OFFSET,
   },
   visible: {
     opacity: 1,
@@ -56,14 +55,14 @@ export const fadeUp: Variants = {
 /**
  * Fade Up with Reduced Motion Support
  * Respects user's motion preferences
- * 
+ *
  * @param prefersReducedMotion - Whether user prefers reduced motion
  * @returns Appropriate animation variant
- * 
+ *
  * @example
  * ```tsx
  * const prefersReducedMotion = useReducedMotion();
- * 
+ *
  * <motion.div
  *   variants={fadeUpAccessible(prefersReducedMotion)}
  *   initial="hidden"
@@ -92,7 +91,7 @@ export const fadeUpAccessible = (prefersReducedMotion: boolean): Variants => {
 /**
  * Stagger Container Variant
  * Use on parent elements to create staggered animations for children
- * 
+ *
  * @example
  * ```tsx
  * <motion.div
@@ -136,9 +135,9 @@ export const fadeIn: Variants = {
  * Useful for cards, images, and featured content
  */
 export const scaleUp: Variants = {
-  hidden: { 
-    opacity: 0, 
-    scale: 0.95 
+  hidden: {
+    opacity: 0,
+    scale: 0.95,
   },
   visible: {
     opacity: 1,
@@ -149,35 +148,3 @@ export const scaleUp: Variants = {
     },
   },
 };
-
-/**
- * Custom Hook: useReducedMotion
- * Detects user's motion preferences from system settings
- * 
- * @returns boolean indicating if user prefers reduced motion
- * 
- * @example
- * ```tsx
- * const prefersReducedMotion = useReducedMotion();
- * const variants = fadeUpAccessible(prefersReducedMotion);
- * ```
- */
-export const useReducedMotion = (): boolean => {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setPrefersReducedMotion(mediaQuery.matches);
-
-    const handler = (e: MediaQueryListEvent) =>
-      setPrefersReducedMotion(e.matches);
-    
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
-  }, []);
-
-  return prefersReducedMotion;
-};
-
-// Note: You'll need to add these imports at the top of the file:
-// import { useState, useEffect } from "react";

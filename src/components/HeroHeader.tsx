@@ -1,9 +1,8 @@
 import { NavLink } from "react-router-dom";
-import { motion } from "motion/react";
+import { motion, easeInOut } from "motion/react";
 import { fadeUp } from "../components/motion/heroMotion";
 import { useMemo } from "react";
 import { Handshake, RocketLaunchIcon } from "@/assets/icons/icons";
-import { easeInOut } from "motion/react";
 import { Layers, ShieldCheck } from "lucide-react";
 
 // Type Definitions
@@ -51,12 +50,7 @@ const HeroHeader: React.FC = () => {
       aria-label="Hero section - Company mission statement"
     >
       {/* Animated Grid Background */}
-      <div
-        className="absolute inset-0 
-                    bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] 
-                    bg-[size:40px_40px]
-                    [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_70%,transparent_100%)]"
-      />
+      <div className="absolute inset-0 hero-grid-pattern" />
 
       {/* Gradient Orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

@@ -1,4 +1,4 @@
-import { easeInOut, motion } from "framer-motion";
+import { easeInOut, motion } from "motion/react";
 import { NavLink } from "react-router-dom";
 import { ArrowRight, WandSparkles } from "lucide-react";
 
@@ -158,9 +158,9 @@ const FinalCTA = () => {
                 aria-hidden="true"
               >
                 <path
-                  clip-rule="evenodd"
+                  clipRule="evenodd"
                   d="M16.403 12.652a3 3 0 0 0 0-5.304 3 3 0 0 0-3.75-3.751 3 3 0 0 0-5.305 0 3 3 0 0 0-3.751 3.75 3 3 0 0 0 0 5.305 3 3 0 0 0 3.75 3.751 3 3 0 0 0 5.305 0 3 3 0 0 0 3.751-3.75Zm-2.546-4.46a.75.75 0 0 0-1.214-.883l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                 ></path>{" "}
               </svg>
               <span>Quality Guaranteed</span>
