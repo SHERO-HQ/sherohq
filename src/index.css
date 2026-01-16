@@ -69,6 +69,7 @@
 }
 
 :root {
+  color-scheme: light dark;
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -161,7 +162,7 @@
 /* Utility classes for complex backgrounds */
 .hero-grid-pattern {
   background-image: linear-gradient(to right, #80808012 1px, transparent 1px),
-                    linear-gradient(to bottom, #80808012 1px, transparent 1px);
+    linear-gradient(to bottom, #80808012 1px, transparent 1px);
   background-size: 40px 40px;
   mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 70%, transparent 100%);
 }

@@ -118,8 +118,7 @@ const HeroHeader: React.FC = () => {
             <motion.h1
               variants={prefersReducedMotion ? {} : fadeUp}
               className="text-center font-sora font-extrabold leading-tight block text-[clamp(2rem,6vw,7rem)] 
-                             bg-linear-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% 
-                             bg-clip-text text-transparent"
+                             text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400"
             >
               {HERO_CONTENT.mainHeader}
             </motion.h1>

@@ -44,7 +44,7 @@ const ProductHero: React.FC<ProductHeroProps> = ({ onSearch }) => {
           transition={{ delay: 0.1 }}
           className="text-center mb-8"
         >
-          <h1 className="text-4xl md:text-5xl font-sora font-bold text-slate-900 dark:text-slate-100 mb-4">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-sora font-bold text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400 mb-4">
             Premium Tech Products
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">

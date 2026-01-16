@@ -1,4 +1,4 @@
-import { motion, useInView, easeInOut } from "motion/react";
+import { motion, useInView, easeInOut, type Variants } from "motion/react";
 import { HeartPlus } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
@@ -67,7 +67,7 @@ const Stats = () => {
       <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-emerald-500/10 dark:bg-emerald-500/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
       <div className="absolute top-1/2 right-1/4 w-96 h-96 bg-blue-500/10 dark:bg-blue-500/5 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2" />
 
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container px-4 md:px-6 relative z-10 w-full mx-auto md:w-10/12">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -98,12 +98,7 @@ const Stats = () => {
           className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
           {stats.map((stat, index) => (
-            <StatCard
-              key={index}
-              stat={stat}
-              index={index}
-              variants={itemVariants}
-            />
+            <StatCard key={index} stat={stat} variants={itemVariants} />
           ))}
         </motion.div>
       </div>
@@ -111,15 +106,12 @@ const Stats = () => {
   );
 };
 
+// ... (imports remain)
+
+// ...
+
 // Separate component for animated counter
-const StatCard = ({
-  stat,
-  variants,
-}: {
-  stat: Stat;
-  index: number;
-  variants: any;
-}) => {
+const StatCard = ({ stat, variants }: { stat: Stat; variants: Variants }) => {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
