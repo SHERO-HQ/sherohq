@@ -110,7 +110,7 @@ const ServicesGrid = () => {
             Our Services
           </span>
           <h2 className="text-4xl md:text-5xl font-sora font-bold text-slate-900 dark:text-slate-100 mb-4">
-            What We Build
+            What We Do
           </h2>
           <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
             End-to-end software solutions designed to solve your business

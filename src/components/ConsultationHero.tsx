@@ -32,12 +32,12 @@ const ConsultationHero = () => {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-sora font-bold text-slate-900 dark:text-slate-100 mb-6 leading-tight">
             Let's Start a
             <br />
-            <span className="bg-linear-to-r from-emerald-500 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-4xl md:text-6xl lg:text-7xl text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400">
               Conversation
             </span>
           </h1>
 
-          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8 leading-relaxed">
+          <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8 leading-relaxed">
             Ready to transform your ideas into reality? Schedule a consultation
             with our experts to discuss your project requirements and goals.
           </p>

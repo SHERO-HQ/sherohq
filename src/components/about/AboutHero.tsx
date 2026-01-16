@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Code2, Users, Zap, Smartphone, Laptop, TruckElectric } from "lucide-react";
+import { Code2, Users, Zap, Smartphone, Laptop, TruckElectric, SmartphoneCharging } from "lucide-react";
 import type { ElementType } from "react";
 
 const AboutHero = () => {
@@ -16,16 +16,17 @@ const AboutHero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <span className="px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 text-sm font-medium mb-8 inline-block shadow-sm">
-            Empowering the Future since 2021
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 text-sm font-medium mb-8  shadow-sm">
+            <SmartphoneCharging className="w-5 h-5" />
+            Redefining the Future since 2021
           </span>
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-sora tracking-tight text-slate-900 dark:text-slate-100 mb-6">
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold font-sora tracking-tight text-slate-900 dark:text-slate-100 mb-6">
             Premium Products & <br />
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400">
+            <span className="text-4xl md:text-6xl lg:text-7xl text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400">
               Full-Spectrum IT
             </span>
           </h1>
-          <p className="max-w-[800px] mx-auto text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
+          <p className="max-w-[800px] mx-auto text-sm md:text-base text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
             We are a collective of visionary developers and strategists
             dedicated to delivering innovative software products and
             comprehensive IT services that transform businesses.

@@ -61,7 +61,7 @@ const Footer = () => {
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-lg bg-slate-800 hover:bg-emerald-600 
+                  className="w-10 h-10 rounded bg-slate-800 hover:bg-emerald-600 
                            text-slate-400 hover:text-white
                            flex items-center justify-center
                            transition-all duration-300

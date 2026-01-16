@@ -220,7 +220,7 @@ const Scheduler = () => {
         {/* Selected Summary (Desktop Only) */}
         {step > 1 && (
           <div className="hidden md:block mt-auto p-4 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <h4 className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">
+            <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">
               Booking Summary
             </h4>
             {formData.service && (
@@ -230,13 +230,13 @@ const Scheduler = () => {
               </div>
             )}
             {formData.date && (
-              <div className="flex items-center gap-2 mb-2 text-sm text-slate-600 dark:text-slate-300">
+              <div className="flex items-center font-semibold gap-2 mb-2 text-sm text-slate-600 dark:text-slate-300">
                 <CalendarIcon className="w-4 h-4 text-emerald-500" />
                 {format(formData.date, "MMM do, yyyy")}
               </div>
             )}
             {formData.time && (
-              <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+              <div className="flex items-center font-semibold gap-2 text-sm text-slate-600 dark:text-slate-300">
                 <Clock className="w-4 h-4 text-emerald-500" />
                 {formData.time}
               </div>
@@ -263,7 +263,7 @@ const Scheduler = () => {
                 <h2 className="text-xl md:text-2xl font-bold font-sora text-slate-900 dark:text-slate-100 mb-6">
                   Select a Service
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-1 gap-4">
+                <div className="grid grid-cols-1 gap-4">
                   {services.map((service) => (
                     <button
                       key={service.id}
@@ -271,7 +271,7 @@ const Scheduler = () => {
                         setFormData({ ...formData, service: service.id })
                       }
                       className={cn(
-                        "flex items-start md:items-center p-4 rounded border-2 transition-all duration-200 text-left hover:border-emerald-500/50 hover:bg-slate-50 dark:hover:bg-slate-800/50 group relative overflow-hidden",
+                        "flex items-start md:items-center p-4 rounded border-2 transition-all duration-200 text-left hover:border-emerald-500/50 hover:bg-emerald-50 dark:hover:bg-emerald-900/10 group relative overflow-hidden cursor-pointer",
                         formData.service === service.id
                           ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-900/10 shadow-sm"
                           : "border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900"
