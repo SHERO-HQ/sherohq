@@ -128,7 +128,7 @@ const Scheduler = () => {
           <br />
           is scheduled for <br />
           <span className="font-semibold text-primary dark:text-blue-600 block text-lg mt-1">
-            {formData.date && format(formData.date, "MMMM do, yyyy")} at{" "}
+            {formData.date && format(formData.date, "MMMM do, yyyy")} <br /> at{" "}
             {formData.time}
           </span>
         </p>
@@ -235,6 +235,7 @@ const Scheduler = () => {
                 {format(formData.date, "MMM do, yyyy")}
               </div>
             )}
+            
             {formData.time && (
               <div className="flex items-center font-semibold gap-2 text-sm text-slate-600 dark:text-slate-300">
                 <Clock className="w-4 h-4 text-emerald-500" />

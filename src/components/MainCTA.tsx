@@ -132,7 +132,7 @@ const MainCTA = () => {
             >
               {/* Card */}
               <div
-                className="relative h-full bg-white dark:bg-slate-900 rounded-2xl p-8 
+                className="relative h-full bg-white dark:bg-slate-900 rounded p-8 
                             border-2 border-slate-200 dark:border-slate-800
                             hover:border-transparent
                             shadow-lg hover:shadow-2xl
@@ -143,11 +143,11 @@ const MainCTA = () => {
                   className={`absolute inset-0 bg-linear-to-br ${path.gradient} 
                               opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10`}
                 />
-                <div className="absolute inset-0.5 bg-white dark:bg-slate-900 rounded-2xl -z-10" />
+                <div className="absolute inset-0.5 bg-white dark:bg-slate-900 rounded -z-10" />
 
                 {/* Icon */}
                 <div
-                  className={`inline-flex items-center justify-center w-16 h-16 rounded-xl
+                  className={`inline-flex items-center justify-center w-16 h-16 rounded
                               ${path.iconBg} ${path.iconColor} mb-6
                               group-hover:scale-110 transition-transform duration-300`}
                 >
@@ -175,7 +175,7 @@ const MainCTA = () => {
                   className={`inline-flex items-center justify-center gap-2 w-full
                            text-white bg-linear-to-r ${path.gradient}
                            ${path.hoverGradient}
-                           px-6 py-3 rounded-lg font-semibold
+                           px-6 py-3 rounded font-semibold
                            shadow-lg shadow-black/10
                            hover:shadow-xl hover:gap-3
                            transition-all duration-300 group`}
