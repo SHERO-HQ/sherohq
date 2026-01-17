@@ -33,22 +33,15 @@ const ProductShowcase = () => {
       image: "🔌",
       rating: 4.6,
     },
-    {
-      id: "3",
-      name: "Mechanical Keyboard",
-      category: "Accessories",
-      price: 350,
-      image: "⌨️",
-      rating: 4.9,
-      badge: "New Arrival",
-    },
+ 
     {
       id: "4",
-      name: "Laptop Stand Aluminum",
-      category: "Accessories",
+      name: "Laptop",
+      category: "Laptops",
       price: 120,
       image: "💻",
       rating: 4.7,
+      badge: "New Arrival",
     },
     {
       id: "5",
@@ -60,11 +53,20 @@ const ProductShowcase = () => {
     },
     {
       id: "6",
-      name: "Phone Case Premium",
+      name: "Protective Phone Case",
       category: "Mobile",
-      price: 8000,
+      price: 35,
       image: "📱",
       rating: 4.4,
+    },
+    {
+      id: "7",
+      name: "Ultra Slim Laptop Pro",
+      category: "Laptop",
+      price: 4500,
+      image: "💻",
+      rating: 4.9,
+      badge: "Premium",
     },
   ];
 
@@ -96,10 +98,10 @@ const ProductShowcase = () => {
             Featured Products
           </span>
           <h2 className="text-4xl md:text-5xl font-sora font-bold text-slate-900 dark:text-slate-200 mb-4">
-            Premium Tech Accessories
+            Premium Tech Products
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Discover our curated collection of high-quality tech products
+            Elevate your tech experience our curated collection of high-quality tech products
             designed to enhance your digital lifestyle
           </p>
         </motion.div>
@@ -192,10 +194,14 @@ const ProductShowcase = () => {
 
                   {/* Rating */}
                   <div className="flex items-center gap-2 mb-4">
-                    <div className="flex items-center">
+                    <div
+                      className="flex items-center"
+                      aria-label={`Rating: ${product.rating} out of 5 stars`}
+                    >
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
+                          aria-hidden="true"
                           className={`w-4 h-4 ${
                             i < Math.floor(product.rating)
                               ? "fill-yellow-400 text-yellow-400"

@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { motion, easeInOut } from "motion/react";
-import { Info } from "lucide-react";
+import { Handshake, Info, Laptop, MessageSquareMore, ShoppingBag } from "lucide-react";
 
 const WhoWeAre = () => {
   const containerVariants = {
@@ -143,14 +143,16 @@ const WhoWeAre = () => {
             className="w-full lg:w-1/2"
           >
             {/* Option 1: Decorative Card Grid */}
-            <div className="relative grid grid-cols-2 gap-4 lg:gap-6 mt-5 md:mt-auto">
+            <div className="relative grid md:grid-cols-2 gap-4 lg:gap-6 mt-5 md:mt-auto">
               {/* Card 1 - Shop Products */}
               <motion.div
                 whileHover={{ y: -8 }}
                 className="relative flex flex-col justify-center bg-linear-to-br from-blue-500 to-blue-600 rounded p-6 text-white shadow-xl"
               >
-                <div className="text-7xl -top-9 absolute">🛍️</div>
-                <h3 className="font-bold text-lg mb-2 mt-4">Shop Products</h3>
+                <div className="text-7xl -top-9 absolute bg-blue-500 p-2 rounded shadow">
+                  <ShoppingBag className="w-16 h-16" />
+                </div>
+                <h3 className="font-bold font-sora text-lg mb-2 mt-4">Shop Products</h3>
                 <p className="text-sm opacity-90">Premium tech accessories</p>
               </motion.div>
 
@@ -159,28 +161,34 @@ const WhoWeAre = () => {
                 whileHover={{ y: -8 }}
                 className="relative bg-linear-to-br from-emerald-500 to-emerald-600 rounded p-6 text-white shadow-xl mt-8"
               >
-                <div className="text-6xl -top-9 absolute">💬</div>
-                <h3 className="font-bold text-lg mb-2 mt-4">Consultation</h3>
+                <div className="-top-9 absolute bg-emerald-500 p-2 rounded shadow">
+                  <MessageSquareMore className="w-16 h-16" />
+                </div>
+                <h3 className="font-bold text-lg mb-2 mt-8">Consultation</h3>
                 <p className="text-sm opacity-90">Expert tech advisory</p>
               </motion.div>
 
               {/* Card 3 - Partnerships */}
               <motion.div
                 whileHover={{ y: -8 }}
-                className="relative bg-linear-to-br from-purple-500 to-purple-600 rounded p-8 text-white shadow-xl mt-8"
+                className="relative bg-linear-to-br from-purple-500 to-purple-600 rounded py-8 px-6 text-white shadow-xl mt-8"
               >
-                <div className="text-7xl -top-9 absolute">🤝</div>
-                <h3 className="font-bold text-lg mb-2 mt-4">Partnerships</h3>
+                <div className="text-7xl -top-9 absolute bg-purple-500 p-2 rounded shadow">
+                  <Handshake className="w-16 h-16"/>
+                </div>
+                <h3 className="font-bold font-sora text-lg mb-2 mt-4">Partnerships</h3>
                 <p className="text-sm opacity-90">Strategic collaborations</p>
               </motion.div>
 
               {/* Card 4 - Software & IT */}
               <motion.div
                 whileHover={{ y: -8 }}
-                className="relative bg-linear-to-br from-indigo-500 to-indigo-600 rounded px-6 py-4 text-white shadow-xl mt-14"
+                className="relative bg-linear-to-br from-indigo-500 to-indigo-600 rounded px-6 py-4 text-white shadow-xl md:mt-14 mt-8"
               >
-                <div className="text-7xl -top-9 absolute">💻</div>
-                <h3 className="font-bold text-lg mb-2 mt-10">Software & IT</h3>
+                <div className="text-7xl -top-9 absolute bg-indigo-500 p-2 rounded shadow">
+                  <Laptop className="w-16 h-16" />
+                </div>
+                <h3 className="font-bold font-sora text-lg mb-2 mt-10">Software & IT</h3>
                 <p className="text-sm opacity-90">Custom development</p>
               </motion.div>
             </div>

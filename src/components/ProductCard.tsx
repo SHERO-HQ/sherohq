@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { ShoppingCart, Heart, Eye, Star } from "lucide-react";
 import { useState } from "react";
 
@@ -139,6 +139,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         >
           <button
             onClick={handleQuickView}
+            aria-label={`Quick view ${product.name}`}
             className="flex items-center gap-2 px-6 py-3 rounded
                      bg-white text-slate-900 font-semibold
                      hover:bg-emerald-600 hover:text-white
@@ -169,10 +170,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Rating */}
         <div className="flex items-center gap-2 mb-4">
-          <div className="flex items-center">
-            {[...Array(5)].map((_, i) => (
+          <div
+            className="flex items-center"
+            aria-label={`Rating: ${product.rating} out of 5 stars based on ${product.reviews} reviews`}
+          >
+            {Array.from({ length: 5 }).map((_, i) => (
               <Star
-                key={i}
+                key={`star-${i}`}
+                aria-hidden="true"
                 className={`w-4 h-4 ${
                   i < Math.floor(product.rating)
                     ? "fill-yellow-400 text-yellow-400"

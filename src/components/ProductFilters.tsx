@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { X, SlidersHorizontal, Check } from "lucide-react";
 import { useState } from "react";
 
@@ -24,9 +24,20 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
   onClose,
 }) => {
   const [tempFilters, setTempFilters] = useState<FilterState>(filters);
-  const [activeTab, setActiveTab] = useState<'sort' | 'price' | 'brand' | 'rating'>('sort');
+  const [activeTab, setActiveTab] = useState<
+    "sort" | "price" | "brand" | "rating"
+  >("sort");
 
-  const brands = ["Apple", "Samsung", "Sony", "Logitech", "Razer", "Dell", "HP", "Lenovo"];
+  const brands = [
+    "Apple",
+    "Samsung",
+    "Sony",
+    "Logitech",
+    "Razer",
+    "Dell",
+    "HP",
+    "Lenovo",
+  ];
   const sortOptions = [
     { value: "newest", label: "Newest First" },
     { value: "price-low", label: "Price: Low to High" },
@@ -63,7 +74,10 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
   };
 
   const isPriceRangeActive = (range: [number, number]) => {
-    return tempFilters.priceRange[0] === range[0] && tempFilters.priceRange[1] === range[1];
+    return (
+      tempFilters.priceRange[0] === range[0] &&
+      tempFilters.priceRange[1] === range[1]
+    );
   };
 
   const getActiveFilterCount = () => {
@@ -71,15 +85,27 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
     if (tempFilters.brands.length > 0) count += tempFilters.brands.length;
     if (tempFilters.minRating > 0) count += 1;
     if (tempFilters.inStock) count += 1;
-    if (tempFilters.priceRange[0] !== 0 || tempFilters.priceRange[1] !== 10000) count += 1;
+    if (tempFilters.priceRange[0] !== 0 || tempFilters.priceRange[1] !== 10000)
+      count += 1;
     return count;
   };
 
   const tabs = [
-    { id: 'sort' as const, label: 'Sort', count: 0 },
-    { id: 'price' as const, label: 'Price', count: tempFilters.priceRange[0] !== 0 || tempFilters.priceRange[1] !== 10000 ? 1 : 0 },
-    { id: 'brand' as const, label: 'Brand', count: tempFilters.brands.length },
-    { id: 'rating' as const, label: 'Rating', count: tempFilters.minRating > 0 ? 1 : 0 },
+    { id: "sort" as const, label: "Sort", count: 0 },
+    {
+      id: "price" as const,
+      label: "Price",
+      count:
+        tempFilters.priceRange[0] !== 0 || tempFilters.priceRange[1] !== 10000
+          ? 1
+          : 0,
+    },
+    { id: "brand" as const, label: "Brand", count: tempFilters.brands.length },
+    {
+      id: "rating" as const,
+      label: "Rating",
+      count: tempFilters.minRating > 0 ? 1 : 0,
+    },
   ];
 
   return (
@@ -158,12 +184,14 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
             {/* Content */}
             <div className="flex-1 overflow-y-auto px-6 py-4">
               {/* Sort Tab */}
-              {activeTab === 'sort' && (
+              {activeTab === "sort" && (
                 <div className="space-y-2">
                   {sortOptions.map((option) => (
                     <button
                       key={option.value}
-                      onClick={() => setTempFilters({ ...tempFilters, sortBy: option.value })}
+                      onClick={() =>
+                        setTempFilters({ ...tempFilters, sortBy: option.value })
+                      }
                       className={`w-full flex items-center justify-between p-4 rounded-xl
                                transition-all ${
                                  tempFilters.sortBy === option.value
@@ -171,11 +199,13 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                                    : "bg-slate-50 dark:bg-slate-800 border-2 border-transparent"
                                }`}
                     >
-                      <span className={`font-medium ${
-                        tempFilters.sortBy === option.value
-                          ? "text-emerald-600 dark:text-emerald-400"
-                          : "text-slate-700 dark:text-slate-300"
-                      }`}>
+                      <span
+                        className={`font-medium ${
+                          tempFilters.sortBy === option.value
+                            ? "text-emerald-600 dark:text-emerald-400"
+                            : "text-slate-700 dark:text-slate-300"
+                        }`}
+                      >
                         {option.label}
                       </span>
                       {tempFilters.sortBy === option.value && (
@@ -187,12 +217,17 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
               )}
 
               {/* Price Tab */}
-              {activeTab === 'price' && (
+              {activeTab === "price" && (
                 <div className="space-y-3">
-                  {priceRanges.map((range, index) => (
+                  {priceRanges.map((range) => (
                     <button
-                      key={index}
-                      onClick={() => setTempFilters({ ...tempFilters, priceRange: range.range })}
+                      key={range.label}
+                      onClick={() =>
+                        setTempFilters({
+                          ...tempFilters,
+                          priceRange: range.range,
+                        })
+                      }
                       className={`w-full flex items-center justify-between p-4 rounded-xl
                                transition-all ${
                                  isPriceRangeActive(range.range)
@@ -200,11 +235,13 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                                    : "bg-slate-50 dark:bg-slate-800 border-2 border-transparent"
                                }`}
                     >
-                      <span className={`font-medium ${
-                        isPriceRangeActive(range.range)
-                          ? "text-emerald-600 dark:text-emerald-400"
-                          : "text-slate-700 dark:text-slate-300"
-                      }`}>
+                      <span
+                        className={`font-medium ${
+                          isPriceRangeActive(range.range)
+                            ? "text-emerald-600 dark:text-emerald-400"
+                            : "text-slate-700 dark:text-slate-300"
+                        }`}
+                      >
                         {range.label}
                       </span>
                       {isPriceRangeActive(range.range) && (
@@ -212,7 +249,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                       )}
                     </button>
                   ))}
-                  
+
                   {/* Stock Filter */}
                   <label className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800 cursor-pointer">
                     <span className="font-medium text-slate-700 dark:text-slate-300">
@@ -221,7 +258,12 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                     <input
                       type="checkbox"
                       checked={tempFilters.inStock}
-                      onChange={(e) => setTempFilters({ ...tempFilters, inStock: e.target.checked })}
+                      onChange={(e) =>
+                        setTempFilters({
+                          ...tempFilters,
+                          inStock: e.target.checked,
+                        })
+                      }
                       className="w-6 h-6 rounded border-slate-300 dark:border-slate-600
                                text-emerald-600 focus:ring-emerald-500"
                     />
@@ -230,7 +272,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
               )}
 
               {/* Brand Tab */}
-              {activeTab === 'brand' && (
+              {activeTab === "brand" && (
                 <div className="space-y-2">
                   {brands.map((brand) => (
                     <label
@@ -259,12 +301,14 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
               )}
 
               {/* Rating Tab */}
-              {activeTab === 'rating' && (
+              {activeTab === "rating" && (
                 <div className="space-y-2">
                   {ratings.map((rating) => (
                     <button
                       key={rating}
-                      onClick={() => setTempFilters({ ...tempFilters, minRating: rating })}
+                      onClick={() =>
+                        setTempFilters({ ...tempFilters, minRating: rating })
+                      }
                       className={`w-full flex items-center justify-between p-4 rounded-xl
                                transition-all ${
                                  tempFilters.minRating === rating
@@ -274,11 +318,13 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                     >
                       <div className="flex items-center gap-2">
                         <span className="text-2xl">{"⭐".repeat(rating)}</span>
-                        <span className={`font-medium ${
-                          tempFilters.minRating === rating
-                            ? "text-emerald-600 dark:text-emerald-400"
-                            : "text-slate-700 dark:text-slate-300"
-                        }`}>
+                        <span
+                          className={`font-medium ${
+                            tempFilters.minRating === rating
+                              ? "text-emerald-600 dark:text-emerald-400"
+                              : "text-slate-700 dark:text-slate-300"
+                          }`}
+                        >
                           {rating} & Up
                         </span>
                       </div>
@@ -288,7 +334,9 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                     </button>
                   ))}
                   <button
-                    onClick={() => setTempFilters({ ...tempFilters, minRating: 0 })}
+                    onClick={() =>
+                      setTempFilters({ ...tempFilters, minRating: 0 })
+                    }
                     className={`w-full flex items-center justify-between p-4 rounded-xl
                              transition-all ${
                                tempFilters.minRating === 0
@@ -296,11 +344,13 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                                  : "bg-slate-50 dark:bg-slate-800 border-2 border-transparent"
                              }`}
                   >
-                    <span className={`font-medium ${
-                      tempFilters.minRating === 0
-                        ? "text-emerald-600 dark:text-emerald-400"
-                        : "text-slate-700 dark:text-slate-300"
-                    }`}>
+                    <span
+                      className={`font-medium ${
+                        tempFilters.minRating === 0
+                          ? "text-emerald-600 dark:text-emerald-400"
+                          : "text-slate-700 dark:text-slate-300"
+                      }`}
+                    >
                       All Ratings
                     </span>
                     {tempFilters.minRating === 0 && (

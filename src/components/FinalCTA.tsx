@@ -1,4 +1,4 @@
-import { easeInOut, motion } from "motion/react";
+import { motion } from "motion/react";
 import { NavLink } from "react-router-dom";
 import { ArrowRight, WandSparkles } from "lucide-react";
 
@@ -10,7 +10,7 @@ const FinalCTA = () => {
 
       {/* Animated Pattern Overlay */}
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff20_1px,transparent_1px),linear-gradient(to_bottom,#ffffff20_1px,transparent_1px)] bg-[size:40px_40px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff20_1px,transparent_1px),linear-gradient(to_bottom,#ffffff20_1px,transparent_1px)] bg-size-[40px_40px]" />
       </div>
 
       {/* Floating Orbs */}
@@ -34,7 +34,7 @@ const FinalCTA = () => {
         transition={{
           duration: 10,
           repeat: Infinity,
-          ease: easeInOut,
+          ease: "easeInOut",
           delay: 1,
         }}
         className="absolute bottom-10 right-10 w-96 h-96 bg-white/10 rounded-full blur-3xl"

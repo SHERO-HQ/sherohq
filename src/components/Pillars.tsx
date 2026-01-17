@@ -1,16 +1,9 @@
 import { motion, easeInOut } from "motion/react";
 import FadeInView from "./motion/AnimateSection";
 import { fadeIn } from "./motion/heroMotion";
-import {
-  // AcademicCapIcon,
-  // CpuChipIcon,
-  // FinanceChart,
-  Handshake,
-  // SeedSprout,
-} from "@/assets/icons/icons";
 import type React from "react";
 
-import { Crosshair, ShoppingBag } from "lucide-react";
+import { Crosshair, HandshakeIcon, ShoppingBag } from "lucide-react";
 import { MessageSquare } from "lucide-react";
 import { Code } from "lucide-react";
 
@@ -68,7 +61,7 @@ const PILLARS: PillarsProps[] = [
     header: "Strategic Partnerships",
     content:
       "Collaborate with us through tech integration partnerships, referral programs, or investment opportunities. Let's grow together.",
-    icon: <Handshake className="w-8 h-8" />,
+    icon: <HandshakeIcon className="w-8 h-8" />,
   },
   {
     header: "Software & IT Solutions",

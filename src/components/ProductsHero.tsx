@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { BadgeCheck, Search, ShoppingBag, TruckElectric } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -81,17 +81,6 @@ const ProductHero: React.FC<ProductHeroProps> = ({ onSearch }) => {
               </div>
 
               {/* Filter Button (Mobile) */}
-              {/* <button
-                type="button"
-                onClick={onFilterToggle}
-                className="lg:hidden flex items-center gap-2 px-6 py-3 rounded
-                         bg-slate-900 dark:bg-slate-800 text-white
-                         hover:bg-slate-800 dark:hover:bg-slate-700
-                         transition-colors cursor-pointer"
-              >
-                <SlidersHorizontal className="w-5 h-5" />
-                <span className="sr-only">Filters</span>
-              </button> */}
 
               {/* Search Button */}
               <button
@@ -125,17 +114,6 @@ const ProductHero: React.FC<ProductHeroProps> = ({ onSearch }) => {
               </div>
 
               {/* Filter Button (Mobile) */}
-              {/* <button
-                type="button"
-                onClick={onFilterToggle}
-                className="lg:hidden flex items-center gap-2 px-6 py-3 rounded
-                         bg-slate-900 dark:bg-slate-800 text-white
-                         hover:bg-slate-800 dark:hover:bg-slate-700
-                         transition-colors cursor-pointer"
-              >
-                <SlidersHorizontal className="w-5 h-5" />
-                <span className="sr-only">Filters</span>
-              </button> */}
 
               {/* Search Button */}
               <button
@@ -150,20 +128,16 @@ const ProductHero: React.FC<ProductHeroProps> = ({ onSearch }) => {
             </div>
           </form>
 
-          {/* Quick Stats */}
           <div className="flex flex-wrap md:flex-nowrap items-center justify-center gap-8 mt-6 text-sm sm:text-xs text-slate-600 dark:text-slate-400">
             <div className="flex items-center gap-1">
-              {/* <div className="w-2 h-2 bg-emerald-500 rounded-full" /> */}
               <ShoppingBag className="w-4 h-4 text-emerald-500/80" />
               <span>1000+ Products</span>
             </div>
             <div className="flex items-center gap-2">
-              {/* <div className="w-2 h-2 bg-blue-500 rounded-full" /> */}
               <TruckElectric className="w-5 h-5 text-blue-500/80" />
               <span>Fast Delivery</span>
             </div>
             <div className="flex items-center gap-2">
-              {/* <div className="w-2 h-2 bg-indigo-500 rounded-full" /> */}
               <BadgeCheck className="w-5 h-5 text-indigo-500/80" />
               <span>Quality Guaranteed</span>
             </div>

@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import ProductCard from "@/components/ProductCard";
 import type { Product } from "@/components/ProductCard";
 import { Loader2, PackageX } from "lucide-react";
@@ -57,8 +57,10 @@ const ProductGrid: React.FC<ProductGridProps> = ({
         className="w-full py-20"
       >
         <div className="flex flex-col items-center justify-center gap-6 text-center">
-          <div className="w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-800 
-                        flex items-center justify-center">
+          <div
+            className="w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-800 
+                        flex items-center justify-center"
+          >
             <PackageX className="w-12 h-12 text-slate-400" />
           </div>
           <div>
@@ -70,7 +72,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
             </p>
           </div>
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => globalThis.location.reload()}
             className="px-6 py-3 rounded-lg bg-emerald-600 text-white font-semibold
                      hover:bg-emerald-700 transition-colors"
           >
