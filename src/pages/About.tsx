@@ -1,20 +1,22 @@
 import AboutHero from "@/components/about/AboutHero";
-import Values from "@/components/about/Values";
-import Team from "@/components/about/Team";
-import Stats from "@/components/Stats";
-import Testimonials from "@/components/about/Testimonials";
-import Footer from "@/components/Footer";
+import AboutValues from "@/components/about/AboutValues";
+import AboutTeam from "@/components/about/AboutTeam";
+import LandingStats from "@/components/landing/LandingStats";
+import AboutTestimonials from "@/components/about/AboutTestimonials";
+import Footer from "@/components/layout/Footer";
 import { useTitle } from "@/hooks/useTitle";
+import AboutTimeline from "@/components/about/AboutTimeline";
 
 const About = () => {
   useTitle("About Us");
   return (
     <>
       <AboutHero />
-      <Stats />
-      <Values />
-      <Testimonials />
-      <Team />
+      <LandingStats />
+      <AboutTimeline />
+      <AboutValues />
+      <AboutTestimonials />
+      <AboutTeam />
       <Footer />
     </>
   );

@@ -1,0 +1,150 @@
+import { useTitle } from "@/hooks/useTitle";
+import ContactForm from "@/components/common/ContactForm";
+import Footer from "@/components/layout/Footer";
+import { motion } from "motion/react";
+import { Mail, MapPin, MessagesSquare, Phone } from "lucide-react";
+
+const Contact = () => {
+  useTitle("Contact Us");
+
+  return (
+    <>
+      <div className="relative pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden dark:bg-slate-950 bg-slate-50 min-h-screen">
+        {/* Deep Space Background - Dark Mode Only */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black opacity-0 dark:opacity-100 transition-opacity duration-500" />
+
+        {/* Soft Light Mode Gradient */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-blue-100/50 via-slate-50 to-white dark:opacity-0 transition-opacity duration-500" />
+
+        {/* Digital Grid Overlay */}
+        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-20 dark:opacity-100" />
+
+        {/* Animated Orbs */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
+
+        <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left Column: Info */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className="space-y-12"
+            >
+              <div>
+                <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-500 uppercase tracking-wider transition-colors duration-300">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  Secure Transmission
+                </span>
+                <h1 className="text-4xl md:text-6xl font-sora font-bold text-slate-900 dark:text-white mb-6 leading-tight">
+                  Let's Build the
+                  <br />
+                  <span className="text-transparent bg-clip-text bg-linear-to-r dark:from-emerald-400 dark:to-cyan-400 from-primary to-secondary">
+                    Future Together
+                  </span>
+                </h1>
+                <p className="text-base text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed">
+                  Ready to transform your vision into reality? Our team of
+                  architects and engineers is standing by to encrypt your ideas
+                  into scalable solutions.
+                </p>
+              </div>
+
+              {/* Contact Details */}
+              <div className="space-y-6">
+                <ContactItem
+                  icon={
+                    <Mail className="w-5 h-5 text-teal-700 dark:text-emerald-400" />
+                  }
+                  label="Email Us"
+                  value="hello@sherotech.com"
+                  delay={0.2}
+                />
+                <ContactItem
+                  icon={
+                    <Phone className="w-5 h-5 text-blue-700 dark:text-blue-400" />
+                  }
+                  label="Call Us"
+                  value="+1 (555) 123-4567"
+                  delay={0.3}
+                />
+                <ContactItem
+                  icon={
+                    <MapPin className="w-5 h-5 text-indigo-700 dark:text-indigo-400" />
+                  }
+                  label="Visit HQ"
+                  value="123 Innovation Dr, Tech City, TC 90210"
+                  delay={0.4}
+                />
+              </div>
+            </motion.div>
+
+            {/* Right Column: Glass Form */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="relative"
+            >
+              {/* Form Container */}
+              <div className="relative bg-white/70 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded p-8 shadow-lg">
+                <div className="absolute top-0 right-0 p-6 opacity-20">
+                  <MessagesSquare className="w-12 h-12" />
+                </div>
+
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold font-sora dark:text-white text-slate-900 mb-2">
+                    Send Message
+                  </h3>
+                  <p className="text-sm dark:text-slate-400 text-slate-900">
+                    We typically reply within 2 hours.
+                  </p>
+                </div>
+
+                <ContactForm />
+              </div>
+
+              {/* Decorative border glow */}
+              <div className="absolute -inset-1 rounded bg-linear-to-br from-emerald-500/20 to-blue-500/20 blur-lg -z-10" />
+            </motion.div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </>
+  );
+};
+
+const ContactItem = ({
+  icon,
+  label,
+  value,
+  delay,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  delay: number;
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 10 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ delay, duration: 0.5 }}
+    className="flex items-center gap-4 group"
+  >
+    <div className="w-12 h-12 rounded text-slate-900 dark:text-white bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+      {icon}
+    </div>
+    <div>
+      <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">
+        {label}
+      </p>
+      <p className="dark:text-slate-200 text-slate-900/90 font-medium">
+        {value}
+      </p>
+    </div>
+  </motion.div>
+);
+
+export default Contact;

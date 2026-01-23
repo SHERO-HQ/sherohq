@@ -42,7 +42,7 @@ function Calendar({
         nav: "flex items-center gap-1 absolute right-2 top-0 z-20 rounded cursor-pointer",
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
-          "h-7 w-7 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 p-0 text-slate-900 hover:text-slate-900 dark:text-slate-200 dark:hover:text-slate-100 transition-colors cursor-pointer rounded"
+          "h-7 w-7 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 p-0 text-slate-900 hover:text-slate-900 dark:text-slate-200 dark:hover:text-slate-100 transition-colors cursor-pointer rounded",
         ),
         nav_button_previous: "static",
         nav_button_next: "static",
@@ -53,7 +53,7 @@ function Calendar({
         head_cell:
           "text-slate-500 rounded w-9 font-normal text-[0.8rem] dark:text-slate-400 block text-center",
         row: "flex w-full mt-2 justify-between",
-        cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r [&:has([aria-selected].day-outside)]:bg-slate-100/50 [&:has([aria-selected])]:bg-slate-100 first:[&:has([aria-selected])]:rounded-l last:[&:has([aria-selected])]:rounded-r focus-within:relative focus-within:z-20 dark:[&:has([aria-selected].day-outside)]:bg-slate-800/50 dark:[&:has([aria-selected])]:bg-slate-800 block",
+        cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r [&:has([aria-selected].day-outside)]:bg-slate-100 [&:has([aria-selected])]:bg-slate-100 first:[&:has([aria-selected])]:rounded-l last:[&:has([aria-selected])]:rounded-r focus-within:relative focus-within:z-20 dark:[&:has([aria-selected].day-outside)]:bg-slate-800 dark:[&:has([aria-selected])]:bg-slate-800 block",
 
         // Day Styles
         weekdays: "flex w-full justify-between mb-2",
@@ -63,11 +63,11 @@ function Calendar({
 
         day_button: cn(
           buttonVariants({ variant: "ghost" }),
-          "md:h-9 md:w-9 h-8 w-8 p-0 font-normal hover:bg-slate-100 dark:hover:bg-slate-800 rounded cursor-pointer text-slate-900 dark:text-slate-200 md:m-1 m-0"
+          "md:h-9 md:w-9 h-8 w-8 p-0 font-normal hover:bg-slate-100 dark:hover:bg-slate-800 rounded cursor-pointer text-slate-900 dark:text-slate-200 md:m-1 m-0",
         ),
         day: cn(
           buttonVariants({ variant: "ghost" }),
-          "md:h-9 md:w-9 h-8 w-8 p-0 font-normal hover:bg-slate-100 dark:hover:bg-slate-800 rounded cursor-pointer text-slate-900 dark:text-slate-200 md:m-1 m-0"
+          "md:h-9 md:w-9 h-8 w-8 p-0 font-normal hover:bg-slate-100 dark:hover:bg-slate-800 rounded cursor-pointer text-slate-900 dark:text-slate-200 md:m-1 m-0",
         ),
 
         ...classNames,
@@ -78,7 +78,7 @@ function Calendar({
         today:
           "bg-slate-100 text-slate-900 dark:bg-slate-800/80 dark:text-slate-100 font-semibold border border-slate-200 dark:border-slate-700",
         outside:
-          "text-slate-400 opacity-50 aria-selected:bg-slate-100/50 aria-selected:text-slate-500 aria-selected:opacity-30 dark:text-slate-600 dark:aria-selected:bg-slate-800/50 dark:aria-selected:text-slate-400 !cursor-not-allowed",
+          "text-slate-400 aria-selected:bg-slate-100 aria-selected:text-slate-500 dark:text-slate-600 dark:aria-selected:bg-slate-800",
         disabled:
           "text-slate-300 opacity-30 dark:text-slate-700 !cursor-not-allowed hover:bg-transparent",
         range_middle:

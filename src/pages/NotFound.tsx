@@ -25,7 +25,7 @@ const NotFound = () => {
         <div className="flex flex-col sm:flex-row sm:w-full items-center justify-center gap-4">
           <NavLink
             to="/"
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded
+            className="inline-flex items-center justify-center gap-2 px-6 py-2 rounded
                      bg-emerald-600 text-white font-semibold
                      hover:bg-emerald-700 transition-colors duration-300 cursor-pointer w-full"
           >
@@ -35,7 +35,7 @@ const NotFound = () => {
 
           <button
             onClick={() => window.history.back()}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded
+            className="inline-flex items-center justify-center gap-2 px-6 py-2 rounded
                      border-2 border-slate-300 dark:border-slate-700
                      text-slate-700 dark:text-slate-300 font-semibold
                      hover:border-emerald-500 hover:text-emerald-600

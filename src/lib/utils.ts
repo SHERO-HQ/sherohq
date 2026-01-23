@@ -5,8 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// import { cn } from "@/lib/utils"; // Adjust path as needed
-
 // ============================================================================
 // CONFIGURATION
 // ============================================================================
@@ -44,7 +42,7 @@ const NAV_LINK_STYLES = {
     // Hover states for inactive
     "hover:bg-emerald-500/10 dark:hover:bg-emerald-500/10",
     "hover:border-emerald-500 dark:hover:border-emerald-700 border-dashed",
-    'hover:rounded-none',
+    "hover:rounded-none",
     "hover:text-emerald-900 dark:hover:text-emerald-300",
   ],
 } as const;
@@ -80,7 +78,7 @@ const NAV_LINK_STYLES = {
 export function navLinkClass(isActive: boolean): string {
   return cn(
     ...NAV_LINK_STYLES.base,
-    isActive ? NAV_LINK_STYLES.active : NAV_LINK_STYLES.inactive
+    isActive ? NAV_LINK_STYLES.active : NAV_LINK_STYLES.inactive,
   );
 }
 
@@ -92,11 +90,11 @@ export function navLinkClass(isActive: boolean): string {
  * Alternative implementation with variant support
  * Use this if you need multiple nav link styles
  */
-export type NavLinkVariant = "default" | "sidebar" | "footer";
+export type NavLinkVariant = "default" | "sidebar" | "footer" | "mobile";
 
 export function navLinkClassVariant(
   isActive: boolean,
-  variant: NavLinkVariant = "default"
+  variant: NavLinkVariant = "default",
 ): string {
   const variantStyles = {
     default: NAV_LINK_STYLES,
@@ -123,10 +121,22 @@ export function navLinkClassVariant(
         "focus:outline-none focus:ring-2 focus:ring-emerald-400",
       ],
       active: ["text-emerald-400", "font-medium", "underline"],
+      inactive: ["text-slate-200", "hover:text-emerald-400", "hover:underline"],
+    },
+    mobile: {
+      base: [
+        "block py-3 px-4",
+        "rounded-lg",
+        "text-base font-medium",
+        "transition-colors duration-200",
+      ],
+      active: [
+        "bg-emerald-50 dark:bg-emerald-900/20",
+        "text-emerald-600 dark:text-emerald-400",
+      ],
       inactive: [
-        "text-slate-200",
-        "hover:text-emerald-400",
-        "hover:underline",
+        "text-slate-700 dark:text-slate-300",
+        "hover:bg-slate-50 dark:hover:bg-slate-800",
       ],
     },
   };

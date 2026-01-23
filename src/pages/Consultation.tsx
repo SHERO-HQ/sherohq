@@ -1,6 +1,6 @@
-import ConsultationHero from "@/components/ConsultationHero";
-import Scheduler from "@/components/Scheduler";
-import Footer from "@/components/Footer";
+import ConsultationHero from "@/components/solutions/ConsultationHero";
+import Scheduler from "@/components/solutions/Scheduler";
+import Footer from "@/components/layout/Footer";
 import { useTitle } from "@/hooks/useTitle";
 
 const Consultation = () => {

@@ -1,14 +1,15 @@
-import type { Category } from "@/components/ProductsCategories";
-import { 
-  Laptop, 
-  Smartphone, 
-  // Headphones, 
-  // Monitor, 
-  // Keyboard, 
+import type { Category } from "@/components/products/ProductsCategories";
+import {
+  Laptop,
+  Smartphone,
+  // Headphones,
+  // Monitor,
+  // Keyboard,
   // Mouse,
   // HardDrive,
   Usb,
-  Package
+  Package,
+  Monitor,
 } from "lucide-react";
 
 // Default categories with icons
@@ -33,11 +34,11 @@ export const defaultCategories: Category[] = [
   //   name: "Audio",
   //   icon: <Headphones className="w-6 h-6" />,
   // },
-  // {
-  //   id: "monitors",
-  //   name: "Monitors",
-  //   icon: <Monitor className="w-6 h-6" />,
-  // },
+  {
+    id: "desktops",
+    name: "Desktops",
+    icon: <Monitor className="w-6 h-6" />,
+  },
   // {
   //   id: "keyboards",
   //   name: "Keyboards",

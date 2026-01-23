@@ -1,8 +1,8 @@
-import ServicesGrid from "@/components/ServicesGrid";
-import SolutionsHero from "@/components/SolutionHero";
-import Process from "@/components/Process";
-import FinalCTA from "@/components/FinalCTA";
-import Footer from "@/components/Footer";
+import ServicesGrid from "@/components/solutions/ServicesGrid";
+import SolutionsHero from "@/components/solutions/SolutionHero";
+import Process from "@/components/solutions/Process";
+import FinalCTA from "@/components/landing/LandingFinalCTA";
+import Footer from "@/components/layout/Footer";
 import { useTitle } from "@/hooks/useTitle";
 
 const Solutions = () => {

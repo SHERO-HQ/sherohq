@@ -1,5 +1,5 @@
-import Footer from "@/components/Footer";
-import ShopPage from "@/components/ShopPage";
+import Footer from "@/components/layout/Footer";
+import ShopPage from "@/components/products/ShopPage";
 import { useTitle } from "@/hooks/useTitle";
 
 const Products = () => {

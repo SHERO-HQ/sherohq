@@ -1,14 +1,27 @@
 import { motion } from "motion/react";
-import { Code2, Users, Zap, Smartphone, Laptop, TruckElectric, SmartphoneCharging } from "lucide-react";
+import {
+  Code2,
+  Users,
+  Zap,
+  Smartphone,
+  Laptop,
+  TruckElectric,
+  SmartphoneCharging,
+} from "lucide-react";
 import type { ElementType } from "react";
 
 const AboutHero = () => {
   return (
     <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-950 pt-20">
       {/* Background Effects */}
-      <div className="absolute inset-0 w-full h-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-size-[24px_24px]" />
-      <div className="absolute left-0 right-0 top-0 -z-10 m-auto h-[310px] w-[310px] rounded-full bg-emerald-500 opacity-20 blur-[100px]" />
-      <div className="absolute right-0 bottom-0 -z-10 h-[310px] w-[310px] rounded-full bg-blue-500 opacity-20 blur-[100px]" />
+      {/* Animated Grid Background */}
+      <div className="absolute inset-0 hero-grid-pattern opacity-50" />
+
+      {/* Gradient Orbs - Purple/Indigo theme for About */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[100px]" />
+      </div>
 
       <div className="container px-4 md:px-6 relative z-10 text-center">
         <motion.div
@@ -18,7 +31,7 @@ const AboutHero = () => {
         >
           <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 text-sm font-medium mb-8  shadow-sm">
             <SmartphoneCharging className="w-5 h-5" />
-            Redefining the Future since 2021
+            Redefining Possibilities since 2023
           </span>
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold font-sora tracking-tight text-slate-900 dark:text-slate-100 mb-6">
             Premium Products & <br />
@@ -28,8 +41,8 @@ const AboutHero = () => {
           </h1>
           <p className="max-w-[800px] mx-auto text-sm md:text-base text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
             We are a collective of visionary developers and strategists
-            dedicated to delivering innovative software products and
-            comprehensive IT services that transform businesses.
+            dedicated to delivering innovative hardware and software products
+            and comprehensive IT services that transform people and businesses.
           </p>
         </motion.div>
 
@@ -49,7 +62,7 @@ const AboutHero = () => {
           className="top-32 right-[15%] text-amber-500 rotate-6"
           delay={0.4}
         />
-         <FloatingIcon
+        <FloatingIcon
           icon={TruckElectric}
           className="top-50 right-[12%] text-emerald-500 rotate-6"
           delay={0.6}
@@ -96,7 +109,7 @@ const FloatingIcon = ({
         delay: delay + 0.5,
       },
     }}
-    className={`absolute hidden lg:flex p-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-200 dark:border-slate-800 ${className}`}
+    className={`absolute hidden lg:flex p-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-200 dark:border-slate-800 ${className}`}
   >
     <Icon className="w-6 h-6" />
   </motion.div>
