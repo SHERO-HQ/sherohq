@@ -81,7 +81,7 @@ const Footer = () => {
                   />
                   <button
                     type="submit"
-                    className="absolute right-2 p-2 bg-emerald-600 rounded text-white hover:bg-emerald-500 transition-colors"
+                    className="cursor-pointer absolute right-2 p-2 bg-emerald-600 rounded text-white hover:bg-emerald-500 transition-colors"
                   >
                     <Send className="w-4 h-4" />
                   </button>
@@ -150,7 +150,7 @@ const Footer = () => {
               <div>
                 <h3 className="text-slate-900 dark:text-white font-sora font-bold text-lg mb-6 flex items-center gap-2 transition-colors duration-300">
                   Connect{" "}
-                  <div className="h-px w-8 bg-slate-200 dark:bg-slate-800 transition-colors duration-300" />
+                  <div className="h-px w-12 bg-emerald-500/50 transition-colors duration-300" />
                 </h3>
                 <div className="flex flex-col gap-4">
                   {socialLinks.map((social) => (

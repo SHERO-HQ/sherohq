@@ -62,11 +62,44 @@ const LandingFinalCTA = () => {
             <div className="relative">
               <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
                 {/* Glowing Core */}
-                <div className="absolute inset-0 bg-emerald-500/20 rounded-full blur-3xl animate-pulse" />
+                <motion.div
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="absolute inset-0 bg-emerald-500/20 rounded-full blur-3xl"
+                />
 
-                {/* Glass Circle */}
-                <div className="relative z-10 w-full h-full  backdrop-blur-md flex items-center justify-center">
-                  <Rocket className="w-32 h-32 text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.5)]" />
+                {/* Glass Circle Container */}
+                <div className="relative z-10 w-full h-full backdrop-blur-md flex items-center justify-center">
+                  <motion.div
+                    animate={{
+                      y: [-10, 10, -10],
+                      rotate: [-2, 2, -2],
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    whileHover={{
+                      scale: 1.1,
+                      rotate: 45,
+                      y: -20,
+                      transition: { duration: 0.3 },
+                    }}
+                    className="relative"
+                  >
+                    <Rocket className="w-32 h-32 text-emerald-400 drop-shadow-[0_0_30px_rgba(52,211,153,0.6)]" />
+                    {/* Engine Flame */}
+                    <motion.div
+                      animate={{ height: [0, 20, 0], opacity: [0, 1, 0] }}
+                      transition={{ duration: 0.5, repeat: Infinity }}
+                      className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-4 bg-orange-500 blur-sm rounded-full"
+                    />
+                  </motion.div>
                 </div>
 
                 {/* Orbiting Particles */}

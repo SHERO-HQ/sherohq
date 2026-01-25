@@ -56,13 +56,13 @@ const LandingPartners = () => {
               <div
                 key={`${partner.name}-${idx}`}
                 className="shrink-0 flex items-center justify-center gap-3 px-8 h-20 
-                           bg-slate-50 dark:bg-white/5 backdrop-blur-md rounded-lg border border-slate-200 dark:border-white/5
+                           bg-slate-50 dark:bg-white/5 backdrop-blur-md rounded border border-slate-200 dark:border-white/5
                            hover:bg-emerald-500/10 hover:border-emerald-500/50
                            hover:shadow-lg hover:shadow-emerald-500/20
                            transition-all duration-300
                            cursor-pointer group/card"
               >
-                <div className="flex items-center justify-center w-10 h-10 rounded-md bg-emerald-100 dark:bg-white/10 text-emerald-600 dark:text-emerald-400 font-bold group-hover/card:bg-emerald-500 group-hover/card:text-white transition-colors duration-300">
+                <div className="flex items-center justify-center w-10 h-10 rounded bg-emerald-100 dark:bg-white/10 text-emerald-600 dark:text-emerald-400 font-bold group-hover/card:bg-emerald-500 group-hover/card:text-white transition-colors duration-300">
                   {partner.logo}
                 </div>
                 <span className="text-slate-600 dark:text-slate-300 font-sora font-semibold tracking-wide group-hover/card:text-white dark:group-hover/card:text-white transition-colors">

@@ -339,7 +339,7 @@ const Scheduler = () => {
                       >
                         {service.icon}
                       </div>
-                      <div className="flex-1">
+                      <div className="cursor-pointer flex-1">
                         <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm md:text-base">
                           {service.title}
                         </h3>
@@ -442,7 +442,7 @@ const Scheduler = () => {
                   </div>
                 </div>
 
-                <div className="mt-8 md:mt-auto pt-8 flex justify-between items-center gap-4">
+                <div className="cursor-pointer mt-8 md:mt-auto pt-8 flex justify-between items-center gap-4">
                   <Button
                     onClick={prevStep}
                     variant="ghost"

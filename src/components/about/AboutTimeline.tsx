@@ -101,7 +101,7 @@ const TimelineItem = ({
       {/* Content Side */}
       <div className="w-full pl-16 md:pl-0 md:w-5/12">
         <div
-          className={`p-6 rounded-2xl bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/5 backdrop-blur-sm hover:border-emerald-500/30 transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-900/20 group text-left md:text-${
+          className={`p-6 rounded bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/5 backdrop-blur-sm hover:border-emerald-500/30 transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-900/20 group text-left md:text-${
             isEven ? "right" : "left"
           }`}
         >

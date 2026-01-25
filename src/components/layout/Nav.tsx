@@ -5,16 +5,19 @@ import { useEffect, useState } from "react";
 import { ToggleTheme } from "./toggle-theme";
 import { NavLink } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
-import { ShoppingCart } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { ShoppingCart, User } from "lucide-react";
 
-import { AnimatePresence, easeIn, easeOut, motion } from "motion/react";
+import { AnimatePresence, easeOut, motion } from "motion/react";
 import { navLinkClass, navLinkClassVariant } from "@/lib/utils";
 import BottomNav from "./BottomNav";
+import SearchBar from "./SearchBar";
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { totalQuantity, setIsCartOpen } = useCart();
+  const { user, isAuthenticated, logout } = useAuth();
 
   // Animation variants
   const menuVars = {
@@ -22,12 +25,18 @@ const Nav = () => {
     animate: {
       scaleY: 1,
       opacity: 1,
-      transition: { duration: 0.3, ease: easeOut },
+      transition: {
+        duration: 0.4,
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      }, // Custom ease for smoother reveal
     },
     exit: {
       scaleY: 0,
       opacity: 0,
-      transition: { duration: 0.2, ease: easeIn },
+      transition: {
+        duration: 0.3,
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      },
     },
   };
 
@@ -37,7 +46,7 @@ const Nav = () => {
     animate: (i: number) => ({
       y: 0,
       opacity: 1,
-      transition: { delay: 0.1 * i, duration: 0.3 },
+      transition: { delay: 0.1 + i * 0.05, duration: 0.4, ease: easeOut },
     }),
   };
 
@@ -128,11 +137,15 @@ const Nav = () => {
               ))}
             </ul>
 
-            {/* Desktop Actions */}
-            <div className="hidden lg:flex items-center gap-4">
+            {/* Global Actions (Always Visible) */}
+            <div className="flex items-center gap-2 lg:gap-4 ml-auto lg:ml-0 mr-4 lg:mr-0">
+              {/* Search */}
+              <SearchBar className="hidden lg:block" />
+
+              {/* Contact Us - Desktop Only */}
               <NavLink
                 to="/contact-us"
-                className="group inline-flex items-center gap-2 
+                className="hidden lg:inline-flex group items-center gap-2 
                          text-white bg-emerald-600 dark:bg-emerald-500
                          px-6 py-2 rounded font-semibold text-sm
                          hover:bg-emerald-700 dark:hover:bg-emerald-600 
@@ -153,16 +166,59 @@ const Nav = () => {
                   <path d="M5 12H19M19 12L13 6M19 12L13 18" />
                 </svg>
               </NavLink>
-            </div>
 
-            {/* Global Actions (Always Visible) */}
-            <div className="flex items-center gap-2 lg:gap-4 ml-auto lg:ml-0 mr-4 lg:mr-0">
               <ToggleTheme />
+
+              {/* User Dropdown */}
+              <div className="relative group">
+                {isAuthenticated ? (
+                  <button className="cursor-pointer p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <span className="sr-only">User Menu</span>
+                    <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-sm border border-emerald-200 dark:border-emerald-800">
+                      {user?.name?.charAt(0)}
+                    </div>
+                  </button>
+                ) : (
+                  <NavLink
+                    to="/login"
+                    className="cursor-pointer p-2 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors block"
+                    aria-label="Login"
+                  >
+                    <User className="w-6 h-6" />
+                  </NavLink>
+                )}
+
+                {/* Dropdown Menu (Only when authenticated) */}
+                {isAuthenticated && (
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-900 rounded shadow-xl border border-slate-200 dark:border-slate-800 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
+                      <p className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">
+                        {user?.name}
+                      </p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
+                        {user?.email}
+                      </p>
+                    </div>
+                    <NavLink
+                      to="/profile"
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+                    >
+                      <User className="w-4 h-4" /> Profile & Orders
+                    </NavLink>
+                    <button
+                      onClick={() => logout()}
+                      className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
 
               {/* Cart Button */}
               <button
                 onClick={() => setIsCartOpen(true)}
-                className="relative p-2 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                className="cursor-pointer relative p-2 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
                 aria-label="Open Cart"
               >
                 <ShoppingCart className="w-6 h-6" />
@@ -227,7 +283,7 @@ const Nav = () => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={() => setIsOpen(false)}
-                className="fixed inset-0 top-16 bg-black/20 dark:bg-black/40 backdrop-blur-sm lg:hidden z-40"
+                className="cursor-pointer fixed inset-0 top-16 bg-black/20 dark:bg-black/40 backdrop-blur-sm lg:hidden z-40"
               />
 
               {/* Menu Panel */}
@@ -243,6 +299,9 @@ const Nav = () => {
                 id="mobile-nav-menu"
               >
                 {/* Nav Links */}
+                <div className="mb-6">
+                  <SearchBar className="mb-4" alwaysOpen={true} />
+                </div>
                 <ul className="space-y-1 mb-8">
                   {navLinks.map((item, i) => (
                     <motion.li
@@ -275,7 +334,7 @@ const Nav = () => {
                     onClick={() => setIsOpen(false)}
                     className="flex w-full items-center justify-center gap-2 
                                text-white bg-emerald-600 dark:bg-emerald-500
-                               px-6 py-3 rounded-lg font-semibold
+                               px-6 py-3 rounded font-semibold
                                hover:bg-emerald-700 dark:hover:bg-emerald-600
                                transition-all duration-300 shadow-lg shadow-emerald-500/25"
                   >

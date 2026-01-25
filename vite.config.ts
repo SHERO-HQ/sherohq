@@ -5,14 +5,26 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-   base: '/',  // Should be '/' for Netlify
+  base: "/", // Should be '/' for Netlify
   build: {
-    outDir: 'dist',
+    outDir: "dist",
   },
-  plugins: [react(), tailwindcss(), ],
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:5000",
+        changeOrigin: true,
+      },
+      "/uploads": {
+        target: "http://localhost:5000",
+        changeOrigin: true,
+      },
     },
   },
 });

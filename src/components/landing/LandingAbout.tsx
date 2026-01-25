@@ -87,21 +87,33 @@ const LandingAbout = () => {
           {/* RIGHT COLUMN: Tech Nexus Visualization */}
           <div className="w-full lg:w-1/2 relative h-[500px] flex items-center justify-center">
             {/* Central Glass Card */}
+            {/* Central Tech Nexus Visual */}
+            {/* Central Glass Card */}
+            {/* Central Tech Nexus Visual with Zap */}
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.8, ease: "circOut" }}
-              className="relative z-20 w-72 h-72 rounded bg-white/40 dark:bg-slate-900/40 backdrop-blur-xl border border-slate-200 dark:border-slate-700/50 shadow-2xl flex flex-col items-center justify-center text-center p-6 transition-colors duration-300"
+              className="relative z-20 w-80 h-80 rounded-full flex items-center justify-center bg-slate-900/10 backdrop-blur-sm border border-emerald-500/30"
             >
-              <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mb-4 transition-colors duration-300">
-                <Zap className="w-8 h-8 text-emerald-500" />
+              <div className="absolute inset-0 bg-emerald-500/20 rounded-full blur-[80px] animate-pulse" />
+
+              {/* Rotating Rings */}
+              <div className="absolute inset-4 border border-emerald-500/30 rounded-full animate-[spin_10s_linear_infinite]" />
+              <div className="absolute inset-8 border border-emerald-400/20 rounded-full animate-[spin_15s_linear_infinite_reverse]" />
+
+              {/* Central Glowing Icon */}
+              <div className="relative z-10 w-32 h-32 bg-emerald-500/10 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.3)] backdrop-blur-md border border-emerald-500/20">
+                <Zap className="w-16 h-16 text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.8)] animate-pulse" />
               </div>
-              <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-1 transition-colors duration-300">
-                10X
-              </h3>
-              <p className="text-sm text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wide transition-colors duration-300">
-                Efficiency Impact
-              </p>
+
+              {/* Floating Badge Overlay */}
+              <div className="absolute bottom-0 right-0 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded transform translate-y-1/2 shadow-lg">
+                <p className="text-xs font-bold text-white uppercase tracking-wider">
+                  Core System
+                </p>
+                <p className="text-[10px] text-emerald-300">Online</p>
+              </div>
             </motion.div>
 
             {/* Floating Elements (Orbiting) */}

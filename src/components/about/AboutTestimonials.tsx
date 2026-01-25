@@ -98,13 +98,13 @@ const AboutTestimonials = () => {
           {/* Desktop/Side Controls */}
           <button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-emerald-600 dark:hover:text-white hover:border-emerald-500 transition-colors z-20 hidden md:block shadow-sm"
+            className="cursor-pointer absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-emerald-600 dark:hover:text-white hover:border-emerald-500 transition-colors z-20 hidden md:block shadow-sm"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-emerald-600 dark:hover:text-white hover:border-emerald-500 transition-colors z-20 hidden md:block shadow-sm"
+            className="cursor-pointer absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-emerald-600 dark:hover:text-white hover:border-emerald-500 transition-colors z-20 hidden md:block shadow-sm"
           >
             <ChevronRight className="w-6 h-6" />
           </button>
@@ -165,7 +165,7 @@ const AboutTestimonials = () => {
             <div className="flex items-center gap-4 md:hidden">
               <button
                 onClick={prevSlide}
-                className="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-400 transition-colors active:border-emerald-500 shadow-sm"
+                className="cursor-pointer p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-400 transition-colors active:border-emerald-500 shadow-sm"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
@@ -184,7 +184,7 @@ const AboutTestimonials = () => {
               </div>
               <button
                 onClick={nextSlide}
-                className="p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-400 transition-colors active:border-emerald-500 shadow-sm"
+                className="cursor-pointer p-2 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-400 transition-colors active:border-emerald-500 shadow-sm"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
@@ -207,7 +207,7 @@ const AboutTestimonials = () => {
         </div>
 
         {/* Feedback CTA */}
-        <div className="text-center">
+        <div className="cursor-pointer text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -224,7 +224,7 @@ const AboutTestimonials = () => {
               <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 transition-colors duration-300">
                 We value your input! Help us improve our products and services.
               </p>
-              <button className="px-8 py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700 transition-colors cursor-pointer shadow-lg shadow-emerald-900/20 w-full sm:w-auto">
+              <button className="cursor-pointer px-8 py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700 transition-colors cursor-pointer shadow-lg shadow-emerald-900/20 w-full sm:w-auto">
                 Share Your Thoughts
               </button>
             </div>

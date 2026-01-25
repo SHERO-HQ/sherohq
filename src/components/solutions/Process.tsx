@@ -1,110 +1,124 @@
 import { motion } from "motion/react";
-import { Search, Lightbulb, Code2, Rocket, Workflow } from "lucide-react";
+import {
+  Search,
+  Lightbulb,
+  Code2,
+  Rocket,
+  Workflow,
+  Wrench,
+  Shield,
+} from "lucide-react";
 
-interface Step {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-}
-
-const steps: Step[] = [
+const steps = [
   {
-    title: "Discovery",
+    title: "Discovery & Consultation",
     description:
-      "We dive deep into your business goals, challenges, and requirements to understand your vision clearly.",
-    icon: <Search className="w-6 h-6" />,
+      "We dive deep into your business needs, assess your current infrastructure, and understand your technology goals.",
+    icon: Search,
   },
   {
-    title: "Strategy",
+    title: "Strategy & Design",
     description:
-      "Our experts craft a tailored roadmap and architecture designed for scalability and performance.",
-    icon: <Lightbulb className="w-6 h-6" />,
+      "Our experts craft a tailored solution encompassing hardware, software, network infrastructure, and security architecture.",
+    icon: Lightbulb,
   },
   {
-    title: "Development",
+    title: "Implementation",
     description:
-      "We build your solution using cutting-edge technologies with a focus on code quality and security.",
-    icon: <Code2 className="w-6 h-6" />,
+      "We build, install, and configure your complete technology stack - from hardware setup to custom software development.",
+    icon: Code2,
   },
   {
-    title: "Launch",
+    title: "Integration & Testing",
     description:
-      "Rigorous testing ensures a flawless deployment, followed by ongoing support and optimization.",
-    icon: <Rocket className="w-6 h-6" />,
+      "Rigorous testing ensures seamless integration of all systems, with security audits and performance optimization.",
+    icon: Wrench,
+  },
+  {
+    title: "Deployment & Training",
+    description:
+      "Smooth rollout with comprehensive staff training and knowledge transfer to ensure successful adoption.",
+    icon: Rocket,
+  },
+  {
+    title: "Support & Maintenance",
+    description:
+      "Ongoing monitoring, updates, hardware maintenance, and 24/7 IT support to keep your systems running optimally.",
+    icon: Shield,
   },
 ];
 
 const Process = () => {
   return (
-    <section className="py-24 bg-slate-50 dark:bg-slate-900 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
-      </div>
+    <section className="py-24 bg-white dark:bg-slate-900 overflow-hidden relative border-t border-slate-200 dark:border-white/5">
+      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-5 dark:opacity-20" />
 
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-16"
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-500 uppercase tracking-wider">
+      <div className="container max-w-5xl mx-auto px-4 relative z-10">
+        <div className="text-center mb-20">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full">
             <Workflow className="w-4 h-4" />
-            <span>How We Work</span>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-sora font-bold text-slate-900 dark:text-slate-100 mt-2 mb-4">
+            How We Work
+          </span>
+          <h2 className="text-3xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white mb-6">
             Our Process
           </h2>
           <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
             A transparent, agile workflow designed to deliver exceptional
             results on time and within budget.
           </p>
-        </motion.div>
+        </div>
 
         <div className="relative">
-          {/* Connector Line (Desktop) */}
-          <div className="hidden lg:block absolute top-[2.5rem] left-0 w-full h-0.5 bg-linear-to-r from-transparent via-slate-300 dark:via-slate-700 to-transparent" />
+          {/* Central Timeline Line */}
+          <div className="absolute left-8 md:left-1/2 transform -translate-x-1/2 h-full w-px bg-gradient-to-b from-transparent via-emerald-500/50 to-transparent" />
 
-          {/* Connector Line (Mobile/Tablet) - Vertical */}
-          <div className="absolute lg:hidden top-0 left-8 h-full w-0.5 bg-linear-to-b from-transparent via-slate-300 dark:via-slate-700 to-transparent" />
+          <div className="space-y-16 md:space-y-24">
+            {steps.map((step, index) => {
+              const isEven = index % 2 === 0;
+              const Icon = step.icon;
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-8">
-            {steps.map((step, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.15 }}
-                className="relative flex flex-row lg:flex-col items-start lg:items-center text-left lg:text-center gap-6 lg:gap-0 group"
-              >
-                {/* Step Number Badge */}
-                <div
-                  className="w-16 h-16 lg:w-20 lg:h-20 shrink-0 rounded bg-white dark:bg-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none
-                           flex items-center justify-center lg:mb-6 relative z-10
-                           border-2 border-transparent group-hover:border-emerald-500/50 transition-colors duration-300"
+              return (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.7, delay: index * 0.1 }}
+                  className={`relative flex items-center justify-between ${
+                    isEven ? "md:flex-row-reverse" : "md:flex-row"
+                  }`}
                 >
-                  <div className="text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform duration-300">
-                    {step.icon}
+                  {/* Content Card */}
+                  <div className="w-full pl-14 md:pl-0 md:w-5/12">
+                    <div
+                      className={`p-6 rounded bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/5 backdrop-blur-sm hover:border-emerald-500/30 transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-900/20 group ${
+                        isEven ? "md:text-right" : "md:text-left"
+                      }`}
+                    >
+                      <span className="inline-block py-1 px-3 rounded mb-3 text-sm font-mono font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                        Step {index + 1}
+                      </span>
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
+                        {step.title}
+                      </h3>
+                      <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                        {step.description}
+                      </p>
+                    </div>
                   </div>
-                  {/* Absolute number for style */}
-                  <span className="absolute -top-2 -right-2 lg:-top-3 lg:-right-3 w-6 h-6 lg:w-8 lg:h-8 rounded-full bg-emerald-600 text-white text-xs lg:text-sm font-bold flex items-center justify-center ring-4 ring-slate-50 dark:ring-slate-900">
-                    {index + 1}
-                  </span>
-                </div>
 
-                <div className="pt-2 lg:pt-0">
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-2 lg:mb-3">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    {step.description}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
+                  {/* Timeline Icon */}
+                  <div className="absolute left-8 md:left-1/2 md:-translate-x-1/2 -translate-x-1/2 flex items-center justify-center">
+                    <div className="w-12 h-12 md:w-20 md:h-20 rounded-full bg-emerald-600 dark:bg-emerald-500 shadow-lg shadow-emerald-500/30 flex items-center justify-center border-4 border-white dark:border-slate-900 z-10 transition-transform hover:scale-110">
+                      <Icon className="w-6 h-6 md:w-10 md:h-10 text-white" />
+                    </div>
+                  </div>
+
+                  {/* Empty Space (Desktop only - for alignment) */}
+                  <div className="hidden md:block w-5/12" />
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </div>

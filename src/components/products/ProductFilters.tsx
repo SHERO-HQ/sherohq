@@ -173,7 +173,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                 >
                   <span>{tab.label}</span>
                   {tab.count > 0 && (
-                    <span className="px-1.5 py-0.5 text-xs font-semibold dark:bg-blue-900/50 bg-blue-500/20 dark:text-blue-300 text-blue-900 rounded border dark:border-blue-500/20 border-blue-500/20">
+                    <span className="cursor-pointer px-1.5 py-0.5 text-xs font-semibold dark:bg-blue-900/50 bg-blue-500/20 dark:text-blue-300 text-blue-900 rounded border dark:border-blue-500/20 border-blue-500/20">
                       {tab.count}
                     </span>
                   )}
@@ -209,7 +209,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                         {option.label}
                       </span>
                       {tempFilters.sortBy === option.value && (
-                        <Check className="w-6 h-6 dark:text-blue-400 text-blue-800" />
+                        <Check className="cursor-pointer w-6 h-6 dark:text-blue-400 text-blue-800" />
                       )}
                     </button>
                   ))}
@@ -245,7 +245,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                         {range.label}
                       </span>
                       {isPriceRangeActive(range.range) && (
-                        <Check className="w-6 h-6 dark:text-blue-400 text-blue-800" />
+                        <Check className="cursor-pointer w-6 h-6 dark:text-blue-400 text-blue-800" />
                       )}
                     </button>
                   ))}
@@ -316,7 +316,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                                     : "dark:bg-slate-800/50 bg-slate-300/70 border border-transparent"
                                 }`}
                     >
-                      <div className="flex items-center gap-2">
+                      <div className="cursor-pointer flex items-center gap-2">
                         <span className="text-xl">{"⭐".repeat(rating)}</span>
                         <span
                           className={`font-medium ${
@@ -354,7 +354,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                       All Ratings
                     </span>
                     {tempFilters.minRating === 0 && (
-                      <Check className="w-6 h-6 dark:text-blue-400 text-blue-800" />
+                      <Check className="cursor-pointer w-6 h-6 dark:text-blue-400 text-blue-800" />
                     )}
                   </button>
                 </div>

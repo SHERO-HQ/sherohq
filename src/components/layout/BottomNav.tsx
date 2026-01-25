@@ -24,7 +24,7 @@ const BottomNav = () => {
                 key={item.label}
                 onClick={() => setIsCartOpen(true)}
                 aria-label={`Open Cart (${totalQuantity} items)`}
-                className="flex flex-col items-center justify-center w-full h-full gap-1 text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors relative"
+                className="cursor-pointer flex flex-col items-center justify-center w-full h-full gap-1 text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors relative"
               >
                 <item.icon className="w-6 h-6" strokeWidth={2} />
                 <span className="text-[12px] font-medium">{item.label}</span>
@@ -56,7 +56,7 @@ const BottomNav = () => {
 
         {/* <button
           onClick={onMenuClick}
-          className="flex flex-col items-center justify-center w-full h-full gap-1 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
+          className="cursor-pointer flex flex-col items-center justify-center w-full h-full gap-1 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
         >
           <Menu className="w-6 h-6" strokeWidth={2} />
           <span className="text-[10px] font-medium">Menu</span>

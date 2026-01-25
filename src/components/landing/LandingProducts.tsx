@@ -1,22 +1,12 @@
 import { motion } from "motion/react";
 import { NavLink } from "react-router-dom";
-import { ShoppingCart, Star, ArrowRight } from "lucide-react";
+import { ShoppingCart, ArrowRight } from "lucide-react";
 import { useState } from "react";
-import { useCart } from "@/context/CartContext";
-
-interface Product {
-  id: string;
-  name: string;
-  category: string;
-  price: number;
-  image: string;
-  rating: number;
-  badge?: string;
-}
+import ProductCard from "@/components/products/ProductCard";
+import type { Product } from "@/data/products";
 
 const LandingProducts = () => {
-  const { addItem } = useCart();
-  // Products data
+  // Products data with extended fields for detail view
   const products: Product[] = [
     {
       id: "1",
@@ -24,8 +14,23 @@ const LandingProducts = () => {
       category: "Accessories",
       price: 400,
       image: "🎧",
+      images: ["🎧", "🎵", "🔊"],
       rating: 4.8,
+      reviews: 156,
       badge: "Best Seller",
+      inStock: true,
+      description:
+        "Premium wireless earbuds with active noise cancellation and 30-hour battery life.",
+      features: [
+        "Active Noise Cancellation",
+        "30-hour battery",
+        "Premium sound quality",
+      ],
+      specifications: {
+        "Battery Life": "30 hours",
+        Bluetooth: "5.2",
+        Charging: "USB-C Fast Charge",
+      },
     },
     {
       id: "2",
@@ -34,8 +39,12 @@ const LandingProducts = () => {
       price: 200,
       image: "🔌",
       rating: 4.6,
+      reviews: 89,
+      inStock: true,
+      description:
+        "Versatile 7-in-1 USB-C hub with HDMI, USB 3.0, and SD card reader.",
+      features: ["7 ports", "4K HDMI output", "Fast data transfer"],
     },
-
     {
       id: "4",
       name: "Laptop",
@@ -43,7 +52,9 @@ const LandingProducts = () => {
       price: 120,
       image: "💻",
       rating: 4.7,
+      reviews: 234,
       badge: "New Arrival",
+      inStock: true,
     },
     {
       id: "5",
@@ -52,6 +63,8 @@ const LandingProducts = () => {
       price: 100,
       image: "🖱️",
       rating: 4.5,
+      reviews: 67,
+      inStock: true,
     },
     {
       id: "6",
@@ -60,6 +73,8 @@ const LandingProducts = () => {
       price: 35,
       image: "📱",
       rating: 4.4,
+      reviews: 145,
+      inStock: true,
     },
     {
       id: "7",
@@ -67,8 +82,25 @@ const LandingProducts = () => {
       category: "Laptop",
       price: 4500,
       image: "💻",
+      images: ["💻", "⌨️", "🖥️", "🔋"],
       rating: 4.9,
+      reviews: 312,
       badge: "Premium",
+      inStock: true,
+      description:
+        "High-performance laptop with premium build quality and all-day battery life.",
+      features: [
+        "Intel i7 Processor",
+        "16GB RAM",
+        "512GB SSD",
+        "14-hour battery",
+      ],
+      specifications: {
+        Processor: "Intel Core i7",
+        RAM: "16GB DDR4",
+        Storage: "512GB NVMe SSD",
+        Display: "14-inch Retina",
+      },
     },
   ];
 
@@ -95,7 +127,7 @@ const LandingProducts = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <span className="inline-flex items-center px-4 py-1.5 mb-4 text-sm font-semibold text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 rounded-full">
+          <span className="inline-flex items-center px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
             <ShoppingCart className="mr-2 w-4 h-4" />
             Featured Products
           </span>
@@ -103,8 +135,8 @@ const LandingProducts = () => {
             Premium Tech Products
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Elevate your tech experience our curated collection of high-quality
-            tech products designed to enhance your digital lifestyle
+            Elevate your tech experience with our curated collection of
+            high-quality products designed to enhance your digital lifestyle
           </p>
         </motion.div>
 
@@ -129,122 +161,10 @@ const LandingProducts = () => {
         </div>
 
         {/* Products Grid */}
-        {/* Products Grid / Carousel */}
-        <div className="flex overflow-x-auto pb-8 -mx-4 px-4 snap-x sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8 mb-12 no-scrollbar">
+        <div className="cursor-pointer grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
-              <motion.div
-                key={product.id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -30 }}
-                transition={{ duration: 0.5 }}
-                whileHover={{ y: -8 }}
-                className="shrink-0 w-[85vw] sm:w-auto snap-center group relative bg-slate-50 dark:bg-slate-900 rounded overflow-hidden
-                           border border-slate-200 dark:border-slate-800
-                           hover:border-emerald-500 dark:hover:border-emerald-500
-                           hover:shadow-2xl hover:shadow-emerald-500/10
-                           transition-all duration-300"
-              >
-                {/* Badge */}
-                {product.badge && (
-                  <div
-                    className="absolute top-4 left-4 z-10 px-3 py-1 rounded text-xs font-semibold
-                                bg-emerald-600 text-white"
-                  >
-                    {product.badge}
-                  </div>
-                )}
-
-                {/* Image Container */}
-                <div
-                  className="relative h-64 bg-linear-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700
-                              flex items-center justify-center overflow-hidden"
-                >
-                  <div className="text-8xl group-hover:scale-110 transition-transform duration-300">
-                    {product.image}
-                  </div>
-
-                  {/* Quick View Overlay */}
-                  <div
-                    className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100
-                                flex items-center justify-center transition-opacity duration-300"
-                  >
-                    <button
-                      className="px-6 py-2 bg-white text-slate-900 rounded font-semibold
-                                     hover:bg-emerald-600 hover:text-white transition-colors duration-300 cursor-pointer"
-                    >
-                      Quick View
-                    </button>
-                  </div>
-                </div>
-
-                {/* Product Info */}
-                <div className="p-6">
-                  {/* Category */}
-                  <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                    {product.category}
-                  </span>
-
-                  {/* Name */}
-                  <h3
-                    className="text-xl font-bold text-slate-900 dark:text-slate-100 mt-2 mb-3
-                               group-hover:text-emerald-600 dark:group-hover:text-emerald-400
-                               transition-colors duration-300"
-                  >
-                    {product.name}
-                  </h3>
-
-                  {/* Rating */}
-                  <div className="flex items-center gap-2 mb-4">
-                    <div
-                      className="flex items-center"
-                      aria-label={`Rating: ${product.rating} out of 5 stars`}
-                    >
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          aria-hidden="true"
-                          className={`w-4 h-4 ${
-                            i < Math.floor(product.rating)
-                              ? "fill-yellow-400 text-yellow-400"
-                              : "text-slate-300 dark:text-slate-600"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-sm text-slate-600 dark:text-slate-400">
-                      {product.rating}
-                    </span>
-                  </div>
-
-                  {/* Price & CTA */}
-                  <div className="flex flex-col gap-3">
-                    <span className="text-xl font-bold font-sora text-slate-900 dark:text-slate-100 text-right">
-                      GH₵{product.price.toFixed(2)}
-                    </span>
-                    <button
-                      onClick={() =>
-                        addItem({
-                          id: product.id,
-                          name: product.name,
-                          price: product.price,
-                          image: product.image,
-                          category: product.category,
-                        })
-                      }
-                      className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded
-                                     bg-emerald-600 hover:bg-emerald-700
-                                     text-white font-semibold text-sm
-                                     transition-all duration-300
-                                     group-hover:gap-3 cursor-pointer"
-                    >
-                      <span>Add to Cart</span>
-                      <ShoppingCart className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
+              <ProductCard key={product.id} product={product} />
             ))
           ) : (
             <div className="col-span-full text-center py-12">

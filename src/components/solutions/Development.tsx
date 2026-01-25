@@ -40,12 +40,12 @@ const Development: React.FC = () => {
             <span>Progress</span>
             <span>72%</span>
           </div>
-          <div className="h-2 w-full rounded-sm dark:bg-white/10 bg-slate-200 overflow-hidden">
+          <div className="h-2 w-full rounded dark:bg-white/10 bg-slate-200 overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: "72%" }}
               transition={{ duration: 1.2, ease: "easeOut" }}
-              className="h-full rounded-sm bg-linear-to-r from-indigo-500 to-cyan-400"
+              className="h-full rounded bg-linear-to-r from-indigo-500 to-cyan-400"
             />
           </div>
         </div>

@@ -7,116 +7,30 @@ import ProductFilters from "./ProductFilters";
 import type { FilterState } from "./ProductFilters";
 import ProductFiltersSidebar from "./ProductFiltersSidebar";
 import ProductGrid from "./ProductsGrid";
-import type { Product } from "./ProductCard";
+import type { Product } from "@/data/products"; // Import shared type
 import { SlidersHorizontal } from "lucide-react";
 
-// Sample products data - Replace with your actual products
-const sampleProducts: Product[] = [
-  {
-    id: "1",
-    name: 'MacBook Pro 16" M3',
-    category: "laptops",
-    price: 8999,
-    originalPrice: 9999,
-    image: "💻",
-    rating: 4.9,
-    reviews: 245,
-    badge: "Best Seller",
-    inStock: true,
-  },
-  {
-    id: "2",
-    name: "iPhone 15 Pro Max",
-    category: "phones",
-    price: 4599,
-    image: "📱",
-    rating: 4.8,
-    reviews: 892,
-    badge: "New",
-    inStock: true,
-  },
-  {
-    id: "3",
-    name: "Sony WH-1000XM5",
-    category: "audio",
-    price: 1299,
-    originalPrice: 1499,
-    image: "🎧",
-    rating: 4.7,
-    reviews: 456,
-    inStock: true,
-  },
-  {
-    id: "4",
-    name: 'Dell UltraSharp 27"',
-    category: "monitors",
-    price: 2199,
-    image: "🖥️",
-    rating: 4.6,
-    reviews: 178,
-    inStock: true,
-  },
-  {
-    id: "5",
-    name: "Logitech MX Keys",
-    category: "keyboards",
-    price: 399,
-    image: "⌨️",
-    rating: 4.8,
-    reviews: 324,
-    badge: "Popular",
-    inStock: true,
-  },
-  {
-    id: "6",
-    name: "Logitech MX Master 3S",
-    category: "mice",
-    price: 349,
-    image: "🖱️",
-    rating: 4.9,
-    reviews: 567,
-    inStock: false,
-  },
-  {
-    id: "7",
-    name: "Samsung T7 SSD 2TB",
-    category: "storage",
-    price: 899,
-    originalPrice: 1099,
-    image: "💾",
-    rating: 4.7,
-    reviews: 289,
-    inStock: true,
-  },
-  {
-    id: "8",
-    name: "USB-C Hub",
-    category: "accessories",
-    price: 149,
-    image: "🔌",
-    rating: 4.5,
-    reviews: 412,
-    inStock: true,
-  },
-  {
-    id: "9",
-    name: 'MacBook Pro 16" M3',
-    category: "Desktops",
-    price: 8999,
-    originalPrice: 9999,
-    image: "💻",
-    rating: 4.9,
-    reviews: 245,
-    badge: "Best Seller",
-    inStock: true,
-  },
-];
+import { products } from "@/data/products";
+
+import { useSearchParams } from "react-router-dom";
+
+// Use the imported products
+const sampleProducts = products;
 
 const ShopPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialSearch = searchParams.get("search") || "";
+
   const [activeCategory, setActiveCategory] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Update effect to sync URL with state
+  useEffect(() => {
+    const query = searchParams.get("search") || "";
+    setSearchQuery(query);
+  }, [searchParams]);
 
   const [filters, setFilters] = useState<FilterState>({
     priceRange: [0, 10000],
@@ -193,6 +107,12 @@ const ShopPage = () => {
   // Handle search
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+    if (query) {
+      setSearchParams({ search: query });
+    } else {
+      searchParams.delete("search");
+      setSearchParams(searchParams);
+    }
     setLoading(true);
     // Simulate API call
     setTimeout(() => setLoading(false), 500);
@@ -206,11 +126,11 @@ const ShopPage = () => {
   };
 
   // Handle quick view
-  const handleQuickView = (product: Product) => {
-    console.log("Quick view:", product);
-    // Implement your quick view modal here
-    alert(`Quick view: ${product.name}`);
-  };
+  // const handleQuickView = (product: Product) => {
+  //   console.log("Quick view:", product);
+  //   // Implement your quick view modal here
+  //   alert(`Quick view: ${product.name}`);
+  // };
 
   // Close mobile filters when clicking outside
   useEffect(() => {
@@ -311,7 +231,7 @@ const ShopPage = () => {
             <ProductGrid
               products={filteredProducts}
               loading={loading}
-              onQuickView={handleQuickView}
+              // onQuickView={handleQuickView}
               columns={3}
             />
           </main>

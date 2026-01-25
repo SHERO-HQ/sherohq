@@ -77,7 +77,7 @@ const AboutTeam = () => {
             </p>
           </div>
           <div className="pt-2">
-            <button className="text-emerald-600 dark:text-emerald-400 font-semibold hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors flex items-center gap-2 mx-auto uppercase tracking-wider text-sm">
+            <button className="cursor-pointer text-emerald-600 dark:text-emerald-400 font-semibold hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors flex items-center gap-2 mx-auto uppercase tracking-wider text-sm">
               Join the team <span aria-hidden="true">→</span>
             </button>
           </div>

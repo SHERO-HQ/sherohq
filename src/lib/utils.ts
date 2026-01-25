@@ -126,7 +126,7 @@ export function navLinkClassVariant(
     mobile: {
       base: [
         "block py-3 px-4",
-        "rounded-lg",
+        "rounded",
         "text-base font-medium",
         "transition-colors duration-200",
       ],

@@ -58,10 +58,10 @@ const SolutionsHero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-2xl md:text-5xl lg:text-7xl font-sora font-bold text-slate-900 dark:text-slate-100 mb-6 leading-tight"
+            className="text-2xl md:text-5xl lg:text-6xl font-sora font-bold text-slate-900 dark:text-slate-100 mb-6 leading-tight"
           >
             Technology Ecosystems <br />
-            <span className="text-3xl md:text-6xl lg:text-8xl text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400">
+            <span className="text-3xl md:text-6xl lg:text-7xl text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400">
               Built for Performance
             </span>
           </motion.h1>

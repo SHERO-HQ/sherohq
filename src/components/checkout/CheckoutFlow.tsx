@@ -1,0 +1,730 @@
+import { useState, useEffect } from "react";
+import { getGuestId } from "@/utils/guestSession";
+import { createOrder, initializePayment } from "@/services/api";
+import { motion, AnimatePresence } from "motion/react";
+import { useNavigate } from "react-router-dom";
+import {
+  ShoppingBag,
+  Truck,
+  CreditCard,
+  CheckCircle,
+  ChevronRight,
+  ChevronLeft,
+  Minus,
+  Plus,
+  Trash2,
+  MapPin,
+  Phone,
+  Mail,
+  User,
+  Wallet,
+  Smartphone,
+} from "lucide-react";
+import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
+import OrderSummary from "./OrderSummary";
+
+const CheckoutFlow = () => {
+  const navigate = useNavigate();
+  const {
+    cart,
+    updateQuantity,
+    removeItem,
+    totalPrice,
+    totalQuantity,
+    clearCart,
+  } = useCart();
+  const { user, isAuthenticated } = useAuth();
+
+  const [currentStep, setCurrentStep] = useState(1);
+  const [shippingInfo, setShippingInfo] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    region: "",
+  });
+  const [paymentMethod, setPaymentMethod] = useState<"momo" | "card" | "cod">(
+    "momo",
+  );
+  const [orderId, setOrderId] = useState<string | null>(null);
+  const [confirmedTotal, setConfirmedTotal] = useState<number>(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Autofill shipping info for logged-in users
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      const nameParts = user.name?.split(" ") || [];
+      setShippingInfo((prev) => ({
+        ...prev,
+        firstName:
+          user.shippingAddress?.firstName || nameParts[0] || prev.firstName,
+        lastName:
+          user.shippingAddress?.lastName ||
+          nameParts.slice(1).join(" ") ||
+          prev.lastName,
+        email: user.email || prev.email,
+        phone: user.phone || prev.phone,
+        address: user.shippingAddress?.address || prev.address,
+        city: user.shippingAddress?.city || prev.city,
+        region: user.shippingAddress?.region || prev.region,
+      }));
+    }
+  }, [isAuthenticated, user]);
+
+  // Redirect if cart is empty
+  if (cart.length === 0 && currentStep < 4) {
+    navigate("/products");
+    return null;
+  }
+
+  // Calculate pricing
+  const subtotal = totalPrice;
+  const shipping = subtotal > 500 ? 0 : 50; // Free shipping over GH₵500
+  const tax = 0; // Tax set to 0.00 for now
+  const total = subtotal + shipping + tax;
+
+  const steps = [
+    { num: 1, title: "Cart Review", icon: ShoppingBag },
+    { num: 2, title: "Shipping", icon: Truck },
+    { num: 3, title: "Payment", icon: CreditCard },
+    { num: 4, title: "Confirmation", icon: CheckCircle },
+  ];
+
+  const handleNext = () => {
+    if (currentStep < 4) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handlePlaceOrder = async () => {
+    setIsSubmitting(true);
+    try {
+      const guestId = getGuestId();
+      const paymentMethodMap = {
+        momo: "mobile_money",
+        card: "card",
+        cod: "cash_on_delivery",
+      };
+
+      const orderItems = cart.map((item) => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image,
+      }));
+
+      const response = await createOrder({
+        guestId,
+        items: orderItems,
+        total,
+        shippingInfo,
+        paymentMethod: paymentMethodMap[paymentMethod],
+        userId: user?.id,
+      });
+
+      if (response.success) {
+        setOrderId(response.orderId);
+        setConfirmedTotal(total);
+
+        // If online payment (momo/card), redirect to Hubtel
+        if (paymentMethod === "momo" || paymentMethod === "card") {
+          try {
+            const paymentResponse = await initializePayment(
+              response.orderId,
+              total,
+              `Order #${response.orderId}`,
+            );
+
+            if (paymentResponse.success && paymentResponse.checkoutUrl) {
+              // Clear cart before redirecting (Hubtel callback will handle status)
+              // Don't clear cart yet if redirecting? Actually standard flow clears it.
+              // But we rely on cart for confirmedTotal? No, we used a separate state now.
+              clearCart();
+              window.location.href = paymentResponse.checkoutUrl;
+              return;
+            }
+          } catch (paymentError) {
+            console.error("Payment initialization failed:", paymentError);
+            alert(
+              "Failed to initialize payment gateway. Order created but payment failed.",
+            );
+            // Fallback: Show confirmation but with pending payment status?
+            // For now, simpler to verify functionality first.
+          }
+        }
+
+        // If COD or fallback
+        setCurrentStep(4);
+        clearCart();
+      }
+    } catch (error) {
+      console.error("Failed to place order:", error);
+      alert("Failed to place order. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const isStep2Valid = () => {
+    return (
+      shippingInfo.firstName &&
+      shippingInfo.lastName &&
+      shippingInfo.email &&
+      shippingInfo.phone &&
+      shippingInfo.address &&
+      shippingInfo.city &&
+      shippingInfo.region
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-32 pb-16">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Progress Steps */}
+        <div className="mb-12">
+          <div className="max-w-4xl mx-auto relative">
+            {/* Progress Track & Line */}
+            <div className="absolute top-6 left-6 right-6 h-1 bg-slate-200 dark:bg-slate-800 -translate-y-1/2 rounded-full">
+              <div
+                className="h-full bg-emerald-600 transition-all duration-300 rounded-full"
+                style={{
+                  width: `${((currentStep - 1) / (steps.length - 1)) * 100}%`,
+                }}
+              />
+            </div>
+
+            <div className="flex justify-between relative z-10">
+              {steps.map((step) => {
+                const Icon = step.icon;
+                const isActive = currentStep === step.num;
+                const isCompleted = currentStep > step.num;
+
+                return (
+                  <div
+                    key={step.num}
+                    className="flex flex-col items-center gap-2 relative z-20 w-12"
+                  >
+                    <div
+                      className={`w-12 h-12 rounded-full flex items-center justify-center transition-all border-4 ${
+                        isCompleted
+                          ? "bg-emerald-600 border-emerald-600 text-white"
+                          : isActive
+                            ? "bg-emerald-600 border-emerald-100 dark:border-emerald-900/50 text-white shadow-lg shadow-emerald-500/30"
+                            : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400"
+                      }`}
+                    >
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <span
+                      className={`text-sm font-medium whitespace-nowrap ${
+                        isActive || isCompleted
+                          ? "text-slate-900 dark:text-white"
+                          : "text-slate-500"
+                      }`}
+                    >
+                      {step.title}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2">
+            <AnimatePresence mode="wait">
+              {/* STEP 1: Cart Review */}
+              {currentStep === 1 && (
+                <motion.div
+                  key="step1"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6"
+                >
+                  <h2 className="text-2xl font-bold font-sora text-slate-900 dark:text-white mb-6">
+                    Review Your Cart
+                  </h2>
+
+                  <div className="space-y-4">
+                    {cart.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex gap-4 p-4 rounded border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 transition-colors"
+                      >
+                        <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center text-3xl">
+                          {item.image}
+                        </div>
+
+                        <div className="flex-1">
+                          <h3 className="font-bold text-slate-900 dark:text-white">
+                            {item.name}
+                          </h3>
+                          <p className="text-sm text-slate-500 dark:text-slate-400">
+                            {item.category}
+                          </p>
+                          <p className="text-lg font-bold font-sora text-emerald-600 dark:text-emerald-400 mt-2">
+                            GH₵{item.price}
+                          </p>
+                        </div>
+
+                        <div className="flex flex-col items-end gap-2">
+                          <div className="flex items-center gap-2 border border-slate-200 dark:border-slate-700 rounded overflow-hidden">
+                            <button
+                              onClick={() => updateQuantity(item.id, -1)}
+                              className="cursor-pointer p-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                            >
+                              <Minus className="w-4 h-4" />
+                            </button>
+                            <span className="px-4 font-bold text-slate-900 dark:text-white">
+                              {item.quantity}
+                            </span>
+                            <button
+                              onClick={() => updateQuantity(item.id, 1)}
+                              className="cursor-pointer p-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                            >
+                              <Plus className="w-4 h-4" />
+                            </button>
+                          </div>
+                          <button
+                            onClick={() => removeItem(item.id)}
+                            className="cursor-pointer text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 text-sm flex items-center gap-1"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex justify-end mt-8">
+                    <button
+                      onClick={handleNext}
+                      className="cursor-pointer flex items-center gap-2 px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-colors"
+                    >
+                      Continue to Shipping
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* STEP 2: Shipping Information */}
+              {currentStep === 2 && (
+                <motion.div
+                  key="step2"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6"
+                >
+                  <h2 className="text-2xl font-bold font-sora text-slate-900 dark:text-white mb-6">
+                    Shipping Information
+                  </h2>
+
+                  <form className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                          <User className="w-4 h-4 inline mr-2" />
+                          First Name
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={shippingInfo.firstName}
+                          onChange={(e) =>
+                            setShippingInfo({
+                              ...shippingInfo,
+                              firstName: e.target.value,
+                            })
+                          }
+                          className="w-full px-4 py-3 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          placeholder="John"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                          Last Name
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={shippingInfo.lastName}
+                          onChange={(e) =>
+                            setShippingInfo({
+                              ...shippingInfo,
+                              lastName: e.target.value,
+                            })
+                          }
+                          className="w-full px-4 py-3 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          placeholder="Doe"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                        <Mail className="w-4 h-4 inline mr-2" />
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        value={shippingInfo.email}
+                        onChange={(e) =>
+                          setShippingInfo({
+                            ...shippingInfo,
+                            email: e.target.value,
+                          })
+                        }
+                        className="w-full px-4 py-3 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        placeholder="john@example.com"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                        <Phone className="w-4 h-4 inline mr-2" />
+                        Phone Number
+                      </label>
+                      <input
+                        type="tel"
+                        required
+                        value={shippingInfo.phone}
+                        onChange={(e) =>
+                          setShippingInfo({
+                            ...shippingInfo,
+                            phone: e.target.value,
+                          })
+                        }
+                        className="w-full px-4 py-3 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        placeholder="+233 123 456 7890"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                        <MapPin className="w-4 h-4 inline mr-2" />
+                        Address
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={shippingInfo.address}
+                        onChange={(e) =>
+                          setShippingInfo({
+                            ...shippingInfo,
+                            address: e.target.value,
+                          })
+                        }
+                        className="w-full px-4 py-3 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        placeholder="123 Main Street"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                          City
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={shippingInfo.city}
+                          onChange={(e) =>
+                            setShippingInfo({
+                              ...shippingInfo,
+                              city: e.target.value,
+                            })
+                          }
+                          className="w-full px-4 py-3 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          placeholder="Accra"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                          Region
+                        </label>
+                        <select
+                          required
+                          value={shippingInfo.region}
+                          onChange={(e) =>
+                            setShippingInfo({
+                              ...shippingInfo,
+                              region: e.target.value,
+                            })
+                          }
+                          className="w-full px-4 py-3 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        >
+                          <option value="">Select Region</option>
+                          <option value="Greater Accra">Greater Accra</option>
+                          <option value="Ashanti">Ashanti</option>
+                          <option value="Central">Central</option>
+                          <option value="Eastern">Eastern</option>
+                          <option value="Northern">Northern</option>
+                          <option value="Western">Western</option>
+                        </select>
+                      </div>
+                    </div>
+                  </form>
+
+                  <div className="flex justify-between mt-8">
+                    <button
+                      onClick={handleBack}
+                      className="cursor-pointer flex items-center gap-2 px-8 py-3 border-2 border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                      Back to Cart
+                    </button>
+                    <button
+                      onClick={handleNext}
+                      disabled={!isStep2Valid()}
+                      className="cursor-pointer flex items-center gap-2 px-8 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded font-bold transition-colors"
+                    >
+                      Continue to Payment
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* STEP 3: Payment Method */}
+              {currentStep === 3 && (
+                <motion.div
+                  key="step3"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6"
+                >
+                  <h2 className="text-2xl font-bold font-sora text-slate-900 dark:text-white mb-6">
+                    Payment Method
+                  </h2>
+
+                  <div className="space-y-4">
+                    {/* Mobile Money */}
+                    <button
+                      onClick={() => setPaymentMethod("momo")}
+                      className={`w-full p-6 rounded border-2 transition-all text-left ${
+                        paymentMethod === "momo"
+                          ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
+                          : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
+                      }`}
+                    >
+                      <div className="cursor-pointer flex items-center gap-4">
+                        <div
+                          className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                            paymentMethod === "momo"
+                              ? "bg-emerald-600 text-white"
+                              : "bg-slate-100 dark:bg-slate-800 text-slate-600"
+                          }`}
+                        >
+                          <Smartphone className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-slate-900 dark:text-white">
+                            Mobile Money
+                          </h3>
+                          <p className="text-sm text-slate-600 dark:text-slate-400">
+                            Pay with MTN or Vodafone Cash
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+
+                    {/* Card Payment */}
+                    <button
+                      onClick={() => setPaymentMethod("card")}
+                      className={`w-full p-6 rounded border-2 transition-all text-left ${
+                        paymentMethod === "card"
+                          ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
+                          : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
+                      }`}
+                    >
+                      <div className="cursor-pointer flex items-center gap-4">
+                        <div
+                          className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                            paymentMethod === "card"
+                              ? "bg-emerald-600 text-white"
+                              : "bg-slate-100 dark:bg-slate-800 text-slate-600"
+                          }`}
+                        >
+                          <CreditCard className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-slate-900 dark:text-white">
+                            Credit / Debit Card
+                          </h3>
+                          <p className="text-sm text-slate-600 dark:text-slate-400">
+                            Visa, Mastercard, Verve
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+
+                    {/* Cash on Delivery */}
+                    <button
+                      onClick={() => setPaymentMethod("cod")}
+                      className={`w-full p-6 rounded border-2 transition-all text-left ${
+                        paymentMethod === "cod"
+                          ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
+                          : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
+                      }`}
+                    >
+                      <div className="cursor-pointer flex items-center gap-4">
+                        <div
+                          className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                            paymentMethod === "cod"
+                              ? "bg-emerald-600 text-white"
+                              : "bg-slate-100 dark:bg-slate-800 text-slate-600"
+                          }`}
+                        >
+                          <Wallet className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-slate-900 dark:text-white">
+                            Cash on Delivery
+                          </h3>
+                          <p className="text-sm text-slate-600 dark:text-slate-400">
+                            Pay when you receive your order
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+
+                  <div className="flex justify-between mt-8">
+                    <button
+                      onClick={handleBack}
+                      className="cursor-pointer flex items-center gap-2 px-8 py-3 border-2 border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                      Back
+                    </button>
+                    <button
+                      onClick={handlePlaceOrder}
+                      disabled={isSubmitting}
+                      className="cursor-pointer flex items-center gap-2 px-8 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 disabled:cursor-not-allowed text-white rounded font-bold transition-colors"
+                    >
+                      {isSubmitting ? "Processing..." : "Place Order"}
+                      <CheckCircle className="w-5 h-5" />
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* STEP 4: Order Confirmation */}
+              {currentStep === 4 && (
+                <motion.div
+                  key="step4"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-12 text-center"
+                >
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.2, type: "spring" }}
+                    className="w-24 h-24 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-6"
+                  >
+                    <CheckCircle className="w-12 h-12 text-emerald-600 dark:text-emerald-400" />
+                  </motion.div>
+
+                  <h2 className="text-3xl font-bold font-sora text-slate-900 dark:text-white mb-4">
+                    Order Confirmed!
+                  </h2>
+                  <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-md mx-auto">
+                    Thank you for your order! We've sent a confirmation email to{" "}
+                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                      {shippingInfo.email}
+                    </span>
+                  </p>
+
+                  <div className="bg-slate-50 dark:bg-slate-950 rounded p-6 mb-8 max-w-md mx-auto">
+                    {orderId && (
+                      <div className="mb-4">
+                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
+                          Order ID
+                        </p>
+                        <p className="font-mono text-sm font-bold text-slate-900 dark:text-white bg-slate-200 dark:bg-slate-800 px-3 py-2 rounded">
+                          {orderId}
+                        </p>
+                      </div>
+                    )}
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
+                      Order Total
+                    </p>
+                    <p className="text-4xl font-bold font-sora text-emerald-600 dark:text-emerald-400">
+                      GH₵{confirmedTotal.toFixed(2)}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button
+                      onClick={() => navigate("/products")}
+                      className="cursor-pointer px-8 py-3 border-2 border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
+                    >
+                      Continue Shopping
+                    </button>
+                    <button
+                      onClick={() => navigate("/")}
+                      className="cursor-pointer px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-colors"
+                    >
+                      Back to Home
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Order Summary Sidebar / Feedback Prompt */}
+          <div className="lg:col-span-1">
+            {currentStep < 4 && (
+              <OrderSummary
+                subtotal={subtotal}
+                shipping={shipping}
+                tax={tax}
+                total={total}
+                itemCount={totalQuantity}
+              />
+            )}
+            {currentStep === 4 && (
+              <div className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6 text-center">
+                <h3 className="text-xl font-bold font-sora text-slate-900 dark:text-white mb-4">
+                  Rate Your Experience
+                </h3>
+                <p className="text-slate-600 dark:text-slate-400 mb-6 text-sm">
+                  We'd love to hear your thoughts! Let us know how we can
+                  improve.
+                </p>
+                <button
+                  onClick={() => navigate("/contact-us")}
+                  className="cursor-pointer w-full px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-colors"
+                >
+                  Leave us a feedback
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CheckoutFlow;

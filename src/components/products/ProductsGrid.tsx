@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import ProductCard from "./ProductCard";
-import type { Product } from "./ProductCard";
+import type { Product } from "@/data/products";
 import { Loader2, PackageX } from "lucide-react";
 
 interface ProductGridProps {
@@ -71,7 +71,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
           </div>
           <button
             onClick={() => globalThis.location.reload()}
-            className="px-6 py-3 rounded bg-emerald-600 text-white font-semibold
+            className="cursor-pointer px-6 py-3 rounded bg-emerald-600 text-white font-semibold
                      hover:bg-emerald-700 transition-colors"
           >
             Reset Filters
