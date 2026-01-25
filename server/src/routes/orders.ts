@@ -38,11 +38,11 @@ interface OrderRow {
   id: string;
   guestId: string;
   items: string;
-  total: number;
+  total: number; // Postgres decimal returns as string/number usually, check driver
   shippingInfo: string;
   paymentMethod: string;
   status: string;
-  createdAt: string;
+  createdAt: Date;
 }
 
 // Valid order statuses
@@ -55,7 +55,7 @@ const ORDER_STATUSES = [
 ];
 
 // POST /api/orders - Create new order
-router.post("/", (req: Request, res: Response) => {
+router.post("/", async (req: Request, res: Response) => {
   try {
     const {
       guestId,
@@ -73,20 +73,21 @@ router.post("/", (req: Request, res: Response) => {
 
     const orderId = uuidv4();
 
-    const insertOrder = db.prepare(`
-      INSERT INTO orders (id, guestId, userId, items, total, shippingInfo, paymentMethod, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-
-    insertOrder.run(
-      orderId,
-      guestId,
-      userId || null, // Optional userId
-      JSON.stringify(items),
-      total,
-      JSON.stringify(shippingInfo),
-      paymentMethod || "cash_on_delivery",
-      "pending",
+    await db.query(
+      `
+      INSERT INTO orders (id, "guestId", "userId", items, total, "shippingInfo", "paymentMethod", status)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    `,
+      [
+        orderId,
+        guestId,
+        userId || null, // Optional userId
+        JSON.stringify(items),
+        total,
+        JSON.stringify(shippingInfo),
+        paymentMethod || "cash_on_delivery",
+        "pending",
+      ],
     );
 
     console.log(`📦 New order created: ${orderId} for guest ${guestId}`);
@@ -108,24 +109,26 @@ router.post("/", (req: Request, res: Response) => {
 });
 
 // GET /api/orders/user/:userId - Get orders by User ID
-router.get("/user/:userId", (req: Request, res: Response) => {
+router.get("/user/:userId", async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
 
-    const orders = db
-      .prepare(
-        `
+    const result = await db.query(
+      `
       SELECT * FROM orders 
-      WHERE userId = ? 
-      ORDER BY createdAt DESC
+      WHERE "userId" = $1 
+      ORDER BY "createdAt" DESC
     `,
-      )
-      .all(userId);
+      [userId],
+    );
 
-    const parsedOrders = (orders as OrderRow[]).map((order) => ({
+    const orders = result.rows as OrderRow[];
+
+    const parsedOrders = orders.map((order) => ({
       ...order,
       items: JSON.parse(order.items),
       shippingInfo: JSON.parse(order.shippingInfo),
+      total: Number(order.total),
     }));
 
     res.json(parsedOrders);
@@ -136,24 +139,26 @@ router.get("/user/:userId", (req: Request, res: Response) => {
 });
 
 // GET /api/orders/guest/:guestId - Get orders by guest ID
-router.get("/guest/:guestId", (req: Request, res: Response) => {
+router.get("/guest/:guestId", async (req: Request, res: Response) => {
   try {
     const { guestId } = req.params;
 
-    const orders = db
-      .prepare(
-        `
+    const result = await db.query(
+      `
       SELECT * FROM orders 
-      WHERE guestId = ? 
-      ORDER BY createdAt DESC
+      WHERE "guestId" = $1 
+      ORDER BY "createdAt" DESC
     `,
-      )
-      .all(guestId);
+      [guestId],
+    );
 
-    const parsedOrders = (orders as OrderRow[]).map((order) => ({
+    const orders = result.rows as OrderRow[];
+
+    const parsedOrders = orders.map((order) => ({
       ...order,
       items: JSON.parse(order.items),
       shippingInfo: JSON.parse(order.shippingInfo),
+      total: Number(order.total),
     }));
 
     res.json(parsedOrders);
@@ -164,13 +169,14 @@ router.get("/guest/:guestId", (req: Request, res: Response) => {
 });
 
 // GET /api/orders/track/:orderId - Track specific order
-router.get("/track/:orderId", (req: Request, res: Response) => {
+router.get("/track/:orderId", async (req: Request, res: Response) => {
   try {
     const { orderId } = req.params;
 
-    const order = db
-      .prepare("SELECT * FROM orders WHERE id = ?")
-      .get(orderId) as OrderRow | undefined;
+    const result = await db.query("SELECT * FROM orders WHERE id = $1", [
+      orderId,
+    ]);
+    const order = result.rows[0] as OrderRow | undefined;
 
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
@@ -180,6 +186,7 @@ router.get("/track/:orderId", (req: Request, res: Response) => {
       ...order,
       items: JSON.parse(order.items),
       shippingInfo: JSON.parse(order.shippingInfo),
+      total: Number(order.total),
     });
   } catch (error) {
     console.error("Error tracking order:", error);
@@ -190,42 +197,48 @@ router.get("/track/:orderId", (req: Request, res: Response) => {
 // ============ ADMIN ROUTES (Protected) ============
 
 // GET /api/orders - Admin: List all orders with optional filtering
-router.get("/", adminAuth, (req: AdminRequest, res: Response) => {
+router.get("/", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
     const { status, limit = 100, startDate, endDate } = req.query;
 
-    let query = "SELECT * FROM orders";
+    let queryText = "SELECT * FROM orders";
     const params: (string | number)[] = [];
     const conditions: string[] = [];
+    let paramIndex = 1;
 
     if (status && ORDER_STATUSES.includes(String(status))) {
-      conditions.push("status = ?");
+      conditions.push(`status = $${paramIndex}`);
       params.push(String(status));
+      paramIndex++;
     }
 
     if (startDate) {
-      conditions.push("createdAt >= ?");
+      conditions.push(`"createdAt" >= $${paramIndex}`);
       params.push(String(startDate));
+      paramIndex++;
     }
 
     if (endDate) {
-      conditions.push("createdAt <= ?");
+      conditions.push(`"createdAt" <= $${paramIndex}`);
       params.push(String(endDate));
+      paramIndex++;
     }
 
     if (conditions.length > 0) {
-      query += " WHERE " + conditions.join(" AND ");
+      queryText += " WHERE " + conditions.join(" AND ");
     }
 
-    query += " ORDER BY createdAt DESC LIMIT ?";
+    queryText += ` ORDER BY "createdAt" DESC LIMIT $${paramIndex}`;
     params.push(Number(limit));
 
-    const orders = db.prepare(query).all(...params);
+    const result = await db.query(queryText, params);
+    const orders = result.rows as OrderRow[];
 
-    const parsedOrders = (orders as OrderRow[]).map((order) => ({
+    const parsedOrders = orders.map((order) => ({
       ...order,
       items: JSON.parse(order.items),
       shippingInfo: JSON.parse(order.shippingInfo),
+      total: Number(order.total),
     }));
 
     res.json(parsedOrders);
@@ -236,13 +249,12 @@ router.get("/", adminAuth, (req: AdminRequest, res: Response) => {
 });
 
 // GET /api/orders/:id - Admin: Get single order details
-router.get("/:id", adminAuth, (req: AdminRequest, res: Response) => {
+router.get("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
     const { id } = req.params;
 
-    const order = db.prepare("SELECT * FROM orders WHERE id = ?").get(id) as
-      | OrderRow
-      | undefined;
+    const result = await db.query("SELECT * FROM orders WHERE id = $1", [id]);
+    const order = result.rows[0] as OrderRow | undefined;
 
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
@@ -252,6 +264,7 @@ router.get("/:id", adminAuth, (req: AdminRequest, res: Response) => {
       ...order,
       items: JSON.parse(order.items),
       shippingInfo: JSON.parse(order.shippingInfo),
+      total: Number(order.total),
     });
   } catch (error) {
     console.error("Error fetching order:", error);
@@ -260,49 +273,58 @@ router.get("/:id", adminAuth, (req: AdminRequest, res: Response) => {
 });
 
 // PATCH /api/orders/:id/status - Admin: Update order status
-router.patch("/:id/status", adminAuth, (req: AdminRequest, res: Response) => {
-  try {
-    const { id } = req.params;
-    const { status } = req.body;
+router.patch(
+  "/:id/status",
+  adminAuth,
+  async (req: AdminRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
 
-    // Validate status
-    if (!status || !ORDER_STATUSES.includes(status)) {
-      return res.status(400).json({
-        error: `Invalid status. Valid statuses: ${ORDER_STATUSES.join(", ")}`,
+      // Validate status
+      if (!status || !ORDER_STATUSES.includes(status)) {
+        return res.status(400).json({
+          error: `Invalid status. Valid statuses: ${ORDER_STATUSES.join(", ")}`,
+        });
+      }
+
+      // Check if order exists
+      const check = await db.query(
+        "SELECT id, status FROM orders WHERE id = $1",
+        [id],
+      );
+      if (check.rowCount === 0) {
+        return res.status(404).json({ error: "Order not found" });
+      }
+
+      const existing = check.rows[0];
+
+      await db.query("UPDATE orders SET status = $1 WHERE id = $2", [
+        status,
+        id,
+      ]);
+
+      console.log(
+        `📦 Order ${id} status: ${existing.status} → ${status} by ${req.admin?.username}`,
+      );
+
+      const result = await db.query("SELECT * FROM orders WHERE id = $1", [id]);
+      const order = result.rows[0] as OrderRow;
+
+      res.json({
+        success: true,
+        order: {
+          ...order,
+          items: JSON.parse(order.items),
+          shippingInfo: JSON.parse(order.shippingInfo),
+          total: Number(order.total),
+        },
       });
+    } catch (error) {
+      console.error("Error updating order status:", error);
+      res.status(500).json({ error: "Failed to update order status" });
     }
-
-    // Check if order exists
-    const existing = db
-      .prepare("SELECT id, status FROM orders WHERE id = ?")
-      .get(id) as { id: string; status: string } | undefined;
-
-    if (!existing) {
-      return res.status(404).json({ error: "Order not found" });
-    }
-
-    db.prepare("UPDATE orders SET status = ? WHERE id = ?").run(status, id);
-
-    console.log(
-      `📦 Order ${id} status: ${existing.status} → ${status} by ${req.admin?.username}`,
-    );
-
-    const order = db
-      .prepare("SELECT * FROM orders WHERE id = ?")
-      .get(id) as OrderRow;
-
-    res.json({
-      success: true,
-      order: {
-        ...order,
-        items: JSON.parse(order.items),
-        shippingInfo: JSON.parse(order.shippingInfo),
-      },
-    });
-  } catch (error) {
-    console.error("Error updating order status:", error);
-    res.status(500).json({ error: "Failed to update order status" });
-  }
-});
+  },
+);
 
 export default router;

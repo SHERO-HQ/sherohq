@@ -25,14 +25,15 @@ router.post("/login", async (req: Request, res: Response) => {
     }
 
     // Find admin by username or email
-    const admin = db
-      .prepare(
-        `
+    const result = await db.query(
+      `
       SELECT * FROM admin_users 
-      WHERE username = ? OR email = ?
+      WHERE username = $1 OR email = $2
     `,
-      )
-      .get(username, username) as AdminUserRow | undefined;
+      [username, username],
+    );
+
+    const admin = result.rows[0] as AdminUserRow | undefined;
 
     if (!admin) {
       return res.status(401).json({ error: "Wrong username" });
@@ -49,15 +50,16 @@ router.post("/login", async (req: Request, res: Response) => {
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
     // Delete any existing sessions for this admin
-    db.prepare("DELETE FROM sessions WHERE adminId = ?").run(admin.id);
+    await db.query('DELETE FROM sessions WHERE "adminId" = $1', [admin.id]);
 
     // Create new session
-    db.prepare(
+    await db.query(
       `
-      INSERT INTO sessions (id, adminId, token, expiresAt)
-      VALUES (?, ?, ?, ?)
+      INSERT INTO sessions (id, "adminId", token, "expiresAt")
+      VALUES ($1, $2, $3, $4)
     `,
-    ).run(uuidv4(), admin.id, token, expiresAt.toISOString());
+      [uuidv4(), admin.id, token, expiresAt.toISOString()],
+    );
 
     console.log(`🔐 Admin login: ${admin.username}`);
 
@@ -78,12 +80,12 @@ router.post("/login", async (req: Request, res: Response) => {
 });
 
 // POST /api/admin/logout
-router.post("/logout", adminAuth, (req: AdminRequest, res: Response) => {
+router.post("/logout", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
     const authHeader = req.headers.authorization;
     if (authHeader && authHeader.startsWith("Bearer ")) {
       const token = authHeader.substring(7);
-      db.prepare("DELETE FROM sessions WHERE token = ?").run(token);
+      await db.query("DELETE FROM sessions WHERE token = $1", [token]);
     }
 
     console.log(`🔓 Admin logout: ${req.admin?.username}`);
@@ -122,15 +124,14 @@ router.post(
       }
 
       // Check if username or email already exists
-      const existing = db
-        .prepare(
-          `
-      SELECT id FROM admin_users WHERE username = ? OR email = ?
+      const check = await db.query(
+        `
+      SELECT id FROM admin_users WHERE username = $1 OR email = $2
     `,
-        )
-        .get(username, email);
+        [username, email],
+      );
 
-      if (existing) {
+      if (check.rowCount && check.rowCount > 0) {
         return res
           .status(409)
           .json({ error: "Username or email already exists" });
@@ -140,12 +141,13 @@ router.post(
       const passwordHash = await bcrypt.hash(password, 10);
       const adminId = uuidv4();
 
-      db.prepare(
+      await db.query(
         `
-      INSERT INTO admin_users (id, username, email, passwordHash, role)
-      VALUES (?, ?, ?, ?, ?)
+      INSERT INTO admin_users (id, username, email, "passwordHash", role)
+      VALUES ($1, $2, $3, $4, $5)
     `,
-      ).run(adminId, username, email, passwordHash, role);
+        [adminId, username, email, passwordHash, role],
+      );
 
       console.log(
         `👤 New admin created: ${username} by ${req.admin?.username}`,
@@ -168,43 +170,40 @@ router.post(
 );
 
 // GET /api/admin/stats - Dashboard statistics
-router.get("/stats", adminAuth, (req: AdminRequest, res: Response) => {
+router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
-    const productCount = db
-      .prepare("SELECT COUNT(*) as count FROM products")
-      .get() as { count: number };
+    const productCountRes = await db.query(
+      "SELECT COUNT(*) as count FROM products",
+    );
+    const orderCountRes = await db.query(
+      "SELECT COUNT(*) as count FROM orders",
+    );
+    const totalRevenueRes = await db.query(
+      "SELECT COALESCE(SUM(total), 0) as total FROM orders",
+    );
 
-    const orderCount = db
-      .prepare("SELECT COUNT(*) as count FROM orders")
-      .get() as { count: number };
+    // Low stock: <= 10 and in stock
+    const lowStockCountRes = await db.query(
+      'SELECT COUNT(*) as count FROM products WHERE "stockQuantity" <= 10 AND "stockQuantity" > 0',
+    );
 
-    const totalRevenue = db
-      .prepare("SELECT COALESCE(SUM(total), 0) as total FROM orders")
-      .get() as { total: number };
+    // Out of stock: 0 stock or explicitly out of stock
+    const outOfStockCountRes = await db.query(
+      'SELECT COUNT(*) as count FROM products WHERE "inStock" = $1 OR "stockQuantity" = 0',
+      [false],
+    );
 
-    const lowStockCount = db
-      .prepare(
-        "SELECT COUNT(*) as count FROM products WHERE stockQuantity <= 10 AND stockQuantity > 0",
-      )
-      .get() as { count: number };
-
-    const outOfStockCount = db
-      .prepare(
-        "SELECT COUNT(*) as count FROM products WHERE inStock = 0 OR stockQuantity = 0",
-      )
-      .get() as { count: number };
-
-    const pendingOrders = db
-      .prepare("SELECT COUNT(*) as count FROM orders WHERE status = 'pending'")
-      .get() as { count: number };
+    const pendingOrdersRes = await db.query(
+      "SELECT COUNT(*) as count FROM orders WHERE status = 'pending'",
+    );
 
     res.json({
-      products: productCount.count,
-      orders: orderCount.count,
-      revenue: totalRevenue.total,
-      lowStock: lowStockCount.count,
-      outOfStock: outOfStockCount.count,
-      pendingOrders: pendingOrders.count,
+      products: Number(productCountRes.rows[0].count),
+      orders: Number(orderCountRes.rows[0].count),
+      revenue: Number(totalRevenueRes.rows[0].total),
+      lowStock: Number(lowStockCountRes.rows[0].count),
+      outOfStock: Number(outOfStockCountRes.rows[0].count),
+      pendingOrders: Number(pendingOrdersRes.rows[0].count),
     });
   } catch (error) {
     console.error("Stats error:", error);
@@ -225,35 +224,41 @@ router.put("/profile", adminAuth, async (req: AdminRequest, res: Response) => {
     // Prepare update parts
     const updates: string[] = [];
     const params: any[] = [];
+    let paramIndex = 1;
 
     if (username) {
       // Check if username already exists for another user
-      const existing = db
-        .prepare("SELECT id FROM admin_users WHERE username = ? AND id != ?")
-        .get(username, adminId);
-      if (existing) {
+      const check = await db.query(
+        "SELECT id FROM admin_users WHERE username = $1 AND id != $2",
+        [username, adminId],
+      );
+      if (check.rowCount && check.rowCount > 0) {
         return res.status(409).json({ error: "Username already exists" });
       }
-      updates.push("username = ?");
+      updates.push(`username = $${paramIndex}`);
       params.push(username);
+      paramIndex++;
     }
 
     if (email) {
       // Check if email already exists for another user
-      const existing = db
-        .prepare("SELECT id FROM admin_users WHERE email = ? AND id != ?")
-        .get(email, adminId);
-      if (existing) {
+      const check = await db.query(
+        "SELECT id FROM admin_users WHERE email = $1 AND id != $2",
+        [email, adminId],
+      );
+      if (check.rowCount && check.rowCount > 0) {
         return res.status(409).json({ error: "Email already exists" });
       }
-      updates.push("email = ?");
+      updates.push(`email = $${paramIndex}`);
       params.push(email);
+      paramIndex++;
     }
 
     if (password) {
       const passwordHash = await bcrypt.hash(password, 10);
-      updates.push("passwordHash = ?");
+      updates.push(`"passwordHash" = $${paramIndex}`);
       params.push(passwordHash);
+      paramIndex++;
     }
 
     if (updates.length === 0) {
@@ -261,13 +266,14 @@ router.put("/profile", adminAuth, async (req: AdminRequest, res: Response) => {
     }
 
     params.push(adminId);
-    db.prepare(
+    await db.query(
       `
       UPDATE admin_users 
       SET ${updates.join(", ")} 
-      WHERE id = ?
+      WHERE id = $${paramIndex}
     `,
-    ).run(...params);
+      params,
+    );
 
     console.log(`👤 Admin profile updated: ${username || req.admin?.username}`);
 

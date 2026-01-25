@@ -45,10 +45,10 @@ router.post("/webhook", async (req: Request, res: Response) => {
 
     if (Status === "Success") {
       // Update order status to 'processing' (paid)
-      db.prepare("UPDATE orders SET status = ? WHERE id = ?").run(
+      await db.query("UPDATE orders SET status = $1 WHERE id = $2", [
         "processing",
         ClientReference,
-      );
+      ]);
       console.log(`✅ Order ${ClientReference} marked as PAID via Webhook`);
 
       // Trigger notifications if not already sent (optional check logic here)

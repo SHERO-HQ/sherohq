@@ -2,19 +2,37 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { Send, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { sendContactMessage } from "@/services/api";
 
 const ContactForm = () => {
   const [status, setStatus] = useState<
     "idle" | "submitting" | "success" | "error"
   >("idle");
 
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "general",
+    message: "",
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("submitting");
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setStatus("success");
+    try {
+      await sendContactMessage({
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message,
+      });
+      setStatus("success");
+      setFormData({ name: "", email: "", subject: "general", message: "" });
+    } catch (error) {
+      console.error("Contact error:", error);
+      setStatus("error");
+    }
   };
 
   return (
@@ -32,6 +50,10 @@ const ContactForm = () => {
               id="name"
               type="text"
               required
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               className="w-full px-4 py-3 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
               placeholder="John Doe"
             />
@@ -47,6 +69,10 @@ const ContactForm = () => {
               id="email"
               type="email"
               required
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
               className="w-full px-4 py-3 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
               placeholder="john@example.com"
             />
@@ -63,6 +89,10 @@ const ContactForm = () => {
           <div className="relative">
             <select
               id="subject"
+              value={formData.subject}
+              onChange={(e) =>
+                setFormData({ ...formData, subject: e.target.value })
+              }
               className="w-full px-4 py-3 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer appearance-none"
             >
               <option value="general">General Inquiry</option>
@@ -100,6 +130,10 @@ const ContactForm = () => {
             id="message"
             required
             rows={5}
+            value={formData.message}
+            onChange={(e) =>
+              setFormData({ ...formData, message: e.target.value })
+            }
             className="w-full px-4 py-3 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all resize-none"
             placeholder="Tell us about your project..."
           />

@@ -1,170 +1,143 @@
-import Database, { type Database as DatabaseType } from "better-sqlite3";
-import path from "node:path";
+import { Pool } from "pg";
+import * as dotenv from "dotenv";
 
-// Initialize database in the server directory
-const dbPath = path.join(__dirname, "../../data/sherotech.db");
-const db: DatabaseType = new Database(dbPath);
+dotenv.config();
 
-// Enable foreign keys
-db.pragma("foreign_keys = ON");
+// Initialize PostgreSQL connection pool
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : undefined,
+});
+
+// Helper to query the database
+export const query = (text: string, params?: any[]) => pool.query(text, params);
 
 // Create tables
-export function initializeDatabase() {
-  // Products table
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS products (
-      id TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      category TEXT NOT NULL,
-      price REAL NOT NULL,
-      originalPrice REAL,
-      image TEXT,
-      images TEXT,
-      rating REAL DEFAULT 0,
-      reviews INTEGER DEFAULT 0,
-      badge TEXT,
-      inStock INTEGER DEFAULT 1,
-      description TEXT,
-      features TEXT,
-      specifications TEXT,
-      createdAt TEXT DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-
-  // Categories table
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS categories (
-      id TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      icon TEXT
-    )
-  `);
-
-  // Orders table
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS orders (
-      id TEXT PRIMARY KEY,
-      guestId TEXT NOT NULL,
-      userId TEXT,
-      items TEXT NOT NULL,
-      total REAL NOT NULL,
-      shippingInfo TEXT NOT NULL,
-      paymentMethod TEXT,
-      status TEXT DEFAULT 'pending',
-      createdAt TEXT DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-
-  // Users table (Customers)
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS users (
-      id TEXT PRIMARY KEY,
-      email TEXT UNIQUE NOT NULL,
-      passwordHash TEXT NOT NULL,
-      name TEXT NOT NULL,
-      phone TEXT,
-      createdAt TEXT DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-
-  // User Sessions table
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS user_sessions (
-      id TEXT PRIMARY KEY,
-      userId TEXT NOT NULL,
-      token TEXT UNIQUE NOT NULL,
-      expiresAt TEXT NOT NULL,
-      createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
-    )
-  `);
-
-  // Admin users table
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS admin_users (
-      id TEXT PRIMARY KEY,
-      username TEXT UNIQUE NOT NULL,
-      email TEXT UNIQUE NOT NULL,
-      passwordHash TEXT NOT NULL,
-      role TEXT DEFAULT 'admin',
-      createdAt TEXT DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
-
-  // Sessions table for admin authentication
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS sessions (
-      id TEXT PRIMARY KEY,
-      adminId TEXT NOT NULL,
-      token TEXT UNIQUE NOT NULL,
-      expiresAt TEXT NOT NULL,
-      createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (adminId) REFERENCES admin_users(id) ON DELETE CASCADE
-    )
-  `);
-
-  // Reviews table
-  db.exec(`
-    CREATE TABLE IF NOT EXISTS reviews (
-      id TEXT PRIMARY KEY,
-      productId TEXT NOT NULL,
-      userName TEXT NOT NULL,
-      rating INTEGER NOT NULL,
-      comment TEXT,
-      createdAt TEXT DEFAULT CURRENT_TIMESTAMP,
-      FOREIGN KEY (productId) REFERENCES products(id) ON DELETE CASCADE
-    )
-  `);
-
-  // Add stockQuantity column if it doesn't exist (safe migration)
+export async function initializeDatabase() {
+  const client = await pool.connect();
   try {
-    db.exec(
-      `ALTER TABLE products ADD COLUMN stockQuantity INTEGER DEFAULT 100`,
-    );
-    console.log("📦 Added stockQuantity column to products");
-  } catch {
-    // Column already exists, ignore
-  }
+    await client.query("BEGIN");
 
-  // Add userId column to orders if it doesn't exist
-  try {
-    db.exec(`ALTER TABLE orders ADD COLUMN userId TEXT`);
-    console.log("📦 Added userId column to orders");
-  } catch {
-    // Column already exists
-  }
+    // Products table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS products (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        category TEXT NOT NULL,
+        price DECIMAL(10, 2) NOT NULL,
+        "originalPrice" DECIMAL(10, 2),
+        image TEXT,
+        images TEXT,
+        rating DECIMAL(3, 2) DEFAULT 0,
+        reviews INTEGER DEFAULT 0,
+        badge TEXT,
+        "inStock" BOOLEAN DEFAULT true,
+        "stockQuantity" INTEGER DEFAULT 100,
+        description TEXT,
+        features TEXT,
+        specifications TEXT,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
 
-  // Add email verification columns to users
-  try {
-    db.exec(`ALTER TABLE users ADD COLUMN emailVerified INTEGER DEFAULT 0`);
-    console.log("📧 Added emailVerified column to users");
-  } catch {
-    // Column already exists
-  }
+    // Categories table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS categories (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        icon TEXT
+      )
+    `);
 
-  try {
-    db.exec(`ALTER TABLE users ADD COLUMN verificationToken TEXT`);
-    console.log("📧 Added verificationToken column to users");
-  } catch {
-    // Column already exists
-  }
+    // Orders table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS orders (
+        id TEXT PRIMARY KEY,
+        "guestId" TEXT NOT NULL,
+        "userId" TEXT,
+        items TEXT NOT NULL,
+        total DECIMAL(10, 2) NOT NULL,
+        "shippingInfo" TEXT NOT NULL,
+        "paymentMethod" TEXT,
+        status TEXT DEFAULT 'pending',
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
 
-  try {
-    db.exec(`ALTER TABLE users ADD COLUMN verificationExpiry TEXT`);
-    console.log("📧 Added verificationExpiry column to users");
-  } catch {
-    // Column already exists
-  }
+    // Users table (Customers)
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        id TEXT PRIMARY KEY,
+        email TEXT UNIQUE NOT NULL,
+        "passwordHash" TEXT NOT NULL,
+        name TEXT NOT NULL,
+        phone TEXT,
+        "emailVerified" BOOLEAN DEFAULT false,
+        "verificationToken" TEXT,
+        "verificationExpiry" TEXT,
+        "shippingAddress" TEXT,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
 
-  // Add shippingAddress column to users for profile management
-  try {
-    db.exec(`ALTER TABLE users ADD COLUMN shippingAddress TEXT`);
-    console.log("📦 Added shippingAddress column to users");
-  } catch {
-    // Column already exists
-  }
+    // User Sessions table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS user_sessions (
+        id TEXT PRIMARY KEY,
+        "userId" TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        token TEXT UNIQUE NOT NULL,
+        "expiresAt" TEXT NOT NULL,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
 
-  console.log("📦 Database initialized successfully");
+    // Admin users table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS admin_users (
+        id TEXT PRIMARY KEY,
+        username TEXT UNIQUE NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        "passwordHash" TEXT NOT NULL,
+        role TEXT DEFAULT 'admin',
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Sessions table for admin authentication
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS sessions (
+        id TEXT PRIMARY KEY,
+        "adminId" TEXT NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
+        token TEXT UNIQUE NOT NULL,
+        "expiresAt" TEXT NOT NULL,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Reviews table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS reviews (
+        id TEXT PRIMARY KEY,
+        "productId" TEXT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+        "userName" TEXT NOT NULL,
+        rating INTEGER NOT NULL,
+        comment TEXT,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await client.query("COMMIT");
+    console.log("📦 Database initialized successfully");
+  } catch (err) {
+    await client.query("ROLLBACK");
+    console.error("Error initializing database:", err);
+    throw err;
+  } finally {
+    client.release();
+  }
 }
 
-export default db;
+export default { query };

@@ -4,99 +4,105 @@ import { v4 as uuidv4 } from "uuid";
 interface DatabaseProduct {
   id: string;
   name: string;
-  price: number;
+  price: string;
 }
 
-export function seedOrders() {
-  const products = db
-    .prepare("SELECT id, name, price FROM products")
-    .all() as DatabaseProduct[];
+export async function seedOrders() {
+  try {
+    const productsRes = await db.query("SELECT id, name, price FROM products");
+    const products = productsRes.rows as DatabaseProduct[];
 
-  if (products.length === 0) {
-    console.log("❌ No products found. Seed products first.");
-    return;
-  }
-
-  console.log(`Found ${products.length} products. Generating orders...`);
-
-  const orders = [];
-
-  const paymentMethods = ["credit_card", "paypal", "apple_pay"];
-
-  // Generate 50 orders over the last 30 days
-  for (let i = 0; i < 50; i++) {
-    const numItems = Math.floor(Math.random() * 3) + 1; // 1-3 items per order
-    const orderItems = [];
-    let total = 0;
-
-    for (let j = 0; j < numItems; j++) {
-      const product = products[Math.floor(Math.random() * products.length)];
-      const quantity = Math.floor(Math.random() * 2) + 1;
-
-      orderItems.push({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        quantity: quantity,
-      });
-
-      total += product.price * quantity;
+    if (products.length === 0) {
+      console.log("❌ No products found. Seed products first.");
+      return;
     }
 
-    const daysAgo = Math.floor(Math.random() * 30);
-    const date = new Date();
-    date.setDate(date.getDate() - daysAgo);
+    console.log(`Found ${products.length} products. Generating orders...`);
 
-    // Random status based on recency
-    let status = "delivered";
-    if (daysAgo < 2) status = "pending";
-    else if (daysAgo < 5) status = "shipped";
-    else if (Math.random() > 0.9) status = "cancelled";
+    const orders = [];
 
-    orders.push({
-      id: uuidv4(),
-      guestId: uuidv4(),
-      items: JSON.stringify(orderItems),
-      total: total,
-      shippingInfo: JSON.stringify({
-        firstName: "John",
-        lastName: "Doe",
-        email: "john.doe@example.com",
-        address: "123 Main St",
-        city: "New York",
-        region: "NY",
-        postalCode: "10001",
-        phone: `(555) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
-      }),
-      paymentMethod:
-        paymentMethods[Math.floor(Math.random() * paymentMethods.length)],
-      status: status,
-      createdAt: date.toISOString(),
-    });
-  }
+    const paymentMethods = ["credit_card", "paypal", "apple_pay"];
 
-  const insertOrder = db.prepare(`
-    INSERT INTO orders (id, guestId, items, total, shippingInfo, paymentMethod, status, createdAt)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-  `);
+    // Generate 50 orders over the last 30 days
+    for (let i = 0; i < 50; i++) {
+      const numItems = Math.floor(Math.random() * 3) + 1; // 1-3 items per order
+      const orderItems = [];
+      let total = 0;
 
-  const insertMany = db.transaction((orders) => {
+      for (let j = 0; j < numItems; j++) {
+        const product = products[Math.floor(Math.random() * products.length)];
+        const quantity = Math.floor(Math.random() * 2) + 1;
+        const price = Number(product.price);
+
+        orderItems.push({
+          id: product.id,
+          name: product.name,
+          price: price,
+          quantity: quantity,
+        });
+
+        total += price * quantity;
+      }
+
+      const daysAgo = Math.floor(Math.random() * 30);
+      const date = new Date();
+      date.setDate(date.getDate() - daysAgo);
+
+      // Random status based on recency
+      let status = "delivered";
+      if (daysAgo < 2) status = "pending";
+      else if (daysAgo < 5) status = "shipped";
+      else if (Math.random() > 0.9) status = "cancelled";
+
+      orders.push({
+        id: uuidv4(),
+        guestId: uuidv4(),
+        items: JSON.stringify(orderItems),
+        total: total,
+        shippingInfo: JSON.stringify({
+          firstName: "John",
+          lastName: "Doe",
+          email: "john.doe@example.com",
+          address: "123 Main St",
+          city: "New York",
+          region: "NY",
+          postalCode: "10001",
+          phone: `(555) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
+        }),
+        paymentMethod:
+          paymentMethods[Math.floor(Math.random() * paymentMethods.length)],
+        status: status,
+        createdAt: date.toISOString(),
+      });
+    }
+
+    await db.query("BEGIN");
+
     for (const order of orders) {
-      insertOrder.run(
-        order.id,
-        order.guestId,
-        order.items,
-        order.total,
-        order.shippingInfo,
-        order.paymentMethod,
-        order.status,
-        order.createdAt,
+      await db.query(
+        `
+        INSERT INTO orders (id, "guestId", items, total, "shippingInfo", "paymentMethod", status, "createdAt")
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      `,
+        [
+          order.id,
+          order.guestId,
+          order.items,
+          order.total,
+          order.shippingInfo,
+          order.paymentMethod,
+          order.status,
+          order.createdAt,
+        ],
       );
     }
-  });
 
-  insertMany(orders);
-  console.log(`✅ Seeded ${orders.length} orders.`);
+    await db.query("COMMIT");
+    console.log(`✅ Seeded ${orders.length} orders.`);
+  } catch (error) {
+    await db.query("ROLLBACK");
+    console.error("Error seeding orders:", error);
+  }
 }
 
 // Check if running directly

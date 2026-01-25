@@ -274,90 +274,103 @@ const categories = [
   { id: "desktops", name: "Desktops", icon: "🖥️" },
 ];
 
-export function seedDatabase() {
-  // Check if products already exist
-  const existingProducts = db
-    .prepare("SELECT COUNT(*) as count FROM products")
-    .get() as { count: number };
+export async function seedDatabase() {
+  try {
+    // Check if products already exist
+    const existingProductsRes = await db.query(
+      "SELECT COUNT(*) as count FROM products",
+    );
+    const existingProducts = existingProductsRes.rows[0];
 
-  if (existingProducts.count > 0) {
-    console.log("📦 Database already seeded, skipping...");
-    return;
-  }
+    // Count returns a string (bigint) in valid Postgres
+    if (Number(existingProducts.count) > 0) {
+      console.log("📦 Database already seeded, skipping...");
+      return;
+    }
 
-  // Insert products with stockQuantity
-  const insertProduct = db.prepare(`
-    INSERT INTO products (id, name, category, price, originalPrice, image, images, rating, reviews, badge, inStock, stockQuantity, description, features, specifications)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `);
+    // Begin transaction
+    await db.query("BEGIN");
 
-  const insertMany = db.transaction((products: SeedProduct[]) => {
+    // Insert products with stockQuantity
     for (const p of products) {
-      insertProduct.run(
-        p.id,
-        p.name,
-        p.category,
-        p.price,
-        p.originalPrice,
-        p.image,
-        p.images ? JSON.stringify(p.images) : null,
-        p.rating,
-        p.reviews,
-        p.badge,
-        p.inStock ? 1 : 0,
-        p.stockQuantity,
-        p.description,
-        p.features ? JSON.stringify(p.features) : null,
-        p.specifications ? JSON.stringify(p.specifications) : null,
+      await db.query(
+        `
+        INSERT INTO products (id, name, category, price, "originalPrice", image, images, rating, reviews, badge, "inStock", "stockQuantity", description, features, specifications)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+      `,
+        [
+          p.id,
+          p.name,
+          p.category,
+          p.price,
+          p.originalPrice,
+          p.image,
+          p.images ? JSON.stringify(p.images) : null,
+          p.rating,
+          p.reviews,
+          p.badge,
+          p.inStock,
+          p.stockQuantity,
+          p.description,
+          p.features ? JSON.stringify(p.features) : null, // Arrays in PG can be native but we store as JSON string to match previous schema
+          p.specifications ? JSON.stringify(p.specifications) : null,
+        ],
       );
     }
-  });
 
-  insertMany(products);
-
-  // Insert categories
-  const insertCategory = db.prepare(`
-    INSERT INTO categories (id, name, icon)
-    VALUES (?, ?, ?)
-  `);
-
-  const insertCategories = db.transaction((categories: SeedCategory[]) => {
+    // Insert categories
     for (const c of categories) {
-      insertCategory.run(c.id, c.name, c.icon);
+      await db.query(
+        `
+        INSERT INTO categories (id, name, icon)
+        VALUES ($1, $2, $3)
+      `,
+        [c.id, c.name, c.icon],
+      );
     }
-  });
 
-  insertCategories(categories);
+    await db.query("COMMIT");
 
-  console.log(
-    `✅ Seeded ${products.length} products and ${categories.length} categories`,
-  );
+    console.log(
+      `✅ Seeded ${products.length} products and ${categories.length} categories`,
+    );
+  } catch (error) {
+    await db.query("ROLLBACK");
+    console.error("Error seeding database:", error);
+    throw error;
+  }
 }
 
 // Seed default admin user
 export async function seedAdminUser() {
-  const existingAdmin = db
-    .prepare("SELECT COUNT(*) as count FROM admin_users")
-    .get() as { count: number };
+  try {
+    const existingAdminRes = await db.query(
+      "SELECT COUNT(*) as count FROM admin_users",
+    );
+    const existingAdmin = existingAdminRes.rows[0];
 
-  if (existingAdmin.count > 0) {
-    console.log("👤 Admin user already exists, skipping...");
-    return;
+    if (Number(existingAdmin.count) > 0) {
+      console.log("👤 Admin user already exists, skipping...");
+      return;
+    }
+
+    // Import bcrypt dynamically to hash password
+    const bcrypt = await import("bcryptjs");
+    const { v4: uuidv4 } = await import("uuid");
+
+    const adminId = uuidv4();
+    const passwordHash = await bcrypt.hash("admin123", 10);
+
+    await db.query(
+      `
+      INSERT INTO admin_users (id, username, email, "passwordHash", role)
+      VALUES ($1, $2, $3, $4, $5)
+    `,
+      [adminId, "admin", "admin@sherotech.com", passwordHash, "superadmin"],
+    );
+
+    console.log("👤 Created default admin user (admin / admin123)");
+  } catch (error) {
+    console.error("Error seeding admin user:", error);
   }
-
-  // Import bcrypt dynamically to hash password
-  const bcrypt = await import("bcryptjs");
-  const { v4: uuidv4 } = await import("uuid");
-
-  const adminId = uuidv4();
-  const passwordHash = await bcrypt.hash("admin123", 10);
-
-  db.prepare(
-    `
-    INSERT INTO admin_users (id, username, email, passwordHash, role)
-    VALUES (?, ?, ?, ?, ?)
-  `,
-  ).run(adminId, "admin", "admin@sherotech.com", passwordHash, "superadmin");
-
-  console.log("👤 Created default admin user (admin / admin123)");
 }

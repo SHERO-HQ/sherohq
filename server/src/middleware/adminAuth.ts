@@ -15,7 +15,7 @@ interface SessionRow {
   id: string;
   adminId: string;
   token: string;
-  expiresAt: string;
+  expiresAt: Date;
 }
 
 interface AdminUserRow {
@@ -29,7 +29,7 @@ interface AdminUserRow {
  * Middleware to protect admin routes
  * Validates session token from Authorization header
  */
-export function adminAuth(
+export async function adminAuth(
   req: AdminRequest,
   res: Response,
   next: NextFunction,
@@ -44,27 +44,29 @@ export function adminAuth(
     const token = authHeader.substring(7); // Remove "Bearer " prefix
 
     // Find valid session
-    const session = db
-      .prepare(
-        `
+    const sessionRes = await db.query(
+      `
       SELECT * FROM sessions 
-      WHERE token = ? AND expiresAt > datetime('now')
+      WHERE token = $1 AND "expiresAt" > NOW()
     `,
-      )
-      .get(token) as SessionRow | undefined;
+      [token],
+    );
+
+    const session = sessionRes.rows[0] as SessionRow | undefined;
 
     if (!session) {
       return res.status(401).json({ error: "Invalid or expired session" });
     }
 
     // Get admin user
-    const admin = db
-      .prepare(
-        `
-      SELECT id, username, email, role FROM admin_users WHERE id = ?
+    const adminRes = await db.query(
+      `
+      SELECT id, username, email, role FROM admin_users WHERE id = $1
     `,
-      )
-      .get(session.adminId) as AdminUserRow | undefined;
+      [session.adminId],
+    );
+
+    const admin = adminRes.rows[0] as AdminUserRow | undefined;
 
     if (!admin) {
       return res.status(401).json({ error: "Admin user not found" });
@@ -82,7 +84,7 @@ export function adminAuth(
 /**
  * Optional auth - doesn't fail if no token, just doesn't set admin
  */
-export function optionalAdminAuth(
+export async function optionalAdminAuth(
   req: AdminRequest,
   res: Response,
   next: NextFunction,

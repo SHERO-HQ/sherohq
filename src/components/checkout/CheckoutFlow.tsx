@@ -190,9 +190,36 @@ const CheckoutFlow = () => {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-32 pb-16">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Progress Steps */}
-        <div className="mb-12">
-          <div className="max-w-4xl mx-auto relative">
+        {/* Progress Steps (Mobile) */}
+        <div className="mb-8 sm:hidden">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                Step {currentStep} of {steps.length}
+              </p>
+              <h2 className="text-2xl font-bold font-sora text-slate-900 dark:text-white">
+                {steps[currentStep - 1].title}
+              </h2>
+            </div>
+            <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+              {(() => {
+                const Icon = steps[currentStep - 1].icon;
+                return <Icon className="w-6 h-6" />;
+              })()}
+            </div>
+          </div>
+          {/* Progress Bar Line */}
+          <div className="mt-4 h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-emerald-600 rounded-full transition-all duration-300"
+              style={{ width: `${(currentStep / steps.length) * 100}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Progress Steps (Desktop) */}
+        <div className="mb-12 hidden sm:block">
+          <div className="max-w-4xl mx-auto relative px-4">
             {/* Progress Track & Line */}
             <div className="absolute top-6 left-6 right-6 h-1 bg-slate-200 dark:bg-slate-800 -translate-y-1/2 rounded-full">
               <div
@@ -262,9 +289,9 @@ const CheckoutFlow = () => {
                     {cart.map((item) => (
                       <div
                         key={item.id}
-                        className="flex gap-4 p-4 rounded border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 transition-colors"
+                        className="flex flex-col sm:flex-row gap-4 p-4 rounded border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 transition-colors"
                       >
-                        <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center text-3xl">
+                        <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center text-3xl shrink-0">
                           {item.image}
                         </div>
 
@@ -280,7 +307,7 @@ const CheckoutFlow = () => {
                           </p>
                         </div>
 
-                        <div className="flex flex-col items-end gap-2">
+                        <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 mt-2 sm:mt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-800 pt-4 sm:pt-0">
                           <div className="flex items-center gap-2 border border-slate-200 dark:border-slate-700 rounded overflow-hidden">
                             <button
                               onClick={() => updateQuantity(item.id, -1)}

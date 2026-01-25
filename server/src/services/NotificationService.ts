@@ -57,13 +57,13 @@ class NotificationService {
   ) {
     console.log(`\n--- 🔔 ORDER NOTIFICATION [Order: ${orderId}] ---`);
 
-    await this.sendEmail(orderId, shippingInfo, items, total);
+    await this.sendOrderEmail(orderId, shippingInfo, items, total);
     await this.sendSMS(orderId, shippingInfo);
 
     console.log(`--- 🏁 END NOTIFICATION ---\n`);
   }
 
-  private async sendEmail(
+  private async sendOrderEmail(
     orderId: string,
     shippingInfo: ShippingInfo,
     items: OrderItem[],
@@ -188,6 +188,96 @@ class NotificationService {
         `📝 [SIMULATION] Verification email would be sent to: ${email}`,
       );
       console.log(`📝 Verification link: ${verifyLink}`);
+    }
+  }
+  public async sendScheduleConfirmation(
+    email: string,
+    name: string,
+    service: string,
+    date: Date,
+    time: string,
+  ) {
+    const formattedDate = date.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+
+    const htmlContent = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+        <h1 style="color: #059669; text-align: center;">Consultation Confirmed!</h1>
+        <p>Hi ${name},</p>
+        <p>Your consultation with <strong>SHERO TECHNOLOGIES</strong> has been successfully scheduled.</p>
+        
+        <div style="background: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="margin-top: 0;">Appointment Details</h3>
+          <p><strong>Service:</strong> ${service}</p>
+          <p><strong>Date:</strong> ${formattedDate}</p>
+          <p><strong>Time:</strong> ${time}</p>
+        </div>
+
+        <p>Our team will contact you shortly to confirm the meeting link or location.</p>
+        
+        <p style="font-size: 12px; color: #666; text-align: center; margin-top: 30px;">
+          SHERO TECHNOLOGIES - Ghana's Leading Tech Store
+        </p>
+      </div>
+    `;
+
+    await this.sendEmail(
+      email,
+      "Consultation Confirmed - SHERO TECHNOLOGIES",
+      htmlContent,
+    );
+  }
+
+  public async sendContactConfirmation(
+    email: string,
+    name: string,
+    subject: string,
+    message: string,
+  ) {
+    const htmlContent = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+        <h1 style="color: #059669; text-align: center;">Message Received</h1>
+        <p>Hi ${name},</p>
+        <p>Thanks for reaching out! We've received your message and will get back to you within 24 hours.</p>
+        
+        <div style="background: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="margin-top: 0;">Your Message</h3>
+          <p><strong>Subject:</strong> ${subject}</p>
+          <p style="white-space: pre-wrap; color: #555;">${message}</p>
+        </div>
+        
+        <p style="font-size: 12px; color: #666; text-align: center; margin-top: 30px;">
+          SHERO TECHNOLOGIES Support Team
+        </p>
+      </div>
+    `;
+
+    await this.sendEmail(
+      email,
+      `Re: ${subject} - SHERO TECHNOLOGIES`,
+      htmlContent,
+    );
+  }
+
+  private async sendEmail(to: string, subject: string, html: string) {
+    if (this.transporter) {
+      try {
+        await this.transporter.sendMail({
+          from: `"SHERO TECHNOLOGIES" <${process.env.SMTP_USER}>`,
+          to,
+          subject,
+          html,
+        });
+        console.log(`✅ Email sent to: ${to} | Subject: ${subject}`);
+      } catch (error) {
+        console.error("❌ Failed to send email:", error);
+      }
+    } else {
+      console.log(`📝 [SIMULATION] Email to ${to}: "${subject}"`);
     }
   }
 }

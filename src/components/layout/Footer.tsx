@@ -102,7 +102,7 @@ const Footer = () => {
           </div>
 
           {/* RIGHT: Navigation & Social */}
-          <div className="lg:col-span-12 xl:col-span-7 flex flex-col justify-between">
+          <div className="lg:col-span-7 flex flex-col justify-between">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
               {/* Company Link Column */}
               <div>

@@ -54,8 +54,8 @@ const LandingHero: React.FC = () => {
 
       {/* Gradient Orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-500/20 dark:bg-blue-500/10 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-emerald-500/20 dark:bg-emerald-500/10 rounded-full blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-64 h-64 md:w-96 md:h-96 bg-blue-500/20 dark:bg-blue-500/10 rounded-full blur-3xl opacity-60 md:opacity-100" />
+        <div className="absolute -bottom-40 -left-40 w-64 h-64 md:w-96 md:h-96 bg-emerald-500/20 dark:bg-emerald-500/10 rounded-full blur-3xl opacity-60 md:opacity-100" />
       </div>
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-10">

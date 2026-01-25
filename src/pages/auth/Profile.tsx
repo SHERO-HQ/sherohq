@@ -187,9 +187,66 @@ const Profile = () => {
           </div>
         )}
 
+        {/* Mobile Title */}
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 lg:hidden font-sora">
+          My Profile
+        </h1>
+
+        {/* Mobile Header & Tabs (Visible < lg) */}
+        <div className="lg:hidden mb-8 space-y-4">
+          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 flex items-center gap-4">
+            <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-2xl font-bold text-emerald-600 dark:text-emerald-400 shrink-0">
+              {user.name.charAt(0)}
+            </div>
+            <div className="min-w-0">
+              <h2 className="font-bold text-lg text-slate-900 dark:text-white truncate">
+                {user.name}
+              </h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400 truncate flex items-center gap-1.5">
+                {user.email}
+                {user.emailVerified && (
+                  <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
+                )}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-2">
+            <button
+              onClick={() => setActiveTab("orders")}
+              className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-xl font-medium text-xs sm:text-sm transition-all border ${
+                activeTab === "orders"
+                  ? "bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-500/20"
+                  : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-emerald-500/50"
+              }`}
+            >
+              <Package className="w-5 h-5" />
+              <span>Orders</span>
+            </button>
+            <button
+              onClick={() => setActiveTab("settings")}
+              className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-xl font-medium text-xs sm:text-sm transition-all border ${
+                activeTab === "settings"
+                  ? "bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-500/20"
+                  : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-emerald-500/50"
+              }`}
+            >
+              <Settings className="w-5 h-5" />
+              <span>Settings</span>
+            </button>
+            <button
+              onClick={handleLogout}
+              className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-xl font-medium text-xs sm:text-sm transition-all border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30"
+            >
+              <LogOut className="w-5 h-5" />
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
+
         <div className="grid lg:grid-cols-4 gap-8">
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
+          {/* Desktop Sidebar (Visible >= lg) */}
+          <div className="hidden lg:block lg:col-span-1">
             <div className="bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 p-6 sticky top-24">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-2xl font-bold text-emerald-600 dark:text-emerald-400">
@@ -391,10 +448,14 @@ const Profile = () => {
                     </h3>
                     <div className="grid sm:grid-cols-2 gap-6">
                       <div className="sm:col-span-2">
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                        <label
+                          htmlFor="fullName"
+                          className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                        >
                           Full Name
                         </label>
                         <input
+                          id="fullName"
                           type="text"
                           value={formData.name}
                           onChange={(e) =>
@@ -418,10 +479,14 @@ const Profile = () => {
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                        <label
+                          htmlFor="phone"
+                          className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                        >
                           Phone Number
                         </label>
                         <input
+                          id="phone"
                           type="tel"
                           value={formData.phone}
                           onChange={(e) =>
@@ -442,10 +507,14 @@ const Profile = () => {
                     </h3>
                     <div className="grid sm:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                        <label
+                          htmlFor="firstName"
+                          className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                        >
                           First Name
                         </label>
                         <input
+                          id="firstName"
                           type="text"
                           value={formData.firstName}
                           onChange={(e) =>
@@ -458,10 +527,14 @@ const Profile = () => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                        <label
+                          htmlFor="lastName"
+                          className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                        >
                           Last Name
                         </label>
                         <input
+                          id="lastName"
                           type="text"
                           value={formData.lastName}
                           onChange={(e) =>
@@ -474,10 +547,14 @@ const Profile = () => {
                         />
                       </div>
                       <div className="sm:col-span-2">
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                        <label
+                          htmlFor="streetAddress"
+                          className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                        >
                           Street Address
                         </label>
                         <input
+                          id="streetAddress"
                           type="text"
                           value={formData.address}
                           onChange={(e) =>
@@ -491,10 +568,14 @@ const Profile = () => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                        <label
+                          htmlFor="city"
+                          className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                        >
                           City
                         </label>
                         <input
+                          id="city"
                           type="text"
                           value={formData.city}
                           onChange={(e) =>
@@ -505,10 +586,14 @@ const Profile = () => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                        <label
+                          htmlFor="region"
+                          className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                        >
                           Region
                         </label>
                         <select
+                          id="region"
                           value={formData.region}
                           onChange={(e) =>
                             setFormData({ ...formData, region: e.target.value })
@@ -535,10 +620,14 @@ const Profile = () => {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                        <label
+                          htmlFor="postalCode"
+                          className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+                        >
                           GPS/Postal Code (Optional)
                         </label>
                         <input
+                          id="postalCode"
                           type="text"
                           value={formData.postalCode}
                           onChange={(e) =>

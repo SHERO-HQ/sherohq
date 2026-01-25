@@ -1,6 +1,6 @@
 import type { Product } from "@/data/products";
 
-const API_BASE = "/api";
+const API_BASE = import.meta.env.VITE_API_URL || "/api";
 
 // Helper to get auth token
 function getAuthToken(): string | null {
@@ -311,6 +311,51 @@ export async function updateUserProfile(data: {
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.error || "Profile update failed");
+  }
+
+  return response.json();
+}
+
+// Inquiry API
+export async function scheduleConsultation(data: {
+  service: string;
+  date: Date;
+  time: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  message: string;
+}): Promise<{ success: boolean; message: string }> {
+  const response = await fetch(`${API_BASE}/inquiry/schedule`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || "Failed to schedule consultation");
+  }
+
+  return response.json();
+}
+
+export async function sendContactMessage(data: {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}): Promise<{ success: boolean; message: string }> {
+  const response = await fetch(`${API_BASE}/inquiry/contact`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || "Failed to send message");
   }
 
   return response.json();

@@ -8,20 +8,21 @@ import { notificationService } from "../services/NotificationService";
 const router = express.Router();
 
 // Helper function to get user from token
-function getUserFromToken(authHeader: string | undefined) {
+async function getUserFromToken(authHeader: string | undefined) {
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return null;
   }
 
   const token = authHeader.split(" ")[1];
 
-  const session = db
-    .prepare(
-      `SELECT users.*, user_sessions.expiresAt as sessionExpiry FROM user_sessions 
-       JOIN users ON user_sessions.userId = users.id 
-       WHERE user_sessions.token = ?`,
-    )
-    .get(token) as any;
+  const result = await db.query(
+    `SELECT users.*, user_sessions."expiresAt" as "sessionExpiry" FROM user_sessions 
+       JOIN users ON user_sessions."userId" = users.id 
+       WHERE user_sessions.token = $1`,
+    [token],
+  );
+
+  const session = result.rows[0];
 
   if (!session) return null;
 
@@ -42,11 +43,11 @@ router.post("/register", async (req, res) => {
     }
 
     // Check if user exists
-    const existingUser = db
-      .prepare("SELECT * FROM users WHERE email = ?")
-      .get(email);
+    const check = await db.query("SELECT * FROM users WHERE email = $1", [
+      email,
+    ]);
 
-    if (existingUser) {
+    if (check.rowCount && check.rowCount > 0) {
       res.status(400).json({ error: "Email already registered" });
       return;
     }
@@ -60,18 +61,19 @@ router.post("/register", async (req, res) => {
       Date.now() + 24 * 60 * 60 * 1000,
     ).toISOString();
 
-    db.prepare(
-      `INSERT INTO users (id, email, passwordHash, name, phone, emailVerified, verificationToken, verificationExpiry) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-    ).run(
-      userId,
-      email,
-      hashedPassword,
-      name,
-      phone || null,
-      0,
-      verificationToken,
-      verificationExpiry,
+    await db.query(
+      `INSERT INTO users (id, email, "passwordHash", name, phone, "emailVerified", "verificationToken", "verificationExpiry") 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+      [
+        userId,
+        email,
+        hashedPassword,
+        name,
+        phone || null,
+        false, // emailVerified boolean
+        verificationToken,
+        verificationExpiry,
+      ],
     );
 
     // Auto login
@@ -82,9 +84,10 @@ router.post("/register", async (req, res) => {
       Date.now() + 30 * 24 * 60 * 60 * 1000,
     ).toISOString();
 
-    db.prepare(
-      "INSERT INTO user_sessions (id, userId, token, expiresAt) VALUES (?, ?, ?, ?)",
-    ).run(sessionId, userId, token, expiresAt);
+    await db.query(
+      'INSERT INTO user_sessions (id, "userId", token, "expiresAt") VALUES ($1, $2, $3, $4)',
+      [sessionId, userId, token, expiresAt],
+    );
 
     // Send verification email (async, don't block response)
     notificationService
@@ -103,7 +106,7 @@ router.post("/register", async (req, res) => {
 });
 
 // Verify Email
-router.post("/verify-email", (req, res) => {
+router.post("/verify-email", async (req, res) => {
   try {
     const { token } = req.body;
 
@@ -112,9 +115,11 @@ router.post("/verify-email", (req, res) => {
       return;
     }
 
-    const user = db
-      .prepare("SELECT * FROM users WHERE verificationToken = ?")
-      .get(token) as any;
+    const result = await db.query(
+      'SELECT * FROM users WHERE "verificationToken" = $1',
+      [token],
+    );
+    const user = result.rows[0];
 
     if (!user) {
       res.status(400).json({ error: "Invalid verification token" });
@@ -130,9 +135,10 @@ router.post("/verify-email", (req, res) => {
     }
 
     // Mark as verified
-    db.prepare(
-      "UPDATE users SET emailVerified = 1, verificationToken = NULL, verificationExpiry = NULL WHERE id = ?",
-    ).run(user.id);
+    await db.query(
+      'UPDATE users SET "emailVerified" = $1, "verificationToken" = NULL, "verificationExpiry" = NULL WHERE id = $2',
+      [true, user.id],
+    );
 
     console.log(`✅ Email verified for user: ${user.email}`);
 
@@ -144,7 +150,7 @@ router.post("/verify-email", (req, res) => {
 });
 
 // Resend Verification Email
-router.post("/resend-verification", (req, res) => {
+router.post("/resend-verification", async (req, res) => {
   try {
     const { email } = req.body;
 
@@ -153,9 +159,10 @@ router.post("/resend-verification", (req, res) => {
       return;
     }
 
-    const user = db
-      .prepare("SELECT * FROM users WHERE email = ?")
-      .get(email) as any;
+    const result = await db.query("SELECT * FROM users WHERE email = $1", [
+      email,
+    ]);
+    const user = result.rows[0];
 
     if (!user) {
       // Don't reveal if email exists for security
@@ -177,9 +184,10 @@ router.post("/resend-verification", (req, res) => {
       Date.now() + 24 * 60 * 60 * 1000,
     ).toISOString();
 
-    db.prepare(
-      "UPDATE users SET verificationToken = ?, verificationExpiry = ? WHERE id = ?",
-    ).run(verificationToken, verificationExpiry, user.id);
+    await db.query(
+      'UPDATE users SET "verificationToken" = $1, "verificationExpiry" = $2 WHERE id = $3',
+      [verificationToken, verificationExpiry, user.id],
+    );
 
     // Send email
     notificationService
@@ -200,9 +208,10 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = db
-      .prepare("SELECT * FROM users WHERE email = ?")
-      .get(email) as any;
+    const result = await db.query("SELECT * FROM users WHERE email = $1", [
+      email,
+    ]);
+    const user = result.rows[0];
 
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
       res.status(401).json({ error: "Invalid credentials" });
@@ -215,9 +224,10 @@ router.post("/login", async (req, res) => {
       Date.now() + 30 * 24 * 60 * 60 * 1000,
     ).toISOString();
 
-    db.prepare(
-      "INSERT INTO user_sessions (id, userId, token, expiresAt) VALUES (?, ?, ?, ?)",
-    ).run(sessionId, user.id, token, expiresAt);
+    await db.query(
+      'INSERT INTO user_sessions (id, "userId", token, "expiresAt") VALUES ($1, $2, $3, $4)',
+      [sessionId, user.id, token, expiresAt],
+    );
 
     res.json({
       success: true,
@@ -240,32 +250,37 @@ router.post("/login", async (req, res) => {
 });
 
 // Get User (Me)
-router.get("/me", (req, res) => {
-  const user = getUserFromToken(req.headers.authorization);
+router.get("/me", async (req, res) => {
+  try {
+    const user = await getUserFromToken(req.headers.authorization);
 
-  if (!user) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
+    if (!user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    res.json({
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        phone: user.phone,
+        emailVerified: !!user.emailVerified,
+        shippingAddress: user.shippingAddress
+          ? JSON.parse(user.shippingAddress)
+          : null,
+      },
+    });
+  } catch (error) {
+    console.error("Get Me error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
-
-  res.json({
-    user: {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      phone: user.phone,
-      emailVerified: !!user.emailVerified,
-      shippingAddress: user.shippingAddress
-        ? JSON.parse(user.shippingAddress)
-        : null,
-    },
-  });
 });
 
 // Update Profile
-router.put("/profile", (req, res) => {
+router.put("/profile", async (req, res) => {
   try {
-    const user = getUserFromToken(req.headers.authorization);
+    const user = await getUserFromToken(req.headers.authorization);
 
     if (!user) {
       res.status(401).json({ error: "Unauthorized" });
@@ -277,20 +292,24 @@ router.put("/profile", (req, res) => {
     // Build update query dynamically
     const updates: string[] = [];
     const values: any[] = [];
+    let paramIndex = 1;
 
     if (name !== undefined) {
-      updates.push("name = ?");
+      updates.push(`name = $${paramIndex}`);
       values.push(name);
+      paramIndex++;
     }
 
     if (phone !== undefined) {
-      updates.push("phone = ?");
+      updates.push(`phone = $${paramIndex}`);
       values.push(phone);
+      paramIndex++;
     }
 
     if (shippingAddress !== undefined) {
-      updates.push("shippingAddress = ?");
+      updates.push(`"shippingAddress" = $${paramIndex}`);
       values.push(JSON.stringify(shippingAddress));
+      paramIndex++;
     }
 
     if (updates.length === 0) {
@@ -299,15 +318,16 @@ router.put("/profile", (req, res) => {
     }
 
     values.push(user.id);
-
-    db.prepare(`UPDATE users SET ${updates.join(", ")} WHERE id = ?`).run(
-      ...values,
+    await db.query(
+      `UPDATE users SET ${updates.join(", ")} WHERE id = $${paramIndex}`,
+      values,
     );
 
     // Fetch updated user
-    const updatedUser = db
-      .prepare("SELECT * FROM users WHERE id = ?")
-      .get(user.id) as any;
+    const result = await db.query("SELECT * FROM users WHERE id = $1", [
+      user.id,
+    ]);
+    const updatedUser = result.rows[0];
 
     res.json({
       success: true,
@@ -329,13 +349,18 @@ router.put("/profile", (req, res) => {
 });
 
 // Logout
-router.post("/logout", (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (authHeader && authHeader.startsWith("Bearer ")) {
-    const token = authHeader.split(" ")[1];
-    db.prepare("DELETE FROM user_sessions WHERE token = ?").run(token);
+router.post("/logout", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      const token = authHeader.split(" ")[1];
+      await db.query("DELETE FROM user_sessions WHERE token = $1", [token]);
+    }
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Logout error:", error);
+    res.status(500).json({ error: "Failed to logout" });
   }
-  res.json({ success: true });
 });
 
 export default router;

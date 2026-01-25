@@ -136,7 +136,23 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         {/* Top Header */}
         <header className="fixed top-0 right-0 left-0 lg:left-64 h-16 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 z-30 px-6 flex items-center justify-between">
           <h2 className="text-xl font-bold text-white capitalize">
-            {location.pathname.split("/").pop() || "Dashboard"}
+            {(() => {
+              const path = location.pathname.split("/").pop();
+              switch (path) {
+                case "dashboard":
+                  return "Admin Dashboard";
+                case "products":
+                  return "Product Management";
+                case "orders":
+                  return "Order Management";
+                case "reports":
+                  return "Analytics & Reports";
+                case "profile":
+                  return "Admin Settings";
+                default:
+                  return path || "Admin Dashboard";
+              }
+            })()}
           </h2>
           <div className="flex items-center gap-4">
             <NotificationCenter />
