@@ -19,9 +19,7 @@
     "multer": "^2.0.2",
     "nodemailer": "^7.0.12",
     "pg": "^8.17.2",
-    "uuid": "^13.0.0"
-  },
-  "devDependencies": {
+    "uuid": "^13.0.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
