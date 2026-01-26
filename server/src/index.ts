@@ -73,8 +73,8 @@ app.get(/.*/, (req: Request, res: Response) => {
 // Initialize database and start server
 async function startServer() {
   try {
-    initializeDatabase();
-    seedDatabase();
+    await initializeDatabase();
+    await seedDatabase();
     await seedAdminUser();
 
     app.listen(PORT, () => {
