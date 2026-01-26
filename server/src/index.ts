@@ -57,18 +57,25 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/inquiry", inquiryRoutes);
 
-// Serve frontend static files
-app.use(express.static(path.join(__dirname, "../../dist")));
+// Root route - information about the API
+app.get("/", (req: Request, res: Response) => {
+  res.json({
+    message: "Sherotech API is running",
+    frontend: process.env.CORS_ORIGIN || "Deployed separately",
+    endpoints: {
+      health: "/api/health",
+      products: "/api/products",
+      docs: "See frontend documentation",
+    },
+  });
+});
 
 // API 404 handler - only for /api routes that weren't matched above
 app.use("/api", (req: Request, res: Response) => {
   res.status(404).json({ error: "API route not found" });
 });
 
-// Catch-all route for client-side routing
-app.get(/.*/, (req: Request, res: Response) => {
-  res.sendFile(path.join(__dirname, "../../dist/index.html"));
-});
+// Removed catch-all route for static files since frontend is deployed independently
 
 // Initialize database and start server
 async function startServer() {
