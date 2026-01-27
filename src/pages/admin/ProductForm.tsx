@@ -14,6 +14,7 @@ import {
   uploadImages,
   type ProductInput,
 } from "@/services/api";
+import { useTitle } from "@/hooks/useTitle";
 import {
   Package,
   Loader2,
@@ -28,6 +29,7 @@ export default function ProductForm() {
   const { id } = useParams();
   const navigate = useNavigate();
   const isEditing = Boolean(id);
+  useTitle(isEditing ? "Edit Product" : "Add Product");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [isLoading, setIsLoading] = useState(false);

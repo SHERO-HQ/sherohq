@@ -10,6 +10,13 @@ interface AnalyticsData {
   orders: number;
 }
 
+interface OrderItem {
+  id: string;
+  name: string;
+  quantity: number;
+  price: number;
+}
+
 // GET /api/reports/stats - Get dashboard stats
 router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
@@ -17,23 +24,33 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
     const revenueResult = await db.query(
       "SELECT SUM(total) as total FROM orders WHERE status != 'cancelled'",
     );
-    const totalRevenue = Number(revenueResult.rows[0].total) || 0;
+    const totalRevenue = parseFloat(revenueResult.rows[0]?.total || "0");
 
     // Total Orders
     const ordersResult = await db.query("SELECT COUNT(*) as count FROM orders");
-    const totalOrders = Number(ordersResult.rows[0].count) || 0;
+    const totalOrders = parseInt(ordersResult.rows[0]?.count || "0", 10);
 
     // Total Products
     const productsResult = await db.query(
       "SELECT COUNT(*) as count FROM products",
     );
-    const totalProducts = Number(productsResult.rows[0].count) || 0;
+    const totalProducts = parseInt(productsResult.rows[0]?.count || "0", 10);
 
     // Low Stock Products
-    const lowStockResult = await db.query(
-      'SELECT COUNT(*) as count FROM products WHERE "stockQuantity" <= 10',
-    );
-    const lowStockProducts = Number(lowStockResult.rows[0].count) || 0;
+    // Using generic query assuming columns might vary, checking stockQuantity or inStock
+    let lowStockProducts = 0;
+    try {
+      const lowStockResult = await db.query(
+        'SELECT COUNT(*) as count FROM products WHERE "stockQuantity" <= 10 AND "stockQuantity" > 0',
+      );
+      lowStockProducts = parseInt(lowStockResult.rows[0]?.count || "0", 10);
+    } catch {
+      // Fallback if stockQuantity missing
+      const lowStockResult = await db.query(
+        'SELECT COUNT(*) as count FROM products WHERE "inStock" = false', // approximating low stock as OOS for fallback
+      );
+      lowStockProducts = parseInt(lowStockResult.rows[0]?.count || "0", 10);
+    }
 
     res.json({
       revenue: totalRevenue,
@@ -60,18 +77,18 @@ router.get(
       if (range === "90d") days = 90;
 
       // Get orders from the last N days
-      const result = await db.query(
+      // Postgres date math: "createdAt" >= NOW() - INTERVAL '7 days'
+      const ordersResult = await db.query(
         `
-        SELECT "createdAt", total 
-        FROM orders 
-        WHERE status != 'cancelled' 
-        AND "createdAt" >= NOW() - ($1 || ' days')::INTERVAL
-        ORDER BY "createdAt" ASC
-      `,
-        [days],
+      SELECT "createdAt", total 
+      FROM orders 
+      WHERE status != 'cancelled' 
+      AND "createdAt" >= NOW() - INTERVAL '${days} days'
+      ORDER BY "createdAt" ASC
+    `,
       );
 
-      const orders = result.rows as { createdAt: Date; total: number }[];
+      const orders = ordersResult.rows as { createdAt: Date; total: string }[];
 
       // Group by date
       const groupedData: Record<string, { revenue: number; orders: number }> =
@@ -86,10 +103,9 @@ router.get(
       }
 
       orders.forEach((order) => {
-        // Postgres returns Date object for timestamp
         const dateStr = new Date(order.createdAt).toISOString().split("T")[0];
         if (groupedData[dateStr]) {
-          groupedData[dateStr].revenue += Number(order.total);
+          groupedData[dateStr].revenue += parseFloat(order.total);
           groupedData[dateStr].orders += 1;
         }
       });
@@ -116,10 +132,10 @@ router.get(
   adminAuth,
   async (req: AdminRequest, res: Response) => {
     try {
-      const result = await db.query(
+      const ordersResult = await db.query(
         "SELECT items FROM orders WHERE status != 'cancelled'",
       );
-      const orders = result.rows as { items: any }[]; // items is JSONB or JSON string, pg returns object if jsonb/json type in db usually
+      const orders = ordersResult.rows as { items: string }[];
 
       const productSales: Record<
         string,
@@ -127,16 +143,8 @@ router.get(
       > = {};
 
       orders.forEach((order) => {
-        // If we stored as TEXT/VARCHAR, parse it. If JSON/JSONB, it might be object.
-        // Assuming init.ts set it as TEXT, then parse. If JSONB, no need.
-        // Based on previous code: JSON.stringify(items). So likely TEXT or JSONB.
-        // If TEXT, `pg` driver returns string.
-        const items =
-          typeof order.items === "string"
-            ? JSON.parse(order.items)
-            : order.items;
-
-        items.forEach((item: any) => {
+        const items = JSON.parse(order.items);
+        items.forEach((item: OrderItem) => {
           if (!productSales[item.id]) {
             productSales[item.id] = {
               name: item.name,
@@ -145,7 +153,7 @@ router.get(
             };
           }
           productSales[item.id].quantity += item.quantity;
-          productSales[item.id].revenue += Number(item.price) * item.quantity;
+          productSales[item.id].revenue += item.price * item.quantity;
         });
       });
 
@@ -167,36 +175,41 @@ router.get(
   adminAuth,
   async (req: AdminRequest, res: Response) => {
     try {
-      const inStock = await db.query(
-        'SELECT COUNT(*) as count FROM products WHERE "inStock" = $1 AND "stockQuantity" > 10',
-        [true],
-      );
+      let inStock = 0,
+        lowStock = 0,
+        outOfStock = 0;
 
-      const lowStock = await db.query(
-        'SELECT COUNT(*) as count FROM products WHERE "stockQuantity" <= 10 AND "stockQuantity" > 0',
-      );
+      try {
+        const inStockRes = await db.query(
+          'SELECT COUNT(*) as count FROM products WHERE "inStock" = true AND "stockQuantity" > 10',
+        );
+        inStock = parseInt(inStockRes.rows[0]?.count || "0", 10);
 
-      const outOfStock = await db.query(
-        'SELECT COUNT(*) as count FROM products WHERE "inStock" = $1 OR "stockQuantity" = 0',
-        [false],
-      );
+        const lowStockRes = await db.query(
+          'SELECT COUNT(*) as count FROM products WHERE "stockQuantity" <= 10 AND "stockQuantity" > 0',
+        );
+        lowStock = parseInt(lowStockRes.rows[0]?.count || "0", 10);
+
+        const outOfStockRes = await db.query(
+          'SELECT COUNT(*) as count FROM products WHERE "inStock" = false OR "stockQuantity" = 0',
+        );
+        outOfStock = parseInt(outOfStockRes.rows[0]?.count || "0", 10);
+      } catch {
+        // Fallback
+        const inStockRes = await db.query(
+          'SELECT COUNT(*) as count FROM products WHERE "inStock" = true',
+        );
+        const outOfStockRes = await db.query(
+          'SELECT COUNT(*) as count FROM products WHERE "inStock" = false',
+        );
+        inStock = parseInt(inStockRes.rows[0]?.count || "0", 10);
+        outOfStock = parseInt(outOfStockRes.rows[0]?.count || "0", 10);
+      }
 
       res.json([
-        {
-          name: "In Stock",
-          value: Number(inStock.rows[0].count) || 0,
-          color: "#10b981",
-        }, // emerald-500
-        {
-          name: "Low Stock",
-          value: Number(lowStock.rows[0].count) || 0,
-          color: "#f59e0b",
-        }, // amber-500
-        {
-          name: "Out of Stock",
-          value: Number(outOfStock.rows[0].count) || 0,
-          color: "#ef4444",
-        }, // red-500
+        { name: "In Stock", value: inStock, color: "#10b981" },
+        { name: "Low Stock", value: lowStock, color: "#f59e0b" },
+        { name: "Out of Stock", value: outOfStock, color: "#ef4444" },
       ]);
     } catch (error) {
       console.error("Error fetching stock distribution:", error);
@@ -211,49 +224,29 @@ router.get(
   adminAuth,
   async (req: AdminRequest, res: Response) => {
     try {
-      const pending = await db.query(
-        "SELECT COUNT(*) as count FROM orders WHERE status = 'pending'",
+      const distributionResult = await db.query(
+        "SELECT status, COUNT(*) as count FROM orders GROUP BY status",
       );
-      const processing = await db.query(
-        "SELECT COUNT(*) as count FROM orders WHERE status = 'processing'",
-      );
-      const shipped = await db.query(
-        "SELECT COUNT(*) as count FROM orders WHERE status = 'shipped'",
-      );
-      const delivered = await db.query(
-        "SELECT COUNT(*) as count FROM orders WHERE status = 'delivered'",
-      );
-      const cancelled = await db.query(
-        "SELECT COUNT(*) as count FROM orders WHERE status = 'cancelled'",
-      );
+      const distribution = distributionResult.rows as {
+        status: string;
+        count: string;
+      }[];
 
-      res.json([
-        {
-          name: "Pending",
-          value: Number(pending.rows[0].count) || 0,
-          color: "#f59e0b",
-        },
-        {
-          name: "Processing",
-          value: Number(processing.rows[0].count) || 0,
-          color: "#3b82f6",
-        },
-        {
-          name: "Shipped",
-          value: Number(shipped.rows[0].count) || 0,
-          color: "#8b5cf6",
-        },
-        {
-          name: "Delivered",
-          value: Number(delivered.rows[0].count) || 0,
-          color: "#10b981",
-        },
-        {
-          name: "Cancelled",
-          value: Number(cancelled.rows[0].count) || 0,
-          color: "#ef4444",
-        },
-      ]);
+      const statusColors: Record<string, string> = {
+        pending: "#f59e0b",
+        processing: "#3b82f6",
+        shipped: "#8b5cf6",
+        delivered: "#10b981",
+        cancelled: "#ef4444",
+      };
+
+      const data = distribution.map((item) => ({
+        name: item.status.charAt(0).toUpperCase() + item.status.slice(1),
+        value: parseInt(item.count, 10),
+        color: statusColors[item.status] || "#64748b",
+      }));
+
+      res.json(data);
     } catch (error) {
       console.error("Error fetching order status:", error);
       res.status(500).json({ error: "Failed to fetch order status" });
@@ -267,35 +260,38 @@ router.get(
   adminAuth,
   async (req: AdminRequest, res: Response) => {
     try {
-      const result = await db.query(
-        `
-        SELECT id, total, status, "createdAt", "shippingInfo" 
-        FROM orders 
-        ORDER BY "createdAt" DESC 
-        LIMIT 5
-      `,
+      const ordersResult = await db.query(
+        `SELECT id, total, status, "createdAt", "shippingInfo" 
+         FROM orders 
+         ORDER BY "createdAt" DESC 
+         LIMIT 5`,
+      );
+      const orders = ordersResult.rows;
+
+      const recentOrders = orders.map(
+        (order: {
+          id: string;
+          total: string;
+          status: string;
+          createdAt: string;
+          shippingInfo: string;
+        }) => {
+          const shipping = JSON.parse(order.shippingInfo);
+          return {
+            id: order.id,
+            total: parseFloat(order.total),
+            status: order.status,
+            createdAt: order.createdAt,
+            customer: {
+              firstName: shipping.firstName,
+              lastName: shipping.lastName,
+              email: shipping.email,
+            },
+          };
+        },
       );
 
-      const orders = result.rows as {
-        id: string;
-        total: number;
-        status: string;
-        createdAt: Date;
-        shippingInfo: any;
-      }[];
-
-      const parsedOrders = orders.map((order) => ({
-        id: order.id,
-        total: Number(order.total),
-        status: order.status,
-        createdAt: order.createdAt,
-        customer:
-          typeof order.shippingInfo === "string"
-            ? JSON.parse(order.shippingInfo)
-            : order.shippingInfo,
-      }));
-
-      res.json(parsedOrders);
+      res.json(recentOrders);
     } catch (error) {
       console.error("Error fetching recent orders:", error);
       res.status(500).json({ error: "Failed to fetch recent orders" });

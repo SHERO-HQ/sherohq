@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { User, Lock, Save, Loader2 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
+import { useTitle } from "@/hooks/useTitle";
 import { updateAdminProfile } from "@/services/api";
 import { useNotifications } from "@/hooks/useNotifications";
 import AdminLayout from "@/components/admin/AdminLayout";
 
 export default function AdminProfile() {
+  useTitle("Admin Settings");
   const { admin } = useAdmin();
   const { addNotification } = useNotifications();
 
@@ -34,10 +36,10 @@ export default function AdminProfile() {
       addNotification("Success", "Profile updated successfully", "success");
       setPassword("");
       setConfirmPassword("");
-    } catch (err: any) {
+    } catch (err: unknown) {
       addNotification(
         "Error",
-        err.message || "Failed to update profile",
+        err instanceof Error ? err.message : "Failed to update profile",
         "error",
       );
     } finally {
@@ -65,10 +67,14 @@ export default function AdminProfile() {
 
               <div className="grid gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-400">
+                  <label
+                    htmlFor="admin-username"
+                    className="text-sm font-medium text-slate-400"
+                  >
                     Username
                   </label>
                   <input
+                    id="admin-username"
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
@@ -77,10 +83,14 @@ export default function AdminProfile() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-400">
+                  <label
+                    htmlFor="admin-email"
+                    className="text-sm font-medium text-slate-400"
+                  >
                     Email Address
                   </label>
                   <input
+                    id="admin-email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -104,10 +114,14 @@ export default function AdminProfile() {
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-400">
+                  <label
+                    htmlFor="admin-password"
+                    className="text-sm font-medium text-slate-400"
+                  >
                     New Password
                   </label>
                   <input
+                    id="admin-password"
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -116,10 +130,14 @@ export default function AdminProfile() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-slate-400">
+                  <label
+                    htmlFor="admin-confirm-password"
+                    className="text-sm font-medium text-slate-400"
+                  >
                     Confirm Password
                   </label>
                   <input
+                    id="admin-confirm-password"
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}

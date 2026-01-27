@@ -34,8 +34,8 @@ const ProductHero: React.FC<ProductHeroProps> = ({ onSearch }) => {
           transition={{ delay: 0.1 }}
           className="text-center mb-10"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 dark:bg-emerald-500/20 border border-emerald-500/20 dark:border-emerald-500/20 text-xs font-semibold text-emerald-600 dark:text-emerald-200 mb-6 backdrop-blur-md">
-            <ShoppingBag className="w-3 h-3" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 uppercase dark:bg-emerald-500/20 border border-emerald-500/20 dark:border-emerald-500/20 text-sm font-semibold text-emerald-600 dark:text-emerald-200 mb-6 backdrop-blur-md">
+            <ShoppingBag className="size-4" />
             <span>Official Store</span>
           </div>
 

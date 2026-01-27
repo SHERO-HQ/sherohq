@@ -14,6 +14,7 @@ import {
   Mail,
   MessageSquare,
   Phone,
+  HelpCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -56,6 +57,12 @@ const services: ServiceType[] = [
     title: "Software Engineering",
     description: "Custom web, mobile, and SaaS application development.",
     icon: <Code2 className="w-6 h-6" />,
+  },
+  {
+    id: "other",
+    title: "Other",
+    description: "Something else? Let's discuss your unique requirements.",
+    icon: <HelpCircle className="w-6 h-6" />,
   },
 ];
 

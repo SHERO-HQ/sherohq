@@ -9,7 +9,8 @@
     "dev:all": "concurrently \"yarn dev\" \"yarn server\"",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "sitemap": "node scripts/generate-sitemap.js"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",
@@ -26,6 +27,7 @@
     "react": "^19.2.0",
     "react-day-picker": "^9.13.0",
     "react-dom": "^19.2.0",
+    "react-helmet-async": "^2.0.5",
     "react-is": "^19.2.3",
     "react-router": "^7.10.1",
     "react-router-dom": "^7.11.0",

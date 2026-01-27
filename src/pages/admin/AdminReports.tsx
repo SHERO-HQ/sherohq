@@ -28,6 +28,7 @@ import {
   type OrderStatusDistribution,
   type RecentOrder,
 } from "@/services/api";
+import { useTitle } from "@/hooks/useTitle";
 import {
   PieChart as PieChartIcon,
   DollarSign,
@@ -37,6 +38,7 @@ import {
   TrendingUp,
   BarChart3,
   LineChart as LineChartIcon,
+  Loader2,
 } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
 
@@ -74,6 +76,7 @@ class ErrorBoundary extends React.Component<
 }
 
 export default function AdminReports() {
+  useTitle("Reports & Analytics");
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [analytics, setAnalytics] = useState<AnalyticsData[]>([]);
   const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
@@ -123,8 +126,8 @@ export default function AdminReports() {
   if (isLoading) {
     return (
       <AdminLayout>
-        <div className="flex items-center justify-center h-96">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500" />
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
         </div>
       </AdminLayout>
     );
@@ -175,7 +178,7 @@ export default function AdminReports() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
               title="Total Revenue"
-              value={`$${stats?.revenue.toLocaleString() ?? 0}`}
+              value={`GH₵${stats?.revenue.toLocaleString() ?? 0}`}
               icon={DollarSign}
               color="text-emerald-400"
               bg="bg-emerald-400/10"
@@ -261,7 +264,7 @@ export default function AdminReports() {
                       <YAxis
                         stroke="#94a3b8"
                         fontSize={12}
-                        tickFormatter={(value) => `$${value}`}
+                        tickFormatter={(value) => `GH₵${value}`}
                       />
                       <Tooltip
                         contentStyle={{
@@ -271,7 +274,7 @@ export default function AdminReports() {
                         }}
                         itemStyle={{ color: "#f8fafc" }}
                         formatter={(value: number | undefined) => [
-                          `$${(value ?? 0).toLocaleString()}`,
+                          `GH₵${(value ?? 0).toLocaleString()}`,
                           "Revenue",
                         ]}
                         labelFormatter={(label) => {
@@ -314,7 +317,7 @@ export default function AdminReports() {
                       <YAxis
                         stroke="#94a3b8"
                         fontSize={12}
-                        tickFormatter={(value) => `$${value}`}
+                        tickFormatter={(value) => `GH₵${value}`}
                       />
                       <Tooltip
                         contentStyle={{
@@ -324,7 +327,7 @@ export default function AdminReports() {
                         }}
                         itemStyle={{ color: "#f8fafc" }}
                         formatter={(value: number | undefined) => [
-                          `$${(value ?? 0).toLocaleString()}`,
+                          `GH₵${(value ?? 0).toLocaleString()}`,
                           "Revenue",
                         ]}
                         labelFormatter={(label) => {
@@ -516,7 +519,7 @@ export default function AdminReports() {
                       </div>
                     </div>
                     <span className="font-bold text-emerald-400 text-sm">
-                      ${product.revenue.toLocaleString()}
+                      GH₵{product.revenue.toLocaleString()}
                     </span>
                   </div>
                 ))}

@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import ProductHero from "./ProductsHero";
-import ProductCategories from "./ProductsCategories";
+// import ProductCategories from "./ProductsCategories"; // Removed
 import { defaultCategories } from "@/utils/defaultCategories";
 import type { Category } from "./ProductsCategories";
 import ProductFilters from "./ProductFilters";
@@ -19,18 +19,15 @@ const sampleProducts = products;
 
 const ShopPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialSearch = searchParams.get("search") || "";
 
   const [activeCategory, setActiveCategory] = useState("all");
-  const [searchQuery, setSearchQuery] = useState(initialSearch);
+  // Derive searchQuery from URL params instead of using useEffect + setState
+  const searchQuery = useMemo(
+    () => searchParams.get("search") || "",
+    [searchParams],
+  );
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  // Update effect to sync URL with state
-  useEffect(() => {
-    const query = searchParams.get("search") || "";
-    setSearchQuery(query);
-  }, [searchParams]);
 
   const [filters, setFilters] = useState<FilterState>({
     priceRange: [0, 10000],
@@ -104,9 +101,8 @@ const ShopPage = () => {
 
   const filteredProducts = getFilteredProducts();
 
-  // Handle search
+  // Handle search - only update URL params, searchQuery is derived from URL
   const handleSearch = (query: string) => {
-    setSearchQuery(query);
     if (query) {
       setSearchParams({ search: query });
     } else {
@@ -158,12 +154,12 @@ const ShopPage = () => {
         onFilterToggle={() => setShowMobileFilters(true)}
       />
 
-      {/* Categories */}
-      <ProductCategories
+      {/* Categories - Removed top bar */
+      /* <ProductCategories
         categories={categoriesWithCount}
         activeCategory={activeCategory}
         onCategoryChange={handleCategoryChange}
-      />
+      /> */}
 
       {/* Main Content */}
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
@@ -174,6 +170,9 @@ const ShopPage = () => {
               <ProductFiltersSidebar
                 filters={filters}
                 onFilterChange={handleFilterChange}
+                categories={categoriesWithCount}
+                activeCategory={activeCategory}
+                onCategoryChange={handleCategoryChange}
               />
             </div>
           </div>
@@ -182,11 +181,11 @@ const ShopPage = () => {
           <div className="lg:hidden mb-4">
             <button
               onClick={() => setShowMobileFilters(true)}
-              className="w-full flex items-center justify-center gap-2 cursor-pointer px-4 py-3 dark:bg-slate-900/80 bg-slate-400/20 hover:bg-blue-400/20 backdrop-blur-md border border-white/10 rounded font-medium dark:text-slate-200 text-slate-800 shadow-md hover:border-blue-500/50 transition-colors"
+              className="w-full flex items-center justify-center gap-2 cursor-pointer px-4 py-3 dark:bg-slate-900/80 bg-slate-400/20 hover:bg-emerald-400/20 backdrop-blur-md border border-white/10 rounded font-medium dark:text-slate-200 text-slate-800 shadow-md hover:border-emerald-500/50 transition-colors"
             >
               <SlidersHorizontal />
               <span>Filter Products</span>
-              <span className="bg-blue-300/20 text-blue-800 px-2 py-0.5 rounded text-xs border border-blue-500/20">
+              <span className="bg-emerald-600 text-white px-2 py-0.5 rounded text-xs font-bold shadow-sm shadow-emerald-500/20">
                 {filteredProducts.length}
               </span>
             </button>
@@ -244,6 +243,9 @@ const ShopPage = () => {
         onFilterChange={handleFilterChange}
         isOpen={showMobileFilters}
         onClose={() => setShowMobileFilters(false)}
+        categories={categoriesWithCount}
+        activeCategory={activeCategory}
+        onCategoryChange={handleCategoryChange}
       />
     </div>
   );

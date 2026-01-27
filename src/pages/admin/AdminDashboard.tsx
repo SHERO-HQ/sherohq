@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAdmin } from "@/context/AdminContext";
+import { useTitle } from "@/hooks/useTitle";
 import { getAdminStats, type AdminStats } from "@/services/api";
 import {
   Package,
@@ -16,6 +17,7 @@ import {
 import AdminLayout from "@/components/admin/AdminLayout";
 
 export default function AdminDashboard() {
+  useTitle("Admin Dashboard");
   const { admin } = useAdmin();
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -74,7 +76,7 @@ export default function AdminDashboard() {
     },
     {
       title: "Total Revenue",
-      value: `$${(stats?.revenue ?? 0).toLocaleString()}`,
+      value: `GH₵${(stats?.revenue ?? 0).toLocaleString()}`,
       icon: DollarSign,
       color: "green",
       link: "/admin/orders",

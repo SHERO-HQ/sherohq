@@ -1,19 +1,27 @@
 import { Check, SlidersHorizontal, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import type { FilterState } from "./ProductFilters";
+import type { Category } from "./ProductsCategories";
 
 interface ProductFiltersSidebarProps {
   filters: FilterState;
   onFilterChange: (filters: FilterState) => void;
   className?: string;
+  categories: Category[];
+  activeCategory: string;
+  onCategoryChange: (categoryId: string) => void;
 }
 
 const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
   filters,
   onFilterChange,
   className = "",
+  categories,
+  activeCategory,
+  onCategoryChange,
 }) => {
   const [expandedSections, setExpandedSections] = useState<string[]>([
+    "categories",
     "price",
     "brand",
     "rating",
@@ -61,10 +69,54 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
       <div className="dark:bg-slate-900/60 bg-slate-200/60 backdrop-blur-xl border border-white/5 rounded p-6 shadow-xl">
         <div className="flex items-center gap-2 mb-8 border-b dark:border-white/5 border-slate-300 pb-4">
           <SlidersHorizontal className="w-5 h-5 text-slate-500" />
-          <h3 className="font-bold text-lg dark:text-white text-slate-800">Filters</h3>
+          <h3 className="font-bold text-lg dark:text-white text-slate-800">
+            Filters
+          </h3>
         </div>
 
         <div className="space-y-8">
+          {/* Categories */}
+          <div className="border-b dark:border-white/5 border-slate-300 pb-6 last:border-0 last:pb-0">
+            <button
+              onClick={() => toggleSection("categories")}
+              className="flex items-center justify-between w-full mb-4 font-semibold dark:text-white text-slate-800 hover:text-primary transition-colors cursor-pointer"
+            >
+              <span>Categories</span>
+              {expandedSections.includes("categories") ? (
+                <ChevronUp className="w-4 h-4 dark:text-slate-500 text-slate-700" />
+              ) : (
+                <ChevronDown className="w-4 h-4 dark:text-slate-500 text-slate-700" />
+              )}
+            </button>
+
+            {expandedSections.includes("categories") && (
+              <div className="space-y-2">
+                {categories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => onCategoryChange(category.id)}
+                    className={`flex items-center justify-between w-full text-left group cursor-pointer ${
+                      activeCategory === category.id
+                        ? "text-emerald-600 dark:text-emerald-400 font-medium"
+                        : "text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400"
+                    }`}
+                  >
+                    <span className="text-sm">{category.name}</span>
+                    <span
+                      className={`text-xs px-2 py-0.5 rounded-full transition-colors ${
+                        activeCategory === category.id
+                          ? "bg-emerald-600 text-white shadow-sm shadow-emerald-500/20"
+                          : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-emerald-50 dark:group-hover:bg-emerald-900/20"
+                      }`}
+                    >
+                      {category.count}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
           {/* Price Range */}
           <div className="border-b dark:border-white/5 border-slate-300 pb-6 last:border-0 last:pb-0">
             <button

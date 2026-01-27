@@ -90,7 +90,7 @@ const Footer = () => {
             </div>
 
             {/* System Status */}
-            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-950/30 border border-emerald-500/20 transition-colors duration-300">
+            {/* <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-950/30 border border-emerald-500/20 transition-colors duration-300">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
@@ -98,7 +98,7 @@ const Footer = () => {
               <span className="text-emerald-600 dark:text-emerald-400 text-xs font-mono font-semibold tracking-wider uppercase transition-colors duration-300">
                 All Systems Operational
               </span>
-            </div>
+            </div> */}
           </div>
 
           {/* RIGHT: Navigation & Social */}

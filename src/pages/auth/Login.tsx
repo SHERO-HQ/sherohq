@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { useTitle } from "@/hooks/useTitle";
 import { Loader2, Mail, Lock, ArrowRight } from "lucide-react";
 import SheroLogo from "@/assets/logo/shero.svg";
 
 const Login = () => {
+  useTitle("Login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -20,8 +22,8 @@ const Login = () => {
     try {
       await login({ email, password });
       navigate("/profile");
-    } catch (err: any) {
-      setError(err.message || "Failed to login");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to login");
     } finally {
       setLoading(false);
     }
@@ -49,11 +51,15 @@ const Login = () => {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              <label
+                htmlFor="login-email"
+                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+              >
                 Email Address
               </label>
               <div className="relative">
                 <input
+                  id="login-email"
                   type="email"
                   required
                   value={email}
@@ -66,11 +72,15 @@ const Login = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              <label
+                htmlFor="login-password"
+                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+              >
                 Password
               </label>
               <div className="relative">
                 <input
+                  id="login-password"
                   type="password"
                   required
                   value={password}

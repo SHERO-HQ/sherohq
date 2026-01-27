@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { fetchAllOrders, updateOrderStatus, type Order } from "@/services/api";
+import { useTitle } from "@/hooks/useTitle";
 import {
   ShoppingCart,
   Clock,
@@ -10,6 +11,7 @@ import {
   Loader2,
   ChevronDown,
   Phone,
+  Store,
 } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
 
@@ -36,20 +38,35 @@ const ORDER_STATUSES = [
   },
 ];
 
+// Utility function moved outside component for better performance
+function formatDate(dateString: string) {
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+function getStatusInfo(status: string) {
+  return ORDER_STATUSES.find((s) => s.value === status) || ORDER_STATUSES[0];
+}
+
 export default function AdminOrders() {
+  useTitle("Manage Orders");
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>("");
+  const [deliveryFilter, setDeliveryFilter] = useState<
+    "all" | "pickup" | "delivery"
+  >("all");
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
 
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
 
-  useEffect(() => {
-    loadOrders();
-  }, [statusFilter, dateRange.start, dateRange.end]);
-
-  async function loadOrders() {
+  const loadOrders = useCallback(async () => {
     try {
       setIsLoading(true);
       const data = await fetchAllOrders(
@@ -63,7 +80,20 @@ export default function AdminOrders() {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [statusFilter, dateRange.start, dateRange.end]);
+
+  useEffect(() => {
+    loadOrders();
+  }, [loadOrders]);
+
+  const filteredOrders = orders.filter((order) => {
+    if (deliveryFilter === "all") return true;
+    if (deliveryFilter === "pickup")
+      return order.paymentMethod === "store_pickup";
+    if (deliveryFilter === "delivery")
+      return order.paymentMethod !== "store_pickup";
+    return true;
+  });
 
   async function handleStatusChange(orderId: string, newStatus: string) {
     try {
@@ -79,20 +109,6 @@ export default function AdminOrders() {
     }
   }
 
-  function getStatusInfo(status: string) {
-    return ORDER_STATUSES.find((s) => s.value === status) || ORDER_STATUSES[0];
-  }
-
-  function formatDate(dateString: string) {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  }
-
   return (
     <AdminLayout>
       <div className="space-y-6">
@@ -104,7 +120,10 @@ export default function AdminOrders() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-white">Orders</h1>
-              <p className="text-slate-400">{orders.length} orders found</p>
+              <h1 className="text-2xl font-bold text-white">Orders</h1>
+              <p className="text-slate-400">
+                {filteredOrders.length} orders found
+              </p>
             </div>
           </div>
         </div>
@@ -144,6 +163,19 @@ export default function AdminOrders() {
               </option>
             ))}
           </select>
+
+          {/* Delivery Filter */}
+          <select
+            value={deliveryFilter}
+            onChange={(e) =>
+              setDeliveryFilter(e.target.value as "all" | "pickup" | "delivery")
+            }
+            className="px-4 py-2 bg-slate-900 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+          >
+            <option value="all">All Delivery Methods</option>
+            <option value="delivery">Delivery</option>
+            <option value="pickup">Store Pickup</option>
+          </select>
         </div>
 
         {/* Orders List */}
@@ -151,14 +183,14 @@ export default function AdminOrders() {
           <div className="flex items-center justify-center h-64">
             <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
           </div>
-        ) : orders.length === 0 ? (
+        ) : filteredOrders.length === 0 ? (
           <div className="text-center py-12">
             <ShoppingCart className="w-12 h-12 text-slate-600 mx-auto mb-4" />
             <p className="text-slate-400">No orders found</p>
           </div>
         ) : (
           <div className="space-y-4">
-            {orders.map((order) => {
+            {filteredOrders.map((order) => {
               const statusInfo = getStatusInfo(order.status);
               const StatusIcon = statusInfo.icon;
               const isExpanded = expandedOrder === order.id;
@@ -170,10 +202,20 @@ export default function AdminOrders() {
                 >
                   {/* Order Header */}
                   <div
-                    className="p-6 cursor-pointer hover:bg-slate-800/30 transition-colors"
+                    role="button"
+                    tabIndex={0}
+                    className="p-6 cursor-pointer hover:bg-slate-800/30 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-inset"
                     onClick={() =>
                       setExpandedOrder(isExpanded ? null : order.id)
                     }
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setExpandedOrder(isExpanded ? null : order.id);
+                      }
+                    }}
+                    aria-expanded={isExpanded}
+                    aria-label={`Order ${order.id.slice(0, 8)}, ${statusInfo.label}, GH₵${order.total.toLocaleString()}`}
                   >
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                       <div className="flex items-center gap-4">
@@ -183,8 +225,13 @@ export default function AdminOrders() {
                           <StatusIcon className="w-5 h-5" />
                         </div>
                         <div>
-                          <p className="font-medium text-white">
+                          <p className="font-medium text-white flex items-center gap-2">
                             Order #{order.id.slice(0, 8)}
+                            {order.paymentMethod === "store_pickup" && (
+                              <span className="flex items-center gap-1 text-[10px] uppercase font-bold bg-emerald-900/50 text-emerald-400 px-2 py-0.5 rounded border border-emerald-800/50">
+                                <Store className="w-3 h-3" /> Pickup
+                              </span>
+                            )}
                           </p>
                           <p className="text-sm text-slate-400">
                             {formatDate(order.createdAt)}
@@ -206,7 +253,7 @@ export default function AdminOrders() {
                       <div className="flex items-center gap-4">
                         <div className="text-right">
                           <p className="font-bold text-white">
-                            ${order.total.toLocaleString()}
+                            GH₵{order.total.toLocaleString()}
                           </p>
                           <p className="text-sm text-slate-400">
                             {order.items.length} items
@@ -214,7 +261,11 @@ export default function AdminOrders() {
                         </div>
 
                         {/* Status Dropdown */}
-                        <div onClick={(e) => e.stopPropagation()}>
+                        <div
+                          role="presentation"
+                          onClick={(e) => e.stopPropagation()}
+                          onKeyDown={(e) => e.stopPropagation()}
+                        >
                           <select
                             value={order.status}
                             onChange={(e) =>
@@ -288,11 +339,11 @@ export default function AdminOrders() {
                                     {item.name}
                                   </p>
                                   <p className="text-slate-400 text-xs">
-                                    Qty: {item.quantity} × ${item.price}
+                                    Qty: {item.quantity} × GH₵{item.price}
                                   </p>
                                 </div>
                                 <p className="text-white font-medium">
-                                  ${(item.price * item.quantity).toFixed(2)}
+                                  GH₵{(item.price * item.quantity).toFixed(2)}
                                 </p>
                               </div>
                             ))}

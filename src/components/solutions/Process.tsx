@@ -55,8 +55,8 @@ const Process = () => {
 
       <div className="container max-w-5xl mx-auto px-4 relative z-10">
         <div className="text-center mb-20">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full">
-            <Workflow className="w-4 h-4" />
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
+            <Workflow className="size-4" />
             How We Work
           </span>
           <h2 className="text-3xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white mb-6">
@@ -95,7 +95,7 @@ const Process = () => {
                         isEven ? "md:text-right" : "md:text-left"
                       }`}
                     >
-                      <span className="inline-block py-1 px-3 rounded mb-3 text-sm font-mono font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                      <span className="inline-block py-1 px-3 rounded mb-3 text-sm font-mono font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 uppercase">
                         Step {index + 1}
                       </span>
                       <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">

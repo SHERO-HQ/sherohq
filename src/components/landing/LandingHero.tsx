@@ -43,7 +43,7 @@ const LandingHero: React.FC = () => {
   return (
     <header
       className="relative min-h-screen w-full overflow-hidden
-                 bg-linear-to-b from-slate-50 to-white 
+                 bg-linear-to-b from-slate-200 to-slate-100
                  dark:from-slate-950 dark:to-slate-900
                  flex items-center justify-center"
       role="banner"
@@ -140,7 +140,7 @@ const LandingHero: React.FC = () => {
               className="flex flex-col sm:flex-row items-center gap-4 pt-4"
             >
               <NavLink
-                to="/explore"
+                to="/solutions"
                 className="group inline-flex items-center justify-center gap-3 
                          text-white bg-emerald-600 dark:bg-emerald-500
                          px-8 py-2 rounded font-semibold text-base
@@ -149,9 +149,9 @@ const LandingHero: React.FC = () => {
                          hover:-translate-y-1
                          transition-all duration-300
                          w-full sm:w-auto"
-                aria-label="Explore our potential and services"
+                aria-label="View our solutions"
               >
-                <span>Explore Potential</span>
+                <span>View Solutions</span>
                 <svg
                   aria-hidden="true"
                   className="w-5 h-5 transform group-hover:translate-x-1 transition-transform"
@@ -169,7 +169,7 @@ const LandingHero: React.FC = () => {
               </NavLink>
 
               <NavLink
-                to="/contact"
+                to="/consultation"
                 className="group inline-flex items-center justify-center gap-3 
                          text-slate-700 dark:text-slate-300
                          border-2 border-slate-300 dark:border-slate-700
@@ -181,7 +181,7 @@ const LandingHero: React.FC = () => {
                          transition-all duration-300
                          w-full sm:w-auto"
               >
-                <span>Get in Touch</span>
+                <span>Request a Quote</span>
                 <MessageSquareDot className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
               </NavLink>
             </motion.div>

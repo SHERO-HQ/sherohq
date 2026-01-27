@@ -27,11 +27,12 @@ router.post("/initialize", async (req: Request, res: Response) => {
     });
 
     res.json({ success: true, checkoutUrl });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Payment initialization error:", error);
-    res
-      .status(500)
-      .json({ error: "Failed to initialize payment", details: error.message });
+    res.status(500).json({
+      error: "Failed to initialize payment",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 });
 

@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { ShoppingCart, Heart, Eye, Star } from "lucide-react";
+import { ShoppingCart, Heart, Eye, Star, CreditCard } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
@@ -33,10 +33,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
     });
   };
 
+  const handleBuyNow = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      category: product.category,
+    });
+    navigate("/checkout");
+  };
+
   const handleQuickView = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    onQuickView?.(product);
+    if (onQuickView) {
+      onQuickView(product);
+    } else {
+      navigate(`/products/${product.id}`);
+    }
   };
 
   const toggleWishlist = (e: React.MouseEvent) => {
@@ -67,19 +84,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-linear-to-b from-emerald-500/5 to-transparent transition-opacity duration-500 pointer-events-none" />
 
       {/* Badges */}
-      <div className="absolute top-3 left-3 z-20 flex  gap-2">
+      <div className="absolute top-2 sm:top-3 left-2 sm:left-3 z-20 flex gap-1 sm:gap-2">
         {product.badge && (
-          <span className="px-2 py-1 rounded text-[12px] font-bold uppercase tracking-wider bg-emerald-600 text-white shadow-lg shadow-emerald-900/20">
+          <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-[12px] font-bold uppercase tracking-wider bg-emerald-600 text-white shadow-lg shadow-emerald-900/20">
             {product.badge}
           </span>
         )}
         {discount > 0 && (
-          <span className="px-2 py-1 rounded text-[12px] font-bold uppercase tracking-wider bg-red-600 text-white shadow-lg shadow-red-900/20 w-fit">
+          <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-[12px] font-bold uppercase tracking-wider bg-red-600 text-white shadow-lg shadow-red-900/20 w-fit">
             -{discount}%
           </span>
         )}
         {!product.inStock && (
-          <span className="px-2 py-1 rounded text-[12px] font-bold uppercase tracking-wider bg-slate-700 text-slate-300">
+          <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-[12px] font-bold uppercase tracking-wider bg-slate-700 text-slate-300">
             Sold Out
           </span>
         )}
@@ -89,14 +106,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       <button
         onClick={toggleWishlist}
         aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-        className="absolute top-3 right-3 z-20 w-8 h-8 rounded
+        className="absolute top-2 sm:top-3 right-2 sm:right-3 z-20 w-7 h-7 sm:w-8 sm:h-8 rounded
                  bg-black/20 backdrop-blur-md border border-white/10
                  flex items-center justify-center
                  hover:bg-red-500 hover:border-red-400
                  transition-all duration-300 group/heart cursor-pointer"
       >
         <Heart
-          className={`w-4 h-4 transition-all duration-300 ${
+          className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-all duration-300 ${
             isWishlisted
               ? "fill-red-600 text-red-600 group-hover/heart:text-white hover:scale-110"
               : "text-white/70 group-hover/heart:text-white"
@@ -105,7 +122,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       </button>
 
       {/* Image Container */}
-      <div className="relative h-60 bg-linear-to-br from-slate-800 to-slate-900 overflow-hidden">
+      <div className="relative h-40 sm:h-52 bg-linear-to-br from-slate-800 to-slate-900 overflow-hidden">
         {/* Render Image or Emoji */}
         {product.image &&
         (product.image.startsWith("/uploads") ||
@@ -139,47 +156,63 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       </div>
 
       {/* Product Info */}
-      <div className="p-5 relative z-10 cursor-pointer">
+      <div className="p-3 sm:p-4 relative z-10 cursor-pointer">
         <div className="flex flex-col justify-between items-start">
-          <div className="inline-flex items-center justify-between w-full mb-2">
-            <p className="text-xs font-medium dark:bg-white/5 bg-emerald-100 px-1.5 py-0.5 rounded dark:text-emerald-400 text-emerald-800 mb-1 uppercase tracking-wide">
+          <div className="inline-flex items-center justify-between w-full mb-1.5 sm:mb-2">
+            <p className="text-[10px] sm:text-xs font-medium dark:bg-white/5 bg-emerald-100 px-1 sm:px-1.5 py-0.5 rounded dark:text-emerald-400 text-emerald-800 mb-0.5 sm:mb-1 uppercase tracking-wide">
               {product.category}
             </p>
-            <span className="flex items-center gap-1 dark:bg-white/5 bg-slate-300/60 px-1.5 py-0.5 rounded text-sm dark:text-slate-300 text-slate-900">
-              <Star className="text-amber-400 inline-flex fill-amber-400 size-4" />
+            <span className="flex items-center gap-0.5 sm:gap-1 dark:bg-white/5 bg-slate-300/60 px-1 sm:px-1.5 py-0.5 rounded text-[11px] sm:text-sm dark:text-slate-300 text-slate-900">
+              <Star className="text-amber-400 inline-flex fill-amber-400 size-3 sm:size-4" />
               {product.rating}
             </span>
           </div>
-          <h3 className="text-base font-bold dark:text-white text-slate-900 leading-tight dark:group-hover:text-emerald-300 group-hover:text-emerald-600 transition-colors">
+          <h3 className="text-sm sm:text-base font-bold dark:text-white text-slate-900 leading-tight dark:group-hover:text-emerald-300 group-hover:text-emerald-600 transition-colors line-clamp-2">
             {product.name}
           </h3>
         </div>
 
-        <div className="flex items-end justify-between mt-3">
-          <div className="flex flex-col">
+        <div className="flex items-end justify-between mt-2 sm:mt-3 gap-1">
+          <div className="flex flex-col min-w-0 shrink">
             {product.originalPrice && (
-              <span className="text-xs text-slate-500 line-through">
+              <span className="text-[10px] sm:text-xs text-slate-500 line-through truncate">
                 GH₵{product.originalPrice}
               </span>
             )}
-            <span className="text-lg font-sora font-bold dark:text-white text-slate-900">
+            <span className="text-sm sm:text-lg font-sora font-bold dark:text-white text-slate-900 truncate">
               GH₵{product.price}
             </span>
           </div>
 
-          <button
-            onClick={handleAddToCart}
-            disabled={!product.inStock}
-            aria-label={`Add ${product.name} to cart`}
-            className={`px-8 py-2 rounded flex items-center justify-center transition-all duration-300 cursor-pointer
-                         ${
-                           product.inStock
-                             ? "dark:bg-emerald-600 bg-emerald-600 text-white hover:bg-emerald-500 hover:scale-105 shadow-lg shadow-emerald-500/20"
-                             : "bg-slate-800 text-slate-600 cursor-not-allowed"
-                         }`}
-          >
-            <ShoppingCart className="cursor-pointer w-5 h-5" />
-          </button>
+          <div className="flex gap-1 sm:gap-2 shrink-0">
+            <button
+              onClick={handleAddToCart}
+              disabled={!product.inStock}
+              aria-label={`Add ${product.name} to cart`}
+              className={`p-1.5 sm:p-2 rounded flex items-center justify-center transition-all duration-300 cursor-pointer border
+                           ${
+                             product.inStock
+                               ? "border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
+                               : "border-slate-700 bg-slate-800 text-slate-600 cursor-not-allowed"
+                           }`}
+            >
+              <ShoppingCart className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
+            </button>
+
+            <button
+              onClick={handleBuyNow}
+              disabled={!product.inStock}
+              className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded flex items-center gap-1 transition-all duration-300 cursor-pointer text-[10px] sm:text-sm font-bold
+                           ${
+                             product.inStock
+                               ? "dark:bg-emerald-600 bg-emerald-600 text-white hover:bg-emerald-500 hover:scale-105 shadow-lg shadow-emerald-500/20"
+                               : "bg-slate-800 text-slate-600 cursor-not-allowed"
+                           }`}
+            >
+              <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span>Buy</span>
+            </button>
+          </div>
         </div>
       </div>
     </motion.div>

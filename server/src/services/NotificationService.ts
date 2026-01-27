@@ -145,7 +145,10 @@ class NotificationService {
     token: string,
     name: string,
   ) {
-    const baseUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const baseUrl =
+      process.env.FRONTEND_URL ||
+      process.env.PUBLIC_URL ||
+      "http://localhost:5173";
     const verifyLink = `${baseUrl}/verify-email?token=${token}`;
 
     const htmlContent = `

@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Target, Heart, Lightbulb, Globe } from "lucide-react";
+import { Target, Heart, Lightbulb, Globe, Clover } from "lucide-react";
 
 const AboutStory = () => {
   return (
@@ -25,13 +25,13 @@ const AboutStory = () => {
               className="relative rounded shadow-2xl border border-slate-200 dark:border-slate-800 w-full object-cover aspect-[4/3]"
             />
             {/* Floating Badge */}
-            <div className="absolute -bottom-6 -right-6 bg-white dark:bg-slate-900 p-4 rounded shadow-xl border border-slate-100 dark:border-slate-800 flex items-center gap-3">
-              <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
-                <Heart className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+            <div className="absolute top-5 -right-8 bg-white/80 dark:bg-slate-900/80 px-4 py-2 rounded shadow-xl border border-slate-100 dark:border-slate-800 flex items-center gap-3">
+              <div className="size-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
+                <Lightbulb className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div>
                 <p className="text-sm font-bold text-slate-900 dark:text-white">
-                  Passionate Team
+                  Possibilities
                 </p>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
                   Driving Innovation
@@ -46,9 +46,16 @@ const AboutStory = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl md:text-4xl font-sora font-bold text-slate-900 dark:text-white mb-6">
-              Our Story
-            </h2>
+              <div className="text-start">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
+            <Clover className="size-4" />
+            Our Story
+          </span>
+          <h2 className="text-3xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white mb-6">
+            What Keep Us Going
+          </h2>
+        
+        </div>
             <div className="prose prose-lg dark:prose-invert max-w-none">
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
                 Founded with a vision to bridge the digital divide in Ghana and
@@ -175,7 +182,7 @@ const AboutStory = () => {
           viewport={{ once: true }}
           className="mt-16 text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-full mb-6">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
             <Heart className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
             <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
               Our Commitment

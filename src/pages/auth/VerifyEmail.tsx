@@ -1,23 +1,30 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { verifyEmail } from "@/services/api";
+import { useTitle } from "@/hooks/useTitle";
 import { CheckCircle, XCircle, Loader2 } from "lucide-react";
 
 const VerifyEmail = () => {
+  useTitle("Verify Email");
   const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
+  const hasAttemptedVerification = useRef(false);
+
+  // Initialize status based on token presence
   const [status, setStatus] = useState<"loading" | "success" | "error">(
-    "loading",
+    token ? "loading" : "error",
   );
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(
+    token ? "" : "No verification token provided.",
+  );
 
   useEffect(() => {
-    const token = searchParams.get("token");
-
-    if (!token) {
-      setStatus("error");
-      setMessage("No verification token provided.");
+    // Skip if no token or if we've already attempted verification
+    if (!token || hasAttemptedVerification.current) {
       return;
     }
+
+    hasAttemptedVerification.current = true;
 
     verifyEmail(token)
       .then(() => {
@@ -28,7 +35,7 @@ const VerifyEmail = () => {
         setStatus("error");
         setMessage(err.message || "Verification failed. Please try again.");
       });
-  }, [searchParams]);
+  }, [token]);
 
   return (
     <div className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 bg-slate-50 dark:bg-slate-950">

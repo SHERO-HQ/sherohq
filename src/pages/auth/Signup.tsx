@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { useTitle } from "@/hooks/useTitle";
 import { Loader2, Mail, Lock, User, Phone, ArrowRight } from "lucide-react";
 import SheroLogo from "@/assets/logo/shero.svg";
 
 const Signup = () => {
+  useTitle("Create Account");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -22,8 +24,8 @@ const Signup = () => {
     try {
       await register({ name, email, phone, password });
       navigate("/profile");
-    } catch (err: any) {
-      setError(err.message || "Failed to create account");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to create account");
     } finally {
       setLoading(false);
     }
@@ -51,11 +53,15 @@ const Signup = () => {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              <label
+                htmlFor="signup-name"
+                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+              >
                 Full Name
               </label>
               <div className="relative">
                 <input
+                  id="signup-name"
                   type="text"
                   required
                   value={name}
@@ -68,11 +74,15 @@ const Signup = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              <label
+                htmlFor="signup-email"
+                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+              >
                 Email Address
               </label>
               <div className="relative">
                 <input
+                  id="signup-email"
                   type="email"
                   required
                   value={email}
@@ -85,11 +95,15 @@ const Signup = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              <label
+                htmlFor="signup-phone"
+                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+              >
                 Phone Number
               </label>
               <div className="relative">
                 <input
+                  id="signup-phone"
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
@@ -101,11 +115,15 @@ const Signup = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              <label
+                htmlFor="signup-password"
+                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
+              >
                 Password
               </label>
               <div className="relative">
                 <input
+                  id="signup-password"
                   type="password"
                   required
                   value={password}

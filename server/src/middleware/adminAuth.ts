@@ -43,11 +43,11 @@ export async function adminAuth(
 
     const token = authHeader.substring(7); // Remove "Bearer " prefix
 
-    // Find valid session
+    // Find valid session (expiresAt is stored as TEXT in ISO format)
     const sessionRes = await db.query(
       `
       SELECT * FROM sessions 
-      WHERE token = $1 AND "expiresAt" > NOW()
+      WHERE token = $1 AND "expiresAt"::timestamp > NOW()
     `,
       [token],
     );

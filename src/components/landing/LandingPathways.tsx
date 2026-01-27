@@ -67,7 +67,7 @@ const LandingPathways = () => {
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <header className="text-center mb-20">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-sm font-semibold text-emerald-400 bg-emerald-950/30 border border-emerald-900 rounded-full">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-sm font-semibold text-emerald-400 bg-emerald-950/30 border border-emerald-900 rounded-full uppercase">
             <Route className="size-4" />
             Navigate Your Journey
           </span>

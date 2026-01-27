@@ -19,6 +19,10 @@ import {
   User,
   Wallet,
   Smartphone,
+  ChevronDown,
+  ChevronUp,
+  ShoppingCart,
+  Store,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
@@ -46,12 +50,14 @@ const CheckoutFlow = () => {
     city: "",
     region: "",
   });
-  const [paymentMethod, setPaymentMethod] = useState<"momo" | "card" | "cod">(
-    "momo",
-  );
+  const [paymentMethod, setPaymentMethod] = useState<
+    "momo" | "card" | "cod" | "pickup"
+  >("momo");
   const [orderId, setOrderId] = useState<string | null>(null);
   const [confirmedTotal, setConfirmedTotal] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showMobileSummary, setShowMobileSummary] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
 
   // Autofill shipping info for logged-in users
   useEffect(() => {
@@ -82,7 +88,7 @@ const CheckoutFlow = () => {
 
   // Calculate pricing
   const subtotal = totalPrice;
-  const shipping = subtotal > 500 ? 0 : 50; // Free shipping over GH₵500
+  const shipping = paymentMethod === "pickup" ? 0 : subtotal > 500 ? 0 : 50; // Free shipping for pickup or orders > GH₵500
   const tax = 0; // Tax set to 0.00 for now
   const total = subtotal + shipping + tax;
 
@@ -94,6 +100,19 @@ const CheckoutFlow = () => {
   ];
 
   const handleNext = () => {
+    if (currentStep === 2) {
+      // Validate Ghana Phone Number specifically
+      // Must start with 0, then 2 or 5, followed by 8 digits (total 10)
+      const ghanaPhoneRegex = /^0(2|5)\d{8}$/;
+      if (!ghanaPhoneRegex.test(shippingInfo.phone.replace(/\s+/g, ""))) {
+        setPhoneError(
+          "Please enter a valid Ghana phone number (e.g., 0244123456 or 0501234567)",
+        );
+        return;
+      }
+      setPhoneError("");
+    }
+
     if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
     }
@@ -113,6 +132,7 @@ const CheckoutFlow = () => {
         momo: "mobile_money",
         card: "card",
         cod: "cash_on_delivery",
+        pickup: "store_pickup",
       };
 
       const orderItems = cart.map((item) => ({
@@ -138,6 +158,12 @@ const CheckoutFlow = () => {
 
         // If online payment (momo/card), redirect to Hubtel
         if (paymentMethod === "momo" || paymentMethod === "card") {
+          // Development Mode: Redirect to internal mock payment page
+          if (import.meta.env.DEV) {
+            clearCart();
+            window.location.href = `/mock-payment?orderId=${response.orderId}&amount=${total}`;
+            return;
+          }
           try {
             const paymentResponse = await initializePayment(
               response.orderId,
@@ -268,6 +294,49 @@ const CheckoutFlow = () => {
           </div>
         </div>
 
+        {/* Mobile Collapsible Order Summary */}
+        <div className="lg:hidden mb-6 bg-slate-50 dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 -mx-4 px-4 sm:mx-0 sm:px-0 sm:border sm:rounded-lg overflow-hidden">
+          <button
+            onClick={() => setShowMobileSummary(!showMobileSummary)}
+            className="w-full py-4 flex items-center justify-between text-left"
+          >
+            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-medium">
+              <ShoppingCart className="w-5 h-5" />
+              <span>{showMobileSummary ? "Hide" : "Show"} Order Summary</span>
+              {showMobileSummary ? (
+                <ChevronUp className="w-4 h-4" />
+              ) : (
+                <ChevronDown className="w-4 h-4" />
+              )}
+            </div>
+            <span className="font-bold text-slate-900 dark:text-white text-lg">
+              GH₵{total.toFixed(2)}
+            </span>
+          </button>
+
+          <AnimatePresence>
+            {showMobileSummary && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="pb-6 border-t border-slate-200 dark:border-slate-800 pt-4">
+                  <OrderSummary
+                    subtotal={subtotal}
+                    shipping={shipping}
+                    tax={tax}
+                    total={total}
+                    itemCount={totalQuantity}
+                    className="!p-0 !border-0 shadow-none bg-transparent dark:bg-transparent"
+                  />
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2">
@@ -363,7 +432,7 @@ const CheckoutFlow = () => {
                   </h2>
 
                   <form className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                           <User className="w-4 h-4 inline mr-2" />
@@ -432,15 +501,25 @@ const CheckoutFlow = () => {
                         type="tel"
                         required
                         value={shippingInfo.phone}
-                        onChange={(e) =>
+                        onChange={(e) => {
                           setShippingInfo({
                             ...shippingInfo,
                             phone: e.target.value,
-                          })
-                        }
-                        className="w-full px-4 py-3 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                        placeholder="+233 123 456 7890"
+                          });
+                          if (phoneError) setPhoneError("");
+                        }}
+                        className={`w-full px-4 py-3 rounded border ${
+                          phoneError
+                            ? "border-red-500 focus:ring-red-500"
+                            : "border-slate-200 dark:border-slate-700 focus:ring-emerald-500"
+                        } bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2`}
+                        placeholder="024 123 4567"
                       />
+                      {phoneError && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {phoneError}
+                        </p>
+                      )}
                     </div>
 
                     <div>
@@ -463,7 +542,7 @@ const CheckoutFlow = () => {
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                           City
@@ -509,10 +588,10 @@ const CheckoutFlow = () => {
                     </div>
                   </form>
 
-                  <div className="flex justify-between mt-8">
+                  <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-4 mt-8">
                     <button
                       onClick={handleBack}
-                      className="cursor-pointer flex items-center gap-2 px-8 py-3 border-2 border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
+                      className="cursor-pointer flex items-center justify-center gap-2 px-8 py-3 w-full sm:w-auto border-2 border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
                     >
                       <ChevronLeft className="w-5 h-5" />
                       Back to Cart
@@ -520,7 +599,7 @@ const CheckoutFlow = () => {
                     <button
                       onClick={handleNext}
                       disabled={!isStep2Valid()}
-                      className="cursor-pointer flex items-center gap-2 px-8 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded font-bold transition-colors"
+                      className="cursor-pointer flex items-center justify-center gap-2 px-8 py-3 w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded font-bold transition-colors"
                     >
                       Continue to Payment
                       <ChevronRight className="w-5 h-5" />
@@ -543,31 +622,61 @@ const CheckoutFlow = () => {
                   </h2>
 
                   <div className="space-y-4">
+                    {/* Store Pickup */}
+                    <button
+                      onClick={() => setPaymentMethod("pickup")}
+                      className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
+                        paymentMethod === "pickup"
+                          ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
+                          : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
+                      }`}
+                    >
+                      <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
+                        <div
+                          className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
+                            paymentMethod === "pickup"
+                              ? "bg-emerald-600 text-white"
+                              : "bg-slate-100 dark:bg-slate-800 text-slate-600"
+                          }`}
+                        >
+                          <Store className="w-5 h-5 sm:w-6 sm:h-6" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
+                            Store Pickup
+                          </h3>
+                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                            Pay upon pickup at our store
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+
                     {/* Mobile Money */}
                     <button
                       onClick={() => setPaymentMethod("momo")}
-                      className={`w-full p-6 rounded border-2 transition-all text-left ${
+                      className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
                         paymentMethod === "momo"
                           ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
                           : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
                       }`}
                     >
-                      <div className="cursor-pointer flex items-center gap-4">
+                      <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
                         <div
-                          className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                          className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
                             paymentMethod === "momo"
                               ? "bg-emerald-600 text-white"
                               : "bg-slate-100 dark:bg-slate-800 text-slate-600"
                           }`}
                         >
-                          <Smartphone className="w-6 h-6" />
+                          <Smartphone className="w-5 h-5 sm:w-6 sm:h-6" />
                         </div>
                         <div>
-                          <h3 className="font-bold text-slate-900 dark:text-white">
+                          <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
                             Mobile Money
                           </h3>
-                          <p className="text-sm text-slate-600 dark:text-slate-400">
-                            Pay with MTN or Vodafone Cash
+                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                            Pay with MTN or Telecel Cash
                           </p>
                         </div>
                       </div>
@@ -576,28 +685,28 @@ const CheckoutFlow = () => {
                     {/* Card Payment */}
                     <button
                       onClick={() => setPaymentMethod("card")}
-                      className={`w-full p-6 rounded border-2 transition-all text-left ${
+                      className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
                         paymentMethod === "card"
                           ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
                           : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
                       }`}
                     >
-                      <div className="cursor-pointer flex items-center gap-4">
+                      <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
                         <div
-                          className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                          className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
                             paymentMethod === "card"
                               ? "bg-emerald-600 text-white"
                               : "bg-slate-100 dark:bg-slate-800 text-slate-600"
                           }`}
                         >
-                          <CreditCard className="w-6 h-6" />
+                          <CreditCard className="w-5 h-5 sm:w-6 sm:h-6" />
                         </div>
                         <div>
-                          <h3 className="font-bold text-slate-900 dark:text-white">
+                          <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
                             Credit / Debit Card
                           </h3>
-                          <p className="text-sm text-slate-600 dark:text-slate-400">
-                            Visa, Mastercard, Verve
+                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                            Visa, Mastercard
                           </p>
                         </div>
                       </div>
@@ -606,27 +715,27 @@ const CheckoutFlow = () => {
                     {/* Cash on Delivery */}
                     <button
                       onClick={() => setPaymentMethod("cod")}
-                      className={`w-full p-6 rounded border-2 transition-all text-left ${
+                      className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
                         paymentMethod === "cod"
                           ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
                           : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
                       }`}
                     >
-                      <div className="cursor-pointer flex items-center gap-4">
+                      <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
                         <div
-                          className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                          className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
                             paymentMethod === "cod"
                               ? "bg-emerald-600 text-white"
                               : "bg-slate-100 dark:bg-slate-800 text-slate-600"
                           }`}
                         >
-                          <Wallet className="w-6 h-6" />
+                          <Wallet className="w-5 h-5 sm:w-6 sm:h-6" />
                         </div>
                         <div>
-                          <h3 className="font-bold text-slate-900 dark:text-white">
+                          <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
                             Cash on Delivery
                           </h3>
-                          <p className="text-sm text-slate-600 dark:text-slate-400">
+                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
                             Pay when you receive your order
                           </p>
                         </div>
@@ -634,10 +743,10 @@ const CheckoutFlow = () => {
                     </button>
                   </div>
 
-                  <div className="flex justify-between mt-8">
+                  <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-4 mt-8">
                     <button
                       onClick={handleBack}
-                      className="cursor-pointer flex items-center gap-2 px-8 py-3 border-2 border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
+                      className="cursor-pointer flex items-center justify-center gap-2 px-8 py-3 w-full sm:w-auto border-2 border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
                     >
                       <ChevronLeft className="w-5 h-5" />
                       Back
@@ -645,7 +754,7 @@ const CheckoutFlow = () => {
                     <button
                       onClick={handlePlaceOrder}
                       disabled={isSubmitting}
-                      className="cursor-pointer flex items-center gap-2 px-8 py-3 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 disabled:cursor-not-allowed text-white rounded font-bold transition-colors"
+                      className="cursor-pointer flex items-center justify-center gap-2 px-8 py-3 w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 disabled:cursor-not-allowed text-white rounded font-bold transition-colors"
                     >
                       {isSubmitting ? "Processing..." : "Place Order"}
                       <CheckCircle className="w-5 h-5" />
@@ -660,7 +769,7 @@ const CheckoutFlow = () => {
                   key="step4"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-12 text-center"
+                  className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6 sm:p-12 text-center"
                 >
                   <motion.div
                     initial={{ scale: 0 }}
@@ -671,12 +780,12 @@ const CheckoutFlow = () => {
                     <CheckCircle className="w-12 h-12 text-emerald-600 dark:text-emerald-400" />
                   </motion.div>
 
-                  <h2 className="text-3xl font-bold font-sora text-slate-900 dark:text-white mb-4">
+                  <h2 className="text-2xl sm:text-3xl font-bold font-sora text-slate-900 dark:text-white mb-4">
                     Order Confirmed!
                   </h2>
                   <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-md mx-auto">
                     Thank you for your order! We've sent a confirmation email to{" "}
-                    <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                    <span className="font-semibold text-emerald-600 dark:text-emerald-400 block sm:inline break-words">
                       {shippingInfo.email}
                     </span>
                   </p>
@@ -687,7 +796,7 @@ const CheckoutFlow = () => {
                         <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
                           Order ID
                         </p>
-                        <p className="font-mono text-sm font-bold text-slate-900 dark:text-white bg-slate-200 dark:bg-slate-800 px-3 py-2 rounded">
+                        <p className="font-mono text-sm font-bold text-slate-900 dark:text-white bg-slate-200 dark:bg-slate-800 px-3 py-2 rounded break-all">
                           {orderId}
                         </p>
                       </div>
@@ -695,7 +804,7 @@ const CheckoutFlow = () => {
                     <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
                       Order Total
                     </p>
-                    <p className="text-4xl font-bold font-sora text-emerald-600 dark:text-emerald-400">
+                    <p className="text-2xl sm:text-4xl font-bold font-sora text-emerald-600 dark:text-emerald-400 break-words">
                       GH₵{confirmedTotal.toFixed(2)}
                     </p>
                   </div>
@@ -720,7 +829,7 @@ const CheckoutFlow = () => {
           </div>
 
           {/* Order Summary Sidebar / Feedback Prompt */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 hidden lg:block">
             {currentStep < 4 && (
               <OrderSummary
                 subtotal={subtotal}

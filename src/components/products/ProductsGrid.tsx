@@ -1,7 +1,8 @@
 import { motion } from "motion/react";
 import ProductCard from "./ProductCard";
 import type { Product } from "@/data/products";
-import { Loader2, PackageX } from "lucide-react";
+import { PackageX } from "lucide-react";
+import { ProductGridSkeleton } from "@/components/ui/Skeleton";
 
 interface ProductGridProps {
   products: Product[];
@@ -32,18 +33,17 @@ const ProductGrid: React.FC<ProductGridProps> = ({
     },
   };
 
-  // Loading State
+  // Convert columns to skeleton count
+  const skeletonCountArg = {
+    2: 6,
+    3: 9,
+    4: 8,
+  }[columns];
+  const skeletonCount = skeletonCountArg || 8;
+
+  // Loading State - Show skeleton grid
   if (loading) {
-    return (
-      <div className="w-full py-20">
-        <div className="flex flex-col items-center justify-center gap-4">
-          <Loader2 className="w-12 h-12 text-emerald-600 animate-spin" />
-          <p className="text-slate-600 dark:text-slate-400 text-lg">
-            Loading products...
-          </p>
-        </div>
-      </div>
-    );
+    return <ProductGridSkeleton count={skeletonCount} />;
   }
 
   // Empty State
@@ -87,7 +87,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className={`grid grid-cols-1 sm:grid-cols-2 ${gridCols[columns]} gap-6 lg:gap-8`}
+      className={`grid grid-cols-1 min-[425px]:grid-cols-2 ${gridCols[columns]} gap-3 sm:gap-6 lg:gap-8`}
     >
       {products.map((product) => (
         <ProductCard

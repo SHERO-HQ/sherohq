@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "motion/react";
 import { X, SlidersHorizontal, Check } from "lucide-react";
 import { useState } from "react";
+import type { Category } from "./ProductsCategories";
 
 export interface FilterState {
   priceRange: [number, number];
@@ -15,6 +16,9 @@ interface ProductFiltersProps {
   onFilterChange: (filters: FilterState) => void;
   isOpen: boolean;
   onClose: () => void;
+  categories: Category[];
+  activeCategory: string;
+  onCategoryChange: (categoryId: string) => void;
 }
 
 const ProductFilters: React.FC<ProductFiltersProps> = ({
@@ -22,11 +26,14 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
   onFilterChange,
   isOpen,
   onClose,
+  categories,
+  activeCategory,
+  onCategoryChange,
 }) => {
   const [tempFilters, setTempFilters] = useState<FilterState>(filters);
   const [activeTab, setActiveTab] = useState<
-    "sort" | "price" | "brand" | "rating"
-  >("sort");
+    "category" | "sort" | "price" | "brand" | "rating"
+  >("category"); // Default to category on mobile per request? Or sort? Let's check tab order.
 
   const brands = [
     "Apple",
@@ -91,6 +98,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
   };
 
   const tabs = [
+    { id: "category" as const, label: "Category", count: 0 },
     { id: "sort" as const, label: "Sort", count: 0 },
     {
       id: "price" as const,
@@ -126,11 +134,11 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
-            onClick={onClose}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
             className="fixed inset-x-0 bottom-0 z-50 dark:bg-slate-900 bg-slate-200 
                        border-t border-white/10
                      rounded shadow-2xl max-h-[85vh] flex flex-col"
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Handle Bar */}
             <div className="flex justify-center pt-3 pb-2">
@@ -140,10 +148,12 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 dark:border-b dark:border-white/5 border-b border-white/5">
               <div className="flex items-center gap-3">
-                <SlidersHorizontal className="w-5 h-5 dark:text-blue-400 text-blue-900" />
-                <h2 className="text-xl font-bold text-blue-900 dark:text-white">Filters</h2>
+                <SlidersHorizontal className="w-5 h-5 dark:text-emerald-400 text-emerald-900" />
+                <h2 className="text-xl font-bold text-emerald-900 dark:text-white">
+                  Filters
+                </h2>
                 {getActiveFilterCount() > 0 && (
-                  <span className="px-2 py-1 text-xs font-semibold bg-blue-600 text-white rounded">
+                  <span className="px-2 py-1 text-xs font-semibold bg-emerald-600 text-white rounded">
                     {getActiveFilterCount()}
                   </span>
                 )}
@@ -167,13 +177,13 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                   className={`flex items-center gap-2 px-4 py-3 font-medium whitespace-nowrap
                            border-b-2 transition-colors cursor-pointer ${
                              activeTab === tab.id
-                               ? "dark:border-blue-400 border-blue-900 dark:text-blue-400 text-blue-900"
+                               ? "dark:border-emerald-400 border-emerald-900 dark:text-emerald-400 text-emerald-900"
                                : "dark:border-transparent border-transparent dark:text-slate-400 text-slate-700"
                            }`}
                 >
                   <span>{tab.label}</span>
                   {tab.count > 0 && (
-                    <span className="cursor-pointer px-1.5 py-0.5 text-xs font-semibold dark:bg-blue-900/50 bg-blue-500/20 dark:text-blue-300 text-blue-900 rounded border dark:border-blue-500/20 border-blue-500/20">
+                    <span className="cursor-pointer px-1.5 py-0.5 text-xs font-semibold bg-emerald-600 text-white rounded shadow-sm shadow-emerald-500/20">
                       {tab.count}
                     </span>
                   )}
@@ -183,6 +193,48 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto px-6 py-4">
+              {/* Category Tab */}
+              {activeTab === "category" && (
+                <div className="space-y-2">
+                  {categories.map((category) => (
+                    <button
+                      key={category.id}
+                      onClick={() => onCategoryChange(category.id)}
+                      className={`flex items-center justify-between w-full p-4 rounded
+                                transition-all cursor-pointer ${
+                                  activeCategory === category.id
+                                    ? "dark:bg-emerald-900/20 bg-emerald-100/50 border border-emerald-600/50"
+                                    : "dark:bg-slate-800/50 bg-slate-200/50 border border-transparent"
+                                }`}
+                    >
+                      <span className="flex items-center gap-3">
+                        <span className="text-xl dark:text-gray-300 text-gray-600">
+                          {/* We don't have the icon object easily stringifiable here unless active, but we rendered node in Category type. 
+                              Wait, Category type has icon: React.ReactNode. We can render it! */}
+                          {category.icon}
+                        </span>
+                        <span
+                          className={`font-medium ${
+                            activeCategory === category.id
+                              ? "dark:text-emerald-400 text-emerald-700"
+                              : "dark:text-slate-400 text-slate-700"
+                          }`}
+                        >
+                          {category.name}
+                        </span>
+                      </span>
+                      {activeCategory === category.id && (
+                        <Check className="w-5 h-5 dark:text-emerald-400 text-emerald-700" />
+                      )}
+                      {category.count !== undefined && (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 dark:text-slate-400 text-slate-600 font-medium">
+                          {category.count}
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
               {/* Sort Tab */}
               {activeTab === "sort" && (
                 <div className="space-y-2">
@@ -195,21 +247,21 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                       className={`w-full flex items-center justify-between p-4 rounded
                                 transition-all cursor-pointer ${
                                   tempFilters.sortBy === option.value
-                                    ? "dark:bg-blue-900/20 bg-blue-300/20 border border-blue-600/50"
+                                    ? "dark:bg-emerald-900/20 bg-emerald-300/20 border border-emerald-600/50"
                                     : "dark:bg-slate-800/50 bg-slate-300/70 border border-transparent"
                                 }`}
                     >
                       <span
                         className={`font-medium ${
                           tempFilters.sortBy === option.value
-                            ? "dark:text-blue-400 text-blue-800"
+                            ? "dark:text-emerald-400 text-emerald-800"
                             : "dark:text-slate-400 text-slate-700"
                         }`}
                       >
                         {option.label}
                       </span>
                       {tempFilters.sortBy === option.value && (
-                        <Check className="cursor-pointer w-6 h-6 dark:text-blue-400 text-blue-800" />
+                        <Check className="cursor-pointer w-6 h-6 dark:text-emerald-400 text-emerald-800" />
                       )}
                     </button>
                   ))}
@@ -231,21 +283,21 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                       className={`w-full flex items-center justify-between p-4 rounded
                                 transition-all ${
                                   isPriceRangeActive(range.range)
-                                    ? "dark:bg-blue-900/20 bg-blue-300/20 border dark:border-blue-600/50 border-blue-300/50"
+                                    ? "dark:bg-emerald-900/20 bg-emerald-300/20 border dark:border-emerald-600/50 border-emerald-300/50"
                                     : "dark:bg-slate-800/50 bg-slate-300/70 border border-transparent"
                                 }`}
                     >
                       <span
                         className={`font-medium ${
                           isPriceRangeActive(range.range)
-                            ? "dark:text-blue-400 text-blue-800"
+                            ? "dark:text-emerald-400 text-emerald-800"
                             : "dark:text-slate-400 text-slate-700"
                         }`}
                       >
                         {range.label}
                       </span>
                       {isPriceRangeActive(range.range) && (
-                        <Check className="cursor-pointer w-6 h-6 dark:text-blue-400 text-blue-800" />
+                        <Check className="cursor-pointer w-6 h-6 dark:text-emerald-400 text-emerald-800" />
                       )}
                     </button>
                   ))}
@@ -265,7 +317,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                         })
                       }
                       className="w-6 h-6 rounded dark:border-slate-600 border-slate-300/70 dark:bg-slate-700 bg-slate-300/30
-                                text-blue-600 dark:focus:ring-blue-500 focus:ring-blue-500 cursor-pointer"
+                                text-emerald-600 dark:focus:ring-emerald-500 focus:ring-emerald-500 cursor-pointer"
                     />
                   </label>
                 </div>
@@ -293,7 +345,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                           setTempFilters({ ...tempFilters, brands: newBrands });
                         }}
                         className="w-6 h-6 rounded dark:border-slate-600 border-slate-300/70 dark:bg-slate-700 bg-slate-300/30
-                                 text-blue-600 dark:focus:ring-blue-500 focus:ring-blue-500 cursor-pointer"
+                                 text-emerald-600 dark:focus:ring-emerald-500 focus:ring-emerald-500 cursor-pointer"
                       />
                     </label>
                   ))}
@@ -312,7 +364,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                       className={`w-full flex items-center justify-between p-4 rounded
                                 transition-all cursor-pointer ${
                                   tempFilters.minRating === rating
-                                    ? "dark:bg-blue-900/20 bg-blue-300/20 border dark:border-blue-600/50 border-blue-300/50"
+                                    ? "dark:bg-emerald-900/20 bg-emerald-300/20 border dark:border-emerald-600/50 border-emerald-300/50"
                                     : "dark:bg-slate-800/50 bg-slate-300/70 border border-transparent"
                                 }`}
                     >
@@ -321,7 +373,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                         <span
                           className={`font-medium ${
                             tempFilters.minRating === rating
-                              ? "dark:text-blue-300 text-blue-800"
+                              ? "dark:text-emerald-300 text-emerald-800"
                               : "dark:text-slate-400 text-slate-700"
                           }`}
                         >
@@ -329,7 +381,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                         </span>
                       </div>
                       {tempFilters.minRating === rating && (
-                        <Check className="w-6 h-6 dark:text-amber-400 text-blue-800" />
+                        <Check className="w-6 h-6 dark:text-amber-400 text-emerald-800" />
                       )}
                     </button>
                   ))}
@@ -340,21 +392,21 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                     className={`w-full flex items-center justify-between p-4 rounded
                              transition-all cursor-pointer ${
                                tempFilters.minRating === 0
-                                 ? "dark:bg-blue-900/20 bg-blue-300/20 border dark:border-blue-600/50 border-blue-300/50"
+                                 ? "dark:bg-emerald-900/20 bg-emerald-300/20 border dark:border-emerald-600/50 border-emerald-300/50"
                                  : "dark:bg-slate-800/50 bg-slate-300/70 border border-transparent"
                              }`}
                   >
                     <span
                       className={`font-medium ${
                         tempFilters.minRating === 0
-                          ? "dark:text-blue-300 text-blue-800"
+                          ? "dark:text-emerald-300 text-emerald-800"
                           : "dark:text-slate-400 text-slate-700"
                       }`}
                     >
                       All Ratings
                     </span>
                     {tempFilters.minRating === 0 && (
-                      <Check className="cursor-pointer w-6 h-6 dark:text-blue-400 text-blue-800" />
+                      <Check className="cursor-pointer w-6 h-6 dark:text-emerald-400 text-emerald-800" />
                     )}
                   </button>
                 </div>
@@ -376,9 +428,9 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
               <button
                 onClick={handleApply}
                 className="flex-1 px-6 py-2 rounded font-semibold
-                         bg-blue-600 dark:text-white text-slate-900
-                         hover:bg-blue-500
-                         transition-colors shadow-lg shadow-blue-900/20 cursor-pointer"
+                         bg-emerald-600 dark:text-white text-slate-900
+                         hover:bg-emerald-500
+                         transition-colors shadow-lg shadow-emerald-900/20 cursor-pointer"
               >
                 Apply Filters
               </button>

@@ -1,5 +1,6 @@
 import { useState, useEffect, type ChangeEvent } from "react";
 import { Link } from "react-router-dom";
+import { useTitle } from "@/hooks/useTitle";
 import {
   fetchProducts,
   deleteProduct,
@@ -20,6 +21,7 @@ import {
 import AdminLayout from "@/components/admin/AdminLayout";
 
 export default function AdminProducts() {
+  useTitle("Manage Products");
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -256,11 +258,11 @@ export default function AdminProducts() {
                         </td>
                         <td className="px-6 py-4">
                           <span className="text-white font-medium">
-                            ${product.price}
+                            GH₵{product.price}
                           </span>
                           {product.originalPrice && (
                             <span className="ml-2 text-sm text-slate-500 line-through">
-                              ${product.originalPrice}
+                              GH₵{product.originalPrice}
                             </span>
                           )}
                         </td>

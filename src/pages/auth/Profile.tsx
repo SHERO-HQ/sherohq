@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useTitle } from "@/hooks/useTitle";
 import {
   getUserOrders,
   resendVerificationEmail,
@@ -25,6 +26,7 @@ import {
 type Tab = "orders" | "settings";
 
 const Profile = () => {
+  useTitle("My Account");
   const {
     user,
     logout,
@@ -53,6 +55,7 @@ const Profile = () => {
   });
   const [saving, setSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
+  const [phoneError, setPhoneError] = useState("");
 
   useEffect(() => {
     if (authLoading) return;
@@ -101,8 +104,10 @@ const Profile = () => {
     try {
       await resendVerificationEmail(user.email);
       setResendMessage("Verification email sent! Check your inbox.");
-    } catch (err: any) {
-      setResendMessage(err.message || "Failed to send email");
+    } catch (err: unknown) {
+      setResendMessage(
+        err instanceof Error ? err.message : "Failed to send email",
+      );
     } finally {
       setResendingEmail(false);
     }
@@ -112,6 +117,20 @@ const Profile = () => {
     e.preventDefault();
     setSaving(true);
     setSaveMessage("");
+
+    // Validate phone number if provided
+    if (formData.phone) {
+      const ghanaPhoneRegex = /^0(2|5)\d{8}$/;
+      // Remove spaces for validation check
+      const cleanPhone = formData.phone.replace(/\s+/g, "");
+      if (!ghanaPhoneRegex.test(cleanPhone)) {
+        setPhoneError(
+          "Please enter a valid Ghana phone number (e.g., 0244123456 or 0501234567)",
+        );
+        setSaving(false);
+        return;
+      }
+    }
 
     try {
       const shippingAddress: ShippingAddress | undefined = formData.address
@@ -133,8 +152,10 @@ const Profile = () => {
 
       setSaveMessage("Profile updated successfully!");
       await refreshUser();
-    } catch (err: any) {
-      setSaveMessage(err.message || "Failed to update profile");
+    } catch (err: unknown) {
+      setSaveMessage(
+        err instanceof Error ? err.message : "Failed to update profile",
+      );
     } finally {
       setSaving(false);
     }
@@ -194,7 +215,7 @@ const Profile = () => {
 
         {/* Mobile Header & Tabs (Visible < lg) */}
         <div className="lg:hidden mb-8 space-y-4">
-          <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6 flex items-center gap-4">
+          <div className="bg-white dark:bg-slate-900 rounded shadow-sm border border-slate-200 dark:border-slate-800 p-6 flex items-center gap-4">
             <div className="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-2xl font-bold text-emerald-600 dark:text-emerald-400 shrink-0">
               {user.name.charAt(0)}
             </div>
@@ -214,7 +235,7 @@ const Profile = () => {
           <div className="grid grid-cols-3 gap-2">
             <button
               onClick={() => setActiveTab("orders")}
-              className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-xl font-medium text-xs sm:text-sm transition-all border ${
+              className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded font-medium text-xs sm:text-sm transition-all border ${
                 activeTab === "orders"
                   ? "bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-500/20"
                   : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-emerald-500/50"
@@ -225,7 +246,7 @@ const Profile = () => {
             </button>
             <button
               onClick={() => setActiveTab("settings")}
-              className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-xl font-medium text-xs sm:text-sm transition-all border ${
+              className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded font-medium text-xs sm:text-sm transition-all border ${
                 activeTab === "settings"
                   ? "bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-500/20"
                   : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-emerald-500/50"
@@ -236,7 +257,7 @@ const Profile = () => {
             </button>
             <button
               onClick={handleLogout}
-              className="flex flex-col items-center justify-center gap-1.5 p-3 rounded-xl font-medium text-xs sm:text-sm transition-all border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30"
+              className="flex flex-col items-center justify-center gap-1.5 p-3 rounded font-medium text-xs sm:text-sm transition-all border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30"
             >
               <LogOut className="w-5 h-5" />
               <span>Sign Out</span>
@@ -489,12 +510,22 @@ const Profile = () => {
                           id="phone"
                           type="tel"
                           value={formData.phone}
-                          onChange={(e) =>
-                            setFormData({ ...formData, phone: e.target.value })
-                          }
-                          placeholder="+233 XX XXX XXXX"
-                          className="w-full px-4 py-3 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          onChange={(e) => {
+                            setFormData({ ...formData, phone: e.target.value });
+                            if (phoneError) setPhoneError("");
+                          }}
+                          placeholder="024 123 4567"
+                          className={`w-full px-4 py-3 rounded border ${
+                            phoneError
+                              ? "border-red-500 focus:ring-red-500"
+                              : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-emerald-500"
+                          } text-slate-900 dark:text-white focus:outline-none focus:ring-2`}
                         />
+                        {phoneError && (
+                          <p className="text-red-500 text-sm mt-1">
+                            {phoneError}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>

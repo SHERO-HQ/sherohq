@@ -73,9 +73,12 @@ router.post("/login", async (req: Request, res: Response) => {
         role: admin.role,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Login error:", error);
-    res.status(500).json({ error: "Login failed", details: error.message });
+    res.status(500).json({
+      error: "Login failed",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 });
 
@@ -223,7 +226,7 @@ router.put("/profile", adminAuth, async (req: AdminRequest, res: Response) => {
 
     // Prepare update parts
     const updates: string[] = [];
-    const params: any[] = [];
+    const params: (string | number)[] = [];
     let paramIndex = 1;
 
     if (username) {

@@ -1,9 +1,11 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useAdmin } from "@/context/AdminContext";
-import { Lock, User, AlertCircle, Loader2 } from "lucide-react";
+import { useTitle } from "@/hooks/useTitle";
+import { Lock, User, AlertCircle, Loader2, Zap } from "lucide-react";
 
 export default function AdminLogin() {
+  useTitle("Admin Login");
   const { login, isAuthenticated, isLoading: isChecking } = useAdmin();
   const navigate = useNavigate();
 
@@ -132,11 +134,10 @@ export default function AdminLogin() {
             </button>
           </form>
 
-          {/* Default credentials hint */}
-          <div className="mt-6 pt-6 border-t border-slate-800">
-            <p className="text-xs text-slate-500 text-center">
-              Default credentials:{" "}
-              <span className="text-slate-400">admin / admin123</span>
+          <div className="mt-6 pt-6 border-t border-slate-800 ">
+            <p className="text-xs text-slate-500 text-center inline-flex items-center gap-1 justify-center w-full">
+              {" "}
+              SHERO TECHNOLOGIES <Zap className="size-3" />{" "}
             </p>
           </div>
         </div>

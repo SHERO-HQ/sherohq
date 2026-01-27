@@ -5,7 +5,7 @@ const SolutionsHero = () => {
   return (
     <section
       className="relative w-full py-20 lg:py-32 overflow-hidden
-                      bg-linear-to-b from-slate-50 to-white 
+                      bg-linear-to-b from-slate-200 to-slate-100 
                       dark:from-slate-950 dark:to-slate-900"
     >
       {/* Animated Grid Background */}
@@ -47,10 +47,10 @@ const SolutionsHero = () => {
                      bg-emerald-100 dark:bg-emerald-900/30 
                      border border-emerald-200 dark:border-emerald-800
                      text-emerald-700 dark:text-emerald-300
-                     text-sm font-semibold mb-6"
+                     text-sm font-semibold mb-6 uppercase"
           >
-            <Code className="w-4 h-4" />
-            <span>IT Infrastructure & Software Solutions</span>
+            <Code className="size-4" />
+            <span>Software & IT Solutions</span>
           </motion.div>
 
           {/* Main Heading */}
@@ -86,7 +86,7 @@ const SolutionsHero = () => {
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <a
-              href="#request-quote"
+              href="/consultation"
               className="inline-flex items-center justify-center gap-2 px-8 py-2 rounded
                        bg-emerald-600 text-white font-semibold
                        hover:bg-emerald-700 hover:shadow-xl hover:shadow-emerald-500/30

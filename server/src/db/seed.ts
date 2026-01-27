@@ -19,12 +19,6 @@ interface SeedProduct {
   specifications: Record<string, string> | null;
 }
 
-interface SeedCategory {
-  id: string;
-  name: string;
-  icon: string;
-}
-
 // Product data matching existing frontend structure
 const products: SeedProduct[] = [
   {

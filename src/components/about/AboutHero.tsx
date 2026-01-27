@@ -12,7 +12,7 @@ import type { ElementType } from "react";
 
 const AboutHero = () => {
   return (
-    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-950 pt-20">
+    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-slate-100 dark:bg-slate-950 pt-20">
       {/* Background Effects */}
       {/* Animated Grid Background */}
       <div className="absolute inset-0 hero-grid-pattern opacity-50" />
@@ -29,8 +29,8 @@ const AboutHero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 text-sm font-medium mb-8  shadow-sm">
-            <SmartphoneCharging className="w-5 h-5" />
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase shadow-sm">
+            <SmartphoneCharging className="size-4" />
             Redefining Possibilities since 2023
           </span>
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold font-sora tracking-tight text-slate-900 dark:text-slate-100 mb-6">

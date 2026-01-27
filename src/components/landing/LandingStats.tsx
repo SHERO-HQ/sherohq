@@ -28,7 +28,7 @@ const LandingStats = () => {
       color: "text-emerald-600 dark:text-emerald-400",
     },
     {
-      value: "50",
+      value: "5",
       suffix: "+",
       label: "Global Partners",
       icon: <Globe className="w-6 h-6" />,

@@ -7,6 +7,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
+import FeedbackModal from "@/components/common/FeedbackModal";
 
 const testimonials = [
   {
@@ -55,6 +56,7 @@ const getInitials = (name: string) => {
 
 const AboutTestimonials = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
 
   const nextSlide = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
@@ -224,12 +226,21 @@ const AboutTestimonials = () => {
               <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 transition-colors duration-300">
                 We value your input! Help us improve our products and services.
               </p>
-              <button className="cursor-pointer px-8 py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700 transition-colors cursor-pointer shadow-lg shadow-emerald-900/20 w-full sm:w-auto">
+              <button
+                onClick={() => setIsFeedbackModalOpen(true)}
+                className="cursor-pointer px-8 py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-900/20 w-full sm:w-auto"
+              >
                 Share Your Thoughts
               </button>
             </div>
           </motion.div>
         </div>
+
+        {/* Feedback Modal */}
+        <FeedbackModal
+          isOpen={isFeedbackModalOpen}
+          onClose={() => setIsFeedbackModalOpen(false)}
+        />
       </div>
     </section>
   );

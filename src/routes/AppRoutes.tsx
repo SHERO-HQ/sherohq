@@ -8,6 +8,7 @@ import Contact from "@/pages/Contact";
 import NotFound from "@/pages/NotFound";
 import ProductDetail from "@/pages/ProductDetail";
 import Checkout from "@/pages/Checkout";
+import CheckoutSuccess from "@/pages/CheckoutSuccess";
 import Partners from "@/pages/Partners";
 import Support from "@/pages/Support";
 import FAQ from "@/pages/FAQ";
@@ -18,6 +19,7 @@ import Login from "@/pages/auth/Login";
 import Signup from "@/pages/auth/Signup";
 import Profile from "@/pages/auth/Profile";
 import VerifyEmail from "@/pages/auth/VerifyEmail";
+import MockPaymentGateway from "@/pages/MockPaymentGateway";
 // Admin imports
 import { AdminProvider } from "@/context/AdminContext";
 import ProtectedRoute from "@/components/admin/ProtectedRoute";
@@ -37,6 +39,7 @@ const AppRoutes = () => {
       <Route path="products" element={<Products />} />
       <Route path="products/:id" element={<ProductDetail />} />
       <Route path="checkout" element={<Checkout />} />
+      <Route path="checkout/success" element={<CheckoutSuccess />} />
       <Route path="solutions" element={<Solutions />} />
       <Route path="consultation" element={<Consultation />} />
       <Route path="about-us" element={<About />} />
@@ -51,6 +54,7 @@ const AppRoutes = () => {
       <Route path="signup" element={<Signup />} />
       <Route path="profile" element={<Profile />} />
       <Route path="verify-email" element={<VerifyEmail />} />
+      <Route path="mock-payment" element={<MockPaymentGateway />} />
 
       {/* Admin Routes */}
       <Route

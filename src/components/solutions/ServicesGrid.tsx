@@ -106,7 +106,7 @@ const ServicesGrid = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-500 uppercase tracking-wider">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
             <Briefcase className="size-5" />
             Our Services
           </span>
@@ -180,7 +180,7 @@ const ServicesGrid = () => {
 
               {/* Learn More Link */}
               <a
-                href="#request-quote"
+                href="/consultation"
                 className="inline-flex items-center gap-2 mt-6 text-emerald-600 dark:text-emerald-400 font-semibold
                          hover:gap-3 transition-all group/link"
               >

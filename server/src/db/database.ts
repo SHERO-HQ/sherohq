@@ -13,7 +13,8 @@ const pool = new Pool({
 });
 
 // Helper to query the database
-export const query = (text: string, params?: any[]) => pool.query(text, params);
+export const query = (text: string, params?: unknown[]) =>
+  pool.query(text, params);
 
 // Create tables
 export async function initializeDatabase() {

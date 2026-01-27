@@ -36,7 +36,7 @@ const LandingAbout = () => {
             className="w-full lg:w-1/2 space-y-10"
           >
             <div className="space-y-6">
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-500 uppercase tracking-wider transition-colors duration-300">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
                 <Info className="w-5 h-5" />
                 Who We Are
               </span>
@@ -103,16 +103,16 @@ const LandingAbout = () => {
               <div className="absolute inset-8 border border-emerald-400/20 rounded-full animate-[spin_15s_linear_infinite_reverse]" />
 
               {/* Central Glowing Icon */}
-              <div className="relative z-10 w-32 h-32 bg-emerald-500/10 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.3)] backdrop-blur-md border border-emerald-500/20">
-                <Zap className="w-16 h-16 text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.8)] animate-pulse" />
+              <div className="relative z-10 w-32 h-32 bg-emerald-50 dark:bg-emerald-500/10 rounded-full flex items-center justify-center shadow-lg dark:shadow-[0_0_30px_rgba(16,185,129,0.3)] backdrop-blur-md border border-emerald-200 dark:border-emerald-500/20">
+                <Zap className="w-16 h-16 text-emerald-600 dark:text-emerald-400 dark:drop-shadow-[0_0_15px_rgba(52,211,153,0.8)] animate-pulse" />
               </div>
 
               {/* Floating Badge Overlay */}
-              <div className="absolute bottom-0 right-0 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded transform translate-y-1/2 shadow-lg">
-                <p className="text-xs font-bold text-white uppercase tracking-wider">
-                  Core System
+              <div className="absolute bottom-10 right-5 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded transform translate-y-1/2 shadow-lg">
+                <p className="text-xs font-bold text-white tracking-wider">
+                  10x
                 </p>
-                <p className="text-[10px] text-emerald-300">Online</p>
+                <p className="text-[10px] text-emerald-300"> Efficiency Impact</p>
               </div>
             </motion.div>
 

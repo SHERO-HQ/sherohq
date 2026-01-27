@@ -291,7 +291,7 @@ router.put("/profile", async (req, res) => {
 
     // Build update query dynamically
     const updates: string[] = [];
-    const values: any[] = [];
+    const values: (string | null)[] = [];
     let paramIndex = 1;
 
     if (name !== undefined) {

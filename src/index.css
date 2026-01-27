@@ -146,7 +146,12 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  button, [role="button"] {
+    cursor: pointer;
+  }
 }
+
 
 @theme {
   --color-primary: oklch(0.3487 0.1456 261.27);
