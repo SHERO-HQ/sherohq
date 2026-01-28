@@ -1,6 +1,10 @@
 import type { Product } from "@/data/products";
 
-const API_BASE = import.meta.env.VITE_API_URL || "/api";
+const API_BASE =
+  import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV
+    ? "/api"
+    : "https://sherotech-production.up.railway.app/api");
 
 // Helper to get auth token
 function getAuthToken(): string | null {
