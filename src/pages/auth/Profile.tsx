@@ -265,7 +265,7 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-4 gap-8">
+        <div className="grid lg:grid-cols-3 gap-8">
           {/* Desktop Sidebar (Visible >= lg) */}
           <div className="hidden lg:block lg:col-span-1">
             <div className="bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 p-6 sticky top-24">
@@ -323,7 +323,7 @@ const Profile = () => {
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-2">
             {activeTab === "orders" && (
               <>
                 <div className="mb-8">
