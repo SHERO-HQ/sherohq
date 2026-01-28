@@ -1,10 +1,25 @@
 import type { Product } from "@/data/products";
 
-const API_BASE =
+// Construct API_BASE: prefer env var, fallback to Railway, but ALWAYS ensure /api suffix
+let apiBase =
   import.meta.env.VITE_API_URL ||
   (import.meta.env.DEV
     ? "/api"
     : "https://sherotech-production.up.railway.app/api");
+
+// Remove trailing slash if present to avoid double slashes
+if (apiBase.endsWith("/")) {
+  apiBase = apiBase.slice(0, -1);
+}
+
+// Append /api if not present (and not in local dev mode using proxy)
+if (!apiBase.endsWith("/api") && apiBase !== "/api") {
+  apiBase = `${apiBase}/api`;
+}
+
+const API_BASE = apiBase;
+
+console.log("🚀 Final API URL:", API_BASE);
 
 // Helper to get auth token
 function getAuthToken(): string | null {
