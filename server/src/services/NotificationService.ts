@@ -49,7 +49,7 @@ class NotificationService {
         // Debugging
         logger: true,
         debug: true,
-      });
+      } as any);
       console.log("📧 Email service initialized with custom SMTP settings.");
     } else {
       console.log(
