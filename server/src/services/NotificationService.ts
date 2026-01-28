@@ -128,7 +128,7 @@ class NotificationService {
         <p>Hi ${shippingInfo.firstName},</p>
         <p>Thank you for your order at <strong>SHERO TECHNOLOGIES</strong>. We've received your order and are processing it.</p>
         
-        <div style="background: #f9fafb; padding: 15px; border-radius: 4px; margin: 20px 0;">
+        <div style="background: #f9fafb; padding: 15px; border-radius: 3px; margin: 20px 0;">
           <h3 style="margin-top: 0;">Order Details</h3>
           <p><strong>Order ID:</strong> ${orderId}</p>
           <table style="width: 100%; border-collapse: collapse;">
@@ -196,13 +196,21 @@ class NotificationService {
         <p>Thank you for creating an account with <strong>SHERO TECHNOLOGIES</strong>. Please verify your email address by clicking the button below:</p>
         
         <div style="text-align: center; margin: 30px 0;">
-          <a href="${verifyLink}" style="background-color: #059669; color: white; padding: 14px 28px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">
+          <a href="${verifyLink}" style="background-color: #059669; color: white; padding: 14px 28px; text-decoration: none; border-radius: 3px; font-weight: bold; display: inline-block;">
             Verify Email
           </a>
         </div>
 
         <p style="color: #666; font-size: 14px;">Or copy and paste this link in your browser:</p>
-        <p style="color: #059669; word-break: break-all; font-size: 14px;">${verifyLink}</p>
+        <p style="color: #059669; word-break: break-all; font-size: 14px;">
+          <a href="${verifyLink}" style="color: #059669; text-decoration: underline;">${verifyLink}</a>
+        </p>
+
+        <div style="background-color: #fef2f2; border: 1px solid #fee2e2; border-radius: 3px; padding: 12px; margin: 20px 0;">
+          <p style="color: #991b1b; font-size: 12px; margin: 0;">
+            <strong>Tip:</strong> If the link above is not clickable, please move this email to your <strong>Inbox</strong> or mark it as <strong>"Not Spam"</strong>.
+          </p>
+        </div>
 
         <p style="color: #666; font-size: 12px; margin-top: 30px;">This link expires in 24 hours. If you didn't create an account, please ignore this email.</p>
         
@@ -238,7 +246,7 @@ class NotificationService {
         <p>Hi ${name},</p>
         <p>Your consultation with <strong>SHERO TECHNOLOGIES</strong> has been successfully scheduled.</p>
         
-        <div style="background: #f9fafb; padding: 15px; border-radius: 4px; margin: 20px 0;">
+        <div style="background: #f9fafb; padding: 15px; border-radius: 3px; margin: 20px 0;">
           <h3 style="margin-top: 0;">Appointment Details</h3>
           <p><strong>Service:</strong> ${service}</p>
           <p><strong>Date:</strong> ${formattedDate}</p>
@@ -272,7 +280,7 @@ class NotificationService {
         <p>Hi ${name},</p>
         <p>Thanks for reaching out! We've received your message and will get back to you within 24 hours.</p>
         
-        <div style="background: #f9fafb; padding: 15px; border-radius: 4px; margin: 20px 0;">
+        <div style="background: #f9fafb; padding: 15px; border-radius: 3px; margin: 20px 0;">
           <h3 style="margin-top: 0;">Your Message</h3>
           <p><strong>Subject:</strong> ${subject}</p>
           <p style="white-space: pre-wrap; color: #555;">${message}</p>
