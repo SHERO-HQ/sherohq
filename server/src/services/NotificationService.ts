@@ -35,11 +35,20 @@ class NotificationService {
       this.transporter = nodemailer.createTransport({
         host: SMTP_HOST,
         port: Number.parseInt(SMTP_PORT),
-        secure: Number.parseInt(SMTP_PORT) === 465,
+        secure: Number.parseInt(SMTP_PORT) === 465, // true for 465, false for other ports
         auth: {
           user: SMTP_USER,
           pass: SMTP_PASS,
         },
+        // Force IPv4 to avoid IPv6 routing issues in containers (Railway/Docker)
+        family: 4,
+        // Connection settings
+        connectionTimeout: 10000, // 10 seconds
+        greetingTimeout: 5000,
+        socketTimeout: 10000,
+        // Debugging
+        logger: true,
+        debug: true,
       });
       console.log("📧 Email service initialized with custom SMTP settings.");
     } else {
