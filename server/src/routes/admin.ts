@@ -19,6 +19,7 @@ interface AdminUserRow {
 router.post("/login", async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
+    console.log(`🔐 Admin login attempt: ${username}`);
 
     if (!username || !password) {
       return res.status(400).json({ error: "Username and password required" });
@@ -36,12 +37,14 @@ router.post("/login", async (req: Request, res: Response) => {
     const admin = result.rows[0] as AdminUserRow | undefined;
 
     if (!admin) {
+      console.warn(`❌ Admin login failed: Admin not found (${username})`);
       return res.status(401).json({ error: "Wrong username" });
     }
 
     // Verify password
     const isValid = await bcrypt.compare(password, admin.passwordHash);
     if (!isValid) {
+      console.warn(`❌ Admin login failed: Wrong password for ${username}`);
       return res.status(401).json({ error: "Wrong password" });
     }
 
@@ -61,7 +64,7 @@ router.post("/login", async (req: Request, res: Response) => {
       [uuidv4(), admin.id, token, expiresAt.toISOString()],
     );
 
-    console.log(`🔐 Admin login: ${admin.username}`);
+    console.log(`✅ Admin logged in: ${admin.username}`);
 
     res.json({
       success: true,
@@ -74,7 +77,7 @@ router.post("/login", async (req: Request, res: Response) => {
       },
     });
   } catch (error: unknown) {
-    console.error("Login error:", error);
+    console.error("❌ Admin login error:", error);
     res.status(500).json({
       error: "Login failed",
       details: error instanceof Error ? error.message : "Unknown error",

@@ -1,7 +1,7 @@
 import express from "express";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
-import crypto from "crypto";
+import { randomBytes } from "node:crypto";
 import db from "../db/database";
 import { notificationService } from "../services/NotificationService";
 
@@ -56,7 +56,7 @@ router.post("/register", async (req, res) => {
     const userId = uuidv4();
 
     // Generate verification token (expires in 24 hours)
-    const verificationToken = crypto.randomBytes(32).toString("hex");
+    const verificationToken = randomBytes(32).toString("hex");
     const verificationExpiry = new Date(
       Date.now() + 24 * 60 * 60 * 1000,
     ).toISOString();
@@ -179,7 +179,7 @@ router.post("/resend-verification", async (req, res) => {
     }
 
     // Generate new token
-    const verificationToken = crypto.randomBytes(32).toString("hex");
+    const verificationToken = randomBytes(32).toString("hex");
     const verificationExpiry = new Date(
       Date.now() + 24 * 60 * 60 * 1000,
     ).toISOString();
@@ -207,13 +207,22 @@ router.post("/resend-verification", async (req, res) => {
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(`🔑 Login attempt for: ${email}`);
 
     const result = await db.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
     const user = result.rows[0];
 
-    if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+    if (!user) {
+      console.warn(`❌ Login failed: User not found (${email})`);
+      res.status(401).json({ error: "Invalid credentials" });
+      return;
+    }
+
+    const isMatch = await bcrypt.compare(password, user.passwordHash);
+    if (!isMatch) {
+      console.warn(`❌ Login failed: Wrong password for ${email}`);
       res.status(401).json({ error: "Invalid credentials" });
       return;
     }
@@ -228,6 +237,8 @@ router.post("/login", async (req, res) => {
       'INSERT INTO user_sessions (id, "userId", token, "expiresAt") VALUES ($1, $2, $3, $4)',
       [sessionId, user.id, token, expiresAt],
     );
+
+    console.log(`✅ User logged in: ${email}`);
 
     res.json({
       success: true,
@@ -244,8 +255,11 @@ router.post("/login", async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Login error:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("❌ Login error:", error);
+    res.status(500).json({
+      error: "Internal server error",
+      details: error instanceof Error ? error.message : String(error),
+    });
   }
 });
 

@@ -1,25 +1,44 @@
 import type { Product } from "@/data/products";
 
-// Construct API_BASE: prefer env var, fallback to Railway, but ALWAYS ensure /api suffix
-let apiBase =
-  import.meta.env.VITE_API_URL ||
-  (import.meta.env.DEV
-    ? "/api"
-    : "https://sherotech-production.up.railway.app/api");
+// Construct API_BASE: prioritize explicit env var, then current origin proxy, fallback to Railway
+const getApiBase = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl) {
+    console.log("📍 Using VITE_API_URL from env:", envUrl);
+    return envUrl;
+  }
+
+  // If we are in local development, use the local proxy
+  if (import.meta.env.DEV) {
+    console.log("📍 Development mode: using /api local proxy");
+    return "/api";
+  }
+
+  // In production, try to use the same-origin /api proxy first (Vercel/Netlify)
+  // This is safer for CORS and deployment consistency
+  console.log("📍 Production mode: defaulting to /api proxy");
+  return "/api";
+};
+
+let apiBase = getApiBase();
+
+// Fallback to Railway if absolutely necessary, but we prefer the proxy
+// const RAILWAY_URL = "https://sherotech-production.up.railway.app/api";
 
 // Remove trailing slash if present to avoid double slashes
 if (apiBase.endsWith("/")) {
   apiBase = apiBase.slice(0, -1);
 }
 
-// Append /api if not present (and not in local dev mode using proxy)
+// Append /api if not present (unless it's already just /api)
 if (!apiBase.endsWith("/api") && apiBase !== "/api") {
   apiBase = `${apiBase}/api`;
 }
 
 const API_BASE = apiBase;
 
-console.log("🚀 Final API URL:", API_BASE);
+console.log("🚀 Final API URL set to:", API_BASE);
+console.log("ℹ️ Site Origin:", globalThis.location.origin);
 
 // Helper to get auth token
 function getAuthToken(): string | null {

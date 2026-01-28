@@ -18,8 +18,12 @@ export const query = (text: string, params?: unknown[]) =>
 
 // Create tables
 export async function initializeDatabase() {
+  console.log("🔌 Attempting to connect to the database...");
   const client = await pool.connect();
   try {
+    console.log(
+      "📡 Connected to database. Running migrations/initialization...",
+    );
     await client.query("BEGIN");
 
     // Products table
@@ -134,7 +138,7 @@ export async function initializeDatabase() {
     console.log("📦 Database initialized successfully");
   } catch (err) {
     await client.query("ROLLBACK");
-    console.error("Error initializing database:", err);
+    console.error("❌ Error initializing database:", err);
     throw err;
   } finally {
     client.release();

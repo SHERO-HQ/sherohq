@@ -24,6 +24,17 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Validate DATABASE_URL for common issues (unencoded special characters)
+if (process.env.DATABASE_URL) {
+  const dbUrl = process.env.DATABASE_URL;
+  // Check for multiple '@' symbols which usually means an unencoded password
+  if (dbUrl.includes("@") && dbUrl.split("@").length > 2) {
+    console.warn(
+      "⚠️ WARNING: DATABASE_URL seems to contain multiple '@' symbols. If your password contains '@', it MUST be URL-encoded (e.g., %40).",
+    );
+  }
+}
+
 // Middleware
 app.use(cors()); // Allow all origins, no credentials (we use tokens)
 app.use(express.json());
