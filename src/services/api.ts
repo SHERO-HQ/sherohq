@@ -4,6 +4,15 @@ import type { Product } from "@/data/products";
 const getApiBase = () => {
   const envUrl = import.meta.env.VITE_API_URL;
   if (envUrl) {
+    // If it's a relative path, use it as is
+    if (envUrl.startsWith("/")) return envUrl;
+
+    // If it's an absolute URL, ensure it has a protocol
+    if (envUrl.includes(".") && !envUrl.startsWith("http")) {
+      console.log("📍 Prepending https:// to VITE_API_URL");
+      return `https://${envUrl}`;
+    }
+
     console.log("📍 Using VITE_API_URL from env:", envUrl);
     return envUrl;
   }

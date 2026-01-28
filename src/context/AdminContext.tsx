@@ -3,6 +3,8 @@ import {
   useContext,
   useState,
   useEffect,
+  useCallback,
+  useMemo,
   type ReactNode,
 } from "react";
 import {
@@ -27,11 +29,8 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   // Check for existing session on mount
-  useEffect(() => {
-    checkAuth();
-  }, []);
 
-  async function checkAuth() {
+  const checkAuth = useCallback(async () => {
     try {
       const token = localStorage.getItem("adminToken");
       if (!token) {
@@ -48,7 +47,11 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   async function login(username: string, password: string) {
     const response = await apiLogin(username, password);
@@ -60,21 +63,23 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     setAdmin(null);
   }
 
+  const value = useMemo(
+    () => ({
+      admin,
+      isAuthenticated: !!admin,
+      isLoading,
+      login,
+      logout,
+    }),
+    [admin, isLoading],
+  );
+
   return (
-    <AdminContext.Provider
-      value={{
-        admin,
-        isAuthenticated: !!admin,
-        isLoading,
-        login,
-        logout,
-      }}
-    >
-      {children}
-    </AdminContext.Provider>
+    <AdminContext.Provider value={value}>{children}</AdminContext.Provider>
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAdmin() {
   const context = useContext(AdminContext);
   if (context === undefined) {

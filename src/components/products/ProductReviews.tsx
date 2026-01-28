@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Star, User, Loader2 } from "lucide-react";
 import {
   getProductReviews,
@@ -21,11 +21,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
   const [comment, setComment] = useState("");
   const [hoveredRating, setHoveredRating] = useState(0);
 
-  useEffect(() => {
-    fetchReviews();
-  }, [productId]);
-
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     try {
       const data = await getProductReviews(productId);
       setReviews(data);
@@ -34,7 +30,11 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [productId]);
+
+  useEffect(() => {
+    fetchReviews();
+  }, [fetchReviews]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

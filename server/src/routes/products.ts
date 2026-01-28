@@ -27,14 +27,24 @@ interface ProductRow {
 
 // Helper to parse JSON fields and numbers
 function parseProduct(row: ProductRow) {
+  const safeParse = (str: string | null) => {
+    if (!str) return null;
+    try {
+      return JSON.parse(str);
+    } catch (e) {
+      console.error("Failed to parse JSON field:", e);
+      return null;
+    }
+  };
+
   return {
     ...row,
     price: Number(row.price),
     originalPrice: row.originalPrice ? Number(row.originalPrice) : null,
     rating: Number(row.rating),
-    images: row.images ? JSON.parse(row.images) : null,
-    features: row.features ? JSON.parse(row.features) : null,
-    specifications: row.specifications ? JSON.parse(row.specifications) : null,
+    images: safeParse(row.images),
+    features: safeParse(row.features),
+    specifications: safeParse(row.specifications),
     inStock: Boolean(row.inStock),
   };
 }
