@@ -292,10 +292,11 @@ class NotificationService {
   }
 
   private async sendEmail(to: string, subject: string, html: string) {
-    const sender = process.env.SMTP_USER || "onboarding@resend.dev";
-    const from = `"SHERO TECHNOLOGIES" <${sender}>`;
-
     if (this.resend) {
+      // Resend requires a verified domain or their onboarding address
+      const resendSender = process.env.RESEND_FROM || "onboarding@resend.dev";
+      const from = `"SHERO TECHNOLOGIES" <${resendSender}>`;
+
       console.log(`📡 Sending email via Resend to: ${to}`);
       try {
         const { data, error } = await this.resend.emails.send({
@@ -307,6 +308,14 @@ class NotificationService {
 
         if (error) {
           console.error("❌ Resend failed to send email:", error);
+          if (
+            resendSender === "onboarding@resend.dev" &&
+            !to.includes(process.env.SMTP_USER || "")
+          ) {
+            console.warn(
+              "💡 TIP: onboarding@resend.dev only sends to your own Resend account email.",
+            );
+          }
           return;
         }
         console.log(`✅ Email sent via Resend to: ${to} | ID: ${data?.id}`);
@@ -317,6 +326,7 @@ class NotificationService {
     }
 
     if (this.transporter) {
+      const from = `"SHERO TECHNOLOGIES" <${process.env.SMTP_USER}>`;
       console.log(`📡 Sending email via SMTP to: ${to}`);
       try {
         await this.transporter.sendMail({
