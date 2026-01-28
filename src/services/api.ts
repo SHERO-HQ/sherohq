@@ -19,7 +19,25 @@ async function authFetch(url: string, options: RequestInit = {}) {
     (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
   }
 
-  return fetch(url, { ...options, headers });
+  const response = await fetch(url, { ...options, headers });
+
+  // Clone response to check body
+  if (!response.ok) {
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      // Let the caller handle the specific JSON error
+      return response;
+    } else {
+      // It's likely HTML (404/500/Bad Gateway)
+      const text = await response.text();
+      console.error("API Error (Non-JSON):", text.substring(0, 200)); // Log first 200 chars
+      throw new Error(
+        `Server Error: ${response.status} ${response.statusText}`,
+      );
+    }
+  }
+
+  return response;
 }
 
 // ============ Products API ============
@@ -192,8 +210,17 @@ export async function userRegister(data: {
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Registration failed");
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const error = await response.json();
+      throw new Error(error.error || "Registration failed");
+    } else {
+      const text = await response.text();
+      console.error("Register Error (Non-JSON):", text.substring(0, 200));
+      throw new Error(
+        `Server Error: ${response.status} ${response.statusText}`,
+      );
+    }
   }
 
   const result = await response.json();
@@ -212,8 +239,17 @@ export async function userLogin(data: {
   });
 
   if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Login failed");
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      const error = await response.json();
+      throw new Error(error.error || "Login failed");
+    } else {
+      const text = await response.text();
+      console.error("Login Error (Non-JSON):", text.substring(0, 200));
+      throw new Error(
+        `Server Error: ${response.status} ${response.statusText}`,
+      );
+    }
   }
 
   const result = await response.json();

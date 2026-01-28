@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
 import * as dotenv from "dotenv";
 
 dotenv.config();
@@ -49,7 +50,7 @@ class NotificationService {
         // Debugging
         logger: true,
         debug: true,
-      } as any);
+      } as SMTPTransport.Options);
       console.log("📧 Email service initialized with custom SMTP settings.");
     } else {
       console.log(
