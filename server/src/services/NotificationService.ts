@@ -29,7 +29,7 @@ class NotificationService {
     this.initEmail();
   }
 
-  private initEmail() {
+  private async initEmail() {
     const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
 
     if (SMTP_HOST && SMTP_PORT && SMTP_USER && SMTP_PASS) {
@@ -51,11 +51,27 @@ class NotificationService {
         logger: true,
         debug: true,
       } as SMTPTransport.Options);
+
+      try {
+        await this.transporter.verify();
+        console.log("✅ SMTP connection verified successfully.");
+      } catch (error) {
+        console.error(
+          "❌ SMTP verification failed during initialization:",
+          error,
+        );
+        // Don't set this.transporter = null here, so we can see the errors later too
+      }
       console.log("📧 Email service initialized with custom SMTP settings.");
     } else {
       console.log(
         "⚠️ SMTP credentials missing. Email notifications will be LOGGED ONLY.",
       );
+      if (process.env.NODE_ENV === "production") {
+        console.warn(
+          "❗ WARNING: Email is in SIMULATION mode in production because credentials are missing.",
+        );
+      }
     }
   }
 
@@ -159,6 +175,15 @@ class NotificationService {
       process.env.FRONTEND_URL ||
       process.env.PUBLIC_URL ||
       "http://localhost:5173";
+
+    if (
+      process.env.NODE_ENV === "production" &&
+      baseUrl.includes("localhost")
+    ) {
+      console.warn(
+        "❗ WARNING: baseUrl set to localhost in production for verification email!",
+      );
+    }
     const verifyLink = `${baseUrl}/verify-email?token=${token}`;
 
     const htmlContent = `
@@ -168,7 +193,7 @@ class NotificationService {
         <p>Thank you for creating an account with <strong>SHERO TECHNOLOGIES</strong>. Please verify your email address by clicking the button below:</p>
         
         <div style="text-align: center; margin: 30px 0;">
-          <a href="${verifyLink}" style="background-color: #059669; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
+          <a href="${verifyLink}" style="background-color: #059669; color: white; padding: 14px 28px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">
             Verify Email
           </a>
         </div>
@@ -194,7 +219,11 @@ class NotificationService {
         });
         console.log(`✅ Verification email sent to: ${email}`);
       } catch (error) {
-        console.error("❌ Failed to send verification email:", error);
+        console.error("❌ Failed to send verification email:", {
+          message: error instanceof Error ? error.message : error,
+          stack: error instanceof Error ? error.stack : undefined,
+          email: email,
+        });
       }
     } else {
       console.log(
@@ -223,7 +252,7 @@ class NotificationService {
         <p>Hi ${name},</p>
         <p>Your consultation with <strong>SHERO TECHNOLOGIES</strong> has been successfully scheduled.</p>
         
-        <div style="background: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0;">
+        <div style="background: #f9fafb; padding: 15px; border-radius: 4px; margin: 20px 0;">
           <h3 style="margin-top: 0;">Appointment Details</h3>
           <p><strong>Service:</strong> ${service}</p>
           <p><strong>Date:</strong> ${formattedDate}</p>
@@ -257,7 +286,7 @@ class NotificationService {
         <p>Hi ${name},</p>
         <p>Thanks for reaching out! We've received your message and will get back to you within 24 hours.</p>
         
-        <div style="background: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0;">
+        <div style="background: #f9fafb; padding: 15px; border-radius: 4px; margin: 20px 0;">
           <h3 style="margin-top: 0;">Your Message</h3>
           <p><strong>Subject:</strong> ${subject}</p>
           <p style="white-space: pre-wrap; color: #555;">${message}</p>
