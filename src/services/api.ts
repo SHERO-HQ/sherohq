@@ -236,7 +236,10 @@ export async function userLogin(data: {
   email: string;
   password: string;
 }): Promise<UserLoginResponse> {
-  const response = await fetch(`${API_BASE}/auth/login`, {
+  const url = `${API_BASE}/auth/login`;
+  console.log("🔑 Attempting Login:", url);
+
+  const response = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
