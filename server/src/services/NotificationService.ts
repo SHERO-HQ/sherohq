@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 import SMTPTransport from "nodemailer/lib/smtp-transport";
+import { Resend } from "resend";
 import * as dotenv from "dotenv";
 
 dotenv.config();
@@ -24,30 +25,46 @@ interface ShippingInfo {
 
 class NotificationService {
   private transporter: nodemailer.Transporter | null = null;
+  private resend: Resend | null = null;
 
   constructor() {
     this.initEmail();
   }
 
   private async initEmail() {
-    const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
+    const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, RESEND_API_KEY } =
+      process.env;
+
+    // Prioritize Resend for production stability
+    if (RESEND_API_KEY && !RESEND_API_KEY.includes("your_api_key")) {
+      this.resend = new Resend(RESEND_API_KEY);
+      console.log("🚀 Email service initialized with Resend (API-based).");
+      return;
+    } else {
+      console.log(
+        "ℹ️ Resend API Key not found or using placeholder. Falling back to SMTP check...",
+      );
+    }
 
     if (SMTP_HOST && SMTP_PORT && SMTP_USER && SMTP_PASS) {
       this.transporter = nodemailer.createTransport({
         host: SMTP_HOST,
         port: Number.parseInt(SMTP_PORT),
-        secure: Number.parseInt(SMTP_PORT) === 465, // true for 465, false for other ports
+        secure: Number.parseInt(SMTP_PORT) === 465,
         auth: {
           user: SMTP_USER,
           pass: SMTP_PASS,
         },
-        // Force IPv4 to avoid IPv6 routing issues in containers (Railway/Docker)
+        tls: {
+          // Do not fail on invalid certs (common with some SMTP providers)
+          rejectUnauthorized: false,
+          // Support for older/strict SMTP servers
+          ciphers: "SSLv3",
+        },
         family: 4,
-        // Connection settings
-        connectionTimeout: 10000, // 10 seconds
+        connectionTimeout: 10000,
         greetingTimeout: 5000,
         socketTimeout: 10000,
-        // Debugging
         logger: true,
         debug: true,
       } as SMTPTransport.Options);
@@ -60,16 +77,15 @@ class NotificationService {
           "❌ SMTP verification failed during initialization:",
           error,
         );
-        // Don't set this.transporter = null here, so we can see the errors later too
       }
       console.log("📧 Email service initialized with custom SMTP settings.");
     } else {
       console.log(
-        "⚠️ SMTP credentials missing. Email notifications will be LOGGED ONLY.",
+        "⚠️ No email provider configured. Email notifications will be LOGGED ONLY.",
       );
       if (process.env.NODE_ENV === "production") {
         console.warn(
-          "❗ WARNING: Email is in SIMULATION mode in production because credentials are missing.",
+          "❗ WARNING: Email is in SIMULATION mode in production because credentials (SMTP or RESEND) are missing.",
         );
       }
     }
@@ -112,7 +128,7 @@ class NotificationService {
         <p>Hi ${shippingInfo.firstName},</p>
         <p>Thank you for your order at <strong>SHERO TECHNOLOGIES</strong>. We've received your order and are processing it.</p>
         
-        <div style="background: #f9fafb; padding: 15px; border-radius: 8px; margin: 20px 0;">
+        <div style="background: #f9fafb; padding: 15px; border-radius: 4px; margin: 20px 0;">
           <h3 style="margin-top: 0;">Order Details</h3>
           <p><strong>Order ID:</strong> ${orderId}</p>
           <table style="width: 100%; border-collapse: collapse;">
@@ -137,24 +153,11 @@ class NotificationService {
       </div>
     `;
 
-    if (this.transporter) {
-      try {
-        await this.transporter.sendMail({
-          from: `"SHERO TECHNOLOGIES" <${process.env.SMTP_USER}>`,
-          to: shippingInfo.email,
-          subject: `Order Confirmation - #${orderId.substring(0, 8)}`,
-          html: htmlContent,
-        });
-        console.log(`✅ Email confirmation sent to: ${shippingInfo.email}`);
-      } catch (error) {
-        console.error("❌ Failed to send email:", error);
-      }
-    } else {
-      console.log(
-        `📝 [SIMULATION] Email receipt for #${orderId} would be sent to: ${shippingInfo.email}`,
-      );
-      // In a real environment with no SMTP, we might log to a specific debug file or service.
-    }
+    await this.sendEmail(
+      shippingInfo.email,
+      `Order Confirmation - #${orderId.substring(0, 8)}`,
+      htmlContent,
+    );
   }
 
   private async sendSMS(orderId: string, shippingInfo: ShippingInfo) {
@@ -209,28 +212,11 @@ class NotificationService {
       </div>
     `;
 
-    if (this.transporter) {
-      try {
-        await this.transporter.sendMail({
-          from: `"SHERO TECHNOLOGIES" <${process.env.SMTP_USER}>`,
-          to: email,
-          subject: "Verify Your Email - SHERO TECHNOLOGIES",
-          html: htmlContent,
-        });
-        console.log(`✅ Verification email sent to: ${email}`);
-      } catch (error) {
-        console.error("❌ Failed to send verification email:", {
-          message: error instanceof Error ? error.message : error,
-          stack: error instanceof Error ? error.stack : undefined,
-          email: email,
-        });
-      }
-    } else {
-      console.log(
-        `📝 [SIMULATION] Verification email would be sent to: ${email}`,
-      );
-      console.log(`📝 Verification link: ${verifyLink}`);
-    }
+    await this.sendEmail(
+      email,
+      "Verify Your Email - SHERO TECHNOLOGIES",
+      htmlContent,
+    );
   }
   public async sendScheduleConfirmation(
     email: string,
@@ -306,17 +292,42 @@ class NotificationService {
   }
 
   private async sendEmail(to: string, subject: string, html: string) {
+    const sender = process.env.SMTP_USER || "onboarding@resend.dev";
+    const from = `"SHERO TECHNOLOGIES" <${sender}>`;
+
+    if (this.resend) {
+      console.log(`📡 Sending email via Resend to: ${to}`);
+      try {
+        const { data, error } = await this.resend.emails.send({
+          from,
+          to: [to],
+          subject,
+          html,
+        });
+
+        if (error) {
+          console.error("❌ Resend failed to send email:", error);
+          return;
+        }
+        console.log(`✅ Email sent via Resend to: ${to} | ID: ${data?.id}`);
+      } catch (error) {
+        console.error("❌ Resend error:", error);
+      }
+      return;
+    }
+
     if (this.transporter) {
+      console.log(`📡 Sending email via SMTP to: ${to}`);
       try {
         await this.transporter.sendMail({
-          from: `"SHERO TECHNOLOGIES" <${process.env.SMTP_USER}>`,
+          from,
           to,
           subject,
           html,
         });
-        console.log(`✅ Email sent to: ${to} | Subject: ${subject}`);
+        console.log(`✅ Email sent via SMTP to: ${to} | Subject: ${subject}`);
       } catch (error) {
-        console.error("❌ Failed to send email:", error);
+        console.error("❌ Failed to send SMTP email:", error);
       }
     } else {
       console.log(`📝 [SIMULATION] Email to ${to}: "${subject}"`);
