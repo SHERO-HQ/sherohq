@@ -123,153 +123,156 @@ const Nav = () => {
               </div>
             </NavLink>
 
-            {/* Desktop Menu */}
-            <ul className="hidden lg:flex items-center gap-3">
-              {navLinks.map((item) => (
-                <li key={item}>
-                  <NavLink
-                    className={({ isActive }) => navLinkClass(isActive)}
-                    to={`/${item.toLowerCase().replace(" ", "-")}`}
-                  >
-                    {item}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-
-            {/* Global Actions (Always Visible) */}
-            <div className="flex items-center gap-2 mr-2 ml-auto">
-              {/* Search */}
-              <SearchBar className="hidden lg:block" />
-
-              {/* Contact Us - Desktop Only */}
-              <NavLink
-                to="/contact-us"
-                className="hidden lg:inline-flex group items-center gap-1 
-                         text-white dark:text-slate-900 bg-emerald-600 dark:bg-emerald-500
-                         px-6 py-2 rounded font-semibold text-sm
-                         hover:bg-emerald-700 dark:hover:bg-emerald-600 
-                         hover:shadow-lg hover:shadow-emerald-500/25
-                         hover:gap-0.5
-                         transition-all duration-300"
-              >
-                <span>Contact Us</span>
-                <svg
-                  className="w-4 h-4 transition-transform"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M5 12H19M19 12L13 6M19 12L13 18" />
-                </svg>
-              </NavLink>
-
-              <ToggleTheme />
-
-              {/* User Dropdown */}
-              <div className="hidden lg:block relative group">
-                {isAuthenticated ? (
-                  <button className="cursor-pointer p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                    <span className="sr-only">User Menu</span>
-                    <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-sm border border-emerald-200 dark:border-emerald-800">
-                      {user?.name?.charAt(0)}
-                    </div>
-                  </button>
-                ) : (
-                  <NavLink
-                    to="/login"
-                    className="cursor-pointer p-2 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors block"
-                    aria-label="Login"
-                  >
-                    <User className="w-6 h-6" />
-                  </NavLink>
-                )}
-
-                {/* Dropdown Menu (Only when authenticated) */}
-                {isAuthenticated && (
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded shadow-xl border border-slate-200 dark:border-slate-800 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                    <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
-                      <p className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">
-                        {user?.name}
-                      </p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
-                        {user?.email}
-                      </p>
-                    </div>
+            {/* Right Groups Wrapper */}
+            <div className="flex items-center gap-2 sm:gap-4 ml-auto">
+              {/* Desktop Menu */}
+              <ul className="hidden lg:flex items-center gap-3">
+                {navLinks.map((item) => (
+                  <li key={item}>
                     <NavLink
-                      to="/profile"
-                      className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+                      className={({ isActive }) => navLinkClass(isActive)}
+                      to={`/${item.toLowerCase().replace(" ", "-")}`}
                     >
-                      <User className="w-4 h-4" /> Profile & Orders
+                      {item}
                     </NavLink>
-                    <button
-                      onClick={() => logout()}
-                      className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Logout
+                  </li>
+                ))}
+              </ul>
+
+              {/* Global Actions */}
+              <div className="flex items-center gap-2 mr-2">
+                {/* Search */}
+                <SearchBar className="hidden lg:block" />
+
+                {/* Contact Us - Desktop Only */}
+                <NavLink
+                  to="/contact-us"
+                  className="hidden lg:inline-flex group items-center gap-1 
+                           text-white dark:text-slate-900 bg-emerald-600 dark:bg-emerald-500
+                           px-6 py-2 rounded font-semibold text-sm
+                           hover:bg-emerald-700 dark:hover:bg-emerald-600 
+                           hover:shadow-lg hover:shadow-emerald-500/25
+                           hover:gap-0.5
+                           transition-all duration-300"
+                >
+                  <span>Contact Us</span>
+                  <svg
+                    className="w-4 h-4 transition-transform"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M5 12H19M19 12L13 6M19 12L13 18" />
+                  </svg>
+                </NavLink>
+
+                <ToggleTheme />
+
+                {/* User Dropdown */}
+                <div className="hidden lg:block relative group">
+                  {isAuthenticated ? (
+                    <button className="cursor-pointer p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                      <span className="sr-only">User Menu</span>
+                      <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-sm border border-emerald-200 dark:border-emerald-800">
+                        {user?.name?.charAt(0)}
+                      </div>
                     </button>
-                  </div>
-                )}
+                  ) : (
+                    <NavLink
+                      to="/login"
+                      className="cursor-pointer p-2 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors block"
+                      aria-label="Login"
+                    >
+                      <User className="w-6 h-6" />
+                    </NavLink>
+                  )}
+
+                  {/* Dropdown Menu (Only when authenticated) */}
+                  {isAuthenticated && (
+                    <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded shadow-xl border border-slate-200 dark:border-slate-800 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                      <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
+                        <p className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">
+                          {user?.name}
+                        </p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
+                          {user?.email}
+                        </p>
+                      </div>
+                      <NavLink
+                        to="/profile"
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
+                      >
+                        <User className="w-4 h-4" /> Profile & Orders
+                      </NavLink>
+                      <button
+                        onClick={() => logout()}
+                        className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Cart Button */}
+                <button
+                  onClick={() => setIsCartOpen(true)}
+                  className="cursor-pointer relative p-2 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  aria-label="Open Cart"
+                >
+                  <ShoppingCart className="w-6 h-6" />
+                  {totalQuantity > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-bold text-white ring-2 ring-white dark:ring-slate-900 animate-in zoom-in">
+                      {totalQuantity}
+                    </span>
+                  )}
+                </button>
               </div>
 
-              {/* Cart Button */}
-              <button
-                onClick={() => setIsCartOpen(true)}
-                className="cursor-pointer relative p-2 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
-                aria-label="Open Cart"
-              >
-                <ShoppingCart className="w-6 h-6" />
-                {totalQuantity > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-bold text-white ring-2 ring-white dark:ring-slate-900 animate-in zoom-in">
-                    {totalQuantity}
-                  </span>
-                )}
-              </button>
-            </div>
-
-            {/* Mobile Actions Overlay Trigger */}
-            <div className="flex items-center lg:hidden">
-              {/* Hamburger Button */}
-              <button
-                className={`relative w-9 h-9 rounded flex items-center justify-center
-                         transition-colors duration-200 cursor-pointer shadow
-                         ${
-                           isOpen
-                             ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border border-red-400"
-                             : "bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-300 border border-slate-200 dark:border-slate-800"
-                         }`}
-                type="button"
-                onClick={() => setIsOpen(!isOpen)}
-                aria-expanded={isOpen}
-                aria-controls="mobile-nav-menu"
-                aria-label="Toggle menu"
-              >
-                <motion.svg
-                  width={25}
-                  height={25}
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  fill="none"
-                  animate={{ rotate: isOpen ? 90 : 0 }}
-                  transition={{ duration: 0.5 }}
+              {/* Mobile Actions Overlay Trigger */}
+              <div className="flex items-center lg:hidden">
+                {/* Hamburger Button */}
+                <button
+                  className={`relative w-9 h-9 rounded flex items-center justify-center
+                           transition-colors duration-200 cursor-pointer shadow
+                           ${
+                             isOpen
+                               ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border border-red-400"
+                               : "bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-300 border border-slate-200 dark:border-slate-800"
+                           }`}
+                  type="button"
+                  onClick={() => setIsOpen(!isOpen)}
+                  aria-expanded={isOpen}
+                  aria-controls="mobile-nav-menu"
+                  aria-label="Toggle menu"
                 >
-                  <motion.path
-                    animate={
-                      isOpen
-                        ? { d: "M18 6L6 18M6 6L18 18" }
-                        : { d: "M5 17H13M5 12H19M11 7H19" }
-                    }
-                    transition={{ duration: 0.3 }}
-                  />
-                </motion.svg>
-              </button>
+                  <motion.svg
+                    width={25}
+                    height={25}
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    fill="none"
+                    animate={{ rotate: isOpen ? 90 : 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <motion.path
+                      animate={
+                        isOpen
+                          ? { d: "M18 6L6 18M6 6L18 18" }
+                          : { d: "M5 17H13M5 12H19M11 7H19" }
+                      }
+                      transition={{ duration: 0.3 }}
+                    />
+                  </motion.svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
