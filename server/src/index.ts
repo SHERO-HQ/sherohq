@@ -152,25 +152,21 @@ app.use("/api", (req: Request, res: Response) => {
 // Removed catch-all route for static files since frontend is deployed independently
 
 // Initialize database and start server
-async function startServer() {
-  try {
-    await initializeDatabase();
-    await seedDatabase();
-    await seedAdminUser();
+try {
+  await initializeDatabase();
+  await seedDatabase();
+  await seedAdminUser();
 
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-      console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
-      console.log(`🛒 Products API: http://localhost:${PORT}/api/products`);
-      console.log(`🔐 Admin API: http://localhost:${PORT}/api/admin`);
-      console.log(`📸 Uploads: http://localhost:${PORT}/uploads`);
-    });
-  } catch (error) {
-    console.error("Failed to start server:", error);
-    process.exit(1);
-  }
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
+    console.log(`🛒 Products API: http://localhost:${PORT}/api/products`);
+    console.log(`🔐 Admin API: http://localhost:${PORT}/api/admin`);
+    console.log(`📸 Uploads: http://localhost:${PORT}/uploads`);
+  });
+} catch (error) {
+  console.error("Failed to start server:", error);
+  process.exit(1);
 }
-
-startServer();
 
 export default app;

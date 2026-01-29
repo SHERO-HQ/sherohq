@@ -44,18 +44,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   const checkAuth = useCallback(async () => {
+    const initialToken = localStorage.getItem("userToken");
     try {
-      const token = localStorage.getItem("userToken");
-      if (!token) {
+      if (!initialToken) {
         setIsLoading(false);
         return;
       }
 
       const { user } = await getUserMe();
       setUser(user);
-    } catch {
-      localStorage.removeItem("userToken");
-      setUser(null);
+    } catch (error) {
+      console.warn("Check auth failed:", error);
+      // Only clear if the token hasn't changed since we started (prevents clearing if we just logged in)
+      if (localStorage.getItem("userToken") === initialToken) {
+        localStorage.removeItem("userToken");
+        setUser(null);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -66,8 +70,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [checkAuth]);
 
   async function login(data: { email: string; password: string }) {
-    const response = await userLogin(data);
-    setUser(response.user);
+    setIsLoading(true);
+    try {
+      const response = await userLogin(data);
+      setUser(response.user);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      throw error;
+    }
   }
 
   async function register(data: {
@@ -76,13 +87,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     name: string;
     phone?: string;
   }) {
-    const response = await userRegister(data);
-    setUser(response.user);
+    setIsLoading(true);
+    try {
+      const response = await userRegister(data);
+      setUser(response.user);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      throw error;
+    }
   }
 
   async function logout() {
-    await userLogout();
-    setUser(null);
+    try {
+      await userLogout();
+    } finally {
+      setUser(null);
+      setIsLoading(false);
+    }
   }
 
   async function updateProfile(data: {
