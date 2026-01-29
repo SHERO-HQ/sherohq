@@ -9,11 +9,13 @@ const getApiBase = () => {
 
     // If it's an absolute URL, ensure it has a protocol
     if (envUrl.includes(".") && !envUrl.startsWith("http")) {
-      console.log("📍 Prepending https:// to VITE_API_URL");
+      if (import.meta.env.DEV)
+        console.log("📍 Prepending https:// to VITE_API_URL");
       return `https://${envUrl}`;
     }
 
-    console.log("📍 Using VITE_API_URL from env:", envUrl);
+    if (import.meta.env.DEV)
+      console.log("📍 Using VITE_API_URL from env:", envUrl);
     return envUrl;
   }
 
@@ -25,7 +27,8 @@ const getApiBase = () => {
 
   // In production, try to use the same-origin /api proxy first (Vercel/Netlify)
   // This is safer for CORS and deployment consistency
-  console.log("📍 Production mode: defaulting to /api proxy");
+  if (import.meta.env.DEV)
+    console.log("📍 Production mode: defaulting to /api proxy");
   return "/api";
 };
 
@@ -46,8 +49,10 @@ if (!apiBase.endsWith("/api") && apiBase !== "/api") {
 
 const API_BASE = apiBase;
 
-console.log("🚀 Final API URL set to:", API_BASE);
-console.log("ℹ️ Site Origin:", globalThis.location.origin);
+if (import.meta.env.DEV) {
+  console.log("🚀 Final API URL set to:", API_BASE);
+  console.log("ℹ️ Site Origin:", globalThis.location.origin);
+}
 
 // Helper to get auth token
 function getAuthToken(): string | null {
