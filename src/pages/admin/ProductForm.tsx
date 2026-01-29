@@ -12,6 +12,7 @@ import {
   fetchProduct,
   fetchCategories,
   uploadImages,
+  getImageUrl,
   type ProductInput,
 } from "@/services/api";
 import { useTitle } from "@/hooks/useTitle";
@@ -108,9 +109,7 @@ export default function ProductForm() {
         specifications: product.specifications || {},
       });
 
-      const previews = imagesList.map((img) =>
-        img.startsWith("/uploads") ? `http://localhost:5000${img}` : img,
-      );
+      const previews = imagesList.map((img) => getImageUrl(img));
       setImagePreviews(previews);
 
       setFeaturesText((product.features || []).join("\n"));
@@ -162,9 +161,7 @@ export default function ProductForm() {
       }));
 
       // Update previews with server URLs
-      const serverPreviews = result.imageUrls.map(
-        (url) => `http://localhost:5000${url}`,
-      );
+      const serverPreviews = result.imageUrls.map((url) => getImageUrl(url));
       setImagePreviews((prev) => {
         const existingCount = prev.length - newPreviews.length;
         return [...prev.slice(0, existingCount), ...serverPreviews];

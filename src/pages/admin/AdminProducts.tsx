@@ -5,6 +5,7 @@ import {
   fetchProducts,
   deleteProduct,
   updateProductStock,
+  getImageUrl,
 } from "@/services/api";
 import type { Product } from "@/data/products";
 import {
@@ -243,7 +244,7 @@ export default function AdminProducts() {
                             <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-slate-800 rounded-lg overflow-hidden border border-slate-700">
                               {product.image?.match(/^(\/|http|data:)/) ? (
                                 <img
-                                  src={product.image}
+                                  src={getImageUrl(product.image)}
                                   alt={product.name}
                                   className="w-full h-full object-cover"
                                 />

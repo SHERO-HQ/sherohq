@@ -15,6 +15,7 @@ import {
   Minus,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { getImageUrl } from "@/services/api";
 import { products, type Product } from "@/data/products";
 import ProductCard from "./ProductCard";
 import ProductReviews from "./ProductReviews";
@@ -86,9 +87,14 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   (images[selectedImage].startsWith("/uploads") ||
                     images[selectedImage].startsWith("http")) ? (
                     <img
-                      src={images[selectedImage]}
+                      src={getImageUrl(images[selectedImage])}
                       alt={product.name}
                       className="w-full h-full object-contain p-4"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src =
+                          "https://placehold.co/600x400?text=No+Image";
+                      }}
                     />
                   ) : (
                     <div className="text-8xl select-none">
@@ -147,9 +153,14 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                       {img &&
                       (img.startsWith("/uploads") || img.startsWith("http")) ? (
                         <img
-                          src={img}
+                          src={getImageUrl(img)}
                           alt={`Thumbnail ${idx}`}
                           className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src =
+                              "https://placehold.co/200x200?text=NA";
+                          }}
                         />
                       ) : (
                         <div className="text-2xl select-none">{img}</div>

@@ -55,6 +55,24 @@ if (import.meta.env.DEV) {
   console.log("ℹ️ Site Origin:", globalThis.location.origin);
 }
 
+// Helper to resolve image URLs
+export function getImageUrl(path: string | undefined): string {
+  if (!path) return "";
+
+  // If it's already a full URL (http/https), return as is
+  if (path.startsWith("http")) return path;
+
+  // If it starts with /uploads, it's a backend upload
+  if (path.startsWith("/uploads")) {
+    // getApiBase might return /api, so we need the base host
+    const base = API_BASE.replace(/\/api$/, "");
+    return `${base}${path}`;
+  }
+
+  // If it's just a string (emoji/icon) or other local path, return as is
+  return path;
+}
+
 // Helper to get auth token
 function getAuthToken(): string | null {
   return localStorage.getItem("adminToken");

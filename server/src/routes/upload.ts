@@ -8,7 +8,7 @@ import { adminAuth, AdminRequest } from "../middleware/adminAuth";
 const router = Router();
 
 // Configure upload directory
-const UPLOAD_DIR = path.join(__dirname, "../../uploads");
+const UPLOAD_DIR = path.resolve(process.cwd(), "uploads");
 
 // Ensure upload directory exists
 if (!fs.existsSync(UPLOAD_DIR)) {

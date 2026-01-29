@@ -3,6 +3,7 @@ import { ShoppingCart, Heart, Eye, Star, CreditCard } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
+import { getImageUrl } from "@/services/api";
 import type { Product } from "@/data/products"; // Import shared type
 
 interface ProductCardProps {
@@ -128,9 +129,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
         (product.image.startsWith("/uploads") ||
           product.image.startsWith("http")) ? (
           <img
-            src={product.image}
+            src={getImageUrl(product.image)}
             alt={product.name}
             className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "https://placehold.co/600x400?text=No+Image";
+            }}
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-6xl select-none opacity-50 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500">
