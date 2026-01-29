@@ -2,8 +2,8 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
-import path from "node:path";
-import fs from "node:fs";
+// import path from "node:path";
+// import fs from "node:fs";
 import * as dotenv from "dotenv";
 
 // Database
@@ -114,20 +114,20 @@ const globalLimiter = rateLimit({
 
 app.use("/api", globalLimiter);
 
-// Serve uploaded files statically
-const uploadsPath = path.resolve(process.cwd(), "uploads");
-if (!fs.existsSync(uploadsPath)) {
-  fs.mkdirSync(uploadsPath, { recursive: true });
-}
-console.log(`📂 Serving uploads from: ${uploadsPath}`);
-app.use(
-  "/uploads",
-  express.static(uploadsPath, {
-    setHeaders: (res) => {
-      res.set("Cross-Origin-Resource-Policy", "cross-origin");
-    },
-  }),
-);
+// Serve uploaded files statically - REMOVED (Migrated to Supabase Storage)
+// const uploadsPath = path.resolve(process.cwd(), "uploads");
+// if (!fs.existsSync(uploadsPath)) {
+//   fs.mkdirSync(uploadsPath, { recursive: true });
+// }
+// console.log(`📂 Serving uploads from: ${uploadsPath}`);
+// app.use(
+//   "/uploads",
+//   express.static(uploadsPath, {
+//     setHeaders: (res) => {
+//       res.set("Cross-Origin-Resource-Policy", "cross-origin");
+//     },
+//   }),
+// );
 
 // Health check route
 app.get("/api/health", (req: Request, res: Response) => {

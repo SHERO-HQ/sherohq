@@ -1,31 +1,14 @@
 import { Router, Request, Response } from "express";
 import multer from "multer";
-import path from "path";
-import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
+import path from "path";
 import { adminAuth, AdminRequest } from "../middleware/adminAuth";
+import { supabase } from "../lib/supabase";
 
 const router = Router();
 
-// Configure upload directory
-const UPLOAD_DIR = path.resolve(process.cwd(), "uploads");
-
-// Ensure upload directory exists
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-}
-
-// Configure multer storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, UPLOAD_DIR);
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const uniqueName = `${uuidv4()}${ext}`;
-    cb(null, uniqueName);
-  },
-});
+// Configure multer to store files in memory
+const storage = multer.memoryStorage();
 
 // File filter for images only
 const fileFilter = (
@@ -47,7 +30,6 @@ const fileFilter = (
   }
 };
 
-// Configure multer
 const upload = multer({
   storage,
   fileFilter,
@@ -56,41 +38,65 @@ const upload = multer({
   },
 });
 
-// POST /api/upload - Upload single image (Admin only)
+async function uploadToSupabase(file: Express.Multer.File): Promise<string> {
+  const fileExt = path.extname(file.originalname);
+  const fileName = `${uuidv4()}${fileExt}`;
+  const filePath = `${fileName}`;
+
+  const { data, error } = await supabase.storage
+    .from("products")
+    .upload(filePath, file.buffer, {
+      contentType: file.mimetype,
+      upsert: false,
+    });
+
+  if (error) {
+    throw error;
+  }
+
+  const { data: publicData } = supabase.storage
+    .from("products")
+    .getPublicUrl(filePath);
+
+  return publicData.publicUrl;
+}
+
+// POST /api/upload - Upload single image
 router.post(
   "/",
   adminAuth,
   upload.single("image"),
-  (req: AdminRequest, res: Response) => {
+  async (req: AdminRequest, res: Response) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: "No image file provided" });
       }
 
-      const imageUrl = `/uploads/${req.file.filename}`;
-
-      console.log(
-        `📸 Image uploaded: ${req.file.filename} by ${req.admin?.username}`,
-      );
+      console.log(`📤 Uploading ${req.file.originalname} to Supabase...`);
+      const imageUrl = await uploadToSupabase(req.file);
+      console.log(`✅ Upload successful: ${imageUrl}`);
 
       res.json({
         success: true,
         imageUrl,
-        filename: req.file.filename,
+        filename: path.basename(imageUrl),
       });
     } catch (error) {
       console.error("Upload error:", error);
-      res.status(500).json({ error: "Failed to upload image" });
+      res.status(500).json({
+        error: "Failed to upload image",
+        details: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   },
 );
 
-// POST /api/upload/multiple - Upload multiple images (Admin only)
+// POST /api/upload/multiple - Upload multiple images
 router.post(
   "/multiple",
   adminAuth,
   upload.array("images", 5),
-  (req: AdminRequest, res: Response) => {
+  async (req: AdminRequest, res: Response) => {
     try {
       const files = req.files as Express.Multer.File[];
 
@@ -98,43 +104,60 @@ router.post(
         return res.status(400).json({ error: "No image files provided" });
       }
 
-      const imageUrls = files.map((file) => `/uploads/${file.filename}`);
-
       console.log(
-        `📸 ${files.length} images uploaded by ${req.admin?.username}`,
+        `📤 Uploading ${files.length} images to Supabase by ${req.admin?.username}`,
       );
+
+      const uploadPromises = files.map((file) => uploadToSupabase(file));
+      const imageUrls = await Promise.all(uploadPromises);
+
+      console.log(`✅ All images uploaded successfully`);
 
       res.json({
         success: true,
         imageUrls,
-        filenames: files.map((f) => f.filename),
+        filenames: imageUrls.map((url) => path.basename(url)),
       });
     } catch (error) {
       console.error("Upload error:", error);
-      res.status(500).json({ error: "Failed to upload images" });
+      res.status(500).json({
+        error: "Failed to upload images",
+        details: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   },
 );
 
-// DELETE /api/upload/:filename - Delete an image (Admin only)
-router.delete("/:filename", adminAuth, (req: AdminRequest, res: Response) => {
-  try {
-    const filename = req.params.filename as string;
-    const filePath = path.join(UPLOAD_DIR, filename);
+// DELETE /api/upload/:filename - Delete an image (Note: filename here is likely the full path or ID in bucket)
+router.delete(
+  "/:filename",
+  adminAuth,
+  async (req: AdminRequest, res: Response) => {
+    try {
+      const filename = req.params.filename as string;
 
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).json({ error: "Image not found" });
+      // Attempt to delete from text/path.
+      // Since we return full URLs, the frontend might send the filename associated with it.
+      // However, if we migrated, existing local files can't be deleted this way.
+      // For Supabase, we need the path inside the bucket.
+
+      // If the frontend sends just the UUID filename:
+      const { error } = await supabase.storage
+        .from("products")
+        .remove([filename]);
+
+      if (error) {
+        throw error;
+      }
+
+      console.log(`🗑️ Image deleted from Supabase: ${filename}`);
+
+      res.json({ success: true, message: "Image deleted" });
+    } catch (error) {
+      console.error("Delete error:", error);
+      res.status(500).json({ error: "Failed to delete image" });
     }
-
-    fs.unlinkSync(filePath);
-
-    console.log(`🗑️ Image deleted: ${filename} by ${req.admin?.username}`);
-
-    res.json({ success: true, message: "Image deleted" });
-  } catch (error) {
-    console.error("Delete error:", error);
-    res.status(500).json({ error: "Failed to delete image" });
-  }
-});
+  },
+);
 
 export default router;
