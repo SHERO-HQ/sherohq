@@ -27,8 +27,9 @@ const getApiBase = () => {
 
   // In production, try to use the same-origin /api proxy first (Vercel/Netlify)
   // This is safer for CORS and deployment consistency
-  if (import.meta.env.DEV)
+  if (import.meta.env.DEV) {
     console.log("📍 Production mode: defaulting to /api proxy");
+  }
   return "/api";
 };
 
@@ -286,30 +287,44 @@ export async function userLogin(data: {
 }): Promise<UserLoginResponse> {
   const url = `${API_BASE}/auth/login`;
   console.log("🔑 Attempting Login:", url);
+  const startTime = performance.now();
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
 
-  if (!response.ok) {
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      const error = await response.json();
-      throw new Error(error.error || "Login failed");
-    } else {
-      const text = await response.text();
-      console.error("Login Error (Non-JSON):", text.substring(0, 200));
-      throw new Error(
-        `Server Error: ${response.status} ${response.statusText}`,
-      );
+    const endTime = performance.now();
+    console.log(
+      `⏱️ Login API Response Time: ${(endTime - startTime).toFixed(2)}ms`,
+    );
+
+    if (!response.ok) {
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const error = await response.json();
+        throw new Error(error.error || "Login failed");
+      } else {
+        const text = await response.text();
+        console.error("Login Error (Non-JSON):", text.substring(0, 200));
+        throw new Error(
+          `Server Error: ${response.status} ${response.statusText}`,
+        );
+      }
     }
-  }
 
-  const result = await response.json();
-  localStorage.setItem("userToken", result.token);
-  return result;
+    const result = await response.json();
+    localStorage.setItem("userToken", result.token);
+    return result;
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("Login failed")) {
+      throw error;
+    }
+    console.error("Login API Network Error:", error);
+    throw error;
+  }
 }
 
 export async function userLogout(): Promise<void> {

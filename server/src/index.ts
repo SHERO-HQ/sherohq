@@ -151,22 +151,27 @@ app.use("/api", (req: Request, res: Response) => {
 
 // Removed catch-all route for static files since frontend is deployed independently
 
-// Initialize database and start server
-try {
-  await initializeDatabase();
-  await seedDatabase();
-  await seedAdminUser();
+// Start server immediately to bind port (crucial for Render/Railway startup checks)
+app.listen(PORT, async () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
 
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
-    console.log(`🛒 Products API: http://localhost:${PORT}/api/products`);
-    console.log(`🔐 Admin API: http://localhost:${PORT}/api/admin`);
-    console.log(`📸 Uploads: http://localhost:${PORT}/uploads`);
-  });
-} catch (error) {
-  console.error("Failed to start server:", error);
-  process.exit(1);
-}
+  // Background database initialization
+  try {
+    console.time("⏱️ Database Startup");
+    await initializeDatabase();
+    await seedDatabase();
+    await seedAdminUser();
+    console.timeEnd("⏱️ Database Startup");
+    console.log("✅ Database is ready to handle requests.");
+  } catch (error) {
+    console.error(
+      "❌ Failed to initialize database during background startup:",
+      error,
+    );
+    // We don't exit here to allow the port to remain bound, but subsequent
+    // DB requests may fail until the issue is fixed.
+  }
+});
 
 export default app;

@@ -219,9 +219,14 @@ router.post("/login", authLimiter, async (req, res) => {
     const { email, password } = req.body;
     console.log(`🔑 Login attempt for: ${email}`);
 
+    console.time(`⏱️ Login Process [${email}]`);
+
+    console.time(`  🔍 DB Query User [${email}]`);
     const result = await db.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
+    console.timeEnd(`  🔍 DB Query User [${email}]`);
+
     const user = result.rows[0];
 
     if (!user) {
@@ -230,7 +235,10 @@ router.post("/login", authLimiter, async (req, res) => {
       return;
     }
 
+    console.time(`  🔐 Bcrypt Compare [${email}]`);
     const isMatch = await bcrypt.compare(password, user.passwordHash);
+    console.timeEnd(`  🔐 Bcrypt Compare [${email}]`);
+
     if (!isMatch) {
       console.warn(`❌ Login failed: Wrong password for ${email}`);
       res.status(401).json({ error: "Invalid credentials" });
@@ -243,12 +251,15 @@ router.post("/login", authLimiter, async (req, res) => {
       Date.now() + 30 * 24 * 60 * 60 * 1000,
     ).toISOString();
 
+    console.time(`  📝 Create Session [${email}]`);
     await db.query(
       'INSERT INTO user_sessions (id, "userId", token, "expiresAt") VALUES ($1, $2, $3, $4)',
       [sessionId, user.id, token, expiresAt],
     );
+    console.timeEnd(`  📝 Create Session [${email}]`);
 
     console.log(`✅ User logged in: ${email}`);
+    console.timeEnd(`⏱️ Login Process [${email}]`);
 
     res.json({
       success: true,
