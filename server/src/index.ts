@@ -24,6 +24,7 @@ import inquiryRoutes from "./routes/inquiry";
 dotenv.config();
 
 const app = express();
+app.set("trust proxy", 1); // Trust Render proxy
 const PORT = process.env.PORT || 5000;
 
 // Validate DATABASE_URL for common issues (unencoded special characters)
