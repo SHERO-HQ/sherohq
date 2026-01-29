@@ -124,7 +124,7 @@ const Nav = () => {
             </NavLink>
 
             {/* Right Groups Wrapper */}
-            <div className="flex items-center gap-2 sm:gap-4 ml-auto">
+            <div className="flex items-center gap-2 ml-auto">
               {/* Desktop Menu */}
               <ul className="hidden lg:flex items-center gap-3">
                 {navLinks.map((item) => (
@@ -169,14 +169,27 @@ const Nav = () => {
                   </svg>
                 </NavLink>
 
-                <ToggleTheme />
+                {/* Cart Button */}
+                <button
+                  onClick={() => setIsCartOpen(true)}
+                  className="cursor-pointer relative p-2 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  aria-label="Open Cart"
+                >
+                  <ShoppingCart className="w-6 h-6" />
+                  {totalQuantity > 0 && (
+                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-bold text-white ring-2 ring-white dark:ring-slate-900 animate-in zoom-in">
+                      {totalQuantity}
+                    </span>
+                  )}
+                </button>
+
 
                 {/* User Dropdown */}
                 <div className="hidden lg:block relative group">
                   {isAuthenticated ? (
                     <button className="cursor-pointer p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                       <span className="sr-only">User Menu</span>
-                      <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-sm border border-emerald-200 dark:border-emerald-800">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-md border border-white/10">
                         {user?.name?.charAt(0)}
                       </div>
                     </button>
@@ -218,19 +231,8 @@ const Nav = () => {
                   )}
                 </div>
 
-                {/* Cart Button */}
-                <button
-                  onClick={() => setIsCartOpen(true)}
-                  className="cursor-pointer relative p-2 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
-                  aria-label="Open Cart"
-                >
-                  <ShoppingCart className="w-6 h-6" />
-                  {totalQuantity > 0 && (
-                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-bold text-white ring-2 ring-white dark:ring-slate-900 animate-in zoom-in">
-                      {totalQuantity}
-                    </span>
-                  )}
-                </button>
+                <ToggleTheme />
+
               </div>
 
               {/* Mobile Actions Overlay Trigger */}
@@ -333,7 +335,7 @@ const Nav = () => {
                   {isAuthenticated ? (
                     <div className="space-y-4">
                       <div className="flex items-center gap-3 px-2">
-                        <div className="w-12 h-12 rounded-full bg-linear-to-br from-emerald-500 to-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg border border-white/10">
                           {user?.name?.charAt(0)}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -376,7 +378,7 @@ const Nav = () => {
                     <NavLink
                       to="/login"
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-4 px-5 py-4 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl transition-all duration-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800/50 group"
+                      className="flex items-center gap-4 px-5 py-2 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl transition-all duration-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800/50 group"
                     >
                       <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
                         <User className="w-6 h-6" />

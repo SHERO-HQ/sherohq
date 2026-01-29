@@ -298,7 +298,7 @@ const CheckoutFlow = () => {
         <div className="lg:hidden mb-6 bg-slate-50 dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 -mx-4 px-4 sm:mx-0 sm:px-0 sm:border sm:rounded-lg overflow-hidden">
           <button
             onClick={() => setShowMobileSummary(!showMobileSummary)}
-            className="w-full py-4 flex items-center justify-between text-left"
+            className="w-full py-2 flex items-center justify-between text-left"
           >
             <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-medium">
               <ShoppingCart className="w-5 h-5" />

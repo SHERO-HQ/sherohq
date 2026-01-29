@@ -405,7 +405,7 @@ const Profile = () => {
         {/* Mobile Header & Tabs (Visible < lg) */}
         <div className="lg:hidden mb-8 space-y-6">
           <div className="bg-white dark:bg-slate-900 rounded shadow-sm border border-slate-200 dark:border-slate-800 p-6 flex items-center gap-4">
-            <div className="w-10 h-10 border border-emerald-200 dark:border-emerald-800 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-xl font-bold text-emerald-600 dark:text-emerald-400 shrink-0">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-blue-600 flex items-center justify-center text-xl font-bold text-white shrink-0 shadow-lg border border-white/10">
               {user.name.charAt(0)}
             </div>
             <div className="min-w-0">
@@ -464,7 +464,7 @@ const Profile = () => {
           <div className="hidden lg:block lg:col-span-1">
             <div className="bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 p-6 sticky top-24">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 border border-emerald-200 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-blue-600 flex items-center justify-center text-2xl font-bold text-white shadow-xl border border-white/10">
                   {user.name.charAt(0)}
                 </div>
                 <div>

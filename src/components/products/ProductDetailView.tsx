@@ -287,14 +287,14 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
               <button
                 onClick={handleAddToCart}
                 disabled={!product.inStock}
-                className="cursor-pointer flex-1 flex items-center justify-center gap-2 px-8 py-4 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white rounded font-bold transition-colors"
+                className="cursor-pointer flex-1 flex items-center justify-center gap-2 px-8 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white rounded font-bold transition-colors"
               >
                 <ShoppingCart className="w-5 h-5" />
                 Add to Cart
               </button>
               <button
                 onClick={() => setIsWishlisted(!isWishlisted)}
-                className={`p-4 rounded border-2 transition-all ${
+                className={`px-4 py-2 rounded border-2 transition-all ${
                   isWishlisted
                     ? "border-red-500 bg-red-50 dark:bg-red-900/20"
                     : "border-slate-200 dark:border-slate-700 hover:border-red-500"

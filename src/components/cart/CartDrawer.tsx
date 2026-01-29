@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useCart } from "@/context/CartContext";
+import { getImageUrl } from "@/services/api";
 import { X, Minus, Plus, ShoppingBag, Trash2, ArrowRight } from "lucide-react";
 import { useEffect } from "react";
 
@@ -93,8 +94,24 @@ const CartDrawer = () => {
                     key={item.id}
                     className="flex gap-4 group"
                   >
-                    <div className="w-24 h-24 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center text-4xl shrink-0">
-                      {item.image}
+                    <div className="w-24 h-24 bg-slate-100 dark:bg-slate-800 rounded shrink-0 overflow-hidden">
+                      {item.image.startsWith("http") ||
+                      item.image.startsWith("/uploads") ? (
+                        <img
+                          src={getImageUrl(item.image)}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src =
+                              "https://placehold.co/200x200?text=No+Image";
+                          }}
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-4xl">
+                          {item.image}
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex justify-between items-start mb-1">
@@ -160,10 +177,10 @@ const CartDrawer = () => {
                     setIsCartOpen(false);
                     window.location.href = "/checkout";
                   }}
-                  className="cursor-pointer w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold flex items-center justify-center gap-2 transition-all group"
+                  className="cursor-pointer w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold flex items-center justify-center gap-2 transition-all group"
                 >
                   Proceed to Checkout
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-5 h-2.5 group-hover:translate-x-1 transition-transform" />
                 </button>
               </div>
             )}

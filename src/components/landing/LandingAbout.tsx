@@ -108,11 +108,11 @@ const LandingAbout = () => {
               </div>
 
               {/* Floating Badge Overlay */}
-              <div className="absolute bottom-10 right-5 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded transform translate-y-1/2 shadow-lg">
-                <p className="text-xs font-bold text-white tracking-wider">
+              <div className="absolute bottom-10 right-5 dark:bg-emerald-50/10 bg-white/40 backdrop-blur-md border border-white/20 dark:border-emerald-500/20 px-4 py-2 rounded transform translate-y-1/2 shadow-lg">
+                <p className="text-xs font-bold dark:text-white text-slate-600 tracking-wider">
                   10x
                 </p>
-                <p className="text-[10px] text-emerald-300">
+                <p className="text-[10px] dark:text-emerald-300 text-emerald-600">
                   {" "}
                   Efficiency Impact
                 </p>
