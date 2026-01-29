@@ -40,11 +40,39 @@ if (process.env.DATABASE_URL) {
 // Middleware
 app.use(helmet()); // Set security headers
 
-// CORS configuration - restrict to frontend URL in production
-const corsOrigin = process.env.FRONTEND_URL || "http://localhost:5173";
+// CORS configuration - Support multiple origins
+const allowedOrigins = [
+  "https://sherohq.vercel.app",
+  "http://localhost:5173",
+  "http://localhost:3000",
+];
+
+// Add FRONTEND_URL from environment if it exists
+if (process.env.FRONTEND_URL) {
+  const envOrigins = process.env.FRONTEND_URL.split(",").map((o) => o.trim());
+  envOrigins.forEach((origin) => {
+    if (origin && !allowedOrigins.includes(origin)) {
+      allowedOrigins.push(origin);
+    }
+  });
+}
+
 app.use(
   cors({
-    origin: process.env.NODE_ENV === "production" ? corsOrigin : "*",
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      if (
+        allowedOrigins.includes(origin) ||
+        process.env.NODE_ENV !== "production"
+      ) {
+        callback(null, true);
+      } else {
+        console.warn(`🚫 CORS blocked for origin: ${origin}`);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
