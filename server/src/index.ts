@@ -39,6 +39,7 @@ if (process.env.DATABASE_URL) {
 
 // CORS configuration - Support multiple origins
 const allowedOrigins = [
+  "https://sherotech.vercel.app",
   "https://sherohq.vercel.app",
   "http://localhost:5173",
   "http://localhost:3000",

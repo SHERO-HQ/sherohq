@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://sherotech-production.up.railway.app/api/$1"
+      "destination": "https://sherotech.onrender.com/api/$1"
     },
     {
       "source": "/uploads/(.*)",
-      "destination": "https://sherotech-production.up.railway.app/uploads/$1"
+      "destination": "https://sherotech.onrender.com/uploads/$1"
     },
     {
       "source": "/(.*)",

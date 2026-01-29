@@ -233,7 +233,7 @@ const Profile = () => {
                     {order.items.map((item) => (
                       <div
                         key={item.id}
-                        className="flex items-center gap-4 bg-slate-50 dark:bg-slate-800/30 p-3 rounded"
+                        className="flex flex-col md:flex-row md:items-center gap-4 bg-slate-50 dark:bg-slate-800/30 p-3 rounded"
                       >
                         <div className="w-12 h-12 bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 flex items-center justify-center text-xl shrink-0">
                           {item.image}
@@ -403,7 +403,7 @@ const Profile = () => {
         </h1>
 
         {/* Mobile Header & Tabs (Visible < lg) */}
-        <div className="lg:hidden mb-8 space-y-4">
+        <div className="lg:hidden mb-8 space-y-6">
           <div className="bg-white dark:bg-slate-900 rounded shadow-sm border border-slate-200 dark:border-slate-800 p-6 flex items-center gap-4">
             <div className="w-10 h-10 border border-emerald-200 dark:border-emerald-800 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-xl font-bold text-emerald-600 dark:text-emerald-400 shrink-0">
               {user.name.charAt(0)}
@@ -421,36 +421,41 @@ const Profile = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              onClick={() => setActiveTab("orders")}
-              className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded font-medium text-xs sm:text-sm transition-all border ${
-                activeTab === "orders"
-                  ? "bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-500/20"
-                  : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-emerald-500/50"
-              }`}
-            >
-              <Package className="w-5 h-5" />
-              <span>Orders</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("settings")}
-              className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded font-medium text-xs sm:text-sm transition-all border ${
-                activeTab === "settings"
-                  ? "bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-500/20"
-                  : "bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-emerald-500/50"
-              }`}
-            >
-              <Settings className="w-5 h-5" />
-              <span>Settings</span>
-            </button>
-            <button
-              onClick={handleLogout}
-              className="flex flex-col items-center justify-center gap-1.5 p-3 rounded font-medium text-xs sm:text-sm transition-all border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30"
-            >
-              <LogOut className="w-5 h-5" />
-              <span>Sign Out</span>
-            </button>
+          <div className="space-y-4">
+            <div className="bg-white dark:bg-slate-900 p-1 rounded border border-slate-200 dark:border-slate-800 flex shadow-sm">
+              <button
+                onClick={() => setActiveTab("orders")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded font-bold text-sm transition-all ${
+                  activeTab === "orders"
+                    ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/20"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                }`}
+              >
+                <Package className="w-4 h-4" />
+                Orders
+              </button>
+              <button
+                onClick={() => setActiveTab("settings")}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded font-bold text-sm transition-all ${
+                  activeTab === "settings"
+                    ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/20"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                }`}
+              >
+                <Settings className="w-4 h-4" />
+                Settings
+              </button>
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                Sign Out
+              </button>
+            </div>
           </div>
         </div>
 
