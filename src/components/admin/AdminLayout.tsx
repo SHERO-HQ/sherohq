@@ -81,7 +81,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             <ChevronLeft className="w-5 h-5 text-slate-400" />
             <span className="text-sm text-slate-400">Back</span>
           </Link>
-          <h1 className="text-xl font-bold text-white mt-4">Sherotech Admin</h1>
+          <h1 className="text-xl font-bold font-sora text-white mt-4">Sherotech Admin</h1>
         </div>
 
         {/* Navigation */}
@@ -95,9 +95,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 key={item.path}
                 to={item.path}
                 onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 px-4 py-2 rounded transition-all ${
+                className={`flex items-center gap-3 px-4 py-2 font-sora rounded transition-all ${
                   isActive
-                    ? "bg-purple-500/20 text-purple-400 border border-purple-500/30"
+                    ? "bg-purple-500/20 text-purple-400 font-semibold border border-purple-500/30"
                     : "text-slate-400 hover:bg-slate-800 hover:text-white"
                 }`}
               >
@@ -123,7 +123,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded text-slate-400 hover:text-white transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 rounded text-red-400 hover:text-red-500 transition-colors duration-75"
           >
             <LogOut className="w-4 h-4" />
             <span>Logout</span>

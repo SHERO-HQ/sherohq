@@ -65,7 +65,7 @@ export default function AdminLogin() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded bg-gradient-to-br from-purple-600 to-blue-600 mb-4">
             <Lock className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-white">Admin Portal</h1>
+          <h1 className="text-2xl font-bold text-white font-sora">Admin Portal</h1>
           <p className="text-slate-400 mt-1">Sign in to access the dashboard</p>
         </div>
 

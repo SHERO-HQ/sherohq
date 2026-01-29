@@ -142,7 +142,7 @@ export default function AdminProducts() {
               <Package className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">Products</h1>
+              <h1 className="text-2xl font-bold text-white font-sora">Products</h1>
               <p className="text-slate-400">{products.length} total products</p>
             </div>
           </div>
@@ -166,14 +166,14 @@ export default function AdminProducts() {
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setSearch(e.target.value)
               }
-              className="w-full pl-12 pr-4 py-3 bg-slate-900/50 border border-slate-800 rounded text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="w-full pl-12 pr-4 py-2 bg-slate-900/50 border border-slate-800 rounded text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
             />
           </div>
 
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-4 py-3 bg-slate-900/50 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select text-base"
+            className="px-4 py-2 bg-slate-900/50 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select text-base"
           >
             <option value="">All Categories</option>
             {categories.map((c) => (
@@ -186,7 +186,7 @@ export default function AdminProducts() {
           <select
             value={stockFilter}
             onChange={(e) => setStockFilter(e.target.value)}
-            className="px-4 py-3 bg-slate-900/50 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select text-base"
+            className="px-4 py-2 bg-slate-900/50 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select text-base"
           >
             <option value="">All Stock Status</option>
             <option value="instock">In Stock</option>
@@ -206,22 +206,22 @@ export default function AdminProducts() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-slate-800">
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 font-sora text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                       Product
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 font-sora text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                       Category
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 font-sora text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                       Price
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 font-sora text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                       Stock
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 font-sora text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-4 text-right text-xs font-medium text-slate-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 font-sora text-right text-xs font-medium text-slate-400 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>

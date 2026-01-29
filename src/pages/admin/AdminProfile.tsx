@@ -51,7 +51,7 @@ export default function AdminProfile() {
     <AdminLayout>
       <div className="max-w-2xl mx-auto space-y-8">
         <div>
-          <h1 className="text-2xl font-bold text-white mb-2">Admin Profile</h1>
+          <h1 className="text-2xl font-bold text-white font-sora mb-2">Admin Profile</h1>
           <p className="text-slate-400">
             Manage your account credentials and settings.
           </p>

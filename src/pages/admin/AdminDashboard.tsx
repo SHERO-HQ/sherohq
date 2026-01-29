@@ -122,7 +122,7 @@ export default function AdminDashboard() {
             <LayoutDashboard className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+            <h1 className="text-2xl font-bold text-white font-sora">Dashboard</h1>
             <p className="text-slate-400">Welcome back, {admin?.username}!</p>
           </div>
         </div>
@@ -141,7 +141,7 @@ export default function AdminDashboard() {
               >
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-slate-400 text-sm">{stat.title}</p>
+                    <p className="text-slate-400 text-sm font-sora">{stat.title}</p>
                     <p className="text-3xl font-bold text-white mt-2">
                       {stat.value}
                     </p>

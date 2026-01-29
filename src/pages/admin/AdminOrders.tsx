@@ -295,7 +295,7 @@ export default function AdminOrders() {
               <ShoppingCart className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">Orders</h1>
+              <h1 className="text-2xl font-bold text-white font-sora">Orders</h1>
               <p className="text-slate-400">
                 {filteredOrders.length} orders found
               </p>

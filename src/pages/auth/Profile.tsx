@@ -10,7 +10,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import {
   Package,
-  Clock,
   LogOut,
   ShoppingBag,
   MapPin,
@@ -21,6 +20,10 @@ import {
   Mail,
   Send,
   BadgeCheck,
+  ChevronDown,
+  ChevronUp,
+  Phone,
+  CreditCard,
 } from "lucide-react";
 
 type Tab = "orders" | "settings";
@@ -40,7 +43,12 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState<Tab>("orders");
   const [resendingEmail, setResendingEmail] = useState(false);
   const [resendMessage, setResendMessage] = useState("");
+  const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const toggleOrderExpansion = (orderId: string) => {
+    setExpandedOrder(expandedOrder === orderId ? null : orderId);
+  };
 
   // Profile form state
   const [formData, setFormData] = useState({
@@ -157,83 +165,139 @@ const Profile = () => {
     }
 
     return (
-      <div className="space-y-6">
-        {orders.map((order) => (
-          <div
-            key={order.id}
-            className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 overflow-hidden"
-          >
-            <div className="bg-slate-50 dark:bg-slate-800/50 p-6 flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800">
-              <div className="flex flex-wrap gap-8">
-                <div>
-                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
-                    Order ID
-                  </p>
-                  <p className="font-mono text-sm font-bold text-slate-900 dark:text-white">
-                    #{order.id.slice(0, 8)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
-                    Date Placed
-                  </p>
-                  <p className="text-sm font-medium text-slate-900 dark:text-white flex items-center gap-1">
-                    <Clock className="w-4 h-4 text-emerald-500" />
-                    {new Date(order.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
-                    Total Amount
-                  </p>
-                  <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
-                    GH₵{order.total.toFixed(2)}
-                  </p>
-                </div>
-              </div>
+      <div className="space-y-4">
+        {orders.map((order) => {
+          const isExpanded = expandedOrder === order.id;
 
-              <div
-                className={`px-4 py-1.5 rounded-full text-sm font-bold capitalize ${getStatusBadgeColor(
-                  order.status,
-                )}`}
+          return (
+            <div
+              key={order.id}
+              className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 overflow-hidden"
+            >
+              {/* Order Header (Clickable) */}
+              <button
+                onClick={() => toggleOrderExpansion(order.id)}
+                className="w-full text-left p-6 flex flex-wrap items-center justify-between gap-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
               >
-                {order.status}
-              </div>
-            </div>
-
-            <div className="p-6">
-              <div className="space-y-4 mb-6">
-                {order.items.map((item) => (
-                  <div key={item.id} className="flex items-center gap-4">
-                    <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center text-xl shrink-0">
-                      {item.image}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-bold text-slate-900 dark:text-white line-clamp-1">
-                        {item.name}
-                      </h4>
-                      <p className="text-sm text-slate-500 dark:text-slate-400">
-                        Qty: {item.quantity}
-                      </p>
-                    </div>
-                    <p className="font-bold text-slate-900 dark:text-white">
-                      GH₵{item.price * item.quantity}
+                <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
+                  <div>
+                    <p className="text-[10px] font-bold font-sora text-slate-500 uppercase tracking-wider">
+                      Order ID
+                    </p>
+                    <p className="font-mono text-sm font-bold text-slate-900 dark:text-white">
+                      #{order.id.slice(0, 8)}
                     </p>
                   </div>
-                ))}
-              </div>
-
-              <div className="flex items-center justify-between pt-6 border-t border-slate-100 dark:border-slate-800">
-                <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-                  <MapPin className="w-4 h-4" />
-                  <span className="line-clamp-1">
-                    {order.shippingInfo.address}, {order.shippingInfo.city}
-                  </span>
+                  <div>
+                    <p className="text-[10px] font-bold font-sora text-slate-500 uppercase tracking-wider">
+                      Date
+                    </p>
+                    <p className="text-sm font-medium text-slate-900 dark:text-white flex items-center gap-1">
+                      {new Date(order.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold font-sora text-slate-500 uppercase tracking-wider">
+                      Total
+                    </p>
+                    <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                      GH₵{order.total.toFixed(2)}
+                    </p>
+                  </div>
                 </div>
-              </div>
+
+                <div className="flex items-center gap-4">
+                  <div
+                    className={`px-3 py-1 rounded text-xs font-bold capitalize ${getStatusBadgeColor(
+                      order.status,
+                    )}`}
+                  >
+                    {order.status}
+                  </div>
+                  {isExpanded ? (
+                    <ChevronUp className="w-5 h-5 text-slate-400" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5 text-slate-400" />
+                  )}
+                </div>
+              </button>
+
+              {/* Expandable Content */}
+              {isExpanded && (
+                <div className="p-6 border-t border-slate-100 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
+                  {/* Items List */}
+                  <div className="space-y-4 mb-8">
+                    <h5 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">
+                      Items in Order
+                    </h5>
+                    {order.items.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex items-center gap-4 bg-slate-50 dark:bg-slate-800/30 p-3 rounded"
+                      >
+                        <div className="w-12 h-12 bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 flex items-center justify-center text-xl shrink-0">
+                          {item.image}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-bold text-sm text-slate-900 dark:text-white line-clamp-1">
+                            {item.name}
+                          </h4>
+                          <p className="text-xs text-slate-500 dark:text-slate-400">
+                            GH₵{item.price.toFixed(2)} × {item.quantity}
+                          </p>
+                        </div>
+                        <p className="font-bold text-sm text-slate-900 dark:text-white">
+                          GH₵{(item.price * item.quantity).toFixed(2)}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Details Grid */}
+                  <div className="grid md:grid-cols-2 gap-8 pt-6 border-t border-slate-100 dark:border-slate-800">
+                    <div>
+                      <h5 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <MapPin className="w-3.5 h-3.5" />
+                        Shipping Address
+                      </h5>
+                      <div className="text-sm text-slate-600 dark:text-slate-400 space-y-1">
+                        <p className="font-bold text-slate-900 dark:text-white">
+                          {order.shippingInfo.firstName}{" "}
+                          {order.shippingInfo.lastName}
+                        </p>
+                        <p>{order.shippingInfo.address}</p>
+                        <p>
+                          {order.shippingInfo.city}, {order.shippingInfo.region}
+                        </p>
+                        <p>{order.shippingInfo.postalCode}</p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h5 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <CreditCard className="w-3.5 h-3.5" />
+                        Contact & Payment
+                      </h5>
+                      <div className="text-sm text-slate-600 dark:text-slate-400 space-y-2">
+                        <div className="flex items-center gap-2">
+                          <Phone className="w-3.5 h-3.5 text-slate-400" />
+                          <span>{order.shippingInfo.phone || "No phone"}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Mail className="w-3.5 h-3.5 text-slate-400" />
+                          <span>{user?.email}</span>
+                        </div>
+                        <div className="mt-2 p-2 bg-emerald-50 dark:bg-emerald-900/10 rounded text-emerald-700 dark:text-emerald-400 text-xs font-medium inline-block">
+                          Paid via Mobile Money / Card
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     );
   };
@@ -245,9 +309,9 @@ const Profile = () => {
 
     // Validate phone number if provided
     if (formData.phone) {
-      const ghanaPhoneRegex = /^0(2|5)\d{8}$/;
+      const ghanaPhoneRegex = /^0[25]\d{8}$/;
       // Remove spaces for validation check
-      const cleanPhone = formData.phone.replace(/\s+/g, "");
+      const cleanPhone = formData.phone.replaceAll(/\s+/g, "");
       if (!ghanaPhoneRegex.test(cleanPhone)) {
         setPhoneError(
           "Please enter a valid Ghana phone number (e.g., 0244123456 or 0501234567)",
@@ -351,7 +415,7 @@ const Profile = () => {
               <p className="text-sm text-slate-500 dark:text-slate-400 truncate flex items-center gap-1.5">
                 {user.email}
                 {user.emailVerified && (
-                  <BadgeCheck className="w-3.5 h-3.5 text-emerald-200 dark:text-emerald-200  fill-emerald-600/40" />
+                  <BadgeCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-300  fill-emerald-500/50" />
                 )}
               </p>
             </div>
@@ -405,7 +469,7 @@ const Profile = () => {
                   <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-1 flex items-center gap-1">
                     {user.email}
                     {user.emailVerified && (
-                      <BadgeCheck className="w-4 h-4 text-emerald-200  fill-emerald-600/40" />
+                      <BadgeCheck className="w-4 h-4 text-emerald-700 dark:text-emerald-300  fill-emerald-500/40" />
                     )}
                   </p>
                 </div>

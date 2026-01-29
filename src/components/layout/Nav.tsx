@@ -190,7 +190,7 @@ const Nav = () => {
 
                 {/* Dropdown Menu (Only when authenticated) */}
                 {isAuthenticated && (
-                  <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-slate-900 rounded shadow-xl border border-slate-200 dark:border-slate-800 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded shadow-xl border border-slate-200 dark:border-slate-800 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                     <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
                       <p className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">
                         {user?.name}
