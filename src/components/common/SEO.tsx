@@ -1,5 +1,3 @@
-import { Helmet } from "react-helmet-async";
-
 interface SEOProps {
   title?: string;
   description?: string;
@@ -23,15 +21,16 @@ const SEO = ({
 
   const metaTitle = title ? `${title} | SHERO` : siteTitle;
   const metaDescription = description || defaultDescription;
-  const metaImage = image
-    ? image.startsWith("http")
-      ? image
-      : `${siteUrl}${image}`
-    : `${siteUrl}${defaultImage}`;
+  let metaImage: string;
+  if (image) {
+    metaImage = image.startsWith("http") ? image : `${siteUrl}${image}`;
+  } else {
+    metaImage = `${siteUrl}${defaultImage}`;
+  }
   const metaUrl = url ? `${siteUrl}${url}` : siteUrl;
 
   return (
-    <Helmet>
+    <>
       {/* Standard Metadata */}
       <title>{metaTitle}</title>
       <meta name="description" content={metaDescription} />
@@ -50,7 +49,7 @@ const SEO = ({
       <meta name="twitter:title" content={metaTitle} />
       <meta name="twitter:description" content={metaDescription} />
       <meta name="twitter:image" content={metaImage} />
-    </Helmet>
+    </>
   );
 };
 

@@ -1,4 +1,3 @@
-import { HelmetProvider } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import Nav from "./components/layout/Nav";
 import { ThemeProvider } from "./context/Theme";
@@ -14,20 +13,18 @@ const App = () => {
   const isAdminRoute = location.pathname.startsWith("/admin");
 
   return (
-    <HelmetProvider>
-      <ThemeProvider>
-        <CartProvider>
-          <AuthProvider>
-            <NotificationProvider>
-              <ScrollToTop />
-              {!isAdminRoute && <Nav />}
-              {!isAdminRoute && <CartDrawer />}
-              <AppRoutes />
-            </NotificationProvider>
-          </AuthProvider>
-        </CartProvider>
-      </ThemeProvider>
-    </HelmetProvider>
+    <ThemeProvider>
+      <CartProvider>
+        <AuthProvider>
+          <NotificationProvider>
+            <ScrollToTop />
+            {!isAdminRoute && <Nav />}
+            {!isAdminRoute && <CartDrawer />}
+            <AppRoutes />
+          </NotificationProvider>
+        </AuthProvider>
+      </CartProvider>
+    </ThemeProvider>
   );
 };
 
