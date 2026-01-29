@@ -79,7 +79,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <div className="p-6 border-b border-slate-800">
           <Link to="/" className="flex items-center gap-2 text-white">
             <ChevronLeft className="w-5 h-5 text-slate-400" />
-            <span className="text-sm text-slate-400">Back to Site</span>
+            <span className="text-sm text-slate-400">Back</span>
           </Link>
           <h1 className="text-xl font-bold text-white mt-4">Sherotech Admin</h1>
         </div>
@@ -135,22 +135,22 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       <main className="lg:ml-64 min-h-screen bg-slate-950">
         {/* Top Header */}
         <header className="fixed top-0 right-0 left-0 lg:left-64 h-16 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 z-30 pl-16 pr-6 lg:px-6 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-white capitalize">
+          <h2 className="text-lg lg:text-xl font-bold text-white capitalize">
             {(() => {
               const path = location.pathname.split("/").pop();
               switch (path) {
                 case "dashboard":
-                  return "Admin Dashboard";
+                  return "Dashboard";
                 case "products":
-                  return "Product Management";
+                  return "Products";
                 case "orders":
-                  return "Order Management";
+                  return "Orders";
                 case "reports":
-                  return "Analytics & Reports";
+                  return "Reports";
                 case "profile":
-                  return "Admin Settings";
+                  return "Settings";
                 default:
-                  return path || "Admin Dashboard";
+                  return path || "Dashboard";
               }
             })()}
           </h2>

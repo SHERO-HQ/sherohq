@@ -37,9 +37,6 @@ if (process.env.DATABASE_URL) {
   }
 }
 
-// Middleware
-app.use(helmet()); // Set security headers
-
 // CORS configuration - Support multiple origins
 const allowedOrigins = [
   "https://sherohq.vercel.app",
@@ -47,38 +44,45 @@ const allowedOrigins = [
   "http://localhost:3000",
 ];
 
-// Add FRONTEND_URL from environment if it exists
-if (process.env.FRONTEND_URL) {
-  const envOrigins = process.env.FRONTEND_URL.split(",").map((o) => o.trim());
-  envOrigins.forEach((origin) => {
+// Add FRONTEND_URL or CORS_ORIGIN from environment if it exists
+const envOrigin = process.env.FRONTEND_URL || process.env.CORS_ORIGIN;
+if (envOrigin) {
+  const origins = envOrigin.split(",").map((o) => o.trim());
+  origins.forEach((origin) => {
     if (origin && !allowedOrigins.includes(origin)) {
       allowedOrigins.push(origin);
     }
   });
 }
 
+// CORS MUST be before helmet and other middleware to handle OPTIONS requests correctly
 app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
 
-      if (
+      const isAllowed =
         allowedOrigins.includes(origin) ||
-        process.env.NODE_ENV !== "production"
-      ) {
+        process.env.NODE_ENV !== "production";
+
+      if (isAllowed) {
         callback(null, true);
       } else {
         console.warn(`🚫 CORS blocked for origin: ${origin}`);
+        console.warn(`📋 Allowed origins: ${allowedOrigins.join(", ")}`);
         callback(new Error("Not allowed by CORS"));
       }
     },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
+    optionsSuccessStatus: 200, // Some legacy browsers choke on 204
   }),
 );
 
+// Other Middleware
+app.use(helmet()); // Set security headers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

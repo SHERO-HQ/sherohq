@@ -109,17 +109,192 @@ export default function AdminOrders() {
     }
   }
 
+  let ordersContent;
+
+  if (isLoading) {
+    ordersContent = (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+      </div>
+    );
+  } else if (filteredOrders.length === 0) {
+    ordersContent = (
+      <div className="text-center py-12">
+        <ShoppingCart className="w-12 h-12 text-slate-600 mx-auto mb-4" />
+        <p className="text-slate-400">No orders found</p>
+      </div>
+    );
+  } else {
+    ordersContent = (
+      <div className="space-y-4">
+        {filteredOrders.map((order) => {
+          const statusInfo = getStatusInfo(order.status);
+          const StatusIcon = statusInfo.icon;
+          const isExpanded = expandedOrder === order.id;
+
+          return (
+            <div
+              key={order.id}
+              className="bg-slate-900/50 border border-slate-800 rounded overflow-hidden"
+            >
+              {/* Order Header */}
+              <button
+                className="w-full text-left p-6 cursor-pointer hover:bg-slate-800/30 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-inset"
+                onClick={() => setExpandedOrder(isExpanded ? null : order.id)}
+                aria-expanded={isExpanded}
+                aria-label={`Order ${order.id.slice(0, 8)}, ${statusInfo.label}, GH₵${order.total.toLocaleString()}`}
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div
+                      className={`p-2 rounded bg-slate-800 ${statusInfo.color}`}
+                    >
+                      <StatusIcon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-white flex items-center gap-2">
+                        Order #{order.id.slice(0, 8)}
+                        {order.paymentMethod === "store_pickup" && (
+                          <span className="flex items-center gap-1 text-[10px] uppercase font-bold bg-emerald-900/50 text-emerald-400 px-2 py-0.5 rounded border border-emerald-800/50">
+                            <Store className="w-3 h-3" /> Pickup
+                          </span>
+                        )}
+                      </p>
+                      <p className="text-sm text-slate-400">
+                        {formatDate(order.createdAt)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="hidden md:block">
+                    <p className="font-medium text-white text-sm">
+                      {order.shippingInfo.firstName}{" "}
+                      {order.shippingInfo.lastName}
+                    </p>
+                    <div className="flex items-center gap-1 text-sm text-slate-400">
+                      <Phone className="w-3 h-3" />
+                      {order.shippingInfo.phone || "No phone"}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="font-bold text-white">
+                        GH₵{order.total.toLocaleString()}
+                      </p>
+                      <p className="text-sm text-slate-400">
+                        {order.items.length} items
+                      </p>
+                    </div>
+
+                    {/* Status Dropdown */}
+                    <select
+                      value={order.status}
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={(e) =>
+                        handleStatusChange(order.id, e.target.value)
+                      }
+                      disabled={updatingStatus === order.id}
+                      className={`px-3 py-1.5 rounded border font-medium text-xs ${statusInfo.color} bg-slate-800 border-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select pr-8 cursor-pointer transition-colors`}
+                    >
+                      {ORDER_STATUSES.map((s) => (
+                        <option
+                          key={s.value}
+                          value={s.value}
+                          className="bg-slate-800 text-white font-normal text-sm"
+                        >
+                          {s.label}
+                        </option>
+                      ))}
+                    </select>
+
+                    <ChevronDown
+                      className={`w-5 h-5 text-slate-400 transition-transform ${
+                        isExpanded ? "rotate-180" : ""
+                      }`}
+                    />
+                  </div>
+                </div>
+              </button>
+
+              {/* Order Details (Expanded) */}
+              {isExpanded && (
+                <div className="px-6 pb-6 border-t border-slate-800 pt-4">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {/* Customer Info */}
+                    <div>
+                      <h3 className="text-sm font-medium text-slate-400 mb-3">
+                        Customer Information
+                      </h3>
+                      <div className="space-y-2 text-sm">
+                        <p className="text-white">
+                          {order.shippingInfo.firstName}{" "}
+                          {order.shippingInfo.lastName}
+                        </p>
+                        <p className="text-slate-400">
+                          {order.shippingInfo.email}
+                        </p>
+                        <p className="text-slate-400">
+                          {order.shippingInfo.phone}
+                        </p>
+                        <p className="text-slate-400">
+                          {order.shippingInfo.address},{" "}
+                          {order.shippingInfo.city}
+                        </p>
+                        <p className="text-slate-400">
+                          {order.shippingInfo.region}{" "}
+                          {order.shippingInfo.postalCode}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Order Items */}
+                    <div>
+                      <h3 className="text-sm font-medium text-slate-400 mb-3">
+                        Order Items
+                      </h3>
+                      <div className="space-y-3">
+                        {order.items.map((item) => (
+                          <div
+                            key={item.id}
+                            className="flex items-center gap-3"
+                          >
+                            <span className="text-xl">{item.image}</span>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-white text-sm truncate">
+                                {item.name}
+                              </p>
+                              <p className="text-slate-400 text-xs">
+                                Qty: {item.quantity} × GH₵{item.price}
+                              </p>
+                            </div>
+                            <p className="text-white font-medium">
+                              GH₵{(item.price * item.quantity).toFixed(2)}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
   return (
     <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded bg-gradient-to-br from-purple-500 to-blue-600">
+            <div className="p-3 rounded bg-linear-to-br from-purple-500 to-blue-600">
               <ShoppingCart className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white">Orders</h1>
               <h1 className="text-2xl font-bold text-white">Orders</h1>
               <p className="text-slate-400">
                 {filteredOrders.length} orders found
@@ -154,11 +329,11 @@ export default function AdminOrders() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 bg-slate-900 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select text-base"
+            className="px-4 py-2 bg-slate-900 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select text-sm"
           >
             <option value="">All Statuses</option>
             {ORDER_STATUSES.map((s) => (
-              <option key={s.value} value={s.value}>
+              <option key={s.value} value={s.value} className="bg-slate-800 text-white font-normal text-sm">
                 {s.label}
               </option>
             ))}
@@ -170,7 +345,7 @@ export default function AdminOrders() {
             onChange={(e) =>
               setDeliveryFilter(e.target.value as "all" | "pickup" | "delivery")
             }
-            className="px-4 py-2 bg-slate-900 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select text-base"
+            className="px-4 py-2 bg-slate-900 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select text-sm"
           >
             <option value="all">All Delivery Methods</option>
             <option value="delivery">Delivery</option>
@@ -179,184 +354,7 @@ export default function AdminOrders() {
         </div>
 
         {/* Orders List */}
-        {isLoading ? (
-          <div className="flex items-center justify-center h-64">
-            <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
-          </div>
-        ) : filteredOrders.length === 0 ? (
-          <div className="text-center py-12">
-            <ShoppingCart className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-            <p className="text-slate-400">No orders found</p>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {filteredOrders.map((order) => {
-              const statusInfo = getStatusInfo(order.status);
-              const StatusIcon = statusInfo.icon;
-              const isExpanded = expandedOrder === order.id;
-
-              return (
-                <div
-                  key={order.id}
-                  className="bg-slate-900/50 border border-slate-800 rounded overflow-hidden"
-                >
-                  {/* Order Header */}
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    className="p-6 cursor-pointer hover:bg-slate-800/30 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-inset"
-                    onClick={() =>
-                      setExpandedOrder(isExpanded ? null : order.id)
-                    }
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        setExpandedOrder(isExpanded ? null : order.id);
-                      }
-                    }}
-                    aria-expanded={isExpanded}
-                    aria-label={`Order ${order.id.slice(0, 8)}, ${statusInfo.label}, GH₵${order.total.toLocaleString()}`}
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                      <div className="flex items-center gap-4">
-                        <div
-                          className={`p-2 rounded bg-slate-800 ${statusInfo.color}`}
-                        >
-                          <StatusIcon className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-white flex items-center gap-2">
-                            Order #{order.id.slice(0, 8)}
-                            {order.paymentMethod === "store_pickup" && (
-                              <span className="flex items-center gap-1 text-[10px] uppercase font-bold bg-emerald-900/50 text-emerald-400 px-2 py-0.5 rounded border border-emerald-800/50">
-                                <Store className="w-3 h-3" /> Pickup
-                              </span>
-                            )}
-                          </p>
-                          <p className="text-sm text-slate-400">
-                            {formatDate(order.createdAt)}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="hidden md:block">
-                        <p className="font-medium text-white text-sm">
-                          {order.shippingInfo.firstName}{" "}
-                          {order.shippingInfo.lastName}
-                        </p>
-                        <div className="flex items-center gap-1 text-xs text-slate-400">
-                          <Phone className="w-3 h-3" />
-                          {order.shippingInfo.phone || "No phone"}
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-4">
-                        <div className="text-right">
-                          <p className="font-bold text-white">
-                            GH₵{order.total.toLocaleString()}
-                          </p>
-                          <p className="text-sm text-slate-400">
-                            {order.items.length} items
-                          </p>
-                        </div>
-
-                        {/* Status Dropdown */}
-                        <div
-                          role="presentation"
-                          onClick={(e) => e.stopPropagation()}
-                          onKeyDown={(e) => e.stopPropagation()}
-                        >
-                          <select
-                            value={order.status}
-                            onChange={(e) =>
-                              handleStatusChange(order.id, e.target.value)
-                            }
-                            disabled={updatingStatus === order.id}
-                            className={`px-3 py-1.5 rounded border text-sm font-medium ${statusInfo.color} bg-slate-800 border-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select pr-8`}
-                          >
-                            {ORDER_STATUSES.map((s) => (
-                              <option key={s.value} value={s.value}>
-                                {s.label}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <ChevronDown
-                          className={`w-5 h-5 text-slate-400 transition-transform ${
-                            isExpanded ? "rotate-180" : ""
-                          }`}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Order Details (Expanded) */}
-                  {isExpanded && (
-                    <div className="px-6 pb-6 border-t border-slate-800 pt-4">
-                      <div className="grid md:grid-cols-2 gap-6">
-                        {/* Customer Info */}
-                        <div>
-                          <h3 className="text-sm font-medium text-slate-400 mb-3">
-                            Customer Information
-                          </h3>
-                          <div className="space-y-2 text-sm">
-                            <p className="text-white">
-                              {order.shippingInfo.firstName}{" "}
-                              {order.shippingInfo.lastName}
-                            </p>
-                            <p className="text-slate-400">
-                              {order.shippingInfo.email}
-                            </p>
-                            <p className="text-slate-400">
-                              {order.shippingInfo.phone}
-                            </p>
-                            <p className="text-slate-400">
-                              {order.shippingInfo.address},{" "}
-                              {order.shippingInfo.city}
-                            </p>
-                            <p className="text-slate-400">
-                              {order.shippingInfo.region}{" "}
-                              {order.shippingInfo.postalCode}
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Order Items */}
-                        <div>
-                          <h3 className="text-sm font-medium text-slate-400 mb-3">
-                            Order Items
-                          </h3>
-                          <div className="space-y-3">
-                            {order.items.map((item) => (
-                              <div
-                                key={item.id}
-                                className="flex items-center gap-3"
-                              >
-                                <span className="text-xl">{item.image}</span>
-                                <div className="flex-1 min-w-0">
-                                  <p className="text-white text-sm truncate">
-                                    {item.name}
-                                  </p>
-                                  <p className="text-slate-400 text-xs">
-                                    Qty: {item.quantity} × GH₵{item.price}
-                                  </p>
-                                </div>
-                                <p className="text-white font-medium">
-                                  GH₵{(item.price * item.quantity).toFixed(2)}
-                                </p>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
+        {ordersContent}
       </div>
     </AdminLayout>
   );
