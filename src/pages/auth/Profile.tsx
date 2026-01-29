@@ -316,7 +316,7 @@ const Profile = () => {
             <button
               onClick={handleResendVerification}
               disabled={resendingEmail}
-              className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded transition-colors disabled:opacity-50"
+              className="cursor-pointer flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded transition-colors disabled:opacity-50"
             >
               {resendingEmail ? (
                 <Loader2 className="w-4 h-4 animate-spin" />

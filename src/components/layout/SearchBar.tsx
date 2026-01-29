@@ -61,7 +61,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
     return (
       <div className={`relative ${className}`}>
         <form onSubmit={handleSearch} className="relative">
-          <div className="flex items-center w-full rounded-full bg-slate-100 dark:bg-slate-800 border border-transparent focus-within:border-emerald-500 pr-10">
+          <div className="flex items-center w-full rounded bg-slate-100 dark:bg-slate-800 border border-transparent focus-within:border-emerald-500 pr-10">
             <button
               type="submit"
               className="flex items-center justify-center w-10 h-10 text-slate-500 dark:text-slate-400 hover:text-emerald-600 transition-colors shrink-0"

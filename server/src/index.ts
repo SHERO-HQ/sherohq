@@ -62,15 +62,25 @@ app.use(
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
 
+      // Normalize origin and allowedOrigins by removing trailing slashes for resilient matching
+      const normalizedOrigin = origin.replace(/\/$/, "");
+      const normalizedAllowedOrigins = allowedOrigins.map((o) =>
+        o.replace(/\/$/, ""),
+      );
+
       const isAllowed =
-        allowedOrigins.includes(origin) ||
+        normalizedAllowedOrigins.includes(normalizedOrigin) ||
         process.env.NODE_ENV !== "production";
 
       if (isAllowed) {
         callback(null, true);
       } else {
         console.warn(`🚫 CORS blocked for origin: ${origin}`);
-        console.warn(`📋 Allowed origins: ${allowedOrigins.join(", ")}`);
+        console.warn(`📋 Normalized origin: ${normalizedOrigin}`);
+        console.warn(
+          `📋 Allowed origins (normalized): ${normalizedAllowedOrigins.join(", ")}`,
+        );
+        console.warn(`🛠️ NODE_ENV: ${process.env.NODE_ENV}`);
         callback(new Error("Not allowed by CORS"));
       }
     },

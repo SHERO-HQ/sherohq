@@ -6,7 +6,7 @@ import { ToggleTheme } from "./toggle-theme";
 import { NavLink } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
-import { ShoppingCart, User } from "lucide-react";
+import { LogOut, ShoppingCart, User } from "lucide-react";
 
 import { AnimatePresence, easeOut, motion } from "motion/react";
 import { navLinkClass, navLinkClassVariant } from "@/lib/utils";
@@ -124,7 +124,7 @@ const Nav = () => {
             </NavLink>
 
             {/* Desktop Menu */}
-            <ul className="hidden lg:flex items-center gap-8">
+            <ul className="hidden lg:flex items-center gap-3">
               {navLinks.map((item) => (
                 <li key={item}>
                   <NavLink
@@ -138,19 +138,19 @@ const Nav = () => {
             </ul>
 
             {/* Global Actions (Always Visible) */}
-            <div className="flex items-center gap-2 lg:gap-4 ml-auto lg:ml-0 mr-4 lg:mr-0">
+            <div className="flex items-center gap-2 mr-2 ml-auto">
               {/* Search */}
               <SearchBar className="hidden lg:block" />
 
               {/* Contact Us - Desktop Only */}
               <NavLink
                 to="/contact-us"
-                className="hidden lg:inline-flex group items-center gap-2 
-                         text-white bg-emerald-600 dark:bg-emerald-500
+                className="hidden lg:inline-flex group items-center gap-1 
+                         text-white dark:text-slate-900 bg-emerald-600 dark:bg-emerald-500
                          px-6 py-2 rounded font-semibold text-sm
                          hover:bg-emerald-700 dark:hover:bg-emerald-600 
                          hover:shadow-lg hover:shadow-emerald-500/25
-                         hover:gap-3
+                         hover:gap-0.5
                          transition-all duration-300"
               >
                 <span>Contact Us</span>
@@ -209,6 +209,7 @@ const Nav = () => {
                       onClick={() => logout()}
                       className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
                     >
+                      <LogOut className="w-4 h-4" />
                       Logout
                     </button>
                   </div>
