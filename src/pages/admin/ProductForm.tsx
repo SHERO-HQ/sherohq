@@ -386,7 +386,7 @@ export default function ProductForm() {
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                   required
                 />
               </div>
@@ -404,7 +404,7 @@ export default function ProductForm() {
                   onChange={(e) =>
                     setFormData({ ...formData, category: e.target.value })
                   }
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select text-base"
                   required
                 >
                   <option value="">Select category</option>
@@ -432,7 +432,7 @@ export default function ProductForm() {
                   onChange={(e) =>
                     setFormData({ ...formData, price: Number(e.target.value) })
                   }
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                   required
                   min="0"
                   step="0.01"
@@ -458,7 +458,7 @@ export default function ProductForm() {
                         : null,
                     })
                   }
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                   min="0"
                   step="0.01"
                 />
@@ -482,7 +482,7 @@ export default function ProductForm() {
                       inStock: Number(e.target.value) > 0,
                     })
                   }
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
                   min="0"
                 />
               </div>
@@ -506,7 +506,7 @@ export default function ProductForm() {
                   })
                 }
                 placeholder="e.g., Best Seller, New"
-                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
 
@@ -524,7 +524,7 @@ export default function ProductForm() {
                   setFormData({ ...formData, description: e.target.value })
                 }
                 rows={3}
-                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none"
               />
             </div>
 
@@ -541,7 +541,7 @@ export default function ProductForm() {
                 onChange={(e) => setFeaturesText(e.target.value)}
                 rows={4}
                 placeholder="Feature 1&#10;Feature 2&#10;Feature 3"
-                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none font-mono text-sm"
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none font-mono text-sm"
               />
             </div>
 
@@ -558,7 +558,7 @@ export default function ProductForm() {
                 onChange={(e) => setSpecsText(e.target.value)}
                 rows={4}
                 placeholder="Processor: Apple M3&#10;Memory: 16GB&#10;Storage: 512GB"
-                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none font-mono text-sm"
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 resize-none font-mono text-sm"
               />
             </div>
           </div>
@@ -566,14 +566,14 @@ export default function ProductForm() {
           <div className="flex justify-end gap-4">
             <Link
               to="/admin/products"
-              className="px-6 py-3 bg-slate-800 text-white rounded hover:bg-slate-700 transition-colors"
+              className="px-6 py-2 bg-slate-800 text-white rounded hover:bg-slate-700 transition-colors"
             >
               Cancel
             </Link>
             <button
               type="submit"
               disabled={isSaving || isUploading}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded hover:from-purple-500 hover:to-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded hover:from-purple-500 hover:to-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               {isSaving ? (
                 <>

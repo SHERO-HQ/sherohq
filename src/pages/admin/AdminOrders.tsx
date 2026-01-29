@@ -154,7 +154,7 @@ export default function AdminOrders() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 bg-slate-900 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="px-4 py-2 bg-slate-900 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select text-base"
           >
             <option value="">All Statuses</option>
             {ORDER_STATUSES.map((s) => (
@@ -170,7 +170,7 @@ export default function AdminOrders() {
             onChange={(e) =>
               setDeliveryFilter(e.target.value as "all" | "pickup" | "delivery")
             }
-            className="px-4 py-2 bg-slate-900 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="px-4 py-2 bg-slate-900 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select text-base"
           >
             <option value="all">All Delivery Methods</option>
             <option value="delivery">Delivery</option>
@@ -272,7 +272,7 @@ export default function AdminOrders() {
                               handleStatusChange(order.id, e.target.value)
                             }
                             disabled={updatingStatus === order.id}
-                            className={`px-3 py-1.5 rounded border text-sm font-medium ${statusInfo.color} bg-slate-800 border-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500`}
+                            className={`px-3 py-1.5 rounded border text-sm font-medium ${statusInfo.color} bg-slate-800 border-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select pr-8`}
                           >
                             {ORDER_STATUSES.map((s) => (
                               <option key={s.value} value={s.value}>

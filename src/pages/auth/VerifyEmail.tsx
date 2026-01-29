@@ -66,7 +66,7 @@ const VerifyEmail = () => {
               </p>
               <Link
                 to="/profile"
-                className="inline-block px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded transition-colors"
+                className="inline-block px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded transition-colors"
               >
                 Go to Profile
               </Link>
@@ -86,7 +86,7 @@ const VerifyEmail = () => {
               </p>
               <Link
                 to="/login"
-                className="inline-block px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded transition-colors"
+                className="inline-block px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded transition-colors"
               >
                 Go to Login
               </Link>

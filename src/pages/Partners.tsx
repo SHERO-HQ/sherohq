@@ -88,7 +88,7 @@ const Partners = () => {
                   </li>
                 ))}
               </ul>
-              <button className="cursor-pointer px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-all shadow-lg shadow-emerald-500/25">
+              <button className="cursor-pointer px-8 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-all shadow-lg shadow-emerald-500/25">
                 Apply Now
               </button>
             </div>

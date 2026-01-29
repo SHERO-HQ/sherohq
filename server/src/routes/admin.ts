@@ -1,6 +1,8 @@
 import { Router, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
+import { randomBytes } from "node:crypto";
+import { rateLimit } from "express-rate-limit";
 import db from "../db/database";
 import { adminAuth, AdminRequest } from "../middleware/adminAuth";
 
@@ -15,8 +17,17 @@ interface AdminUserRow {
   createdAt: string;
 }
 
+// Stricter rate limiting for admin login: 3 attempts per 15 minutes
+const adminLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 3,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many admin login attempts, please try again later." },
+});
+
 // POST /api/admin/login
-router.post("/login", async (req: Request, res: Response) => {
+router.post("/login", adminLimiter, async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
     console.log(`🔐 Admin login attempt: ${username}`);
@@ -49,7 +60,7 @@ router.post("/login", async (req: Request, res: Response) => {
     }
 
     // Create session token
-    const token = uuidv4();
+    const token = randomBytes(32).toString("hex");
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
     // Delete any existing sessions for this admin

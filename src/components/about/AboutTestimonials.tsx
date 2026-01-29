@@ -12,35 +12,35 @@ import FeedbackModal from "@/components/common/FeedbackModal";
 const testimonials = [
   {
     quote:
-      "SHERO transformed our outdated legacy system into a high-performance cloud platform. The transition was seamless, and the results were immediate.",
-    author: "Jennifer Wu",
+      "SHERO transformed our outdated retail operations into a world-class e-commerce engine. Their understanding of the Ghanaian market dynamic coupled with global tech standards is unmatched.",
+    author: "Kwame Mensah",
+    role: "CEO",
+    company: "Osei Digitals, Accra",
+    image: undefined,
+  },
+  {
+    quote:
+      "Their custom inventory software has saved us countless hours. They didn't just provide a tool; they provided a solution that truly understands the scale of West African logistics.",
+    author: "Abena Osei",
+    role: "Operations Lead",
+    company: "Gold Coast Logistics, Kumasi",
+    image: undefined,
+  },
+  {
+    quote:
+      "Reliability is key in our industry. SHERO's networking solutions and security protocols have given us the confidence to expand our digital banking services across the region.",
+    author: "Kofi Asare",
     role: "CTO",
-    company: "TechFlow Solutions",
+    company: "Asante Fintech",
+    image: undefined,
   },
   {
     quote:
-      "Their attention to detail and commitment to quality is unmatched. They didn't just build what we asked for; they built what we needed to grow.",
-    author: "David Ross",
-    role: "Director of Operations",
-    company: "Apex Logistics",
-    image:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=faces",
-  },
-  {
-    quote:
-      "The team at SHERO are true partners. They understood our business goals and delivered a product that exceeded our wildest expectations.",
-    author: "Sarah L.",
-    role: "Founder",
-    company: "Bloom Health",
-    image:
-      "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop&crop=faces",
-  },
-  {
-    quote:
-      "Exceptional service and distinct technical expertise. Highly recommended for any enterprise needing serious scale.",
-    author: "Michael Chang",
-    role: "VP Engineering",
-    company: "Nebula Corp",
+      "Working with SHERO was a breath of fresh air. They turned our complex brand vision into a seamless digital experience that resonates with our local and international audience.",
+    author: "Efua Boateng",
+    role: "Creative Director",
+    company: "Adinkra Media Group",
+    image: undefined,
   },
 ];
 
@@ -79,7 +79,7 @@ const AboutTestimonials = () => {
   return (
     <section className="py-24 bg-white dark:bg-slate-950 overflow-hidden relative border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
       {/* Background decoration */}
-      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
+      <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-emerald-500/20 to-transparent" />
 
       {/* Soft Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none transition-colors duration-300" />
@@ -118,14 +118,14 @@ const AboutTestimonials = () => {
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
               className="flex"
             >
-              {testimonials.map((item, index) => (
-                <div key={index} className="w-full shrink-0 px-4">
-                  <div className="h-full bg-slate-50/50 dark:bg-slate-900/40 backdrop-blur-md p-8 md:p-12 rounded border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 transition-all duration-300 flex flex-col relative group transition-all duration-300">
-                    <div className="absolute top-8 right-8 p-3 rounded bg-white/10 dark:bg-white/5 border border-slate-200 dark:border-white/5 transition-colors duration-300">
-                      <Quote className="w-6 h-6 text-emerald-500" />
+              {testimonials.map((item) => (
+                <div key={item.author} className="w-full shrink-0 px-4">
+                  <div className="h-full bg-slate-50/50 dark:bg-slate-900/40 backdrop-blur-md p-8 md:p-12 rounded border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 transition-all duration-300 flex flex-col relative group">
+                    <div className="absolute lg:top-8 top-3 right-3 p-3 transition-colors duration-300">
+                      <Quote className="size-10 text-emerald-500/40 -z-10" />
                     </div>
 
-                    <blockquote className="text-lg md:text-xl text-slate-700 dark:text-slate-300 italic mb-10 relative z-10 leading-relaxed font-light transition-colors duration-300">
+                    <blockquote className="text-slate-700 dark:text-slate-300 italic mb-10 relative z-10 leading-relaxed font-light transition-colors duration-300">
                       "{item.quote}"
                     </blockquote>
 
@@ -141,7 +141,7 @@ const AboutTestimonials = () => {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-blue-600 to-emerald-600 flex items-center justify-center text-white font-bold text-sm tracking-wider">
+                          <div className="w-full h-full bg-linear-to-br from-blue-600 to-emerald-600 flex items-center justify-center text-white font-bold text-sm tracking-wider">
                             {getInitials(item.author)}
                           </div>
                         )}
@@ -172,12 +172,12 @@ const AboutTestimonials = () => {
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <div className="flex gap-2">
-                {testimonials.map((_, idx) => (
+                {testimonials.map((item) => (
                   <button
-                    key={idx}
-                    onClick={() => setCurrentIndex(idx)}
+                    key={`dot-${item.author}`}
+                    onClick={() => setCurrentIndex(testimonials.indexOf(item))}
                     className={`h-2 rounded transition-all duration-300 ${
-                      idx === currentIndex
+                      testimonials.indexOf(item) === currentIndex
                         ? "w-8 bg-emerald-500"
                         : "w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-500"
                     }`}
@@ -193,12 +193,12 @@ const AboutTestimonials = () => {
             </div>
 
             <div className="hidden md:flex gap-2">
-              {testimonials.map((_, idx) => (
+              {testimonials.map((item) => (
                 <button
-                  key={idx}
-                  onClick={() => setCurrentIndex(idx)}
+                  key={`desktop-dot-${item.author}`}
+                  onClick={() => setCurrentIndex(testimonials.indexOf(item))}
                   className={`h-2 rounded transition-all duration-300 ${
-                    idx === currentIndex
+                    testimonials.indexOf(item) === currentIndex
                       ? "w-8 bg-emerald-500"
                       : "w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-500"
                   }`}
@@ -214,7 +214,7 @@ const AboutTestimonials = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex flex-col items-center gap-4 p-8 rounded bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-white/10 shadow-xl dark:shadow-2xl relative overflow-hidden max-w-lg mx-auto w-full transition-all duration-300"
+            className="inline-flex flex-col items-center gap-4 p-8 rounded bg-linear-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-white/10 shadow-xl dark:shadow-2xl relative overflow-hidden max-w-lg mx-auto w-full transition-all duration-300"
           >
             <div className="p-3 bg-emerald-500/10 rounded text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 transition-colors duration-300">
               <MessageSquarePlus className="w-6 h-6" />

@@ -18,7 +18,7 @@ const LandingAbout = () => {
   ];
 
   return (
-    <section className="relative w-full py-24 lg:py-32 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-300">
+    <section className="relative w-full py-24 lg:py-22 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-300">
       {/* Background Ambience */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-emerald-500/5 rounded-full blur-[120px]" />
@@ -42,7 +42,7 @@ const LandingAbout = () => {
               </span>
 
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-sora font-bold text-slate-900 dark:text-slate-100 leading-tight transition-colors duration-300">
-                Empowering the <br />
+                Redefining the <br />
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-700 dark:from-blue-700 dark:to-emerald-500 transition-all duration-500">
                   Future of Tech
                 </span>
@@ -52,7 +52,7 @@ const LandingAbout = () => {
                 SHERO is more than a tech company. We are architects of
                 innovation, bridging the gap between hardware excellence and
                 digital potential. Our mission is to redefine what is possible
-                for businesses and individuals alike.
+                for communities, businesses and individuals alike.
               </p>
             </div>
 
@@ -112,7 +112,10 @@ const LandingAbout = () => {
                 <p className="text-xs font-bold text-white tracking-wider">
                   10x
                 </p>
-                <p className="text-[10px] text-emerald-300"> Efficiency Impact</p>
+                <p className="text-[10px] text-emerald-300">
+                  {" "}
+                  Efficiency Impact
+                </p>
               </div>
             </motion.div>
 
@@ -123,7 +126,7 @@ const LandingAbout = () => {
               }
               label="Global Scale"
               className="absolute top-10 right-10 z-10"
-              delay={0.8}
+              // delay={0.8}
             />
             <FloatingCard
               icon={
@@ -131,7 +134,7 @@ const LandingAbout = () => {
               }
               label="Hardware"
               className="absolute bottom-20 left-0 z-30"
-              delay={0.6}
+              // delay={0.6}
             />
             <FloatingCard
               icon={
@@ -139,7 +142,7 @@ const LandingAbout = () => {
               }
               label="Software"
               className="absolute bottom-10 right-20 z-10"
-              delay={0.8}
+              // delay={0.8}
             />
 
             {/* Abstract Background Mesh for Column */}
@@ -159,30 +162,30 @@ const FloatingCard = ({
   icon,
   label,
   className,
-  delay,
+  // delay,
 }: {
   icon: React.ReactNode;
   label: string;
   className?: string;
-  delay: number;
+  // delay: number;
 }) => (
-  <motion.div
-    initial={{ y: 20, opacity: 0 }}
-    whileInView={{ y: 0, opacity: 1 }}
-    animate={{
-      y: [0, -10, 0],
-    }}
-    transition={{
-      y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: delay * 2 },
-      opacity: { duration: 0.5, delay },
-    }}
-    className={`flex items-center gap-3 px-4 py-3 rounded bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-slate-700 transition-colors duration-300 ${className}`}
+  <div
+    // initial={{ y: 20, opacity: 0 }}
+    // whileInView={{ y: 0, opacity: 1 }}
+    // animate={{
+    //   y: [0, -10, 0],
+    // }}
+    // transition={{
+    //   y: { duration: 4, repeat: Infinity, ease: "easeInOut", delay: delay * 2 },
+    //   opacity: { duration: 0.5, delay },
+    // }}
+    className={`flex items-center gap-3 px-4 py-2 rounded bg-white dark:bg-slate-800 shadow-lg border border-slate-200 dark:border-slate-700 transition-colors duration-300 ${className}`}
   >
     {icon}
     <span className="text-sm font-semibold text-slate-700 dark:text-slate-200 transition-colors duration-300">
       {label}
     </span>
-  </motion.div>
+  </div>
 );
 
 export default LandingAbout;

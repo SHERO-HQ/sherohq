@@ -16,14 +16,14 @@ const ProductHero: React.FC<ProductHeroProps> = ({ onSearch }) => {
   };
 
   return (
-    <section className="relative w-full py-20 lg:py-24 overflow-hidden dark:bg-slate-950 bg-slate-200">
+    <section className="relative w-full py-20 lg:py-24 overflow-hidden dark:bg-slate-950 bg-slate-50">
       {/* Animated Grid Background */}
       <div className="absolute inset-0 hero-grid-pattern opacity-40" />
 
       {/* Retail/Showcase Accent Orbs (Pink/Purple) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-[100px]" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/5 dark:bg-blue-500/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-emerald-500/5 dark:bg-emerald-500/5 rounded-full blur-[100px]" />
       </div>
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -41,8 +41,8 @@ const ProductHero: React.FC<ProductHeroProps> = ({ onSearch }) => {
 
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-sora font-bold dark:text-white text-slate-900 mb-6 tracking-tight">
             Premium{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary dark:from-blue-600 dark:to-emerald-600">
-              Tech Gear
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-600 dark:from-blue-400 dark:to-emerald-400">
+              Gear
             </span>
           </h1>
           <p className="text-base dark:text-slate-400 text-slate-700 max-w-2xl mx-auto leading-relaxed">

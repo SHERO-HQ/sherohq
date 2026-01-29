@@ -334,7 +334,7 @@ const Nav = () => {
                     onClick={() => setIsOpen(false)}
                     className="flex w-full items-center justify-center gap-2 
                                text-white bg-emerald-600 dark:bg-emerald-500
-                               px-6 py-3 rounded font-semibold
+                               px-6 py-2 rounded font-semibold
                                hover:bg-emerald-700 dark:hover:bg-emerald-600
                                transition-all duration-300 shadow-lg shadow-emerald-500/25"
                   >

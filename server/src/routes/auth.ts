@@ -2,10 +2,20 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 import { randomBytes } from "node:crypto";
+import { rateLimit } from "express-rate-limit";
 import db from "../db/database";
 import { notificationService } from "../services/NotificationService";
 
 const router = express.Router();
+
+// Stricter rate limiting for auth routes: 5 attempts per 15 minutes
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many attempts, please try again in 15 minutes." },
+});
 
 // Helper function to get user from token
 async function getUserFromToken(authHeader: string | undefined) {
@@ -33,7 +43,7 @@ async function getUserFromToken(authHeader: string | undefined) {
 }
 
 // Register
-router.post("/register", async (req, res) => {
+router.post("/register", authLimiter, async (req, res) => {
   try {
     const { email, password, name, phone } = req.body;
 
@@ -77,7 +87,7 @@ router.post("/register", async (req, res) => {
     );
 
     // Auto login
-    const token = uuidv4();
+    const token = randomBytes(32).toString("hex");
     const sessionId = uuidv4();
     // Expires in 30 days
     const expiresAt = new Date(
@@ -150,7 +160,7 @@ router.post("/verify-email", async (req, res) => {
 });
 
 // Resend Verification Email
-router.post("/resend-verification", async (req, res) => {
+router.post("/resend-verification", authLimiter, async (req, res) => {
   try {
     const { email } = req.body;
 
@@ -204,7 +214,7 @@ router.post("/resend-verification", async (req, res) => {
 });
 
 // Login
-router.post("/login", async (req, res) => {
+router.post("/login", authLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
     console.log(`🔑 Login attempt for: ${email}`);
@@ -227,7 +237,7 @@ router.post("/login", async (req, res) => {
       return;
     }
 
-    const token = uuidv4();
+    const token = randomBytes(32).toString("hex");
     const sessionId = uuidv4();
     const expiresAt = new Date(
       Date.now() + 30 * 24 * 60 * 60 * 1000,

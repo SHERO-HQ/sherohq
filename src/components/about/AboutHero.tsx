@@ -12,15 +12,15 @@ import type { ElementType } from "react";
 
 const AboutHero = () => {
   return (
-    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-slate-100 dark:bg-slate-950 pt-20">
+    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-950 pt-20">
       {/* Background Effects */}
       {/* Animated Grid Background */}
       <div className="absolute inset-0 hero-grid-pattern opacity-50" />
 
       {/* Gradient Orbs - Purple/Indigo theme for About */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[100px]" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/5 dark:bg-purple-500/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/5 dark:bg-indigo-500/5 rounded-full blur-[100px]" />
       </div>
 
       <div className="container px-4 md:px-6 relative z-10 text-center">

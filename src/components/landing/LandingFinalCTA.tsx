@@ -4,7 +4,7 @@ import { ArrowRight, Rocket, WandSparkles } from "lucide-react";
 
 const LandingFinalCTA = () => {
   return (
-    <section className="relative w-full py-24 lg:py-32 overflow-hidden dark:bg-slate-950">
+    <section className="relative w-full py-24 lg:py-22 overflow-hidden dark:bg-slate-950">
       {/* Container */}
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Massive Glass Card */}

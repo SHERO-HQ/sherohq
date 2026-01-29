@@ -173,7 +173,7 @@ export default function AdminProducts() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-4 py-3 bg-slate-900/50 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="px-4 py-3 bg-slate-900/50 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select text-base"
           >
             <option value="">All Categories</option>
             {categories.map((c) => (
@@ -186,7 +186,7 @@ export default function AdminProducts() {
           <select
             value={stockFilter}
             onChange={(e) => setStockFilter(e.target.value)}
-            className="px-4 py-3 bg-slate-900/50 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+            className="px-4 py-3 bg-slate-900/50 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select text-base"
           >
             <option value="">All Stock Status</option>
             <option value="instock">In Stock</option>

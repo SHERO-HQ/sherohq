@@ -180,7 +180,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-bold rounded transition-colors flex items-center justify-center gap-2"
+              className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-bold rounded transition-colors flex items-center justify-center gap-2"
             >
               {submitting ? (
                 <>

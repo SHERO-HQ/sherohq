@@ -185,7 +185,7 @@ const LandingProducts = () => {
         >
           <NavLink
             to="/products"
-            className="inline-flex items-center gap-3 px-8 py-3 rounded
+            className="inline-flex items-center gap-3 px-8 py-2 rounded
                      border-2 border-slate-300 dark:border-slate-700
                      text-slate-700 dark:text-slate-300 font-semibold
                      hover:border-emerald-500 dark:hover:border-emerald-500

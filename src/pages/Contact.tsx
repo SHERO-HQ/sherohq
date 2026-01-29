@@ -45,9 +45,8 @@ const Contact = () => {
                   </span>
                 </h1>
                 <p className="text-base text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed">
-                  Ready to transform your vision into reality? Our team of
-                  architects and engineers is standing by to encrypt your ideas
-                  into scalable solutions.
+                  Ready to redefine your vision into possibilities? Our team of
+                  developers and technicians is standing by to bring your ideas to life.
                 </p>
               </div>
 
@@ -58,7 +57,7 @@ const Contact = () => {
                     <Mail className="w-5 h-5 text-teal-700 dark:text-emerald-400" />
                   }
                   label="Email Us"
-                  value="hello@sherotech.com"
+                  value="info.sherohq@gmail.com"
                   delay={0.2}
                 />
                 <ContactItem
@@ -66,15 +65,15 @@ const Contact = () => {
                     <Phone className="w-5 h-5 text-blue-700 dark:text-blue-400" />
                   }
                   label="Call Us"
-                  value="+1 (555) 123-4567"
+                  value="+233 (54) 871-1582"
                   delay={0.3}
                 />
                 <ContactItem
                   icon={
                     <MapPin className="w-5 h-5 text-indigo-700 dark:text-indigo-400" />
                   }
-                  label="Visit HQ"
-                  value="123 Innovation Dr, Tech City, TC 90210"
+                  label="Visit Us"
+                  value="Tamale, Northern Region, Ghana"
                   delay={0.4}
                 />
               </div>

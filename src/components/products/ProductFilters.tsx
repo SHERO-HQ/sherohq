@@ -174,7 +174,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-3 font-medium whitespace-nowrap
+                  className={`flex items-center gap-2 px-4 py-2 font-medium whitespace-nowrap
                            border-b-2 transition-colors cursor-pointer ${
                              activeTab === tab.id
                                ? "dark:border-emerald-400 border-emerald-900 dark:text-emerald-400 text-emerald-900"

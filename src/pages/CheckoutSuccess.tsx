@@ -105,7 +105,7 @@ const CheckoutSuccess = () => {
               </p>
               <button
                 onClick={() => navigate("/products")}
-                className="px-8 py-3 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-colors"
+                className="px-8 py-2 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-colors"
               >
                 Return to Shop
               </button>
@@ -143,13 +143,13 @@ const CheckoutSuccess = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
                   onClick={() => navigate("/products")}
-                  className="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition-all shadow-lg shadow-emerald-500/20"
+                  className="px-8 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition-all shadow-lg shadow-emerald-500/20"
                 >
                   Continue Shopping
                 </button>
                 <button
                   onClick={() => navigate("/")}
-                  className="px-8 py-3 border-2 border-slate-200 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded-lg font-bold transition-colors"
+                  className="px-8 py-2 border-2 border-slate-200 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded-lg font-bold transition-colors"
                 >
                   Return Home
                 </button>

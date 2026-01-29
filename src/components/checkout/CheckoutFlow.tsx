@@ -409,7 +409,7 @@ const CheckoutFlow = () => {
                   <div className="flex justify-end mt-8">
                     <button
                       onClick={handleNext}
-                      className="cursor-pointer flex items-center gap-2 px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-colors"
+                      className="cursor-pointer flex items-center gap-2 px-8 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-colors"
                     >
                       Continue to Shipping
                       <ChevronRight className="w-5 h-5" />
@@ -448,7 +448,7 @@ const CheckoutFlow = () => {
                               firstName: e.target.value,
                             })
                           }
-                          className="w-full px-4 py-3 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                           placeholder="John"
                         />
                       </div>
@@ -466,7 +466,7 @@ const CheckoutFlow = () => {
                               lastName: e.target.value,
                             })
                           }
-                          className="w-full px-4 py-3 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                           placeholder="Doe"
                         />
                       </div>
@@ -487,7 +487,7 @@ const CheckoutFlow = () => {
                             email: e.target.value,
                           })
                         }
-                        className="w-full px-4 py-3 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                         placeholder="john@example.com"
                       />
                     </div>
@@ -508,7 +508,7 @@ const CheckoutFlow = () => {
                           });
                           if (phoneError) setPhoneError("");
                         }}
-                        className={`w-full px-4 py-3 rounded border ${
+                        className={`w-full px-4 py-2 rounded border ${
                           phoneError
                             ? "border-red-500 focus:ring-red-500"
                             : "border-slate-200 dark:border-slate-700 focus:ring-emerald-500"
@@ -537,7 +537,7 @@ const CheckoutFlow = () => {
                             address: e.target.value,
                           })
                         }
-                        className="w-full px-4 py-3 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                         placeholder="123 Main Street"
                       />
                     </div>
@@ -557,7 +557,7 @@ const CheckoutFlow = () => {
                               city: e.target.value,
                             })
                           }
-                          className="w-full px-4 py-3 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                           placeholder="Accra"
                         />
                       </div>
@@ -574,7 +574,7 @@ const CheckoutFlow = () => {
                               region: e.target.value,
                             })
                           }
-                          className="w-full px-4 py-3 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 custom-select text-base"
                         >
                           <option value="">Select Region</option>
                           <option value="Greater Accra">Greater Accra</option>
@@ -591,7 +591,7 @@ const CheckoutFlow = () => {
                   <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-4 mt-8">
                     <button
                       onClick={handleBack}
-                      className="cursor-pointer flex items-center justify-center gap-2 px-8 py-3 w-full sm:w-auto border-2 border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
+                      className="cursor-pointer flex items-center justify-center gap-2 px-8 py-2 w-full sm:w-auto border-2 border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
                     >
                       <ChevronLeft className="w-5 h-5" />
                       Back to Cart
@@ -599,7 +599,7 @@ const CheckoutFlow = () => {
                     <button
                       onClick={handleNext}
                       disabled={!isStep2Valid()}
-                      className="cursor-pointer flex items-center justify-center gap-2 px-8 py-3 w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded font-bold transition-colors"
+                      className="cursor-pointer flex items-center justify-center gap-2 px-8 py-2 w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded font-bold transition-colors"
                     >
                       Continue to Payment
                       <ChevronRight className="w-5 h-5" />
@@ -746,7 +746,7 @@ const CheckoutFlow = () => {
                   <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-4 mt-8">
                     <button
                       onClick={handleBack}
-                      className="cursor-pointer flex items-center justify-center gap-2 px-8 py-3 w-full sm:w-auto border-2 border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
+                      className="cursor-pointer flex items-center justify-center gap-2 px-8 py-2 w-full sm:w-auto border-2 border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
                     >
                       <ChevronLeft className="w-5 h-5" />
                       Back
@@ -754,7 +754,7 @@ const CheckoutFlow = () => {
                     <button
                       onClick={handlePlaceOrder}
                       disabled={isSubmitting}
-                      className="cursor-pointer flex items-center justify-center gap-2 px-8 py-3 w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 disabled:cursor-not-allowed text-white rounded font-bold transition-colors"
+                      className="cursor-pointer flex items-center justify-center gap-2 px-8 py-2 w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 disabled:cursor-not-allowed text-white rounded font-bold transition-colors"
                     >
                       {isSubmitting ? "Processing..." : "Place Order"}
                       <CheckCircle className="w-5 h-5" />
@@ -812,13 +812,13 @@ const CheckoutFlow = () => {
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <button
                       onClick={() => navigate("/products")}
-                      className="cursor-pointer px-8 py-3 border-2 border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
+                      className="cursor-pointer px-8 py-2 border-2 border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
                     >
                       Continue Shopping
                     </button>
                     <button
                       onClick={() => navigate("/")}
-                      className="cursor-pointer px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-colors"
+                      className="cursor-pointer px-8 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-colors"
                     >
                       Back to Home
                     </button>
@@ -850,7 +850,7 @@ const CheckoutFlow = () => {
                 </p>
                 <button
                   onClick={() => navigate("/contact-us")}
-                  className="cursor-pointer w-full px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-colors"
+                  className="cursor-pointer w-full px-8 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-colors"
                 >
                   Leave us a feedback
                 </button>

@@ -181,7 +181,7 @@ const ShopPage = () => {
           <div className="lg:hidden mb-4">
             <button
               onClick={() => setShowMobileFilters(true)}
-              className="w-full flex items-center justify-center gap-2 cursor-pointer px-4 py-3 dark:bg-slate-900/80 bg-slate-400/20 hover:bg-emerald-400/20 backdrop-blur-md border border-white/10 rounded font-medium dark:text-slate-200 text-slate-800 shadow-md hover:border-emerald-500/50 transition-colors"
+              className="w-full flex items-center justify-center gap-2 cursor-pointer px-4 py-2 dark:bg-slate-900/80 bg-slate-400/20 hover:bg-emerald-400/20 backdrop-blur-md border border-white/10 rounded font-medium dark:text-slate-200 text-slate-800 shadow-md hover:border-emerald-500/50 transition-colors"
             >
               <SlidersHorizontal />
               <span>Filter Products</span>
@@ -216,7 +216,7 @@ const ShopPage = () => {
                   onChange={(e) =>
                     handleFilterChange({ ...filters, sortBy: e.target.value })
                   }
-                  className="text-sm border-none bg-transparent font-medium text-white focus:ring-0 cursor-pointer [&>option]:text-slate-900"
+                  className="text-sm border-none bg-transparent font-medium text-white focus:ring-0 cursor-pointer [&>option]:text-slate-900 custom-select pr-8"
                 >
                   <option value="newest">Newest</option>
                   <option value="price-low">Price: Low to High</option>

@@ -99,11 +99,11 @@ const Support = () => {
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="cursor-pointer flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-colors">
+                <button className="cursor-pointer flex items-center gap-2 px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-colors">
                   <Phone className="w-4 h-4" />
                   Call Support
                 </button>
-                <button className="cursor-pointer flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded font-bold transition-colors">
+                <button className="cursor-pointer flex items-center gap-2 px-6 py-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded font-bold transition-colors">
                   <Mail className="w-4 h-4" />
                   Email Us
                 </button>

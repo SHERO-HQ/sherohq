@@ -167,7 +167,7 @@ export default function OrderRatingModal({
                   <button
                     type="submit"
                     disabled={rating === 0 || status === "submitting"}
-                    className="w-full py-3 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                    className="w-full py-2 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                   >
                     {status === "submitting" ? (
                       <>

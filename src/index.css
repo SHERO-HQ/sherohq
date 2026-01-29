@@ -4,6 +4,15 @@
 @import '@fontsource-variable/jetbrains-mono';
 @import '@fontsource-variable/sora';
 
+
+@font-face {
+  font-family: 'AubetteArchiType';
+  src: url('@/assets/font/AubetteArchiType.woff2');
+  font-weight: 700;
+  font-style: bold;
+  font-display: swap;
+}
+
 /* Thin Scrollbar */
 * {
   scrollbar-width: thin;
@@ -162,6 +171,7 @@
   --font-primary: 'JetBrains Mono Variable', 'JetBrains Mono', 'monospace', 'system-ui';
   --font-inter: 'Inter Variable', 'Inter', 'system-ui', 'sans-serif';
   --font-sora: 'Sora Variable', sans-serif;
+  --font-logo: 'AubetteArchiType', sans-serif;
 }
 
 /* Utility classes for complex backgrounds */
@@ -170,4 +180,17 @@
     linear-gradient(to bottom, #80808012 1px, transparent 1px);
   background-size: 40px 40px;
   mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 70%, transparent 100%);
+}
+@layer utilities {
+  .custom-select {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.25rem;
+    padding-right: 2.5rem !important;
+    font-size: 16px !important;
+  }
 }

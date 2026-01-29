@@ -61,7 +61,7 @@ const LandingPathways = () => {
   ];
 
   return (
-    <section className="relative w-full py-32 bg-slate-950 overflow-hidden">
+    <section className="relative w-full py-22 bg-slate-950 overflow-hidden">
       {/* Background Glows */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-slate-900/50 rounded-full blur-[120px]" />
 

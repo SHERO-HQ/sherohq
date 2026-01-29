@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import path from "path";
+import helmet from "helmet";
+import { rateLimit } from "express-rate-limit";
+import path from "node:path";
 import * as dotenv from "dotenv";
 
 // Database
@@ -36,9 +38,32 @@ if (process.env.DATABASE_URL) {
 }
 
 // Middleware
-app.use(cors()); // Allow all origins, no credentials (we use tokens)
+app.use(helmet()); // Set security headers
+
+// CORS configuration - restrict to frontend URL in production
+const corsOrigin = process.env.FRONTEND_URL || "http://localhost:5173";
+app.use(
+  cors({
+    origin: process.env.NODE_ENV === "production" ? corsOrigin : "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  }),
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Global Rate Limiting - 100 requests per 15 minutes per IP
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later." },
+});
+
+app.use("/api", globalLimiter);
 
 // Serve uploaded files statically
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));

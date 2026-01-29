@@ -1,5 +1,13 @@
 import { motion } from "motion/react";
-import { Target, Heart, Lightbulb, Globe, Clover } from "lucide-react";
+import {
+  Target,
+  Heart,
+  Lightbulb,
+  Globe,
+  Clover,
+  SearchCheck,
+} from "lucide-react";
+import aboutImage from "@/assets/aboutImg.png";
 
 const AboutStory = () => {
   return (
@@ -8,8 +16,6 @@ const AboutStory = () => {
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-5 dark:opacity-20" />
 
       <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Main Story */}
-        {/* Main Story */}
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-24">
           {/* Image Side */}
           <motion.div
@@ -18,23 +24,37 @@ const AboutStory = () => {
             viewport={{ once: true }}
             className="relative"
           >
-            <div className="absolute inset-0 bg-emerald-600 rounded rotate-3 opacity-10 dark:opacity-20" />
             <img
-              src="/src/assets/about-story.png"
-              alt="SHERO Team collaborating in modern office"
-              className="relative rounded shadow-2xl border border-slate-200 dark:border-slate-800 w-full object-cover aspect-[4/3]"
+              src={aboutImage}
+              alt="SHERO Technologies"
+              className="relative w-full object-cover rounded"
             />
-            {/* Floating Badge */}
-            <div className="absolute top-5 -right-8 bg-white/80 dark:bg-slate-900/80 px-4 py-2 rounded shadow-xl border border-slate-100 dark:border-slate-800 flex items-center gap-3">
-              <div className="size-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
-                <Lightbulb className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+            {/* Floating Badge 1 - Bottom Left */}
+            <div className="absolute -bottom-4 -left-2 sm:bottom-0 sm:left-0 lg:-left-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-2 sm:px-4 sm:py-2.5 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3 z-20">
+              <div className="size-8 sm:size-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
+                <SearchCheck className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div>
-                <p className="text-sm font-bold text-slate-900 dark:text-white">
+                <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-tight">
                   Possibilities
                 </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Driving Innovation
+                <p className="text-[8px] sm:text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                  All round
+                </p>
+              </div>
+            </div>
+
+            {/* Floating Badge 2 - Top Right */}
+            <div className="absolute -top-4 -right-2 sm:top-0 sm:right-0 lg:-right-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-2 sm:px-4 sm:py-2.5 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3 z-20">
+              <div className="size-8 sm:size-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
+                <Lightbulb className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 dark:text-emerald-400" />
+              </div>
+              <div>
+                <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-tight">
+                  Redefining
+                </p>
+                <p className="text-[8px] sm:text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                  Driven Innovation
                 </p>
               </div>
             </div>
@@ -46,41 +66,31 @@ const AboutStory = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-              <div className="text-start">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
-            <Clover className="size-4" />
-            Our Story
-          </span>
-          <h2 className="text-3xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white mb-6">
-            What Keep Us Going
-          </h2>
-        
-        </div>
+            <div className="text-start">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
+                <Clover className="size-4" />
+                Our Story
+              </span>
+              <h2 className="text-3xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white mb-6">
+                Driven by Purpose
+              </h2>
+            </div>
             <div className="prose prose-lg dark:prose-invert max-w-none">
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
-                Founded with a vision to bridge the digital divide in Ghana and
-                across Africa,{" "}
+                Founded to bridge Africa's digital divide,{" "}
                 <span className="font-bold text-emerald-600 dark:text-emerald-400">
                   SHERO Technologies
                 </span>{" "}
-                began as a small team of passionate technologists who believed
-                that access to quality technology should not be a privilege, but
-                a right.
-              </p>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
-                What started as a modest hardware supply operation has evolved
-                into a comprehensive technology solutions provider. We've grown
-                from serving local businesses to partnering with organizations
-                across West Africa, delivering not just products, but complete
-                digital transformation solutions.
+                is a passionate team making quality tech accessible. We have
+                evolved into a comprehensive technology partner, empowering
+                businesses across West Africa with world-class digital
+                solutions.
               </p>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                Today, we stand at the intersection of hardware excellence and
-                software innovation, offering everything from premium laptops
-                and networking equipment to custom software development and
-                cloud infrastructure services. Our commitment remains unchanged:
-                empowering businesses and individuals with the tools and
-                knowledge they need to thrive in the digital age.
+                We lead at the intersection of hardware excellence and software
+                innovation, from networking to custom development. Our mission
+                remains constant: to equip our community with the transformative
+                tools and knowledge needed to thrive today.
               </p>
             </div>
           </motion.div>

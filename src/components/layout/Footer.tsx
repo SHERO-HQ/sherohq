@@ -4,9 +4,10 @@ import {
   Twitter,
   Linkedin,
   Facebook,
-  Send,
   ArrowRight,
-  CheckCircle2,
+  BadgeCheck,
+  Mail,
+  Phone,
 } from "lucide-react";
 
 const Footer = () => {
@@ -42,7 +43,7 @@ const Footer = () => {
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 mb-24">
-          {/* LEFT: Branding & Newsletter */}
+          {/* LEFT: Branding & Contact */}
           <div className="lg:col-span-5 space-y-10">
             <div>
               <NavLink to="/" className="inline-block mb-6">
@@ -52,7 +53,7 @@ const Footer = () => {
                   className="h-10 w-auto dark:block hidden"
                 />
                 <img
-                  src={SheroLight} // Using light logo for both as it usually works on dark footer, but footer is now white in light mode
+                  src={SheroLight} // Using light logo for both as it usually works on dark footer
                   alt="Shero Logo"
                   className="h-10 w-auto dark:hidden block brightness-0"
                 />
@@ -63,29 +64,39 @@ const Footer = () => {
               </p>
             </div>
 
-            {/* Newsletter Card */}
+            {/* Contact Card */}
             <div className="p-1 rounded bg-gradient-to-br from-slate-200 to-slate-100 dark:from-white/10 dark:to-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-sm transition-all duration-300">
               <div className="bg-white dark:bg-slate-950/80 rounded p-6 transition-colors duration-300">
-                <h4 className="text-slate-900 dark:text-white font-sora font-semibold mb-2 flex items-center gap-2 transition-colors duration-300">
-                  Stay in the Loop{" "}
+                <h4 className="text-slate-900 dark:text-white font-sora font-semibold mb-6 flex items-center gap-2 transition-colors duration-300">
+                  Contact Details{" "}
                   <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
                 </h4>
-                <p className="text-slate-600 dark:text-slate-400 text-sm mb-4 transition-colors duration-300">
-                  Get the latest tech trends and updates.
-                </p>
-                <form className="relative flex items-center">
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded pl-4 pr-12 py-3 focus:outline-none focus:border-emerald-500 transition-colors"
-                  />
-                  <button
-                    type="submit"
-                    className="cursor-pointer absolute right-2 p-2 bg-emerald-600 rounded text-white hover:bg-emerald-500 transition-colors"
+
+                <div className="space-y-4">
+                  <a
+                    href="mailto:info.sherohq@gmail.com"
+                    className="flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors group"
                   >
-                    <Send className="w-4 h-4" />
-                  </button>
-                </form>
+                    <div className="p-2 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 group-hover:border-emerald-500/50 transition-colors">
+                      <Mail className="w-4 h-4" />
+                    </div>
+                    <span className="text-sm font-medium">
+                      info.sherohq@gmail.com
+                    </span>
+                  </a>
+
+                  <a
+                    href="tel:+233548711582"
+                    className="flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors group"
+                  >
+                    <div className="p-2 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 group-hover:border-emerald-500/50 transition-colors">
+                      <Phone className="w-4 h-4" />
+                    </div>
+                    <span className="text-sm font-medium">
+                      +233 (54) 871-1582
+                    </span>
+                  </a>
+                </div>
               </div>
             </div>
 
@@ -204,16 +215,16 @@ const Footer = () => {
 
           {/* Certificate/Badge (Decorative) */}
           <div className="flex items-center gap-2 px-4 py-2 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
-            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            <BadgeCheck className="w-4 h-4" />
             <span className="text-xs font-semibold text-slate-600 dark:text-slate-300 transition-colors">
-              ISO 27001 Certified
+              Certified
             </span>
           </div>
         </div>
 
         {/* MASSIVE TYPOGRAPHY (Background Layer) */}
         <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none overflow-hidden z-0 opacity-[0.03] dark:opacity-5 transition-opacity duration-300">
-          <h1 className="text-[15vw] leading-none font-bold text-slate-900 dark:text-white font-sora tracking-tighter transition-colors duration-300">
+          <h1 className="text-[15vw] leading-none font-bold text-slate-900 dark:text-white font-logo tracking-wider transition-colors duration-300">
             SHERO
           </h1>
         </div>

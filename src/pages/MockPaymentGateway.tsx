@@ -64,7 +64,7 @@ const MockPaymentGateway = () => {
             <button
               onClick={() => handlePayment(true)}
               disabled={isProcessing}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isProcessing ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -77,7 +77,7 @@ const MockPaymentGateway = () => {
             <button
               onClick={() => handlePayment(false)}
               disabled={isProcessing}
-              className="w-full bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 py-3 rounded-lg font-semibold transition-all hover:bg-red-100 dark:hover:bg-red-900/20 border border-transparent hover:border-red-200 dark:hover:border-red-800 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 py-2 rounded-lg font-semibold transition-all hover:bg-red-100 dark:hover:bg-red-900/20 border border-transparent hover:border-red-200 dark:hover:border-red-800 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <AlertCircle className="w-5 h-5" />
               Cancel Transaction

@@ -71,7 +71,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
           </div>
           <button
             onClick={() => globalThis.location.reload()}
-            className="cursor-pointer px-6 py-3 rounded bg-emerald-600 text-white font-semibold
+            className="cursor-pointer px-6 py-2 rounded bg-emerald-600 text-white font-semibold
                      hover:bg-emerald-700 transition-colors"
           >
             Reset Filters

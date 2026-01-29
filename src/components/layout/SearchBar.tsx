@@ -106,7 +106,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                           setQuery("");
                         }
                       }}
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+                      className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors"
                     >
                       <div className="w-10 h-10 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden">
                         {product.image?.startsWith("/") ||
@@ -267,7 +267,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                         {filteredProducts.length > 8 && (
                           <button
                             onClick={handleSearch}
-                            className="w-full py-3 text-center text-emerald-600 dark:text-emerald-400 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors"
+                            className="w-full py-2 text-center text-emerald-600 dark:text-emerald-400 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors"
                           >
                             View all {filteredProducts.length} results →
                           </button>

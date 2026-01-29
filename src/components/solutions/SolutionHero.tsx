@@ -4,8 +4,8 @@ import { Code, Zap, Shield, ArrowRight } from "lucide-react";
 const SolutionsHero = () => {
   return (
     <section
-      className="relative w-full py-20 lg:py-32 overflow-hidden
-                      bg-linear-to-b from-slate-200 to-slate-100 
+      className="relative w-full py-20 lg:py-22 overflow-hidden
+                      bg-linear-to-t from-slate-100 to-slate-50 
                       dark:from-slate-950 dark:to-slate-900"
     >
       {/* Animated Grid Background */}
@@ -14,8 +14,8 @@ const SolutionsHero = () => {
 
       {/* Gradient Orbs - Blue/Cyan theme for Solutions */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[100px]" />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-500/2 dark:bg-blue-500/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-cyan-500/2 dark:bg-cyan-500/5 rounded-full blur-[100px]" />
       </div>
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -60,9 +60,9 @@ const SolutionsHero = () => {
             transition={{ delay: 0.2 }}
             className="text-2xl md:text-5xl lg:text-6xl font-sora font-bold text-slate-900 dark:text-slate-100 mb-6 leading-tight"
           >
-            Technology Ecosystems <br />
+            Performance-Driven{" "}
             <span className="text-3xl md:text-6xl lg:text-7xl text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400">
-              Built for Performance
+              Solutions
             </span>
           </motion.h1>
 
