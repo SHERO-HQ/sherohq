@@ -142,7 +142,9 @@ export default function AdminProducts() {
               <Package className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white font-sora">Products</h1>
+              <h1 className="text-2xl font-bold text-white font-sora">
+                Products
+              </h1>
               <p className="text-slate-400">{products.length} total products</p>
             </div>
           </div>
@@ -238,7 +240,19 @@ export default function AdminProducts() {
                       <tr key={product.id} className="hover:bg-slate-800/30">
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
-                            <span className="text-2xl">{product.image}</span>
+                            <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-slate-800 rounded-lg overflow-hidden border border-slate-700">
+                              {product.image?.match(/^(\/|http|data:)/) ? (
+                                <img
+                                  src={product.image}
+                                  alt={product.name}
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <span className="text-2xl">
+                                  {product.image}
+                                </span>
+                              )}
+                            </div>
                             <div>
                               <p className="font-medium text-white">
                                 {product.name}

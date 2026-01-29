@@ -9,13 +9,9 @@ import ProductFiltersSidebar from "./ProductFiltersSidebar";
 import ProductGrid from "./ProductsGrid";
 import type { Product } from "@/data/products"; // Import shared type
 import { SlidersHorizontal } from "lucide-react";
-
-import { products } from "@/data/products";
+import { fetchProducts } from "@/services/api";
 
 import { useSearchParams } from "react-router-dom";
-
-// Use the imported products
-const sampleProducts = products;
 
 const ShopPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,7 +23,8 @@ const ShopPage = () => {
     [searchParams],
   );
   const [showMobileFilters, setShowMobileFilters] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState<Product[]>([]);
 
   const [filters, setFilters] = useState<FilterState>({
     priceRange: [0, 10000],
@@ -37,18 +34,37 @@ const ShopPage = () => {
     sortBy: "newest",
   });
 
+  // Fetch products from API
+  useEffect(() => {
+    const loadProducts = async () => {
+      setLoading(true);
+      try {
+        // We fetch all products and filter client-side for consistent filtering experience
+        // In a larger app, you might filter on the server
+        const data = await fetchProducts();
+        setProducts(data);
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
+
   // Add product counts to categories
   const categoriesWithCount: Category[] = defaultCategories.map((cat) => ({
     ...cat,
     count:
       cat.id === "all"
-        ? sampleProducts.length
-        : sampleProducts.filter((p) => p.category === cat.id).length,
+        ? products.length
+        : products.filter((p) => p.category === cat.id).length,
   }));
 
   // Filter and sort products
   const getFilteredProducts = (): Product[] => {
-    let filtered = [...sampleProducts];
+    let filtered = [...products];
 
     // Filter by category
     if (activeCategory !== "all") {
@@ -93,6 +109,7 @@ const ShopPage = () => {
         filtered.sort((a, b) => b.reviews - a.reviews);
         break;
       default: // newest
+        // Assuming products from API are already sorted by newest or we can add createdAt
         break;
     }
 
@@ -109,16 +126,11 @@ const ShopPage = () => {
       searchParams.delete("search");
       setSearchParams(searchParams);
     }
-    setLoading(true);
-    // Simulate API call
-    setTimeout(() => setLoading(false), 500);
   };
 
   // Handle category change
   const handleCategoryChange = (categoryId: string) => {
     setActiveCategory(categoryId);
-    setLoading(true);
-    setTimeout(() => setLoading(false), 300);
   };
 
   // Handle quick view
