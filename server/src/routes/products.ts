@@ -9,6 +9,7 @@ const router = Router();
 interface ProductRow {
   id: string;
   name: string;
+  sku: string | null;
   category: string;
   price: string; // Postgres returns decimals as strings
   originalPrice: string | null;
@@ -46,6 +47,7 @@ function parseProduct(row: ProductRow) {
     features: safeParse(row.features),
     specifications: safeParse(row.specifications),
     inStock: Boolean(row.inStock),
+    sku: row.sku || null,
   };
 }
 
@@ -124,6 +126,7 @@ router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
     const {
       name,
+      sku,
       category,
       price,
       originalPrice,
@@ -147,14 +150,18 @@ router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
 
     const productId = uuidv4();
 
+    // Auto-generate SKU if not provided
+    const finalSku = sku || `SHERO-${productId.split("-")[0].toUpperCase()}`;
+
     await db.query(
       `
-      INSERT INTO products (id, name, category, price, "originalPrice", image, images, rating, reviews, badge, "inStock", "stockQuantity", description, features, specifications)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+      INSERT INTO products (id, name, sku, category, price, "originalPrice", image, images, rating, reviews, badge, "inStock", "stockQuantity", description, features, specifications)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
     `,
       [
         productId,
         name,
+        finalSku,
         category,
         price,
         originalPrice || null,
@@ -194,6 +201,7 @@ router.put("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
     const { id } = req.params;
     const {
       name,
+      sku,
       category,
       price,
       originalPrice,
@@ -219,23 +227,25 @@ router.put("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
       `
       UPDATE products SET
         name = COALESCE($1, name),
-        category = COALESCE($2, category),
-        price = COALESCE($3, price),
-        "originalPrice" = $4,
-        image = COALESCE($5, image),
-        images = $6,
-        rating = COALESCE($7, rating),
-        reviews = COALESCE($8, reviews),
-        badge = $9,
-        "inStock" = COALESCE($10, "inStock"),
-        "stockQuantity" = COALESCE($11, "stockQuantity"),
-        description = COALESCE($12, description),
-        features = $13,
-        specifications = $14
-      WHERE id = $15
+        sku = COALESCE($2, sku),
+        category = COALESCE($3, category),
+        price = COALESCE($4, price),
+        "originalPrice" = $5,
+        image = COALESCE($6, image),
+        images = $7,
+        rating = COALESCE($8, rating),
+        reviews = COALESCE($9, reviews),
+        badge = $10,
+        "inStock" = COALESCE($11, "inStock"),
+        "stockQuantity" = COALESCE($12, "stockQuantity"),
+        description = COALESCE($13, description),
+        features = $14,
+        specifications = $15
+      WHERE id = $16
     `,
       [
         name,
+        sku,
         category,
         price,
         originalPrice ?? null,

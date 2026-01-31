@@ -159,6 +159,7 @@ const CheckoutFlow = () => {
 
       const orderItems = cart.map((item) => ({
         id: item.id,
+        sku: item.sku,
         name: item.name,
         price: item.price,
         quantity: item.quantity,

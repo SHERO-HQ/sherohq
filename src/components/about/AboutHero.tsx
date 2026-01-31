@@ -12,10 +12,10 @@ import type { ElementType } from "react";
 
 const AboutHero = () => {
   return (
-    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-950 pt-20">
+    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-slate-100 dark:bg-slate-950 pt-20">
       {/* Background Effects */}
       {/* Animated Grid Background */}
-      <div className="absolute inset-0 hero-grid-pattern opacity-50" />
+      <div className="absolute inset-0 hero-grid-pattern" />
 
       {/* Gradient Orbs - Purple/Indigo theme for About */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none hidden dark:block">
@@ -40,7 +40,7 @@ const AboutHero = () => {
             </span>
           </h1>
           <p className="max-w-[800px] mx-auto text-sm md:text-base text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
-            We are a collective of visionary developers and strategists
+            Collective of visionary developers and strategists
             dedicated to delivering innovative hardware and software products
             and comprehensive IT services that transform people and businesses.
           </p>

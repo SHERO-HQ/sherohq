@@ -106,6 +106,7 @@ export default function AdminProducts() {
   const handleExport = (format: "csv" | "excel" | "pdf") => {
     const dataToExport = filteredProducts.map((p) => ({
       id: p.id,
+      sku: p.sku || "N/A",
       name: p.name,
       category: p.category,
       price: p.price,
@@ -116,6 +117,7 @@ export default function AdminProducts() {
     const fileName = `products_${new Date().toISOString().split("T")[0]}`;
     const columns = [
       "id",
+      "sku",
       "name",
       "category",
       "price",
@@ -310,9 +312,14 @@ export default function AdminProducts() {
                             <span className="text-sm font-semibold text-white truncate">
                               {product.name}
                             </span>
-                            <span className="text-[10px] text-slate-500 font-mono">
-                              ID: {product.id}
-                            </span>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span className="text-[10px] text-emerald-500 font-mono font-bold bg-emerald-500/10 px-1.5 py-0.5 rounded">
+                                {product.sku || "NO-SKU"}
+                              </span>
+                              <span className="text-[9px] text-slate-500 font-mono">
+                                ID: {product.id.slice(0, 8)}...
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </td>

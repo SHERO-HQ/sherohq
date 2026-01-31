@@ -520,6 +520,7 @@ export async function updateAdminProfile(data: {
 // Admin Product functions
 export interface ProductInput {
   name: string;
+  sku?: string;
   category: string;
   price: number;
   originalPrice?: number | null;

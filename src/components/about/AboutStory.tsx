@@ -11,9 +11,9 @@ import aboutImage from "@/assets/aboutImg.png";
 
 const AboutStory = () => {
   return (
-    <section className="py-24 bg-white dark:bg-slate-950 relative overflow-hidden">
+    <section className="py-24 bg-white dark:bg-slate-950 relative overflow-hidden pattern-dots">
       {/* Background Elements */}
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-5 dark:opacity-20" />
+      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
 
       <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-24">

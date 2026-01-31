@@ -53,26 +53,30 @@ export default function AdminLayout({ children }: Readonly<AdminLayoutProps>) {
   }, []);
 
   return (
-    <div className="dark min-h-screen bg-slate-950 text-slate-200 relative">
+    <div className="dark min-h-screen bg-slate-950 text-slate-200 relative print:bg-white">
       {/* Background Pattern: Tiny dots for "Elite" texture */}
-      <div className="fixed inset-0 pattern-dots opacity-10 pointer-events-none z-0" />
+      <div className="fixed inset-0 pattern-dots opacity-10 pointer-events-none z-0 print:hidden" />
 
       {/* Sidebar Component */}
-      <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+      <div className="print:hidden">
+        <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+      </div>
 
       {/* Main Content Area */}
       <div
         className={cn(
           "transition-all duration-300 min-h-screen flex flex-col",
           isSidebarOpen ? "lg:pl-[260px]" : "lg:pl-20",
-          "pl-0",
+          "pl-0 print:pl-0",
         )}
       >
         {/* Header Component */}
-        <AdminHeader onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
+        <div className="print:hidden">
+          <AdminHeader onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
+        </div>
 
         {/* Page Content */}
-        <main className="flex-1 p-4 md:p-8">
+        <main className="flex-1 p-4 md:p-8 print:p-0">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -83,7 +87,7 @@ export default function AdminLayout({ children }: Readonly<AdminLayoutProps>) {
         </main>
 
         {/* Simple Footer */}
-        <footer className="py-6 px-4 md:px-8 border-t border-white/5 text-center text-slate-500 text-xs">
+        <footer className="py-6 px-4 md:px-8 border-t border-white/5 text-center text-slate-500 text-xs print:hidden">
           <p>
             © {new Date().getFullYear()} SHERO Technologies Admin Panel. Built
             with precision.
@@ -92,7 +96,7 @@ export default function AdminLayout({ children }: Readonly<AdminLayoutProps>) {
       </div>
 
       {/* Background Decor */}
-      <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+      <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none print:hidden">
         <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-emerald-500/10 blur-[140px] rounded-full" />
         <div className="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-500/10 blur-[140px] rounded-full" />
         <div className="absolute top-[30%] left-[20%] w-[30%] h-[30%] bg-emerald-500/5 blur-[120px] rounded-full" />

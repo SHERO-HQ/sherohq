@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   fetchOrderById,
@@ -445,355 +446,353 @@ export default function OrderDetails() {
           </div>
         </div>
 
-        {/* Printable Document (Hidden by default) */}
-        <div className="hidden print:block absolute inset-0 bg-white text-black p-0 m-0 z-[9999] print-area">
-          <style>
-            {`
+        {/* Printable Document (using Portal to ensure it's a direct child of body) */}
+        {order &&
+          createPortal(
+            <div className="hidden print:block fixed inset-0 bg-white text-black p-0 m-0 z-[9999999] print-area">
+              <style>
+                {`
               @media print {
                 @page { 
                   margin: 0; 
-                  size: A4; 
+                  size: auto; 
                 }
-                body {
+                html, body {
                   margin: 0 !important;
                   padding: 0 !important;
+                  height: auto !important;
+                  overflow: visible !important;
                 }
-                body * {
-                  visibility: hidden !important;
+                /* Hide everything */
+                body > * {
+                  display: none !important;
                 }
-                .print-area,
-                .print-area * {
-                  visibility: visible !important;
-                }
-                .print-area {
-                  position: fixed !important;
-                  left: 0 !important;
+                /* Except THE print area */
+                body > .print-area {
+                  display: block !important;
+                  position: absolute !important;
                   top: 0 !important;
+                  left: 0 !important;
                   width: 100% !important;
                   height: auto !important;
+                  min-height: 100% !important;
                   background: white !important;
-                  z-index: 99999 !important;
                 }
                 .print-document {
-                  min-height: auto !important;
-                  height: auto !important;
+                  width: 100% !important;
+                  max-width: none !important;
+                  margin: 0 !important;
+                  padding: 40px !important;
+                  background: white !important;
+                  page-break-after: avoid !important;
+                  page-break-before: avoid !important;
+                  break-inside: avoid !important;
                 }
               }
             `}
-          </style>
+              </style>
 
-          {printMode === "invoice" ? (
-            /* PREMIUM INVOICE LAYOUT */
-            <div
-              className="max-w-4xl mx-auto bg-white text-black print-document"
-              style={{ padding: "40px" }}
-            >
-              {/* Header with gradient accent */}
-              <div className="relative mb-8">
-                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500" />
-                <div className="flex justify-between items-start pt-6">
-                  <div>
-                    <img src={logoFull} alt="SHERO" className="h-12 mb-4" />
-                    <div className="text-[10px] text-slate-600 space-y-0.5">
-                      <p className="font-bold text-slate-900">
-                        SHERO Technologies Ltd.
-                      </p>
-                      <p>Accra Digital Centre, Block A</p>
-                      <p>Accra, Greater Accra Region, Ghana</p>
-                      <p>TIN: GHA-12345678-9</p>
+              {printMode === "invoice" ? (
+                /* MODERN MINIMALIST INVOICE */
+                <div
+                  className="max-w-4xl mx-auto bg-white text-black font-sans print-document"
+                  style={{ padding: "48px" }}
+                >
+                  <div className="flex justify-between items-start mb-12">
+                    <div>
+                      <img src={logoFull} alt="SHERO" className="h-10 mb-6" />
+                      <div className="space-y-1">
+                        <h2 className="text-lg font-bold font-sora text-slate-900">
+                          SHERO Technologies
+                        </h2>
+                        <div className="text-[11px] text-slate-500 leading-relaxed uppercase tracking-wider">
+                          <p>Accra Digital Centre, Block A</p>
+                          <p>Accra, Ghana</p>
+                          <p>TIN: GHA-12345678-9</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <h1 className="text-4xl font-black bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent uppercase tracking-tight">
-                      Invoice
-                    </h1>
-                    <div className="mt-4 space-y-1 text-[11px]">
-                      <div className="flex justify-end gap-4">
-                        <span className="text-slate-400 uppercase tracking-wider">
-                          Invoice No.
-                        </span>
-                        <span className="font-bold font-mono text-slate-900">
+                    <div className="text-right">
+                      <h1 className="text-4xl font-bold font-sora text-emerald-600 uppercase tracking-tight mb-4">
+                        Invoice
+                      </h1>
+                      <div className="space-y-1.5 text-xs">
+                        <p className="text-slate-500 uppercase tracking-widest font-bold text-[9px]">
+                          Invoice Number
+                        </p>
+                        <p className="font-mono font-bold text-sm">
                           #{order.id.slice(0, 8).toUpperCase()}
-                        </span>
-                      </div>
-                      <div className="flex justify-end gap-4">
-                        <span className="text-slate-400 uppercase tracking-wider">
-                          Date
-                        </span>
-                        <span className="font-medium text-slate-700">
-                          {new Date(order.createdAt).toLocaleDateString(
-                            "en-GB",
-                            {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            },
-                          )}
-                        </span>
-                      </div>
-                      <div className="flex justify-end gap-4">
-                        <span className="text-slate-400 uppercase tracking-wider">
-                          Status
-                        </span>
-                        <span className="font-bold text-emerald-600 uppercase">
-                          {order.status}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Bill To / Ship To */}
-              <div className="grid grid-cols-2 gap-8 mb-8 p-6 bg-slate-50 rounded-lg">
-                <div>
-                  <h3 className="text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-3">
-                    Bill To
-                  </h3>
-                  <p className="font-bold text-slate-900">
-                    {order.shippingInfo.firstName} {order.shippingInfo.lastName}
-                  </p>
-                  <p className="text-xs text-slate-600 mt-1">
-                    {order.shippingInfo.email}
-                  </p>
-                  <p className="text-xs text-slate-600">
-                    {order.shippingInfo.phone}
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-[9px] font-black text-emerald-600 uppercase tracking-[0.2em] mb-3">
-                    Ship To
-                  </h3>
-                  <p className="text-xs text-slate-900 font-medium">
-                    {order.shippingInfo.address}
-                  </p>
-                  <p className="text-xs text-slate-600">
-                    {order.shippingInfo.city}, {order.shippingInfo.region}
-                  </p>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Standard Delivery
-                  </p>
-                </div>
-              </div>
-
-              {/* Items Table */}
-              <div className="mb-8">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b-2 border-slate-900">
-                      <th className="py-3 text-left text-[10px] font-black uppercase tracking-wider text-slate-600 w-12">
-                        #
-                      </th>
-                      <th className="py-3 text-left text-[10px] font-black uppercase tracking-wider text-slate-600">
-                        Description
-                      </th>
-                      <th className="py-3 text-center text-[10px] font-black uppercase tracking-wider text-slate-600 w-20">
-                        Qty
-                      </th>
-                      <th className="py-3 text-right text-[10px] font-black uppercase tracking-wider text-slate-600 w-28">
-                        Price
-                      </th>
-                      <th className="py-3 text-right text-[10px] font-black uppercase tracking-wider text-slate-600 w-28">
-                        Total
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {order.items.map((item, index) => (
-                      <tr key={item.id} className="border-b border-slate-100">
-                        <td className="py-4 text-xs text-slate-400 font-mono">
-                          {String(index + 1).padStart(2, "0")}
-                        </td>
-                        <td className="py-4">
-                          <p className="text-sm font-semibold text-slate-900">
-                            {item.name}
+                        </p>
+                        <div className="pt-2">
+                          <p className="text-slate-500 uppercase tracking-widest font-bold text-[9px]">
+                            Date Issued
                           </p>
-                          {item.sku && (
-                            <p className="text-[10px] text-slate-400 mt-0.5">
-                              SKU: {item.sku}
-                            </p>
-                          )}
-                        </td>
-                        <td className="py-4 text-xs text-center font-medium text-slate-700">
-                          {item.quantity}
-                        </td>
-                        <td className="py-4 text-xs text-right text-slate-600">
-                          GH₵{item.price.toLocaleString()}
-                        </td>
-                        <td className="py-4 text-sm text-right font-bold text-slate-900">
-                          GH₵{(item.price * item.quantity).toLocaleString()}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Footer with Totals */}
-              <div className="flex justify-between items-end">
-                <div className="space-y-4 max-w-xs">
-                  <div>
-                    <h4 className="text-[9px] font-black text-slate-400 uppercase tracking-wider mb-1">
-                      Payment Method
-                    </h4>
-                    <p className="text-sm font-bold text-slate-900">
-                      {formatPaymentMethod(order.paymentMethod)}
-                    </p>
+                          <p className="font-medium">
+                            {new Date(order.createdAt).toLocaleDateString(
+                              "en-GB",
+                              {
+                                day: "2-digit",
+                                month: "long",
+                                year: "numeric",
+                              },
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="pt-6">
-                    <p className="text-[9px] text-slate-400 uppercase tracking-wider mb-6">
-                      Authorized Signature
-                    </p>
-                    <div className="w-40 border-b border-slate-300" />
+
+                  <div className="grid grid-cols-2 gap-16 mb-12 py-8 border-y border-slate-100">
+                    <div>
+                      <h3 className="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.2em] mb-4">
+                        Client Information
+                      </h3>
+                      <div className="space-y-1">
+                        <p className="font-bold text-slate-900 font-sora">
+                          {order.shippingInfo.firstName}{" "}
+                          {order.shippingInfo.lastName}
+                        </p>
+                        <p className="text-xs text-slate-500">
+                          {order.shippingInfo.email}
+                        </p>
+                        <p className="text-xs text-slate-500">
+                          {order.shippingInfo.phone}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.2em] mb-4">
+                        Shipping Address
+                      </h3>
+                      <div className="space-y-1">
+                        <p className="text-xs text-slate-900 font-medium">
+                          {order.shippingInfo.address}
+                        </p>
+                        <p className="text-xs text-slate-500">
+                          {order.shippingInfo.city}, {order.shippingInfo.region}
+                        </p>
+                        <div className="pt-2">
+                          <span className="text-[9px] font-bold bg-slate-100 px-2 py-0.5 rounded text-slate-600 uppercase">
+                            Standard Delivery
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mb-12">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="text-left border-b border-slate-900">
+                          <th className="pb-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                            Item Details
+                          </th>
+                          <th className="pb-4 text-center text-[10px] font-bold uppercase tracking-widest text-slate-400 w-24">
+                            Quantity
+                          </th>
+                          <th className="pb-4 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400 w-32">
+                            Rate
+                          </th>
+                          <th className="pb-4 text-right text-[10px] font-bold uppercase tracking-widest text-slate-400 w-32">
+                            Amount
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-50">
+                        {order.items.map((item) => (
+                          <tr key={item.id}>
+                            <td className="py-5">
+                              <p className="font-bold text-slate-900 font-sora text-sm">
+                                {item.name}
+                              </p>
+                              {item.sku && (
+                                <p className="text-[10px] text-slate-400 mt-1 uppercase tracking-tighter">
+                                  SKU: {item.sku}
+                                </p>
+                              )}
+                            </td>
+                            <td className="py-5 text-center text-sm font-medium text-slate-600">
+                              {item.quantity}
+                            </td>
+                            <td className="py-5 text-right text-sm text-slate-600">
+                              GH₵{item.price.toLocaleString()}
+                            </td>
+                            <td className="py-5 text-right text-sm font-bold text-slate-900 font-sora">
+                              GH₵{(item.price * item.quantity).toLocaleString()}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="flex justify-between items-start pt-8 border-t border-slate-900">
+                    <div className="max-w-xs space-y-6">
+                      <div>
+                        <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+                          Payment Info
+                        </h4>
+                        <p className="text-sm font-bold text-emerald-600 font-sora">
+                          {formatPaymentMethod(
+                            order.paymentMethod,
+                          ).toUpperCase()}
+                        </p>
+                        <p className="text-[10px] text-slate-400 mt-1 italic uppercase">
+                          {order.status === "completed"
+                            ? "Paid in full"
+                            : "Payment Pending"}
+                        </p>
+                      </div>
+                      <div className="pt-8">
+                        <div className="w-48 h-px bg-slate-200 mb-2" />
+                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                          Authorized Signatory
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="w-64 space-y-3">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-slate-400 uppercase tracking-wider">
+                          Subtotal
+                        </span>
+                        <span className="font-medium">
+                          GH₵{order.total.toLocaleString()}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-slate-400 uppercase tracking-wider">
+                          Discount
+                        </span>
+                        <span className="text-emerald-500 font-medium">
+                          - GH₵0.00
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-xs pb-3">
+                        <span className="text-slate-400 uppercase tracking-wider">
+                          Tax (VAT 0%)
+                        </span>
+                        <span className="font-medium">GH₵0.00</span>
+                      </div>
+                      <div className="flex justify-between items-center pt-4 border-t-2 border-slate-900">
+                        <span className="text-xs font-bold font-sora uppercase tracking-widest">
+                          Total Amount
+                        </span>
+                        <span className="text-2xl font-bold font-sora text-emerald-600">
+                          GH₵{order.total.toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-20 text-center">
+                    <div className="inline-block px-10 py-3 border border-slate-100 rounded text-[10px] text-slate-400 uppercase tracking-[0.4em]">
+                      Thank you for your business
+                    </div>
                   </div>
                 </div>
+              ) : (
+                /* MODERN MINIMALIST RECEIPT */
+                <div
+                  className="max-w-sm mx-auto bg-white text-black font-sans print-document"
+                  style={{ padding: "40px" }}
+                >
+                  {/* Receipt Header */}
+                  <div className="text-center mb-10 border-b-2 border-slate-900 pb-8">
+                    <img
+                      src={logoFull}
+                      alt="SHERO"
+                      className="h-8 mx-auto mb-4"
+                    />
+                    <h1 className="text-xl font-bold font-sora uppercase tracking-widest text-slate-900">
+                      Transaction Receipt
+                    </h1>
+                    <p className="text-[10px] text-slate-400 uppercase tracking-[0.3em] mt-1 italic">
+                      Verified Official Copy
+                    </p>
+                  </div>
 
-                <div className="w-72">
-                  <div className="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-5 rounded-lg">
-                    <div className="flex justify-between text-xs mb-2">
-                      <span className="text-slate-400">Subtotal</span>
-                      <span>GH₵{order.total.toLocaleString()}</span>
+                  {/* Transaction Highlight */}
+                  <div className="mb-10 text-center">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+                      Total Amount Paid
+                    </p>
+                    <p className="text-5xl font-bold font-sora text-emerald-600">
+                      GH₵{order.total.toLocaleString()}
+                    </p>
+                    <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-600 rounded text-[9px] font-bold uppercase tracking-wider">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      Payment Successful
                     </div>
-                    <div className="flex justify-between text-xs mb-2">
-                      <span className="text-slate-400">Tax (VAT 0%)</span>
-                      <span>GH₵0.00</span>
+                  </div>
+
+                  {/* Details Grid */}
+                  <div className="space-y-4 mb-10 border-y border-dashed border-slate-200 py-6">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">
+                        Reference No.
+                      </span>
+                      <span className="font-mono font-bold text-slate-900">
+                        #{order.id.slice(0, 10).toUpperCase()}
+                      </span>
                     </div>
-                    <div className="flex justify-between text-xs mb-3">
-                      <span className="text-slate-400">Shipping</span>
-                      <span className="text-emerald-400">FREE</span>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">
+                        Date & Time
+                      </span>
+                      <span className="font-medium text-slate-700">
+                        {new Date(order.createdAt).toLocaleString()}
+                      </span>
                     </div>
-                    <div className="border-t border-slate-700 pt-3 flex justify-between items-center">
-                      <span className="text-sm font-medium">Total Due</span>
-                      <span className="text-2xl font-black">
-                        GH₵{order.total.toLocaleString()}
+                    <div className="flex justify-between text-xs">
+                      <span className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">
+                        Customer
+                      </span>
+                      <span className="font-bold text-slate-900 uppercase">
+                        {order.shippingInfo.firstName}{" "}
+                        {order.shippingInfo.lastName}
+                      </span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-slate-400 font-bold uppercase tracking-wider text-[9px]">
+                        Payment Method
+                      </span>
+                      <span className="font-bold text-emerald-600 uppercase italic">
+                        {formatPaymentMethod(order.paymentMethod)}
                       </span>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/* Footer Note */}
-              <div className="mt-10 pt-6 border-t border-slate-100 text-center">
-                <p className="text-[10px] text-slate-400">
-                  Thank you for choosing SHERO Technologies
-                </p>
-                <p className="text-[9px] text-slate-300 mt-1">
-                  support@sherotech.com • www.sherotech.com
-                </p>
-              </div>
-            </div>
-          ) : (
-            /* PREMIUM RECEIPT LAYOUT */
-            <div
-              className="max-w-sm mx-auto bg-white text-black print-document"
-              style={{ padding: "40px" }}
-            >
-              {/* Top Gradient Bar */}
-              <div
-                className="h-2 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 -mx-10 -mt-10 mb-8"
-                style={{
-                  marginLeft: "-40px",
-                  marginRight: "-40px",
-                  marginTop: "-40px",
-                }}
-              />
+                  {/* Quality Guarantee */}
+                  <div className="bg-slate-50 rounded p-4 mb-10 text-center">
+                    <p className="text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-1">
+                      Authentic Product Guarantee
+                    </p>
+                    <p className="text-[9px] text-slate-500 leading-tight">
+                      All products sold by SHERO Technologies are verified for
+                      quality and authenticity.
+                    </p>
+                  </div>
 
-              {/* Header */}
-              <div className="text-center mb-8">
-                <img src={logoFull} alt="SHERO" className="h-10 mx-auto mb-4" />
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-full text-[10px] font-black uppercase tracking-widest">
-                  <CheckCircle2 className="w-4 h-4" />
-                  Payment Receipt
+                  {/* Receipt Footer */}
+                  <div className="text-center">
+                    <p className="text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-1">
+                      SHERO Technologies
+                    </p>
+                    <p className="text-[9px] text-slate-500">
+                      www.sherotech.com • support@sherotech.com
+                    </p>
+                    <div className="mt-6 pt-4 border-t border-slate-50">
+                      <p className="text-[8px] text-slate-300 italic">
+                        This receipt is proof of purchase for your warranty.
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-
-              {/* Reference & Date */}
-              <div className="bg-slate-50 rounded-lg p-4 mb-6">
-                <div className="flex justify-between items-center mb-3">
-                  <span className="text-[9px] text-slate-400 uppercase tracking-wider font-bold">
-                    Reference
-                  </span>
-                  <span className="font-mono text-sm font-black text-slate-900">
-                    #{order.id.slice(0, 10).toUpperCase()}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-[9px] text-slate-400 uppercase tracking-wider font-bold">
-                    Date
-                  </span>
-                  <span className="text-xs font-medium text-slate-700">
-                    {new Date(order.createdAt).toLocaleString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </span>
-                </div>
-              </div>
-
-              {/* Customer */}
-              <div className="mb-6">
-                <p className="text-[9px] text-slate-400 uppercase tracking-wider font-bold mb-2">
-                  Customer
-                </p>
-                <p className="font-bold text-slate-900">
-                  {order.shippingInfo.firstName} {order.shippingInfo.lastName}
-                </p>
-                <p className="text-xs text-slate-500">
-                  {order.shippingInfo.email}
-                </p>
-              </div>
-
-              {/* Amount Box */}
-              <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl p-6 text-center text-white mb-6">
-                <p className="text-[10px] text-slate-400 uppercase tracking-widest mb-2">
-                  Amount Paid
-                </p>
-                <p className="text-4xl font-black">
-                  GH₵{order.total.toLocaleString()}
-                </p>
-                <div className="flex items-center justify-center gap-2 mt-3">
-                  <span className="px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-full text-[10px] font-bold uppercase">
-                    {formatPaymentMethod(order.paymentMethod)}
-                  </span>
-                  <span className="px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-full text-[10px] font-bold uppercase">
-                    Verified
-                  </span>
-                </div>
-              </div>
-
-              {/* Status */}
-              <div className="flex items-center justify-center gap-3 py-4 border-y border-slate-100 mb-6">
-                <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
-                  <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                </div>
-                <div className="text-left">
-                  <p className="text-sm font-bold text-slate-900">
-                    Transaction Complete
-                  </p>
-                  <p className="text-[10px] text-slate-500">
-                    Secure payment processed successfully
-                  </p>
-                </div>
-              </div>
-
-              {/* Footer */}
-              <div className="text-center">
-                <p className="text-[10px] font-bold text-slate-600 uppercase tracking-wider">
-                  SHERO Technologies
-                </p>
-                <p className="text-[9px] text-slate-400 mt-1">
-                  www.sherotech.com • support@sherotech.com
-                </p>
-                <p className="text-[8px] text-slate-300 mt-3 italic">
-                  Please retain this receipt for your records
-                </p>
-              </div>
-            </div>
+              )}
+            </div>,
+            document.body,
           )}
-        </div>
       </div>
     </AdminLayout>
   );

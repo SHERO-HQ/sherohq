@@ -500,26 +500,52 @@ export default function ProductForm() {
               </div>
 
               <div className="space-y-4">
-                <div className="space-y-2">
-                  <label
-                    htmlFor="name"
-                    className="text-sm font-medium text-slate-400"
-                  >
-                    Product Name
-                  </label>
-                  <Input
-                    id="name"
-                    placeholder="e.g. MacBook Pro M3"
-                    value={productData.name}
-                    onChange={(e) =>
-                      setProductData((prev) => ({
-                        ...prev,
-                        name: e.target.value,
-                      }))
-                    }
-                    className="bg-slate-800/50 border-white/5 text-white"
-                    required
-                  />
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="name"
+                      className="text-sm font-medium text-slate-400"
+                    >
+                      Product Name
+                    </label>
+                    <Input
+                      id="name"
+                      placeholder="e.g. MacBook Pro M3"
+                      value={productData.name}
+                      onChange={(e) =>
+                        setProductData((prev) => ({
+                          ...prev,
+                          name: e.target.value,
+                        }))
+                      }
+                      className="bg-slate-800/50 border-white/5 text-white"
+                      required
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="sku"
+                      className="text-sm font-medium text-slate-400"
+                    >
+                      SKU (Optional)
+                    </label>
+                    <Input
+                      id="sku"
+                      placeholder="e.g. LAP-MAC-16M3"
+                      value={productData.sku || ""}
+                      onChange={(e) =>
+                        setProductData((prev) => ({
+                          ...prev,
+                          sku: e.target.value,
+                        }))
+                      }
+                      className="bg-slate-800/50 border-white/5 text-white"
+                    />
+                    <p className="text-[10px] text-slate-500 italic">
+                      Leave blank to auto-generate based on Product ID.
+                    </p>
+                  </div>
                 </div>
 
                 <div className="space-y-2">

@@ -9,7 +9,7 @@ const SolutionsHero = () => {
                       dark:from-slate-950 dark:to-slate-900"
     >
       {/* Dot Pattern Background */}
-      <div className="absolute inset-0 pattern-dots opacity-30 dark:opacity-20 pointer-events-none" />
+      <div className="absolute inset-0 pattern-dots opacity-80 dark:opacity-80 pointer-events-none" />
 
       {/* Gradient Orbs - Blue/Cyan theme for Solutions */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

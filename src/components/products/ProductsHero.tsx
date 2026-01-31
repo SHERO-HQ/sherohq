@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { BadgeCheck, ShoppingBag, TruckElectric } from "lucide-react";
+import { BadgeCheck, Package, ShoppingBag, TruckElectric } from "lucide-react";
 
 const ProductHero = () => {
   return (
@@ -38,17 +38,17 @@ const ProductHero = () => {
           </p>
 
           {/* Trust Indicators */}
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-sm text-slate-400">
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-xs dark:text-slate-400 text-slate-600">
             <div className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <Package className="w-4 h-4 text-emerald-500" />
               <span>In Stock & Ready</span>
             </div>
             <div className="flex items-center gap-2">
-              <TruckElectric className="w-4 h-4 text-blue-400" />
+              <TruckElectric className="w-4 h-4 text-blue-500" />
               <span>Fast Delivery</span>
             </div>
             <div className="flex items-center gap-2">
-              <BadgeCheck className="w-4 h-4 text-purple-400" />
+              <BadgeCheck className="w-4 h-4 text-purple-500" />
               <span>Official Warranty</span>
             </div>
           </div>
