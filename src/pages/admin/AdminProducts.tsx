@@ -1,377 +1,461 @@
-import { useState, useEffect, type ChangeEvent } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { useTitle } from "@/hooks/useTitle";
 import {
   fetchProducts,
+  fetchCategories,
   deleteProduct,
   updateProductStock,
   getImageUrl,
 } from "@/services/api";
 import type { Product } from "@/data/products";
 import {
-  Package,
-  Plus,
   Search,
+  Plus,
   Edit2,
   Trash2,
-  AlertTriangle,
-  XCircle,
-  CheckCircle,
-  Loader2,
+  ExternalLink,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  CheckCircle2,
+  MoreVertical,
+  Printer,
 } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
 
 export default function AdminProducts() {
-  useTitle("Manage Products");
   const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [search, setSearch] = useState("");
-  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
-  const [editingStock, setEditingStock] = useState<string | null>(null);
-  const [stockValue, setStockValue] = useState<number>(0);
-
-  // Filters
-  const [categoryFilter, setCategoryFilter] = useState("");
-  const [stockFilter, setStockFilter] = useState("");
   const [categories, setCategories] = useState<{ id: string; name: string }[]>(
     [],
   );
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    loadProducts();
-    loadCategories();
-  }, []);
+  // Filters
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [stockFilter, setStockFilter] = useState("all");
 
-  async function loadProducts() {
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const loadData = useCallback(async () => {
     try {
-      const data = await fetchProducts();
-      setProducts(data);
+      setIsLoading(true);
+      const [productsData, categoriesData] = await Promise.all([
+        fetchProducts(selectedCategory, search),
+        fetchCategories(),
+      ]);
+      setProducts(productsData);
+      setCategories(categoriesData);
     } catch (err) {
       console.error("Failed to load products:", err);
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [selectedCategory, search]);
 
-  async function handleDelete(id: string) {
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  const handleDelete = async (id: string) => {
+    if (!globalThis.confirm?.("Are you sure you want to delete this product?"))
+      return;
+
     try {
       await deleteProduct(id);
       setProducts(products.filter((p) => p.id !== id));
-      setDeleteConfirm(null);
     } catch (err) {
-      console.error("Failed to delete product:", err);
+      alert(
+        "Failed to delete product: " +
+          (err instanceof Error ? err.message : "Unknown error"),
+      );
     }
-  }
+  };
 
-  async function handleStockUpdate(id: string) {
+  const handleToggleStock = async (product: Product) => {
     try {
-      const { product } = await updateProductStock(id, stockValue);
+      const newQuantity = product.inStock ? 0 : 10;
+      await updateProductStock(product.id, newQuantity);
       setProducts(
         products.map((p) =>
-          p.id === id
-            ? { ...p, inStock: product.inStock, stockQuantity: stockValue }
-            : p,
+          p.id === product.id ? { ...p, inStock: !p.inStock } : p,
         ),
       );
-      setEditingStock(null);
     } catch (err) {
-      console.error("Failed to update stock:", err);
-    }
-  }
-
-  function startEditStock(product: Product) {
-    setEditingStock(product.id);
-    setStockValue(
-      (product as Product & { stockQuantity?: number }).stockQuantity ?? 0,
-    );
-  }
-
-  async function loadCategories() {
-    try {
-      const data = await import("@/services/api").then((m) =>
-        m.fetchCategories(),
+      alert(
+        "Failed to update stock: " +
+          (err instanceof Error ? err.message : "Unknown error"),
       );
-      setCategories(data);
-    } catch (err) {
-      console.error(err);
     }
-  }
+  };
 
-  const filteredProducts = products.filter((p) => {
-    const matchesSearch =
-      p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.category.toLowerCase().includes(search.toLowerCase());
+  const handleExport = (format: "csv" | "excel" | "pdf") => {
+    const dataToExport = filteredProducts.map((p) => ({
+      id: p.id,
+      name: p.name,
+      category: p.category,
+      price: p.price,
+      inStock: p.inStock ? "Yes" : "No",
+      description: p.description,
+    }));
 
-    const matchesCategory = categoryFilter
-      ? p.category === categoryFilter
-      : true;
+    const fileName = `products_${new Date().toISOString().split("T")[0]}`;
+    const columns = [
+      "id",
+      "name",
+      "category",
+      "price",
+      "inStock",
+      "description",
+    ];
 
-    let matchesStock = true;
-    const qty = (p as Product & { stockQuantity?: number }).stockQuantity ?? 0;
+    if (format === "csv") exportToCSV(dataToExport, fileName);
+    else if (format === "excel") exportToExcel(dataToExport, fileName);
+    else
+      exportToPDF(dataToExport, columns, fileName, "Products Inventory Report");
+  };
 
-    if (stockFilter === "instock") matchesStock = p.inStock && qty > 10;
-    else if (stockFilter === "lowstock")
-      matchesStock = p.inStock && qty <= 10 && qty > 0;
-    else if (stockFilter === "outstock") matchesStock = !p.inStock || qty === 0;
-
-    return matchesSearch && matchesCategory && matchesStock;
+  const filteredProducts = products.filter((product) => {
+    if (stockFilter === "in-stock" && !product.inStock) return false;
+    if (stockFilter === "out-of-stock" && product.inStock) return false;
+    return true;
   });
 
-  function getStockStatus(product: Product) {
-    const qty =
-      (product as Product & { stockQuantity?: number }).stockQuantity ?? 0;
-    if (!product.inStock || qty === 0) {
-      return { label: "Out of Stock", color: "text-red-400", icon: XCircle };
-    }
-    if (qty <= 10) {
-      return {
-        label: "Low Stock",
-        color: "text-yellow-400",
-        icon: AlertTriangle,
-      };
-    }
-    return { label: "In Stock", color: "text-emerald-400", icon: CheckCircle };
-  }
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const currentProducts = filteredProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
 
   return (
     <AdminLayout>
       <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded bg-gradient-to-br from-purple-500 to-blue-600">
-              <Package className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-white font-sora">
-                Products
-              </h1>
-              <p className="text-slate-400">{products.length} total products</p>
-            </div>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-white font-sora">
+              Products
+            </h1>
+            <p className="text-slate-400 text-sm">
+              Manage your inventory and product listings
+            </p>
           </div>
-          <Link
-            to="/admin/products/new"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded hover:from-purple-500 hover:to-blue-500 transition-all"
-          >
-            <Plus className="w-5 h-5" />
-            Add Product
-          </Link>
+          <div className="flex items-center gap-3">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="border-white/10 text-white hover:bg-white/5"
+                >
+                  <Printer className="mr-2 h-4 w-4" /> Export
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="bg-slate-900 border-white/10 text-white"
+              >
+                <DropdownMenuItem
+                  onClick={() => handleExport("csv")}
+                  className="cursor-pointer hover:bg-white/5"
+                >
+                  Export as CSV
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleExport("excel")}
+                  className="cursor-pointer hover:bg-white/5"
+                >
+                  Export as Excel
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleExport("pdf")}
+                  className="cursor-pointer hover:bg-white/5"
+                >
+                  Export as PDF
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Button
+              className="bg-emerald-600 hover:bg-emerald-500 text-white"
+              asChild
+            >
+              <Link to="/admin/products/new">
+                <Plus className="mr-2 h-4 w-4" /> Add New Product
+              </Link>
+            </Button>
+          </div>
         </div>
 
-        {/* Filters */}
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={search}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                setSearch(e.target.value)
-              }
-              className="w-full pl-12 pr-4 py-2 bg-slate-900/50 border border-slate-800 rounded text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-            />
+        <Card className="bg-slate-900 border-white/5 p-4">
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <Input
+                placeholder="Search products..."
+                className="pl-10 bg-slate-800/50 border-white/5 text-white placeholder:text-slate-500"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <select
+                className="bg-slate-800 border-white/5 text-sm text-white rounded px-3 py-2 outline-none focus:ring-1 focus:ring-emerald-500/50"
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+              >
+                <option value="all">All Categories</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+              <select
+                className="bg-slate-800 border-white/5 text-sm text-white rounded px-3 py-2 outline-none focus:ring-1 focus:ring-emerald-500/50"
+                value={stockFilter}
+                onChange={(e) => setStockFilter(e.target.value)}
+              >
+                <option value="all">All Status</option>
+                <option value="in-stock">In Stock</option>
+                <option value="out-of-stock">Out of Stock</option>
+              </select>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-slate-400 hover:text-white hover:bg-white/5"
+                onClick={() => {
+                  setSearch("");
+                  setSelectedCategory("all");
+                  setStockFilter("all");
+                }}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
+        </Card>
 
-          <select
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-4 py-2 bg-slate-900/50 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select text-base"
-          >
-            <option value="">All Categories</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id === "all" ? "" : c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={stockFilter}
-            onChange={(e) => setStockFilter(e.target.value)}
-            className="px-4 py-2 bg-slate-900/50 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select text-base"
-          >
-            <option value="">All Stock Status</option>
-            <option value="instock">In Stock</option>
-            <option value="lowstock">Low Stock (≤10)</option>
-            <option value="outstock">Out of Stock</option>
-          </select>
-        </div>
-
-        {/* Products Table */}
-        {isLoading ? (
-          <div className="flex items-center justify-center h-64">
-            <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
-          </div>
-        ) : (
-          <div className="bg-slate-900/50 border border-slate-800 rounded overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-slate-800">
-                    <th className="px-6 py-4 font-sora text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
-                      Product
-                    </th>
-                    <th className="px-6 py-4 font-sora text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
-                      Category
-                    </th>
-                    <th className="px-6 py-4 font-sora text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
-                      Price
-                    </th>
-                    <th className="px-6 py-4 font-sora text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
-                      Stock
-                    </th>
-                    <th className="px-6 py-4 font-sora text-left text-xs font-medium text-slate-400 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-4 font-sora text-right text-xs font-medium text-slate-400 uppercase tracking-wider">
-                      Actions
-                    </th>
+        <Card className="bg-slate-900 border-white/5 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-slate-800/50">
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Product
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Category
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Price
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Stock
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {isLoading ? (
+                  new Array(5).fill(0).map((_, i) => (
+                    <tr key={i} className="animate-pulse">
+                      <td colSpan={5} className="px-6 py-6">
+                        <div className="h-10 bg-slate-800 rounded w-full" />
+                      </td>
+                    </tr>
+                  ))
+                ) : currentProducts.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="px-6 py-12 text-center text-slate-500"
+                    >
+                      No products found matching your criteria.
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800">
-                  {filteredProducts.map((product) => {
-                    const status = getStockStatus(product);
-                    const StatusIcon = status.icon;
-                    const qty =
-                      (product as Product & { stockQuantity?: number })
-                        .stockQuantity ?? 0;
-
-                    return (
-                      <tr key={product.id} className="hover:bg-slate-800/30">
-                        <td className="px-6 py-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-slate-800 rounded-lg overflow-hidden border border-slate-700">
-                              {product.image?.match(/^(\/|http|data:)/) ? (
-                                <img
-                                  src={getImageUrl(product.image)}
-                                  alt={product.name}
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <span className="text-2xl">
-                                  {product.image}
-                                </span>
-                              )}
-                            </div>
-                            <div>
-                              <p className="font-medium text-white">
-                                {product.name}
-                              </p>
-                              {product.badge && (
-                                <span className="inline-block px-2 py-0.5 text-xs bg-purple-500/20 text-purple-400 rounded-full mt-1">
-                                  {product.badge}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="text-slate-300 capitalize">
-                            {product.category}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className="text-white font-medium">
-                            GH₵{product.price}
-                          </span>
-                          {product.originalPrice && (
-                            <span className="ml-2 text-sm text-slate-500 line-through">
-                              GH₵{product.originalPrice}
-                            </span>
-                          )}
-                        </td>
-                        <td className="px-6 py-4">
-                          {editingStock === product.id ? (
-                            <div className="flex items-center gap-2">
-                              <input
-                                type="number"
-                                value={stockValue}
-                                onChange={(e) =>
-                                  setStockValue(Number(e.target.value))
-                                }
-                                className="w-20 px-2 py-1 bg-slate-800 border border-slate-700 rounded text-white text-sm"
-                                min="0"
-                              />
-                              <button
-                                onClick={() => handleStockUpdate(product.id)}
-                                className="p-1 text-emerald-400 hover:text-emerald-300"
-                              >
-                                <CheckCircle className="w-4 h-4" />
-                              </button>
-                              <button
-                                onClick={() => setEditingStock(null)}
-                                className="p-1 text-slate-400 hover:text-slate-300"
-                              >
-                                <XCircle className="w-4 h-4" />
-                              </button>
-                            </div>
-                          ) : (
-                            <button
-                              onClick={() => startEditStock(product)}
-                              className="text-slate-300 hover:text-white"
-                            >
-                              {qty}
-                            </button>
-                          )}
-                        </td>
-                        <td className="px-6 py-4">
-                          <div
-                            className={`flex items-center gap-1.5 ${status.color}`}
-                          >
-                            <StatusIcon className="w-4 h-4" />
-                            <span className="text-sm">{status.label}</span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center justify-end gap-2">
-                            <Link
-                              to={`/admin/products/${product.id}/edit`}
-                              className="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded transition-colors"
-                            >
-                              <Edit2 className="w-4 h-4" />
-                            </Link>
-                            {deleteConfirm === product.id ? (
-                              <div className="flex items-center gap-1">
-                                <button
-                                  onClick={() => handleDelete(product.id)}
-                                  className="px-2 py-1 text-xs bg-red-500 text-white rounded"
-                                >
-                                  Confirm
-                                </button>
-                                <button
-                                  onClick={() => setDeleteConfirm(null)}
-                                  className="px-2 py-1 text-xs bg-slate-700 text-white rounded"
-                                >
-                                  Cancel
-                                </button>
-                              </div>
+                ) : (
+                  currentProducts.map((product) => (
+                    <tr
+                      key={product.id}
+                      className="hover:bg-white/2 transition-colors group"
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded bg-slate-800 border border-white/5 flex items-center justify-center shrink-0 overflow-hidden text-2xl">
+                            {product.image.length <= 4 ? (
+                              product.image
                             ) : (
-                              <button
-                                onClick={() => setDeleteConfirm(product.id)}
-                                className="p-2 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded transition-colors"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
+                              <img
+                                src={getImageUrl(product.image)}
+                                alt=""
+                                className="w-full h-full object-cover"
+                              />
                             )}
                           </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-
-            {filteredProducts.length === 0 && (
-              <div className="text-center py-12">
-                <Package className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-                <p className="text-slate-400">No products found</p>
-              </div>
-            )}
+                          <div className="flex flex-col min-w-0">
+                            <span className="text-sm font-semibold text-white truncate">
+                              {product.name}
+                            </span>
+                            <span className="text-[10px] text-slate-500 font-mono">
+                              ID: {product.id}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <Badge
+                          variant="outline"
+                          className="bg-slate-800/50 border-white/5 text-slate-300 capitalize"
+                        >
+                          {product.category}
+                        </Badge>
+                      </td>
+                      <td className="px-6 py-4 text-sm font-bold text-white">
+                        GH₵{product.price.toLocaleString()}
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={cn(
+                              "w-2 h-2 rounded-full",
+                              product.inStock
+                                ? "bg-emerald-500"
+                                : "bg-rose-500",
+                            )}
+                          />
+                          <span
+                            className={cn(
+                              "text-sm font-medium",
+                              product.inStock
+                                ? "text-emerald-400"
+                                : "text-rose-400",
+                            )}
+                          >
+                            {product.inStock ? "In Stock" : "Out of Stock"}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-slate-400 hover:text-white"
+                            asChild
+                          >
+                            <Link to={`/admin/products/${product.id}/edit`}>
+                              <Edit2 className="w-4 h-4" />
+                            </Link>
+                          </Button>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-slate-400 hover:text-white"
+                              >
+                                <MoreVertical className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                              align="end"
+                              className="bg-slate-900 border-white/10 text-white"
+                            >
+                              <DropdownMenuItem asChild>
+                                <Link
+                                  to={`/products/${product.id}`}
+                                  target="_blank"
+                                >
+                                  <ExternalLink className="mr-2 h-4 w-4" /> View
+                                  Site
+                                </Link>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleToggleStock(product)}
+                              >
+                                {product.inStock ? (
+                                  <X className="mr-2 h-4 w-4 text-rose-400" />
+                                ) : (
+                                  <CheckCircle2 className="mr-2 h-4 w-4 text-emerald-400" />
+                                )}
+                                {product.inStock
+                                  ? "Mark Out of Stock"
+                                  : "Mark In Stock"}
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator className="bg-white/5" />
+                              <DropdownMenuItem
+                                className="text-rose-400 focus:text-rose-400"
+                                onClick={() => handleDelete(product.id)}
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" /> Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
           </div>
-        )}
+
+          {!isLoading && filteredProducts.length > itemsPerPage && (
+            <div className="px-6 py-4 border-t border-white/5 flex items-center justify-between">
+              <p className="text-sm text-slate-500">
+                Page <span className="text-white">{currentPage}</span> of{" "}
+                {totalPages}
+              </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-white/10"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((prev) => prev - 1)}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="border-white/10"
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((prev) => prev + 1)}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          )}
+        </Card>
       </div>
     </AdminLayout>
+  );
+}
+
+function Card({
+  children,
+  className,
+  ...props
+}: { children: React.ReactNode } & React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div className={cn("rounded border bg-slate-950", className)} {...props}>
+      {children}
+    </div>
   );
 }

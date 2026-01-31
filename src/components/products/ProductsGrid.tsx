@@ -81,20 +81,27 @@ const ProductGrid: React.FC<ProductGridProps> = ({
     );
   }
 
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4 },
+    },
+  };
+
   // Products Grid
   return (
     <motion.div
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className={`grid grid-cols-1 min-[425px]:grid-cols-2 ${gridCols[columns]} gap-3 sm:gap-6 lg:gap-8`}
+      className={`grid grid-cols-1 min-[425px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ${gridCols[columns]} gap-3`}
     >
       {products.map((product) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-          onQuickView={onQuickView}
-        />
+        <motion.div key={product.id} variants={itemVariants}>
+          <ProductCard product={product} onQuickView={onQuickView} />
+        </motion.div>
       ))}
     </motion.div>
   );

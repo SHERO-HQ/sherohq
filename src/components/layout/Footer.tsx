@@ -9,6 +9,7 @@ import {
   Mail,
   Phone,
 } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 const Footer = () => {
   const companyLinks = ["Products", "Solutions", "About Us", "Contact Us"];
@@ -33,20 +34,20 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="w-full bg-slate-50 dark:bg-slate-950 relative overflow-hidden border-t border-slate-200 dark:border-white/5 pt-24 md:pb-12 pb-24 transition-colors duration-300">
+    <footer className="w-full bg-background relative overflow-hidden border-t border-slate-200 dark:border-slate-800 pt-24 md:pb-12 pb-24 transition-colors duration-300">
       {/* Background Ambience */}
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0))] opacity-5 dark:opacity-20 transition-opacity duration-300" />
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-100 via-slate-100/90 to-slate-100/50 dark:from-slate-950 dark:via-slate-950/90 dark:to-slate-950/50 pointer-events-none transition-all duration-300" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/90 to-background/50 pointer-events-none transition-all duration-300" />
 
       {/* Glow Effect */}
       <div className="absolute -bottom-1/2 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 mb-24">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 lg:mb-32 mb-4">
           {/* LEFT: Branding & Contact */}
-          <div className="lg:col-span-5 space-y-10">
+          <div className="lg:col-span-5 space-y-6">
             <div>
-              <NavLink to="/" className="inline-block mb-6">
+              <NavLink to="/" className="inline-block mb-3">
                 <img
                   src={SheroLight}
                   alt="Shero Logo"
@@ -58,15 +59,16 @@ const Footer = () => {
                   className="h-10 w-auto dark:hidden block brightness-0"
                 />
               </NavLink>
-              <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed max-w-md transition-colors duration-300">
-                Engineering the future of enterprise technology. We build the
-                systems that power tomorrow's leaders.
+              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed max-w-md transition-colors duration-300">
+                Engineering the future of technology with focus on clarity,
+                performance, and scalability with long term value to Redefine
+                what is Possible.
               </p>
             </div>
 
             {/* Contact Card */}
-            <div className="p-1 rounded bg-gradient-to-br from-slate-200 to-slate-100 dark:from-white/10 dark:to-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-sm transition-all duration-300">
-              <div className="bg-white dark:bg-slate-950/80 rounded p-6 transition-colors duration-300">
+            <div className="p-1 rounded border border-slate-200 dark:border-slate-800 backdrop-blur-sm transition-all duration-300">
+              <div className="bg-background rounded p-6 transition-colors duration-300">
                 <h4 className="text-slate-900 dark:text-white font-sora font-semibold mb-6 flex items-center gap-2 transition-colors duration-300">
                   Contact Details{" "}
                   <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -117,9 +119,8 @@ const Footer = () => {
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
               {/* Company Link Column */}
               <div>
-                <h3 className="text-slate-900 dark:text-white font-sora font-bold text-lg mb-6 flex items-center gap-2 transition-colors duration-300">
-                  Company{" "}
-                  <div className="h-px w-8 bg-slate-200 dark:bg-slate-800 transition-colors duration-300" />
+                <h3 className="text-foreground font-sora font-bold text-lg mb-6 flex items-center gap-2">
+                  Company <Separator className="w-8 bg-border" />
                 </h3>
                 <ul className="space-y-4">
                   {companyLinks.map((link) => (
@@ -138,9 +139,8 @@ const Footer = () => {
 
               {/* Resources Link Column */}
               <div>
-                <h3 className="text-slate-900 dark:text-white font-sora font-bold text-lg mb-6 flex items-center gap-2 transition-colors duration-300">
-                  Resources{" "}
-                  <div className="h-px w-8 bg-slate-200 dark:bg-slate-800 transition-colors duration-300" />
+                <h3 className="text-foreground font-sora font-bold text-lg mb-6 flex items-center gap-2">
+                  Resources <Separator className="w-8 bg-border" />
                 </h3>
                 <ul className="space-y-4">
                   {resourceLinks.map((link) => (
@@ -159,9 +159,8 @@ const Footer = () => {
 
               {/* Socials Column */}
               <div>
-                <h3 className="text-slate-900 dark:text-white font-sora font-bold text-lg mb-6 flex items-center gap-2 transition-colors duration-300">
-                  Connect{" "}
-                  <div className="h-px w-12 bg-emerald-500/50 transition-colors duration-300" />
+                <h3 className="text-foreground font-sora font-bold text-lg mb-6 flex items-center gap-2">
+                  Connect <Separator className="w-12 bg-emerald-500/50" />
                 </h3>
                 <div className="flex flex-col gap-4">
                   {socialLinks.map((social) => (
@@ -182,12 +181,12 @@ const Footer = () => {
               </div>
             </div>
 
-            <div className="hidden lg:block h-px w-full bg-gradient-to-r from-transparent via-slate-200 dark:via-slate-800 to-transparent mt-12 transition-colors duration-300" />
+            <Separator className="hidden lg:block w-full bg-gradient-to-r from-transparent via-border to-transparent mt-12" />
           </div>
         </div>
 
         {/* BOTTOM: Massive Text & Copyright */}
-        <div className="relative pt-8 border-t border-slate-200 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 transition-colors duration-300">
+        <div className="relative pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6 transition-colors duration-300">
           {/* Copyright & Legal */}
           <div className="flex flex-col md:flex-row items-center gap-6 text-sm text-slate-500">
             <p>&copy; {new Date().getFullYear()} Shero Group.</p>
@@ -214,9 +213,9 @@ const Footer = () => {
           </div>
 
           {/* Certificate/Badge (Decorative) */}
-          <div className="flex items-center gap-2 px-4 py-2 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all">
-            <BadgeCheck className="w-4 h-4" />
-            <span className="text-xs font-semibold text-slate-600 dark:text-slate-300 transition-colors">
+          <div className="flex items-center gap-2 px-4 py-2 rounded bg-emerald-100/30 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800 opacity-40 hover:opacity-100 transition-all">
+            <BadgeCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 transition-colors">
               Certified
             </span>
           </div>
@@ -224,7 +223,7 @@ const Footer = () => {
 
         {/* MASSIVE TYPOGRAPHY (Background Layer) */}
         <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none overflow-hidden z-0 opacity-[0.03] dark:opacity-5 transition-opacity duration-300">
-          <h1 className="text-[15vw] leading-none font-bold text-slate-900 dark:text-white font-logo tracking-wider transition-colors duration-300">
+          <h1 className="text-[15vw] leading-none font-bold text-slate-900/80 dark:text-white/80 font-logo tracking-wider transition-colors duration-300">
             SHERO
           </h1>
         </div>

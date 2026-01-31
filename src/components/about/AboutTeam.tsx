@@ -70,11 +70,12 @@ const getInitials = (name: string) => {
 
 const AboutTeam = () => {
   return (
-    <section className="py-24 bg-white dark:bg-slate-900 overflow-hidden border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
+    <section className="py-24 bg-white pattern-dots dark:bg-slate-900 overflow-hidden border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
+      {/* <div className="absolute inset-0 pattern-dots opacity-80 pointer-events-none" /> */}
       <div className="container px-4 md:px-6 mx-auto w-full md:max-w-10/12">
         <div className="mb-16 space-y-4 flex flex-col md:flex-row md:justify-between justify-start md:items-center items-start">
           <div>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase transition-colors duration-300">
+            <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase transition-colors duration-300">
               <Users className="w-4 h-4" />
               Our Team
             </span>

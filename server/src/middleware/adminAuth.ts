@@ -8,6 +8,7 @@ export interface AdminRequest extends Request {
     username: string;
     email: string;
     role: string;
+    avatar?: string;
   };
 }
 
@@ -23,6 +24,7 @@ interface AdminUserRow {
   username: string;
   email: string;
   role: string;
+  avatar?: string;
 }
 
 /**
@@ -37,7 +39,7 @@ export async function adminAuth(
   try {
     // Get token from Authorization header (Bearer token)
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!authHeader?.startsWith("Bearer ")) {
       return res.status(401).json({ error: "No authorization token provided" });
     }
 
@@ -61,7 +63,7 @@ export async function adminAuth(
     // Get admin user
     const adminRes = await db.query(
       `
-      SELECT id, username, email, role FROM admin_users WHERE id = $1
+      SELECT id, username, email, role, avatar FROM admin_users WHERE id = $1
     `,
       [session.adminId],
     );

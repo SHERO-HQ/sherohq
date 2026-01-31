@@ -3,6 +3,7 @@ import { ShoppingCart, Heart, Eye, Star, CreditCard } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
+import { useNotifications } from "@/hooks/useNotifications";
 import { getImageUrl } from "@/services/api";
 import type { Product } from "@/data/products"; // Import shared type
 
@@ -13,6 +14,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
   const { addItem } = useCart();
+  const { addNotification } = useNotifications();
   const navigate = useNavigate();
   const [isWishlisted, setIsWishlisted] = useState(false);
 
@@ -32,6 +34,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       image: product.image,
       category: product.category,
     });
+    addNotification(
+      "Added to Cart",
+      `${product.name} has been added to your cart.`,
+      "success",
+    );
   };
 
   const handleBuyNow = (e: React.MouseEvent) => {
@@ -131,10 +138,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
           <img
             src={getImageUrl(product.image)}
             alt={product.name}
+            width={600}
+            height={400}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
             onError={(e) => {
               e.currentTarget.onerror = null;
-              e.currentTarget.src = "https://placehold.co/600x400?text=No+Image";
+              e.currentTarget.src =
+                "https://placehold.co/600x400?text=No+Image";
             }}
           />
         ) : (
@@ -149,7 +161,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             onClick={handleQuickView}
             aria-label={`View details for ${product.name}`}
             className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300
-                           flex items-center gap-2 px-5 py-2.5 rounded
+                           flex items-center gap-2 px-5 py-2 rounded
                            bg-white/10 backdrop-blur-md border border-white/20
                            text-white font-medium text-sm
                            hover:bg-emerald-600 hover:border-emerald-500 cursor-pointer"
@@ -178,7 +190,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
         </div>
 
         <div className="flex items-end justify-between mt-2 sm:mt-3 gap-1">
-          <div className="flex flex-col min-w-0 shrink">
+          <div className="flex flex-row-reverse gap-1 items-center min-w-0 shrink">
             {product.originalPrice && (
               <span className="text-[10px] sm:text-xs text-slate-500 line-through truncate">
                 GH₵{product.originalPrice}
@@ -188,36 +200,35 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
               GH₵{product.price}
             </span>
           </div>
-
-          <div className="flex gap-1 sm:gap-2 shrink-0">
-            <button
-              onClick={handleAddToCart}
-              disabled={!product.inStock}
-              aria-label={`Add ${product.name} to cart`}
-              className={`p-1.5 sm:p-2 rounded flex items-center justify-center transition-all duration-300 cursor-pointer border
+        </div>
+        <div className="flex gap-1 sm:gap-2 shrink-0 mt-2">
+          <button
+            onClick={handleAddToCart}
+            disabled={!product.inStock}
+            aria-label={`Add ${product.name} to cart`}
+            className={`px-4 py-2 rounded flex items-center justify-center transition-all duration-300 cursor-pointer border w-full
                            ${
                              product.inStock
                                ? "border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
                                : "border-slate-700 bg-slate-800 text-slate-600 cursor-not-allowed"
                            }`}
-            >
-              <ShoppingCart className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
-            </button>
+          >
+            <ShoppingCart className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
+          </button>
 
-            <button
-              onClick={handleBuyNow}
-              disabled={!product.inStock}
-              className={`px-2 sm:px-4 py-1.5 sm:py-2 rounded flex items-center gap-1 transition-all duration-300 cursor-pointer text-[10px] sm:text-sm font-bold
+          <button
+            onClick={handleBuyNow}
+            disabled={!product.inStock}
+            className={`px-4 py-2 rounded flex items-center justify-center gap-1 transition-all duration-300 cursor-pointer text-[10px] sm:text-sm font-bold w-full
                            ${
                              product.inStock
                                ? "dark:bg-emerald-600 bg-emerald-600 text-white hover:bg-emerald-500 hover:scale-105 shadow-lg shadow-emerald-500/20"
                                : "bg-slate-800 text-slate-600 cursor-not-allowed"
                            }`}
-            >
-              <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span>Buy</span>
-            </button>
-          </div>
+          >
+            <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span>Buy</span>
+          </button>
         </div>
       </div>
     </motion.div>

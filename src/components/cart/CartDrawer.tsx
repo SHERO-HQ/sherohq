@@ -3,6 +3,7 @@ import { useCart } from "@/context/CartContext";
 import { getImageUrl } from "@/services/api";
 import { X, Minus, Plus, ShoppingBag, Trash2, ArrowRight } from "lucide-react";
 import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 const CartDrawer = () => {
   const {
@@ -53,13 +54,15 @@ const CartDrawer = () => {
                   Your Cart ({totalQuantity})
                 </h2>
               </div>
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setIsCartOpen(false)}
                 aria-label="Close Cart"
-                className="cursor-pointer p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                className="rounded-full"
               >
                 <X className="w-6 h-6 text-slate-500" />
-              </button>
+              </Button>
             </div>
 
             {/* Items List */}
@@ -77,12 +80,13 @@ const CartDrawer = () => {
                       Time to add some premium tech!
                     </p>
                   </div>
-                  <button
+                  <Button
                     onClick={() => setIsCartOpen(false)}
-                    className="cursor-pointer px-6 py-2 bg-emerald-600 text-white rounded font-semibold hover:bg-emerald-700 transition-colors"
+                    variant="brand"
+                    className="font-bold"
                   >
                     Start Shopping
-                  </button>
+                  </Button>
                 </div>
               ) : (
                 cart.map((item) => (
@@ -172,16 +176,17 @@ const CartDrawer = () => {
                 <p className="text-xs text-slate-500 dark:text-slate-400">
                   Shipping and taxes calculated at checkout.
                 </p>
-                <button
+                <Button
                   onClick={() => {
                     setIsCartOpen(false);
                     window.location.href = "/checkout";
                   }}
-                  className="cursor-pointer w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold flex items-center justify-center gap-2 transition-all group"
+                  variant="brand"
+                  className="w-full h-12 font-bold group"
                 >
                   Proceed to Checkout
                   <ArrowRight className="w-5 h-2.5 group-hover:translate-x-1 transition-transform" />
-                </button>
+                </Button>
               </div>
             )}
           </motion.div>

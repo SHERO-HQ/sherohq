@@ -78,36 +78,58 @@ function getAuthToken(): string | null {
   return localStorage.getItem("adminToken");
 }
 
+// Helper to safely parse JSON and handle errors
+async function handleResponse<T>(response: Response): Promise<T> {
+  const text = await response.text();
+
+  if (!response.ok) {
+    const contentType = response.headers.get("content-type");
+    if (contentType?.includes("application/json")) {
+      try {
+        const errorData = JSON.parse(text);
+        throw new Error(errorData.error || `Error ${response.status}`);
+      } catch {
+        throw new Error(
+          `Server Error: ${response.status} ${response.statusText}`,
+        );
+      }
+    }
+    console.error("API Error (Non-JSON):", text.substring(0, 200));
+    throw new Error(`Server Error: ${response.status} ${response.statusText}`);
+  }
+
+  if (!text) {
+    // Some successful operations might return empty body (e.g. 204 No Content)
+    // But our API usually returns {success: true} or similar.
+    if (response.status === 204) return {} as T;
+    throw new Error("Server returned an empty response.");
+  }
+
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    console.error("JSON Parse Error:", text.substring(0, 200));
+    throw new Error("Failed to parse server response.");
+  }
+}
+
 // Helper to make authenticated requests
 async function authFetch(url: string, options: RequestInit = {}) {
   const token = getAuthToken();
   const headers: HeadersInit = {
-    "Content-Type": "application/json",
     ...options.headers,
   };
+
+  // Only set application/json if not FormData and not already set
+  if (!(options.body instanceof FormData)) {
+    (headers as Record<string, string>)["Content-Type"] = "application/json";
+  }
 
   if (token) {
     (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
   }
 
   const response = await fetch(url, { ...options, headers });
-
-  // Clone response to check body
-  if (!response.ok) {
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      // Let the caller handle the specific JSON error
-      return response;
-    } else {
-      // It's likely HTML (404/500/Bad Gateway)
-      const text = await response.text();
-      console.error("API Error (Non-JSON):", text.substring(0, 200)); // Log first 200 chars
-      throw new Error(
-        `Server Error: ${response.status} ${response.statusText}`,
-      );
-    }
-  }
-
   return response;
 }
 
@@ -127,34 +149,19 @@ export async function fetchProducts(
 
   const url = `${API_BASE}/products${params.toString() ? "?" + params.toString() : ""}`;
   const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch products");
-  }
-
-  return response.json();
+  return handleResponse<Product[]>(response);
 }
 
 export async function fetchProduct(id: string): Promise<Product> {
   const response = await fetch(`${API_BASE}/products/${id}`);
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch product");
-  }
-
-  return response.json();
+  return handleResponse<Product>(response);
 }
 
 export async function fetchCategories(): Promise<
   { id: string; name: string; icon: string }[]
 > {
   const response = await fetch(`${API_BASE}/products/categories/list`);
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch categories");
-  }
-
-  return response.json();
+  return handleResponse(response);
 }
 
 // ============ Orders API ============
@@ -165,6 +172,7 @@ export interface OrderItem {
   price: number;
   quantity: number;
   image?: string;
+  sku?: string;
 }
 
 export interface ShippingInfo {
@@ -204,11 +212,7 @@ export async function createOrder(
     body: JSON.stringify(payload),
   });
 
-  if (!response.ok) {
-    throw new Error("Failed to create order");
-  }
-
-  return response.json();
+  return handleResponse<CreateOrderResponse>(response);
 }
 
 export interface Order {
@@ -224,22 +228,12 @@ export interface Order {
 
 export async function fetchGuestOrders(guestId: string): Promise<Order[]> {
   const response = await fetch(`${API_BASE}/orders/guest/${guestId}`);
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch orders");
-  }
-
-  return response.json();
+  return handleResponse<Order[]>(response);
 }
 
 export async function trackOrder(orderId: string): Promise<Order> {
   const response = await fetch(`${API_BASE}/orders/track/${orderId}`);
-
-  if (!response.ok) {
-    throw new Error("Order not found");
-  }
-
-  return response.json();
+  return handleResponse<Order>(response);
 }
 
 // ============ User Auth API ============
@@ -280,21 +274,7 @@ export async function userRegister(data: {
     body: JSON.stringify(data),
   });
 
-  if (!response.ok) {
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      const error = await response.json();
-      throw new Error(error.error || "Registration failed");
-    } else {
-      const text = await response.text();
-      console.error("Register Error (Non-JSON):", text.substring(0, 200));
-      throw new Error(
-        `Server Error: ${response.status} ${response.statusText}`,
-      );
-    }
-  }
-
-  const result = await response.json();
+  const result = await handleResponse<UserLoginResponse>(response);
   localStorage.setItem("userToken", result.token);
   return result;
 }
@@ -319,28 +299,15 @@ export async function userLogin(data: {
       `⏱️ Login API Response Time: ${(endTime - startTime).toFixed(2)}ms`,
     );
 
-    if (!response.ok) {
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
-        const error = await response.json();
-        throw new Error(error.error || "Login failed");
-      } else {
-        const text = await response.text();
-        console.error("Login Error (Non-JSON):", text.substring(0, 200));
-        throw new Error(
-          `Server Error: ${response.status} ${response.statusText}`,
-        );
-      }
-    }
-
-    const result = await response.json();
+    const result = await handleResponse<UserLoginResponse>(response);
     localStorage.setItem("userToken", result.token);
     return result;
   } catch (error) {
-    if (error instanceof Error && error.message.includes("Login failed")) {
-      throw error;
-    }
-    console.error("Login API Network Error:", error);
+    console.error("Login API Network Error Details:", {
+      message: error instanceof Error ? error.message : String(error),
+      url,
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     throw error;
   }
 }
@@ -364,19 +331,12 @@ export async function getUserMe(): Promise<{ user: User }> {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  if (!response.ok) {
-    throw new Error("Not authenticated");
-  }
-
-  return response.json();
+  return handleResponse<{ user: User }>(response);
 }
 
 export async function getUserOrders(userId: string): Promise<Order[]> {
   const response = await fetch(`${API_BASE}/orders/user/${userId}`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch user orders");
-  }
-  return response.json();
+  return handleResponse<Order[]>(response);
 }
 
 // Email Verification
@@ -389,12 +349,7 @@ export async function verifyEmail(
     body: JSON.stringify({ token }),
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Verification failed");
-  }
-
-  return response.json();
+  return handleResponse(response);
 }
 
 export async function resendVerificationEmail(
@@ -406,19 +361,14 @@ export async function resendVerificationEmail(
     body: JSON.stringify({ email }),
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Failed to resend verification");
-  }
-
-  return response.json();
+  return handleResponse(response);
 }
 
 // Profile Update
 export async function updateUserProfile(data: {
   name?: string;
   phone?: string;
-  shippingAddress?: ShippingAddress;
+  shippingAddress?: ShippingAddress | null;
 }): Promise<{ success: boolean; user: User }> {
   const token = localStorage.getItem("userToken");
   if (!token) throw new Error("Not authenticated");
@@ -432,12 +382,7 @@ export async function updateUserProfile(data: {
     body: JSON.stringify(data),
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Profile update failed");
-  }
-
-  return response.json();
+  return handleResponse(response);
 }
 
 // Inquiry API
@@ -457,12 +402,7 @@ export async function scheduleConsultation(data: {
     body: JSON.stringify(data),
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Failed to schedule consultation");
-  }
-
-  return response.json();
+  return handleResponse(response);
 }
 
 export async function sendContactMessage(data: {
@@ -477,12 +417,26 @@ export async function sendContactMessage(data: {
     body: JSON.stringify(data),
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Failed to send message");
-  }
+  return handleResponse(response);
+}
 
-  return response.json();
+export async function createTicket(data: {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  category: string;
+  priority?: string;
+  productId?: string;
+  userId?: string;
+}): Promise<{ success: boolean; message: string; ticketId: string }> {
+  const response = await fetch(`${API_BASE}/tickets`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  return handleResponse(response);
 }
 
 export interface AdminUser {
@@ -490,6 +444,7 @@ export interface AdminUser {
   username: string;
   email: string;
   role: string;
+  avatar?: string;
 }
 
 export interface LoginResponse {
@@ -518,12 +473,7 @@ export async function adminLogin(
     body: JSON.stringify({ username, password }),
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Login failed");
-  }
-
-  const data = await response.json();
+  const data = await handleResponse<LoginResponse>(response);
   localStorage.setItem("adminToken", data.token);
   return data;
 }
@@ -541,28 +491,19 @@ export async function getAdminMe(): Promise<{
   admin: AdminUser;
 }> {
   const response = await authFetch(`${API_BASE}/admin/me`);
-
-  if (!response.ok) {
-    throw new Error("Not authenticated");
-  }
-
-  return response.json();
+  return handleResponse(response);
 }
 
 export async function getAdminStats(): Promise<AdminStats> {
   const response = await authFetch(`${API_BASE}/admin/stats`);
-
-  if (!response.ok) {
-    throw new Error("Failed to fetch stats");
-  }
-
-  return response.json();
+  return handleResponse(response);
 }
 
 export async function updateAdminProfile(data: {
   username?: string;
   email?: string;
   password?: string;
+  avatar?: string;
 }): Promise<{
   success: boolean;
   message: string;
@@ -573,12 +514,7 @@ export async function updateAdminProfile(data: {
     body: JSON.stringify(data),
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Failed to update profile");
-  }
-
-  return response.json();
+  return handleResponse(response);
 }
 
 // Admin Product functions
@@ -607,12 +543,7 @@ export async function createProduct(
     body: JSON.stringify(data),
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Failed to create product");
-  }
-
-  return response.json();
+  return handleResponse(response);
 }
 
 export async function updateProduct(
@@ -624,12 +555,7 @@ export async function updateProduct(
     body: JSON.stringify(data),
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Failed to update product");
-  }
-
-  return response.json();
+  return handleResponse(response);
 }
 
 export async function updateProductStock(
@@ -641,12 +567,7 @@ export async function updateProductStock(
     body: JSON.stringify({ stockQuantity }),
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Failed to update stock");
-  }
-
-  return response.json();
+  return handleResponse(response);
 }
 
 export async function deleteProduct(
@@ -656,22 +577,38 @@ export async function deleteProduct(
     method: "DELETE",
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Failed to delete product");
-  }
+  return handleResponse(response);
+}
 
-  return response.json();
+export async function uploadImage(
+  file: File,
+): Promise<{ success: boolean; imageUrl: string; filename: string }> {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const response = await authFetch(`${API_BASE}/upload`, {
+    method: "POST",
+    body: formData,
+  });
+
+  return handleResponse(response);
+}
+
+export async function uploadImages(
+  files: File[],
+): Promise<{ success: boolean; imageUrls: string[]; filenames: string[] }> {
+  const formData = new FormData();
+  files.forEach((file) => formData.append("images", file));
+
+  const response = await authFetch(`${API_BASE}/upload/multiple`, {
+    method: "POST",
+    body: formData,
+  });
+
+  return handleResponse(response);
 }
 
 // ============ Report API ============
-
-export interface DashboardStats {
-  revenue: number;
-  orders: number;
-  products: number;
-  lowStock: number;
-}
 
 export interface AnalyticsData {
   date: string;
@@ -685,10 +622,9 @@ export interface TopProduct {
   revenue: number;
 }
 
-export async function fetchDashboardStats(): Promise<DashboardStats> {
+export async function fetchDashboardStats(): Promise<AdminStats> {
   const response = await authFetch(`${API_BASE}/reports/stats`);
-  if (!response.ok) throw new Error("Failed to fetch stats");
-  return response.json();
+  return handleResponse<AdminStats>(response);
 }
 
 export async function fetchAnalytics(
@@ -697,14 +633,12 @@ export async function fetchAnalytics(
   const response = await authFetch(
     `${API_BASE}/reports/analytics?range=${range}`,
   );
-  if (!response.ok) throw new Error("Failed to fetch analytics");
-  return response.json();
+  return handleResponse<AnalyticsData[]>(response);
 }
 
 export async function fetchTopProducts(): Promise<TopProduct[]> {
   const response = await authFetch(`${API_BASE}/reports/top-products`);
-  if (!response.ok) throw new Error("Failed to fetch top products");
-  return response.json();
+  return handleResponse<TopProduct[]>(response);
 }
 
 export interface StockDistribution {
@@ -715,8 +649,7 @@ export interface StockDistribution {
 
 export async function fetchStockDistribution(): Promise<StockDistribution[]> {
   const response = await authFetch(`${API_BASE}/reports/stock-distribution`);
-  if (!response.ok) throw new Error("Failed to fetch stock distribution");
-  return response.json();
+  return handleResponse<StockDistribution[]>(response);
 }
 
 export interface OrderStatusDistribution {
@@ -729,8 +662,7 @@ export async function fetchOrderStatusDistribution(): Promise<
   OrderStatusDistribution[]
 > {
   const response = await authFetch(`${API_BASE}/reports/order-status`);
-  if (!response.ok) throw new Error("Failed to fetch order status");
-  return response.json();
+  return handleResponse<OrderStatusDistribution[]>(response);
 }
 
 export interface RecentOrder {
@@ -747,8 +679,23 @@ export interface RecentOrder {
 
 export async function fetchRecentOrders(): Promise<RecentOrder[]> {
   const response = await authFetch(`${API_BASE}/reports/recent-orders`);
-  if (!response.ok) throw new Error("Failed to fetch recent orders");
-  return response.json();
+  return handleResponse<RecentOrder[]>(response);
+}
+
+// Activity Log functions
+export interface ActivityLog {
+  id: string;
+  adminId: string;
+  adminName?: string;
+  action: string;
+  details?: string;
+  type: "info" | "success" | "warning" | "error";
+  createdAt: string;
+}
+
+export async function fetchActivityLogs(): Promise<ActivityLog[]> {
+  const response = await authFetch(`${API_BASE}/admin/activity`);
+  return handleResponse<ActivityLog[]>(response);
 }
 
 // Admin Orders functions
@@ -763,12 +710,12 @@ export async function fetchAllOrders(
   if (endDate) params.append("endDate", endDate);
 
   const response = await authFetch(`${API_BASE}/orders?${params.toString()}`);
+  return handleResponse<Order[]>(response);
+}
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch orders");
-  }
-
-  return response.json();
+export async function fetchOrderById(id: string): Promise<Order> {
+  const response = await authFetch(`${API_BASE}/orders/${id}`);
+  return handleResponse<Order>(response);
 }
 
 export async function updateOrderStatus(
@@ -780,35 +727,7 @@ export async function updateOrderStatus(
     body: JSON.stringify({ status }),
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Failed to update order status");
-  }
-
-  return response.json();
-}
-
-// ============ Upload API ============
-
-export async function uploadImage(
-  file: File,
-): Promise<{ success: boolean; imageUrl: string }> {
-  const token = getAuthToken();
-  const formData = new FormData();
-  formData.append("image", file);
-
-  const response = await fetch(`${API_BASE}/upload`, {
-    method: "POST",
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-    body: formData,
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Failed to upload image");
-  }
-
-  return response.json();
+  return handleResponse(response);
 }
 
 // ============ Payment API ============
@@ -824,33 +743,7 @@ export async function initializePayment(
     body: JSON.stringify({ orderId, totalAmount, description }),
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Failed to initialize payment");
-  }
-
-  return response.json();
-}
-
-export async function uploadImages(
-  files: File[],
-): Promise<{ success: boolean; imageUrls: string[] }> {
-  const token = getAuthToken();
-  const formData = new FormData();
-  files.forEach((file) => formData.append("images", file));
-
-  const response = await fetch(`${API_BASE}/upload/multiple`, {
-    method: "POST",
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
-    body: formData,
-  });
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Failed to upload images");
-  }
-
-  return response.json();
+  return handleResponse(response);
 }
 
 // ============ Reviews API ============
@@ -866,10 +759,7 @@ export interface Review {
 
 export async function getProductReviews(productId: string): Promise<Review[]> {
   const response = await fetch(`${API_BASE}/reviews/${productId}`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch reviews");
-  }
-  return response.json();
+  return handleResponse<Review[]>(response);
 }
 
 export async function submitProductReview(
@@ -882,10 +772,5 @@ export async function submitProductReview(
     body: JSON.stringify(data),
   });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.error || "Failed to submit review");
-  }
-
-  return response.json();
+  return handleResponse(response);
 }

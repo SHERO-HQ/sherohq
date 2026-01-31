@@ -1,4 +1,5 @@
 import { Route, Routes, Navigate } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import HomePage from "@/pages/Home";
 import About from "@/pages/About";
 import Products from "@/pages/Products";
@@ -23,13 +24,23 @@ import MockPaymentGateway from "@/pages/MockPaymentGateway";
 // Admin imports
 import { AdminProvider } from "@/context/AdminContext";
 import ProtectedRoute from "@/components/admin/ProtectedRoute";
-import AdminLogin from "@/pages/admin/AdminLogin";
-import AdminDashboard from "@/pages/admin/AdminDashboard";
-import AdminProducts from "@/pages/admin/AdminProducts";
-import AdminOrders from "@/pages/admin/AdminOrders";
-import ProductForm from "@/pages/admin/ProductForm";
-import AdminReports from "@/pages/admin/AdminReports";
-import AdminProfile from "@/pages/admin/AdminProfile";
+import { Loader2 } from "lucide-react";
+
+// Lazy loaded Admin Pages
+const AdminLogin = lazy(() => import("@/pages/admin/AdminLogin"));
+const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard"));
+const AdminProducts = lazy(() => import("@/pages/admin/AdminProducts"));
+const AdminOrders = lazy(() => import("@/pages/admin/AdminOrders"));
+const ProductForm = lazy(() => import("@/pages/admin/ProductForm"));
+const AdminReports = lazy(() => import("@/pages/admin/AdminReports"));
+const AdminProfile = lazy(() => import("@/pages/admin/AdminProfile"));
+const OrderDetails = lazy(() => import("@/pages/admin/OrderDetails"));
+
+const AppLoading = () => (
+  <div className="min-h-screen flex items-center justify-center dark:bg-slate-950 bg-slate-50">
+    <Loader2 className="w-10 h-10 text-emerald-500 animate-spin" />
+  </div>
+);
 
 const AppRoutes = () => {
   return (
@@ -60,68 +71,78 @@ const AppRoutes = () => {
       <Route
         path="admin/*"
         element={
-          <AdminProvider>
-            <Routes>
-              <Route path="login" element={<AdminLogin />} />
-              <Route path="" element={<Navigate to="dashboard" replace />} />
-              <Route
-                path="dashboard"
-                element={
-                  <ProtectedRoute>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="products"
-                element={
-                  <ProtectedRoute>
-                    <AdminProducts />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="products/new"
-                element={
-                  <ProtectedRoute>
-                    <ProductForm />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="products/:id/edit"
-                element={
-                  <ProtectedRoute>
-                    <ProductForm />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="orders"
-                element={
-                  <ProtectedRoute>
-                    <AdminOrders />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="reports"
-                element={
-                  <ProtectedRoute>
-                    <AdminReports />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="profile"
-                element={
-                  <ProtectedRoute>
-                    <AdminProfile />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-          </AdminProvider>
+          <Suspense fallback={<AppLoading />}>
+            <AdminProvider>
+              <Routes>
+                <Route path="login" element={<AdminLogin />} />
+                <Route path="" element={<Navigate to="dashboard" replace />} />
+                <Route
+                  path="dashboard"
+                  element={
+                    <ProtectedRoute>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="products"
+                  element={
+                    <ProtectedRoute>
+                      <AdminProducts />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="products/new"
+                  element={
+                    <ProtectedRoute>
+                      <ProductForm />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="products/:id/edit"
+                  element={
+                    <ProtectedRoute>
+                      <ProductForm />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="orders"
+                  element={
+                    <ProtectedRoute>
+                      <AdminOrders />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="orders/:id"
+                  element={
+                    <ProtectedRoute>
+                      <OrderDetails />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="reports"
+                  element={
+                    <ProtectedRoute>
+                      <AdminReports />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="profile"
+                  element={
+                    <ProtectedRoute>
+                      <AdminProfile />
+                    </ProtectedRoute>
+                  }
+                />
+              </Routes>
+            </AdminProvider>
+          </Suspense>
         }
       />
 

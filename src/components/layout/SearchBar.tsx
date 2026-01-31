@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Search, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
@@ -35,11 +35,11 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
     setTimeout(() => inputRef.current?.focus(), 100);
   };
 
-  const closeSearch = () => {
+  const closeSearch = useCallback(() => {
     if (alwaysOpen) return;
     setIsOpen(false);
     setQuery("");
-  };
+  }, [alwaysOpen]);
 
   // Close on Escape key
   useEffect(() => {
@@ -54,7 +54,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
       document.removeEventListener("keydown", handleEsc);
       document.body.style.overflow = "unset";
     };
-  }, [isOpen, alwaysOpen]);
+  }, [isOpen, alwaysOpen, closeSearch]);
 
   // For alwaysOpen mode (mobile), render inline
   if (alwaysOpen) {
@@ -92,21 +92,13 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
               {filteredProducts.length > 0 ? (
                 <div className="py-2">
                   {filteredProducts.slice(0, 5).map((product) => (
-                    <div
+                    <button
                       key={product.id}
                       onClick={() => {
                         navigate(`/products/${product.id}`);
                         setQuery("");
                       }}
-                      role="button"
-                      tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          navigate(`/products/${product.id}`);
-                          setQuery("");
-                        }
-                      }}
-                      className="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+                      className="w-full flex items-center gap-3 px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors text-left"
                     >
                       <div className="w-10 h-10 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden">
                         {product.image?.startsWith("/") ||
@@ -128,7 +120,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                           GH₵{product.price}
                         </div>
                       </div>
-                    </div>
+                    </button>
                   ))}
                 </div>
               ) : (
@@ -165,7 +157,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={closeSearch}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100]"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-100"
             />
 
             {/* Search Panel */}
@@ -174,7 +166,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed top-0 left-0 right-0 bg-white dark:bg-slate-900 shadow-2xl z-[101] p-4 border-b border-slate-200 dark:border-slate-800"
+              className="fixed top-0 left-0 right-0 bg-white dark:bg-slate-900 shadow-2xl z-101 p-4 border-b border-slate-200 dark:border-slate-800"
             >
               <div className="container max-w-3xl mx-auto">
                 <form onSubmit={handleSearch} className="relative">
@@ -220,21 +212,13 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                           {filteredProducts.length > 1 ? "s" : ""}
                         </p>
                         {filteredProducts.slice(0, 8).map((product) => (
-                          <div
+                          <button
                             key={product.id}
                             onClick={() => {
                               navigate(`/products/${product.id}`);
                               closeSearch();
                             }}
-                            role="button"
-                            tabIndex={0}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") {
-                                navigate(`/products/${product.id}`);
-                                closeSearch();
-                              }
-                            }}
-                            className="flex items-center gap-4 p-3 rounded hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+                            className="w-full flex items-center gap-4 p-3 rounded hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors text-left"
                           >
                             <div className="w-14 h-14 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden">
                               {product.image?.startsWith("/") ||
@@ -261,7 +245,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                             <div className="text-emerald-600 dark:text-emerald-400 font-bold">
                               GH₵{product.price}
                             </div>
-                          </div>
+                          </button>
                         ))}
 
                         {filteredProducts.length > 8 && (
@@ -279,11 +263,10 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                           <Search className="w-8 h-8 text-slate-400" />
                         </div>
                         <p className="text-slate-500 dark:text-slate-400">
-                          No products found for "
+                          No products found for{" "}
                           <span className="font-medium text-slate-700 dark:text-slate-300">
-                            {query}
+                            "{query}"
                           </span>
-                          "
                         </p>
                       </div>
                     )}

@@ -1,32 +1,42 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { useAuth } from "@/context/AuthContext";
 import { useTitle } from "@/hooks/useTitle";
-import { Loader2, Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import SheroLogo from "@/assets/logo/shero.svg";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const Login = () => {
   useTitle("Login");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = async (data: LoginInput) => {
     setError("");
-    setLoading(true);
 
     try {
-      await login({ email, password });
+      await login(data);
       navigate("/profile");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to login");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -44,57 +54,36 @@ const Login = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {error && (
               <div className="p-3 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-sm rounded text-center">
                 {error}
               </div>
             )}
 
-            <div>
-              <label
-                htmlFor="login-email"
-                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-              >
-                Email Address
-              </label>
-              <div className="relative">
-                <input
-                  id="login-email"
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
-                  placeholder="john@example.com"
-                />
-                <Mail className="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-              </div>
-            </div>
+            <Input
+              id="login-email"
+              type="email"
+              label="Email Address"
+              placeholder="john@example.com"
+              leftIcon={<Mail className="w-5 h-5" />}
+              error={errors.email?.message}
+              {...register("email")}
+            />
 
-            <div>
-              <label
-                htmlFor="login-password"
-                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"
-              >
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  id="login-password"
-                  type={showPassword ? "text" : "password"}
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-12 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
-                  placeholder="••••••••"
-                />
-                <Lock className="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-
+            <Input
+              id="login-password"
+              type={showPassword ? "text" : "password"}
+              label="Password"
+              placeholder="••••••••"
+              leftIcon={<Lock className="w-5 h-5" />}
+              error={errors.password?.message}
+              {...register("password")}
+              rightIcon={
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 focus:outline-none transition-colors"
+                  className="focus:outline-none transition-colors"
                 >
                   {showPassword ? (
                     <EyeOff className="w-5 h-5" />
@@ -102,29 +91,30 @@ const Login = () => {
                     <Eye className="w-5 h-5" />
                   )}
                 </button>
-              </div>
-            </div>
+              }
+            />
 
-            <button
+            <Button
               type="submit"
-              disabled={loading}
-              className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              variant="brand"
+              disabled={isSubmitting}
+              className="w-full font-bold h-11"
             >
-              {loading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
+              {isSubmitting ? (
+                <span className="flex items-center gap-2">Signing In...</span>
               ) : (
                 <>
                   Sign In <ArrowRight className="w-5 h-5" />
                 </>
               )}
-            </button>
+            </Button>
           </form>
 
           <div className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
             Don't have an account?{" "}
             <Link
               to="/signup"
-              className="text-emerald-600 dark:text-emerald-400 font-semibold hover:underline"
+              className="text-purple-600 dark:text-purple-400 font-semibold hover:underline"
             >
               Sign up
             </Link>

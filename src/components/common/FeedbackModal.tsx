@@ -109,7 +109,7 @@ export default function FeedbackModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-lg shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden"
+            className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
@@ -258,7 +258,7 @@ export default function FeedbackModal({
                 <button
                   type="submit"
                   disabled={status === "submitting" || rating === 0}
-                  className="w-full py-2.5 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {status === "submitting" ? (
                     <>

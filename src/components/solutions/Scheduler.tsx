@@ -466,7 +466,7 @@ const Scheduler = () => {
                               onClick={() => setFormData({ ...formData, time })}
                               disabled={isPassed}
                               className={cn(
-                                "px-3 py-2.5 rounded text-sm font-medium transition-all text-center border cursor-pointer",
+                                "px-3 py-2 rounded text-sm font-medium transition-all text-center border cursor-pointer",
                                 slotClass,
                               )}
                             >

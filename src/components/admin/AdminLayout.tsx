@@ -1,173 +1,102 @@
-import { type ReactNode } from "react";
-import { Link, useLocation, useNavigate, Navigate } from "react-router-dom";
-import { useAdmin } from "@/context/AdminContext";
-import {
-  LayoutDashboard,
-  Package,
-  ShoppingCart,
-  LogOut,
-  Menu,
-  X,
-  ChevronLeft,
-  TrendingUp,
-  Settings,
-} from "lucide-react";
-import { useState } from "react";
-import NotificationCenter from "@/components/admin/NotificationCenter";
+import { useState, useEffect } from "react";
+import AdminSidebar from "./AdminSidebar";
+import AdminHeader from "./AdminHeader";
+import { cn } from "@/lib/utils";
+import { motion } from "motion/react";
 
 interface AdminLayoutProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
-const navItems = [
-  { path: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { path: "/admin/products", label: "Products", icon: Package },
-  { path: "/admin/orders", label: "Orders", icon: ShoppingCart },
-  { path: "/admin/reports", label: "Reports", icon: TrendingUp },
-  { path: "/admin/profile", label: "Settings", icon: Settings },
-];
+export default function AdminLayout({ children }: Readonly<AdminLayoutProps>) {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-export default function AdminLayout({ children }: AdminLayoutProps) {
-  const { admin, logout, isAuthenticated, isLoading } = useAdmin();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  // Global Keyboard Shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // '/' to focus search
+      if (
+        e.key === "/" &&
+        (e.target as HTMLElement).tagName !== "INPUT" &&
+        (e.target as HTMLElement).tagName !== "TEXTAREA"
+      ) {
+        e.preventDefault();
+        const searchInput = document.querySelector(
+          'input[placeholder*="Search"]',
+        ) as HTMLInputElement;
+        if (searchInput) searchInput.focus();
+      }
 
-  // Redirect if not authenticated
-  if (!isLoading && !isAuthenticated) {
-    return <Navigate to="/admin/login" replace />;
-  }
+      // 'ESC' to close sidebar if mobile
+      if (e.key === "Escape" && globalThis.innerWidth < 1024) {
+        setIsSidebarOpen(false);
+      }
+    };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500" />
-      </div>
-    );
-  }
+    globalThis.addEventListener("keydown", handleKeyDown);
+    return () => globalThis.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
-  async function handleLogout() {
-    await logout();
-    navigate("/admin/login");
-  }
+  // Close sidebar by default on smaller screens
+  useEffect(() => {
+    const handleResize = () => {
+      if (globalThis.innerWidth < 1024) {
+        setIsSidebarOpen(false);
+      } else {
+        setIsSidebarOpen(true);
+      }
+    };
+
+    handleResize(); // Set initial state
+    globalThis.addEventListener("resize", handleResize);
+    return () => globalThis.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
-    <div className="min-h-screen bg-slate-950">
-      {/* Mobile Menu Button */}
-      <button
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-slate-800 rounded text-white"
+    <div className="dark min-h-screen bg-slate-950 text-slate-200 relative">
+      {/* Background Pattern: Tiny dots for "Elite" texture */}
+      <div className="fixed inset-0 pattern-dots opacity-10 pointer-events-none z-0" />
+
+      {/* Sidebar Component */}
+      <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+
+      {/* Main Content Area */}
+      <div
+        className={cn(
+          "transition-all duration-300 min-h-screen flex flex-col",
+          isSidebarOpen ? "lg:pl-[260px]" : "lg:pl-20",
+          "pl-0",
+        )}
       >
-        {sidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-      </button>
-
-      {/* Sidebar Overlay */}
-      {sidebarOpen && (
-        <div
-          className="lg:hidden fixed inset-0 bg-black/50 z-40"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside
-        className={`fixed top-0 left-0 h-full w-64 bg-slate-900 border-r border-slate-800 z-50 transform transition-transform lg:translate-x-0 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        {/* Logo */}
-        <div className="p-6 border-b border-slate-800">
-          <Link to="/" className="flex items-center gap-2 text-white">
-            <ChevronLeft className="w-5 h-5 text-slate-400" />
-            <span className="text-sm text-slate-400">Back</span>
-          </Link>
-          <h1 className="text-xl font-bold font-sora text-white mt-4">Sherotech Admin</h1>
-        </div>
-
-        {/* Navigation */}
-        <nav className="p-4 space-y-2">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.path;
-
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 px-4 py-2 font-sora rounded transition-all ${
-                  isActive
-                    ? "bg-purple-500/20 text-purple-400 font-semibold border border-purple-500/30"
-                    : "text-slate-400 hover:bg-slate-800 hover:text-white"
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* User Info */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-800">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center text-white font-semibold">
-              {admin?.username.charAt(0).toUpperCase()}
-            </div>
-            <div>
-              <p className="text-sm font-medium text-white">
-                {admin?.username}
-              </p>
-              <p className="text-xs text-slate-500">{admin?.role}</p>
-            </div>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 rounded text-red-400 hover:text-red-500 transition-colors duration-75"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Logout</span>
-          </button>
-        </div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="lg:ml-64 min-h-screen bg-slate-950">
-        {/* Top Header */}
-        <header className="fixed top-0 right-0 left-0 lg:left-64 h-16 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 z-30 pl-16 pr-6 lg:px-6 flex items-center justify-between">
-          <h2 className="text-lg lg:text-xl font-bold text-white capitalize">
-            {(() => {
-              const path = location.pathname.split("/").pop();
-              switch (path) {
-                case "dashboard":
-                  return "Dashboard";
-                case "products":
-                  return "Products";
-                case "orders":
-                  return "Orders";
-                case "reports":
-                  return "Reports";
-                case "profile":
-                  return "Settings";
-                default:
-                  return path || "Dashboard";
-              }
-            })()}
-          </h2>
-          <div className="flex items-center gap-4">
-            <NotificationCenter />
-            <div className="w-px h-6 bg-slate-800" />
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center text-white text-sm font-semibold">
-                {admin?.username.charAt(0).toUpperCase()}
-              </div>
-            </div>
-          </div>
-        </header>
+        {/* Header Component */}
+        <AdminHeader onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
 
         {/* Page Content */}
-        <div className="p-6 pt-20 lg:pt-24">{children}</div>
-      </main>
+        <main className="flex-1 p-4 md:p-8">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            {children}
+          </motion.div>
+        </main>
+
+        {/* Simple Footer */}
+        <footer className="py-6 px-4 md:px-8 border-t border-white/5 text-center text-slate-500 text-xs">
+          <p>
+            © {new Date().getFullYear()} SHERO Technologies Admin Panel. Built
+            with precision.
+          </p>
+        </footer>
+      </div>
+
+      {/* Background Decor */}
+      <div className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-emerald-500/10 blur-[140px] rounded-full" />
+        <div className="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-500/10 blur-[140px] rounded-full" />
+        <div className="absolute top-[30%] left-[20%] w-[30%] h-[30%] bg-emerald-500/5 blur-[120px] rounded-full" />
+      </div>
     </div>
   );
 }

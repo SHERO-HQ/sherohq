@@ -52,7 +52,7 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
     { label: "GH₵500 - GH₵1,000", range: [500, 1000] as [number, number] },
     { label: "GH₵1,000 - GH₵3,000", range: [1000, 3000] as [number, number] },
     { label: "GH₵3,000 - GH₵5,000", range: [3000, 5000] as [number, number] },
-    { label: "Above GH₵5,000", range: [5000, 10000] as [number, number] },
+    { label: "Above GH₵5,000", range: [5000, 1000000] as [number, number] },
   ];
 
   const ratings = [5, 4, 3, 2, 1];

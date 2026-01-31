@@ -8,9 +8,8 @@ const SolutionsHero = () => {
                       bg-linear-to-t from-slate-100 to-slate-50 
                       dark:from-slate-950 dark:to-slate-900"
     >
-      {/* Animated Grid Background */}
-      {/* Animated Grid Background */}
-      <div className="absolute inset-0 hero-grid-pattern opacity-50" />
+      {/* Dot Pattern Background */}
+      <div className="absolute inset-0 pattern-dots opacity-30 dark:opacity-20 pointer-events-none" />
 
       {/* Gradient Orbs - Blue/Cyan theme for Solutions */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -47,7 +46,7 @@ const SolutionsHero = () => {
                      bg-emerald-100 dark:bg-emerald-900/30 
                      border border-emerald-200 dark:border-emerald-800
                      text-emerald-700 dark:text-emerald-300
-                     text-sm font-semibold mb-6 uppercase"
+                     text-xs font-semibold mb-6 uppercase"
           >
             <Code className="size-4" />
             <span>Software & IT Solutions</span>

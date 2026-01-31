@@ -8,12 +8,13 @@ import { notificationService } from "../services/NotificationService";
 
 const router = express.Router();
 
-// Stricter rate limiting for auth routes: 5 attempts per 15 minutes
+// Rate limiting for auth routes: Disabled in development
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 5,
+  limit: process.env.NODE_ENV === "production" ? 5 : 100000,
   standardHeaders: "draft-7",
   legacyHeaders: false,
+  skip: () => process.env.NODE_ENV !== "production",
   message: { error: "Too many attempts, please try again in 15 minutes." },
 });
 
@@ -395,6 +396,41 @@ router.post("/logout", async (req, res) => {
   } catch (error) {
     console.error("Logout error:", error);
     res.status(500).json({ error: "Failed to logout" });
+  }
+});
+
+// Upload Avatar
+router.put("/avatar", async (req, res) => {
+  try {
+    const user = await getUserFromToken(req.headers.authorization);
+
+    if (!user) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const { avatarUrl } = req.body;
+
+    if (!avatarUrl) {
+      res.status(400).json({ error: "Avatar URL is required" });
+      return;
+    }
+
+    await db.query("UPDATE users SET avatar = $1 WHERE id = $2", [
+      avatarUrl,
+      user.id,
+    ]);
+
+    res.json({
+      success: true,
+      user: {
+        ...user,
+        avatar: avatarUrl,
+      },
+    });
+  } catch (error) {
+    console.error("Update avatar error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

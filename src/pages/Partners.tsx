@@ -7,12 +7,12 @@ const Partners = () => {
   useTitle("Partners");
 
   const partners = [
-    { name: "TechCorp Ghana", logo: "🏢" },
+    { name: "Tech Companies", logo: "🏢" },
     { name: "Global Systems", logo: "🌐" },
     { name: "EduTech Solutions", logo: "🎓" },
-    { name: "FinServe Africa", logo: "💰" },
-    { name: "HealthPlus", logo: "🏥" },
-    { name: "AgriGrow", logo: "🌱" },
+    { name: "FinTechs", logo: "💰" },
+    { name: "Health Industries", logo: "🏥" },
+    { name: "AgriTech", logo: "🌱" },
   ];
 
   const benefits = [
@@ -32,9 +32,9 @@ const Partners = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto mb-20"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-500/20">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-500/20 uppercase">
               <Handshake className="w-4 h-4" />
-              <span>Partner With Us</span>
+              <span className="text-emerald-600 dark:text-emerald-400">Partner With Us</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white mb-6">
               Building the Future Together

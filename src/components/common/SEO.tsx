@@ -6,6 +6,8 @@ interface SEOProps {
   type?: string;
 }
 
+import { Helmet } from "react-helmet-async";
+
 const SEO = ({
   title,
   description,
@@ -30,7 +32,7 @@ const SEO = ({
   const metaUrl = url ? `${siteUrl}${url}` : siteUrl;
 
   return (
-    <>
+    <Helmet>
       {/* Standard Metadata */}
       <title>{metaTitle}</title>
       <meta name="description" content={metaDescription} />
@@ -49,7 +51,7 @@ const SEO = ({
       <meta name="twitter:title" content={metaTitle} />
       <meta name="twitter:description" content={metaDescription} />
       <meta name="twitter:image" content={metaImage} />
-    </>
+    </Helmet>
   );
 };
 

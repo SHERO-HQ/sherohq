@@ -2,8 +2,6 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
-// import path from "node:path";
-// import fs from "node:fs";
 import * as dotenv from "dotenv";
 
 // Database
@@ -20,6 +18,8 @@ import paymentRoutes from "./routes/payments";
 import reviewRoutes from "./routes/reviews";
 import authRoutes from "./routes/auth";
 import inquiryRoutes from "./routes/inquiry";
+import ticketsRoute from "./routes/tickets";
+import activityRoutes from "./routes/activity";
 
 // Load environment variables
 dotenv.config();
@@ -103,12 +103,19 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Global Rate Limiting - 100 requests per 15 minutes per IP
+// Request Logging Middleware
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
+
+// Global Rate Limiting - Disabled in development, 500 requests per 15 minutes in production
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 100,
+  limit: process.env.NODE_ENV === "production" ? 500 : 100000, // Effectively disabled in dev
   standardHeaders: "draft-7",
   legacyHeaders: false,
+  skip: () => process.env.NODE_ENV !== "production", // Skip entirely if not in production
   message: { error: "Too many requests, please try again later." },
 });
 
@@ -143,11 +150,13 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/tickets", ticketsRoute);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/inquiry", inquiryRoutes);
+app.use("/api/admin", activityRoutes);
 
 // Root route - information about the API
 app.get("/", (req: Request, res: Response) => {

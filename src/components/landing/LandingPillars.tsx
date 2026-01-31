@@ -71,7 +71,7 @@ const LandingPillars = () => {
         <FadeInView direction="up">
           {/* Header */}
           <motion.header className="text-center mb-16" variants={fadeIn}>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
+            <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
               <Crosshair className="size-4" />
               Core Competencies
             </span>

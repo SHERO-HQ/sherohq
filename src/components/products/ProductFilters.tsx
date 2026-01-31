@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { X, SlidersHorizontal, Check } from "lucide-react";
 import { useState } from "react";
 import type { Category } from "./ProductsCategories";
+import { Button } from "@/components/ui/button";
 
 export interface FilterState {
   priceRange: [number, number];
@@ -58,7 +59,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
     { label: "GH₵500 - GH₵1,000", range: [500, 1000] as [number, number] },
     { label: "GH₵1,000 - GH₵3,000", range: [1000, 3000] as [number, number] },
     { label: "GH₵3,000 - GH₵5,000", range: [3000, 5000] as [number, number] },
-    { label: "Above GH₵5,000", range: [5000, 10000] as [number, number] },
+    { label: "Above GH₵5,000", range: [5000, 1000000] as [number, number] },
   ];
 
   const ratings = [5, 4, 3, 2, 1];
@@ -70,7 +71,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
 
   const handleReset = () => {
     const resetFilters = {
-      priceRange: [0, 10000] as [number, number],
+      priceRange: [0, 1000000] as [number, number],
       brands: [],
       minRating: 0,
       inStock: false,
@@ -92,7 +93,10 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
     if (tempFilters.brands.length > 0) count += tempFilters.brands.length;
     if (tempFilters.minRating > 0) count += 1;
     if (tempFilters.inStock) count += 1;
-    if (tempFilters.priceRange[0] !== 0 || tempFilters.priceRange[1] !== 10000)
+    if (
+      tempFilters.priceRange[0] !== 0 ||
+      tempFilters.priceRange[1] !== 1000000
+    )
       count += 1;
     return count;
   };
@@ -104,7 +108,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
       id: "price" as const,
       label: "Price",
       count:
-        tempFilters.priceRange[0] !== 0 || tempFilters.priceRange[1] !== 10000
+        tempFilters.priceRange[0] !== 0 || tempFilters.priceRange[1] !== 1000000
           ? 1
           : 0,
     },
@@ -146,7 +150,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
             </div>
 
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 dark:border-b dark:border-white/5 border-b border-white/5">
+            <div className="flex items-center justify-between px-6 py-2 dark:border-b dark:border-white/5 border-b border-white/5">
               <div className="flex items-center gap-3">
                 <SlidersHorizontal className="w-5 h-5 dark:text-emerald-400 text-emerald-900" />
                 <h2 className="text-xl font-bold text-emerald-900 dark:text-white">
@@ -192,7 +196,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto px-6 py-4">
+            <div className="flex-1 overflow-y-auto px-6 py-2">
               {/* Category Tab */}
               {activeTab === "category" && (
                 <div className="space-y-2">
@@ -414,26 +418,21 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
             </div>
 
             {/* Footer Actions */}
-            <div className="flex gap-3 p-6 border-t border-white/5 dark:bg-slate-900 bg-slate-300/70">
-              <button
+            <div className="flex gap-3 p-6 border-t border-white/5 dark:bg-slate-900 bg-slate-100">
+              <Button
+                variant="outline"
                 onClick={handleReset}
-                className="flex-1 px-6 py-2 rounded font-semibold
-                         border border-slate-700 dark:border-slate-300/70
-                         dark:text-slate-300 text-slate-700
-                         hover:bg-red-800 dark:hover:bg-red-800/50 hover:text-white
-                         transition-colors cursor-pointer"
+                className="flex-1 h-12 font-bold border-slate-300 dark:border-slate-700 dark:text-slate-300 text-slate-700 hover:bg-red-500 hover:text-white dark:hover:bg-red-600 dark:hover:text-white transition-colors"
               >
                 Reset
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="brand"
                 onClick={handleApply}
-                className="flex-1 px-6 py-2 rounded font-semibold
-                         bg-emerald-600 dark:text-white text-slate-900
-                         hover:bg-emerald-500
-                         transition-colors shadow-lg shadow-emerald-900/20 cursor-pointer"
+                className="flex-1 h-12 font-bold shadow-lg shadow-emerald-500/20"
               >
                 Apply Filters
-              </button>
+              </Button>
             </div>
           </motion.div>
         </>

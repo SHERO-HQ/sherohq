@@ -1,9 +1,10 @@
 import { NavLink } from "react-router-dom";
-import { motion, easeInOut } from "motion/react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { fadeUp } from "@/components/motion/heroMotion";
-import { useMemo } from "react";
-import { Handshake, RocketLaunchIcon } from "@/assets/icons/icons";
-import { Layers, MessageSquareDot, ShieldCheck } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { RocketIcon } from "@/assets/icons/icons";
+import { Layers, MessageSquareDot } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 // Type Definitions
 interface HeroContent {
@@ -11,206 +12,370 @@ interface HeroContent {
   subHeader: string;
 }
 
-type SmallText = {
-  text: string;
-  icon: React.ReactNode;
-};
-
 // Constants
 const HERO_CONTENT: HeroContent = {
   mainHeader: "Redefine Possible",
   subHeader:
-    "Innovative solutions that scale to ELEVATE people, businesses, and communities.",
+    "Built for efficiency, scalability, and innovation. Crafted Hardware and Software solutions to redefine the future of possibilities.",
 } as const;
-
-const ANIMATION_TIMINGS = {
-  PARAGRAPH_DELAY: 0.15,
-  CTA_DELAY: 0.25,
-} as const;
-
-const TopText: SmallText = {
-  text: "Scalable Innovative Solutions",
-  icon: <RocketLaunchIcon />,
-};
 
 const LandingHero: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Mouse Tracking for Kinetic Effects
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Particle State (Lazy Initializer for Stability - Elite Tuning)
+  const [particles] = useState(() =>
+    Array.from({ length: 8 }, (_, idx) => ({
+      id: idx,
+      x: Math.random() * 100 + "%",
+      y: Math.random() * 100 + "%",
+      opacity: Math.random() * 0.3, // More subtle
+      duration: Math.random() * 20 + 30, // Much slower (30-50s)
+    })),
+  );
+
+  // Spring physics for smooth movement
+  const springConfig = { damping: 25, stiffness: 150 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+
+  // Transform values for parallax and 3D
+  const rotateX = useTransform(smoothY, [-0.5, 0.5], [10, -10]);
+  const rotateY = useTransform(smoothX, [-0.5, 0.5], [-10, 10]);
+  const translateX = useTransform(smoothX, [-0.5, 0.5], [-20, 20]);
+  const translateY = useTransform(smoothY, [-0.5, 0.5], [-20, 20]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
   // Check reduced motion once on mount
   const prefersReducedMotion = useMemo(
-    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () => globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches,
     [],
   );
 
   return (
     <header
-      className="relative min-h-screen w-full overflow-hidden
-                 bg-linear-to-b from-slate-200 to-slate-100
-                 dark:from-slate-950 dark:to-slate-900
-                 flex items-center justify-center"
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      className="relative min-h-[90vh] lg:min-h-screen w-full overflow-hidden
+                 bg-slate-50 dark:bg-slate-950
+                 flex items-center md:pt-26"
       role="banner"
       aria-label="Hero section - Company mission statement"
     >
-      {/* Animated Grid Background */}
-      <div className="absolute inset-0 hero-grid-pattern" />
+      {/* KINETIC BACKGROUND LAYERS */}
+      <motion.div
+        style={{ x: translateX, y: translateY, opacity: .9 }}
+        className="absolute inset-0 pattern-dots pointer-events-none"
+      />
 
-      {/* Gradient Orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-64 h-64 md:w-96 md:h-96 bg-blue-500/20 dark:bg-blue-500/10 rounded-full blur-3xl opacity-60 md:opacity-100" />
-        <div className="absolute -bottom-40 -left-40 w-64 h-64 md:w-96 md:h-96 bg-emerald-500/20 dark:bg-emerald-500/10 rounded-full blur-3xl opacity-60 md:opacity-100" />
+      {/* Particle Field (Subtle) */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
+        {particles.map((p) => (
+          <motion.div
+            key={p.id}
+            initial={{
+              x: p.x,
+              y: p.y,
+              opacity: p.opacity,
+            }}
+            animate={{
+              y: [null, "-20%"],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: p.duration,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            className="absolute w-1 h-1 bg-emerald-500 rounded-full"
+          />
+        ))}
       </div>
 
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pt-10">
-        <div className="flex flex-col justify-center items-center gap-10 w-full py-20">
-          {/* Top Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="relative group"
-          >
-            <div className="relative overflow-hidden rounded-full p-0.5 bg-linear-to-r from-emerald-500 via-blue-500 to-indigo-500">
-              {/* Rotating gradient border */}
-              <motion.div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    "conic-gradient(from 0deg, #10b981 0%, #0ea5e9 33%, #6366f1 66%, #10b981 100%)",
-                }}
-                animate={{ rotate: 360 }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-              />
+      {/* Scanning Line Effect (Horizontal) */}
+      <div className="absolute inset-y-0 left-0 w-px bg-emerald-500/30 hidden md:block" />
 
-              {/* Inner content */}
-              <div className="relative bg-slate-50 dark:bg-slate-900 px-5 py-2.5 rounded-full">
-                <div className="flex items-center gap-2.5">
-                  <motion.span
-                    animate={{
-                      y: [0, -3, 0],
-                      x: [0, 3, 0],
-                    }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: easeInOut,
-                    }}
-                    className="w-4 h-4 text-emerald-600 dark:text-emerald-400"
-                  >
-                    {TopText.icon}
-                  </motion.span>
-                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                    {TopText.text}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Main Content */}
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            className="space-y-8 mx-auto flex flex-col items-center justify-center w-full max-w-5xl"
-          >
-            {/* Headline */}
-            <motion.h1
-              variants={prefersReducedMotion ? {} : fadeUp}
-              className="text-center font-sora font-extrabold leading-tight block text-[clamp(2rem,6vw,7rem)] 
-                             text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400"
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20 lg:py-0">
+        <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-8">
+          {/* LEFT: Content (60%) */}
+          <div className="w-full lg:w-[60%] flex flex-col items-start space-y-2 text-left">
+            {/* Top Badge: Mono Font */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm"
             >
-              {HERO_CONTENT.mainHeader}
-            </motion.h1>
+              <RocketIcon className="w-4 h-4 text-emerald-500" />
+              <span className="text-[10px] md:text-xs font-mono font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
+                Innovation at Scale
+              </span>
+            </motion.div>
+
+            {/* Headline: Sora Font + Scanline Reveal */}
+            <div className="relative overflow-hidden group">
+              <motion.h1
+                initial="hidden"
+                animate="visible"
+                variants={prefersReducedMotion ? {} : fadeUp}
+                className="font-sora font-extrabold leading-[1.1] text-5xl md:text-7xl lg:text-8xl 
+                           text-slate-900 dark:text-white relative z-10"
+              >
+                {HERO_CONTENT.mainHeader.split(" ").map((word, i) => (
+                  <span
+                    key={`${word}-${i}`}
+                    className={
+                      word === "Possible"
+                        ? "text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400"
+                        : ""
+                    }
+                  >
+                    {word}{" "}
+                  </span>
+                ))}
+              </motion.h1>
+            </div>
 
             {/* Subheading */}
             <motion.p
+              initial="hidden"
+              animate="visible"
               variants={prefersReducedMotion ? {} : fadeUp}
-              transition={{ delay: ANIMATION_TIMINGS.PARAGRAPH_DELAY }}
-              className="text-base md:text-xl text-slate-600 dark:text-slate-400 
-                       text-center max-w-2xl leading-relaxed md:leading-relaxed"
+              transition={{ delay: 0.15 }}
+              className="text-sm md:text-xl text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed"
             >
               {HERO_CONTENT.subHeader}
             </motion.p>
 
-            {/* CTA Buttons */}
+            {/* CTAs */}
             <motion.div
+              initial="hidden"
+              animate="visible"
               variants={prefersReducedMotion ? {} : fadeUp}
-              transition={{ delay: ANIMATION_TIMINGS.CTA_DELAY }}
-              className="flex flex-col sm:flex-row items-center gap-4 pt-4"
+              transition={{ delay: 0.25 }}
+              className="flex flex-col sm:flex-row items-center gap-6 pt-4 w-full sm:w-auto"
             >
-              <NavLink
-                to="/solutions"
-                className="group inline-flex items-center justify-center gap-3 
-                         text-white bg-emerald-600 dark:bg-emerald-500
-                         px-8 py-2 rounded font-semibold text-base
-                         hover:bg-emerald-700 dark:hover:bg-emerald-600
-                         hover:shadow-2xl hover:shadow-emerald-500/30
-                         hover:-translate-y-1
-                         transition-all duration-300
-                         w-full sm:w-auto"
-                aria-label="View our solutions"
+              <Button
+                asChild
+                variant="brand"
+                size="lg"
+                className="w-full sm:w-auto h-9 px-8 text-sm shadow-2xl shadow-emerald-500/20 group"
               >
-                <span>View Solutions</span>
-                <svg
-                  aria-hidden="true"
-                  className="w-5 h-5 transform group-hover:translate-x-1 transition-transform"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                >
-                  <path
-                    d="M5 12H19M19 12L13 6M19 12L13 18"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </NavLink>
+                <NavLink to="/solutions">
+                  <span>Explore Solutions</span>
+                  <Layers className="w-5 h-5 transition-transform group-hover:rotate-12" />
+                </NavLink>
+              </Button>
 
               <NavLink
                 to="/consultation"
-                className="group inline-flex items-center justify-center gap-3 
-                         text-slate-700 dark:text-slate-300
-                         border-2 border-slate-300 dark:border-slate-700
-                         bg-transparent
-                         px-8 py-2 rounded font-semibold text-base
-                         hover:border-emerald-500 dark:hover:border-emerald-500
-                         hover:text-emerald-600 dark:hover:text-emerald-400
-                         hover:shadow-lg
-                         transition-all duration-300
-                         w-full sm:w-auto"
+                className="group flex items-center justify-center gap-3 text-slate-900 dark:text-white font-mono text-sm font-bold tracking-tight border-2  hover:border-emerald-500/50! rounded px-4 py-2 w-full border-slate-200 dark:border-slate-800 pb-1 transition-all"
               >
-                <span>Request a Quote</span>
-                <MessageSquareDot className="w-5 h-5 transform group-hover:translate-x-1 transition-transform" />
+                Request a Quote
+                <MessageSquareDot className="w-5 h-5 text-emerald-500" />
               </NavLink>
             </motion.div>
-          </motion.div>
 
-          {/* Trust Indicators */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="flex flex-wrap items-center justify-center gap-8 pt-8 text-sm text-slate-600 dark:text-slate-400"
-          >
-            <div className="flex items-center gap-2">
-              {/* <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" /> */}
-              <Layers className="w-4 h-4 text-emerald-500 animate-pulse" />
-              <span>1500+ Projects Delivered</span>
-            </div>
-            <div className="flex items-center gap-2">
-              {/* <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" /> */}
-              <Handshake className="w-4 h-4 text-blue-500 animate-pulse" />
+            {/* Trust Indicators: Simplified Mono */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="flex flex-wrap items-center gap-8 pt-10 border-t border-slate-200 dark:border-slate-900 w-full"
+            >
+              <div className="flex flex-col gap-1">
+                <span className="text-2xl font-sora font-bold text-slate-900 dark:text-white">
+                  1500+
+                </span>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500">
+                  Delivered
+                </span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-2xl font-sora font-bold text-slate-900 dark:text-white">
+                  3+
+                </span>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500">
+                  Global Partners
+                </span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-2xl font-sora font-bold text-slate-900 dark:text-white">
+                  4+
+                </span>
+                <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500">
+                  Years Exp
+                </span>
+              </div>
+            </motion.div>
+          </div>
 
-              <span>3+ Partners</span>
-            </div>
-            <div className="flex items-center gap-2">
-              {/* <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" /> */}
-              <ShieldCheck className="w-4 h-4 text-indigo-500 animate-pulse" />
-              <span>4+ Years Experience</span>
-            </div>
-          </motion.div>
+          {/* RIGHT: Kinetic Possibility Hub (40%) */}
+          <div className="w-full lg:w-[40%] relative aspect-square flex items-center justify-center perspective-distant py-12 lg:py-0">
+            {/* Parallax Container */}
+            <motion.div
+              style={{
+                rotateX,
+                rotateY,
+                transformStyle: "preserve-3d",
+              }}
+              className="relative w-full max-w-md h-[400px] flex items-center justify-center"
+            >
+              {/* Layer 1: Main Capability Table */}
+              <motion.div
+                style={{ z: 0 }}
+                className="w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl border border-slate-200 dark:border-slate-800 rounded shadow-2xl p-6 relative overflow-hidden z-10 select-none"
+              >
+                <div className="absolute inset-0 pattern-dots opacity-5 pointer-events-none" />
+
+                {/* Header */}
+                <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded bg-emerald-500/10 flex items-center justify-center">
+                      <RocketIcon className="w-6 h-6 text-emerald-500" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold font-sora text-slate-900 dark:text-white">
+                        Possibilities Hub
+                      </h4>
+                      <p className="text-[10px] font-mono text-slate-500">
+                        v4.0.0_STABLE
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end gap-1">
+                    <span className="text-[9px] font-mono font-bold text-emerald-500 px-2 py-0.5 rounded-full bg-emerald-500/10">
+                      SYSTEMS_ACTIVE
+                    </span>
+                    <span className="text-[8px] font-mono text-slate-400">
+                      LATENCY: 14ms
+                    </span>
+                  </div>
+                </div>
+
+                {/* Service Matrix */}
+                <div className="space-y-4">
+                  {[
+                    {
+                      service: "AI_ORCHESTRATION",
+                      status: "OPTIMIZED",
+                      color: "bg-emerald-500",
+                      desc: "Autonomous neural workflows",
+                    },
+                    {
+                      service: "CLOUD_SYNCHRONY",
+                      status: "STABLE",
+                      color: "bg-blue-500",
+                      desc: "Elastic edge computing",
+                    },
+                    {
+                      service: "SECURITY_PROTOCOL",
+                      status: "LOCKED",
+                      color: "bg-purple-500",
+                      desc: "Zero-Trust architecture",
+                    },
+                    {
+                      service: "DATA_ANALYTICS",
+                      status: "PROCESSING",
+                      color: "bg-amber-500",
+                      desc: "Predictive insight engines",
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.service}
+                      className="group flex items-start justify-between p-3 rounded hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+                    >
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[10px] font-mono font-bold text-slate-700 dark:text-slate-300 tracking-wider">
+                          {item.service}
+                        </span>
+                        <span className="text-[8px] text-slate-500">
+                          {item.desc}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 pt-1">
+                        <div
+                          className={`w-1.5 h-1.5 rounded-full ${item.color} animate-pulse`}
+                        />
+                        <span className="text-[9px] font-mono font-bold text-slate-900 dark:text-white">
+                          {item.status}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Layer 2: Floating Performance Card (Extreme Front) */}
+              <motion.div
+                style={{
+                  z: 150,
+                  x: useTransform(smoothX, [-0.5, 0.5], [25, -25]),
+                  y: useTransform(smoothY, [-0.5, 0.5], [25, 25]),
+                }}
+                className="absolute -bottom-10 -left-6 w-44 p-4 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/20 shadow-2xl z-20 select-none pointer-events-none"
+              >
+                <div className="text-[10px] font-mono text-slate-500 mb-1">
+                  GLOBAL_REACH
+                </div>
+                <div className="text-2xl font-bold font-sora text-slate-900 dark:text-white mb-2">
+                  99.9%
+                </div>
+                <div className="w-full h-1 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: "99.9%" }}
+                    transition={{ duration: 2, ease: "easeOut" }}
+                    className="h-full bg-emerald-500"
+                  />
+                </div>
+                <div className="mt-3 flex items-center justify-between">
+                  <span className="text-[8px] font-mono text-emerald-600 dark:text-emerald-400">
+                    UPTIME
+                  </span>
+                  <span className="text-[8px] font-mono text-slate-500">
+                    24/7 MONITOR
+                  </span>
+                </div>
+              </motion.div>
+
+              {/* Layer 3: Floating Network Badge (Extreme Front) */}
+              <motion.div
+                style={{
+                  z: 200,
+                  x: useTransform(smoothX, [-0.5, 0.5], [-5, 5]),
+                  y: useTransform(smoothY, [-0.5, 0.5], [5, 5]),
+                }}
+                className="absolute -top-10 -right-4 bg-blue-600 p-4 rounded shadow-blue-600/30 shadow-xl flex flex-col items-center justify-center rotate-6 z-30 select-none pointer-events-none"
+              >
+                <div className="flex -space-x-2 mb-2">
+                  {[1, 2, 3].map((i) => (
+                    <div
+                      key={i}
+                      className="w-6 h-6 rounded-full border-2 border-blue-600 bg-white/20 backdrop-blur-sm"
+                    />
+                  ))}
+                </div>
+                <span className="text-[9px] font-bold text-white uppercase tracking-widest">
+                  +12 LOCATIONS
+                </span>
+              </motion.div>
+
+              {/* Background Aura */}
+              <div className="absolute inset-0 bg-radial-gradient from-emerald-500/5 to-transparent blur-3xl rounded-full scale-150 pointer-events-none" />
+            </motion.div>
+          </div>
         </div>
       </div>
     </header>

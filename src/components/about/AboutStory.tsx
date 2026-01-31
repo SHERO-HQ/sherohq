@@ -30,7 +30,7 @@ const AboutStory = () => {
               className="relative w-full object-cover rounded"
             />
             {/* Floating Badge 1 - Bottom Left */}
-            <div className="absolute -bottom-4 -left-2 sm:bottom-0 sm:left-0 lg:-left-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-2 sm:px-4 sm:py-2.5 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3 z-20">
+            <div className="absolute -bottom-4 -left-2 sm:bottom-0 sm:left-0 lg:-left-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-2 sm:px-4 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3 z-20">
               <div className="size-8 sm:size-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
                 <SearchCheck className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 dark:text-emerald-400" />
               </div>
@@ -45,7 +45,7 @@ const AboutStory = () => {
             </div>
 
             {/* Floating Badge 2 - Top Right */}
-            <div className="absolute -top-4 -right-2 sm:top-0 sm:right-0 lg:-right-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-2 sm:px-4 sm:py-2.5 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3 z-20">
+            <div className="absolute -top-4 -right-2 sm:top-0 sm:right-0 lg:-right-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-2 sm:px-4 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3 z-20">
               <div className="size-8 sm:size-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
                 <Lightbulb className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 dark:text-emerald-400" />
               </div>
@@ -67,7 +67,7 @@ const AboutStory = () => {
             viewport={{ once: true }}
           >
             <div className="text-start">
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
+              <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
                 <Clover className="size-4" />
                 Our Story
               </span>
@@ -192,9 +192,9 @@ const AboutStory = () => {
           viewport={{ once: true }}
           className="mt-16 text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
+          <div className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
             <Heart className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-            <span className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+            <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">
               Our Commitment
             </span>
           </div>

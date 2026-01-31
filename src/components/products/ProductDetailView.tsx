@@ -13,6 +13,7 @@ import {
   ArrowLeft,
   Plus,
   Minus,
+  BadgeCheck,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { getImageUrl } from "@/services/api";
@@ -37,6 +38,10 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         ((product.originalPrice - product.price) / product.originalPrice) * 100,
       )
     : 0;
+
+  const relatedProducts = products
+    .filter((p) => p.category === product.category && p.id !== product.id)
+    .slice(0, 4);
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
@@ -89,6 +94,9 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     <img
                       src={getImageUrl(images[selectedImage])}
                       alt={product.name}
+                      width={800}
+                      height={800}
+                      fetchPriority="high"
                       className="w-full h-full object-contain p-4"
                       onError={(e) => {
                         e.currentTarget.onerror = null;
@@ -155,6 +163,9 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                         <img
                           src={getImageUrl(img)}
                           alt={`Thumbnail ${idx}`}
+                          width={200}
+                          height={200}
+                          loading="lazy"
                           className="w-full h-full object-cover"
                           onError={(e) => {
                             e.currentTarget.onerror = null;
@@ -180,7 +191,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl md:text-4xl font-bold font-sora text-slate-900 dark:text-white">
+            <h1 className="text-lg md:text-2xl font-bold font-sora text-slate-900 dark:text-white">
               {product.name}
             </h1>
 
@@ -205,7 +216,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
 
             {/* Price */}
             <div className="flex items-baseline gap-4">
-              <span className="text-4xl font-bold font-sora text-slate-900 dark:text-white">
+              <span className="text-lg md:text-2xl font-bold font-sora text-slate-900 dark:text-white">
                 GH₵{product.price}
               </span>
               {product.originalPrice && (
@@ -283,51 +294,64 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
             </div>
 
             {/* Actions */}
-            <div className="flex gap-4 pt-4">
+            <div className="space-y-2 pt-4">
               <button
                 onClick={handleAddToCart}
                 disabled={!product.inStock}
-                className="cursor-pointer flex-1 flex items-center justify-center gap-2 px-8 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white rounded font-bold transition-colors"
+                className="cursor-pointer flex-1 flex items-center justify-center gap-2 px-8 py-2 border-2 border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 disabled:border-slate-300 disabled:text-slate-400 dark:disabled:border-slate-700 dark:disabled:text-slate-600 rounded font-bold transition-all w-full"
               >
                 <ShoppingCart className="w-5 h-5" />
                 Add to Cart
               </button>
-              <button
-                onClick={() => setIsWishlisted(!isWishlisted)}
-                className={`px-4 py-2 rounded border-2 transition-all ${
-                  isWishlisted
-                    ? "border-red-500 bg-red-50 dark:bg-red-900/20"
-                    : "border-slate-200 dark:border-slate-700 hover:border-red-500"
-                }`}
-              >
-                <Heart
-                  className={`w-6 h-6 ${
+              <div className="flex gap-2 w-full">
+                <button
+                  onClick={() => {
+                    handleAddToCart();
+                    navigate("/checkout");
+                  }}
+                  disabled={!product.inStock}
+                  className="cursor-pointer flex-1 flex items-center justify-center gap-2 px-8 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white rounded font-bold transition-all shadow-lg shadow-emerald-500/20 w-full"
+                >
+                  <Package className="w-5 h-5" />
+                  Buy Now
+                </button>
+                <button
+                  onClick={() => setIsWishlisted(!isWishlisted)}
+                  className={`px-4 py-2 text-center w-fit rounded border-2 transition-all ${
                     isWishlisted
-                      ? "fill-red-500 text-red-500"
-                      : "text-slate-600 dark:text-slate-400"
+                      ? "border-red-500 bg-red-50 dark:bg-red-900/20"
+                      : "border-slate-200 dark:border-slate-700 hover:border-red-500"
                   }`}
-                />
-              </button>
+                >
+                  <Heart
+                    className={`w-6 h-6 ${
+                      isWishlisted
+                        ? "fill-red-500 text-red-500"
+                        : "text-slate-600 dark:text-slate-400"
+                    }`}
+                  />
+                </button>
+              </div>
             </div>
 
             {/* Trust Badges */}
             <div className="cursor-pointer grid grid-cols-3 gap-4 pt-6 border-t border-slate-200 dark:border-slate-800">
-              <div className="flex flex-col items-center gap-2 text-center">
-                <Shield className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+              <div className="flex flex-col md:flex-row items-center gap-2 text-center">
+                <Shield className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <span className="text-xs text-slate-600 dark:text-slate-400">
                   Secure Payment
                 </span>
               </div>
-              <div className="flex flex-col items-center gap-2 text-center">
-                <Truck className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+              <div className="flex flex-col md:flex-row items-center gap-2 text-center">
+                <Truck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <span className="text-xs text-slate-600 dark:text-slate-400">
                   Fast Delivery
                 </span>
               </div>
-              <div className="flex flex-col items-center gap-2 text-center">
-                <Package className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+              <div className="flex flex-col md:flex-row items-center gap-2 text-center">
+                <BadgeCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                 <span className="text-xs text-slate-600 dark:text-slate-400">
-                  Easy Returns
+                  Quality Guaranteed
                 </span>
               </div>
             </div>
@@ -350,10 +374,10 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                           key={idx}
                           className="border-b border-slate-200 dark:border-slate-800 last:border-0"
                         >
-                          <td className="px-6 py-4 font-medium text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-950 w-1/3">
+                          <td className="px-6 py-2 font-medium text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-950 w-1/3">
                             {key}
                           </td>
-                          <td className="px-6 py-4 text-slate-600 dark:text-slate-400">
+                          <td className="px-6 py-2 text-slate-600 dark:text-slate-400">
                             {value}
                           </td>
                         </tr>
@@ -366,21 +390,20 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
           )}
 
         {/* Related Products */}
-        <div className="mt-20 border-t border-slate-200 dark:border-slate-800 pt-16">
-          <h2 className="text-3xl font-bold font-sora text-slate-900 dark:text-white mb-8">
-            You Might Also Like
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products
-              .filter(
-                (p) => p.category === product.category && p.id !== product.id,
-              )
-              .slice(0, 4)
-              .map((relatedProduct) => (
+        {relatedProducts.length > 0 && (
+          <div className="mt-20 border-t border-slate-200 dark:border-slate-800 pt-16">
+            <h2 className="text-3xl font-bold font-sora text-slate-900 dark:text-white mb-8">
+              You Might Also Like
+            </h2>
+            <div
+              className={`grid grid-cols-1 min-[425px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3`}
+            >
+              {relatedProducts.map((relatedProduct) => (
                 <ProductCard key={relatedProduct.id} product={relatedProduct} />
               ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Product Reviews */}
         <ProductReviews productId={product.id} />

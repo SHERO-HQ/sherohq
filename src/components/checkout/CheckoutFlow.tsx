@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { checkoutSchema, type CheckoutInput } from "@/lib/validations/checkout";
 import { getGuestId } from "@/utils/guestSession";
 import { createOrder, initializePayment } from "@/services/api";
 import { motion, AnimatePresence } from "motion/react";
@@ -16,7 +19,6 @@ import {
   MapPin,
   Phone,
   Mail,
-  User,
   Wallet,
   Smartphone,
   ChevronDown,
@@ -26,6 +28,9 @@ import {
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import OrderSummary from "./OrderSummary";
 
 const CheckoutFlow = () => {
@@ -41,44 +46,63 @@ const CheckoutFlow = () => {
   const { user, isAuthenticated } = useAuth();
 
   const [currentStep, setCurrentStep] = useState(1);
-  const [shippingInfo, setShippingInfo] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    region: "",
-  });
-  const [paymentMethod, setPaymentMethod] = useState<
-    "momo" | "card" | "cod" | "pickup"
-  >("momo");
   const [orderId, setOrderId] = useState<string | null>(null);
   const [confirmedTotal, setConfirmedTotal] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showMobileSummary, setShowMobileSummary] = useState(false);
-  const [phoneError, setPhoneError] = useState("");
+
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<CheckoutInput>({
+    resolver: zodResolver(checkoutSchema),
+    defaultValues: {
+      email: "",
+      shippingAddress: {
+        firstName: "",
+        lastName: "",
+        address: "",
+        city: "",
+        region: "",
+        postalCode: "",
+      },
+      paymentMethod: "momo",
+    },
+  });
+
+  const paymentMethod = watch("paymentMethod");
+  const email = watch("email");
 
   // Autofill shipping info for logged-in users
   useEffect(() => {
     if (isAuthenticated && user) {
       const nameParts = user.name?.split(" ") || [];
-      setShippingInfo((prev) => ({
-        ...prev,
-        firstName:
-          user.shippingAddress?.firstName || nameParts[0] || prev.firstName,
-        lastName:
-          user.shippingAddress?.lastName ||
-          nameParts.slice(1).join(" ") ||
-          prev.lastName,
-        email: user.email || prev.email,
-        phone: user.phone || prev.phone,
-        address: user.shippingAddress?.address || prev.address,
-        city: user.shippingAddress?.city || prev.city,
-        region: user.shippingAddress?.region || prev.region,
-      }));
+      setValue("email", user.email || "");
+      setValue(
+        "shippingAddress.firstName",
+        user.shippingAddress?.firstName || nameParts[0] || "",
+      );
+      setValue(
+        "shippingAddress.lastName",
+        user.shippingAddress?.lastName || nameParts.slice(1).join(" ") || "",
+      );
+      setValue("shippingAddress.address", user.shippingAddress?.address || "");
+      setValue("shippingAddress.city", user.shippingAddress?.city || "");
+      setValue("shippingAddress.region", user.shippingAddress?.region || "");
+      setValue(
+        "shippingAddress.postalCode",
+        user.shippingAddress?.postalCode || "",
+      );
+      if (user.phone) {
+        // We don't have phone in checkoutSchema yet, maybe we should add it?
+        // Actually, let's add it to checkoutSchema as well for consistency if needed.
+      }
     }
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user, setValue]);
 
   // Redirect if cart is empty
   if (cart.length === 0 && currentStep < 4) {
@@ -88,7 +112,8 @@ const CheckoutFlow = () => {
 
   // Calculate pricing
   const subtotal = totalPrice;
-  const shipping = paymentMethod === "pickup" ? 0 : subtotal > 500 ? 0 : 50; // Free shipping for pickup or orders > GH₵500
+  const shipping =
+    paymentMethod === "store_pickup" ? 0 : subtotal > 500 ? 0 : 50; // Free shipping for pickup or orders > GH₵500
   const tax = 0; // Tax set to 0.00 for now
   const total = subtotal + shipping + tax;
 
@@ -99,18 +124,15 @@ const CheckoutFlow = () => {
     { num: 4, title: "Confirmation", icon: CheckCircle },
   ];
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentStep === 2) {
-      // Validate Ghana Phone Number specifically
-      // Must start with 0, then 2 or 5, followed by 8 digits (total 10)
-      const ghanaPhoneRegex = /^0(2|5)\d{8}$/;
-      if (!ghanaPhoneRegex.test(shippingInfo.phone.replace(/\s+/g, ""))) {
-        setPhoneError(
-          "Please enter a valid Ghana phone number (e.g., 0244123456 or 0501234567)",
-        );
-        return;
-      }
-      setPhoneError("");
+      await trigger(["email", "phone", "shippingAddress"]);
+      if (errors.email || errors.phone || errors.shippingAddress) return;
+    }
+
+    if (currentStep === 3) {
+      const isStep3Valid = await trigger("paymentMethod");
+      if (!isStep3Valid) return;
     }
 
     if (currentStep < 4) {
@@ -124,7 +146,7 @@ const CheckoutFlow = () => {
     }
   };
 
-  const handlePlaceOrder = async () => {
+  const onSubmit = async (data: CheckoutInput) => {
     setIsSubmitting(true);
     try {
       const guestId = getGuestId();
@@ -132,7 +154,7 @@ const CheckoutFlow = () => {
         momo: "mobile_money",
         card: "card",
         cod: "cash_on_delivery",
-        pickup: "store_pickup",
+        store_pickup: "store_pickup",
       };
 
       const orderItems = cart.map((item) => ({
@@ -147,8 +169,16 @@ const CheckoutFlow = () => {
         guestId,
         items: orderItems,
         total,
-        shippingInfo,
-        paymentMethod: paymentMethodMap[paymentMethod],
+        shippingInfo: {
+          firstName: data.shippingAddress.firstName,
+          lastName: data.shippingAddress.lastName,
+          email: data.email,
+          phone: data.phone, // Updated to use data.phone
+          address: data.shippingAddress.address,
+          city: data.shippingAddress.city,
+          region: data.shippingAddress.region,
+        },
+        paymentMethod: paymentMethodMap[data.paymentMethod],
         userId: user?.id,
       });
 
@@ -157,7 +187,7 @@ const CheckoutFlow = () => {
         setConfirmedTotal(total);
 
         // If online payment (momo/card), redirect to Hubtel
-        if (paymentMethod === "momo" || paymentMethod === "card") {
+        if (data.paymentMethod === "momo" || data.paymentMethod === "card") {
           // Development Mode: Redirect to internal mock payment page
           if (import.meta.env.DEV) {
             clearCart();
@@ -172,9 +202,6 @@ const CheckoutFlow = () => {
             );
 
             if (paymentResponse.success && paymentResponse.checkoutUrl) {
-              // Clear cart before redirecting (Hubtel callback will handle status)
-              // Don't clear cart yet if redirecting? Actually standard flow clears it.
-              // But we rely on cart for confirmedTotal? No, we used a separate state now.
               clearCart();
               window.location.href = paymentResponse.checkoutUrl;
               return;
@@ -184,8 +211,6 @@ const CheckoutFlow = () => {
             alert(
               "Failed to initialize payment gateway. Order created but payment failed.",
             );
-            // Fallback: Show confirmation but with pending payment status?
-            // For now, simpler to verify functionality first.
           }
         }
 
@@ -199,18 +224,6 @@ const CheckoutFlow = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const isStep2Valid = () => {
-    return (
-      shippingInfo.firstName &&
-      shippingInfo.lastName &&
-      shippingInfo.email &&
-      shippingInfo.phone &&
-      shippingInfo.address &&
-      shippingInfo.city &&
-      shippingInfo.region
-    );
   };
 
   return (
@@ -295,7 +308,7 @@ const CheckoutFlow = () => {
         </div>
 
         {/* Mobile Collapsible Order Summary */}
-        <div className="lg:hidden mb-6 bg-slate-50 dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 -mx-4 px-4 sm:mx-0 sm:px-0 sm:border sm:rounded-lg overflow-hidden">
+        <div className="lg:hidden mb-6 bg-slate-50 dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 -mx-4 px-4 sm:mx-0 sm:px-0 sm:border sm:rounded overflow-hidden">
           <button
             onClick={() => setShowMobileSummary(!showMobileSummary)}
             className="w-full py-2 flex items-center justify-between text-left"
@@ -407,13 +420,14 @@ const CheckoutFlow = () => {
                   </div>
 
                   <div className="flex justify-end mt-8">
-                    <button
+                    <Button
                       onClick={handleNext}
-                      className="cursor-pointer flex items-center gap-2 px-8 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-colors"
+                      variant="brand"
+                      className="font-bold gap-2 px-8"
                     >
                       Continue to Shipping
                       <ChevronRight className="w-5 h-5" />
-                    </button>
+                    </Button>
                   </div>
                 </motion.div>
               )}
@@ -433,177 +447,95 @@ const CheckoutFlow = () => {
 
                   <form className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                          <User className="w-4 h-4 inline mr-2" />
-                          First Name
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={shippingInfo.firstName}
-                          onChange={(e) =>
-                            setShippingInfo({
-                              ...shippingInfo,
-                              firstName: e.target.value,
-                            })
-                          }
-                          className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                          placeholder="John"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                          Last Name
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={shippingInfo.lastName}
-                          onChange={(e) =>
-                            setShippingInfo({
-                              ...shippingInfo,
-                              lastName: e.target.value,
-                            })
-                          }
-                          className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                          placeholder="Doe"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                        <Mail className="w-4 h-4 inline mr-2" />
-                        Email
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        value={shippingInfo.email}
-                        onChange={(e) =>
-                          setShippingInfo({
-                            ...shippingInfo,
-                            email: e.target.value,
-                          })
-                        }
-                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                        placeholder="john@example.com"
+                      <Input
+                        id="firstName"
+                        label="First Name"
+                        placeholder="John"
+                        error={errors.shippingAddress?.firstName?.message}
+                        {...register("shippingAddress.firstName")}
                       />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                        <Phone className="w-4 h-4 inline mr-2" />
-                        Phone Number
-                      </label>
-                      <input
-                        type="tel"
-                        required
-                        value={shippingInfo.phone}
-                        onChange={(e) => {
-                          setShippingInfo({
-                            ...shippingInfo,
-                            phone: e.target.value,
-                          });
-                          if (phoneError) setPhoneError("");
-                        }}
-                        className={`w-full px-4 py-2 rounded border ${
-                          phoneError
-                            ? "border-red-500 focus:ring-red-500"
-                            : "border-slate-200 dark:border-slate-700 focus:ring-emerald-500"
-                        } bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2`}
-                        placeholder="024 123 4567"
-                      />
-                      {phoneError && (
-                        <p className="text-red-500 text-sm mt-1">
-                          {phoneError}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                        <MapPin className="w-4 h-4 inline mr-2" />
-                        Address
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={shippingInfo.address}
-                        onChange={(e) =>
-                          setShippingInfo({
-                            ...shippingInfo,
-                            address: e.target.value,
-                          })
-                        }
-                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                        placeholder="123 Main Street"
+                      <Input
+                        id="lastName"
+                        label="Last Name"
+                        placeholder="Doe"
+                        error={errors.shippingAddress?.lastName?.message}
+                        {...register("shippingAddress.lastName")}
                       />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                          City
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={shippingInfo.city}
-                          onChange={(e) =>
-                            setShippingInfo({
-                              ...shippingInfo,
-                              city: e.target.value,
-                            })
-                          }
-                          className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                          placeholder="Accra"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                          Region
-                        </label>
-                        <select
-                          required
-                          value={shippingInfo.region}
-                          onChange={(e) =>
-                            setShippingInfo({
-                              ...shippingInfo,
-                              region: e.target.value,
-                            })
-                          }
-                          className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 custom-select text-base"
-                        >
-                          <option value="">Select Region</option>
-                          <option value="Greater Accra">Greater Accra</option>
-                          <option value="Ashanti">Ashanti</option>
-                          <option value="Central">Central</option>
-                          <option value="Eastern">Eastern</option>
-                          <option value="Northern">Northern</option>
-                          <option value="Western">Western</option>
-                        </select>
-                      </div>
+                      <Input
+                        id="email"
+                        type="email"
+                        label="Email Address"
+                        placeholder="john@example.com"
+                        leftIcon={<Mail className="w-4 h-4" />}
+                        error={errors.email?.message}
+                        {...register("email")}
+                      />
+                      <Input
+                        id="phone"
+                        type="tel"
+                        label="Phone Number"
+                        placeholder="024 123 4567"
+                        leftIcon={<Phone className="w-4 h-4" />}
+                        error={errors.phone?.message}
+                        {...register("phone")}
+                      />
+                    </div>
+
+                    <Input
+                      id="address"
+                      label="Street Address"
+                      placeholder="123 Main Street"
+                      leftIcon={<MapPin className="w-4 h-4" />}
+                      error={errors.shippingAddress?.address?.message}
+                      {...register("shippingAddress.address")}
+                    />
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <Input
+                        id="city"
+                        label="City"
+                        placeholder="Accra"
+                        error={errors.shippingAddress?.city?.message}
+                        {...register("shippingAddress.city")}
+                      />
+                      <Select
+                        id="region"
+                        label="Region"
+                        error={errors.shippingAddress?.region?.message}
+                        {...register("shippingAddress.region")}
+                        options={[
+                          { value: "", label: "Select Region" },
+                          { value: "Greater Accra", label: "Greater Accra" },
+                          { value: "Ashanti", label: "Ashanti" },
+                          { value: "Central", label: "Central" },
+                          { value: "Eastern", label: "Eastern" },
+                          { value: "Northern", label: "Northern" },
+                          { value: "Western", label: "Western" },
+                        ]}
+                      />
                     </div>
                   </form>
 
                   <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-4 mt-8">
-                    <button
+                    <Button
                       onClick={handleBack}
-                      className="cursor-pointer flex items-center justify-center gap-2 px-8 py-2 w-full sm:w-auto border-2 border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
+                      variant="outline"
+                      className="font-bold gap-2 px-8 border-slate-300 dark:border-slate-700"
                     >
                       <ChevronLeft className="w-5 h-5" />
                       Back to Cart
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={handleNext}
-                      disabled={!isStep2Valid()}
-                      className="cursor-pointer flex items-center justify-center gap-2 px-8 py-2 w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed text-white rounded font-bold transition-colors"
+                      variant="brand"
+                      className="font-bold gap-2 px-8"
                     >
                       Continue to Payment
                       <ChevronRight className="w-5 h-5" />
-                    </button>
+                    </Button>
                   </div>
                 </motion.div>
               )}
@@ -624,9 +556,9 @@ const CheckoutFlow = () => {
                   <div className="space-y-4">
                     {/* Store Pickup */}
                     <button
-                      onClick={() => setPaymentMethod("pickup")}
+                      onClick={() => setValue("paymentMethod", "store_pickup")}
                       className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
-                        paymentMethod === "pickup"
+                        paymentMethod === "store_pickup"
                           ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
                           : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
                       }`}
@@ -634,7 +566,7 @@ const CheckoutFlow = () => {
                       <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
                         <div
                           className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
-                            paymentMethod === "pickup"
+                            paymentMethod === "store_pickup"
                               ? "bg-emerald-600 text-white"
                               : "bg-slate-100 dark:bg-slate-800 text-slate-600"
                           }`}
@@ -654,7 +586,7 @@ const CheckoutFlow = () => {
 
                     {/* Mobile Money */}
                     <button
-                      onClick={() => setPaymentMethod("momo")}
+                      onClick={() => setValue("paymentMethod", "momo")}
                       className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
                         paymentMethod === "momo"
                           ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
@@ -684,7 +616,7 @@ const CheckoutFlow = () => {
 
                     {/* Card Payment */}
                     <button
-                      onClick={() => setPaymentMethod("card")}
+                      onClick={() => setValue("paymentMethod", "card")}
                       className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
                         paymentMethod === "card"
                           ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
@@ -714,7 +646,7 @@ const CheckoutFlow = () => {
 
                     {/* Cash on Delivery */}
                     <button
-                      onClick={() => setPaymentMethod("cod")}
+                      onClick={() => setValue("paymentMethod", "cod")}
                       className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
                         paymentMethod === "cod"
                           ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
@@ -741,24 +673,31 @@ const CheckoutFlow = () => {
                         </div>
                       </div>
                     </button>
+                    {errors.paymentMethod && (
+                      <p className="text-red-500 text-sm mt-2">
+                        {errors.paymentMethod.message}
+                      </p>
+                    )}
                   </div>
 
                   <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-4 mt-8">
-                    <button
+                    <Button
                       onClick={handleBack}
-                      className="cursor-pointer flex items-center justify-center gap-2 px-8 py-2 w-full sm:w-auto border-2 border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
+                      variant="outline"
+                      className="font-bold gap-2 px-8 border-slate-300 dark:border-slate-700"
                     >
                       <ChevronLeft className="w-5 h-5" />
                       Back
-                    </button>
-                    <button
-                      onClick={handlePlaceOrder}
+                    </Button>
+                    <Button
+                      onClick={handleSubmit(onSubmit)}
                       disabled={isSubmitting}
-                      className="cursor-pointer flex items-center justify-center gap-2 px-8 py-2 w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 disabled:cursor-not-allowed text-white rounded font-bold transition-colors"
+                      variant="brand"
+                      className="font-bold gap-2 px-8"
                     >
                       {isSubmitting ? "Processing..." : "Place Order"}
                       <CheckCircle className="w-5 h-5" />
-                    </button>
+                    </Button>
                   </div>
                 </motion.div>
               )}
@@ -785,8 +724,8 @@ const CheckoutFlow = () => {
                   </h2>
                   <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-md mx-auto">
                     Thank you for your order! We've sent a confirmation email to{" "}
-                    <span className="font-semibold text-emerald-600 dark:text-emerald-400 block sm:inline break-words">
-                      {shippingInfo.email}
+                    <span className="font-semibold text-emerald-600 dark:text-emerald-400 block sm:inline wrap-break-word">
+                      {email}
                     </span>
                   </p>
 
@@ -804,24 +743,26 @@ const CheckoutFlow = () => {
                     <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
                       Order Total
                     </p>
-                    <p className="text-2xl sm:text-4xl font-bold font-sora text-emerald-600 dark:text-emerald-400 break-words">
+                    <p className="text-2xl sm:text-4xl font-bold font-sora text-emerald-600 dark:text-emerald-400 wrap-break-word">
                       GH₵{confirmedTotal.toFixed(2)}
                     </p>
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button
+                    <Button
                       onClick={() => navigate("/products")}
-                      className="cursor-pointer px-8 py-2 border-2 border-slate-300 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
+                      variant="outline"
+                      className="font-bold px-8 border-slate-300 dark:border-slate-700"
                     >
                       Continue Shopping
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                       onClick={() => navigate("/")}
-                      className="cursor-pointer px-8 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-colors"
+                      variant="brand"
+                      className="font-bold px-8"
                     >
                       Back to Home
-                    </button>
+                    </Button>
                   </div>
                 </motion.div>
               )}
@@ -848,12 +789,13 @@ const CheckoutFlow = () => {
                   We'd love to hear your thoughts! Let us know how we can
                   improve.
                 </p>
-                <button
+                <Button
                   onClick={() => navigate("/contact-us")}
-                  className="cursor-pointer w-full px-8 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-colors"
+                  variant="brand"
+                  className="w-full font-bold px-8"
                 >
                   Leave us a feedback
-                </button>
+                </Button>
               </div>
             )}
           </div>

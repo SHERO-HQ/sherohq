@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Send, CheckCircle2 } from "lucide-react";
+import { Send, CheckCircle2, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { sendContactMessage } from "@/services/api";
 
@@ -102,19 +102,7 @@ const ContactForm = () => {
               <option value="feedback">Feedback</option>
             </select>
             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M19 9l-7 7-7-7"
-                ></path>
-              </svg>
+              <ChevronDown className="w-4 h-4" />
             </div>
           </div>
         </div>

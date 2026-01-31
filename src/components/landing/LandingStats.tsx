@@ -1,4 +1,4 @@
-import { motion, spring, useInView, type Variants } from "motion/react";
+import { motion, useInView } from "motion/react";
 import { Activity, Globe, Users, Trophy } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
@@ -16,104 +16,82 @@ const LandingStats = () => {
     {
       value: "1000",
       suffix: "+",
-      label: "Happy Customers",
-      icon: <Users className="w-6 h-6" />,
-      color: "text-blue-600 dark:text-blue-400",
+      label: "Customers",
+      icon: <Users className="w-5 h-5" />,
+      color: "text-emerald-500",
     },
     {
       value: "1500",
       suffix: "+",
-      label: "Products Delivered",
-      icon: <Trophy className="w-6 h-6" />,
-      color: "text-emerald-600 dark:text-emerald-400",
+      label: "Delivered",
+      icon: <Trophy className="w-5 h-5" />,
+      color: "text-emerald-500",
     },
     {
       value: "5",
       suffix: "+",
-      label: "Global Partners",
-      icon: <Globe className="w-6 h-6" />,
-      color: "text-purple-600 dark:text-purple-400",
+      label: "Partners",
+      icon: <Globe className="w-5 h-5" />,
+      color: "text-emerald-500",
     },
     {
       value: "99",
       suffix: "%",
-      label: "Client Satisfaction",
-      icon: <Activity className="w-6 h-6" />,
-      color: "text-amber-600 dark:text-amber-400",
+      label: "Satisfaction",
+      icon: <Activity className="w-5 h-5" />,
+      color: "text-emerald-500",
     },
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: { type: spring, stiffness: 100 },
-    },
-  };
-
   return (
-    <section className="relative w-full py-20 bg-white dark:bg-slate-950 overflow-hidden border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
-      {/* HUD Background Graph/Grid */}
-      <div className="absolute inset-0 opacity-10 dark:opacity-20 pointer-events-none transition-opacity duration-300">
-        <svg width="100%" height="100%">
-          <defs>
-            <pattern
-              id="grid"
-              width="40"
-              height="40"
-              patternUnits="userSpaceOnUse"
+    <section className="relative w-full py-16 bg-white dark:bg-slate-950 overflow-hidden border-y border-slate-200 dark:border-slate-900 transition-colors duration-300">
+      {/* Background patterns */}
+      <div className="absolute inset-0 pattern-grid-emerald opacity-[0.03] dark:opacity-[0.5] pointer-events-none" />
+
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* The Hub Container */}
+        <div className="relative flex flex-col md:flex-row items-center border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded overflow-hidden shadow-2xl shadow-emerald-500/5">
+          {/* Scanning Line Effect (Horizontal) */}
+          <div className="absolute inset-y-0 left-0 w-px bg-emerald-500/30 hidden md:block" />
+
+          {stats.map((stat, idx) => (
+            <div
+              key={stat.label}
+              className={`relative flex-1 w-full py-10 px-8 flex flex-col items-center md:items-start transition-all hover:bg-slate-50 dark:hover:bg-slate-800/50
+                         ${idx !== stats.length - 1 ? "border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800" : ""}`}
             >
-              <path
-                d="M 40 0 L 0 0 0 40"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="0.5"
-                className="text-emerald-600/30 dark:text-emerald-500/30"
-              />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#grid)" />
-        </svg>
-      </div>
+              {/* Corner Accent (Top Left) */}
+              <div className="absolute top-2 left-2 w-1.5 h-1.5 border-t border-l border-emerald-500 opacity-40" />
 
-      {/* Radial Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[100px] transition-colors duration-300" />
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                  {stat.icon}
+                </div>
+                <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-slate-500">
+                  {stat.label}
+                </span>
+              </div>
 
-      <div className="container px-4 md:px-6 relative z-10 mx-auto w-full md:w-10/12">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8"
-        >
-          {stats.map((stat) => (
-            <StatCard key={stat.label} stat={stat} variants={itemVariants} />
+              <StatItem stat={stat} />
+
+              {/* Individual Pattern Overlay */}
+              <div className="absolute inset-0 pattern-dots pointer-events-none" />
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
 };
 
-// Floating HUD Card
-const StatCard = ({ stat, variants }: { stat: Stat; variants: Variants }) => {
+const StatItem = ({ stat }: { stat: Stat }) => {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
 
   useEffect(() => {
     if (isInView) {
-      const target = parseInt(stat.value, 10);
+      const target = Number.parseInt(stat.value, 10);
       const duration = 2000;
       const steps = 60;
       const increment = target / steps;
@@ -134,53 +112,25 @@ const StatCard = ({ stat, variants }: { stat: Stat; variants: Variants }) => {
   }, [isInView, stat.value]);
 
   return (
-    <motion.div
-      ref={ref}
-      variants={variants}
-      whileHover={{
-        y: -5,
-        boxShadow: "0 10px 30px -10px rgba(16, 185, 129, 0.2)",
-      }}
-      className="relative group bg-slate-50 dark:bg-slate-800/50 backdrop-blur-sm border border-slate-200 dark:border-slate-700/50 rounded p-6 flex flex-col items-center justify-center text-center overflow-hidden transition-all duration-300"
-    >
-      {/* Scanning Line Effect */}
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent -translate-y-full group-hover:animate-scan" />
-
-      {/* Icon Ring */}
-      <div
-        className={`mb-4 p-3 rounded-full bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700 ${stat.color} shadow-lg relative transition-colors duration-300`}
-      >
-        {stat.icon}
-        <div
-          className={`absolute inset-0 rounded-full ${stat.color} opacity-10 dark:opacity-20 blur-md`}
-        />
-      </div>
-
-      {/* Number */}
-      <div className="relative mb-1">
-        <span className="text-4xl lg:text-5xl font-mono font-bold text-slate-900 dark:text-white tracking-tighter transition-colors duration-300">
+    <div ref={ref} className="flex flex-col items-center md:items-start">
+      <div className="flex items-baseline gap-1">
+        <span className="text-4xl md:text-5xl font-sora font-extrabold text-slate-900 dark:text-white tracking-tighter">
           {stat.prefix}
           {count.toLocaleString()}
           {stat.suffix}
         </span>
-
-        {/* Glow behind number */}
-        <div
-          className={`absolute inset-0 ${stat.color.replace("dark:", "")} opacity-10 dark:opacity-20 blur-xl block transition-opacity duration-300`}
-        />
       </div>
 
-      {/* Label */}
-      <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-2 transition-colors duration-300">
-        {stat.label}
-      </p>
-
-      {/* Corners */}
-      <div className="absolute top-2 left-2 w-2 h-2 border-l border-t border-slate-300 dark:border-slate-500/30 transition-colors duration-300" />
-      <div className="absolute top-2 right-2 w-2 h-2 border-r border-t border-slate-300 dark:border-slate-500/30 transition-colors duration-300" />
-      <div className="absolute bottom-2 left-2 w-2 h-2 border-l border-b border-slate-300 dark:border-slate-500/30 transition-colors duration-300" />
-      <div className="absolute bottom-2 right-2 w-2 h-2 border-r border-b border-slate-300 dark:border-slate-500/30 transition-colors duration-300" />
-    </motion.div>
+      {/* Mini Progress Line */}
+      <div className="mt-4 w-12 h-0.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+        <motion.div
+          initial={{ x: "-100%" }}
+          whileInView={{ x: "0%" }}
+          transition={{ duration: 1, delay: 0.5 }}
+          className="w-full h-full bg-emerald-500"
+        />
+      </div>
+    </div>
   );
 };
 

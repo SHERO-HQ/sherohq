@@ -32,14 +32,14 @@ interface AuthContextType {
   updateProfile: (data: {
     name?: string;
     phone?: string;
-    shippingAddress?: ShippingAddress;
+    shippingAddress?: ShippingAddress | null;
   }) => Promise<void>;
   refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -110,7 +110,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function updateProfile(data: {
     name?: string;
     phone?: string;
-    shippingAddress?: ShippingAddress;
+    shippingAddress?: ShippingAddress | null;
   }) {
     const response = await updateUserProfile(data);
     setUser(response.user);

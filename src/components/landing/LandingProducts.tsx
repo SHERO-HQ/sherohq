@@ -1,117 +1,65 @@
 import { motion } from "motion/react";
 import { NavLink } from "react-router-dom";
 import { ShoppingCart, ArrowRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProductCard from "@/components/products/ProductCard";
 import type { Product } from "@/data/products";
+import { fetchProducts } from "@/services/api";
+
+const ProductSkeleton = () => (
+  <div className="rounded overflow-hidden bg-slate-200/60 dark:bg-slate-900/40 border border-white/5 animate-pulse">
+    <div className="h-40 sm:h-52 bg-slate-300 dark:bg-slate-800" />
+    <div className="p-3 sm:p-4 space-y-3">
+      <div className="flex justify-between">
+        <div className="h-4 w-16 bg-slate-300 dark:bg-slate-700 rounded" />
+        <div className="h-4 w-10 bg-slate-300 dark:bg-slate-700 rounded" />
+      </div>
+      <div className="h-5 w-3/4 bg-slate-300 dark:bg-slate-700 rounded" />
+      <div className="h-4 w-1/2 bg-slate-300 dark:bg-slate-700 rounded" />
+      <div className="flex gap-2 mt-2">
+        <div className="h-9 flex-1 bg-slate-300 dark:bg-slate-700 rounded" />
+        <div className="h-9 flex-1 bg-slate-300 dark:bg-slate-700 rounded" />
+      </div>
+    </div>
+  </div>
+);
 
 const LandingProducts = () => {
-  // Products data with extended fields for detail view
-  const products: Product[] = [
-    {
-      id: "1",
-      name: "Wireless Earbuds Pro",
-      category: "Accessories",
-      price: 400,
-      image: "🎧",
-      images: ["🎧", "🎵", "🔊"],
-      rating: 4.8,
-      reviews: 156,
-      badge: "Best Seller",
-      inStock: true,
-      description:
-        "Premium wireless earbuds with active noise cancellation and 30-hour battery life.",
-      features: [
-        "Active Noise Cancellation",
-        "30-hour battery",
-        "Premium sound quality",
-      ],
-      specifications: {
-        "Battery Life": "30 hours",
-        Bluetooth: "5.2",
-        Charging: "USB-C Fast Charge",
-      },
-    },
-    {
-      id: "2",
-      name: "USB-C Hub 7-in-1",
-      category: "Accessories",
-      price: 200,
-      image: "🔌",
-      rating: 4.6,
-      reviews: 89,
-      inStock: true,
-      description:
-        "Versatile 7-in-1 USB-C hub with HDMI, USB 3.0, and SD card reader.",
-      features: ["7 ports", "4K HDMI output", "Fast data transfer"],
-    },
-    {
-      id: "4",
-      name: "Laptop",
-      category: "Laptops",
-      price: 120,
-      image: "💻",
-      rating: 4.7,
-      reviews: 234,
-      badge: "New Arrival",
-      inStock: true,
-    },
-    {
-      id: "5",
-      name: "Wireless Mouse",
-      category: "Accessories",
-      price: 100,
-      image: "🖱️",
-      rating: 4.5,
-      reviews: 67,
-      inStock: true,
-    },
-    {
-      id: "6",
-      name: "Protective Phone Case",
-      category: "Mobile",
-      price: 35,
-      image: "📱",
-      rating: 4.4,
-      reviews: 145,
-      inStock: true,
-    },
-    {
-      id: "7",
-      name: "Ultra Slim Laptop Pro",
-      category: "Laptop",
-      price: 4500,
-      image: "💻",
-      images: ["💻", "⌨️", "🖥️", "🔋"],
-      rating: 4.9,
-      reviews: 312,
-      badge: "Premium",
-      inStock: true,
-      description:
-        "High-performance laptop with premium build quality and all-day battery life.",
-      features: [
-        "Intel i7 Processor",
-        "16GB RAM",
-        "512GB SSD",
-        "14-hour battery",
-      ],
-      specifications: {
-        Processor: "Intel Core i7",
-        RAM: "16GB DDR4",
-        Storage: "512GB NVMe SSD",
-        Display: "14-inch Retina",
-      },
-    },
-  ];
-
-  const categories = ["All", "Laptop", "Accessories", "Mobile"];
+  const [products, setProducts] = useState<Product[]>([]);
   const [activeCategory, setActiveCategory] = useState<string>("All");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      setIsLoading(true);
+      try {
+        const allProducts = await fetchProducts();
+        // Filter for in-stock items and shuffle for "random suggestions"
+        const inStockProducts = allProducts.filter((p) => p.inStock);
+        const shuffled = [...inStockProducts].sort(() => 0.5 - Math.random());
+        setProducts(shuffled);
+      } catch (error) {
+        console.error("Failed to load landing products:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
+
+  const categories = ["All", "Laptops", "Accessories", "Mobile"];
 
   const getFilteredProducts = () => {
     if (activeCategory === "All") {
       return products;
     }
-    return products.filter((product) => product.category === activeCategory);
+    return products.filter(
+      (product) =>
+        product.category.toLowerCase() === activeCategory.toLowerCase() ||
+        (activeCategory === "Laptops" &&
+          product.category.toLowerCase() === "laptop"),
+    );
   };
 
   const filteredProducts = getFilteredProducts();
@@ -127,7 +75,7 @@ const LandingProducts = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
+          <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
             <ShoppingCart className="mr-2 w-4 h-4" />
             Featured Products
           </span>
@@ -161,12 +109,22 @@ const LandingProducts = () => {
         </div>
 
         {/* Products Grid */}
-        <div className="cursor-pointer grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))
-          ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+          {isLoading && (
+            <>
+              {[0, 1, 2, 3].map((i) => (
+                <ProductSkeleton key={`skeleton-${i}`} />
+              ))}
+            </>
+          )}
+          {!isLoading && filteredProducts.length > 0 && (
+            <>
+              {filteredProducts.slice(0, 4).map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </>
+          )}
+          {!isLoading && filteredProducts.length === 0 && (
             <div className="col-span-full text-center py-12">
               <p className="text-slate-500 dark:text-slate-400 text-lg">
                 No products found in this category

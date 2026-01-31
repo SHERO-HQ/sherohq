@@ -75,7 +75,7 @@ const CheckoutSuccess = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 p-8 sm:p-12 text-center"
+          className="bg-white dark:bg-slate-900 rounded shadow-xl border border-slate-200 dark:border-slate-800 p-8 sm:p-12 text-center"
         >
           {status === "verifying" ? (
             <div className="py-12">
@@ -105,7 +105,7 @@ const CheckoutSuccess = () => {
               </p>
               <button
                 onClick={() => navigate("/products")}
-                className="px-8 py-2 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-colors"
+                className="px-8 py-2 bg-emerald-600 text-white rounded font-bold hover:bg-emerald-700 transition-colors"
               >
                 Return to Shop
               </button>
@@ -133,7 +133,7 @@ const CheckoutSuccess = () => {
                 has been confirmed.
               </p>
 
-              <div className="bg-slate-50 dark:bg-slate-950 rounded-xl p-6 mb-8 max-w-sm mx-auto border border-slate-100 dark:border-slate-800">
+              <div className="bg-slate-50 dark:bg-slate-950 rounded p-6 mb-8 max-w-sm mx-auto border border-slate-100 dark:border-slate-800">
                 <p className="text-sm text-slate-500 mb-1">Amount Paid</p>
                 <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 font-sora">
                   GH₵{order?.total.toFixed(2)}
@@ -143,13 +143,13 @@ const CheckoutSuccess = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
                   onClick={() => navigate("/products")}
-                  className="px-8 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition-all shadow-lg shadow-emerald-500/20"
+                  className="px-8 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-all shadow-lg shadow-emerald-500/20"
                 >
                   Continue Shopping
                 </button>
                 <button
                   onClick={() => navigate("/")}
-                  className="px-8 py-2 border-2 border-slate-200 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded-lg font-bold transition-colors"
+                  className="px-8 py-2 border-2 border-slate-200 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded- font-bold transition-colors"
                 >
                   Return Home
                 </button>

@@ -1,361 +1,481 @@
 import { useState, useEffect, useCallback } from "react";
 import { fetchAllOrders, updateOrderStatus, type Order } from "@/services/api";
-import { useTitle } from "@/hooks/useTitle";
 import {
-  ShoppingCart,
-  Clock,
-  Package,
+  Search,
+  Eye,
   Truck,
-  CheckCircle,
+  CheckCircle2,
+  Clock,
   XCircle,
-  Loader2,
-  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardList,
+  Calendar,
+  Printer,
   Phone,
-  Store,
+  Mail,
+  PackageSearch,
+  PackageCheck,
+  PackageX,
 } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
-
-const ORDER_STATUSES = [
-  { value: "pending", label: "Pending", icon: Clock, color: "text-yellow-400" },
-  {
-    value: "processing",
-    label: "Processing",
-    icon: Package,
-    color: "text-blue-400",
-  },
-  { value: "shipped", label: "Shipped", icon: Truck, color: "text-purple-400" },
-  {
-    value: "delivered",
-    label: "Delivered",
-    icon: CheckCircle,
-    color: "text-emerald-400",
-  },
-  {
-    value: "cancelled",
-    label: "Cancelled",
-    icon: XCircle,
-    color: "text-red-400",
-  },
-];
-
-// Utility function moved outside component for better performance
-function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
-function getStatusInfo(status: string) {
-  return ORDER_STATUSES.find((s) => s.value === status) || ORDER_STATUSES[0];
-}
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { motion } from "motion/react";
+import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
 
 export default function AdminOrders() {
-  useTitle("Manage Orders");
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<string>("");
-  const [deliveryFilter, setDeliveryFilter] = useState<
-    "all" | "pickup" | "delivery"
-  >("all");
-  const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
-  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
+  const [error, setError] = useState("");
 
-  const [dateRange, setDateRange] = useState({ start: "", end: "" });
+  // Filters
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
   const loadOrders = useCallback(async () => {
     try {
       setIsLoading(true);
       const data = await fetchAllOrders(
-        statusFilter || undefined,
-        dateRange.start,
-        dateRange.end,
+        statusFilter === "all" ? undefined : statusFilter,
       );
       setOrders(data);
     } catch (err) {
-      console.error("Failed to load orders:", err);
+      setError(err instanceof Error ? err.message : "Failed to load orders");
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
-  }, [statusFilter, dateRange.start, dateRange.end]);
+  }, [statusFilter]);
 
   useEffect(() => {
     loadOrders();
   }, [loadOrders]);
 
-  const filteredOrders = orders.filter((order) => {
-    if (deliveryFilter === "all") return true;
-    if (deliveryFilter === "pickup")
-      return order.paymentMethod === "store_pickup";
-    if (deliveryFilter === "delivery")
-      return order.paymentMethod !== "store_pickup";
-    return true;
-  });
-
-  async function handleStatusChange(orderId: string, newStatus: string) {
+  const handleUpdateStatus = async (id: string, newStatus: string) => {
     try {
-      setUpdatingStatus(orderId);
-      await updateOrderStatus(orderId, newStatus);
+      await updateOrderStatus(id, newStatus);
       setOrders(
-        orders.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o)),
+        orders.map((o) => (o.id === id ? { ...o, status: newStatus } : o)),
       );
     } catch (err) {
-      console.error("Failed to update status:", err);
-    } finally {
-      setUpdatingStatus(null);
+      alert(
+        "Failed to update status: " +
+          (err instanceof Error ? err.message : "Unknown error"),
+      );
     }
-  }
+  };
 
-  let ordersContent;
-
-  if (isLoading) {
-    ordersContent = (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
-      </div>
+  const filteredOrders = orders.filter((order) => {
+    const searchLower = search.toLowerCase();
+    return (
+      order.id.toLowerCase().includes(searchLower) ||
+      order.shippingInfo.firstName.toLowerCase().includes(searchLower) ||
+      order.shippingInfo.lastName.toLowerCase().includes(searchLower) ||
+      order.shippingInfo.email.toLowerCase().includes(searchLower)
     );
-  } else if (filteredOrders.length === 0) {
-    ordersContent = (
-      <div className="text-center py-12">
-        <ShoppingCart className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-        <p className="text-slate-400">No orders found</p>
-      </div>
-    );
-  } else {
-    ordersContent = (
-      <div className="space-y-4">
-        {filteredOrders.map((order) => {
-          const statusInfo = getStatusInfo(order.status);
-          const StatusIcon = statusInfo.icon;
-          const isExpanded = expandedOrder === order.id;
+  });
 
-          return (
-            <div
-              key={order.id}
-              className="bg-slate-900/50 border border-slate-800 rounded overflow-hidden"
-            >
-              {/* Order Header */}
-              <button
-                className="w-full text-left p-6 cursor-pointer hover:bg-slate-800/30 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-inset"
-                onClick={() => setExpandedOrder(isExpanded ? null : order.id)}
-                aria-expanded={isExpanded}
-                aria-label={`Order ${order.id.slice(0, 8)}, ${statusInfo.label}, GH₵${order.total.toLocaleString()}`}
-              >
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={`p-2 rounded bg-slate-800 ${statusInfo.color}`}
-                    >
-                      <StatusIcon className="w-5 h-5" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-white flex items-center gap-2">
-                        Order #{order.id.slice(0, 8)}
-                        {order.paymentMethod === "store_pickup" && (
-                          <span className="flex items-center gap-1 text-[10px] uppercase font-bold bg-emerald-900/50 text-emerald-400 px-2 py-0.5 rounded border border-emerald-800/50">
-                            <Store className="w-3 h-3" /> Pickup
-                          </span>
-                        )}
-                      </p>
-                      <p className="text-sm text-slate-400">
-                        {formatDate(order.createdAt)}
-                      </p>
-                    </div>
-                  </div>
+  const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
+  const currentOrders = filteredOrders.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
 
-                  <div className="hidden md:block">
-                    <p className="font-medium text-white text-sm">
-                      {order.shippingInfo.firstName}{" "}
-                      {order.shippingInfo.lastName}
-                    </p>
-                    <div className="flex items-center gap-1 text-sm text-slate-400">
-                      <Phone className="w-3 h-3" />
-                      {order.shippingInfo.phone || "No phone"}
-                    </div>
-                  </div>
+  const formatPaymentMethod = (method: string) => {
+    switch (method.toLowerCase()) {
+      case "mobile_money":
+      case "momo":
+        return "MoMo";
+      case "card":
+      case "credit_card":
+        return "Card";
+      case "cash":
+        return "Cash";
+      default:
+        return method.replaceAll("_", " ");
+    }
+  };
 
-                  <div className="flex items-center gap-4">
-                    <div className="text-right">
-                      <p className="font-bold text-white">
-                        GH₵{order.total.toLocaleString()}
-                      </p>
-                      <p className="text-sm text-slate-400">
-                        {order.items.length} items
-                      </p>
-                    </div>
+  const getStatusConfig = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "pending":
+        return { color: "text-amber-400 bg-amber-500/10", icon: Clock };
+      case "processing":
+        return { color: "text-blue-400 bg-blue-500/10", icon: Truck };
+      case "shipped":
+        return { color: "text-purple-400 bg-purple-500/10", icon: Truck };
+      case "delivered":
+        return {
+          color: "text-emerald-400 bg-emerald-500/10",
+          icon: CheckCircle2,
+        };
+      case "cancelled":
+        return { color: "text-rose-400 bg-rose-500/10", icon: XCircle };
+      default:
+        return { color: "text-slate-400 bg-slate-500/10", icon: Clock };
+    }
+  };
 
-                    {/* Status Dropdown */}
-                    <select
-                      value={order.status}
-                      onClick={(e) => e.stopPropagation()}
-                      onChange={(e) =>
-                        handleStatusChange(order.id, e.target.value)
-                      }
-                      disabled={updatingStatus === order.id}
-                      className={`px-3 py-1.5 rounded border font-medium text-xs ${statusInfo.color} bg-slate-800 border-slate-700 focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select pr-8 cursor-pointer transition-colors`}
-                    >
-                      {ORDER_STATUSES.map((s) => (
-                        <option
-                          key={s.value}
-                          value={s.value}
-                          className="bg-slate-800 text-white font-normal text-sm"
-                        >
-                          {s.label}
-                        </option>
-                      ))}
-                    </select>
+  const handleExport = (format: "csv" | "excel" | "pdf") => {
+    const dataToExport = filteredOrders.map((order) => ({
+      id: order.id,
+      customer: `${order.shippingInfo.firstName} ${order.shippingInfo.lastName}`,
+      email: order.shippingInfo.email,
+      total: order.total,
+      status: order.status,
+      paymentMethod: formatPaymentMethod(order.paymentMethod),
+      items: order.items.length,
+      date: new Date(order.createdAt).toLocaleDateString(),
+    }));
 
-                    <ChevronDown
-                      className={`w-5 h-5 text-slate-400 transition-transform ${
-                        isExpanded ? "rotate-180" : ""
-                      }`}
-                    />
-                  </div>
-                </div>
-              </button>
+    const fileName = `orders_${new Date().toISOString().split("T")[0]}`;
+    const columns = [
+      "id",
+      "customer",
+      "email",
+      "total",
+      "status",
+      "paymentMethod",
+      "items",
+      "date",
+    ];
 
-              {/* Order Details (Expanded) */}
-              {isExpanded && (
-                <div className="px-6 pb-6 border-t border-slate-800 pt-4">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {/* Customer Info */}
-                    <div>
-                      <h3 className="text-sm font-medium text-slate-400 mb-3">
-                        Customer Information
-                      </h3>
-                      <div className="space-y-2 text-sm">
-                        <p className="text-white">
-                          {order.shippingInfo.firstName}{" "}
-                          {order.shippingInfo.lastName}
-                        </p>
-                        <p className="text-slate-400">
-                          {order.shippingInfo.email}
-                        </p>
-                        <p className="text-slate-400">
-                          {order.shippingInfo.phone}
-                        </p>
-                        <p className="text-slate-400">
-                          {order.shippingInfo.address},{" "}
-                          {order.shippingInfo.city}
-                        </p>
-                        <p className="text-slate-400">
-                          {order.shippingInfo.region}{" "}
-                          {order.shippingInfo.postalCode}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Order Items */}
-                    <div>
-                      <h3 className="text-sm font-medium text-slate-400 mb-3">
-                        Order Items
-                      </h3>
-                      <div className="space-y-3">
-                        {order.items.map((item) => (
-                          <div
-                            key={item.id}
-                            className="flex items-center gap-3"
-                          >
-                            <span className="text-xl">{item.image}</span>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-white text-sm truncate">
-                                {item.name}
-                              </p>
-                              <p className="text-slate-400 text-xs">
-                                Qty: {item.quantity} × GH₵{item.price}
-                              </p>
-                            </div>
-                            <p className="text-white font-medium">
-                              GH₵{(item.price * item.quantity).toFixed(2)}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
+    if (format === "csv") exportToCSV(dataToExport, fileName);
+    else if (format === "excel") exportToExcel(dataToExport, fileName);
+    else exportToPDF(dataToExport, columns, fileName, "Orders Report");
+  };
 
   return (
     <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded bg-linear-to-br from-purple-500 to-blue-600">
-              <ShoppingCart className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-white font-sora">Orders</h1>
-              <p className="text-slate-400">
-                {filteredOrders.length} orders found
-              </p>
-            </div>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-white font-sora">Orders</h1>
+            <p className="text-slate-400 text-sm">
+              Monitor and manage customer transactions
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="border-white/10 text-white hover:bg-white/5"
+                >
+                  <Printer className="mr-2 h-4 w-4" /> Export
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="bg-slate-900 border-white/10 text-white"
+              >
+                <DropdownMenuItem
+                  onClick={() => handleExport("csv")}
+                  className="cursor-pointer hover:bg-white/5"
+                >
+                  Export as CSV
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleExport("excel")}
+                  className="cursor-pointer hover:bg-white/5"
+                >
+                  Export as Excel
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleExport("pdf")}
+                  className="cursor-pointer hover:bg-white/5"
+                >
+                  Export as PDF
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
+
+        {/* Error State */}
+        {error && (
+          <div className="bg-rose-500/10 border border-rose-500/20 p-4 rounded text-rose-400 text-sm">
+            {error}
+          </div>
+        )}
 
         {/* Filters */}
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex bg-slate-900 border border-slate-800 rounded p-1">
-            <input
-              type="date"
-              value={dateRange.start}
-              onChange={(e) =>
-                setDateRange((prev) => ({ ...prev, start: e.target.value }))
-              }
-              className="bg-transparent text-white px-2 py-1 text-sm focus:outline-none"
-            />
-            <span className="text-slate-500 px-2 self-center">-</span>
-            <input
-              type="date"
-              value={dateRange.end}
-              onChange={(e) =>
-                setDateRange((prev) => ({ ...prev, end: e.target.value }))
-              }
-              className="bg-transparent text-white px-2 py-1 text-sm focus:outline-none"
-            />
+        <Card className="bg-slate-900 border-white/5 p-4">
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <Input
+                placeholder="Search by Order ID, customer name or email..."
+                className="pl-10 bg-slate-800/50 border-white/5 text-white placeholder:text-slate-500"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <div className="flex items-center gap-3 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
+              {[
+                "all",
+                "pending",
+                "processing",
+                "shipped",
+                "delivered",
+                "cancelled",
+              ].map((status) => (
+                <button
+                  key={status}
+                  onClick={() => setStatusFilter(status)}
+                  className={cn(
+                    "px-4 py-2 rounded text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap border",
+                    statusFilter === status
+                      ? "bg-emerald-600 border-emerald-500 text-white"
+                      : "bg-slate-800 border-white/5 text-slate-400 hover:text-white hover:border-white/10",
+                  )}
+                >
+                  {status}
+                </button>
+              ))}
+            </div>
           </div>
-
-          {/* Status Filter */}
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 bg-slate-900 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select text-sm"
-          >
-            <option value="">All Statuses</option>
-            {ORDER_STATUSES.map((s) => (
-              <option key={s.value} value={s.value} className="bg-slate-800 text-white font-normal text-sm">
-                {s.label}
-              </option>
-            ))}
-          </select>
-
-          {/* Delivery Filter */}
-          <select
-            value={deliveryFilter}
-            onChange={(e) =>
-              setDeliveryFilter(e.target.value as "all" | "pickup" | "delivery")
-            }
-            className="px-4 py-2 bg-slate-900 border border-slate-800 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-500 custom-select text-sm"
-          >
-            <option value="all">All Delivery Methods</option>
-            <option value="delivery">Delivery</option>
-            <option value="pickup">Store Pickup</option>
-          </select>
-        </div>
+        </Card>
 
         {/* Orders List */}
-        {ordersContent}
+        <div className="space-y-4">
+          {isLoading &&
+            new Array(4)
+              .fill(0)
+              .map((_, i) => (
+                <div
+                  key={`skeleton-${i}`}
+                  className="h-32 rounded bg-slate-900 animate-pulse border border-white/5"
+                />
+              ))}
+
+          {!isLoading && currentOrders.length === 0 && (
+            <div className="p-12 text-center bg-slate-900 border border-white/5 rounded">
+              <ClipboardList className="w-12 h-12 text-slate-700 mx-auto mb-4" />
+              <p className="text-slate-500 font-medium">No orders found</p>
+            </div>
+          )}
+
+          {!isLoading &&
+            currentOrders.length > 0 &&
+            currentOrders.map((order, index) => {
+              const status = getStatusConfig(order.status);
+              return (
+                <motion.div
+                  key={order.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <Card className="bg-slate-900 border-white/5 hover:border-white/10 transition-all p-4 md:p-6 group">
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                      {/* Order Core Info */}
+                      <div className="flex items-start gap-4">
+                        <div
+                          className={cn("p-3 rounded shrink-0", status.color)}
+                        >
+                          <status.icon className="w-6 h-6" />
+                        </div>
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <Link
+                              to={`/admin/orders/${order.id}`}
+                              className="text-sm font-mono text-slate-400 hover:text-emerald-400 transition-colors"
+                            >
+                              #{order.id.slice(0, 12)}
+                            </Link>
+                            <Badge
+                              className={cn(
+                                "text-[10px] font-bold uppercase",
+                                status.color,
+                              )}
+                            >
+                              {order.status}
+                            </Badge>
+                          </div>
+                          <Link to={`/admin/orders/${order.id}`}>
+                            <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors">
+                              {order.shippingInfo.firstName}{" "}
+                              {order.shippingInfo.lastName}
+                            </h3>
+                          </Link>
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-slate-500">
+                            <div className="flex items-center gap-1.5">
+                              <Mail className="w-3 h-3" />
+                              <span className="truncate max-w-[150px]">
+                                {order.shippingInfo.email}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              <Phone className="w-3 h-3" />
+                              <span>{order.shippingInfo.phone}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Details Grid */}
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 flex-1 lg:max-w-2xl">
+                        <div className="space-y-1">
+                          <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">
+                            Date
+                          </p>
+                          <div className="flex items-center gap-2 text-sm text-slate-300">
+                            <Calendar className="w-3 h-3 text-slate-500" />
+                            {new Date(order.createdAt).toLocaleDateString()}
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">
+                            Total(GH₵)
+                          </p>
+                          <div className="flex items-center gap-2 text-sm font-bold text-emerald-400">
+                            {/* <DollarSign className="w-3 h-3" /> */}
+                            {order.total.toLocaleString()}
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">
+                            Items
+                          </p>
+                          <p className="text-sm text-slate-300">
+                            {order.items.length} product(s)
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">
+                            Payment
+                          </p>
+                          <p className="text-xs text-slate-300 font-medium">
+                            {formatPaymentMethod(order.paymentMethod)}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-3">
+                        <Button
+                          variant="ghost"
+                          className="text-slate-400 hover:text-white hover:bg-white/5"
+                          asChild
+                        >
+                          <Link to={`/admin/orders/${order.id}`}>
+                            <Eye className="w-4 h-4 mr-2" /> Details
+                          </Link>
+                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className="border-white/10 text-white hover:bg-white/5"
+                            >
+                              Update Status
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            align="end"
+                            className="bg-slate-900 border-white/10 text-white"
+                          >
+                            <DropdownMenuItem
+                              onClick={() =>
+                                handleUpdateStatus(order.id, "processing")
+                              }
+                              className="cursor-pointer hover:bg-white/5"
+                            >
+                              <PackageSearch className="w-4 h-4 mr-2 text-blue-400" />{" "}
+                              Processing
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                handleUpdateStatus(order.id, "shipped")
+                              }
+                              className="cursor-pointer hover:bg-white/5"
+                            >
+                              <Truck className="w-4 h-4 mr-2 text-purple-400" />{" "}
+                              Shipped
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                handleUpdateStatus(order.id, "delivered")
+                              }
+                              className="cursor-pointer hover:bg-white/5"
+                            >
+                              <PackageCheck className="w-4 h-4 mr-2 text-emerald-400" />{" "}
+                              Delivered
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator className="bg-white/5" />
+                            <DropdownMenuItem
+                              onClick={() =>
+                                handleUpdateStatus(order.id, "cancelled")
+                              }
+                              className="cursor-pointer text-rose-400 focus:text-rose-400 focus:bg-rose-500/10"
+                            >
+                              <PackageX className="w-4 h-4 mr-2 text-rose-400" /> Cancelled
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+              );
+            })}
+        </div>
+
+        {/* Pagination */}
+        {!isLoading && filteredOrders.length > itemsPerPage && (
+          <div className="flex items-center justify-center gap-4 py-6">
+            <Button
+              variant="ghost"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => prev - 1)}
+              className="text-slate-400 hover:text-white"
+            >
+              <ChevronLeft className="w-4 h-4 mr-2" /> Previous
+            </Button>
+            <span className="text-sm font-medium text-slate-400">
+              Page {currentPage} of {totalPages}
+            </span>
+            <Button
+              variant="ghost"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+              className="text-slate-400 hover:text-white"
+            >
+              Next <ChevronRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        )}
       </div>
     </AdminLayout>
+  );
+}
+
+// Sub-components used
+function Card({
+  children,
+  className,
+  ...props
+}: { children: React.ReactNode } & React.HTMLAttributes<HTMLDivElement>) {
+  return (
+    <div className={cn("rounded border", className)} {...props}>
+      {children}
+    </div>
   );
 }

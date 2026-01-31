@@ -20,11 +20,12 @@ interface AdminContextType {
   isLoading: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  setAdmin: (admin: AdminUser | null) => void;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
-export function AdminProvider({ children }: { children: ReactNode }) {
+export function AdminProvider({ children }: { readonly children: ReactNode }) {
   const [admin, setAdmin] = useState<AdminUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -70,6 +71,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       isLoading,
       login,
       logout,
+      setAdmin, // Expose setAdmin to allow direct state updates
     }),
     [admin, isLoading],
   );

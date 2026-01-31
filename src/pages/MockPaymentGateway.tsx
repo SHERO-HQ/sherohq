@@ -29,7 +29,7 @@ const MockPaymentGateway = () => {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center p-4">
       <SEO title="Secure Payment" />
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200 dark:border-slate-700">
+      <div className="bg-white dark:bg-slate-800 rounded shadow-2xl max-w-md w-full overflow-hidden border border-slate-200 dark:border-slate-700">
         {/* Header */}
         <div className="bg-slate-900 p-6 text-center">
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-500/10 mb-3">
@@ -41,7 +41,7 @@ const MockPaymentGateway = () => {
 
         {/* content */}
         <div className="p-6 space-y-6">
-          <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg border border-slate-100 dark:border-slate-700">
+          <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded border border-slate-100 dark:border-slate-700">
             <div className="flex justify-between items-center mb-2">
               <span className="text-slate-500 dark:text-slate-400">
                 Order ID:
@@ -64,7 +64,7 @@ const MockPaymentGateway = () => {
             <button
               onClick={() => handlePayment(true)}
               disabled={isProcessing}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded font-semibold transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isProcessing ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -77,7 +77,7 @@ const MockPaymentGateway = () => {
             <button
               onClick={() => handlePayment(false)}
               disabled={isProcessing}
-              className="w-full bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 py-2 rounded-lg font-semibold transition-all hover:bg-red-100 dark:hover:bg-red-900/20 border border-transparent hover:border-red-200 dark:hover:border-red-800 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-red-50 dark:bg-red-900/10 text-red-600 dark:text-red-400 py-2 rounded font-semibold transition-all hover:bg-red-100 dark:hover:bg-red-900/20 border border-transparent hover:border-red-200 dark:hover:border-red-800 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <AlertCircle className="w-5 h-5" />
               Cancel Transaction

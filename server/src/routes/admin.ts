@@ -14,15 +14,17 @@ interface AdminUserRow {
   email: string;
   passwordHash: string;
   role: string;
+  avatar?: string;
   createdAt: string;
 }
 
-// Stricter rate limiting for admin login: 3 attempts per 15 minutes
+// Rate limiting for admin login: Disabled in development
 const adminLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 3,
+  limit: process.env.NODE_ENV === "production" ? 20 : 100000,
   standardHeaders: "draft-7",
   legacyHeaders: false,
+  skip: () => process.env.NODE_ENV !== "production",
   message: { error: "Too many admin login attempts, please try again later." },
 });
 
@@ -85,6 +87,7 @@ router.post("/login", adminLimiter, async (req: Request, res: Response) => {
         username: admin.username,
         email: admin.email,
         role: admin.role,
+        avatar: admin.avatar,
       },
     });
   } catch (error: unknown) {
@@ -231,7 +234,7 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
 // PUT /api/admin/profile - Update current admin profile
 router.put("/profile", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, avatar } = req.body;
     const adminId = req.admin?.id;
 
     if (!adminId) {
@@ -278,6 +281,12 @@ router.put("/profile", adminAuth, async (req: AdminRequest, res: Response) => {
       paramIndex++;
     }
 
+    if (avatar !== undefined) {
+      updates.push(`avatar = $${paramIndex}`);
+      params.push(avatar);
+      paramIndex++;
+    }
+
     if (updates.length === 0) {
       return res.status(400).json({ error: "No updates provided" });
     }
@@ -301,6 +310,7 @@ router.put("/profile", adminAuth, async (req: AdminRequest, res: Response) => {
         ...req.admin,
         username: username || req.admin?.username,
         email: email || req.admin?.email,
+        avatar: avatar !== undefined ? avatar : req.admin?.avatar,
       },
     });
   } catch (error) {

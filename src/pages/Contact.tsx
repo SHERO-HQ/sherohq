@@ -1,23 +1,26 @@
-import { useTitle } from "@/hooks/useTitle";
+import SEO from "@/components/common/SEO";
 import ContactForm from "@/components/common/ContactForm";
 import Footer from "@/components/layout/Footer";
 import { motion } from "motion/react";
 import { Mail, MapPin, MessagesSquare, Phone } from "lucide-react";
 
 const Contact = () => {
-  useTitle("Contact Us");
-
   return (
     <>
+      <SEO
+        title="Contact Us"
+        description="Get in touch with Shero Technologies. We are ready to help you build the future with our tech solutions and consultation services."
+        url="/contact-us"
+      />
       <div className="relative pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden dark:bg-slate-950 bg-slate-50 min-h-screen">
+        {/* Dot Pattern Background */}
+        <div className="absolute inset-0 pattern-dots opacity-30 dark:opacity-20 pointer-events-none" />
+
         {/* Deep Space Background - Dark Mode Only */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black opacity-0 dark:opacity-100 transition-opacity duration-500" />
 
         {/* Soft Light Mode Gradient */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-blue-100/50 via-slate-50 to-white dark:opacity-0 transition-opacity duration-500" />
-
-        {/* Digital Grid Overlay */}
-        <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-20 dark:opacity-100" />
 
         {/* Animated Orbs */}
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
@@ -46,7 +49,8 @@ const Contact = () => {
                 </h1>
                 <p className="text-base text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed">
                   Ready to redefine your vision into possibilities? Our team of
-                  developers and technicians is standing by to bring your ideas to life.
+                  developers and technicians is standing by to bring your ideas
+                  to life.
                 </p>
               </div>
 

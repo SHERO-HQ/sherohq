@@ -1,20 +1,23 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import ProductHero from "./ProductsHero";
-// import ProductCategories from "./ProductsCategories"; // Removed
 import { defaultCategories } from "@/utils/defaultCategories";
 import type { Category } from "./ProductsCategories";
 import ProductFilters from "./ProductFilters";
 import type { FilterState } from "./ProductFilters";
 import ProductFiltersSidebar from "./ProductFiltersSidebar";
 import ProductGrid from "./ProductsGrid";
-import type { Product } from "@/data/products"; // Import shared type
+import type { Product } from "@/data/products";
 import { SlidersHorizontal } from "lucide-react";
-import { fetchProducts } from "@/services/api";
-
 import { useSearchParams } from "react-router-dom";
+import ProductSearch from "./ProductSearch";
+import { useProducts, useCategories } from "@/hooks/queries/useProducts";
 
 const ShopPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // TanStack Query
+  const { data: products = [], isLoading: loading } = useProducts();
+  useCategories();
 
   const [activeCategory, setActiveCategory] = useState("all");
   // Derive searchQuery from URL params instead of using useEffect + setState
@@ -23,44 +26,29 @@ const ShopPage = () => {
     [searchParams],
   );
   const [showMobileFilters, setShowMobileFilters] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [products, setProducts] = useState<Product[]>([]);
 
   const [filters, setFilters] = useState<FilterState>({
-    priceRange: [0, 10000],
+    priceRange: [0, 1000000],
     brands: [],
     minRating: 0,
     inStock: false,
     sortBy: "newest",
   });
 
-  // Fetch products from API
-  useEffect(() => {
-    const loadProducts = async () => {
-      setLoading(true);
-      try {
-        // We fetch all products and filter client-side for consistent filtering experience
-        // In a larger app, you might filter on the server
-        const data = await fetchProducts();
-        setProducts(data);
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadProducts();
-  }, []);
+  // Fetching moved to useProducts hook above
+  //useEffect(() => { ... }, []);
 
   // Add product counts to categories
-  const categoriesWithCount: Category[] = defaultCategories.map((cat) => ({
-    ...cat,
-    count:
-      cat.id === "all"
-        ? products.length
-        : products.filter((p) => p.category === cat.id).length,
-  }));
+  // Use defaultCategories as base but could also use apiCategories if preferred
+  const categoriesWithCount: Category[] = defaultCategories.map(
+    (cat: Category) => ({
+      ...cat,
+      count:
+        cat.id === "all"
+          ? products.length
+          : products.filter((p: Product) => p.category === cat.id).length,
+    }),
+  );
 
   // Filter and sort products
   const getFilteredProducts = (): Product[] => {
@@ -133,13 +121,6 @@ const ShopPage = () => {
     setActiveCategory(categoryId);
   };
 
-  // Handle quick view
-  // const handleQuickView = (product: Product) => {
-  //   console.log("Quick view:", product);
-  //   // Implement your quick view modal here
-  //   alert(`Quick view: ${product.name}`);
-  // };
-
   // Close mobile filters when clicking outside
   useEffect(() => {
     if (showMobileFilters) {
@@ -160,18 +141,8 @@ const ShopPage = () => {
 
   return (
     <div className="min-h-screen dark:bg-slate-950">
-      {/* Hero Section */}
-      <ProductHero
-        onSearch={handleSearch}
-        onFilterToggle={() => setShowMobileFilters(true)}
-      />
-
-      {/* Categories - Removed top bar */
-      /* <ProductCategories
-        categories={categoriesWithCount}
-        activeCategory={activeCategory}
-        onCategoryChange={handleCategoryChange}
-      /> */}
+      {/* Hero Section - Reduced props */}
+      <ProductHero />
 
       {/* Main Content */}
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
@@ -205,6 +176,13 @@ const ShopPage = () => {
 
           {/* Products Grid */}
           <main className="flex-1 min-w-0">
+            {/* Search Bar - Moved from Hero */}
+            <ProductSearch
+              onSearch={handleSearch}
+              initialQuery={searchQuery}
+              className="mb-8"
+            />
+
             {/* Results Header (Desktop) */}
             <div className="hidden lg:flex items-center justify-between mb-6">
               <div>
@@ -242,7 +220,6 @@ const ShopPage = () => {
             <ProductGrid
               products={filteredProducts}
               loading={loading}
-              // onQuickView={handleQuickView}
               columns={3}
             />
           </main>

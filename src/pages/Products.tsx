@@ -1,11 +1,15 @@
 import Footer from "@/components/layout/Footer";
 import ShopPage from "@/components/products/ShopPage";
-import { useTitle } from "@/hooks/useTitle";
+import SEO from "@/components/common/SEO";
 
 const Products = () => {
-  useTitle("Products");
   return (
     <>
+      <SEO
+        title="Products"
+        description="Explore our range of premium tech products including laptops, drones, specialized equipment, and custom software solutions."
+        url="/products"
+      />
       <ShopPage />
       <Footer />
     </>

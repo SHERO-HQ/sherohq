@@ -21,7 +21,7 @@ import {
   fetchStockDistribution,
   fetchOrderStatusDistribution,
   fetchRecentOrders,
-  type DashboardStats,
+  type AdminStats,
   type AnalyticsData,
   type TopProduct,
   type StockDistribution,
@@ -39,8 +39,17 @@ import {
   BarChart3,
   LineChart as LineChartIcon,
   Loader2,
+  Printer,
 } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
+import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 class ErrorBoundary extends React.Component<
   { children: React.ReactNode },
@@ -77,7 +86,7 @@ class ErrorBoundary extends React.Component<
 
 export default function AdminReports() {
   useTitle("Reports & Analytics");
-  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [stats, setStats] = useState<AdminStats | null>(null);
   const [analytics, setAnalytics] = useState<AnalyticsData[]>([]);
   const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
   const [range, setRange] = useState("7d");
@@ -123,6 +132,25 @@ export default function AdminReports() {
     loadData();
   }, [range]);
 
+  const handleExport = (format: "csv" | "excel" | "pdf") => {
+    // Exporting a summary report
+    const summaryData = [
+      { Metric: "Total Revenue", Value: stats?.revenue ?? 0 },
+      { Metric: "Total Orders", Value: stats?.orders ?? 0 },
+      { Metric: "Total Products", Value: stats?.products ?? 0 },
+      { Metric: "Low Stock Items", Value: stats?.lowStock ?? 0 },
+      { Metric: "Out of Stock Items", Value: stats?.outOfStock ?? 0 },
+    ];
+
+    const fileName = `analytics_summary_${new Date().toISOString().split("T")[0]}`;
+    const columns = ["Metric", "Value"];
+
+    if (format === "csv") exportToCSV(summaryData, fileName);
+    else if (format === "excel") exportToExcel(summaryData, fileName);
+    else
+      exportToPDF(summaryData, columns, fileName, "Analytics Summary Report");
+  };
+
   if (isLoading) {
     return (
       <AdminLayout>
@@ -138,7 +166,7 @@ export default function AdminReports() {
       <ErrorBoundary>
         <div className="space-y-8">
           {/* Header */}
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded bg-gradient-to-br from-purple-500 to-blue-600">
                 <TrendingUp className="w-6 h-6 text-white" />
@@ -152,28 +180,62 @@ export default function AdminReports() {
                 </p>
               </div>
             </div>
+            <div className="flex flex-col lg:flex-row gap-4 lg:items-center lg:justify-end">
+              <div className="flex justify-between bg-slate-800 rounded p-1">
+                {[
+                  { value: "7d", label: "7 Days" },
+                  { value: "30d", label: "30 Days" },
+                  { value: "90d", label: "90 Days" },
+                ].map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => setRange(option.value)}
+                    className={`px-4 py-1 rounded text-sm font-medium transition-all ${
+                      range === option.value
+                        ? "bg-slate-700 text-white shadow"
+                        : "text-slate-400 hover:text-white"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
 
-            <div className="flex bg-slate-800 rounded p-1">
-              {[
-                { value: "7d", label: "7 Days" },
-                { value: "30d", label: "30 Days" },
-                { value: "90d", label: "90 Days" },
-              ].map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() => setRange(option.value)}
-                  className={`px-4 py-2 rounded text-sm font-medium transition-all ${
-                    range === option.value
-                      ? "bg-slate-700 text-white shadow"
-                      : "text-slate-400 hover:text-white"
-                  }`}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="border-white/10 text-white hover:bg-white/5"
+                  >
+                    <Printer className="mr-2 h-4 w-4" /> Export Summary
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="bg-slate-900 border-white/10 text-white"
                 >
-                  {option.label}
-                </button>
-              ))}
+                  <DropdownMenuItem
+                    onClick={() => handleExport("csv")}
+                    className="cursor-pointer hover:bg-white/5"
+                  >
+                    Export as CSV
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleExport("excel")}
+                    className="cursor-pointer hover:bg-white/5"
+                  >
+                    Export as Excel
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleExport("pdf")}
+                    className="cursor-pointer hover:bg-white/5"
+                  >
+                    Export as PDF
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
-
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
@@ -456,8 +518,11 @@ export default function AdminReports() {
                           <span className="font-mono text-sm text-white">
                             #{order.id.slice(0, 8)}
                           </span>
-                          <span className="text-xs text-slate-400">
+                          <span className="text-xs text-slate-300">
                             {order.customer.firstName} {order.customer.lastName}
+                          </span>
+                          <span className="text-[10px] text-slate-500 truncate max-w-[120px]">
+                            {order.customer.email}
                           </span>
                         </div>
                       </div>

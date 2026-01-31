@@ -98,7 +98,7 @@ export function TableRowSkeleton({ columns = 5 }: { columns?: number }) {
   return (
     <tr className="border-b border-slate-800">
       {Array.from({ length: columns }).map((_, i) => (
-        <td key={i} className="px-6 py-4">
+        <td key={i} className="px-6 py-2">
           <Skeleton className="h-4 w-full max-w-[120px]" />
         </td>
       ))}

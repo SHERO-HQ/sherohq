@@ -43,7 +43,7 @@ async function uploadToSupabase(file: Express.Multer.File): Promise<string> {
   const fileName = `${uuidv4()}${fileExt}`;
   const filePath = `${fileName}`;
 
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from("products")
     .upload(filePath, file.buffer, {
       contentType: file.mimetype,

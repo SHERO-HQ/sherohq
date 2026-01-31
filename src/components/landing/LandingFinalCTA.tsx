@@ -24,7 +24,7 @@ const LandingFinalCTA = () => {
             <div className="max-w-xl space-y-8 text-center md:text-left">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-emerald-400/50 backdrop-blur-sm">
                 <WandSparkles className="w-4 h-4 text-emerald-400" />
-                <span className="text-sm font-medium text-emerald-100 uppercase">
+                <span className="text-xs font-medium text-emerald-100 uppercase">
                   Unlock Your Potential
                 </span>
               </div>
@@ -36,7 +36,7 @@ const LandingFinalCTA = () => {
                 </span>
               </h2>
 
-              <p className="text-lg text-slate-300 leading-relaxed">
+              <p className="text-sm lg:text-slate-300 leading-relaxed">
                 Join the league of visionaries who are redefining their
                 industries with SHERO's cutting-edge ecosystem.
               </p>

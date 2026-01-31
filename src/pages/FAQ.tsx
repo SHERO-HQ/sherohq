@@ -2,11 +2,9 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Plus, Minus, HelpCircle } from "lucide-react";
 import Footer from "@/components/layout/Footer";
-import { useTitle } from "@/hooks/useTitle";
+import SEO from "@/components/common/SEO";
 
 const FAQ = () => {
-  useTitle("FAQ");
-
   const faqs = [
     {
       category: "General",
@@ -21,7 +19,7 @@ const FAQ = () => {
         },
         {
           q: "Where is your physical office located?",
-          a: "Our headquarters is located in Accra, Ghana. You can find our exact location on the Contact Us page.",
+          a: "We are located in Tamale, Northern Region, Ghana. You can find our exact location on the Contact Us page.",
         },
       ],
     },
@@ -30,11 +28,11 @@ const FAQ = () => {
       items: [
         {
           q: "What is the warranty period for laptops?",
-          a: "All our new laptops come with a standard 1-year manufacturer warranty. We also offer an optional extended warranty plan for up to 3 years.",
+          a: "All our products come with a standard warranty. We also offer an optional extended warranty plan depending on the product and your needs.",
         },
         {
           q: "Do you sell refurbished items?",
-          a: "We primarily sell brand new, sealed products. However, we have a specific certified refurbished section which is clearly labeled.",
+          a: "Yes we do! We have a specific certified refurbished section which is clearly labeled.",
         },
       ],
     },
@@ -55,17 +53,24 @@ const FAQ = () => {
 
   return (
     <>
+      <SEO
+        title="FAQ"
+        description="Frequently Asked Questions about Shero Technologies' products, services, shipping, and payments."
+        url="/faq"
+      />
       <div className="pt-24 pb-12 bg-slate-50 dark:bg-slate-950 min-h-screen">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-500/20">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-500/20 uppercase">
               <HelpCircle className="w-4 h-4" />
-              <span>Helper Center</span>
+              <span className="text-emerald-600 dark:text-emerald-400">
+                Help Center
+              </span>
             </div>
             <h1 className="text-3xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white mb-6">
               Frequently Asked Questions
             </h1>
-            <p className="text-slate-600 dark:text-slate-400 text-lg">
+            <p className="text-slate-600 dark:text-slate-400">
               Everything you need to know about our products and services.
             </p>
           </div>
@@ -73,7 +78,7 @@ const FAQ = () => {
           <div className="space-y-12">
             {faqs.map((section, idx) => (
               <div key={idx}>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6 border-b border-slate-200 dark:border-slate-800 pb-2">
+                <h2 className="text-xl font-sora font-bold text-slate-900 dark:text-white mb-6 border-b border-slate-200 dark:border-slate-800 pb-2 uppercase">
                   {section.category}
                 </h2>
                 <div className="space-y-4">
@@ -106,7 +111,9 @@ const FAQItem = ({
         onClick={() => setIsOpen(!isOpen)}
         className="cursor-pointer w-full flex items-center justify-between p-6 text-left hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
       >
-        <span className="font-semibold text-slate-900 dark:text-white pr-8">
+        <span
+          className={`font-semibold pr-8 ${isOpen ? "text-emerald-600 dark:text-emerald-400" : ""}`}
+        >
           {question}
         </span>
         <span className="text-emerald-600 dark:text-emerald-400 shrink-0">
@@ -125,7 +132,9 @@ const FAQItem = ({
             exit={{ height: 0, opacity: 0 }}
             className="overflow-hidden"
           >
-            <div className="p-6 pt-0 text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-100 dark:border-slate-800/50">
+            <div
+              className={`p-6 pt-2 leading-relaxed border-t border-slate-100 dark:border-slate-800/50 ${isOpen ? "text-slate-600 dark:text-slate-400" : ""}`}
+            >
               {answer}
             </div>
           </motion.div>

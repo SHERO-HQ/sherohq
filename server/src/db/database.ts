@@ -31,6 +31,7 @@ export async function initializeDatabase() {
       CREATE TABLE IF NOT EXISTS products (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
+        sku TEXT UNIQUE,
         category TEXT NOT NULL,
         price DECIMAL(10, 2) NOT NULL,
         "originalPrice" DECIMAL(10, 2),
@@ -80,6 +81,7 @@ export async function initializeDatabase() {
         "passwordHash" TEXT NOT NULL,
         name TEXT NOT NULL,
         phone TEXT,
+        avatar TEXT,
         "emailVerified" BOOLEAN DEFAULT false,
         "verificationToken" TEXT,
         "verificationExpiry" TEXT,
@@ -107,6 +109,7 @@ export async function initializeDatabase() {
         email TEXT UNIQUE NOT NULL,
         "passwordHash" TEXT NOT NULL,
         role TEXT DEFAULT 'admin',
+        avatar TEXT,
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
@@ -122,6 +125,23 @@ export async function initializeDatabase() {
       )
     `);
 
+    // Support Tickets table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS tickets (
+        id TEXT PRIMARY KEY,
+        "userId" TEXT REFERENCES users(id) ON DELETE SET NULL,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        subject TEXT NOT NULL,
+        message TEXT NOT NULL,
+        category TEXT NOT NULL,
+        priority TEXT DEFAULT 'medium',
+        status TEXT DEFAULT 'open',
+        "productId" TEXT REFERENCES products(id) ON DELETE SET NULL,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
     // Reviews table
     await client.query(`
       CREATE TABLE IF NOT EXISTS reviews (
@@ -130,6 +150,18 @@ export async function initializeDatabase() {
         "userName" TEXT NOT NULL,
         rating INTEGER NOT NULL,
         comment TEXT,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Activity Logs table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS activity_logs (
+        id TEXT PRIMARY KEY,
+        "adminId" TEXT REFERENCES admin_users(id) ON DELETE SET NULL,
+        action TEXT NOT NULL,
+        details TEXT,
+        type TEXT DEFAULT 'info',
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);

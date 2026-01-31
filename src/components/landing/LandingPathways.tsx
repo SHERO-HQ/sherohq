@@ -1,27 +1,36 @@
 import { NavLink } from "react-router-dom";
-import { motion } from "motion/react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import {
   ShoppingBag,
   MessageSquare,
   Handshake,
   Code,
-  Route,
   ArrowRight,
 } from "lucide-react";
+import { useRef } from "react";
+
+interface Pathway {
+  icon: React.ReactNode;
+  label: string;
+  title: string;
+  description: string;
+  link: string;
+  pattern: string;
+  span: string;
+  color: string;
+}
 
 const LandingPathways = () => {
-  const paths = [
+  const paths: Pathway[] = [
     {
       icon: <ShoppingBag className="w-8 h-8" />,
       label: "For Everyone",
       title: "Shop Products",
-      description:
-        "Premium hardware and accessories curated for the modern professional.",
-      cta: "Visit Store",
+      description: "Premium hardware curated for the modern professional.",
       link: "/products",
-      gradient: "from-blue-600 to-cyan-500",
-      image:
-        "bg-[url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop')]",
+      pattern: "pattern-dots",
+      span: "lg:col-span-4 lg:row-span-2",
+      color: "text-emerald-500",
     },
     {
       icon: <MessageSquare className="w-8 h-8" />,
@@ -29,105 +38,166 @@ const LandingPathways = () => {
       title: "Consultation",
       description:
         "Strategic advisory to navigate your digital transformation.",
-      cta: "Book Session",
       link: "/consultation",
-      gradient: "from-emerald-600 to-teal-500",
-      image:
-        "bg-[url('https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2070&auto=format&fit=crop')]",
+      pattern: "pattern-dots",
+      span: "lg:col-span-8 lg:row-span-1",
+      color: "text-blue-500",
     },
     {
       icon: <Handshake className="w-8 h-8" />,
       label: "For Partners",
       title: "Partnerships",
-      description: "Join our global network of technology innovators.",
-      cta: "Collaborate",
+      description: "Join our global network of innovators.",
       link: "/partners",
-      gradient: "from-purple-600 to-pink-500",
-      image:
-        "bg-[url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2084&auto=format&fit=crop')]",
+      pattern: "pattern-dots",
+      span: "lg:col-span-4 lg:row-span-1",
+      color: "text-purple-500",
     },
     {
       icon: <Code className="w-8 h-8" />,
       label: "For Enterprise",
-      title: "Solutions & Infrastructure",
-      description:
-        "Custom software development, server configurations, and managed IT infrastructure.",
-      cta: "Get Started",
+      title: "Solutions",
+      description: "Custom software and managed IT infrastructure.",
       link: "/solutions",
-      gradient: "from-indigo-600 to-blue-500",
-      image:
-        "bg-[url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop')]",
+      pattern: "pattern-dots",
+      span: "lg:col-span-4 lg:row-span-1",
+      color: "text-indigo-500",
     },
   ];
 
   return (
-    <section className="relative w-full py-22 bg-slate-950 overflow-hidden">
-      {/* Background Glows */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-slate-900/50 rounded-full blur-[120px]" />
+    <section className="relative w-full py-32 bg-slate-50 dark:bg-slate-950 overflow-hidden border-t border-slate-200 dark:border-slate-900">
+      {/* Background decoration */}
+      <div className="absolute top-0 right-0 w-1/3 h-full pattern-dots opacity-5 dark:opacity-10 pointer-events-none" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <header className="text-center mb-20">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-sm font-semibold text-emerald-400 bg-emerald-950/30 border border-emerald-900 rounded-full uppercase">
-            <Route className="size-4" />
-            Navigate Your Journey
-          </span>
-          <h2 className="text-5xl lg:text-7xl font-sora font-bold text-white mb-6 tracking-tight">
-            Choose Your Path
-          </h2>
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-            Tailored gateways to the technology solutions you need.
-          </p>
+        <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+          <div className="max-w-2xl">
+            <span className="text-xs font-mono font-bold tracking-[0.3em] uppercase text-emerald-600 dark:text-emerald-400 mb-4 block">
+              Direct Access
+            </span>
+            <h2 className="text-4xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white mb-6">
+              Navigate Shero
+            </h2>
+            <p className="text-lg text-slate-600 dark:text-slate-400">
+              Tailored gateways to the technology solutions you need.
+            </p>
+          </div>
+          <NavLink
+            to="/solutions"
+            className="group flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b-2 border-emerald-500 pb-1"
+          >
+            All Services{" "}
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+          </NavLink>
         </header>
 
-        {/* Interactive Portals */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 h-auto lg:h-[500px]">
+        {/* Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 grid-rows-2 gap-4">
           {paths.map((path) => (
-            <motion.div
-              key={path.label}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="group relative flex-1 flex flex-col justify-end p-8 rounded overflow-hidden border border-white/5 bg-slate-900 transition-all duration-500 hover:flex-2 hover:border-white/20"
-            >
-              {/* Background Image with Overlay */}
-              <div
-                className={`absolute inset-0 ${path.image} bg-cover bg-center opacity-30 group-hover:opacity-50 transition-opacity duration-500 scale-105 group-hover:scale-100 transform`}
-              />
-              <div
-                className={`absolute inset-0 bg-linear-to-t ${path.gradient.replace("from-", "from-black/80 via-black/40 to-transparent opacity-80 group-hover:opacity-90")}`}
-              />
-
-              {/* Content */}
-              <div className="relative z-10 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                <div
-                  className={`w-12 h-12 rounded bg-white/10 backdrop-blur-md flex items-center justify-center mb-4 text-white border border-white/10 group-hover:scale-110 transition-transform duration-500`}
-                >
-                  {path.icon}
-                </div>
-
-                <span className="text-xs font-bold text-white/60 uppercase tracking-widest mb-1 block">
-                  {path.label}
-                </span>
-                <h3 className="text-2xl font-bold text-white mb-2 font-sora">
-                  {path.title}
-                </h3>
-                <p className="text-slate-300 text-sm mb-6 max-w-[200px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 h-0 group-hover:h-auto">
-                  {path.description}
-                </p>
-
-                <NavLink
-                  to={path.link}
-                  className="inline-flex items-center gap-2 text-white font-semibold group-hover:gap-3 transition-all duration-300"
-                >
-                  {path.cta}
-                  <ArrowRight className="w-4 h-4" />
-                </NavLink>
-              </div>
-            </motion.div>
+            <PathwayCard key={path.label} path={path} />
           ))}
         </div>
       </div>
     </section>
+  );
+};
+
+const PathwayCard = ({ path }: { path: Pathway }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Mouse tilt logic
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x);
+  const mouseYSpring = useSpring(y);
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+      }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      className={`group relative ${path.span} col-span-1 min-h-[240px] p-8 rounded border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between overflow-hidden transition-colors hover:border-emerald-500/50 hover:shadow-2xl shadow-emerald-500/5`}
+    >
+      {/* Dynamic Glow Layer */}
+      <motion.div
+        style={{
+          background: useTransform(
+            [mouseXSpring, mouseYSpring],
+            ([sx, sy]) =>
+              `radial-gradient(400px circle at ${((sx as number) + 0.5) * 100}% ${((sy as number) + 0.5) * 100}%, rgba(16, 185, 129, 0.1), transparent)`,
+          ),
+        }}
+        className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
+      />
+
+      {/* Pattern Background */}
+      <div
+        style={{ transform: "translateZ(-20px)" }}
+        className={`absolute inset-0 ${path.pattern} opacity-50 dark:opacity-50 group-hover:opacity-40 transition-opacity`}
+      />
+
+      <div className="relative z-10" style={{ transform: "translateZ(40px)" }}>
+        <div
+          className={`w-14 h-14 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-6 text-slate-900 dark:text-white border border-slate-100 dark:border-slate-700 group-hover:scale-110 group-hover:text-emerald-500 transition-all shadow-sm`}
+        >
+          {path.icon}
+        </div>
+        <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-slate-500 dark:text-slate-500 mb-2 block">
+          {path.label}
+        </span>
+        <h3 className="text-2xl font-bold text-slate-900 dark:text-white font-sora mb-2">
+          {path.title}
+        </h3>
+        <p className="text-slate-600 dark:text-slate-400 text-sm max-w-[240px] leading-relaxed">
+          {path.description}
+        </p>
+      </div>
+
+      <div
+        className="relative z-10 pt-6"
+        style={{ transform: "translateZ(30px)" }}
+      >
+        <NavLink
+          to={path.link}
+          className={`inline-flex items-center justify-center w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white group-hover:bg-emerald-500 group-hover:border-emerald-500 group-hover:text-white transition-all`}
+        >
+          <ArrowRight className="w-5 h-5" />
+        </NavLink>
+      </div>
+    </motion.div>
   );
 };
 

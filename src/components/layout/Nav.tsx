@@ -12,6 +12,7 @@ import { AnimatePresence, easeOut, motion } from "motion/react";
 import { navLinkClass, navLinkClassVariant } from "@/lib/utils";
 import BottomNav from "./BottomNav";
 import SearchBar from "./SearchBar";
+import { Badge } from "@/components/ui/badge";
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -76,7 +77,7 @@ const Nav = () => {
         className={`fixed top-0 w-full z-50 transition-all duration-300
           ${
             isOpen || scrolled
-              ? "bg-white/90 dark:bg-slate-900/90 backdrop-blur-lg shadow-lg border-b border-slate-200 dark:border-slate-800"
+              ? "bg-background/80 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-800"
               : "bg-transparent"
           }`}
         aria-label="main navigation"
@@ -124,7 +125,7 @@ const Nav = () => {
             </NavLink>
 
             {/* Right Groups Wrapper */}
-            <div className="flex items-center gap-2 ml-auto">
+            <div className="flex items-center gap-2 lg:space-x-4 ml-auto">
               {/* Desktop Menu */}
               <ul className="hidden lg:flex items-center gap-3">
                 {navLinks.map((item) => (
@@ -172,24 +173,26 @@ const Nav = () => {
                 {/* Cart Button */}
                 <button
                   onClick={() => setIsCartOpen(true)}
-                  className="cursor-pointer relative p-2 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  className="cursor-pointer relative p-1 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors rounded border-none"
                   aria-label="Open Cart"
                 >
                   <ShoppingCart className="w-6 h-6" />
                   {totalQuantity > 0 && (
-                    <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-[10px] font-bold text-white ring-2 ring-white dark:ring-slate-900 animate-in zoom-in">
+                    <Badge
+                      variant="emerald"
+                      className="absolute -top-2 -right-2 h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full text-[10px] ring-2 ring-background animate-in zoom-in"
+                    >
                       {totalQuantity}
-                    </span>
+                    </Badge>
                   )}
                 </button>
-
 
                 {/* User Dropdown */}
                 <div className="hidden lg:block relative group">
                   {isAuthenticated ? (
-                    <button className="cursor-pointer p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <button className="cursor-pointer p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                       <span className="sr-only">User Menu</span>
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-md border border-white/10">
+                      <div className="w-8 h-8 rounded  font-sora font-bold bg-linear-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-sm text-white shrink-0 shadow-lg">
                         {user?.name?.charAt(0)}
                       </div>
                     </button>
@@ -207,7 +210,7 @@ const Nav = () => {
                   {isAuthenticated && (
                     <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded shadow-xl border border-slate-200 dark:border-slate-800 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                       <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
-                        <p className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">
+                        <p className="text-sm font-bold font-sora text-slate-900 dark:text-white line-clamp-1">
                           {user?.name}
                         </p>
                         <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
@@ -232,7 +235,6 @@ const Nav = () => {
                 </div>
 
                 <ToggleTheme />
-
               </div>
 
               {/* Mobile Actions Overlay Trigger */}
@@ -335,7 +337,7 @@ const Nav = () => {
                   {isAuthenticated ? (
                     <div className="space-y-4">
                       <div className="flex items-center gap-3 px-2">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-blue-600 flex items-center justify-center text-white font-bold text-xl shadow-lg border border-white/10">
+                        <div className="w-10 h-10 rounded  font-sora font-bold bg-linear-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-xl text-white shrink-0 shadow-lg">
                           {user?.name?.charAt(0)}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -351,9 +353,9 @@ const Nav = () => {
                         <NavLink
                           to="/profile"
                           onClick={() => setIsOpen(false)}
-                          className="flex items-center gap-3 px-4 py-3 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded-xl transition-all duration-200 group/item"
+                          className="flex items-center gap-3 px-4 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded transition-all duration-200 group/item"
                         >
-                          <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 group-hover/item:bg-emerald-100 dark:group-hover/item:bg-emerald-900/30 transition-colors">
+                          <div className="p-2 rounded bg-slate-100 dark:bg-slate-800 group-hover/item:bg-emerald-100 dark:group-hover/item:bg-emerald-900/30 transition-colors">
                             <User className="w-5 h-5 text-slate-600 dark:text-slate-400 group-hover/item:text-emerald-600 dark:group-hover/item:text-emerald-400" />
                           </div>
                           <span className="font-semibold">
@@ -365,9 +367,9 @@ const Nav = () => {
                             logout();
                             setIsOpen(false);
                           }}
-                          className="flex items-center gap-3 px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl transition-all duration-200 group/logout"
+                          className="flex items-center gap-3 px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-all duration-200 group/logout"
                         >
-                          <div className="p-2 rounded-lg bg-red-50 dark:bg-red-900/10 group-hover/logout:bg-red-100 dark:group-hover/logout:bg-red-900/30 transition-colors">
+                          <div className="p-2 rounded bg-red-50 dark:bg-red-900/10 group-hover/logout:bg-red-100 dark:group-hover/logout:bg-red-900/30 transition-colors">
                             <LogOut className="w-5 h-5" />
                           </div>
                           <span className="font-semibold">Logout</span>
@@ -378,7 +380,7 @@ const Nav = () => {
                     <NavLink
                       to="/login"
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-4 px-5 py-2 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl transition-all duration-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800/50 group"
+                      className="flex items-center gap-4 px-5 py-2 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 rounded transition-all duration-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800/50 group"
                     >
                       <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
                         <User className="w-6 h-6" />

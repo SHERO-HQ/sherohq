@@ -47,7 +47,7 @@ const milestones = [
 const AboutTimeline = () => {
   return (
     <section className="py-24 bg-white dark:bg-slate-900 overflow-hidden relative border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-5 dark:opacity-20 transition-opacity duration-300" />
+      <div className="absolute inset-0 pattern-grid-emerald opacity-[0.03] dark:opacity-[0.1] mask-radial-faded" />
 
       <div className="container max-w-5xl mx-auto px-4 relative z-10">
         <div className="text-center mb-20">
@@ -120,7 +120,7 @@ const TimelineItem = ({
       </div>
 
       {/* Axis Point */}
-      <div className="absolute left-8 md:left-1/2 -translate-x-1/2 flex items-center justify-center w-10 md:w-12 h-10 md:h-12 rounded-full bg-white dark:bg-slate-900 border-4 border-slate-100 dark:border-slate-950 shadow-[0_0_20px_rgba(16,185,129,0.3)] z-10 transition-colors duration-300">
+      <div className="absolute left-8 md:left-1/2 -translate-x-1/2 flex items-center justify-center w-10 md:w-12 h-10 md:h-12 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 ring-4 ring-slate-100 dark:ring-slate-950 z-10 transition-colors duration-300">
         <div
           className={`w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-${item.color}-500 animate-pulse`}
         />

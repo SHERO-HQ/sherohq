@@ -78,7 +78,7 @@ export default function OrderRatingModal({
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative w-full max-w-sm bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden"
+            className="relative w-full max-w-sm bg-white dark:bg-slate-900 rounded shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
@@ -153,7 +153,7 @@ export default function OrderRatingModal({
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
                       placeholder="The checkout was fast..."
-                      className="w-full px-3 py-2 text-sm rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none resize-none"
+                      className="w-full px-3 py-2 text-sm rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none resize-none"
                     />
                   </div>
 
@@ -167,7 +167,7 @@ export default function OrderRatingModal({
                   <button
                     type="submit"
                     disabled={rating === 0 || status === "submitting"}
-                    className="w-full py-2 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+                    className="w-full py-2 bg-emerald-600 text-white rounded font-bold hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
                   >
                     {status === "submitting" ? (
                       <>

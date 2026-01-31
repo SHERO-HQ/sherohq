@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useNotifications } from "@/hooks/useNotifications";
 import { type Notification } from "@/types/notification";
+import { cn } from "@/lib/utils";
 
 export default function NotificationCenter() {
   const { notifications, unreadCount, markAsRead, markAllAsRead, clearAll } =
@@ -60,12 +61,21 @@ export default function NotificationCenter() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 rounded-full hover:bg-slate-800 transition-colors text-slate-400 hover:text-white"
+        className={cn(
+          "relative p-2 rounded transition-all duration-300",
+          isOpen
+            ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+            : "text-slate-400 hover:text-white hover:bg-white/5 border-white/5",
+          "border backdrop-blur-md",
+        )}
         title="Notifications"
       >
-        <Bell className="w-6 h-6" />
+        <Bell className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
         {unreadCount > 0 && (
-          <span className="absolute top-1 right-1 w-3 h-3 bg-red-500 rounded-full border border-slate-950 animate-pulse" />
+          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-900" />
+          </span>
         )}
       </button>
 
@@ -73,7 +83,9 @@ export default function NotificationCenter() {
         <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-slate-900 border border-slate-800 rounded shadow-xl z-50 overflow-hidden">
           {/* Header */}
           <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-            <h3 className="font-semibold font-sora text-white">Notifications</h3>
+            <h3 className="font-semibold font-sora text-white">
+              Notifications
+            </h3>
             {notifications.length > 0 && (
               <div className="flex gap-2">
                 <button

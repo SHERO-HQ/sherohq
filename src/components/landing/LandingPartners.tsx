@@ -24,7 +24,7 @@ const LandingPartners = () => {
 
       {/* Header */}
       <div className="container mx-auto px-4 relative z-10 mb-12 text-center">
-        <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase tracking-wider transition-colors duration-300">
+        <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase tracking-wider transition-colors duration-300">
           <Briefcase className="w-4 h-4" />
           Strategic Alliances
         </span>
