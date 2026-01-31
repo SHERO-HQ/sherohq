@@ -19,12 +19,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import NotificationCenter from "./NotificationCenter";
+import { cn } from "@/lib/utils";
 
 interface HeaderProps {
   onMenuClick: () => void;
+  isSidebarOpen: boolean;
 }
 
-export default function AdminHeader({ onMenuClick }: HeaderProps) {
+export default function AdminHeader({
+  onMenuClick,
+  isSidebarOpen,
+}: Readonly<HeaderProps>) {
   const { admin, logout } = useAdmin();
   const location = useLocation();
   const pathnames = location.pathname
@@ -32,7 +37,13 @@ export default function AdminHeader({ onMenuClick }: HeaderProps) {
     .filter((x) => x && x !== "admin");
 
   return (
-    <header className="sticky top-0 z-30 flex h-20 w-full items-center justify-between border-b border-white/5 bg-slate-900/80 backdrop-blur-xl px-4 md:px-6 lg:px-8">
+    <header
+      className={cn(
+        "fixed top-0 right-0 z-30 flex h-20 items-center justify-between border-b border-white/5 bg-slate-900/80 backdrop-blur-xl px-4 md:px-6 lg:px-8 transition-all duration-300",
+        isSidebarOpen ? "lg:left-[260px]" : "lg:left-20",
+        "left-0",
+      )}
+    >
       {/* Left side: Breadcrumbs & Menu Toggle */}
       <div className="flex items-center font-sora gap-2 md:gap-4 overflow-hidden">
         <button

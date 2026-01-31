@@ -65,14 +65,17 @@ export default function AdminLayout({ children }: Readonly<AdminLayoutProps>) {
       {/* Main Content Area */}
       <div
         className={cn(
-          "transition-all duration-300 min-h-screen flex flex-col",
+          "transition-all duration-300 min-h-screen flex flex-col pt-20",
           isSidebarOpen ? "lg:pl-[260px]" : "lg:pl-20",
           "pl-0 print:pl-0",
         )}
       >
         {/* Header Component */}
         <div className="print:hidden">
-          <AdminHeader onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} />
+          <AdminHeader
+            onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            isSidebarOpen={isSidebarOpen}
+          />
         </div>
 
         {/* Page Content */}

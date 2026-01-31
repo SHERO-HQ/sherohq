@@ -16,8 +16,11 @@ A modern, responsive e-commerce web application built for the Ghanaian market, s
   - 💳 **Card Payment**: Visa and Mastercard support.
   - 💵 **Cash on Delivery**: Pay upon receipt.
   - 🏪 **Store Pickup**: Free shipping option for self-collection.
-- **Admin Dashboard**: Capable of managing products and orders (requires admin login).
-- **Product Management**: Filtering, sorting, and categorization of tech products.
+- **Admin Dashboard**: Comprehensive panel for managing products, categories, and orders.
+- **Product Management**:
+  - SKU management with auto-generation based on product ID.
+  - Advanced filtering, sorting, and categorization.
+  - Multi-format data exports (CSV, Excel, PDF).
 
 ## 🛠️ Tech Stack
 
@@ -94,6 +97,26 @@ yarn dev:all
 - `yarn server`: Run only the backend.
 - `yarn build`: Build the frontend for production.
 - `yarn lint`: Run ESLint checks.
+- `yarn test`: Run frontend unit tests (Vitest).
+
+## 🧪 Testing
+
+The project uses a two-tier testing strategy:
+
+### Unit Testing
+
+Designed for logic validation in both frontend and backend.
+
+- **Run All Tests**: `yarn test` (from root)
+- **Run Backend Tests**: `cd server && yarn test`
+- **Run Frontend Tests**: `yarn test` (from root)
+
+### E2E Testing
+
+Built with Playwright for user journey validation.
+
+- **Run E2E Tests**: `yarn test:e2e`
+- **UI Mode**: `yarn test:e2e:ui`
 
 ## 📂 Project Structure
 

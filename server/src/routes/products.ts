@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import db from "../db/database";
 import { adminAuth, AdminRequest } from "../middleware/adminAuth";
+import { generateSku } from "../utils/sku";
 
 const router = Router();
 
@@ -151,7 +152,7 @@ router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
     const productId = uuidv4();
 
     // Auto-generate SKU if not provided
-    const finalSku = sku || `SHERO-${productId.split("-")[0].toUpperCase()}`;
+    const finalSku = generateSku(productId, sku);
 
     await db.query(
       `
