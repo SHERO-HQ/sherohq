@@ -5,7 +5,7 @@ const ProductHero = () => {
   return (
     <section className="relative w-full py-20 lg:py-24 overflow-hidden dark:bg-slate-950 bg-slate-50">
       {/* Dot Pattern Background */}
-      <div className="absolute inset-0 pattern-dots opacity-30 dark:opacity-20 pointer-events-none" />
+      <div className="absolute inset-0 pattern-dots opacity-80 pointer-events-none" />
 
       {/* Animated Gradient Orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

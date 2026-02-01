@@ -79,13 +79,13 @@ const LandingPathways = () => {
             <h2 className="text-4xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white mb-6">
               Navigate Shero
             </h2>
-            <p className="text-lg text-slate-600 dark:text-slate-400">
+            <p className="text-sm text-slate-600 dark:text-slate-400">
               Tailored gateways to the technology solutions you need.
             </p>
           </div>
           <NavLink
             to="/solutions"
-            className="group flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b-2 border-emerald-500 pb-1"
+            className="group w-fit flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b-2 border-emerald-500 pb-1"
           >
             All Services{" "}
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -171,7 +171,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
 
       <div className="relative z-10" style={{ transform: "translateZ(40px)" }}>
         <div
-          className={`w-14 h-14 rounded-xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-6 text-slate-900 dark:text-white border border-slate-100 dark:border-slate-700 group-hover:scale-110 group-hover:text-emerald-500 transition-all shadow-sm`}
+          className={`w-14 h-14 rounded bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-6 text-slate-900 dark:text-white border border-slate-100 dark:border-slate-700 group-hover:scale-110 group-hover:text-emerald-500 transition-all shadow-sm`}
         >
           {path.icon}
         </div>
@@ -192,8 +192,9 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
       >
         <NavLink
           to={path.link}
-          className={`inline-flex items-center justify-center w-10 h-10 rounded-full border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white group-hover:bg-emerald-500 group-hover:border-emerald-500 group-hover:text-white transition-all`}
+          className={`inline-flex items-center justify-center w-fit h-9 px-4 rounded border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white group-hover:bg-emerald-500 group-hover:border-emerald-500 group-hover:text-white transition-all`}
         >
+          <span className="text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white">Explore</span>
           <ArrowRight className="w-5 h-5" />
         </NavLink>
       </div>

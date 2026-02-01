@@ -177,7 +177,7 @@ const SupportTicketForm = ({
                   type="submit"
                   disabled={loading}
                   variant="brand"
-                  className="w-full h-12 text-base font-bold"
+                  className="w-full h-10 text-base font-bold"
                 >
                   {loading ? (
                     <>

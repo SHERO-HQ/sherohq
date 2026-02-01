@@ -64,7 +64,7 @@ const LandingStats = () => {
               <div className="absolute top-2 left-2 w-1.5 h-1.5 border-t border-l border-emerald-500 opacity-40" />
 
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                <div className="p-2 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                   {stat.icon}
                 </div>
                 <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-slate-500">

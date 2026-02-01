@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { NavLink } from "react-router-dom";
-import { ArrowRight, Rocket, WandSparkles } from "lucide-react";
+import { ArrowRight, WandSparkles } from "lucide-react";
+import { RocketIcon } from "@/assets/icons/icons";
 
 const LandingFinalCTA = () => {
   return (
@@ -22,7 +23,7 @@ const LandingFinalCTA = () => {
           <div className="relative z-10 p-8 md:p-16 lg:p-20 flex flex-col md:flex-row items-center justify-between gap-12">
             {/* Content Left */}
             <div className="max-w-xl space-y-8 text-center md:text-left">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-emerald-400/50 backdrop-blur-sm">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded bg-white/5 border border-emerald-400/50 backdrop-blur-sm">
                 <WandSparkles className="w-4 h-4 text-emerald-400" />
                 <span className="text-xs font-medium text-emerald-100 uppercase">
                   Unlock Your Potential
@@ -76,8 +77,7 @@ const LandingFinalCTA = () => {
                 <div className="relative z-10 w-full h-full backdrop-blur-md flex items-center justify-center">
                   <motion.div
                     animate={{
-                      y: [-10, 10, -10],
-                      rotate: [-2, 2, -2],
+                      y: [-20, 20, -20],
                     }}
                     transition={{
                       duration: 4,
@@ -86,13 +86,12 @@ const LandingFinalCTA = () => {
                     }}
                     whileHover={{
                       scale: 1.1,
-                      rotate: 45,
                       y: -20,
                       transition: { duration: 0.3 },
                     }}
                     className="relative"
                   >
-                    <Rocket className="w-32 h-32 text-emerald-400 drop-shadow-[0_0_30px_rgba(52,211,153,0.6)]" />
+                    <RocketIcon className="w-32 h-32 text-emerald-400 drop-shadow-[0_0_30px_rgba(52,211,153,0.6)]" />
                     {/* Engine Flame */}
                     <motion.div
                       animate={{ height: [0, 20, 0], opacity: [0, 1, 0] }}
