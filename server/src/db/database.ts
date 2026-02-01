@@ -202,7 +202,7 @@ export async function initializeDatabase() {
       await client.query(
         `ALTER TABLE tickets ADD COLUMN IF NOT EXISTS phone TEXT`,
       );
-    } catch (ignore) {
+    } catch {
       // Column might already exist
     }
 
@@ -211,7 +211,11 @@ export async function initializeDatabase() {
       await client.query(
         `ALTER TABLE tickets ADD COLUMN IF NOT EXISTS ticket_no SERIAL`,
       );
-    } catch (ignore) {
+      // Set sequence to start from 100000 for 6-7 digit ticket numbers
+      await client.query(
+        `SELECT setval(pg_get_serial_sequence('tickets', 'ticket_no'), GREATEST(100000, (SELECT COALESCE(MAX(ticket_no), 0) FROM tickets)))`,
+      );
+    } catch {
       // Column might already exist
     }
 
