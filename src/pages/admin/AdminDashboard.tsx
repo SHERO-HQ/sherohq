@@ -43,7 +43,6 @@ import {
   ResponsiveContainer,
   PieChart,
   Pie,
-  Cell,
   Legend,
 } from "recharts";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
