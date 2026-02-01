@@ -5,6 +5,7 @@ import { randomBytes } from "node:crypto";
 import { rateLimit } from "express-rate-limit";
 import db from "../db/database";
 import { adminAuth, AdminRequest } from "../middleware/adminAuth";
+import { logActivity } from "./activity";
 
 const router = Router();
 
@@ -78,6 +79,12 @@ router.post("/login", adminLimiter, async (req: Request, res: Response) => {
     );
 
     console.log(`✅ Admin logged in: ${admin.username}`);
+    await logActivity(
+      admin.id,
+      "admin_login",
+      "success",
+      `Admin logged in: ${admin.username}`,
+    );
 
     res.json({
       success: true,
@@ -109,6 +116,14 @@ router.post("/logout", adminAuth, async (req: AdminRequest, res: Response) => {
     }
 
     console.log(`🔓 Admin logout: ${req.admin?.username}`);
+    if (req.admin?.id) {
+      await logActivity(
+        req.admin.id,
+        "admin_logout",
+        "info",
+        `Admin logged out: ${req.admin.username}`,
+      );
+    }
     res.json({ success: true, message: "Logged out successfully" });
   } catch (error) {
     console.error("Logout error:", error);
@@ -302,6 +317,14 @@ router.put("/profile", adminAuth, async (req: AdminRequest, res: Response) => {
     );
 
     console.log(`👤 Admin profile updated: ${username || req.admin?.username}`);
+    if (adminId) {
+      await logActivity(
+        adminId,
+        "admin_profile_update",
+        "info",
+        `Updated admin profile for: ${username || req.admin?.username}`,
+      );
+    }
 
     res.json({
       success: true,

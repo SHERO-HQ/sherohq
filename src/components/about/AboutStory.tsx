@@ -45,7 +45,7 @@ const AboutStory = () => {
             </div>
 
             {/* Floating Badge 2 - Top Right */}
-            <div className="absolute -top-4 -right-2 sm:top-0 sm:right-0 lg:-right-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-2 sm:px-4 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3 z-20">
+            <div className="absolute top-20 -right-2 sm:-right-2 lg:-right-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-2 sm:px-4 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3 z-20">
               <div className="size-8 sm:size-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
                 <Lightbulb className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 dark:text-emerald-400" />
               </div>
@@ -81,9 +81,9 @@ const AboutStory = () => {
                 <span className="font-bold text-emerald-600 dark:text-emerald-400">
                   SHERO Technologies
                 </span>{" "}
-                is a passionate team making quality tech accessible. We have
-                evolved into a comprehensive technology partner, empowering
-                businesses across West Africa with world-class digital
+                is making quality technology accessible. We have
+                evolved into a comprehensive technology partner, equipping people,
+                businesses and communities across West Africa with world-class digital
                 solutions.
               </p>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed">

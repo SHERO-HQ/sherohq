@@ -129,9 +129,11 @@ export async function initializeDatabase() {
     await client.query(`
       CREATE TABLE IF NOT EXISTS tickets (
         id TEXT PRIMARY KEY,
+        ticket_no SERIAL,
         "userId" TEXT REFERENCES users(id) ON DELETE SET NULL,
         name TEXT NOT NULL,
         email TEXT NOT NULL,
+        phone TEXT,
         subject TEXT NOT NULL,
         message TEXT NOT NULL,
         category TEXT NOT NULL,
@@ -165,6 +167,53 @@ export async function initializeDatabase() {
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+
+    // Consultations table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS consultations (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        phone TEXT,
+        service TEXT NOT NULL,
+        date TIMESTAMP NOT NULL,
+        time TEXT NOT NULL,
+        message TEXT,
+        status TEXT DEFAULT 'pending',
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Inquiries table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS inquiries (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        subject TEXT,
+        message TEXT NOT NULL,
+        status TEXT DEFAULT 'pending',
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Ensure phone column exists in tickets table (migration)
+    try {
+      await client.query(
+        `ALTER TABLE tickets ADD COLUMN IF NOT EXISTS phone TEXT`,
+      );
+    } catch (ignore) {
+      // Column might already exist
+    }
+
+    // Ensure ticket_no column exists in tickets table (migration)
+    try {
+      await client.query(
+        `ALTER TABLE tickets ADD COLUMN IF NOT EXISTS ticket_no SERIAL`,
+      );
+    } catch (ignore) {
+      // Column might already exist
+    }
 
     await client.query("COMMIT");
     console.log("📦 Database initialized successfully");

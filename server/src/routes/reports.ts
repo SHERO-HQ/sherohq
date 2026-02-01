@@ -24,17 +24,20 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
     const revenueResult = await db.query(
       "SELECT SUM(total) as total FROM orders WHERE status != 'cancelled'",
     );
-    const totalRevenue = parseFloat(revenueResult.rows[0]?.total || "0");
+    const totalRevenue = Number.parseFloat(revenueResult.rows[0]?.total || "0");
 
     // Total Orders
     const ordersResult = await db.query("SELECT COUNT(*) as count FROM orders");
-    const totalOrders = parseInt(ordersResult.rows[0]?.count || "0", 10);
+    const totalOrders = Number.parseInt(ordersResult.rows[0]?.count || "0", 10);
 
     // Total Products
     const productsResult = await db.query(
       "SELECT COUNT(*) as count FROM products",
     );
-    const totalProducts = parseInt(productsResult.rows[0]?.count || "0", 10);
+    const totalProducts = Number.parseInt(
+      productsResult.rows[0]?.count || "0",
+      10,
+    );
 
     // Low Stock Products
     // Using generic query assuming columns might vary, checking stockQuantity or inStock
@@ -43,13 +46,19 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
       const lowStockResult = await db.query(
         'SELECT COUNT(*) as count FROM products WHERE "stockQuantity" <= 10 AND "stockQuantity" > 0',
       );
-      lowStockProducts = parseInt(lowStockResult.rows[0]?.count || "0", 10);
+      lowStockProducts = Number.parseInt(
+        lowStockResult.rows[0]?.count || "0",
+        10,
+      );
     } catch {
       // Fallback if stockQuantity missing
       const lowStockResult = await db.query(
         'SELECT COUNT(*) as count FROM products WHERE "inStock" = false', // approximating low stock as OOS for fallback
       );
-      lowStockProducts = parseInt(lowStockResult.rows[0]?.count || "0", 10);
+      lowStockProducts = Number.parseInt(
+        lowStockResult.rows[0]?.count || "0",
+        10,
+      );
     }
 
     res.json({
@@ -105,7 +114,7 @@ router.get(
       orders.forEach((order) => {
         const dateStr = new Date(order.createdAt).toISOString().split("T")[0];
         if (groupedData[dateStr]) {
-          groupedData[dateStr].revenue += parseFloat(order.total);
+          groupedData[dateStr].revenue += Number.parseFloat(order.total);
           groupedData[dateStr].orders += 1;
         }
       });
@@ -183,17 +192,17 @@ router.get(
         const inStockRes = await db.query(
           'SELECT COUNT(*) as count FROM products WHERE "inStock" = true AND "stockQuantity" > 10',
         );
-        inStock = parseInt(inStockRes.rows[0]?.count || "0", 10);
+        inStock = Number.parseInt(inStockRes.rows[0]?.count || "0", 10);
 
         const lowStockRes = await db.query(
           'SELECT COUNT(*) as count FROM products WHERE "stockQuantity" <= 10 AND "stockQuantity" > 0',
         );
-        lowStock = parseInt(lowStockRes.rows[0]?.count || "0", 10);
+        lowStock = Number.parseInt(lowStockRes.rows[0]?.count || "0", 10);
 
         const outOfStockRes = await db.query(
           'SELECT COUNT(*) as count FROM products WHERE "inStock" = false OR "stockQuantity" = 0',
         );
-        outOfStock = parseInt(outOfStockRes.rows[0]?.count || "0", 10);
+        outOfStock = Number.parseInt(outOfStockRes.rows[0]?.count || "0", 10);
       } catch {
         // Fallback
         const inStockRes = await db.query(
@@ -202,8 +211,8 @@ router.get(
         const outOfStockRes = await db.query(
           'SELECT COUNT(*) as count FROM products WHERE "inStock" = false',
         );
-        inStock = parseInt(inStockRes.rows[0]?.count || "0", 10);
-        outOfStock = parseInt(outOfStockRes.rows[0]?.count || "0", 10);
+        inStock = Number.parseInt(inStockRes.rows[0]?.count || "0", 10);
+        outOfStock = Number.parseInt(outOfStockRes.rows[0]?.count || "0", 10);
       }
 
       res.json([
@@ -242,7 +251,7 @@ router.get(
 
       const data = distribution.map((item) => ({
         name: item.status.charAt(0).toUpperCase() + item.status.slice(1),
-        value: parseInt(item.count, 10),
+        value: Number.parseInt(item.count, 10),
         color: statusColors[item.status] || "#64748b",
       }));
 
@@ -279,7 +288,7 @@ router.get(
           const shipping = JSON.parse(order.shippingInfo);
           return {
             id: order.id,
-            total: parseFloat(order.total),
+            total: Number.parseFloat(order.total),
             status: order.status,
             createdAt: order.createdAt,
             customer: {
@@ -298,5 +307,32 @@ router.get(
     }
   },
 );
+
+// GET /api/reports/regional - Get sales by region
+router.get("/regional", adminAuth, async (req: AdminRequest, res: Response) => {
+  try {
+    const result = await db.query(`
+      SELECT 
+        "shippingInfo"->>'region' as region,
+        COUNT(*) as orders,
+        SUM(total) as revenue
+      FROM orders
+      WHERE status != 'cancelled'
+      GROUP BY region
+      ORDER BY revenue DESC
+    `);
+
+    const data = result.rows.map((row) => ({
+      name: row.region || "Unknown",
+      orders: Number.parseInt(row.orders, 10),
+      revenue: Number.parseFloat(row.revenue),
+    }));
+
+    res.json(data);
+  } catch (error) {
+    console.error("Error fetching regional reports:", error);
+    res.status(500).json({ error: "Failed to fetch regional report" });
+  }
+});
 
 export default router;

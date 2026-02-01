@@ -66,19 +66,16 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       </div>
 
       {/* Trust Badges */}
-      <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 grid grid-cols-2 gap-4">
-        <div className="flex flex-col items-center gap-2 text-center">
-          <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-            <Truck className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-          </div>
+      <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 grid grid-cols-2 place-items-center gap-2">
+        <div className="flex items-center gap-2 text-center">
+         
+            <Truck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
           <span className="text-xs text-slate-600 dark:text-slate-400">
             Fast Delivery
           </span>
         </div>
-        <div className="flex flex-col items-center gap-2 text-center">
-          <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-            <CheckCircle className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-          </div>
+        <div className="flex items-center gap-2 text-center">
+            <CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
           <span className="text-xs text-slate-600 dark:text-slate-400">
             Secure Payment
           </span>

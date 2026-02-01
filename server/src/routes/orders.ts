@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import db from "../db/database";
 import { adminAuth, AdminRequest } from "../middleware/adminAuth";
+import { logActivity } from "./activity";
 import { notificationService } from "../services/NotificationService";
 
 const router = Router();
@@ -307,6 +308,19 @@ router.patch(
       console.log(
         `📦 Order ${id} status: ${existing.status} → ${status} by ${req.admin?.username}`,
       );
+      const orderIdStr = String(id);
+      let activityType: "info" | "success" | "warning" | "error" = "info";
+      if (status === "delivered") activityType = "success";
+      if (status === "cancelled") activityType = "warning";
+
+      if (req.admin?.id) {
+        await logActivity(
+          req.admin.id,
+          "order_status_update",
+          activityType,
+          `Changed order status for #${orderIdStr.substring(0, 8)}: ${existing.status} → ${status}`,
+        );
+      }
 
       const result = await db.query("SELECT * FROM orders WHERE id = $1", [id]);
       const order = result.rows[0] as OrderRow;

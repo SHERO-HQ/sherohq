@@ -54,7 +54,7 @@ const MockPaymentGateway = () => {
               <span className="text-slate-500 dark:text-slate-400">
                 Amount:
               </span>
-              <span className="text-2xl font-bold text-slate-900 dark:text-white">
+              <span className="text-2xl font-sora font-bold text-emerald-600 dark:text-emerald-400">
                 GH₵ {Number.parseFloat(amount || "0").toLocaleString()}
               </span>
             </div>

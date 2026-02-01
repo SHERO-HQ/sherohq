@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { fetchAllOrders, updateOrderStatus, type Order } from "@/services/api";
+import { useNotifications } from "@/hooks/useNotifications";
 import {
   Search,
   Eye,
@@ -38,6 +39,7 @@ export default function AdminOrders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const { addNotification } = useNotifications();
 
   // Filters
   const [search, setSearch] = useState("");
@@ -72,10 +74,17 @@ export default function AdminOrders() {
       setOrders(
         orders.map((o) => (o.id === id ? { ...o, status: newStatus } : o)),
       );
+      addNotification(
+        "Success",
+        `Order status updated to ${newStatus}`,
+        "success",
+      );
     } catch (err) {
-      alert(
+      addNotification(
+        "Error",
         "Failed to update status: " +
           (err instanceof Error ? err.message : "Unknown error"),
+        "error",
       );
     }
   };
@@ -256,14 +265,12 @@ export default function AdminOrders() {
         {/* Orders List */}
         <div className="space-y-4">
           {isLoading &&
-            new Array(4)
-              .fill(0)
-              .map((_, i) => (
-                <div
-                  key={`skeleton-${i}`}
-                  className="h-32 rounded bg-slate-900 animate-pulse border border-white/5"
-                />
-              ))}
+            ["skel-1", "skel-2", "skel-3", "skel-4"].map((skelKey) => (
+              <div
+                key={skelKey}
+                className="h-32 rounded bg-slate-900 animate-pulse border border-white/5"
+              />
+            ))}
 
           {!isLoading && currentOrders.length === 0 && (
             <div className="p-12 text-center bg-slate-900 border border-white/5 rounded">
@@ -426,7 +433,8 @@ export default function AdminOrders() {
                               }
                               className="cursor-pointer text-rose-400 focus:text-rose-400 focus:bg-rose-500/10"
                             >
-                              <PackageX className="w-4 h-4 mr-2 text-rose-400" /> Cancelled
+                              <PackageX className="w-4 h-4 mr-2 text-rose-400" />{" "}
+                              Cancelled
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>

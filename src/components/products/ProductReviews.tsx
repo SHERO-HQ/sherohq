@@ -5,6 +5,7 @@ import {
   submitProductReview,
   type Review,
 } from "@/services/api";
+import { useNotifications } from "@/hooks/useNotifications";
 
 interface ProductReviewsProps {
   productId: string;
@@ -14,6 +15,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const { addNotification } = useNotifications();
 
   // Form State
   const [rating, setRating] = useState(5);
@@ -53,9 +55,18 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
       setComment("");
       setRating(5);
       fetchReviews();
+      addNotification(
+        "Review Submitted",
+        "Thank you for your feedback!",
+        "success",
+      );
     } catch (error) {
       console.error("Error submitting review:", error);
-      alert("Failed to submit review. Please try again.");
+      addNotification(
+        "Review Error",
+        "Failed to submit review. Please try again.",
+        "error",
+      );
     } finally {
       setSubmitting(false);
     }

@@ -192,7 +192,7 @@ const Nav = () => {
                   {isAuthenticated ? (
                     <button className="cursor-pointer p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                       <span className="sr-only">User Menu</span>
-                      <div className="w-8 h-8 rounded  font-sora font-bold bg-linear-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-sm text-white shrink-0 shadow-lg">
+                      <div className="w-8 h-8 rounded  font-sora font-bold bg-linear-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-sm text-white shrink-0 shadow">
                         {user?.name?.charAt(0)}
                       </div>
                     </button>
@@ -208,7 +208,7 @@ const Nav = () => {
 
                   {/* Dropdown Menu (Only when authenticated) */}
                   {isAuthenticated && (
-                    <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded shadow-xl border border-slate-200 dark:border-slate-800 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded shadow-lg border border-slate-200 dark:border-slate-800 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                       <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
                         <p className="text-sm font-bold font-sora text-slate-900 dark:text-white line-clamp-1">
                           {user?.name}
@@ -337,7 +337,7 @@ const Nav = () => {
                   {isAuthenticated ? (
                     <div className="space-y-4">
                       <div className="flex items-center gap-3 px-2">
-                        <div className="w-10 h-10 rounded  font-sora font-bold bg-linear-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-xl text-white shrink-0 shadow-lg">
+                        <div className="w-10 h-10 rounded  font-sora font-bold bg-linear-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-xl text-white shrink-0 ">
                           {user?.name?.charAt(0)}
                         </div>
                         <div className="flex-1 min-w-0">

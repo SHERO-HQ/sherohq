@@ -7,6 +7,7 @@ import {
   type Order,
   getImageUrl,
 } from "@/services/api";
+import { useNotifications } from "@/hooks/useNotifications";
 import logoFull from "@/assets/logo/shero-full.svg";
 import {
   ArrowLeft,
@@ -44,6 +45,7 @@ export default function OrderDetails() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
+  const { addNotification } = useNotifications();
   const [printMode, setPrintMode] = useState<"invoice" | "receipt">("invoice");
 
   useEffect(() => {
@@ -69,10 +71,17 @@ export default function OrderDetails() {
       setIsUpdating(true);
       await updateOrderStatus(order.id, newStatus);
       setOrder({ ...order, status: newStatus });
+      addNotification(
+        "Success",
+        `Order status updated to ${newStatus}`,
+        "success",
+      );
     } catch (err) {
-      alert(
+      addNotification(
+        "Error",
         "Failed to update status: " +
           (err instanceof Error ? err.message : "Unknown error"),
+        "error",
       );
     } finally {
       setIsUpdating(false);

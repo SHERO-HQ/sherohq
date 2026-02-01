@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import db from "../db/database";
 import { adminAuth, AdminRequest } from "../middleware/adminAuth";
+import { logActivity } from "./activity";
 import { generateSku } from "../utils/sku";
 
 const router = Router();
@@ -72,7 +73,7 @@ router.get("/", async (req: Request, res: Response) => {
       conditions.push(
         `(name ILIKE $${paramIndex} OR description ILIKE $${paramIndex})`,
       );
-      params.push(`%${search}%`);
+      params.push(`%${String(search)}%`);
       paramIndex++;
     }
 
@@ -180,6 +181,14 @@ router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
     );
 
     console.log(`📦 Product created: ${name} by ${req.admin?.username}`);
+    if (req.admin?.id) {
+      await logActivity(
+        req.admin.id,
+        "product_create",
+        "success",
+        `Created product: ${name} (SKU: ${finalSku})`,
+      );
+    }
 
     const result = await db.query("SELECT * FROM products WHERE id = $1", [
       productId,
@@ -265,6 +274,14 @@ router.put("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
     );
 
     console.log(`📦 Product updated: ${id} by ${req.admin?.username}`);
+    if (req.admin?.id) {
+      await logActivity(
+        req.admin.id,
+        "product_update",
+        "info",
+        `Updated product: ${name || id}`,
+      );
+    }
 
     const result = await db.query("SELECT * FROM products WHERE id = $1", [id]);
     const product = result.rows[0] as ProductRow;
@@ -318,6 +335,14 @@ router.patch(
       }
 
       console.log(`📦 Stock updated: ${id} by ${req.admin?.username}`);
+      if (req.admin?.id) {
+        await logActivity(
+          req.admin.id,
+          "stock_update",
+          "info",
+          `Updated stock for product ID: ${id}. New quantity: ${stockQuantity}`,
+        );
+      }
 
       const result = await db.query("SELECT * FROM products WHERE id = $1", [
         id,
@@ -355,6 +380,14 @@ router.delete("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
     console.log(
       `🗑️ Product deleted: ${existing.name} by ${req.admin?.username}`,
     );
+    if (req.admin?.id) {
+      await logActivity(
+        req.admin.id,
+        "product_delete",
+        "warning",
+        `Deleted product: ${existing.name} (ID: ${id})`,
+      );
+    }
 
     res.json({
       success: true,

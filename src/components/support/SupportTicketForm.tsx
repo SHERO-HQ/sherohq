@@ -28,6 +28,7 @@ const SupportTicketForm = ({
 }: SupportTicketFormProps) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [ticketNo, setTicketNo] = useState<number | null>(null);
   const [error, setError] = useState("");
 
   const {
@@ -40,6 +41,7 @@ const SupportTicketForm = ({
     defaultValues: {
       name: "",
       email: "",
+      phone: "",
       subject: defaultSubject,
       category: defaultCategory,
       message: "",
@@ -52,16 +54,19 @@ const SupportTicketForm = ({
     setError("");
 
     try {
-      await createTicket({
+      const response = await createTicket({
         ...data,
-        userId: localStorage.getItem("userToken") ? "authenticated" : undefined,
+        // Let the backend handle userId from the token if needed, or pass undefined for now since we don't have the UUID handy
+        userId: undefined,
       });
+      setTicketNo(response.ticketNo);
       setSuccess(true);
       setTimeout(() => {
         onClose();
         setSuccess(false);
+        setTicketNo(null);
         reset();
-      }, 2000);
+      }, 5000); // Give user more time to see the ticket number
     } catch (err: unknown) {
       setError(
         err instanceof Error
@@ -121,8 +126,16 @@ const SupportTicketForm = ({
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
                   Ticket Submitted!
                 </h3>
+                {ticketNo && (
+                  <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-4 py-2 mb-4">
+                    <span className="text-emerald-600 dark:text-emerald-400 font-mono font-bold text-lg">
+                      Ticket #{ticketNo}
+                    </span>
+                  </div>
+                )}
                 <p className="text-slate-600 dark:text-slate-400">
-                  We've received your request and will respond via email.
+                  We've received your request and will respond via email. Please
+                  keep your ticket number for reference.
                 </p>
               </div>
             ) : (
@@ -149,6 +162,14 @@ const SupportTicketForm = ({
                     {...register("email")}
                   />
                 </div>
+
+                <Input
+                  label="Phone Number (Optional)"
+                  type="tel"
+                  placeholder="+1 (555) 000-0000"
+                  error={errors.phone?.message}
+                  {...register("phone")}
+                />
 
                 <div className="grid grid-cols-2 gap-4">
                   <Select

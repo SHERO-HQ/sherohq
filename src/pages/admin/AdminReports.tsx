@@ -21,12 +21,14 @@ import {
   fetchStockDistribution,
   fetchOrderStatusDistribution,
   fetchRecentOrders,
+  fetchRegionalReport,
   type AdminStats,
   type AnalyticsData,
   type TopProduct,
   type StockDistribution,
   type OrderStatusDistribution,
   type RecentOrder,
+  type RegionalData,
 } from "@/services/api";
 import { useTitle } from "@/hooks/useTitle";
 import {
@@ -94,6 +96,7 @@ export default function AdminReports() {
   const [stockDist, setStockDist] = useState<StockDistribution[]>([]);
   const [orderStatus, setOrderStatus] = useState<OrderStatusDistribution[]>([]);
   const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
+  const [regionalData, setRegionalData] = useState<RegionalData[]>([]);
   const [chartType, setChartType] = useState<"line" | "bar">("line");
 
   useEffect(() => {
@@ -108,6 +111,7 @@ export default function AdminReports() {
           stockData,
           orderStatusData,
           recentData,
+          regionalData,
         ] = await Promise.all([
           fetchDashboardStats(),
           fetchAnalytics(range),
@@ -115,6 +119,7 @@ export default function AdminReports() {
           fetchStockDistribution(),
           fetchOrderStatusDistribution(),
           fetchRecentOrders(),
+          fetchRegionalReport(),
         ]);
         setStats(statsData || null);
         setAnalytics(Array.isArray(analyticsData) ? analyticsData : []);
@@ -122,6 +127,7 @@ export default function AdminReports() {
         setStockDist(Array.isArray(stockData) ? stockData : []);
         setOrderStatus(Array.isArray(orderStatusData) ? orderStatusData : []);
         setRecentOrders(Array.isArray(recentData) ? recentData : []);
+        setRegionalData(Array.isArray(regionalData) ? regionalData : []);
       } catch (err: unknown) {
         console.error("Failed to load reports:", err);
       } finally {
@@ -168,7 +174,7 @@ export default function AdminReports() {
           {/* Header */}
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <div className="p-3 rounded bg-gradient-to-br from-purple-500 to-blue-600">
+              <div className="p-3 rounded bg-linear-to-br from-purple-500 to-blue-600">
                 <TrendingUp className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -496,6 +502,51 @@ export default function AdminReports() {
                     />
                     <Legend verticalAlign="bottom" height={36} />
                   </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Regional Data Chart */}
+            <div className="bg-slate-900/50 border border-slate-800 rounded p-6">
+              <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <TrendingUp className="w-5 h-5 text-emerald-400" />
+                Sales by Region
+              </h3>
+              <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={regionalData} layout="vertical">
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="#1e293b"
+                      horizontal={true}
+                      vertical={false}
+                    />
+                    <XAxis type="number" stroke="#94a3b8" fontSize={10} hide />
+                    <YAxis
+                      dataKey="name"
+                      type="category"
+                      stroke="#94a3b8"
+                      fontSize={11}
+                      width={100}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "#0f172a",
+                        borderColor: "#1e293b",
+                        color: "#f8fafc",
+                      }}
+                      formatter={(value: number | undefined) => [
+                        `GH₵${(value ?? 0).toLocaleString()}`,
+                        "Revenue",
+                      ]}
+                    />
+                    <Bar
+                      dataKey="revenue"
+                      fill="#10b981"
+                      radius={[0, 4, 4, 0]}
+                      barSize={20}
+                    />
+                  </BarChart>
                 </ResponsiveContainer>
               </div>
             </div>

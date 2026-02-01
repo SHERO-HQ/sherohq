@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
+import { useNotifications } from "@/hooks/useNotifications";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -44,6 +45,7 @@ const CheckoutFlow = () => {
     clearCart,
   } = useCart();
   const { user, isAuthenticated } = useAuth();
+  const { addNotification } = useNotifications();
 
   const [currentStep, setCurrentStep] = useState(1);
   const [orderId, setOrderId] = useState<string | null>(null);
@@ -112,8 +114,8 @@ const CheckoutFlow = () => {
 
   // Calculate pricing
   const subtotal = totalPrice;
-  const shipping =
-    paymentMethod === "store_pickup" ? 0 : subtotal > 500 ? 0 : 50; // Free shipping for pickup or orders > GH₵500
+  const isFreeShipping = paymentMethod === "store_pickup" || subtotal > 500;
+  const shipping = isFreeShipping ? 0 : 50;
   const tax = 0; // Tax set to 0.00 for now
   const total = subtotal + shipping + tax;
 
@@ -209,8 +211,10 @@ const CheckoutFlow = () => {
             }
           } catch (paymentError) {
             console.error("Payment initialization failed:", paymentError);
-            alert(
+            addNotification(
+              "Payment Error",
               "Failed to initialize payment gateway. Order created but payment failed.",
+              "error",
             );
           }
         }
@@ -221,7 +225,11 @@ const CheckoutFlow = () => {
       }
     } catch (error) {
       console.error("Failed to place order:", error);
-      alert("Failed to place order. Please try again.");
+      addNotification(
+        "Order Error",
+        "Failed to place order. Please try again.",
+        "error",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -276,19 +284,23 @@ const CheckoutFlow = () => {
                 const isActive = currentStep === step.num;
                 const isCompleted = currentStep > step.num;
 
+                let stepBaseStyle =
+                  "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400";
+                if (isCompleted) {
+                  stepBaseStyle =
+                    "bg-emerald-600 border-emerald-600 text-white";
+                } else if (isActive) {
+                  stepBaseStyle =
+                    "bg-emerald-600 border-emerald-100 dark:border-emerald-900/50 text-white shadow-lg shadow-emerald-500/30";
+                }
+
                 return (
                   <div
                     key={step.num}
                     className="flex flex-col items-center gap-2 relative z-20 w-12"
                   >
                     <div
-                      className={`w-12 h-12 rounded-full flex items-center justify-center transition-all border-4 ${
-                        isCompleted
-                          ? "bg-emerald-600 border-emerald-600 text-white"
-                          : isActive
-                            ? "bg-emerald-600 border-emerald-100 dark:border-emerald-900/50 text-white shadow-lg shadow-emerald-500/30"
-                            : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400"
-                      }`}
+                      className={`w-12 h-12 rounded-full flex items-center justify-center transition-all border-4 ${stepBaseStyle}`}
                     >
                       <Icon className="w-5 h-5" />
                     </div>
@@ -343,7 +355,7 @@ const CheckoutFlow = () => {
                     tax={tax}
                     total={total}
                     itemCount={totalQuantity}
-                    className="!p-0 !border-0 shadow-none bg-transparent dark:bg-transparent"
+                    className="p-0! border-0! shadow-none bg-transparent dark:bg-transparent"
                   />
                 </div>
               </motion.div>

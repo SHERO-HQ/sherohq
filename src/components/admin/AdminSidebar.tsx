@@ -9,6 +9,7 @@ import {
   Plus,
   PanelLeftClose,
   PanelLeftOpen,
+  Headset,
 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { cn } from "@/lib/utils";
@@ -24,6 +25,7 @@ const navItems = [
   { icon: Package, label: "Products", href: "/admin/products" },
   { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
   { icon: BarChart3, label: "Reports", href: "/admin/reports" },
+  { icon: Headset, label: "Support", href: "/admin/support" },
   { icon: User, label: "Profile", href: "/admin/profile" },
 ];
 

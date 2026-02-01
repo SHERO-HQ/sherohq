@@ -423,19 +423,135 @@ export async function sendContactMessage(data: {
 export async function createTicket(data: {
   name: string;
   email: string;
+  phone?: string;
   subject: string;
   message: string;
   category: string;
   priority?: string;
   productId?: string;
   userId?: string;
-}): Promise<{ success: boolean; message: string; ticketId: string }> {
+}): Promise<{
+  success: boolean;
+  message: string;
+  ticketId: string;
+  ticketNo: number;
+}> {
   const response = await fetch(`${API_BASE}/tickets`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
 
+  return handleResponse(response);
+}
+
+export interface SupportTicket {
+  id: string;
+  ticket_no: number;
+  name: string;
+  email: string;
+  phone?: string;
+  subject: string;
+  message: string;
+  category: string;
+  productId?: string;
+  userId?: string;
+  status: string;
+  createdAt: string;
+}
+
+export interface Consultation {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  service: string;
+  date: string;
+  time: string;
+  message?: string;
+  status: string;
+  createdAt: string;
+}
+
+export interface Inquiry {
+  id: string;
+  name: string;
+  email: string;
+  subject?: string;
+  message: string;
+  status: string;
+  createdAt: string;
+}
+
+export async function fetchSupportTickets(): Promise<SupportTicket[]> {
+  const response = await authFetch(`${API_BASE}/tickets`);
+  return handleResponse(response);
+}
+
+export async function updateTicketStatus(
+  id: string,
+  status: string,
+): Promise<{ success: boolean; ticket: SupportTicket }> {
+  const response = await authFetch(`${API_BASE}/tickets/${id}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });
+  return handleResponse(response);
+}
+
+export async function fetchConsultations(): Promise<Consultation[]> {
+  const response = await authFetch(`${API_BASE}/inquiry/consultations`);
+  return handleResponse(response);
+}
+
+export async function updateConsultationStatus(
+  id: string,
+  status: string,
+): Promise<{ success: boolean; consultation: Consultation }> {
+  const response = await authFetch(
+    `${API_BASE}/inquiry/consultations/${id}/status`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    },
+  );
+  return handleResponse(response);
+}
+
+export async function deleteConsultation(
+  id: string,
+): Promise<{ success: boolean; message: string }> {
+  const response = await authFetch(`${API_BASE}/inquiry/consultations/${id}`, {
+    method: "DELETE",
+  });
+  return handleResponse(response);
+}
+
+export async function fetchInquiries(): Promise<Inquiry[]> {
+  const response = await authFetch(`${API_BASE}/inquiry/list`);
+  return handleResponse(response);
+}
+
+export async function updateInquiryStatus(
+  id: string,
+  status: string,
+): Promise<{ success: boolean; inquiry: Inquiry }> {
+  const response = await authFetch(
+    `${API_BASE}/inquiry/inquiries/${id}/status`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    },
+  );
+  return handleResponse(response);
+}
+
+export async function deleteInquiry(
+  id: string,
+): Promise<{ success: boolean; message: string }> {
+  const response = await authFetch(`${API_BASE}/inquiry/inquiries/${id}`, {
+    method: "DELETE",
+  });
   return handleResponse(response);
 }
 
@@ -492,6 +608,11 @@ export async function getAdminMe(): Promise<{
 }> {
   const response = await authFetch(`${API_BASE}/admin/me`);
   return handleResponse(response);
+}
+
+export async function fetchRegionalReport(): Promise<RegionalData[]> {
+  const response = await authFetch(`${API_BASE}/reports/regional`);
+  return handleResponse<RegionalData[]>(response);
 }
 
 export async function getAdminStats(): Promise<AdminStats> {
@@ -626,6 +747,12 @@ export interface TopProduct {
 export async function fetchDashboardStats(): Promise<AdminStats> {
   const response = await authFetch(`${API_BASE}/reports/stats`);
   return handleResponse<AdminStats>(response);
+}
+
+export interface RegionalData {
+  name: string;
+  orders: number;
+  revenue: number;
 }
 
 export async function fetchAnalytics(

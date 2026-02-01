@@ -35,6 +35,7 @@ const ProductForm = lazy(() => import("@/pages/admin/ProductForm"));
 const AdminReports = lazy(() => import("@/pages/admin/AdminReports"));
 const AdminProfile = lazy(() => import("@/pages/admin/AdminProfile"));
 const OrderDetails = lazy(() => import("@/pages/admin/OrderDetails"));
+const AdminSupport = lazy(() => import("@/pages/admin/AdminSupport"));
 
 const AppLoading = () => (
   <div className="min-h-screen flex items-center justify-center dark:bg-slate-950 bg-slate-50">
@@ -137,6 +138,14 @@ const AppRoutes = () => {
                   element={
                     <ProtectedRoute>
                       <AdminProfile />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="support"
+                  element={
+                    <ProtectedRoute>
+                      <AdminSupport />
                     </ProtectedRoute>
                   }
                 />

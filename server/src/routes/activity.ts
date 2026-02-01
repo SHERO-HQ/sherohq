@@ -24,7 +24,7 @@ router.get("/activity", adminAuth, async (req: AdminRequest, res: Response) => {
 
 // POST /api/admin/activity - Create a new activity log
 export async function logActivity(
-  adminId: string,
+  adminId: string | null,
   action: string,
   type: string = "info",
   details?: string,

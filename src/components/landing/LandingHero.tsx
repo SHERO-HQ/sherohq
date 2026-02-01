@@ -3,7 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { fadeUp } from "@/components/motion/heroMotion";
 import { useMemo, useRef, useState } from "react";
 import { RocketIcon } from "@/assets/icons/icons";
-import { Layers, MessageSquareDot } from "lucide-react";
+import { CircleCheckBig, Layers, MessageSquareDot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // Type Definitions
@@ -153,7 +153,7 @@ const LandingHero: React.FC = () => {
               animate="visible"
               variants={prefersReducedMotion ? {} : fadeUp}
               transition={{ delay: 0.15 }}
-              className="text-sm md:text-xl text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed"
+              className="text-sm  text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed"
             >
               {HERO_CONTENT.subHeader}
             </motion.p>
@@ -357,18 +357,20 @@ const LandingHero: React.FC = () => {
                   x: useTransform(smoothX, [-0.5, 0.5], [-5, 5]),
                   y: useTransform(smoothY, [-0.5, 0.5], [5, 5]),
                 }}
-                className="absolute -top-10 -right-4 bg-blue-600 p-4 rounded shadow-blue-600/30 shadow-xl flex flex-col items-center justify-center rotate-6 z-30 select-none pointer-events-none"
+                className="absolute -top-10 -right-4 bg-blue-500 p-4 rounded shadow-blue-500/30 shadow-xl flex flex-col items-center justify-center rotate-6 z-30 select-none pointer-events-none"
               >
                 <div className="flex -space-x-2 mb-2">
                   {[1, 2, 3].map((i) => (
                     <div
                       key={i}
-                      className="w-6 h-6 rounded-full border-2 border-blue-600 bg-white/20 backdrop-blur-sm"
-                    />
+                      className="w-8 h-8 flex items-center justify-center rounded-full border border-blue-100/30 bg-blue-500/20 backdrop-blur-sm"
+                    >
+                      <CircleCheckBig className="text-slate-100 w-4 h-4" />
+                    </div>
                   ))}
                 </div>
                 <span className="text-[9px] font-bold text-white uppercase tracking-widest">
-                  +12 LOCATIONS
+                  +12 RESOLVED
                 </span>
               </motion.div>
 

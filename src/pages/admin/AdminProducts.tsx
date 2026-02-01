@@ -7,6 +7,7 @@ import {
   updateProductStock,
   getImageUrl,
 } from "@/services/api";
+import { useNotifications } from "@/hooks/useNotifications";
 import type { Product } from "@/data/products";
 import {
   Search,
@@ -41,6 +42,7 @@ export default function AdminProducts() {
     [],
   );
   const [isLoading, setIsLoading] = useState(true);
+  const { addNotification } = useNotifications();
 
   // Filters
   const [search, setSearch] = useState("");
@@ -78,10 +80,13 @@ export default function AdminProducts() {
     try {
       await deleteProduct(id);
       setProducts(products.filter((p) => p.id !== id));
+      addNotification("Success", "Product deleted successfully", "success");
     } catch (err) {
-      alert(
+      addNotification(
+        "Error",
         "Failed to delete product: " +
           (err instanceof Error ? err.message : "Unknown error"),
+        "error",
       );
     }
   };
@@ -95,10 +100,17 @@ export default function AdminProducts() {
           p.id === product.id ? { ...p, inStock: !p.inStock } : p,
         ),
       );
+      addNotification(
+        "Success",
+        `Product marked as ${!product.inStock ? "in stock" : "out of stock"}`,
+        "success",
+      );
     } catch (err) {
-      alert(
+      addNotification(
+        "Error",
         "Failed to update stock: " +
           (err instanceof Error ? err.message : "Unknown error"),
+        "error",
       );
     }
   };
