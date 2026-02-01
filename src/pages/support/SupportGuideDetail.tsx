@@ -106,7 +106,7 @@ const SupportGuideDetail = () => {
           <motion.article
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden"
+            className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 overflow-hidden"
           >
             {/* Cover Image */}
             {guide.coverImage && (
@@ -159,7 +159,7 @@ const SupportGuideDetail = () => {
               )}
 
               {/* Content */}
-              <div className="prose prose-slate dark:prose-invert max-w-none prose-headings:font-sora prose-a:text-emerald-600 dark:prose-a:text-emerald-400 prose-img:rounded-lg">
+              <div className="prose prose-slate dark:prose-invert max-w-none prose-headings:font-sora prose-a:text-emerald-600 dark:prose-a:text-emerald-400 prose-img:rounded">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {guide.content}
                 </ReactMarkdown>

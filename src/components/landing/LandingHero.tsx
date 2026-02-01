@@ -75,7 +75,7 @@ const LandingHero: React.FC = () => {
     >
       {/* KINETIC BACKGROUND LAYERS */}
       <motion.div
-        style={{ x: translateX, y: translateY, opacity: .9 }}
+        style={{ x: translateX, y: translateY, opacity: 0.9 }}
         className="absolute inset-0 pattern-dots pointer-events-none"
       />
 
@@ -115,7 +115,7 @@ const LandingHero: React.FC = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-sm border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm"
+              className="inline-flex items-center gap-2 px-3 py-1 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm"
             >
               <RocketIcon className="w-4 h-4 text-emerald-500" />
               <span className="text-[10px] md:text-xs font-mono font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-400">

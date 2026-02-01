@@ -155,7 +155,7 @@ export default function AdminSidebar({
             {/* Quick Actions Section */}
             <div className="mt-8 pt-8 border-t border-white/5 space-y-4 px-2">
               {isOpen && (
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-3">
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest px-2">
                   Quick Actions
                 </p>
               )}
@@ -164,7 +164,7 @@ export default function AdminSidebar({
                   to="/admin/products/new"
                   className={({ isActive }) =>
                     cn(
-                      "flex items-center gap-3 px-3 py-2.5 rounded transition-all duration-200 group relative",
+                      "flex items-center gap-2 px-3 py-2 rounded transition-all duration-200 group relative",
                       isActive
                         ? "bg-emerald-500/10 text-emerald-400"
                         : "text-slate-400 hover:text-white hover:bg-white/5",

@@ -102,7 +102,7 @@ const AdminGuides = () => {
           {[1, 2, 3].map((i) => (
             <div
               key={`skeleton-${i}`}
-              className="bg-slate-900/40 rounded-lg border border-white/10 p-6 animate-pulse"
+              className="bg-slate-900/40 rounded border border-white/10 p-6 animate-pulse"
             >
               <div className="h-5 bg-slate-800 rounded w-1/3 mb-3" />
               <div className="h-4 bg-slate-800 rounded w-2/3" />
@@ -110,7 +110,7 @@ const AdminGuides = () => {
           ))}
         </div>
       ) : filteredGuides.length === 0 ? (
-        <div className="text-center py-16 bg-slate-900/40 rounded-lg border border-white/10">
+        <div className="text-center py-16 bg-slate-900/40 rounded border border-white/10">
           <h3 className="text-xl font-semibold text-slate-400 mb-2">
             No guides found
           </h3>
@@ -122,7 +122,7 @@ const AdminGuides = () => {
           </Button>
         </div>
       ) : (
-        <div className="bg-slate-900/40 rounded-lg border border-white/10 overflow-hidden">
+        <div className="bg-slate-900/40 rounded border border-white/10 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left min-w-[700px]">
               <thead className="bg-white/5 border-b border-white/5">

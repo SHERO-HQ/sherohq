@@ -7,8 +7,6 @@ import {
   Phone,
   Calendar,
   ShoppingBag,
-  CheckCircle,
-  XCircle,
   Loader2,
   ChevronLeft,
   ChevronRight,
@@ -17,6 +15,9 @@ import {
   X,
   Package,
   RefreshCw,
+  Printer,
+  BadgeCheck,
+  BadgeX,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -27,6 +28,13 @@ import {
 } from "@/hooks/queries/useUsers";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
 
 export default function AdminUsers() {
   const [search, setSearch] = useState("");
@@ -109,6 +117,42 @@ export default function AdminUsers() {
     return `GH₵ ${amount.toLocaleString("en-GH", { minimumFractionDigits: 2 })}`;
   };
 
+  const handleExport = (format: "csv" | "excel" | "pdf") => {
+    if (!users || users.length === 0) {
+      addNotification("Warning", "No customer data to export", "warning");
+      return;
+    }
+
+    const exportData = users.map((user) => ({
+      ID: user.id,
+      Name: user.name,
+      Email: user.email,
+      Phone: user.phone || "N/A",
+      Status: user.emailVerified ? "Verified" : "Unverified",
+      JoinedDate: new Date(user.createdAt).toLocaleDateString(),
+    }));
+
+    const fileName = `customers_export_${new Date().toISOString().split("T")[0]}`;
+
+    if (format === "csv") {
+      exportToCSV(exportData, fileName);
+    } else if (format === "excel") {
+      exportToExcel(exportData, fileName);
+    } else if (format === "pdf") {
+      exportToPDF(
+        exportData,
+        ["ID", "Name", "Email", "Phone", "Status", "JoinedDate"],
+        fileName,
+        "Customer Directory",
+      );
+    }
+    addNotification(
+      "Success",
+      `Exported as ${format.toUpperCase()}`,
+      "success",
+    );
+  };
+
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
       pending: "bg-yellow-500/20 text-yellow-400",
@@ -150,9 +194,36 @@ export default function AdminUsers() {
                 className={cn("w-4 h-4", isFetching && "animate-spin")}
               />
             </Button>
-            <Button className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6">
-              Export List
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6">
+                  <Printer className="mr-2 h-4 w-4" /> Export
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="bg-slate-900 border-white/10 text-white"
+              >
+                <DropdownMenuItem
+                  onClick={() => handleExport("csv")}
+                  className="cursor-pointer hover:bg-white/5"
+                >
+                  Export as CSV
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleExport("excel")}
+                  className="cursor-pointer hover:bg-white/5"
+                >
+                  Export as Excel
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleExport("pdf")}
+                  className="cursor-pointer hover:bg-white/5"
+                >
+                  Export as PDF
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
@@ -165,16 +236,16 @@ export default function AdminUsers() {
               placeholder="Search by name or email..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-800/50 border border-white/10 rounded-xl text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+              className="w-full pl-10 pr-4 py-2.5 bg-slate-800/50 border border-white/10 rounded text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
             />
           </div>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-slate-800/30 backdrop-blur-sm border border-white/5 rounded-xl p-4">
+          <div className="bg-slate-800/30 backdrop-blur-sm border border-white/5 rounded p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-emerald-500/20 rounded-lg">
+              <div className="p-2 bg-emerald-500/20 rounded">
                 <Users className="w-5 h-5 text-emerald-400" />
               </div>
               <div>
@@ -185,10 +256,10 @@ export default function AdminUsers() {
               </div>
             </div>
           </div>
-          <div className="bg-slate-800/30 backdrop-blur-sm border border-white/5 rounded-xl p-4">
+          <div className="bg-slate-800/30 backdrop-blur-sm border border-white/5 rounded p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-500/20 rounded-lg">
-                <CheckCircle className="w-5 h-5 text-blue-400" />
+              <div className="p-2 bg-blue-500/20 rounded">
+                <BadgeCheck className="w-5 h-5 text-blue-400" />
               </div>
               <div>
                 <p className="text-slate-400 text-sm">Verified Users</p>
@@ -198,9 +269,9 @@ export default function AdminUsers() {
               </div>
             </div>
           </div>
-          <div className="bg-slate-800/30 backdrop-blur-sm border border-white/5 rounded-xl p-4">
+          <div className="bg-slate-800/30 backdrop-blur-sm border border-white/5 rounded p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-500/20 rounded-lg">
+              <div className="p-2 bg-purple-500/20 rounded">
                 <Calendar className="w-5 h-5 text-purple-400" />
               </div>
               <div>
@@ -223,7 +294,7 @@ export default function AdminUsers() {
         </div>
 
         {/* Users Table */}
-        <div className="bg-slate-800/30 backdrop-blur-sm border border-white/5 rounded-xl overflow-hidden relative">
+        <div className="bg-slate-800/30 backdrop-blur-sm border border-white/5 rounded overflow-hidden relative">
           {loading && !users.length ? (
             <div className="flex items-center justify-center py-20">
               <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
@@ -265,12 +336,12 @@ export default function AdminUsers() {
                     >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-linear-to-br from-emerald-500 to-blue-500 flex items-center justify-center text-white font-medium">
+                          <div className="w-10 h-10 rounded bg-linear-to-br from-emerald-500 to-emerald-500/60 font-bold text-lg font-sora flex items-center justify-center text-white">
                             {user.avatar ? (
                               <img
                                 src={user.avatar}
                                 alt={user.name}
-                                className="w-full h-full rounded-full object-cover"
+                                className="w-full h-full rounded object-cover"
                               />
                             ) : (
                               user.name.charAt(0).toUpperCase()
@@ -302,13 +373,13 @@ export default function AdminUsers() {
                       </td>
                       <td className="px-6 py-4">
                         {user.emailVerified ? (
-                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-400">
-                            <CheckCircle className="w-3 h-3" />
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-emerald-500/20 text-emerald-400">
+                            <BadgeCheck className="w-3 h-3" />
                             Verified
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-yellow-500/20 text-yellow-400">
-                            <XCircle className="w-3 h-3" />
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-yellow-500/20 text-yellow-400">
+                            <BadgeX className="w-3 h-3" />
                             Unverified
                           </span>
                         )}
@@ -320,14 +391,14 @@ export default function AdminUsers() {
                         <div className="flex items-center justify-end gap-2">
                           <button
                             onClick={() => openDetails(user.id)}
-                            className="p-2 text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded-lg transition-colors"
+                            className="p-2 text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors"
                             title="View Details"
                           >
                             <Eye className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => setDeleteConfirmId(user.id)}
-                            className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                            className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors"
                             title="Delete User"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -353,7 +424,7 @@ export default function AdminUsers() {
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={pagination.page === 1}
-                  className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
@@ -365,7 +436,7 @@ export default function AdminUsers() {
                     setPage((p) => Math.min(pagination.totalPages, p + 1))
                   }
                   disabled={pagination.page === pagination.totalPages}
-                  className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   <ChevronRight className="w-5 h-5" />
                 </button>
@@ -389,7 +460,7 @@ export default function AdminUsers() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-2xl max-h-[80vh] overflow-hidden"
+                className="bg-slate-900 border border-white/10 rounded w-full max-w-2xl max-h-[80vh] overflow-hidden"
               >
                 {/* Modal Header */}
                 <div className="flex items-center justify-between p-6 border-b border-white/5">
@@ -398,7 +469,7 @@ export default function AdminUsers() {
                   </h2>
                   <button
                     onClick={() => setShowDetailsModal(false)}
-                    className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                    className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -412,12 +483,12 @@ export default function AdminUsers() {
                   <div className="p-6 space-y-6 overflow-y-auto max-h-[calc(80vh-80px)]">
                     {/* User Info */}
                     <div className="flex items-start gap-4">
-                      <div className="w-16 h-16 rounded-xl bg-linear-to-br from-emerald-500 to-blue-500 flex items-center justify-center text-white text-2xl font-bold">
+                      <div className="w-16 h-16 rounded bg-linear-to-br from-emerald-500 to-blue-500 flex items-center justify-center text-white text-2xl font-bold">
                         {selectedUser.avatar ? (
                           <img
                             src={selectedUser.avatar}
                             alt={selectedUser.name}
-                            className="w-full h-full rounded-xl object-cover"
+                            className="w-full h-full rounded object-cover"
                           />
                         ) : (
                           selectedUser.name.charAt(0).toUpperCase()
@@ -448,21 +519,21 @@ export default function AdminUsers() {
                     {/* Stats */}
                     {userStats && (
                       <div className="grid grid-cols-3 gap-4">
-                        <div className="bg-slate-800/50 rounded-xl p-4 text-center">
+                        <div className="bg-slate-800/50 rounded p-4 text-center">
                           <ShoppingBag className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
                           <p className="text-2xl font-bold text-white">
                             {userStats.totalOrders}
                           </p>
                           <p className="text-xs text-slate-400">Total Orders</p>
                         </div>
-                        <div className="bg-slate-800/50 rounded-xl p-4 text-center">
+                        <div className="bg-slate-800/50 rounded p-4 text-center">
                           <Package className="w-6 h-6 text-blue-400 mx-auto mb-2" />
                           <p className="text-2xl font-bold text-white">
                             {formatCurrency(userStats.totalSpent)}
                           </p>
                           <p className="text-xs text-slate-400">Total Spent</p>
                         </div>
-                        <div className="bg-slate-800/50 rounded-xl p-4 text-center">
+                        <div className="bg-slate-800/50 rounded p-4 text-center">
                           <Calendar className="w-6 h-6 text-purple-400 mx-auto mb-2" />
                           <p className="text-sm font-bold text-white">
                             {userStats.lastOrderDate
@@ -480,7 +551,7 @@ export default function AdminUsers() {
                         Recent Orders
                       </h4>
                       {userOrders.length === 0 ? (
-                        <div className="text-center py-8 bg-slate-800/30 rounded-xl">
+                        <div className="text-center py-8 bg-slate-800/30 rounded">
                           <ShoppingBag className="w-8 h-8 text-slate-600 mx-auto mb-2" />
                           <p className="text-slate-500">No orders yet</p>
                         </div>
@@ -489,7 +560,7 @@ export default function AdminUsers() {
                           {userOrders.slice(0, 5).map((order) => (
                             <div
                               key={order.id}
-                              className="bg-slate-800/30 rounded-xl p-4 flex items-center justify-between"
+                              className="bg-slate-800/30 rounded p-4 flex items-center justify-between"
                             >
                               <div>
                                 <p className="text-white font-medium">
@@ -541,7 +612,7 @@ export default function AdminUsers() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-slate-900 border border-white/10 rounded-2xl p-6 w-full max-w-md"
+                className="bg-slate-900 border border-white/10 rounded p-6 w-full max-w-md"
               >
                 <div className="text-center">
                   <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -557,14 +628,14 @@ export default function AdminUsers() {
                   <div className="flex gap-3">
                     <button
                       onClick={() => setDeleteConfirmId(null)}
-                      className="flex-1 px-4 py-2.5 bg-slate-800 text-white rounded-xl hover:bg-slate-700 transition-colors"
+                      className="flex-1 px-4 py-2.5 bg-slate-800 text-white rounded hover:bg-slate-700 transition-colors"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={() => handleDeleteUser(deleteConfirmId)}
                       disabled={deleteMutation.isPending}
-                      className="flex-1 px-4 py-2.5 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                      className="flex-1 px-4 py-2.5 bg-red-500 text-white rounded hover:bg-red-600 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                     >
                       {deleteMutation.isPending ? (
                         <Loader2 className="w-4 h-4 animate-spin" />

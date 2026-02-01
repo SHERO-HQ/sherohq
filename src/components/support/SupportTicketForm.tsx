@@ -127,7 +127,7 @@ const SupportTicketForm = ({
                   Ticket Submitted!
                 </h3>
                 {ticketNo && (
-                  <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-4 py-2 mb-4">
+                  <div className="bg-emerald-500/10 border border-emerald-500/20 rounded px-4 py-2 mb-4">
                     <span className="text-emerald-600 dark:text-emerald-400 font-mono font-bold text-lg">
                       Ticket #{ticketNo}
                     </span>

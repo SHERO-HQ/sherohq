@@ -16,7 +16,7 @@ export function cn(...inputs: ClassValue[]) {
 const NAV_LINK_STYLES = {
   base: [
     "px-2 py-1",
-    "rounded-xs", // Add for better visual consistency
+    "rounded", // Add for better visual consistency
     "transition-colors duration-200 ease-in-out",
     // Focus states (CRITICAL for accessibility)
     "focus:ring-primary",
@@ -101,7 +101,7 @@ export function navLinkClassVariant(
     sidebar: {
       base: [
         "px-3 py-2",
-        "rounded-xs",
+        "rounded",
         "w-full",
         "transition-colors duration-200",
         "focus:outline-none focus:border-b-2 focus:border-emerald-500",

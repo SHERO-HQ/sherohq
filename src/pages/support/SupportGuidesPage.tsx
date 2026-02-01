@@ -55,7 +55,7 @@ const SupportGuidesPage = () => {
           {/* Header */}
           <div className="mb-12">
             <div className="flex items-center gap-4 mb-4">
-              <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+              <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/30 rounded flex items-center justify-center text-emerald-600 dark:text-emerald-400">
                 <span>{category === "software" ? "S" : "H"}</span>
               </div>
               <div>
@@ -75,7 +75,7 @@ const SupportGuidesPage = () => {
                 placeholder="Search guides..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                className="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
               />
             </div>
           </div>
@@ -88,7 +88,7 @@ const SupportGuidesPage = () => {
                   {[1, 2, 3, 4, 5, 6].map((i) => (
                     <div
                       key={`skeleton-${i}`}
-                      className="bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 p-6 animate-pulse"
+                      className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6 animate-pulse"
                     >
                       <div className="h-32 bg-slate-200 dark:bg-slate-800 rounded mb-4" />
                       <div className="h-5 bg-slate-200 dark:bg-slate-800 rounded w-3/4 mb-2" />
@@ -121,7 +121,7 @@ const SupportGuidesPage = () => {
                   <div key={guide.id}>
                     <Link
                       to={`/support/${category}/${guide.slug}`}
-                      className="block bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/5 transition-all overflow-hidden group"
+                      className="block bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 hover:border-emerald-500/50 hover:shadow-lg hover:shadow-emerald-500/5 transition-all overflow-hidden group"
                     >
                       {guide.coverImage && (
                         <div className="h-40 overflow-hidden">

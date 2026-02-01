@@ -234,7 +234,7 @@ export default function AdminProducts() {
                 setSelectedCategory(e.target.value);
                 setCurrentPage(1);
               }}
-              className="bg-slate-800/50 border border-white/5 rounded-md text-sm text-white p-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+              className="bg-slate-800/50 border border-white/5 rounded text-sm text-white p-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
             >
               <option value="all">All Categories</option>
               {categories.map((cat) => (
@@ -249,7 +249,7 @@ export default function AdminProducts() {
                 setStockFilter(e.target.value);
                 setCurrentPage(1);
               }}
-              className="bg-slate-800/50 border border-white/5 rounded-md text-sm text-white p-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+              className="bg-slate-800/50 border border-white/5 rounded text-sm text-white p-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
             >
               <option value="all">All Stock Status</option>
               <option value="low">Low Stock (≤ 5)</option>
@@ -259,7 +259,7 @@ export default function AdminProducts() {
         </Card>
 
         {/* Products Table */}
-        <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden">
+        <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>

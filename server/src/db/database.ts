@@ -252,6 +252,15 @@ export async function initializeDatabase() {
       }
     }
 
+    // Migration: Add avatar column to users if it doesn't exist
+    try {
+      await client.query(
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar TEXT`,
+      );
+    } catch (error_) {
+      console.warn("⚠️ Migration failed for users.avatar:", error_);
+    }
+
     // Ensure phone column exists in tickets table (migration)
     try {
       await client.query(
