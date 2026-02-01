@@ -289,7 +289,9 @@ export async function userLogin(data: {
   password: string;
 }): Promise<UserLoginResponse> {
   const url = `${API_BASE}/auth/login`;
-  console.log("🔑 Attempting Login:", url);
+  if (import.meta.env.DEV) {
+    console.log("🔑 Attempting Login:", url);
+  }
   const startTime = performance.now();
 
   try {
@@ -300,9 +302,11 @@ export async function userLogin(data: {
     });
 
     const endTime = performance.now();
-    console.log(
-      `⏱️ Login API Response Time: ${(endTime - startTime).toFixed(2)}ms`,
-    );
+    if (import.meta.env.DEV) {
+      console.log(
+        `⏱️ Login API Response Time: ${(endTime - startTime).toFixed(2)}ms`,
+      );
+    }
 
     const result = await handleResponse<UserLoginResponse>(response);
     localStorage.setItem("userToken", result.token);

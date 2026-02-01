@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ShieldCheck, Lock, AlertCircle, Loader2 } from "lucide-react";
-import SEO from "@/components/common/SEO";
+import Seo from "@/components/common/Seo";
 
 const MockPaymentGateway = () => {
   const [searchParams] = useSearchParams();
@@ -28,7 +28,7 @@ const MockPaymentGateway = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center p-4">
-      <SEO title="Secure Payment" />
+      <Seo title="Secure Payment" />
       <div className="bg-white dark:bg-slate-800 rounded shadow-2xl max-w-md w-full overflow-hidden border border-slate-200 dark:border-slate-700">
         {/* Header */}
         <div className="bg-slate-900 p-6 text-center">

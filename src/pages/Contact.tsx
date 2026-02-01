@@ -1,4 +1,4 @@
-import SEO from "@/components/common/SEO";
+import Seo from "@/components/common/Seo";
 import ContactForm from "@/components/common/ContactForm";
 import Footer from "@/components/layout/Footer";
 import { motion } from "motion/react";
@@ -7,7 +7,7 @@ import { Mail, MapPin, MessagesSquare, Phone } from "lucide-react";
 const Contact = () => {
   return (
     <>
-      <SEO
+      <Seo
         title="Contact Us"
         description="Get in touch with Shero Technologies. We are ready to help you build the future with our tech solutions and consultation services."
         url="/contact-us"

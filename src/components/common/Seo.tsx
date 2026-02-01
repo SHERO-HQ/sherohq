@@ -1,4 +1,4 @@
-interface SEOProps {
+interface SeoProps {
   title?: string;
   description?: string;
   image?: string;
@@ -8,13 +8,13 @@ interface SEOProps {
 
 import { Helmet } from "react-helmet-async";
 
-const SEO = ({
+const Seo = ({
   title,
   description,
   image,
   url,
   type = "website",
-}: SEOProps) => {
+}: SeoProps) => {
   const siteTitle = "SHERO - Redefine Possible";
   const defaultDescription =
     "Innovative technology solutions that scale to elevate people, businesses, and communities. Premium tech products, consultation, partnerships, and custom software development.";
@@ -55,4 +55,4 @@ const SEO = ({
   );
 };
 
-export default SEO;
+export default Seo;

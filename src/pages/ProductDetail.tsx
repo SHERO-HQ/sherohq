@@ -1,7 +1,7 @@
 import { useParams, Navigate } from "react-router-dom";
 import Footer from "@/components/layout/Footer";
 import ProductDetailView from "@/components/products/ProductDetailView";
-import Seo from "@/components/common/SEO";
+import Seo from "@/components/common/Seo";
 import { Loader2 } from "lucide-react";
 import { useProduct } from "@/hooks/queries/useProducts";
 

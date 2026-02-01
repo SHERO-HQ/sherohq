@@ -14,7 +14,9 @@ export function getGuestId(): string {
     // Generate a new UUID for this guest
     guestId = uuidv4();
     localStorage.setItem(GUEST_ID_KEY, guestId);
-    console.log("🆕 New guest session created:", guestId);
+    if (import.meta.env.DEV) {
+      console.log("🆕 New guest session created:", guestId);
+    }
   }
 
   return guestId;

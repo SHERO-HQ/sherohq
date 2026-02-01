@@ -6,12 +6,12 @@ import LandingPathways from "@/components/landing/LandingPathways";
 import LandingStats from "@/components/landing/LandingStats";
 import LandingProducts from "@/components/landing/LandingProducts";
 import LandingFinalCTA from "@/components/landing/LandingFinalCTA";
-import SEO from "@/components/common/SEO";
+import Seo from "@/components/common/Seo";
 
 const Home = () => {
   return (
     <>
-      <SEO
+      <Seo
         title="Home"
         description="SHERO - Innovative technology solutions that scale to elevate people, businesses, and communities."
       />

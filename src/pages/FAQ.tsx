@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Plus, Minus, HelpCircle } from "lucide-react";
 import Footer from "@/components/layout/Footer";
-import SEO from "@/components/common/SEO";
+import Seo from "@/components/common/Seo";
 
 const FAQ = () => {
   const faqs = [
@@ -53,7 +53,7 @@ const FAQ = () => {
 
   return (
     <>
-      <SEO
+      <Seo
         title="FAQ"
         description="Frequently Asked Questions about Shero Technologies' products, services, shipping, and payments."
         url="/faq"

@@ -4,13 +4,13 @@ import AboutTeam from "@/components/about/AboutTeam";
 import LandingStats from "@/components/landing/LandingStats";
 import AboutTestimonials from "@/components/about/AboutTestimonials";
 import Footer from "@/components/layout/Footer";
-import SEO from "@/components/common/SEO";
+import Seo from "@/components/common/Seo";
 import AboutStory from "@/components/about/AboutStory";
 
 const About = () => {
   return (
     <>
-      <SEO
+      <Seo
         title="About Us"
         description="Learn about Shero Technologies' mission to redefine possibilities through innovative tech solutions in Ghana and West Africa."
         url="/about-us"

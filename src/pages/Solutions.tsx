@@ -4,12 +4,16 @@ import Process from "@/components/solutions/Process";
 import FinalCTA from "@/components/landing/LandingFinalCTA";
 import Portfolio from "@/components/solutions/Portfolio";
 import Footer from "@/components/layout/Footer";
-import { useTitle } from "@/hooks/useTitle";
+import Seo from "@/components/common/Seo";
 
 const Solutions = () => {
-  useTitle("Solutions");
   return (
     <>
+      <Seo
+        title="Solutions"
+        description="SHERO Technologies offers innovative software and IT solutions tailored for growth and efficiency."
+        url="/solutions"
+      />
       <SolutionsHero />
       <ServicesGrid />
       <Process />
