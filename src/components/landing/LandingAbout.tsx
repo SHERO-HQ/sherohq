@@ -85,13 +85,14 @@ const LandingAbout = () => {
 
           {/* RIGHT COLUMN: Tech Nexus Visualization */}
           <div className="w-full lg:w-1/2 relative h-[500px] flex items-center justify-center">
+            <div className="absolute inset-0 pattern-dots mask-radial-faded" />
+
             <motion.div
               // initial={{ scale: 0.9, opacity: 0 }}
               // whileInView={{ scale: 1, opacity: 1 }}
               // transition={{ duration: 0.8, ease: "circOut" }}
               className="relative z-20 w-80 h-80 rounded-full flex items-center justify-center border-2 border-emerald-500/20"
             >
-              <div className="absolute inset-0 pattern-dots opacity-20 dark:opacity-40 mask-radial-faded" />
 
               {/* Rotating Rings */}
               <div className="absolute inset-4 border-2 border-emerald-500/30 rounded-full" />
@@ -140,7 +141,7 @@ const LandingAbout = () => {
                 <Code2 className="w-5 h-5 text-emerald-600 dark:text-emerald-500" />
               }
               label="Software"
-              className="absolute bottom-1/3 right-0 z-10"
+              className="absolute bottom-1/3 right-0 -translate-y-10 z-10"
               // delay={0.8}
             />
 

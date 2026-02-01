@@ -30,13 +30,14 @@ interface ProductRow {
 
 // Helper to parse JSON fields and numbers
 function parseProduct(row: ProductRow) {
-  const safeParse = (str: string | null) => {
-    if (!str) return null;
+  const safeParse = (val: unknown): any => {
+    if (!val) return null;
+    if (typeof val !== "string") return val;
     try {
-      return JSON.parse(str);
+      return JSON.parse(val);
     } catch (e) {
       console.error("Failed to parse JSON field:", e);
-      return null;
+      return val;
     }
   };
 

@@ -15,6 +15,17 @@ interface OrderItem {
   image?: string;
 }
 
+const safeParse = (val: unknown): any => {
+  if (!val) return null;
+  if (typeof val !== "string") return val;
+  try {
+    return JSON.parse(val);
+  } catch (e) {
+    console.error("Failed to parse JSON field:", e);
+    return val;
+  }
+};
+
 interface ShippingInfo {
   firstName: string;
   lastName: string;
@@ -127,8 +138,8 @@ router.get("/user/:userId", async (req: Request, res: Response) => {
 
     const parsedOrders = orders.map((order) => ({
       ...order,
-      items: JSON.parse(order.items),
-      shippingInfo: JSON.parse(order.shippingInfo),
+      items: safeParse(order.items),
+      shippingInfo: safeParse(order.shippingInfo),
       total: Number(order.total),
     }));
 
@@ -157,8 +168,8 @@ router.get("/guest/:guestId", async (req: Request, res: Response) => {
 
     const parsedOrders = orders.map((order) => ({
       ...order,
-      items: JSON.parse(order.items),
-      shippingInfo: JSON.parse(order.shippingInfo),
+      items: safeParse(order.items),
+      shippingInfo: safeParse(order.shippingInfo),
       total: Number(order.total),
     }));
 
@@ -237,8 +248,8 @@ router.get("/", adminAuth, async (req: AdminRequest, res: Response) => {
 
     const parsedOrders = orders.map((order) => ({
       ...order,
-      items: JSON.parse(order.items),
-      shippingInfo: JSON.parse(order.shippingInfo),
+      items: safeParse(order.items),
+      shippingInfo: safeParse(order.shippingInfo),
       total: Number(order.total),
     }));
 
@@ -329,8 +340,8 @@ router.patch(
         success: true,
         order: {
           ...order,
-          items: JSON.parse(order.items),
-          shippingInfo: JSON.parse(order.shippingInfo),
+          items: safeParse(order.items),
+          shippingInfo: safeParse(order.shippingInfo),
           total: Number(order.total),
         },
       });

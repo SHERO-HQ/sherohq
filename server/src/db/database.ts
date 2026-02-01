@@ -36,15 +36,15 @@ export async function initializeDatabase() {
         price DECIMAL(10, 2) NOT NULL,
         "originalPrice" DECIMAL(10, 2),
         image TEXT,
-        images TEXT,
+        images JSONB,
         rating DECIMAL(3, 2) DEFAULT 0,
         reviews INTEGER DEFAULT 0,
         badge TEXT,
         "inStock" BOOLEAN DEFAULT true,
         "stockQuantity" INTEGER DEFAULT 100,
         description TEXT,
-        features TEXT,
-        specifications TEXT,
+        features JSONB,
+        specifications JSONB,
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
@@ -64,9 +64,9 @@ export async function initializeDatabase() {
         id TEXT PRIMARY KEY,
         "guestId" TEXT NOT NULL,
         "userId" TEXT,
-        items TEXT NOT NULL,
+        items JSONB NOT NULL,
         total DECIMAL(10, 2) NOT NULL,
-        "shippingInfo" TEXT NOT NULL,
+        "shippingInfo" JSONB NOT NULL,
         "paymentMethod" TEXT,
         status TEXT DEFAULT 'pending',
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -85,7 +85,7 @@ export async function initializeDatabase() {
         "emailVerified" BOOLEAN DEFAULT false,
         "verificationToken" TEXT,
         "verificationExpiry" TEXT,
-        "shippingAddress" TEXT,
+        "shippingAddress" JSONB,
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
@@ -196,6 +196,61 @@ export async function initializeDatabase() {
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+
+    // Support Guides table (for hardware/software articles)
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS support_guides (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        slug TEXT UNIQUE NOT NULL,
+        content TEXT NOT NULL,
+        summary TEXT,
+        category TEXT NOT NULL,
+        "authorId" TEXT REFERENCES admin_users(id) ON DELETE SET NULL,
+        "coverImage" TEXT,
+        published BOOLEAN DEFAULT false,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Migration: Convert TEXT columns to JSONB if they are still TEXT
+    const tablesToMigrate = [
+      { table: "products", columns: ["images", "features", "specifications"] },
+      { table: "orders", columns: ["items", "shippingInfo"] },
+      { table: "users", columns: ["shippingAddress"] },
+    ];
+
+    for (const { table, columns } of tablesToMigrate) {
+      for (const column of columns) {
+        try {
+          // Check column type
+          const typeRes = await client.query(
+            `
+            SELECT data_type 
+            FROM information_schema.columns 
+            WHERE table_name = $1 AND column_name = $2
+          `,
+            [table, column],
+          );
+
+          if (
+            typeRes.rows[0]?.data_type === "text" ||
+            typeRes.rows[0]?.data_type === "character varying"
+          ) {
+            console.log(
+              `🔄 Migrating ${table}.${column} from TEXT to JSONB...`,
+            );
+            await client.query(`
+              ALTER TABLE ${table} 
+              ALTER COLUMN "${column}" TYPE JSONB USING "${column}"::JSONB
+            `);
+          }
+        } catch (error_) {
+          console.warn(`⚠️ Migration failed for ${table}.${column}:`, error_);
+        }
+      }
+    }
 
     // Ensure phone column exists in tickets table (migration)
     try {

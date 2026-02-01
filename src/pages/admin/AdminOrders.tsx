@@ -1,5 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
-import { fetchAllOrders, updateOrderStatus, type Order } from "@/services/api";
+import { useState, useMemo } from "react";
 import { useNotifications } from "@/hooks/useNotifications";
 import {
   Search,
@@ -15,9 +14,10 @@ import {
   Printer,
   Phone,
   Mail,
+  PackageX,
+  RefreshCw,
   PackageSearch,
   PackageCheck,
-  PackageX,
 } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
@@ -34,11 +34,13 @@ import { motion } from "motion/react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
+import {
+  useAdminOrdersQuery,
+  useUpdateOrderStatus,
+} from "@/hooks/queries/useOrders";
+import { Card } from "@/components/ui/card";
 
 export default function AdminOrders() {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
   const { addNotification } = useNotifications();
 
   // Filters
@@ -49,31 +51,27 @@ export default function AdminOrders() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  const loadOrders = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const data = await fetchAllOrders(
-        statusFilter === "all" ? undefined : statusFilter,
-      );
-      setOrders(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load orders");
-      console.error(err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [statusFilter]);
+  // React Query Hooks
+  const {
+    data: orders = [],
+    isLoading,
+    isPlaceholderData,
+    refetch,
+    isFetching,
+    error: queryError,
+  } = useAdminOrdersQuery({
+    status: statusFilter === "all" ? undefined : statusFilter,
+  });
 
-  useEffect(() => {
-    loadOrders();
-  }, [loadOrders]);
+  const updateStatusMutation = useUpdateOrderStatus();
 
-  const handleUpdateStatus = async (id: string, newStatus: string) => {
+  const handleUpdateStatus = async (orderId: string, newStatus: string) => {
     try {
-      await updateOrderStatus(id, newStatus);
-      setOrders(
-        orders.map((o) => (o.id === id ? { ...o, status: newStatus } : o)),
-      );
+      // Hook expects { id, status }
+      await updateStatusMutation.mutateAsync({
+        id: orderId,
+        status: newStatus,
+      });
       addNotification(
         "Success",
         `Order status updated to ${newStatus}`,
@@ -89,15 +87,17 @@ export default function AdminOrders() {
     }
   };
 
-  const filteredOrders = orders.filter((order) => {
-    const searchLower = search.toLowerCase();
-    return (
-      order.id.toLowerCase().includes(searchLower) ||
-      order.shippingInfo.firstName.toLowerCase().includes(searchLower) ||
-      order.shippingInfo.lastName.toLowerCase().includes(searchLower) ||
-      order.shippingInfo.email.toLowerCase().includes(searchLower)
-    );
-  });
+  const filteredOrders = useMemo(() => {
+    return orders.filter((order) => {
+      const searchLower = search.toLowerCase();
+      return (
+        order.id.toLowerCase().includes(searchLower) ||
+        order.shippingInfo.firstName.toLowerCase().includes(searchLower) ||
+        order.shippingInfo.lastName.toLowerCase().includes(searchLower) ||
+        order.shippingInfo.email.toLowerCase().includes(searchLower)
+      );
+    });
+  }, [orders, search]);
 
   const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
   const currentOrders = filteredOrders.slice(
@@ -169,9 +169,15 @@ export default function AdminOrders() {
     else exportToPDF(dataToExport, columns, fileName, "Orders Report");
   };
 
+  const error = queryError instanceof Error ? queryError.message : "";
+
   return (
     <AdminLayout>
-      <div className="space-y-6">
+      <div className="space-y-6 relative">
+        {isPlaceholderData && (
+          <div className="absolute inset-0 bg-slate-900/10 backdrop-blur-[1px] z-10 pointer-events-none transition-opacity" />
+        )}
+
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
@@ -181,11 +187,23 @@ export default function AdminOrders() {
             </p>
           </div>
           <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => refetch()}
+              disabled={isFetching}
+              className="bg-slate-800/50 border-white/5"
+            >
+              <RefreshCw
+                className={cn("w-4 h-4", isFetching && "animate-spin")}
+              />
+            </Button>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="border-white/10 text-white hover:bg-white/5"
+                  className="bg-slate-800/50 border-white/10 text-white hover:bg-white/5"
                 >
                   <Printer className="mr-2 h-4 w-4" /> Export
                 </Button>
@@ -225,7 +243,7 @@ export default function AdminOrders() {
         )}
 
         {/* Filters */}
-        <Card className="bg-slate-900 border-white/5 p-4">
+        <Card className="bg-slate-900/40 border-white/5 p-4">
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -247,7 +265,10 @@ export default function AdminOrders() {
               ].map((status) => (
                 <button
                   key={status}
-                  onClick={() => setStatusFilter(status)}
+                  onClick={() => {
+                    setStatusFilter(status);
+                    setCurrentPage(1);
+                  }}
                   className={cn(
                     "px-4 py-2 rounded text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap border",
                     statusFilter === status
@@ -290,7 +311,7 @@ export default function AdminOrders() {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05 }}
                 >
-                  <Card className="bg-slate-900 border-white/5 hover:border-white/10 transition-all p-4 md:p-6 group">
+                  <Card className="bg-slate-900/40 border-white/5 hover:border-white/10 transition-all p-4 md:p-6 group">
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                       {/* Order Core Info */}
                       <div className="flex items-start gap-4">
@@ -353,7 +374,6 @@ export default function AdminOrders() {
                             Total(GH₵)
                           </p>
                           <div className="flex items-center gap-2 text-sm font-bold text-emerald-400">
-                            {/* <DollarSign className="w-3 h-3" /> */}
                             {order.total.toLocaleString()}
                           </div>
                         </div>
@@ -362,7 +382,7 @@ export default function AdminOrders() {
                             Items
                           </p>
                           <p className="text-sm text-slate-300">
-                            {order.items.length} product(s)
+                            {order.items?.length || 0} product(s)
                           </p>
                         </div>
                         <div className="space-y-1">
@@ -472,18 +492,5 @@ export default function AdminOrders() {
         )}
       </div>
     </AdminLayout>
-  );
-}
-
-// Sub-components used
-function Card({
-  children,
-  className,
-  ...props
-}: { children: React.ReactNode } & React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={cn("rounded border", className)} {...props}>
-      {children}
-    </div>
   );
 }

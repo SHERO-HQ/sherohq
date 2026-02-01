@@ -240,12 +240,12 @@ const AdminSupport = () => {
             Manage user tickets, consultations, and contact messages
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="relative">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+          <div className="relative flex-1 sm:flex-none">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
             <Input
               placeholder="Search inquiries..."
-              className="pl-10 w-64 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-emerald-500/20"
+              className="pl-10 w-full sm:w-64 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-emerald-500/20"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -291,34 +291,34 @@ const AdminSupport = () => {
       </div>
 
       <Tabs defaultValue="tickets" className="w-full">
-        <TabsList className="bg-slate-900/50 border border-white/5 p-1 mb-8">
+        <TabsList className="bg-slate-900/50 border border-white/5 p-1 mb-8 flex flex-wrap sm:flex-nowrap overflow-x-auto scrollbar-hide">
           <TabsTrigger
             value="tickets"
-            className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-emerald-500/20 px-6"
+            className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-emerald-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
           >
-            <Headset className="w-4 h-4 mr-2" />
-            Support Tickets
-            <Badge className="ml-2 bg-white/10 text-white border-none">
+            <Headset className="w-4 h-4 mr-1 sm:mr-2" />
+            <span className="hidden xs:inline">Support </span>Tickets
+            <Badge className="ml-1 sm:ml-2 bg-white/10 text-white border-none text-[10px] sm:text-xs">
               {filteredTickets.length}
             </Badge>
           </TabsTrigger>
           <TabsTrigger
             value="consultations"
-            className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-emerald-500/20 px-6"
+            className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-emerald-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
           >
-            <Calendar className="w-4 h-4 mr-2" />
+            <Calendar className="w-4 h-4 mr-1 sm:mr-2" />
             Consultations
-            <Badge className="ml-2 bg-white/10 text-white border-none">
+            <Badge className="ml-1 sm:ml-2 bg-white/10 text-white border-none text-[10px] sm:text-xs">
               {filteredConsultations.length}
             </Badge>
           </TabsTrigger>
           <TabsTrigger
             value="inquiries"
-            className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-emerald-500/20 px-6"
+            className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-emerald-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
           >
-            <MessageSquare className="w-4 h-4 mr-2" />
-            Contact Messages
-            <Badge className="ml-2 bg-white/10 text-white border-none">
+            <MessageSquare className="w-4 h-4 mr-1 sm:mr-2" />
+            <span className="hidden xs:inline">Contact </span>Messages
+            <Badge className="ml-1 sm:ml-2 bg-white/10 text-white border-none text-[10px] sm:text-xs">
               {filteredInquiries.length}
             </Badge>
           </TabsTrigger>
@@ -625,7 +625,7 @@ const AdminSupport = () => {
         <TabsContent value="inquiries">
           <div className="bg-slate-900/40 rounded border border-white/10 overflow-hidden">
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
+              <table className="w-full text-left min-w-[800px]">
                 <thead className="bg-white/5 border-b border-white/5">
                   <tr>
                     <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-slate-500">

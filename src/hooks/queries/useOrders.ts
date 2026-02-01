@@ -38,6 +38,7 @@ export const useAdminOrdersQuery = (filters: {
   return useQuery({
     queryKey: ORDER_KEYS.admin(filters),
     queryFn: () => fetchAllOrders(filters.status, filters.start, filters.end),
+    placeholderData: (previousData) => previousData,
   });
 };
 

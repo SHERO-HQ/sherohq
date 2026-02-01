@@ -214,7 +214,7 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
       "SELECT COUNT(*) as count FROM orders",
     );
     const totalRevenueRes = await db.query(
-      "SELECT COALESCE(SUM(total), 0) as total FROM orders",
+      "SELECT COALESCE(SUM(total), 0) as total FROM orders WHERE status != 'cancelled'",
     );
 
     // Low stock: <= 10 and in stock

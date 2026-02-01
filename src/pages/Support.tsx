@@ -23,6 +23,7 @@ import {
 import Footer from "@/components/layout/Footer";
 import { useTitle } from "@/hooks/useTitle";
 import SupportTicketForm from "@/components/support/SupportTicketForm";
+import { Link } from "react-router-dom";
 
 const Support = () => {
   useTitle("Support Center");
@@ -33,14 +34,13 @@ const Support = () => {
       title: "Hardware Support",
       description: "Detailed guides and manuals for all hardware products.",
       icon: FileText,
-      action: "Browse",
+      link: "/support/hardware",
     },
     {
       title: "Software Support",
-      description:
-        "OS updates, driver downloads, and software updates.",
+      description: "OS updates, driver downloads, and software updates.",
       icon: Download,
-      action: "Browse",
+      link: "/support/software",
     },
     {
       title: "Community Forum",
@@ -53,7 +53,6 @@ const Support = () => {
         { icon: FacebookIcon, url: "https://facebook.com" },
         { icon: InstagramIcon, url: "https://instagram.com" },
         { icon: TwitterXIcon, url: "https://twitter.com" },
-        // { icon: Linkedin, url: "https://linkedin.com" },
       ],
     },
   ];
@@ -78,7 +77,7 @@ const Support = () => {
               team for assistance.
             </p>
 
-            {/* Search and Ticket CTA */}
+            {/* Search */}
             <div className="max-w-2xl mx-auto flex flex-col sm:flex-row items-center gap-4">
               <div className="relative w-full">
                 <input
@@ -126,9 +125,12 @@ const Support = () => {
                     ))}
                   </div>
                 ) : (
-                  <button className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-semibold group-hover:gap-3 transition-all">
-                    {item.action} <ArrowRight className="w-4 h-4" />
-                  </button>
+                  <Link
+                    to={item.link!}
+                    className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-semibold group-hover:gap-3 transition-all"
+                  >
+                    Browse <ArrowRight className="w-4 h-4" />
+                  </Link>
                 )}
               </motion.div>
             ))}
@@ -138,12 +140,12 @@ const Support = () => {
           <div className="flex items-center justify-around bg-white dark:bg-slate-900 rounded p-8 md:p-12 border border-slate-200 dark:border-slate-800 text-center relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
             <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[80px] translate-y-1/2 translate-x-1/2" />
-           <div className="z-10 flex items-center justify-center">
-            {/* little glow Decoration for the headset icon */}
-           <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
-           <HeadsetIcon className="w-28 h-28 hidden lg:block text-emerald-600 dark:text-emerald-400" />
-           </div>
-           <div className="w-px h-42 bg-slate-200 dark:bg-slate-800 hidden lg:block" />
+            <div className="z-10 flex items-center justify-center">
+              {/* little glow Decoration for the headset icon */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
+              <HeadsetIcon className="w-28 h-28 hidden lg:block text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <div className="w-px h-42 bg-slate-200 dark:bg-slate-800 hidden lg:block" />
             <div className="z-10">
               <h2 className="md:text-3xl text-2xl font-sora font-bold text-slate-900 dark:text-white mb-4">
                 Still need help?

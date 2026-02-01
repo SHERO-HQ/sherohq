@@ -254,7 +254,7 @@ const Nav = () => {
                   aria-controls="mobile-nav-menu"
                   aria-label="Toggle menu"
                 >
-                  <motion.svg
+                  <svg
                     width={25}
                     height={25}
                     viewBox="0 0 24 24"
@@ -263,18 +263,17 @@ const Nav = () => {
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     fill="none"
-                    animate={{ rotate: isOpen ? 90 : 0 }}
-                    transition={{ duration: 0.5 }}
+                    className={`transition-transform duration-500 ${isOpen ? "rotate-90" : "rotate-0"}`}
                   >
-                    <motion.path
-                      animate={
+                    <path
+                      d={
                         isOpen
-                          ? { d: "M18 6L6 18M6 6L18 18" }
-                          : { d: "M5 17H13M5 12H19M11 7H19" }
+                          ? "M18 6L6 18M6 6L18 18"
+                          : "M5 17H13M5 12H19M11 7H19"
                       }
-                      transition={{ duration: 0.3 }}
+                      className="transition-all duration-300"
                     />
-                  </motion.svg>
+                  </svg>
                 </button>
               </div>
             </div>

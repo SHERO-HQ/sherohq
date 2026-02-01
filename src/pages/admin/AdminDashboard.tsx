@@ -1,17 +1,13 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useAdmin } from "@/context/AdminContext";
 import { useTitle } from "@/hooks/useTitle";
 import {
-  getAdminStats,
-  fetchAnalytics,
-  fetchRecentOrders,
-  fetchActivityLogs,
-  type AdminStats,
-  type AnalyticsData,
-  type RecentOrder,
-  type ActivityLog,
-} from "@/services/api";
+  useAdminStats,
+  useAnalytics,
+  useRecentOrders,
+  useActivityLogs,
+} from "@/hooks/queries/useAdmin";
 import {
   Package,
   ShoppingCart,
@@ -23,6 +19,7 @@ import {
   Plus,
   TrendingUp,
   Settings,
+  RefreshCw,
 } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import {
@@ -157,43 +154,96 @@ const getStatusStyles = (status: string) => {
 export default function AdminDashboard() {
   useTitle("Admin Dashboard");
   const { admin } = useAdmin();
-  const [stats, setStats] = useState<AdminStats | null>(null);
-  const [analytics, setAnalytics] = useState<AnalyticsData[]>([]);
-  const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
-  const [activityLogs, setActivityLogs] = useState<ActivityLog[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [period] = useState("7d");
 
-  const loadData = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const [statsData, analyticsData, ordersData, activityData] =
-        await Promise.all([
-          getAdminStats(),
-          fetchAnalytics("7d"),
-          fetchRecentOrders(),
-          fetchActivityLogs(),
-        ]);
-      setStats(statsData);
-      setAnalytics(analyticsData);
-      setRecentOrders(ordersData);
-      setActivityLogs(activityData);
-    } catch (err) {
-      const message =
-        err instanceof Error ? err.message : "Failed to load dashboard data";
-      setError(
-        message === "Failed to fetch"
-          ? "Cannot connect to server. Please check if the backend is running."
-          : message,
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  // React Query hooks with 30s auto-refresh
+  const {
+    data: stats,
+    isLoading: statsLoading,
+    error: statsError,
+    refetch: refetchStats,
+  } = useAdminStats(30000);
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
+  const {
+    data: analytics,
+    isLoading: analyticsLoading,
+    refetch: refetchAnalytics,
+  } = useAnalytics(period);
+
+  const {
+    data: recentOrders,
+    isLoading: ordersLoading,
+    refetch: refetchOrders,
+  } = useRecentOrders(30000);
+
+  const {
+    data: activityLogs,
+    isLoading: activityLoading,
+    refetch: refetchActivity,
+  } = useActivityLogs(30000);
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleManualRefresh = async () => {
+    setIsRefreshing(true);
+    await Promise.all([
+      refetchStats(),
+      refetchAnalytics(),
+      refetchOrders(),
+      refetchActivity(),
+    ]);
+    setIsRefreshing(false);
+  };
+
+  const statCards = useMemo(
+    () => [
+      {
+        title: "Total Revenue",
+        value: `GH₵${(stats?.revenue ?? 0).toLocaleString()}`,
+        icon: DollarSign,
+        color: "text-emerald-400",
+        bgColor: "bg-emerald-400/10",
+        trend: "+12.5%",
+        subtext: "from last month",
+      },
+      {
+        title: "Total Orders",
+        value: stats?.orders ?? 0,
+        icon: ShoppingCart,
+        color: "text-blue-400",
+        bgColor: "bg-blue-400/10",
+        trend: "+8.2%",
+        subtext: "from last month",
+      },
+      {
+        title: "Active Products",
+        value: stats?.products ?? 0,
+        icon: Package,
+        color: "text-purple-400",
+        bgColor: "bg-purple-400/10",
+        trend: "+2 new",
+        subtext: "added this week",
+      },
+      {
+        title: "Pending Orders",
+        value: stats?.pendingOrders ?? 0,
+        icon: Clock,
+        color: "text-amber-400",
+        bgColor: "bg-amber-400/10",
+        trend: "-15%",
+        subtext: "than yesterday",
+      },
+    ],
+    [stats],
+  );
+
+  const isLoading =
+    statsLoading || analyticsLoading || ordersLoading || activityLoading;
+  const error = statsError
+    ? statsError instanceof Error
+      ? statsError.message
+      : "Failed to load dashboard data"
+    : "";
 
   if (error) {
     return (
@@ -213,7 +263,7 @@ export default function AdminDashboard() {
             </span>
           </p>
           <Button
-            onClick={loadData}
+            onClick={handleManualRefresh}
             variant="outline"
             className="border-white/10 hover:bg-white/5"
           >
@@ -223,45 +273,6 @@ export default function AdminDashboard() {
       </AdminLayout>
     );
   }
-
-  const statCards = [
-    {
-      title: "Total Revenue",
-      value: `GH₵${(stats?.revenue ?? 0).toLocaleString()}`,
-      icon: DollarSign,
-      color: "text-emerald-400",
-      bgColor: "bg-emerald-400/10",
-      trend: "+12.5%",
-      subtext: "from last month",
-    },
-    {
-      title: "Total Orders",
-      value: stats?.orders ?? 0,
-      icon: ShoppingCart,
-      color: "text-blue-400",
-      bgColor: "bg-blue-400/10",
-      trend: "+8.2%",
-      subtext: "from last month",
-    },
-    {
-      title: "Active Products",
-      value: stats?.products ?? 0,
-      icon: Package,
-      color: "text-purple-400",
-      bgColor: "bg-purple-400/10",
-      trend: "+2 new",
-      subtext: "added this week",
-    },
-    {
-      title: "Pending Orders",
-      value: stats?.pendingOrders ?? 0,
-      icon: Clock,
-      color: "text-amber-400",
-      bgColor: "bg-amber-400/10",
-      trend: "-15%",
-      subtext: "than yesterday",
-    },
-  ];
 
   return (
     <AdminLayout>
@@ -281,6 +292,18 @@ export default function AdminDashboard() {
             </p>
           </div>
           <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={handleManualRefresh}
+              disabled={isRefreshing}
+              className="border-white/10 text-slate-400 hover:text-white hover:bg-white/5 h-10 w-10"
+              title="Refresh Data"
+            >
+              <RefreshCw
+                className={cn("h-4 w-4", isRefreshing && "animate-spin")}
+              />
+            </Button>
             <Button
               variant="outline"
               className="border-white/10 text-white hover:bg-white/5"
@@ -342,8 +365,8 @@ export default function AdminDashboard() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="h-[350px] w-full mt-4">
-                {isLoading ? (
+              <div className="h-[200px] w-full mt-4">
+                {analyticsLoading ? (
                   <div className="w-full h-full bg-slate-800/50 rounded animate-pulse" />
                 ) : (
                   <ResponsiveContainer width="100%" height="100%">
@@ -527,7 +550,7 @@ export default function AdminDashboard() {
               </CardHeader>
               <CardContent className="pt-6">
                 <div className="h-[200px] w-full">
-                  {isLoading ? (
+                  {statsLoading ? (
                     <div className="w-full h-full bg-slate-800/50 rounded animate-pulse" />
                   ) : (
                     <ResponsiveContainer width="100%" height="100%">
@@ -577,8 +600,11 @@ export default function AdminDashboard() {
                   <Clock className="w-4 h-4 text-slate-500" />
                 </div>
               </CardHeader>
-              <CardContent className="pt-6">
-                <ActivityFeed logs={activityLogs} isLoading={isLoading} />
+              <CardContent className="pt-6 max-h-64 overflow-y-auto">
+                <ActivityFeed
+                  logs={activityLogs || []}
+                  isLoading={activityLoading}
+                />
               </CardContent>
             </Card>
           </div>
@@ -630,7 +656,7 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {isLoading ? (
+                {ordersLoading ? (
                   new Array(5).fill(0).map((_, i) => (
                     <tr key={`skeleton-order-${i}`} className="animate-pulse">
                       <td colSpan={6} className="px-6 py-4">
@@ -638,7 +664,7 @@ export default function AdminDashboard() {
                       </td>
                     </tr>
                   ))
-                ) : recentOrders.length === 0 ? (
+                ) : !recentOrders || recentOrders.length === 0 ? (
                   <tr>
                     <td
                       colSpan={6}

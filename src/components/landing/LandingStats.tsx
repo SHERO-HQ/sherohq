@@ -1,4 +1,4 @@
-import { motion, useInView } from "motion/react";
+import { useInView } from "motion/react";
 import { Activity, Globe, Users, Trophy } from "lucide-react";
 import { useRef, useEffect, useState } from "react";
 
@@ -50,7 +50,10 @@ const LandingStats = () => {
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* The Hub Container */}
-        <div className="relative flex flex-col md:flex-row items-center border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded overflow-hidden shadow-2xl shadow-emerald-500/5">
+        <div className="relative flex flex-col md:flex-row items-center border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded overflow-hidden shadow-2xl shadow-emerald-500/5 group/hub">
+          {/* Pulsing Aura */}
+          <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover/hub:opacity-100 transition-opacity duration-1000 animate-pulse pointer-events-none" />
+
           {/* Scanning Line Effect (Horizontal) */}
           <div className="absolute inset-y-0 left-0 w-px bg-emerald-500/30 hidden md:block" />
 
@@ -58,7 +61,7 @@ const LandingStats = () => {
             <div
               key={stat.label}
               className={`relative flex-1 w-full py-10 px-8 flex flex-col items-center md:items-start transition-all hover:bg-slate-50 dark:hover:bg-slate-800/50
-                         ${idx !== stats.length - 1 ? "border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800" : ""}`}
+                         ${idx === stats.length - 1 ? "" : "border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800"}`}
             >
               {/* Corner Accent (Top Left) */}
               <div className="absolute top-2 left-2 w-1.5 h-1.5 border-t border-l border-emerald-500 opacity-40" />
@@ -112,7 +115,10 @@ const StatItem = ({ stat }: { stat: Stat }) => {
   }, [isInView, stat.value]);
 
   return (
-    <div ref={ref} className="flex flex-col items-center md:items-start">
+    <div
+      ref={ref}
+      className="flex flex-col items-center md:items-start select-none"
+    >
       <div className="flex items-baseline gap-1">
         <span className="text-4xl md:text-5xl font-sora font-extrabold text-slate-900 dark:text-white tracking-tighter">
           {stat.prefix}
@@ -123,11 +129,9 @@ const StatItem = ({ stat }: { stat: Stat }) => {
 
       {/* Mini Progress Line */}
       <div className="mt-4 w-12 h-0.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-        <motion.div
-          initial={{ x: "-100%" }}
-          whileInView={{ x: "0%" }}
-          transition={{ duration: 1, delay: 0.5 }}
-          className="w-full h-full bg-emerald-500"
+        <div
+          className="h-full bg-emerald-500 transition-all duration-1000 ease-out"
+          style={{ width: isInView ? "100%" : "0%" }}
         />
       </div>
     </div>

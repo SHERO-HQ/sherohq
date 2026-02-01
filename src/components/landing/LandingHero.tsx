@@ -323,8 +323,9 @@ const LandingHero: React.FC = () => {
                   z: 150,
                   x: useTransform(smoothX, [-0.5, 0.5], [25, -25]),
                   y: useTransform(smoothY, [-0.5, 0.5], [25, 25]),
+                  rotate: 15,
                 }}
-                className="absolute -bottom-10 -left-6 w-44 p-4 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/20 shadow-2xl z-20 select-none pointer-events-none"
+                className="absolute -bottom-10 left-3 w-44 p-4 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/20 shadow z-20 select-none pointer-events-none"
               >
                 <div className="text-[10px] font-mono text-slate-500 mb-1">
                   GLOBAL_REACH
@@ -357,7 +358,7 @@ const LandingHero: React.FC = () => {
                   x: useTransform(smoothX, [-0.5, 0.5], [-5, 5]),
                   y: useTransform(smoothY, [-0.5, 0.5], [5, 5]),
                 }}
-                className="absolute -top-10 -right-4 bg-blue-500 p-4 rounded shadow-blue-500/30 shadow-xl flex flex-col items-center justify-center rotate-6 z-30 select-none pointer-events-none"
+                className="absolute -top-10 right-4 bg-blue-500 p-4 rounded shadow-blue-500/30 shadow flex flex-col items-center justify-center rotate-6 z-30 select-none pointer-events-none"
               >
                 <div className="flex -space-x-2 mb-2">
                   {[1, 2, 3].map((i) => (

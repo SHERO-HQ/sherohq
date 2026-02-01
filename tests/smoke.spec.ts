@@ -5,6 +5,7 @@ test.describe("Smoke Tests", () => {
     await page.goto("/");
     await expect(page).toHaveTitle(/Shero/i);
     await expect(page.getByText(/Redefine Possible/i)).toBeVisible();
+    await expect(page.getByLabel("main navigation")).toBeVisible();
   });
 
   test("shop page loads correctly", async ({ page }) => {

@@ -11,6 +11,8 @@ export interface Product {
   reviews: number;
   badge?: string;
   inStock: boolean;
+  quantity: number;
+  stockQuantity?: number; // Added to match API
   description?: string;
   features?: string[];
   specifications?: Record<string, string>;
@@ -29,6 +31,7 @@ export const products: Product[] = [
     reviews: 245,
     badge: "Best Seller",
     inStock: true,
+    quantity: 100,
     description:
       "Experience the ultimate pro laptop. The new MacBook Pro features the M3 chip line, up to 22 hours of battery life, and the world's best laptop display.",
     features: [
@@ -55,6 +58,7 @@ export const products: Product[] = [
     reviews: 892,
     badge: "New",
     inStock: true,
+    quantity: 50,
     description:
       "The first iPhone to feature an aerospace-grade titanium design, using the same alloy that spacecraft use for missions to Mars.",
     features: [
@@ -81,6 +85,7 @@ export const products: Product[] = [
     rating: 4.7,
     reviews: 456,
     inStock: true,
+    quantity: 75,
     description:
       "Our best noise cancelling gets even better. See how these Sony noise cancelling headphones combine our best noise cancelling technology with superlative sound for a truly remarkable listening experience.",
     features: [
@@ -105,6 +110,7 @@ export const products: Product[] = [
     rating: 4.6,
     reviews: 178,
     inStock: true,
+    quantity: 30,
     description:
       "Experience captivating visuals with this 27-inch 4K monitor featuring wide color coverage and ComfortView Plus.",
     features: [
@@ -130,6 +136,7 @@ export const products: Product[] = [
     reviews: 324,
     badge: "Popular",
     inStock: true,
+    quantity: 45,
     description:
       "Introducing MX Keys - the key to mastering your next big project. It's the first ever MX keyboard – designed for creatives and engineered for coders.",
     features: [
@@ -154,6 +161,7 @@ export const products: Product[] = [
     rating: 4.9,
     reviews: 567,
     inStock: false,
+    quantity: 0,
     description:
       "Meet MX Master 3S – an iconic mouse remastered. Feel every moment of your workflow with even more precision, tactility, and performance.",
     features: [
@@ -173,6 +181,7 @@ export const products: Product[] = [
     rating: 4.7,
     reviews: 289,
     inStock: true,
+    quantity: 25,
     description:
       "The light, pocket-sized Portable SSD T7 delivers fast speeds with easy and reliable data storage for transferring large files.",
     features: [
@@ -191,6 +200,7 @@ export const products: Product[] = [
     rating: 4.5,
     reviews: 412,
     inStock: true,
+    quantity: 120,
     description:
       "Expand your connectivity with this 7-in-1 USB-C hub. Features 4K HDMI, USB 3.0 ports, SD card readers, and Pass-Through charging.",
     features: [
@@ -211,6 +221,7 @@ export const products: Product[] = [
     reviews: 245,
     badge: "Best Seller",
     inStock: true,
+    quantity: 15,
     description:
       "Experience the ultimate pro laptop. The new MacBook Pro features the M3 chip line, up to 22 hours of battery life, and the world's best laptop display.",
     features: [

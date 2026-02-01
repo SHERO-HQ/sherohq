@@ -7,6 +7,7 @@ import * as dotenv from "dotenv";
 // Database
 import { initializeDatabase } from "./db/database";
 import { seedDatabase, seedAdminUser } from "./db/seed";
+import { seedAllAdminData } from "./db/seed_admin_data";
 
 // Routes
 import productRoutes from "./routes/products";
@@ -20,6 +21,8 @@ import authRoutes from "./routes/auth";
 import inquiryRoutes from "./routes/inquiry";
 import ticketsRoute from "./routes/tickets";
 import activityRoutes from "./routes/activity";
+import usersRoutes from "./routes/users";
+import guidesRoutes from "./routes/guides";
 
 // Load environment variables
 dotenv.config();
@@ -157,6 +160,8 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/inquiry", inquiryRoutes);
 app.use("/api/admin", activityRoutes);
+app.use("/api/admin/users", usersRoutes);
+app.use("/api/guides", guidesRoutes);
 
 // Root route - information about the API
 app.get("/", (req: Request, res: Response) => {
@@ -189,6 +194,7 @@ app.listen(PORT, async () => {
     await initializeDatabase();
     await seedDatabase();
     await seedAdminUser();
+    await seedAllAdminData();
     console.timeEnd("⏱️ Database Startup");
     console.log("✅ Database is ready to handle requests.");
   } catch (error) {

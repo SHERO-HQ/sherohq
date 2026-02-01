@@ -221,19 +221,19 @@ export default function AdminReports() {
                   className="bg-slate-900 border-white/10 text-white"
                 >
                   <DropdownMenuItem
-                    onClick={() => handleExport("csv")}
+                    onSelect={() => handleExport("csv")}
                     className="cursor-pointer hover:bg-white/5"
                   >
                     Export as CSV
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => handleExport("excel")}
+                    onSelect={() => handleExport("excel")}
                     className="cursor-pointer hover:bg-white/5"
                   >
                     Export as Excel
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => handleExport("pdf")}
+                    onSelect={() => handleExport("pdf")}
                     className="cursor-pointer hover:bg-white/5"
                   >
                     Export as PDF
@@ -246,28 +246,28 @@ export default function AdminReports() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
               title="Total Revenue"
-              value={`GH₵${stats?.revenue.toLocaleString() ?? 0}`}
+              value={`GH₵${(stats?.revenue ?? 0).toLocaleString()}`}
               icon={DollarSign}
               color="text-emerald-400"
               bg="bg-emerald-400/10"
             />
             <StatCard
               title="Total Orders"
-              value={stats?.orders.toString() ?? "0"}
+              value={(stats?.orders ?? 0).toString()}
               icon={ShoppingCart}
               color="text-blue-400"
               bg="bg-blue-400/10"
             />
             <StatCard
               title="Total Products"
-              value={stats?.products.toString() ?? "0"}
+              value={(stats?.products ?? 0).toString()}
               icon={Package}
               color="text-purple-400"
               bg="bg-purple-400/10"
             />
             <StatCard
               title="Low Stock"
-              value={stats?.lowStock.toString() ?? "0"}
+              value={(stats?.lowStock ?? 0).toString()}
               icon={AlertTriangle}
               color="text-red-400"
               bg="bg-red-400/10"
@@ -306,7 +306,7 @@ export default function AdminReports() {
                   <BarChart3 className="w-4 h-4" />
                 </button>
               </div>
-              <div className="h-80">
+              <div className="h-52">
                 <ResponsiveContainer width="100%" height="100%">
                   {chartType === "line" ? (
                     <LineChart data={analytics}>
@@ -423,7 +423,7 @@ export default function AdminReports() {
                 <PieChartIcon className="w-5 h-5 text-blue-400" />
                 Stock Distribution
               </h3>
-              <div className="h-64">
+              <div className="h-52">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -469,7 +469,7 @@ export default function AdminReports() {
                 <ShoppingCart className="w-5 h-5 text-amber-400" />
                 Order Status
               </h3>
-              <div className="h-64">
+              <div className="h-52">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -512,7 +512,7 @@ export default function AdminReports() {
                 <TrendingUp className="w-5 h-5 text-emerald-400" />
                 Sales by Region
               </h3>
-              <div className="h-64">
+              <div className="h-52">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={regionalData} layout="vertical">
                     <CartesianGrid

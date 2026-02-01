@@ -5,7 +5,6 @@ import LandingStats from "@/components/landing/LandingStats";
 import AboutTestimonials from "@/components/about/AboutTestimonials";
 import Footer from "@/components/layout/Footer";
 import SEO from "@/components/common/SEO";
-// import AboutTimeline from "@/components/about/AboutTimeline";
 import AboutStory from "@/components/about/AboutStory";
 
 const About = () => {
@@ -19,7 +18,6 @@ const About = () => {
       <AboutHero />
       <AboutStory />
       <LandingStats />
-      {/* <AboutTimeline /> */}
       <AboutValues />
       <AboutTestimonials />
       <AboutTeam />

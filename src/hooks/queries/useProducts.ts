@@ -1,5 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchProducts, fetchProduct, fetchCategories } from "@/services/api";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  fetchProducts,
+  fetchProduct,
+  fetchCategories,
+  deleteProduct,
+  updateProductStock,
+} from "@/services/api";
 
 export const PRODUCT_KEYS = {
   all: ["products"] as const,
@@ -15,6 +21,7 @@ export const useProducts = (category?: string, search?: string) => {
   return useQuery({
     queryKey: PRODUCT_KEYS.list({ category, search }),
     queryFn: () => fetchProducts(category, search),
+    placeholderData: (previousData) => previousData,
   });
 };
 
@@ -30,5 +37,26 @@ export const useCategories = () => {
   return useQuery({
     queryKey: PRODUCT_KEYS.categories(),
     queryFn: fetchCategories,
+  });
+};
+
+export const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: PRODUCT_KEYS.all });
+    },
+  });
+};
+
+export const useUpdateProductStock = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, quantity }: { id: string; quantity: number }) =>
+      updateProductStock(id, quantity),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: PRODUCT_KEYS.all });
+    },
   });
 };

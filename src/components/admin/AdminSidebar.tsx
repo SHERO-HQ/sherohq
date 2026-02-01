@@ -5,11 +5,13 @@ import {
   ShoppingCart,
   BarChart3,
   User,
+  Users,
   LogOut,
   Plus,
   PanelLeftClose,
   PanelLeftOpen,
   Headset,
+  BookOpen,
 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { cn } from "@/lib/utils";
@@ -24,8 +26,10 @@ const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/admin/dashboard" },
   { icon: Package, label: "Products", href: "/admin/products" },
   { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
+  { icon: Users, label: "Customers", href: "/admin/users" },
   { icon: BarChart3, label: "Reports", href: "/admin/reports" },
   { icon: Headset, label: "Support", href: "/admin/support" },
+  { icon: BookOpen, label: "Guides", href: "/admin/guides" },
   { icon: User, label: "Profile", href: "/admin/profile" },
 ];
 

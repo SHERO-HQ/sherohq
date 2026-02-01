@@ -24,7 +24,6 @@ import MockPaymentGateway from "@/pages/MockPaymentGateway";
 // Admin imports
 import { AdminProvider } from "@/context/AdminContext";
 import ProtectedRoute from "@/components/admin/ProtectedRoute";
-import { Loader2 } from "lucide-react";
 
 // Lazy loaded Admin Pages
 const AdminLogin = lazy(() => import("@/pages/admin/AdminLogin"));
@@ -36,10 +35,17 @@ const AdminReports = lazy(() => import("@/pages/admin/AdminReports"));
 const AdminProfile = lazy(() => import("@/pages/admin/AdminProfile"));
 const OrderDetails = lazy(() => import("@/pages/admin/OrderDetails"));
 const AdminSupport = lazy(() => import("@/pages/admin/AdminSupport"));
+const AdminUsers = lazy(() => import("@/pages/admin/AdminUsers"));
+import AdminGuides from "@/pages/admin/AdminGuides";
+import AdminGuideEditor from "@/pages/admin/AdminGuideEditor";
+
+// Public support pages
+import SupportGuidesPage from "@/pages/support/SupportGuidesPage";
+import SupportGuideDetail from "@/pages/support/SupportGuideDetail";
 
 const AppLoading = () => (
   <div className="min-h-screen flex items-center justify-center dark:bg-slate-950 bg-slate-50">
-    <Loader2 className="w-10 h-10 text-emerald-500 animate-spin" />
+    <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
   </div>
 );
 
@@ -67,6 +73,24 @@ const AppRoutes = () => {
       <Route path="profile" element={<Profile />} />
       <Route path="verify-email" element={<VerifyEmail />} />
       <Route path="mock-payment" element={<MockPaymentGateway />} />
+
+      {/* Support Guide Routes */}
+      <Route
+        path="support/:category"
+        element={
+          <Suspense fallback={<AppLoading />}>
+            <SupportGuidesPage />
+          </Suspense>
+        }
+      />
+      <Route
+        path="support/:category/:slug"
+        element={
+          <Suspense fallback={<AppLoading />}>
+            <SupportGuideDetail />
+          </Suspense>
+        }
+      />
 
       {/* Admin Routes */}
       <Route
@@ -126,6 +150,14 @@ const AppRoutes = () => {
                   }
                 />
                 <Route
+                  path="users"
+                  element={
+                    <ProtectedRoute>
+                      <AdminUsers />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
                   path="reports"
                   element={
                     <ProtectedRoute>
@@ -146,6 +178,30 @@ const AppRoutes = () => {
                   element={
                     <ProtectedRoute>
                       <AdminSupport />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="guides"
+                  element={
+                    <ProtectedRoute>
+                      <AdminGuides />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="guides/new"
+                  element={
+                    <ProtectedRoute>
+                      <AdminGuideEditor />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="guides/edit/:id"
+                  element={
+                    <ProtectedRoute>
+                      <AdminGuideEditor />
                     </ProtectedRoute>
                   }
                 />

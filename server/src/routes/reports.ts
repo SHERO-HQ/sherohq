@@ -17,6 +17,17 @@ interface OrderItem {
   price: number;
 }
 
+const safeParse = (val: unknown): any => {
+  if (!val) return null;
+  if (typeof val !== "string") return val;
+  try {
+    return JSON.parse(val);
+  } catch (e) {
+    console.error("Failed to parse JSON field:", e);
+    return val;
+  }
+};
+
 // GET /api/reports/stats - Get dashboard stats
 router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
@@ -39,9 +50,18 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
       10,
     );
 
-    // Low Stock Products
-    // Using generic query assuming columns might vary, checking stockQuantity or inStock
+    // Pending Orders
+    const pendingResult = await db.query(
+      "SELECT COUNT(*) as count FROM orders WHERE status = 'pending'",
+    );
+    const pendingOrders = Number.parseInt(
+      pendingResult.rows[0]?.count || "0",
+      10,
+    );
+
+    // Low Stock Products and Out of Stock
     let lowStockProducts = 0;
+    let outOfStockProducts = 0;
     try {
       const lowStockResult = await db.query(
         'SELECT COUNT(*) as count FROM products WHERE "stockQuantity" <= 10 AND "stockQuantity" > 0',
@@ -50,10 +70,18 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
         lowStockResult.rows[0]?.count || "0",
         10,
       );
+
+      const outOfStockResult = await db.query(
+        'SELECT COUNT(*) as count FROM products WHERE "inStock" = false OR "stockQuantity" = 0',
+      );
+      outOfStockProducts = Number.parseInt(
+        outOfStockResult.rows[0]?.count || "0",
+        10,
+      );
     } catch {
       // Fallback if stockQuantity missing
       const lowStockResult = await db.query(
-        'SELECT COUNT(*) as count FROM products WHERE "inStock" = false', // approximating low stock as OOS for fallback
+        'SELECT COUNT(*) as count FROM products WHERE "inStock" = false',
       );
       lowStockProducts = Number.parseInt(
         lowStockResult.rows[0]?.count || "0",
@@ -66,6 +94,8 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
       orders: totalOrders,
       products: totalProducts,
       lowStock: lowStockProducts,
+      outOfStock: outOfStockProducts,
+      pendingOrders: pendingOrders,
     });
   } catch (error) {
     console.error("Error fetching stats:", error);
@@ -103,8 +133,8 @@ router.get(
       const groupedData: Record<string, { revenue: number; orders: number }> =
         {};
 
-      // Initialize dates
-      for (let i = 0; i < days; i++) {
+      // Initialize dates with a margin for tomorrow to handle timezone skew
+      for (let i = -1; i < days; i++) {
         const d = new Date();
         d.setDate(d.getDate() - i);
         const dateStr = d.toISOString().split("T")[0];
@@ -152,7 +182,7 @@ router.get(
       > = {};
 
       orders.forEach((order) => {
-        const items = JSON.parse(order.items);
+        const items = safeParse(order.items);
         items.forEach((item: OrderItem) => {
           if (!productSales[item.id]) {
             productSales[item.id] = {
@@ -283,18 +313,18 @@ router.get(
           total: string;
           status: string;
           createdAt: string;
-          shippingInfo: string;
+          shippingInfo: any;
         }) => {
-          const shipping = JSON.parse(order.shippingInfo);
+          const shipping = safeParse(order.shippingInfo);
           return {
             id: order.id,
             total: Number.parseFloat(order.total),
             status: order.status,
             createdAt: order.createdAt,
             customer: {
-              firstName: shipping.firstName,
-              lastName: shipping.lastName,
-              email: shipping.email,
+              firstName: shipping?.firstName || "Unknown",
+              lastName: shipping?.lastName || "",
+              email: shipping?.email || "",
             },
           };
         },
@@ -313,20 +343,33 @@ router.get("/regional", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
     const result = await db.query(`
       SELECT 
-        "shippingInfo"->>'region' as region,
-        COUNT(*) as orders,
-        SUM(total) as revenue
+        "shippingInfo" as shipping,
+        total
       FROM orders
       WHERE status != 'cancelled'
-      GROUP BY region
-      ORDER BY revenue DESC
     `);
 
-    const data = result.rows.map((row) => ({
-      name: row.region || "Unknown",
-      orders: Number.parseInt(row.orders, 10),
-      revenue: Number.parseFloat(row.revenue),
-    }));
+    const regionSales: Record<string, { orders: number; revenue: number }> = {};
+
+    result.rows.forEach((row) => {
+      const shipping = safeParse(row.shipping);
+      const region = shipping?.region || "Unknown";
+      const total = Number.parseFloat(row.total);
+
+      if (!regionSales[region]) {
+        regionSales[region] = { orders: 0, revenue: 0 };
+      }
+      regionSales[region].orders += 1;
+      regionSales[region].revenue += total;
+    });
+
+    const data = Object.entries(regionSales)
+      .map(([name, stats]) => ({
+        name,
+        orders: stats.orders,
+        revenue: stats.revenue,
+      }))
+      .sort((a, b) => b.revenue - a.revenue);
 
     res.json(data);
   } catch (error) {

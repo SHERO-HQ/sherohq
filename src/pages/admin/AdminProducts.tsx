@@ -1,12 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import {
-  fetchProducts,
-  fetchCategories,
-  deleteProduct,
-  updateProductStock,
-  getImageUrl,
-} from "@/services/api";
+import { getImageUrl } from "@/services/api";
 import { useNotifications } from "@/hooks/useNotifications";
 import type { Product } from "@/data/products";
 import {
@@ -19,8 +13,9 @@ import {
   ChevronRight,
   X,
   CheckCircle2,
-  MoreVertical,
   Printer,
+  RefreshCw,
+  MoreVertical,
 } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
@@ -35,13 +30,15 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
+import {
+  useProducts,
+  useCategories,
+  useDeleteProduct,
+  useUpdateProductStock,
+} from "@/hooks/queries/useProducts";
+import { Card } from "@/components/ui/card";
 
 export default function AdminProducts() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [categories, setCategories] = useState<{ id: string; name: string }[]>(
-    [],
-  );
-  const [isLoading, setIsLoading] = useState(true);
   const { addNotification } = useNotifications();
 
   // Filters
@@ -53,219 +50,220 @@ export default function AdminProducts() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const loadData = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const [productsData, categoriesData] = await Promise.all([
-        fetchProducts(selectedCategory, search),
-        fetchCategories(),
-      ]);
-      setProducts(productsData);
-      setCategories(categoriesData);
-    } catch (err) {
-      console.error("Failed to load products:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [selectedCategory, search]);
+  // React Query Hooks
+  const {
+    data: allProducts = [],
+    isLoading: productsLoading,
+    isPlaceholderData,
+    refetch: refetchProducts,
+    isFetching,
+  } = useProducts(
+    selectedCategory === "all" ? undefined : selectedCategory,
+    search,
+  );
 
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
+  const { data: categories = [], isLoading: categoriesLoading } =
+    useCategories();
+
+  const deleteMutation = useDeleteProduct();
+  const stockMutation = useUpdateProductStock();
+
+  const isLoading = productsLoading || categoriesLoading;
+
+  // Filtered products for stock filter (searching is handled by the hook)
+  const filteredProducts = useMemo(() => {
+    return allProducts.filter((product) => {
+      const stock = product.stockQuantity ?? product.quantity;
+      if (stockFilter === "low") return stock > 0 && stock <= 5;
+      if (stockFilter === "out") return stock === 0;
+      return true;
+    });
+  }, [allProducts, stockFilter]);
+
+  // Client-side pagination for the filtered results
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
 
   const handleDelete = async (id: string) => {
     if (!globalThis.confirm?.("Are you sure you want to delete this product?"))
       return;
 
     try {
-      await deleteProduct(id);
-      setProducts(products.filter((p) => p.id !== id));
+      await deleteMutation.mutateAsync(id);
       addNotification("Success", "Product deleted successfully", "success");
-    } catch (err) {
-      addNotification(
-        "Error",
-        "Failed to delete product: " +
-          (err instanceof Error ? err.message : "Unknown error"),
-        "error",
-      );
+    } catch {
+      addNotification("Error", "Failed to delete product", "error");
     }
   };
 
   const handleToggleStock = async (product: Product) => {
     try {
       const newQuantity = product.inStock ? 0 : 10;
-      await updateProductStock(product.id, newQuantity);
-      setProducts(
-        products.map((p) =>
-          p.id === product.id ? { ...p, inStock: !p.inStock } : p,
-        ),
-      );
+      await stockMutation.mutateAsync({
+        id: product.id,
+        quantity: newQuantity,
+      });
       addNotification(
         "Success",
-        `Product marked as ${!product.inStock ? "in stock" : "out of stock"}`,
+        `Product marked as ${newQuantity > 0 ? "in stock" : "out of stock"}`,
         "success",
       );
     } catch (err) {
-      addNotification(
-        "Error",
-        "Failed to update stock: " +
-          (err instanceof Error ? err.message : "Unknown error"),
-        "error",
-      );
+      addNotification("Error", "Failed to update stock", "error");
     }
   };
 
   const handleExport = (format: "csv" | "excel" | "pdf") => {
     const dataToExport = filteredProducts.map((p) => ({
-      id: p.id,
-      sku: p.sku || "N/A",
-      name: p.name,
-      category: p.category,
-      price: p.price,
-      inStock: p.inStock ? "Yes" : "No",
-      description: p.description,
+      ID: p.id,
+      Name: p.name,
+      Category: p.category,
+      Price: `GH₵ ${p.price}`,
+      Stock: p.stockQuantity,
+      Status: p.inStock ? "In Stock" : "Out of Stock",
     }));
 
-    const fileName = `products_${new Date().toISOString().split("T")[0]}`;
-    const columns = [
-      "id",
-      "sku",
-      "name",
-      "category",
-      "price",
-      "inStock",
-      "description",
-    ];
+    const filename = `products-export-${new Date().toISOString().split("T")[0]}`;
+    const columns = ["ID", "Name", "Category", "Price", "Stock", "Status"];
 
-    if (format === "csv") exportToCSV(dataToExport, fileName);
-    else if (format === "excel") exportToExcel(dataToExport, fileName);
-    else
-      exportToPDF(dataToExport, columns, fileName, "Products Inventory Report");
+    if (format === "csv") exportToCSV(dataToExport, filename);
+    else if (format === "excel") exportToExcel(dataToExport, filename);
+    else exportToPDF(dataToExport, columns, filename, "Products List");
+
+    addNotification(
+      "Export",
+      `Products exported as ${format.toUpperCase()}`,
+      "success",
+    );
   };
-
-  const filteredProducts = products.filter((product) => {
-    if (stockFilter === "in-stock" && !product.inStock) return false;
-    if (stockFilter === "out-of-stock" && product.inStock) return false;
-    return true;
-  });
-
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-  const currentProducts = filteredProducts.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage,
-  );
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
+      <div className="space-y-6 relative">
+        {isPlaceholderData && (
+          <div className="absolute inset-0 bg-slate-900/10 backdrop-blur-[1px] z-10 pointer-events-none transition-opacity" />
+        )}
+
+        {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white font-sora">
               Products
             </h1>
             <p className="text-slate-400 text-sm">
-              Manage your inventory and product listings
+              Manage your store inventory and pricing
             </p>
           </div>
           <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => refetchProducts()}
+              disabled={isFetching}
+              className="bg-slate-800/50 border-white/5"
+            >
+              <RefreshCw
+                className={cn("w-4 h-4", isFetching && "animate-spin")}
+              />
+            </Button>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="border-white/10 text-white hover:bg-white/5"
+                  className="bg-slate-800/50 border-white/5 text-white hover:bg-white/5"
                 >
-                  <Printer className="mr-2 h-4 w-4" /> Export
+                  <Printer className="w-4 h-4 mr-2" /> Export
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                align="end"
                 className="bg-slate-900 border-white/10 text-white"
+                align="end"
               >
                 <DropdownMenuItem
                   onClick={() => handleExport("csv")}
-                  className="cursor-pointer hover:bg-white/5"
+                  className="hover:bg-white/5 cursor-pointer"
                 >
                   Export as CSV
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleExport("excel")}
-                  className="cursor-pointer hover:bg-white/5"
+                  className="hover:bg-white/5 cursor-pointer"
                 >
                   Export as Excel
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleExport("pdf")}
-                  className="cursor-pointer hover:bg-white/5"
+                  className="hover:bg-white/5 cursor-pointer"
                 >
                   Export as PDF
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+
             <Button
-              className="bg-emerald-600 hover:bg-emerald-500 text-white"
+              className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4"
               asChild
             >
               <Link to="/admin/products/new">
-                <Plus className="mr-2 h-4 w-4" /> Add New Product
+                <Plus className="w-4 h-4 mr-2" />
+                Add Product
               </Link>
             </Button>
           </div>
         </div>
 
-        <Card className="bg-slate-900 border-white/5 p-4">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+        {/* Filters */}
+        <Card className="bg-slate-900/40 backdrop-blur-xl border-white/10 p-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
                 placeholder="Search products..."
-                className="pl-10 bg-slate-800/50 border-white/5 text-white placeholder:text-slate-500"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                className="pl-9 bg-slate-800/50 border-white/5 text-white"
               />
             </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <select
-                className="bg-slate-800 border-white/5 text-sm text-white rounded px-3 py-2 outline-none focus:ring-1 focus:ring-emerald-500/50"
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-              >
-                <option value="all">All Categories</option>
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-              <select
-                className="bg-slate-800 border-white/5 text-sm text-white rounded px-3 py-2 outline-none focus:ring-1 focus:ring-emerald-500/50"
-                value={stockFilter}
-                onChange={(e) => setStockFilter(e.target.value)}
-              >
-                <option value="all">All Status</option>
-                <option value="in-stock">In Stock</option>
-                <option value="out-of-stock">Out of Stock</option>
-              </select>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-slate-400 hover:text-white hover:bg-white/5"
-                onClick={() => {
-                  setSearch("");
-                  setSelectedCategory("all");
-                  setStockFilter("all");
-                }}
-              >
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
+            <select
+              value={selectedCategory}
+              onChange={(e) => {
+                setSelectedCategory(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="bg-slate-800/50 border border-white/5 rounded-md text-sm text-white p-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+            >
+              <option value="all">All Categories</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+            <select
+              value={stockFilter}
+              onChange={(e) => {
+                setStockFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="bg-slate-800/50 border border-white/5 rounded-md text-sm text-white p-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+            >
+              <option value="all">All Stock Status</option>
+              <option value="low">Low Stock (≤ 5)</option>
+              <option value="out">Out of Stock</option>
+            </select>
           </div>
         </Card>
 
-        <Card className="bg-slate-900 border-white/5 overflow-hidden">
+        {/* Products Table */}
+        <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+            <table className="w-full text-left">
               <thead>
-                <tr className="bg-slate-800/50">
+                <tr className="bg-slate-800/50 border-b border-white/5">
                   <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
                     Product
                   </th>
@@ -287,12 +285,12 @@ export default function AdminProducts() {
                 {isLoading ? (
                   new Array(5).fill(0).map((_, i) => (
                     <tr key={i} className="animate-pulse">
-                      <td colSpan={5} className="px-6 py-6">
-                        <div className="h-10 bg-slate-800 rounded w-full" />
+                      <td colSpan={5} className="px-6 py-8">
+                        <div className="h-4 bg-slate-800 rounded w-full" />
                       </td>
                     </tr>
                   ))
-                ) : currentProducts.length === 0 ? (
+                ) : paginatedProducts.length === 0 ? (
                   <tr>
                     <td
                       colSpan={5}
@@ -302,43 +300,34 @@ export default function AdminProducts() {
                     </td>
                   </tr>
                 ) : (
-                  currentProducts.map((product) => (
+                  paginatedProducts.map((product) => (
                     <tr
                       key={product.id}
-                      className="hover:bg-white/2 transition-colors group"
+                      className="hover:bg-white/5 transition-colors group"
                     >
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded bg-slate-800 border border-white/5 flex items-center justify-center shrink-0 overflow-hidden text-2xl">
-                            {product.image.length <= 4 ? (
-                              product.image
-                            ) : (
-                              <img
-                                src={getImageUrl(product.image)}
-                                alt=""
-                                className="w-full h-full object-cover"
-                              />
-                            )}
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded bg-slate-800 overflow-hidden shrink-0 border border-white/5">
+                            <img
+                              src={getImageUrl(product.image)}
+                              alt={product.name}
+                              className="w-full h-full object-cover"
+                            />
                           </div>
-                          <div className="flex flex-col min-w-0">
-                            <span className="text-sm font-semibold text-white truncate">
+                          <div>
+                            <p className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">
                               {product.name}
-                            </span>
-                            <div className="flex items-center gap-2 mt-0.5">
-                              <span className="text-[10px] text-emerald-500 font-mono font-bold bg-emerald-500/10 px-1.5 py-0.5 rounded">
-                                {product.sku || "NO-SKU"}
-                              </span>
-                              <span className="text-[9px] text-slate-500 font-mono">
-                                ID: {product.id.slice(0, 8)}...
-                              </span>
-                            </div>
+                            </p>
+                            <p className="text-xs text-slate-500 font-mono">
+                              ID: {product.id.slice(0, 8)}
+                            </p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 bg-transparent">
                         <Badge
                           variant="outline"
-                          className="bg-slate-800/50 border-white/5 text-slate-300 capitalize"
+                          className="bg-emerald-500/10 text-emerald-400 border-none capitalize"
                         >
                           {product.category}
                         </Badge>
@@ -347,80 +336,98 @@ export default function AdminProducts() {
                         GH₵{product.price.toLocaleString()}
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <div
-                            className={cn(
-                              "w-2 h-2 rounded-full",
-                              product.inStock
-                                ? "bg-emerald-500"
-                                : "bg-rose-500",
-                            )}
-                          />
+                        <div className="flex flex-col gap-1">
                           <span
                             className={cn(
                               "text-sm font-medium",
-                              product.inStock
-                                ? "text-emerald-400"
-                                : "text-rose-400",
+                              product.quantity === 0
+                                ? "text-rose-400"
+                                : product.quantity <= 5
+                                  ? "text-amber-400"
+                                  : "text-emerald-400",
                             )}
                           >
-                            {product.inStock ? "In Stock" : "Out of Stock"}
+                            {product.quantity} in stock
                           </span>
+                          <div className="w-24 h-1 bg-slate-800 rounded-full overflow-hidden">
+                            <div
+                              className={cn(
+                                "h-full rounded-full transition-all duration-500",
+                                product.quantity === 0
+                                  ? "bg-rose-500"
+                                  : product.quantity <= 5
+                                    ? "bg-amber-500"
+                                    : "bg-emerald-500",
+                              )}
+                              style={{
+                                width: `${Math.min(100, (product.quantity / 20) * 100)}%`,
+                              }}
+                            />
+                          </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex items-center justify-end gap-2">
                           <Button
-                            variant="ghost"
                             size="icon"
+                            variant="ghost"
                             className="h-8 w-8 text-slate-400 hover:text-white"
                             asChild
                           >
-                            <Link to={`/admin/products/${product.id}/edit`}>
+                            <Link to={`/admin/products/edit/${product.id}`}>
                               <Edit2 className="w-4 h-4" />
                             </Link>
                           </Button>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button
-                                variant="ghost"
                                 size="icon"
+                                variant="ghost"
                                 className="h-8 w-8 text-slate-400 hover:text-white"
                               >
                                 <MoreVertical className="w-4 h-4" />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
-                              align="end"
                               className="bg-slate-900 border-white/10 text-white"
+                              align="end"
                             >
-                              <DropdownMenuItem asChild>
-                                <Link
-                                  to={`/products/${product.id}`}
+                              <DropdownMenuItem
+                                className="hover:bg-white/5 cursor-pointer"
+                                asChild
+                              >
+                                <a
+                                  href={`/products/${product.id}`}
                                   target="_blank"
+                                  rel="noreferrer"
                                 >
-                                  <ExternalLink className="mr-2 h-4 w-4" /> View
-                                  Site
-                                </Link>
+                                  <ExternalLink className="w-4 h-4 mr-2" /> View
+                                  on Site
+                                </a>
                               </DropdownMenuItem>
                               <DropdownMenuItem
+                                className="hover:bg-white/5 cursor-pointer"
                                 onClick={() => handleToggleStock(product)}
                               >
                                 {product.inStock ? (
-                                  <X className="mr-2 h-4 w-4 text-rose-400" />
+                                  <>
+                                    <X className="w-4 h-4 mr-2" /> Mark Out of
+                                    Stock
+                                  </>
                                 ) : (
-                                  <CheckCircle2 className="mr-2 h-4 w-4 text-emerald-400" />
+                                  <>
+                                    <CheckCircle2 className="w-4 h-4 mr-2" />{" "}
+                                    Mark In Stock
+                                  </>
                                 )}
-                                {product.inStock
-                                  ? "Mark Out of Stock"
-                                  : "Mark In Stock"}
                               </DropdownMenuItem>
                               <DropdownMenuSeparator className="bg-white/5" />
                               <DropdownMenuItem
-                                className="text-rose-400 focus:text-rose-400"
+                                className="text-rose-400 hover:bg-rose-500/10 cursor-pointer"
                                 onClick={() => handleDelete(product.id)}
                               >
-                                <Trash2 className="mr-2 h-4 w-4" /> Delete
+                                <Trash2 className="w-4 h-4 mr-2" /> Delete
+                                Product
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -433,48 +440,55 @@ export default function AdminProducts() {
             </table>
           </div>
 
-          {!isLoading && filteredProducts.length > itemsPerPage && (
-            <div className="px-6 py-4 border-t border-white/5 flex items-center justify-between">
-              <p className="text-sm text-slate-500">
-                Page <span className="text-white">{currentPage}</span> of{" "}
-                {totalPages}
+          {/* Pagination */}
+          {!isLoading && totalPages > 1 && (
+            <div className="px-6 py-4 bg-slate-800/30 border-t border-white/5 flex items-center justify-between">
+              <p className="text-sm text-slate-400 font-sora">
+                Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
+                {Math.min(currentPage * itemsPerPage, filteredProducts.length)}{" "}
+                of {filteredProducts.length} entries
               </p>
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
-                  size="sm"
-                  className="border-white/10"
+                  size="icon"
+                  className="h-8 w-8 border-white/10"
                   disabled={currentPage === 1}
-                  onClick={() => setCurrentPage((prev) => prev - 1)}
+                  onClick={() => setCurrentPage((p) => p - 1)}
                 >
-                  <ChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="h-4 w-4 text-white" />
                 </Button>
+                <div className="flex items-center gap-1">
+                  {new Array(totalPages).fill(0).map((_, i) => (
+                    <Button
+                      key={i}
+                      variant={currentPage === i + 1 ? "default" : "outline"}
+                      className={cn(
+                        "h-8 w-8 text-xs",
+                        currentPage === i + 1
+                          ? "bg-emerald-600 hover:bg-emerald-500 border-none"
+                          : "border-white/10 text-white",
+                      )}
+                      onClick={() => setCurrentPage(i + 1)}
+                    >
+                      {i + 1}
+                    </Button>
+                  ))}
+                </div>
                 <Button
                   variant="outline"
-                  size="sm"
-                  className="border-white/10"
+                  size="icon"
+                  className="h-8 w-8 border-white/10"
                   disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage((prev) => prev + 1)}
+                  onClick={() => setCurrentPage((p) => p + 1)}
                 >
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronRight className="h-4 w-4 text-white" />
                 </Button>
               </div>
             </div>
           )}
-        </Card>
+        </div>
       </div>
     </AdminLayout>
-  );
-}
-
-function Card({
-  children,
-  className,
-  ...props
-}: { children: React.ReactNode } & React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={cn("rounded border bg-slate-950", className)} {...props}>
-      {children}
-    </div>
   );
 }

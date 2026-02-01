@@ -48,7 +48,8 @@ if (!apiBase.endsWith("/api") && apiBase !== "/api") {
   apiBase = `${apiBase}/api`;
 }
 
-const API_BASE = apiBase;
+export const API_BASE = apiBase;
+export const API_URL = API_BASE;
 
 if (import.meta.env.DEV) {
   console.log("🚀 Final API URL set to:", API_BASE);
@@ -114,7 +115,7 @@ async function handleResponse<T>(response: Response): Promise<T> {
 }
 
 // Helper to make authenticated requests
-async function authFetch(url: string, options: RequestInit = {}) {
+export async function authFetch(url: string, options: RequestInit = {}) {
   const token = getAuthToken();
   const headers: HeadersInit = {
     ...options.headers,
@@ -129,7 +130,11 @@ async function authFetch(url: string, options: RequestInit = {}) {
     (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await fetch(url, { ...options, headers });
+  const response = await fetch(url, {
+    ...options,
+    headers,
+    credentials: "include", // Enable cookie-based auth
+  });
   return response;
 }
 
@@ -900,5 +905,75 @@ export async function submitProductReview(
     body: JSON.stringify(data),
   });
 
+  return handleResponse(response);
+}
+// ============ Admin Users API ============
+
+export interface AdminUserListItem {
+  id: string;
+  email: string;
+  name: string;
+  phone: string | null;
+  avatar: string | null;
+  emailVerified: boolean;
+  createdAt: string;
+}
+
+export interface AdminUserDetails extends AdminUserListItem {
+  shippingAddress: string | null;
+}
+
+export interface AdminUserStats {
+  totalOrders: number;
+  totalSpent: number;
+  lastOrderDate: string | null;
+}
+
+export interface AdminUsersPagination {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+}
+
+export interface AdminUsersResponse {
+  users: AdminUserListItem[];
+  pagination: AdminUsersPagination;
+}
+
+export interface AdminUserDetailsResponse {
+  user: AdminUserDetails;
+  orders: Order[];
+  stats: AdminUserStats;
+}
+
+export async function fetchAdminUsers(
+  page = 1,
+  limit = 20,
+  search = "",
+): Promise<AdminUsersResponse> {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+    ...(search && { search }),
+  });
+
+  const response = await authFetch(`${API_BASE}/admin/users?${params}`);
+  return handleResponse<AdminUsersResponse>(response);
+}
+
+export async function fetchAdminUserDetails(
+  userId: string,
+): Promise<AdminUserDetailsResponse> {
+  const response = await authFetch(`${API_BASE}/admin/users/${userId}`);
+  return handleResponse<AdminUserDetailsResponse>(response);
+}
+
+export async function deleteAdminUser(
+  userId: string,
+): Promise<{ success: boolean; message: string }> {
+  const response = await authFetch(`${API_BASE}/admin/users/${userId}`, {
+    method: "DELETE",
+  });
   return handleResponse(response);
 }
