@@ -1,15 +1,13 @@
 import { NavLink, Link } from "react-router-dom";
 import SheroLight from "@/assets/logo/shero-light.svg";
 import {
-  Twitter,
-  Linkedin,
-  Facebook,
   ArrowRight,
   BadgeCheck,
   Mail,
   Phone,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { FacebookIcon, InstagramIcon, TikTokIcon, TwitterXIcon } from "@/assets/icons/icons";
 
 const Footer = () => {
   const companyLinks = ["Products", "Solutions", "About Us", "Contact Us"];
@@ -17,19 +15,24 @@ const Footer = () => {
 
   const socialLinks = [
     {
-      name: "Twitter",
-      url: "https://twitter.com",
-      icon: Twitter,
+      name: "X (Twitter)",
+      url: "https://twitter.com/@sherohq",
+      icon: TwitterXIcon,
     },
     {
-      name: "LinkedIn",
-      url: "https://linkedin.com",
-      icon: Linkedin,
+      name: "TikTok",
+      url: "https://tiktok.com/@sherohq",
+      icon: TikTokIcon,
     },
     {
       name: "Facebook",
-      url: "https://facebook.com",
-      icon: Facebook,
+      url: "https://web.facebook.com/profile.php?id=61583887925479",
+      icon: FacebookIcon,
+    },
+    {
+      name: "Instagram",
+      url: "https://instagram.com/sherohq",
+      icon: InstagramIcon,
     },
   ];
 

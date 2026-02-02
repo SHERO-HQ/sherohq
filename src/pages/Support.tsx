@@ -49,10 +49,10 @@ const Support = () => {
       icon: MessageCircle,
       socials: [
         { icon: WhatsAppIcon, url: "https://wa.me/233548711582" },
-        { icon: TelegramIcon, url: "https://telegram.org" },
-        { icon: FacebookIcon, url: "https://facebook.com" },
-        { icon: InstagramIcon, url: "https://instagram.com" },
-        { icon: TwitterXIcon, url: "https://twitter.com" },
+        { icon: TelegramIcon, url: "https://t.me/sherohq" },
+        { icon: FacebookIcon, url: "https://web.facebook.com/profile.php?id=61583887925479" },
+        { icon: InstagramIcon, url: "https://instagram.com/sherohq" },
+        { icon: TwitterXIcon, url: "https://twitter.com/sherohq" },
       ],
     },
   ];
