@@ -12,7 +12,7 @@ import Checkout from "@/pages/Checkout";
 import CheckoutSuccess from "@/pages/CheckoutSuccess";
 import Partners from "@/pages/Partners";
 import Support from "@/pages/Support";
-import FAQ from "@/pages/FAQ";
+import Faq from "@/pages/FAQ";
 import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
 import Cookies from "@/pages/Cookies";
@@ -38,6 +38,7 @@ const AdminSupport = lazy(() => import("@/pages/admin/AdminSupport"));
 const AdminUsers = lazy(() => import("@/pages/admin/AdminUsers"));
 import AdminGuides from "@/pages/admin/AdminGuides";
 import AdminGuideEditor from "@/pages/admin/AdminGuideEditor";
+import { BreadcrumbProvider } from "@/context/BreadcrumbContext";
 
 // Public support pages
 import SupportGuidesPage from "@/pages/support/SupportGuidesPage";
@@ -63,7 +64,7 @@ const AppRoutes = () => {
       <Route path="about-us" element={<About />} />
       <Route path="partners" element={<Partners />} />
       <Route path="support" element={<Support />} />
-      <Route path="faq" element={<FAQ />} />
+      <Route path="faq" element={<Faq />} />
       <Route path="contact-us" element={<Contact />} />
       <Route path="terms" element={<Terms />} />
       <Route path="privacy" element={<Privacy />} />
@@ -97,116 +98,125 @@ const AppRoutes = () => {
         path="admin/*"
         element={
           <Suspense fallback={<AppLoading />}>
-            <AdminProvider>
-              <Routes>
-                <Route path="login" element={<AdminLogin />} />
-                <Route path="" element={<Navigate to="dashboard" replace />} />
-                <Route
-                  path="dashboard"
-                  element={
-                    <ProtectedRoute>
-                      <AdminDashboard />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="products"
-                  element={
-                    <ProtectedRoute>
-                      <AdminProducts />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="products/new"
-                  element={
-                    <ProtectedRoute>
-                      <ProductForm />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="products/:id/edit"
-                  element={
-                    <ProtectedRoute>
-                      <ProductForm />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="orders"
-                  element={
-                    <ProtectedRoute>
-                      <AdminOrders />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="orders/:id"
-                  element={
-                    <ProtectedRoute>
-                      <OrderDetails />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="users"
-                  element={
-                    <ProtectedRoute>
-                      <AdminUsers />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="reports"
-                  element={
-                    <ProtectedRoute>
-                      <AdminReports />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="profile"
-                  element={
-                    <ProtectedRoute>
-                      <AdminProfile />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="support"
-                  element={
-                    <ProtectedRoute>
-                      <AdminSupport />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="guides"
-                  element={
-                    <ProtectedRoute>
-                      <AdminGuides />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="guides/new"
-                  element={
-                    <ProtectedRoute>
-                      <AdminGuideEditor />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="guides/edit/:id"
-                  element={
-                    <ProtectedRoute>
-                      <AdminGuideEditor />
-                    </ProtectedRoute>
-                  }
-                />
-              </Routes>
-            </AdminProvider>
+            <BreadcrumbProvider>
+              <AdminProvider>
+                <Routes>
+                  <Route path="login" element={<AdminLogin />} />
+                  <Route
+                    path=""
+                    element={<Navigate to="dashboard" replace />}
+                  />
+                  <Route
+                    path="dashboard"
+                    element={
+                      <ProtectedRoute>
+                        <AdminDashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="products"
+                    element={
+                      <ProtectedRoute>
+                        <AdminProducts />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="products/new"
+                    element={
+                      <ProtectedRoute>
+                        <ProductForm />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="products/:id"
+                    element={<Navigate to="edit" replace />}
+                  />
+                  <Route
+                    path="products/:id/edit"
+                    element={
+                      <ProtectedRoute>
+                        <ProductForm />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="orders"
+                    element={
+                      <ProtectedRoute>
+                        <AdminOrders />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="orders/:id"
+                    element={
+                      <ProtectedRoute>
+                        <OrderDetails />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="users"
+                    element={
+                      <ProtectedRoute>
+                        <AdminUsers />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="reports"
+                    element={
+                      <ProtectedRoute>
+                        <AdminReports />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="profile"
+                    element={
+                      <ProtectedRoute>
+                        <AdminProfile />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="support"
+                    element={
+                      <ProtectedRoute>
+                        <AdminSupport />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="guides"
+                    element={
+                      <ProtectedRoute>
+                        <AdminGuides />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="guides/new"
+                    element={
+                      <ProtectedRoute>
+                        <AdminGuideEditor />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="guides/edit/:id"
+                    element={
+                      <ProtectedRoute>
+                        <AdminGuideEditor />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
+              </AdminProvider>
+            </BreadcrumbProvider>
           </Suspense>
         }
       />

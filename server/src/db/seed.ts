@@ -4,6 +4,7 @@ import db from "./database";
 interface SeedProduct {
   id: string;
   name: string;
+  sku?: string;
   category: string;
   price: number;
   originalPrice: number | null;
@@ -24,6 +25,7 @@ const products: SeedProduct[] = [
   {
     id: "1",
     name: 'MacBook Pro 16" M3',
+    sku: "MAC-PRO-16-M3",
     category: "laptops",
     price: 8999,
     originalPrice: 9999,
@@ -52,6 +54,7 @@ const products: SeedProduct[] = [
   {
     id: "2",
     name: "iPhone 15 Pro Max",
+    sku: "IPHONE-15-PRO-MAX",
     category: "phones",
     price: 4599,
     originalPrice: null,
@@ -80,6 +83,7 @@ const products: SeedProduct[] = [
   {
     id: "3",
     name: "Sony WH-1000XM5",
+    sku: "SONY-WH1000XM5",
     category: "audio",
     price: 1299,
     originalPrice: 1499,
@@ -108,6 +112,7 @@ const products: SeedProduct[] = [
   {
     id: "4",
     name: 'Dell UltraSharp 27"',
+    sku: "DELL-U27-4K",
     category: "monitors",
     price: 2199,
     originalPrice: null,
@@ -136,6 +141,7 @@ const products: SeedProduct[] = [
   {
     id: "5",
     name: "Logitech MX Keys",
+    sku: "LOGI-MX-KEYS",
     category: "keyboards",
     price: 399,
     originalPrice: null,
@@ -164,6 +170,7 @@ const products: SeedProduct[] = [
   {
     id: "6",
     name: "Logitech MX Master 3S",
+    sku: "LOGI-MX-MASTER-3S",
     category: "mice",
     price: 349,
     originalPrice: null,
@@ -187,6 +194,7 @@ const products: SeedProduct[] = [
   {
     id: "7",
     name: "Samsung T7 SSD 2TB",
+    sku: "SAMSUNG-T7-2TB",
     category: "storage",
     price: 899,
     originalPrice: 1099,
@@ -210,6 +218,7 @@ const products: SeedProduct[] = [
   {
     id: "8",
     name: "USB-C Hub",
+    sku: "USBC-HUB-7IN1",
     category: "accessories",
     price: 149,
     originalPrice: null,
@@ -233,6 +242,7 @@ const products: SeedProduct[] = [
   {
     id: "9",
     name: "Gaming Desktop PC",
+    sku: "GAMING-PC-RTX4090",
     category: "desktops",
     price: 8999,
     originalPrice: 9999,
@@ -289,12 +299,13 @@ export async function seedDatabase() {
     for (const p of products) {
       await db.query(
         `
-        INSERT INTO products (id, name, category, price, "originalPrice", image, images, rating, reviews, badge, "inStock", "stockQuantity", description, features, specifications)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
+        INSERT INTO products (id, name, sku, category, price, "originalPrice", image, images, rating, reviews, badge, "inStock", "stockQuantity", description, features, specifications)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
       `,
         [
           p.id,
           p.name,
+          p.sku || null,
           p.category,
           p.price,
           p.originalPrice,
@@ -306,7 +317,7 @@ export async function seedDatabase() {
           p.inStock,
           p.stockQuantity,
           p.description,
-          p.features ? JSON.stringify(p.features) : null, // Arrays in PG can be native but we store as JSON string to match previous schema
+          p.features ? JSON.stringify(p.features) : null,
           p.specifications ? JSON.stringify(p.specifications) : null,
         ],
       );

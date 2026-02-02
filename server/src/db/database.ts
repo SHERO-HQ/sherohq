@@ -12,9 +12,21 @@ const pool = new Pool({
       : undefined,
 });
 
-// Helper to query the database
-export const query = (text: string, params?: unknown[]) =>
-  pool.query(text, params);
+// Helper to query the database with logging
+export const query = async (text: string, params?: unknown[]) => {
+  try {
+    const res = await pool.query(text, params);
+    return res;
+  } catch (err) {
+    console.error(`[DB Error] Query: ${text.substring(0, 500)}`);
+    console.error(`[DB Error] Params:`, params);
+    console.error(
+      `[DB Error] Message:`,
+      err instanceof Error ? err.message : err,
+    );
+    throw err;
+  }
+};
 
 // Create tables
 export async function initializeDatabase() {

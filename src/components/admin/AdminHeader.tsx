@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { useLocation, Link } from "react-router-dom";
+import { useBreadcrumb } from "@/context/BreadcrumbContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,15 +27,33 @@ interface HeaderProps {
   isSidebarOpen: boolean;
 }
 
+// Detect UUID pattern (e.g., "1167aa25-662b-4041-90f1-929639b6847e")
+const isUUID = (str: string) =>
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str);
+
 export default function AdminHeader({
   onMenuClick,
   isSidebarOpen,
 }: Readonly<HeaderProps>) {
   const { admin, logout } = useAdmin();
   const location = useLocation();
+  const { customLabels } = useBreadcrumb();
   const pathnames = location.pathname
     .split("/")
     .filter((x) => x && x !== "admin");
+
+  // Get display label for a path segment
+  const getDisplayLabel = (segment: string, fullPath: string) => {
+    // Check for custom label first
+    const customLabel = customLabels.get(fullPath);
+    if (customLabel) return customLabel;
+
+    // If it's a UUID without custom label, truncate it
+    if (isUUID(segment)) return segment.slice(0, 8) + "...";
+
+    // Otherwise, format the segment nicely
+    return segment.replaceAll("-", " ");
+  };
 
   return (
     <header
@@ -66,20 +85,21 @@ export default function AdminHeader({
             {pathnames.map((value, index) => {
               const to = `/admin/${pathnames.slice(0, index + 1).join("/")}`;
               const isLast = index === pathnames.length - 1;
+              const displayLabel = getDisplayLabel(value, to);
 
               return (
                 <li key={to} className="flex items-center space-x-2">
                   <span className="text-slate-600">/</span>
                   {isLast ? (
                     <span className="text-emerald-400 font-medium capitalize">
-                      {value.replaceAll("-", " ")}
+                      {displayLabel}
                     </span>
                   ) : (
                     <Link
                       to={to}
                       className="text-slate-400 font-sora hover:text-white transition-colors capitalize"
                     >
-                      {value.replaceAll("-", " ")}
+                      {displayLabel}
                     </Link>
                   )}
                 </li>

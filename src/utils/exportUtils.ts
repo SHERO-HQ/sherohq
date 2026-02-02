@@ -17,14 +17,17 @@ const downloadFile = (blob: Blob, fileName: string) => {
   URL.revokeObjectURL(url);
 };
 
-export const exportToCSV = (data: Record<string, any>[], fileName: string) => {
+export const exportToCSV = (
+  data: Record<string, unknown>[],
+  fileName: string,
+) => {
   const csv = Papa.unparse(data);
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   downloadFile(blob, `${fileName}.csv`);
 };
 
 export const exportToExcel = (
-  data: Record<string, any>[],
+  data: Record<string, unknown>[],
   fileName: string,
 ) => {
   const worksheet = XLSX.utils.json_to_sheet(data);
@@ -38,7 +41,7 @@ export const exportToExcel = (
 };
 
 export const exportToPDF = (
-  data: Record<string, any>[],
+  data: Record<string, unknown>[],
   columns: string[],
   fileName: string,
   title: string,
@@ -56,7 +59,7 @@ export const exportToPDF = (
   doc.text(`Generated on: ${dateStr}`, 14, 30);
 
   // Add Table
-  const body = data.map((row) => columns.map((col) => row[col]));
+  const body = data.map((row) => columns.map((col) => String(row[col] ?? "")));
 
   autoTable(doc, {
     startY: 40,

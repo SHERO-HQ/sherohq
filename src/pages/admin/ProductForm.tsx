@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   fetchProduct,
-  createProduct,
-  updateProduct,
   fetchCategories,
   uploadImages,
   type ProductInput,
@@ -25,8 +23,13 @@ import {
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  useUpdateProduct,
+  useCreateProduct,
+} from "@/hooks/queries/useProducts";
 import { Badge } from "@/components/ui/badge";
 import { useNotifications } from "@/hooks/useNotifications";
+import { useBreadcrumb } from "@/context/BreadcrumbContext";
 import { cn } from "@/lib/utils";
 
 interface Category {
@@ -38,12 +41,16 @@ export default function ProductForm() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addNotification } = useNotifications();
+  const { setLabel, clearLabel } = useBreadcrumb();
   const isEdit = Boolean(id);
 
   const [isLoading, setIsLoading] = useState(isEdit);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+
+  const createProductMutation = useCreateProduct();
+  const updateProductMutation = useUpdateProduct();
 
   const [productData, setProductData] = useState<Partial<Product>>({
     name: "",
@@ -55,6 +62,9 @@ export default function ProductForm() {
     description: "",
     features: [],
     specifications: {},
+    badge: "",
+    images: [],
+    stockQuantity: 100,
   });
 
   const [newFeature, setNewFeature] = useState("");
@@ -71,6 +81,9 @@ export default function ProductForm() {
           const product = await fetchProduct(id);
           if (product) {
             setProductData(product);
+            // Set breadcrumb label to SKU or product name
+            const label = product.name || id;
+            setLabel(`/admin/products/${id}`, label);
           }
         }
       } catch (err) {
@@ -81,20 +94,30 @@ export default function ProductForm() {
       }
     }
     loadData();
-  }, [id, isEdit, addNotification]);
+
+    // Cleanup: clear label on unmount
+    return () => {
+      if (id) {
+        clearLabel(`/admin/products/${id}`);
+      }
+    };
+  }, [id, isEdit, addNotification, setLabel, clearLabel]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setIsSaving(true);
       if (isEdit && id) {
-        await updateProduct(id, productData);
+        await updateProductMutation.mutateAsync({ id, data: productData });
         addNotification("Success", "Product updated successfully", "success");
       } else {
-        await createProduct(productData as ProductInput);
+        await createProductMutation.mutateAsync(productData as ProductInput);
         addNotification("Success", "Product created successfully", "success");
       }
       navigate("/admin/products");
+    } catch (err) {
+      addNotification("Error", "Failed to save product", "error");
+      console.error(err);
     } finally {
       setIsSaving(false);
     }

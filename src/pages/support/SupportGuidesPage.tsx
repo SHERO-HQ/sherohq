@@ -40,7 +40,7 @@ const SupportGuidesPage = () => {
   );
 
   return (
-    <>
+  
       <div className="pt-24 pb-12 bg-slate-50 dark:bg-slate-950 min-h-screen">
         <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
@@ -48,8 +48,7 @@ const SupportGuidesPage = () => {
             to="/support"
             className="inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 hover:text-emerald-500 mb-8 transition-colors"
           >
-            <span>&larr;</span>
-            Back to Support
+            <span>&larr;</span> Back to Support
           </Link>
 
           {/* Header */}
@@ -156,7 +155,6 @@ const SupportGuidesPage = () => {
           })()}
         </div>
       </div>
-    </>
   );
 };
 

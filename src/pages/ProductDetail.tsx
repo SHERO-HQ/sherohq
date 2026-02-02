@@ -29,7 +29,7 @@ const ProductDetail = () => {
           title={product.name}
           description={product.description}
           image={product.image}
-          url={`/products/${product.id}`}
+          url={`/products/${product.sku || product.id}`}
           type="product"
         />
       )}

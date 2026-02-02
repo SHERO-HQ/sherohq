@@ -9,34 +9,18 @@ const getApiBase = () => {
 
     // If it's an absolute URL, ensure it has a protocol
     if (envUrl.includes(".") && !envUrl.startsWith("http")) {
-      if (import.meta.env.DEV)
-        console.log("📍 Prepending https:// to VITE_API_URL");
       return `https://${envUrl}`;
     }
 
-    if (import.meta.env.DEV)
-      console.log("📍 Using VITE_API_URL from env:", envUrl);
     return envUrl;
-  }
-
-  // If we are in local development, use the local proxy
-  if (import.meta.env.DEV) {
-    console.log("📍 Development mode: using /api local proxy");
-    return "/api";
   }
 
   // In production, try to use the same-origin /api proxy first (Vercel/Netlify)
   // This is safer for CORS and deployment consistency
-  if (import.meta.env.DEV) {
-    console.log("📍 Production mode: defaulting to /api proxy");
-  }
   return "/api";
 };
 
 let apiBase = getApiBase();
-
-// Fallback to Railway if absolutely necessary, but we prefer the proxy
-// const RAILWAY_URL = "https://sherotech-production.up.railway.app/api";
 
 // Remove trailing slash if present to avoid double slashes
 if (apiBase.endsWith("/")) {
@@ -50,11 +34,6 @@ if (!apiBase.endsWith("/api") && apiBase !== "/api") {
 
 export const API_BASE = apiBase;
 export const API_URL = API_BASE;
-
-if (import.meta.env.DEV) {
-  console.log("🚀 Final API URL set to:", API_BASE);
-  console.log("ℹ️ Site Origin:", globalThis.location.origin);
-}
 
 // Helper to resolve image URLs
 export function getImageUrl(path: string | undefined): string {
@@ -289,10 +268,6 @@ export async function userLogin(data: {
   password: string;
 }): Promise<UserLoginResponse> {
   const url = `${API_BASE}/auth/login`;
-  if (import.meta.env.DEV) {
-    console.log("🔑 Attempting Login:", url);
-  }
-  const startTime = performance.now();
 
   try {
     const response = await fetch(url, {
@@ -300,13 +275,6 @@ export async function userLogin(data: {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-
-    const endTime = performance.now();
-    if (import.meta.env.DEV) {
-      console.log(
-        `⏱️ Login API Response Time: ${(endTime - startTime).toFixed(2)}ms`,
-      );
-    }
 
     const result = await handleResponse<UserLoginResponse>(response);
     localStorage.setItem("userToken", result.token);

@@ -17,7 +17,7 @@ interface OrderItem {
   price: number;
 }
 
-const safeParse = (val: unknown): any => {
+const safeParse = (val: unknown): unknown => {
   if (!val) return null;
   if (typeof val !== "string") return val;
   try {
@@ -182,7 +182,7 @@ router.get(
       > = {};
 
       orders.forEach((order) => {
-        const items = safeParse(order.items);
+        const items = safeParse(order.items) as OrderItem[];
         items.forEach((item: OrderItem) => {
           if (!productSales[item.id]) {
             productSales[item.id] = {
@@ -313,9 +313,12 @@ router.get(
           total: string;
           status: string;
           createdAt: string;
-          shippingInfo: any;
+          shippingInfo: unknown;
         }) => {
-          const shipping = safeParse(order.shippingInfo);
+          const shipping = safeParse(order.shippingInfo) as Record<
+            string,
+            unknown
+          >;
           return {
             id: order.id,
             total: Number.parseFloat(order.total),
@@ -352,8 +355,8 @@ router.get("/regional", adminAuth, async (req: AdminRequest, res: Response) => {
     const regionSales: Record<string, { orders: number; revenue: number }> = {};
 
     result.rows.forEach((row) => {
-      const shipping = safeParse(row.shipping);
-      const region = shipping?.region || "Unknown";
+      const shipping = safeParse(row.shipping) as Record<string, unknown>;
+      const region = String(shipping?.region || "Unknown");
       const total = Number.parseFloat(row.total);
 
       if (!regionSales[region]) {

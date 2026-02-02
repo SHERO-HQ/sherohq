@@ -6,8 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
-import SimpleMDE from "react-simplemde-editor";
-import "easymde/dist/easymde.min.css";
+import MDEditor from "@uiw/react-md-editor";
 import {
   createGuide,
   updateGuide,
@@ -237,25 +236,17 @@ const AdminGuideEditor = () => {
           </div>
 
           {/* Content */}
-          <div className="space-y-2 prose-slate dark:prose-invert">
+          <div className="space-y-2" data-color-mode="dark">
             <Label htmlFor="content" className="text-white">
               Content * (Markdown supported)
             </Label>
-            <div className="bg-slate-900/50 border border-white/10 rounded overflow-hidden">
-              <SimpleMDE
-                id="content"
-                value={content}
-                onChange={(value) => setContent(value)}
-                options={{
-                  autofocus: false,
-                  spellChecker: false,
-                  placeholder:
-                    "Write your guide content here using markdown...",
-                  status: false,
-                  minHeight: "300px",
-                }}
-              />
-            </div>
+            <MDEditor
+              value={content}
+              onChange={(val) => setContent(val || "")}
+              height={400}
+              preview="edit"
+              hideToolbar={false}
+            />
             <p className="text-xs text-slate-500">
               Markdown is supported. Use # for headers, ** for bold, - for
               lists, etc.

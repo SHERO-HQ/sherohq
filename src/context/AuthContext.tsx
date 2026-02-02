@@ -53,13 +53,10 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
 
       const { user } = await getUserMe();
       setUser(user);
-    } catch (error) {
-      console.warn("Check auth failed:", error);
-      // Only clear if the token hasn't changed since we started (prevents clearing if we just logged in)
-      if (localStorage.getItem("userToken") === initialToken) {
-        localStorage.removeItem("userToken");
-        setUser(null);
-      }
+    } catch {
+      // Token invalid or expired
+      localStorage.removeItem("userToken");
+      setUser(null);
     } finally {
       setIsLoading(false);
     }

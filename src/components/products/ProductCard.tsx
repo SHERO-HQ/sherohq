@@ -60,7 +60,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
     if (onQuickView) {
       onQuickView(product);
     } else {
-      navigate(`/products/${product.id}`);
+      navigate(`/products/${product.sku || product.id}`);
     }
   };
 
@@ -71,7 +71,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
   };
 
   const handleCardClick = () => {
-    navigate(`/products/${product.id}`);
+    navigate(`/products/${product.sku || product.id}`);
   };
 
   return (

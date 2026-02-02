@@ -1,5 +1,7 @@
 import { Router, Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
+import fs from "node:fs";
+import path from "node:path";
 import db from "../db/database";
 import { adminAuth, AdminRequest } from "../middleware/adminAuth";
 import { logActivity } from "./activity";
@@ -30,7 +32,7 @@ interface ProductRow {
 
 // Helper to parse JSON fields and numbers
 function parseProduct(row: ProductRow) {
-  const safeParse = (val: unknown): any => {
+  const safeParse = (val: unknown): unknown => {
     if (!val) return null;
     if (typeof val !== "string") return val;
     try {
@@ -51,6 +53,7 @@ function parseProduct(row: ProductRow) {
     specifications: safeParse(row.specifications),
     inStock: Boolean(row.inStock),
     sku: row.sku || null,
+    quantity: row.stockQuantity, // Alias for frontend compatibility
   };
 }
 
@@ -66,7 +69,7 @@ router.get("/", async (req: Request, res: Response) => {
 
     if (category && category !== "all") {
       conditions.push(`category = $${paramIndex}`);
-      params.push(String(category));
+      params.push(category as string);
       paramIndex++;
     }
 
@@ -74,7 +77,7 @@ router.get("/", async (req: Request, res: Response) => {
       conditions.push(
         `(name ILIKE $${paramIndex} OR description ILIKE $${paramIndex})`,
       );
-      params.push(`%${String(search)}%`);
+      params.push(`%${search as string}%`);
       paramIndex++;
     }
 
@@ -93,11 +96,14 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-// GET /api/products/:id - Get single product
+// GET /api/products/:id - Get single product (supports ID or SKU)
 router.get("/:id", async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
-    const result = await db.query("SELECT * FROM products WHERE id = $1", [id]);
+    const id = String(req.params.id);
+
+    // Resilient lookup: check both ID and SKU in one query
+    const query = "SELECT * FROM products WHERE id = $1 OR sku = $1";
+    const result = await db.query(query, [id]);
     const product = result.rows[0];
 
     if (!product) {
@@ -206,85 +212,134 @@ router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
   }
 });
 
-// PUT /api/products/:id - Update product (Admin)
+// Helper to format numeric fields for Postgres
+function formatNumericValue(_field: string, value: unknown): number | null {
+  if (value === null || value === undefined || value === "") return null;
+  if (typeof value === "number") return value;
+  if (typeof value === "string") {
+    const numValue = Number.parseFloat(value);
+    return Number.isNaN(numValue) ? null : numValue;
+  }
+  return null;
+}
+
+// Helper to stringify JSON fields safely
+function stringifyJsonValue(field: string, value: unknown): string | null {
+  if (value === null) return null;
+  try {
+    return typeof value === "string" ? value : JSON.stringify(value);
+  } catch {
+    console.error(`Invalid JSON for field ${field}`);
+    return null;
+  }
+}
+
+// Helper to process update fields
+function processUpdateFields(body: Record<string, unknown>) {
+  // Handle quantity/stockQuantity aliasing
+  if (body.quantity !== undefined && body.stockQuantity === undefined) {
+    body.stockQuantity = body.quantity;
+  }
+
+  const updates: string[] = [];
+  const values: unknown[] = [];
+  let paramIndex = 1;
+
+  // Fields allowed to be updated through the form
+  const allowedFields = [
+    "name",
+    "sku",
+    "category",
+    "price",
+    "originalPrice",
+    "image",
+    "images",
+    "badge",
+    "inStock",
+    "stockQuantity",
+    "description",
+    "features",
+    "specifications",
+  ];
+
+  for (const field of allowedFields) {
+    if (body[field] !== undefined) {
+      let value = body[field];
+
+      if (field === "price" || field === "originalPrice") {
+        value = formatNumericValue(field, value);
+      } else if (["images", "features", "specifications"].includes(field)) {
+        value = stringifyJsonValue(field, value);
+      }
+
+      updates.push(`"${field}" = $${paramIndex++}`);
+      values.push(value);
+    }
+  }
+
+  return { updates, values, paramIndex };
+}
+
+// PUT /api/products/:id - Update product (Admin) - supports ID or SKU
 router.put("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
-    const { id } = req.params;
-    const {
-      name,
-      sku,
-      category,
-      price,
-      originalPrice,
-      image,
-      images,
-      rating,
-      reviews,
-      badge,
-      inStock,
-      stockQuantity,
-      description,
-      features,
-      specifications,
-    } = req.body;
+    const identifier = String(req.params.id);
 
-    // Check if product exists
-    const check = await db.query("SELECT id FROM products WHERE id = $1", [id]);
+    // Resilient lookup: check both ID and SKU
+    const lookupQuery = "SELECT id FROM products WHERE id = $1 OR sku = $1";
+
+    const check = await db.query(lookupQuery, [identifier]);
     if (check.rowCount === 0) {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    await db.query(
-      `
-      UPDATE products SET
-        name = COALESCE($1, name),
-        sku = COALESCE($2, sku),
-        category = COALESCE($3, category),
-        price = COALESCE($4, price),
-        "originalPrice" = $5,
-        image = COALESCE($6, image),
-        images = $7,
-        rating = COALESCE($8, rating),
-        reviews = COALESCE($9, reviews),
-        badge = $10,
-        "inStock" = COALESCE($11, "inStock"),
-        "stockQuantity" = COALESCE($12, "stockQuantity"),
-        description = COALESCE($13, description),
-        features = $14,
-        specifications = $15
-      WHERE id = $16
-    `,
-      [
-        name,
-        sku,
-        category,
-        price,
-        originalPrice ?? null,
-        image,
-        images ? JSON.stringify(images) : null,
-        rating,
-        reviews,
-        badge ?? null,
-        inStock,
-        stockQuantity,
-        description,
-        features ? JSON.stringify(features) : null,
-        specifications ? JSON.stringify(specifications) : null,
-        id,
-      ],
-    );
+    const productId = check.rows[0].id;
 
-    console.log(`📦 Product updated: ${id} by ${req.admin?.username}`);
+    const { updates, values, paramIndex } = processUpdateFields(req.body);
+
+    if (updates.length === 0) {
+      return res.status(400).json({ error: "No fields to update" });
+    }
+
+    values.push(productId);
+    const queryText = `UPDATE products SET ${updates.join(", ")} WHERE id = $${paramIndex}`;
+    console.log("🔍 Executing Update:", {
+      query: queryText,
+      paramCount: values.length,
+      values: values.map((v) =>
+        typeof v === "string" && v.length > 50 ? v.substring(0, 50) + "..." : v,
+      ),
+    });
+
+    const updateResult = await db.query(queryText, values);
+
+    console.log(`📦 Product update result for ${productId}:`, {
+      rowCount: updateResult.rowCount,
+      updates: updates.length,
+    });
+
+    if (updateResult.rowCount === 0) {
+      console.warn(
+        `⚠️ No product found with ID ${productId} during update attempt.`,
+      );
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    console.log(
+      `📦 Product updated successfully: ${productId} by ${req.admin?.username}`,
+    );
     if (req.admin?.id) {
       await logActivity(
         req.admin.id,
         "product_update",
         "info",
-        `Updated product: ${name || id}`,
+        `Updated product: ${productId}`,
       );
     }
 
-    const result = await db.query("SELECT * FROM products WHERE id = $1", [id]);
+    const result = await db.query("SELECT * FROM products WHERE id = $1", [
+      productId,
+    ]);
     const product = result.rows[0] as ProductRow;
 
     res.json({
@@ -292,8 +347,28 @@ router.put("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
       product: parseProduct(product),
     });
   } catch (error) {
-    console.error("Error updating product:", error);
-    res.status(500).json({ error: "Failed to update product" });
+    // For debugging: also write to a file in the workspace
+    const logPath = path.join(process.cwd(), "product_update_error.log");
+    const logContent = JSON.stringify(
+      {
+        timestamp: new Date().toISOString(),
+        productId: req.params.id,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        body: req.body,
+      },
+      null,
+      2,
+    );
+    fs.appendFileSync(logPath, logContent + "\n---\n");
+
+    res.status(500).json({
+      error:
+        error instanceof Error
+          ? `Failed: ${error.message}`
+          : "Failed to update product",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 });
 

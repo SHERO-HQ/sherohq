@@ -111,7 +111,7 @@ export default function AdminProducts() {
         `Product marked as ${newQuantity > 0 ? "in stock" : "out of stock"}`,
         "success",
       );
-    } catch (err) {
+    } catch {
       addNotification("Error", "Failed to update stock", "error");
     }
   };
@@ -374,7 +374,9 @@ export default function AdminProducts() {
                             className="h-8 w-8 text-slate-400 hover:text-white"
                             asChild
                           >
-                            <Link to={`/admin/products/edit/${product.id}`}>
+                            <Link
+                              to={`/admin/products/${product.sku || product.id}/edit`}
+                            >
                               <Edit2 className="w-4 h-4" />
                             </Link>
                           </Button>

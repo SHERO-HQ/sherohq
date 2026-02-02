@@ -15,7 +15,7 @@ interface OrderItem {
   image?: string;
 }
 
-const safeParse = (val: unknown): any => {
+const safeParse = (val: unknown): unknown => {
   if (!val) return null;
   if (typeof val !== "string") return val;
   try {
