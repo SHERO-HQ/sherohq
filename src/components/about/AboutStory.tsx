@@ -98,7 +98,7 @@ const AboutStory = () => {
         <StaggerContainer className="grid md:grid-cols-2 gap-8 mb-16 lg:grid-cols-2!">
           {/* Mission */}
           <StaggerItem>
-            <div className="h-full bg-gradient-to-br from-emerald-50 to-white dark:from-emerald-900/10 dark:to-slate-900 p-8 rounded border border-emerald-200 dark:border-emerald-800/30">
+            <div className="h-full bg-linear-to-br from-emerald-50 to-white dark:from-emerald-900/10 dark:to-slate-900 p-8 rounded border border-emerald-200 dark:border-emerald-800/30">
               <div className="w-14 h-14 bg-emerald-600 dark:bg-emerald-500 rounded flex items-center justify-center mb-6">
                 <Target className="w-7 h-7 text-white" />
               </div>
@@ -115,7 +115,7 @@ const AboutStory = () => {
 
           {/* Vision */}
           <StaggerItem>
-            <div className="h-full bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/10 dark:to-slate-900 p-8 rounded border border-blue-200 dark:border-blue-800/30">
+            <div className="h-full bg-linear-to-br from-blue-50 to-white dark:from-blue-900/10 dark:to-slate-900 p-8 rounded border border-blue-200 dark:border-blue-800/30">
               <div className="w-14 h-14 bg-blue-600 dark:bg-blue-500 rounded flex items-center justify-center mb-6">
                 <Globe className="w-7 h-7 text-white" />
               </div>
