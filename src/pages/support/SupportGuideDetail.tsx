@@ -122,7 +122,7 @@ const SupportGuideDetail = () => {
             <div className="p-8 md:p-12">
               {/* Category Badge */}
               <div className="flex items-center gap-2 mb-4">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full">
                   {category === "software" ? (
                     <Settings className="w-3.5 h-3.5" />
                   ) : (

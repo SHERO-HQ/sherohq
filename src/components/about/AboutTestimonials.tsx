@@ -86,7 +86,7 @@ const AboutTestimonials = () => {
 
       <div className="container px-4 md:px-6 relative z-10 w-full mx-auto md:w-10/12">
         <div className="text-center mb-16">
-          <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase transition-colors duration-300">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded uppercase transition-colors duration-300">
             <UserCheck className="w-4 h-4" />
             Client Voices
           </span>

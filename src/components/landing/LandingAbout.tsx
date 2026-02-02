@@ -19,7 +19,7 @@ const LandingAbout = () => {
   ];
 
   return (
-    <section className="relative w-full py-24 lg:py-22 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-300">
+    <section className="relative w-full py-12 lg:py-16 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-300">
       {/* Background Ambience */}
       <div className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-emerald-500/5 to-transparent pointer-events-none" />
       <div className="absolute inset-0 pattern-grid-emerald opacity-[0.03] dark:opacity-[0.05] pointer-events-none" />
@@ -35,15 +35,15 @@ const LandingAbout = () => {
             className="w-full lg:w-1/2 space-y-10"
           >
             <div className="space-y-6">
-              <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded uppercase">
                 <Info className="w-5 h-5" />
                 Who We Are
               </span>
 
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-sora font-bold text-slate-900 dark:text-slate-100 leading-tight transition-colors duration-300">
-                Redefining the <br />
+                Redefining {" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-700 dark:from-blue-700 dark:to-emerald-500 transition-all duration-500">
-                  Future of Tech
+                  Possible
                 </span>
               </h2>
 

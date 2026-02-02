@@ -92,7 +92,7 @@ export default function OrderDetails() {
     setPrintMode(type);
     // Use a small timeout to ensure state is updated before printing
     setTimeout(() => {
-      window.print();
+      globalThis.print();
     }, 100);
   };
 
@@ -297,12 +297,23 @@ export default function OrderDetails() {
                     key={item.id}
                     className="p-6 flex items-center gap-6 group"
                   >
-                    <div className="w-20 h-20 rounded bg-slate-800 border border-white/5 overflow-hidden shrink-0">
-                      <img
-                        src={getImageUrl(item.image)}
-                        alt={item.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
+                    <div className="w-20 h-20 rounded bg-slate-800 border border-white/5 overflow-hidden flex items-center justify-center shrink-0">
+                      {item.image &&
+                      (item.image.startsWith("/uploads") ||
+                        item.image.startsWith("http")) ? (
+                        <img
+                          src={getImageUrl(item.image)}
+                          alt={item.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src =
+                              "https://placehold.co/200x200?text=No+Image";
+                          }}
+                        />
+                      ) : (
+                        <div className="text-3xl select-none">{item.image}</div>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="text-white font-bold truncate group-hover:text-emerald-400 transition-colors">
@@ -458,7 +469,7 @@ export default function OrderDetails() {
         {/* Printable Document (using Portal to ensure it's a direct child of body) */}
         {order &&
           createPortal(
-            <div className="hidden print:block fixed inset-0 bg-white text-black p-0 m-0 z-[9999999] print-area">
+            <div className="hidden print:block fixed inset-0 bg-white text-black p-0 m-0 z-9999999 print-area">
               <style>
                 {`
               @media print {

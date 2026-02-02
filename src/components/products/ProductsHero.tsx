@@ -1,60 +1,328 @@
-import { motion } from "motion/react";
-import { BadgeCheck, Package, ShoppingBag, TruckElectric } from "lucide-react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import {
+  BadgeCheck,
+  Package,
+  ShoppingBag,
+  TruckElectric,
+  Star,
+  TrendingUp,
+  CreditCard,
+  ShieldCheck,
+} from "lucide-react";
+import { useRef, useMemo, useState } from "react";
 
 const ProductHero = () => {
-  return (
-    <section className="relative w-full py-20 lg:py-24 overflow-hidden dark:bg-slate-950 bg-slate-50">
-      {/* Dot Pattern Background */}
-      <div className="absolute inset-0 pattern-dots opacity-80 pointer-events-none" />
+  const containerRef = useRef<HTMLDivElement>(null);
 
-      {/* Animated Gradient Orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 dark:bg-blue-500/5 rounded-full blur-[100px] animate-[pulse_8s_ease-in-out_infinite]" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-emerald-500/10 dark:bg-emerald-500/5 rounded-full blur-[100px] animate-[pulse_8s_ease-in-out_infinite_2s]" />
+  // Mouse Tracking for Kinetic Effects
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Particle State
+  const [particles] = useState(() =>
+    Array.from({ length: 10 }, (_, idx) => ({
+      id: idx,
+      x: Math.random() * 100 + "%",
+      y: Math.random() * 100 + "%",
+      opacity: Math.random() * 0.2 + 0.1,
+      duration: Math.random() * 20 + 30,
+    })),
+  );
+
+  // Spring physics
+  const springConfig = { damping: 25, stiffness: 150 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+
+  // Parallax transforms - Subdued for professional feel
+  const rotateX = useTransform(smoothY, [-0.5, 0.5], [5, -5]);
+  const rotateY = useTransform(smoothX, [-0.5, 0.5], [-5, 5]);
+  const translateX = useTransform(smoothX, [-0.5, 0.5], [-10, 10]);
+  const translateY = useTransform(smoothY, [-0.5, 0.5], [-10, 10]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const prefersReducedMotion = useMemo(
+    () => globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    [],
+  );
+
+  return (
+    <header
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center pt-20 pb-20 lg:pt-26 overflow-hidden
+                 bg-slate-50 dark:bg-slate-950"
+      role="banner"
+    >
+      {/* KINETIC BACKGROUND LAYERS */}
+      <motion.div
+        style={{ x: translateX, y: translateY, opacity: 0.9 }}
+        className="absolute inset-0 pattern-dots pointer-events-none"
+      />
+
+      {/* Particle Field */}
+      <div className="absolute inset-0 pointer-events-none">
+        {particles.map((p) => (
+          <motion.div
+            key={p.id}
+            initial={{ x: p.x, y: p.y, opacity: p.opacity }}
+            animate={{
+              y: [null, "-20%"],
+              opacity: [0, p.opacity, 0],
+            }}
+            transition={{
+              duration: p.duration,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            className={`absolute w-1 h-1 rounded-full ${p.id % 2 === 0 ? "bg-emerald-500" : "bg-blue-500"}`}
+          />
+        ))}
       </div>
+
+      {/* Scanning Line Effect */}
+      <div className="absolute inset-y-0 left-0 w-px bg-emerald-500/20 hidden md:block" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="text-center"
-        >
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 uppercase dark:bg-emerald-500/20 border border-emerald-500/20 dark:border-emerald-500/20 text-sm font-semibold text-emerald-600 dark:text-emerald-200 mb-6 backdrop-blur-md">
-            <ShoppingBag className="size-4" />
-            <span>Official Store</span>
+        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-8">
+          {/* LEFT: Content (60%) */}
+          <div className="w-full lg:w-[60%] flex flex-col items-start space-y-2">
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm mb-4"
+            >
+              <ShoppingBag className="size-4 text-emerald-500" />
+              <span className="text-[10px] md:text-xs font-mono font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
+                Official SHERO Store
+              </span>
+            </motion.div>
+
+            {/* Main Heading */}
+            <div className="relative">
+              <motion.h1
+                initial={
+                  prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 30 }
+                }
+                animate={{ opacity: 1, y: 0 }}
+                transition={
+                  prefersReducedMotion
+                    ? { duration: 0 }
+                    : { duration: 0.8, ease: "easeOut" }
+                }
+                className="font-sora font-extrabold leading-[1.1] text-5xl md:text-8xl lg:text-9xl 
+                           text-slate-900 dark:text-white mb-6"
+              >
+                Premium {"\n"}
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400">
+                  Gear
+                </span>
+              </motion.h1>
+            </div>
+
+            {/* Description */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-base md:text-lg text-slate-600 dark:text-slate-400 mb-10 leading-relaxed max-w-xl"
+            >
+              
+              Elevate your experience with our selection of high-performance
+              tools and technologies.
+            </motion.p>
+
+            {/* Trust Indicators */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="flex flex-wrap items-center gap-5 pt-10 border-t border-slate-200 dark:border-slate-800 w-full"
+            >
+              {[
+                {
+                  label: "IN_STOCK",
+                  sub: "Fast Fulfillment",
+                  icon: Package,
+                  color: "text-emerald-500",
+                },
+                {
+                  label: "FREE_SHIPPING",
+                  sub: "Global Delivery",
+                  icon: TruckElectric,
+                  color: "text-blue-500",
+                },
+                {
+                  label: "QUALITY_GUARANTEE",
+                  sub: "Official Warranty",
+                  icon: BadgeCheck,
+                  color: "text-blue-500",
+                },
+              ].map((item, idx) => (
+                <div key={idx} className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <item.icon className={`w-4 h-4 ${item.color}`} />
+                    <span className="text-xs font-bold font-sora text-slate-900 dark:text-white">
+                      {item.label}
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500">
+                    {item.sub}
+                  </span>
+                </div>
+              ))}
+            </motion.div>
           </div>
 
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-sora font-bold dark:text-white text-slate-900 mb-6 tracking-tight">
-            Premium{" "}
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-emerald-600 dark:from-blue-400 dark:to-emerald-400">
-              Gear
-            </span>
-          </h1>
-          <p className="text-base dark:text-slate-400 text-slate-700 max-w-2xl mx-auto leading-relaxed mb-10">
-            Curated hardware and accessories for the modern professional.
-            Elevate your workspace with our selection of high-performance tools.
-          </p>
+          {/* RIGHT: Kinetic Visual Hub (40%) */}
+          <div className="w-full lg:w-[40%] relative aspect-square flex items-center justify-center perspective-distant py-12 lg:py-0">
+            <motion.div
+              style={{
+                rotateX,
+                rotateY,
+                transformStyle: "preserve-3d",
+              }}
+              className="relative w-full max-w-md h-[400px] flex items-center justify-center"
+            >
+              {/* Layer 1: Store Insights Card */}
+              <motion.div
+                style={{ z: 0 }}
+                className="w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl border border-slate-200 dark:border-slate-800 rounded shadow-2xl p-6 relative overflow-hidden z-10 select-none font-mono"
+              >
+                <div className="absolute inset-0 pattern-dots opacity-5 pointer-events-none" />
 
-          {/* Trust Indicators */}
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-xs dark:text-slate-400 text-slate-600">
-            <div className="flex items-center gap-2">
-              <Package className="w-4 h-4 text-emerald-500" />
-              <span>In Stock & Ready</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <TruckElectric className="w-4 h-4 text-blue-500" />
-              <span>Fast Delivery</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <BadgeCheck className="w-4 h-4 text-purple-500" />
-              <span>Official Warranty</span>
-            </div>
+                <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded bg-emerald-500/10 flex items-center justify-center">
+                      <TrendingUp className="w-6 h-6 text-emerald-500" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-tighter">
+                        Store Insights
+                      </h4>
+                      <p className="text-[9px] text-slate-500 tracking-widest">
+                        REAL_TIME_PULSE
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[9px] text-emerald-500 font-bold px-2 py-0.5 rounded bg-emerald-500/10 mb-1">
+                      ACTIVE
+                    </div>
+                    <div className="text-[8px] text-slate-400">
+                      UPTIME: 100%
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  {[
+                    {
+                      label: "HAPPY_CUSTOMERS",
+                      val: "1.2k+",
+                      trend: "+12%",
+                      color: "text-emerald-500",
+                    },
+                    {
+                      label: "AVERAGE_RATING",
+                      val: "4.9/5",
+                      trend: "TOP_TIER",
+                      color: "text-blue-500",
+                    },
+                    {
+                      label: "DAILY_ORDERS",
+                      val: "45",
+                      trend: "STABLE",
+                      color: "text-blue-600",
+                    },
+                  ].map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-center justify-between p-3 rounded bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800"
+                    >
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[8px] text-slate-500 uppercase tracking-wider">
+                          {item.label}
+                        </span>
+                        <span className="text-lg font-bold font-sora text-slate-900 dark:text-white">
+                          {item.val}
+                        </span>
+                      </div>
+                      <div className={`text-[9px] font-bold ${item.color}`}>
+                        {item.trend}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Layer 2: Floating Payment Success Card */}
+              <motion.div
+                style={{
+                  z: 150,
+                  x: useTransform(mouseX, [-0.5, 0.5], [15, -15]),
+                  y: useTransform(mouseY, [-0.5, 0.5], [15, 15]),
+                  rotate: 12,
+                }}
+                className="absolute -bottom-10 -left-6 w-44 p-4 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/20 shadow-2xl z-20 pointer-events-none"
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-8 h-8 rounded bg-emerald-500/10 flex items-center justify-center">
+                    <CreditCard className="w-4 h-4 text-emerald-500" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[8px] font-mono text-slate-500 uppercase">
+                      Payment
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-900 dark:text-white">
+                      VERIFIED
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1 mb-2">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star
+                      key={s}
+                      className="w-2.5 h-2.5 fill-amber-400 text-amber-400"
+                    />
+                  ))}
+                </div>
+                <div className="text-[9px] text-slate-500 font-mono">
+                  AUTHORIZED_SECURE
+                </div>
+              </motion.div>
+
+              {/* Layer 3: Quality Seal */}
+              <motion.div
+                style={{
+                  z: 200,
+                  x: useTransform(mouseX, [-0.5, 0.5], [-8, 8]),
+                  y: useTransform(mouseY, [-0.5, 0.5], [-8, 8]),
+                }}
+                className="absolute -top-8 -right-4 bg-emerald-600 p-4 rounded-full shadow-2xl shadow-emerald-500/50 flex flex-col items-center justify-center -rotate-6 z-30 pointer-events-none aspect-square"
+              >
+                <ShieldCheck className="text-white w-8 h-8 drop-shadow-lg" />
+                <span className="text-[7px] font-bold text-white uppercase tracking-tighter mt-1 whitespace-nowrap">
+                  TRUSTED_VERIFIED
+                </span>
+              </motion.div>
+
+              {/* Background Aura */}
+              <div className="absolute inset-0 bg-radial-gradient from-emerald-500/10 to-transparent blur-3xl rounded-full scale-150 pointer-events-none" />
+            </motion.div>
           </div>
-        </motion.div>
+        </div>
       </div>
-    </section>
+    </header>
   );
 };
 

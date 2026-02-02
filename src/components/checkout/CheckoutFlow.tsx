@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { checkoutSchema, type CheckoutInput } from "@/lib/validations/checkout";
 import { getGuestId } from "@/utils/guestSession";
-import { createOrder, initializePayment } from "@/services/api";
+import { createOrder, initializePayment, getImageUrl } from "@/services/api";
 import { motion, AnimatePresence } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -194,7 +194,7 @@ const CheckoutFlow = () => {
           // Development Mode: Redirect to internal mock payment page
           if (import.meta.env.DEV) {
             clearCart();
-            window.location.href = `/mock-payment?orderId=${response.orderId}&amount=${total}`;
+            globalThis.location.href = `/mock-payment?orderId=${response.orderId}&amount=${total}`;
             return;
           }
           try {
@@ -206,7 +206,7 @@ const CheckoutFlow = () => {
 
             if (paymentResponse.success && paymentResponse.checkoutUrl) {
               clearCart();
-              window.location.href = paymentResponse.checkoutUrl;
+              globalThis.location.href = paymentResponse.checkoutUrl;
               return;
             }
           } catch (paymentError) {
@@ -386,8 +386,23 @@ const CheckoutFlow = () => {
                         key={item.id}
                         className="flex flex-col sm:flex-row gap-4 p-4 rounded border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 transition-colors"
                       >
-                        <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center text-3xl shrink-0">
-                          {item.image}
+                        <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center overflow-hidden shrink-0">
+                          {item.image &&
+                          (item.image.startsWith("/uploads") ||
+                            item.image.startsWith("http")) ? (
+                            <img
+                              src={getImageUrl(item.image)}
+                              alt={item.name}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src =
+                                  "https://placehold.co/200x200?text=No+Image";
+                              }}
+                            />
+                          ) : (
+                            <div className="text-3xl">{item.image}</div>
+                          )}
                         </div>
 
                         <div className="flex-1">

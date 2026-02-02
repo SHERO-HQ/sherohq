@@ -8,7 +8,6 @@ import {
 } from "lucide-react";
 import aboutImage from "@/assets/aboutImg.png";
 import Reveal from "@/components/motion/Reveal";
-import Float from "@/components/motion/Float";
 import {
   StaggerContainer,
   StaggerItem,
@@ -29,15 +28,10 @@ const AboutStory = () => {
               <img
                 src={aboutImage}
                 alt="SHERO Technologies"
-                className="relative w-full object-cover rounded shadow-2xl"
+                className="relative w-full object-cover"
               />
-              {/* Floating Badge 1 - Bottom Left */}
-              <Float
-                distance={8}
-                duration={3}
-                className="absolute -bottom-4 -left-2 sm:bottom-0 sm:left-0 lg:-left-4 z-20"
-              >
-                <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-2 sm:px-4 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
+     
+                <div className="absolute bottom-35 -left-20 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-2 sm:px-4 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
                   <div className="size-8 sm:size-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
                     <SearchCheck className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 dark:text-emerald-400" />
                   </div>
@@ -50,16 +44,9 @@ const AboutStory = () => {
                     </p>
                   </div>
                 </div>
-              </Float>
 
-              {/* Floating Badge 2 - Top Right */}
-              <Float
-                distance={12}
-                duration={4}
-                delay={0.5}
-                className="absolute top-20 -right-2 sm:-right-2 lg:-right-4 z-20"
-              >
-                <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-2 sm:px-4 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
+     
+                <div className="absolute top-20 right-5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-2 sm:px-4 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
                   <div className="size-8 sm:size-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
                     <Lightbulb className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 dark:text-emerald-400" />
                   </div>
@@ -72,14 +59,13 @@ const AboutStory = () => {
                     </p>
                   </div>
                 </div>
-              </Float>
             </div>
           </Reveal>
 
           {/* Text Side */}
           <Reveal direction="left" distance={40} delay={0.2}>
             <div className="text-start">
-              <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded uppercase">
                 <Clover className="size-4" />
                 Our Story
               </span>
@@ -191,7 +177,7 @@ const AboutStory = () => {
         {/* Commitment Statement */}
         <Reveal direction="up" distance={30} delay={0.4} blur>
           <div className="mt-16 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded uppercase">
               <Heart className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
               <span className="text-xs font-semibold text-emerald-700 dark:text-emerald-300">
                 Our Commitment

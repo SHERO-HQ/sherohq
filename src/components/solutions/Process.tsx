@@ -50,12 +50,12 @@ const steps = [
 
 const Process = () => {
   return (
-    <section className="py-24 bg-white dark:bg-slate-900 overflow-hidden relative border-t border-slate-200 dark:border-white/5">
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-5 dark:opacity-20" />
+    <section className="py-24 bg-white dark:bg-slate-900 overflow-hidden relative border-t border-slate-200 dark:border-white/5 pattern-dots">
+      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-95 dark:opacity-90" />
 
       <div className="container max-w-5xl mx-auto px-4 relative z-10">
         <div className="text-center mb-20">
-          <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
+          <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded uppercase">
             <Workflow className="size-4" />
             How We Work
           </span>

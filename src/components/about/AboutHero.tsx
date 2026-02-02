@@ -1,118 +1,344 @@
-import { motion } from "motion/react";
+import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import {
-  Code2,
-  Users,
   Zap,
-  Smartphone,
-  Laptop,
-  TruckElectric,
+  ShieldCheck,
   SmartphoneCharging,
+  Lightbulb,
+  Target,
+  Compass,
+  Mountain,
+  Heart,
 } from "lucide-react";
-import type { ElementType } from "react";
+import { useRef, useMemo, useState } from "react";
 
 const AboutHero = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Mouse Tracking for Kinetic Effects
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Particle State - Emerald/Blue theme
+  const [particles] = useState(() =>
+    Array.from({ length: 15 }, (_, idx) => ({
+      id: idx,
+      x: Math.random() * 100 + "%",
+      y: Math.random() * 100 + "%",
+      opacity: Math.random() * 0.2 + 0.1,
+      duration: Math.random() * 20 + 30,
+    })),
+  );
+
+  // Spring physics
+  const springConfig = { damping: 25, stiffness: 150 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+
+  // Parallax transforms - Reduced for subtler motion
+  const rotateX = useTransform(smoothY, [-0.5, 0.5], [6, -6]);
+  const rotateY = useTransform(smoothX, [-0.5, 0.5], [-6, 6]);
+  const translateX = useTransform(smoothX, [-0.5, 0.5], [-12, 12]);
+  const translateY = useTransform(smoothY, [-0.5, 0.5], [-12, 12]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const prefersReducedMotion = useMemo(
+    () => globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    [],
+  );
+
   return (
-    <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-slate-100 dark:bg-slate-950">
-      {/* Background Effects */}
-      {/* Animated Grid Background */}
-      <div className="absolute inset-0 hero-grid-pattern" />
+    <header
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center py-20 lg:py-24 overflow-hidden
+                 bg-slate-50 dark:bg-slate-950"
+      role="banner"
+    >
+      {/* KINETIC BACKGROUND LAYERS */}
+      <motion.div
+        style={{ x: translateX, y: translateY, opacity: 0.7 }}
+        className="absolute inset-0 pattern-dots pointer-events-none"
+      />
 
-      {/* Gradient Orbs - Purple/Indigo theme for About */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none hidden dark:block">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-500/5 dark:bg-purple-500/5 rounded-full blur-[100px]" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/5 dark:bg-indigo-500/5 rounded-full blur-[100px]" />
+      {/* Particle Field - Emerald theme */}
+      <div className="absolute inset-0 opacity-40 pointer-events-none">
+        {particles.map((p) => (
+          <motion.div
+            key={p.id}
+            initial={{ x: p.x, y: p.y, opacity: p.opacity }}
+            animate={{
+              y: [null, "-25%"],
+              opacity: [0, p.opacity, 0],
+            }}
+            transition={{
+              duration: p.duration,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            className="absolute w-1 h-1 bg-emerald-500 rounded-full"
+          />
+        ))}
       </div>
 
-      <div className="container px-4 md:px-6 relative z-10 text-center">
+      {/* Scanning Line Effect */}
+      <div className="absolute inset-y-0 left-0 w-px bg-emerald-500/20 hidden md:block" />
+
+      {/* Gradient Orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
-          <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase shadow-sm">
-            <SmartphoneCharging className="size-4" />
-            Redefining Possibilities since 2023
-          </span>
-          <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold font-sora tracking-tight text-slate-900 dark:text-slate-100 mb-6">
-            Premium Products & <br />
-            <span className="text-4xl md:text-6xl lg:text-7xl text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400">
-              Full-Spectrum IT
-            </span>
-          </h1>
-          <p className="max-w-[800px] mx-auto text-sm md:text-base text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
-            Collective of visionary developers and strategists
-            dedicated to delivering innovative hardware and software products
-            and comprehensive IT services that transform people and businesses.
-          </p>
-        </motion.div>
-
-        {/* Decorative Icons Floating */}
-        <FloatingIcon
-          icon={Code2}
-          className="top-20 left-[10%] text-emerald-500 rotate-12"
-          delay={0}
+          style={{ x: translateX, y: translateY }}
+          className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-emerald-500/5 dark:bg-emerald-600/10 rounded-full blur-[120px]"
         />
-        <FloatingIcon
-          icon={Users}
-          className="bottom-40 right-[10%] text-blue-500 -rotate-12"
-          delay={0.2}
-        />
-        <FloatingIcon
-          icon={Zap}
-          className="top-32 right-[15%] text-amber-500 rotate-6"
-          delay={0.4}
-        />
-        <FloatingIcon
-          icon={TruckElectric}
-          className="top-50 right-[12%] text-emerald-500 rotate-6"
-          delay={0.6}
-        />
-        <FloatingIcon
-          icon={Laptop}
-          className="bottom-32 left-[15%] text-violet-500 -rotate-6"
-          delay={0.8}
-        />
-        <FloatingIcon
-          icon={Smartphone}
-          className="top-1/2 left-[5%] text-slate-500 rotate-45 hidden xl:flex"
-          delay={1}
+        <motion.div
+          style={{
+            x: useTransform(smoothX, [-0.5, 0.5], [15, -15]),
+            y: useTransform(smoothY, [-0.5, 0.5], [15, -15]),
+          }}
+          className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-blue-500/5 dark:bg-blue-600/10 rounded-full blur-[120px]"
         />
       </div>
-    </section>
+
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+          {/* LEFT: Vision Content (60%) */}
+          <div className="w-full lg:w-[60%] flex flex-col items-start space-y-4">
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm mb-4"
+            >
+              <SmartphoneCharging className="size-4 text-emerald-500" />
+              <span className="text-[10px] md:text-xs font-mono font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
+                Redefining Possibilities since 2023
+              </span>
+            </motion.div>
+
+            {/* Main Heading */}
+            <div className="relative">
+              <motion.h1
+                initial={
+                  prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 30 }
+                }
+                animate={{ opacity: 1, y: 0 }}
+                transition={
+                  prefersReducedMotion
+                    ? { duration: 0 }
+                    : { duration: 0.8, ease: "easeOut" }
+                }
+                className="font-sora font-extrabold leading-[1.1] text-6xl md:text-8xl lg:text-8xl 
+                           text-slate-900 dark:text-white mb-6"
+              >
+                The Future of{"\n"}
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400">
+                  Technical Excellence
+                </span>
+              </motion.h1>
+            </div>
+
+            {/* Description */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-base md:text-lg text-slate-600 dark:text-slate-400 mb-10 leading-relaxed max-w-xl"
+            >
+              Visionary collective of developers and strategists
+              dedicated to delivering innovative hardware and software products
+              that transform businesses and empower people.
+            </motion.p>
+
+            {/* Values Preview */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="flex flex-wrap items-center gap-8 pt-10 border-t border-slate-200 dark:border-slate-800 w-full"
+            >
+              {[
+                {
+                  label: "INNOVATION",
+                  sub: "Cutting Edge",
+                  icon: Lightbulb,
+                  color: "text-emerald-500",
+                },
+                {
+                  label: "INTEGRITY",
+                  sub: "Trusted Partner",
+                  icon: ShieldCheck,
+                  color: "text-blue-500",
+                },
+                {
+                  label: "IMPACT",
+                  sub: "Results Driven",
+                  icon: Target,
+                  color: "text-emerald-600",
+                },
+              ].map((item) => (
+                <div key={item.label} className="flex flex-col gap-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <item.icon className={`w-4 h-4 ${item.color}`} />
+                    <span className="text-sm font-bold font-sora text-slate-900 dark:text-white uppercase tracking-tight">
+                      {item.label}
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500">
+                    {item.sub}
+                  </span>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+
+          {/* RIGHT: Vision Hub (40%) */}
+          <div className="w-full lg:w-[40%] relative aspect-square flex items-center justify-center perspective-distant py-12 lg:py-0">
+            <motion.div
+              style={{
+                rotateX,
+                rotateY,
+                transformStyle: "preserve-3d",
+              }}
+              className="relative w-full max-w-md h-[420px] flex items-center justify-center"
+            >
+              {/* Layer 1: Core Values Card */}
+              <motion.div
+                style={{ z: 0 }}
+                className="w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl border border-slate-200 dark:border-slate-800 rounded shadow-2xl p-8 relative overflow-hidden z-10 select-none font-mono"
+              >
+                <div className="absolute inset-0 pattern-dots opacity-5 pointer-events-none" />
+
+                <div className="flex items-center gap-4 mb-10 pb-4 border-b border-slate-100 dark:border-slate-800">
+                  <div className="w-12 h-12 rounded bg-emerald-500/10 flex items-center justify-center shadow-inner">
+                    <Target className="w-7 h-7 text-emerald-500" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-tighter">
+                      Mission_Protocol
+                    </h4>
+                    <p className="text-[10px] text-slate-500 tracking-widest">
+                      EST_SESSION_2023
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  {[
+                    {
+                      label: "STRATEGIC_GOALS",
+                      val: "Reached",
+                      progress: 85,
+                      color: "bg-emerald-500",
+                    },
+                    {
+                      label: "CLIENT_SUCCESS",
+                      val: "Consistent",
+                      progress: 98,
+                      color: "bg-blue-500",
+                    },
+                    {
+                      label: "TECH_ROBUSTNESS",
+                      val: "Stable",
+                      progress: 94,
+                      color: "bg-emerald-600",
+                    },
+                  ].map((item) => (
+                    <div key={item.label} className="space-y-2">
+                      <div className="flex justify-between text-[9px] font-bold text-slate-500 tracking-wider">
+                        <span>{item.label}</span>
+                        <span className="text-slate-900 dark:text-white">
+                          {item.val}
+                        </span>
+                      </div>
+                      <div className="h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${item.progress}%` }}
+                          transition={{ duration: 1.5 }}
+                          className={`h-full ${item.color}`}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-8 flex items-center justify-between pt-6 border-t border-slate-100 dark:border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <Compass className="w-4 h-4 text-emerald-500" />
+                    <span className="text-[10px] font-bold text-slate-900 dark:text-white">
+                      GUIDED_BY_PASSION
+                    </span>
+                  </div>
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                </div>
+              </motion.div>
+
+              {/* Layer 2: Floating Achievement Badge */}
+              <motion.div
+                style={{
+                  z: 150,
+                  x: useTransform(mouseX, [-0.5, 0.5], [20, -20]),
+                  y: useTransform(mouseY, [-0.5, 0.5], [20, 20]),
+                  rotate: -12,  
+                }}
+                className="absolute -top-20 -left-6 w-48 p-5 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/30 shadow-2xl z-20 pointer-events-none"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-linear-to-br from-emerald-600 to-blue-400 flex items-center justify-center shadow-lg">
+                    <Mountain className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[9px] font-mono text-slate-500 uppercase">
+                      Growth
+                    </span>
+                    <span className="text-[11px] font-bold text-slate-900 dark:text-white italic">
+                      LIMITLESS
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5 p-2 bg-slate-50 dark:bg-slate-900/50 rounded border border-slate-100 dark:border-slate-800">
+                  <Zap className="w-3 h-3 text-amber-500 fill-amber-500" />
+                  <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300">
+                    VISION_READY
+                  </span>
+                </div>
+              </motion.div>
+
+              {/* Layer 3: Impact Seal */}
+              <motion.div
+                style={{
+                  z: 220,
+                  x: useTransform(mouseX, [-0.5, 0.5], [-12, 12]),
+                  y: useTransform(mouseY, [-0.5, 0.5], [-12, 12]),
+                }}
+                className="absolute -bottom-3 -right-6 bg-linear-to-r from-emerald-600 to-teal-500 p-5 rounded shadow-2xl shadow-emerald-500/40 flex flex-col items-center justify-center rotate-6 z-30 pointer-events-none"
+              >
+                <Heart className="text-white w-8 h-8 mb-2 drop-shadow-lg" />
+                <span className="text-[9px] font-bold text-white uppercase tracking-tighter whitespace-nowrap">
+                  CLIENT_CENTRIC_CORE
+                </span>
+                <div className="mt-1 flex gap-0.5">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="w-1 h-1 rounded-full bg-white/50" />
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Background Aura */}
+              <div className="absolute inset-0 bg-radial-gradient from-emerald-500/15 to-transparent blur-3xl rounded-full scale-150 pointer-events-none" />
+            </motion.div>
+          </div>
+        </div>
+      </div>
+    </header>
   );
 };
-
-const FloatingIcon = ({
-  icon: Icon,
-  className,
-  delay,
-}: {
-  icon: ElementType;
-  className?: string;
-  delay: number;
-}) => (
-  <motion.div
-    initial={{ opacity: 0, scale: 0, y: 20 }}
-    animate={{
-      opacity: 1,
-      scale: 1,
-      y: [0, -15, 0],
-    }}
-    transition={{
-      opacity: { duration: 0.5, delay },
-      scale: { duration: 0.5, delay },
-      y: {
-        duration: 3,
-        repeat: Infinity,
-        repeatType: "reverse",
-        ease: "easeInOut",
-        delay: delay + 0.5,
-      },
-    }}
-    className={`absolute hidden lg:flex p-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-200 dark:border-slate-800 ${className}`}
-  >
-    <Icon className="w-6 h-6" />
-  </motion.div>
-);
 
 export default AboutHero;

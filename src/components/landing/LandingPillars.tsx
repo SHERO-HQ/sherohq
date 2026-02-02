@@ -61,7 +61,7 @@ const PILLARS: PillarsProps[] = [
 
 const LandingPillars = () => {
   return (
-    <section className="relative w-full py-24 bg-white dark:bg-slate-950 overflow-hidden transition-colors duration-300">
+    <section className="relative w-full pb-12 bg-white dark:bg-slate-950 overflow-hidden transition-colors duration-300">
       {/* Background Ambience */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-100 via-white to-slate-50 dark:from-slate-900 dark:via-slate-950 dark:to-black transition-all duration-500 opacity-50 dark:opacity-100" />
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-10 dark:opacity-100 transition-opacity duration-300" />
@@ -69,7 +69,7 @@ const LandingPillars = () => {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
           <Reveal direction="up" distance={20}>
-            <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded uppercase">
               <Crosshair className="size-4" />
               Core Competencies
             </span>

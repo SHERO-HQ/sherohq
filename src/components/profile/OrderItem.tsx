@@ -8,6 +8,7 @@ import {
   Mail,
 } from "lucide-react";
 import type { Order, User } from "@/services/api";
+import { getImageUrl } from "@/services/api";
 
 interface OrderItemProps {
   order: Order;
@@ -96,8 +97,23 @@ const OrderItem: React.FC<OrderItemProps> = ({
                 key={item.id}
                 className="flex flex-col md:flex-row md:items-center gap-4 bg-slate-50 dark:bg-slate-800/30 p-3 rounded"
               >
-                <div className="w-12 h-12 bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 flex items-center justify-center text-xl shrink-0">
-                  {item.image}
+                <div className="w-12 h-12 bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 flex items-center justify-center overflow-hidden shrink-0">
+                  {item.image &&
+                  (item.image.startsWith("/uploads") ||
+                    item.image.startsWith("http")) ? (
+                    <img
+                      src={getImageUrl(item.image)}
+                      alt={item.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src =
+                          "https://placehold.co/200x200?text=No+Image";
+                      }}
+                    />
+                  ) : (
+                    <div className="text-xl select-none">{item.image}</div>
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="font-bold text-sm text-slate-900 dark:text-white line-clamp-1">

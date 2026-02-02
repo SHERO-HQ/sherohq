@@ -20,9 +20,9 @@ const LandingFinalCTA = () => {
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-20 hover:scale-105 transition-transform duration-[2s]" />
           <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-900/50" />
 
-          <div className="relative z-10 p-8 md:p-16 lg:p-20 flex flex-col md:flex-row items-center justify-between gap-12">
+          <div className="relative z-10 p-8 md:p-16 lg:p-20 flex flex-col lg:flex-row items-center justify-between">
             {/* Content Left */}
-            <div className="max-w-xl space-y-8 text-center md:text-left">
+            <div className="max-w-xl space-y-4 text-center md:text-left">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded bg-white/5 border border-emerald-400/50 backdrop-blur-sm">
                 <WandSparkles className="w-4 h-4 text-emerald-400" />
                 <span className="text-xs font-medium text-emerald-100 uppercase">

@@ -3,7 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { fadeUp } from "@/components/motion/heroMotion";
 import { useMemo, useRef, useState } from "react";
 import { RocketIcon } from "@/assets/icons/icons";
-import { CircleCheckBig, Layers, MessageSquareDot } from "lucide-react";
+import { CircleCheckBig, Layers, MessageSquareDot, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // Type Definitions
@@ -14,7 +14,7 @@ interface HeroContent {
 
 // Constants
 const HERO_CONTENT: HeroContent = {
-  mainHeader: "Redefine Possible",
+  mainHeader: "Redefine \n Possible",
   subHeader:
     "Built for efficiency, scalability, and innovation. Crafted Hardware and Software solutions to redefine the future of possibilities.",
 } as const;
@@ -42,11 +42,11 @@ const LandingHero: React.FC = () => {
   const smoothX = useSpring(mouseX, springConfig);
   const smoothY = useSpring(mouseY, springConfig);
 
-  // Transform values for parallax and 3D
-  const rotateX = useTransform(smoothY, [-0.5, 0.5], [10, -10]);
-  const rotateY = useTransform(smoothX, [-0.5, 0.5], [-10, 10]);
-  const translateX = useTransform(smoothX, [-0.5, 0.5], [-20, 20]);
-  const translateY = useTransform(smoothY, [-0.5, 0.5], [-20, 20]);
+  // Transform values for parallax and 3D - Subdued
+  const rotateX = useTransform(smoothY, [-0.5, 0.5], [5, -5]);
+  const rotateY = useTransform(smoothX, [-0.5, 0.5], [-5, 5]);
+  const translateX = useTransform(smoothX, [-0.5, 0.5], [-10, 10]);
+  const translateY = useTransform(smoothY, [-0.5, 0.5], [-10, 10]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!containerRef.current) return;
@@ -115,7 +115,7 @@ const LandingHero: React.FC = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm"
             >
               <RocketIcon className="w-4 h-4 text-emerald-500" />
               <span className="text-[10px] md:text-xs font-mono font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
@@ -123,27 +123,31 @@ const LandingHero: React.FC = () => {
               </span>
             </motion.div>
 
-            {/* Headline: Sora Font + Scanline Reveal */}
+            {/* Headline: Sora Font + Scan line Reveal */}
             <div className="relative overflow-hidden group">
               <motion.h1
                 initial="hidden"
                 animate="visible"
                 variants={prefersReducedMotion ? {} : fadeUp}
-                className="font-sora font-extrabold leading-[1.1] text-5xl md:text-7xl lg:text-8xl 
+                className="font-sora font-extrabold leading-[1.1] text-7xl md:text-8xl lg:text-9xl 
                            text-slate-900 dark:text-white relative z-10"
               >
-                {HERO_CONTENT.mainHeader.split(" ").map((word, i) => (
-                  <span
-                    key={`${word}-${i}`}
-                    className={
-                      word === "Possible"
-                        ? "text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400"
-                        : ""
-                    }
-                  >
-                    {word}{" "}
-                  </span>
-                ))}
+                {HERO_CONTENT.mainHeader.split(" ").map((word, i) =>
+                  word === "\n" ? (
+                    <br key={`line-br-${i}`} />
+                  ) : (
+                    <span
+                      key={`${word}-${i}`}
+                      className={
+                        word === "Possible"
+                          ? "text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400"
+                          : ""
+                      }
+                    >
+                      {word}{" "}
+                    </span>
+                  ),
+                )}
               </motion.h1>
             </div>
 
@@ -180,7 +184,7 @@ const LandingHero: React.FC = () => {
 
               <NavLink
                 to="/consultation"
-                className="group flex items-center justify-center gap-3 text-slate-900 dark:text-white font-mono text-sm font-bold tracking-tight border-2  hover:border-emerald-500/50! rounded px-4 py-2 w-full border-slate-200 dark:border-slate-800 pb-1 transition-all"
+                className="group flex items-center justify-center gap-3 text-slate-900 dark:text-white font-mono text-sm font-bold tracking-tight border-2  hover:border-emerald-500/50! rounded px-4 py-2 h-10 w-full border-slate-200 dark:border-slate-800 pb-1 transition-all"
               >
                 Request a Quote
                 <MessageSquareDot className="w-5 h-5 text-emerald-500" />
@@ -243,7 +247,7 @@ const LandingHero: React.FC = () => {
                 <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100 dark:border-slate-800">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded bg-emerald-500/10 flex items-center justify-center">
-                      <RocketIcon className="w-6 h-6 text-emerald-500" />
+                      <Zap className="w-6 h-6 text-emerald-500 rotate-30" />
                     </div>
                     <div>
                       <h4 className="text-sm font-bold font-sora text-slate-900 dark:text-white">
@@ -268,28 +272,28 @@ const LandingHero: React.FC = () => {
                 <div className="space-y-4">
                   {[
                     {
-                      service: "AI_ORCHESTRATION",
-                      status: "OPTIMIZED",
+                      service: "HARDWARE_ACCESSORIES",
+                      status: "STABLE",
                       color: "bg-emerald-500",
-                      desc: "Autonomous neural workflows",
+                      desc: "High quality and performance",
                     },
                     {
-                      service: "CLOUD_SYNCHRONY",
-                      status: "STABLE",
+                      service: "SOFTWARE_SOLUTIONS",
+                      status: "OPTIMIZED",
                       color: "bg-blue-500",
-                      desc: "Elastic edge computing",
+                      desc: "Custom and high performance software",
                     },
                     {
                       service: "SECURITY_PROTOCOL",
                       status: "LOCKED",
-                      color: "bg-purple-500",
+                      color: "bg-blue-600",
                       desc: "Zero-Trust architecture",
                     },
                     {
-                      service: "DATA_ANALYTICS",
+                      service: "IT_TECHNICAL",
                       status: "PROCESSING",
                       color: "bg-amber-500",
-                      desc: "Predictive insight engines",
+                      desc: "Reliable and fast technical support",
                     },
                   ].map((item) => (
                     <div
@@ -321,8 +325,8 @@ const LandingHero: React.FC = () => {
               <motion.div
                 style={{
                   z: 150,
-                  x: useTransform(smoothX, [-0.5, 0.5], [25, -25]),
-                  y: useTransform(smoothY, [-0.5, 0.5], [25, 25]),
+                  x: useTransform(smoothX, [-0.5, 0.5], [12, -12]),
+                  y: useTransform(smoothY, [-0.5, 0.5], [12, 12]),
                   rotate: 15,
                 }}
                 className="absolute -bottom-10 left-3 w-44 p-4 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/20 shadow z-20 select-none pointer-events-none"

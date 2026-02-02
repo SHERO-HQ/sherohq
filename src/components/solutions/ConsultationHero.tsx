@@ -5,7 +5,7 @@ const ConsultationHero = () => {
   return (
     <section className="relative w-full py-20 lg:py-22 overflow-hidden bg-slate-100 dark:bg-slate-950">
       {/* Dot Pattern Background */}
-      <div className="absolute inset-0 pattern-dots opacity-80 dark:opacity-80 pointer-events-none" />
+      <div className="absolute inset-0 pattern-dots opacity-90 dark:opacity-90 pointer-events-none" />
 
       {/* Gradient Orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -19,7 +19,7 @@ const ConsultationHero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded-full uppercase">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded uppercase">
             <MessageSquare className="size-4" />
             <span>Consultation</span>
           </div>
