@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import UniversalLink from "@/components/common/UniversalLink";
 import {
   LayoutDashboard,
   Package,
@@ -107,7 +107,7 @@ export default function AdminSidebar({
           {/* Navigation */}
           <nav className="flex-1 py-6 px-3 space-y-2 overflow-y-auto custom-scrollbar">
             {navItems.map((item) => (
-              <NavLink
+              <UniversalLink
                 key={item.href}
                 to={item.href}
                 className={({ isActive }) =>
@@ -149,7 +149,7 @@ export default function AdminSidebar({
                     )}
                   </>
                 )}
-              </NavLink>
+              </UniversalLink>
             ))}
 
             {/* Quick Actions Section */}
@@ -160,7 +160,7 @@ export default function AdminSidebar({
                 </p>
               )}
               <div className="space-y-1">
-                <NavLink
+                <UniversalLink
                   to="/admin/products/new"
                   className={({ isActive }) =>
                     cn(
@@ -175,8 +175,8 @@ export default function AdminSidebar({
                   {isOpen && (
                     <span className="text-xs font-medium">New Product</span>
                   )}
-                </NavLink>
-                <NavLink
+                </UniversalLink>
+                <UniversalLink
                   to="/admin/orders?status=pending"
                   className={({ isActive }) =>
                     cn(
@@ -191,7 +191,7 @@ export default function AdminSidebar({
                   {isOpen && (
                     <span className="text-xs font-medium">Review Orders</span>
                   )}
-                </NavLink>
+                </UniversalLink>
               </div>
             </div>
           </nav>

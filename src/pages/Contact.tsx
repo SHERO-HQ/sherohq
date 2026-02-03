@@ -3,6 +3,7 @@ import ContactForm from "@/components/common/ContactForm";
 import Footer from "@/components/layout/Footer";
 import { motion } from "motion/react";
 import { Mail, MapPin, MessagesSquare, Phone } from "lucide-react";
+import { COMPANY_EMAILS } from "@/constants/emails";
 
 const Contact = () => {
   return (
@@ -61,7 +62,7 @@ const Contact = () => {
                     <Mail className="w-5 h-5 text-teal-700 dark:text-emerald-400" />
                   }
                   label="Email Us"
-                  value="info@sherohq.com"
+                  value={COMPANY_EMAILS.INFO}
                   delay={0.2}
                 />
                 <ContactItem

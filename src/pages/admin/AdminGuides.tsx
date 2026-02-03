@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import UniversalLink from "@/components/common/UniversalLink";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -103,10 +104,10 @@ const AdminGuides = () => {
           No guides found
         </h3>
         <Button
-          onClick={() => navigate("/admin/guides/new")}
           className="bg-emerald-600 text-slate-100 hover:bg-emerald-500"
+          asChild
         >
-          Create Guide
+          <UniversalLink to="/admin/guides/new">Create Guide</UniversalLink>
         </Button>
       </div>
     );
@@ -188,18 +189,18 @@ const AdminGuides = () => {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-end gap-2">
-                      <Link
+                      <UniversalLink
                         to={`/support/${guide.category}/${guide.slug}`}
                         target="_blank"
                         className="text-slate-400 hover:text-white"
                       >
                         View
-                      </Link>
+                      </UniversalLink>
                       <button
+                        className="text-slate-400 hover:text-white ml-4"
                         onClick={() =>
                           navigate(`/admin/guides/edit/${guide.id}`)
                         }
-                        className="text-slate-400 hover:text-white ml-4"
                       >
                         Edit
                       </button>
@@ -241,10 +242,10 @@ const AdminGuides = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <Button
-            onClick={() => navigate("/admin/guides/new")}
             className="bg-emerald-600 hover:bg-emerald-500 text-white"
+            asChild
           >
-            New Guide
+            <UniversalLink to="/admin/guides/new">New Guide</UniversalLink>
           </Button>
         </div>
       </div>

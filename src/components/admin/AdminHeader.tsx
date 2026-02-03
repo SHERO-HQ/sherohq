@@ -8,7 +8,8 @@ import {
   Globe,
 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import UniversalLink from "@/components/common/UniversalLink";
 import { useBreadcrumb } from "@/context/BreadcrumbContext";
 import {
   DropdownMenu,
@@ -75,12 +76,12 @@ export default function AdminHeader({
         <nav aria-label="Breadcrumb" className="hidden sm:flex overflow-hidden">
           <ol className="flex items-center space-x-2 text-sm">
             <li>
-              <Link
+              <UniversalLink
                 to="/admin"
                 className="text-slate-400 font-sora hover:text-white transition-colors"
               >
                 Admin
-              </Link>
+              </UniversalLink>
             </li>
             {pathnames.map((value, index) => {
               const to = `/admin/${pathnames.slice(0, index + 1).join("/")}`;
@@ -95,12 +96,12 @@ export default function AdminHeader({
                       {displayLabel}
                     </span>
                   ) : (
-                    <Link
+                    <UniversalLink
                       to={to}
                       className="text-slate-400 font-sora hover:text-white transition-colors capitalize"
                     >
                       {displayLabel}
-                    </Link>
+                    </UniversalLink>
                   )}
                 </li>
               );
@@ -122,14 +123,14 @@ export default function AdminHeader({
         </div>
 
         {/* View Site */}
-        <Link
+        <UniversalLink
           to="/"
           className="hidden md:flex items-center gap-1 px-3 py-2 text-sm text-slate-400 font-sora hover:text-white hover:bg-emerald-500/5 rounded transition-colors"
           title="View Site"
         >
           <Globe className="w-4 h-4" />
           <span>View Site</span>
-        </Link>
+        </UniversalLink>
 
         {/* Notifications */}
         <NotificationCenter />
@@ -172,13 +173,13 @@ export default function AdminHeader({
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-white/5" />
             <DropdownMenuItem asChild>
-              <Link
+              <UniversalLink
                 to="/admin/profile"
                 className="flex items-center cursor-pointer hover:bg-white/5"
               >
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile</span>
-              </Link>
+              </UniversalLink>
             </DropdownMenuItem>
             <DropdownMenuItem className="flex items-center cursor-pointer hover:bg-white/5">
               <Settings className="mr-2 h-4 w-4" />

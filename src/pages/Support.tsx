@@ -24,6 +24,7 @@ import Footer from "@/components/layout/Footer";
 import { useTitle } from "@/hooks/useTitle";
 import SupportTicketForm from "@/components/support/SupportTicketForm";
 import { Link } from "react-router-dom";
+import { COMPANY_EMAILS } from "@/constants/emails";
 
 const Support = () => {
   useTitle("Support Center");
@@ -50,7 +51,10 @@ const Support = () => {
       socials: [
         { icon: WhatsAppIcon, url: "https://wa.me/233548711582" },
         { icon: TelegramIcon, url: "https://t.me/sherohq" },
-        { icon: FacebookIcon, url: "https://web.facebook.com/profile.php?id=61583887925479" },
+        {
+          icon: FacebookIcon,
+          url: "https://web.facebook.com/profile.php?id=61583887925479",
+        },
         { icon: InstagramIcon, url: "https://instagram.com/sherohq" },
         { icon: TwitterXIcon, url: "https://twitter.com/sherohq" },
       ],
@@ -166,7 +170,7 @@ const Support = () => {
                   <span>Ticket</span>
                 </button>
                 <a
-                  href="mailto:support@sherohq.com"
+                  href={`mailto:${COMPANY_EMAILS.SUPPORT}`}
                   className="flex items-center gap-3 px-6 py-2 sm:px-6 rounded bg-slate-300/70 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors min-w-[200px] justify-center w-full md:w-auto"
                 >
                   <Mail className="w-5 h-5" />

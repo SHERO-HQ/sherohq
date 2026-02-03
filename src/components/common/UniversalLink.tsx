@@ -4,13 +4,15 @@ import { cn } from "@/lib/utils";
 
 interface UniversalLinkProps extends Omit<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
-  "className"
+  "className" | "children"
 > {
   to: string;
   className?: string | ((props: { isActive: boolean }) => string);
   activeClassName?: string;
   end?: boolean; // For NavLink exact matching
-  children: React.ReactNode;
+  children:
+    | React.ReactNode
+    | ((props: { isActive: boolean }) => React.ReactNode);
 }
 
 const UniversalLink = ({
@@ -53,7 +55,9 @@ const UniversalLink = ({
         }
         {...props}
       >
-        {children}
+        {({ isActive }) =>
+          typeof children === "function" ? children({ isActive }) : children
+        }
       </NavLink>
     );
   }
@@ -66,7 +70,9 @@ const UniversalLink = ({
 
   return (
     <a href={href} className={finalClassName} {...props}>
-      {children}
+      {typeof children === "function"
+        ? children({ isActive: isExternalActive })
+        : children}
     </a>
   );
 };

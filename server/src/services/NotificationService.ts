@@ -148,7 +148,7 @@ class NotificationService {
         </div>
 
         <p style="font-size: 12px; color: #666; text-align: center; margin-top: 30px;">
-          If you have any questions, please contact our support team at info@sherohq.com or call us at +233 54 871 1582.
+          If you have any questions, please contact our support team at support@sherohq.com or call us at +233 54 871 1582.
         </p>
       </div>
     `;

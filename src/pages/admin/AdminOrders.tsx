@@ -31,7 +31,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "motion/react";
-import { Link } from "react-router-dom";
+import UniversalLink from "@/components/common/UniversalLink";
 import { cn } from "@/lib/utils";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
 import {
@@ -322,12 +322,12 @@ export default function AdminOrders() {
                         </div>
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
-                            <Link
+                            <UniversalLink
                               to={`/admin/orders/${order.id}`}
                               className="text-sm font-mono text-slate-400 hover:text-emerald-400 transition-colors"
                             >
                               #{order.id.slice(0, 12)}
-                            </Link>
+                            </UniversalLink>
                             <Badge
                               className={cn(
                                 "text-[10px] font-bold uppercase",
@@ -337,12 +337,12 @@ export default function AdminOrders() {
                               {order.status}
                             </Badge>
                           </div>
-                          <Link to={`/admin/orders/${order.id}`}>
+                          <UniversalLink to={`/admin/orders/${order.id}`}>
                             <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors">
                               {order.shippingInfo.firstName}{" "}
                               {order.shippingInfo.lastName}
                             </h3>
-                          </Link>
+                          </UniversalLink>
                           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-slate-500">
                             <div className="flex items-center gap-1.5">
                               <Mail className="w-3 h-3" />
@@ -402,9 +402,9 @@ export default function AdminOrders() {
                           className="text-slate-400 hover:text-white hover:bg-white/5"
                           asChild
                         >
-                          <Link to={`/admin/orders/${order.id}`}>
+                          <UniversalLink to={`/admin/orders/${order.id}`}>
                             <Eye className="w-4 h-4 mr-2" /> Details
-                          </Link>
+                          </UniversalLink>
                         </Button>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>

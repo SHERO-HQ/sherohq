@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+import UniversalLink from "@/components/common/UniversalLink";
 import { getImageUrl } from "@/services/api";
 import { useNotifications } from "@/hooks/useNotifications";
 import type { Product } from "@/data/products";
@@ -208,10 +208,10 @@ export default function AdminProducts() {
               className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4"
               asChild
             >
-              <Link to="/admin/products/new">
+              <UniversalLink to="/admin/products/new">
                 <Plus className="w-4 h-4 mr-2" />
                 Add Product
-              </Link>
+              </UniversalLink>
             </Button>
           </div>
         </div>
@@ -374,11 +374,11 @@ export default function AdminProducts() {
                             className="h-8 w-8 text-slate-400 hover:text-white"
                             asChild
                           >
-                            <Link
+                            <UniversalLink
                               to={`/admin/products/${product.sku || product.id}/edit`}
                             >
                               <Edit2 className="w-4 h-4" />
-                            </Link>
+                            </UniversalLink>
                           </Button>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>

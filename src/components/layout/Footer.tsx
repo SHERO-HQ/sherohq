@@ -8,6 +8,7 @@ import {
   TikTokIcon,
   TwitterXIcon,
 } from "@/assets/icons/icons";
+import { COMPANY_EMAILS } from "@/constants/emails";
 
 const Footer = () => {
   const companyLinks = ["Shop", "Solutions", "About Us", "Contact Us"];
@@ -79,14 +80,14 @@ const Footer = () => {
 
                 <div className="space-y-4">
                   <a
-                    href="mailto:info@sherohq.com"
+                    href={`mailto:${COMPANY_EMAILS.INFO}`}
                     className="flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors group"
                   >
                     <div className="p-2 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 group-hover:border-emerald-500/50 transition-colors">
                       <Mail className="w-4 h-4" />
                     </div>
                     <span className="text-sm font-medium">
-                      info@sherohq.com
+                      {COMPANY_EMAILS.INFO}
                     </span>
                   </a>
 

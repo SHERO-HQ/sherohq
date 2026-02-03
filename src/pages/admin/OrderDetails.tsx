@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import UniversalLink from "@/components/common/UniversalLink";
 import {
   fetchOrderById,
   updateOrderStatus,
@@ -157,11 +158,13 @@ export default function OrderDetails() {
               "The order you are looking for does not exist or has been removed."}
           </p>
           <Button
-            onClick={() => navigate("/admin/orders")}
             variant="outline"
             className="text-white border-white/10 hover:bg-white/5"
+            asChild
           >
-            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Orders
+            <UniversalLink to="/admin/orders">
+              <ArrowLeft className="w-4 h-4 mr-2" /> Back to Orders
+            </UniversalLink>
           </Button>
         </div>
       </AdminLayout>
@@ -454,13 +457,13 @@ export default function OrderDetails() {
                   {order.shippingInfo.postalCode &&
                     `Postal Code: ${order.shippingInfo.postalCode}`}
                 </p>
-                <Link
+                <UniversalLink
                   to={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${order.shippingInfo.address}, ${order.shippingInfo.city}, ${order.shippingInfo.region}`)}`}
                   target="_blank"
                   className="flex items-center gap-2 text-xs text-emerald-400 hover:text-emerald-300 transition-colors font-bold uppercase tracking-wider"
                 >
                   View on Maps <ExternalLink className="w-3 h-3" />
-                </Link>
+                </UniversalLink>
               </div>
             </Card>
           </div>

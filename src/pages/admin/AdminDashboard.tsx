@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+
+import UniversalLink from "@/components/common/UniversalLink";
 import { useAdmin } from "@/context/AdminContext";
 import { useTitle } from "@/hooks/useTitle";
 import {
@@ -291,7 +292,7 @@ export default function AdminDashboard() {
               . Here's your store's performance at a glance.
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center flex-wrap gap-3">
             <Button
               variant="outline"
               size="icon"
@@ -309,17 +310,17 @@ export default function AdminDashboard() {
               className="border-white/10 text-white hover:bg-white/5"
               asChild
             >
-              <Link to="/admin/reports">
+              <UniversalLink to="/admin/reports">
                 <TrendingUp className="mr-2 h-4 w-4" /> View Detailed Reports
-              </Link>
+              </UniversalLink>
             </Button>
             <Button
               className="bg-emerald-600 hover:bg-emerald-500 text-white"
               asChild
             >
-              <Link to="/admin/products/new">
+              <UniversalLink to="/admin/products/new">
                 <Plus className="mr-2 h-4 w-4" /> Add Product
-              </Link>
+              </UniversalLink>
             </Button>
           </div>
         </div>
@@ -520,7 +521,7 @@ export default function AdminDashboard() {
                     color: "bg-slate-500/10 text-slate-400",
                   },
                 ].map((action) => (
-                  <Link
+                  <UniversalLink
                     key={action.title}
                     to={action.link}
                     className="flex items-center justify-between p-3 rounded hover:bg-white/5 transition-all group"
@@ -534,7 +535,7 @@ export default function AdminDashboard() {
                       </span>
                     </div>
                     <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-emerald-500 transition-all opacity-0 group-hover:opacity-100 group-hover:translate-x-1" />
-                  </Link>
+                  </UniversalLink>
                 ))}
               </div>
             </Card>
@@ -626,9 +627,9 @@ export default function AdminDashboard() {
               className="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10"
               asChild
             >
-              <Link to="/admin/orders">
+              <UniversalLink to="/admin/orders">
                 View All Orders <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
+              </UniversalLink>
             </Button>
           </CardHeader>
           <div className="overflow-x-auto">
@@ -680,15 +681,15 @@ export default function AdminDashboard() {
                       className="hover:bg-white/2 transition-colors group"
                     >
                       <td className="px-6 py-4">
-                        <Link
+                        <UniversalLink
                           to={`/admin/orders/${order.id}`}
                           className="text-sm font-mono text-slate-400 group-hover:text-emerald-400 transition-colors"
                         >
                           #{order.id.slice(0, 8)}
-                        </Link>
+                        </UniversalLink>
                       </td>
                       <td className="px-6 py-4">
-                        <Link
+                        <UniversalLink
                           to={`/admin/orders/${order.id}`}
                           className="flex flex-col"
                         >
@@ -698,7 +699,7 @@ export default function AdminDashboard() {
                           <span className="text-xs text-slate-500">
                             {order.customer.email}
                           </span>
-                        </Link>
+                        </UniversalLink>
                       </td>
                       <td className="px-6 py-4 text-sm text-slate-400">
                         {new Date(order.createdAt).toLocaleDateString()}
@@ -723,7 +724,9 @@ export default function AdminDashboard() {
                           className="h-8 px-2 text-slate-400 hover:text-white hover:bg-white/10"
                           asChild
                         >
-                          <Link to={`/admin/orders/${order.id}`}>Details</Link>
+                          <UniversalLink to={`/admin/orders/${order.id}`}>
+                            Details
+                          </UniversalLink>
                         </Button>
                       </td>
                     </tr>
