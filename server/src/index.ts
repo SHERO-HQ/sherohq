@@ -50,6 +50,11 @@ const allowedOrigins = [
   "https://www.sherotech.com",
   "https://sherohq.com",
   "https://www.sherohq.com",
+  "https://admin.sherohq.com",
+  "https://support.sherohq.com",
+  "https://products.sherohq.com",
+  "https://shop.sherohq.com",
+  "https://api.sherohq.com",
   "http://localhost:5173",
   "http://localhost:3000",
 ];

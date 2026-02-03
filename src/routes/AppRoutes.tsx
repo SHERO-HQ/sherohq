@@ -50,7 +50,177 @@ const AppLoading = () => (
   </div>
 );
 
+const getSubdomain = () => {
+  const hostname = globalThis.location.hostname;
+  if (hostname === "localhost" || hostname === "127.0.0.1") return null;
+
+  const parts = hostname.split(".");
+  // For sherohq.com, parts.length is 2. For subdomain.sherohq.com, it is 3+.
+  if (parts.length >= 3) {
+    return parts[0].toLowerCase();
+  }
+  return null;
+};
+
+const AdminSection = () => (
+  <Suspense fallback={<AppLoading />}>
+    <BreadcrumbProvider>
+      <AdminProvider>
+        <Routes>
+          <Route path="login" element={<AdminLogin />} />
+          <Route path="" element={<Navigate to="dashboard" replace />} />
+          <Route
+            path="dashboard"
+            element={
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="products"
+            element={
+              <ProtectedRoute>
+                <AdminProducts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="products/new"
+            element={
+              <ProtectedRoute>
+                <ProductForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="products/:id" element={<Navigate to="edit" replace />} />
+          <Route
+            path="products/:id/edit"
+            element={
+              <ProtectedRoute>
+                <ProductForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="orders"
+            element={
+              <ProtectedRoute>
+                <AdminOrders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="orders/:id"
+            element={
+              <ProtectedRoute>
+                <OrderDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="users"
+            element={
+              <ProtectedRoute>
+                <AdminUsers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="reports"
+            element={
+              <ProtectedRoute>
+                <AdminReports />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="profile"
+            element={
+              <ProtectedRoute>
+                <AdminProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="support"
+            element={
+              <ProtectedRoute>
+                <AdminSupport />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="guides"
+            element={
+              <ProtectedRoute>
+                <AdminGuides />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="guides/new"
+            element={
+              <ProtectedRoute>
+                <AdminGuideEditor />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="guides/edit/:id"
+            element={
+              <ProtectedRoute>
+                <AdminGuideEditor />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </AdminProvider>
+    </BreadcrumbProvider>
+  </Suspense>
+);
+
+const SupportSection = () => (
+  <Routes>
+    <Route path="" element={<Support />} />
+    <Route path="faq" element={<Faq />} />
+    <Route
+      path=":category"
+      element={
+        <Suspense fallback={<AppLoading />}>
+          <SupportGuidesPage />
+        </Suspense>
+      }
+    />
+    <Route
+      path=":category/:slug"
+      element={
+        <Suspense fallback={<AppLoading />}>
+          <SupportGuideDetail />
+        </Suspense>
+      }
+    />
+    <Route path="*" element={<NotFound />} />
+  </Routes>
+);
+
+const ShopSection = () => (
+  <Routes>
+    <Route path="" element={<Products />} />
+    <Route path=":id" element={<ProductDetail />} />
+    <Route path="*" element={<NotFound />} />
+  </Routes>
+);
+
 const AppRoutes = () => {
+  const subdomain = getSubdomain();
+
+  // Route entirely based on subdomain if present
+  if (subdomain === "admin") return <AdminSection />;
+  if (subdomain === "support") return <SupportSection />;
+  if (subdomain === "shop" || subdomain === "products") return <ShopSection />;
+
   return (
     <Routes>
       {/* Public Routes */}
@@ -93,133 +263,8 @@ const AppRoutes = () => {
         }
       />
 
-      {/* Admin Routes */}
-      <Route
-        path="admin/*"
-        element={
-          <Suspense fallback={<AppLoading />}>
-            <BreadcrumbProvider>
-              <AdminProvider>
-                <Routes>
-                  <Route path="login" element={<AdminLogin />} />
-                  <Route
-                    path=""
-                    element={<Navigate to="dashboard" replace />}
-                  />
-                  <Route
-                    path="dashboard"
-                    element={
-                      <ProtectedRoute>
-                        <AdminDashboard />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="products"
-                    element={
-                      <ProtectedRoute>
-                        <AdminProducts />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="products/new"
-                    element={
-                      <ProtectedRoute>
-                        <ProductForm />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="products/:id"
-                    element={<Navigate to="edit" replace />}
-                  />
-                  <Route
-                    path="products/:id/edit"
-                    element={
-                      <ProtectedRoute>
-                        <ProductForm />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="orders"
-                    element={
-                      <ProtectedRoute>
-                        <AdminOrders />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="orders/:id"
-                    element={
-                      <ProtectedRoute>
-                        <OrderDetails />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="users"
-                    element={
-                      <ProtectedRoute>
-                        <AdminUsers />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="reports"
-                    element={
-                      <ProtectedRoute>
-                        <AdminReports />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="profile"
-                    element={
-                      <ProtectedRoute>
-                        <AdminProfile />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="support"
-                    element={
-                      <ProtectedRoute>
-                        <AdminSupport />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="guides"
-                    element={
-                      <ProtectedRoute>
-                        <AdminGuides />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="guides/new"
-                    element={
-                      <ProtectedRoute>
-                        <AdminGuideEditor />
-                      </ProtectedRoute>
-                    }
-                  />
-                  <Route
-                    path="guides/edit/:id"
-                    element={
-                      <ProtectedRoute>
-                        <AdminGuideEditor />
-                      </ProtectedRoute>
-                    }
-                  />
-                </Routes>
-              </AdminProvider>
-            </BreadcrumbProvider>
-          </Suspense>
-        }
-      />
+      {/* Admin Path-Based Routes (Compatibility) */}
+      <Route path="admin/*" element={<AdminSection />} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>
