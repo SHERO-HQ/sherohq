@@ -46,6 +46,10 @@ if (process.env.DATABASE_URL) {
 const allowedOrigins = [
   "https://sherotech.vercel.app",
   "https://sherohq.vercel.app",
+  "https://sherotech.com",
+  "https://www.sherotech.com",
+  "https://sherohq.com",
+  "https://www.sherohq.com",
   "http://localhost:5173",
   "http://localhost:3000",
 ];
@@ -81,13 +85,13 @@ app.use(
       if (isAllowed) {
         callback(null, true);
       } else {
-        console.warn(`🚫 CORS blocked for origin: ${origin}`);
+        console.error(`🚫 CORS blocked for origin: ${origin}`);
         console.warn(`📋 Normalized origin: ${normalizedOrigin}`);
         console.warn(
           `📋 Allowed origins (normalized): ${normalizedAllowedOrigins.join(", ")}`,
         );
         console.warn(`🛠️ NODE_ENV: ${process.env.NODE_ENV}`);
-        callback(new Error("Not allowed by CORS"));
+        callback(new Error(`Not allowed by CORS for origin: ${origin}`));
       }
     },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],

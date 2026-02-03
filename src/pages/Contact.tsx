@@ -61,7 +61,7 @@ const Contact = () => {
                     <Mail className="w-5 h-5 text-teal-700 dark:text-emerald-400" />
                   }
                   label="Email Us"
-                  value="info.sherohq@gmail.com"
+                  value="info@sherohq.com"
                   delay={0.2}
                 />
                 <ContactItem

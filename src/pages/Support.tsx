@@ -166,7 +166,7 @@ const Support = () => {
                   <span>Ticket</span>
                 </button>
                 <a
-                  href="mailto:info.sherohq@gmail.com"
+                  href="mailto:support@sherohq.com"
                   className="flex items-center gap-3 px-6 py-2 sm:px-6 rounded bg-slate-300/70 dark:bg-slate-800 text-slate-900 dark:text-white font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors min-w-[200px] justify-center w-full md:w-auto"
                 >
                   <Mail className="w-5 h-5" />
