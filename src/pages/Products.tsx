@@ -6,9 +6,9 @@ const Products = () => {
   return (
     <>
       <Seo
-        title="Products"
+        title="Shop"
         description="Explore our range of premium tech products including laptops, drones, specialized equipment, and custom software solutions."
-        url="/products"
+        url="/shop"
       />
       <ShopPage />
       <Footer />

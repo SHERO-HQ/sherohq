@@ -19,7 +19,7 @@ const ProductDetail = () => {
   }
 
   if (isError || (!loading && !product)) {
-    return <Navigate to="/products" replace />;
+    return <Navigate to="/shop" replace />;
   }
 
   return (
@@ -29,7 +29,7 @@ const ProductDetail = () => {
           title={product.name}
           description={product.description}
           image={product.image}
-          url={`/products/${product.sku || product.id}`}
+          url={`/shop/${product.sku || product.id}`}
           type="product"
         />
       )}

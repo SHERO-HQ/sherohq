@@ -97,7 +97,7 @@ const CheckoutSuccess = () => {
             order history.
           </p>
           <button
-            onClick={() => navigate("/products")}
+            onClick={() => navigate("/shop")}
             className="px-8 py-2 bg-emerald-600 text-white rounded font-bold hover:bg-emerald-700 transition-colors"
           >
             Return to Shop
@@ -137,7 +137,7 @@ const CheckoutSuccess = () => {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
-            onClick={() => navigate("/products")}
+            onClick={() => navigate("/shop")}
             className="px-8 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-all shadow-lg shadow-emerald-500/20"
           >
             Continue Shopping

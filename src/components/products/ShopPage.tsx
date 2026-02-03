@@ -167,7 +167,7 @@ const ShopPage = () => {
               className="w-full flex items-center justify-center gap-2 cursor-pointer px-4 py-2 dark:bg-slate-900/80 bg-slate-400/20 hover:bg-emerald-400/20 backdrop-blur-md border border-white/10 rounded font-medium dark:text-slate-200 text-slate-800 shadow-md hover:border-emerald-500/50 transition-colors"
             >
               <SlidersHorizontal />
-              <span>Filter Products</span>
+              <span>Filter Shop</span>
               <span className="bg-emerald-600 text-white px-2 py-0.5 rounded text-xs font-bold shadow-sm shadow-emerald-500/20">
                 {filteredProducts.length}
               </span>
@@ -188,13 +188,13 @@ const ShopPage = () => {
               <div>
                 <h2 className="text-2xl font-bold dark:text-white text-slate-800">
                   {activeCategory === "all"
-                    ? "All Products"
+                    ? "Shop All"
                     : categoriesWithCount.find((c) => c.id === activeCategory)
                         ?.name}
                 </h2>
                 <p className="text-sm dark:text-slate-400 text-slate-500 mt-1">
                   {filteredProducts.length}{" "}
-                  {filteredProducts.length === 1 ? "product" : "products"} found
+                  {filteredProducts.length === 1 ? "item" : "items"} found
                 </p>
               </div>
 

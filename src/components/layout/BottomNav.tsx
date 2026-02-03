@@ -2,15 +2,11 @@ import { Home, ShoppingBag, ShoppingCart } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 
-// interface BottomNavProps {
-//   onMenuClick: () => void;
-// }
-
 const BottomNav = () => {
   const { setIsCartOpen, totalQuantity } = useCart();
   const navItems = [
     { icon: Home, label: "Home", path: "/" },
-    { icon: ShoppingBag, label: "Products", path: "/products" },
+    { icon: ShoppingBag, label: "Shop", path: "/shop" },
     { icon: ShoppingCart, label: "Cart", path: "/cart" },
   ];
 
@@ -53,14 +49,6 @@ const BottomNav = () => {
             </NavLink>
           );
         })}
-
-        {/* <button
-          onClick={onMenuClick}
-          className="cursor-pointer flex flex-col items-center justify-center w-full h-full gap-1 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 transition-colors"
-        >
-          <Menu className="w-6 h-6" strokeWidth={2} />
-          <span className="text-[10px] font-medium">Menu</span>
-        </button> */}
       </nav>
     </div>
   );

@@ -1,16 +1,16 @@
 import { NavLink, Link } from "react-router-dom";
 import SheroLight from "@/assets/logo/shero-light.svg";
-import {
-  ArrowRight,
-  BadgeCheck,
-  Mail,
-  Phone,
-} from "lucide-react";
+import { ArrowRight, BadgeCheck, Mail, Phone } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { FacebookIcon, InstagramIcon, TikTokIcon, TwitterXIcon } from "@/assets/icons/icons";
+import {
+  FacebookIcon,
+  InstagramIcon,
+  TikTokIcon,
+  TwitterXIcon,
+} from "@/assets/icons/icons";
 
 const Footer = () => {
-  const companyLinks = ["Products", "Solutions", "About Us", "Contact Us"];
+  const companyLinks = ["Shop", "Solutions", "About Us", "Contact Us"];
   const resourceLinks = ["Consultation", "Partners", "Support", "FAQ"];
 
   const socialLinks = [

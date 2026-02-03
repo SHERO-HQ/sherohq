@@ -92,10 +92,10 @@ const LandingProducts = () => {
         >
           <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded uppercase">
             <ShoppingCart className="mr-2 w-4 h-4" />
-            Featured Products
+            Featured Deals
           </span>
           <h2 className="text-4xl md:text-5xl font-sora font-bold text-slate-900 dark:text-slate-200 mb-4">
-            Premium Tech Products
+            Shop Premium Tech
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
             Elevate your tech experience with our curated collection of
@@ -157,7 +157,7 @@ const LandingProducts = () => {
           className="text-center"
         >
           <NavLink
-            to="/products"
+            to="/shop"
             className="inline-flex items-center gap-3 px-8 py-2 rounded
                      border-2 border-slate-300 dark:border-slate-700
                      text-slate-700 dark:text-slate-300 font-semibold
@@ -166,7 +166,7 @@ const LandingProducts = () => {
                      hover:shadow-lg
                      transition-all duration-300 group"
           >
-            <span>View All Products</span>
+            <span>Visit the Shop</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </NavLink>
         </motion.div>

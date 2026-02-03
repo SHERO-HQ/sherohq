@@ -103,7 +103,7 @@ const ProductHero = () => {
             >
               <ShoppingBag className="size-4 text-emerald-500" />
               <span className="text-[10px] md:text-xs font-mono font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
-                Official SHERO Store
+                Official SHERO Shop
               </span>
             </motion.div>
 
@@ -136,7 +136,6 @@ const ProductHero = () => {
               transition={{ delay: 0.1 }}
               className="text-base md:text-lg text-slate-600 dark:text-slate-400 mb-10 leading-relaxed max-w-xl"
             >
-              
               Elevate your experience with our selection of high-performance
               tools and technologies.
             </motion.p>
@@ -167,8 +166,8 @@ const ProductHero = () => {
                   icon: BadgeCheck,
                   color: "text-blue-500",
                 },
-              ].map((item, idx) => (
-                <div key={idx} className="flex flex-col gap-1">
+              ].map((item) => (
+                <div key={item.label} className="flex flex-col gap-1">
                   <div className="flex items-center gap-2 mb-1">
                     <item.icon className={`w-4 h-4 ${item.color}`} />
                     <span className="text-xs font-bold font-sora text-slate-900 dark:text-white">
@@ -207,7 +206,7 @@ const ProductHero = () => {
                     </div>
                     <div>
                       <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-tighter">
-                        Store Insights
+                        Shop Insights
                       </h4>
                       <p className="text-[9px] text-slate-500 tracking-widest">
                         REAL_TIME_PULSE
@@ -244,9 +243,9 @@ const ProductHero = () => {
                       trend: "STABLE",
                       color: "text-blue-600",
                     },
-                  ].map((item, idx) => (
+                  ].map((item) => (
                     <div
-                      key={idx}
+                      key={item.label}
                       className="flex items-center justify-between p-3 rounded bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800"
                     >
                       <div className="flex flex-col gap-0.5">

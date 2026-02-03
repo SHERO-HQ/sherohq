@@ -25,7 +25,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
-      navigate(`/products?search=${encodeURIComponent(query)}`);
+      navigate(`/shop?search=${encodeURIComponent(query)}`);
       closeSearch();
     }
   };
@@ -74,7 +74,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search products..."
+              placeholder="Search shop..."
               className="bg-transparent border-none focus:ring-0 text-sm w-full h-10 outline-none text-slate-900 dark:text-white pr-4"
             />
           </div>
@@ -95,7 +95,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                     <button
                       key={product.id}
                       onClick={() => {
-                        navigate(`/products/${product.id}`);
+                        navigate(`/shop/${product.id}`);
                         setQuery("");
                       }}
                       className="w-full flex items-center gap-3 px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors text-left"
@@ -125,7 +125,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                 </div>
               ) : (
                 <div className="p-4 text-center text-slate-500 dark:text-slate-400 text-sm">
-                  No products found for "{query}"
+                  No items found for "{query}"
                 </div>
               )}
             </motion.div>
@@ -178,7 +178,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                         type="text"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Search products..."
+                        placeholder="Search our shop..."
                         className="w-full h-14 bg-transparent border-none focus:ring-0 text-lg outline-none text-slate-900 dark:text-white pl-3"
                         autoComplete="off"
                       />
@@ -215,7 +215,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                           <button
                             key={product.id}
                             onClick={() => {
-                              navigate(`/products/${product.id}`);
+                              navigate(`/shop/${product.id}`);
                               closeSearch();
                             }}
                             className="w-full flex items-center gap-4 p-3 rounded hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors text-left"
@@ -263,7 +263,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                           <Search className="w-8 h-8 text-slate-400" />
                         </div>
                         <p className="text-slate-500 dark:text-slate-400">
-                          No products found for{" "}
+                          No items found for{" "}
                           <span className="font-medium text-slate-700 dark:text-slate-300">
                             "{query}"
                           </span>
@@ -276,7 +276,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                 {/* Quick hint when empty */}
                 {!query && (
                   <div className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
-                    <p>Start typing to search for products</p>
+                    <p>Start typing to search the shop</p>
                     <p className="mt-1 text-xs">
                       Press{" "}
                       <kbd className="px-1.5 py-0.5 bg-slate-100 dark:bg-slate-800 rounded text-slate-600 dark:text-slate-300 font-mono">

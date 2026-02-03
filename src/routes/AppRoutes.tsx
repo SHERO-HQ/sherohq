@@ -50,17 +50,7 @@ const AppLoading = () => (
   </div>
 );
 
-const getSubdomain = () => {
-  const hostname = globalThis.location.hostname;
-  if (hostname === "localhost" || hostname === "127.0.0.1") return null;
-
-  const parts = hostname.split(".");
-  // For sherohq.com, parts.length is 2. For subdomain.sherohq.com, it is 3+.
-  if (parts.length >= 3) {
-    return parts[0].toLowerCase();
-  }
-  return null;
-};
+import { getSubdomain } from "@/utils/subdomain";
 
 const AdminSection = () => (
   <Suspense fallback={<AppLoading />}>
@@ -219,14 +209,20 @@ const AppRoutes = () => {
   // Route entirely based on subdomain if present
   if (subdomain === "admin") return <AdminSection />;
   if (subdomain === "support") return <SupportSection />;
-  if (subdomain === "shop" || subdomain === "products") return <ShopSection />;
+  // 'shop' subdomain or 'products' fallback (legacy)
+  if (subdomain === "shop") return <ShopSection />;
 
   return (
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<HomePage />} />
-      <Route path="products" element={<Products />} />
-      <Route path="products/:id" element={<ProductDetail />} />
+      <Route path="shop" element={<Products />} />
+      <Route path="shop/:id" element={<ProductDetail />} />
+      <Route path="products" element={<Navigate to="/shop" replace />} />
+      <Route
+        path="products/:id"
+        element={<Navigate to="/shop/:id" replace />}
+      />
       <Route path="checkout" element={<Checkout />} />
       <Route path="checkout/success" element={<CheckoutSuccess />} />
       <Route path="solutions" element={<Solutions />} />

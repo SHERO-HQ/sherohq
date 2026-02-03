@@ -8,6 +8,7 @@ import { NotificationProvider } from "./context/NotificationProvider";
 import Toaster from "./components/admin/Toaster";
 import CartDrawer from "./components/cart/CartDrawer";
 import ScrollToTop from "./components/common/ScrollToTop";
+import { getSubdomain } from "@/utils/subdomain";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -24,7 +25,11 @@ const queryClient = new QueryClient({
 
 const App = () => {
   const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith("/admin");
+  const subdomain = getSubdomain();
+
+  // Hide Nav on admin subdomain OR admin routes (path-based fallback)
+  const isAdmin =
+    subdomain === "admin" || location.pathname.startsWith("/admin");
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -34,8 +39,8 @@ const App = () => {
             <NotificationProvider>
               <Toaster />
               <ScrollToTop />
-              {!isAdminRoute && <Nav />}
-              {!isAdminRoute && <CartDrawer />}
+              {!isAdmin && <Nav />}
+              {!isAdmin && <CartDrawer />}
               <AppRoutes />
             </NotificationProvider>
           </AuthProvider>

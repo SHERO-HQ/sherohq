@@ -25,9 +25,9 @@ const LandingPathways = () => {
     {
       icon: <ShoppingBag className="w-8 h-8" />,
       label: "For Everyone",
-      title: "Shop Products",
+      title: "The Shop",
       description: "Premium hardware curated for the modern professional.",
-      link: "/products",
+      link: "/shop",
       pattern: "pattern-dots",
       span: "lg:col-span-4 lg:row-span-2",
       color: "text-emerald-500",
@@ -194,7 +194,9 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
           to={path.link}
           className={`inline-flex items-center justify-center w-fit h-9 px-4 rounded border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white group-hover:bg-emerald-500 group-hover:border-emerald-500 group-hover:text-white transition-all`}
         >
-          <span className="text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white">Explore</span>
+          <span className="text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white">
+            Explore
+          </span>
           <ArrowRight className="w-5 h-5" />
         </NavLink>
       </div>
