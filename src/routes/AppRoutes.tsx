@@ -36,6 +36,8 @@ const AdminProfile = lazy(() => import("@/pages/admin/AdminProfile"));
 const OrderDetails = lazy(() => import("@/pages/admin/OrderDetails"));
 const AdminSupport = lazy(() => import("@/pages/admin/AdminSupport"));
 const AdminUsers = lazy(() => import("@/pages/admin/AdminUsers"));
+const AdminProjects = lazy(() => import("@/pages/admin/AdminProjects"));
+const ProjectForm = lazy(() => import("@/pages/admin/ProjectForm"));
 import AdminGuides from "@/pages/admin/AdminGuides";
 import AdminGuideEditor from "@/pages/admin/AdminGuideEditor";
 import { BreadcrumbProvider } from "@/context/BreadcrumbContext";
@@ -62,121 +64,161 @@ const AdminSection = () => (
     <BreadcrumbProvider>
       <AdminProvider>
         <Routes>
-          <Route path="login" element={<AdminLogin />} />
-          <Route path="" element={<Navigate to="dashboard" replace />} />
-          <Route
-            path="dashboard"
-            element={
-              <ProtectedRoute>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="products"
-            element={
-              <ProtectedRoute>
-                <AdminProducts />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="products/new"
-            element={
-              <ProtectedRoute>
-                <ProductForm />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="products/:id" element={<Navigate to="edit" replace />} />
-          <Route
-            path="products/:id/edit"
-            element={
-              <ProtectedRoute>
-                <ProductForm />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="orders"
-            element={
-              <ProtectedRoute>
-                <AdminOrders />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="orders/:id"
-            element={
-              <ProtectedRoute>
-                <OrderDetails />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="users"
-            element={
-              <ProtectedRoute>
-                <AdminUsers />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="reports"
-            element={
-              <ProtectedRoute>
-                <AdminReports />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="profile"
-            element={
-              <ProtectedRoute>
-                <AdminProfile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="support"
-            element={
-              <ProtectedRoute>
-                <AdminSupport />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="guides"
-            element={
-              <ProtectedRoute>
-                <AdminGuides />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="guides/new"
-            element={
-              <ProtectedRoute>
-                <AdminGuideEditor />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="guides/edit/:id"
-            element={
-              <ProtectedRoute>
-                <AdminGuideEditor />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="*" element={<NotFound />} />
+          {/* Handle cases where /admin prefix is still present on admin subdomain */}
+          <Route path="admin/*" element={<AdminSectionInternal />} />
+          <Route path="*" element={<AdminSectionInternal />} />
         </Routes>
       </AdminProvider>
     </BreadcrumbProvider>
   </Suspense>
 );
 
+const AdminSectionInternal = () => (
+  <Routes>
+    <Route path="login" element={<AdminLogin />} />
+    <Route path="" element={<Navigate to="dashboard" replace />} />
+    <Route
+      path="dashboard"
+      element={
+        <ProtectedRoute>
+          <AdminDashboard />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="products"
+      element={
+        <ProtectedRoute>
+          <AdminProducts />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="products/new"
+      element={
+        <ProtectedRoute>
+          <ProductForm />
+        </ProtectedRoute>
+      }
+    />
+    <Route path="products/:id" element={<Navigate to="edit" replace />} />
+    <Route
+      path="products/:id/edit"
+      element={
+        <ProtectedRoute>
+          <ProductForm />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="orders"
+      element={
+        <ProtectedRoute>
+          <AdminOrders />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="orders/:id"
+      element={
+        <ProtectedRoute>
+          <OrderDetails />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="users"
+      element={
+        <ProtectedRoute>
+          <AdminUsers />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="reports"
+      element={
+        <ProtectedRoute>
+          <AdminReports />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="profile"
+      element={
+        <ProtectedRoute>
+          <AdminProfile />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="support"
+      element={
+        <ProtectedRoute>
+          <AdminSupport />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="guides"
+      element={
+        <ProtectedRoute>
+          <AdminGuides />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="projects"
+      element={
+        <ProtectedRoute>
+          <AdminProjects />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="projects/new"
+      element={
+        <ProtectedRoute>
+          <ProjectForm />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="projects/:id/edit"
+      element={
+        <ProtectedRoute>
+          <ProjectForm />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="guides/new"
+      element={
+        <ProtectedRoute>
+          <AdminGuideEditor />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="guides/edit/:id"
+      element={
+        <ProtectedRoute>
+          <AdminGuideEditor />
+        </ProtectedRoute>
+      }
+    />
+    <Route path="*" element={<NotFound />} />
+  </Routes>
+);
+
 const SupportSection = () => (
+  <Routes>
+    {/* Handle /support prefix on support subdomain */}
+    <Route path="support/*" element={<SupportSectionInternal />} />
+    <Route path="*" element={<SupportSectionInternal />} />
+  </Routes>
+);
+
+const SupportSectionInternal = () => (
   <Routes>
     <Route path="" element={<Support />} />
     <Route path="faq" element={<Faq />} />
@@ -201,6 +243,15 @@ const SupportSection = () => (
 );
 
 const ShopSection = () => (
+  <Routes>
+    {/* Handle /shop or /products prefix on shop subdomain */}
+    <Route path="shop/*" element={<ShopSectionInternal />} />
+    <Route path="products/*" element={<ShopSectionInternal />} />
+    <Route path="*" element={<ShopSectionInternal />} />
+  </Routes>
+);
+
+const ShopSectionInternal = () => (
   <Routes>
     <Route path="" element={<Products />} />
     <Route path=":id" element={<ProductDetail />} />

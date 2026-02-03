@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { NavLink } from "react-router-dom";
+import UniversalLink from "@/components/common/UniversalLink";
 import { ShoppingCart, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import ProductCard from "@/components/products/ProductCard";
@@ -156,7 +156,7 @@ const LandingProducts = () => {
           transition={{ delay: 0.5, duration: 0.6 }}
           className="text-center"
         >
-          <NavLink
+          <UniversalLink
             to="/shop"
             className="inline-flex items-center gap-3 px-8 py-2 rounded
                      border-2 border-slate-300 dark:border-slate-700
@@ -168,7 +168,7 @@ const LandingProducts = () => {
           >
             <span>Visit the Shop</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </NavLink>
+          </UniversalLink>
         </motion.div>
       </div>
     </section>

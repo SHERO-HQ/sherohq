@@ -99,7 +99,10 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
     });
   } catch (error) {
     console.error("Error fetching stats:", error);
-    res.status(500).json({ error: "Failed to fetch stats" });
+    res.status(500).json({
+      error: "Failed to fetch stats",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 });
 
@@ -160,7 +163,10 @@ router.get(
       res.json(chartData);
     } catch (error) {
       console.error("Error fetching analytics:", error);
-      res.status(500).json({ error: "Failed to fetch analytics" });
+      res.status(500).json({
+        error: "Failed to fetch analytics",
+        details: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   },
 );
@@ -203,7 +209,10 @@ router.get(
       res.json(topProducts);
     } catch (error) {
       console.error("Error fetching top products:", error);
-      res.status(500).json({ error: "Failed to fetch top products" });
+      res.status(500).json({
+        error: "Failed to fetch top products",
+        details: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   },
 );
@@ -252,7 +261,10 @@ router.get(
       ]);
     } catch (error) {
       console.error("Error fetching stock distribution:", error);
-      res.status(500).json({ error: "Failed to fetch stock distribution" });
+      res.status(500).json({
+        error: "Failed to fetch stock distribution",
+        details: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   },
 );
@@ -288,7 +300,10 @@ router.get(
       res.json(data);
     } catch (error) {
       console.error("Error fetching order status:", error);
-      res.status(500).json({ error: "Failed to fetch order status" });
+      res.status(500).json({
+        error: "Failed to fetch order status",
+        details: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   },
 );
@@ -336,7 +351,10 @@ router.get(
       res.json(recentOrders);
     } catch (error) {
       console.error("Error fetching recent orders:", error);
-      res.status(500).json({ error: "Failed to fetch recent orders" });
+      res.status(500).json({
+        error: "Failed to fetch recent orders",
+        details: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   },
 );
@@ -377,7 +395,10 @@ router.get("/regional", adminAuth, async (req: AdminRequest, res: Response) => {
     res.json(data);
   } catch (error) {
     console.error("Error fetching regional reports:", error);
-    res.status(500).json({ error: "Failed to fetch regional report" });
+    res.status(500).json({
+      error: "Failed to fetch regional report",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 });
 

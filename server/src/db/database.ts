@@ -209,6 +209,22 @@ export async function initializeDatabase() {
       )
     `);
 
+    // Projects table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS projects (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        category TEXT NOT NULL,
+        client TEXT,
+        description TEXT,
+        "useCase" TEXT,
+        technologies JSONB,
+        image TEXT,
+        link TEXT,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
     // Support Guides table (for hardware/software articles)
     await client.query(`
       CREATE TABLE IF NOT EXISTS support_guides (

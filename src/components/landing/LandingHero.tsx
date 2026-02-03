@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import UniversalLink from "@/components/common/UniversalLink";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { fadeUp } from "@/components/motion/heroMotion";
 import { useMemo, useRef, useState } from "react";
@@ -176,19 +176,19 @@ const LandingHero: React.FC = () => {
                 size="lg"
                 className="w-full sm:w-auto h-9 px-8 text-sm shadow-2xl shadow-emerald-500/20 group"
               >
-                <NavLink to="/solutions">
+                <UniversalLink to="/solutions">
                   <span>Explore Solutions</span>
                   <Layers className="w-5 h-5 transition-transform group-hover:rotate-12" />
-                </NavLink>
+                </UniversalLink>
               </Button>
 
-              <NavLink
+              <UniversalLink
                 to="/consultation"
                 className="group flex items-center justify-center gap-3 text-slate-900 dark:text-white font-mono text-sm font-bold tracking-tight border-2  hover:border-emerald-500/50! rounded px-4 py-2 h-10 w-full border-slate-200 dark:border-slate-800 pb-1 transition-all"
               >
                 Request a Quote
                 <MessageSquareDot className="w-5 h-5 text-emerald-500" />
-              </NavLink>
+              </UniversalLink>
             </motion.div>
 
             {/* Trust Indicators: Simplified Mono */}

@@ -955,3 +955,60 @@ export async function deleteAdminUser(
   });
   return handleResponse(response);
 }
+
+// ============ Projects API ============
+
+export interface Project {
+  id: string;
+  title: string;
+  category: string;
+  client: string | null;
+  description: string | null;
+  useCase: string | null;
+  technologies: string[];
+  image: string | null;
+  link: string | null;
+  createdAt: string;
+}
+
+export async function fetchProjects(category?: string): Promise<Project[]> {
+  const params = new URLSearchParams();
+  if (category && category !== "All") params.append("category", category);
+  const response = await fetch(`${API_BASE}/projects?${params.toString()}`);
+  return handleResponse<Project[]>(response);
+}
+
+export async function fetchProjectById(id: string): Promise<Project> {
+  const response = await fetch(`${API_BASE}/projects/${id}`);
+  return handleResponse<Project>(response);
+}
+
+export async function createProject(
+  data: Partial<Project>,
+): Promise<{ success: boolean; project: Project }> {
+  const response = await authFetch(`${API_BASE}/projects`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+}
+
+export async function updateProject(
+  id: string,
+  data: Partial<Project>,
+): Promise<{ success: boolean; project: Project }> {
+  const response = await authFetch(`${API_BASE}/projects/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+}
+
+export async function deleteProject(
+  id: string,
+): Promise<{ success: boolean; message: string }> {
+  const response = await authFetch(`${API_BASE}/projects/${id}`, {
+    method: "DELETE",
+  });
+  return handleResponse(response);
+}

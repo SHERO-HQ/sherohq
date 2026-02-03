@@ -23,6 +23,7 @@ import ticketsRoute from "./routes/tickets";
 import activityRoutes from "./routes/activity";
 import usersRoutes from "./routes/users";
 import guidesRoutes from "./routes/guides";
+import projectRoutes from "./routes/projects";
 
 // Load environment variables
 dotenv.config();
@@ -171,6 +172,7 @@ app.use("/api/inquiry", inquiryRoutes);
 app.use("/api/admin", activityRoutes);
 app.use("/api/admin/users", usersRoutes);
 app.use("/api/guides", guidesRoutes);
+app.use("/api/projects", projectRoutes);
 
 // Root route - information about the API
 app.get("/", (req: Request, res: Response) => {

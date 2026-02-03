@@ -196,13 +196,16 @@ router.get("/track/:orderId", async (req: Request, res: Response) => {
 
     res.json({
       ...order,
-      items: JSON.parse(order.items),
-      shippingInfo: JSON.parse(order.shippingInfo),
+      items: safeParse(order.items),
+      shippingInfo: safeParse(order.shippingInfo),
       total: Number(order.total),
     });
   } catch (error) {
     console.error("Error tracking order:", error);
-    res.status(500).json({ error: "Failed to track order" });
+    res.status(500).json({
+      error: "Failed to track order",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 });
 
@@ -255,8 +258,11 @@ router.get("/", adminAuth, async (req: AdminRequest, res: Response) => {
 
     res.json(parsedOrders);
   } catch (error) {
-    console.error("Error fetching all orders:", error);
-    res.status(500).json({ error: "Failed to fetch orders" });
+    console.error("Error fetching all orders (Admin):", error);
+    res.status(500).json({
+      error: "Failed to fetch orders",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 });
 
@@ -274,13 +280,16 @@ router.get("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
 
     res.json({
       ...order,
-      items: JSON.parse(order.items),
-      shippingInfo: JSON.parse(order.shippingInfo),
+      items: safeParse(order.items),
+      shippingInfo: safeParse(order.shippingInfo),
       total: Number(order.total),
     });
   } catch (error) {
-    console.error("Error fetching order:", error);
-    res.status(500).json({ error: "Failed to fetch order" });
+    console.error("Error fetching order detail (Admin):", error);
+    res.status(500).json({
+      error: "Failed to fetch order",
+      details: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 });
 

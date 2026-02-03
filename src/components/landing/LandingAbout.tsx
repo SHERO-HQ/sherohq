@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import UniversalLink from "@/components/common/UniversalLink";
 import { motion } from "motion/react";
 import {
   ArrowRight,
@@ -41,7 +41,7 @@ const LandingAbout = () => {
               </span>
 
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-sora font-bold text-slate-900 dark:text-slate-100 leading-tight transition-colors duration-300">
-                Redefining {" "}
+                Redefining{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-700 dark:from-blue-700 dark:to-emerald-500 transition-all duration-500">
                   Possible
                 </span>
@@ -73,13 +73,13 @@ const LandingAbout = () => {
 
             {/* CTA */}
             <div className="pt-2">
-              <NavLink
+              <UniversalLink
                 to="/about-us"
                 className="group inline-flex items-center gap-2 text-slate-900 dark:text-white font-semibold border-b-2 border-emerald-500 pb-1 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
               >
                 Discover Our Story
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </NavLink>
+              </UniversalLink>
             </div>
           </motion.div>
 
@@ -93,7 +93,6 @@ const LandingAbout = () => {
               // transition={{ duration: 0.8, ease: "circOut" }}
               className="relative z-20 w-80 h-80 rounded-full flex items-center justify-center border-2 border-emerald-500/20"
             >
-
               {/* Rotating Rings */}
               <div className="absolute inset-4 border-2 border-emerald-500/30 rounded-full" />
               <div className="absolute inset-8 border-2 border-emerald-400/20 rounded-full" />

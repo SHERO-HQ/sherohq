@@ -23,7 +23,7 @@ import {
 import Footer from "@/components/layout/Footer";
 import { useTitle } from "@/hooks/useTitle";
 import SupportTicketForm from "@/components/support/SupportTicketForm";
-import { Link } from "react-router-dom";
+import UniversalLink from "@/components/common/UniversalLink";
 import { COMPANY_EMAILS } from "@/constants/emails";
 
 const Support = () => {
@@ -129,12 +129,12 @@ const Support = () => {
                     ))}
                   </div>
                 ) : (
-                  <Link
+                  <UniversalLink
                     to={item.link!}
                     className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-semibold group-hover:gap-3 transition-all"
                   >
                     Browse <ArrowRight className="w-4 h-4" />
-                  </Link>
+                  </UniversalLink>
                 )}
               </motion.div>
             ))}

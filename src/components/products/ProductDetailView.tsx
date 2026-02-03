@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { useNavigate } from "react-router-dom";
+import { useUniversalNavigate } from "@/hooks/useUniversalNavigate";
 import {
   ShoppingCart,
   Heart,
@@ -29,7 +29,7 @@ interface ProductDetailViewProps {
 
 const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
   const { addItem } = useCart();
-  const navigate = useNavigate();
+  const navigate = useUniversalNavigate();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -70,7 +70,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back Button */}
         <button
-          onClick={() => navigate("/products")}
+          onClick={() => navigate("/shop")}
           className="cursor-pointer flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 mb-8 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />

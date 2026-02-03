@@ -1,11 +1,13 @@
 import { motion } from "motion/react";
 import { ShoppingCart, Heart, Eye, Star, CreditCard } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useUniversalNavigate } from "@/hooks/useUniversalNavigate";
 import { useCart } from "@/context/CartContext";
 import { useNotifications } from "@/hooks/useNotifications";
 import { getImageUrl } from "@/services/api";
-import type { Product } from "@/data/products"; // Import shared type
+import type { Product } from "@/data/products";
+import { COMPANY_CONTACTS } from "@/constants/contacts";
+import { WhatsAppIcon } from "@/assets/icons/icons";
 
 interface ProductCardProps {
   product: Product;
@@ -15,7 +17,7 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
   const { addItem } = useCart();
   const { addNotification } = useNotifications();
-  const navigate = useNavigate();
+  const navigate = useUniversalNavigate();
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   const discount = product.originalPrice
@@ -229,6 +231,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
             <span>Buy</span>
           </button>
+
+          <a
+            href={`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}?text=${encodeURIComponent(
+              `Hi, I'm interested in inquiring about ${product.name}. Is it available?`,
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="px-4 py-2 rounded flex items-center justify-center bg-[#25D366] hover:bg-[#20bd5a] text-white transition-all duration-300 shadow-lg shadow-[#25D366]/20"
+            aria-label="Inquire via WhatsApp"
+          >
+            <WhatsAppIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+          </a>
         </div>
       </div>
     </motion.div>

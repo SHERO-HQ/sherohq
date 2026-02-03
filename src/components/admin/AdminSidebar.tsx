@@ -12,6 +12,7 @@ import {
   PanelLeftOpen,
   Headset,
   BookOpen,
+  Briefcase,
 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { cn } from "@/lib/utils";
@@ -25,6 +26,7 @@ interface SidebarProps {
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/admin/dashboard" },
   { icon: Package, label: "Products", href: "/admin/products" },
+  { icon: Briefcase, label: "Projects", href: "/admin/projects" },
   { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
   { icon: Users, label: "Customers", href: "/admin/users" },
   { icon: BarChart3, label: "Reports", href: "/admin/reports" },
