@@ -43,3 +43,70 @@ export const getSubdomain = (): string | null => {
 
   return subdomain;
 };
+
+/**
+ * Generates the correct URL for navigation, handling cross-subdomain links.
+ *
+ * @param path - The target path (e.g., "/shop", "/about-us")
+ * @returns {string} - The absolute URL (prod) or relative path (local)
+ */
+
+const getBaseDomain = (hostname: string): string => {
+  const parts = hostname.split(".");
+  if (parts.length === 2) return hostname;
+  if (parts.length >= 3) return parts.slice(1).join(".");
+  return hostname;
+};
+
+const getTargetSubdomain = (
+  path: string,
+): { subdomain: string; path: string } => {
+  if (path.startsWith("/shop") || path.startsWith("/products")) {
+    const cleanPath = path.replace(/^\/shop|^\/products/, "");
+    const finalPath =
+      !cleanPath || cleanPath === "/"
+        ? "/"
+        : cleanPath.startsWith("/")
+          ? cleanPath
+          : "/" + cleanPath;
+
+    return { subdomain: "shop", path: finalPath };
+  }
+  if (path.startsWith("/admin")) {
+    const cleanPath = path.replace("/admin", "");
+    if (!cleanPath || cleanPath === "/")
+      return { subdomain: "admin", path: "/" };
+
+    const finalPath = cleanPath.startsWith("/") ? cleanPath : "/" + cleanPath;
+    return { subdomain: "admin", path: finalPath };
+  }
+  if (path.startsWith("/support")) {
+    return {
+      subdomain: "support",
+      path: path === "/support" ? "/" : path.replace("/support", ""),
+    };
+  }
+  return { subdomain: "www", path };
+};
+
+export const getAbsoluteUrl = (path: string): string => {
+  const hostname = globalThis.location.hostname;
+  const protocol = globalThis.location.protocol;
+
+  if (
+    hostname === "localhost" ||
+    hostname === "127.0.0.1" ||
+    hostname.startsWith("192.168.")
+  ) {
+    return path;
+  }
+
+  const baseDomain = getBaseDomain(hostname);
+  const { subdomain, path: targetPath } = getTargetSubdomain(path);
+
+  if (subdomain === "www") {
+    return `${protocol}//${baseDomain}${targetPath}`;
+  }
+
+  return `${protocol}//${subdomain}.${baseDomain}${targetPath}`;
+};

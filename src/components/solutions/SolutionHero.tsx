@@ -119,7 +119,7 @@ const SolutionsHero = () => {
                     ? { duration: 0 }
                     : { duration: 0.8, ease: "easeOut" }
                 }
-                className="font-sora font-extrabold leading-[1.1] text-6xl md:text-8xl lg:text-8xl 
+                className="font-sora font-extrabold leading-[1.1] text-5xl md:text-6xl lg:text-7xl 
                            text-slate-900 dark:text-white mb-6"
               >
                 Performance Driven{" "}

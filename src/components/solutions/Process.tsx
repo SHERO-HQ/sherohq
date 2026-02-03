@@ -70,7 +70,7 @@ const Process = () => {
 
         <div className="relative">
           {/* Central Timeline Line */}
-          <div className="absolute left-8 md:left-1/2 transform -translate-x-1/2 h-full w-px bg-gradient-to-b from-transparent via-emerald-500/50 to-transparent" />
+          <div className="absolute left-8 md:left-1/2 transform -translate-x-1/2 h-full w-px bg-linear-to-b from-transparent via-emerald-500/50 to-transparent" />
 
           <div className="space-y-16 md:space-y-24">
             {steps.map((step, index) => {

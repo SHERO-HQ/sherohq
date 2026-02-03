@@ -1,5 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { useAdmin } from "@/context/AdminContext";
+import { getSubdomain } from "@/utils/subdomain";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -17,7 +18,9 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/admin/login" replace />;
+    const subdomain = getSubdomain();
+    const loginPath = subdomain === "admin" ? "/login" : "/admin/login";
+    return <Navigate to={loginPath} replace />;
   }
 
   return <>{children}</>;

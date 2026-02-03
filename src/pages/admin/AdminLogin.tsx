@@ -11,6 +11,7 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
+import { getSubdomain } from "@/utils/subdomain";
 
 export default function AdminLogin() {
   useTitle("Admin Login");
@@ -33,7 +34,10 @@ export default function AdminLogin() {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/admin/dashboard" replace />;
+    const subdomain = getSubdomain();
+    const dashboardPath =
+      subdomain === "admin" ? "/dashboard" : "/admin/dashboard";
+    return <Navigate to={dashboardPath} replace />;
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -43,7 +47,10 @@ export default function AdminLogin() {
 
     try {
       await login(username, password);
-      navigate("/admin/dashboard");
+      const subdomain = getSubdomain();
+      const dashboardPath =
+        subdomain === "admin" ? "/dashboard" : "/admin/dashboard";
+      navigate(dashboardPath);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {
@@ -62,7 +69,7 @@ export default function AdminLogin() {
       <div className="relative z-10 w-full max-w-md">
         {/* Logo/Brand */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded bg-gradient-to-br from-purple-600 to-blue-600 mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded bg-linear-to-br from-purple-600 to-blue-600 mb-4">
             <Lock className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-white font-sora">
@@ -77,7 +84,7 @@ export default function AdminLogin() {
             {/* Error Message */}
             {error && (
               <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 rounded text-red-400 text-sm">
-                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
               </div>
             )}
@@ -144,7 +151,7 @@ export default function AdminLogin() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-2 px-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-medium rounded hover:from-purple-500 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+              className="w-full py-2 px-4 bg-linear-to-r from-purple-600 to-blue-600 text-white font-medium rounded hover:from-purple-500 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <>

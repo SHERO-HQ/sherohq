@@ -1,5 +1,5 @@
 import { Home, ShoppingBag, ShoppingCart } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import UniversalLink from "@/components/common/UniversalLink";
 import { useCart } from "@/context/CartContext";
 
 const BottomNav = () => {
@@ -33,7 +33,7 @@ const BottomNav = () => {
             );
           }
           return (
-            <NavLink
+            <UniversalLink
               key={item.label}
               to={item.path}
               className={({ isActive }) =>
@@ -46,7 +46,7 @@ const BottomNav = () => {
             >
               <item.icon className="w-6 h-6" strokeWidth={2} />
               <span className="text-[12px] font-medium">{item.label}</span>
-            </NavLink>
+            </UniversalLink>
           );
         })}
       </nav>

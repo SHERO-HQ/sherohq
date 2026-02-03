@@ -137,9 +137,9 @@ const AboutHero = () => {
                 className="font-sora font-extrabold leading-[1.1] text-6xl md:text-8xl lg:text-8xl 
                            text-slate-900 dark:text-white mb-6"
               >
-                The Future of{"\n"}
+                Technical{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400">
-                  Technical Excellence
+                  Excellence
                 </span>
               </motion.h1>
             </div>
@@ -288,7 +288,7 @@ const AboutHero = () => {
                   y: useTransform(mouseY, [-0.5, 0.5], [20, 20]),
                   rotate: -12,  
                 }}
-                className="absolute -top-20 -left-6 w-48 p-5 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/30 shadow-2xl z-20 pointer-events-none"
+                className="absolute -top-15 -left-20 w-48 p-5 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/30 shadow-2xl z-20 pointer-events-none"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-full bg-linear-to-br from-emerald-600 to-blue-400 flex items-center justify-center shadow-lg">

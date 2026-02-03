@@ -1,4 +1,4 @@
-import { NavLink, Link } from "react-router-dom";
+import UniversalLink from "@/components/common/UniversalLink";
 import SheroLight from "@/assets/logo/shero-light.svg";
 import { ArrowRight, BadgeCheck, Mail, Phone } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
@@ -50,7 +50,7 @@ const Footer = () => {
           {/* LEFT: Branding & Contact */}
           <div className="lg:col-span-5 space-y-6">
             <div>
-              <NavLink to="/" className="inline-block mb-3">
+              <UniversalLink to="/" className="inline-block mb-3">
                 <img
                   src={SheroLight}
                   alt="Shero Logo"
@@ -61,7 +61,7 @@ const Footer = () => {
                   alt="Shero Logo"
                   className="h-10 w-auto dark:hidden block brightness-0"
                 />
-              </NavLink>
+              </UniversalLink>
               <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed max-w-md transition-colors duration-300">
                 Engineering the future of technology with focus on clarity,
                 performance, and scalability with long term value to Redefine
@@ -128,13 +128,13 @@ const Footer = () => {
                 <ul className="space-y-4">
                   {companyLinks.map((link) => (
                     <li key={link}>
-                      <NavLink
+                      <UniversalLink
                         to={`/${link.toLowerCase().replace(" ", "-")}`}
                         className="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors text-sm"
                       >
                         <ArrowRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                         {link}
-                      </NavLink>
+                      </UniversalLink>
                     </li>
                   ))}
                 </ul>
@@ -148,13 +148,13 @@ const Footer = () => {
                 <ul className="space-y-4">
                   {resourceLinks.map((link) => (
                     <li key={link}>
-                      <NavLink
+                      <UniversalLink
                         to={`/${link.toLowerCase().replace(" ", "-")}`}
                         className="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors text-sm"
                       >
                         <ArrowRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                         {link}
-                      </NavLink>
+                      </UniversalLink>
                     </li>
                   ))}
                 </ul>
@@ -194,24 +194,24 @@ const Footer = () => {
           <div className="flex flex-col md:flex-row items-center gap-6 text-sm text-slate-500">
             <p>&copy; {new Date().getFullYear()} Shero Group.</p>
             <div className="flex items-center gap-6">
-              <Link
+              <UniversalLink
                 to="/terms"
                 className="hover:text-slate-900 dark:hover:text-white transition-colors"
               >
                 Terms
-              </Link>
-              <Link
+              </UniversalLink>
+              <UniversalLink
                 to="/privacy"
                 className="hover:text-slate-900 dark:hover:text-white transition-colors"
               >
                 Privacy
-              </Link>
-              <Link
+              </UniversalLink>
+              <UniversalLink
                 to="/cookies"
                 className="hover:text-slate-900 dark:hover:text-white transition-colors"
               >
                 Cookies
-              </Link>
+              </UniversalLink>
             </div>
           </div>
 

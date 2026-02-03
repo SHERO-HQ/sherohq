@@ -3,10 +3,10 @@ import SheroLogoLight from "@/assets/logo/shero-light.svg";
 import SheroLogoDark from "@/assets/logo/shero-dark.svg";
 import { useEffect, useState } from "react";
 import { ToggleTheme } from "./toggle-theme";
-import { NavLink } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { LogOut, ShoppingCart, User } from "lucide-react";
+import UniversalLink from "@/components/common/UniversalLink";
 
 import { AnimatePresence, easeOut, motion } from "motion/react";
 import { navLinkClass, navLinkClassVariant } from "@/lib/utils";
@@ -86,7 +86,7 @@ const Nav = () => {
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 lg:h-20">
             {/* Logo */}
-            <NavLink to="/" className="flex items-center z-50">
+            <UniversalLink to="/" className="flex items-center z-50">
               {/* Mobile Logos */}
               <div className="md:hidden">
                 <img
@@ -122,7 +122,7 @@ const Nav = () => {
                   className="h-10 w-auto dark:hidden block"
                 />
               </div>
-            </NavLink>
+            </UniversalLink>
 
             {/* Right Groups Wrapper */}
             <div className="flex items-center gap-2 lg:space-x-4 ml-auto">
@@ -130,12 +130,12 @@ const Nav = () => {
               <ul className="hidden lg:flex items-center gap-3">
                 {navLinks.map((item) => (
                   <li key={item}>
-                    <NavLink
+                    <UniversalLink
                       className={({ isActive }) => navLinkClass(isActive)}
                       to={`/${item.toLowerCase().replace(" ", "-")}`}
                     >
                       {item}
-                    </NavLink>
+                    </UniversalLink>
                   </li>
                 ))}
               </ul>
@@ -146,7 +146,7 @@ const Nav = () => {
                 <SearchBar className="hidden lg:block" />
 
                 {/* Contact Us - Desktop Only */}
-                <NavLink
+                <UniversalLink
                   to="/contact-us"
                   className="hidden lg:inline-flex group items-center gap-1 
                            text-white dark:text-slate-900 bg-emerald-600 dark:bg-emerald-500
@@ -168,7 +168,7 @@ const Nav = () => {
                   >
                     <path d="M5 12H19M19 12L13 6M19 12L13 18" />
                   </svg>
-                </NavLink>
+                </UniversalLink>
 
                 {/* Cart Button */}
                 <button
@@ -197,13 +197,13 @@ const Nav = () => {
                       </div>
                     </button>
                   ) : (
-                    <NavLink
+                    <UniversalLink
                       to="/login"
                       className="cursor-pointer p-2 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors block"
                       aria-label="Login"
                     >
                       <User className="w-6 h-6" />
-                    </NavLink>
+                    </UniversalLink>
                   )}
 
                   {/* Dropdown Menu (Only when authenticated) */}
@@ -217,12 +217,12 @@ const Nav = () => {
                           {user?.email}
                         </p>
                       </div>
-                      <NavLink
+                      <UniversalLink
                         to="/profile"
                         className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
                       >
                         <User className="w-4 h-4" /> Profile & Orders
-                      </NavLink>
+                      </UniversalLink>
                       <button
                         onClick={() => logout()}
                         className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
@@ -318,7 +318,7 @@ const Nav = () => {
                       initial="initial"
                       animate="animate"
                     >
-                      <NavLink
+                      <UniversalLink
                         className={({ isActive }) =>
                           navLinkClassVariant(isActive, "mobile")
                         }
@@ -326,7 +326,7 @@ const Nav = () => {
                         onClick={() => setIsOpen(false)}
                       >
                         {item}
-                      </NavLink>
+                      </UniversalLink>
                     </motion.li>
                   ))}
                 </ul>
@@ -349,7 +349,7 @@ const Nav = () => {
                         </div>
                       </div>
                       <div className="grid grid-cols-1 gap-2">
-                        <NavLink
+                        <UniversalLink
                           to="/profile"
                           onClick={() => setIsOpen(false)}
                           className="flex items-center gap-3 px-4 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded transition-all duration-200 group/item"
@@ -360,7 +360,7 @@ const Nav = () => {
                           <span className="font-semibold">
                             Profile & Orders
                           </span>
-                        </NavLink>
+                        </UniversalLink>
                         <button
                           onClick={() => {
                             logout();
@@ -376,7 +376,7 @@ const Nav = () => {
                       </div>
                     </div>
                   ) : (
-                    <NavLink
+                    <UniversalLink
                       to="/login"
                       onClick={() => setIsOpen(false)}
                       className="flex items-center gap-4 px-5 py-2 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 rounded transition-all duration-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800/50 group"
@@ -392,7 +392,7 @@ const Nav = () => {
                           Access your account & orders
                         </span>
                       </div>
-                    </NavLink>
+                    </UniversalLink>
                   )}
                 </div>
 
@@ -401,7 +401,7 @@ const Nav = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0, transition: { delay: 0.4 } }}
                 >
-                  <NavLink
+                  <UniversalLink
                     to="/contact-us"
                     onClick={() => setIsOpen(false)}
                     className="flex w-full items-center justify-center gap-2 
@@ -422,7 +422,7 @@ const Nav = () => {
                     >
                       <path d="M5 12H19M19 12L13 6M19 12L13 18" />
                     </svg>
-                  </NavLink>
+                  </UniversalLink>
                 </motion.div>
               </motion.div>
             </>

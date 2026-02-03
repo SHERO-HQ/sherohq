@@ -1,4 +1,4 @@
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Route, Routes, Navigate, useParams } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import HomePage from "@/pages/Home";
 import About from "@/pages/About";
@@ -51,6 +51,11 @@ const AppLoading = () => (
 );
 
 import { getSubdomain } from "@/utils/subdomain";
+
+const RedirectToShopProduct = () => {
+  const { id } = useParams();
+  return <Navigate to={`/shop/${id}`} replace />;
+};
 
 const AdminSection = () => (
   <Suspense fallback={<AppLoading />}>
@@ -219,10 +224,7 @@ const AppRoutes = () => {
       <Route path="shop" element={<Products />} />
       <Route path="shop/:id" element={<ProductDetail />} />
       <Route path="products" element={<Navigate to="/shop" replace />} />
-      <Route
-        path="products/:id"
-        element={<Navigate to="/shop/:id" replace />}
-      />
+      <Route path="products/:id" element={<RedirectToShopProduct />} />
       <Route path="checkout" element={<Checkout />} />
       <Route path="checkout/success" element={<CheckoutSuccess />} />
       <Route path="solutions" element={<Solutions />} />

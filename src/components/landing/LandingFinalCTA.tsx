@@ -18,7 +18,7 @@ const LandingFinalCTA = () => {
         >
           {/* Warp Speed Background */}
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-20 hover:scale-105 transition-transform duration-[2s]" />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-slate-900/50" />
+          <div className="absolute inset-0 bg-linear-to-r from-slate-950 via-slate-950/80 to-slate-900/50" />
 
           <div className="relative z-10 p-8 md:p-16 lg:p-20 flex flex-col lg:flex-row items-center justify-between">
             {/* Content Left */}
@@ -32,7 +32,7 @@ const LandingFinalCTA = () => {
 
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-sora font-bold text-white leading-tight">
                 Ready to{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-400 to-cyan-400">
                   Launch?
                 </span>
               </h2>

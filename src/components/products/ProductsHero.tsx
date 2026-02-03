@@ -119,7 +119,7 @@ const ProductHero = () => {
                     ? { duration: 0 }
                     : { duration: 0.8, ease: "easeOut" }
                 }
-                className="font-sora font-extrabold leading-[1.1] text-5xl md:text-8xl lg:text-9xl 
+                className="font-sora font-extrabold leading-[1.1] text-4xl md:text-7xl lg:text-9xl 
                            text-slate-900 dark:text-white mb-6"
               >
                 Premium {"\n"}
