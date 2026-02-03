@@ -345,7 +345,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 className="flex items-center justify-center gap-2 px-8 py-3 w-full bg-[#25D366] hover:bg-[#20bd5a] text-white rounded font-bold transition-all shadow-lg shadow-[#25D366]/20"
               >
                 <WhatsAppIcon className="w-5 h-5" />
-                
+                Chat on WhatsApp
               </a>
             </div>
 
