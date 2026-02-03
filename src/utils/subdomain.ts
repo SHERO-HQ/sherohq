@@ -61,8 +61,12 @@ const getBaseDomain = (hostname: string): string => {
 const getTargetSubdomain = (
   path: string,
 ): { subdomain: string; path: string } => {
-  if (path.startsWith("/shop") || path.startsWith("/products")) {
-    const cleanPath = path.replace(/^\/shop|^\/products/, "");
+  if (
+    path.startsWith("/shop") ||
+    path.startsWith("/products") ||
+    path.startsWith("/checkout")
+  ) {
+    const cleanPath = path.replace(/^\/shop|^\/products|^\/checkout/, "");
     const finalPath =
       !cleanPath || cleanPath === "/"
         ? "/"
@@ -70,7 +74,12 @@ const getTargetSubdomain = (
           ? cleanPath
           : "/" + cleanPath;
 
-    return { subdomain: "shop", path: finalPath };
+    // Maintain checkout prefix for routing within the shop subdomain
+    const shopPath = path.startsWith("/checkout")
+      ? "/checkout" + finalPath
+      : finalPath;
+
+    return { subdomain: "shop", path: shopPath };
   }
   if (path.startsWith("/admin")) {
     const cleanPath = path.replace("/admin", "");

@@ -46,34 +46,47 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   const addItem = (newItem: Omit<CartItem, "quantity">) => {
     setCart((prev) => {
       const existing = prev.find((item) => item.id === newItem.id);
+      let updated;
       if (existing) {
-        return prev.map((item) =>
+        updated = prev.map((item) =>
           item.id === newItem.id
             ? { ...item, quantity: item.quantity + 1 }
             : item,
         );
+      } else {
+        updated = [...prev, { ...newItem, quantity: 1 }];
       }
-      return [...prev, { ...newItem, quantity: 1 }];
+      localStorage.setItem("sherotech_cart", JSON.stringify(updated));
+      return updated;
     });
   };
 
   const removeItem = (id: string) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+    setCart((prev) => {
+      const updated = prev.filter((item) => item.id !== id);
+      localStorage.setItem("sherotech_cart", JSON.stringify(updated));
+      return updated;
+    });
   };
 
   const updateQuantity = (id: string, delta: number) => {
-    setCart((prev) =>
-      prev
+    setCart((prev) => {
+      const updated = prev
         .map((item) =>
           item.id === id
             ? { ...item, quantity: Math.max(0, item.quantity + delta) }
             : item,
         )
-        .filter((item) => item.quantity > 0),
-    );
+        .filter((item) => item.quantity > 0);
+      localStorage.setItem("sherotech_cart", JSON.stringify(updated));
+      return updated;
+    });
   };
 
-  const clearCart = () => setCart([]);
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem("sherotech_cart");
+  };
 
   const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cart.reduce(
