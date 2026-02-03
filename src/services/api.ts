@@ -846,11 +846,12 @@ export async function initializePayment(
   orderId: string,
   totalAmount: number,
   description?: string,
+  provider?: "hubtel" | "paystack",
 ): Promise<{ success: boolean; checkoutUrl: string }> {
   const response = await fetch(`${API_BASE}/payments/initialize`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ orderId, totalAmount, description }),
+    body: JSON.stringify({ orderId, totalAmount, description, provider }),
   });
 
   return handleResponse(response);

@@ -157,6 +157,7 @@ const CheckoutFlow = () => {
         card: "card",
         cod: "cash_on_delivery",
         store_pickup: "store_pickup",
+        paystack: "paystack",
       };
 
       const orderItems = cart.map((item) => ({
@@ -176,7 +177,7 @@ const CheckoutFlow = () => {
           firstName: data.shippingAddress.firstName,
           lastName: data.shippingAddress.lastName,
           email: data.email,
-          phone: data.phone, // Updated to use data.phone
+          phone: data.phone,
           address: data.shippingAddress.address,
           city: data.shippingAddress.city,
           region: data.shippingAddress.region,
@@ -189,8 +190,8 @@ const CheckoutFlow = () => {
         setOrderId(response.orderId);
         setConfirmedTotal(total);
 
-        // If online payment (momo/card), redirect to Hubtel
-        if (data.paymentMethod === "momo" || data.paymentMethod === "card") {
+        // If online payment (momo/card/paystack), redirect to Gateway
+        if (["momo", "card", "paystack"].includes(data.paymentMethod)) {
           // Development Mode: Redirect to internal mock payment page
           if (import.meta.env.DEV) {
             clearCart();
@@ -202,6 +203,7 @@ const CheckoutFlow = () => {
               response.orderId,
               total,
               `Order #${response.orderId}`,
+              data.paymentMethod === "paystack" ? "paystack" : "hubtel",
             );
 
             if (paymentResponse.success && paymentResponse.checkoutUrl) {
@@ -667,6 +669,36 @@ const CheckoutFlow = () => {
                           </h3>
                           <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
                             Visa, Mastercard
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+
+                    {/* Paystack */}
+                    <button
+                      onClick={() => setValue("paymentMethod", "paystack")}
+                      className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
+                        paymentMethod === "paystack"
+                          ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
+                          : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
+                      }`}
+                    >
+                      <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
+                        <div
+                          className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
+                            paymentMethod === "paystack"
+                              ? "bg-emerald-600 text-white"
+                              : "bg-slate-100 dark:bg-slate-800 text-slate-600"
+                          }`}
+                        >
+                          <CreditCard className="w-5 h-5 sm:w-6 sm:h-6" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
+                            Pay with Paystack
+                          </h3>
+                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                            Generic Mobile Money & Card
                           </p>
                         </div>
                       </div>

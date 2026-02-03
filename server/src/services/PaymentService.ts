@@ -4,14 +4,17 @@ dotenv.config();
 
 const HUBTEL_BASE_URL =
   "https://payproxyapi.hubtel.com/merchantaccount/onlinecheckout/items/initiate";
+const PAYSTACK_BASE_URL = "https://api.paystack.co/transaction/initialize";
 
 interface PaymentRequest {
   totalAmount: number;
   description: string;
   callbackUrl: string;
-  returnUrl: string; // The URL to redirect the user to after payment
+  returnUrl: string;
   cancellationUrl: string;
-  clientReference: string; // Unique order ID
+  clientReference: string;
+  email: string; // Required for Paystack
+  provider?: "hubtel" | "paystack";
 }
 
 interface PaymentResponse {
@@ -23,16 +26,28 @@ interface PaymentResponse {
   };
 }
 
+interface PaystackResponse {
+  status: boolean;
+  message: string;
+  data: {
+    authorization_url: string;
+    access_code: string;
+    reference: string;
+  };
+}
+
 class PaymentService {
   private merchantAccountNumber: string;
   private clientId: string;
   private clientSecret: string;
+  private paystackSecretKey: string;
 
   constructor() {
     this.merchantAccountNumber =
       process.env.HUBTEL_MERCHANT_ACCOUNT_NUMBER || "";
     this.clientId = process.env.HUBTEL_CLIENT_ID || "";
     this.clientSecret = process.env.HUBTEL_CLIENT_SECRET || "";
+    this.paystackSecretKey = process.env.PAYSTACK_SECRET_KEY || "";
 
     if (!this.merchantAccountNumber || !this.clientId || !this.clientSecret) {
       console.warn(
@@ -47,6 +62,63 @@ class PaymentService {
   }
 
   public async initiatePayment(request: PaymentRequest): Promise<string> {
+    if (request.provider === "paystack") {
+      return this.initiatePaystackPayment(request);
+    }
+    return this.initiateHubtelPayment(request);
+  }
+
+  private async initiatePaystackPayment(
+    request: PaymentRequest,
+  ): Promise<string> {
+    if (!this.paystackSecretKey) {
+      throw new Error("Paystack Secret Key is missing");
+    }
+
+    const payload = {
+      email: request.email,
+      amount: Math.round(request.totalAmount * 100), // Paystack expects kobo/pesewas
+      reference: request.clientReference,
+      callback_url: request.returnUrl, // Paystack redirects here after payment
+      metadata: {
+        description: request.description,
+        cancel_action: request.cancellationUrl,
+      },
+      channels: ["card", "mobile_money"],
+    };
+
+    try {
+      const response = await fetch(PAYSTACK_BASE_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.paystackSecretKey}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Paystack Payment Error:", errorText);
+        throw new Error(`Paystack API error: ${response.statusText}`);
+      }
+
+      const data = (await response.json()) as PaystackResponse;
+
+      if (data.status && data.data.authorization_url) {
+        return data.data.authorization_url;
+      }
+
+      throw new Error("Failed to generate checkout URL from Paystack");
+    } catch (error) {
+      console.error("Paystack initiation failed:", error);
+      throw error;
+    }
+  }
+
+  private async initiateHubtelPayment(
+    request: PaymentRequest,
+  ): Promise<string> {
     if (!this.merchantAccountNumber) {
       throw new Error("Hubtel Merchant Account Number is missing");
     }

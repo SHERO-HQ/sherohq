@@ -18,8 +18,10 @@ import {
 import { useCart } from "@/context/CartContext";
 import { getImageUrl } from "@/services/api";
 import { products, type Product } from "@/data/products";
+import { COMPANY_CONTACTS } from "@/constants/contacts";
 import ProductCard from "./ProductCard";
 import ProductReviews from "./ProductReviews";
+import { WhatsAppIcon } from "@/assets/icons/icons";
 
 interface ProductDetailViewProps {
   product: Product;
@@ -332,6 +334,19 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   />
                 </button>
               </div>
+
+              {/* WhatsApp Button */}
+              <a
+                href={`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}?text=${encodeURIComponent(
+                  `Hi, I'm interested in ${product.name} (Price: GH₵${product.price}). Is it available?`,
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 px-8 py-3 w-full bg-[#25D366] hover:bg-[#20bd5a] text-white rounded font-bold transition-all shadow-lg shadow-[#25D366]/20"
+              >
+                <WhatsAppIcon className="w-5 h-5" />
+                
+              </a>
             </div>
 
             {/* Trust Badges */}
