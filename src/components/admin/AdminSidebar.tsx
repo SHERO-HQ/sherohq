@@ -112,6 +112,9 @@ export default function AdminSidebar({
               <UniversalLink
                 key={item.href}
                 to={item.href}
+                onClick={() => {
+                  if (globalThis.innerWidth < 1024) setIsOpen(false);
+                }}
                 className={({ isActive }) =>
                   cn(
                     "flex items-center gap-3 px-3 py-3 rounded transition-all duration-300 group relative",

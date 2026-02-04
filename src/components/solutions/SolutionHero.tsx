@@ -136,9 +136,8 @@ const SolutionsHero = () => {
               transition={{ delay: 0.1 }}
               className="text-base md:text-lg text-slate-600 dark:text-slate-400 mb-10 leading-relaxed max-w-xl"
             >
-              We bridge the gap between digital strategy and physical
-              infrastructure. From custom software engineering to complex server
-              networks, we power your transformation.
+              Bridging the gap between digital strategy and physical
+              infrastructure.
             </motion.p>
 
             {/* CTA Buttons */}

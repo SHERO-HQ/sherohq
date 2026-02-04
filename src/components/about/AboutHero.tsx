@@ -151,7 +151,7 @@ const AboutHero = () => {
               transition={{ delay: 0.1 }}
               className="text-base md:text-lg text-slate-600 dark:text-slate-400 mb-10 leading-relaxed max-w-xl"
             >
-              Visionary collective of developers and strategists
+              Visionary strategists and engineers
               dedicated to delivering innovative hardware and software products
               that transform businesses and empower people.
             </motion.p>

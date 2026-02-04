@@ -6,8 +6,12 @@ import * as dotenv from "dotenv";
 
 // Database
 import { initializeDatabase } from "./db/database";
-import { seedDatabase, seedAdminUser } from "./db/seed";
-import { seedAllAdminData } from "./db/seed_admin_data";
+import {
+  seedDatabase,
+  seedAdminUser,
+  seedDefaultUser,
+  flushTestData,
+} from "./db/seed";
 
 // Routes
 import productRoutes from "./routes/products";
@@ -205,7 +209,13 @@ app.listen(PORT, async () => {
     await initializeDatabase();
     await seedDatabase();
     await seedAdminUser();
-    await seedAllAdminData();
+    await seedDefaultUser();
+
+    // Check for a flag to flush test data (one-time or env-driven)
+    if (process.env.FLUSH_TEST_DATA === "true") {
+      await flushTestData();
+    }
+
     console.timeEnd("⏱️ Database Startup");
     console.log("✅ Database is ready to handle requests.");
   } catch (error) {

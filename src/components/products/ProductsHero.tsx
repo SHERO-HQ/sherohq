@@ -119,7 +119,7 @@ const ProductHero = () => {
                     ? { duration: 0 }
                     : { duration: 0.8, ease: "easeOut" }
                 }
-                className="font-sora font-extrabold leading-[1.1] text-4xl md:text-7xl lg:text-9xl 
+                className="font-sora font-extrabold leading-[1.1] text-4xl sm:text-7xl md:text-8xl lg:text-9xl 
                            text-slate-900 dark:text-white mb-6"
               >
                 Premium {"\n"}
@@ -272,7 +272,7 @@ const ProductHero = () => {
                   y: useTransform(mouseY, [-0.5, 0.5], [15, 15]),
                   rotate: 12,
                 }}
-                className="absolute -bottom-10 -left-6 w-44 p-4 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/20 shadow-2xl z-20 pointer-events-none"
+                className="absolute -bottom-10 -left-6 w-32 sm:w-44 p-3 sm:p-4 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/20 shadow-2xl z-20 pointer-events-none scale-75 sm:scale-100"
               >
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-8 h-8 rounded bg-emerald-500/10 flex items-center justify-center">
@@ -307,7 +307,7 @@ const ProductHero = () => {
                   x: useTransform(mouseX, [-0.5, 0.5], [-8, 8]),
                   y: useTransform(mouseY, [-0.5, 0.5], [-8, 8]),
                 }}
-                className="absolute -top-8 -right-4 bg-emerald-600 p-4 rounded-full shadow-2xl shadow-emerald-500/50 flex flex-col items-center justify-center -rotate-6 z-30 pointer-events-none aspect-square"
+                className="absolute -top-8 -right-4 bg-emerald-600 p-3 sm:p-4 rounded-full shadow-2xl shadow-emerald-500/50 flex flex-col items-center justify-center -rotate-6 z-30 pointer-events-none aspect-square scale-75 sm:scale-100 hidden sm:flex"
               >
                 <ShieldCheck className="text-white w-8 h-8 drop-shadow-lg" />
                 <span className="text-[7px] font-bold text-white uppercase tracking-tighter mt-1 whitespace-nowrap">

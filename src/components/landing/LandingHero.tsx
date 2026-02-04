@@ -129,7 +129,7 @@ const LandingHero: React.FC = () => {
                 initial="hidden"
                 animate="visible"
                 variants={prefersReducedMotion ? {} : fadeUp}
-                className="font-sora font-extrabold leading-[1.1] text-7xl md:text-8xl lg:text-9xl 
+                className="font-sora font-extrabold leading-[1.1] text-5xl sm:text-7xl md:text-8xl lg:text-9xl 
                            text-slate-900 dark:text-white relative z-10"
               >
                 {HERO_CONTENT.mainHeader.split(" ").map((word, i) =>
@@ -239,7 +239,7 @@ const LandingHero: React.FC = () => {
               {/* Layer 1: Main Capability Table */}
               <motion.div
                 style={{ z: 0 }}
-                className="w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl border border-slate-200 dark:border-slate-800 rounded shadow-2xl p-6 relative overflow-hidden z-10 select-none"
+                className="w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl border border-slate-200 dark:border-slate-800 rounded shadow-2xl p-4 sm:p-6 relative overflow-hidden z-10 select-none"
               >
                 <div className="absolute inset-0 pattern-dots opacity-5 pointer-events-none" />
 
@@ -329,7 +329,7 @@ const LandingHero: React.FC = () => {
                   y: useTransform(smoothY, [-0.5, 0.5], [12, 12]),
                   rotate: 15,
                 }}
-                className="absolute -bottom-10 left-3 w-44 p-4 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/20 shadow z-20 select-none pointer-events-none"
+                className="absolute -bottom-10 left-3 w-32 sm:w-44 p-3 sm:p-4 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/20 shadow z-20 select-none pointer-events-none scale-75 sm:scale-100"
               >
                 <div className="text-[10px] font-mono text-slate-500 mb-1">
                   GLOBAL_REACH
@@ -362,7 +362,7 @@ const LandingHero: React.FC = () => {
                   x: useTransform(smoothX, [-0.5, 0.5], [-5, 5]),
                   y: useTransform(smoothY, [-0.5, 0.5], [5, 5]),
                 }}
-                className="absolute -top-10 right-4 bg-blue-500 p-4 rounded shadow-blue-500/30 shadow flex flex-col items-center justify-center rotate-6 z-30 select-none pointer-events-none"
+                className="absolute -top-10 right-4 bg-blue-500 p-3 sm:p-4 rounded shadow-blue-500/30 shadow flex flex-col items-center justify-center rotate-6 z-30 select-none pointer-events-none scale-75 sm:scale-100 hidden sm:flex"
               >
                 <div className="flex -space-x-2 mb-2">
                   {[1, 2, 3].map((i) => (

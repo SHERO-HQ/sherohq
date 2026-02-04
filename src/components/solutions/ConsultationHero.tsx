@@ -33,7 +33,6 @@ const ConsultationHero = () => {
           </h1>
 
           <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8 leading-relaxed">
-            Ready to integrate complex infrastructure with custom software?
             Schedule a session to discuss how we build the technology frameworks
             that power your business growth.
           </p>

@@ -1,4 +1,6 @@
 import db from "./database";
+import { v4 as uuidv4 } from "uuid";
+import bcrypt from "bcryptjs";
 
 // Type definitions for seed data
 interface SeedProduct {
@@ -377,5 +379,75 @@ export async function seedAdminUser() {
     console.log("👤 Created default admin user (admin / admin123)");
   } catch (error) {
     console.error("Error seeding admin user:", error);
+  }
+}
+
+// Seed default regular user
+export async function seedDefaultUser() {
+  try {
+    const existingUserRes = await db.query(
+      "SELECT COUNT(*) as count FROM users WHERE email = $1",
+      ["user@sherotech.com"],
+    );
+    const existingUser = existingUserRes.rows[0];
+
+    if (Number(existingUser.count) > 0) {
+      console.log("👤 Default user already exists, skipping...");
+      return;
+    }
+
+    const userId = uuidv4();
+    const passwordHash = await bcrypt.hash("password123", 10);
+
+    await db.query(
+      `
+      INSERT INTO users (id, email, "passwordHash", name, phone, "emailVerified")
+      VALUES ($1, $2, $3, $4, $5, $6)
+    `,
+      [
+        userId,
+        "user@sherotech.com",
+        passwordHash,
+        "Shero User",
+        "0240000000",
+        true,
+      ],
+    );
+
+    console.log("👤 Created default user (user@sherotech.com / password123)");
+  } catch (error) {
+    console.error("Error seeding default user:", error);
+  }
+}
+
+// Flush test data (orders, tickets, inquiries, consultations, non-essential users)
+// Does NOT touch products or categories.
+export async function flushTestData() {
+  try {
+    console.log("🧹 Flushing test data...");
+    await db.query("BEGIN");
+
+    // Order of deletion matters due to foreign keys
+    await db.query("DELETE FROM reviews");
+    await db.query("DELETE FROM orders");
+    await db.query("DELETE FROM activity_logs");
+    await db.query("DELETE FROM tickets");
+    await db.query("DELETE FROM consultations");
+    await db.query("DELETE FROM inquiries");
+    await db.query("DELETE FROM user_sessions");
+    await db.query("DELETE FROM sessions"); // Admin sessions
+
+    // Delete all users except our new default user (if we want to keep it)
+    await db.query("DELETE FROM users WHERE email != $1", [
+      "user@sherotech.com",
+    ]);
+
+    await db.query("COMMIT");
+    console.log(
+      "✨ Test data flushed successfully. Products and categories preserved.",
+    );
+  } catch (error) {
+    await db.query("ROLLBACK");
+    console.error("❌ Error flushing test data:", error);
   }
 }

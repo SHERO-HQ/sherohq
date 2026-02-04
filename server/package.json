@@ -7,6 +7,7 @@
     "dev": "nodemon --exec ts-node src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
+    "flush-db": "ts-node src/db/flush.ts",
     "lint": "eslint src",
     "test": "vitest run"
   },

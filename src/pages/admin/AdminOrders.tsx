@@ -9,11 +9,7 @@ import {
   XCircle,
   ChevronLeft,
   ChevronRight,
-  ClipboardList,
-  Calendar,
   Printer,
-  Phone,
-  Mail,
   PackageX,
   RefreshCw,
   PackageSearch,
@@ -283,187 +279,178 @@ export default function AdminOrders() {
           </div>
         </Card>
 
-        {/* Orders List */}
-        <div className="space-y-4">
-          {isLoading &&
-            ["skel-1", "skel-2", "skel-3", "skel-4"].map((skelKey) => (
-              <div
-                key={skelKey}
-                className="h-32 rounded bg-slate-900 animate-pulse border border-white/5"
-              />
-            ))}
-
-          {!isLoading && currentOrders.length === 0 && (
-            <div className="p-12 text-center bg-slate-900 border border-white/5 rounded">
-              <ClipboardList className="w-12 h-12 text-slate-700 mx-auto mb-4" />
-              <p className="text-slate-500 font-medium">No orders found</p>
-            </div>
-          )}
-
-          {!isLoading &&
-            currentOrders.length > 0 &&
-            currentOrders.map((order, index) => {
-              const status = getStatusConfig(order.status);
-              return (
-                <motion.div
-                  key={order.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                >
-                  <Card className="bg-slate-900/40 border-white/5 hover:border-white/10 transition-all p-4 md:p-6 group">
-                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                      {/* Order Core Info */}
-                      <div className="flex items-start gap-4">
-                        <div
-                          className={cn("p-3 rounded shrink-0", status.color)}
-                        >
-                          <status.icon className="w-6 h-6" />
-                        </div>
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <UniversalLink
-                              to={`/admin/orders/${order.id}`}
-                              className="text-sm font-mono text-slate-400 hover:text-emerald-400 transition-colors"
-                            >
-                              #{order.id.slice(0, 12)}
-                            </UniversalLink>
-                            <Badge
-                              className={cn(
-                                "text-[10px] font-bold uppercase",
-                                status.color,
-                              )}
-                            >
-                              {order.status}
-                            </Badge>
-                          </div>
-                          <UniversalLink to={`/admin/orders/${order.id}`}>
-                            <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors">
+        {/* Orders Table */}
+        <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left min-w-[1000px]">
+              <thead>
+                <tr className="bg-slate-800/50 border-b border-white/5">
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Order ID
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Customer
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Date
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">
+                    Total
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {isLoading ? (
+                  new Array(5).fill(0).map((_, i) => (
+                    <tr key={i} className="animate-pulse">
+                      <td colSpan={6} className="px-6 py-8 text-center">
+                        <div className="h-4 bg-slate-800 rounded w-full" />
+                      </td>
+                    </tr>
+                  ))
+                ) : currentOrders.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={6}
+                      className="px-6 py-12 text-center text-slate-500"
+                    >
+                      No orders found matching your criteria.
+                    </td>
+                  </tr>
+                ) : (
+                  currentOrders.map((order, index) => {
+                    const status = getStatusConfig(order.status);
+                    return (
+                      <motion.tr
+                        key={order.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.03 }}
+                        className="hover:bg-white/5 transition-colors group"
+                      >
+                        <td className="px-6 py-4">
+                          <UniversalLink
+                            to={`/admin/orders/${order.id}`}
+                            className="text-xs font-mono text-slate-400 hover:text-emerald-400 transition-colors"
+                          >
+                            #{order.id.slice(0, 12)}
+                          </UniversalLink>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex flex-col">
+                            <span className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">
                               {order.shippingInfo.firstName}{" "}
                               {order.shippingInfo.lastName}
-                            </h3>
-                          </UniversalLink>
-                          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs text-slate-500">
-                            <div className="flex items-center gap-1.5">
-                              <Mail className="w-3 h-3" />
-                              <span className="truncate max-w-[150px]">
-                                {order.shippingInfo.email}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                              <Phone className="w-3 h-3" />
-                              <span>{order.shippingInfo.phone}</span>
-                            </div>
+                            </span>
+                            <span className="text-xs text-slate-500 truncate max-w-[150px]">
+                              {order.shippingInfo.email}
+                            </span>
                           </div>
-                        </div>
-                      </div>
-
-                      {/* Details Grid */}
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 flex-1 lg:max-w-2xl">
-                        <div className="space-y-1">
-                          <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">
-                            Date
-                          </p>
-                          <div className="flex items-center gap-2 text-sm text-slate-300">
-                            <Calendar className="w-3 h-3 text-slate-500" />
-                            {new Date(order.createdAt).toLocaleDateString()}
-                          </div>
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">
-                            Total(GH₵)
-                          </p>
-                          <div className="flex items-center gap-2 text-sm font-bold text-emerald-400">
-                            {order.total.toLocaleString()}
-                          </div>
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">
-                            Items
-                          </p>
-                          <p className="text-sm text-slate-300">
-                            {order.items?.length || 0} product(s)
-                          </p>
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">
-                            Payment
-                          </p>
-                          <p className="text-xs text-slate-300 font-medium">
-                            {formatPaymentMethod(order.paymentMethod)}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Actions */}
-                      <div className="flex items-center gap-3">
-                        <Button
-                          variant="ghost"
-                          className="text-slate-400 hover:text-white hover:bg-white/5"
-                          asChild
-                        >
-                          <UniversalLink to={`/admin/orders/${order.id}`}>
-                            <Eye className="w-4 h-4 mr-2" /> Details
-                          </UniversalLink>
-                        </Button>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="outline"
-                              className="border-white/10 text-white hover:bg-white/5"
-                            >
-                              Update Status
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent
-                            align="end"
-                            className="bg-slate-900 border-white/10 text-white"
+                        </td>
+                        <td className="px-6 py-4">
+                          <Badge
+                            className={cn(
+                              "text-[10px] font-bold uppercase border-none",
+                              status.color,
+                            )}
                           >
-                            <DropdownMenuItem
-                              onClick={() =>
-                                handleUpdateStatus(order.id, "processing")
-                              }
-                              className="cursor-pointer hover:bg-white/5"
+                            <status.icon className="w-3 h-3 mr-1" />
+                            {order.status}
+                          </Badge>
+                        </td>
+                        <td className="px-6 py-4">
+                          <p className="text-xs text-slate-300">
+                            {new Date(order.createdAt).toLocaleDateString()}
+                          </p>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <p className="text-sm font-bold text-white">
+                            GH₵{order.total.toLocaleString()}
+                          </p>
+                          <p className="text-[10px] text-slate-500">
+                            {order.items?.length || 0} items
+                          </p>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              className="h-8 w-8 text-slate-400 hover:text-white"
+                              asChild
                             >
-                              <PackageSearch className="w-4 h-4 mr-2 text-blue-400" />{" "}
-                              Processing
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() =>
-                                handleUpdateStatus(order.id, "shipped")
-                              }
-                              className="cursor-pointer hover:bg-white/5"
-                            >
-                              <Truck className="w-4 h-4 mr-2 text-purple-400" />{" "}
-                              Shipped
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() =>
-                                handleUpdateStatus(order.id, "delivered")
-                              }
-                              className="cursor-pointer hover:bg-white/5"
-                            >
-                              <PackageCheck className="w-4 h-4 mr-2 text-emerald-400" />{" "}
-                              Delivered
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator className="bg-white/5" />
-                            <DropdownMenuItem
-                              onClick={() =>
-                                handleUpdateStatus(order.id, "cancelled")
-                              }
-                              className="cursor-pointer text-rose-400 focus:text-rose-400 focus:bg-rose-500/10"
-                            >
-                              <PackageX className="w-4 h-4 mr-2 text-rose-400" />{" "}
-                              Cancelled
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </div>
-                  </Card>
-                </motion.div>
-              );
-            })}
+                              <UniversalLink to={`/admin/orders/${order.id}`}>
+                                <Eye className="w-4 h-4" />
+                              </UniversalLink>
+                            </Button>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-8 w-8 text-slate-400 hover:text-white"
+                                >
+                                  <RefreshCw className="w-4 h-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent
+                                align="end"
+                                className="bg-slate-900 border-white/10 text-white"
+                              >
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    handleUpdateStatus(order.id, "processing")
+                                  }
+                                  className="cursor-pointer hover:bg-white/5"
+                                >
+                                  <PackageSearch className="w-4 h-4 mr-2 text-blue-400" />{" "}
+                                  Processing
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    handleUpdateStatus(order.id, "shipped")
+                                  }
+                                  className="cursor-pointer hover:bg-white/5"
+                                >
+                                  <Truck className="w-4 h-4 mr-2 text-purple-400" />{" "}
+                                  Shipped
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    handleUpdateStatus(order.id, "delivered")
+                                  }
+                                  className="cursor-pointer hover:bg-white/5"
+                                >
+                                  <PackageCheck className="w-4 h-4 mr-2 text-emerald-400" />{" "}
+                                  Delivered
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator className="bg-white/5" />
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    handleUpdateStatus(order.id, "cancelled")
+                                  }
+                                  className="cursor-pointer text-rose-400 focus:text-rose-400 focus:bg-rose-500/10"
+                                >
+                                  <PackageX className="w-4 h-4 mr-2 text-rose-400" />{" "}
+                                  Cancelled
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </td>
+                      </motion.tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Pagination */}
