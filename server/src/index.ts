@@ -112,7 +112,12 @@ app.use(
       }
     },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "X-CSRF-Protection",
+      "X-Requested-With",
+    ],
     credentials: true,
     optionsSuccessStatus: 200, // Some legacy browsers choke on 204
   }),
