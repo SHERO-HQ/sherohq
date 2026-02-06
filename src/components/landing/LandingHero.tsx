@@ -3,7 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { fadeUp } from "@/components/motion/heroMotion";
 import { useMemo, useRef, useState } from "react";
 import { RocketIcon } from "@/assets/icons/icons";
-import { CircleCheckBig, Layers, MessageSquareDot } from "lucide-react";
+import { CircleCheckBig, Clock, HeartHandshake, Layers, MessageSquareDot, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Logo from "@/assets/logo/shero.svg";
 
@@ -130,7 +130,7 @@ const LandingHero: React.FC = () => {
                 initial="hidden"
                 animate="visible"
                 variants={prefersReducedMotion ? {} : fadeUp}
-                className="font-sora font-extrabold leading-[1.1] text-5xl sm:text-7xl md:text-8xl lg:text-9xl 
+                className="font-sora font-extrabold leading-[1.1] text-4xl sm:text-6xl md:text-7xl lg:text-8xl 
                            text-slate-900 dark:text-white relative z-10"
               >
                 {HERO_CONTENT.mainHeader.split(" ").map((word, i) =>
@@ -199,10 +199,11 @@ const LandingHero: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.8 }}
-              className="flex flex-wrap items-center gap-8 pt-10 border-t border-slate-200 dark:border-slate-900 w-full"
+              className="flex flex-wrap items-center gap-5 pt-5 border-t border-slate-200 dark:border-slate-900 w-full"
             >
               <div className="flex flex-col gap-1">
-                <span className="text-2xl font-sora font-bold text-slate-900 dark:text-white">
+                <span className="text-xs inline-flex items-center gap-1 font-sora font-bold text-slate-900 dark:text-white">
+                <Users className="w-4 h-4 text-primary" />
                   1500+
                 </span>
                 <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500">
@@ -210,15 +211,17 @@ const LandingHero: React.FC = () => {
                 </span>
               </div>
               <div className="flex flex-col gap-1">
-                <span className="text-2xl font-sora font-bold text-slate-900 dark:text-white">
-                  3+
+                <span className="text-xs inline-flex items-center gap-1 font-sora font-bold text-slate-900 dark:text-white">
+                  <HeartHandshake className="w-4 h-4 text-destructive" />
+                  2+
                 </span>
                 <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500">
-                  Global Partners
+                  Partners
                 </span>
               </div>
               <div className="flex flex-col gap-1">
-                <span className="text-2xl font-sora font-bold text-slate-900 dark:text-white">
+                <span className="text-xs inline-flex items-center gap-1 font-sora font-bold text-slate-900 dark:text-white">
+                  <Clock className="w-4 h-4 text-blue-500" />
                   4+
                 </span>
                 <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500">

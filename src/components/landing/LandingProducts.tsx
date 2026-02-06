@@ -6,6 +6,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProductCard from "@/components/products/ProductCard";
 import type { Product } from "@/types/product";
 import { fetchProducts } from "@/services/api";
+import { defaultCategories } from "@/utils/defaultCategories";
 
 const ProductSkeleton = () => (
   <div className="rounded overflow-hidden bg-slate-200/60 dark:bg-slate-900/40 border border-white/5 animate-pulse">
@@ -49,7 +50,7 @@ const LandingProducts = () => {
     loadProducts();
   }, []);
 
-  const categories = ["All", "Laptops", "Accessories", "Mobile"];
+  const categories = defaultCategories.map((category) => category.name);
 
   const getFilteredProducts = () => {
     if (activeCategory === "All") {

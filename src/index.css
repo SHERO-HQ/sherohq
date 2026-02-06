@@ -84,6 +84,7 @@
 }
 
 :root {
+  font-size: 15px;
   /* Fonts Registration */
   --font-primary: 'JetBrains Mono Variable', 'JetBrains Mono', 'monospace', 'system-ui';
   --font-inter: 'Inter Variable', 'Inter', 'system-ui', 'sans-serif';

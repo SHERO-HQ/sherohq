@@ -45,7 +45,7 @@ const AboutValues = () => {
             <Lightbulb className="w-4 h-4" />
             Core Values
           </span>
-          <h2 className="text-3xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white mb-6 transition-colors duration-300">
+          <h2 className="text-3xl md:text-4xl font-sora font-bold text-slate-900 dark:text-white mb-6 transition-colors duration-300">
             Our Core Principles
           </h2>
           <p className="max-w-2xl mx-auto text-sm text-slate-600 dark:text-slate-400 transition-colors duration-300">

@@ -75,7 +75,7 @@ const LandingPillars = () => {
             </span>
           </Reveal>
           <Reveal direction="up" distance={30} delay={0.1}>
-            <h2 className="text-5xl lg:text-6xl font-sora font-bold mb-6 transition-all duration-300">
+            <h2 className="text-4xl lg:text-5xl font-sora font-bold mb-6 transition-all duration-300">
               Our Expertise
             </h2>
           </Reveal>

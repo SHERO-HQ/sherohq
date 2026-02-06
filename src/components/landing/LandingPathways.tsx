@@ -76,7 +76,7 @@ const LandingPathways = () => {
             <span className="text-xs font-mono font-bold tracking-[0.3em] uppercase text-emerald-600 dark:text-emerald-400 mb-4 block">
               Direct Access
             </span>
-            <h2 className="text-4xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white mb-6">
+            <h2 className="text-3xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white mb-6">
               Navigate Shero
             </h2>
             <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -178,7 +178,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
         <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-slate-500 dark:text-slate-500 mb-2 block">
           {path.label}
         </span>
-        <h3 className="text-2xl font-bold text-slate-900 dark:text-white font-sora mb-2">
+        <h3 className="text-xl font-bold text-slate-900 dark:text-white font-sora mb-2">
           {path.title}
         </h3>
         <p className="text-slate-600 dark:text-slate-400 text-sm max-w-[240px] leading-relaxed">

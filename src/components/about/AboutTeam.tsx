@@ -29,7 +29,7 @@ const AboutTeam = () => {
               <Users className="w-4 h-4" />
               Our Team
             </span>
-            <h2 className="text-3xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white transition-colors duration-300">
+            <h2 className="text-3xl md:text-4xl font-sora font-bold text-slate-900 dark:text-white transition-colors duration-300">
               Meet the Minds
             </h2>
             <p className="text-slate-600 dark:text-slate-400 max-w-2xl mt-2 transition-colors duration-300">

@@ -68,7 +68,7 @@ const AboutStory = () => {
                 <Clover className="size-4" />
                 Our Story
               </span>
-              <h2 className="text-3xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white mb-6">
+              <h2 className="text-3xl md:text-4xl font-sora font-bold text-slate-900 dark:text-white mb-6">
                 Driven by Purpose
               </h2>
             </div>

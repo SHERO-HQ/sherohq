@@ -117,7 +117,7 @@ const ProductHero = () => {
                     ? { duration: 0 }
                     : { duration: 0.8, ease: "easeOut" }
                 }
-                className="font-sora font-extrabold leading-[1.1] text-5xl sm:text-7xl md:text-8xl lg:text-9xl 
+                className="font-sora font-extrabold leading-[1.1] text-5xl sm:text-6xl md:text-7xl lg:text-8xl 
                            text-slate-900 dark:text-white mb-6"
               >
                 Premium {"\n"} <br />
@@ -147,19 +147,19 @@ const ProductHero = () => {
             >
               {[
                 {
-                  label: "IN_STOCK",
-                  sub: "Fast Fulfillment",
+                  label: "FAST_FULFILLMENT",
+                  sub: "Fastest Delivery",
                   icon: Package,
                   color: "text-emerald-500",
                 },
                 {
                   label: "FREE_SHIPPING",
-                  sub: "Global Delivery",
+                  sub: "Nationwide Delivery",
                   icon: TruckElectric,
                   color: "text-blue-500",
                 },
                 {
-                  label: "QUALITY_GUARANTEE",
+                  label: "QUALITY_GUARANTEED",
                   sub: "Official Warranty",
                   icon: BadgeCheck,
                   color: "text-blue-500",
@@ -174,7 +174,7 @@ const ProductHero = () => {
                       {item.label}
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500">
+                  <span className="text-[10px] ml-6 font-mono uppercase tracking-widest text-slate-500">
                     {item.sub}
                   </span>
                 </div>

@@ -30,14 +30,14 @@ const LandingFinalCTA = () => {
                 </span>
               </div>
 
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-sora font-bold text-white leading-tight">
+              <h2 className="text-3xl md:text-5xl lg:text-6xl font-sora font-bold text-white leading-tight">
                 Ready to{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-400 to-cyan-400">
                   Launch?
                 </span>
               </h2>
 
-              <p className="text-sm lg:text-slate-300 leading-relaxed">
+              <p className="text-sm text-slate-300 leading-relaxed">
                 Join the league of visionaries who are redefining their
                 industries with SHERO's cutting-edge ecosystem.
               </p>

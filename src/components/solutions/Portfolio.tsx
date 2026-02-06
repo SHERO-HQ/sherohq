@@ -58,7 +58,7 @@ const Portfolio = () => {
             <Wrench className="size-4" />
             Our Work
           </span>
-          <h2 className="text-4xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white mb-4">
+          <h2 className="text-3xl md:text-4xl font-sora font-bold text-slate-900 dark:text-white mb-4">
             Featured Projects
           </h2>
           <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">

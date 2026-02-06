@@ -119,12 +119,12 @@ const SolutionsHero = () => {
                     ? { duration: 0 }
                     : { duration: 0.8, ease: "easeOut" }
                 }
-                className="font-sora font-extrabold leading-[1.1] text-3xl md:text-6xl lg:text-7xl 
+                className="font-sora font-extrabold leading-[1.1] text-5xl md:text-5xl lg:text-6xl 
                            text-slate-900 dark:text-white sm:mb-3"
               >
-                Performance Driven{" "}
+                Performance {" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-emerald-600 dark:from-blue-400 dark:to-emerald-400">
-                  Solutions
+                  Driven
                 </span>
               </motion.h1>
             </div>
