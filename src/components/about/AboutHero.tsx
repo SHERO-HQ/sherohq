@@ -63,7 +63,7 @@ const AboutHero = () => {
     >
       {/* KINETIC BACKGROUND LAYERS */}
       <motion.div
-        style={{ x: translateX, y: translateY, opacity: 0.7 }}
+        style={{ x: translateX, y: translateY, opacity: 0.9 }}
         className="absolute inset-0 pattern-dots pointer-events-none"
       />
 
@@ -91,7 +91,7 @@ const AboutHero = () => {
       <div className="absolute inset-y-0 left-0 w-px bg-emerald-500/20 hidden md:block" />
 
       {/* Gradient Orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
           style={{ x: translateX, y: translateY }}
           className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-emerald-500/5 dark:bg-emerald-600/10 rounded-full blur-[120px]"
@@ -103,7 +103,7 @@ const AboutHero = () => {
           }}
           className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-blue-500/5 dark:bg-blue-600/10 rounded-full blur-[120px]"
         />
-      </div>
+      </div> */}
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
