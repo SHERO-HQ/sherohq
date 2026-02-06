@@ -8,6 +8,36 @@ export default defineConfig({
   base: "/", // Should be '/' for Netlify
   build: {
     outDir: "dist",
+    chunkSizeWarningLimit: 1000, // Increase warning limit to 1MB
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (
+              id.includes("react") ||
+              id.includes("react-dom") ||
+              id.includes("react-router-dom")
+            ) {
+              return "vendor";
+            }
+            if (
+              id.includes("@radix-ui") ||
+              id.includes("class-variance-authority") ||
+              id.includes("clsx") ||
+              id.includes("tailwind-merge")
+            ) {
+              return "ui";
+            }
+            if (id.includes("framer-motion") || id.includes("motion")) {
+              return "animation";
+            }
+            if (id.includes("lucide-react")) {
+              return "icons";
+            }
+          }
+        },
+      },
+    },
   },
   plugins: [react(), tailwindcss()],
   resolve: {
