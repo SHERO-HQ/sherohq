@@ -5,8 +5,10 @@ import AppRoutes from "./routes/AppRoutes";
 import { CartProvider } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 import { NotificationProvider } from "./context/NotificationProvider";
+import { WishlistProvider } from "./context/WishlistContext";
 import Toaster from "./components/admin/Toaster";
 import CartDrawer from "./components/cart/CartDrawer";
+import WishlistDrawer from "./components/products/WishlistDrawer";
 import ScrollToTop from "./components/common/ScrollToTop";
 import { getSubdomain } from "@/utils/subdomain";
 
@@ -37,11 +39,14 @@ const App = () => {
         <CartProvider>
           <AuthProvider>
             <NotificationProvider>
-              <Toaster />
-              <ScrollToTop />
-              {!isAdmin && <Nav />}
-              {!isAdmin && <CartDrawer />}
-              <AppRoutes />
+              <WishlistProvider>
+                <Toaster />
+                <ScrollToTop />
+                {!isAdmin && <Nav />}
+                {!isAdmin && <CartDrawer />}
+                {!isAdmin && <WishlistDrawer />}
+                <AppRoutes />
+              </WishlistProvider>
             </NotificationProvider>
           </AuthProvider>
         </CartProvider>

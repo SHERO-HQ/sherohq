@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import { ToggleTheme } from "./toggle-theme";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
-import { LogOut, ShoppingCart, User } from "lucide-react";
+import { useWishlist } from "@/hooks/useWishlist";
+import { LogOut, ShoppingCart, User, Heart } from "lucide-react";
 import UniversalLink from "@/components/common/UniversalLink";
 
 import { AnimatePresence, easeOut, motion } from "motion/react";
@@ -18,6 +19,7 @@ const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { totalQuantity, setIsCartOpen } = useCart();
+  const { wishlist, setIsWishlistOpen } = useWishlist();
   const { user, isAuthenticated, logout } = useAuth();
 
   // Animation variants
@@ -169,6 +171,25 @@ const Nav = () => {
                     <path d="M5 12H19M19 12L13 6M19 12L13 18" />
                   </svg>
                 </UniversalLink>
+
+                {/* Wishlist Button */}
+                <button
+                  onClick={() => setIsWishlistOpen(true)}
+                  className="cursor-pointer relative p-1 text-slate-700 dark:text-slate-300 hover:text-red-500 dark:hover:text-red-400 transition-colors rounded border-none"
+                  aria-label="Open Wishlist"
+                >
+                  <Heart
+                    className={`w-6 h-6 ${wishlist.length > 0 ? "fill-red-500 text-red-500" : ""}`}
+                  />
+                  {wishlist.length > 0 && (
+                    <Badge
+                      variant="destructive"
+                      className="absolute -top-2 -right-2 h-5 min-w-[20px] px-1 flex items-center justify-center rounded-full text-[10px] ring-2 ring-background animate-in zoom-in"
+                    >
+                      {wishlist.length}
+                    </Badge>
+                  )}
+                </button>
 
                 {/* Cart Button */}
                 <button

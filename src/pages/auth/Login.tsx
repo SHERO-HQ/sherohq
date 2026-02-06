@@ -69,6 +69,7 @@ const Login = () => {
               leftIcon={<Mail className="w-5 h-5" />}
               error={errors.email?.message}
               {...register("email")}
+              size="xl"
             />
 
             <Input
@@ -79,6 +80,7 @@ const Login = () => {
               leftIcon={<Lock className="w-5 h-5" />}
               error={errors.password?.message}
               {...register("password")}
+              size="xl"
               rightIcon={
                 <button
                   type="button"
@@ -98,7 +100,8 @@ const Login = () => {
               type="submit"
               variant="brand"
               disabled={isSubmitting}
-              className="w-full font-bold h-11"
+              className="w-full font-bold"
+              size="xl"
             >
               {isSubmitting ? (
                 <span className="flex items-center gap-2">Signing In...</span>

@@ -1,8 +1,34 @@
 import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { Label } from "./label";
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+const inputVariants = cva(
+  "flex w-full rounded border-2 border-slate-200 dark:border-slate-800 bg-secondary/5 shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50",
+  {
+    variants: {
+      size: {
+        default: "h-9 px-3 py-2 text-sm",
+        sm: "h-8 px-2 py-1 text-xs",
+        lg: "h-10 px-4 py-2 text-sm",
+        xl: "h-12 px-5 py-3 text-base",
+      },
+      hasError: {
+        true: "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20",
+        false: "",
+      },
+    },
+    defaultVariants: {
+      size: "default",
+      hasError: false,
+    },
+  },
+);
+
+export interface InputProps
+  extends
+    Omit<React.InputHTMLAttributes<HTMLInputElement>, "size">,
+    VariantProps<typeof inputVariants> {
   label?: string;
   error?: string;
   leftIcon?: React.ReactNode;
@@ -11,7 +37,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
-    { className, type, label, error, leftIcon, rightIcon, id, ...props },
+    { className, type, label, error, leftIcon, rightIcon, id, size, ...props },
     ref,
   ) => {
     const fallbackId = React.useId();
@@ -22,7 +48,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {label && <Label htmlFor={inputId}>{label}</Label>}
         <div className="relative group">
           {leftIcon && (
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
               {leftIcon}
             </div>
           )}
@@ -30,11 +56,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             type={type}
             id={inputId}
             className={cn(
-              "flex h-9 w-full rounded border-2 border-slate-200 dark:border-slate-800 bg-secondary/5 px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
+              inputVariants({ size, hasError: !!error, className }),
               leftIcon && "pl-10",
               rightIcon && "pr-10",
-              error && "border-destructive focus-visible:ring-destructive",
-              className,
             )}
             ref={ref}
             aria-invalid={!!error}
@@ -50,7 +74,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         {error && (
           <p
             id={`${inputId}-error`}
-            className="text-xs font-medium text-red-500 mt-1 animate-in fade-in slide-in-from-top-1"
+            className="text-xs font-medium text-destructive mt-1 animate-in fade-in slide-in-from-top-1"
           >
             {error}
           </p>

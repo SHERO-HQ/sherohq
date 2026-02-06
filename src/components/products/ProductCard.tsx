@@ -1,11 +1,11 @@
 import { motion } from "motion/react";
 import { ShoppingCart, Heart, Eye, Star, CreditCard } from "lucide-react";
-import { useState } from "react";
 import { useUniversalNavigate } from "@/hooks/useUniversalNavigate";
 import { useCart } from "@/context/CartContext";
 import { useNotifications } from "@/hooks/useNotifications";
 import { getImageUrl } from "@/services/api";
-import type { Product } from "@/data/products";
+import { useWishlist } from "@/hooks/useWishlist";
+import type { Product } from "@/types/product";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { WhatsAppIcon } from "@/assets/icons/icons";
 
@@ -18,7 +18,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
   const { addItem } = useCart();
   const { addNotification } = useNotifications();
   const navigate = useUniversalNavigate();
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const { toggleWishlist: globalToggleWishlist, isInWishlist } = useWishlist();
+  const isWishlisted = isInWishlist(product.id);
 
   const discount = product.originalPrice
     ? Math.round(
@@ -69,7 +70,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
   const toggleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsWishlisted(!isWishlisted);
+    globalToggleWishlist({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      category: product.category,
+    });
   };
 
   const handleCardClick = () => {
@@ -88,7 +95,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
                border border-white/5 dark:border-white/5 shadow
                hover:border-emerald-500/30
                hover:shadow-2xl hover:shadow-emerald-500/10
-               transition-all duration-500 cursor-pointer"
+               transition-all duration-500 cursor-pointer
+               flex flex-col h-full"
     >
       {/* Hover Glow Effect */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-linear-to-b from-emerald-500/5 to-transparent transition-opacity duration-500 pointer-events-none" />
@@ -96,17 +104,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       {/* Badges */}
       <div className="absolute top-2 sm:top-3 left-2 sm:left-3 z-20 flex gap-1 sm:gap-2">
         {product.badge && (
-          <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-[12px] font-bold uppercase tracking-wider bg-emerald-600 text-white shadow-lg shadow-emerald-900/20">
+          <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-bold uppercase tracking-wider bg-emerald-600 text-white shadow-lg shadow-emerald-900/20">
             {product.badge}
           </span>
         )}
         {discount > 0 && (
-          <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-[12px] font-bold uppercase tracking-wider bg-red-600 text-white shadow-lg shadow-red-900/20 w-fit">
+          <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-bold uppercase tracking-wider bg-red-600 text-white shadow-lg shadow-red-900/20 w-fit">
             -{discount}%
           </span>
         )}
         {!product.inStock && (
-          <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[10px] sm:text-[12px] font-bold uppercase tracking-wider bg-slate-700 text-slate-300">
+          <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-bold uppercase tracking-wider bg-slate-700 text-slate-300">
             Sold Out
           </span>
         )}
@@ -132,7 +140,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       </button>
 
       {/* Image Container */}
-      <div className="relative h-40 sm:h-52 bg-linear-to-br from-slate-800 to-slate-900 overflow-hidden">
+      <div className="relative aspect-square bg-linear-to-br from-slate-800 to-slate-900 overflow-hidden shrink-0">
         {/* Render Image or Emoji */}
         {product.image &&
         (product.image.startsWith("/uploads") ||
@@ -172,23 +180,49 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             View Details
           </button>
         </div>
+        {product.condition && (
+          <div className="absolute bottom-2 left-2 z-20 pointer-events-none">
+            <span
+              className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-white shadow-lg ${
+                product.condition === "New"
+                  ? "bg-emerald-600 shadow-emerald-900/20"
+                  : product.condition === "Refurbished"
+                    ? "bg-blue-600 shadow-blue-900/20"
+                    : "bg-amber-600 shadow-amber-900/20"
+              }`}
+            >
+              {product.condition}
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Product Info */}
-      <div className="p-3 sm:p-4 relative z-10 cursor-pointer">
-        <div className="flex flex-col justify-between items-start">
+      <div className="p-3 sm:p-4 relative z-10 cursor-pointer flex-1 flex flex-col">
+        <div className="flex flex-col justify-between items-start flex-1">
           <div className="inline-flex items-center justify-between w-full mb-1.5 sm:mb-2">
             <p className="text-[10px] sm:text-xs font-medium dark:bg-white/5 bg-emerald-100 px-1 sm:px-1.5 py-0.5 rounded dark:text-emerald-400 text-emerald-800 mb-0.5 sm:mb-1 uppercase tracking-wide">
               {product.category}
             </p>
             <span className="flex items-center gap-0.5 sm:gap-1 dark:bg-white/5 bg-slate-300/60 px-1 sm:px-1.5 py-0.5 rounded text-[11px] sm:text-sm dark:text-slate-300 text-slate-900">
-              <Star className="text-amber-400 inline-flex fill-amber-400 size-3 sm:size-4" />
-              {product.rating}
+              <Star className={`w-3 h-3 fill-amber-400 text-amber-400`} />
+              <span className="ml-0.5 sm:ml-1 text-xs">{product.rating}</span>
             </span>
           </div>
-          <h3 className="text-sm sm:text-base font-bold dark:text-white text-slate-900 leading-tight dark:group-hover:text-emerald-300 group-hover:text-emerald-600 transition-colors line-clamp-2">
+          <h3 className="text-sm sm:text-base font-bold dark:text-white text-slate-900 leading-tight dark:group-hover:text-emerald-300 group-hover:text-emerald-600 transition-colors line-clamp-2 min-h-10 sm:min-h-12">
             {product.name}
           </h3>
+          {product.specifications &&
+            Object.values(product.specifications).length > 0 && (
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mt-1 min-h-[2.5em]">
+                {Object.values(product.specifications).slice(0, 3).join(" • ")}
+              </p>
+            )}
+          {!product.specifications && product.description && (
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mt-1 min-h-[2.5em]">
+              {product.description}
+            </p>
+          )}
         </div>
 
         <div className="flex items-end justify-between mt-2 sm:mt-3 gap-1">

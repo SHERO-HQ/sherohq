@@ -40,6 +40,9 @@ const AdminProjects = lazy(() => import("@/pages/admin/AdminProjects"));
 const ProjectForm = lazy(() => import("@/pages/admin/ProjectForm"));
 import AdminGuides from "@/pages/admin/AdminGuides";
 import AdminGuideEditor from "@/pages/admin/AdminGuideEditor";
+const AdminCategories = lazy(() => import("@/pages/admin/AdminCategories"));
+const AdminReviews = lazy(() => import("@/pages/admin/AdminReviews"));
+const AdminTeam = lazy(() => import("@/pages/admin/AdminTeam"));
 import { BreadcrumbProvider } from "@/context/BreadcrumbContext";
 
 // Public support pages
@@ -203,6 +206,30 @@ const AdminSectionInternal = () => (
       element={
         <ProtectedRoute>
           <AdminGuideEditor />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="categories"
+      element={
+        <ProtectedRoute>
+          <AdminCategories />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="reviews"
+      element={
+        <ProtectedRoute>
+          <AdminReviews />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="team"
+      element={
+        <ProtectedRoute>
+          <AdminTeam />
         </ProtectedRoute>
       }
     />

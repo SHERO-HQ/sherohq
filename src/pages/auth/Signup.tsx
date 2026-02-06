@@ -72,6 +72,7 @@ const Signup = () => {
               leftIcon={<User className="w-5 h-5" />}
               error={errors.name?.message}
               {...register("name")}
+              size="xl"
             />
 
             <Input
@@ -82,6 +83,7 @@ const Signup = () => {
               leftIcon={<Mail className="w-5 h-5" />}
               error={errors.email?.message}
               {...register("email")}
+              size="xl"
             />
 
             <Input
@@ -92,6 +94,7 @@ const Signup = () => {
               leftIcon={<Phone className="w-5 h-5" />}
               error={errors.phone?.message}
               {...register("phone")}
+              size="xl"
             />
 
             <Input
@@ -102,6 +105,7 @@ const Signup = () => {
               leftIcon={<Lock className="w-5 h-5" />}
               error={errors.password?.message}
               {...register("password")}
+              size="xl"
               rightIcon={
                 <button
                   type="button"
@@ -125,13 +129,15 @@ const Signup = () => {
               leftIcon={<Lock className="w-5 h-5" />}
               error={errors.confirmPassword?.message}
               {...register("confirmPassword")}
+              size="xl"
             />
 
             <Button
               type="submit"
               variant="brand"
               disabled={isSubmitting}
-              className="w-full font-bold h-11 mt-6"
+              className="w-full font-bold mt-6"
+              size="xl"
             >
               {isSubmitting ? (
                 <span className="flex items-center gap-2">
@@ -149,7 +155,7 @@ const Signup = () => {
             Already have an account?{" "}
             <Link
               to="/login"
-              className="text-purple-600 dark:text-purple-400 font-semibold hover:underline"
+              className="text-emerald-600! dark:text-emerald-400 font-semibold hover:underline"
             >
               Sign in
             </Link>

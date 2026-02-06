@@ -1,12 +1,15 @@
-import { Home, ShoppingBag, ShoppingCart } from "lucide-react";
+import { Home, ShoppingBag, ShoppingCart, Heart } from "lucide-react";
 import UniversalLink from "@/components/common/UniversalLink";
 import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/hooks/useWishlist";
 
 const BottomNav = () => {
   const { setIsCartOpen, totalQuantity } = useCart();
+  const { setIsWishlistOpen, wishlist } = useWishlist();
   const navItems = [
     { icon: Home, label: "Home", path: "/" },
     { icon: ShoppingBag, label: "Shop", path: "/shop" },
+    { icon: Heart, label: "Wishlist", path: "/wishlist" },
     { icon: ShoppingCart, label: "Cart", path: "/cart" },
   ];
 
@@ -27,6 +30,27 @@ const BottomNav = () => {
                 {totalQuantity > 0 && (
                   <span className="absolute top-1 right-1/2 translate-x-4 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-600 text-[8px] font-bold text-white">
                     {totalQuantity}
+                  </span>
+                )}
+              </button>
+            );
+          }
+          if (item.label === "Wishlist") {
+            return (
+              <button
+                key={item.label}
+                onClick={() => setIsWishlistOpen(true)}
+                aria-label={`Open Wishlist (${wishlist.length} items)`}
+                className="cursor-pointer flex flex-col items-center justify-center w-full h-full gap-1 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors relative"
+              >
+                <item.icon
+                  className={`w-6 h-6 ${wishlist.length > 0 ? "fill-red-500 text-red-500" : ""}`}
+                  strokeWidth={2}
+                />
+                <span className="text-[12px] font-medium">{item.label}</span>
+                {wishlist.length > 0 && (
+                  <span className="absolute top-1 right-1/2 translate-x-4 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[8px] font-bold text-white">
+                    {wishlist.length}
                   </span>
                 )}
               </button>

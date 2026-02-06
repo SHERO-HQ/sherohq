@@ -1,4 +1,4 @@
-import type { Product } from "@/data/products";
+import type { Product } from "@/types/product";
 
 // Construct API_BASE: prioritize explicit env var, then current origin proxy, fallback to Railway
 const getApiBase = () => {
@@ -146,10 +146,43 @@ export async function fetchProduct(id: string): Promise<Product> {
   return handleResponse<Product>(response);
 }
 
+// ============ Categories API ============
+
 export async function fetchCategories(): Promise<
   { id: string; name: string; icon: string }[]
 > {
   const response = await fetch(`${API_BASE}/products/categories/list`);
+  return handleResponse(response);
+}
+
+export async function createCategory(data: {
+  name: string;
+  icon: string;
+}): Promise<{ id: string } & typeof data> {
+  const response = await authFetch(`${API_BASE}/products/categories`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+}
+
+export async function updateCategory(
+  id: string,
+  data: { name: string; icon: string },
+): Promise<{ id: string } & typeof data> {
+  const response = await authFetch(`${API_BASE}/products/categories/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+}
+
+export async function deleteCategory(id: string): Promise<{ success: true }> {
+  const response = await authFetch(`${API_BASE}/products/categories/${id}`, {
+    method: "DELETE",
+  });
   return handleResponse(response);
 }
 
@@ -885,6 +918,73 @@ export async function submitProductReview(
 
   return handleResponse(response);
 }
+
+export async function fetchAdminReviews(): Promise<Review[]> {
+  const response = await authFetch(`${API_BASE}/admin/reviews`);
+  return handleResponse<Review[]>(response);
+}
+
+export async function deleteReview(id: string): Promise<{ success: boolean }> {
+  const response = await authFetch(`${API_BASE}/admin/reviews/${id}`, {
+    method: "DELETE",
+  });
+  return handleResponse(response);
+}
+
+// ============ Team API ============
+
+export interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  image?: string;
+  bio?: string;
+  social: {
+    twitter?: string;
+    linkedin?: string;
+    github?: string;
+    [key: string]: string | undefined;
+  };
+  order?: number;
+}
+
+export async function fetchTeam(): Promise<TeamMember[]> {
+  const response = await fetch(`${API_BASE}/team`);
+  return handleResponse<TeamMember[]>(response);
+}
+
+export async function createTeamMember(
+  data: Omit<TeamMember, "id">,
+): Promise<TeamMember> {
+  const response = await authFetch(`${API_BASE}/team`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return handleResponse<TeamMember>(response);
+}
+
+export async function updateTeamMember(
+  id: string,
+  data: Partial<TeamMember>,
+): Promise<TeamMember> {
+  const response = await authFetch(`${API_BASE}/team/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return handleResponse<TeamMember>(response);
+}
+
+export async function deleteTeamMember(
+  id: string,
+): Promise<{ message: string }> {
+  const response = await authFetch(`${API_BASE}/team/${id}`, {
+    method: "DELETE",
+  });
+  return handleResponse<{ message: string }>(response);
+}
+
 // ============ Admin Users API ============
 
 export interface AdminUserListItem {
@@ -958,18 +1058,8 @@ export async function deleteAdminUser(
 
 // ============ Projects API ============
 
-export interface Project {
-  id: string;
-  title: string;
-  category: string;
-  client: string | null;
-  description: string | null;
-  useCase: string | null;
-  technologies: string[];
-  image: string | null;
-  link: string | null;
-  createdAt: string;
-}
+import type { Project } from "@/types/project";
+export type { Project };
 
 export async function fetchProjects(category?: string): Promise<Project[]> {
   const params = new URLSearchParams();

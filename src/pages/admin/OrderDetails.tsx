@@ -709,7 +709,7 @@ export default function OrderDetails() {
                   </div>
 
                   <div className="mt-20 text-center">
-                    <div className="inline-block px-10 py-3 border border-slate-100 rounded text-[10px] text-slate-400 uppercase tracking-[0.4em]">
+                    <div className="inline-block px-10 py-2 border border-slate-100 rounded text-[10px] text-slate-400 uppercase tracking-[0.4em]">
                       Thank you for your business
                     </div>
                   </div>

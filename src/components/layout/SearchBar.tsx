@@ -2,7 +2,8 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Search, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { products } from "@/data/products";
+import { useProducts } from "@/hooks/queries/useProducts";
+import { getImageUrl } from "@/services/api";
 
 interface SearchBarProps {
   className?: string;
@@ -15,12 +16,13 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
-  const filteredProducts =
-    query.length > 1
-      ? products.filter((p) =>
-          p.name.toLowerCase().includes(query.toLowerCase()),
-        )
-      : [];
+  // Live search from DB
+  const { data: allProducts = [], isLoading: searchLoading } = useProducts(
+    undefined,
+    query.length > 1 ? query : undefined,
+  );
+
+  const filteredProducts = query.length > 1 ? allProducts : [];
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,16 +103,11 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                       className="w-full flex items-center gap-3 px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors text-left"
                     >
                       <div className="w-10 h-10 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden">
-                        {product.image?.startsWith("/") ||
-                        product.image?.startsWith("http") ? (
-                          <img
-                            src={product.image}
-                            alt={product.name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <span className="text-lg">{product.image}</span>
-                        )}
+                        <img
+                          src={getImageUrl(product.image)}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
                       <div>
                         <div className="font-medium text-slate-900 dark:text-white line-clamp-1">
@@ -171,7 +168,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
               <div className="container max-w-3xl mx-auto">
                 <form onSubmit={handleSearch} className="relative">
                   <div className="flex items-center gap-3">
-                    <div className="flex-1 flex items-center bg-slate-100 dark:bg-slate-800 rounded px-4">
+                    <div className="flex-1 flex items-center bg-slate-100 dark:bg-slate-800 rounded px-4 relative">
                       <Search className="w-5 h-5 text-slate-400 shrink-0" />
                       <input
                         ref={inputRef}
@@ -182,6 +179,11 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                         className="w-full h-14 bg-transparent border-none focus:ring-0 text-lg outline-none text-slate-900 dark:text-white pl-3"
                         autoComplete="off"
                       />
+                      {searchLoading && (
+                        <div className="absolute right-12 top-1/2 -translate-y-1/2">
+                          <div className="w-5 h-5 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+                        </div>
+                      )}
                       {query && (
                         <button
                           type="button"
@@ -221,18 +223,11 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                             className="w-full flex items-center gap-4 p-3 rounded hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors text-left"
                           >
                             <div className="w-14 h-14 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden">
-                              {product.image?.startsWith("/") ||
-                              product.image?.startsWith("http") ? (
-                                <img
-                                  src={product.image}
-                                  alt={product.name}
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <span className="text-2xl">
-                                  {product.image}
-                                </span>
-                              )}
+                              <img
+                                src={getImageUrl(product.image)}
+                                alt={product.name}
+                                className="w-full h-full object-cover"
+                              />
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="font-bold text-slate-900 dark:text-white line-clamp-1">

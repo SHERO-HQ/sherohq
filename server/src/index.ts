@@ -10,6 +10,7 @@ import {
   seedDatabase,
   seedAdminUser,
   seedDefaultUser,
+  seedTeamMembers,
   flushTestData,
 } from "./db/seed";
 
@@ -28,6 +29,7 @@ import activityRoutes from "./routes/activity";
 import usersRoutes from "./routes/users";
 import guidesRoutes from "./routes/guides";
 import projectRoutes from "./routes/projects";
+import teamRoutes from "./routes/team";
 
 // Load environment variables
 dotenv.config();
@@ -177,6 +179,7 @@ app.use("/api/admin", activityRoutes);
 app.use("/api/admin/users", usersRoutes);
 app.use("/api/guides", guidesRoutes);
 app.use("/api/projects", projectRoutes);
+app.use("/api/team", teamRoutes);
 
 // Root route - information about the API
 app.get("/", (req: Request, res: Response) => {
@@ -210,6 +213,7 @@ app.listen(PORT, async () => {
     await seedDatabase();
     await seedAdminUser();
     await seedDefaultUser();
+    await seedTeamMembers();
 
     // Check for a flag to flush test data (one-time or env-driven)
     if (process.env.FLUSH_TEST_DATA === "true") {

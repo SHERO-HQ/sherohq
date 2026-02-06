@@ -242,6 +242,20 @@ export async function initializeDatabase() {
       )
     `);
 
+    // Team Members table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS team_members (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        role TEXT NOT NULL,
+        bio TEXT,
+        image TEXT,
+        social JSONB,
+        "order" INTEGER DEFAULT 0,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
     // Migration: Convert TEXT columns to JSONB if they are still TEXT
     const tablesToMigrate = [
       { table: "products", columns: ["images", "features", "specifications"] },
@@ -306,6 +320,15 @@ export async function initializeDatabase() {
       // Set sequence to start from 100000 for 6-7 digit ticket numbers
       await client.query(
         `SELECT setval(pg_get_serial_sequence('tickets', 'ticket_no'), GREATEST(100000, (SELECT COALESCE(MAX(ticket_no), 0) FROM tickets)))`,
+      );
+    } catch {
+      // Column might already exist
+    }
+
+    // Migration: Add condition column to products if it doesn't exist
+    try {
+      await client.query(
+        `ALTER TABLE products ADD COLUMN IF NOT EXISTS condition TEXT DEFAULT 'New'`,
       );
     } catch {
       // Column might already exist

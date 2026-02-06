@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import UniversalLink from "@/components/common/UniversalLink";
 import { getImageUrl } from "@/services/api";
 import { useNotifications } from "@/hooks/useNotifications";
-import type { Product } from "@/data/products";
+import type { Product, Category } from "@/types/product";
 import {
   Search,
   Plus,
@@ -32,10 +32,10 @@ import { cn } from "@/lib/utils";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
 import {
   useProducts,
-  useCategories,
   useDeleteProduct,
   useUpdateProductStock,
 } from "@/hooks/queries/useProducts";
+import { useCategories } from "@/hooks/queries/useCategories";
 import { Card } from "@/components/ui/card";
 
 export default function AdminProducts() {
@@ -237,7 +237,7 @@ export default function AdminProducts() {
               className="bg-slate-800/50 border border-white/5 rounded text-sm text-white p-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
             >
               <option value="all">All Categories</option>
-              {categories.map((cat) => (
+              {categories.map((cat: Category) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.name}
                 </option>

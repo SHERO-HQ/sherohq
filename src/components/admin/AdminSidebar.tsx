@@ -13,6 +13,8 @@ import {
   Headset,
   BookOpen,
   Briefcase,
+  Tag,
+  Star,
 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { cn } from "@/lib/utils";
@@ -26,6 +28,9 @@ interface SidebarProps {
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/admin/dashboard" },
   { icon: Package, label: "Products", href: "/admin/products" },
+  { icon: Tag, label: "Categories", href: "/admin/categories" },
+  { icon: Star, label: "Reviews", href: "/admin/reviews" },
+  { icon: Users, label: "Team", href: "/admin/team" },
   { icon: Briefcase, label: "Projects", href: "/admin/projects" },
   { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
   { icon: Users, label: "Customers", href: "/admin/users" },

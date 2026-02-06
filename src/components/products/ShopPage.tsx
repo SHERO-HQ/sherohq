@@ -4,20 +4,29 @@ import { defaultCategories } from "@/utils/defaultCategories";
 import type { Category } from "./ProductsCategories";
 import ProductFilters from "./ProductFilters";
 import type { FilterState } from "./ProductFilters";
-import ProductFiltersSidebar from "./ProductFiltersSidebar";
+import CategorySidebar from "./CategorySidebar";
 import ProductGrid from "./ProductsGrid";
-import type { Product } from "@/data/products";
-import { SlidersHorizontal } from "lucide-react";
+import type { Product } from "@/types/product";
+import { SlidersHorizontal, Package } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import ProductSearch from "./ProductSearch";
-import { useProducts, useCategories } from "@/hooks/queries/useProducts";
+import { useProducts } from "@/hooks/queries/useProducts";
+import { useCategories } from "@/hooks/queries/useCategories";
+
+interface ApiCategory {
+  id: string;
+  name: string;
+}
 
 const ShopPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // TanStack Query
-  const { data: products = [], isLoading: loading } = useProducts();
-  useCategories();
+  const { data: products = [], isLoading: productsLoading } = useProducts();
+  const { data: apiCategories = [], isLoading: categoriesLoading } =
+    useCategories();
+
+  const loading = productsLoading || categoriesLoading;
 
   const [activeCategory, setActiveCategory] = useState("all");
   // Derive searchQuery from URL params instead of using useEffect + setState
@@ -38,17 +47,37 @@ const ShopPage = () => {
   // Fetching moved to useProducts hook above
   //useEffect(() => { ... }, []);
 
-  // Add product counts to categories
-  // Use defaultCategories as base but could also use apiCategories if preferred
-  const categoriesWithCount: Category[] = defaultCategories.map(
-    (cat: Category) => ({
-      ...cat,
-      count:
-        cat.id === "all"
-          ? products.length
-          : products.filter((p: Product) => p.category === cat.id).length,
-    }),
-  );
+  // Merge API categories with hardcoded icons and count
+  const categoriesWithCount: Category[] = useMemo(() => {
+    // Start with "All Products"
+    const allCategory: Category = {
+      id: "all",
+      name: "All Products",
+      icon: <Package className="w-6 h-6" />,
+      count: products.length,
+    };
+
+    const dynamicCategories: Category[] = apiCategories.map(
+      (cat: ApiCategory) => ({
+        id: cat.id,
+        name: cat.name,
+        icon: defaultCategories.find((c) => c.id === cat.id)?.icon || (
+          <Package className="w-6 h-6" />
+        ),
+        count: products.filter((p: Product) => p.category === cat.id).length,
+      }),
+    );
+
+    // Filter out duplicates if any, and ensure unique keys
+    const seen = new Set(["all"]);
+    const uniqueDynamic = dynamicCategories.filter((cat) => {
+      if (seen.has(cat.id)) return false;
+      seen.add(cat.id);
+      return true;
+    });
+
+    return [allCategory, ...uniqueDynamic];
+  }, [apiCategories, products]);
 
   // Filter and sort products
   const getFilteredProducts = (): Product[] => {
@@ -75,6 +104,15 @@ const ShopPage = () => {
     // Filter by rating
     if (filters.minRating > 0) {
       filtered = filtered.filter((p) => p.rating >= filters.minRating);
+    }
+
+    // Filter by brand
+    if (filters.brands.length > 0) {
+      filtered = filtered.filter((p) =>
+        filters.brands.some((brand) =>
+          p.name.toLowerCase().includes(brand.toLowerCase()),
+        ),
+      );
     }
 
     // Filter by stock
@@ -139,6 +177,16 @@ const ShopPage = () => {
     // Optional: scroll to top of grid on filter change if needed
   };
 
+  const handleReset = () => {
+    setFilters({
+      priceRange: [0, 1000000],
+      brands: [],
+      minRating: 0,
+      inStock: false,
+      sortBy: "newest",
+    });
+  };
+
   return (
     <div className="min-h-screen dark:bg-slate-950">
       {/* Hero Section - Reduced props */}
@@ -150,7 +198,7 @@ const ShopPage = () => {
           {/* Desktop Sidebar (Hidden on Mobile) */}
           <div className="hidden lg:block w-64 shrink-0">
             <div className="sticky top-24">
-              <ProductFiltersSidebar
+              <CategorySidebar
                 filters={filters}
                 onFilterChange={handleFilterChange}
                 categories={categoriesWithCount}
@@ -159,7 +207,6 @@ const ShopPage = () => {
               />
             </div>
           </div>
-
           {/* Mobile Filter Toggle (Visible only on Mobile) */}
           <div className="lg:hidden mb-4">
             <button
@@ -173,7 +220,6 @@ const ShopPage = () => {
               </span>
             </button>
           </div>
-
           {/* Products Grid */}
           <main className="flex-1 min-w-0">
             {/* Search Bar - Moved from Hero */}
@@ -221,6 +267,7 @@ const ShopPage = () => {
               products={filteredProducts}
               loading={loading}
               columns={3}
+              onReset={handleReset}
             />
           </main>
         </div>

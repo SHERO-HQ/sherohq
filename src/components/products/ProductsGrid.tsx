@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import ProductCard from "./ProductCard";
-import type { Product } from "@/data/products";
+import type { Product } from "@/types/product";
 import { PackageX } from "lucide-react";
 import { ProductGridSkeleton } from "@/components/ui/Skeleton";
 
@@ -9,6 +9,7 @@ interface ProductGridProps {
   loading?: boolean;
   onQuickView?: (product: Product) => void;
   columns?: 2 | 3 | 4;
+  onReset?: () => void;
 }
 
 const ProductGrid: React.FC<ProductGridProps> = ({
@@ -16,6 +17,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
   loading = false,
   onQuickView,
   columns = 3,
+  onReset,
 }) => {
   const gridCols = {
     2: "lg:grid-cols-2",
@@ -70,7 +72,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
             </p>
           </div>
           <button
-            onClick={() => globalThis.location.reload()}
+            onClick={() => (onReset ? onReset() : globalThis.location.reload())}
             className="cursor-pointer px-6 py-2 rounded bg-emerald-600 text-white font-semibold
                      hover:bg-emerald-700 transition-colors"
           >
@@ -93,6 +95,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
   // Products Grid
   return (
     <motion.div
+      key={products.map((p) => p.id).join(",")}
       variants={containerVariants}
       initial="hidden"
       animate="visible"

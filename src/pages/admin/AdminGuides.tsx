@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UniversalLink from "@/components/common/UniversalLink";
 import { format } from "date-fns";
@@ -6,18 +6,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import {
-  getAdminGuides,
-  deleteGuide,
-  updateGuide,
-  type SupportGuide,
-} from "@/services/guides";
+import { type SupportGuide } from "@/types/guide";
 import { useNotifications } from "@/hooks/useNotifications";
+import {
+  useAdminGuides,
+  useUpdateGuide,
+  useDeleteGuide,
+} from "@/hooks/queries/useGuides";
 
 const AdminGuides = () => {
   const navigate = useNavigate();
-  const [guides, setGuides] = useState<SupportGuide[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: guides = [], isLoading } = useAdminGuides();
+  const updateMutation = useUpdateGuide();
+  const deleteMutation = useDeleteGuide();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<{
     id: string;
@@ -26,30 +28,12 @@ const AdminGuides = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const { addNotification } = useNotifications();
 
-  const loadGuides = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const data = await getAdminGuides();
-      setGuides(data);
-    } catch (error) {
-      console.error("Failed to load guides:", error);
-      addNotification("Error", "Failed to load guides", "error");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [addNotification]);
-
-  useEffect(() => {
-    loadGuides();
-  }, [loadGuides]);
-
   async function handleDelete() {
     if (!deleteTarget) return;
     setIsDeleting(true);
     try {
-      await deleteGuide(deleteTarget.id);
+      await deleteMutation.mutateAsync(deleteTarget.id);
       addNotification("Success", "Guide deleted successfully", "success");
-      setGuides((prev) => prev.filter((g) => g.id !== deleteTarget.id));
       setDeleteTarget(null);
     } catch (error) {
       console.error("Failed to delete guide:", error);
@@ -61,14 +45,12 @@ const AdminGuides = () => {
 
   async function togglePublished(guide: SupportGuide) {
     try {
-      await updateGuide(guide.id, { published: !guide.published });
+      await updateMutation.mutateAsync({
+        id: guide.id,
+        data: { published: !guide.published },
+      });
       const message = guide.published ? "Guide unpublished" : "Guide published";
       addNotification("Success", message, "success");
-      setGuides((prev) =>
-        prev.map((g) =>
-          g.id === guide.id ? { ...g, published: !g.published } : g,
-        ),
-      );
     } catch (error) {
       console.error("Failed to update guide:", error);
       addNotification("Error", "Failed to update guide", "error");

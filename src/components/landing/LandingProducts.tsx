@@ -3,7 +3,7 @@ import UniversalLink from "@/components/common/UniversalLink";
 import { ShoppingCart, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import ProductCard from "@/components/products/ProductCard";
-import type { Product } from "@/data/products";
+import type { Product } from "@/types/product";
 import { fetchProducts } from "@/services/api";
 
 const ProductSkeleton = () => (
@@ -39,22 +39,7 @@ const LandingProducts = () => {
         const shuffled = [...inStockProducts].sort(() => 0.5 - Math.random());
         setProducts(shuffled);
       } catch (error) {
-        console.error(
-          "Failed to load landing products, falling back to static data:",
-          error,
-        );
-        // Fallback to static products if API fails
-        try {
-          const { products: staticProducts } = await import("@/data/products");
-          const inStockProducts = staticProducts.filter((p) => p.inStock);
-          const shuffled = [...inStockProducts].sort(() => 0.5 - Math.random());
-          setProducts(shuffled);
-        } catch (fallbackError) {
-          console.error(
-            "Critical: Failed to load fallback products:",
-            fallbackError,
-          );
-        }
+        console.error("Failed to load landing products:", error);
       } finally {
         setIsLoading(false);
       }

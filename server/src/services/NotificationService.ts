@@ -27,8 +27,11 @@ class NotificationService {
   private transporter: nodemailer.Transporter | null = null;
   private resend: Resend | null = null;
 
-  constructor() {
-    this.initEmail();
+  private initPromise: Promise<void> | null = null;
+
+  private async ensureInitialized() {
+    this.initPromise ??= this.initEmail();
+    return this.initPromise;
   }
 
   private async initEmail() {
@@ -97,6 +100,7 @@ class NotificationService {
     items: OrderItem[],
     total: number,
   ) {
+    await this.ensureInitialized();
     console.log(`\n--- 🔔 ORDER NOTIFICATION [Order: ${orderId}] ---`);
 
     await this.sendOrderEmail(orderId, shippingInfo, items, total);
@@ -174,6 +178,7 @@ class NotificationService {
     token: string,
     name: string,
   ) {
+    await this.ensureInitialized();
     const baseUrl =
       process.env.FRONTEND_URL ||
       process.env.PUBLIC_URL ||
@@ -233,6 +238,7 @@ class NotificationService {
     date: Date,
     time: string,
   ) {
+    await this.ensureInitialized();
     const formattedDate = date.toLocaleDateString("en-US", {
       weekday: "long",
       year: "numeric",
@@ -274,6 +280,7 @@ class NotificationService {
     subject: string,
     message: string,
   ) {
+    await this.ensureInitialized();
     const htmlContent = `
       <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
         <h1 style="color: #059669; text-align: center;">Message Received</h1>

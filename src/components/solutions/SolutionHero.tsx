@@ -149,7 +149,7 @@ const SolutionsHero = () => {
             >
               <a
                 href="/consultation"
-                className="inline-flex items-center justify-center gap-3 px-10 py-3 rounded
+                className="inline-flex items-center justify-center gap-3 px-10 py-2 rounded
                          bg-emerald-600 text-white font-bold
                          hover:bg-emerald-700 hover:shadow-2xl hover:shadow-emerald-500/30
                          hover:-translate-y-1 transition-all duration-300
@@ -160,7 +160,7 @@ const SolutionsHero = () => {
               </a>
               <a
                 href="#services"
-                className="group flex items-center justify-center gap-3 text-slate-900 dark:text-white font-bold tracking-tight border-2 border-slate-200 dark:border-slate-800 hover:border-blue-500/50! rounded px-8 py-3 w-full sm:w-auto transition-all text-sm uppercase"
+                className="group flex items-center justify-center gap-3 text-slate-900 dark:text-white font-bold tracking-tight border-2 border-slate-200 dark:border-slate-800 hover:border-blue-500/50! rounded px-8 py-2 w-full sm:w-auto transition-all text-sm uppercase"
               >
                 Explore Services
                 <Zap className="w-5 h-5 text-blue-500 group-hover:rotate-12 transition-transform" />

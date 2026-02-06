@@ -20,6 +20,7 @@ interface SeedProduct {
   description: string;
   features: string[] | null;
   specifications: Record<string, string> | null;
+  condition?: "New" | "Used" | "Refurbished";
 }
 
 // Product data matching existing frontend structure
@@ -46,6 +47,7 @@ const products: SeedProduct[] = [
       "Liquid Retina XDR display",
       "Advanced camera and audio",
     ],
+    condition: "New",
     specifications: {
       Processor: "Apple M3 Pro",
       Memory: "18GB Unified Memory",
@@ -75,6 +77,7 @@ const products: SeedProduct[] = [
       "Action button",
       "48MP Main camera system",
     ],
+    condition: "New",
     specifications: {
       Display: '6.7" Super Retina XDR',
       Processor: "A17 Pro chip",
@@ -104,6 +107,7 @@ const products: SeedProduct[] = [
       "Crystal clear hands-free calling",
       "Up to 30-hour battery life",
     ],
+    condition: "Refurbished",
     specifications: {
       "Driver Unit": "30mm",
       "Frequency Response": "4Hz-40,000Hz",
@@ -239,6 +243,7 @@ const products: SeedProduct[] = [
       "High-Speed Data Transfer",
       "Compact Design",
     ],
+    condition: "Used",
     specifications: null,
   },
   {
@@ -301,8 +306,8 @@ export async function seedDatabase() {
     for (const p of products) {
       await db.query(
         `
-        INSERT INTO products (id, name, sku, category, price, "originalPrice", image, images, rating, reviews, badge, "inStock", "stockQuantity", description, features, specifications)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+        INSERT INTO products (id, name, sku, category, price, "originalPrice", image, images, rating, reviews, badge, "inStock", "stockQuantity", description, features, specifications, condition)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
       `,
         [
           p.id,
@@ -321,6 +326,7 @@ export async function seedDatabase() {
           p.description,
           p.features ? JSON.stringify(p.features) : null,
           p.specifications ? JSON.stringify(p.specifications) : null,
+          p.condition || "New",
         ],
       );
     }
@@ -449,5 +455,88 @@ export async function flushTestData() {
   } catch (error) {
     await db.query("ROLLBACK");
     console.error("❌ Error flushing test data:", error);
+  }
+}
+
+// Seed Team Members
+export async function seedTeamMembers() {
+  try {
+    const existingTeamRes = await db.query(
+      "SELECT COUNT(*) as count FROM team_members",
+    );
+    const existingTeam = existingTeamRes.rows[0];
+
+    if (Number(existingTeam.count) > 0) {
+      // console.log("👥 Team members already exist, skipping...");
+      return;
+    }
+
+    const teamMembers = [
+      {
+        name: "Kwame Mensah",
+        role: "Founder & Lead Architect",
+        bio: "Visionary leader with 15+ years in digital transformation. Kwame spearheads our mission to bridge Africa's digital divide.",
+        image: "https://randomuser.me/api/portraits/men/32.jpg", // Placeholder or use Cloudinary URL
+        social: { twitter: "#", linkedin: "#", github: "#" },
+      },
+      {
+        name: "Abena Osei",
+        role: "Head of Product Design",
+        bio: "Champion of inclusive design. Abena ensures every SHERO product is intuitive and resonates with our diverse user base.",
+        image: "https://randomuser.me/api/portraits/women/44.jpg",
+        social: { twitter: "#", linkedin: "#", github: "#" },
+      },
+      {
+        name: "Kofi Asare",
+        role: "Senior Cloud Architect",
+        bio: "Infrastructure wizard specializing in high-availability systems. Kofi builds the backbone of our enterprise solutions.",
+        image: "https://randomuser.me/api/portraits/men/11.jpg",
+        social: { twitter: "#", linkedin: "#", github: "#" },
+      },
+      {
+        name: "Efua Boateng",
+        role: "Lead Software Engineer",
+        bio: "Full-stack expert with a passion for clean, performant code. Efua leads our engineering teams to excellence.",
+        image: "https://randomuser.me/api/portraits/women/68.jpg",
+        social: {
+          twitter: "https://x.com/",
+          linkedin: "https://linkedin.com/",
+          github: "https://github.com/",
+        },
+      },
+      {
+        name: "Yaw Appiah",
+        role: "Cybersecurity Lead",
+        bio: "Security first. Yaw protects our clients' digital assets with state-of-the-art protocols and proactive monitoring.",
+        image: "https://randomuser.me/api/portraits/men/86.jpg",
+        social: { twitter: "#", linkedin: "#", github: "#" },
+      },
+      {
+        name: "Ama Serwaa",
+        role: "Operations Manager",
+        bio: "The glue that holds us together. Ama ensures seamless execution and world-class service delivery for every project.",
+        image: "https://randomuser.me/api/portraits/women/22.jpg",
+        social: { twitter: "#", linkedin: "#", github: "#" },
+      },
+    ];
+
+    for (const [index, member] of teamMembers.entries()) {
+      const id = uuidv4();
+      await db.query(
+        `INSERT INTO team_members (id, name, role, bio, image, social, "order") VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+        [
+          id,
+          member.name,
+          member.role,
+          member.bio,
+          member.image,
+          JSON.stringify(member.social),
+          index,
+        ],
+      );
+    }
+    console.log(`👥 Seeded ${teamMembers.length} team members`);
+  } catch (error) {
+    console.error("Error seeding team members:", error);
   }
 }

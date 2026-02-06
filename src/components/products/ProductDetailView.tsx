@@ -16,8 +16,10 @@ import {
   BadgeCheck,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/hooks/useWishlist";
 import { getImageUrl } from "@/services/api";
-import { products, type Product } from "@/data/products";
+import type { Product } from "@/types/product";
+import { useProducts } from "@/hooks/queries/useProducts";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import ProductCard from "./ProductCard";
 import ProductReviews from "./ProductReviews";
@@ -29,10 +31,11 @@ interface ProductDetailViewProps {
 
 const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
   const { addItem } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
   const navigate = useUniversalNavigate();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const isWishlisted = isInWishlist(product.id);
 
   const images = product.images || [product.image];
   const discount = product.originalPrice
@@ -41,8 +44,11 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
       )
     : 0;
 
-  const relatedProducts = products
-    .filter((p) => p.category === product.category && p.id !== product.id)
+  const { data: allCategoryProducts = [], isLoading: relatedLoading } =
+    useProducts(product.category);
+
+  const relatedProducts = allCategoryProducts
+    .filter((p: Product) => p.id !== product.id)
     .slice(0, 4);
 
   const handleAddToCart = () => {
@@ -151,7 +157,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
               <div className="grid grid-cols-5 gap-4">
                 {images.map((img: string, idx: number) => (
                   <button
-                    key={idx}
+                    key={`thumb-${idx}-${img.slice(-10)}`}
                     onClick={() => setSelectedImage(idx)}
                     className={`aspect-square bg-slate-200 dark:bg-slate-900 rounded overflow-hidden border-2 transition-all ${
                       idx === selectedImage
@@ -200,11 +206,11 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
             {/* Rating */}
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1">
-                {[...Array(5)].map((_, i) => (
+                {[1, 2, 3, 4, 5].map((star) => (
                   <Star
-                    key={i}
+                    key={`star-${product.id}-${star}`}
                     className={`w-5 h-5 ${
-                      i < Math.floor(product.rating)
+                      star <= Math.floor(product.rating)
                         ? "fill-amber-400 text-amber-400"
                         : "text-slate-300 dark:text-slate-600"
                     }`}
@@ -254,9 +260,9 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   Key Features
                 </h3>
                 <ul className="space-y-2">
-                  {product.features.map((feature: string, idx: number) => (
+                  {product.features.map((feature: string) => (
                     <li
-                      key={idx}
+                      key={`feature-${feature.substring(0, 20)}`}
                       className="flex items-start gap-2 text-slate-600 dark:text-slate-400"
                     >
                       <span className="text-emerald-600 dark:text-emerald-400 mt-1">
@@ -271,7 +277,10 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
 
             {/* Quantity Selector */}
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              <label
+                htmlFor="quantity-input"
+                className="text-sm font-medium text-slate-700 dark:text-slate-300"
+              >
                 Quantity
               </label>
               <div className="flex items-center gap-4">
@@ -282,9 +291,18 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   >
                     <Minus className="w-4 h-4" />
                   </button>
-                  <span className="px-6 font-bold text-slate-900 dark:text-white">
-                    {quantity}
-                  </span>
+                  <input
+                    id="quantity-input"
+                    type="number"
+                    min="1"
+                    value={quantity}
+                    onChange={(e) =>
+                      setQuantity(
+                        Math.max(1, Number.parseInt(e.target.value) || 1),
+                      )
+                    }
+                    className="w-12 text-center font-bold text-slate-900 dark:text-white bg-transparent border-none focus:ring-0 outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
                   <button
                     onClick={() => setQuantity((q) => q + 1)}
                     className="cursor-pointer p-3 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
@@ -318,7 +336,15 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   Buy Now
                 </button>
                 <button
-                  onClick={() => setIsWishlisted(!isWishlisted)}
+                  onClick={() =>
+                    toggleWishlist({
+                      id: product.id,
+                      name: product.name,
+                      price: product.price,
+                      image: product.image,
+                      category: product.category,
+                    })
+                  }
                   className={`px-4 py-2 text-center w-fit rounded border-2 transition-all ${
                     isWishlisted
                       ? "border-red-500 bg-red-50 dark:bg-red-900/20"
@@ -342,7 +368,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 px-8 py-3 w-full bg-[#25D366] hover:bg-[#20bd5a] text-white rounded font-bold transition-all shadow-lg shadow-[#25D366]/20"
+                className="flex items-center justify-center gap-2 px-8 py-2 w-full bg-[#25D366] hover:bg-[#20bd5a] text-white rounded font-bold transition-all shadow-lg shadow-[#25D366]/20"
               >
                 <WhatsAppIcon className="w-5 h-5" />
                 Chat on WhatsApp
@@ -381,31 +407,29 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 Technical Specifications
               </h2>
               <div className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 overflow-hidden">
-                <table className="w-full">
-                  <tbody>
-                    {Object.entries(product.specifications).map(
-                      ([key, value], idx: number) => (
-                        <tr
-                          key={idx}
-                          className="border-b border-slate-200 dark:border-slate-800 last:border-0"
-                        >
-                          <td className="px-6 py-2 font-medium text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-950 w-1/3">
-                            {key}
-                          </td>
-                          <td className="px-6 py-2 text-slate-600 dark:text-slate-400">
-                            {value}
-                          </td>
-                        </tr>
-                      ),
-                    )}
-                  </tbody>
-                </table>
+                <div className="divide-y divide-slate-200 dark:divide-slate-800">
+                  {Object.entries(product.specifications).map(
+                    ([key, value]) => (
+                      <div
+                        key={`spec-${key}`}
+                        className="grid grid-cols-1 sm:grid-cols-3"
+                      >
+                        <div className="px-6 py-3 font-medium text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-950 sm:col-span-1">
+                          {key}
+                        </div>
+                        <div className="px-6 py-3 text-slate-600 dark:text-slate-400 sm:col-span-2 break-words">
+                          {value}
+                        </div>
+                      </div>
+                    ),
+                  )}
+                </div>
               </div>
             </div>
           )}
 
         {/* Related Products */}
-        {relatedProducts.length > 0 && (
+        {(relatedLoading || relatedProducts.length > 0) && (
           <div className="mt-20 border-t border-slate-200 dark:border-slate-800 pt-16">
             <h2 className="text-3xl font-bold font-sora text-slate-900 dark:text-white mb-8">
               You Might Also Like
@@ -413,9 +437,19 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
             <div
               className={`grid grid-cols-1 min-[425px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3`}
             >
-              {relatedProducts.map((relatedProduct) => (
-                <ProductCard key={relatedProduct.id} product={relatedProduct} />
-              ))}
+              {relatedLoading
+                ? [1, 2, 3, 4].map((skeleton) => (
+                    <div
+                      key={`related-skeleton-${skeleton}`}
+                      className="h-72 bg-slate-200 dark:bg-slate-900 animate-pulse rounded"
+                    />
+                  ))
+                : relatedProducts.map((relatedProduct: Product) => (
+                    <ProductCard
+                      key={relatedProduct.id}
+                      product={relatedProduct}
+                    />
+                  ))}
             </div>
           </div>
         )}
