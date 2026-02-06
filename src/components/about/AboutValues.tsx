@@ -80,7 +80,7 @@ const AboutValues = () => {
               >
                 <item.icon className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold font-sora text-slate-900 dark:text-white mb-3 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+              <h3 className="text-sm font-bold font-sora text-slate-900 dark:text-white mb-3 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                 {item.title}
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed group-hover:text-slate-800 dark:group-hover:text-slate-300 transition-colors">

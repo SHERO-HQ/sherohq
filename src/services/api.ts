@@ -113,6 +113,9 @@ export async function authFetch(url: string, options: RequestInit = {}) {
     (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
   }
 
+  // Explicit CSRF Protection header
+  (headers as Record<string, string>)["X-CSRF-Protection"] = "1";
+
   const response = await fetch(url, {
     ...options,
     headers,
@@ -230,6 +233,7 @@ export async function createOrder(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "X-CSRF-Protection": "1",
     },
     body: JSON.stringify(payload),
   });
@@ -245,7 +249,35 @@ export interface Order {
   shippingInfo: ShippingInfo;
   paymentMethod: string;
   status: string;
-  createdAt: string;
+  createdAt: Date;
+}
+
+export async function createAdminOrder(data: {
+  shippingInfo: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    region: string;
+  };
+  items: {
+    id?: string;
+    name: string;
+    price: number;
+    quantity: number;
+    image?: string;
+    sku?: string;
+  }[];
+  total: number;
+  status: "pending" | "quote";
+}): Promise<{ success: true; order: Order }> {
+  const response = await authFetch(`${API_BASE}/orders/admin`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
 }
 
 export async function fetchGuestOrders(guestId: string): Promise<Order[]> {
@@ -256,6 +288,22 @@ export async function fetchGuestOrders(guestId: string): Promise<Order[]> {
 export async function trackOrder(orderId: string): Promise<Order> {
   const response = await fetch(`${API_BASE}/orders/track/${orderId}`);
   return handleResponse<Order>(response);
+}
+
+export async function updateOrderPaymentMethod(
+  id: string,
+  payload: { paymentMethod: string; guestId?: string; userId?: string },
+): Promise<{ success: boolean }> {
+  const response = await fetch(`${API_BASE}/orders/${id}/payment-method`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Protection": "1",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  return handleResponse(response);
 }
 
 // ============ User Auth API ============
@@ -292,7 +340,10 @@ export async function userRegister(data: {
 }): Promise<UserLoginResponse> {
   const response = await fetch(`${API_BASE}/auth/register`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Protection": "1",
+    },
     body: JSON.stringify(data),
   });
 
@@ -310,7 +361,10 @@ export async function userLogin(data: {
   try {
     const response = await fetch(url, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Protection": "1",
+      },
       body: JSON.stringify(data),
     });
 
@@ -332,7 +386,10 @@ export async function userLogout(): Promise<void> {
   if (token) {
     await fetch(`${API_BASE}/auth/logout`, {
       method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "X-CSRF-Protection": "1",
+      },
     });
   }
   localStorage.removeItem("userToken");
@@ -360,7 +417,10 @@ export async function verifyEmail(
 ): Promise<{ success: boolean; message: string }> {
   const response = await fetch(`${API_BASE}/auth/verify-email`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Protection": "1",
+    },
     body: JSON.stringify({ token }),
   });
 
@@ -372,7 +432,10 @@ export async function resendVerificationEmail(
 ): Promise<{ success: boolean; message: string }> {
   const response = await fetch(`${API_BASE}/auth/resend-verification`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Protection": "1",
+    },
     body: JSON.stringify({ email }),
   });
 
@@ -413,7 +476,10 @@ export async function scheduleConsultation(data: {
 }): Promise<{ success: boolean; message: string }> {
   const response = await fetch(`${API_BASE}/inquiry/schedule`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Protection": "1",
+    },
     body: JSON.stringify(data),
   });
 
@@ -428,7 +494,10 @@ export async function sendContactMessage(data: {
 }): Promise<{ success: boolean; message: string }> {
   const response = await fetch(`${API_BASE}/inquiry/contact`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Protection": "1",
+    },
     body: JSON.stringify(data),
   });
 
@@ -453,7 +522,10 @@ export async function createTicket(data: {
 }> {
   const response = await fetch(`${API_BASE}/tickets`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Protection": "1",
+    },
     body: JSON.stringify(data),
   });
 
@@ -600,7 +672,10 @@ export async function adminLogin(
 ): Promise<LoginResponse> {
   const response = await fetch(`${API_BASE}/admin/login`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Protection": "1",
+    },
     body: JSON.stringify({ username, password }),
   });
 
@@ -1059,7 +1134,10 @@ export async function deleteAdminUser(
 // ============ Projects API ============
 
 import type { Project } from "@/types/project";
-export type { Project };
+import type { Testimonial } from "@/types/testimonial";
+import type { SiteStat } from "@/types/stat";
+
+export type { Project, Testimonial, SiteStat };
 
 export async function fetchProjects(category?: string): Promise<Project[]> {
   const params = new URLSearchParams();
@@ -1101,4 +1179,83 @@ export async function deleteProject(
     method: "DELETE",
   });
   return handleResponse(response);
+}
+
+// ============ Testimonials API ============
+
+export async function fetchTestimonials(): Promise<Testimonial[]> {
+  const response = await fetch(`${API_BASE}/testimonials`);
+  return handleResponse<Testimonial[]>(response);
+}
+
+export async function fetchAdminTestimonials(): Promise<Testimonial[]> {
+  const response = await authFetch(`${API_BASE}/testimonials/admin`);
+  return handleResponse<Testimonial[]>(response);
+}
+
+export async function createTestimonial(
+  data: Partial<Testimonial>,
+): Promise<Testimonial> {
+  const response = await authFetch(`${API_BASE}/testimonials`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return handleResponse<Testimonial>(response);
+}
+
+export async function updateTestimonial(
+  id: string,
+  data: Partial<Testimonial>,
+): Promise<Testimonial> {
+  const response = await authFetch(`${API_BASE}/testimonials/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return handleResponse<Testimonial>(response);
+}
+
+export async function deleteTestimonial(
+  id: string,
+): Promise<{ message: string }> {
+  const response = await authFetch(`${API_BASE}/testimonials/${id}`, {
+    method: "DELETE",
+  });
+  return handleResponse<{ message: string }>(response);
+}
+
+// ============ Stats API ============
+
+export async function fetchStats(): Promise<SiteStat[]> {
+  const response = await fetch(`${API_BASE}/stats`);
+  return handleResponse<SiteStat[]>(response);
+}
+
+export async function createStat(data: Partial<SiteStat>): Promise<SiteStat> {
+  const response = await authFetch(`${API_BASE}/stats`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return handleResponse<SiteStat>(response);
+}
+
+export async function updateStat(
+  id: string,
+  data: Partial<SiteStat>,
+): Promise<SiteStat> {
+  const response = await authFetch(`${API_BASE}/stats/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return handleResponse<SiteStat>(response);
+}
+
+export async function deleteStat(id: string): Promise<{ message: string }> {
+  const response = await authFetch(`${API_BASE}/stats/${id}`, {
+    method: "DELETE",
+  });
+  return handleResponse<{ message: string }>(response);
 }

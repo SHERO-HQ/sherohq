@@ -284,7 +284,7 @@ export default function AdminDashboard() {
             <h1 className="text-3xl font-bold tracking-tight text-white font-sora">
               Dashboard Overview
             </h1>
-            <p className="text-slate-400">
+            <p className="text-slate-400 text-sm">
               Welcome back,{" "}
               <span className="text-emerald-400 font-semibold">
                 {admin?.username}

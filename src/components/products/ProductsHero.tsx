@@ -4,9 +4,7 @@ import {
   Package,
   ShoppingBag,
   TruckElectric,
-  Star,
   TrendingUp,
-  CreditCard,
   ShieldCheck,
 } from "lucide-react";
 import { useRef, useMemo, useState } from "react";
@@ -119,12 +117,12 @@ const ProductHero = () => {
                     ? { duration: 0 }
                     : { duration: 0.8, ease: "easeOut" }
                 }
-                className="font-sora font-extrabold leading-[1.1] text-4xl sm:text-7xl md:text-8xl lg:text-9xl 
+                className="font-sora font-extrabold leading-[1.1] text-5xl sm:text-7xl md:text-8xl lg:text-9xl 
                            text-slate-900 dark:text-white mb-6"
               >
-                Premium {"\n"}
+                Premium {"\n"} <br />
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400">
-                  Gear
+                  Tech Gear
                 </span>
               </motion.h1>
             </div>
@@ -134,7 +132,7 @@ const ProductHero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-base md:text-lg text-slate-600 dark:text-slate-400 mb-10 leading-relaxed max-w-xl"
+              className="text-sm text-slate-600 dark:text-slate-400 mb-10 leading-relaxed max-w-xl"
             >
               Elevate your experience with our selection of high-performance
               tools and technologies.
@@ -252,7 +250,7 @@ const ProductHero = () => {
                         <span className="text-[8px] text-slate-500 uppercase tracking-wider">
                           {item.label}
                         </span>
-                        <span className="text-lg font-bold font-sora text-slate-900 dark:text-white">
+                        <span className="text-sm font-bold font-sora text-slate-900 dark:text-white">
                           {item.val}
                         </span>
                       </div>
@@ -272,31 +270,20 @@ const ProductHero = () => {
                   y: useTransform(mouseY, [-0.5, 0.5], [15, 15]),
                   rotate: 12,
                 }}
-                className="absolute -bottom-10 -left-6 w-32 sm:w-44 p-3 sm:p-4 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/20 shadow-2xl z-20 pointer-events-none scale-75 sm:scale-100"
+                className="absolute bottom-0 left-0 w-fit p-3 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/20 shadow-2xl z-20 pointer-events-none scale-75 sm:scale-100"
               >
-                <div className="flex items-center gap-2 mb-3">
+                <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded bg-emerald-500/10 flex items-center justify-center">
-                    <CreditCard className="w-4 h-4 text-emerald-500" />
+                    <ShieldCheck className="w-4 h-4 text-emerald-500" />
                   </div>
                   <div className="flex flex-col">
                     <span className="text-[8px] font-mono text-slate-500 uppercase">
-                      Payment
+                      100%
                     </span>
                     <span className="text-[10px] font-bold text-slate-900 dark:text-white">
-                      VERIFIED
+                      TRUSTED
                     </span>
                   </div>
-                </div>
-                <div className="flex items-center gap-1 mb-2">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Star
-                      key={s}
-                      className="w-2.5 h-2.5 fill-amber-400 text-amber-400"
-                    />
-                  ))}
-                </div>
-                <div className="text-[9px] text-slate-500 font-mono">
-                  AUTHORIZED_SECURE
                 </div>
               </motion.div>
 
@@ -307,11 +294,11 @@ const ProductHero = () => {
                   x: useTransform(mouseX, [-0.5, 0.5], [-8, 8]),
                   y: useTransform(mouseY, [-0.5, 0.5], [-8, 8]),
                 }}
-                className="absolute -top-8 -right-4 bg-emerald-600 p-3 sm:p-4 rounded-full shadow-2xl shadow-emerald-500/50 flex flex-col items-center justify-center -rotate-6 z-30 pointer-events-none aspect-square scale-75 sm:scale-100 hidden sm:flex"
+                className="absolute top-4 right-4 bg-emerald-600  w-16 h-16 rounded-full shadow-2xl shadow-emerald-500/50 flex-col items-center justify-center -rotate-6 z-30 pointer-events-none aspect-square scale-75 sm:scale-100 flex"
               >
-                <ShieldCheck className="text-white w-8 h-8 drop-shadow-lg" />
+                <BadgeCheck className="text-white w-8 h-8 drop-shadow-lg" />
                 <span className="text-[7px] font-bold text-white uppercase tracking-tighter mt-1 whitespace-nowrap">
-                  TRUSTED_VERIFIED
+                  VERIFIED
                 </span>
               </motion.div>
 

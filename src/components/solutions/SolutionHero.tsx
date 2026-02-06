@@ -89,7 +89,7 @@ const SolutionsHero = () => {
       </div>
 
       {/* Scanning Line Effect */}
-      <div className="absolute inset-y-0 left-0 w-px bg-emerald-500/20 hidden md:block" />
+      <div className="absolute inset-y-0 left-0 w-1 bg-emerald-500/20 hidden md:block" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-8">
@@ -119,8 +119,8 @@ const SolutionsHero = () => {
                     ? { duration: 0 }
                     : { duration: 0.8, ease: "easeOut" }
                 }
-                className="font-sora font-extrabold leading-[1.1] text-5xl md:text-6xl lg:text-7xl 
-                           text-slate-900 dark:text-white mb-6"
+                className="font-sora font-extrabold leading-[1.1] text-3xl md:text-6xl lg:text-7xl 
+                           text-slate-900 dark:text-white sm:mb-3"
               >
                 Performance Driven{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-emerald-600 dark:from-blue-400 dark:to-emerald-400">
@@ -134,7 +134,7 @@ const SolutionsHero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-base md:text-lg text-slate-600 dark:text-slate-400 mb-10 leading-relaxed max-w-xl"
+              className="text-sm md:text-base text-slate-600 dark:text-slate-400 mb-10 leading-relaxed max-w-xl"
             >
               Bridging the gap between digital strategy and physical
               infrastructure.
@@ -278,7 +278,7 @@ const SolutionsHero = () => {
                           {item.label}
                         </span>
                       </div>
-                      <div className="text-lg font-bold font-sora text-slate-900 dark:text-white leading-none mb-1">
+                      <div className="text-sm font-bold font-sora text-slate-900 dark:text-white leading-none mb-1">
                         {item.val}
                       </div>
                       <div className="text-[8px] font-mono text-emerald-500 flex items-center gap-1">
@@ -298,28 +298,23 @@ const SolutionsHero = () => {
                   y: useTransform(mouseY, [-0.5, 0.5], [15, 15]),
                   rotate: -8,
                 }}
-                className="absolute -top-25 -left-12 w-42 p-4 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-blue-500/30 shadow-2xl z-20 pointer-events-none"
+                className="absolute sm:-top-12 -top-5 sm:-left-12 left-2  sm:block w-fit p-4 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-blue-500/30 shadow-2xl z-20 pointer-events-none"
               >
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                  <span className="text-[9px] font-mono font-bold text-slate-500 tracking-widest uppercase">
-                    Live Integrity
-                  </span>
-                </div>
-                <div className="h-24 flex items-end gap-1 mb-3">
+                <div className="h-8 flex items-end gap-1 mb-2">
                   {[0.4, 0.7, 0.5, 0.9, 0.6, 0.8, 0.95].map((h, i) => (
                     <motion.div
                       key={i}
                       initial={{ height: 0 }}
                       animate={{ height: `${h * 100}%` }}
                       transition={{ delay: i * 0.1, duration: 1 }}
-                      className="flex-1 bg-linear-to-t from-blue-600 to-cyan-400 rounded-t-sm"
+                      className="bg-linear-to-t from-blue-600 to-cyan-400 rounded-t-sm w-2"
                     />
                   ))}
                 </div>
-                <div className="flex justify-between items-center text-[10px] font-bold text-slate-900 dark:text-white">
-                  <span>SYSTEM_HEALTH</span>
-                  <span className="text-emerald-500">EXCELLENT</span>
+                <div className="flex justify-between items-center text-[8px] font-bold text-slate-900 dark:text-white">
+                  <p>SYSTEM_
+                  <span className="text-emerald-500">PERFORMANCE</span>
+                  </p>
                 </div>
               </motion.div>
 
@@ -330,10 +325,10 @@ const SolutionsHero = () => {
                   x: useTransform(mouseX, [-0.5, 0.5], [-10, 10]),
                   y: useTransform(mouseY, [-0.5, 0.5], [-10, 10]),
                 }}
-                className="absolute -bottom-5 -right-8 bg-blue-600 p-5 rounded shadow-2xl shadow-blue-500/50 flex flex-col items-center justify-center rotate-12 z-30 pointer-events-none"
+                className="absolute bottom-0 right-5 bg-blue-600 p-3 rounded shadow-2xl shadow-blue-500/50 flex flex-col items-center justify-center rotate-12 z-30 pointer-events-none"
               >
-                <Shield className="text-white w-8 h-8 mb-2 drop-shadow-lg" />
-                <span className="text-[9px] font-bold text-white uppercase tracking-[0.2em] leading-none">
+                <Shield className="text-white w-4 h-4 mb-2 drop-shadow-lg" />
+                <span className="text-[8px] font-bold text-white uppercase tracking-[0.2em] leading-none">
                   Encrypted_v2
                 </span>
               </motion.div>

@@ -61,10 +61,10 @@ const PILLARS: PillarsProps[] = [
 
 const LandingPillars = () => {
   return (
-    <section className="relative w-full pb-12 bg-white dark:bg-slate-950 overflow-hidden transition-colors duration-300">
+    <section className="relative w-full py-12 bg-white dark:bg-slate-950 overflow-hidden transition-colors duration-300">
       {/* Background Ambience */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-100 via-white to-slate-50 dark:from-slate-900 dark:via-slate-950 dark:to-black transition-all duration-500 opacity-50 dark:opacity-100" />
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-10 dark:opacity-100 transition-opacity duration-300" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-100 via-white to-slate-50 dark:from-slate-900 dark:via-slate-950 dark:to-black transition-all duration-500 opacity-50 dark:opacity-100" />
+      <div className="absolute inset-0 hero-grid-pattern opacity-10 dark:opacity-100 transition-opacity duration-300" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
@@ -80,7 +80,7 @@ const LandingPillars = () => {
             </h2>
           </Reveal>
           <Reveal direction="up" distance={40} delay={0.2}>
-            <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed transition-colors duration-300">
+            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed transition-colors duration-300">
               A comprehensive ecosystem of services designed to accelerate your
               technological evolution.
             </p>

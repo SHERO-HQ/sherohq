@@ -3,8 +3,9 @@ import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { fadeUp } from "@/components/motion/heroMotion";
 import { useMemo, useRef, useState } from "react";
 import { RocketIcon } from "@/assets/icons/icons";
-import { CircleCheckBig, Layers, MessageSquareDot, Zap } from "lucide-react";
+import { CircleCheckBig, Layers, MessageSquareDot } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Logo from "@/assets/logo/shero.svg";
 
 // Type Definitions
 interface HeroContent {
@@ -134,10 +135,10 @@ const LandingHero: React.FC = () => {
               >
                 {HERO_CONTENT.mainHeader.split(" ").map((word, i) =>
                   word === "\n" ? (
-                    <br key={`line-br-${i}`} />
+                    <br key={`line-br-${i}-${word}`} />
                   ) : (
                     <span
-                      key={`${word}-${i}`}
+                      key={`${word}-${i}-${word}`}
                       className={
                         word === "Possible"
                           ? "text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400"
@@ -246,11 +247,11 @@ const LandingHero: React.FC = () => {
                 {/* Header */}
                 <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100 dark:border-slate-800">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded bg-emerald-500/10 flex items-center justify-center">
-                      <Zap className="w-6 h-6 text-emerald-500 rotate-30" />
+                    <div className="flex items-center justify-center">
+                      <img src={Logo} alt="SHERO" className="sm:w-10 sm:h-10 w-8 h-8" />
                     </div>
                     <div>
-                      <h4 className="text-sm font-bold font-sora text-slate-900 dark:text-white">
+                      <h4 className="text-xs font-bold font-sora text-slate-900 dark:text-white">
                         Possibilities Hub
                       </h4>
                       <p className="text-[10px] font-mono text-slate-500">
@@ -362,7 +363,7 @@ const LandingHero: React.FC = () => {
                   x: useTransform(smoothX, [-0.5, 0.5], [-5, 5]),
                   y: useTransform(smoothY, [-0.5, 0.5], [5, 5]),
                 }}
-                className="absolute -top-10 right-4 bg-blue-500 p-3 sm:p-4 rounded shadow-blue-500/30 shadow flex flex-col items-center justify-center rotate-6 z-30 select-none pointer-events-none scale-75 sm:scale-100 hidden sm:flex"
+                className="absolute -top-10 right-4 bg-blue-500 p-3 sm:p-4 rounded shadow-blue-500/30 shadow flex-col items-center justify-center rotate-6 z-30 select-none pointer-events-none scale-75 sm:scale-100 hidden sm:flex"
               >
                 <div className="flex -space-x-2 mb-2">
                   {[1, 2, 3].map((i) => (

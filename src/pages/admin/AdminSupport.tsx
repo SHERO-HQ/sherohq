@@ -10,6 +10,7 @@ import {
   Mail,
   Phone,
   ArrowRight,
+  Trash2,
 } from "lucide-react";
 import { format } from "date-fns";
 import {
@@ -43,6 +44,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Modal } from "@/components/ui/Modal";
 
 const AdminSupport = () => {
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
@@ -52,6 +54,17 @@ const AdminSupport = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const { addNotification } = useNotifications();
+
+  // Delete Modal State
+  const [deleteModal, setDeleteModal] = useState<{
+    isOpen: boolean;
+    type: "consultation" | "inquiry" | null;
+    id: string | null;
+  }>({
+    isOpen: false,
+    type: null,
+    id: null,
+  });
 
   const loadData = useCallback(async () => {
     try {
@@ -111,9 +124,13 @@ const AdminSupport = () => {
     }
   };
 
-  const handleDelete = async (type: "consultation" | "inquiry", id: string) => {
-    if (!globalThis.confirm(`Are you sure you want to delete this ${type}?`))
-      return;
+  const confirmDelete = (type: "consultation" | "inquiry", id: string) => {
+    setDeleteModal({ isOpen: true, type, id });
+  };
+
+  const handleDelete = async () => {
+    const { type, id } = deleteModal;
+    if (!type || !id) return;
 
     try {
       if (type === "consultation") {
@@ -123,6 +140,7 @@ const AdminSupport = () => {
         await deleteInquiry(id);
         setInquiries((prev) => prev.filter((i) => i.id !== id));
       }
+      setDeleteModal({ isOpen: false, type: null, id: null });
       addNotification("Success", `${type} deleted successfully`, "success");
     } catch (err) {
       console.error("Failed to delete support item:", err);
@@ -134,41 +152,41 @@ const AdminSupport = () => {
     const s = status.toLowerCase();
     if (s === "pending") {
       return (
-        <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20 rounded">
+        <Badge className="bg-amber-500/10 w-fit text-amber-500 border-amber-500/20 rounded">
           Pending
         </Badge>
       );
     }
     if (s === "resolved" || s === "completed") {
       return (
-        <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 rounded">
+        <Badge className="bg-emerald-500/10 w-fit text-emerald-500 border-emerald-500/20 rounded">
           Resolved
         </Badge>
       );
     }
     if (s === "in-progress") {
       return (
-        <Badge className="bg-blue-500/10 text-blue-500 border-blue-500/20 rounded">
+        <Badge className="bg-blue-500/10 w-fit text-blue-500 border-blue-500/20 rounded">
           In Progress
         </Badge>
       );
     }
     if (s === "confirmed") {
       return (
-        <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 rounded">
+        <Badge className="bg-emerald-500/10 w-fit text-emerald-500 border-emerald-500/20 rounded">
           Confirmed
         </Badge>
       );
     }
     if (s === "cancelled") {
       return (
-        <Badge className="bg-red-500/10 text-red-500 border-red-500/20 rounded">
+        <Badge className="bg-red-500/10 w-fit text-red-500 border-red-500/20 rounded">
           Cancelled
         </Badge>
       );
     }
     return (
-      <Badge variant="outline" className="rounded">
+      <Badge variant="outline" className="rounded w-fit">
         {status}
       </Badge>
     );
@@ -236,7 +254,7 @@ const AdminSupport = () => {
           <h1 className="text-3xl font-bold font-sora text-white">
             Support & Inquiries
           </h1>
-          <p className="text-slate-400 mt-1">
+          <p className="text-slate-400 mt-1 text-sm">
             Manage user tickets, consultations, and contact messages
           </p>
         </div>
@@ -291,7 +309,7 @@ const AdminSupport = () => {
       </div>
 
       <Tabs defaultValue="tickets" className="w-full">
-        <TabsList className="bg-slate-900/50 border border-white/5 p-1 mb-8 flex flex-wrap sm:flex-nowrap overflow-x-auto scrollbar-hide">
+        <TabsList className="bg-slate-900/50 border border-white/5 p-1 mb-8 flex justify-center items-center flex-wrap sm:flex-nowrap overflow-x-auto scrollbar-hide w-fit">
           <TabsTrigger
             value="tickets"
             className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-emerald-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
@@ -534,7 +552,7 @@ const AdminSupport = () => {
                             Cancel
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onSelect={() => handleDelete("consultation", c.id)}
+                            onSelect={() => confirmDelete("consultation", c.id)}
                             className="text-red-400 focus:bg-red-500/10 focus:text-red-400"
                           >
                             Delete
@@ -742,11 +760,11 @@ const AdminSupport = () => {
                             <Button
                               variant="ghost"
                               onClick={() =>
-                                handleDelete("inquiry", inquiry.id)
+                                confirmDelete("inquiry", inquiry.id)
                               }
-                              className="h-8 w-8 p-0 text-slate-500 hover:text-red-500 group-hover:bg-white/10"
+                              className="h-8 w-8 p-0 text-red-500/60 hover:text-red-500 group-hover:bg-white/10"
                             >
-                              <MoreVertical className="h-4 w-4" />
+                              <Trash2 className="h-4 w-4" />
                             </Button>
                           </div>
                         </td>
@@ -759,6 +777,35 @@ const AdminSupport = () => {
           </div>
         </TabsContent>
       </Tabs>
+
+      <Modal
+        isOpen={deleteModal.isOpen}
+        onClose={() => setDeleteModal({ ...deleteModal, isOpen: false })}
+        title={`Delete ${deleteModal.type === "consultation" ? "Consultation" : "Inquiry"}`}
+      >
+        <div className="space-y-4">
+          <p className="text-slate-300">
+            Are you sure you want to delete this{" "}
+            {deleteModal.type === "consultation" ? "consultation" : "inquiry"}?
+            This action cannot be undone.
+          </p>
+          <div className="flex justify-end gap-3">
+            <Button
+              variant="outline"
+              onClick={() => setDeleteModal({ ...deleteModal, isOpen: false })}
+              className="border-white/10 text-slate-300 hover:text-white"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleDelete}
+              className="bg-red-500/10 text-red-500 hover:bg-red-500/20 border border-red-500/20"
+            >
+              Delete
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

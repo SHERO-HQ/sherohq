@@ -14,6 +14,7 @@ import {
   RefreshCw,
   PackageSearch,
   PackageCheck,
+  Plus,
 } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
@@ -182,7 +183,7 @@ export default function AdminOrders() {
               Monitor and manage customer transactions
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <Button
               variant="outline"
               size="icon"
@@ -228,6 +229,12 @@ export default function AdminOrders() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+
+            <UniversalLink to="/admin/orders/new">
+              <Button className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-all shadow-lg shadow-emerald-500/20">
+                <Plus className="mr-2 h-4 w-4" /> Create Order
+              </Button>
+            </UniversalLink>
           </div>
         </div>
 
@@ -250,29 +257,29 @@ export default function AdminOrders() {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            <div className="flex items-center gap-3 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
+            <div className="flex flex-wrap items-center gap-2 lg:gap-0 lg:bg-slate-950/50 lg:p-1 lg:rounded lg:border lg:border-white/5 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
               {[
-                "all",
-                "pending",
-                "processing",
-                "shipped",
-                "delivered",
-                "cancelled",
+                { id: "all", label: "All" },
+                { id: "pending", label: "Pending" },
+                { id: "processing", label: "Processing" },
+                { id: "shipped", label: "Shipped" },
+                { id: "delivered", label: "Delivered" },
+                { id: "cancelled", label: "Cancelled" },
               ].map((status) => (
                 <button
-                  key={status}
+                  key={status.id}
                   onClick={() => {
-                    setStatusFilter(status);
+                    setStatusFilter(status.id);
                     setCurrentPage(1);
                   }}
                   className={cn(
-                    "px-4 py-2 rounded text-xs font-bold uppercase tracking-wider transition-all whitespace-nowrap border",
-                    statusFilter === status
-                      ? "bg-emerald-600 border-emerald-500 text-white"
-                      : "bg-slate-800 border-white/5 text-slate-400 hover:text-white hover:border-white/10",
+                    "px-4 py-1 rounded text-sm font-medium transition-all whitespace-nowrap",
+                    statusFilter === status.id
+                      ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20"
+                      : "text-slate-400 hover:text-white hover:bg-white/5",
                   )}
                 >
-                  {status}
+                  {status.label}
                 </button>
               ))}
             </div>

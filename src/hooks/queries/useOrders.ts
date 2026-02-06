@@ -4,6 +4,7 @@ import {
   getUserOrders,
   fetchAllOrders,
   updateOrderStatus,
+  createAdminOrder,
 } from "@/services/api";
 
 export const ORDER_KEYS = {
@@ -50,6 +51,16 @@ export const useUpdateOrderStatus = () => {
       updateOrderStatus(id, status),
     onSuccess: () => {
       // Invalidate all admin order lists to trigger a refetch
+      queryClient.invalidateQueries({ queryKey: ORDER_KEYS.all });
+    },
+  });
+};
+
+export const useCreateAdminOrder = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createAdminOrder,
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ORDER_KEYS.all });
     },
   });

@@ -113,7 +113,7 @@ export default function FeedbackModal({
           >
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
-              <h2 className="text-lg font-bold font-sora text-slate-900 dark:text-white">
+              <h2 className="text-sm font-bold font-sora text-slate-900 dark:text-white">
                 Share Your Feedback
               </h2>
               <button

@@ -126,8 +126,15 @@ class NotificationService {
       )
       .join("");
 
+    const baseUrl =
+      process.env.FRONTEND_URL?.replace(/\/$/, "") || "https://sherotech.com";
+    const logoUrl = `${baseUrl}/shero.png`;
+
     const htmlContent = `
       <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <img src="${logoUrl}" alt="SHERO TECHNOLOGIES" style="height: 40px;" />
+        </div>
         <h1 style="color: #059669; text-align: center;">Order Confirmed!</h1>
         <p>Hi ${shippingInfo.firstName},</p>
         <p>Thank you for your order at <strong>SHERO TECHNOLOGIES</strong>. We've received your order and are processing it.</p>
@@ -161,6 +168,317 @@ class NotificationService {
       shippingInfo.email,
       `Order Confirmation - #${orderId.substring(0, 8)}`,
       htmlContent,
+      "info",
+    );
+  }
+
+  public async sendInvoice(
+    orderId: string,
+    shippingInfo: ShippingInfo,
+    items: OrderItem[],
+    total: number,
+  ) {
+    if (!shippingInfo.email) return;
+
+    await this.ensureInitialized();
+
+    const shortOrderId = orderId.slice(0, 8).toUpperCase();
+    const invoiceDate = new Date().toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+
+    const itemsHtml = items
+      .map(
+        (item) => `
+        <tr>
+          <td style="padding: 12px 0; border-bottom: 1px solid #eee; color: #333;">${item.name} <span style="color: #666; font-size: 12px;">x${item.quantity}</span></td>
+          <td style="padding: 12px 0; border-bottom: 1px solid #eee; text-align: right; color: #333; font-weight: 500;">GH₵${(item.price * item.quantity).toLocaleString()}</td>
+        </tr>
+      `,
+      )
+      .join("");
+
+    const logoUrl = process.env.FRONTEND_URL
+      ? `${process.env.FRONTEND_URL}/shero.png`
+      : "https://sherotech.com/shero.png";
+
+    const subject = `Invoice #${shortOrderId} from SHERO Technologies`;
+
+    const htmlContent = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+           <img src="${logoUrl}" alt="SHERO" style="height: 40px; margin-bottom: 20px;" />
+          <h1 style="color: #059669; margin: 0;">We've Created an Invoice</h1>
+          <p style="color: #666; font-size: 14px; margin-top: 10px;">Please review the invoice below.</p>
+        </div>
+
+        <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+          <h2 style="font-size: 16px; margin: 0 0 15px 0; color: #333;">Invoice Details</h2>
+          <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Invoice ID:</strong> #${shortOrderId}</p>
+          <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Date:</strong> ${invoiceDate}</p>
+          <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Status:</strong> Pending Payment</p>
+        </div>
+        
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+          <thead>
+            <tr>
+              <th style="text-align: left; color: #666; font-size: 12px; text-transform: uppercase; padding-bottom: 10px; border-bottom: 2px solid #eee;">Item</th>
+              <th style="text-align: right; color: #666; font-size: 12px; text-transform: uppercase; padding-bottom: 10px; border-bottom: 2px solid #eee;">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsHtml}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td style="padding-top: 20px; text-align: right; color: #666; font-weight: bold;">Total Due:</td>
+              <td style="padding-top: 20px; text-align: right; color: #059669; font-size: 18px; font-weight: bold;">GH₵${total.toLocaleString()}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div style="text-align: center; margin-top: 40px;">
+          <a href="${process.env.FRONTEND_URL}/checkout/${orderId}" style="display: inline-block; background: #059669; color: white; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: bold; font-size: 16px;">Pay Invoice Now</a>
+        </div>
+
+        <div style="margin-top: 40px; pt: 20px; border-top: 1px solid #eee; text-align: center; color: #999; font-size: 12px;">
+          <p>SHERO Technologies</p>
+          <p>If you have any questions, please reply to this email.</p>
+        </div>
+      </div>
+    `;
+
+    try {
+      await this.sendEmail(shippingInfo.email, subject, htmlContent);
+      console.log(`✅ Invoice sent to ${shippingInfo.email}`);
+    } catch (error) {
+      console.error(
+        `❌ Failed to send invoice to ${shippingInfo.email}:`,
+        error,
+      );
+      throw error;
+    }
+  }
+
+  public async sendQuote(
+    orderId: string,
+    shippingInfo: ShippingInfo,
+    items: OrderItem[],
+    total: number,
+  ) {
+    if (!shippingInfo.email) return;
+
+    await this.ensureInitialized();
+
+    const shortOrderId = orderId.slice(0, 8).toUpperCase();
+    const quoteDate = new Date().toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+
+    const itemsHtml = items
+      .map(
+        (item) => `
+        <tr>
+          <td style="padding: 12px 0; border-bottom: 1px solid #eee; color: #333;">${item.name} <span style="color: #666; font-size: 12px;">x${item.quantity}</span></td>
+          <td style="padding: 12px 0; border-bottom: 1px solid #eee; text-align: right; color: #333; font-weight: 500;">GH₵${(item.price * item.quantity).toLocaleString()}</td>
+        </tr>
+      `,
+      )
+      .join("");
+
+    const logoUrl = process.env.FRONTEND_URL
+      ? `${process.env.FRONTEND_URL}/shero.png`
+      : "https://sherotech.com/shero.png";
+
+    const subject = `Quote #${shortOrderId} from SHERO Technologies`;
+
+    const htmlContent = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+        <div style="text-align: center; margin-bottom: 30px;">
+           <img src="${logoUrl}" alt="SHERO" style="height: 40px; margin-bottom: 20px;" />
+          <h1 style="color: #2563EB; margin: 0;">Here is your Quote</h1>
+          <p style="color: #666; font-size: 14px; margin-top: 10px;">Thank you for your interest. Please review the quote below.</p>
+        </div>
+
+        <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+          <h2 style="font-size: 16px; margin: 0 0 15px 0; color: #333;">Quote Details</h2>
+          <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Quote ID:</strong> #${shortOrderId}</p>
+          <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Date:</strong> ${quoteDate}</p>
+          <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Valid Until:</strong> 30 Days from date</p>
+        </div>
+        
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+          <thead>
+            <tr>
+              <th style="text-align: left; color: #666; font-size: 12px; text-transform: uppercase; padding-bottom: 10px; border-bottom: 2px solid #eee;">Item</th>
+              <th style="text-align: right; color: #666; font-size: 12px; text-transform: uppercase; padding-bottom: 10px; border-bottom: 2px solid #eee;">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsHtml}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td style="padding-top: 20px; text-align: right; color: #666; font-weight: bold;">Total Estimate:</td>
+              <td style="padding-top: 20px; text-align: right; color: #2563EB; font-size: 18px; font-weight: bold;">GH₵${total.toLocaleString()}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div style="text-align: center; margin-top: 40px;">
+          <p style="color: #666; font-style: italic;">To accept this quote, please reply to this email.</p>
+        </div>
+
+        <div style="margin-top: 40px; pt: 20px; border-top: 1px solid #eee; text-align: center; color: #999; font-size: 12px;">
+          <p>SHERO Technologies</p>
+          <p>Tamale, Ghana</p>
+        </div>
+      </div>
+    `;
+
+    try {
+      await this.sendEmail(shippingInfo.email, subject, htmlContent);
+      console.log(`✅ Quote sent to ${shippingInfo.email}`);
+    } catch (error) {
+      console.error(`❌ Failed to send quote to ${shippingInfo.email}:`, error);
+      throw error;
+    }
+  }
+
+  public async sendPaymentReceipt(
+    orderId: string,
+    shippingInfo: ShippingInfo,
+    items: OrderItem[],
+    total: number,
+    paymentDetails?: { method: string; transactionId?: string },
+  ) {
+    await this.ensureInitialized();
+    console.log(`\n--- 🧾 PAYMENT RECEIPT [Order: ${orderId}] ---`);
+
+    await this.sendReceiptEmail(
+      orderId,
+      shippingInfo,
+      items,
+      total,
+      paymentDetails,
+    );
+
+    console.log(`--- 🏁 END RECEIPT ---\n`);
+  }
+
+  private async sendReceiptEmail(
+    orderId: string,
+    shippingInfo: ShippingInfo,
+    items: OrderItem[],
+    total: number,
+    paymentDetails?: { method: string; transactionId?: string },
+  ) {
+    const itemsHtml = items
+      .map(
+        (item) => `
+      <tr>
+        <td style="padding: 12px 8px; border-bottom: 1px solid #efefef;">
+          <div style="font-weight: 600; color: #334155;">${item.name}</div>
+          <div style="font-size: 12px; color: #64748b;">Qty: ${item.quantity}</div>
+        </td>
+        <td style="padding: 12px 8px; border-bottom: 1px solid #efefef; text-align: right; color: #334155;">
+          GH₵${(item.price * item.quantity).toFixed(2)}
+        </td>
+      </tr>
+    `,
+      )
+      .join("");
+
+    const thermalDate = new Date().toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const baseUrl =
+      process.env.FRONTEND_URL?.replace(/\/$/, "") || "https://sherotech.com";
+    const logoUrl = `${baseUrl}/shero.png`;
+
+    const htmlContent = `
+      <div style="font-family: 'Inter', sans-serif; max-width: 600px; margin: auto; padding: 0; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; background-color: #ffffff;">
+        <div style="text-align: center; padding: 20px; border-bottom: 1px solid #f1f5f9;">
+          <img src="${logoUrl}" alt="SHERO TECHNOLOGIES" style="height: 35px;" />
+        </div>
+        <!-- Header Arc -->
+        <div style="background: linear-gradient(135deg, #059669 0%, #10b981 100%); padding: 40px 20px; text-align: center; color: white;">
+          <div style="font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; opacity: 0.9;">Payment Successful</div>
+          <h1 style="margin: 0; font-size: 32px; font-weight: 800;">GH₵${total.toFixed(2)}</h1>
+          <div style="margin-top: 12px; display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 12px;">
+            Order #${orderId.substring(0, 8)}
+          </div>
+        </div>
+
+        <div style="padding: 32px 24px;">
+          <div style="text-align: center; margin-bottom: 32px;">
+            <p style="color: #64748b; margin: 0;">Hi ${shippingInfo.firstName},</p>
+            <h2 style="color: #1e293b; margin: 8px 0 0; font-size: 20px;">Thank you for your payment!</h2>
+            <p style="color: #64748b; font-size: 14px; margin-top: 8px;">Your transaction was completed successfully and your order is now being processed.</p>
+          </div>
+
+          <div style="background-color: #f8fafc; border-radius: 12px; padding: 20px; margin-bottom: 32px;">
+            <h3 style="margin: 0 0 16px; font-size: 14px; color: #64748b; text-transform: uppercase; letter-spacing: 1px;">Transaction Detail</h3>
+            <table style="width: 100%; font-size: 14px; color: #334155;">
+              <tr>
+                <td style="padding: 4px 0;">Date</td>
+                <td style="padding: 4px 0; text-align: right; font-weight: 600;">${thermalDate}</td>
+              </tr>
+              <tr>
+                <td style="padding: 4px 0;">Payment Method</td>
+                <td style="padding: 4px 0; text-align: right; font-weight: 600; text-transform: capitalize;">${paymentDetails?.method || "Online Payment"}</td>
+              </tr>
+              ${
+                paymentDetails?.transactionId
+                  ? `
+              <tr>
+                <td style="padding: 4px 0;">Transaction ID</td>
+                <td style="padding: 4px 0; text-align: right; font-weight: 600; font-family: monospace;">${paymentDetails.transactionId}</td>
+              </tr>
+              `
+                  : ""
+              }
+            </table>
+          </div>
+
+          <h3 style="font-size: 16px; color: #1e293b; margin-bottom: 16px;">Items Summary</h3>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 32px;">
+            ${itemsHtml}
+            <tr>
+              <td style="padding: 16px 8px; font-weight: 800; color: #1e293b; font-size: 18px;">Total Paid</td>
+              <td style="padding: 16px 8px; font-weight: 800; color: #059669; font-size: 18px; text-align: right;">GH₵${total.toFixed(2)}</td>
+            </tr>
+          </table>
+
+          <div style="border-top: 1px solid #e2e8f0; padding-top: 24px; text-align: center;">
+            <p style="font-size: 14px; color: #64748b; margin-bottom: 16px;">Need help with this order?</p>
+            <div style="display: flex; justify-content: center; gap: 12px;">
+               <a href="https://wa.me/233548711582" style="background-color: #25D366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 13px;">WhatsApp Support</a>
+            </div>
+          </div>
+        </div>
+
+        <div style="background-color: #f1f5f9; padding: 20px; text-align: center; color: #94a3b8; font-size: 12px;">
+          <p style="margin: 0 0 8px;">&copy; ${new Date().getFullYear()} SHERO TECHNOLOGIES. All rights reserved.</p>
+          <p style="margin: 0;">Accra, Ghana | www.sherohq.com</p>
+        </div>
+      </div>
+    `;
+
+    await this.sendEmail(
+      shippingInfo.email,
+      `Payment Receipt - Order #${orderId.substring(0, 8)}`,
+      htmlContent,
+      "info",
     );
   }
 
@@ -194,8 +512,13 @@ class NotificationService {
     }
     const verifyLink = `${baseUrl}/verify-email?token=${token}`;
 
+    const logoUrl = `${baseUrl}/shero.png`;
+
     const htmlContent = `
       <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <img src="${logoUrl}" alt="SHERO" style="height: 40px;" />
+        </div>
         <h1 style="color: #059669; text-align: center;">Verify Your Email</h1>
         <p>Hi ${name},</p>
         <p>Thank you for creating an account with <strong>SHERO TECHNOLOGIES</strong>. Please verify your email address by clicking the button below:</p>
@@ -229,6 +552,7 @@ class NotificationService {
       email,
       "Verify Your Email - SHERO TECHNOLOGIES",
       htmlContent,
+      "noreply",
     );
   }
   public async sendScheduleConfirmation(
@@ -246,8 +570,15 @@ class NotificationService {
       day: "numeric",
     });
 
+    const baseUrl =
+      process.env.FRONTEND_URL?.replace(/\/$/, "") || "https://sherotech.com";
+    const logoUrl = `${baseUrl}/shero.png`;
+
     const htmlContent = `
       <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <img src="${logoUrl}" alt="SHERO" style="height: 40px;" />
+        </div>
         <h1 style="color: #059669; text-align: center;">Consultation Confirmed!</h1>
         <p>Hi ${name},</p>
         <p>Your consultation with <strong>SHERO TECHNOLOGIES</strong> has been successfully scheduled.</p>
@@ -256,7 +587,7 @@ class NotificationService {
           <h3 style="margin-top: 0;">Appointment Details</h3>
           <p><strong>Service:</strong> ${service}</p>
           <p><strong>Date:</strong> ${formattedDate}</p>
-          <p><strong>Time:</strong> ${time}</p>
+          <p><strong>Time:</strong> ${time} GMT</p>
         </div>
 
         <p>Our team will contact you shortly to confirm the meeting link or location.</p>
@@ -271,6 +602,7 @@ class NotificationService {
       email,
       "Consultation Confirmed - SHERO TECHNOLOGIES",
       htmlContent,
+      "support",
     );
   }
 
@@ -303,16 +635,30 @@ class NotificationService {
       email,
       `Re: ${subject} - SHERO TECHNOLOGIES`,
       htmlContent,
+      "support",
     );
   }
 
-  private async sendEmail(to: string, subject: string, html: string) {
+  private async sendEmail(
+    to: string,
+    subject: string,
+    html: string,
+    fromType: "info" | "support" | "noreply" = "info",
+  ) {
+    const fromEmails = {
+      info: "info@sherohq.com",
+      support: "support@sherohq.com",
+      noreply: "noreply@sherohq.com",
+    };
+
+    const senderEmail = fromEmails[fromType];
+
     if (this.resend) {
       // Resend requires a verified domain or their onboarding address
-      const resendSender = process.env.RESEND_FROM || "onboarding@resend.dev";
+      const resendSender = process.env.RESEND_FROM || senderEmail;
       const from = `"SHERO TECHNOLOGIES" <${resendSender}>`;
 
-      console.log(`📡 Sending email via Resend to: ${to}`);
+      console.log(`📡 Sending email via Resend to: ${to} (from: ${from})`);
       try {
         const { data, error } = await this.resend.emails.send({
           from,
@@ -341,8 +687,8 @@ class NotificationService {
     }
 
     if (this.transporter) {
-      const from = `"SHERO TECHNOLOGIES" <${process.env.SMTP_USER}>`;
-      console.log(`📡 Sending email via SMTP to: ${to}`);
+      const from = `"SHERO TECHNOLOGIES" <${process.env.SMTP_USER || senderEmail}>`;
+      console.log(`📡 Sending email via SMTP to: ${to} (from: ${from})`);
       try {
         await this.transporter.sendMail({
           from,
@@ -355,7 +701,9 @@ class NotificationService {
         console.error("❌ Failed to send SMTP email:", error);
       }
     } else {
-      console.log(`📝 [SIMULATION] Email to ${to}: "${subject}"`);
+      console.log(
+        `📝 [SIMULATION] Email to ${to} [from: ${senderEmail}]: "${subject}"`,
+      );
     }
   }
 }

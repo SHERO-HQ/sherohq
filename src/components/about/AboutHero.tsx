@@ -1,13 +1,12 @@
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import {
-  Zap,
   ShieldCheck,
   SmartphoneCharging,
   Lightbulb,
   Target,
   Compass,
-  Mountain,
-  Heart,
+  TrendingUp,
+  Star,
 } from "lucide-react";
 import { useRef, useMemo, useState } from "react";
 
@@ -117,7 +116,7 @@ const AboutHero = () => {
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm mb-4"
             >
               <SmartphoneCharging className="size-4 text-emerald-500" />
-              <span className="text-[10px] md:text-xs font-mono font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
+              <span className="text-[8px] md:text-xs font-mono font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
                 Redefining Possibilities since 2023
               </span>
             </motion.div>
@@ -134,8 +133,8 @@ const AboutHero = () => {
                     ? { duration: 0 }
                     : { duration: 0.8, ease: "easeOut" }
                 }
-                className="font-sora font-extrabold leading-[1.1] text-6xl md:text-8xl lg:text-8xl 
-                           text-slate-900 dark:text-white mb-6"
+                className="font-sora font-extrabold leading-[1.1] text-5xl md:text-8xl lg:text-8xl 
+                           text-slate-900 dark:text-white mb-2"
               >
                 Technical{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400">
@@ -149,11 +148,11 @@ const AboutHero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-base md:text-lg text-slate-600 dark:text-slate-400 mb-10 leading-relaxed max-w-xl"
+              className="text-sm text-slate-600 dark:text-slate-400 mb-10 leading-relaxed max-w-xl"
             >
-              Visionary strategists and engineers
-              dedicated to delivering innovative hardware and software products
-              that transform businesses and empower people.
+              Visionary strategists and engineers dedicated to delivering
+              innovative hardware and software products that transform
+              businesses and empower people.
             </motion.p>
 
             {/* Values Preview */}
@@ -286,28 +285,22 @@ const AboutHero = () => {
                   z: 150,
                   x: useTransform(mouseX, [-0.5, 0.5], [20, -20]),
                   y: useTransform(mouseY, [-0.5, 0.5], [20, 20]),
-                  rotate: -12,  
+                  rotate: -12,
                 }}
-                className="absolute -top-15 -left-20 w-48 p-5 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/30 shadow-2xl z-20 pointer-events-none"
+                className="absolute top-0 left-0 w-fit p-3 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/30 shadow-2xl z-20 pointer-events-none"
               >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-linear-to-br from-emerald-600 to-blue-400 flex items-center justify-center shadow-lg">
-                    <Mountain className="w-5 h-5 text-white" />
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-linear-to-br from-emerald-600 to-blue-400 flex items-center justify-center shadow-lg">
+                    <TrendingUp className="w-4 h-4 text-white" />
                   </div>
                   <div className="flex flex-col">
                     <span className="text-[9px] font-mono text-slate-500 uppercase">
                       Growth
                     </span>
                     <span className="text-[11px] font-bold text-slate-900 dark:text-white italic">
-                      LIMITLESS
+                      METER
                     </span>
                   </div>
-                </div>
-                <div className="flex items-center gap-1.5 p-2 bg-slate-50 dark:bg-slate-900/50 rounded border border-slate-100 dark:border-slate-800">
-                  <Zap className="w-3 h-3 text-amber-500 fill-amber-500" />
-                  <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300">
-                    VISION_READY
-                  </span>
                 </div>
               </motion.div>
 
@@ -318,17 +311,19 @@ const AboutHero = () => {
                   x: useTransform(mouseX, [-0.5, 0.5], [-12, 12]),
                   y: useTransform(mouseY, [-0.5, 0.5], [-12, 12]),
                 }}
-                className="absolute -bottom-3 -right-6 bg-linear-to-r from-emerald-600 to-teal-500 p-5 rounded shadow-2xl shadow-emerald-500/40 flex flex-col items-center justify-center rotate-6 z-30 pointer-events-none"
+                className="absolute bottom-10 right-5 w-fit p-3 bg-linear-to-r from-blue-600 to-blue-400 rounded shadow-2xl shadow-blue-500/40 flex flex-col items-center justify-center rotate-6 z-30 pointer-events-none"
               >
-                <Heart className="text-white w-8 h-8 mb-2 drop-shadow-lg" />
-                <span className="text-[9px] font-bold text-white uppercase tracking-tighter whitespace-nowrap">
-                  CLIENT_CENTRIC_CORE
-                </span>
-                <div className="mt-1 flex gap-0.5">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="w-1 h-1 rounded-full bg-white/50" />
+                <div className="flex">
+                  {[1, 2, 3, 4, 5].map((item) => (
+                    <Star
+                      key={item}
+                      className={`text-yellow-500 w-5 h-5 mb-2 drop-shadow-lg  ${item <= 4 ? "fill-amber-400" : ""}`}
+                    />
                   ))}
                 </div>
+                <span className="text-[9px] font-bold text-white uppercase tracking-tighter whitespace-nowrap">
+                  CLIENT_SATISFACTION
+                </span>
               </motion.div>
 
               {/* Background Aura */}

@@ -30,6 +30,9 @@ const AdminLogin = lazy(() => import("@/pages/admin/AdminLogin"));
 const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard"));
 const AdminProducts = lazy(() => import("@/pages/admin/AdminProducts"));
 const AdminOrders = lazy(() => import("@/pages/admin/AdminOrders"));
+const AdminCreateInvoice = lazy(
+  () => import("@/pages/admin/AdminCreateInvoice"),
+);
 const ProductForm = lazy(() => import("@/pages/admin/ProductForm"));
 const AdminReports = lazy(() => import("@/pages/admin/AdminReports"));
 const AdminProfile = lazy(() => import("@/pages/admin/AdminProfile"));
@@ -43,6 +46,8 @@ import AdminGuideEditor from "@/pages/admin/AdminGuideEditor";
 const AdminCategories = lazy(() => import("@/pages/admin/AdminCategories"));
 const AdminReviews = lazy(() => import("@/pages/admin/AdminReviews"));
 const AdminTeam = lazy(() => import("@/pages/admin/AdminTeam"));
+const AdminTestimonials = lazy(() => import("@/pages/admin/AdminTestimonials"));
+const AdminStats = lazy(() => import("@/pages/admin/AdminStats"));
 import { BreadcrumbProvider } from "@/context/BreadcrumbContext";
 
 // Public support pages
@@ -118,6 +123,14 @@ const AdminSectionInternal = () => (
       element={
         <ProtectedRoute>
           <AdminOrders />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="orders/new"
+      element={
+        <ProtectedRoute>
+          <AdminCreateInvoice />
         </ProtectedRoute>
       }
     />
@@ -230,6 +243,22 @@ const AdminSectionInternal = () => (
       element={
         <ProtectedRoute>
           <AdminTeam />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="testimonials"
+      element={
+        <ProtectedRoute>
+          <AdminTestimonials />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="stats"
+      element={
+        <ProtectedRoute>
+          <AdminStats />
         </ProtectedRoute>
       }
     />

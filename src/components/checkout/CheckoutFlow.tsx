@@ -3,7 +3,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { checkoutSchema, type CheckoutInput } from "@/lib/validations/checkout";
 import { getGuestId } from "@/utils/guestSession";
-import { createOrder, initializePayment, getImageUrl } from "@/services/api";
+import {
+  createOrder,
+  initializePayment,
+  getImageUrl,
+  updateOrderPaymentMethod,
+} from "@/services/api";
 import { motion, AnimatePresence } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -33,6 +38,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import OrderSummary from "./OrderSummary";
+import PaymentFailureSupport from "./PaymentFailureSupport";
 
 const CheckoutFlow = () => {
   const navigate = useNavigate();
@@ -52,6 +58,9 @@ const CheckoutFlow = () => {
   const [confirmedTotal, setConfirmedTotal] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showMobileSummary, setShowMobileSummary] = useState(false);
+
+  const [paymentError, setPaymentError] = useState(false);
+  const [isUpdatingOffline, setIsUpdatingOffline] = useState(false);
 
   const {
     register,
@@ -99,10 +108,6 @@ const CheckoutFlow = () => {
         "shippingAddress.postalCode",
         user.shippingAddress?.postalCode || "",
       );
-      if (user.phone) {
-        // We don't have phone in checkoutSchema yet, maybe we should add it?
-        // Actually, let's add it to checkoutSchema as well for consistency if needed.
-      }
     }
   }, [isAuthenticated, user, setValue]);
 
@@ -116,7 +121,7 @@ const CheckoutFlow = () => {
   const subtotal = totalPrice;
   const isFreeShipping = paymentMethod === "store_pickup" || subtotal > 500;
   const shipping = isFreeShipping ? 0 : 50;
-  const tax = 0; // Tax set to 0.00 for now
+  const tax = 0;
   const total = subtotal + shipping + tax;
 
   const steps = [
@@ -148,8 +153,61 @@ const CheckoutFlow = () => {
     }
   };
 
+  const handleRetryPayment = async () => {
+    if (!orderId) return;
+    setIsSubmitting(true);
+    setPaymentError(false);
+    try {
+      const paymentResponse = await initializePayment(
+        orderId,
+        total,
+        `Order #${orderId}`,
+        paymentMethod === "paystack" ? "paystack" : "hubtel",
+      );
+
+      if (paymentResponse.success && paymentResponse.checkoutUrl) {
+        clearCart();
+        globalThis.location.href = paymentResponse.checkoutUrl;
+      } else {
+        setPaymentError(true);
+      }
+    } catch (error) {
+      console.error("Retry payment failed:", error);
+      setPaymentError(true);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSwitchToOffline = async (method: "cod" | "store_pickup") => {
+    if (!orderId) return;
+    setIsUpdatingOffline(true);
+    try {
+      const guestId = getGuestId();
+      await updateOrderPaymentMethod(orderId, {
+        paymentMethod: method === "cod" ? "cash_on_delivery" : "store_pickup",
+        guestId,
+        userId: user?.id,
+      });
+
+      setPaymentError(false);
+      setCurrentStep(4);
+      clearCart();
+    } catch (error) {
+      console.error("Failed to switch to offline payment:", error);
+      addNotification(
+        "Error",
+        "Failed to update order. Please contact support.",
+        "error",
+      );
+    } finally {
+      setIsUpdatingOffline(false);
+    }
+  };
+
   const onSubmit = async (data: CheckoutInput) => {
     setIsSubmitting(true);
+    setPaymentError(false);
     try {
       const guestId = getGuestId();
       const paymentMethodMap = {
@@ -190,9 +248,7 @@ const CheckoutFlow = () => {
         setOrderId(response.orderId);
         setConfirmedTotal(total);
 
-        // If online payment (momo/card/paystack), redirect to Gateway
         if (["momo", "card", "paystack"].includes(data.paymentMethod)) {
-          // Development Mode: Redirect to internal mock payment page
           if (import.meta.env.DEV) {
             clearCart();
             globalThis.location.href = `/mock-payment?orderId=${response.orderId}&amount=${total}`;
@@ -210,18 +266,21 @@ const CheckoutFlow = () => {
               clearCart();
               globalThis.location.href = paymentResponse.checkoutUrl;
               return;
+            } else {
+              setPaymentError(true);
             }
           } catch (paymentError) {
             console.error("Payment initialization failed:", paymentError);
+            setPaymentError(true);
             addNotification(
-              "Payment Error",
-              "Failed to initialize payment gateway. Order created but payment failed.",
-              "error",
+              "Payment System Busy",
+              "We couldn't connect to the payment provider. We've saved your order!",
+              "warning",
             );
           }
+          return;
         }
 
-        // If COD or fallback
         setCurrentStep(4);
         clearCart();
       }
@@ -369,462 +428,504 @@ const CheckoutFlow = () => {
           {/* Main Content */}
           <div className="lg:col-span-2">
             <AnimatePresence mode="wait">
-              {/* STEP 1: Cart Review */}
-              {currentStep === 1 && (
+              {/* Payment Failure Support View */}
+              {paymentError && orderId ? (
                 <motion.div
-                  key="step1"
+                  key="payment-error"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6"
                 >
-                  <h2 className="text-2xl font-bold font-sora text-slate-900 dark:text-white mb-6">
-                    Review Your Cart
-                  </h2>
+                  <PaymentFailureSupport
+                    orderId={orderId}
+                    amount={total}
+                    onRetry={handleRetryPayment}
+                    onSwitchToOffline={handleSwitchToOffline}
+                    isUpdatingOffline={isUpdatingOffline}
+                    onBack={() => {
+                      setPaymentError(false);
+                      setCurrentStep(3);
+                    }}
+                  />
+                </motion.div>
+              ) : (
+                <>
+                  {/* STEP 1: Cart Review */}
+                  {currentStep === 1 && (
+                    <motion.div
+                      key="step1"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6"
+                    >
+                      <h2 className="text-2xl font-bold font-sora text-slate-900 dark:text-white mb-6">
+                        Review Your Cart
+                      </h2>
 
-                  <div className="space-y-4">
-                    {cart.map((item) => (
-                      <div
-                        key={item.id}
-                        className="flex flex-col sm:flex-row gap-4 p-4 rounded border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 transition-colors"
-                      >
-                        <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center overflow-hidden shrink-0">
-                          {item.image &&
-                          (item.image.startsWith("/uploads") ||
-                            item.image.startsWith("http")) ? (
-                            <img
-                              src={getImageUrl(item.image)}
-                              alt={item.name}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                e.currentTarget.onerror = null;
-                                e.currentTarget.src =
-                                  "https://placehold.co/200x200?text=No+Image";
-                              }}
-                            />
-                          ) : (
-                            <div className="text-3xl">{item.image}</div>
-                          )}
-                        </div>
-
-                        <div className="flex-1">
-                          <h3 className="font-bold text-slate-900 dark:text-white">
-                            {item.name}
-                          </h3>
-                          <p className="text-sm text-slate-500 dark:text-slate-400">
-                            {item.category}
-                          </p>
-                          <p className="text-lg font-bold font-sora text-emerald-600 dark:text-emerald-400 mt-2">
-                            GH₵{item.price}
-                          </p>
-                        </div>
-
-                        <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 mt-2 sm:mt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-800 pt-4 sm:pt-0">
-                          <div className="flex items-center gap-2 border border-slate-200 dark:border-slate-700 rounded overflow-hidden">
-                            <button
-                              onClick={() => updateQuantity(item.id, -1)}
-                              className="cursor-pointer p-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                            >
-                              <Minus className="w-4 h-4" />
-                            </button>
-                            <span className="px-4 font-bold text-slate-900 dark:text-white">
-                              {item.quantity}
-                            </span>
-                            <button
-                              onClick={() => updateQuantity(item.id, 1)}
-                              className="cursor-pointer p-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                            >
-                              <Plus className="w-4 h-4" />
-                            </button>
-                          </div>
-                          <button
-                            onClick={() => removeItem(item.id)}
-                            className="cursor-pointer text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 text-sm flex items-center gap-1"
+                      <div className="space-y-4">
+                        {cart.map((item) => (
+                          <div
+                            key={item.id}
+                            className="flex flex-col sm:flex-row gap-4 p-4 rounded border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 transition-colors"
                           >
-                            <Trash2 className="w-4 h-4" />
-                            Remove
-                          </button>
-                        </div>
+                            <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center overflow-hidden shrink-0">
+                              {item.image &&
+                              (item.image.startsWith("/uploads") ||
+                                item.image.startsWith("http")) ? (
+                                <img
+                                  src={getImageUrl(item.image)}
+                                  alt={item.name}
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src =
+                                      "https://placehold.co/200x200?text=No+Image";
+                                  }}
+                                />
+                              ) : (
+                                <div className="text-3xl">{item.image}</div>
+                              )}
+                            </div>
+
+                            <div className="flex-1">
+                              <h3 className="font-bold text-slate-900 dark:text-white">
+                                {item.name}
+                              </h3>
+                              <p className="text-sm text-slate-500 dark:text-slate-400">
+                                {item.category}
+                              </p>
+                              <p className="text-lg font-bold font-sora text-emerald-600 dark:text-emerald-400 mt-2">
+                                GH₵{item.price}
+                              </p>
+                            </div>
+
+                            <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 mt-2 sm:mt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-800 pt-4 sm:pt-0">
+                              <div className="flex items-center gap-2 border border-slate-200 dark:border-slate-700 rounded overflow-hidden">
+                                <button
+                                  onClick={() => updateQuantity(item.id, -1)}
+                                  className="cursor-pointer p-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                                >
+                                  <Minus className="w-4 h-4" />
+                                </button>
+                                <span className="px-4 font-bold text-slate-900 dark:text-white">
+                                  {item.quantity}
+                                </span>
+                                <button
+                                  onClick={() => updateQuantity(item.id, 1)}
+                                  className="cursor-pointer p-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                                >
+                                  <Plus className="w-4 h-4" />
+                                </button>
+                              </div>
+                              <button
+                                onClick={() => removeItem(item.id)}
+                                className="cursor-pointer text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 text-sm flex items-center gap-1"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                                Remove
+                              </button>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
 
-                  <div className="flex justify-end mt-8">
-                    <Button
-                      onClick={handleNext}
-                      variant="brand"
-                      className="font-bold gap-2 px-8"
+                      <div className="flex justify-end mt-8">
+                        <Button
+                          onClick={handleNext}
+                          variant="brand"
+                          className="font-bold gap-2 px-8"
+                        >
+                          Continue to Shipping
+                          <ChevronRight className="w-5 h-5" />
+                        </Button>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* STEP 2: Shipping Information */}
+                  {currentStep === 2 && (
+                    <motion.div
+                      key="step2"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6"
                     >
-                      Continue to Shipping
-                      <ChevronRight className="w-5 h-5" />
-                    </Button>
-                  </div>
-                </motion.div>
-              )}
+                      <h2 className="text-2xl font-bold font-sora text-slate-900 dark:text-white mb-6">
+                        Shipping Information
+                      </h2>
 
-              {/* STEP 2: Shipping Information */}
-              {currentStep === 2 && (
-                <motion.div
-                  key="step2"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6"
-                >
-                  <h2 className="text-2xl font-bold font-sora text-slate-900 dark:text-white mb-6">
-                    Shipping Information
-                  </h2>
+                      <form className="space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <Input
+                            id="firstName"
+                            label="First Name"
+                            placeholder="John"
+                            error={errors.shippingAddress?.firstName?.message}
+                            {...register("shippingAddress.firstName")}
+                          />
+                          <Input
+                            id="lastName"
+                            label="Last Name"
+                            placeholder="Doe"
+                            error={errors.shippingAddress?.lastName?.message}
+                            {...register("shippingAddress.lastName")}
+                          />
+                        </div>
 
-                  <form className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Input
-                        id="firstName"
-                        label="First Name"
-                        placeholder="John"
-                        error={errors.shippingAddress?.firstName?.message}
-                        {...register("shippingAddress.firstName")}
-                      />
-                      <Input
-                        id="lastName"
-                        label="Last Name"
-                        placeholder="Doe"
-                        error={errors.shippingAddress?.lastName?.message}
-                        {...register("shippingAddress.lastName")}
-                      />
-                    </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <Input
+                            id="email"
+                            type="email"
+                            label="Email Address"
+                            placeholder="john@example.com"
+                            leftIcon={<Mail className="w-4 h-4" />}
+                            error={errors.email?.message}
+                            {...register("email")}
+                          />
+                          <Input
+                            id="phone"
+                            type="tel"
+                            label="Phone Number"
+                            placeholder="024 123 4567"
+                            leftIcon={<Phone className="w-4 h-4" />}
+                            error={errors.phone?.message}
+                            {...register("phone")}
+                          />
+                        </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Input
-                        id="email"
-                        type="email"
-                        label="Email Address"
-                        placeholder="john@example.com"
-                        leftIcon={<Mail className="w-4 h-4" />}
-                        error={errors.email?.message}
-                        {...register("email")}
-                      />
-                      <Input
-                        id="phone"
-                        type="tel"
-                        label="Phone Number"
-                        placeholder="024 123 4567"
-                        leftIcon={<Phone className="w-4 h-4" />}
-                        error={errors.phone?.message}
-                        {...register("phone")}
-                      />
-                    </div>
+                        <Input
+                          id="address"
+                          label="Street Address"
+                          placeholder="123 Main Street"
+                          leftIcon={<MapPin className="w-4 h-4" />}
+                          error={errors.shippingAddress?.address?.message}
+                          {...register("shippingAddress.address")}
+                        />
 
-                    <Input
-                      id="address"
-                      label="Street Address"
-                      placeholder="123 Main Street"
-                      leftIcon={<MapPin className="w-4 h-4" />}
-                      error={errors.shippingAddress?.address?.message}
-                      {...register("shippingAddress.address")}
-                    />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <Input
+                            id="city"
+                            label="City"
+                            placeholder="Accra"
+                            error={errors.shippingAddress?.city?.message}
+                            {...register("shippingAddress.city")}
+                          />
+                          <Select
+                            id="region"
+                            label="Region"
+                            error={errors.shippingAddress?.region?.message}
+                            {...register("shippingAddress.region")}
+                            options={[
+                              { value: "", label: "Select Region" },
+                              {
+                                value: "Greater Accra",
+                                label: "Greater Accra",
+                              },
+                              { value: "Ashanti", label: "Ashanti" },
+                              { value: "Central", label: "Central" },
+                              { value: "Eastern", label: "Eastern" },
+                              { value: "Northern", label: "Northern" },
+                              { value: "Western", label: "Western" },
+                              { value: "Bono", label: "Bono" },
+                              { value: "Bono East", label: "Bono East" },
+                              { value: "Ahafo", label: "Ahafo" },
+                              { value: "Upper East", label: "Upper East" },
+                              { value: "Upper West", label: "Upper West" },
+                              { value: "Savannah", label: "Savannah" },
+                              { value: "North East", label: "North East" },
+                              { value: "Oti", label: "Oti" },
+                              {
+                                value: "Western North",
+                                label: "Western North",
+                              },
+                            ]}
+                          />
+                        </div>
+                      </form>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <Input
-                        id="city"
-                        label="City"
-                        placeholder="Accra"
-                        error={errors.shippingAddress?.city?.message}
-                        {...register("shippingAddress.city")}
-                      />
-                      <Select
-                        id="region"
-                        label="Region"
-                        error={errors.shippingAddress?.region?.message}
-                        {...register("shippingAddress.region")}
-                        options={[
-                          { value: "", label: "Select Region" },
-                          { value: "Greater Accra", label: "Greater Accra" },
-                          { value: "Ashanti", label: "Ashanti" },
-                          { value: "Central", label: "Central" },
-                          { value: "Eastern", label: "Eastern" },
-                          { value: "Northern", label: "Northern" },
-                          { value: "Western", label: "Western" },
-                        ]}
-                      />
-                    </div>
-                  </form>
+                      <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-4 mt-8">
+                        <Button
+                          onClick={handleBack}
+                          variant="outline"
+                          className="font-bold gap-2 px-8 border-slate-300 dark:border-slate-700"
+                        >
+                          <ChevronLeft className="w-5 h-5" />
+                          Back to Cart
+                        </Button>
+                        <Button
+                          onClick={handleNext}
+                          variant="brand"
+                          className="font-bold gap-2 px-8"
+                        >
+                          Continue to Payment
+                          <ChevronRight className="w-5 h-5" />
+                        </Button>
+                      </div>
+                    </motion.div>
+                  )}
 
-                  <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-4 mt-8">
-                    <Button
-                      onClick={handleBack}
-                      variant="outline"
-                      className="font-bold gap-2 px-8 border-slate-300 dark:border-slate-700"
+                  {/* STEP 3: Payment Method */}
+                  {currentStep === 3 && (
+                    <motion.div
+                      key="step3"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6"
                     >
-                      <ChevronLeft className="w-5 h-5" />
-                      Back to Cart
-                    </Button>
-                    <Button
-                      onClick={handleNext}
-                      variant="brand"
-                      className="font-bold gap-2 px-8"
-                    >
-                      Continue to Payment
-                      <ChevronRight className="w-5 h-5" />
-                    </Button>
-                  </div>
-                </motion.div>
-              )}
+                      <h2 className="text-2xl font-bold font-sora text-slate-900 dark:text-white mb-6">
+                        Payment Method
+                      </h2>
 
-              {/* STEP 3: Payment Method */}
-              {currentStep === 3 && (
-                <motion.div
-                  key="step3"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6"
-                >
-                  <h2 className="text-2xl font-bold font-sora text-slate-900 dark:text-white mb-6">
-                    Payment Method
-                  </h2>
-
-                  <div className="space-y-4">
-                    {/* Store Pickup */}
-                    <button
-                      onClick={() => setValue("paymentMethod", "store_pickup")}
-                      className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
-                        paymentMethod === "store_pickup"
-                          ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
-                          : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
-                      }`}
-                    >
-                      <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
-                        <div
-                          className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
+                      <div className="space-y-4">
+                        {/* Store Pickup */}
+                        <button
+                          onClick={() =>
+                            setValue("paymentMethod", "store_pickup")
+                          }
+                          className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
                             paymentMethod === "store_pickup"
-                              ? "bg-emerald-600 text-white"
-                              : "bg-slate-100 dark:bg-slate-800 text-slate-600"
+                              ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
+                              : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
                           }`}
                         >
-                          <Store className="w-5 h-5 sm:w-6 sm:h-6" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
-                            Store Pickup
-                          </h3>
-                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-                            Pay upon pickup at our store
-                          </p>
-                        </div>
-                      </div>
-                    </button>
+                          <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
+                            <div
+                              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
+                                paymentMethod === "store_pickup"
+                                  ? "bg-emerald-600 text-white"
+                                  : "bg-slate-100 dark:bg-slate-800 text-slate-600"
+                              }`}
+                            >
+                              <Store className="w-5 h-5 sm:w-6 sm:h-6" />
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
+                                Store Pickup
+                              </h3>
+                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                                Pay upon pickup at our store
+                              </p>
+                            </div>
+                          </div>
+                        </button>
 
-                    {/* Mobile Money */}
-                    <button
-                      onClick={() => setValue("paymentMethod", "momo")}
-                      className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
-                        paymentMethod === "momo"
-                          ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
-                          : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
-                      }`}
-                    >
-                      <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
-                        <div
-                          className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
+                        {/* Mobile Money */}
+                        <button
+                          onClick={() => setValue("paymentMethod", "momo")}
+                          className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
                             paymentMethod === "momo"
-                              ? "bg-emerald-600 text-white"
-                              : "bg-slate-100 dark:bg-slate-800 text-slate-600"
+                              ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
+                              : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
                           }`}
                         >
-                          <Smartphone className="w-5 h-5 sm:w-6 sm:h-6" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
-                            Mobile Money
-                          </h3>
-                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-                            Pay with MTN or Telecel Cash
-                          </p>
-                        </div>
-                      </div>
-                    </button>
+                          <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
+                            <div
+                              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
+                                paymentMethod === "momo"
+                                  ? "bg-emerald-600 text-white"
+                                  : "bg-slate-100 dark:bg-slate-800 text-slate-600"
+                              }`}
+                            >
+                              <Smartphone className="w-5 h-5 sm:w-6 sm:h-6" />
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
+                                Mobile Money
+                              </h3>
+                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                                Pay with MTN or Telecel Cash
+                              </p>
+                            </div>
+                          </div>
+                        </button>
 
-                    {/* Card Payment */}
-                    <button
-                      onClick={() => setValue("paymentMethod", "card")}
-                      className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
-                        paymentMethod === "card"
-                          ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
-                          : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
-                      }`}
-                    >
-                      <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
-                        <div
-                          className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
+                        {/* Card Payment */}
+                        <button
+                          onClick={() => setValue("paymentMethod", "card")}
+                          className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
                             paymentMethod === "card"
-                              ? "bg-emerald-600 text-white"
-                              : "bg-slate-100 dark:bg-slate-800 text-slate-600"
+                              ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
+                              : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
                           }`}
                         >
-                          <CreditCard className="w-5 h-5 sm:w-6 sm:h-6" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
-                            Credit / Debit Card
-                          </h3>
-                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-                            Visa, Mastercard
-                          </p>
-                        </div>
-                      </div>
-                    </button>
+                          <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
+                            <div
+                              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
+                                paymentMethod === "card"
+                                  ? "bg-emerald-600 text-white"
+                                  : "bg-slate-100 dark:bg-slate-800 text-slate-600"
+                              }`}
+                            >
+                              <CreditCard className="w-5 h-5 sm:w-6 sm:h-6" />
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
+                                Credit / Debit Card
+                              </h3>
+                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                                Visa, Mastercard
+                              </p>
+                            </div>
+                          </div>
+                        </button>
 
-                    {/* Paystack */}
-                    <button
-                      onClick={() => setValue("paymentMethod", "paystack")}
-                      className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
-                        paymentMethod === "paystack"
-                          ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
-                          : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
-                      }`}
-                    >
-                      <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
-                        <div
-                          className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
+                        {/* Paystack */}
+                        <button
+                          onClick={() => setValue("paymentMethod", "paystack")}
+                          className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
                             paymentMethod === "paystack"
-                              ? "bg-emerald-600 text-white"
-                              : "bg-slate-100 dark:bg-slate-800 text-slate-600"
+                              ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
+                              : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
                           }`}
                         >
-                          <CreditCard className="w-5 h-5 sm:w-6 sm:h-6" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
-                            Pay with Paystack
-                          </h3>
-                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-                            Generic Mobile Money & Card
-                          </p>
-                        </div>
-                      </div>
-                    </button>
+                          <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
+                            <div
+                              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
+                                paymentMethod === "paystack"
+                                  ? "bg-emerald-600 text-white"
+                                  : "bg-slate-100 dark:bg-slate-800 text-slate-600"
+                              }`}
+                            >
+                              <CreditCard className="w-5 h-5 sm:w-6 sm:h-6" />
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
+                                Pay with Paystack
+                              </h3>
+                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                                Generic Mobile Money & Card
+                              </p>
+                            </div>
+                          </div>
+                        </button>
 
-                    {/* Cash on Delivery */}
-                    <button
-                      onClick={() => setValue("paymentMethod", "cod")}
-                      className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
-                        paymentMethod === "cod"
-                          ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
-                          : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
-                      }`}
-                    >
-                      <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
-                        <div
-                          className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
+                        {/* Cash on Delivery */}
+                        <button
+                          onClick={() => setValue("paymentMethod", "cod")}
+                          className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
                             paymentMethod === "cod"
-                              ? "bg-emerald-600 text-white"
-                              : "bg-slate-100 dark:bg-slate-800 text-slate-600"
+                              ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
+                              : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
                           }`}
                         >
-                          <Wallet className="w-5 h-5 sm:w-6 sm:h-6" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
-                            Cash on Delivery
-                          </h3>
-                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-                            Pay when you receive your order
+                          <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
+                            <div
+                              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
+                                paymentMethod === "cod"
+                                  ? "bg-emerald-600 text-white"
+                                  : "bg-slate-100 dark:bg-slate-800 text-slate-600"
+                              }`}
+                            >
+                              <Wallet className="w-5 h-5 sm:w-6 sm:h-6" />
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
+                                Cash on Delivery
+                              </h3>
+                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+                                Pay when you receive your order
+                              </p>
+                            </div>
+                          </div>
+                        </button>
+                        {errors.paymentMethod && (
+                          <p className="text-red-500 text-sm mt-2">
+                            {errors.paymentMethod.message}
                           </p>
-                        </div>
+                        )}
                       </div>
-                    </button>
-                    {errors.paymentMethod && (
-                      <p className="text-red-500 text-sm mt-2">
-                        {errors.paymentMethod.message}
+
+                      <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-4 mt-8">
+                        <Button
+                          onClick={handleBack}
+                          variant="outline"
+                          className="font-bold gap-2 px-8 border-slate-300 dark:border-slate-700"
+                        >
+                          <ChevronLeft className="w-5 h-5" />
+                          Back
+                        </Button>
+                        <Button
+                          onClick={handleSubmit(onSubmit)}
+                          disabled={isSubmitting}
+                          variant="brand"
+                          className="font-bold gap-2 px-8"
+                        >
+                          {isSubmitting ? "Processing..." : "Place Order"}
+                          <CheckCircle className="w-5 h-5" />
+                        </Button>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* STEP 4: Order Confirmation */}
+                  {currentStep === 4 && (
+                    <motion.div
+                      key="step4"
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6 sm:p-12 text-center"
+                    >
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.2, type: "spring" }}
+                        className="w-24 h-24 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-6"
+                      >
+                        <CheckCircle className="w-12 h-12 text-emerald-600 dark:text-emerald-400" />
+                      </motion.div>
+
+                      <h2 className="text-2xl sm:text-3xl font-bold font-sora text-slate-900 dark:text-white mb-4">
+                        Order Confirmed!
+                      </h2>
+                      <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-md mx-auto">
+                        Thank you for your order! We've sent a confirmation
+                        email to{" "}
+                        <span className="font-semibold text-emerald-600 dark:text-emerald-400 block sm:inline wrap-break-word">
+                          {email}
+                        </span>
                       </p>
-                    )}
-                  </div>
 
-                  <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-4 mt-8">
-                    <Button
-                      onClick={handleBack}
-                      variant="outline"
-                      className="font-bold gap-2 px-8 border-slate-300 dark:border-slate-700"
-                    >
-                      <ChevronLeft className="w-5 h-5" />
-                      Back
-                    </Button>
-                    <Button
-                      onClick={handleSubmit(onSubmit)}
-                      disabled={isSubmitting}
-                      variant="brand"
-                      className="font-bold gap-2 px-8"
-                    >
-                      {isSubmitting ? "Processing..." : "Place Order"}
-                      <CheckCircle className="w-5 h-5" />
-                    </Button>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* STEP 4: Order Confirmation */}
-              {currentStep === 4 && (
-                <motion.div
-                  key="step4"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6 sm:p-12 text-center"
-                >
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.2, type: "spring" }}
-                    className="w-24 h-24 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-6"
-                  >
-                    <CheckCircle className="w-12 h-12 text-emerald-600 dark:text-emerald-400" />
-                  </motion.div>
-
-                  <h2 className="text-2xl sm:text-3xl font-bold font-sora text-slate-900 dark:text-white mb-4">
-                    Order Confirmed!
-                  </h2>
-                  <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-md mx-auto">
-                    Thank you for your order! We've sent a confirmation email to{" "}
-                    <span className="font-semibold text-emerald-600 dark:text-emerald-400 block sm:inline wrap-break-word">
-                      {email}
-                    </span>
-                  </p>
-
-                  <div className="bg-slate-50 dark:bg-slate-950 rounded p-6 mb-8 max-w-md mx-auto">
-                    {orderId && (
-                      <div className="mb-4">
-                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
-                          Order ID
+                      <div className="bg-slate-50 dark:bg-slate-950 rounded p-6 mb-8 max-w-md mx-auto">
+                        {orderId && (
+                          <div className="mb-4">
+                            <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
+                              Order ID
+                            </p>
+                            <p className="font-mono text-sm font-bold text-slate-900 dark:text-white bg-slate-200 dark:bg-slate-800 px-3 py-2 rounded break-all">
+                              {orderId}
+                            </p>
+                          </div>
+                        )}
+                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
+                          Order Total
                         </p>
-                        <p className="font-mono text-sm font-bold text-slate-900 dark:text-white bg-slate-200 dark:bg-slate-800 px-3 py-2 rounded break-all">
-                          {orderId}
+                        <p className="text-2xl sm:text-4xl font-bold font-sora text-emerald-600 dark:text-emerald-400 wrap-break-word">
+                          GH₵{confirmedTotal.toFixed(2)}
                         </p>
                       </div>
-                    )}
-                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
-                      Order Total
-                    </p>
-                    <p className="text-2xl sm:text-4xl font-bold font-sora text-emerald-600 dark:text-emerald-400 wrap-break-word">
-                      GH₵{confirmedTotal.toFixed(2)}
-                    </p>
-                  </div>
 
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Button
-                      onClick={() => navigate("/products")}
-                      variant="outline"
-                      className="font-bold px-8 border-slate-300 dark:border-slate-700"
-                    >
-                      Continue Shopping
-                    </Button>
-                    <Button
-                      onClick={() => navigate("/")}
-                      variant="brand"
-                      className="font-bold px-8"
-                    >
-                      Back to Home
-                    </Button>
-                  </div>
-                </motion.div>
+                      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <Button
+                          onClick={() => navigate("/products")}
+                          variant="outline"
+                          className="font-bold px-8 border-slate-300 dark:border-slate-700"
+                        >
+                          Continue Shopping
+                        </Button>
+                        <Button
+                          onClick={() => navigate("/")}
+                          variant="brand"
+                          className="font-bold px-8"
+                        >
+                          Back to Home
+                        </Button>
+                      </div>
+                    </motion.div>
+                  )}
+                </>
               )}
             </AnimatePresence>
           </div>

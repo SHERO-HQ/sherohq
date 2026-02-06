@@ -40,8 +40,8 @@ const Footer = () => {
   return (
     <footer className="w-full bg-background relative overflow-hidden border-t border-slate-200 dark:border-slate-800 pt-24 md:pb-12 pb-24 transition-colors duration-300">
       {/* Background Ambience */}
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0))] opacity-5 dark:opacity-20 transition-opacity duration-300" />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/90 to-background/50 pointer-events-none transition-all duration-300" />
+      <div className="absolute inset-0 hero-grid-pattern opacity-5 dark:opacity-20 transition-opacity duration-300" />
+      <div className="absolute inset-0 bg-linear-to-t from-background via-background/90 to-background/50 pointer-events-none transition-all duration-300" />
 
       {/* Glow Effect */}
       <div className="absolute -bottom-1/2 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
@@ -185,7 +185,7 @@ const Footer = () => {
               </div>
             </div>
 
-            <Separator className="hidden lg:block w-full bg-gradient-to-r from-transparent via-border to-transparent mt-12" />
+            <Separator className="hidden lg:block w-full bg-linear-to-r from-transparent via-border to-transparent mt-12" />
           </div>
         </div>
 

@@ -9,7 +9,7 @@ import {
   getImageUrl,
 } from "@/services/api";
 import { useNotifications } from "@/hooks/useNotifications";
-import logoFull from "@/assets/logo/shero-full.svg";
+import sheroLogo from "@/assets/logo/shero.png";
 import {
   ArrowLeft,
   Clock,
@@ -26,6 +26,7 @@ import {
   ExternalLink,
   Printer,
   Loader2,
+  FileText,
 } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
@@ -90,10 +91,17 @@ export default function OrderDetails() {
   };
 
   const handlePrint = (type: "invoice" | "receipt") => {
+    const originalTitle = document.title;
+    const orderId = order?.id.slice(0, 8).toUpperCase() || "ID";
+    const typeLabel = type === "invoice" ? "Invoice" : "Receipt";
+    document.title = `SHERO-${typeLabel}-${orderId}`;
+
     setPrintMode(type);
     // Use a small timeout to ensure state is updated before printing
     setTimeout(() => {
       globalThis.print();
+      // Restore the original title after the print dialog is handled
+      document.title = originalTitle;
     }, 100);
   };
 
@@ -105,6 +113,8 @@ export default function OrderDetails() {
         return { color: "text-blue-400 bg-blue-500/10", icon: Truck };
       case "shipped":
         return { color: "text-purple-400 bg-purple-500/10", icon: Truck };
+      case "quote":
+        return { color: "text-slate-400 bg-slate-500/10", icon: FileText };
       case "delivered":
         return {
           color: "text-emerald-400 bg-emerald-500/10",
@@ -128,7 +138,7 @@ export default function OrderDetails() {
       case "cash":
         return "Cash";
       default:
-        return method.replace(/_/g, " ");
+        return method.replaceAll("_", " ")[0].toUpperCase() + method.slice(1);
     }
   };
 
@@ -457,13 +467,20 @@ export default function OrderDetails() {
                   {order.shippingInfo.postalCode &&
                     `Postal Code: ${order.shippingInfo.postalCode}`}
                 </p>
-                <UniversalLink
-                  to={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${order.shippingInfo.address}, ${order.shippingInfo.city}, ${order.shippingInfo.region}`)}`}
-                  target="_blank"
-                  className="flex items-center gap-2 text-xs text-emerald-400 hover:text-emerald-300 transition-colors font-bold uppercase tracking-wider"
-                >
-                  View on Maps <ExternalLink className="w-3 h-3" />
-                </UniversalLink>
+                {(() => {
+                  const query = encodeURIComponent(
+                    `${order.shippingInfo.address}, ${order.shippingInfo.city}, ${order.shippingInfo.region}`,
+                  );
+                  return (
+                    <UniversalLink
+                      to={`https://www.google.com/maps/search/?api=1&query=${query}`}
+                      target="_blank"
+                      className="flex items-center gap-2 text-xs text-emerald-400 hover:text-emerald-300 transition-colors font-bold uppercase tracking-wider"
+                    >
+                      View on Maps <ExternalLink className="w-3 h-3" />
+                    </UniversalLink>
+                  );
+                })()}
               </div>
             </Card>
           </div>
@@ -510,6 +527,7 @@ export default function OrderDetails() {
                   page-break-after: avoid !important;
                   page-break-before: avoid !important;
                   break-inside: avoid !important;
+                  font-family: "Inter", sans-serif;
                 }
               }
             `}
@@ -523,15 +541,15 @@ export default function OrderDetails() {
                 >
                   <div className="flex justify-between items-start mb-12">
                     <div>
-                      <img src={logoFull} alt="SHERO" className="h-10 mb-6" />
+                      <img src={sheroLogo} alt="SHERO" className="h-10 mb-6" />
                       <div className="space-y-1">
-                        <h2 className="text-lg font-bold font-sora text-slate-900">
+                        <h2 className="text-lg font-bold font-logo uppercase text-slate-900">
                           SHERO Technologies
                         </h2>
                         <div className="text-[11px] text-slate-500 leading-relaxed uppercase tracking-wider">
-                          <p>Accra Digital Centre, Block A</p>
-                          <p>Accra, Ghana</p>
-                          <p>TIN: GHA-12345678-9</p>
+                          <p>Tamale, Northern Region</p>
+                          <p>Tamale, Ghana</p>
+                          <p>TIN: P0051004100</p>
                         </div>
                       </div>
                     </div>
@@ -723,7 +741,7 @@ export default function OrderDetails() {
                   {/* Receipt Header */}
                   <div className="text-center mb-10 border-b-2 border-slate-900 pb-8">
                     <img
-                      src={logoFull}
+                      src={sheroLogo}
                       alt="SHERO"
                       className="h-8 mx-auto mb-4"
                     />
@@ -799,11 +817,11 @@ export default function OrderDetails() {
 
                   {/* Receipt Footer */}
                   <div className="text-center">
-                    <p className="text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-1">
+                    <p className="text-[10px] font-bold font-logo uppercase text-slate-900 tracking-widest mb-1">
                       SHERO Technologies
                     </p>
                     <p className="text-[9px] text-slate-500">
-                      www.sherotech.com • support@sherotech.com
+                      www.sherohq.com • support@sherohq.com
                     </p>
                     <div className="mt-6 pt-4 border-t border-slate-50">
                       <p className="text-[8px] text-slate-300 italic">

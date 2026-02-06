@@ -100,10 +100,10 @@ const Terms = () => {
                   If you have any questions about these Terms, please contact us
                   at{" "}
                   <a
-                    href="mailto:legal@sherotech.com"
+                    href="mailto:legal@sherohq.com"
                     className="text-emerald-600 hover:underline"
                   >
-                    legal@sherotech.com
+                    legal@sherohq.com
                   </a>
                 </p>
               </section>

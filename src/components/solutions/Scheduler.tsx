@@ -209,7 +209,7 @@ const Scheduler = () => {
           is scheduled for <br />
           <span className="font-semibold text-primary dark:text-blue-600 block text-lg mt-1">
             {formData.date && format(formData.date, "MMMM do, yyyy")} <br /> at{" "}
-            {formData.time}
+            {formData.time} GMT
           </span>
         </p>
         <p className="text-sm text-slate-500 mb-6">
@@ -319,7 +319,7 @@ const Scheduler = () => {
             {formData.time && (
               <div className="flex items-center font-semibold gap-2 text-sm text-slate-600 dark:text-slate-300">
                 <Clock className="w-4 h-4 text-emerald-500" />
-                {formData.time}
+                {formData.time} GMT
               </div>
             )}
           </div>
@@ -519,7 +519,7 @@ const Scheduler = () => {
                     <CalendarIcon className="w-4 h-4 text-emerald-500" />
                     <span>
                       {formData.date && format(formData.date, "MMM do")} at{" "}
-                      {formData.time}
+                      {formData.time} GMT
                     </span>
                   </div>
                 </div>

@@ -28,7 +28,7 @@ router.post("/initialize", async (req: Request, res: Response) => {
         ? JSON.parse(orderRes.rows[0].shippingInfo)
         : orderRes.rows[0].shippingInfo;
 
-    const email = shippingInfo.email || "guest@sherotech.com";
+    const email = shippingInfo.email || "guest@sherohq.com";
 
     const returnUrl = `${process.env.PUBLIC_URL || "http://localhost:5173"}/checkout/success?orderId=${orderId}`;
     const cancellationUrl = `${process.env.PUBLIC_URL || "http://localhost:5173"}/checkout?canceled=true`;
@@ -87,6 +87,44 @@ router.post("/webhook", async (req: Request, res: Response) => {
         orderId,
       ]);
       console.log(`✅ Order ${orderId} marked as PAID via Webhook`);
+
+      // 🔥 Send Payment Receipt (Async)
+      try {
+        const orderResult = await db.query(
+          "SELECT * FROM orders WHERE id = $1",
+          [orderId],
+        );
+        if (orderResult && orderResult.rowCount && orderResult.rowCount > 0) {
+          const order = orderResult.rows[0];
+          const items =
+            typeof order.items === "string"
+              ? JSON.parse(order.items)
+              : order.items;
+          const shippingInfo =
+            typeof order.shippingInfo === "string"
+              ? JSON.parse(order.shippingInfo)
+              : order.shippingInfo;
+
+          const { notificationService } =
+            await import("../services/NotificationService");
+          notificationService
+            .sendPaymentReceipt(
+              orderId,
+              shippingInfo,
+              items,
+              Number(order.total),
+              {
+                method: order.paymentMethod,
+                transactionId: data.data?.id || data.TransactionId || "N/A",
+              },
+            )
+            .catch((err) =>
+              console.error("Receipt notification trigger failed:", err),
+            );
+        }
+      } catch (err) {
+        console.error("Failed to fetch order for receipt:", err);
+      }
     }
 
     res.sendStatus(200);

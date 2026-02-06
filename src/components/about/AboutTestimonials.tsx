@@ -8,41 +8,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import FeedbackModal from "@/components/common/FeedbackModal";
-
-const testimonials = [
-  {
-    quote:
-      "SHERO transformed our outdated retail operations into a world-class e-commerce engine. Their understanding of the Ghanaian market dynamic coupled with global tech standards is unmatched.",
-    author: "Kwame Mensah",
-    role: "CEO",
-    company: "Osei Digitals, Accra",
-    image: undefined,
-  },
-  {
-    quote:
-      "Their custom inventory software has saved us countless hours. They didn't just provide a tool; they provided a solution that truly understands the scale of West African logistics.",
-    author: "Abena Osei",
-    role: "Operations Lead",
-    company: "Gold Coast Logistics, Kumasi",
-    image: undefined,
-  },
-  {
-    quote:
-      "Reliability is key in our industry. SHERO's networking solutions and security protocols have given us the confidence to expand our digital banking services across the region.",
-    author: "Kofi Asare",
-    role: "CTO",
-    company: "Asante Fintech",
-    image: undefined,
-  },
-  {
-    quote:
-      "Working with SHERO was a breath of fresh air. They turned our complex brand vision into a seamless digital experience that resonates with our local and international audience.",
-    author: "Efua Boateng",
-    role: "Creative Director",
-    company: "Adinkra Media Group",
-    image: undefined,
-  },
-];
+import { useTestimonials } from "@/hooks/queries/useTestimonials";
 
 // Helper to get initials
 const getInitials = (name: string) => {
@@ -55,26 +21,30 @@ const getInitials = (name: string) => {
 };
 
 const AboutTestimonials = () => {
+  const { data: testimonials = [], isLoading } = useTestimonials();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
 
   const nextSlide = useCallback(() => {
+    if (testimonials.length === 0) return;
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-  }, []);
+  }, [testimonials.length]);
 
   const prevSlide = useCallback(() => {
+    if (testimonials.length === 0) return;
     setCurrentIndex(
       (prev) => (prev - 1 + testimonials.length) % testimonials.length,
     );
-  }, []);
+  }, [testimonials.length]);
 
   // Auto-slide effect
   useEffect(() => {
+    if (testimonials.length === 0) return;
     const timer = setInterval(() => {
       nextSlide();
     }, 5000);
     return () => clearInterval(timer);
-  }, [nextSlide]);
+  }, [nextSlide, testimonials.length]);
 
   return (
     <section className="py-24 bg-white dark:bg-slate-950 overflow-hidden relative border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
@@ -112,54 +82,84 @@ const AboutTestimonials = () => {
           </button>
 
           <div className="overflow-hidden relative min-h-[400px]">
-            <motion.div
-              initial={false}
-              animate={{ x: `-${currentIndex * 100}%` }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="flex"
-            >
-              {testimonials.map((item) => (
-                <div key={item.author} className="w-full shrink-0 px-4">
-                  <div className="h-full bg-slate-50/50 dark:bg-slate-900/40 backdrop-blur-md p-8 md:p-12 rounded border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 transition-all duration-300 flex flex-col relative group">
-                    <div className="absolute lg:top-8 top-3 right-3 p-3 transition-colors duration-300">
-                      <Quote className="size-10 text-emerald-500/40 -z-10" />
-                    </div>
-
-                    <blockquote className="text-slate-700 dark:text-slate-300 italic mb-10 relative z-10 leading-relaxed font-light transition-colors duration-300">
-                      "{item.quote}"
-                    </blockquote>
-
-                    <div className="mt-auto flex items-center gap-4">
-                      {/* Avatar with Fallback */}
-                      <div className="w-14 h-14 rounded shadow border border-slate-200 dark:border-white/10 overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 transition-colors duration-300">
-                        {item.image ? (
-                          <img
-                            src={item.image}
-                            alt={item.author}
-                            loading="lazy"
-                            decoding="async"
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-linear-to-br from-blue-600 to-emerald-600 flex items-center justify-center text-white font-bold text-sm tracking-wider">
-                            {getInitials(item.author)}
-                          </div>
-                        )}
-                      </div>
-
-                      <div>
-                        <h4 className="font-bold font-sora text-slate-900 dark:text-white text-base transition-colors duration-300">
-                          {item.author}
-                        </h4>
-                        <p className="text-sm text-emerald-600 dark:text-emerald-400">
-                          {item.role}, {item.company}
-                        </p>
-                      </div>
+            {isLoading ? (
+              <div className="w-full h-full flex items-center justify-center">
+                <div className="w-full max-w-2xl bg-slate-50/50 dark:bg-slate-900/40 backdrop-blur-md p-8 md:p-12 rounded border border-slate-200 dark:border-white/5 animate-pulse">
+                  <div className="h-6 w-3/4 bg-slate-200 dark:bg-slate-800 rounded mb-4" />
+                  <div className="h-4 w-full bg-slate-200 dark:bg-slate-800 rounded mb-2" />
+                  <div className="h-4 w-2/3 bg-slate-200 dark:bg-slate-800 rounded mb-10" />
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-full bg-slate-200 dark:bg-slate-800" />
+                    <div>
+                      <div className="h-5 w-32 bg-slate-200 dark:bg-slate-800 rounded mb-2" />
+                      <div className="h-4 w-24 bg-slate-200 dark:bg-slate-800 rounded" />
                     </div>
                   </div>
                 </div>
-              ))}
-            </motion.div>
+              </div>
+            ) : (
+              <>
+                {testimonials.length === 0 ? (
+                  <div className="w-full h-full flex flex-col items-center justify-center text-slate-500">
+                    <Quote className="size-12 mb-4 opacity-20" />
+                    <p>No testimonials to display</p>
+                  </div>
+                ) : (
+                  <motion.div
+                    initial={false}
+                    animate={{ x: `-${currentIndex * 100}%` }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    className="flex"
+                  >
+                    {testimonials.map((item) => (
+                      <div
+                        key={item.id || item.author}
+                        className="w-full shrink-0 sm:px-4"
+                      >
+                        <div className="h-full bg-slate-50/50 dark:bg-slate-900/40 backdrop-blur-md sm:p-8 p-6 md:p-12 rounded border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 transition-all duration-300 flex flex-col relative group">
+                          <div className="absolute lg:top-8 top-3 right-3 p-3 transition-colors duration-300">
+                            <Quote className="size-10 text-emerald-500/40 -z-10" />
+                          </div>
+
+                          <blockquote className="text-slate-700 dark:text-slate-300 italic mb-10 relative z-10 leading-relaxed font-light transition-colors duration-300">
+                            "{item.quote}"
+                          </blockquote>
+
+                          <div className="mt-auto flex items-center gap-4">
+                            {/* Avatar with Fallback */}
+                            <div className="w-14 h-14 rounded shadow border border-slate-200 dark:border-white/10 overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 transition-colors duration-300">
+                              {item.image ? (
+                                <img
+                                  src={item.image}
+                                  alt={item.author}
+                                  loading="lazy"
+                                  decoding="async"
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full bg-linear-to-br from-blue-600 to-emerald-600 flex items-center justify-center text-white font-bold text-sm tracking-wider">
+                                  {getInitials(item.author)}
+                                </div>
+                              )}
+                            </div>
+
+                            <div>
+                              <h4 className="font-bold font-sora text-slate-900 dark:text-white text-base transition-colors duration-300">
+                                {item.author}
+                              </h4>
+                              <p className="text-sm text-emerald-600 dark:text-emerald-400">
+                                {item.role}
+                                {item.company ? `, ${item.company}` : ""}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </>
+            )}
           </div>
 
           {/* Dots and Mobile Controls */}

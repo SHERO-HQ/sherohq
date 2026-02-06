@@ -2,6 +2,7 @@ import { motion } from "motion/react";
 import UniversalLink from "@/components/common/UniversalLink";
 import { ShoppingCart, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProductCard from "@/components/products/ProductCard";
 import type { Product } from "@/types/product";
 import { fetchProducts } from "@/services/api";
@@ -89,23 +90,24 @@ const LandingProducts = () => {
         </motion.div>
 
         {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {categories.map((category) => (
-            <button
-              key={category}
-              type="button"
-              onClick={() => setActiveCategory(category)}
-              className={`px-5 py-2 rounded text-sm font-medium transition-all duration-300 cursor-pointer
-                focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-slate-950
-                ${
-                  activeCategory === category
-                    ? "bg-emerald-600 text-white shadow-lg"
-                    : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 hover:text-emerald-600 dark:hover:text-emerald-400"
-                }`}
-            >
-              {category}
-            </button>
-          ))}
+        <div className="flex justify-center mb-12">
+          <Tabs
+            value={activeCategory}
+            onValueChange={setActiveCategory}
+            className="w-full"
+          >
+            <TabsList className="w-full max-w-fit mx-auto h-auto p-1 bg-slate-100 dark:bg-slate-800/50 overflow-x-auto no-scrollbar justify-start sm:justify-center flex-nowrap">
+              {categories.map((category) => (
+                <TabsTrigger
+                  key={category}
+                  value={category}
+                  className="px-6 py-2 text-sm whitespace-nowrap data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300"
+                >
+                  {category}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
         </div>
 
         {/* Products Grid */}

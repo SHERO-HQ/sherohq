@@ -64,7 +64,79 @@ const ORDER_STATUSES = [
   "shipped",
   "delivered",
   "cancelled",
+  "quote",
 ];
+
+// POST /api/orders/admin - Admin Create Order/Quote
+router.post("/admin", adminAuth, async (req: AdminRequest, res: Response) => {
+  try {
+    const {
+      items,
+      total,
+      shippingInfo,
+      status = "pending", // Default to pending if not specified
+    }: CreateOrderBody & { status?: string } = req.body;
+
+    if (!items || !total || !shippingInfo) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // Determine type based on status or infer logic
+    const isQuote = status === "quote";
+
+    const orderId = uuidv4();
+    // guestId is required by DB currently, so generate one or use a placeholder
+    const guestId = `admin_${uuidv4().substring(0, 8)}`;
+
+    await db.query(
+      `
+      INSERT INTO orders (id, "guestId", "userId", items, total, "shippingInfo", "paymentMethod", status)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    `,
+      [
+        orderId,
+        guestId,
+        req.admin?.id || null, // Track which admin created it? Or leave null. Schema says userId.
+        JSON.stringify(items),
+        total,
+        JSON.stringify(shippingInfo), // Object to JSON string
+        "invoice_payment", // Default payment method for invoices
+        status,
+      ],
+    );
+
+    console.log(
+      `📦 Admin created ${isQuote ? "Quote" : "Order"}: ${orderId} by ${req.admin?.username}`,
+    );
+
+    // 🔥 Send Admin Invoice or Quote Notification
+    if (isQuote) {
+      notificationService
+        .sendQuote(orderId, shippingInfo, items, total)
+        .catch((err: unknown) =>
+          console.error("Quote notification failed:", err),
+        );
+    } else {
+      notificationService
+        .sendInvoice(orderId, shippingInfo, items, total)
+        .catch((err: unknown) =>
+          console.error("Invoice notification failed:", err),
+        );
+    }
+
+    res.status(201).json({
+      success: true,
+      order: {
+        id: orderId,
+        status,
+      },
+      message: `${isQuote ? "Quote" : "Order"} created successfully`,
+    });
+  } catch (error) {
+    console.error("Error creating admin order:", error);
+    res.status(500).json({ error: "Failed to create order" });
+  }
+});
 
 // POST /api/orders - Create new order
 router.post("/", async (req: Request, res: Response) => {
@@ -209,6 +281,58 @@ router.get("/track/:orderId", async (req: Request, res: Response) => {
   }
 });
 
+// PATCH /api/orders/:id/payment-method - Update payment method (Public/Auth)
+router.patch("/:id/payment-method", async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { paymentMethod, guestId, userId } = req.body;
+
+    if (!paymentMethod) {
+      return res.status(400).json({ error: "Payment method is required" });
+    }
+
+    // Verify order ownership
+    const check = await db.query(
+      'SELECT "guestId", "userId", status FROM orders WHERE id = $1',
+      [id],
+    );
+
+    if (check.rowCount === 0) {
+      return res.status(404).json({ error: "Order not found" });
+    }
+
+    const order = check.rows[0];
+
+    // Security: Ensure the requester matches guestId or userId
+    const isOwner =
+      (guestId && order.guestId === guestId) ||
+      (userId && order.userId === userId);
+
+    if (!isOwner) {
+      return res
+        .status(403)
+        .json({ error: "Unauthorized to update this order" });
+    }
+
+    // Only allow updating if order is still pending
+    if (order.status !== "pending") {
+      return res
+        .status(400)
+        .json({ error: "Order cannot be updated in its current status" });
+    }
+
+    await db.query('UPDATE orders SET "paymentMethod" = $1 WHERE id = $2', [
+      paymentMethod,
+      id,
+    ]);
+
+    res.json({ success: true, message: "Payment method updated successfully" });
+  } catch (error) {
+    console.error("Error updating order payment method:", error);
+    res.status(500).json({ error: "Failed to update payment method" });
+  }
+});
+
 // ============ ADMIN ROUTES (Protected) ============
 
 // GET /api/orders - Admin: List all orders with optional filtering
@@ -221,21 +345,25 @@ router.get("/", adminAuth, async (req: AdminRequest, res: Response) => {
     const conditions: string[] = [];
     let paramIndex = 1;
 
-    if (status && ORDER_STATUSES.includes(String(status))) {
+    if (
+      status &&
+      typeof status === "string" &&
+      ORDER_STATUSES.includes(status)
+    ) {
       conditions.push(`status = $${paramIndex}`);
-      params.push(String(status));
+      params.push(status);
       paramIndex++;
     }
 
-    if (startDate) {
+    if (startDate && typeof startDate === "string") {
       conditions.push(`"createdAt" >= $${paramIndex}`);
-      params.push(String(startDate));
+      params.push(startDate);
       paramIndex++;
     }
 
-    if (endDate) {
+    if (endDate && typeof endDate === "string") {
       conditions.push(`"createdAt" <= $${paramIndex}`);
-      params.push(String(endDate));
+      params.push(endDate);
       paramIndex++;
     }
 
@@ -328,6 +456,41 @@ router.patch(
       console.log(
         `📦 Order ${id} status: ${existing.status} → ${status} by ${req.admin?.username}`,
       );
+
+      // 🔥 Trigger Payment Receipt if manually marked as paid (processing)
+      if (status === "processing" && existing.status === "pending") {
+        try {
+          const orderResult = await db.query(
+            "SELECT * FROM orders WHERE id = $1",
+            [id],
+          );
+          if (orderResult.rowCount && orderResult.rowCount > 0) {
+            const order = orderResult.rows[0];
+            const items = safeParse(order.items) as OrderItem[];
+            const shippingInfo = safeParse(order.shippingInfo) as ShippingInfo;
+
+            notificationService
+              .sendPaymentReceipt(
+                String(id),
+                shippingInfo,
+                items,
+                Number(order.total),
+                {
+                  method: order.paymentMethod,
+                  transactionId: "ADMIN_MANUAL_CONFIRM",
+                },
+              )
+              .catch((err) =>
+                console.error(
+                  "Manual receipt notification trigger failed:",
+                  err,
+                ),
+              );
+          }
+        } catch (err) {
+          console.error("Failed to trigger manual receipt:", err);
+        }
+      }
       const orderIdStr = String(id);
       let activityType: "info" | "success" | "warning" | "error" = "info";
       if (status === "delivered") activityType = "success";
@@ -342,7 +505,9 @@ router.patch(
         );
       }
 
-      const result = await db.query("SELECT * FROM orders WHERE id = $1", [id]);
+      const result = await db.query("SELECT * FROM orders WHERE id = $1", [
+        String(id),
+      ]);
       const order = result.rows[0] as OrderRow;
 
       res.json({

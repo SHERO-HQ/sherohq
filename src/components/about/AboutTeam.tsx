@@ -52,13 +52,13 @@ const AboutTeam = () => {
           {isLoading ? (
             Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="space-y-4">
-                <Skeleton className="h-64 w-full rounded-lg" />
+                <Skeleton className="h-64 w-full rounded" />
                 <Skeleton className="h-4 w-2/3" />
                 <Skeleton className="h-4 w-1/3" />
               </div>
             ))
           ) : team.length === 0 ? (
-            <div className="col-span-full text-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-800">
+            <div className="col-span-full text-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded border border-slate-100 dark:border-slate-800">
               <Users className="w-12 h-12 text-slate-400 mx-auto mb-3" />
               <p className="text-slate-500 dark:text-slate-400">
                 Our team is growing correctly! Check back soon.

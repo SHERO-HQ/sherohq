@@ -17,7 +17,7 @@ const AboutStory = () => {
   return (
     <section className="py-24 bg-white dark:bg-slate-950 relative overflow-hidden pattern-dots">
       {/* Background Elements */}
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
+      <div className="absolute inset-0 hero-grid-pattern" />
 
       <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-24">
@@ -30,35 +30,34 @@ const AboutStory = () => {
                 alt="SHERO Technologies"
                 className="relative w-full object-cover"
               />
-     
-                <div className="absolute bottom-35 -left-20 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-2 sm:px-4 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
-                  <div className="size-8 sm:size-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
-                    <SearchCheck className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 dark:text-emerald-400" />
-                  </div>
-                  <div>
-                    <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-tight">
-                      Possibilities
-                    </p>
-                    <p className="text-[8px] sm:text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                      All round
-                    </p>
-                  </div>
-                </div>
 
-     
-                <div className="absolute top-20 right-5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-2 sm:px-4 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
-                  <div className="size-8 sm:size-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
-                    <Lightbulb className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 dark:text-emerald-400" />
-                  </div>
-                  <div>
-                    <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-tight">
-                      Redefining
-                    </p>
-                    <p className="text-[8px] sm:text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                      Driven Innovation
-                    </p>
-                  </div>
+              <div className="absolute sm:bottom-46 md:bottom-35 sm:-left-4 md:-left-20 -bottom-5 -left-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-2 sm:px-4 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
+                <div className="size-8 sm:size-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
+                  <SearchCheck className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 dark:text-emerald-400" />
                 </div>
+                <div>
+                  <p className="text-[10px] sm:text-sm font-bold text-slate-900 dark:text-white leading-tight">
+                    Possibilities
+                  </p>
+                  <p className="text-[8px] sm:text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                    All round
+                  </p>
+                </div>
+              </div>
+
+              <div className="absolute sm:top-20 sm:right-5 -top-5 right-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-2 sm:px-4 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
+                <div className="size-8 sm:size-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
+                  <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <div>
+                  <p className="text-[10px] sm:text-sm font-bold text-slate-900 dark:text-white leading-tight">
+                    Redefining
+                  </p>
+                  <p className="text-[8px] sm:text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                    Driven Innovation
+                  </p>
+                </div>
+              </div>
             </div>
           </Reveal>
 

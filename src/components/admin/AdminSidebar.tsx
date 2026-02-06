@@ -15,6 +15,9 @@ import {
   Briefcase,
   Tag,
   Star,
+  MessageSquareQuote,
+  BarChart,
+  FileText,
 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { cn } from "@/lib/utils";
@@ -28,15 +31,21 @@ interface SidebarProps {
 const navItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/admin/dashboard" },
   { icon: Package, label: "Products", href: "/admin/products" },
+  { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
+  { icon: BarChart3, label: "Reports", href: "/admin/reports" },
+  { icon: Headset, label: "Support", href: "/admin/support" },
+  { icon: BookOpen, label: "Guides", href: "/admin/guides" },
   { icon: Tag, label: "Categories", href: "/admin/categories" },
   { icon: Star, label: "Reviews", href: "/admin/reviews" },
   { icon: Users, label: "Team", href: "/admin/team" },
   { icon: Briefcase, label: "Projects", href: "/admin/projects" },
-  { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
+  {
+    icon: MessageSquareQuote,
+    label: "Testimonials",
+    href: "/admin/testimonials",
+  },
+  { icon: BarChart, label: "Site Stats", href: "/admin/stats" },
   { icon: Users, label: "Customers", href: "/admin/users" },
-  { icon: BarChart3, label: "Reports", href: "/admin/reports" },
-  { icon: Headset, label: "Support", href: "/admin/support" },
-  { icon: BookOpen, label: "Guides", href: "/admin/guides" },
   { icon: User, label: "Profile", href: "/admin/profile" },
 ];
 
@@ -200,6 +209,22 @@ export default function AdminSidebar({
                   <ShoppingCart className="w-4 h-4 shrink-0" />
                   {isOpen && (
                     <span className="text-xs font-medium">Review Orders</span>
+                  )}
+                </UniversalLink>
+                <UniversalLink
+                  to="/admin/orders/new"
+                  className={({ isActive }) =>
+                    cn(
+                      "flex items-center gap-2 px-3 py-2 rounded transition-all duration-200 group relative",
+                      isActive
+                        ? "bg-blue-500/10 text-blue-400"
+                        : "text-slate-400 hover:text-white hover:bg-white/5",
+                    )
+                  }
+                >
+                  <FileText className="w-4 h-4 shrink-0" />
+                  {isOpen && (
+                    <span className="text-xs font-medium">Create Invoice</span>
                   )}
                 </UniversalLink>
               </div>

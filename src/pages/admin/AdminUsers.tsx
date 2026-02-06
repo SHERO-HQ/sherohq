@@ -34,11 +34,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import {
-  exportToCSV,
-  exportToExcel,
-  exportToPDF,
-} from "@/utils/exportUtils";
+import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
 import type {
   AdminUserListItem,
   AdminUserDetails,
@@ -47,8 +43,8 @@ import type {
   Order,
 } from "@/services/api";
 
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString("en-GB", {
+const formatDate = (date: string | Date) => {
+  return new Date(date).toLocaleDateString("en-GB", {
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -250,7 +246,9 @@ interface StatsCardsProps {
 }
 
 const StatsCards = ({ total, users }: StatsCardsProps) => {
-  const verifiedCount = users.filter((u: AdminUserListItem) => u.emailVerified).length;
+  const verifiedCount = users.filter(
+    (u: AdminUserListItem) => u.emailVerified,
+  ).length;
   const newThisMonthCount = users.filter((u: AdminUserListItem) => {
     const created = new Date(u.createdAt);
     const now = new Date();

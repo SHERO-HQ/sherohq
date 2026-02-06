@@ -406,7 +406,7 @@ const Nav = () => {
                         <User className="w-6 h-6" />
                       </div>
                       <div className="flex-1">
-                        <span className="block font-bold text-lg">
+                        <span className="block font-bold text-base">
                           Login / Register
                         </span>
                         <span className="block text-xs text-emerald-600/70 dark:text-emerald-400/70">

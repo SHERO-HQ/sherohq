@@ -8,6 +8,7 @@ import { useWishlist } from "@/hooks/useWishlist";
 import type { Product } from "@/types/product";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { WhatsAppIcon } from "@/assets/icons/icons";
+import { formatCurrency } from "@/utils/format";
 
 interface ProductCardProps {
   product: Product;
@@ -102,7 +103,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-linear-to-b from-emerald-500/5 to-transparent transition-opacity duration-500 pointer-events-none" />
 
       {/* Badges */}
-      <div className="absolute top-2 sm:top-3 left-2 sm:left-3 z-20 flex gap-1 sm:gap-2">
+      <div className="absolute top-2 sm:top-3 left-2 sm:left-3 z-20 flex flex-col items-start gap-1">
         {product.badge && (
           <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-bold uppercase tracking-wider bg-emerald-600 text-white shadow-lg shadow-emerald-900/20">
             {product.badge}
@@ -111,11 +112,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
         {discount > 0 && (
           <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-bold uppercase tracking-wider bg-red-600 text-white shadow-lg shadow-red-900/20 w-fit">
             -{discount}%
-          </span>
-        )}
-        {!product.inStock && (
-          <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-bold uppercase tracking-wider bg-slate-700 text-slate-300">
-            Sold Out
           </span>
         )}
       </div>
@@ -180,8 +176,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             View Details
           </button>
         </div>
-        {product.condition && (
-          <div className="absolute bottom-2 left-2 z-20 pointer-events-none">
+        <div className="absolute bottom-2 left-2 z-20 pointer-events-none flex flex-wrap gap-1">
+          {product.condition && (
             <span
               className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-white shadow-lg ${
                 product.condition === "New"
@@ -193,15 +189,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             >
               {product.condition}
             </span>
-          </div>
-        )}
+          )}
+          {!product.inStock && (
+            <span className="px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-bold uppercase tracking-wider bg-slate-700 text-slate-300 shadow-lg shadow-black/20">
+              Sold Out
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Product Info */}
       <div className="p-3 sm:p-4 relative z-10 cursor-pointer flex-1 flex flex-col">
         <div className="flex flex-col justify-between items-start flex-1">
           <div className="inline-flex items-center justify-between w-full mb-1.5 sm:mb-2">
-            <p className="text-[10px] sm:text-xs font-medium dark:bg-white/5 bg-emerald-100 px-1 sm:px-1.5 py-0.5 rounded dark:text-emerald-400 text-emerald-800 mb-0.5 sm:mb-1 uppercase tracking-wide">
+            <p className="text-[10px] sm:text-xs font-medium dark:bg-white/5 bg-emerald-100 px-1 sm:px-1.5 py-0.5 rounded dark:text-emerald-400 text-emerald-800 uppercase tracking-wide">
               {product.category}
             </p>
             <span className="flex items-center gap-0.5 sm:gap-1 dark:bg-white/5 bg-slate-300/60 px-1 sm:px-1.5 py-0.5 rounded text-[11px] sm:text-sm dark:text-slate-300 text-slate-900">
@@ -209,13 +210,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
               <span className="ml-0.5 sm:ml-1 text-xs">{product.rating}</span>
             </span>
           </div>
-          <h3 className="text-sm sm:text-base font-bold dark:text-white text-slate-900 leading-tight dark:group-hover:text-emerald-300 group-hover:text-emerald-600 transition-colors line-clamp-2 min-h-10 sm:min-h-12">
+          <h3 className="text-sm sm:text-base font-bold dark:text-white text-slate-900 leading-tight dark:group-hover:text-emerald-300 group-hover:text-emerald-600 transition-colors line-clamp-2">
             {product.name}
           </h3>
           {product.specifications &&
             Object.values(product.specifications).length > 0 && (
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mt-1 min-h-[2.5em]">
-                {Object.values(product.specifications).slice(0, 3).join(" • ")}
+                {Object.values(product.specifications).slice(0, 3).join(" •")}
               </p>
             )}
           {!product.specifications && product.description && (
@@ -226,14 +227,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
         </div>
 
         <div className="flex items-end justify-between mt-2 sm:mt-3 gap-1">
-          <div className="flex flex-row-reverse gap-1 items-center min-w-0 shrink">
+          <div className="flex flex-col gap-1 min-w-0 shrink">
             {product.originalPrice && (
               <span className="text-[10px] sm:text-xs text-slate-500 line-through truncate">
-                GH₵{product.originalPrice}
+                {formatCurrency(product.originalPrice)}
               </span>
             )}
             <span className="text-sm sm:text-lg font-sora font-bold dark:text-white text-slate-900 truncate">
-              GH₵{product.price}
+              {formatCurrency(product.price)}
             </span>
           </div>
         </div>

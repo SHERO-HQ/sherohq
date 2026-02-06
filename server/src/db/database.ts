@@ -97,6 +97,8 @@ export async function initializeDatabase() {
         "emailVerified" BOOLEAN DEFAULT false,
         "verificationToken" TEXT,
         "verificationExpiry" TEXT,
+        "isActive" BOOLEAN DEFAULT true,
+        role TEXT DEFAULT 'customer',
         "shippingAddress" JSONB,
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
@@ -256,6 +258,36 @@ export async function initializeDatabase() {
       )
     `);
 
+    // Testimonials table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS testimonials (
+        id TEXT PRIMARY KEY,
+        quote TEXT NOT NULL,
+        author TEXT NOT NULL,
+        role TEXT,
+        company TEXT,
+        image TEXT,
+        "order" INTEGER DEFAULT 0,
+        active BOOLEAN DEFAULT true,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Site Stats table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS site_stats (
+        id TEXT PRIMARY KEY,
+        label TEXT NOT NULL,
+        value TEXT NOT NULL,
+        suffix TEXT,
+        prefix TEXT,
+        icon TEXT,
+        color TEXT,
+        "order" INTEGER DEFAULT 0,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
     // Migration: Convert TEXT columns to JSONB if they are still TEXT
     const tablesToMigrate = [
       { table: "products", columns: ["images", "features", "specifications"] },
@@ -294,13 +326,19 @@ export async function initializeDatabase() {
       }
     }
 
-    // Migration: Add avatar column to users if it doesn't exist
+    // Migration: Add missing columns to users if they don't exist
     try {
       await client.query(
         `ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar TEXT`,
       );
+      await client.query(
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS "isActive" BOOLEAN DEFAULT true`,
+      );
+      await client.query(
+        `ALTER TABLE users ADD COLUMN IF NOT EXISTS role TEXT DEFAULT 'customer'`,
+      );
     } catch (error_) {
-      console.warn("⚠️ Migration failed for users.avatar:", error_);
+      console.warn("⚠️ Migration failed for users table:", error_);
     }
 
     // Ensure phone column exists in tickets table (migration)

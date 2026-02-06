@@ -417,7 +417,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                         <div className="px-6 py-3 font-medium text-slate-900 dark:text-white bg-slate-50 dark:bg-slate-950 sm:col-span-1">
                           {key}
                         </div>
-                        <div className="px-6 py-3 text-slate-600 dark:text-slate-400 sm:col-span-2 break-words">
+                        <div className="px-6 py-3 text-slate-600 dark:text-slate-400 sm:col-span-2 wrap-break-word">
                           {value}
                         </div>
                       </div>

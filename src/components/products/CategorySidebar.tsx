@@ -64,7 +64,7 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({
 
   return (
     <aside
-      className={`w-full shrink-0 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden ${className}`}
+      className={`w-full shrink-0 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded overflow-hidden ${className}`}
     >
       {/* Header */}
       <div className="p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50">
@@ -80,7 +80,7 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({
           <button
             key={category.id}
             onClick={() => onCategoryChange(category.id)}
-            className={`flex items-center justify-between w-full px-3 py-2 text-sm rounded-md transition-all group ${
+            className={`flex items-center justify-between w-full px-3 py-2 text-sm rounded transition-all group ${
               activeCategory === category.id
                 ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 font-semibold"
                 : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200"

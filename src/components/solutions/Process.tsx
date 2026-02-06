@@ -51,7 +51,7 @@ const steps = [
 const Process = () => {
   return (
     <section className="py-24 bg-white dark:bg-slate-900 overflow-hidden relative border-t border-slate-200 dark:border-white/5 pattern-dots">
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-95 dark:opacity-90" />
+      <div className="absolute inset-0 hero-grid-pattern opacity-95 dark:opacity-90" />
 
       <div className="container max-w-5xl mx-auto px-4 relative z-10">
         <div className="text-center mb-20">
@@ -79,7 +79,7 @@ const Process = () => {
 
               return (
                 <motion.div
-                  key={index}
+                  key={step.title}
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-100px" }}

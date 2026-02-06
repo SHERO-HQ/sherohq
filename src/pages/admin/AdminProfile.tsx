@@ -95,7 +95,7 @@ export default function AdminProfile() {
           <h1 className="text-3xl font-bold text-white font-sora">
             Account Settings
           </h1>
-          <p className="text-slate-400">
+          <p className="text-slate-400 text-sm">
             Manage your administrative profile and security preferences.
           </p>
         </div>

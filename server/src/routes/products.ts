@@ -128,6 +128,118 @@ router.get("/categories/list", async (req: Request, res: Response) => {
   }
 });
 
+// POST /api/products/categories - Create new category (Admin)
+router.post(
+  "/categories",
+  adminAuth,
+  async (req: AdminRequest, res: Response) => {
+    try {
+      const { name, icon } = req.body;
+      if (!name) {
+        return res.status(400).json({ error: "Category name is required" });
+      }
+
+      const id = uuidv4();
+      await db.query(
+        "INSERT INTO categories (id, name, icon) VALUES ($1, $2, $3)",
+        [id, name, icon || "Package"],
+      );
+
+      if (req.admin?.id) {
+        await logActivity(
+          req.admin.id,
+          "category_create",
+          "success",
+          `Created category: ${name}`,
+        );
+      }
+
+      res.status(201).json({ id, name, icon: icon || "Package" });
+    } catch (error) {
+      console.error("Error creating category:", error);
+      res.status(500).json({ error: "Failed to create category" });
+    }
+  },
+);
+
+// PUT /api/products/categories/:id - Update category (Admin)
+router.put(
+  "/categories/:id",
+  adminAuth,
+  async (req: AdminRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { name, icon } = req.body;
+
+      const check = await db.query("SELECT * FROM categories WHERE id = $1", [
+        id,
+      ]);
+      if (check.rowCount === 0) {
+        return res.status(404).json({ error: "Category not found" });
+      }
+
+      await db.query(
+        "UPDATE categories SET name = $1, icon = $2 WHERE id = $3",
+        [name, icon, id],
+      );
+
+      if (req.admin?.id) {
+        await logActivity(
+          req.admin.id,
+          "category_update",
+          "info",
+          `Updated category: ${name}`,
+        );
+      }
+
+      res.json({ id, name, icon });
+    } catch (error) {
+      console.error("Error updating category:", error);
+      res.status(500).json({ error: "Failed to update category" });
+    }
+  },
+);
+
+// DELETE /api/products/categories/:id - Delete category (Admin)
+router.delete(
+  "/categories/:id",
+  adminAuth,
+  async (req: AdminRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+
+      const check = await db.query(
+        "SELECT name FROM categories WHERE id = $1",
+        [id],
+      );
+      if (check.rowCount === 0) {
+        return res.status(404).json({ error: "Category not found" });
+      }
+
+      const categoryName = check.rows[0].name;
+
+      await db.query("DELETE FROM categories WHERE id = $1", [id]);
+
+      if (req.admin?.id) {
+        await logActivity(
+          req.admin.id,
+          "category_delete",
+          "warning",
+          `Deleted category: ${categoryName}`,
+        );
+      }
+
+      res.json({
+        success: true,
+        message: `Category "${categoryName}" deleted`,
+      });
+    } catch (error) {
+      console.error("Error deleting category:", error);
+      res.status(500).json({ error: "Failed to delete category" });
+    }
+  },
+);
+
 // ============ ADMIN ROUTES (Protected) ============
 
 // POST /api/products - Create new product (Admin)

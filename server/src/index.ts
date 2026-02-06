@@ -11,8 +11,11 @@ import {
   seedAdminUser,
   seedDefaultUser,
   seedTeamMembers,
+  seedTestimonials,
+  seedStats,
   flushTestData,
 } from "./db/seed";
+import { adminAuth } from "./middleware/adminAuth";
 
 // Routes
 import productRoutes from "./routes/products";
@@ -30,6 +33,8 @@ import usersRoutes from "./routes/users";
 import guidesRoutes from "./routes/guides";
 import projectRoutes from "./routes/projects";
 import teamRoutes from "./routes/team";
+import testimonialRoutes from "./routes/testimonials";
+import statRoutes from "./routes/stats";
 
 // Load environment variables
 dotenv.config();
@@ -113,7 +118,6 @@ app.use(
   }),
 );
 
-// Other Middleware
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
@@ -121,6 +125,10 @@ app.use(
 ); // Set security headers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// CSRF Protection
+import { csrfProtection } from "./middleware/csrfProtection";
+app.use(csrfProtection);
 
 // Request Logging Middleware
 app.use((req, res, next) => {
@@ -173,6 +181,7 @@ app.use("/api/tickets", ticketsRoute);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/admin/reviews", adminAuth, reviewRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/inquiry", inquiryRoutes);
 app.use("/api/admin", activityRoutes);
@@ -180,6 +189,8 @@ app.use("/api/admin/users", usersRoutes);
 app.use("/api/guides", guidesRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/team", teamRoutes);
+app.use("/api/testimonials", testimonialRoutes);
+app.use("/api/stats", statRoutes);
 
 // Root route - information about the API
 app.get("/", (req: Request, res: Response) => {
@@ -214,6 +225,8 @@ app.listen(PORT, async () => {
     await seedAdminUser();
     await seedDefaultUser();
     await seedTeamMembers();
+    await seedTestimonials();
+    await seedStats();
 
     // Check for a flag to flush test data (one-time or env-driven)
     if (process.env.FLUSH_TEST_DATA === "true") {

@@ -1,6 +1,5 @@
 import db from "./database";
 import { v4 as uuidv4 } from "uuid";
-import bcrypt from "bcryptjs";
 
 // Type definitions for seed data
 interface SeedProduct {
@@ -379,7 +378,7 @@ export async function seedAdminUser() {
       INSERT INTO admin_users (id, username, email, "passwordHash", role)
       VALUES ($1, $2, $3, $4, $5)
     `,
-      [adminId, "admin", "admin@sherotech.com", passwordHash, "superadmin"],
+      [adminId, "admin", "admin@sherohq.com", passwordHash, "superadmin"],
     );
 
     console.log("👤 Created default admin user (admin / admin123)");
@@ -393,34 +392,37 @@ export async function seedDefaultUser() {
   try {
     const existingUserRes = await db.query(
       "SELECT COUNT(*) as count FROM users WHERE email = $1",
-      ["user@sherotech.com"],
+      ["user@sherohq.com"],
     );
-    const existingUser = existingUserRes.rows[0];
 
-    if (Number(existingUser.count) > 0) {
-      console.log("👤 Default user already exists, skipping...");
-      return;
+    if (Number.parseInt(existingUserRes.rows[0].count) === 0) {
+      // Import bcrypt dynamically to hash password
+      const bcrypt = await import("bcryptjs");
+      const { v4: uuidv4 } = await import("uuid");
+
+      const passwordHash = await bcrypt.hash("password123", 10);
+      await db.query(
+        `INSERT INTO users (id, name, email, "passwordHash", role, "isActive", "emailVerified")
+         VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+        [
+          uuidv4(),
+          "Shero User",
+          "user@sherohq.com",
+          passwordHash,
+          "customer",
+          true,
+          true,
+        ],
+      );
+      console.log("👤 Created default user (user@sherohq.com / password123)");
+    } else {
+      console.log("👤 Default user already exists.");
     }
 
-    const userId = uuidv4();
-    const passwordHash = await bcrypt.hash("password123", 10);
-
-    await db.query(
-      `
-      INSERT INTO users (id, email, "passwordHash", name, phone, "emailVerified")
-      VALUES ($1, $2, $3, $4, $5, $6)
-    `,
-      [
-        userId,
-        "user@sherotech.com",
-        passwordHash,
-        "Shero User",
-        "0240000000",
-        true,
-      ],
-    );
-
-    console.log("👤 Created default user (user@sherotech.com / password123)");
+    // Assign customer role to the user
+    await db.query("UPDATE users SET role = 'customer' WHERE email = $1", [
+      "user@sherohq.com",
+    ]);
   } catch (error) {
     console.error("Error seeding default user:", error);
   }
@@ -444,9 +446,7 @@ export async function flushTestData() {
     await db.query("DELETE FROM sessions"); // Admin sessions
 
     // Delete all users except our new default user (if we want to keep it)
-    await db.query("DELETE FROM users WHERE email != $1", [
-      "user@sherotech.com",
-    ]);
+    await db.query("DELETE FROM users WHERE email != $1", ["user@sherohq.com"]);
 
     await db.query("COMMIT");
     console.log(
@@ -467,7 +467,6 @@ export async function seedTeamMembers() {
     const existingTeam = existingTeamRes.rows[0];
 
     if (Number(existingTeam.count) > 0) {
-      // console.log("👥 Team members already exist, skipping...");
       return;
     }
 
@@ -538,5 +537,113 @@ export async function seedTeamMembers() {
     console.log(`👥 Seeded ${teamMembers.length} team members`);
   } catch (error) {
     console.error("Error seeding team members:", error);
+  }
+}
+
+// Seed Testimonials
+export async function seedTestimonials() {
+  try {
+    const existingRes = await db.query(
+      "SELECT COUNT(*) as count FROM testimonials",
+    );
+    if (Number(existingRes.rows[0].count) > 0) return;
+
+    const testimonials = [
+      {
+        quote:
+          "SHERO transformed our outdated retail operations into a world-class e-commerce engine. Their understanding of the Ghanaian market dynamic coupled with global tech standards is unmatched.",
+        author: "Kwame Mensah",
+        role: "CEO",
+        company: "Osei Digitals, Accra",
+        active: true,
+      },
+      {
+        quote:
+          "Their custom inventory software has saved us countless hours. They didn't just provide a tool; they provided a solution that truly understands the scale of West African logistics.",
+        author: "Abena Osei",
+        role: "Operations Lead",
+        company: "Gold Coast Logistics, Kumasi",
+        active: true,
+      },
+      {
+        quote:
+          "Reliability is key in our industry. SHERO's networking solutions and security protocols have given us the confidence to expand our digital banking services across the region.",
+        author: "Kofi Asare",
+        role: "CTO",
+        company: "Asante Fintech",
+        active: true,
+      },
+      {
+        quote:
+          "Working with SHERO was a breath of fresh air. They turned our complex brand vision into a seamless digital experience that resonates with our local and international audience.",
+        author: "Efua Boateng",
+        role: "Creative Director",
+        company: "Adinkra Media Group",
+        active: true,
+      },
+    ];
+
+    for (const [index, t] of testimonials.entries()) {
+      const id = uuidv4();
+      await db.query(
+        `INSERT INTO testimonials (id, quote, author, role, company, "order", active) VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+        [id, t.quote, t.author, t.role, t.company, index, t.active],
+      );
+    }
+    console.log(`💬 Seeded ${testimonials.length} testimonials`);
+  } catch (error) {
+    console.error("Error seeding testimonials:", error);
+  }
+}
+
+// Seed Site Stats
+export async function seedStats() {
+  try {
+    const existingRes = await db.query(
+      "SELECT COUNT(*) as count FROM site_stats",
+    );
+    if (Number(existingRes.rows[0].count) > 0) return;
+
+    const stats = [
+      {
+        label: "Customers",
+        value: "1000",
+        suffix: "+",
+        icon: "Users",
+        color: "text-emerald-500",
+      },
+      {
+        label: "Delivered",
+        value: "1500",
+        suffix: "+",
+        icon: "Trophy",
+        color: "text-emerald-500",
+      },
+      {
+        label: "Partners",
+        value: "5",
+        suffix: "+",
+        icon: "Globe",
+        color: "text-emerald-500",
+      },
+      {
+        label: "Satisfaction",
+        value: "99",
+        suffix: "%",
+        icon: "Activity",
+        color: "text-emerald-500",
+      },
+    ];
+
+    for (const [index, s] of stats.entries()) {
+      const id = uuidv4();
+      await db.query(
+        `INSERT INTO site_stats (id, label, value, suffix, icon, color, "order") VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+        [id, s.label, s.value, s.suffix, s.icon, s.color, index],
+      );
+    }
+    console.log(`📊 Seeded ${stats.length} site stats`);
+  } catch (error) {
+    console.error("Error seeding site stats:", error);
   }
 }

@@ -7,9 +7,9 @@ import {
   Cpu,
   Globe2,
   Info,
-  Zap,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import Logo from "@/assets/logo/shero.svg";
 
 const LandingAbout = () => {
   const features = [
@@ -47,7 +47,7 @@ const LandingAbout = () => {
                 </span>
               </h2>
 
-              <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl transition-colors duration-300">
+              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl transition-colors duration-300">
                 SHERO is more than a tech company. We are architects of
                 innovation, bridging the gap between hardware excellence and
                 digital potential. Our mission is to redefine what is possible
@@ -103,11 +103,15 @@ const LandingAbout = () => {
                 <div className="absolute inset-0 pattern-dots opacity-40 dark:opacity-60 mask-radial-faded scale-150" />
 
                 {/* The Icon itself (Restored) */}
-                <Zap className="relative z-20 w-12 h-12 text-emerald-600 dark:text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]" />
+                <img
+                  src={Logo}
+                  alt="SHERO"
+                  className="relative z-20 w-16 h-16 text-emerald-600 dark:text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]"
+                />
               </div>
 
               {/* Floating Badge Overlay */}
-              <div className="absolute bottom-10 right-5 dark:bg-emerald-50/10 bg-white/40 backdrop-blur-md border border-white/20 dark:border-emerald-500/20 px-4 py-2 rounded transform translate-y-1/2 shadow-lg">
+              <div className="absolute -top-24 right-0 dark:bg-emerald-50/10 bg-white/40 backdrop-blur-md border border-white/20 dark:border-emerald-500/20 px-4 py-2 rounded transform translate-y-1/2 shadow-lg">
                 <p className="text-xs font-bold dark:text-white text-slate-600 tracking-wider">
                   10x
                 </p>
@@ -121,26 +125,23 @@ const LandingAbout = () => {
             {/* Floating Elements (Orbiting) */}
             <FloatingCard
               icon={
-                <Globe2 className="w-5 h-5 text-blue-600 dark:text-blue-500" />
+                <Globe2 className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-blue-600 dark:text-blue-500" />
               }
-              label="Global Scale"
-              className="absolute top-20 right-20 z-10"
+              className="absolute sm:top-10 sm:right-20 md:top-8 md:right-28 top-30 left-10 z-10"
               // delay={0.8}
             />
             <FloatingCard
               icon={
-                <Cpu className="w-5 h-5 text-indigo-600 dark:text-indigo-500" />
+                <Cpu className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-indigo-600 dark:text-indigo-500" />
               }
-              label="Hardware"
-              className="absolute bottom-25 left-10 z-30"
+              className="absolute bottom-35 sm:left-40 md:left-20 left-0 z-30"
               // delay={0.6}
             />
             <FloatingCard
               icon={
-                <Code2 className="w-5 h-5 text-emerald-600 dark:text-emerald-500" />
+                <Code2 className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-emerald-600 dark:text-emerald-500" />
               }
-              label="Software"
-              className="absolute bottom-1/3 right-0 -translate-y-10 z-10"
+              className="absolute sm:bottom-1/3 sm:right-38 md:right-14 bottom-40 right-4 -translate-y-10 z-10"
               // delay={0.8}
             />
 
@@ -160,13 +161,17 @@ const FloatingCard = ({
   className,
 }: {
   icon: React.ReactNode;
-  label: string;
+  label?: string;
   className?: string;
 }) => (
   <div className={className}>
-    <Card className="flex items-center gap-3 px-4 py-2 border border-slate-400/20 dark:border-slate-400/20 rounded bg-slate-200/20 dark:bg-slate-800/20 shadow-sm transition-all duration-300">
+    <Card
+      className={`flex items-center justify-center ${label ? "gap-3 px-4 py-2" : "p-3"} border-none bg-transparent transition-all duration-300 shadow-none`}
+    >
       {icon}
-      <span className="text-sm font-semibold">{label}</span>
+      {label && (
+        <span className="text-sm font-semibold user-select-none">{label}</span>
+      )}
     </Card>
   </div>
 );

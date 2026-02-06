@@ -20,7 +20,7 @@ const LandingPartners = () => {
   return (
     <section className="w-full py-20 bg-white dark:bg-slate-950 relative overflow-hidden border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
       {/* Background Ambience */}
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-5 dark:opacity-20 transition-opacity duration-300" />
+      <div className="absolute inset-0 hero-grid-pattern opacity-5 dark:opacity-20 transition-opacity duration-300" />
 
       {/* Header */}
       <div className="container mx-auto px-4 relative z-10 mb-12 text-center">

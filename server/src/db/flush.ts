@@ -35,7 +35,7 @@ async function flushTestData() {
     // Non-essential users (keep default user)
     const usersRes = await db.query(
       "DELETE FROM users WHERE email NOT IN ($1)",
-      ["user@sherotech.com"],
+      ["user@sherohq.com"],
     );
     console.log(`🗑️ Deleted ${usersRes.rowCount} test users`);
 

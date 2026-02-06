@@ -24,14 +24,14 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       animate={{ opacity: 1, y: 0 }}
       className={`bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6 ${className}`}
     >
-      <h3 className="text-lg font-bold font-sora text-slate-900 dark:text-white mb-6 text-center">
+      <h3 className="text-base font-bold font-sora text-slate-900 dark:text-white mb-6 text-center">
         Order Summary
       </h3>
 
       {/* Summary Details */}
       <div className="space-y-4">
         <div className="flex items-center justify-between text-sm flex-wrap gap-2">
-          <span className="text-slate-600 dark:text-slate-400 break-words max-w-[60%]">
+          <span className="text-slate-600 dark:text-slate-400 wrap-break-word max-w-[60%]">
             Subtotal ({itemCount} {itemCount === 1 ? "item" : "items"})
           </span>
           <span className="font-semibold text-slate-900 dark:text-white whitespace-nowrap">

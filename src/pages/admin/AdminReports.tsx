@@ -181,7 +181,7 @@ export default function AdminReports() {
                 <h1 className="text-2xl font-sora font-bold text-white">
                   Reports & Analytics
                 </h1>
-                <p className="text-slate-400">
+                <p className="text-slate-400 text-sm">
                   Overview of your store performance
                 </p>
               </div>
