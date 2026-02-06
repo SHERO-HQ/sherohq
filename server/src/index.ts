@@ -6,16 +6,7 @@ import * as dotenv from "dotenv";
 
 // Database
 import db, { initializeDatabase } from "./db/database";
-import {
-  seedDatabase,
-  seedAdminUser,
-  seedDefaultUser,
-  seedTeamMembers,
-  seedTestimonials,
-  seedStats,
-  flushTestData,
-  flushAllData,
-} from "./db/seed";
+import { seedAdminUser } from "./db/seed";
 import { adminAuth } from "./middleware/adminAuth";
 
 // Routes
@@ -223,47 +214,15 @@ app.listen(PORT, async () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
 
-  // Background database initialization
+  // Synchronous database initialization for stability
   try {
     console.time("⏱️ Database Startup");
     await initializeDatabase();
-
-    // Check for a flag to flush ALL data (one-time or env-driven)
-    if (process.env.FLUSH_DATABASE === "true") {
-      await flushAllData();
-    } else if (process.env.FLUSH_TEST_DATA === "true") {
-      // Keep legacy support for partial flush
-      await flushTestData();
-    }
-
-    // Only seed if explicitly allowed
-    if (process.env.SKIP_SEEDING === "true") {
-      console.log("⏭️ Seeding skipped (SKIP_SEEDING=true).");
-      // Ensure at least one admin exists if NO admins are present
-      const adminCount = await db.query("SELECT COUNT(*) FROM admin_users");
-      if (Number.parseInt(adminCount.rows[0].count) === 0) {
-        console.log("👤 No admins found, seeding default admin user...");
-        await seedAdminUser();
-      }
-    } else {
-      await seedDatabase();
-      await seedAdminUser();
-      await seedDefaultUser();
-      await seedTeamMembers();
-      await seedTestimonials();
-      await seedStats();
-      console.log("🌱 Seeding completed.");
-    }
-
     console.timeEnd("⏱️ Database Startup");
     console.log("✅ Database is ready to handle requests.");
-  } catch (error) {
-    console.error(
-      "❌ Failed to initialize database during background startup:",
-      error,
-    );
-    // We don't exit here to allow the port to remain bound, but subsequent
-    // DB requests may fail until the issue is fixed.
+  } catch (err) {
+    console.error("Critical error starting server:", err);
+    process.exit(1); // Exit if DB fails
   }
 });
 

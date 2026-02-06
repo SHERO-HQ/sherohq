@@ -33,6 +33,8 @@ const LandingStats = () => {
     }));
   }, [apiStats]);
 
+  if (!isLoading && stats.length === 0) return null;
+
   return (
     <section className="relative w-full py-16 bg-white dark:bg-slate-950 overflow-hidden border-y border-slate-200 dark:border-slate-900 transition-colors duration-300">
       {/* Background patterns */}

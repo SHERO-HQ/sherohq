@@ -100,7 +100,7 @@ export function navLinkClassVariant(
     default: NAV_LINK_STYLES,
     sidebar: {
       base: [
-        "px-3 py-2",
+        "px-2 py-1",
         "rounded",
         "w-full",
         "transition-colors duration-200",

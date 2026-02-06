@@ -127,7 +127,7 @@ const Nav = () => {
             </UniversalLink>
 
             {/* Right Groups Wrapper */}
-            <div className="flex items-center gap-2 lg:space-x-4 ml-auto">
+            <div className="flex items-center gap-2 lg:space-x-2 ml-auto">
               {/* Desktop Menu */}
               <ul className="hidden lg:flex items-center gap-3">
                 {navLinks.map((item) => (

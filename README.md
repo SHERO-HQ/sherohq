@@ -16,11 +16,14 @@ A modern, responsive e-commerce web application built for the Ghanaian market, s
   - 💳 **Card Payment**: Visa and Mastercard support.
   - 💵 **Cash on Delivery**: Pay upon receipt.
   - 🏪 **Store Pickup**: Free shipping option for self-collection.
-- **Admin Dashboard**: Comprehensive panel for managing products, categories, and orders.
+- **Admin Dashboard**: Comprehensive panel with dynamic real-time statistics and growth metrics.
 - **Product Management**:
   - SKU management with auto-generation based on product ID.
   - Advanced filtering, sorting, and categorization.
   - Multi-format data exports (CSV, Excel, PDF).
+- **Accessibility & UI**:
+  - **WCAG AA Compliant**: Optimized contrast and semantic HTML for screen readers.
+  - **Dynamic Design**: Interactive stats, magnetic cards, and micro-animations.
 
 ## 🛠️ Tech Stack
 
@@ -77,6 +80,7 @@ Follow these instructions to set up the project locally.
     ```env
     PORT=5000
     DATABASE_URL=your_database_connection_string
+    SKIP_SEEDING=true  # Set to true to prevent automatic re-seeding of test data
     # Add other necessary API keys here
     ```
 
@@ -98,6 +102,7 @@ yarn dev:all
 - `yarn build`: Build the frontend for production.
 - `yarn lint`: Run ESLint checks.
 - `yarn test`: Run frontend unit tests (Vitest).
+- `yarn flush`: Purge all test data from the database while preserving admin users.
 
 ## 🧪 Testing
 

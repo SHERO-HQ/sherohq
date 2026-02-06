@@ -13,10 +13,32 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const previousFocus = useRef<HTMLElement | null>(null);
 
+  // 1. Focus Management (Run only when isOpen changes)
   useEffect(() => {
     if (isOpen) {
       previousFocus.current = document.activeElement as HTMLElement;
 
+      // Focus the first element (close button or input)
+      // Small timeout to ensure content is mounted and to let other effects settle
+      const timer = setTimeout(() => {
+        const firstFocusable = modalRef.current?.querySelector(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        if (firstFocusable instanceof HTMLElement) {
+          firstFocusable.focus();
+        }
+      }, 10);
+
+      return () => {
+        clearTimeout(timer);
+        previousFocus.current?.focus();
+      };
+    }
+  }, [isOpen]);
+
+  // 2. Event Listeners (Run when isOpen or onClose changes)
+  useEffect(() => {
+    if (isOpen) {
       const handleEscape = (e: KeyboardEvent) => {
         if (e.key === "Escape") onClose();
       };
@@ -46,16 +68,9 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
       document.addEventListener("keydown", handleEscape);
       document.addEventListener("keydown", handleTab);
 
-      // Focus the first element (close button)
-      const firstFocusable = modalRef.current?.querySelector("button");
-      if (firstFocusable instanceof HTMLElement) {
-        firstFocusable.focus();
-      }
-
       return () => {
         document.removeEventListener("keydown", handleEscape);
         document.removeEventListener("keydown", handleTab);
-        previousFocus.current?.focus();
       };
     }
   }, [isOpen, onClose]);

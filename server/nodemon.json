@@ -1,0 +1,11 @@
+{
+  "watch": ["src"],
+  "ext": "ts,json",
+  "ignore": [
+    "src/debug_db.ts",
+    "server_debug.log",
+    "server_startup.log",
+    "src/kill_backends.ts"
+  ],
+  "exec": "ts-node src/index.ts"
+}

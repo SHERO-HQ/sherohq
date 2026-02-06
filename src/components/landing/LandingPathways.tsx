@@ -166,7 +166,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
       {/* Pattern Background */}
       <div
         style={{ transform: "translateZ(-20px)" }}
-        className={`absolute inset-0 ${path.pattern} opacity-50 dark:opacity-50 group-hover:opacity-40 transition-opacity`}
+        className={`absolute inset-0 ${path.pattern} opacity-50 group-hover:opacity-80 transition-opacity`}
       />
 
       <div className="relative z-10" style={{ transform: "translateZ(40px)" }}>
@@ -192,7 +192,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
       >
         <NavLink
           to={path.link}
-          className={`inline-flex items-center justify-center w-fit h-9 px-4 rounded border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white group-hover:bg-emerald-500 group-hover:border-emerald-500 group-hover:text-white transition-all`}
+          className={`inline-flex items-center justify-center w-fit h-9 px-4 rounded border border-slate-200 dark:border-slate-800 text-slate-900! dark:text-white! group-hover:bg-emerald-500 group-hover:border-emerald-500 group-hover:text-white transition-all`}
         >
           <span className="text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white">
             Explore

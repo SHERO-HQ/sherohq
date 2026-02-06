@@ -63,13 +63,17 @@ const Support = () => {
 
   return (
     <>
-      <div className="dark pt-24 pb-12 bg-slate-950 min-h-screen text-slate-300">
+      <div className="pt-24 pb-12 bg-background min-h-screen text-foreground relative overflow-hidden transition-colors duration-300">
+        {/* Ambient Background Glows - Visible in both but subtle */}
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[120px] -z-10 animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[120px] -z-10" />
+
         <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back Button */}
           <div className="mb-8">
             <UniversalLink
               to="/"
-              className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors group"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span>Back to Home</span>
@@ -77,61 +81,74 @@ const Support = () => {
           </div>
 
           {/* Header */}
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-emerald-400 bg-emerald-900/30 rounded-full border border-emerald-500/20 uppercase">
+          <div className="text-center mb-16 relative">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded border border-emerald-200 dark:border-emerald-500/20 uppercase tracking-wider"
+            >
               <LifeBuoy className="w-4 h-4" />
-              <span className="text-emerald-400">Support Center</span>
-            </div>
-            <h1 className="md:text-4xl text-3xl font-sora font-bold text-white mb-4">
-              How can we help?
+              <span>Support Center</span>
+            </motion.div>
+            <h1 className="md:text-5xl text-4xl font-sora font-bold text-foreground mb-6 tracking-tight">
+              How can we{" "}
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-500 to-blue-600 dark:to-blue-400">
+                help?
+              </span>
             </h1>
-            <p className="text-slate-400 text-sm max-w-2xl mx-auto mb-8">
+            <p className="text-muted-foreground text-sm max-w-2xl mx-auto mb-10 leading-relaxed">
               Find answers, download drivers, or contact our dedicated support
               team for assistance.
             </p>
 
             {/* Search */}
             <div className="max-w-2xl mx-auto flex flex-col sm:flex-row items-center gap-4">
-              <div className="relative w-full">
+              <div className="relative w-full group">
                 <input
                   type="text"
                   placeholder="Search for articles, guides, and more..."
-                  className="w-full pl-12 pr-4 py-3 bg-slate-900/50 border border-white/10 rounded focus:ring-2 focus:ring-emerald-500 outline-none transition-all shadow-sm text-white placeholder:text-slate-500"
+                  className="w-full pl-12 pr-4 py-4 bg-card/40 dark:bg-slate-900/40 backdrop-blur-md border border-border rounded focus:ring-2 focus:ring-emerald-500/50 outline-none transition-all shadow text-foreground placeholder:text-muted-foreground"
                 />
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-emerald-500 transition-colors" />
               </div>
             </div>
           </div>
 
           {/* Resources Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
             {resources.map((item, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-slate-900/50 backdrop-blur-sm p-8 rounded border border-white/5 hover:border-emerald-500/30 transition-all group"
+                viewport={{ once: true }}
+                className="bg-card/40 dark:bg-slate-900/40 backdrop-blur-md p-8 rounded border border-border hover:border-emerald-500/30 hover:bg-card/60 dark:hover:bg-slate-900/60 transition-all group relative overflow-hidden shadow-sm hover:shadow-xl"
               >
-                <div className="w-12 h-12 bg-emerald-900/30 rounded flex items-center justify-center mb-6 text-emerald-400 group-hover:scale-110 transition-transform">
-                  <item.icon className="w-6 h-6" />
+                {/* Pattern dots on hover */}
+                <div className="absolute pattern-dots pattern-emerald-500/10 pattern-opacity-100 pattern-size-4 top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 -z-10"/>
+
+                <div className="absolute -top-15 -right-15 w-44 h-44 bg-linear-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-full" />
+
+                <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/40 rounded flex items-center justify-center mb-6 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500 dark:group-hover:bg-emerald-700/80 group-hover:text-white transition-all duration-300 shadow-lg shadow-emerald-500/10">
+                  <item.icon className="w-7 h-7" />
                 </div>
-                <h3 className="text-xl font-sora font-bold text-white mb-3">
+                <h3 className="text-2xl font-sora font-bold text-foreground mb-3 tracking-snug">
                   {item.title}
                 </h3>
-                <p className="text-slate-400 text-sm mb-6 leading-relaxed">
+                <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
                   {item.description}
                 </p>
 
                 {item.socials ? (
-                  <div className="flex gap-4">
+                  <div className="flex gap-5">
                     {item.socials.map((social, i) => (
                       <a
                         key={i}
                         href={social.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-slate-500 hover:text-emerald-400 transition-colors"
+                        className="p-2 rounded bg-secondary text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-500/10 transition-all transform hover:-translate-y-1"
                       >
                         <social.icon className="w-5 h-5" />
                       </a>
@@ -140,9 +157,10 @@ const Support = () => {
                 ) : (
                   <UniversalLink
                     to={item.link!}
-                    className="flex items-center gap-2 text-emerald-400 font-semibold group-hover:gap-3 transition-all"
+                    className="inline-flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold group-hover:gap-3 transition-all hover:text-emerald-700 dark:hover:text-emerald-300"
                   >
-                    Browse <ArrowRight className="w-4 h-4" />
+                    <span>Browse Guides</span>
+                    <ArrowRight className="w-5 h-5" />
                   </UniversalLink>
                 )}
               </motion.div>
@@ -150,26 +168,33 @@ const Support = () => {
           </div>
 
           {/* Contact Section */}
-          <div className="flex flex-col lg:flex-row items-center justify-around bg-slate-900/50 backdrop-blur-sm rounded p-8 md:p-12 border border-white/5 text-center lg:text-left relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-[80px] translate-y-1/2 translate-x-1/2" />
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-col lg:flex-row items-center justify-between bg-linear-to-br from-card via-card to-emerald-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-900/20 backdrop-blur-xl rounded  p-8 md:p-16 border border-border text-center lg:text-left relative overflow-hidden shadow-md pattern-dots pattern-emerald-500/90 pattern-opacity-100 pattern-size-4pattern-dots pattern-emerald-500/10 pattern-opacity-100 pattern-size-4"
+          >
+            <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
 
-            <div className="z-10 flex flex-col items-center lg:items-start lg:flex-row gap-8 lg:gap-12">
-              <HeadsetIcon className="w-24 h-24 text-emerald-400 shrink-0" />
-              <div className="hidden lg:block w-px h-24 bg-white/10 self-center" />
-              <div>
-                <h2 className="md:text-3xl text-2xl font-sora font-bold text-white mb-4">
+            <div className="z-10 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 w-full">
+              <div className="p-6 group shrink-0 flex">
+                <HeadsetIcon className="w-28 h-28 text-emerald-600 dark:text-emerald-400 group-hover:rotate-12 transition-transform duration-500" />
+              </div>
+
+              <div className="flex-1">
+                <h2 className="md:text-4xl text-3xl font-sora font-bold text-foreground mb-4 tracking-tight">
                   Still need help?
                 </h2>
-                <p className="text-slate-400 text-sm mb-8 max-w-xl">
+                <p className="text-muted-foreground text-sm mb-10 max-w-xl">
                   Can't find what you're looking for? Our support team is
-                  available Monday through Friday, 9am to 6pm EST.
+                  available Monday through Friday, 9am to 6pm GMT.
                 </p>
 
-                <div className="flex flex-col md:flex-row items-center justify-center lg:justify-start gap-4">
+                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
                   <button
                     onClick={() => setIsTicketModalOpen(true)}
-                    className="flex items-center gap-3 px-6 py-2.5 rounded bg-emerald-600 text-white font-semibold hover:bg-emerald-700 transition-all shadow-lg hover:shadow-emerald-500/20 w-full md:w-auto justify-center"
+                    className="flex items-center gap-3 px-8 py-2 rounded bg-emerald-600 text-white dark:text-slate-950 font-bold hover:bg-emerald-500 transition-all shadow-md shadow-emerald-500/20 hover:scale-[1.02] active:scale-95 w-full md:w-auto justify-center"
                     aria-label="Submit a Ticket"
                   >
                     <Ticket className="w-5 h-5" />
@@ -177,14 +202,14 @@ const Support = () => {
                   </button>
                   <a
                     href={`mailto:${COMPANY_EMAILS.SUPPORT}`}
-                    className="flex items-center gap-3 px-6 py-2.5 rounded bg-slate-800 text-white font-semibold hover:bg-slate-700 transition-all w-full md:w-auto justify-center"
+                    className="flex items-center gap-3 px-8 py-2 rounded bg-secondary text-foreground font-bold hover:bg-accent transition-all backdrop-blur-sm border border-border w-full md:w-auto justify-center"
                   >
                     <Mail className="w-5 h-5" />
                     <span>Email Us</span>
                   </a>
                   <a
                     href="tel:+233548711582"
-                    className="flex items-center gap-3 px-6 py-2.5 rounded border border-emerald-500/30 text-emerald-400 font-semibold hover:bg-emerald-500/10 transition-all w-full md:w-auto justify-center"
+                    className="flex items-center gap-3 px-8 py-2 rounded border-2 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-bold hover:bg-emerald-500/10 transition-all w-full md:w-auto justify-center"
                   >
                     <Phone className="w-5 h-5" />
                     <span>Call Support</span>
@@ -192,7 +217,7 @@ const Support = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
       <Footer />

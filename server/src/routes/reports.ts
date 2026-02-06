@@ -31,131 +31,89 @@ const safeParse = (val: unknown): unknown => {
 // GET /api/reports/stats - Get dashboard stats
 router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
-    // Current totals
-    const revenueResult = await db.query(
-      "SELECT SUM(total) as total FROM orders WHERE status != 'cancelled'",
-    );
-    const totalRevenue = Number.parseFloat(revenueResult.rows[0]?.total || "0");
+    // 1. Consolidated Orders Stats
+    const orderStatsResult = await db.query(`
+      SELECT 
+        COUNT(*) as total_orders,
+        SUM(total) FILTER (WHERE status != 'cancelled') as total_revenue,
+        COUNT(*) FILTER (WHERE status = 'pending') as pending_orders,
+        
+        -- Revenue Growth
+        SUM(total) FILTER (WHERE status != 'cancelled' AND "createdAt" >= NOW() - INTERVAL '30 days') as current_revenue_30d,
+        SUM(total) FILTER (WHERE status != 'cancelled' AND "createdAt" < NOW() - INTERVAL '30 days' AND "createdAt" >= NOW() - INTERVAL '60 days') as prev_revenue_30d,
+        
+        -- Orders Growth
+        COUNT(*) FILTER (WHERE "createdAt" >= NOW() - INTERVAL '30 days') as current_orders_30d,
+        COUNT(*) FILTER (WHERE "createdAt" < NOW() - INTERVAL '30 days' AND "createdAt" >= NOW() - INTERVAL '60 days') as prev_orders_30d,
+        
+        -- Pending Trend
+        COUNT(*) FILTER (WHERE status = 'pending' AND "createdAt" >= NOW() - INTERVAL '24 hours') as current_pending_24h,
+        COUNT(*) FILTER (WHERE status = 'pending' AND "createdAt" < NOW() - INTERVAL '24 hours' AND "createdAt" >= NOW() - INTERVAL '48 hours') as prev_pending_24h
+      FROM orders
+    `);
 
-    const ordersResult = await db.query("SELECT COUNT(*) as count FROM orders");
-    const totalOrders = Number.parseInt(ordersResult.rows[0]?.count || "0", 10);
+    const os = orderStatsResult.rows[0];
+    const totalRevenue = Number.parseFloat(os.total_revenue || "0");
+    const totalOrders = Number.parseInt(os.total_orders || "0", 10);
+    const pendingOrders = Number.parseInt(os.pending_orders || "0", 10);
 
-    const productsResult = await db.query(
-      "SELECT COUNT(*) as count FROM products",
-    );
-    const totalProducts = Number.parseInt(
-      productsResult.rows[0]?.count || "0",
+    // Revenue Growth calculation
+    const currentRevenue = Number.parseFloat(os.current_revenue_30d || "0");
+    const prevRevenue = Number.parseFloat(os.prev_revenue_30d || "0");
+    let revenueGrowth = 0;
+    if (prevRevenue === 0) {
+      revenueGrowth = currentRevenue > 0 ? 100 : 0;
+    } else {
+      revenueGrowth = ((currentRevenue - prevRevenue) / prevRevenue) * 100;
+    }
+
+    // Orders Growth calculation
+    const currentOrdersCount = Number.parseInt(
+      os.current_orders_30d || "0",
       10,
     );
+    const prevOrdersCount = Number.parseInt(os.prev_orders_30d || "0", 10);
+    let ordersGrowth = 0;
+    if (prevOrdersCount === 0) {
+      ordersGrowth = currentOrdersCount > 0 ? 100 : 0;
+    } else {
+      ordersGrowth =
+        ((currentOrdersCount - prevOrdersCount) / prevOrdersCount) * 100;
+    }
 
-    const pendingResult = await db.query(
-      "SELECT COUNT(*) as count FROM orders WHERE status = 'pending'",
-    );
-    const pendingOrders = Number.parseInt(
-      pendingResult.rows[0]?.count || "0",
-      10,
-    );
-
-    // --- Growth Calculations ---
-
-    // Revenue Growth (Last 30 days vs 30 days before)
-    const currentRevenueRes = await db.query(
-      "SELECT SUM(total) as total FROM orders WHERE status != 'cancelled' AND \"createdAt\" >= NOW() - INTERVAL '30 days'",
-    );
-    const prevRevenueRes = await db.query(
-      "SELECT SUM(total) as total FROM orders WHERE status != 'cancelled' AND \"createdAt\" < NOW() - INTERVAL '30 days' AND \"createdAt\" >= NOW() - INTERVAL '60 days'",
-    );
-    const currentRevenue = Number.parseFloat(
-      currentRevenueRes.rows[0]?.total || "0",
-    );
-    const prevRevenue = Number.parseFloat(prevRevenueRes.rows[0]?.total || "0");
-    const revenueGrowth =
-      prevRevenue === 0
-        ? currentRevenue > 0
-          ? 100
-          : 0
-        : ((currentRevenue - prevRevenue) / prevRevenue) * 100;
-
-    // Orders Growth (Last 30 days vs 30 days before)
-    const currentOrdersRes = await db.query(
-      "SELECT COUNT(*) as count FROM orders WHERE \"createdAt\" >= NOW() - INTERVAL '30 days'",
-    );
-    const prevOrdersRes = await db.query(
-      "SELECT COUNT(*) as count FROM orders WHERE \"createdAt\" < NOW() - INTERVAL '30 days' AND \"createdAt\" >= NOW() - INTERVAL '60 days'",
-    );
-    const currentOrders = Number.parseInt(
-      currentOrdersRes.rows[0]?.count || "0",
-      10,
-    );
-    const prevOrders = Number.parseInt(prevOrdersRes.rows[0]?.count || "0", 10);
-    const ordersGrowth =
-      prevOrders === 0
-        ? currentOrders > 0
-          ? 100
-          : 0
-        : ((currentOrders - prevOrders) / prevOrders) * 100;
-
-    // New Products (Last 7 days)
-    const newProductsRes = await db.query(
-      "SELECT COUNT(*) as count FROM products WHERE \"createdAt\" >= NOW() - INTERVAL '7 days'",
-    );
-    const newProductsCount = Number.parseInt(
-      newProductsRes.rows[0]?.count || "0",
-      10,
-    );
-
-    // Pending Orders Trend (vs yesterday)
-    const currentPendingRes = await db.query(
-      "SELECT COUNT(*) as count FROM orders WHERE status = 'pending' AND \"createdAt\" >= NOW() - INTERVAL '24 hours'",
-    );
-    const prevPendingRes = await db.query(
-      "SELECT COUNT(*) as count FROM orders WHERE status = 'pending' AND \"createdAt\" < NOW() - INTERVAL '24 hours' AND \"createdAt\" >= NOW() - INTERVAL '48 hours'",
-    );
+    // Pending Growth calculation
     const currentPendingToday = Number.parseInt(
-      currentPendingRes.rows[0]?.count || "0",
+      os.current_pending_24h || "0",
       10,
     );
     const prevPendingYesterday = Number.parseInt(
-      prevPendingRes.rows[0]?.count || "0",
+      os.prev_pending_24h || "0",
       10,
     );
-    const pendingGrowth =
-      prevPendingYesterday === 0
-        ? currentPendingToday > 0
-          ? 100
-          : 0
-        : ((currentPendingToday - prevPendingYesterday) /
-            prevPendingYesterday) *
-          100;
-
-    // Low Stock Products and Out of Stock
-    let lowStockProducts = 0;
-    let outOfStockProducts = 0;
-    try {
-      const lowStockResult = await db.query(
-        'SELECT COUNT(*) as count FROM products WHERE "stockQuantity" <= 10 AND "stockQuantity" > 0',
-      );
-      lowStockProducts = Number.parseInt(
-        lowStockResult.rows[0]?.count || "0",
-        10,
-      );
-
-      const outOfStockResult = await db.query(
-        'SELECT COUNT(*) as count FROM products WHERE "inStock" = false OR "stockQuantity" = 0',
-      );
-      outOfStockProducts = Number.parseInt(
-        outOfStockResult.rows[0]?.count || "0",
-        10,
-      );
-    } catch {
-      const lowStockResult = await db.query(
-        'SELECT COUNT(*) as count FROM products WHERE "inStock" = false',
-      );
-      lowStockProducts = Number.parseInt(
-        lowStockResult.rows[0]?.count || "0",
-        10,
-      );
+    let pendingGrowth = 0;
+    if (prevPendingYesterday === 0) {
+      pendingGrowth = currentPendingToday > 0 ? 100 : 0;
+    } else {
+      pendingGrowth =
+        ((currentPendingToday - prevPendingYesterday) / prevPendingYesterday) *
+        100;
     }
+
+    // 2. Consolidated Product Stats
+    const productStatsResult = await db.query(`
+      SELECT 
+        COUNT(*) as total_products,
+        COUNT(*) FILTER (WHERE "createdAt" >= NOW() - INTERVAL '7 days') as new_products_7d,
+        COUNT(*) FILTER (WHERE "stockQuantity" <= 10 AND "stockQuantity" > 0) as low_stock,
+        COUNT(*) FILTER (WHERE "inStock" = false OR "stockQuantity" = 0) as out_of_stock
+      FROM products
+    `);
+
+    const ps = productStatsResult.rows[0];
+    const totalProducts = Number.parseInt(ps.total_products || "0", 10);
+    const newProductsCount = Number.parseInt(ps.new_products_7d || "0", 10);
+    const lowStockProducts = Number.parseInt(ps.low_stock || "0", 10);
+    const outOfStockProducts = Number.parseInt(ps.out_of_stock || "0", 10);
 
     res.json({
       revenue: totalRevenue,
