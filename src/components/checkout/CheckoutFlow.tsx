@@ -249,11 +249,6 @@ const CheckoutFlow = () => {
         setConfirmedTotal(total);
 
         if (["momo", "card", "paystack"].includes(data.paymentMethod)) {
-          if (import.meta.env.DEV) {
-            clearCart();
-            globalThis.location.href = `/mock-payment?orderId=${response.orderId}&amount=${total}`;
-            return;
-          }
           try {
             const paymentResponse = await initializePayment(
               response.orderId,

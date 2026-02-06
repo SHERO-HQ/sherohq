@@ -61,12 +61,6 @@ function getAuthToken(): string | null {
 // Helper to safely parse JSON and handle errors
 async function handleResponse<T>(response: Response): Promise<T> {
   const text = await response.text();
-  console.log(`[API Response] ${response.status} ${response.url}`, {
-    status: response.status,
-    ok: response.ok,
-    contentType: response.headers.get("content-type"),
-    bodySample: text.substring(0, 200),
-  });
 
   if (!response.ok) {
     const contentType = response.headers.get("content-type");
@@ -139,7 +133,6 @@ export async function fetchProducts(
   if (search) params.append("search", search);
 
   const url = `${API_BASE}/products${params.toString() ? "?" + params.toString() : ""}`;
-  console.log(`[API Fetch] fetchProducts URL: ${url}`);
   const response = await fetch(url);
   return handleResponse<Product[]>(response);
 }

@@ -20,7 +20,6 @@ import Login from "@/pages/auth/Login";
 import Signup from "@/pages/auth/Signup";
 import Profile from "@/pages/auth/Profile";
 import VerifyEmail from "@/pages/auth/VerifyEmail";
-import MockPaymentGateway from "@/pages/MockPaymentGateway";
 // Admin imports
 import { AdminProvider } from "@/context/AdminContext";
 import ProtectedRoute from "@/components/admin/ProtectedRoute";
@@ -351,7 +350,6 @@ const AppRoutes = () => {
       <Route path="signup" element={<Signup />} />
       <Route path="profile" element={<Profile />} />
       <Route path="verify-email" element={<VerifyEmail />} />
-      <Route path="mock-payment" element={<MockPaymentGateway />} />
 
       {/* Support Guide Routes */}
       <Route
