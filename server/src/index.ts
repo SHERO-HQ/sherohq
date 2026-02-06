@@ -5,7 +5,7 @@ import { rateLimit } from "express-rate-limit";
 import * as dotenv from "dotenv";
 
 // Database
-import db, { initializeDatabase } from "./db/database";
+import { initializeDatabase } from "./db/database";
 import { seedAdminUser } from "./db/seed";
 import { adminAuth } from "./middleware/adminAuth";
 
@@ -218,6 +218,7 @@ app.listen(PORT, async () => {
   try {
     console.time("⏱️ Database Startup");
     await initializeDatabase();
+    await seedAdminUser();
     console.timeEnd("⏱️ Database Startup");
     console.log("✅ Database is ready to handle requests.");
   } catch (err) {
