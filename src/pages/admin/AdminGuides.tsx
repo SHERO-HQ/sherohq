@@ -13,6 +13,8 @@ import {
   useUpdateGuide,
   useDeleteGuide,
 } from "@/hooks/queries/useGuides";
+import AdminLayout from "@/components/admin/AdminLayout";
+import { ArrowLeft } from "lucide-react";
 
 const AdminGuides = () => {
   const navigate = useNavigate();
@@ -206,46 +208,61 @@ const AdminGuides = () => {
   }
 
   return (
-    <div className="space-y-8 p-6 lg:p-10">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold font-sora text-white">
-            Support Guides
-          </h1>
-          <p className="text-slate-400 mt-1">
-            Create and manage hardware & software guides
-          </p>
+    <AdminLayout>
+      <div className="space-y-8 animate-in fade-in duration-500">
+        <div className="flex flex-col gap-4">
+          {/* Back Button */}
+          <div>
+            <UniversalLink
+              to="/admin/dashboard"
+              className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors group"
+            >
+              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+              <span>Back to Dashboard</span>
+            </UniversalLink>
+          </div>
+
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+              <h1 className="text-3xl font-bold font-sora text-white">
+                Support Guides
+              </h1>
+              <p className="text-slate-400 mt-1">
+                Create and manage hardware & software guides
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+              <Input
+                placeholder="Search guides..."
+                className="pl-4 w-full sm:w-64 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <Button
+                className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                asChild
+              >
+                <UniversalLink to="/admin/guides/new">New Guide</UniversalLink>
+              </Button>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
-          <Input
-            placeholder="Search guides..."
-            className="pl-4 w-full sm:w-64 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <Button
-            className="bg-emerald-600 hover:bg-emerald-500 text-white"
-            asChild
-          >
-            <UniversalLink to="/admin/guides/new">New Guide</UniversalLink>
-          </Button>
-        </div>
+
+        {renderContent}
+
+        {/* Delete Confirmation Modal */}
+        <ConfirmDialog
+          isOpen={!!deleteTarget}
+          onClose={() => setDeleteTarget(null)}
+          onConfirm={handleDelete}
+          title="Delete Guide"
+          message={`Are you sure you want to delete "${deleteTarget?.title}"? This action cannot be undone.`}
+          confirmText="Delete"
+          variant="danger"
+          isLoading={isDeleting}
+        />
       </div>
-
-      {renderContent}
-
-      {/* Delete Confirmation Modal */}
-      <ConfirmDialog
-        isOpen={!!deleteTarget}
-        onClose={() => setDeleteTarget(null)}
-        onConfirm={handleDelete}
-        title="Delete Guide"
-        message={`Are you sure you want to delete "${deleteTarget?.title}"? This action cannot be undone.`}
-        confirmText="Delete"
-        variant="danger"
-        isLoading={isDeleting}
-      />
-    </div>
+    </AdminLayout>
   );
 };
 

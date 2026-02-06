@@ -910,7 +910,7 @@ export async function seedActivityLogs() {
 
 // Main function to run all seeders
 export async function seedAllAdminData() {
-  console.log("\n🌱 Starting admin data seeding...\n");
+  console.log("🌱 Starting admin data seeding...");
 
   await seedUsers();
   await seedOrders();
@@ -920,7 +920,7 @@ export async function seedAllAdminData() {
   await seedReviews();
   await seedActivityLogs();
 
-  console.log("\n✅ Admin data seeding complete!\n");
+  console.log("✅ Admin data seeding complete!");
 }
 
 // Allow running directly

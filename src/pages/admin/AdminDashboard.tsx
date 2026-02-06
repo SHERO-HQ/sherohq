@@ -204,7 +204,7 @@ export default function AdminDashboard() {
         icon: DollarSign,
         color: "text-emerald-400",
         bgColor: "bg-emerald-400/10",
-        trend: "+12.5%",
+        trend: `${(stats?.revenueGrowth ?? 0) >= 0 ? "+" : ""}${stats?.revenueGrowth ?? 0}%`,
         subtext: "from last month",
       },
       {
@@ -213,7 +213,7 @@ export default function AdminDashboard() {
         icon: ShoppingCart,
         color: "text-blue-400",
         bgColor: "bg-blue-400/10",
-        trend: "+8.2%",
+        trend: `${(stats?.ordersGrowth ?? 0) >= 0 ? "+" : ""}${stats?.ordersGrowth ?? 0}%`,
         subtext: "from last month",
       },
       {
@@ -222,7 +222,7 @@ export default function AdminDashboard() {
         icon: Package,
         color: "text-purple-400",
         bgColor: "bg-purple-400/10",
-        trend: "+2 new",
+        trend: `+${stats?.newProductsCount ?? 0} new`,
         subtext: "added this week",
       },
       {
@@ -231,7 +231,7 @@ export default function AdminDashboard() {
         icon: Clock,
         color: "text-amber-400",
         bgColor: "bg-amber-400/10",
-        trend: "-15%",
+        trend: `${(stats?.pendingGrowth ?? 0) >= 0 ? "+" : ""}${stats?.pendingGrowth ?? 0}%`,
         subtext: "than yesterday",
       },
     ],

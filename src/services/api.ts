@@ -656,6 +656,10 @@ export interface AdminStats {
   lowStock: number;
   outOfStock: number;
   pendingOrders: number;
+  revenueGrowth: number;
+  ordersGrowth: number;
+  newProductsCount: number;
+  pendingGrowth: number;
 }
 
 // Auth functions
@@ -699,7 +703,7 @@ export async function fetchRegionalReport(): Promise<RegionalData[]> {
 }
 
 export async function getAdminStats(): Promise<AdminStats> {
-  const response = await authFetch(`${API_BASE}/admin/stats`);
+  const response = await authFetch(`${API_BASE}/reports/stats`);
   return handleResponse(response);
 }
 

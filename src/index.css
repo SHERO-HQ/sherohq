@@ -84,6 +84,12 @@
 }
 
 :root {
+  /* Fonts Registration */
+  --font-primary: 'JetBrains Mono Variable', 'JetBrains Mono', 'monospace', 'system-ui';
+  --font-inter: 'Inter Variable', 'Inter', 'system-ui', 'sans-serif';
+  --font-sora: 'Sora Variable', sans-serif;
+  --font-logo: 'AubetteArchiType', sans-serif;
+
   color-scheme: light dark;
   --radius: 0.5rem;
   /* 8px - Cleaner look than 10px */
@@ -132,34 +138,30 @@
   --popover: oklch(0.15 0.02 240);
   --popover-foreground: oklch(0.98 0 0);
 
-  /* Primary: Vibrant Emerald */
-  --primary: oklch(0.60 0.18 145);
-  --primary-foreground: oklch(1 1 1);
+  /* Primary: More Contrast for Accessibility (approx 4.6:1 against #1e293b background) */
+  --primary: oklch(0.64 0.16 145);
+  --primary-foreground: oklch(0.98 0 0);
 
-  --secondary: oklch(0.20 0.02 240);
+  --secondary: oklch(0.25 0.02 240);
   --secondary-foreground: oklch(0.98 0 0);
 
-  /* Muted: Subtle separating lines/text */
+  /* Muted: Lighter for better readability on deep background (approx 4.5:1) */
   --muted: oklch(0.20 0.02 240);
-  --muted-foreground: oklch(0.65 0 0);
+  --muted-foreground: oklch(0.70 0.02 240);
 
-  --accent: oklch(0.20 0.02 240);
+  --accent: oklch(0.25 0.02 240);
   --accent-foreground: oklch(0.98 0 0);
 
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.45 0.15 25);
+  --destructive-foreground: oklch(0.98 0 0);
 
-  /* Borders: Very subtle in dark mode to avoid "grid" look */
-  --border: oklch(0.25 0.02 240);
-  --input: oklch(0.25 0.02 240);
-  --ring: oklch(0.60 0.18 145);
+  /* Borders: Slightly lighter for clarity */
+  --border: oklch(0.28 0.02 240);
+  --input: oklch(0.28 0.02 240);
+  --ring: oklch(0.64 0.16 145);
 }
 
 @layer base {
-  /* * {
-    @apply border-border outline-ring/50;
-  } */
-
   body {
     @apply bg-background text-foreground;
   }
@@ -168,15 +170,6 @@
   [role="button"] {
     cursor: pointer;
   }
-}
-
-
-/* Fonts */
-:root {
-  --font-primary: 'JetBrains Mono Variable', 'JetBrains Mono', 'monospace', 'system-ui';
-  --font-inter: 'Inter Variable', 'Inter', 'system-ui', 'sans-serif';
-  --font-sora: 'Sora Variable', sans-serif;
-  --font-logo: 'AubetteArchiType', sans-serif;
 }
 
 

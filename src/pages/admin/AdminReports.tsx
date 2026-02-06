@@ -250,6 +250,8 @@ export default function AdminReports() {
               icon={DollarSign}
               color="text-emerald-400"
               bg="bg-emerald-400/10"
+              trend={stats?.revenueGrowth}
+              subtext="vs last month"
             />
             <StatCard
               title="Total Orders"
@@ -257,6 +259,8 @@ export default function AdminReports() {
               icon={ShoppingCart}
               color="text-blue-400"
               bg="bg-blue-400/10"
+              trend={stats?.ordersGrowth}
+              subtext="vs last month"
             />
             <StatCard
               title="Total Products"
@@ -264,6 +268,12 @@ export default function AdminReports() {
               icon={Package}
               color="text-purple-400"
               bg="bg-purple-400/10"
+              trend={
+                (stats?.newProductsCount ?? 0) > 0
+                  ? `+${stats?.newProductsCount} new`
+                  : undefined
+              }
+              subtext="this week"
             />
             <StatCard
               title="Low Stock"
@@ -659,18 +669,52 @@ interface StatCardProps {
   icon: React.ElementType;
   color: string;
   bg: string;
+  trend?: number | string;
+  subtext?: string;
 }
 
-function StatCard({ title, value, icon: Icon, color, bg }: StatCardProps) {
+function StatCard({
+  title,
+  value,
+  icon: Icon,
+  color,
+  bg,
+  trend,
+  subtext,
+}: StatCardProps) {
+  const isPositive = typeof trend === "number" ? trend >= 0 : true;
+
   return (
-    <div className="bg-slate-900/50 border border-slate-800 rounded p-6 flex items-center gap-4">
-      <div className={`p-3 rounded ${bg} ${color}`}>
-        <Icon className="w-6 h-6" />
+    <div className="bg-slate-900/50 border border-slate-800 rounded p-6 flex flex-col gap-4">
+      <div className="flex items-center gap-4">
+        <div className={`p-3 rounded ${bg} ${color}`}>
+          <Icon className="w-6 h-6" />
+        </div>
+        <div>
+          <p className="text-sm font-medium text-slate-400 font-sora">
+            {title}
+          </p>
+          <p className="text-2xl font-bold text-white">{value}</p>
+        </div>
       </div>
-      <div>
-        <p className="text-sm font-medium text-slate-400 font-sora">{title}</p>
-        <p className="text-2xl font-bold text-white">{value}</p>
-      </div>
+      {trend !== undefined && (
+        <div className="flex items-center gap-2 mt-1">
+          <span
+            className={`text-xs font-bold px-2 py-0.5 rounded ${
+              typeof trend === "number"
+                ? isPositive
+                  ? "bg-emerald-500/10 text-emerald-400"
+                  : "bg-rose-500/10 text-rose-400"
+                : "bg-blue-500/10 text-blue-400"
+            }`}
+          >
+            {typeof trend === "number"
+              ? `${isPositive ? "+" : ""}${trend}%`
+              : trend}
+          </span>
+          {subtext && <span className="text-xs text-slate-500">{subtext}</span>}
+        </div>
+      )}
     </div>
   );
 }

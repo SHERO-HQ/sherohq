@@ -99,7 +99,7 @@ const LandingHero: React.FC = () => {
               repeat: Infinity,
               ease: "linear",
             }}
-            className="absolute w-1 h-1 bg-emerald-500 rounded-full"
+            className="absolute w-1 h-1 bg-primary rounded-full"
           />
         ))}
       </div>
@@ -141,7 +141,7 @@ const LandingHero: React.FC = () => {
                       key={`${word}-${i}-${word}`}
                       className={
                         word === "Possible"
-                          ? "text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400"
+                          ? "text-transparent bg-clip-text bg-linear-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-400"
                           : ""
                       }
                     >
@@ -185,10 +185,12 @@ const LandingHero: React.FC = () => {
 
               <UniversalLink
                 to="/consultation"
-                className="group flex items-center justify-center gap-3 text-slate-900 dark:text-white font-mono text-sm font-bold tracking-tight border-2  hover:border-emerald-500/50! rounded px-4 py-2 h-10 w-full border-slate-200 dark:border-slate-800 pb-1 transition-all"
+                className="group flex items-center justify-center gap-3 text-foreground font-mono text-sm font-bold tracking-tight border-2  hover:border-primary/50! rounded px-4 py-2 h-10 w-full border-border pb-1 transition-all"
+                role="button"
+                aria-label="Request a Quote"
               >
                 Request a Quote
-                <MessageSquareDot className="w-5 h-5 text-emerald-500" />
+                <MessageSquareDot className="w-5 h-5 text-primary" />
               </UniversalLink>
             </motion.div>
 
@@ -248,7 +250,11 @@ const LandingHero: React.FC = () => {
                 <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-100 dark:border-slate-800">
                   <div className="flex items-center gap-3">
                     <div className="flex items-center justify-center">
-                      <img src={Logo} alt="SHERO" className="sm:w-10 sm:h-10 w-8 h-8" />
+                      <img
+                        src={Logo}
+                        alt="SHERO"
+                        className="sm:w-10 sm:h-10 w-8 h-8"
+                      />
                     </div>
                     <div>
                       <h4 className="text-xs font-bold font-sora text-slate-900 dark:text-white">
@@ -260,7 +266,7 @@ const LandingHero: React.FC = () => {
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-1">
-                    <span className="text-[9px] font-mono font-bold text-emerald-500 px-2 py-0.5 rounded-full bg-emerald-500/10">
+                    <span className="text-[9px] font-mono font-bold text-primary px-2 py-0.5 rounded-full bg-primary/10">
                       SYSTEMS_ACTIVE
                     </span>
                     <span className="text-[8px] font-mono text-slate-400">
@@ -343,7 +349,7 @@ const LandingHero: React.FC = () => {
                     initial={{ width: 0 }}
                     animate={{ width: "99.9%" }}
                     transition={{ duration: 2, ease: "easeOut" }}
-                    className="h-full bg-emerald-500"
+                    className="h-full bg-primary"
                   />
                 </div>
                 <div className="mt-3 flex items-center justify-between">

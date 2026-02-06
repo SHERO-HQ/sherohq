@@ -1,14 +1,5 @@
 import { useState, useRef } from "react";
-import {
-  User,
-  Lock,
-  Save,
-  Loader2,
-  Mail,
-  Shield,
-  Camera,
-  AlertCircle,
-} from "lucide-react";
+import { User, Save, Loader2, Shield, Camera, AlertCircle } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { useTitle } from "@/hooks/useTitle";
 import { updateAdminProfile, uploadImage, getImageUrl } from "@/services/api";
@@ -102,12 +93,12 @@ export default function AdminProfile() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1 space-y-6">
-            <Card className="bg-slate-900 border-white/5 overflow-hidden">
+            <Card className="bg-card border-border overflow-hidden">
               <div className="h-24 bg-linear-to-br from-emerald-600 to-blue-600" />
               <div className="px-6 pb-6 relative">
                 <div className="flex justify-center -mt-12 mb-4">
                   <div className="relative group">
-                    <div className="w-24 h-24 rounded bg-slate-800 border-4 border-slate-900 overflow-hidden shadow-2xl">
+                    <div className="w-24 h-24 rounded bg-background border-4 border-card overflow-hidden shadow-2xl">
                       {avatar ? (
                         <img
                           src={getImageUrl(avatar)}
@@ -115,7 +106,7 @@ export default function AdminProfile() {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-slate-800">
+                        <div className="w-full h-full flex items-center justify-center bg-muted">
                           <User className="w-10 h-10 text-slate-600" />
                         </div>
                       )}
@@ -168,67 +159,13 @@ export default function AdminProfile() {
           </div>
 
           <div className="lg:col-span-2 space-y-6">
-            <Card className="bg-slate-900 border-white/5">
+            <Card className="bg-card border-border">
               <form
                 onSubmit={handleUpdateProfile}
                 className="p-6 md:p-8 space-y-8"
               >
                 <div className="space-y-6">
-                  <div className="flex items-center gap-2 pb-2 border-b border-white/5">
-                    <User className="w-5 h-5 text-emerald-400" />
-                    <h3 className="text-lg font-bold text-white font-sora">
-                      Personal Information
-                    </h3>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="username"
-                        className="text-sm font-medium text-slate-400"
-                      >
-                        Username
-                      </label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
-                        <Input
-                          id="username"
-                          value={username}
-                          onChange={(e) => setUsername(e.target.value)}
-                          className="pl-10 bg-slate-800/50 border-white/5 text-white"
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <label
-                        htmlFor="email"
-                        className="text-sm font-medium text-slate-400"
-                      >
-                        Email Address
-                      </label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600" />
-                        <Input
-                          id="email"
-                          type="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="pl-10 bg-slate-800/50 border-white/5 text-white"
-                          required
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-6">
-                  <div className="flex items-center gap-2 pb-2 border-b border-white/5">
-                    <Lock className="w-5 h-5 text-emerald-400" />
-                    <h3 className="text-lg font-bold text-white font-sora">
-                      Security Settings
-                    </h3>
-                  </div>
-                  <div className="p-4 rounded bg-slate-800/30 border border-white/5 space-y-6">
+                  <div className="p-4 rounded bg-muted/30 border border-border space-y-6">
                     <p className="text-sm text-slate-500 flex items-center gap-2">
                       <AlertCircle className="w-4 h-4" /> Keep blank to maintain
                       current password
@@ -246,7 +183,7 @@ export default function AdminProfile() {
                           type="password"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="bg-slate-800/50 border-white/5 text-white"
+                          className="bg-muted/50 border-border text-foreground"
                           placeholder="••••••••"
                         />
                       </div>
@@ -262,7 +199,7 @@ export default function AdminProfile() {
                           type="password"
                           value={confirmPassword}
                           onChange={(e) => setConfirmPassword(e.target.value)}
-                          className="bg-slate-800/50 border-white/5 text-white"
+                          className="bg-muted/50 border-border text-foreground"
                           placeholder="••••••••"
                         />
                       </div>
@@ -287,7 +224,7 @@ export default function AdminProfile() {
                   <Button
                     type="submit"
                     disabled={isUpdating}
-                    className="bg-emerald-600 hover:bg-emerald-500 text-white min-w-[140px]"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground min-w-[140px]"
                   >
                     {isUpdating ? (
                       <Loader2 className="w-4 h-4 animate-spin mr-2" />

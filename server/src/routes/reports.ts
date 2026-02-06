@@ -31,17 +31,15 @@ const safeParse = (val: unknown): unknown => {
 // GET /api/reports/stats - Get dashboard stats
 router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
-    // Total Revenue
+    // Current totals
     const revenueResult = await db.query(
       "SELECT SUM(total) as total FROM orders WHERE status != 'cancelled'",
     );
     const totalRevenue = Number.parseFloat(revenueResult.rows[0]?.total || "0");
 
-    // Total Orders
     const ordersResult = await db.query("SELECT COUNT(*) as count FROM orders");
     const totalOrders = Number.parseInt(ordersResult.rows[0]?.count || "0", 10);
 
-    // Total Products
     const productsResult = await db.query(
       "SELECT COUNT(*) as count FROM products",
     );
@@ -50,7 +48,6 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
       10,
     );
 
-    // Pending Orders
     const pendingResult = await db.query(
       "SELECT COUNT(*) as count FROM orders WHERE status = 'pending'",
     );
@@ -58,6 +55,78 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
       pendingResult.rows[0]?.count || "0",
       10,
     );
+
+    // --- Growth Calculations ---
+
+    // Revenue Growth (Last 30 days vs 30 days before)
+    const currentRevenueRes = await db.query(
+      "SELECT SUM(total) as total FROM orders WHERE status != 'cancelled' AND \"createdAt\" >= NOW() - INTERVAL '30 days'",
+    );
+    const prevRevenueRes = await db.query(
+      "SELECT SUM(total) as total FROM orders WHERE status != 'cancelled' AND \"createdAt\" < NOW() - INTERVAL '30 days' AND \"createdAt\" >= NOW() - INTERVAL '60 days'",
+    );
+    const currentRevenue = Number.parseFloat(
+      currentRevenueRes.rows[0]?.total || "0",
+    );
+    const prevRevenue = Number.parseFloat(prevRevenueRes.rows[0]?.total || "0");
+    const revenueGrowth =
+      prevRevenue === 0
+        ? currentRevenue > 0
+          ? 100
+          : 0
+        : ((currentRevenue - prevRevenue) / prevRevenue) * 100;
+
+    // Orders Growth (Last 30 days vs 30 days before)
+    const currentOrdersRes = await db.query(
+      "SELECT COUNT(*) as count FROM orders WHERE \"createdAt\" >= NOW() - INTERVAL '30 days'",
+    );
+    const prevOrdersRes = await db.query(
+      "SELECT COUNT(*) as count FROM orders WHERE \"createdAt\" < NOW() - INTERVAL '30 days' AND \"createdAt\" >= NOW() - INTERVAL '60 days'",
+    );
+    const currentOrders = Number.parseInt(
+      currentOrdersRes.rows[0]?.count || "0",
+      10,
+    );
+    const prevOrders = Number.parseInt(prevOrdersRes.rows[0]?.count || "0", 10);
+    const ordersGrowth =
+      prevOrders === 0
+        ? currentOrders > 0
+          ? 100
+          : 0
+        : ((currentOrders - prevOrders) / prevOrders) * 100;
+
+    // New Products (Last 7 days)
+    const newProductsRes = await db.query(
+      "SELECT COUNT(*) as count FROM products WHERE \"createdAt\" >= NOW() - INTERVAL '7 days'",
+    );
+    const newProductsCount = Number.parseInt(
+      newProductsRes.rows[0]?.count || "0",
+      10,
+    );
+
+    // Pending Orders Trend (vs yesterday)
+    const currentPendingRes = await db.query(
+      "SELECT COUNT(*) as count FROM orders WHERE status = 'pending' AND \"createdAt\" >= NOW() - INTERVAL '24 hours'",
+    );
+    const prevPendingRes = await db.query(
+      "SELECT COUNT(*) as count FROM orders WHERE status = 'pending' AND \"createdAt\" < NOW() - INTERVAL '24 hours' AND \"createdAt\" >= NOW() - INTERVAL '48 hours'",
+    );
+    const currentPendingToday = Number.parseInt(
+      currentPendingRes.rows[0]?.count || "0",
+      10,
+    );
+    const prevPendingYesterday = Number.parseInt(
+      prevPendingRes.rows[0]?.count || "0",
+      10,
+    );
+    const pendingGrowth =
+      prevPendingYesterday === 0
+        ? currentPendingToday > 0
+          ? 100
+          : 0
+        : ((currentPendingToday - prevPendingYesterday) /
+            prevPendingYesterday) *
+          100;
 
     // Low Stock Products and Out of Stock
     let lowStockProducts = 0;
@@ -79,7 +148,6 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
         10,
       );
     } catch {
-      // Fallback if stockQuantity missing
       const lowStockResult = await db.query(
         'SELECT COUNT(*) as count FROM products WHERE "inStock" = false',
       );
@@ -96,6 +164,10 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
       lowStock: lowStockProducts,
       outOfStock: outOfStockProducts,
       pendingOrders: pendingOrders,
+      revenueGrowth: Number(revenueGrowth.toFixed(1)),
+      ordersGrowth: Number(ordersGrowth.toFixed(1)),
+      newProductsCount: newProductsCount,
+      pendingGrowth: Number(pendingGrowth.toFixed(1)),
     });
   } catch (error) {
     console.error("Error fetching stats:", error);

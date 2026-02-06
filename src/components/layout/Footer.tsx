@@ -71,7 +71,7 @@ const Footer = () => {
             </div>
 
             {/* Contact Card */}
-            <div className="p-1 rounded border border-slate-200 dark:border-slate-800 backdrop-blur-sm transition-all duration-300">
+            <div className="p-1 rounded border border-slate-200 dark:border-slate-800 ring-2 ring-emerald-500/20 ring-offset-2 ring-offset-background backdrop-blur-sm transition-all duration-300">
               <div className="bg-background rounded p-6 transition-colors duration-300">
                 <h4 className="text-slate-900 dark:text-white font-sora font-semibold mb-6 flex items-center gap-2 transition-colors duration-300">
                   Contact Details{" "}

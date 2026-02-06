@@ -150,20 +150,24 @@ const SolutionsHero = () => {
               <a
                 href="/consultation"
                 className="inline-flex items-center justify-center gap-3 px-10 py-2 rounded
-                         bg-emerald-600 text-white font-bold
-                         hover:bg-emerald-700 hover:shadow-2xl hover:shadow-emerald-500/30
+                         bg-primary text-primary-foreground font-bold
+                         hover:bg-primary/90 hover:shadow-2xl hover:shadow-primary/30
                          hover:-translate-y-1 transition-all duration-300
                          w-full sm:w-auto text-sm uppercase tracking-wide"
+                role="button"
+                aria-label="Request a Quote"
               >
                 <span>Request a Quote</span>
                 <ArrowRight className="w-5 h-5" />
               </a>
               <a
                 href="#services"
-                className="group flex items-center justify-center gap-3 text-slate-900 dark:text-white font-bold tracking-tight border-2 border-slate-200 dark:border-slate-800 hover:border-blue-500/50! rounded px-8 py-2 w-full sm:w-auto transition-all text-sm uppercase"
+                className="group flex items-center justify-center gap-3 text-foreground font-bold tracking-tight border-2 border-border hover:border-primary/50! rounded px-8 py-2 w-full sm:w-auto transition-all text-sm uppercase"
+                role="button"
+                aria-label="Explore Services"
               >
                 Explore Services
-                <Zap className="w-5 h-5 text-blue-500 group-hover:rotate-12 transition-transform" />
+                <Zap className="w-5 h-5 text-primary group-hover:rotate-12 transition-transform" />
               </a>
             </motion.div>
 
@@ -312,8 +316,9 @@ const SolutionsHero = () => {
                   ))}
                 </div>
                 <div className="flex justify-between items-center text-[8px] font-bold text-slate-900 dark:text-white">
-                  <p>SYSTEM_
-                  <span className="text-emerald-500">PERFORMANCE</span>
+                  <p>
+                    SYSTEM_
+                    <span className="text-emerald-500">PERFORMANCE</span>
                   </p>
                 </div>
               </motion.div>

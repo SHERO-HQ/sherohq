@@ -99,8 +99,8 @@ const ProductHero = () => {
               animate={{ opacity: 1, x: 0 }}
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm mb-4"
             >
-              <ShoppingBag className="size-4 text-emerald-500" />
-              <span className="text-[10px] md:text-xs font-mono font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
+              <ShoppingBag className="size-4 text-primary" />
+              <span className="text-[10px] md:text-xs font-mono font-bold tracking-widest uppercase text-primary">
                 Official SHERO Shop
               </span>
             </motion.div>
@@ -121,7 +121,7 @@ const ProductHero = () => {
                            text-slate-900 dark:text-white mb-6"
               >
                 Premium {"\n"} <br />
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-400">
                   Tech Gear
                 </span>
               </motion.h1>
@@ -167,8 +167,10 @@ const ProductHero = () => {
               ].map((item) => (
                 <div key={item.label} className="flex flex-col gap-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <item.icon className={`w-4 h-4 ${item.color}`} />
-                    <span className="text-xs font-bold font-sora text-slate-900 dark:text-white">
+                    <item.icon
+                      className={`w-4 h-4 ${item.color === "text-emerald-500" ? "text-primary" : item.color}`}
+                    />
+                    <span className="text-xs font-bold font-sora text-foreground">
                       {item.label}
                     </span>
                   </div>
@@ -254,7 +256,9 @@ const ProductHero = () => {
                           {item.val}
                         </span>
                       </div>
-                      <div className={`text-[9px] font-bold ${item.color}`}>
+                      <div
+                        className={`text-[9px] font-bold ${item.color === "text-emerald-500" ? "text-primary" : item.color}`}
+                      >
                         {item.trend}
                       </div>
                     </div>

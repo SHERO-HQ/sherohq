@@ -1,5 +1,7 @@
 import db from "./database";
 import { v4 as uuidv4 } from "uuid";
+import { seedGuides } from "./seed_guides";
+import { seedAllAdminData } from "./seed_admin_data";
 
 // Type definitions for seed data
 interface SeedProduct {
@@ -292,62 +294,66 @@ export async function seedDatabase() {
     );
     const existingProducts = existingProductsRes.rows[0];
 
-    // Count returns a string (bigint) in valid Postgres
-    if (Number(existingProducts.count) > 0) {
-      console.log("📦 Database already seeded, skipping...");
-      return;
-    }
-
     // Begin transaction
     await db.query("BEGIN");
 
-    // Insert products with stockQuantity
-    for (const p of products) {
-      await db.query(
-        `
-        INSERT INTO products (id, name, sku, category, price, "originalPrice", image, images, rating, reviews, badge, "inStock", "stockQuantity", description, features, specifications, condition)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
-      `,
-        [
-          p.id,
-          p.name,
-          p.sku || null,
-          p.category,
-          p.price,
-          p.originalPrice,
-          p.image,
-          p.images ? JSON.stringify(p.images) : null,
-          p.rating,
-          p.reviews,
-          p.badge,
-          p.inStock,
-          p.stockQuantity,
-          p.description,
-          p.features ? JSON.stringify(p.features) : null,
-          p.specifications ? JSON.stringify(p.specifications) : null,
-          p.condition || "New",
-        ],
-      );
-    }
+    // Only seed products if table is empty
+    if (Number(existingProducts.count) === 0) {
+      // Insert products with stockQuantity
+      for (const p of products) {
+        await db.query(
+          `
+          INSERT INTO products (id, name, sku, category, price, "originalPrice", image, images, rating, reviews, badge, "inStock", "stockQuantity", description, features, specifications, condition)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+        `,
+          [
+            p.id,
+            p.name,
+            p.sku || null,
+            p.category,
+            p.price,
+            p.originalPrice,
+            p.image,
+            p.images ? JSON.stringify(p.images) : null,
+            p.rating,
+            p.reviews,
+            p.badge,
+            p.inStock,
+            p.stockQuantity,
+            p.description,
+            p.features ? JSON.stringify(p.features) : null,
+            p.specifications ? JSON.stringify(p.specifications) : null,
+            p.condition || "New",
+          ],
+        );
+      }
 
-    // Insert categories
-    for (const c of categories) {
-      await db.query(
-        `
-        INSERT INTO categories (id, name, icon)
-        VALUES ($1, $2, $3)
-      `,
-        [c.id, c.name, c.icon],
+      // Insert categories
+      for (const c of categories) {
+        await db.query(
+          `
+          INSERT INTO categories (id, name, icon)
+          VALUES ($1, $2, $3)
+        `,
+          [c.id, c.name, c.icon],
+        );
+      }
+      console.log(
+        `✅ Seeded ${products.length} products and ${categories.length} categories`,
       );
+    } else {
+      console.log("📦 Products/Categories already exist, skipping...");
     }
 
     await db.query("COMMIT");
 
-    console.log(
-      `✅ Seeded ${products.length} products and ${categories.length} categories`,
-    );
+    // Seed admin-related data and guides if tables are empty (self-checking in these functions)
+    await seedAllAdminData();
+    await seedGuides();
+
+    console.log("🌟 All database seeding complete!");
   } catch (error) {
-    await db.query("ROLLBACK");
+    if (db.query) await db.query("ROLLBACK");
     console.error("Error seeding database:", error);
     throw error;
   }
@@ -444,6 +450,7 @@ export async function flushTestData() {
     await db.query("DELETE FROM inquiries");
     await db.query("DELETE FROM user_sessions");
     await db.query("DELETE FROM sessions"); // Admin sessions
+    await db.query("DELETE FROM support_guides"); // Added
 
     // Delete all users except our new default user (if we want to keep it)
     await db.query("DELETE FROM users WHERE email != $1", ["user@sherohq.com"]);
@@ -645,5 +652,51 @@ export async function seedStats() {
     console.log(`📊 Seeded ${stats.length} site stats`);
   } catch (error) {
     console.error("Error seeding site stats:", error);
+  }
+}
+
+/**
+ * Purges all test/mock data from the database.
+ * Preserves admin_users and their sessions.
+ */
+export async function flushAllData() {
+  console.log("🧨 Starting database flush...");
+  try {
+    const tables = [
+      "user_sessions",
+      "sessions", // Note: sessions depends on admin_users, but we might want to keep active admin sessions?
+      // If we want to stay logged in, we should NOT flush sessions.
+      // However, the plan says NOT truncate admin_users or sessions.
+      "activity_logs",
+      "tickets",
+      "reviews",
+      "consultations",
+      "inquiries",
+      "orders",
+      "products",
+      "categories",
+      "users",
+      "projects",
+      "support_guides",
+      "team_members",
+      "testimonials",
+      "site_stats",
+    ];
+
+    // Preserve admin sessions if desired, but flushing them just means you login again.
+    // Let's stick to the plan: NOT truncate admin_users or sessions (the one for admins).
+    const tablesToFlush = tables.filter(
+      (t) => t !== "admin_users" && t !== "sessions",
+    );
+
+    for (const table of tablesToFlush) {
+      await db.query(`TRUNCATE TABLE "${table}" RESTART IDENTITY CASCADE`);
+      console.log(`🧹 Flushed table: ${table}`);
+    }
+
+    console.log("✅ Database flush completed successfully");
+  } catch (error) {
+    console.error("❌ Error during database flush:", error);
+    throw error;
   }
 }
