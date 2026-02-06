@@ -269,7 +269,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
 
           <a
             href={`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}?text=${encodeURIComponent(
-              `Hi, I'm interested in inquiring about ${product.name}. Is it available?`,
+              `Hi, I'm interested in inquiring about ${product.name}. Is it still available?`,
             )}`}
             target="_blank"
             rel="noopener noreferrer"

@@ -364,7 +364,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
               {/* WhatsApp Button */}
               <a
                 href={`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}?text=${encodeURIComponent(
-                  `Hi, I'm interested in ${product.name} (Price: GH₵${product.price}). Is it available?`,
+                  `Hi, I'm interested in ${product.name} (Price: GH₵${product.price}). Is it still available?`,
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"
