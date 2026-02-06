@@ -1,7 +1,7 @@
 {
-  "name": "sherotech-server",
+  "name": "sherohq-server",
   "version": "1.0.0",
-  "description": "Backend API for Sherotech",
+  "description": "Backend API for SheroHQ",
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node src/index.ts",

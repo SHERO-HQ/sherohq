@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const BASE_URL = "https://sherotech.com";
+const BASE_URL = "https://sherohq.com";
 const OUTPUT_FILE = path.join(__dirname, "../public/sitemap.xml");
 const PRODUCTS_FILE = path.join(__dirname, "../src/data/products.ts");
 
@@ -26,28 +26,31 @@ const staticRoutes = [
   "/signup",
 ];
 
-function getProductIds() {
+// Fallback IDs if API is not reachable
+const FALLBACK_PRODUCT_IDS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+async function getProductIds() {
   try {
-    const content = fs.readFileSync(PRODUCTS_FILE, "utf8");
-    // Simple regex to find "id: "1"," or 'id: "1",' style entries
-    const regex = /id:\s*["']([^"']+)["']/g;
-    const ids = [];
-    let match;
-    while ((match = regex.exec(content)) !== null) {
-      ids.push(match[1]);
+    // Try to fetch from local API if server is running
+    const response = await fetch("http://localhost:5000/api/products");
+    if (response.ok) {
+      const products = await response.json();
+      const ids = products.map((p) => p.id);
+      console.log(`📡 Fetched ${ids.length} products from API`);
+      return ids;
     }
-    return ids;
-  } catch (error) {
-    console.warn(
-      "Warning: Could not read products file for sitemap generation.",
-      error,
-    );
-    return [];
+  } catch (e) {
+    // Server likely not running
   }
+
+  // Fallback: Read from seed file would be complex due to TS, so using hardcoded list
+  // which matches the seed data we saw in server/src/db/seed.ts
+  console.log("⚠️ API unreachable, using fallback product IDs");
+  return FALLBACK_PRODUCT_IDS;
 }
 
-function generateSitemap() {
-  const productIds = getProductIds();
+async function generateSitemap() {
+  const productIds = await getProductIds();
   const currentDate = new Date().toISOString().split("T")[0];
 
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';

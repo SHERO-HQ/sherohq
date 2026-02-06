@@ -103,7 +103,7 @@ const Terms = () => {
                     href="mailto:legal@sherohq.com"
                     className="text-emerald-600 hover:underline"
                   >
-                    legal@sherohq.com
+                    support@sherohq.com
                   </a>
                 </p>
               </section>

@@ -48,12 +48,7 @@ if (process.env.DATABASE_URL) {
 
 // CORS configuration - Support multiple origins
 const allowedOrigins = [
-  "https://sherotech.vercel.app",
   "https://sherohq.vercel.app",
-  "https://sherotech.com",
-  "https://www.sherotech.com",
-  "https://sherohq.com",
-  "https://www.sherohq.com",
   "https://admin.sherohq.com",
   "https://support.sherohq.com",
   "https://products.sherohq.com",
@@ -193,7 +188,7 @@ app.use("/api/stats", statRoutes);
 app.get("/", (req: Request, res: Response) => {
   res.json({
     message: "Sherotech API is running",
-    frontend: process.env.CORS_ORIGIN || "Deployed separately",
+    frontend: process.env.CORS_ORIGIN || "https://www.sherohq.com",
     endpoints: {
       health: "/api/health",
       products: "/api/products",

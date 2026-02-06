@@ -1,141 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://sherotech.com/</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://sherohq.com/</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sherotech.com/products</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://sherohq.com/products</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sherotech.com/solutions</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://sherohq.com/solutions</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sherotech.com/consultation</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://sherohq.com/consultation</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sherotech.com/about-us</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://sherohq.com/about-us</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sherotech.com/partners</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://sherohq.com/partners</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sherotech.com/support</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://sherohq.com/support</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sherotech.com/faq</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://sherohq.com/faq</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sherotech.com/contact-us</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://sherohq.com/contact-us</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sherotech.com/terms</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://sherohq.com/terms</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sherotech.com/privacy</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://sherohq.com/privacy</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sherotech.com/cookies</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://sherohq.com/cookies</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sherotech.com/login</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://sherohq.com/login</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://sherotech.com/signup</loc>
-    <lastmod>2026-01-27</lastmod>
+    <loc>https://sherohq.com/signup</loc>
+    <lastmod>2026-02-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://sherotech.com/products/1</loc>
-    <lastmod>2026-01-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://sherotech.com/products/2</loc>
-    <lastmod>2026-01-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://sherotech.com/products/3</loc>
-    <lastmod>2026-01-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://sherotech.com/products/4</loc>
-    <lastmod>2026-01-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://sherotech.com/products/5</loc>
-    <lastmod>2026-01-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://sherotech.com/products/6</loc>
-    <lastmod>2026-01-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://sherotech.com/products/7</loc>
-    <lastmod>2026-01-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://sherotech.com/products/8</loc>
-    <lastmod>2026-01-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://sherotech.com/products/9</loc>
-    <lastmod>2026-01-27</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
   </url>
 </urlset>

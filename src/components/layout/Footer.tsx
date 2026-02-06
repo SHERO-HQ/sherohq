@@ -193,7 +193,7 @@ const Footer = () => {
         <div className="relative pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6 transition-colors duration-300">
           {/* Copyright & Legal */}
           <div className="flex flex-col md:flex-row items-center gap-6 text-sm text-slate-500">
-            <p>&copy; {new Date().getFullYear()} Shero Group.</p>
+            <p>&copy;{new Date().getFullYear()} Shero Group.</p>
             <div className="flex items-center gap-6">
               <UniversalLink
                 to="/terms"

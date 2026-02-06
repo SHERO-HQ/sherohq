@@ -127,7 +127,7 @@ class NotificationService {
       .join("");
 
     const baseUrl =
-      process.env.FRONTEND_URL?.replace(/\/$/, "") || "https://sherotech.com";
+      process.env.FRONTEND_URL?.replace(/\/$/, "") || "https://sherohq.com";
     const logoUrl = `${baseUrl}/shero.png`;
 
     const htmlContent = `
@@ -202,7 +202,7 @@ class NotificationService {
 
     const logoUrl = process.env.FRONTEND_URL
       ? `${process.env.FRONTEND_URL}/shero.png`
-      : "https://sherotech.com/shero.png";
+      : "https://sherohq.com/shero.png";
 
     const subject = `Invoice #${shortOrderId} from SHERO Technologies`;
 
@@ -292,7 +292,7 @@ class NotificationService {
 
     const logoUrl = process.env.FRONTEND_URL
       ? `${process.env.FRONTEND_URL}/shero.png`
-      : "https://sherotech.com/shero.png";
+      : "https://sherohq.com/shero.png";
 
     const subject = `Quote #${shortOrderId} from SHERO Technologies`;
 
@@ -402,7 +402,7 @@ class NotificationService {
     });
 
     const baseUrl =
-      process.env.FRONTEND_URL?.replace(/\/$/, "") || "https://sherotech.com";
+      process.env.FRONTEND_URL?.replace(/\/$/, "") || "https://sherohq.com";
     const logoUrl = `${baseUrl}/shero.png`;
 
     const htmlContent = `
@@ -571,7 +571,7 @@ class NotificationService {
     });
 
     const baseUrl =
-      process.env.FRONTEND_URL?.replace(/\/$/, "") || "https://sherotech.com";
+      process.env.FRONTEND_URL?.replace(/\/$/, "") || "https://sherohq.com";
     const logoUrl = `${baseUrl}/shero.png`;
 
     const htmlContent = `

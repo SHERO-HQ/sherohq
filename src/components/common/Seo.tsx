@@ -18,7 +18,7 @@ const Seo = ({
   const siteTitle = "SHERO - Redefine Possible";
   const defaultDescription =
     "Innovative technology solutions that scale to elevate people, businesses, and communities. Premium tech products, consultation, partnerships, and custom software development.";
-  const siteUrl = "https://sherotech.com"; // Replace with actual domain when live
+  const siteUrl = "https://www.sherohq.com"; // Replace with actual domain when live
   const defaultImage = "/og-image.jpg"; // You should ensure this image exists in public folder
 
   const metaTitle = title ? `${title} | SHERO` : siteTitle;
