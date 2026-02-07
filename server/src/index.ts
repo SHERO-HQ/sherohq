@@ -48,6 +48,8 @@ if (process.env.DATABASE_URL) {
 
 // CORS configuration - Support multiple origins
 const allowedOrigins = [
+  "https://sherohq.com",
+  "https://www.sherohq.com",
   "https://sherohq.vercel.app",
   "https://admin.sherohq.com",
   "https://support.sherohq.com",
