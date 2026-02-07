@@ -24,6 +24,7 @@ import { COMPANY_CONTACTS } from "@/constants/contacts";
 import ProductCard from "./ProductCard";
 import ProductReviews from "./ProductReviews";
 import { WhatsAppIcon } from "@/assets/icons/icons";
+import ShareButton from "@/components/common/ShareButton";
 
 interface ProductDetailViewProps {
   product: Product;
@@ -359,6 +360,10 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     }`}
                   />
                 </button>
+                <ShareButton
+                  title={product.name}
+                  description={`Check out ${product.name} - GH₵${product.price}`}
+                />
               </div>
 
               {/* WhatsApp Button */}
