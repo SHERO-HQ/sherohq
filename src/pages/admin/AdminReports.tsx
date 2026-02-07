@@ -721,6 +721,11 @@ interface StatCardProps {
   subtext?: string;
 }
 
+const getTrendStyles = (trend: number) => {
+  if (trend >= 0) return "bg-emerald-500/10 text-emerald-400";
+  return "bg-rose-500/10 text-rose-400";
+};
+
 function StatCard({
   title,
   value,
@@ -731,6 +736,10 @@ function StatCard({
   subtext,
 }: StatCardProps) {
   const isPositive = typeof trend === "number" ? trend >= 0 : true;
+  const trendColor =
+    typeof trend === "number"
+      ? getTrendStyles(trend)
+      : "bg-blue-500/10 text-blue-400";
 
   return (
     <div className="bg-slate-900/50 border border-slate-800 rounded p-6 flex flex-col gap-4">
@@ -748,13 +757,7 @@ function StatCard({
       {trend !== undefined && (
         <div className="flex items-center gap-2 mt-1">
           <span
-            className={`text-xs font-bold px-2 py-0.5 rounded ${
-              typeof trend === "number"
-                ? isPositive
-                  ? "bg-emerald-500/10 text-emerald-400"
-                  : "bg-rose-500/10 text-rose-400"
-                : "bg-blue-500/10 text-blue-400"
-            }`}
+            className={`text-xs font-bold px-2 py-0.5 rounded ${trendColor}`}
           >
             {typeof trend === "number"
               ? `${isPositive ? "+" : ""}${trend}%`

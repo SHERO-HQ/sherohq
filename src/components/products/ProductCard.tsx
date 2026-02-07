@@ -84,6 +84,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
     navigate(`/products/${product.slug || product.sku || product.id}`);
   };
 
+  const getConditionStyles = (condition: string) => {
+    switch (condition) {
+      case "New":
+        return "bg-emerald-600 shadow-emerald-900/20";
+      case "Refurbished":
+        return "bg-blue-600 shadow-blue-900/20";
+      default:
+        return "bg-amber-600 shadow-amber-900/20";
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -179,13 +190,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
         <div className="absolute bottom-2 left-2 z-20 pointer-events-none flex flex-wrap gap-1">
           {product.condition && (
             <span
-              className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-white shadow-lg ${
-                product.condition === "New"
-                  ? "bg-emerald-600 shadow-emerald-900/20"
-                  : product.condition === "Refurbished"
-                    ? "bg-blue-600 shadow-blue-900/20"
-                    : "bg-amber-600 shadow-amber-900/20"
-              }`}
+              className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-white shadow-lg ${getConditionStyles(product.condition)}`}
             >
               {product.condition}
             </span>

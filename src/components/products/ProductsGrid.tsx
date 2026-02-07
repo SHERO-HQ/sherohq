@@ -56,7 +56,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
         animate={{ opacity: 1, y: 0 }}
         className="w-full py-20"
       >
-        <div className="flex flex-col items-center justify-center gap-6 text-center">
+        <div className="flex flex-col items-center justify-center gap-3 text-center">
           <div
             className="w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-800 
                         flex items-center justify-center"
@@ -99,7 +99,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className={`grid grid-cols-1 min-[425px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ${gridCols[columns]} gap-3`}
+      className={`grid grid-cols-2 min-[500px]:grid-cols-3 lg:grid-cols-4 ${gridCols[columns]} gap-3`}
     >
       {products.map((product) => (
         <motion.div key={product.id} variants={itemVariants}>

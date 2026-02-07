@@ -152,6 +152,11 @@ const getStatusStyles = (status: string) => {
   }
 };
 
+const getTrendStyles = (trend: number) => {
+  if (trend >= 0) return "bg-emerald-500/10 text-emerald-400";
+  return "bg-rose-500/10 text-rose-400";
+};
+
 export default function AdminDashboard() {
   useTitle("Admin Dashboard");
   const { admin } = useAdmin();
@@ -222,6 +227,7 @@ export default function AdminDashboard() {
         color: "text-emerald-400",
         bgColor: "bg-emerald-400/10",
         trend: `${kpi.revenueGrowth >= 0 ? "+" : ""}${kpi.revenueGrowth}%`,
+        trendColor: getTrendStyles(kpi.revenueGrowth),
         subtext: subtextMap[period],
       },
       {
@@ -231,6 +237,7 @@ export default function AdminDashboard() {
         color: "text-blue-400",
         bgColor: "bg-blue-400/10",
         trend: `${kpi.ordersGrowth >= 0 ? "+" : ""}${kpi.ordersGrowth}%`,
+        trendColor: getTrendStyles(kpi.ordersGrowth),
         subtext: subtextMap[period],
       },
       {
@@ -249,7 +256,8 @@ export default function AdminDashboard() {
         color: "text-amber-400",
         bgColor: "bg-amber-400/10",
         trend: `${(stats?.pendingGrowth ?? 0) >= 0 ? "+" : ""}${stats?.pendingGrowth ?? 0}%`,
-        subtext: "than yesterday",
+        trendColor: getTrendStyles(stats?.pendingGrowth ?? 0),
+        subtext: "vs yesterday",
       },
     ];
   }, [stats, period]);
