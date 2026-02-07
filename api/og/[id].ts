@@ -1,3 +1,15 @@
+// Vercel types (simplified to avoid needing @vercel/node locally)
+interface VercelRequest {
+  query: { [key: string]: string | string[] };
+  headers: { [key: string]: string | undefined };
+}
+
+interface VercelResponse {
+  send: (body: string) => void;
+  redirect: (statusOrUrl: number | string, url?: string) => void;
+  setHeader: (name: string, value: string) => void;
+}
+
 // Social media crawler User-Agent patterns
 const SOCIAL_CRAWLERS = [
   "facebookexternalhit",
@@ -13,7 +25,7 @@ const SOCIAL_CRAWLERS = [
 ];
 
 // Check if the request is from a social media crawler
-function isSocialCrawler(userAgent: string | null): boolean {
+function isSocialCrawler(userAgent: string | undefined): boolean {
   if (!userAgent) return false;
   return SOCIAL_CRAWLERS.some((crawler) =>
     userAgent.toLowerCase().includes(crawler.toLowerCase()),
@@ -29,7 +41,7 @@ async function fetchProduct(productId: string): Promise<{
   category: string;
 } | null> {
   try {
-    const apiUrl = "https://sherotech.onrender.com/api";
+    const apiUrl = "https://api.sherohq.com";
     const response = await fetch(`${apiUrl}/products/${productId}`, {
       headers: { "Content-Type": "application/json" },
     });
@@ -46,29 +58,41 @@ function getImageUrl(image: string | undefined): string {
   if (!image) return "https://sherohq.com/og-image.png";
   if (image.startsWith("http")) return image;
   if (image.startsWith("/uploads")) {
-    return `https://sherotech.onrender.com${image}`;
+    return `https://api.sherohq.com${image}`;
   }
   return "https://sherohq.com/og-image.png";
 }
 
-// Generate HTML with proper OG meta tags
-function generateOgHtml(
-  product: {
-    name: string;
-    description: string;
-    price: number;
-    image: string;
-    category: string;
-  },
-  url: string,
-): string {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const { id } = req.query;
+  const userAgent = req.headers["user-agent"];
+  const productId = Array.isArray(id) ? id[0] : id;
+
+  // If not a social crawler or no product ID, redirect to the SPA
+  if (!productId || !isSocialCrawler(userAgent)) {
+    return res.redirect(302, `/shop/${productId || ""}`);
+  }
+
+  // Fetch product data
+  const product = await fetchProduct(productId);
+
+  if (!product) {
+    return res.redirect(302, `/shop/${productId}`);
+  }
+
+  // Prepare OG data
   const imageUrl = getImageUrl(product.image);
   const description =
     product.description || `${product.name} - GH₵${product.price}`;
   const truncatedDesc =
     description.length > 160 ? description.slice(0, 157) + "..." : description;
+  const pageUrl = `https://sherohq.com/shop/${productId}`;
 
-  return `<!DOCTYPE html>
+  // Return HTML with OG tags
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.setHeader("Cache-Control", "public, max-age=3600");
+
+  return res.send(`<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -78,7 +102,7 @@ function generateOgHtml(
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="product">
-  <meta property="og:url" content="${url}">
+  <meta property="og:url" content="${pageUrl}">
   <meta property="og:title" content="${product.name}">
   <meta property="og:description" content="${truncatedDesc}">
   <meta property="og:image" content="${imageUrl}">
@@ -90,64 +114,16 @@ function generateOgHtml(
   
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:url" content="${url}">
+  <meta name="twitter:url" content="${pageUrl}">
   <meta name="twitter:title" content="${product.name}">
   <meta name="twitter:description" content="${truncatedDesc}">
   <meta name="twitter:image" content="${imageUrl}">
   
   <!-- Redirect regular browsers to the actual page -->
-  <meta http-equiv="refresh" content="0; url=${url}">
+  <meta http-equiv="refresh" content="0; url=${pageUrl}">
 </head>
 <body>
-  <p>Redirecting to <a href="${url}">${product.name}</a>...</p>
+  <p>Redirecting to <a href="${pageUrl}">${product.name}</a>...</p>
 </body>
-</html>`;
+</html>`);
 }
-
-export default async function middleware(request: Request): Promise<Response> {
-  const url = new URL(request.url);
-  const pathname = url.pathname;
-  const userAgent = request.headers.get("user-agent");
-
-  // Only intercept product pages for social crawlers
-  if (!pathname.startsWith("/shop/") && !pathname.startsWith("/product/")) {
-    // Pass through to the origin
-    return fetch(request);
-  }
-
-  // Check if this is a social media crawler
-  if (!isSocialCrawler(userAgent)) {
-    return fetch(request);
-  }
-
-  // Extract product ID from the URL
-  const pathParts = pathname.split("/");
-  const productId = pathParts[pathParts.length - 1];
-
-  if (!productId || productId === "shop" || productId === "product") {
-    return fetch(request);
-  }
-
-  // Fetch product data
-  const product = await fetchProduct(productId);
-
-  if (!product) {
-    return fetch(request);
-  }
-
-  // Generate HTML with OG tags
-  const html = generateOgHtml(product, request.url);
-
-  return new Response(html, {
-    status: 200,
-    headers: {
-      "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "public, max-age=3600", // Cache for 1 hour
-    },
-  });
-}
-
-// Vercel Edge Config
-export const config = {
-  matcher: ["/shop/:path*", "/product/:path*"],
-};

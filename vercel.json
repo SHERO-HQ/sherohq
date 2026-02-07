@@ -9,6 +9,10 @@
       "destination": "https://sherotech.onrender.com/uploads/$1"
     },
     {
+      "source": "/og/:id",
+      "destination": "/api/og/:id"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
