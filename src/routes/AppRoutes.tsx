@@ -302,7 +302,11 @@ const ShopSection = () => (
     {/* Handle /shop or /products prefix on shop subdomain */}
     <Route path="shop/*" element={<ShopSectionInternal />} />
     <Route path="products/*" element={<ShopSectionInternal />} />
-    <Route path="checkout/*" element={<ShopSectionInternal />} />
+
+    {/* Explicitly handle checkout routes to avoid ambiguity with products wildcard */}
+    <Route path="checkout" element={<Checkout />} />
+    <Route path="checkout/success" element={<CheckoutSuccess />} />
+
     <Route path="*" element={<ShopSectionInternal />} />
   </Routes>
 );

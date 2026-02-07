@@ -30,7 +30,7 @@ const PaymentFailureSupport = ({
 }: PaymentFailureSupportProps) => {
   const WHATSAPP_NUMBER = "233548711582";
   const supportMessage = encodeURIComponent(
-    `Hello Sherotech Support, I'm having trouble completing my payment for Order #${orderId} (GH₵${amount.toFixed(2)}). Can you help me?`,
+    `Hello SHERO Support, I'm having trouble completing my payment for Order #${orderId} (GH₵${amount.toFixed(2)}). Can you help me?`,
   );
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${supportMessage}`;
 
@@ -69,7 +69,7 @@ const PaymentFailureSupport = ({
               <Button
                 onClick={onRetry}
                 variant="outline"
-                className="w-full h-14 justify-between group hover:border-emerald-500 transition-all font-semibold"
+                className="w-full h-14 justify-between group hover:border-emerald-500 transition-colors font-semibold"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30 group-hover:text-emerald-600 transition-colors">
@@ -83,7 +83,7 @@ const PaymentFailureSupport = ({
               <Button
                 onClick={onBack}
                 variant="ghost"
-                className="w-full h-12 justify-center gap-2 text-slate-500 hover:text-slate-900"
+                className="w-full h-12 justify-center gap-2 text-slate-400 dark:text-slate-400 dark:hover:text-slate-100 hover:text-slate-900"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Change Payment Method
@@ -99,7 +99,7 @@ const PaymentFailureSupport = ({
                 onClick={() => onSwitchToOffline("cod")}
                 disabled={isUpdatingOffline}
                 variant="outline"
-                className="w-full h-14 justify-between group hover:border-emerald-500 transition-all font-semibold"
+                className="w-full h-14 justify-between group hover:border-emerald-500 transition-colors font-semibold"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30 group-hover:text-emerald-600 transition-colors">
@@ -120,7 +120,7 @@ const PaymentFailureSupport = ({
                 onClick={() => onSwitchToOffline("store_pickup")}
                 disabled={isUpdatingOffline}
                 variant="outline"
-                className="w-full h-14 justify-between group hover:border-emerald-500 transition-all font-semibold"
+                className="w-full h-14 justify-between group hover:border-emerald-500 transition-colors font-semibold"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30 group-hover:text-emerald-600 transition-colors">

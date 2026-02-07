@@ -130,7 +130,7 @@ const LandingHero: React.FC = () => {
                 initial="hidden"
                 animate="visible"
                 variants={prefersReducedMotion ? {} : fadeUp}
-                className="font-sora font-extrabold leading-[1.1] text-4xl sm:text-6xl md:text-7xl lg:text-8xl 
+                className="font-sora font-extrabold leading-[1.1] text-5xl sm:text-6xl md:text-7xl lg:text-8xl 
                            text-slate-900 dark:text-white relative z-10"
               >
                 {HERO_CONTENT.mainHeader.split(" ").map((word, i) =>
@@ -185,7 +185,7 @@ const LandingHero: React.FC = () => {
 
               <UniversalLink
                 to="/consultation"
-                className="group flex items-center justify-center gap-3 text-foreground font-mono text-sm font-bold tracking-tight border-2  hover:border-primary/50! rounded px-4 py-2 h-10 w-full border-border pb-1 transition-all"
+                className="group flex items-center justify-center gap-3 text-foreground font-mono text-sm font-bold text-primary tracking-tight border-2  hover:border-primary/50! rounded px-4 py-2 h-10 w-full border-border pb-1 transition-all"
                 role="button"
                 aria-label="Request a Quote"
               >

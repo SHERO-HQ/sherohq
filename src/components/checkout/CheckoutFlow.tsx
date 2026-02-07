@@ -133,8 +133,16 @@ const CheckoutFlow = () => {
 
   const handleNext = async () => {
     if (currentStep === 2) {
-      await trigger(["email", "phone", "shippingAddress"]);
-      if (errors.email || errors.phone || errors.shippingAddress) return;
+      const isStep2Valid = await trigger([
+        "email",
+        "phone",
+        "shippingAddress.firstName",
+        "shippingAddress.lastName",
+        "shippingAddress.address",
+        "shippingAddress.city",
+        "shippingAddress.region",
+      ]);
+      if (!isStep2Valid) return;
     }
 
     if (currentStep === 3) {
@@ -460,41 +468,42 @@ const CheckoutFlow = () => {
 
                       <div className="space-y-4">
                         {cart.map((item) => (
-                          <div
-                            key={item.id}
-                            className="flex flex-col sm:flex-row gap-4 p-4 rounded border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 transition-colors"
-                          >
-                            <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center overflow-hidden shrink-0">
-                              {item.image &&
-                              (item.image.startsWith("/uploads") ||
-                                item.image.startsWith("http")) ? (
-                                <img
-                                  src={getImageUrl(item.image)}
-                                  alt={item.name}
-                                  className="w-full h-full object-cover"
-                                  onError={(e) => {
-                                    e.currentTarget.onerror = null;
-                                    e.currentTarget.src =
-                                      "https://placehold.co/200x200?text=No+Image";
-                                  }}
-                                />
-                              ) : (
-                                <div className="text-3xl">{item.image}</div>
-                              )}
-                            </div>
+                          <>
+                            <div
+                              key={item.id}
+                              className="flex flex-row sm:flex-row gap-4 p-4 rounded border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 transition-colors"
+                            >
+                              <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center overflow-hidden shrink-0">
+                                {item.image &&
+                                (item.image.startsWith("/uploads") ||
+                                  item.image.startsWith("http")) ? (
+                                  <img
+                                    src={getImageUrl(item.image)}
+                                    alt={item.name}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                      e.currentTarget.onerror = null;
+                                      e.currentTarget.src =
+                                        "https://placehold.co/200x200?text=No+Image";
+                                    }}
+                                  />
+                                ) : (
+                                  <div className="text-3xl">{item.image}</div>
+                                )}
+                              </div>
 
-                            <div className="flex-1">
-                              <h3 className="font-bold text-slate-900 dark:text-white">
-                                {item.name}
-                              </h3>
-                              <p className="text-sm text-slate-500 dark:text-slate-400">
-                                {item.category}
-                              </p>
-                              <p className="text-lg font-bold font-sora text-emerald-600 dark:text-emerald-400 mt-2">
-                                GH₵{item.price}
-                              </p>
+                              <div className="flex-1">
+                                <h3 className="font-bold text-slate-900 dark:text-white">
+                                  {item.name}
+                                </h3>
+                                <p className="text-sm text-slate-500 dark:text-slate-400">
+                                  {item.category}
+                                </p>
+                                <p className="text-lg font-bold font-sora text-emerald-600 dark:text-emerald-400 mt-2">
+                                  GH₵{item.price}
+                                </p>
+                              </div>
                             </div>
-
                             <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 mt-2 sm:mt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-800 pt-4 sm:pt-0">
                               <div className="flex items-center gap-2 border border-slate-200 dark:border-slate-700 rounded overflow-hidden">
                                 <button
@@ -521,7 +530,7 @@ const CheckoutFlow = () => {
                                 Remove
                               </button>
                             </div>
-                          </div>
+                          </>
                         ))}
                       </div>
 
@@ -680,7 +689,7 @@ const CheckoutFlow = () => {
                           onClick={() =>
                             setValue("paymentMethod", "store_pickup")
                           }
-                          className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
+                          className={`w-full p-3 sm:p-6 rounded border-2 transition-colors text-left ${
                             paymentMethod === "store_pickup"
                               ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
                               : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
@@ -710,7 +719,7 @@ const CheckoutFlow = () => {
                         {/* Mobile Money */}
                         <button
                           onClick={() => setValue("paymentMethod", "momo")}
-                          className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
+                          className={`w-full p-3 sm:p-6 rounded border-2 transition-colors text-left ${
                             paymentMethod === "momo"
                               ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
                               : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
@@ -740,7 +749,7 @@ const CheckoutFlow = () => {
                         {/* Card Payment */}
                         <button
                           onClick={() => setValue("paymentMethod", "card")}
-                          className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
+                          className={`w-full p-3 sm:p-6 rounded border-2 transition-colors text-left ${
                             paymentMethod === "card"
                               ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
                               : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
@@ -770,7 +779,7 @@ const CheckoutFlow = () => {
                         {/* Paystack */}
                         <button
                           onClick={() => setValue("paymentMethod", "paystack")}
-                          className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
+                          className={`w-full p-3 sm:p-6 rounded border-2 transition-colors text-left ${
                             paymentMethod === "paystack"
                               ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
                               : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
@@ -800,7 +809,7 @@ const CheckoutFlow = () => {
                         {/* Cash on Delivery */}
                         <button
                           onClick={() => setValue("paymentMethod", "cod")}
-                          className={`w-full p-3 sm:p-6 rounded border-2 transition-all text-left ${
+                          className={`w-full p-3 sm:p-6 rounded border-2 transition-colors text-left ${
                             paymentMethod === "cod"
                               ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
                               : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
@@ -926,7 +935,7 @@ const CheckoutFlow = () => {
           </div>
 
           {/* Order Summary Sidebar / Feedback Prompt */}
-          <div className="lg:col-span-1 hidden lg:block">
+          <div className="lg:col-span-1 font-sora hidden lg:block">
             {currentStep < 4 && (
               <OrderSummary
                 subtotal={subtotal}

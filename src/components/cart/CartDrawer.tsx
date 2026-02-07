@@ -96,9 +96,9 @@ const CartDrawer = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, x: 20 }}
                     key={item.id}
-                    className="flex flex-col sm:flex-row gap-3 sm:gap-4 group border-b border-slate-100 dark:border-slate-800 pb-4 sm:pb-0 sm:border-0"
+                    className="flex sm:flex-row gap-3 sm:gap-4 group border-b border-slate-200 dark:border-slate-700 pb-4"
                   >
-                    <div className="w-full sm:w-24 h-32 sm:h-24 bg-slate-100 dark:bg-slate-800 rounded shrink-0 overflow-hidden">
+                    <div className="w-fit h-32 sm:h-24 bg-slate-100 dark:bg-slate-800 rounded shrink-0 overflow-hidden">
                       {item.image.startsWith("http") ||
                       item.image.startsWith("/uploads") ? (
                         <img
@@ -112,32 +112,33 @@ const CartDrawer = () => {
                           }}
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-4xl">
+                        <div className="flex items-center justify-center text-4xl">
                           {item.image}
                         </div>
                       )}
                     </div>
                     <div className="flex-1 min-w-0 flex flex-col justify-between">
-                      <div className="space-y-1">
-                        <div className="flex justify-between items-start gap-2">
-                          <h4 className="font-bold text-slate-900 dark:text-white truncate text-sm sm:text-base">
-                            {item.name}
-                          </h4>
-                          <span className="font-bold text-slate-900 dark:text-white shrink-0 text-sm sm:text-base">
-                            GH₵{(item.price * item.quantity).toFixed(2)}
-                          </span>
-                        </div>
-                        <div className="flex justify-between items-center">
+                      <div className="space-y-4">
+                        <div className="gap-2">
                           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
                             {item.category}
                           </p>
-                          <button
-                            onClick={() => removeItem(item.id)}
-                            aria-label={`Remove ${item.name} from cart`}
-                            className="cursor-pointer text-slate-400 hover:text-red-500 transition-colors"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          <h4 className="font-sora font-bold text-slate-900 dark:text-white truncate text-lg">
+                            {item.name}
+                          </h4> 
+                               <span className="text-sm text-slate-500 dark:text-slate-400">Price: 
+                          GH₵{item.price.toFixed(2)}
+                        </span>
+                       
+                        </div>
+                        <div className="flex justify-between items-center">
+                         
+                          <div className="">
+                            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Total(x{item.quantity}):</p>
+                             <span className="font-bold font-sora text-slate-900 dark:text-white shrink-0">
+                            GH₵{(item.price * item.quantity).toFixed(2)}
+                          </span>                         
+                          </div>
                         </div>
                       </div>
 
@@ -159,9 +160,13 @@ const CartDrawer = () => {
                             <Plus className="w-3 h-3 text-slate-600 dark:text-slate-400" />
                           </button>
                         </div>
-                        <span className="text-[10px] text-slate-500 dark:text-slate-400">
-                          GH₵{item.price.toFixed(2)}
-                        </span>
+                         <button
+                            onClick={() => removeItem(item.id)}
+                            aria-label={`Remove ${item.name} from cart`}
+                            className="cursor-pointer text-slate-400 hover:text-red-500 transition-colors mt-3"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>                   
                       </div>
                     </div>
                   </motion.div>
