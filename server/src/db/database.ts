@@ -354,6 +354,19 @@ export async function initializeDatabase() {
       'CREATE INDEX IF NOT EXISTS idx_activity_logs_admin ON activity_logs("adminId")',
     );
 
+    // Reviews indexes
+    await client.query(
+      'CREATE INDEX IF NOT EXISTS idx_reviews_product ON reviews("productId")',
+    );
+    await client.query(
+      'CREATE INDEX IF NOT EXISTS idx_reviews_created ON reviews("createdAt" DESC)',
+    );
+
+    // Categories index
+    await client.query(
+      "CREATE INDEX IF NOT EXISTS idx_categories_name ON categories(name)",
+    );
+
     console.log("⚡ Indexes ensured.");
 
     console.log("📦 Database initialized successfully");

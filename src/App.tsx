@@ -10,6 +10,7 @@ import Toaster from "./components/admin/Toaster";
 import CartDrawer from "./components/cart/CartDrawer";
 import WishlistDrawer from "./components/products/WishlistDrawer";
 import ScrollToTop from "./components/common/ScrollToTop";
+import PWAInstallPrompt from "./components/common/PWAInstallPrompt";
 import { getSubdomain } from "@/utils/subdomain";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -45,6 +46,7 @@ const App = () => {
                 {!isAdmin && <Nav />}
                 {!isAdmin && <CartDrawer />}
                 {!isAdmin && <WishlistDrawer />}
+                {!isAdmin && <PWAInstallPrompt />}
                 <AppRoutes />
               </WishlistProvider>
             </NotificationProvider>

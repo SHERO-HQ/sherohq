@@ -104,6 +104,7 @@ const CartDrawer = () => {
                         <img
                           src={getImageUrl(item.image)}
                           alt={item.name}
+                          loading="lazy"
                           className="w-full h-full object-cover"
                           onError={(e) => {
                             e.currentTarget.onerror = null;
@@ -125,19 +126,19 @@ const CartDrawer = () => {
                           </p>
                           <h4 className="font-sora font-bold text-slate-900 dark:text-white truncate text-lg">
                             {item.name}
-                          </h4> 
-                               <span className="text-sm text-slate-500 dark:text-slate-400">Price: 
-                          GH₵{item.price.toFixed(2)}
-                        </span>
-                       
+                          </h4>
+                          <span className="text-sm text-slate-500 dark:text-slate-400">
+                            Price: GH₵{item.price.toFixed(2)}
+                          </span>
                         </div>
                         <div className="flex justify-between items-center">
-                         
                           <div className="">
-                            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Total(x{item.quantity}):</p>
-                             <span className="font-bold font-sora text-slate-900 dark:text-white shrink-0">
-                            GH₵{(item.price * item.quantity).toFixed(2)}
-                          </span>                         
+                            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                              Total(x{item.quantity}):
+                            </p>
+                            <span className="font-bold font-sora text-slate-900 dark:text-white shrink-0">
+                              GH₵{(item.price * item.quantity).toFixed(2)}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -160,13 +161,13 @@ const CartDrawer = () => {
                             <Plus className="w-3 h-3 text-slate-600 dark:text-slate-400" />
                           </button>
                         </div>
-                         <button
-                            onClick={() => removeItem(item.id)}
-                            aria-label={`Remove ${item.name} from cart`}
-                            className="cursor-pointer text-slate-400 hover:text-red-500 transition-colors mt-3"
-                          >
-                            <Trash2 className="w-5 h-5" />
-                          </button>                   
+                        <button
+                          onClick={() => removeItem(item.id)}
+                          aria-label={`Remove ${item.name} from cart`}
+                          className="cursor-pointer text-slate-400 hover:text-red-500 transition-colors mt-3"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
                       </div>
                     </div>
                   </motion.div>

@@ -7,6 +7,7 @@ A modern, responsive e-commerce web application built for the Ghanaian market, s
 - **Modern User Interface**: Built with React, Tailwind CSS, and Framer Motion for smooth animations and a premium feel.
 - **Responsive Design**: Fully optimized for Mobile, Tablet, and Desktop devices.
 - **Dark Mode Support**: System-aware dark mode integration.
+- **PWA Ready**: Installable as a Progressive Web App on supported devices.
 - **Advanced Checkout Flow**:
   - Multi-step checkout (Cart -> Shipping -> Payment -> Confirmation).
   - **Ghana Phone Validation**: Strict regex validation for local phone numbers (`02x` / `05x`).
@@ -14,8 +15,11 @@ A modern, responsive e-commerce web application built for the Ghanaian market, s
 - **Flexible Payment & Delivery Options**:
   - 📱 **Mobile Money**: Integration for MTN and Telecel Cash.
   - 💳 **Card Payment**: Visa and Mastercard support.
+  - 🏬 **Paystack**: Online payment gateway integration.
   - 💵 **Cash on Delivery**: Pay upon receipt.
   - 🏪 **Store Pickup**: Free shipping option for self-collection.
+- **Social Sharing**: Share products via WhatsApp, Twitter, Facebook, or copy link.
+- **Wishlist**: Save products with real-time badge count in navigation.
 - **Admin Dashboard**: Comprehensive panel with dynamic real-time statistics and growth metrics.
 - **Product Management**:
   - SKU management with auto-generation based on product ID.
@@ -24,6 +28,7 @@ A modern, responsive e-commerce web application built for the Ghanaian market, s
 - **Accessibility & UI**:
   - **WCAG AA Compliant**: Optimized contrast and semantic HTML for screen readers.
   - **Dynamic Design**: Interactive stats, magnetic cards, and micro-animations.
+  - **Add-to-Cart Feedback**: Animated success states with visual confirmation.
 
 ## 🛠️ Tech Stack
 

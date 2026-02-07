@@ -14,6 +14,7 @@ import {
   Plus,
   Minus,
   BadgeCheck,
+  Check,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/hooks/useWishlist";
@@ -36,6 +37,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
   const navigate = useUniversalNavigate();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [isAddedToCart, setIsAddedToCart] = useState(false);
   const isWishlisted = isInWishlist(product.id);
 
   const images = product.images || [product.image];
@@ -62,6 +64,9 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         category: product.category,
       });
     }
+    // Show success state
+    setIsAddedToCart(true);
+    setTimeout(() => setIsAddedToCart(false), 2000);
   };
 
   const nextImage = () => {
@@ -316,14 +321,43 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
 
             {/* Actions */}
             <div className="space-y-2 pt-4">
-              <button
+              <motion.button
                 onClick={handleAddToCart}
-                disabled={!product.inStock}
-                className="cursor-pointer flex-1 flex items-center justify-center gap-2 px-8 py-2 border-2 border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 disabled:border-slate-300 disabled:text-slate-400 dark:disabled:border-slate-700 dark:disabled:text-slate-600 rounded font-bold transition-all w-full"
+                disabled={!product.inStock || isAddedToCart}
+                whileTap={{ scale: 0.95 }}
+                animate={isAddedToCart ? { scale: [1, 1.05, 1] } : {}}
+                className={`cursor-pointer flex-1 flex items-center justify-center gap-2 px-8 py-2 border-2 rounded font-bold transition-all w-full ${
+                  isAddedToCart
+                    ? "border-emerald-500 bg-emerald-500 text-white"
+                    : "border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 disabled:border-slate-300 disabled:text-slate-400 dark:disabled:border-slate-700 dark:disabled:text-slate-600"
+                }`}
               >
-                <ShoppingCart className="w-5 h-5" />
-                Add to Cart
-              </button>
+                <AnimatePresence mode="wait">
+                  {isAddedToCart ? (
+                    <motion.div
+                      key="check"
+                      initial={{ scale: 0, rotate: -180 }}
+                      animate={{ scale: 1, rotate: 0 }}
+                      exit={{ scale: 0 }}
+                      className="flex items-center gap-2"
+                    >
+                      <Check className="w-5 h-5" />
+                      Added!
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="cart"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      className="flex items-center gap-2"
+                    >
+                      <ShoppingCart className="w-5 h-5" />
+                      Add to Cart
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.button>
               <div className="flex gap-2 w-full">
                 <button
                   onClick={() => {
