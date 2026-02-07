@@ -7,9 +7,9 @@ dotenv.config();
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }, // Always use SSL for Supabase
-  max: 10,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 5000,
+  max: 20, // Increased pool size
+  idleTimeoutMillis: 60000, // 60 seconds
+  connectionTimeoutMillis: 60000, // 60 seconds - allow time for initialization
 });
 
 // Helper to query the database with logging
@@ -331,6 +331,27 @@ export async function initializeDatabase() {
     );
     await client.query(
       'CREATE INDEX IF NOT EXISTS idx_orders_composite ON orders(status, "createdAt")',
+    );
+
+    // Sessions (critical for authentication performance)
+    await client.query(
+      "CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token)",
+    );
+    await client.query(
+      'CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions("expiresAt")',
+    );
+
+    // Admin users
+    await client.query(
+      "CREATE INDEX IF NOT EXISTS idx_admin_users_id ON admin_users(id)",
+    );
+
+    // Activity logs
+    await client.query(
+      'CREATE INDEX IF NOT EXISTS idx_activity_logs_created ON activity_logs("createdAt" DESC)',
+    );
+    await client.query(
+      'CREATE INDEX IF NOT EXISTS idx_activity_logs_admin ON activity_logs("adminId")',
     );
 
     console.log("⚡ Indexes ensured.");

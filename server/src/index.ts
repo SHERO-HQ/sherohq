@@ -205,21 +205,25 @@ app.use("/api", (req: Request, res: Response) => {
 // Removed catch-all route for static files since frontend is deployed independently
 
 // Start server immediately to bind port (crucial for Render/Railway startup checks)
-app.listen(PORT, async () => {
+app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
 
-  // Synchronous database initialization for stability
-  try {
-    console.time("⏱️ Database Startup");
-    await initializeDatabase();
-    await seedAdminUser();
-    console.timeEnd("⏱️ Database Startup");
-    console.log("✅ Database is ready to handle requests.");
-  } catch (err) {
-    console.error("Critical error starting server:", err);
-    process.exit(1); // Exit if DB fails
-  }
+  // Run database initialization in background (non-blocking)
+  (async () => {
+    try {
+      console.time("⏱️ Database Startup");
+      await initializeDatabase();
+      await seedAdminUser();
+      console.timeEnd("⏱️ Database Startup");
+      console.log("✅ Database is ready to handle requests.");
+    } catch (err) {
+      console.error("❌ Error during database initialization:", err);
+      console.warn(
+        "⚠️ Server is running but database may not be fully initialized",
+      );
+    }
+  })();
 });
 
 export default app;
