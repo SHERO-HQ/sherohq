@@ -48,7 +48,6 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
           ("createdAt" < NOW() - INTERVAL '365 days' AND "createdAt" >= NOW() - INTERVAL '730 days') as is_prev_year
         FROM orders
         WHERE status NOT IN ('cancelled', 'pending', 'quote')
-        AND "createdAt" >= NOW() - INTERVAL '731 days'
       )
       SELECT
         -- Today
@@ -255,23 +254,39 @@ router.get(
   adminAuth,
   async (req: AdminRequest, res: Response) => {
     try {
-      const topProductsResult = await db.query(`
-        SELECT 
-          item->>'name' as name,
-          CAST(SUM(CAST(item->>'quantity' AS INTEGER)) AS INTEGER) as quantity,
-          CAST(SUM(CAST(item->>'price' AS DECIMAL) * CAST(item->>'quantity' AS INTEGER)) AS DECIMAL) as revenue
-        FROM orders, jsonb_array_elements(items) as item
-        WHERE status NOT IN ('cancelled', 'pending', 'quote')
-        GROUP BY name
-        ORDER BY revenue DESC
-        LIMIT 5
-      `);
+      const ordersResult = await db.query(
+        "SELECT items FROM orders WHERE status NOT IN ('cancelled', 'pending', 'quote')",
+      );
+      const orders = ordersResult.rows as { items: string }[];
 
-      const topProducts = topProductsResult.rows.map((row) => ({
-        name: row.name,
-        quantity: Number.parseInt(row.quantity, 10),
-        revenue: Number.parseFloat(row.revenue),
-      }));
+      const productSales: Record<
+        string,
+        { name: string; quantity: number; revenue: number }
+      > = {};
+
+      orders.forEach((order) => {
+        const items = safeParse(order.items) as Array<{
+          id: string;
+          name: string;
+          quantity: number;
+          price: number;
+        }>;
+        items.forEach((item) => {
+          if (!productSales[item.id]) {
+            productSales[item.id] = {
+              name: item.name,
+              quantity: 0,
+              revenue: 0,
+            };
+          }
+          productSales[item.id].quantity += item.quantity;
+          productSales[item.id].revenue += item.price * item.quantity;
+        });
+      });
+
+      const topProducts = Object.values(productSales)
+        .sort((a, b) => b.revenue - a.revenue)
+        .slice(0, 5);
 
       res.json(topProducts);
     } catch (error) {
