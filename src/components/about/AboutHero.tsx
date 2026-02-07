@@ -198,7 +198,7 @@ const AboutHero = () => {
           </div>
 
           {/* RIGHT: Vision Hub (40%) */}
-          <div className="w-full lg:w-[40%] relative aspect-square flex items-center justify-center perspective-distant py-12 lg:py-0">
+          <div className="w-full lg:w-[40%] relative aspect-square md:flex items-center justify-center perspective-distant py-12 lg:py-0 hidden">
             <motion.div
               style={{
                 rotateX,

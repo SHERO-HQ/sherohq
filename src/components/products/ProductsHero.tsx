@@ -183,7 +183,7 @@ const ProductHero = () => {
           </div>
 
           {/* RIGHT: Kinetic Visual Hub (40%) */}
-          <div className="w-full lg:w-[40%] relative aspect-square flex items-center justify-center perspective-distant py-12 lg:py-0">
+          <div className="w-full lg:w-[40%] relative aspect-square md:flex items-center justify-center perspective-distant py-12 lg:py-0 hidden">
             <motion.div
               style={{
                 rotateX,
@@ -274,7 +274,7 @@ const ProductHero = () => {
                   y: useTransform(mouseY, [-0.5, 0.5], [15, 15]),
                   rotate: 12,
                 }}
-                className="absolute bottom-0 left-0 w-fit p-3 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/20 shadow-2xl z-20 pointer-events-none scale-75 sm:scale-100"
+                className="absolute bottom-8 left-0 w-fit p-3 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/20 shadow-2xl z-20 pointer-events-none scale-75 sm:scale-100"
               >
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded bg-emerald-500/10 flex items-center justify-center">

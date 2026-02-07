@@ -176,7 +176,7 @@ const SolutionsHero = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="flex flex-wrap items-center gap-12 mt-16 pt-12 border-t border-slate-200 dark:border-slate-800 w-full"
+              className="flex flex-wrap items-center gap-8 mt-16 pt-6 border-t border-slate-200 dark:border-slate-800 w-full"
             >
               {[
                 { label: "ULTRA_FAST", sub: "Service Delivery", icon: Zap },
@@ -194,7 +194,7 @@ const SolutionsHero = () => {
                 <div key={idx} className="flex flex-col gap-1">
                   <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 mb-1">
                     <item.icon className="w-4 h-4" />
-                    <span className="text-sm font-bold font-sora text-slate-900 dark:text-white">
+                    <span className="text-xs font-bold font-sora text-slate-900 dark:text-white">
                       {item.label}
                     </span>
                   </div>
@@ -207,7 +207,7 @@ const SolutionsHero = () => {
           </div>
 
           {/* RIGHT: Kinetic Visual Hub (40%) */}
-          <div className="w-full lg:w-[40%] relative aspect-square flex items-center justify-center perspective-distant py-12 lg:py-0">
+          <div className="w-full lg:w-[40%] relative aspect-square md:flex items-center justify-center perspective-distant py-12 lg:py-0 hidden">
             <motion.div
               style={{
                 rotateX,
@@ -302,7 +302,7 @@ const SolutionsHero = () => {
                   y: useTransform(mouseY, [-0.5, 0.5], [15, 15]),
                   rotate: -8,
                 }}
-                className="absolute sm:-top-12 -top-5 sm:-left-12 left-2  sm:block w-fit p-4 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-blue-500/30 shadow-2xl z-20 pointer-events-none"
+                className="absolute sm:top-2 -top-5 sm:left-2 left-2  sm:block w-fit p-4 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-blue-500/30 shadow-2xl z-20 pointer-events-none"
               >
                 <div className="h-8 flex items-end gap-1 mb-2">
                   {[0.4, 0.7, 0.5, 0.9, 0.6, 0.8, 0.95].map((h, i) => (
@@ -330,7 +330,7 @@ const SolutionsHero = () => {
                   x: useTransform(mouseX, [-0.5, 0.5], [-10, 10]),
                   y: useTransform(mouseY, [-0.5, 0.5], [-10, 10]),
                 }}
-                className="absolute bottom-0 right-5 bg-blue-600 p-3 rounded shadow-2xl shadow-blue-500/50 flex flex-col items-center justify-center rotate-12 z-30 pointer-events-none"
+                className="absolute bottom-10 right-0 bg-blue-600 p-3 rounded shadow-2xl shadow-blue-500/50 flex flex-col items-center justify-center rotate-12 z-30 pointer-events-none"
               >
                 <Shield className="text-white w-4 h-4 mb-2 drop-shadow-lg" />
                 <span className="text-[8px] font-bold text-white uppercase tracking-[0.2em] leading-none">

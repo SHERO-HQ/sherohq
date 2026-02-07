@@ -43,6 +43,10 @@ const Portfolio = () => {
     }
   };
 
+  if (!isLoading && projects.length === 0 && activeCategory === "All") {
+    return null;
+  }
+
   return (
     <section className="relative w-full py-20 bg-slate-50 dark:bg-slate-950">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

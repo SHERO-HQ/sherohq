@@ -185,7 +185,7 @@ const LandingHero: React.FC = () => {
 
               <UniversalLink
                 to="/consultation"
-                className="group flex items-center justify-center gap-3 text-foreground font-mono text-sm font-bold text-primary tracking-tight border-2  hover:border-primary/50! rounded px-4 py-2 h-10 w-full border-border pb-1 transition-all"
+                className="group flex items-center justify-center gap-3 font-mono text-sm font-bold text-primary tracking-tight border-2  hover:border-primary/50! rounded px-4 py-2 h-10 w-full border-border pb-1 transition-all"
                 role="button"
                 aria-label="Request a Quote"
               >
