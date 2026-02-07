@@ -28,6 +28,10 @@ const AboutStory = () => {
               <img
                 src={aboutImage}
                 alt="SHERO Technologies"
+                width={600}
+                height={400}
+                loading="lazy"
+                decoding="async"
                 className="relative w-full object-cover"
               />
 

@@ -85,8 +85,8 @@ const LandingProducts = () => {
             Shop Premium Tech
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Elevate your tech experience with our curated collection of
-            high-quality products designed to enhance your digital lifestyle
+            Elevate your tech experience with our collection of high-quality
+            products to enhance your digital lifestyle
           </p>
         </motion.div>
 
@@ -112,7 +112,7 @@ const LandingProducts = () => {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mb-6">
           {isLoading && (
             <>
               {[0, 1, 2, 3].map((i) => (

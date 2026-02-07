@@ -649,6 +649,14 @@ export interface LoginResponse {
   admin: AdminUser;
 }
 
+export interface KPIData {
+  revenue: number;
+  orders: number;
+  revenueGrowth: number;
+  ordersGrowth: number;
+  newProducts: number;
+}
+
 export interface AdminStats {
   products: number;
   orders: number;
@@ -660,6 +668,12 @@ export interface AdminStats {
   ordersGrowth: number;
   newProductsCount: number;
   pendingGrowth: number;
+  kpis: {
+    today: KPIData;
+    week: KPIData;
+    month: KPIData;
+    year: KPIData;
+  };
 }
 
 // Auth functions

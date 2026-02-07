@@ -3,7 +3,14 @@ import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { fadeUp } from "@/components/motion/heroMotion";
 import { useMemo, useRef, useState } from "react";
 import { RocketIcon } from "@/assets/icons/icons";
-import { CircleCheckBig, Clock, HeartHandshake, Layers, MessageSquareDot, Users } from "lucide-react";
+import {
+  CircleCheckBig,
+  Clock,
+  HeartHandshake,
+  Layers,
+  MessageSquareDot,
+  Users,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Logo from "@/assets/logo/shero.svg";
 
@@ -203,7 +210,7 @@ const LandingHero: React.FC = () => {
             >
               <div className="flex flex-col gap-1">
                 <span className="text-xs inline-flex items-center gap-1 font-sora font-bold text-slate-900 dark:text-white">
-                <Users className="w-4 h-4 text-primary" />
+                  <Users className="w-4 h-4 text-primary" />
                   1500+
                 </span>
                 <span className="text-[10px] font-mono uppercase tracking-widest text-slate-500">
@@ -256,6 +263,10 @@ const LandingHero: React.FC = () => {
                       <img
                         src={Logo}
                         alt="SHERO"
+                        width={40}
+                        height={40}
+                        fetchPriority="high"
+                        decoding="async"
                         className="sm:w-10 sm:h-10 w-8 h-8"
                       />
                     </div>

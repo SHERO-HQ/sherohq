@@ -308,20 +308,6 @@ export async function initializeDatabase() {
       )
     `);
 
-    // Migration: Convert TEXT columns to JSONB if they are still TEXT (Temporarily disabled)
-    /*
-    const tablesToMigrate = [
-      { table: "products", columns: ["images", "features", "specifications"] },
-      { table: "orders", columns: ["items", "shippingInfo"] },
-      { table: "users", columns: ["shippingAddress"] },
-    ];
-
-    for (const { table, columns } of tablesToMigrate) {
-       // ... existing code ...
-    }
-    // ... other migrations ...
-    */
-
     // --- PERFORMANCE INDEXES ---
     console.log("⚡ Creating performance indexes...");
 
@@ -329,7 +315,24 @@ export async function initializeDatabase() {
     await client.query(
       "CREATE INDEX IF NOT EXISTS idx_products_category ON products(category)",
     );
-    // ... (rest of indexes)
+    await client.query(
+      'CREATE INDEX IF NOT EXISTS idx_products_created_at ON products("createdAt")',
+    );
+    await client.query(
+      'CREATE INDEX IF NOT EXISTS idx_products_stock ON products("stockQuantity")',
+    );
+
+    // Orders
+    await client.query(
+      "CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status)",
+    );
+    await client.query(
+      'CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders("createdAt")',
+    );
+    await client.query(
+      'CREATE INDEX IF NOT EXISTS idx_orders_composite ON orders(status, "createdAt")',
+    );
+
     console.log("⚡ Indexes ensured.");
 
     console.log("📦 Database initialized successfully");

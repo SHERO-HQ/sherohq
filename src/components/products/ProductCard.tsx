@@ -144,7 +144,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
           <img
             src={getImageUrl(product.image)}
             alt={product.name}
-            width={600}
+            width={400}
             height={400}
             loading="lazy"
             decoding="async"
@@ -243,7 +243,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             onClick={handleAddToCart}
             disabled={!product.inStock}
             aria-label={`Add ${product.name} to cart`}
-            className={`px-4 py-2 rounded flex items-center justify-center transition-all duration-300 cursor-pointer border w-full
+            className={` p-2 rounded flex items-center justify-center transition-all duration-300 cursor-pointer border w-full
                            ${
                              product.inStock
                                ? "border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
@@ -256,7 +256,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
           <button
             onClick={handleBuyNow}
             disabled={!product.inStock}
-            className={`px-4 py-2 rounded flex items-center justify-center gap-1 transition-all duration-300 cursor-pointer text-[10px] sm:text-sm font-bold w-full
+            className={`p-2 rounded flex items-center justify-center gap-1 transition-all duration-300 cursor-pointer text-[10px] sm:text-sm font-bold w-full
                            ${
                              product.inStock
                                ? "dark:bg-emerald-600 bg-emerald-600 text-white hover:bg-emerald-500 hover:scale-105 shadow-lg shadow-emerald-500/20"
@@ -274,7 +274,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="px-4 py-2 rounded flex items-center justify-center bg-[#25D366] hover:bg-[#20bd5a] text-white transition-all duration-300 shadow-lg shadow-[#25D366]/20"
+            className="w-full p-2 rounded flex items-center justify-center bg-[#25D366] hover:bg-[#20bd5a] text-white transition-all duration-300 shadow-lg shadow-[#25D366]/20"
             aria-label="Inquire via WhatsApp"
           >
             <WhatsAppIcon className="w-4 h-4 sm:w-5 sm:h-5" />

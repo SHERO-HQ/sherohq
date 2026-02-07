@@ -94,14 +94,18 @@ const Nav = () => {
                 <img
                   src={SheroLogo}
                   alt="SHERO Logo"
-                  loading="lazy"
+                  width={40}
+                  height={40}
+                  fetchPriority="high"
                   decoding="async"
                   className="h-10 w-auto dark:block hidden"
                 />
                 <img
                   src={SheroLogo}
                   alt="SHERO Logo"
-                  loading="lazy"
+                  width={40}
+                  height={40}
+                  fetchPriority="high"
                   decoding="async"
                   className="h-10 w-auto dark:hidden block"
                 />
@@ -112,14 +116,18 @@ const Nav = () => {
                 <img
                   src={SheroLogoLight}
                   alt="SHERO Logo"
-                  loading="lazy"
+                  width={40}
+                  height={40}
+                  fetchPriority="high"
                   decoding="async"
                   className="h-10 w-auto dark:block hidden"
                 />
                 <img
                   src={SheroLogoDark}
                   alt="SHERO Logo"
-                  loading="lazy"
+                  width={40}
+                  height={40}
+                  fetchPriority="high"
                   decoding="async"
                   className="h-10 w-auto dark:hidden block"
                 />

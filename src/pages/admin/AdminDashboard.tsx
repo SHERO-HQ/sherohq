@@ -155,7 +155,9 @@ const getStatusStyles = (status: string) => {
 export default function AdminDashboard() {
   useTitle("Admin Dashboard");
   const { admin } = useAdmin();
-  const [period] = useState("7d");
+  const [period, setPeriod] = useState<"today" | "week" | "month" | "year">(
+    "today",
+  );
 
   // React Query hooks with 30s auto-refresh
   const {
@@ -196,25 +198,40 @@ export default function AdminDashboard() {
     setIsRefreshing(false);
   };
 
-  const statCards = useMemo(
-    () => [
+  const statCards = useMemo(() => {
+    const kpi = stats?.kpis?.[period] || {
+      revenue: stats?.revenue || 0,
+      orders: stats?.orders || 0,
+      revenueGrowth: stats?.revenueGrowth || 0,
+      ordersGrowth: stats?.ordersGrowth || 0,
+      newProducts: stats?.newProductsCount || 0,
+    };
+
+    const subtextMap = {
+      today: "vs yesterday",
+      week: "vs last week",
+      month: "from last month",
+      year: "from last year",
+    };
+
+    return [
       {
         title: "Total Revenue",
-        value: `GH₵${(stats?.revenue ?? 0).toLocaleString()}`,
+        value: `GH₵${kpi.revenue.toLocaleString()}`,
         icon: DollarSign,
         color: "text-emerald-400",
         bgColor: "bg-emerald-400/10",
-        trend: `${(stats?.revenueGrowth ?? 0) >= 0 ? "+" : ""}${stats?.revenueGrowth ?? 0}%`,
-        subtext: "from last month",
+        trend: `${kpi.revenueGrowth >= 0 ? "+" : ""}${kpi.revenueGrowth}%`,
+        subtext: subtextMap[period],
       },
       {
         title: "Total Orders",
-        value: stats?.orders ?? 0,
+        value: kpi.orders,
         icon: ShoppingCart,
         color: "text-blue-400",
         bgColor: "bg-blue-400/10",
-        trend: `${(stats?.ordersGrowth ?? 0) >= 0 ? "+" : ""}${stats?.ordersGrowth ?? 0}%`,
-        subtext: "from last month",
+        trend: `${kpi.ordersGrowth >= 0 ? "+" : ""}${kpi.ordersGrowth}%`,
+        subtext: subtextMap[period],
       },
       {
         title: "Active Products",
@@ -222,8 +239,8 @@ export default function AdminDashboard() {
         icon: Package,
         color: "text-purple-400",
         bgColor: "bg-purple-400/10",
-        trend: `+${stats?.newProductsCount ?? 0} new`,
-        subtext: "added this week",
+        trend: `+${kpi.newProducts ?? 0} new`,
+        subtext: period === "today" ? "added today" : subtextMap[period],
       },
       {
         title: "Pending Orders",
@@ -234,9 +251,8 @@ export default function AdminDashboard() {
         trend: `${(stats?.pendingGrowth ?? 0) >= 0 ? "+" : ""}${stats?.pendingGrowth ?? 0}%`,
         subtext: "than yesterday",
       },
-    ],
-    [stats],
-  );
+    ];
+  }, [stats, period]);
 
   const isLoading =
     statsLoading || analyticsLoading || ordersLoading || activityLoading;
@@ -293,6 +309,29 @@ export default function AdminDashboard() {
             </p>
           </div>
           <div className="flex items-center flex-wrap gap-3">
+            <div className="flex bg-slate-900/50 p-1 rounded border border-white/5">
+              {[
+                { value: "today", label: "Today" },
+                { value: "week", label: "Week" },
+                { value: "month", label: "Month" },
+                { value: "year", label: "Year" },
+              ].map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() =>
+                    setPeriod(opt.value as "today" | "week" | "month" | "year")
+                  }
+                  className={cn(
+                    "px-3 py-1 text-xs font-semibold rounded transition-all",
+                    period === opt.value
+                      ? "bg-emerald-600 text-white shadow-lg"
+                      : "text-slate-400 hover:text-white hover:bg-white/5",
+                  )}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
             <Button
               variant="outline"
               size="icon"

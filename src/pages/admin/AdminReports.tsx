@@ -98,6 +98,9 @@ export default function AdminReports() {
   const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
   const [regionalData, setRegionalData] = useState<RegionalData[]>([]);
   const [chartType, setChartType] = useState<"line" | "bar">("line");
+  const [kpiPeriod, setKpiPeriod] = useState<
+    "today" | "week" | "month" | "year"
+  >("today");
 
   useEffect(() => {
     async function loadData() {
@@ -242,25 +245,66 @@ export default function AdminReports() {
               </DropdownMenu>
             </div>
           </div>
+          {/* KPI Period Selector */}
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              KPI Period:
+            </span>
+            <div className="flex bg-slate-800 p-0.5 rounded border border-white/5">
+              {[
+                { value: "today", label: "Today" },
+                { value: "week", label: "Week" },
+                { value: "month", label: "Month" },
+                { value: "year", label: "Year" },
+              ].map((opt) => (
+                <button
+                  key={opt.value}
+                  onClick={() =>
+                    setKpiPeriod(
+                      opt.value as "today" | "week" | "month" | "year",
+                    )
+                  }
+                  className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${
+                    kpiPeriod === opt.value
+                      ? "bg-purple-600 text-white shadow"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
               title="Total Revenue"
-              value={`GH₵${(stats?.revenue ?? 0).toLocaleString()}`}
+              value={`GH₵${(stats?.kpis?.[kpiPeriod]?.revenue ?? (kpiPeriod === "month" ? stats?.revenue : 0) ?? 0).toLocaleString()}`}
               icon={DollarSign}
               color="text-emerald-400"
               bg="bg-emerald-400/10"
-              trend={stats?.revenueGrowth}
-              subtext="vs last month"
+              trend={
+                stats?.kpis?.[kpiPeriod]?.revenueGrowth ??
+                (kpiPeriod === "month" ? stats?.revenueGrowth : undefined)
+              }
+              subtext={`vs last ${kpiPeriod === "today" ? "day" : kpiPeriod}`}
             />
             <StatCard
               title="Total Orders"
-              value={(stats?.orders ?? 0).toString()}
+              value={(
+                stats?.kpis?.[kpiPeriod]?.orders ??
+                (kpiPeriod === "month" ? stats?.orders : 0) ??
+                0
+              ).toString()}
               icon={ShoppingCart}
               color="text-blue-400"
               bg="bg-blue-400/10"
-              trend={stats?.ordersGrowth}
-              subtext="vs last month"
+              trend={
+                stats?.kpis?.[kpiPeriod]?.ordersGrowth ??
+                (kpiPeriod === "month" ? stats?.ordersGrowth : undefined)
+              }
+              subtext={`vs last ${kpiPeriod === "today" ? "day" : kpiPeriod}`}
             />
             <StatCard
               title="Total Products"
@@ -269,11 +313,15 @@ export default function AdminReports() {
               color="text-purple-400"
               bg="bg-purple-400/10"
               trend={
-                (stats?.newProductsCount ?? 0) > 0
-                  ? `+${stats?.newProductsCount} new`
+                (stats?.kpis?.[kpiPeriod]?.newProducts ?? 0) > 0
+                  ? `+${stats?.kpis?.[kpiPeriod]?.newProducts} new`
                   : undefined
               }
-              subtext="this week"
+              subtext={
+                kpiPeriod === "today"
+                  ? "added today"
+                  : `vs last ${kpiPeriod === "week" ? "week" : kpiPeriod}`
+              }
             />
             <StatCard
               title="Low Stock"
