@@ -34,17 +34,17 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
     // 1. Consolidated Orders Stats
     const orderStatsResult = await db.query(`
       SELECT 
-        COUNT(*) as total_orders,
-        SUM(total) FILTER (WHERE status != 'cancelled') as total_revenue,
+        COUNT(*) FILTER (WHERE status != 'cancelled' AND status != 'pending' AND status != 'quote') as total_orders,
+        SUM(total) FILTER (WHERE status != 'cancelled' AND status != 'pending' AND status != 'quote') as total_revenue,
         COUNT(*) FILTER (WHERE status = 'pending') as pending_orders,
         
         -- Revenue Growth
-        SUM(total) FILTER (WHERE status != 'cancelled' AND "createdAt" >= NOW() - INTERVAL '30 days') as current_revenue_30d,
-        SUM(total) FILTER (WHERE status != 'cancelled' AND "createdAt" < NOW() - INTERVAL '30 days' AND "createdAt" >= NOW() - INTERVAL '60 days') as prev_revenue_30d,
+        SUM(total) FILTER (WHERE status != 'cancelled' AND status != 'pending' AND status != 'quote' AND "createdAt" >= NOW() - INTERVAL '30 days') as current_revenue_30d,
+        SUM(total) FILTER (WHERE status != 'cancelled' AND status != 'pending' AND status != 'quote' AND "createdAt" < NOW() - INTERVAL '30 days' AND "createdAt" >= NOW() - INTERVAL '60 days') as prev_revenue_30d,
         
         -- Orders Growth
-        COUNT(*) FILTER (WHERE "createdAt" >= NOW() - INTERVAL '30 days') as current_orders_30d,
-        COUNT(*) FILTER (WHERE "createdAt" < NOW() - INTERVAL '30 days' AND "createdAt" >= NOW() - INTERVAL '60 days') as prev_orders_30d,
+        COUNT(*) FILTER (WHERE status != 'cancelled' AND status != 'pending' AND status != 'quote' AND "createdAt" >= NOW() - INTERVAL '30 days') as current_orders_30d,
+        COUNT(*) FILTER (WHERE status != 'cancelled' AND status != 'pending' AND status != 'quote' AND "createdAt" < NOW() - INTERVAL '30 days' AND "createdAt" >= NOW() - INTERVAL '60 days') as prev_orders_30d,
         
         -- Pending Trend
         COUNT(*) FILTER (WHERE status = 'pending' AND "createdAt" >= NOW() - INTERVAL '24 hours') as current_pending_24h,
@@ -150,11 +150,12 @@ router.get(
 
       // Get orders from the last N days
       // Postgres date math: "createdAt" >= NOW() - INTERVAL '7 days'
+      // Exclude pending and quote
       const ordersResult = await db.query(
         `
       SELECT "createdAt", total 
       FROM orders 
-      WHERE status != 'cancelled' 
+      WHERE status != 'cancelled' AND status != 'pending' AND status != 'quote'
       AND "createdAt" >= NOW() - INTERVAL '${days} days'
       ORDER BY "createdAt" ASC
     `,
@@ -208,7 +209,7 @@ router.get(
   async (req: AdminRequest, res: Response) => {
     try {
       const ordersResult = await db.query(
-        "SELECT items FROM orders WHERE status != 'cancelled'",
+        "SELECT items FROM orders WHERE status != 'cancelled' AND status != 'pending' AND status != 'quote'",
       );
       const orders = ordersResult.rows as { items: string }[];
 
@@ -397,14 +398,17 @@ router.get("/regional", adminAuth, async (req: AdminRequest, res: Response) => {
         "shippingInfo" as shipping,
         total
       FROM orders
-      WHERE status != 'cancelled'
+      WHERE status != 'cancelled' AND status != 'pending' AND status != 'quote'
     `);
 
     const regionSales: Record<string, { orders: number; revenue: number }> = {};
 
     result.rows.forEach((row) => {
       const shipping = safeParse(row.shipping) as Record<string, unknown>;
-      const region = String(shipping?.region || "Unknown");
+      // Fix potential object conversion issue by ensuring it's a string
+      const region =
+        typeof shipping?.region === "string" ? shipping.region : "Unknown";
+
       const total = Number.parseFloat(row.total);
 
       if (!regionSales[region]) {
