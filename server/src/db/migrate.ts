@@ -25,6 +25,17 @@ async function migrate() {
     console.log(
       '✅ Migration successful: "avatar" column added or already exists.',
     );
+
+    console.log('📡 Adding "slug" column to "products"...');
+    await client.query(
+      "ALTER TABLE products ADD COLUMN IF NOT EXISTS slug TEXT UNIQUE;",
+    );
+    console.log(
+      '✅ Migration successful: "slug" column added or already exists.',
+    );
+    console.log(
+      '✅ Migration successful: "avatar" column added or already exists.',
+    );
   } catch (err) {
     console.error("❌ Migration failed:", err);
     process.exit(1);

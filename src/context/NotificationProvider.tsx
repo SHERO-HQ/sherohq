@@ -1,4 +1,4 @@
-import { useState, useMemo, type ReactNode } from "react";
+import { useState, useMemo, useCallback, type ReactNode } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { type Notification, type NotificationType } from "@/types/notification";
 import { NotificationContext } from "./NotificationContextType";
@@ -9,56 +9,63 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   // Calculate unread count
   const unreadCount = notifications.filter((n) => !n.read).length;
 
-  function addNotification(
-    title: string,
-    message: string,
-    type: NotificationType = "info",
-    link?: string,
-  ) {
-    const newNotification: Notification = {
-      id: uuidv4(),
-      title,
-      message,
-      type,
-      read: false,
-      createdAt: new Date().toISOString(),
-      link,
-    };
+  const addNotification = useCallback(
+    (
+      title: string,
+      message: string,
+      type: NotificationType = "info",
+      link?: string,
+    ) => {
+      const newNotification: Notification = {
+        id: uuidv4(),
+        title,
+        message,
+        type,
+        read: false,
+        createdAt: new Date().toISOString(),
+        link,
+      };
 
-    setNotifications((prev) => [newNotification, ...prev]);
-  }
+      setNotifications((prev) => [newNotification, ...prev]);
+    },
+    [],
+  );
 
-  function markAsRead(id: string) {
+  const markAsRead = useCallback((id: string) => {
     setNotifications((prev) =>
       prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
     );
-  }
+  }, []);
 
-  function markAllAsRead() {
+  const markAllAsRead = useCallback(() => {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-  }
+  }, []);
 
-  function clearAll() {
+  const clearAll = useCallback(() => {
     setNotifications([]);
-  }
+  }, []);
 
-  // Note: Real-time order notifications would be implemented via WebSocket or SSE
-  // when connected to a live order processing system
+  const contextValue = useMemo(
+    () => ({
+      notifications,
+      unreadCount,
+      addNotification,
+      markAsRead,
+      markAllAsRead,
+      clearAll,
+    }),
+    [
+      notifications,
+      unreadCount,
+      addNotification,
+      markAsRead,
+      markAllAsRead,
+      clearAll,
+    ],
+  );
 
   return (
-    <NotificationContext.Provider
-      value={useMemo(
-        () => ({
-          notifications,
-          unreadCount,
-          addNotification,
-          markAsRead,
-          markAllAsRead,
-          clearAll,
-        }),
-        [notifications, unreadCount],
-      )}
-    >
+    <NotificationContext.Provider value={contextValue}>
       {children}
     </NotificationContext.Provider>
   );

@@ -64,7 +64,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
     if (onQuickView) {
       onQuickView(product);
     } else {
-      navigate(`/products/${product.sku || product.id}`);
+      navigate(`/products/${product.slug || product.sku || product.id}`);
     }
   };
 
@@ -81,7 +81,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
   };
 
   const handleCardClick = () => {
-    navigate(`/products/${product.sku || product.id}`);
+    navigate(`/products/${product.slug || product.sku || product.id}`);
   };
 
   return (
@@ -269,7 +269,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
 
           <a
             href={`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}?text=${encodeURIComponent(
-              `Hi, I'm interested in inquiring about ${product.name}. Is it still available?`,
+              `Hi SHERO, I'm interested in inquiring about ${product.name}. Is it still available?`,
             )}`}
             target="_blank"
             rel="noopener noreferrer"

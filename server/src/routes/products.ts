@@ -10,11 +10,14 @@ import { generateSku } from "../utils/sku";
 const router = Router();
 
 // Database row type for products
+// Database row type for products
 interface ProductRow {
   id: string;
   name: string;
   sku: string | null;
-  category: string;
+  slug: string | null; // Added slug
+  category: string; // This is the UUID from DB
+  category_name?: string; // Joined name
   price: string; // Postgres returns decimals as strings
   originalPrice: string | null;
   image: string | null;
@@ -27,6 +30,7 @@ interface ProductRow {
   description: string | null;
   features: string | null;
   specifications: string | null;
+  condition: "New" | "Used" | "Refurbished" | null;
   createdAt: Date;
 }
 
@@ -43,8 +47,20 @@ function parseProduct(row: ProductRow) {
     }
   };
 
+  // Debug log for category mismatch investigation
+  if (!row.category_name && row.category) {
+    console.warn(
+      `⚠️ Product ${row.id} has category ID '${row.category}' but no matching category name found.`,
+    );
+  }
+
   return {
     ...row,
+    id: row.id,
+    // Frontend expects "category" to be the Display Name
+    category: row.category_name || row.category,
+    // We add "categoryId" to hold the UUID for forms
+    categoryId: row.category,
     price: Number(row.price),
     originalPrice: row.originalPrice ? Number(row.originalPrice) : null,
     rating: Number(row.rating),
@@ -53,7 +69,9 @@ function parseProduct(row: ProductRow) {
     specifications: safeParse(row.specifications),
     inStock: Boolean(row.inStock),
     sku: row.sku || null,
+    slug: row.slug || null, // Return slug
     quantity: row.stockQuantity, // Alias for frontend compatibility
+    condition: row.condition || "New",
   };
 }
 
@@ -62,20 +80,25 @@ router.get("/", async (req: Request, res: Response) => {
   try {
     const { category, search } = req.query;
 
-    let queryText = "SELECT * FROM products";
+    let queryText = `
+      SELECT p.*, c.name as category_name 
+      FROM products p
+      LEFT JOIN categories c ON p.category = c.id
+    `;
     const params: (string | number)[] = [];
     const conditions: string[] = [];
     let paramIndex = 1;
 
     if (category && category !== "all") {
-      conditions.push(`category = $${paramIndex}`);
+      // If filtering by ID, check p.category
+      conditions.push(`p.category = $${paramIndex}`);
       params.push(category as string);
       paramIndex++;
     }
 
     if (search) {
       conditions.push(
-        `(name ILIKE $${paramIndex} OR description ILIKE $${paramIndex})`,
+        `(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex})`,
       );
       params.push(`%${search as string}%`);
       paramIndex++;
@@ -85,7 +108,7 @@ router.get("/", async (req: Request, res: Response) => {
       queryText += " WHERE " + conditions.join(" AND ");
     }
 
-    queryText += ' ORDER BY "createdAt" DESC';
+    queryText += ' ORDER BY p."createdAt" DESC';
 
     const result = await db.query(queryText, params);
     const products = result.rows as ProductRow[];
@@ -96,13 +119,18 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-// GET /api/products/:id - Get single product (supports ID or SKU)
+// GET /api/products/:id - Get single product
 router.get("/:id", async (req: Request, res: Response) => {
   try {
     const id = String(req.params.id);
+    // Query by ID, SKU, or Slug - Cast ID to text to avoid UUID type mismatch
+    const query = `
+      SELECT p.*, c.name as category_name
+      FROM products p
+      LEFT JOIN categories c ON p.category = c.id
+      WHERE p.id::text = $1 OR p.sku = $1 OR p.slug = $1
+    `;
 
-    // Resilient lookup: check both ID and SKU in one query
-    const query = "SELECT * FROM products WHERE id = $1 OR sku = $1";
     const result = await db.query(query, [id]);
     const product = result.rows[0];
 
@@ -240,8 +268,6 @@ router.delete(
   },
 );
 
-// ============ ADMIN ROUTES (Protected) ============
-
 // POST /api/products - Create new product (Admin)
 router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
@@ -261,6 +287,8 @@ router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
       description,
       features,
       specifications,
+      condition,
+      slug,
     } = req.body;
 
     if (!name || !category || !price) {
@@ -274,10 +302,18 @@ router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
     // Auto-generate SKU if not provided
     const finalSku = generateSku(productId, sku);
 
+    // Auto-generate Slug if not provided
+    const finalSlug =
+      slug ||
+      name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+
     await db.query(
       `
-      INSERT INTO products (id, name, sku, category, price, "originalPrice", image, images, rating, reviews, badge, "inStock", "stockQuantity", description, features, specifications)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+      INSERT INTO products (id, name, sku, category, price, "originalPrice", image, images, rating, reviews, badge, "inStock", "stockQuantity", description, features, specifications, condition, slug)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
     `,
       [
         productId,
@@ -296,6 +332,8 @@ router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
         description || null,
         features ? JSON.stringify(features) : null,
         specifications ? JSON.stringify(specifications) : null,
+        condition || "New",
+        finalSlug,
       ],
     );
 
@@ -372,6 +410,8 @@ function processUpdateFields(body: Record<string, unknown>) {
     "description",
     "features",
     "specifications",
+    "condition",
+    "slug",
   ];
 
   for (const field of allowedFields) {
@@ -397,8 +437,9 @@ router.put("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
     const identifier = String(req.params.id);
 
-    // Resilient lookup: check both ID and SKU
-    const lookupQuery = "SELECT id FROM products WHERE id = $1 OR sku = $1";
+    // Resilient lookup: check ID, SKU, or Slug - Cast ID to text for safety
+    const lookupQuery =
+      "SELECT id FROM products WHERE id::text = $1 OR sku = $1 OR slug = $1";
 
     const check = await db.query(lookupQuery, [identifier]);
     if (check.rowCount === 0) {
@@ -449,9 +490,15 @@ router.put("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
       );
     }
 
-    const result = await db.query("SELECT * FROM products WHERE id = $1", [
-      productId,
-    ]);
+    const result = await db.query(
+      `
+      SELECT p.*, c.name as category_name
+      FROM products p
+      LEFT JOIN categories c ON p.category = c.id
+      WHERE p.id = $1
+    `,
+      [productId],
+    );
     const product = result.rows[0] as ProductRow;
 
     res.json({
@@ -490,16 +537,19 @@ router.patch(
   adminAuth,
   async (req: AdminRequest, res: Response) => {
     try {
-      const { id } = req.params;
+      const identifier = String(req.params.id);
       const { inStock, stockQuantity } = req.body;
 
-      // Check if product exists
-      const check = await db.query("SELECT id FROM products WHERE id = $1", [
-        id,
-      ]);
+      // Check if product exists - Cast id to text for safety
+      const check = await db.query(
+        "SELECT id FROM products WHERE id::text = $1 OR sku = $1 OR slug = $1",
+        [identifier],
+      );
       if (check.rowCount === 0) {
         return res.status(404).json({ error: "Product not found" });
       }
+
+      const productId = check.rows[0].id;
 
       // Update stock fields
       if (stockQuantity !== undefined) {
@@ -511,29 +561,29 @@ router.patch(
           "inStock" = $2
         WHERE id = $3
       `,
-          [stockQuantity, newInStock, id],
+          [stockQuantity, newInStock, productId],
         );
       } else if (inStock !== undefined) {
         await db.query(
           `
         UPDATE products SET "inStock" = $1 WHERE id = $2
       `,
-          [inStock, id],
+          [inStock, productId],
         );
       }
 
-      console.log(`📦 Stock updated: ${id} by ${req.admin?.username}`);
+      console.log(`📦 Stock updated: ${productId} by ${req.admin?.username}`);
       if (req.admin?.id) {
         await logActivity(
           req.admin.id,
           "stock_update",
           "info",
-          `Updated stock for product ID: ${id}. New quantity: ${stockQuantity}`,
+          `Updated stock for product ID: ${productId}. New quantity: ${stockQuantity}`,
         );
       }
 
       const result = await db.query("SELECT * FROM products WHERE id = $1", [
-        id,
+        productId,
       ]);
       const product = result.rows[0] as ProductRow;
 
@@ -551,19 +601,20 @@ router.patch(
 // DELETE /api/products/:id - Delete product (Admin)
 router.delete("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const identifier = String(req.params.id);
 
-    // Check if product exists
-    const result = await db.query("SELECT name FROM products WHERE id = $1", [
-      id,
-    ]);
+    // Resilient lookup: check ID, SKU, or Slug - Cast ID to text for safety
+    const lookupQuery =
+      "SELECT id, name FROM products WHERE id::text = $1 OR sku = $1 OR slug = $1";
+
+    const result = await db.query(lookupQuery, [identifier]);
     const existing = result.rows[0];
 
     if (!existing) {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    await db.query("DELETE FROM products WHERE id = $1", [id]);
+    await db.query("DELETE FROM products WHERE id = $1", [existing.id]);
 
     console.log(
       `🗑️ Product deleted: ${existing.name} by ${req.admin?.username}`,
@@ -573,7 +624,7 @@ router.delete("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
         req.admin.id,
         "product_delete",
         "warning",
-        `Deleted product: ${existing.name} (ID: ${id})`,
+        `Deleted product: ${existing.name} (ID: ${existing.id})`,
       );
     }
 

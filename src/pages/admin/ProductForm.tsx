@@ -67,9 +67,10 @@ export default function ProductForm() {
     stockQuantity: 100,
   });
 
+  const [specsList, setSpecsList] = useState<{ key: string; value: string }[]>(
+    [],
+  );
   const [newFeature, setNewFeature] = useState("");
-  const [newSpecKey, setNewSpecKey] = useState("");
-  const [newSpecValue, setNewSpecValue] = useState("");
 
   useEffect(() => {
     async function loadData() {
@@ -80,10 +81,23 @@ export default function ProductForm() {
         if (isEdit && id) {
           const product = await fetchProduct(id);
           if (product) {
-            setProductData(product);
+            setProductData({
+              ...product,
+              category: product.categoryId || product.category || "",
+            });
             // Set breadcrumb label to SKU or product name
             const label = product.name || id;
             setLabel(`/admin/products/${id}`, label);
+
+            // Init specs list
+            if (product.specifications) {
+              setSpecsList(
+                Object.entries(product.specifications).map(([key, value]) => ({
+                  key,
+                  value,
+                })),
+              );
+            }
           }
         }
       } catch (err) {
@@ -107,11 +121,25 @@ export default function ProductForm() {
     e.preventDefault();
     try {
       setIsSaving(true);
+
+      // Convert specs list back to object
+      const specifications = specsList.reduce(
+        (acc, { key, value }) => {
+          if (key.trim()) {
+            acc[key.trim()] = value.trim();
+          }
+          return acc;
+        },
+        {} as Record<string, string>,
+      );
+
+      const finalData = { ...productData, specifications };
+
       if (isEdit && id) {
-        await updateProductMutation.mutateAsync({ id, data: productData });
+        await updateProductMutation.mutateAsync({ id, data: finalData });
         addNotification("Success", "Product updated successfully", "success");
       } else {
-        await createProductMutation.mutateAsync(productData as ProductInput);
+        await createProductMutation.mutateAsync(finalData as ProductInput);
         addNotification("Success", "Product created successfully", "success");
       }
       navigate("/admin/products");
@@ -188,24 +216,23 @@ export default function ProductForm() {
     }));
   };
 
-  const addSpec = () => {
-    if (!newSpecKey.trim() || !newSpecValue.trim()) return;
-    setProductData((prev) => ({
-      ...prev,
-      specifications: {
-        ...prev.specifications,
-        [newSpecKey.trim()]: newSpecValue.trim(),
-      },
-    }));
-    setNewSpecKey("");
-    setNewSpecValue("");
+  const addSpecRow = () => {
+    setSpecsList((prev) => [...prev, { key: "", value: "" }]);
   };
 
-  const removeSpec = (key: string) => {
-    setProductData((prev) => {
-      const newSpecs = { ...prev.specifications };
-      delete newSpecs[key];
-      return { ...prev, specifications: newSpecs };
+  const removeSpecRow = (index: number) => {
+    setSpecsList((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const updateSpecRow = (
+    index: number,
+    field: "key" | "value",
+    newValue: string,
+  ) => {
+    setSpecsList((prev) => {
+      const newList = [...prev];
+      newList[index] = { ...newList[index], [field]: newValue };
+      return newList;
     });
   };
 
@@ -448,64 +475,78 @@ export default function ProductForm() {
               </div>
 
               <div className="space-y-6 pt-4">
-                <div className="flex items-center gap-2 pb-2 border-b border-white/5">
-                  <Tag className="w-5 h-5 text-emerald-400" />
-                  <h3 className="text-lg font-bold text-white font-sora">
-                    Specifications
-                  </h3>
+                <div className="flex items-center justify-between pb-2 border-b border-white/5">
+                  <div className="flex items-center gap-2">
+                    <Tag className="w-5 h-5 text-emerald-400" />
+                    <h3 className="text-lg font-bold text-white font-sora">
+                      Specifications
+                    </h3>
+                  </div>
+                  <Button
+                    type="button"
+                    onClick={addSpecRow}
+                    variant="outline"
+                    size="sm"
+                    className="border-white/10 text-white hover:bg-white/5 hover:text-emerald-400"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Spec
+                  </Button>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-2">
-                    <div className="md:col-span-2">
-                      <Input
-                        placeholder="Label (e.g. RAM)"
-                        value={newSpecKey}
-                        onChange={(e) => setNewSpecKey(e.target.value)}
-                        className="bg-slate-800/50 border-white/5 text-white"
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <Input
-                        placeholder="Value (e.g. 16GB)"
-                        value={newSpecValue}
-                        onChange={(e) => setNewSpecValue(e.target.value)}
-                        className="bg-slate-800/50 border-white/5 text-white"
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      onClick={addSpec}
-                      className="bg-slate-800 text-white hover:bg-slate-700"
+                <div className="space-y-3">
+                  {specsList.map((spec, index) => (
+                    <div
+                      key={index}
+                      className="flex gap-3 items-start p-3 rounded bg-slate-800/30 border border-white/5 animate-in fade-in slide-in-from-top-1 duration-200"
                     >
-                      <Plus className="w-4 h-4" />
-                    </Button>
-                  </div>
+                      <div className="flex-1 space-y-1">
+                        <Input
+                          placeholder="Key (e.g. RAM)"
+                          value={spec.key}
+                          onChange={(e) =>
+                            updateSpecRow(index, "key", e.target.value)
+                          }
+                          className="bg-slate-800/50 border-white/5 text-white h-9 text-sm"
+                        />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <Input
+                          placeholder="Value (e.g. 16GB)"
+                          value={spec.value}
+                          onChange={(e) =>
+                            updateSpecRow(index, "value", e.target.value)
+                          }
+                          className="bg-slate-800/50 border-white/5 text-white h-9 text-sm"
+                        />
+                      </div>
+                      <Button
+                        type="button"
+                        onClick={() => removeSpecRow(index)}
+                        variant="ghost"
+                        size="icon"
+                        className="h-9 w-9 text-slate-500 hover:text-rose-400 hover:bg-rose-950/20 shrink-0"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ))}
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {Object.entries(productData.specifications || {}).map(
-                      ([key, value]) => (
-                        <div
-                          key={key}
-                          className="flex items-center justify-between p-3 rounded bg-slate-800/30 border border-white/5"
-                        >
-                          <div className="text-sm">
-                            <span className="text-slate-500 mr-2">{key}:</span>
-                            <span className="text-white font-medium">
-                              {value}
-                            </span>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => removeSpec(key)}
-                            className="text-slate-500 hover:text-rose-400 transition-colors"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      ),
-                    )}
-                  </div>
+                  {specsList.length === 0 && (
+                    <div className="text-center py-8 border-2 border-dashed border-white/5 rounded">
+                      <p className="text-slate-500 text-sm italic mb-2">
+                        No technical specifications added.
+                      </p>
+                      <Button
+                        type="button"
+                        onClick={addSpecRow}
+                        variant="link"
+                        className="text-emerald-400"
+                      >
+                        Add your first specification
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             </Card>
@@ -567,6 +608,34 @@ export default function ProductForm() {
                     />
                     <p className="text-[10px] text-slate-500 italic">
                       Leave blank to auto-generate based on Product ID.
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="slug"
+                      className="text-sm font-medium text-slate-400"
+                    >
+                      URL Slug
+                    </label>
+                    <Input
+                      id="slug"
+                      placeholder="e.g. macbook-pro-m3"
+                      value={productData.slug || ""}
+                      onChange={(e) =>
+                        setProductData((prev) => ({
+                          ...prev,
+                          slug: e.target.value
+                            .toLowerCase()
+                            .replace(/[^a-z0-9]+/g, "-")
+                            .replace(/(^-|-$)/g, ""),
+                        }))
+                      }
+                      className="bg-slate-800/50 border-white/5 text-white"
+                    />
+                    <p className="text-[10px] text-slate-500 italic">
+                      The friendly URL for this product (e.g.,
+                      /products/your-product-name).
                     </p>
                   </div>
                 </div>
@@ -677,6 +746,30 @@ export default function ProductForm() {
                       {cat.name}
                     </option>
                   ))}
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <label
+                  htmlFor="condition"
+                  className="text-sm font-medium text-slate-400"
+                >
+                  Condition
+                </label>
+                <select
+                  id="condition"
+                  className="w-full bg-slate-800 border-white/5 text-white rounded px-4 py-2 outline-none focus:ring-1 focus:ring-emerald-500/50"
+                  value={productData.condition || "New"}
+                  onChange={(e) =>
+                    setProductData((prev) => ({
+                      ...prev,
+                      condition: e.target.value as Product["condition"],
+                    }))
+                  }
+                >
+                  <option value="New">New</option>
+                  <option value="Used">Used</option>
+                  <option value="Refurbished">Refurbished</option>
                 </select>
               </div>
 

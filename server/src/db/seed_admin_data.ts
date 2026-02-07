@@ -550,7 +550,7 @@ export async function seedInquiries() {
       {
         subject: "Store Location",
         message:
-          "I'm visiting Accra next week. Can you share your physical store address and operating hours?",
+          "I'm visiting Tamale next week. Can you share your physical store address and operating hours?",
       },
       {
         subject: "Payment Options",

@@ -462,14 +462,14 @@ class NotificationService {
           <div style="border-top: 1px solid #e2e8f0; padding-top: 24px; text-align: center;">
             <p style="font-size: 14px; color: #64748b; margin-bottom: 16px;">Need help with this order?</p>
             <div style="display: flex; justify-content: center; gap: 12px;">
-               <a href="https://wa.me/233548711582" style="background-color: #25D366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 13px;">WhatsApp Support</a>
+               <a href="https://wa.me/233548711582" style="background-color: #25D366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 3px; font-weight: 600; font-size: 13px;">WhatsApp Support</a>
             </div>
           </div>
         </div>
 
         <div style="background-color: #f1f5f9; padding: 20px; text-align: center; color: #94a3b8; font-size: 12px;">
           <p style="margin: 0 0 8px;">&copy; ${new Date().getFullYear()} SHERO TECHNOLOGIES. All rights reserved.</p>
-          <p style="margin: 0;">Accra, Ghana | www.sherohq.com</p>
+          <p style="margin: 0;">Tamale, Ghana | www.sherohq.com</p>
         </div>
       </div>
     `;

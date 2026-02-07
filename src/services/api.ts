@@ -742,6 +742,8 @@ export interface ProductInput {
   description?: string;
   features?: string[];
   specifications?: Record<string, string>;
+  condition?: "New" | "Used" | "Refurbished";
+  slug?: string;
 }
 
 export async function createProduct(

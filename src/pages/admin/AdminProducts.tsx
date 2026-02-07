@@ -268,6 +268,9 @@ export default function AdminProducts() {
                     Product
                   </th>
                   <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    SKU
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
                     Category
                   </th>
                   <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
@@ -285,7 +288,7 @@ export default function AdminProducts() {
                 {isLoading ? (
                   new Array(5).fill(0).map((_, i) => (
                     <tr key={i} className="animate-pulse">
-                      <td colSpan={5} className="px-6 py-8">
+                      <td colSpan={6} className="px-6 py-8">
                         <div className="h-4 bg-slate-800 rounded w-full" />
                       </td>
                     </tr>
@@ -293,7 +296,7 @@ export default function AdminProducts() {
                 ) : paginatedProducts.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={5}
+                      colSpan={6}
                       className="px-6 py-12 text-center text-slate-500"
                     >
                       No products found matching your criteria.
@@ -315,14 +318,22 @@ export default function AdminProducts() {
                             />
                           </div>
                           <div>
-                            <p className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">
+                            <UniversalLink
+                              to={`/admin/products/${product.slug || product.sku || product.id}/edit`}
+                              className="text-sm font-semibold text-white hover:text-emerald-400 font-sora transition-colors"
+                            >
                               {product.name}
-                            </p>
+                            </UniversalLink>
                             <p className="text-xs text-slate-500 font-mono">
                               ID: {product.id.slice(0, 8)}
                             </p>
                           </div>
                         </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">
+                          {product.sku || "-"}
+                        </span>
                       </td>
                       <td className="px-6 py-4 bg-transparent">
                         <Badge
@@ -375,7 +386,7 @@ export default function AdminProducts() {
                             asChild
                           >
                             <UniversalLink
-                              to={`/admin/products/${product.sku || product.id}/edit`}
+                              to={`/admin/products/${product.slug || product.sku || product.id}/edit`}
                             >
                               <Edit2 className="w-4 h-4" />
                             </UniversalLink>
@@ -399,7 +410,7 @@ export default function AdminProducts() {
                                 asChild
                               >
                                 <a
-                                  href={`/products/${product.id}`}
+                                  href={`/products/${product.slug || product.sku || product.id}`}
                                   target="_blank"
                                   rel="noreferrer"
                                 >
