@@ -1,0 +1,133 @@
+import crypto from "crypto";
+import { Request, Response, NextFunction } from "express";
+
+/**
+ * Middleware to verify webhook signatures using HMAC-SHA256
+ * Protects against fake webhook requests
+ */
+export function verifyWebhookSignature(secret: string) {
+    return (req: Request, res: Response, next: NextFunction) => {
+        try {
+            // Get signature from header
+            const signature = req.headers["x-webhook-signature"] as string;
+
+            if (!signature) {
+                console.warn("🛑 Webhook request missing signature header");
+                return res.status(401).json({
+                    error: "Missing webhook signature",
+                    details: "X-Webhook-Signature header is required",
+                });
+            }
+
+            if (!secret) {
+                console.error("❌ PAYMENT_WEBHOOK_SECRET not configured");
+                return res.status(500).json({
+                    error: "Webhook verification not configured",
+                });
+            }
+
+            // Calculate expected signature
+            const payload = JSON.stringify(req.body);
+            const expectedSignature = crypto
+                .createHmac("sha256", secret)
+                .update(payload)
+                .digest("hex");
+
+            // Use timing-safe comparison to prevent timing attacks
+            const isValid = crypto.timingSafeEqual(
+                Buffer.from(signature),
+                Buffer.from(expectedSignature)
+            );
+
+            if (!isValid) {
+                console.error("🔴 Webhook signature verification failed");
+                console.warn(`Received signature: ${signature.substring(0, 20)}...`);
+                console.warn(`Expected signature: ${expectedSignature.substring(0, 20)}...`);
+                return res.status(401).json({
+                    error: "Invalid webhook signature",
+                });
+            }
+
+            console.log("✅ Webhook signature verified");
+            next();
+        } catch (error) {
+            console.error("Webhook verification error:", error);
+            return res.status(500).json({
+                error: "Webhook verification failed",
+            });
+        }
+    };
+}
+
+/**
+ * Middleware to verify Paystack webhook signatures
+ * Uses the standard Paystack signature verification method
+ */
+export function verifyPaystackSignature(secret: string) {
+    return (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const signature = req.headers["x-paystack-signature"] as string;
+
+            if (!signature) {
+                console.warn("🛑 Paystack webhook missing signature");
+                return res.status(401).json({
+                    error: "Missing Paystack signature",
+                });
+            }
+
+            const payload = JSON.stringify(req.body);
+            const hash = crypto.createHmac("sha512", secret).update(payload).digest("hex");
+
+            if (hash !== signature) {
+                console.error("🔴 Paystack signature verification failed");
+                return res.status(401).json({
+                    error: "Invalid Paystack signature",
+                });
+            }
+
+            console.log("✅ Paystack webhook verified");
+            next();
+        } catch (error) {
+            console.error("Paystack verification error:", error);
+            return res.status(500).json({
+                error: "Webhook verification failed",
+            });
+        }
+    };
+}
+
+/**
+ * Middleware to verify Hubtel webhook signatures
+ */
+export function verifyHubtelSignature(secret: string) {
+    return (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const signature = req.headers["x-hubtel-signature"] as string;
+
+            if (!signature) {
+                console.warn("🛑 Hubtel webhook missing signature");
+                return res.status(401).json({
+                    error: "Missing Hubtel signature",
+                });
+            }
+
+            const payload = JSON.stringify(req.body);
+            const hash = crypto.createHmac("sha256", secret).update(payload).digest("hex");
+
+            if (hash !== signature) {
+                console.error("🔴 Hubtel signature verification failed");
+                return res.status(401).json({
+                    error: "Invalid Hubtel signature",
+                });
+            }
+
+            console.log("✅ Hubtel webhook verified");
+            next();
+        } catch (error) {
+            console.error("Hubtel verification error:", error);
+            return res.status(500).json({
+                error: "Webhook verification failed",
+            });
+        }
+    };
+}

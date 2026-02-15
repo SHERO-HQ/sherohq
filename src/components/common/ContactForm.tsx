@@ -100,6 +100,8 @@ const ContactForm = () => {
               <option value="partnership">Partnership</option>
               <option value="support">Support</option>
               <option value="feedback">Feedback</option>
+              {/* <option value="other">Other</option> */}
+
             </select>
             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
               <ChevronDown className="w-4 h-4" />

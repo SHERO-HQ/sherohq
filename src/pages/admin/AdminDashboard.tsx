@@ -273,7 +273,7 @@ export default function AdminDashboard() {
   if (error) {
     return (
       <AdminLayout>
-        <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
+        <div className="flex flex-col items-center justify-center min-h-100 text-center">
           <div className="p-4 rounded bg-rose-500/10 mb-4">
             <XCircle className="w-12 h-12 text-rose-500" />
           </div>
