@@ -5,61 +5,55 @@ dotenv.config();
 
 // Initialize PostgreSQL connection pool
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }, // Always use SSL for Supabase
-  max: 20, // Increased pool size
-  idleTimeoutMillis: 60000, // 60 seconds
-  connectionTimeoutMillis: 60000, // 60 seconds - allow time for initialization
+    connectionString: process.env.DATABASE_URL,
+    ssl:
+        process.env.NODE_ENV === "production"
+            ? true // Enforce SSL certificate validation in production
+            : { rejectUnauthorized: false }, // Allow self-signed certs in dev
+    max: 20, // Increased pool size
+    idleTimeoutMillis: 60000, // 60 seconds
+    connectionTimeoutMillis: 60000, // 60 seconds - allow time for initialization
 });
 
 // Helper to query the database with logging
 export const query = async (text: string, params?: unknown[]) => {
-  const start = Date.now();
-  try {
-    const res = await pool.query(text, params);
-    const duration = Date.now() - start;
-    if (duration > 100) {
-      // Log slow queries (> 100ms)
-      console.log(
-        `🐢 Slow Query (${duration}ms): ${text.substring(0, 200)}...`,
-      );
-    } else if (process.env.DEBUG === "true") {
-      console.log(`⏱️ DB Query (${duration}ms): ${text.substring(0, 100)}...`);
+    const start = Date.now();
+    try {
+        const res = await pool.query(text, params);
+        const duration = Date.now() - start;
+        if (duration > 100) {
+            // Log slow queries (> 100ms)
+            console.log(`🐢 Slow Query (${duration}ms): ${text.substring(0, 200)}...`);
+        } else if (process.env.DEBUG === "true") {
+            console.log(`⏱️ DB Query (${duration}ms): ${text.substring(0, 100)}...`);
+        }
+        return res;
+    } catch (err) {
+        const duration = Date.now() - start;
+        console.error(`❌ [DB Error] (${duration}ms) Query: ${text.substring(0, 500)}`);
+        console.error(`[DB Error] Params:`, params);
+        console.error(`[DB Error] Message:`, err instanceof Error ? err.message : err);
+        throw err;
     }
-    return res;
-  } catch (err) {
-    const duration = Date.now() - start;
-    console.error(
-      `❌ [DB Error] (${duration}ms) Query: ${text.substring(0, 500)}`,
-    );
-    console.error(`[DB Error] Params:`, params);
-    console.error(
-      `[DB Error] Message:`,
-      err instanceof Error ? err.message : err,
-    );
-    throw err;
-  }
 };
 
 // Create tables
 export async function initializeDatabase() {
-  console.log("🔌 Attempting to connect to the database...");
+    console.log("🔌 Attempting to connect to the database...");
 
-  // Use a direct client for initialization to bypass pooler issues with DDL
-  const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
-  });
+    // Use a direct client for initialization to bypass pooler issues with DDL
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: process.env.NODE_ENV === "production" ? true : { rejectUnauthorized: false },
+    });
 
-  await client.connect();
-  try {
-    console.log(
-      "📡 Connected to database. Running migrations/initialization...",
-    );
+    await client.connect();
+    try {
+        console.log("📡 Connected to database. Running migrations/initialization...");
 
-    // Products table
-    console.log("📦 Initializing products table...");
-    await client.query(`
+        // Products table
+        console.log("📦 Initializing products table...");
+        await client.query(`
       CREATE TABLE IF NOT EXISTS products (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
@@ -81,8 +75,8 @@ export async function initializeDatabase() {
       )
     `);
 
-    // Categories table
-    await client.query(`
+        // Categories table
+        await client.query(`
       CREATE TABLE IF NOT EXISTS categories (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
@@ -90,8 +84,8 @@ export async function initializeDatabase() {
       )
     `);
 
-    // Orders table
-    await client.query(`
+        // Orders table
+        await client.query(`
       CREATE TABLE IF NOT EXISTS orders (
         id TEXT PRIMARY KEY,
         "guestId" TEXT NOT NULL,
@@ -105,8 +99,8 @@ export async function initializeDatabase() {
       )
     `);
 
-    // Users table (Customers)
-    await client.query(`
+        // Users table (Customers)
+        await client.query(`
       CREATE TABLE IF NOT EXISTS users (
         id TEXT PRIMARY KEY,
         email TEXT UNIQUE NOT NULL,
@@ -124,8 +118,8 @@ export async function initializeDatabase() {
       )
     `);
 
-    // User Sessions table
-    await client.query(`
+        // User Sessions table
+        await client.query(`
       CREATE TABLE IF NOT EXISTS user_sessions (
         id TEXT PRIMARY KEY,
         "userId" TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -135,8 +129,8 @@ export async function initializeDatabase() {
       )
     `);
 
-    // Admin users table
-    await client.query(`
+        // Admin users table
+        await client.query(`
       CREATE TABLE IF NOT EXISTS admin_users (
         id TEXT PRIMARY KEY,
         username TEXT UNIQUE NOT NULL,
@@ -148,8 +142,8 @@ export async function initializeDatabase() {
       )
     `);
 
-    // Sessions table for admin authentication
-    await client.query(`
+        // Sessions table for admin authentication
+        await client.query(`
       CREATE TABLE IF NOT EXISTS sessions (
         id TEXT PRIMARY KEY,
         "adminId" TEXT NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
@@ -159,8 +153,8 @@ export async function initializeDatabase() {
       )
     `);
 
-    // Support Tickets table
-    await client.query(`
+        // Support Tickets table
+        await client.query(`
       CREATE TABLE IF NOT EXISTS tickets (
         id TEXT PRIMARY KEY,
         ticket_no SERIAL,
@@ -178,8 +172,8 @@ export async function initializeDatabase() {
       )
     `);
 
-    // Reviews table
-    await client.query(`
+        // Reviews table
+        await client.query(`
       CREATE TABLE IF NOT EXISTS reviews (
         id TEXT PRIMARY KEY,
         "productId" TEXT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
@@ -190,8 +184,8 @@ export async function initializeDatabase() {
       )
     `);
 
-    // Activity Logs table
-    await client.query(`
+        // Activity Logs table
+        await client.query(`
       CREATE TABLE IF NOT EXISTS activity_logs (
         id TEXT PRIMARY KEY,
         "adminId" TEXT REFERENCES admin_users(id) ON DELETE SET NULL,
@@ -202,8 +196,8 @@ export async function initializeDatabase() {
       )
     `);
 
-    // Consultations table
-    await client.query(`
+        // Consultations table
+        await client.query(`
       CREATE TABLE IF NOT EXISTS consultations (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
@@ -218,8 +212,8 @@ export async function initializeDatabase() {
       )
     `);
 
-    // Inquiries table
-    await client.query(`
+        // Inquiries table
+        await client.query(`
       CREATE TABLE IF NOT EXISTS inquiries (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
@@ -231,8 +225,8 @@ export async function initializeDatabase() {
       )
     `);
 
-    // Projects table
-    await client.query(`
+        // Projects table
+        await client.query(`
       CREATE TABLE IF NOT EXISTS projects (
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
@@ -247,8 +241,8 @@ export async function initializeDatabase() {
       )
     `);
 
-    // Support Guides table (for hardware/software articles)
-    await client.query(`
+        // Support Guides table (for hardware/software articles)
+        await client.query(`
       CREATE TABLE IF NOT EXISTS support_guides (
         id TEXT PRIMARY KEY,
         title TEXT NOT NULL,
@@ -264,8 +258,8 @@ export async function initializeDatabase() {
       )
     `);
 
-    // Team Members table
-    await client.query(`
+        // Team Members table
+        await client.query(`
       CREATE TABLE IF NOT EXISTS team_members (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
@@ -278,8 +272,8 @@ export async function initializeDatabase() {
       )
     `);
 
-    // Testimonials table
-    await client.query(`
+        // Testimonials table
+        await client.query(`
       CREATE TABLE IF NOT EXISTS testimonials (
         id TEXT PRIMARY KEY,
         quote TEXT NOT NULL,
@@ -293,8 +287,8 @@ export async function initializeDatabase() {
       )
     `);
 
-    // Site Stats table
-    await client.query(`
+        // Site Stats table
+        await client.query(`
       CREATE TABLE IF NOT EXISTS site_stats (
         id TEXT PRIMARY KEY,
         label TEXT NOT NULL,
@@ -308,74 +302,46 @@ export async function initializeDatabase() {
       )
     `);
 
-    // --- PERFORMANCE INDEXES ---
-    console.log("⚡ Creating performance indexes...");
+        // --- PERFORMANCE INDEXES ---
+        console.log("⚡ Creating performance indexes...");
 
-    // Products
-    await client.query(
-      "CREATE INDEX IF NOT EXISTS idx_products_category ON products(category)",
-    );
-    await client.query(
-      'CREATE INDEX IF NOT EXISTS idx_products_created_at ON products("createdAt")',
-    );
-    await client.query(
-      'CREATE INDEX IF NOT EXISTS idx_products_stock ON products("stockQuantity")',
-    );
+        // Products
+        await client.query("CREATE INDEX IF NOT EXISTS idx_products_category ON products(category)");
+        await client.query('CREATE INDEX IF NOT EXISTS idx_products_created_at ON products("createdAt")');
+        await client.query('CREATE INDEX IF NOT EXISTS idx_products_stock ON products("stockQuantity")');
 
-    // Orders
-    await client.query(
-      "CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status)",
-    );
-    await client.query(
-      'CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders("createdAt")',
-    );
-    await client.query(
-      'CREATE INDEX IF NOT EXISTS idx_orders_composite ON orders(status, "createdAt")',
-    );
+        // Orders
+        await client.query("CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(status)");
+        await client.query('CREATE INDEX IF NOT EXISTS idx_orders_created_at ON orders("createdAt")');
+        await client.query('CREATE INDEX IF NOT EXISTS idx_orders_composite ON orders(status, "createdAt")');
 
-    // Sessions (critical for authentication performance)
-    await client.query(
-      "CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token)",
-    );
-    await client.query(
-      'CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions("expiresAt")',
-    );
+        // Sessions (critical for authentication performance)
+        await client.query("CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token)");
+        await client.query('CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions("expiresAt")');
 
-    // Admin users
-    await client.query(
-      "CREATE INDEX IF NOT EXISTS idx_admin_users_id ON admin_users(id)",
-    );
+        // Admin users
+        await client.query("CREATE INDEX IF NOT EXISTS idx_admin_users_id ON admin_users(id)");
 
-    // Activity logs
-    await client.query(
-      'CREATE INDEX IF NOT EXISTS idx_activity_logs_created ON activity_logs("createdAt" DESC)',
-    );
-    await client.query(
-      'CREATE INDEX IF NOT EXISTS idx_activity_logs_admin ON activity_logs("adminId")',
-    );
+        // Activity logs
+        await client.query('CREATE INDEX IF NOT EXISTS idx_activity_logs_created ON activity_logs("createdAt" DESC)');
+        await client.query('CREATE INDEX IF NOT EXISTS idx_activity_logs_admin ON activity_logs("adminId")');
 
-    // Reviews indexes
-    await client.query(
-      'CREATE INDEX IF NOT EXISTS idx_reviews_product ON reviews("productId")',
-    );
-    await client.query(
-      'CREATE INDEX IF NOT EXISTS idx_reviews_created ON reviews("createdAt" DESC)',
-    );
+        // Reviews indexes
+        await client.query('CREATE INDEX IF NOT EXISTS idx_reviews_product ON reviews("productId")');
+        await client.query('CREATE INDEX IF NOT EXISTS idx_reviews_created ON reviews("createdAt" DESC)');
 
-    // Categories index
-    await client.query(
-      "CREATE INDEX IF NOT EXISTS idx_categories_name ON categories(name)",
-    );
+        // Categories index
+        await client.query("CREATE INDEX IF NOT EXISTS idx_categories_name ON categories(name)");
 
-    console.log("⚡ Indexes ensured.");
+        console.log("⚡ Indexes ensured.");
 
-    console.log("📦 Database initialized successfully");
-  } catch (err) {
-    console.error("❌ Error initializing database:", err);
-    throw err;
-  } finally {
-    await client.end();
-  }
+        console.log("📦 Database initialized successfully");
+    } catch (err) {
+        console.error("❌ Error initializing database:", err);
+        throw err;
+    } finally {
+        await client.end();
+    }
 }
 
 export default { query };

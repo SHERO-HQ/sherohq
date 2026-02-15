@@ -44,7 +44,7 @@ const Contact = () => {
                 <h1 className="text-4xl md:text-6xl font-sora font-bold text-slate-900 dark:text-white mb-6 leading-tight">
                   Let's Build the
                   <br />
-                  <span className="text-transparent bg-clip-text bg-linear-to-r dark:from-emerald-400 dark:to-cyan-400 from-primary to-secondary">
+                  <span className="text-transparent bg-clip-text bg-linear-to-r dark:from-emerald-400 dark:to-cyan-400  from-primary to-cyan-600">
                     Future Together
                   </span>
                 </h1>
@@ -102,7 +102,7 @@ const Contact = () => {
                     Send Message
                   </h3>
                   <p className="text-sm dark:text-slate-400 text-slate-900">
-                    We typically reply within 2 hours.
+                    We typically reply within 2hrs.
                   </p>
                 </div>
 
