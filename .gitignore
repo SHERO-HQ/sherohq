@@ -26,3 +26,17 @@ dist-ssr
 
 # Server
 server/.env
+
+# Yarn
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+.pnp.*
+
+# Server
+server/.yarn/*
+!server/.yarn/patches
+!server/.yarn/plugins
+!server/.yarn/releases
+server/.pnp.*

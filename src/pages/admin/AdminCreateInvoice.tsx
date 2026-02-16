@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
@@ -41,14 +41,28 @@ export default function AdminCreateInvoice() {
   const [mode, setMode] = useState<"invoice" | "quote">("invoice");
 
   // Customer Info
-  const [customer, setCustomer] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    region: "",
+  const [customer, setCustomer] = useState(() => {
+    const params = new URLSearchParams(globalThis.location.search);
+    if (params.get("walkin") === "true") {
+      return {
+        firstName: "Walk-in",
+        lastName: "Guest",
+        email: "walkin@sherotech.com",
+        phone: "+233 00 000 0000",
+        address: "In-Store",
+        city: "Accra",
+        region: "Greater Accra",
+      };
+    }
+    return {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      address: "",
+      city: "",
+      region: "",
+    };
   });
 
   // Items
@@ -111,7 +125,7 @@ export default function AdminCreateInvoice() {
     0,
   );
 
-  const handleQuickWalkIn = () => {
+  const handleQuickWalkIn = useCallback(() => {
     setCustomer({
       firstName: "Walk-in",
       lastName: "Guest",
@@ -122,14 +136,14 @@ export default function AdminCreateInvoice() {
       region: "Greater Accra",
     });
     addNotification("Success", "Walk-in details pre-filled!", "success");
-  };
+  }, [addNotification]);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(globalThis.location.search);
     if (params.get("walkin") === "true") {
-      handleQuickWalkIn();
+      addNotification("Success", "Walk-in details pre-filled!", "success");
     }
-  }, []);
+  }, [addNotification]);
 
   const handleSubmit = async () => {
     if (

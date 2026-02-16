@@ -4,6 +4,10 @@ import {
   fetchActivityLogs,
   fetchRecentOrders,
   fetchAnalytics,
+  type AdminStats,
+  type ActivityLog,
+  type RecentOrder,
+  type AnalyticsData,
 } from "@/services/api";
 
 export const ADMIN_KEYS = {
@@ -20,7 +24,7 @@ export const useAdminStats = (refetchInterval?: number | false) => {
     queryKey: ADMIN_KEYS.stats(),
     queryFn: getAdminStats,
     refetchInterval,
-    placeholderData: (previousData: any) => previousData,
+    placeholderData: (previousData: AdminStats | undefined) => previousData,
   });
 };
 
@@ -29,7 +33,7 @@ export const useActivityLogs = (refetchInterval?: number | false) => {
     queryKey: ADMIN_KEYS.activity(),
     queryFn: fetchActivityLogs,
     refetchInterval,
-    placeholderData: (previousData: any) => previousData,
+    placeholderData: (previousData: ActivityLog[] | undefined) => previousData,
   });
 };
 
@@ -38,7 +42,7 @@ export const useRecentOrders = (refetchInterval?: number | false) => {
     queryKey: ADMIN_KEYS.recentOrders(),
     queryFn: () => fetchRecentOrders(),
     refetchInterval,
-    placeholderData: (previousData: any) => previousData,
+    placeholderData: (previousData: RecentOrder[] | undefined) => previousData,
   });
 };
 
@@ -46,6 +50,7 @@ export const useAnalytics = (period = "7d") => {
   return useQuery({
     queryKey: ADMIN_KEYS.analytics(period),
     queryFn: () => fetchAnalytics(period),
-    placeholderData: (previousData: any) => previousData,
+    placeholderData: (previousData: AnalyticsData[] | undefined) =>
+      previousData,
   });
 };
