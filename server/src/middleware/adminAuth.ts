@@ -7,6 +7,7 @@ export interface AdminRequest extends Request {
     id: string;
     username: string;
     email: string;
+    phone?: string;
     role: string;
     avatar?: string;
   };
@@ -23,6 +24,7 @@ interface AdminUserRow {
   id: string;
   username: string;
   email: string;
+  phone?: string;
   role: string;
   avatar?: string;
 }
@@ -63,7 +65,7 @@ export async function adminAuth(
     // Get admin user
     const adminRes = await db.query(
       `
-      SELECT id, username, email, role, avatar FROM admin_users WHERE id = $1
+      SELECT id, username, email, phone, role, avatar FROM admin_users WHERE id = $1
     `,
       [session.adminId],
     );
@@ -83,18 +85,53 @@ export async function adminAuth(
   }
 }
 
-/**
- * Optional auth - doesn't fail if no token, just doesn't set admin
- */
-export async function optionalAdminAuth(
-  req: AdminRequest,
-  res: Response,
-  next: NextFunction,
-) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return next();
-  }
+const ROLE_HIERARCHY: Record<string, number> = {
+  superadmin: 100,
+  admin: 80,
+  manager: 60,
+  attendant: 40,
+  clerk: 20,
+};
 
-  return adminAuth(req, res, next);
+/**
+ * Middleware to require a minimum role level
+ */
+export function requireRole(minRole: string) {
+  return (req: AdminRequest, res: Response, next: NextFunction) => {
+    if (!req.admin) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    const userLevel = ROLE_HIERARCHY[req.admin.role] || 0;
+    const requiredLevel = ROLE_HIERARCHY[minRole] || 0;
+
+    if (userLevel < requiredLevel) {
+      return res.status(403).json({
+        error: "Insufficient privileges",
+        required: minRole,
+        actual: req.admin.role,
+      });
+    }
+
+    next();
+  };
+}
+
+/**
+ * Middleware to require one of specific roles (no hierarchy)
+ */
+export function requireAnyRole(roles: string[]) {
+  return (req: AdminRequest, res: Response, next: NextFunction) => {
+    if (!req.admin) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    if (!roles.includes(req.admin.role)) {
+      return res.status(403).json({
+        error: "Access denied for this role",
+      });
+    }
+
+    next();
+  };
 }

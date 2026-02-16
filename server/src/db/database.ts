@@ -155,6 +155,7 @@ export async function initializeDatabase() {
         email TEXT UNIQUE NOT NULL,
         "passwordHash" TEXT NOT NULL,
         role TEXT DEFAULT 'admin',
+        phone TEXT,
         avatar TEXT,
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
@@ -333,6 +334,11 @@ export async function initializeDatabase() {
             "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
           )
         `);
+
+    // Migration: Add phone to admin_users
+    await client.query(`
+      ALTER TABLE admin_users ADD COLUMN IF NOT EXISTS phone TEXT;
+    `);
 
     // --- PERFORMANCE INDEXES ---
     console.log("⚡ Creating performance indexes...");

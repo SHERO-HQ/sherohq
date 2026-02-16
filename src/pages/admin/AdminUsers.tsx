@@ -22,9 +22,9 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 import { useNotifications } from "@/hooks/useNotifications";
 import {
-  useAdminUsers,
-  useAdminUserDetails,
-  useDeleteAdminUser,
+  useCustomers,
+  useCustomerDetails,
+  useDeleteCustomer,
 } from "@/hooks/queries/useUsers";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -683,7 +683,7 @@ export default function AdminUsers() {
     isPlaceholderData,
     refetch: refetchUsers,
     isFetching,
-  } = useAdminUsers({
+  } = useCustomers({
     page,
     limit: 20,
     search: debouncedSearch,
@@ -698,7 +698,7 @@ export default function AdminUsers() {
   };
 
   // User details query
-  const { data: detailsData, isLoading: detailsLoading } = useAdminUserDetails(
+  const { data: detailsData, isLoading: detailsLoading } = useCustomerDetails(
     selectedUserId || "",
   );
 
@@ -707,7 +707,7 @@ export default function AdminUsers() {
   const userStats = detailsData?.stats;
 
   // Delete mutation
-  const deleteMutation = useDeleteAdminUser();
+  const deleteMutation = useDeleteCustomer();
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   const handleDeleteUser = async (userId: string) => {

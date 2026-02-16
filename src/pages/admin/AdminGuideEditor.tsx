@@ -86,7 +86,7 @@ const AdminGuideEditor = () => {
     }
   };
 
-  async function handleSubmit(e: React.FormEvent) {
+  const handleSubmit = async (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
 
     if (!title.trim() || !content.trim()) {
@@ -119,7 +119,7 @@ const AdminGuideEditor = () => {
     } finally {
       setIsSaving(false);
     }
-  }
+  };
 
   if (isLoading) {
     return (
@@ -156,7 +156,9 @@ const AdminGuideEditor = () => {
               </h1>
             </div>
             <Button
-              onClick={handleSubmit}
+              onClick={(e) =>
+                handleSubmit(e as unknown as React.BaseSyntheticEvent)
+              }
               disabled={isSaving}
               className="bg-emerald-600 hover:bg-emerald-500 text-white"
             >
@@ -231,7 +233,7 @@ const AdminGuideEditor = () => {
                   <p className="text-xs text-slate-500 mb-1">
                     Upload from computer
                   </p>
-                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-white/10 rounded-lg cursor-pointer bg-slate-900/50 hover:bg-slate-800/50 transition-colors">
+                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-white/10 rounded cursor-pointer bg-slate-900/50 hover:bg-slate-800/50 transition-colors">
                     {isUploadingImage ? (
                       <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
                     ) : (

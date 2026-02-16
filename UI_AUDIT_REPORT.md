@@ -1,4 +1,5 @@
 # UI/UX Audit Report - SHERO Technologies
+
 **Date:** 2024
 **Scope:** Frontend UI - Light & Dark Theme Audit
 
@@ -11,6 +12,7 @@ This comprehensive audit evaluates the SHERO Technologies frontend application a
 **Overall Rating:** 7.5/10
 
 **Key Strengths:**
+
 - Modern, clean design system with OKLCH color space
 - Smooth animations and transitions
 - Comprehensive theme system with system preference support
@@ -18,6 +20,7 @@ This comprehensive audit evaluates the SHERO Technologies frontend application a
 - Good use of shadcn/ui components
 
 **Critical Issues:**
+
 - Contrast ratio concerns in dark mode
 - Inconsistent spacing and sizing patterns
 - Missing accessibility features
@@ -30,16 +33,19 @@ This comprehensive audit evaluates the SHERO Technologies frontend application a
 ### 1.1 Light Theme ✅ GOOD
 
 **Strengths:**
+
 - Primary emerald color: `oklch(0.5737 0.1385 156.05)` - Professional and distinctive
 - Clean white background with good contrast
 - Text color `oklch(0.12 0.02 240)` provides excellent readability
 - Border colors are subtle yet visible
 
 **Issues:**
+
 - ⚠️ Secondary gray `oklch(0.96 0.01 240)` might be too light for some UI elements
 - ⚠️ Muted foreground `oklch(0.45 0 0)` could use slightly better contrast
 
 **Recommendations:**
+
 ```css
 /* Increase muted foreground contrast slightly */
 --muted-foreground: oklch(0.42 0 0); /* was 0.45 */
@@ -48,6 +54,7 @@ This comprehensive audit evaluates the SHERO Technologies frontend application a
 ### 1.2 Dark Theme ⚠️ NEEDS ATTENTION
 
 **Strengths:**
+
 - Premium deep blue-black slate background
 - Elevated card design with `oklch(0.15 0.02 240)`
 - Primary color adjusted for dark mode: `oklch(0.66 0.12 156.05)`
@@ -64,28 +71,30 @@ This comprehensive audit evaluates the SHERO Technologies frontend application a
    - Recommended: Increase to `oklch(0.18 0.02 240)` for better differentiation
 
 3. **Input/Border Visibility**
+
    ```css
    /* Current */
    --border: oklch(0.28 0.02 240);
    --input: oklch(0.28 0.02 240);
-   
+
    /* Recommended */
    --border: oklch(0.32 0.02 240);
    --input: oklch(0.32 0.02 240);
    ```
 
 **Recommendations:**
+
 ```css
 .dark {
   --background: oklch(0.12 0.02 240); /* Keep */
   --foreground: oklch(0.98 0 0); /* Keep */
-  
+
   --card: oklch(0.18 0.02 240); /* Increase from 0.15 */
   --card-foreground: oklch(0.98 0 0);
-  
+
   --muted: oklch(0.22 0.02 240); /* Increase from 0.20 */
   --muted-foreground: oklch(0.72 0.02 240); /* Increase from 0.70 */
-  
+
   --border: oklch(0.32 0.02 240); /* Increase from 0.28 */
   --input: oklch(0.32 0.02 240);
 }
@@ -98,6 +107,7 @@ This comprehensive audit evaluates the SHERO Technologies frontend application a
 ### 2.1 Font System ✅ EXCELLENT
 
 **Strengths:**
+
 - Well-organized font stack with fallbacks
 - Custom "AubetteArchiType" for branding
 - JetBrains Mono for monospace (clean and modern)
@@ -107,17 +117,19 @@ This comprehensive audit evaluates the SHERO Technologies frontend application a
 **Base Size:** 15px (good for readability)
 
 **Issues:**
+
 - ⚠️ No explicit line-height rules defined globally
 - ⚠️ Font weights not systematically defined
 
 **Recommendations:**
+
 ```css
 :root {
   /* Add these */
   --line-height-tight: 1.25;
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.75;
-  
+
   /* Font weights */
   --font-weight-normal: 400;
   --font-weight-medium: 500;
@@ -133,20 +145,24 @@ This comprehensive audit evaluates the SHERO Technologies frontend application a
 ### 3.1 Navigation (Nav.tsx)
 
 **Light Theme:** ✅ Good
+
 - Transparent background when not scrolled
 - Good hover states with slate colors
 - Logo visibility excellent
 
 **Dark Theme:** ⚠️ Needs Attention
+
 - Border `border-slate-800` might be too subtle
 - Recommendation: Use `border-slate-700` or `dark:border-white/10`
 
 **Issues:**
+
 - Mobile menu animation is smooth but body scroll lock adds padding
 - Badge positioning could be more consistent
 - Search bar integration needs review
 
 **Recommendations:**
+
 ```tsx
 // Navigation background
 className={`fixed top-0 w-full z-50 transition-all duration-300
@@ -159,6 +175,7 @@ className={`fixed top-0 w-full z-50 transition-all duration-300
 ### 3.2 Buttons (button.tsx) ✅ EXCELLENT
 
 **Strengths:**
+
 - Clean variant system with CVA
 - Good size options (sm, default, lg, xl, icon)
 - Proper focus states with ring
@@ -166,17 +183,18 @@ className={`fixed top-0 w-full z-50 transition-all duration-300
 
 **Variants Analysis:**
 
-| Variant | Light Theme | Dark Theme | Notes |
-|---------|-------------|------------|-------|
-| default | ✅ Good | ✅ Good | Primary color works well |
-| destructive | ✅ Good | ✅ Good | Red stands out appropriately |
-| outline | ✅ Good | ⚠️ Border too subtle | Increase border opacity |
-| secondary | ✅ Good | ⚠️ Low contrast | Background too similar to cards |
-| ghost | ✅ Good | ✅ Good | Hover states work well |
-| link | ✅ Good | ✅ Good | Underline clear |
-| brand | ✅ Good | ✅ Good | Custom shadow nice touch |
+| Variant     | Light Theme | Dark Theme           | Notes                           |
+| ----------- | ----------- | -------------------- | ------------------------------- |
+| default     | ✅ Good     | ✅ Good              | Primary color works well        |
+| destructive | ✅ Good     | ✅ Good              | Red stands out appropriately    |
+| outline     | ✅ Good     | ⚠️ Border too subtle | Increase border opacity         |
+| secondary   | ✅ Good     | ⚠️ Low contrast      | Background too similar to cards |
+| ghost       | ✅ Good     | ✅ Good              | Hover states work well          |
+| link        | ✅ Good     | ✅ Good              | Underline clear                 |
+| brand       | ✅ Good     | ✅ Good              | Custom shadow nice touch        |
 
 **Recommendations:**
+
 ```typescript
 outline: "border border-input bg-transparent shadow-sm hover:bg-accent hover:text-accent-foreground dark:border-slate-600", // Add dark:border-slate-600
 
@@ -188,10 +206,12 @@ secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/
 **Light Theme:** Excellent - white background with subtle shadow
 
 **Dark Theme:** ⚠️ Needs Attention
+
 - Shadow might be lost on dark background
 - Border `border-white/5` too subtle
 
 **Recommendations:**
+
 ```tsx
 className={cn(
   "rounded border bg-card text-card-foreground shadow",
@@ -203,6 +223,7 @@ className={cn(
 ### 3.4 Product Card (ProductCard.tsx) ⭐ EXCELLENT
 
 **Strengths:**
+
 - Beautiful hover animations
 - Magnetic effect on product images
 - Good badge system
@@ -210,15 +231,18 @@ className={cn(
 - WhatsApp CTA prominent
 
 **Light Theme Issues:**
+
 - Background `bg-slate-200/60` might be too light
 - Text contrast on light backgrounds needs verification
 
 **Dark Theme Issues:**
+
 - Background `dark:bg-slate-900/40` with backdrop-blur is nice
 - Border `dark:border-white/5` too subtle
 - Hover glow effect `from-emerald-500/5` barely visible
 
 **Recommendations:**
+
 ```tsx
 // Product card container
 className="group relative rounded overflow-hidden
@@ -230,14 +254,15 @@ className="group relative rounded overflow-hidden
   flex flex-col h-full"
 
 // Hover glow - increase opacity
-<div className="absolute inset-0 opacity-0 group-hover:opacity-100 
-  bg-gradient-to-b from-emerald-500/10 dark:from-emerald-500/5 to-transparent 
+<div className="absolute inset-0 opacity-0 group-hover:opacity-100
+  bg-gradient-to-b from-emerald-500/10 dark:from-emerald-500/5 to-transparent
   transition-opacity duration-500 pointer-events-none" />
 ```
 
 ### 3.5 Input Fields (input.tsx) ✅ GOOD
 
 **Strengths:**
+
 - Size variants available
 - Error state handling
 - Icon support (left/right)
@@ -246,15 +271,18 @@ className="group relative rounded overflow-hidden
 **Issues:**
 
 **Light Theme:**
+
 - Border `border-slate-200` adequate
 - Focus ring `ring-primary/20` good
 
 **Dark Theme:**
+
 - Border `dark:border-slate-800` too subtle
 - Background `bg-secondary/5` barely visible
 - Placeholder text might be too light
 
 **Recommendations:**
+
 ```typescript
 const inputVariants = cva(
   "flex w-full rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/50 shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground dark:placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50",
@@ -265,20 +293,23 @@ const inputVariants = cva(
 ### 3.6 Theme Toggle (toggle-theme.tsx) ✅ EXCELLENT
 
 **Strengths:**
+
 - Clean icon transitions
 - System preference option
 - Accessible dropdown
 
 **Minor Issue:**
+
 - Background colors on toggle button could be more distinct
 
 **Recommendations:**
+
 ```tsx
 <Button
   variant="ghost"
   size="icon"
-  className="cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 
-    rounded border border-slate-300 dark:border-slate-700 
+  className="cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700
+    rounded border border-slate-300 dark:border-slate-700
     bg-slate-50 dark:bg-slate-800/80" // Increased opacity
 >
 ```
@@ -286,16 +317,19 @@ const inputVariants = cva(
 ### 3.7 Admin Panel (AdminLayout.tsx) ⭐ EXCELLENT
 
 **Strengths:**
+
 - Forced dark mode - smart choice
 - Pattern dots background texture
 - Smooth sidebar transitions
 - Keyboard shortcuts support
 
 **Issues:**
+
 - Pattern opacity at 10% might be too subtle
 - Footer text color could be slightly brighter
 
 **Recommendations:**
+
 ```tsx
 <div className="fixed inset-0 pattern-dots opacity-15 pointer-events-none z-0 print:hidden" />
 
@@ -312,14 +346,15 @@ const inputVariants = cva(
 
 **Issues Found:**
 
-| Element | Light Theme | Dark Theme | Status |
-|---------|-------------|------------|--------|
-| Body text | ✅ Pass (>4.5:1) | ⚠️ Check needed | Needs testing |
-| Muted text | ⚠️ Borderline | ⚠️ Likely fail | Fix required |
-| Borders | ✅ N/A | ❌ Too low | Fix required |
-| Placeholders | ⚠️ Check needed | ❌ Likely fail | Fix required |
+| Element      | Light Theme      | Dark Theme      | Status        |
+| ------------ | ---------------- | --------------- | ------------- |
+| Body text    | ✅ Pass (>4.5:1) | ⚠️ Check needed | Needs testing |
+| Muted text   | ⚠️ Borderline    | ⚠️ Likely fail  | Fix required  |
+| Borders      | ✅ N/A           | ❌ Too low      | Fix required  |
+| Placeholders | ⚠️ Check needed  | ❌ Likely fail  | Fix required  |
 
 **Recommendations:**
+
 - Run automated contrast checker on all text/background combinations
 - Ensure all interactive elements meet 3:1 minimum
 - Consider adding a high-contrast mode option
@@ -327,15 +362,18 @@ const inputVariants = cva(
 ### 4.2 Keyboard Navigation ✅ GOOD
 
 **Strengths:**
+
 - Focus rings present on buttons
 - Keyboard shortcuts in admin panel
 - Tab order appears logical
 
 **Issues:**
+
 - Focus indicators on some custom components unclear
 - Skip links missing for main content
 
 **Recommendations:**
+
 ```css
 /* Add global focus-visible styles */
 *:focus-visible {
@@ -362,16 +400,19 @@ const inputVariants = cva(
 ### 4.3 Screen Readers ⚠️ NEEDS IMPROVEMENT
 
 **Good:**
+
 - Semantic HTML used in most places
 - ARIA labels on icon buttons
 - Alt text on images
 
 **Issues:**
+
 - Some interactive divs lack proper roles
 - Loading states not announced
 - Error messages need aria-live regions
 
 **Recommendations:**
+
 ```tsx
 // Add to notification system
 <div role="alert" aria-live="polite" aria-atomic="true">
@@ -387,13 +428,15 @@ const inputVariants = cva(
 ### 4.4 Touch Targets ✅ MOSTLY GOOD
 
 **Analysis:**
+
 - Buttons generally meet 44×44px minimum
 - Some icon buttons on mobile might be small (sm:w-8 sm:h-8 = 32px)
 
 **Recommendations:**
+
 ```tsx
 // Ensure minimum touch targets
-className="w-10 h-10 sm:w-11 sm:h-11" // Instead of w-7 h-7 sm:w-8 sm:h-8
+className = "w-10 h-10 sm:w-11 sm:h-11"; // Instead of w-7 h-7 sm:w-8 sm:h-8
 ```
 
 ---
@@ -403,6 +446,7 @@ className="w-10 h-10 sm:w-11 sm:h-11" // Instead of w-7 h-7 sm:w-8 sm:h-8
 ### 5.1 Breakpoints ✅ GOOD
 
 Using Tailwind defaults:
+
 - sm: 640px
 - md: 768px
 - lg: 1024px
@@ -413,11 +457,13 @@ Using Tailwind defaults:
 ### 5.2 Mobile Experience ⚠️ NEEDS ATTENTION
 
 **Issues:**
+
 - Product card text sizes very small on mobile (text-[8px])
 - Some touch targets below recommended size
 - Horizontal scrolling on some pages (needs verification)
 
 **Recommendations:**
+
 ```tsx
 // Product card badges - increase mobile size
 <span className="px-2 py-1 text-[10px] sm:text-xs">
@@ -439,12 +485,14 @@ Most layouts adapt well at md breakpoint
 ### 6.1 Performance ⭐ EXCELLENT
 
 **Strengths:**
+
 - Using Motion (Framer Motion) efficiently
 - GPU-accelerated transforms
 - Conditional animations with `whileInView`
 - Proper viewport once settings
 
 **Examples:**
+
 ```tsx
 <motion.div
   initial={{ opacity: 0, y: 20 }}
@@ -458,6 +506,7 @@ Most layouts adapt well at md breakpoint
 **Issue:** No `prefers-reduced-motion` support
 
 **Recommendations:**
+
 ```css
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -472,12 +521,14 @@ Most layouts adapt well at md breakpoint
 
 ```tsx
 // In motion components
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const prefersReducedMotion = window.matchMedia(
+  "(prefers-reduced-motion: reduce)",
+).matches;
 
 <motion.div
   initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
   animate={prefersReducedMotion ? {} : { opacity: 1, y: 0 }}
-/>
+/>;
 ```
 
 ---
@@ -487,6 +538,7 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 ### 7.1 Utility Classes ✅ CREATIVE
 
 **Available Patterns:**
+
 - `.hero-grid-pattern` - Subtle grid with radial mask
 - `.pattern-grid-white` - White dotted grid
 - `.pattern-grid-emerald` - Emerald dotted grid
@@ -497,6 +549,7 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 **Issue:** Pattern visibility in dark mode
 
 **Recommendations:**
+
 ```css
 /* Dark mode pattern adjustments */
 .dark .pattern-dots {
@@ -505,7 +558,13 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 }
 
 .dark .pattern-diagonal {
-  background-image: repeating-linear-gradient(45deg, #64748b22 0, #64748b22 1px, transparent 0, transparent 50%);
+  background-image: repeating-linear-gradient(
+    45deg,
+    #64748b22 0,
+    #64748b22 1px,
+    transparent 0,
+    transparent 50%
+  );
   /* Increased from #64748b11 */
 }
 ```
@@ -552,11 +611,13 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 ### 9.1 Spacing ⚠️ INCONSISTENT
 
 **Issues:**
+
 - Mix of `gap-1`, `gap-2`, `gap-1 sm:gap-2` patterns
 - Padding values vary: `p-3 sm:p-4` vs `p-4 sm:p-6`
 - Margin patterns not standardized
 
 **Recommendations:**
+
 ```tsx
 // Establish spacing scale
 const spacing = {
@@ -574,6 +635,7 @@ const spacing = {
 ### 9.2 Border Radius 🎯 CONSISTENT
 
 **Good:** Using CSS variables
+
 ```css
 --radius: 0.5rem; /* 8px base */
 --radius-sm: calc(var(--radius) - 4px);
@@ -587,6 +649,7 @@ Consistently applied across components.
 **Current:** Using inline classes like `shadow`, `shadow-lg`, `shadow-xl`
 
 **Recommendation:** Define shadow scale in CSS variables
+
 ```css
 :root {
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -760,7 +823,7 @@ const prefersReducedMotion = usePrefersReducedMotion();
 
 ```tsx
 // Updated container classes
-className="group relative rounded-lg overflow-hidden
+className="group relative rounded overflow-hidden
   dark:bg-slate-900/60 bg-white
   border border-slate-300 dark:border-white/10 shadow-md
   hover:border-emerald-500/50 dark:hover:border-emerald-400/40
@@ -769,8 +832,8 @@ className="group relative rounded-lg overflow-hidden
   flex flex-col h-full"
 
 // Improved hover glow
-<div className="absolute inset-0 opacity-0 group-hover:opacity-100 
-  bg-gradient-to-b from-emerald-500/15 dark:from-emerald-400/8 to-transparent 
+<div className="absolute inset-0 opacity-0 group-hover:opacity-100
+  bg-gradient-to-b from-emerald-500/15 dark:from-emerald-400/8 to-transparent
   transition-opacity duration-500 pointer-events-none" />
 ```
 
@@ -779,6 +842,7 @@ className="group relative rounded-lg overflow-hidden
 ## 13. Testing Checklist
 
 ### Visual Testing
+
 - [ ] Compare all pages in light mode
 - [ ] Compare all pages in dark mode
 - [ ] Check system theme preference switching
@@ -787,6 +851,7 @@ className="group relative rounded-lg overflow-hidden
 - [ ] Verify animations on different devices
 
 ### Accessibility Testing
+
 - [ ] Run axe DevTools on all pages
 - [ ] Test with screen reader (NVDA/JAWS/VoiceOver)
 - [ ] Verify keyboard navigation throughout app
@@ -795,12 +860,14 @@ className="group relative rounded-lg overflow-hidden
 - [ ] Verify touch targets on mobile devices
 
 ### Responsive Testing
+
 - [ ] Mobile (375px, 414px)
 - [ ] Tablet (768px, 1024px)
 - [ ] Desktop (1280px, 1440px, 1920px)
 - [ ] Ultra-wide (2560px+)
 
 ### Browser Testing
+
 - [ ] Chrome/Edge (Chromium)
 - [ ] Firefox
 - [ ] Safari (macOS/iOS)
@@ -813,12 +880,14 @@ className="group relative rounded-lg overflow-hidden
 The SHERO Technologies frontend demonstrates strong design fundamentals with a modern, professional aesthetic. The dual theme implementation is well-structured, though dark mode requires refinement for optimal contrast and visibility.
 
 **Immediate Action Items:**
+
 1. Update dark mode color values per Section 12.1
 2. Implement reduced motion support (Section 12.2)
 3. Run accessibility audit with automated tools
 4. Increase touch target sizes on mobile
 
 **Long-term Goals:**
+
 1. Create comprehensive design system documentation
 2. Establish component usage guidelines
 3. Build pattern library with examples

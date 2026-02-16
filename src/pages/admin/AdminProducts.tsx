@@ -18,6 +18,7 @@ import {
   MoreVertical,
 } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
+import { useAdmin } from "@/context/AdminContext";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -40,6 +41,8 @@ import { Card } from "@/components/ui/card";
 
 export default function AdminProducts() {
   const { addNotification } = useNotifications();
+  const { admin: currentAdmin } = useAdmin();
+  const canDelete = !["clerk", "attendant"].includes(currentAdmin?.role || "");
 
   // Filters
   const [search, setSearch] = useState("");
@@ -435,13 +438,15 @@ export default function AdminProducts() {
                                 )}
                               </DropdownMenuItem>
                               <DropdownMenuSeparator className="bg-white/5" />
-                              <DropdownMenuItem
-                                className="text-rose-400 hover:bg-rose-500/10 cursor-pointer"
-                                onClick={() => handleDelete(product.id)}
-                              >
-                                <Trash2 className="w-4 h-4 mr-2" /> Delete
-                                Product
-                              </DropdownMenuItem>
+                              {canDelete && (
+                                <DropdownMenuItem
+                                  className="text-rose-400 hover:bg-rose-500/10 cursor-pointer"
+                                  onClick={() => handleDelete(product.id)}
+                                >
+                                  <Trash2 className="w-4 h-4 mr-2" /> Delete
+                                  Product
+                                </DropdownMenuItem>
+                              )}
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </div>

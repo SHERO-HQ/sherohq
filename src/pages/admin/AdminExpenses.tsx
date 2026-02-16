@@ -237,7 +237,7 @@ export default function AdminExpenses() {
     setEditingId(null);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
     if (!formData.title || !formData.amount || !formData.date) {
       addNotification("Warning", "Please fill required fields", "warning");
@@ -531,15 +531,16 @@ export default function AdminExpenses() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {isLoading ? (
-                  new Array(5).fill(0).map((_, i) => (
-                    <tr key={`loading-${i}`} className="animate-pulse">
+                {isLoading &&
+                  ["sk1", "sk2", "sk3", "sk4", "sk5"].map((id) => (
+                    <tr key={id} className="animate-pulse">
                       <td colSpan={5} className="px-6 py-8">
                         <div className="h-4 bg-slate-800 rounded w-full" />
                       </td>
                     </tr>
-                  ))
-                ) : filteredExpenses.length === 0 ? (
+                  ))}
+
+                {!isLoading && filteredExpenses.length === 0 && (
                   <tr>
                     <td
                       colSpan={5}
@@ -548,7 +549,10 @@ export default function AdminExpenses() {
                       No expense records found.
                     </td>
                   </tr>
-                ) : (
+                )}
+
+                {!isLoading &&
+                  filteredExpenses.length > 0 &&
                   filteredExpenses.map((expense) => (
                     <tr
                       key={expense.id}
@@ -613,8 +617,7 @@ export default function AdminExpenses() {
                         </div>
                       </td>
                     </tr>
-                  ))
-                )}
+                  ))}
               </tbody>
             </table>
           </div>

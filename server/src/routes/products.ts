@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import fs from "node:fs";
 import path from "node:path";
 import db from "../db/database";
-import { adminAuth, AdminRequest } from "../middleware/adminAuth";
+import { adminAuth, AdminRequest, requireRole } from "../middleware/adminAuth";
 import { logActivity } from "./activity";
 import { generateSku } from "../utils/sku";
 
@@ -598,44 +598,49 @@ router.patch(
   },
 );
 
-// DELETE /api/products/:id - Delete product (Admin)
-router.delete("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
-  try {
-    const identifier = String(req.params.id);
+// DELETE /api/products/:id - Delete product (Admin - Manager+)
+router.delete(
+  "/:id",
+  adminAuth,
+  requireRole("manager"),
+  async (req: AdminRequest, res: Response) => {
+    try {
+      const identifier = String(req.params.id);
 
-    // Resilient lookup: check ID, SKU, or Slug - Cast ID to text for safety
-    const lookupQuery =
-      "SELECT id, name FROM products WHERE id::text = $1 OR sku = $1 OR slug = $1";
+      // Resilient lookup: check ID, SKU, or Slug - Cast ID to text for safety
+      const lookupQuery =
+        "SELECT id, name FROM products WHERE id::text = $1 OR sku = $1 OR slug = $1";
 
-    const result = await db.query(lookupQuery, [identifier]);
-    const existing = result.rows[0];
+      const result = await db.query(lookupQuery, [identifier]);
+      const existing = result.rows[0];
 
-    if (!existing) {
-      return res.status(404).json({ error: "Product not found" });
-    }
+      if (!existing) {
+        return res.status(404).json({ error: "Product not found" });
+      }
 
-    await db.query("DELETE FROM products WHERE id = $1", [existing.id]);
+      await db.query("DELETE FROM products WHERE id = $1", [existing.id]);
 
-    console.log(
-      `🗑️ Product deleted: ${existing.name} by ${req.admin?.username}`,
-    );
-    if (req.admin?.id) {
-      await logActivity(
-        req.admin.id,
-        "product_delete",
-        "warning",
-        `Deleted product: ${existing.name} (ID: ${existing.id})`,
+      console.log(
+        `🗑️ Product deleted: ${existing.name} by ${req.admin?.username}`,
       );
-    }
+      if (req.admin?.id) {
+        await logActivity(
+          req.admin.id,
+          "product_delete",
+          "warning",
+          `Deleted product: ${existing.name} (ID: ${existing.id})`,
+        );
+      }
 
-    res.json({
-      success: true,
-      message: `Product "${existing.name}" deleted`,
-    });
-  } catch (error) {
-    console.error("Error deleting product:", error);
-    res.status(500).json({ error: "Failed to delete product" });
-  }
-});
+      res.json({
+        success: true,
+        message: `Product "${existing.name}" deleted`,
+      });
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      res.status(500).json({ error: "Failed to delete product" });
+    }
+  },
+);
 
 export default router;

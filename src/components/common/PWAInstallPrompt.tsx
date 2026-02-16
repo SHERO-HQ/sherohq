@@ -122,13 +122,13 @@ const PWAInstallPrompt = () => {
             <div className="flex gap-2 mt-4">
               <button
                 onClick={handleDismiss}
-                className="cursor-pointer flex-1 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                className="cursor-pointer flex-1 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors"
               >
                 Not now
               </button>
               <button
                 onClick={handleInstall}
-                className="cursor-pointer flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors"
+                className="cursor-pointer flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded transition-colors"
               >
                 <Download className="w-4 h-4" />
                 Install

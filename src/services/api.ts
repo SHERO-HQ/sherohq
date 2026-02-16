@@ -668,7 +668,9 @@ export interface AdminUser {
   username: string;
   email: string;
   role: string;
+  phone?: string;
   avatar?: string;
+  createdAt?: string;
 }
 
 export interface LoginResponse {
@@ -768,14 +770,12 @@ export async function updateAdminProfile(data: {
   username?: string;
   email?: string;
   password?: string;
+  phone?: string;
   avatar?: string;
-}): Promise<{
-  success: boolean;
-  message: string;
-  admin: AdminUser;
-}> {
+}): Promise<AdminUserDetailsResponse> {
   const response = await authFetch(`${API_BASE}/admin/profile`, {
     method: "PUT",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
 
@@ -1178,29 +1178,64 @@ export interface AdminUsersPagination {
 }
 
 export interface AdminUsersResponse {
+  success: boolean;
+  users: AdminUser[];
+}
+
+export interface AdminUserDetailsResponse {
+  success: boolean;
+  user: AdminUser;
+}
+
+export async function fetchAdminUsers(): Promise<AdminUsersResponse> {
+  const response = await authFetch(`${API_BASE}/admin/users`);
+  return handleResponse<AdminUsersResponse>(response);
+}
+
+export interface CustomersResponse {
   users: AdminUserListItem[];
   pagination: AdminUsersPagination;
 }
 
-export interface AdminUserDetailsResponse {
-  user: AdminUserDetails;
-  orders: Order[];
-  stats: AdminUserStats;
-}
-
-export async function fetchAdminUsers(
+export async function fetchCustomers(
   page = 1,
   limit = 20,
   search = "",
-): Promise<AdminUsersResponse> {
+): Promise<CustomersResponse> {
   const params = new URLSearchParams({
     page: page.toString(),
     limit: limit.toString(),
-    ...(search && { search }),
   });
+  if (search) params.append("search", search);
 
-  const response = await authFetch(`${API_BASE}/admin/users?${params}`);
-  return handleResponse<AdminUsersResponse>(response);
+  const response = await authFetch(
+    `${API_BASE}/admin/customers?${params.toString()}`,
+  );
+  return handleResponse<CustomersResponse>(response);
+}
+
+export async function registerAdminUser(data: {
+  username: string;
+  email: string;
+  password?: string;
+  role: string;
+}): Promise<{ success: boolean; admin: AdminUser }> {
+  const response = await authFetch(`${API_BASE}/admin/register`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+}
+
+export async function updateAdminUserRole(
+  id: string,
+  role: string,
+): Promise<{ success: boolean; message: string }> {
+  const response = await authFetch(`${API_BASE}/admin/users/${id}`, {
+    method: "PUT",
+    body: JSON.stringify({ role }),
+  });
+  return handleResponse(response);
 }
 
 export async function fetchAdminUserDetails(
@@ -1210,10 +1245,32 @@ export async function fetchAdminUserDetails(
   return handleResponse<AdminUserDetailsResponse>(response);
 }
 
+export interface CustomerDetailsResponse {
+  user: AdminUserDetails;
+  orders: Order[];
+  stats: AdminUserStats;
+}
+
+export async function fetchCustomerDetails(
+  userId: string,
+): Promise<CustomerDetailsResponse> {
+  const response = await authFetch(`${API_BASE}/admin/customers/${userId}`);
+  return handleResponse<CustomerDetailsResponse>(response);
+}
+
 export async function deleteAdminUser(
   userId: string,
 ): Promise<{ success: boolean; message: string }> {
   const response = await authFetch(`${API_BASE}/admin/users/${userId}`, {
+    method: "DELETE",
+  });
+  return handleResponse(response);
+}
+
+export async function deleteCustomer(
+  userId: string,
+): Promise<{ success: boolean; message: string }> {
+  const response = await authFetch(`${API_BASE}/admin/customers/${userId}`, {
     method: "DELETE",
   });
   return handleResponse(response);

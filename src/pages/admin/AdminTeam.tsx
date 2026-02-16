@@ -16,6 +16,7 @@ import {
   useDeleteTeamMember,
 } from "@/hooks/queries/useTeam";
 import { useNotifications } from "@/hooks/useNotifications";
+import { useAdmin } from "@/context/AdminContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/Modal";
@@ -29,6 +30,9 @@ const AdminTeam = () => {
   const updateMutation = useUpdateTeamMember();
   const deleteMutation = useDeleteTeamMember();
   const { addNotification } = useNotifications();
+  const { admin: currentAdmin } = useAdmin();
+  const canAddMember =
+    currentAdmin?.role === "superadmin" || currentAdmin?.role === "admin";
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -156,13 +160,15 @@ const AdminTeam = () => {
               Manage your team profiles and roles
             </p>
           </div>
-          <Button
-            onClick={handleOpenCreate}
-            className="bg-emerald-600 hover:bg-emerald-500 text-white"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Member
-          </Button>
+          {canAddMember && (
+            <Button
+              onClick={handleOpenCreate}
+              className="bg-emerald-600 hover:bg-emerald-500 text-white"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Member
+            </Button>
+          )}
         </div>
 
         {/* Search */}

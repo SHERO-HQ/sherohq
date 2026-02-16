@@ -12,6 +12,7 @@ import {
   PanelLeftOpen,
   Headset,
   BookOpen,
+  ShieldCheck,
   Briefcase,
   Tag,
   Star,
@@ -40,6 +41,7 @@ const navItems = [
   { icon: Tag, label: "Categories", href: "/admin/categories" },
   { icon: Star, label: "Reviews", href: "/admin/reviews" },
   { icon: Users, label: "Team", href: "/admin/team" },
+  { icon: ShieldCheck, label: "Staff", href: "/admin/staff" },
   { icon: Briefcase, label: "Projects", href: "/admin/projects" },
   {
     icon: MessageSquareQuote,

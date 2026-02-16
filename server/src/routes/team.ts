@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { v4 as uuidv4 } from "uuid";
 import { query } from "../db/database";
-import { adminAuth } from "../middleware/adminAuth";
+import { adminAuth, requireAnyRole } from "../middleware/adminAuth";
 
 const router = Router();
 
@@ -18,29 +18,34 @@ router.get("/", async (req, res) => {
   }
 });
 
-// POST create new team member (Admin only)
-router.post("/", adminAuth, async (req, res) => {
-  const { name, role, bio, image, social, order } = req.body;
+// POST create new team member (Admin only - SuperAdmin or Admin)
+router.post(
+  "/",
+  adminAuth,
+  requireAnyRole(["superadmin", "admin"]),
+  async (req, res) => {
+    const { name, role, bio, image, social, order } = req.body;
 
-  if (!name || !role) {
-    return res.status(400).json({ error: "Name and role are required" });
-  }
+    if (!name || !role) {
+      return res.status(400).json({ error: "Name and role are required" });
+    }
 
-  try {
-    const id = uuidv4();
-    const result = await query(
-      `INSERT INTO team_members (id, name, role, bio, image, social, "order")
+    try {
+      const id = uuidv4();
+      const result = await query(
+        `INSERT INTO team_members (id, name, role, bio, image, social, "order")
        VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING *`,
-      [id, name, role, bio, image, JSON.stringify(social || {}), order || 0],
-    );
+        [id, name, role, bio, image, JSON.stringify(social || {}), order || 0],
+      );
 
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    console.error("Error creating team member:", err);
-    res.status(500).json({ error: "Failed to create team member" });
-  }
-});
+      res.status(201).json(result.rows[0]);
+    } catch (err) {
+      console.error("Error creating team member:", err);
+      res.status(500).json({ error: "Failed to create team member" });
+    }
+  },
+);
 
 // PUT update team member (Admin only)
 router.put("/:id", adminAuth, async (req, res) => {

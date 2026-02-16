@@ -42,6 +42,7 @@ import {
   LineChart as LineChartIcon,
   Loader2,
   Printer,
+  type LucideIcon,
 } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { cn } from "@/lib/utils";
@@ -49,10 +50,20 @@ import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
+  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  icon: LucideIcon;
+  color: string;
+  bg: string;
+  trend: number | string;
+  subtext?: string;
+}
 
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar";
@@ -62,6 +73,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import type { DateRange } from "react-day-picker";
+import { useAdmin } from "@/context/AdminContext";
 
 type KpiPeriod = "today" | "week" | "month" | "year" | "custom";
 
@@ -130,6 +142,8 @@ export default function AdminReports() {
     from: new Date(new Date().setDate(new Date().getDate() - 7)),
     to: new Date(),
   });
+  const { admin: currentAdmin } = useAdmin();
+  const canExport = !["clerk", "attendant"].includes(currentAdmin?.role || "");
 
   useEffect(() => {
     async function loadData() {
@@ -290,40 +304,41 @@ export default function AdminReports() {
                   />
                 </PopoverContent>
               </Popover>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="border-white/10 text-white hover:bg-white/5"
+              {canExport && (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="border-white/10 text-white hover:bg-white/5"
+                    >
+                      <Printer className="mr-2 h-4 w-4" /> Export Summary
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    align="end"
+                    className="bg-slate-900 border-white/10 text-white"
                   >
-                    <Printer className="mr-2 h-4 w-4" /> Export Summary
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="end"
-                  className="bg-slate-900 border-white/10 text-white"
-                >
-                  <DropdownMenuItem
-                    onSelect={() => handleExport("csv")}
-                    className="cursor-pointer hover:bg-white/5"
-                  >
-                    Export as CSV
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onSelect={() => handleExport("excel")}
-                    className="cursor-pointer hover:bg-white/5"
-                  >
-                    Export as Excel
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onSelect={() => handleExport("pdf")}
-                    className="cursor-pointer hover:bg-white/5"
-                  >
-                    Export as PDF
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                    <DropdownMenuItem
+                      onSelect={() => handleExport("csv")}
+                      className="cursor-pointer hover:bg-white/5"
+                    >
+                      Export as CSV
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onSelect={() => handleExport("excel")}
+                      className="cursor-pointer hover:bg-white/5"
+                    >
+                      Export as Excel
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onSelect={() => handleExport("pdf")}
+                      className="cursor-pointer hover:bg-white/5"
+                    >
+                      Export as PDF
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              )}
             </div>
           </div>
           {/* KPI Period Selector */}
@@ -392,16 +407,6 @@ export default function AdminReports() {
       </ErrorBoundary>
     </AdminLayout>
   );
-}
-
-interface StatCardProps {
-  readonly title: string;
-  readonly value: string | number;
-  readonly icon: React.ElementType;
-  readonly color: string;
-  readonly bg: string;
-  readonly trend?: number | string;
-  readonly subtext?: string;
 }
 
 const getTrendStyles = (trend: number) => {
@@ -889,7 +894,7 @@ function StatsGrid({
         icon={DollarSign}
         color="text-emerald-400"
         bg="bg-emerald-400/10"
-        trend={getKpiData(kpiPeriod)?.revenueGrowth}
+        trend={getKpiData(kpiPeriod)?.revenueGrowth ?? 0}
         subtext={getSubtext(kpiPeriod)}
       />
       <StatCard
@@ -907,7 +912,7 @@ function StatsGrid({
         icon={TrendingUp}
         color="text-blue-400"
         bg="bg-blue-400/10"
-        trend={getKpiData(kpiPeriod)?.profitGrowth}
+        trend={getKpiData(kpiPeriod)?.profitGrowth ?? 0}
         subtext={getSubtext(kpiPeriod)}
       />
       <StatCard
@@ -916,7 +921,7 @@ function StatsGrid({
         icon={ShoppingCart}
         color="text-amber-400"
         bg="bg-amber-400/10"
-        trend={getKpiData(kpiPeriod)?.ordersGrowth}
+        trend={getKpiData(kpiPeriod)?.ordersGrowth ?? 0}
         subtext={getSubtext(kpiPeriod)}
       />
       <StatCard
@@ -925,7 +930,7 @@ function StatsGrid({
         icon={Package}
         color="text-purple-400"
         bg="bg-purple-400/10"
-        trend={newProductsTrend}
+        trend={newProductsTrend ?? 0}
         subtext={newProductsSubtext}
       />
       <StatCard
@@ -934,6 +939,7 @@ function StatsGrid({
         icon={AlertTriangle}
         color="text-red-400"
         bg="bg-red-400/10"
+        trend={0}
       />
     </div>
   );

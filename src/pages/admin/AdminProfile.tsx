@@ -15,8 +15,9 @@ export default function AdminProfile() {
   const { addNotification } = useNotifications();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [username, setUsername] = useState(admin?.username || "");
-  const [email, setEmail] = useState(admin?.email || "");
+  const [username] = useState(admin?.username || "");
+  const [email] = useState(admin?.email || "");
+  const [phone, setPhone] = useState(admin?.phone || "");
   const [avatar, setAvatar] = useState(admin?.avatar || "");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -46,7 +47,7 @@ export default function AdminProfile() {
     }
   }
 
-  async function handleUpdateProfile(e: React.FormEvent) {
+  async function handleUpdateProfile(e: React.BaseSyntheticEvent) {
     e.preventDefault();
 
     if (password && password !== confirmPassword) {
@@ -56,14 +57,14 @@ export default function AdminProfile() {
 
     try {
       setIsUpdating(true);
+      // Username and Email are read-only and not sent
       const res = await updateAdminProfile({
-        username,
-        email,
+        phone: phone || undefined,
         password: password || undefined,
         avatar: avatar || undefined,
       });
 
-      setAdmin(res.admin);
+      setAdmin(res.user);
 
       addNotification("Success", "Profile updated successfully", "success");
       setPassword("");
@@ -165,6 +166,56 @@ export default function AdminProfile() {
                 className="p-6 md:p-8 space-y-8"
               >
                 <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="username"
+                        className="text-sm font-medium text-slate-400"
+                      >
+                        Username
+                      </label>
+                      <Input
+                        id="username"
+                        value={username}
+                        readOnly
+                        className="bg-muted/30 border-border text-slate-500 cursor-not-allowed focus:ring-0"
+                        title="Contact Super Admin to change username"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="email"
+                        className="text-sm font-medium text-slate-400"
+                      >
+                        Email Address
+                      </label>
+                      <Input
+                        id="email"
+                        value={email}
+                        readOnly
+                        className="bg-muted/30 border-border text-slate-500 cursor-not-allowed focus:ring-0"
+                        title="Contact Super Admin to change email"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="phone"
+                      className="text-sm font-medium text-slate-400"
+                    >
+                      Phone Number
+                    </label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="bg-muted/50 border-border text-foreground focus:ring-emerald-500/20"
+                      placeholder="02XXXXXXXX"
+                    />
+                  </div>
+
                   <div className="p-4 rounded bg-muted/30 border border-border space-y-6">
                     <p className="text-sm text-slate-500 flex items-center gap-2">
                       <AlertCircle className="w-4 h-4" /> Keep blank to maintain
@@ -213,8 +264,7 @@ export default function AdminProfile() {
                     variant="ghost"
                     className="text-slate-400  hover:text-white"
                     onClick={() => {
-                      setUsername(admin?.username || "");
-                      setEmail(admin?.email || "");
+                      setPhone(admin?.phone || "");
                       setPassword("");
                       setConfirmPassword("");
                     }}

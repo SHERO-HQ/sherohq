@@ -40,6 +40,7 @@ const AdminSupport = lazy(() => import("@/pages/admin/AdminSupport"));
 const AdminUsers = lazy(() => import("@/pages/admin/AdminUsers"));
 const AdminProjects = lazy(() => import("@/pages/admin/AdminProjects"));
 const ProjectForm = lazy(() => import("@/pages/admin/ProjectForm"));
+import AdminUserManagement from "@/pages/admin/AdminUserManagement";
 import AdminGuides from "@/pages/admin/AdminGuides";
 import AdminGuideEditor from "@/pages/admin/AdminGuideEditor";
 const AdminCategories = lazy(() => import("@/pages/admin/AdminCategories"));
@@ -251,6 +252,14 @@ const AdminSectionInternal = () => (
       element={
         <ProtectedRoute>
           <AdminTeam />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="staff"
+      element={
+        <ProtectedRoute>
+          <AdminUserManagement />
         </ProtectedRoute>
       }
     />
