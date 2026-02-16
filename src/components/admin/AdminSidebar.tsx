@@ -126,54 +126,69 @@ export default function AdminSidebar({
 
           {/* Navigation */}
           <nav className="flex-1 py-6 px-3 space-y-2 overflow-y-auto custom-scrollbar">
-            {navItems.map((item) => (
-              <UniversalLink
-                key={item.href}
-                to={item.href}
-                onClick={() => {
-                  if (globalThis.innerWidth < 1024) setIsOpen(false);
-                }}
-                className={({ isActive }) =>
-                  cn(
-                    "flex items-center gap-3 px-3 py-3 rounded transition-all duration-300 group relative",
-                    isActive
-                      ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]"
-                      : "text-slate-400 hover:text-white hover:bg-white/5 border border-transparent",
-                  )
+            {navItems
+              .filter((item) => {
+                const isAdminOrSuper =
+                  admin?.role === "superadmin" || admin?.role === "admin";
+                const isManagerOrHigher =
+                  isAdminOrSuper || admin?.role === "manager";
+
+                if (item.label === "Staff" || item.label === "Team") {
+                  return isAdminOrSuper;
                 }
-              >
-                {({ isActive }) => (
-                  <>
-                    <item.icon
-                      className={cn(
-                        "w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110",
-                        isActive
-                          ? "text-emerald-400"
-                          : "text-slate-400 group-hover:text-white",
-                      )}
-                    />
-                    <AnimatePresence mode="wait">
-                      {isOpen && (
-                        <motion.span
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: -10 }}
-                          className="font-medium text-sm whitespace-nowrap"
-                        >
-                          {item.label}
-                        </motion.span>
-                      )}
-                    </AnimatePresence>
-                    {isActive && (
-                      <motion.div
-                        layoutId="sidebar-active-indicator"
-                        className="absolute left-0 w-1 h-6 bg-emerald-500 rounded-r-full"
+                if (item.label === "Reports" || item.label === "Customers") {
+                  return isManagerOrHigher;
+                }
+                return true;
+              })
+              .map((item) => (
+                <UniversalLink
+                  key={item.href}
+                  to={item.href}
+                  onClick={() => {
+                    if (globalThis.innerWidth < 1024) setIsOpen(false);
+                  }}
+                  className={({ isActive }) =>
+                    cn(
+                      "flex items-center gap-3 px-3 py-3 rounded transition-all duration-300 group relative",
+                      isActive
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]"
+                        : "text-slate-400 hover:text-white hover:bg-white/5 border border-transparent",
+                    )
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      <item.icon
+                        className={cn(
+                          "w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110",
+                          isActive
+                            ? "text-emerald-400"
+                            : "text-slate-400 group-hover:text-white",
+                        )}
                       />
-                    )}
-                  </>
-                )}
-              </UniversalLink>
-            ))}
+                      <AnimatePresence mode="wait">
+                        {isOpen && (
+                          <motion.span
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: -10 }}
+                            className="font-medium text-sm whitespace-nowrap"
+                          >
+                            {item.label}
+                          </motion.span>
+                        )}
+                      </AnimatePresence>
+                      {isActive && (
+                        <motion.div
+                          layoutId="sidebar-active-indicator"
+                          className="absolute left-0 w-1 h-6 bg-emerald-500 rounded-r-full"
+                        />
+                      )}
+                    </>
+                  )}
+                </UniversalLink>
+              ))}
 
             {/* Quick Actions Section */}
             <div className="mt-8 pt-8 border-t border-white/5 space-y-4 px-2">

@@ -146,7 +146,7 @@ const AdminSectionInternal = () => (
     <Route
       path="users"
       element={
-        <ProtectedRoute>
+        <ProtectedRoute allowedRoles={["superadmin", "admin", "manager"]}>
           <AdminUsers />
         </ProtectedRoute>
       }
@@ -154,7 +154,7 @@ const AdminSectionInternal = () => (
     <Route
       path="reports"
       element={
-        <ProtectedRoute>
+        <ProtectedRoute allowedRoles={["superadmin", "admin", "manager"]}>
           <AdminReports />
         </ProtectedRoute>
       }
@@ -250,7 +250,7 @@ const AdminSectionInternal = () => (
     <Route
       path="team"
       element={
-        <ProtectedRoute>
+        <ProtectedRoute allowedRoles={["superadmin", "admin"]}>
           <AdminTeam />
         </ProtectedRoute>
       }
@@ -258,7 +258,7 @@ const AdminSectionInternal = () => (
     <Route
       path="staff"
       element={
-        <ProtectedRoute>
+        <ProtectedRoute allowedRoles={["superadmin", "admin"]}>
           <AdminUserManagement />
         </ProtectedRoute>
       }

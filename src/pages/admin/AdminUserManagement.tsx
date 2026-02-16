@@ -296,10 +296,26 @@ export default function AdminUserManagement() {
                             )}
                           </>
                         )}
-                        <DropdownMenuItem className="cursor-pointer hover:bg-white/5">
-                          <Mail className="w-4 h-4 mr-2" />
-                          Email User
+                        <DropdownMenuItem
+                          asChild
+                          className="cursor-pointer hover:bg-white/5"
+                        >
+                          <a href={`mailto:${user.email}`}>
+                            <Mail className="w-4 h-4 mr-2" />
+                            Email User
+                          </a>
                         </DropdownMenuItem>
+                        {user.phone && (
+                          <DropdownMenuItem
+                            asChild
+                            className="cursor-pointer hover:bg-white/5"
+                          >
+                            <a href={`tel:${user.phone}`}>
+                              <Phone className="w-4 h-4 mr-2" />
+                              Call User
+                            </a>
+                          </DropdownMenuItem>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
@@ -331,14 +347,20 @@ export default function AdminUserManagement() {
                       <h3 className="font-bold text-white truncate font-sora tracking-tight">
                         {user.username}
                       </h3>
-                      <p className="text-xs text-slate-500 truncate mb-1">
+                      <a
+                        href={`mailto:${user.email}`}
+                        className="text-xs text-slate-500 hover:text-emerald-400 transition-colors truncate mb-1 block"
+                      >
                         {user.email}
-                      </p>
+                      </a>
                       {user.phone && (
-                        <p className="text-[10px] text-slate-500 truncate flex items-center gap-1 mb-2">
+                        <a
+                          href={`tel:${user.phone}`}
+                          className="text-[10px] text-slate-500 hover:text-emerald-400 transition-colors truncate flex items-center gap-1 mb-2"
+                        >
                           <Phone className="w-3 h-3 text-slate-600" />
                           {user.phone}
-                        </p>
+                        </a>
                       )}
                       <Badge
                         variant="outline"

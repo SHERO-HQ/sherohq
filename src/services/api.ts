@@ -351,6 +351,7 @@ export interface UserLoginResponse {
   success: boolean;
   token: string;
   user: User;
+  mustReset?: boolean;
 }
 
 export async function userRegister(data: {
@@ -416,7 +417,10 @@ export async function userLogout(): Promise<void> {
   localStorage.removeItem("userToken");
 }
 
-export async function getUserMe(): Promise<{ user: User }> {
+export async function getUserMe(): Promise<{
+  user: User;
+  mustReset?: boolean;
+}> {
   const token = localStorage.getItem("userToken");
   if (!token) throw new Error("No token found");
 
@@ -424,7 +428,7 @@ export async function getUserMe(): Promise<{ user: User }> {
     headers: { Authorization: `Bearer ${token}` },
   });
 
-  return handleResponse<{ user: User }>(response);
+  return handleResponse<{ user: User; mustReset?: boolean }>(response);
 }
 
 export async function getUserOrders(userId: string): Promise<Order[]> {
@@ -479,6 +483,24 @@ export async function updateUserProfile(data: {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+}
+
+export async function userChangePassword(
+  password: string,
+): Promise<{ success: boolean }> {
+  const token = localStorage.getItem("userToken");
+  if (!token) throw new Error("Not authenticated");
+
+  const response = await fetch(`${API_BASE}/auth/change-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+      "X-CSRF-Protection": "1",
+    },
+    body: JSON.stringify({ password }),
   });
 
   return handleResponse(response);
@@ -677,6 +699,7 @@ export interface LoginResponse {
   success: boolean;
   token: string;
   admin: AdminUser;
+  mustReset?: boolean;
 }
 
 export interface KPIData {
@@ -731,6 +754,16 @@ export async function adminLogin(
   const data = await handleResponse<LoginResponse>(response);
   localStorage.setItem("adminToken", data.token);
   return data;
+}
+
+export async function adminChangePassword(
+  password: string,
+): Promise<{ success: boolean }> {
+  const response = await authFetch(`${API_BASE}/admin/change-password`, {
+    method: "POST",
+    body: JSON.stringify({ password }),
+  });
+  return handleResponse(response);
 }
 
 export async function adminLogout(): Promise<void> {

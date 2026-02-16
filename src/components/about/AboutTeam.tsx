@@ -3,6 +3,12 @@ import { Github, Linkedin, Users, Twitter } from "lucide-react";
 import type { ElementType } from "react";
 import { useTeam } from "@/hooks/queries/useTeam";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { cn } from "@/lib/utils";
+import type { TeamMember } from "@/services/api";
+
+interface TeamMemberWithPlaceholder extends TeamMember {
+  isPlaceholder?: boolean;
+}
 
 // Helper to get initials
 const getInitials = (name: string) => {
@@ -37,78 +43,106 @@ const AboutTeam = () => {
         <div className="col-span-full text-center py-12 bg-slate-50 dark:bg-slate-800/50 rounded border border-slate-100 dark:border-slate-800">
           <Users className="w-12 h-12 text-slate-400 mx-auto mb-3" />
           <p className="text-slate-500 dark:text-slate-400">
-            Our team is growing correctly! Check back soon.
+            Our team is growing! Check back soon.
           </p>
         </div>
       );
     }
 
     return (
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 relative">
-        {/* Decorative background blur */}
-        <div className="absolute -top-24 -left-24 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="relative border border-slate-200 dark:border-white/10 overflow-hidden shadow-2xl shadow-slate-200/50 dark:shadow-none">
+        <div className="grid grid-cols-1 sm:grid-cols-2 min-[470px]:grid-cols-2 lg:grid-cols-4 relative">
+          {/* Decorative background blur */}
+          <div className="absolute -top-24 -left-24 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
 
-        {team.map((member, index) => (
-          <motion.div
-            key={member.id}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: index * 0.1, duration: 0.5 }}
-            className="group relative bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-white/5 p-4 hover:border-emerald-500/30 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-500 overflow-hidden"
-          >
-            <div className="relative overflow-hidden rounded bg-slate-100 dark:bg-slate-800 mb-6 aspect-square transition-colors duration-300">
-              {member.image ? (
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  width={400}
-                  height={400}
-                  loading="lazy"
-                  decoding="async"
-                  className="object-cover w-full h-full transition-all duration-700 filter grayscale group-hover:grayscale-0 group-hover:scale-105"
-                />
-              ) : (
-                <div className="w-full h-full bg-linear-to-br from-blue-600/20 to-emerald-600/20 flex items-center justify-center text-slate-400 dark:text-slate-500 font-bold text-4xl tracking-tighter transition-all duration-700 group-hover:from-blue-600 group-hover:to-emerald-600 group-hover:text-white">
-                  {getInitials(member.name)}
+          {team.map((member: TeamMemberWithPlaceholder, index) => (
+            <motion.div
+              key={member.id}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
+              className={cn(
+                "group relative p-4 transition-colors duration-500 hover:bg-slate-50/50 dark:hover:bg-white/2",
+                // Horizontal borders
+                "border-b border-slate-200 dark:border-white/10",
+                // Vertical borders logic
+                "min-[470px]:border-r", // Default right border on 470px+
+                (index + 1) % 2 === 0 && "min-[470px]:border-r-0", // Remove every 2nd on 470px+
+                "lg:border-r", // Restore/set right border on lg
+                (index + 1) % 4 === 0 && "lg:border-r-0", // Remove every 4th on lg
+              )}
+            >
+              {/* Coming Soon Badge for placeholders (no image) */}
+              {!member.image && (
+                <div className="absolute top-4 left-4 z-10">
+                  <span className="px-2 py-0.5 text-[8px] font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20 uppercase tracking-tighter">
+                    Coming Soon
+                  </span>
                 </div>
               )}
+              <div className="relative overflow-hidden bg-slate-100 dark:bg-slate-800 mb-4 aspect-square transition-colors duration-300">
+                {member.image ? (
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    width={400}
+                    height={400}
+                    loading="lazy"
+                    decoding="async"
+                    className="object-cover w-full h-full transition-all duration-700 filter grayscale group-hover:grayscale-0 group-hover:scale-110"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-linear-to-br from-blue-600/20 to-emerald-600/20 flex items-center justify-center text-slate-400 dark:text-slate-500 font-bold text-5xl tracking-tighter transition-all duration-700 group-hover:from-blue-600 group-hover:to-emerald-600 group-hover:text-white">
+                    {getInitials(member.name)}
+                  </div>
+                )}
 
-              {/* Overlay with bio - Sleeker design */}
-              {member.bio && (
-                <div className="absolute inset-0 bg-linear-to-t from-slate-950/90 via-slate-950/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 backdrop-blur-[2px]">
-                  <p className="text-white text-sm leading-relaxed font-medium translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    {member.bio}
+                {/* Overlay with bio */}
+                {member.bio && (
+                  <div className="absolute inset-0 bg-linear-to-t from-slate-950/90 via-slate-950/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8 backdrop-blur-[2px]">
+                    <p className="text-white text-sm leading-relaxed font-medium translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                      {member.bio}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <div>
+                  <h3 className="text-2xl font-bold font-sora text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-300">
+                    {member.name}
+                  </h3>
+                  <p className="text-emerald-600 dark:text-emerald-500 text-sm font-bold mt-1 uppercase tracking-widest">
+                    {member.role}
                   </p>
                 </div>
-              )}
-            </div>
 
-            <div className="flex justify-between items-end px-2">
-              <div>
-                <h3 className="text-xl font-bold font-sora text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                  {member.name}
-                </h3>
-                <p className="text-emerald-600 dark:text-emerald-500 text-sm font-semibold mt-1">
-                  {member.role}
-                </p>
-              </div>
+                <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-white/5">
+                  <div className="flex gap-4">
+                    {member.social?.twitter && (
+                      <SocialLink href={member.social.twitter} icon={Twitter} />
+                    )}
+                    {member.social?.linkedin && (
+                      <SocialLink
+                        href={member.social.linkedin}
+                        icon={Linkedin}
+                      />
+                    )}
+                    {member.social?.github && (
+                      <SocialLink href={member.social.github} icon={Github} />
+                    )}
+                  </div>
 
-              <div className="flex gap-4 mb-1">
-                {member.social?.twitter && (
-                  <SocialLink href={member.social.twitter} icon={Twitter} />
-                )}
-                {member.social?.linkedin && (
-                  <SocialLink href={member.social.linkedin} icon={Linkedin} />
-                )}
-                {member.social?.github && (
-                  <SocialLink href={member.social.github} icon={Github} />
-                )}
+                  <div className="h-8 w-8 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300 text-slate-400">
+                    <Users className="w-4 h-4" />
+                  </div>
+                </div>
               </div>
-            </div>
-          </motion.div>
-        ))}
+            </motion.div>
+          ))}
+        </div>
       </div>
     );
   };

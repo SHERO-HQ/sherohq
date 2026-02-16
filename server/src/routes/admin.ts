@@ -22,6 +22,8 @@ interface AdminUserRow {
   passwordHash: string;
   role: string;
   avatar?: string;
+  passwordResetRequired: boolean;
+  passwordUpdatedAt: string;
   createdAt: string;
 }
 
@@ -76,6 +78,12 @@ router.post(
         return res.status(401).json({ error: "Invalid credentials" });
       }
 
+      // Check for password expiration (6 months)
+      const sixMonthsAgo = new Date();
+      sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+      const passwordExpired = new Date(admin.passwordUpdatedAt) < sixMonthsAgo;
+      const mustReset = admin.passwordResetRequired || passwordExpired;
+
       // Create session token
       const token = randomBytes(32).toString("hex");
       const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
@@ -103,6 +111,7 @@ router.post(
       res.json({
         success: true,
         token,
+        mustReset,
         admin: {
           id: admin.id,
           username: admin.username,
@@ -210,10 +219,10 @@ router.post(
 
       await db.query(
         `
-      INSERT INTO admin_users (id, username, email, "passwordHash", phone, role)
-      VALUES ($1, $2, $3, $4, $5, $6)
+      INSERT INTO admin_users (id, username, email, "passwordHash", phone, role, "passwordResetRequired")
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
     `,
-        [adminId, username, email, passwordHash, phone, role],
+        [adminId, username, email, passwordHash, phone, role, true],
       );
 
       console.log(
@@ -407,7 +416,7 @@ router.get(
   },
 );
 
-// GET /api/admin/users - List all admin users (superadmin, admin only)
+// GET /api/admin/users - List all admin users (superadmin, admin)
 router.get(
   "/users",
   adminAuth,
@@ -569,6 +578,48 @@ router.put(
     } catch (error) {
       console.error("Update admin error:", error);
       res.status(500).json({ error: "Failed to update admin user" });
+    }
+  },
+);
+
+// POST /api/admin/change-password - Force password reset
+router.post(
+  "/change-password",
+  adminAuth,
+  async (req: AdminRequest, res: Response) => {
+    try {
+      const { password } = req.body;
+      const adminId = req.admin?.id;
+
+      if (!password || password.length < 6) {
+        return res
+          .status(400)
+          .json({ error: "Password must be at least 6 characters" });
+      }
+
+      const passwordHash = await bcrypt.hash(password, 10);
+
+      await db.query(
+        `
+      UPDATE admin_users 
+      SET "passwordHash" = $1, "passwordResetRequired" = false, "passwordUpdatedAt" = CURRENT_TIMESTAMP
+      WHERE id = $2
+    `,
+        [passwordHash, adminId],
+      );
+
+      console.log(`🔐 Password changed for admin: ${req.admin?.username}`);
+      await logActivity(
+        adminId!,
+        "admin_password_reset",
+        "info",
+        `Admin changed their own password`,
+      );
+
+      res.json({ success: true, message: "Password updated successfully" });
+    } catch (error) {
+      console.error("Change password error:", error);
+      res.status(500).json({ error: "Failed to change password" });
     }
   },
 );

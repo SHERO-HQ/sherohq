@@ -13,6 +13,7 @@ import {
   userLogout,
   getUserMe,
   updateUserProfile,
+  userChangePassword,
   type User,
   type ShippingAddress,
 } from "@/services/api";
@@ -22,6 +23,7 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  mustReset: boolean;
   login: (data: { email: string; password: string }) => Promise<void>;
   register: (data: {
     email: string;
@@ -35,13 +37,16 @@ interface AuthContextType {
     phone?: string;
     shippingAddress?: ShippingAddress | null;
   }) => Promise<void>;
+  changePassword: (password: string) => Promise<void>;
   refreshUser: () => Promise<void>;
+  setMustReset: (mustReset: boolean) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [user, setUser] = useState<User | null>(null);
+  const [mustReset, setMustReset] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const checkAuth = useCallback(async () => {
@@ -52,8 +57,9 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
         return;
       }
 
-      const { user } = await getUserMe();
+      const { user, mustReset: resetRequired } = await getUserMe();
       setUser(user);
+      setMustReset(!!resetRequired);
     } catch {
       // Token invalid or expired
       localStorage.removeItem("userToken");
@@ -72,6 +78,7 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
     try {
       const response = await userLogin(data);
       setUser(response.user);
+      setMustReset(!!response.mustReset);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -101,6 +108,7 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
       await userLogout();
     } finally {
       setUser(null);
+      setMustReset(false);
       setIsLoading(false);
     }
   }
@@ -114,10 +122,16 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
     setUser(response.user);
   }
 
+  async function changePassword(password: string) {
+    await userChangePassword(password);
+    setMustReset(false);
+  }
+
   async function refreshUser() {
     try {
-      const { user } = await getUserMe();
+      const { user, mustReset: resetRequired } = await getUserMe();
       setUser(user);
+      setMustReset(!!resetRequired);
     } catch {
       // Silent fail for refresh
     }
@@ -128,13 +142,16 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
       user,
       isAuthenticated: !!user,
       isLoading,
+      mustReset,
       login,
       register,
       logout,
       updateProfile,
+      changePassword,
       refreshUser,
+      setMustReset,
     }),
-    [user, isLoading],
+    [user, isLoading, mustReset],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

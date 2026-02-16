@@ -19,15 +19,18 @@ interface AdminContextType {
   admin: AdminUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  mustReset: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   setAdmin: (admin: AdminUser | null) => void;
+  setMustReset: (mustReset: boolean) => void;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 export function AdminProvider({ children }: { readonly children: ReactNode }) {
   const [admin, setAdmin] = useState<AdminUser | null>(null);
+  const [mustReset, setMustReset] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   // Check for existing session on mount
@@ -60,6 +63,7 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
     try {
       const response = await apiLogin(username, password);
       setAdmin(response.admin);
+      setMustReset(!!response.mustReset);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -70,6 +74,7 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
   async function logout() {
     await apiLogout();
     setAdmin(null);
+    setMustReset(false);
   }
 
   const value = useMemo(
@@ -77,11 +82,13 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
       admin,
       isAuthenticated: !!admin,
       isLoading,
+      mustReset,
       login,
       logout,
       setAdmin, // Expose setAdmin to allow direct state updates
+      setMustReset,
     }),
-    [admin, isLoading],
+    [admin, isLoading, mustReset],
   );
 
   return (

@@ -6,10 +6,7 @@ dotenv.config();
 // Initialize PostgreSQL connection pool
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl:
-    process.env.NODE_ENV === "production"
-      ? true // Enforce SSL certificate validation in production
-      : { rejectUnauthorized: false }, // Allow self-signed certs in dev
+  ssl: { rejectUnauthorized: false }, // Allow self-signed certs in all environments
   max: 20, // Increased pool size
   idleTimeoutMillis: 60000, // 60 seconds
   connectionTimeoutMillis: 60000, // 60 seconds - allow time for initialization
@@ -51,10 +48,7 @@ export async function initializeDatabase() {
   // Use a direct client for initialization to bypass pooler issues with DDL
   const client = new Client({
     connectionString: process.env.DATABASE_URL,
-    ssl:
-      process.env.NODE_ENV === "production"
-        ? true
-        : { rejectUnauthorized: false },
+    ssl: { rejectUnauthorized: false },
   });
 
   await client.connect();
@@ -157,6 +151,8 @@ export async function initializeDatabase() {
         role TEXT DEFAULT 'admin',
         phone TEXT,
         avatar TEXT,
+        "passwordResetRequired" BOOLEAN DEFAULT true,
+        "passwordUpdatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
@@ -335,9 +331,19 @@ export async function initializeDatabase() {
           )
         `);
 
-    // Migration: Add phone to admin_users
+    // Migration: Add phone, password_reset_required, and password_updated_at to admin_users
     await client.query(`
-      ALTER TABLE admin_users ADD COLUMN IF NOT EXISTS phone TEXT;
+      ALTER TABLE admin_users 
+      ADD COLUMN IF NOT EXISTS phone TEXT,
+      ADD COLUMN IF NOT EXISTS "passwordResetRequired" BOOLEAN DEFAULT true,
+      ADD COLUMN IF NOT EXISTS "passwordUpdatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+    `);
+
+    // Migration: Add passwordResetRequired and passwordUpdatedAt to users
+    await client.query(`
+      ALTER TABLE users
+      ADD COLUMN IF NOT EXISTS "passwordResetRequired" BOOLEAN DEFAULT false,
+      ADD COLUMN IF NOT EXISTS "passwordUpdatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
     `);
 
     // --- PERFORMANCE INDEXES ---

@@ -4,10 +4,14 @@ import { getSubdomain } from "@/utils/subdomain";
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
+  allowedRoles?: string[];
 }
 
-export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated, isLoading } = useAdmin();
+export default function ProtectedRoute({
+  children,
+  allowedRoles,
+}: ProtectedRouteProps) {
+  const { isAuthenticated, isLoading, admin } = useAdmin();
 
   if (isLoading) {
     return (
@@ -21,6 +25,10 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
     const subdomain = getSubdomain();
     const loginPath = subdomain === "admin" ? "/login" : "/admin/login";
     return <Navigate to={loginPath} replace />;
+  }
+
+  if (allowedRoles && admin && !allowedRoles.includes(admin.role)) {
+    return <Navigate to="/admin/dashboard" replace />;
   }
 
   return <>{children}</>;
