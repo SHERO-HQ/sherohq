@@ -58,6 +58,23 @@ function getAuthToken(): string | null {
   return localStorage.getItem("adminToken");
 }
 
+// Helper to get user-friendly error messages from status codes
+function getStatusErrorMessage(status: number): string | null {
+  const statusMap: Record<number, string> = {
+    400: "Bad Request: Please check your input.",
+    401: "Unauthorized: Invalid credentials or session expired.",
+    403: "Forbidden: You do not have permission to perform this action.",
+    404: "Not Found: The requested resource does not exist.",
+    422: "Unprocessable Entity: Please check your data format.",
+    429: "Too Many Requests: Please try again later.",
+    500: "Server Error: Something went wrong on our end.",
+    502: "Service Unavailable: The server is temporarily down.",
+    503: "Service Unavailable: The server is temporarily down.",
+    504: "Service Unavailable: The server is temporarily down.",
+  };
+  return statusMap[status] || null;
+}
+
 // Helper to safely parse JSON and handle errors
 export async function handleResponse<T>(response: Response): Promise<T> {
   const text = await response.text();
@@ -69,7 +86,6 @@ export async function handleResponse<T>(response: Response): Promise<T> {
     if (contentType?.includes("application/json")) {
       try {
         const errorData = JSON.parse(text);
-        // Backend often returns { error: "message" } or { message: "message" } or { detail: "message" }
         errorMessage =
           errorData.error ||
           errorData.message ||
@@ -83,44 +99,14 @@ export async function handleResponse<T>(response: Response): Promise<T> {
 
     // Add meaningful defaults for common status codes if no specific message was found
     if (errorMessage.startsWith("Error ")) {
-      switch (response.status) {
-        case 400:
-          errorMessage = "Bad Request: Please check your input.";
-          break;
-        case 401:
-          errorMessage =
-            "Unauthorized: Invalid credentials or session expired.";
-          break;
-        case 403:
-          errorMessage =
-            "Forbidden: You do not have permission to perform this action.";
-          break;
-        case 404:
-          errorMessage = "Not Found: The requested resource does not exist.";
-          break;
-        case 422:
-          errorMessage = "Unprocessable Entity: Please check your data format.";
-          break;
-        case 429:
-          errorMessage = "Too Many Requests: Please try again later.";
-          break;
-        case 500:
-          errorMessage = "Server Error: Something went wrong on our end.";
-          break;
-        case 502:
-        case 503:
-        case 504:
-          errorMessage = "Service Unavailable: The server is temporarily down.";
-          break;
-      }
+      errorMessage = getStatusErrorMessage(response.status) || errorMessage;
     }
 
     throw new Error(errorMessage);
   }
 
   if (!text) {
-    if (response.status === 204) return {} as T;
-    throw new Error("Server returned an empty response.");
+    return (response.status === 204 ? {} : null) as T;
   }
 
   try {

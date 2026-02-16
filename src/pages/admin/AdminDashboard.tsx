@@ -3,7 +3,6 @@ import { useState, useMemo } from "react";
 import UniversalLink from "@/components/common/UniversalLink";
 import { useAdmin } from "@/context/AdminContext";
 import { useTitle } from "@/hooks/useTitle";
-import { type RecentOrder } from "@/services/api";
 import {
   useAdminStats,
   useAnalytics,
@@ -50,21 +49,21 @@ import ActivityFeed from "@/components/admin/ActivityFeed";
 
 // --- Internal Magnetic Card Component ---
 interface StatCardItem {
-  title: string;
-  value: string | number;
-  icon: React.ElementType;
-  color: string;
-  bgColor: string;
-  trend: string;
-  subtext: string;
+  readonly title: string;
+  readonly value: string | number;
+  readonly icon: React.ElementType;
+  readonly color: string;
+  readonly bgColor: string;
+  readonly trend: string;
+  readonly subtext: string;
 }
 
 const MagneticStatCard = ({
   stat,
   index,
 }: {
-  stat: StatCardItem;
-  index: number;
+  readonly stat: StatCardItem;
+  readonly index: number;
 }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -265,11 +264,13 @@ export default function AdminDashboard() {
 
   const isLoading =
     statsLoading || analyticsLoading || ordersLoading || activityLoading;
-  const error = statsError
-    ? statsError instanceof Error
+  const getErrorMessage = () => {
+    if (!statsError) return "";
+    return statsError instanceof Error
       ? statsError.message
-      : "Failed to load dashboard data"
-    : "";
+      : "Failed to load dashboard data";
+  };
+  const error = getErrorMessage();
 
   if (error) {
     return (
@@ -380,7 +381,7 @@ export default function AdminDashboard() {
                 .fill(0)
                 .map((_, i) => (
                   <div
-                    key={`skeleton-stat-${i}`}
+                    key={`skeleton-stat-summary-${i}`}
                     className="h-32 rounded bg-slate-900 animate-pulse border border-white/5"
                   />
                 ))
@@ -705,27 +706,39 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
-                {ordersLoading ? (
-                  new Array(5).fill(0).map((_, i) => (
-                    <tr key={`skeleton-order-${i}`} className="animate-pulse">
-                      <td colSpan={6} className="px-6 py-4">
-                        <div className="h-4 bg-slate-800 rounded w-full" />
-                      </td>
-                    </tr>
-                  ))
-                ) : !recentOrders ||
-                  !Array.isArray(recentOrders) ||
-                  recentOrders.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan={6}
-                      className="px-6 py-8 text-center text-slate-500 italic"
-                    >
-                      No recent orders found
-                    </td>
-                  </tr>
-                ) : (
-                  (recentOrders as RecentOrder[])?.map((order) => (
+                {(() => {
+                  const hasNoOrders =
+                    !recentOrders ||
+                    !Array.isArray(recentOrders) ||
+                    recentOrders.length === 0;
+
+                  if (ordersLoading) {
+                    return new Array(5).fill(0).map((_, i) => (
+                      <tr
+                        key={`skeleton-recent-order-${i}`}
+                        className="animate-pulse"
+                      >
+                        <td colSpan={6} className="px-6 py-4">
+                          <div className="h-4 bg-slate-800 rounded w-full" />
+                        </td>
+                      </tr>
+                    ));
+                  }
+
+                  if (hasNoOrders) {
+                    return (
+                      <tr>
+                        <td
+                          colSpan={6}
+                          className="px-6 py-8 text-center text-slate-500 italic"
+                        >
+                          No recent orders found
+                        </td>
+                      </tr>
+                    );
+                  }
+
+                  return recentOrders.map((order) => (
                     <tr
                       key={order.id}
                       className="border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors"
@@ -780,8 +793,8 @@ export default function AdminDashboard() {
                         </Button>
                       </td>
                     </tr>
-                  ))
-                )}
+                  ));
+                })()}
               </tbody>
             </table>
           </div>

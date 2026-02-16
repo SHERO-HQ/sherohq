@@ -497,7 +497,7 @@ export default function ProductForm() {
                 <div className="space-y-3">
                   {specsList.map((spec, index) => (
                     <div
-                      key={index}
+                      key={`spec-${index}-${spec.key}`}
                       className="flex gap-3 items-start p-3 rounded bg-slate-800/30 border border-white/5 animate-in fade-in slide-in-from-top-1 duration-200"
                     >
                       <div className="flex-1 space-y-1">
@@ -627,8 +627,8 @@ export default function ProductForm() {
                           ...prev,
                           slug: e.target.value
                             .toLowerCase()
-                            .replace(/[^a-z0-9]+/g, "-")
-                            .replace(/(^-|-$)/g, ""),
+                            .replaceAll(/[^a-z0-9]+/g, "-")
+                            .replaceAll(/(^-|-$)/g, ""),
                         }))
                       }
                       className="bg-slate-800/50 border-white/5 text-white"

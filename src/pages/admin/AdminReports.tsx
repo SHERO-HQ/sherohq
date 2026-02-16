@@ -653,7 +653,7 @@ function StockDistributionChart({
                 ? data
                 : [{ name: "No Data", value: 1, color: "#334155" }]
               ).map((entry, index) => (
-                <Cell key={entry.name || index} fill={entry.color} />
+                <Cell key={`stock-${entry.name || index}`} fill={entry.color} />
               ))}
             </Pie>
             <Tooltip
@@ -703,7 +703,10 @@ function OrderStatusChart({
                 ? data
                 : [{ name: "No Data", value: 1, color: "#334155" }]
               ).map((entry, index) => (
-                <Cell key={entry.name || index} fill={entry.color} />
+                <Cell
+                  key={`status-${entry.name || index}`}
+                  fill={entry.color}
+                />
               ))}
             </Pie>
             <Tooltip

@@ -925,13 +925,14 @@ export async function seedAllAdminData() {
 
 // Allow running directly
 if (process.argv[1]?.endsWith("seed_admin_data.ts")) {
-  seedAllAdminData()
-    .then(() => {
+  (async () => {
+    try {
+      await seedAllAdminData();
       console.log("Seeding successful");
       process.exit(0);
-    })
-    .catch((error) => {
+    } catch (error) {
       console.error("Seeding failed:", error);
       process.exit(1);
-    });
+    }
+  })();
 }

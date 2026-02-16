@@ -22,24 +22,7 @@ const ERROR_MAP: Record<string, string> = {
   server_error: "Something went wrong on our end. Please try again later.",
 };
 
-/**
- * Normalizes an error string or Error object into a user-friendly message.
- */
-export function formatAuthError(error: unknown): string {
-  if (!error) return "An unknown error occurred.";
-
-  const originalMessage =
-    error instanceof Error ? error.message : String(error);
-  const lowerMessage = originalMessage.toLowerCase();
-
-  // Try to find a match in the error map (case-insensitive keys for flexibility)
-  for (const [key, value] of Object.entries(ERROR_MAP)) {
-    if (lowerMessage.includes(key.toLowerCase())) {
-      return value;
-    }
-  }
-
-  // Handle specific substrings if not in the direct map
+function getSubstringError(lowerMessage: string): string | null {
   if (lowerMessage.includes("credentials")) {
     return ERROR_MAP.invalid_credentials;
   }
@@ -50,8 +33,42 @@ export function formatAuthError(error: unknown): string {
     if (lowerMessage.includes("email")) return ERROR_MAP.email_already_exists;
     if (lowerMessage.includes("phone")) return ERROR_MAP.phone_already_exists;
   }
+  return null;
+}
 
-  // Return the original message if it seems helpful, otherwise a generic one
+function mapErrorToMessage(lowerMessage: string): string | null {
+  for (const [key, value] of Object.entries(ERROR_MAP)) {
+    if (lowerMessage.includes(key.toLowerCase())) return value;
+  }
+  return null;
+}
+
+/**
+ * Normalizes an error string or Error object into a user-friendly message.
+ */
+export function formatAuthError(error: unknown): string {
+  if (!error) return "An unknown error occurred.";
+
+  let originalMessage = "";
+  if (error instanceof Error) {
+    originalMessage = error.message;
+  } else if (typeof error === "object" && error !== null) {
+    const errObj = error as Record<string, unknown>;
+    originalMessage = String(
+      errObj.message || errObj.error || JSON.stringify(error),
+    );
+  } else {
+    originalMessage = String(error);
+  }
+
+  const lowerMessage = originalMessage.toLowerCase();
+  const directMatch = mapErrorToMessage(lowerMessage);
+  if (directMatch) return directMatch;
+
+  const substringError = getSubstringError(lowerMessage);
+  if (substringError) return substringError;
+
+  // Return the original message if it seems helpful
   if (
     originalMessage.length < 100 &&
     !originalMessage.includes("Error") &&

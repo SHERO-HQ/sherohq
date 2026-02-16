@@ -307,8 +307,8 @@ router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
       slug ||
       name
         .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "");
+        .replaceAll(/[^a-z0-9]+/g, "-")
+        .replaceAll(/(^-|-$)/g, "");
 
     await db.query(
       `

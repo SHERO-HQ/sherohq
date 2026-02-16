@@ -122,7 +122,7 @@ const SolutionsHero = () => {
                 className="font-sora font-extrabold leading-[1.1] text-5xl md:text-5xl lg:text-6xl 
                            text-slate-900 dark:text-white sm:mb-3"
               >
-                Performance {" "}
+                Performance{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-emerald-600 dark:from-blue-400 dark:to-emerald-400">
                   Driven
                 </span>
@@ -190,8 +190,8 @@ const SolutionsHero = () => {
                   sub: "Edge Implementation",
                   icon: Code,
                 },
-              ].map((item, idx) => (
-                <div key={idx} className="flex flex-col gap-1">
+              ].map((item) => (
+                <div key={item.label} className="flex flex-col gap-1">
                   <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 mb-1">
                     <item.icon className="w-4 h-4" />
                     <span className="text-xs font-bold font-sora text-slate-900 dark:text-white">
@@ -271,9 +271,9 @@ const SolutionsHero = () => {
                       icon: Zap,
                       status: "Ready",
                     },
-                  ].map((item, idx) => (
+                  ].map((item) => (
                     <div
-                      key={idx}
+                      key={item.label}
                       className="p-3 rounded bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800"
                     >
                       <div className="flex items-center justify-between mb-2">
@@ -305,20 +305,31 @@ const SolutionsHero = () => {
                 className="absolute sm:top-2 -top-5 sm:left-2 left-2  sm:block w-fit p-4 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-blue-500/30 shadow-2xl z-20 pointer-events-none"
               >
                 <div className="h-8 flex items-end gap-1 mb-2">
-                  {[0.4, 0.7, 0.5, 0.9, 0.6, 0.8, 0.95].map((h, i) => (
+                  {[
+                    { h: 0.4, id: "h1" },
+                    { h: 0.7, id: "h2" },
+                    { h: 0.5, id: "h3" },
+                    { h: 0.9, id: "h4" },
+                    { h: 0.6, id: "h5" },
+                    { h: 0.8, id: "h6" },
+                    { h: 0.95, id: "h7" },
+                  ].map((item) => (
                     <motion.div
-                      key={i}
+                      key={item.id}
                       initial={{ height: 0 }}
-                      animate={{ height: `${h * 100}%` }}
-                      transition={{ delay: i * 0.1, duration: 1 }}
+                      animate={{ height: `${item.h * 100}%` }}
+                      transition={{
+                        delay: Number(item.id.slice(1)) * 0.1,
+                        duration: 1,
+                      }}
                       className="bg-linear-to-t from-blue-600 to-cyan-400 rounded-t-sm w-2"
                     />
                   ))}
                 </div>
                 <div className="flex justify-between items-center text-[8px] font-bold text-slate-900 dark:text-white">
                   <p>
-                    SYSTEM_
-                    <span className="text-emerald-500">PERFORMANCE</span>
+                    SYSTEM{"_"}
+                    <span className="text-emerald-500 ml-1">PERFORMANCE</span>
                   </p>
                 </div>
               </motion.div>

@@ -324,7 +324,7 @@ export default function AdminOrders() {
               <tbody className="divide-y divide-white/5">
                 {isLoading ? (
                   new Array(5).fill(0).map((_, i) => (
-                    <tr key={i} className="animate-pulse">
+                    <tr key={`skeleton-row-${i}`} className="animate-pulse">
                       <td colSpan={6} className="px-6 py-8 text-center">
                         <div className="h-4 bg-slate-800 rounded w-full" />
                       </td>

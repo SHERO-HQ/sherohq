@@ -257,6 +257,29 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
   }
 });
 
+// Helper to determine date range
+function getDateRange(range: string, startDate?: string, endDate?: string) {
+  let dateRangeStart: Date;
+  let dateRangeEnd: Date = new Date();
+  let queryConditions = "";
+  const params: string[] = [];
+
+  if (startDate && endDate) {
+    queryConditions = ` AND "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date`;
+    params.push(startDate, endDate);
+    dateRangeStart = new Date(startDate + "T00:00:00");
+    dateRangeEnd = new Date(endDate + "T00:00:00");
+  } else {
+    let days = 7;
+    if (range === "30d") days = 30;
+    if (range === "90d") days = 90;
+    queryConditions = ` AND "createdAt" >= NOW() - INTERVAL '${days} days'`;
+    dateRangeStart = new Date();
+    dateRangeStart.setDate(dateRangeStart.getDate() - days);
+  }
+  return { dateRangeStart, dateRangeEnd, queryConditions, params };
+}
+
 // GET /api/reports/analytics - Get sales analytics over time
 router.get(
   "/analytics",
@@ -264,91 +287,62 @@ router.get(
   async (req: AdminRequest, res: Response) => {
     try {
       const { range = "7d", startDate, endDate } = req.query;
+      const { dateRangeStart, dateRangeEnd, queryConditions, params } =
+        getDateRange(range as string, startDate as string, endDate as string);
 
-      let query = `
-        SELECT TO_CHAR("createdAt", 'YYYY-MM-DD') as date, total 
-        FROM orders 
-        WHERE status != 'cancelled' AND status != 'pending' AND status != 'quote'
-      `;
-      let params: string[] = [];
-      let dateRangeStart: Date;
-      let dateRangeEnd: Date = new Date(); // Default end date to today
+      const ordersResult = await db.query(
+        `SELECT TO_CHAR("createdAt", 'YYYY-MM-DD') as date, total 
+         FROM orders 
+         WHERE status != 'cancelled' AND status != 'pending' AND status != 'quote'
+         ${queryConditions}
+         ORDER BY "createdAt" ASC`,
+        params,
+      );
 
-      if (startDate && endDate) {
-        query += ` AND "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date`;
-        params = [startDate as string, endDate as string];
-        // Parse as local dates by adding time component
-        dateRangeStart = new Date((startDate as string) + "T00:00:00");
-        dateRangeEnd = new Date((endDate as string) + "T00:00:00");
-      } else {
-        let days = 7;
-        if (range === "30d") days = 30;
-        if (range === "90d") days = 90;
-        query += ` AND "createdAt" >= NOW() - INTERVAL '${days} days'`;
-        // No params needed for the interval string interpolation
-        dateRangeStart = new Date();
-        dateRangeStart.setDate(dateRangeStart.getDate() - days);
-      }
+      const expQueryConditions = queryConditions.replace(
+        /"createdAt"/g,
+        "date",
+      );
+      const expensesResult = await db.query(
+        `SELECT TO_CHAR(date, 'YYYY-MM-DD') as date, amount FROM expenses
+         WHERE 1=1 ${expQueryConditions}`,
+        params,
+      );
 
-      query += ` ORDER BY "createdAt" ASC`;
-
-      const ordersResult = await db.query(query, params);
-      const orders = ordersResult.rows as { date: string; total: string }[];
-
-      // Fetch expenses for the same period
-      let expQuery = `SELECT TO_CHAR(date, 'YYYY-MM-DD') as date, amount FROM expenses`;
-      if (startDate && endDate) {
-        expQuery += ` WHERE date::date >= $1::date AND date::date <= $2::date`;
-      } else {
-        let days = 7;
-        if (range === "30d") days = 30;
-        if (range === "90d") days = 90;
-        expQuery += ` WHERE date >= NOW() - INTERVAL '${days} days'`;
-      }
-      const expensesResult = await db.query(expQuery, params);
-      const expenses = expensesResult.rows as {
-        date: string;
-        amount: string;
-      }[];
-
-      // Group by date
       const groupedData: Record<
         string,
         { revenue: number; orders: number; expenses: number }
       > = {};
-
-      // Initialize all dates in the range to ensure continuity in charts
       const currentDate = new Date(dateRangeStart);
       while (currentDate <= dateRangeEnd) {
-        const yr = currentDate.getFullYear();
-        const mo = String(currentDate.getMonth() + 1).padStart(2, "0");
-        const da = String(currentDate.getDate()).padStart(2, "0");
-        const dateStr = `${yr}-${mo}-${da}`;
+        const dateStr = currentDate.toISOString().split("T")[0];
         groupedData[dateStr] = { revenue: 0, orders: 0, expenses: 0 };
         currentDate.setDate(currentDate.getDate() + 1);
       }
 
-      orders.forEach((order) => {
-        const date = order.date;
-        if (groupedData[date]) {
-          groupedData[date].revenue += Number.parseFloat(order.total);
-          groupedData[date].orders += 1;
-        }
-      });
+      (ordersResult.rows as { date: string; total: string }[]).forEach(
+        (order) => {
+          if (groupedData[order.date]) {
+            groupedData[order.date].revenue += Number.parseFloat(order.total);
+            groupedData[order.date].orders += 1;
+          }
+        },
+      );
 
-      expenses.forEach((expense) => {
-        const date = expense.date;
-        if (groupedData[date]) {
-          groupedData[date].expenses += Number.parseFloat(expense.amount);
-        }
-      });
+      (expensesResult.rows as { date: string; amount: string }[]).forEach(
+        (expense) => {
+          if (groupedData[expense.date]) {
+            groupedData[expense.date].expenses += Number.parseFloat(
+              expense.amount,
+            );
+          }
+        },
+      );
 
       const analyticsData = Object.entries(groupedData)
         .map(([date, data]) => ({
+          ...data,
           date,
-          revenue: data.revenue,
-          orders: data.orders,
-          expenses: data.expenses,
           profit: data.revenue - data.expenses,
         }))
         .sort((a, b) => a.date.localeCompare(b.date));

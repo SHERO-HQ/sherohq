@@ -132,9 +132,9 @@ const CheckoutFlow = () => {
     { num: 4, title: "Confirmation", icon: CheckCircle },
   ];
 
-  const handleNext = async () => {
-    if (currentStep === 2) {
-      const isStep2Valid = await trigger([
+  const validateStep = async (step: number) => {
+    if (step === 2) {
+      return await trigger([
         "email",
         "phone",
         "shippingAddress.firstName",
@@ -143,16 +143,18 @@ const CheckoutFlow = () => {
         "shippingAddress.city",
         "shippingAddress.region",
       ]);
-      if (!isStep2Valid) return;
     }
-
-    if (currentStep === 3) {
-      const isStep3Valid = await trigger("paymentMethod");
-      if (!isStep3Valid) return;
+    if (step === 3) {
+      return await trigger("paymentMethod");
     }
+    return true;
+  };
 
-    if (currentStep < 4) {
-      setCurrentStep(currentStep + 1);
+  const handleNext = async () => {
+    if (await validateStep(currentStep)) {
+      if (currentStep < 4) {
+        setCurrentStep(currentStep + 1);
+      }
     }
   };
 
@@ -162,16 +164,13 @@ const CheckoutFlow = () => {
     }
   };
 
-  const handleRetryPayment = async () => {
-    if (!orderId) return;
-    setIsSubmitting(true);
-    setPaymentError(false);
+  const processPayment = async (orderId: string, method: string) => {
     try {
       const paymentResponse = await initializePayment(
         orderId,
         total,
         `Order #${orderId}`,
-        paymentMethod === "paystack" ? "paystack" : "hubtel",
+        method === "paystack" ? "paystack" : "hubtel",
       );
 
       if (paymentResponse.success && paymentResponse.checkoutUrl) {
@@ -181,11 +180,22 @@ const CheckoutFlow = () => {
         setPaymentError(true);
       }
     } catch (error) {
-      console.error("Retry payment failed:", error);
+      console.error("Payment initialization failed:", error);
       setPaymentError(true);
-    } finally {
-      setIsSubmitting(false);
+      addNotification(
+        "Payment System Busy",
+        "We couldn't connect to the payment provider. We've saved your order!",
+        "warning",
+      );
     }
+  };
+
+  const handleRetryPayment = async () => {
+    if (!orderId) return;
+    setIsSubmitting(true);
+    setPaymentError(false);
+    await processPayment(orderId, paymentMethod);
+    setIsSubmitting(false);
   };
 
   const handleSwitchToOffline = async (method: "cod" | "store_pickup") => {
@@ -219,7 +229,7 @@ const CheckoutFlow = () => {
     setPaymentError(false);
     try {
       const guestId = getGuestId();
-      const paymentMethodMap = {
+      const paymentMethodMap: Record<string, string> = {
         momo: "mobile_money",
         card: "card",
         cod: "cash_on_delivery",
@@ -227,27 +237,14 @@ const CheckoutFlow = () => {
         paystack: "paystack",
       };
 
-      const orderItems = cart.map((item) => ({
-        id: item.id,
-        sku: item.sku,
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity,
-        image: item.image,
-      }));
-
       const response = await createOrder({
         guestId,
-        items: orderItems,
+        items: cart.map((item) => ({ ...item })),
         total,
         shippingInfo: {
-          firstName: data.shippingAddress.firstName,
-          lastName: data.shippingAddress.lastName,
+          ...data.shippingAddress,
           email: data.email,
           phone: data.phone,
-          address: data.shippingAddress.address,
-          city: data.shippingAddress.city,
-          region: data.shippingAddress.region,
         },
         paymentMethod: paymentMethodMap[data.paymentMethod],
         referralCode: data.referralCode,
@@ -259,30 +256,7 @@ const CheckoutFlow = () => {
         setConfirmedTotal(total);
 
         if (["momo", "card", "paystack"].includes(data.paymentMethod)) {
-          try {
-            const paymentResponse = await initializePayment(
-              response.orderId,
-              total,
-              `Order #${response.orderId}`,
-              data.paymentMethod === "paystack" ? "paystack" : "hubtel",
-            );
-
-            if (paymentResponse.success && paymentResponse.checkoutUrl) {
-              clearCart();
-              globalThis.location.href = paymentResponse.checkoutUrl;
-              return;
-            } else {
-              setPaymentError(true);
-            }
-          } catch (paymentError) {
-            console.error("Payment initialization failed:", paymentError);
-            setPaymentError(true);
-            addNotification(
-              "Payment System Busy",
-              "We couldn't connect to the payment provider. We've saved your order!",
-              "warning",
-            );
-          }
+          await processPayment(response.orderId, data.paymentMethod);
           return;
         }
 

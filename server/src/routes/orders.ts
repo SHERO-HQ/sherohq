@@ -62,14 +62,14 @@ interface OrderRow {
 }
 
 // Valid order statuses
-const ORDER_STATUSES = [
+const ORDER_STATUSES = new Set([
   "pending",
   "processing",
   "shipped",
   "delivered",
   "cancelled",
   "quote",
-];
+]);
 
 // POST /api/orders/admin - Admin Create Order/Quote
 router.post(
@@ -373,11 +373,7 @@ router.get("/", adminAuth, async (req: AdminRequest, res: Response) => {
     const conditions: string[] = [];
     let paramIndex = 1;
 
-    if (
-      status &&
-      typeof status === "string" &&
-      ORDER_STATUSES.includes(status)
-    ) {
+    if (status && typeof status === "string" && ORDER_STATUSES.has(status)) {
       conditions.push(`status = $${paramIndex}`);
       params.push(status);
       paramIndex++;
