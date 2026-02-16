@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "packageManager": "yarn@4.5.0",
+  "packageManager": "yarn@4.12.0",
   "workspaces": [
     "server"
   ],
@@ -89,6 +89,9 @@
     "vitest": "^4.0.18"
   },
   "resolutions": {
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-is": "19.2.3",
     "vite": "npm:rolldown-vite@latest"
   }
 }

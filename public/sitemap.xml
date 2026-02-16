@@ -2,86 +2,158 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://sherohq.com/</loc>
-    <lastmod>2026-02-06</lastmod>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sherohq.com/products</loc>
-    <lastmod>2026-02-06</lastmod>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sherohq.com/solutions</loc>
-    <lastmod>2026-02-06</lastmod>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sherohq.com/consultation</loc>
-    <lastmod>2026-02-06</lastmod>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sherohq.com/about-us</loc>
-    <lastmod>2026-02-06</lastmod>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sherohq.com/partners</loc>
-    <lastmod>2026-02-06</lastmod>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sherohq.com/support</loc>
-    <lastmod>2026-02-06</lastmod>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sherohq.com/faq</loc>
-    <lastmod>2026-02-06</lastmod>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sherohq.com/contact-us</loc>
-    <lastmod>2026-02-06</lastmod>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sherohq.com/terms</loc>
-    <lastmod>2026-02-06</lastmod>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sherohq.com/privacy</loc>
-    <lastmod>2026-02-06</lastmod>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sherohq.com/cookies</loc>
-    <lastmod>2026-02-06</lastmod>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sherohq.com/login</loc>
-    <lastmod>2026-02-06</lastmod>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sherohq.com/signup</loc>
-    <lastmod>2026-02-06</lastmod>
+    <lastmod>2026-02-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sherohq.com/products/9ae9be8e-d332-4db0-8c63-b9b132959ff5</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sherohq.com/products/a2b607e5-2b16-42da-a8fe-c21dbace9038</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sherohq.com/products/38e2dced-5ae6-431e-8fda-e57178d77072</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sherohq.com/products/3a5d2c87-54c0-4aae-91e7-bed80bbb0a21</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sherohq.com/products/a0e2a102-dbed-4825-80e4-2b5a165a951b</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sherohq.com/products/782410c3-312f-4e16-b6ef-cc6818f3b45d</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sherohq.com/products/59908ab9-d16e-40e8-ab4d-fa2b08b0d3bb</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sherohq.com/products/537c77bf-28fd-4c0c-9696-925d29c2a8f7</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sherohq.com/products/527c52bf-2228-4f30-b705-d5ef11879320</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sherohq.com/products/e84b33ef-dac2-4cbb-9b3e-e3aed21f9d50</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sherohq.com/products/d677b1f0-5cfd-4a64-b7f6-5c153eed9815</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://sherohq.com/products/eac0425e-c2ea-4d06-9404-0278029da9f1</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
   </url>
 </urlset>
