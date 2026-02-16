@@ -16,6 +16,7 @@ import {
   type User,
   type ShippingAddress,
 } from "@/services/api";
+import { formatAuthError } from "@/utils/authErrors";
 
 interface AuthContextType {
   user: User | null;
@@ -74,7 +75,7 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      throw error;
+      throw new Error(formatAuthError(error));
     }
   }
 
@@ -91,7 +92,7 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      throw error;
+      throw new Error(formatAuthError(error));
     }
   }
 

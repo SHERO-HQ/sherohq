@@ -64,18 +64,58 @@ export async function handleResponse<T>(response: Response): Promise<T> {
 
   if (!response.ok) {
     const contentType = response.headers.get("content-type");
+    let errorMessage = `Error ${response.status}`;
+
     if (contentType?.includes("application/json")) {
       try {
         const errorData = JSON.parse(text);
-        throw new Error(errorData.error || `Error ${response.status}`);
+        // Backend often returns { error: "message" } or { message: "message" } or { detail: "message" }
+        errorMessage =
+          errorData.error ||
+          errorData.message ||
+          errorData.detail ||
+          (Array.isArray(errorData.errors) && errorData.errors[0]?.message) ||
+          errorMessage;
       } catch {
-        throw new Error(
-          `Server Error: ${response.status} ${response.statusText}`,
-        );
+        // Fallback to status-based messages if JSON parsing fails
       }
     }
-    console.error("API Error (Non-JSON):", text.substring(0, 200));
-    throw new Error(`Server Error: ${response.status} ${response.statusText}`);
+
+    // Add meaningful defaults for common status codes if no specific message was found
+    if (errorMessage.startsWith("Error ")) {
+      switch (response.status) {
+        case 400:
+          errorMessage = "Bad Request: Please check your input.";
+          break;
+        case 401:
+          errorMessage =
+            "Unauthorized: Invalid credentials or session expired.";
+          break;
+        case 403:
+          errorMessage =
+            "Forbidden: You do not have permission to perform this action.";
+          break;
+        case 404:
+          errorMessage = "Not Found: The requested resource does not exist.";
+          break;
+        case 422:
+          errorMessage = "Unprocessable Entity: Please check your data format.";
+          break;
+        case 429:
+          errorMessage = "Too Many Requests: Please try again later.";
+          break;
+        case 500:
+          errorMessage = "Server Error: Something went wrong on our end.";
+          break;
+        case 502:
+        case 503:
+        case 504:
+          errorMessage = "Service Unavailable: The server is temporarily down.";
+          break;
+      }
+    }
+
+    throw new Error(errorMessage);
   }
 
   if (!text) {

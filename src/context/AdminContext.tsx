@@ -13,6 +13,7 @@ import {
   getAdminMe,
   type AdminUser,
 } from "@/services/api";
+import { formatAuthError } from "@/utils/authErrors";
 
 interface AdminContextType {
   admin: AdminUser | null;
@@ -55,8 +56,15 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
   }, [checkAuth]);
 
   async function login(username: string, password: string) {
-    const response = await apiLogin(username, password);
-    setAdmin(response.admin);
+    setIsLoading(true);
+    try {
+      const response = await apiLogin(username, password);
+      setAdmin(response.admin);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      throw new Error(formatAuthError(error));
+    }
   }
 
   async function logout() {
