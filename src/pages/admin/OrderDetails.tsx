@@ -448,6 +448,16 @@ export default function OrderDetails() {
                     <Phone className="w-4 h-4 text-slate-500 shrink-0 group-hover:text-emerald-400 transition-colors" />
                     <span>{order.shippingInfo.phone}</span>
                   </div>
+                  {order.referralCode && (
+                    <div className="flex items-center gap-3 text-sm text-slate-300 group pt-2 border-t border-white/5">
+                      <span className="text-[10px] uppercase font-bold text-slate-500 shrink-0 min-w-4">
+                        Ref
+                      </span>
+                      <span className="font-mono text-emerald-400">
+                        {order.referralCode}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             </Card>

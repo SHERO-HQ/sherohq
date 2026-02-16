@@ -95,11 +95,11 @@ const PWAInstallPrompt = () => {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 100 }}
-          className="fixed bottom-20 md:bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-sm z-60 bg-white dark:bg-slate-900 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden"
+          className="fixed bottom-20 md:bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-sm z-60 bg-white dark:bg-slate-900 rounded shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden"
         >
           <div className="p-4">
             <div className="flex items-start gap-3">
-              <div className="shrink-0 w-12 h-12 bg-linear-to-br from-emerald-500 to-blue-600 rounded-xl flex items-center justify-center">
+              <div className="shrink-0 w-12 h-12 bg-linear-to-br from-emerald-500 to-blue-600 rounded flex items-center justify-center">
                 <Smartphone className="w-6 h-6 text-white" />
               </div>
               <div className="flex-1 min-w-0">

@@ -20,7 +20,7 @@ export const useAdminStats = (refetchInterval?: number | false) => {
     queryKey: ADMIN_KEYS.stats(),
     queryFn: getAdminStats,
     refetchInterval,
-    placeholderData: (previousData) => previousData,
+    placeholderData: (previousData: any) => previousData,
   });
 };
 
@@ -29,16 +29,16 @@ export const useActivityLogs = (refetchInterval?: number | false) => {
     queryKey: ADMIN_KEYS.activity(),
     queryFn: fetchActivityLogs,
     refetchInterval,
-    placeholderData: (previousData) => previousData,
+    placeholderData: (previousData: any) => previousData,
   });
 };
 
 export const useRecentOrders = (refetchInterval?: number | false) => {
   return useQuery({
     queryKey: ADMIN_KEYS.recentOrders(),
-    queryFn: fetchRecentOrders,
+    queryFn: () => fetchRecentOrders(),
     refetchInterval,
-    placeholderData: (previousData) => previousData,
+    placeholderData: (previousData: any) => previousData,
   });
 };
 
@@ -46,6 +46,6 @@ export const useAnalytics = (period = "7d") => {
   return useQuery({
     queryKey: ADMIN_KEYS.analytics(period),
     queryFn: () => fetchAnalytics(period),
-    placeholderData: (previousData) => previousData,
+    placeholderData: (previousData: any) => previousData,
   });
 };

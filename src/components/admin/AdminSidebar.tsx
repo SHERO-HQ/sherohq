@@ -18,6 +18,7 @@ import {
   MessageSquareQuote,
   BarChart,
   FileText,
+  DollarSign,
 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { cn } from "@/lib/utils";
@@ -33,6 +34,7 @@ const navItems = [
   { icon: Package, label: "Products", href: "/admin/products" },
   { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
   { icon: BarChart3, label: "Reports", href: "/admin/reports" },
+  { icon: DollarSign, label: "Expenses", href: "/admin/expenses" },
   { icon: Headset, label: "Support", href: "/admin/support" },
   { icon: BookOpen, label: "Guides", href: "/admin/guides" },
   { icon: Tag, label: "Categories", href: "/admin/categories" },
@@ -227,6 +229,22 @@ export default function AdminSidebar({
                     <span className="text-xs font-medium">Create Invoice</span>
                   )}
                 </UniversalLink>
+                <UniversalLink
+                  to="/admin/expenses?action=new"
+                  className={({ isActive }) =>
+                    cn(
+                      "flex items-center gap-2 px-3 py-2 rounded transition-all duration-200 group relative",
+                      isActive
+                        ? "bg-rose-500/10 text-rose-400"
+                        : "text-slate-400 hover:text-white hover:bg-white/5",
+                    )
+                  }
+                >
+                  <DollarSign className="w-4 h-4 shrink-0" />
+                  {isOpen && (
+                    <span className="text-xs font-medium">New Expense</span>
+                  )}
+                </UniversalLink>
               </div>
             </div>
           </nav>
@@ -255,11 +273,11 @@ export default function AdminSidebar({
             {/* Profile Summary */}
             <div
               className={cn(
-                "flex items-center gap-3 px-3 py-4 rounded bg-white/5 backdrop-blur-md border border-white/10 mt-4",
+                "flex items-center gap-3 px-3 py-4 backdrop-blur-md border border-white/10 mt-4",
                 !isOpen && "justify-center px-0",
               )}
             >
-              <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center shrink-0 border border-white/10 overflow-hidden">
+              <div className="w-8 h-8 flex items-center justify-center shrink-0 overflow-hidden">
                 {admin?.avatar ? (
                   <img
                     src={admin.avatar}
@@ -273,7 +291,7 @@ export default function AdminSidebar({
               {isOpen && (
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-white truncate font-sora">
-                    {admin?.username || "Admin"}
+                    {admin?.username.toUpperCase() || "Admin"}
                   </p>
                   <p className="text-[10px] text-slate-500 truncate capitalize font-medium">
                     {admin?.role || "Administrator"}

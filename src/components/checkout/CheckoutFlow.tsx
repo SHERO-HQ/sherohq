@@ -82,6 +82,7 @@ const CheckoutFlow = () => {
         postalCode: "",
       },
       paymentMethod: "momo",
+      referralCode: "",
     },
   });
 
@@ -249,6 +250,7 @@ const CheckoutFlow = () => {
           region: data.shippingAddress.region,
         },
         paymentMethod: paymentMethodMap[data.paymentMethod],
+        referralCode: data.referralCode,
         userId: user?.id,
       });
 
@@ -598,6 +600,15 @@ const CheckoutFlow = () => {
                             {...register("phone")}
                           />
                         </div>
+
+                        <Input
+                          id="referralCode"
+                          label="Referral Code (Phone Number) - Optional"
+                          placeholder="024 123 4567"
+                          leftIcon={<Phone className="w-4 h-4" />}
+                          error={errors.referralCode?.message}
+                          {...register("referralCode")}
+                        />
 
                         <Input
                           id="address"

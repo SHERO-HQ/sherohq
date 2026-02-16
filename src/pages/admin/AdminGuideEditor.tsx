@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, Plus, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,6 +15,7 @@ import {
 } from "@/services/guides";
 import { useNotifications } from "@/hooks/useNotifications";
 import AdminLayout from "@/components/admin/AdminLayout";
+import { uploadImage } from "@/services/api";
 
 const AdminGuideEditor = () => {
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ const AdminGuideEditor = () => {
   const [content, setContent] = useState("");
   const [category, setCategory] = useState<"hardware" | "software">("hardware");
   const [coverImage, setCoverImage] = useState("");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [published, setPublished] = useState(false);
 
   const loadGuide = useCallback(
@@ -64,6 +66,25 @@ const AdminGuideEditor = () => {
       loadGuide(id);
     }
   }, [id, isEditing, loadGuide]);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingImage(true);
+    try {
+      const result = await uploadImage(file);
+      if (result.success) {
+        setCoverImage(result.imageUrl);
+        addNotification("Success", "Image uploaded successfully", "success");
+      }
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      addNotification("Error", "Failed to upload image", "error");
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -203,25 +224,58 @@ const AdminGuideEditor = () => {
             {/* Cover Image */}
             <div className="space-y-2">
               <Label htmlFor="coverImage" className="text-white">
-                Cover Image URL (optional)
+                Cover Image
               </Label>
-              <Input
-                id="coverImage"
-                value={coverImage}
-                onChange={(e) => setCoverImage(e.target.value)}
-                placeholder="https://example.com/image.jpg"
-                className="bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600"
-              />
-              {coverImage && (
-                <div className="mt-2 h-32 rounded overflow-hidden bg-slate-800">
-                  <img
-                    src={coverImage}
-                    alt="Cover preview"
-                    className="w-full h-full object-cover"
-                    onError={(e) => (e.currentTarget.style.display = "none")}
-                  />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <p className="text-xs text-slate-500 mb-1">
+                    Upload from computer
+                  </p>
+                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-white/10 rounded-lg cursor-pointer bg-slate-900/50 hover:bg-slate-800/50 transition-colors">
+                    {isUploadingImage ? (
+                      <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <Plus className="w-8 h-8 text-slate-400 mb-2" />
+                        <p className="text-sm text-slate-400">
+                          Click to upload
+                        </p>
+                      </div>
+                    )}
+                    <input
+                      type="file"
+                      className="hidden"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      disabled={isUploadingImage}
+                    />
+                  </label>
                 </div>
-              )}
+                <div className="space-y-2">
+                  <p className="text-xs text-slate-500 mb-1">
+                    Or provide a URL
+                  </p>
+                  <Input
+                    id="coverImage"
+                    value={coverImage}
+                    onChange={(e) => setCoverImage(e.target.value)}
+                    placeholder="https://example.com/image.jpg"
+                    className="bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600"
+                  />
+                  {coverImage && (
+                    <div className="mt-2 h-20 rounded overflow-hidden bg-slate-800 border border-white/5">
+                      <img
+                        src={coverImage}
+                        alt="Cover preview"
+                        className="w-full h-full object-cover"
+                        onError={(e) =>
+                          (e.currentTarget.style.display = "none")
+                        }
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* Summary */}

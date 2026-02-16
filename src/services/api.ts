@@ -59,7 +59,7 @@ function getAuthToken(): string | null {
 }
 
 // Helper to safely parse JSON and handle errors
-async function handleResponse<T>(response: Response): Promise<T> {
+export async function handleResponse<T>(response: Response): Promise<T> {
   const text = await response.text();
 
   if (!response.ok) {
@@ -211,6 +211,7 @@ export interface CreateOrderPayload {
   shippingInfo: ShippingInfo;
   paymentMethod: string;
   userId?: string;
+  referralCode?: string;
 }
 
 export interface CreateOrderResponse {
@@ -243,6 +244,7 @@ export interface Order {
   paymentMethod: string;
   status: string;
   createdAt: Date;
+  referralCode?: string;
 }
 
 export async function createAdminOrder(data: {
@@ -651,9 +653,12 @@ export interface LoginResponse {
 
 export interface KPIData {
   revenue: number;
+  expenses: number;
+  profit: number;
   orders: number;
   revenueGrowth: number;
   ordersGrowth: number;
+  profitGrowth: number;
   newProducts: number;
 }
 
@@ -661,6 +666,8 @@ export interface AdminStats {
   products: number;
   orders: number;
   revenue: number;
+  profit: number;
+  expenses: number;
   lowStock: number;
   outOfStock: number;
   pendingOrders: number;
@@ -668,11 +675,14 @@ export interface AdminStats {
   ordersGrowth: number;
   newProductsCount: number;
   pendingGrowth: number;
+  lifetimeRevenue?: number;
+  lifetimeExpenses?: number;
   kpis: {
     today: KPIData;
     week: KPIData;
     month: KPIData;
     year: KPIData;
+    custom?: KPIData | null;
   };
 }
 
@@ -711,8 +721,15 @@ export async function getAdminMe(): Promise<{
   return handleResponse(response);
 }
 
-export async function fetchRegionalReport(): Promise<RegionalData[]> {
-  const response = await authFetch(`${API_BASE}/reports/regional`);
+export async function fetchRegionalReport(
+  startDate?: string,
+  endDate?: string,
+): Promise<RegionalData[]> {
+  const params = new URLSearchParams();
+  if (startDate) params.append("startDate", startDate);
+  if (endDate) params.append("endDate", endDate);
+  const url = `${API_BASE}/reports/regional${params.toString() ? "?" + params.toString() : ""}`;
+  const response = await authFetch(url);
   return handleResponse<RegionalData[]>(response);
 }
 
@@ -838,6 +855,8 @@ export async function uploadImages(
 export interface AnalyticsData {
   date: string;
   revenue: number;
+  expenses: number;
+  profit: number;
   orders: number;
 }
 
@@ -847,8 +866,15 @@ export interface TopProduct {
   revenue: number;
 }
 
-export async function fetchDashboardStats(): Promise<AdminStats> {
-  const response = await authFetch(`${API_BASE}/reports/stats`);
+export async function fetchDashboardStats(
+  startDate?: string,
+  endDate?: string,
+): Promise<AdminStats> {
+  const params = new URLSearchParams();
+  if (startDate) params.append("startDate", startDate);
+  if (endDate) params.append("endDate", endDate);
+  const url = `${API_BASE}/reports/stats${params.toString() ? "?" + params.toString() : ""}`;
+  const response = await authFetch(url);
   return handleResponse<AdminStats>(response);
 }
 
@@ -860,15 +886,26 @@ export interface RegionalData {
 
 export async function fetchAnalytics(
   range: string = "7d",
+  startDate?: string,
+  endDate?: string,
 ): Promise<AnalyticsData[]> {
-  const response = await authFetch(
-    `${API_BASE}/reports/analytics?range=${range}`,
-  );
+  let url = `${API_BASE}/reports/analytics?range=${range}`;
+  if (startDate && endDate) {
+    url += `&startDate=${startDate}&endDate=${endDate}`;
+  }
+  const response = await authFetch(url);
   return handleResponse<AnalyticsData[]>(response);
 }
 
-export async function fetchTopProducts(): Promise<TopProduct[]> {
-  const response = await authFetch(`${API_BASE}/reports/top-products`);
+export async function fetchTopProducts(
+  startDate?: string,
+  endDate?: string,
+): Promise<TopProduct[]> {
+  const params = new URLSearchParams();
+  if (startDate) params.append("startDate", startDate);
+  if (endDate) params.append("endDate", endDate);
+  const url = `${API_BASE}/reports/top-products${params.toString() ? "?" + params.toString() : ""}`;
+  const response = await authFetch(url);
   return handleResponse<TopProduct[]>(response);
 }
 
@@ -889,10 +926,15 @@ export interface OrderStatusDistribution {
   color: string;
 }
 
-export async function fetchOrderStatusDistribution(): Promise<
-  OrderStatusDistribution[]
-> {
-  const response = await authFetch(`${API_BASE}/reports/order-status`);
+export async function fetchOrderStatusDistribution(
+  startDate?: string,
+  endDate?: string,
+): Promise<OrderStatusDistribution[]> {
+  const params = new URLSearchParams();
+  if (startDate) params.append("startDate", startDate);
+  if (endDate) params.append("endDate", endDate);
+  const url = `${API_BASE}/reports/order-status${params.toString() ? "?" + params.toString() : ""}`;
+  const response = await authFetch(url);
   return handleResponse<OrderStatusDistribution[]>(response);
 }
 
@@ -908,8 +950,15 @@ export interface RecentOrder {
   };
 }
 
-export async function fetchRecentOrders(): Promise<RecentOrder[]> {
-  const response = await authFetch(`${API_BASE}/reports/recent-orders`);
+export async function fetchRecentOrders(
+  startDate?: string,
+  endDate?: string,
+): Promise<RecentOrder[]> {
+  const params = new URLSearchParams();
+  if (startDate) params.append("startDate", startDate);
+  if (endDate) params.append("endDate", endDate);
+  const url = `${API_BASE}/reports/recent-orders${params.toString() ? "?" + params.toString() : ""}`;
+  const response = await authFetch(url);
   return handleResponse<RecentOrder[]>(response);
 }
 

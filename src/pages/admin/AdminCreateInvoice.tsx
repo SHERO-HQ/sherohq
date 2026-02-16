@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ import {
   FileText,
   Loader2,
   CheckCircle2,
+  User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/types/product";
@@ -109,6 +110,26 @@ export default function AdminCreateInvoice() {
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
+
+  const handleQuickWalkIn = () => {
+    setCustomer({
+      firstName: "Walk-in",
+      lastName: "Guest",
+      email: "walkin@sherotech.com",
+      phone: "+233 00 000 0000",
+      address: "In-Store",
+      city: "Accra",
+      region: "Greater Accra",
+    });
+    addNotification("Success", "Walk-in details pre-filled!", "success");
+  };
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("walkin") === "true") {
+      handleQuickWalkIn();
+    }
+  }, []);
 
   const handleSubmit = async () => {
     if (
@@ -212,9 +233,19 @@ export default function AdminCreateInvoice() {
           <div className="lg:col-span-2 space-y-8">
             {/* Customer Details */}
             <Card className="bg-slate-900 border-white/5 p-6 space-y-6">
-              <h2 className="text-lg font-bold text-white flex items-center gap-2 pb-4 border-b border-white/5">
-                Customer Information
-              </h2>
+              <div className="flex items-center justify-between pb-4 border-b border-white/5">
+                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                  Customer Information
+                </h2>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleQuickWalkIn}
+                  className="border-white/10 text-emerald-400 hover:bg-emerald-500/10"
+                >
+                  <User className="w-4 h-4 mr-2" /> Quick Walk-in
+                </Button>
+              </div>
               <div className="grid sm:grid-cols-2 gap-4">
                 <Input
                   label="First Name"

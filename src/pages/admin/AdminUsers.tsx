@@ -516,61 +516,72 @@ const UserDetailsModal = ({
             </button>
           </div>
 
-          {loading ? (
-            <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
-            </div>
-          ) : user ? (
-            <div className="p-6 space-y-6 overflow-y-auto max-h-[calc(80vh-80px)]">
-              {/* User Info */}
-              <div className="flex items-start gap-4">
-                <div className="w-16 h-16 rounded bg-linear-to-br from-emerald-500 to-blue-500 flex items-center justify-center text-white text-2xl font-bold">
-                  {user.avatar ? (
-                    <img
-                      src={user.avatar}
-                      alt={user.name}
-                      className="w-full h-full rounded object-cover"
-                    />
-                  ) : (
-                    user.name.charAt(0).toUpperCase()
-                  )}
+          {/* Modal Content */}
+          {(() => {
+            if (loading) {
+              return (
+                <div className="flex items-center justify-center py-20">
+                  <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-white">
-                    {user.name}
-                  </h3>
-                  <p className="text-slate-400">{user.email}</p>
-                  {user.phone && (
-                    <p className="text-slate-500 text-sm">{user.phone}</p>
-                  )}
+              );
+            }
+
+            if (!user) {
+              return (
+                <div className="text-center py-20">
+                  <p className="text-slate-400">User not found</p>
                 </div>
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    user.emailVerified
-                      ? "bg-emerald-500/20 text-emerald-400"
-                      : "bg-yellow-500/20 text-yellow-400"
-                  }`}
-                >
-                  {user.emailVerified ? "Verified" : "Unverified"}
-                </span>
-              </div>
+              );
+            }
 
-              {/* Stats */}
-              {stats && <UserStatsGrid stats={stats} />}
+            return (
+              <div className="p-6 space-y-6 overflow-y-auto max-h-[calc(80vh-80px)]">
+                {/* User Info */}
+                <div className="flex items-start gap-4">
+                  <div className="w-16 h-16 rounded bg-linear-to-br from-emerald-500 to-blue-500 flex items-center justify-center text-white text-2xl font-bold">
+                    {user.avatar ? (
+                      <img
+                        src={user.avatar}
+                        alt={user.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      user.name.charAt(0).toUpperCase()
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-white">
+                      {user.name}
+                    </h3>
+                    <p className="text-slate-400">{user.email}</p>
+                    {user.phone && (
+                      <p className="text-slate-500 text-sm">{user.phone}</p>
+                    )}
+                  </div>
+                  <span
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      user.emailVerified
+                        ? "bg-emerald-500/20 text-emerald-400"
+                        : "bg-yellow-500/20 text-yellow-400"
+                    }`}
+                  >
+                    {user.emailVerified ? "Verified" : "Unverified"}
+                  </span>
+                </div>
 
-              {/* Order History */}
-              <div>
-                <h4 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-3">
-                  Recent Orders
-                </h4>
-                <OrderHistoryList orders={orders} />
+                {/* Stats */}
+                {stats && <UserStatsGrid stats={stats} />}
+
+                {/* Order History */}
+                <div>
+                  <h4 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-3">
+                    Recent Orders
+                  </h4>
+                  <OrderHistoryList orders={orders} />
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="text-center py-20">
-              <p className="text-slate-400">User not found</p>
-            </div>
-          )}
+            );
+          })()}
         </motion.div>
       </motion.div>
     )}

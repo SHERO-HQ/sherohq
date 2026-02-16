@@ -47,6 +47,7 @@ const AdminReviews = lazy(() => import("@/pages/admin/AdminReviews"));
 const AdminTeam = lazy(() => import("@/pages/admin/AdminTeam"));
 const AdminTestimonials = lazy(() => import("@/pages/admin/AdminTestimonials"));
 const AdminStats = lazy(() => import("@/pages/admin/AdminStats"));
+const AdminExpenses = lazy(() => import("@/pages/admin/AdminExpenses"));
 import { BreadcrumbProvider } from "@/context/BreadcrumbContext";
 
 // Public support pages
@@ -162,6 +163,14 @@ const AdminSectionInternal = () => (
       element={
         <ProtectedRoute>
           <AdminProfile />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="expenses"
+      element={
+        <ProtectedRoute>
+          <AdminExpenses />
         </ProtectedRoute>
       }
     />

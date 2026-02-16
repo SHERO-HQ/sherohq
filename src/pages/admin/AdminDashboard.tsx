@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import UniversalLink from "@/components/common/UniversalLink";
 import { useAdmin } from "@/context/AdminContext";
 import { useTitle } from "@/hooks/useTitle";
+import { type RecentOrder } from "@/services/api";
 import {
   useAdminStats,
   useAnalytics,
@@ -413,7 +414,7 @@ export default function AdminDashboard() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="h-[200px] w-full mt-4">
+              <div className="h-[500px] w-full mt-4">
                 {analyticsLoading ? (
                   <div className="w-full h-full bg-slate-800/50 rounded animate-pulse" />
                 ) : (
@@ -712,7 +713,9 @@ export default function AdminDashboard() {
                       </td>
                     </tr>
                   ))
-                ) : !recentOrders || recentOrders.length === 0 ? (
+                ) : !recentOrders ||
+                  !Array.isArray(recentOrders) ||
+                  recentOrders.length === 0 ? (
                   <tr>
                     <td
                       colSpan={6}
@@ -722,10 +725,10 @@ export default function AdminDashboard() {
                     </td>
                   </tr>
                 ) : (
-                  recentOrders.map((order) => (
+                  (recentOrders as RecentOrder[])?.map((order) => (
                     <tr
                       key={order.id}
-                      className="hover:bg-white/2 transition-colors group"
+                      className="border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors"
                     >
                       <td className="px-6 py-4">
                         <UniversalLink

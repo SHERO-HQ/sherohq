@@ -2,9 +2,8 @@ import {
   Search,
   Menu,
   User,
-  Settings,
   LogOut,
-  ChevronDown,
+  // ChevronDown,
   Globe,
 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
@@ -111,7 +110,7 @@ export default function AdminHeader({
       </div>
 
       {/* Right side: Search, Notifications, Profile */}
-      <div className="flex items-center gap-2 md:gap-4">
+      <div className="flex items-center gap-2">
         {/* Search Bar */}
         <div className="hidden lg:flex relative group">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-emerald-500 transition-colors" />
@@ -125,7 +124,7 @@ export default function AdminHeader({
         {/* View Site */}
         <UniversalLink
           to="/"
-          className="hidden md:flex items-center gap-1 px-3 py-2 text-sm text-slate-400 font-sora hover:text-white hover:bg-emerald-500/5 rounded transition-colors"
+          className="hidden md:flex items-center px-3 py-2 text-sm text-slate-400 font-sora hover:text-white hover:bg-emerald-500/5 rounded transition-colors"
           title="View Site"
         >
           <Globe className="w-4 h-4" />
@@ -138,11 +137,8 @@ export default function AdminHeader({
         {/* User Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className="flex items-center gap-2 px-2 hover:bg-white/5 border border-transparent hover:border-white/5 transition-all outline-none"
-            >
-              <div className="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/20 flex items-center justify-center overflow-hidden font-sora">
+            <Button variant="ghost" className="flex items-center hover:bg-transparent p-0">
+              <div className="flex items-center justify-center p-1 w-10 h-10 overflow-hidden hover:bg-white/5 rounded backdrop-blur-md border border-white/10 hover:border-white/5 transition-all outline-none">
                 {admin?.avatar ? (
                   <img
                     src={admin.avatar}
@@ -153,15 +149,15 @@ export default function AdminHeader({
                   <User className="w-4 h-4 text-emerald-400" />
                 )}
               </div>
-              <div className="hidden sm:flex flex-col items-start">
+              {/* <div className="hidden sm:flex flex-col items-start">
                 <span className="text-sm font-semibold text-white capitalize font-sora leading-none mb-1">
                   {admin?.username || "Admin"}
                 </span>
                 <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">
                   {admin?.role || "Super Admin"}
                 </span>
-              </div>
-              <ChevronDown className="w-4 h-4 text-slate-500 ml-1 hidden sm:block" />
+              </div> */}
+              {/* <ChevronDown className="w-4 h-4 text-slate-500 ml-1 hidden sm:block" /> */}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -180,10 +176,6 @@ export default function AdminHeader({
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile</span>
               </UniversalLink>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="flex items-center cursor-pointer hover:bg-white/5">
-              <Settings className="mr-2 h-4 w-4" />
-              <span>Settings</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-white/5" />
             <DropdownMenuItem

@@ -27,6 +27,7 @@ import projectRoutes from "./routes/projects";
 import teamRoutes from "./routes/team";
 import testimonialRoutes from "./routes/testimonials";
 import statRoutes from "./routes/stats";
+import expensesRoutes from "./routes/expenses";
 
 // Load environment variables
 dotenv.config();
@@ -220,6 +221,7 @@ app.use("/api/projects", projectRoutes);
 app.use("/api/team", teamRoutes);
 app.use("/api/testimonials", testimonialRoutes);
 app.use("/api/stats", statRoutes);
+app.use("/api/expenses", expensesRoutes);
 
 // Root route - information about the API
 app.get("/", (req: Request, res: Response) => {

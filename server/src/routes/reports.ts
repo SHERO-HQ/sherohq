@@ -4,7 +4,8 @@ import { adminAuth, AdminRequest } from "../middleware/adminAuth";
 
 const router = Router();
 
-interface AnalyticsData {
+// Analytics data type for grouping
+export interface AnalyticsData {
   date: string;
   revenue: number;
   orders: number;
@@ -24,13 +25,11 @@ const safeParse = (val: unknown): unknown => {
 // GET /api/reports/stats - Get dashboard stats with multi-period support
 router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
-    // We aggregate data for:
-    // 1. Today (vs Yesterday)
-    // 2. This Week (Last 7 days vs Previous 7 days)
-    // 3. This Month (Last 30 days vs Previous 30 days)
-    // 4. This Year (Last 365 days vs Previous 365 days)
+    const { startDate, endDate } = req.query;
+    const hasCustomRange = !!(startDate && endDate);
 
-    const statsResult = await db.query(`
+    const statsResult = await db.query(
+      `
       WITH periods AS (
         SELECT 
           total,
@@ -41,6 +40,7 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
           "createdAt" >= NOW() - INTERVAL '7 days' as is_week,
           "createdAt" >= NOW() - INTERVAL '30 days' as is_month,
           "createdAt" >= NOW() - INTERVAL '365 days' as is_year,
+          ${hasCustomRange ? `("createdAt"::date >= $1::date AND "createdAt"::date <= $2::date) as is_custom,` : ""}
           -- Previous periods for growth
           ("createdAt" < CURRENT_DATE AND "createdAt" >= CURRENT_DATE - INTERVAL '1 day') as is_prev_today,
           ("createdAt" < NOW() - INTERVAL '7 days' AND "createdAt" >= NOW() - INTERVAL '14 days') as is_prev_week,
@@ -70,11 +70,56 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
         COUNT(*) FILTER (WHERE is_year) as ord_year,
         SUM(total) FILTER (WHERE is_prev_year) as prev_rev_year,
         COUNT(*) FILTER (WHERE is_prev_year) as prev_ord_year,
+        -- Custom
+        ${hasCustomRange ? `SUM(total) FILTER (WHERE is_custom) as rev_custom, COUNT(*) FILTER (WHERE is_custom) as ord_custom,` : ""}
         -- Lifetime Totals
         SUM(total) as lifetime_revenue,
         COUNT(*) as lifetime_orders
       FROM periods
-    `);
+    `,
+      hasCustomRange ? [startDate, endDate] : [],
+    );
+
+    const expensesResult = await db.query(
+      `
+      WITH periods AS (
+        SELECT 
+          amount,
+          date,
+          -- Current periods
+          date >= CURRENT_DATE as is_today,
+          date >= NOW() - INTERVAL '7 days' as is_week,
+          date >= NOW() - INTERVAL '30 days' as is_month,
+          date >= NOW() - INTERVAL '365 days' as is_year,
+          ${hasCustomRange ? `(date::date >= $1::date AND date::date <= $2::date) as is_custom,` : ""}
+          -- Previous periods for growth
+          (date < CURRENT_DATE AND date >= CURRENT_DATE - INTERVAL '1 day') as is_prev_today,
+          (date < NOW() - INTERVAL '7 days' AND date >= NOW() - INTERVAL '14 days') as is_prev_week,
+          (date < NOW() - INTERVAL '30 days' AND date >= NOW() - INTERVAL '60 days') as is_prev_month,
+          (date < NOW() - INTERVAL '365 days' AND date >= NOW() - INTERVAL '730 days') as is_prev_year
+        FROM expenses
+      )
+      SELECT
+        -- Today
+        SUM(amount) FILTER (WHERE is_today) as exp_today,
+        SUM(amount) FILTER (WHERE is_prev_today) as prev_exp_today,
+        -- Week
+        SUM(amount) FILTER (WHERE is_week) as exp_week,
+        SUM(amount) FILTER (WHERE is_prev_week) as prev_exp_week,
+        -- Month
+        SUM(amount) FILTER (WHERE is_month) as exp_month,
+        SUM(amount) FILTER (WHERE is_prev_month) as prev_exp_month,
+        -- Year
+        SUM(amount) FILTER (WHERE is_year) as exp_year,
+        SUM(amount) FILTER (WHERE is_prev_year) as prev_exp_year,
+        -- Custom
+        ${hasCustomRange ? `SUM(amount) FILTER (WHERE is_custom) as exp_custom,` : ""}
+        -- Lifetime
+        SUM(amount) as lifetime_expenses
+      FROM periods
+    `,
+      hasCustomRange ? [startDate, endDate] : [],
+    );
 
     const productStatsResult = await db.query(`
       SELECT 
@@ -93,6 +138,7 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
     );
 
     const s = statsResult.rows[0];
+    const e = expensesResult.rows[0];
     const ps = productStatsResult.rows[0];
     const pendingOrdersCount = Number.parseInt(
       pendingOrdersResult.rows[0].pending_count || "0",
@@ -110,8 +156,12 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
       prevRev: string | null,
       prevOrd: string | null,
       newProd: string | null,
+      exp: string | null,
+      prevExp: string | null,
     ) => ({
       revenue: Number.parseFloat(rev || "0"),
+      expenses: Number.parseFloat(exp || "0"),
+      profit: Number.parseFloat(rev || "0") - Number.parseFloat(exp || "0"),
       orders: Number.parseInt(ord || "0", 10),
       revenueGrowth: calculateGrowth(
         Number.parseFloat(rev || "0"),
@@ -120,6 +170,10 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
       ordersGrowth: calculateGrowth(
         Number.parseInt(ord || "0", 10),
         Number.parseInt(prevOrd || "0", 10),
+      ),
+      profitGrowth: calculateGrowth(
+        Number.parseFloat(rev || "0") - Number.parseFloat(exp || "0"),
+        Number.parseFloat(prevRev || "0") - Number.parseFloat(prevExp || "0"),
       ),
       newProducts: Number.parseInt(newProd || "0", 10),
     });
@@ -131,6 +185,8 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
         s.prev_rev_today,
         s.prev_ord_today,
         ps.new_today,
+        e.exp_today,
+        e.prev_exp_today,
       ),
       week: formatStats(
         s.rev_week,
@@ -138,6 +194,8 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
         s.prev_rev_week,
         s.prev_ord_week,
         ps.new_week,
+        e.exp_week,
+        e.prev_exp_week,
       ),
       month: formatStats(
         s.rev_month,
@@ -145,6 +203,8 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
         s.prev_rev_month,
         s.prev_ord_month,
         ps.new_month,
+        e.exp_month,
+        e.prev_exp_month,
       ),
       year: formatStats(
         s.rev_year,
@@ -152,7 +212,20 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
         s.prev_rev_year,
         s.prev_ord_year,
         ps.new_year,
+        e.exp_year,
+        e.prev_exp_year,
       ),
+      custom: hasCustomRange
+        ? formatStats(
+            s.rev_custom,
+            s.ord_custom,
+            null,
+            null,
+            "0",
+            e.exp_custom,
+            null,
+          )
+        : null,
     };
 
     res.json({
@@ -160,6 +233,8 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
       kpis,
       // Legacy support (Monthly)
       revenue: kpis.month.revenue,
+      expenses: kpis.month.expenses,
+      profit: kpis.month.profit,
       orders: kpis.month.orders,
       revenueGrowth: kpis.month.revenueGrowth,
       ordersGrowth: kpis.month.ordersGrowth,
@@ -169,8 +244,8 @@ router.get("/stats", adminAuth, async (req: AdminRequest, res: Response) => {
       outOfStock: Number.parseInt(ps.out_of_stock || "0", 10),
       pendingOrders: pendingOrdersCount,
       newProductsCount: Number.parseInt(ps.new_week || "0", 10),
-      // We also keep pendingGrowth from before or can calculate it here
-      // Let's just keep it simple for now as per plan
+      lifetimeRevenue: Number.parseFloat(s.lifetime_revenue || "0"),
+      lifetimeExpenses: Number.parseFloat(e.lifetime_expenses || "0"),
       pendingGrowth: 0,
     });
   } catch (error) {
@@ -188,56 +263,97 @@ router.get(
   adminAuth,
   async (req: AdminRequest, res: Response) => {
     try {
-      const { range = "7d" } = req.query; // 7d, 30d, 90d
+      const { range = "7d", startDate, endDate } = req.query;
 
-      let days = 7;
-      if (range === "30d") days = 30;
-      if (range === "90d") days = 90;
+      let query = `
+        SELECT TO_CHAR("createdAt", 'YYYY-MM-DD') as date, total 
+        FROM orders 
+        WHERE status != 'cancelled' AND status != 'pending' AND status != 'quote'
+      `;
+      let params: string[] = [];
+      let dateRangeStart: Date;
+      let dateRangeEnd: Date = new Date(); // Default end date to today
 
-      // Get orders from the last N days
-      // Postgres date math: "createdAt" >= NOW() - INTERVAL '7 days'
-      // Exclude pending and quote
-      const ordersResult = await db.query(
-        `
-      SELECT "createdAt", total 
-      FROM orders 
-      WHERE status != 'cancelled' AND status != 'pending' AND status != 'quote'
-      AND "createdAt" >= NOW() - INTERVAL '${days} days'
-      ORDER BY "createdAt" ASC
-    `,
-      );
+      if (startDate && endDate) {
+        query += ` AND "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date`;
+        params = [startDate as string, endDate as string];
+        // Parse as local dates by adding time component
+        dateRangeStart = new Date((startDate as string) + "T00:00:00");
+        dateRangeEnd = new Date((endDate as string) + "T00:00:00");
+      } else {
+        let days = 7;
+        if (range === "30d") days = 30;
+        if (range === "90d") days = 90;
+        query += ` AND "createdAt" >= NOW() - INTERVAL '${days} days'`;
+        // No params needed for the interval string interpolation
+        dateRangeStart = new Date();
+        dateRangeStart.setDate(dateRangeStart.getDate() - days);
+      }
 
-      const orders = ordersResult.rows as { createdAt: Date; total: string }[];
+      query += ` ORDER BY "createdAt" ASC`;
+
+      const ordersResult = await db.query(query, params);
+      const orders = ordersResult.rows as { date: string; total: string }[];
+
+      // Fetch expenses for the same period
+      let expQuery = `SELECT TO_CHAR(date, 'YYYY-MM-DD') as date, amount FROM expenses`;
+      if (startDate && endDate) {
+        expQuery += ` WHERE date::date >= $1::date AND date::date <= $2::date`;
+      } else {
+        let days = 7;
+        if (range === "30d") days = 30;
+        if (range === "90d") days = 90;
+        expQuery += ` WHERE date >= NOW() - INTERVAL '${days} days'`;
+      }
+      const expensesResult = await db.query(expQuery, params);
+      const expenses = expensesResult.rows as {
+        date: string;
+        amount: string;
+      }[];
 
       // Group by date
-      const groupedData: Record<string, { revenue: number; orders: number }> =
-        {};
+      const groupedData: Record<
+        string,
+        { revenue: number; orders: number; expenses: number }
+      > = {};
 
-      // Initialize dates with a margin for tomorrow to handle timezone skew
-      for (let i = -1; i < days; i++) {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-        const dateStr = d.toISOString().split("T")[0];
-        groupedData[dateStr] = { revenue: 0, orders: 0 };
+      // Initialize all dates in the range to ensure continuity in charts
+      const currentDate = new Date(dateRangeStart);
+      while (currentDate <= dateRangeEnd) {
+        const yr = currentDate.getFullYear();
+        const mo = String(currentDate.getMonth() + 1).padStart(2, "0");
+        const da = String(currentDate.getDate()).padStart(2, "0");
+        const dateStr = `${yr}-${mo}-${da}`;
+        groupedData[dateStr] = { revenue: 0, orders: 0, expenses: 0 };
+        currentDate.setDate(currentDate.getDate() + 1);
       }
 
       orders.forEach((order) => {
-        const dateStr = new Date(order.createdAt).toISOString().split("T")[0];
-        if (groupedData[dateStr]) {
-          groupedData[dateStr].revenue += Number.parseFloat(order.total);
-          groupedData[dateStr].orders += 1;
+        const date = order.date;
+        if (groupedData[date]) {
+          groupedData[date].revenue += Number.parseFloat(order.total);
+          groupedData[date].orders += 1;
         }
       });
 
-      const chartData: AnalyticsData[] = Object.entries(groupedData)
+      expenses.forEach((expense) => {
+        const date = expense.date;
+        if (groupedData[date]) {
+          groupedData[date].expenses += Number.parseFloat(expense.amount);
+        }
+      });
+
+      const analyticsData = Object.entries(groupedData)
         .map(([date, data]) => ({
           date,
           revenue: data.revenue,
           orders: data.orders,
+          expenses: data.expenses,
+          profit: data.revenue - data.expenses,
         }))
         .sort((a, b) => a.date.localeCompare(b.date));
 
-      res.json(chartData);
+      res.json(analyticsData);
     } catch (error) {
       console.error("Error fetching analytics:", error);
       res.status(500).json({
@@ -254,9 +370,18 @@ router.get(
   adminAuth,
   async (req: AdminRequest, res: Response) => {
     try {
-      const ordersResult = await db.query(
-        "SELECT items FROM orders WHERE status NOT IN ('cancelled', 'pending', 'quote')",
-      );
+      const { startDate, endDate } = req.query;
+      let query =
+        "SELECT items FROM orders WHERE status NOT IN ('cancelled', 'pending', 'quote')";
+      const params = [];
+
+      if (startDate && endDate) {
+        query +=
+          ' AND "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date';
+        params.push(startDate, endDate);
+      }
+
+      const ordersResult = await db.query(query, params);
       const orders = ordersResult.rows as { items: string }[];
 
       const productSales: Record<
@@ -357,9 +482,18 @@ router.get(
   adminAuth,
   async (req: AdminRequest, res: Response) => {
     try {
-      const distributionResult = await db.query(
-        "SELECT status, COUNT(*) as count FROM orders GROUP BY status",
-      );
+      const { startDate, endDate } = req.query;
+      let query = "SELECT status, COUNT(*) as count FROM orders";
+      const params = [];
+
+      if (startDate && endDate) {
+        query +=
+          ' WHERE "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date';
+        params.push(startDate, endDate);
+      }
+
+      query += " GROUP BY status";
+      const distributionResult = await db.query(query, params);
       const distribution = distributionResult.rows as {
         status: string;
         count: string;
@@ -396,12 +530,14 @@ router.get(
   adminAuth,
   async (req: AdminRequest, res: Response) => {
     try {
-      const ordersResult = await db.query(
-        `SELECT id, total, status, "createdAt", "shippingInfo" 
-         FROM orders 
-         ORDER BY "createdAt" DESC 
-         LIMIT 5`,
-      );
+      const { startDate, endDate } = req.query;
+      const query = `SELECT id, total, status, "createdAt", "shippingInfo" 
+                   FROM orders 
+                   ${startDate && endDate ? 'WHERE "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date' : ""}
+                   ORDER BY "createdAt" DESC 
+                   LIMIT 5`;
+      const params = startDate && endDate ? [startDate, endDate] : [];
+      const ordersResult = await db.query(query, params);
       const orders = ordersResult.rows;
 
       const recentOrders = orders.map(
@@ -444,13 +580,23 @@ router.get(
 // GET /api/reports/regional - Get sales by region
 router.get("/regional", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
-    const result = await db.query(`
+    const { startDate, endDate } = req.query;
+    let query = `
       SELECT 
         "shippingInfo" as shipping,
         total
       FROM orders
-      WHERE status != 'cancelled' AND status != 'pending' AND status != 'quote'
-    `);
+      WHERE status NOT IN ('cancelled', 'pending', 'quote')
+    `;
+    const params = [];
+
+    if (startDate && endDate) {
+      query +=
+        ' AND "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date';
+      params.push(startDate, endDate);
+    }
+
+    const result = await db.query(query, params);
 
     const regionSales: Record<string, { orders: number; revenue: number }> = {};
 

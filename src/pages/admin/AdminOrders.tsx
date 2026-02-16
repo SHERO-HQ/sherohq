@@ -230,6 +230,15 @@ export default function AdminOrders() {
               </DropdownMenuContent>
             </DropdownMenu>
 
+            <UniversalLink to="/admin/orders/new?walkin=true">
+              <Button
+                variant="outline"
+                className="border-white/10 text-emerald-400 hover:bg-emerald-500/10 font-bold"
+              >
+                <Plus className="mr-2 h-4 w-4" /> Record Walk-in
+              </Button>
+            </UniversalLink>
+
             <UniversalLink to="/admin/orders/new">
               <Button className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-all shadow-lg shadow-emerald-500/20">
                 <Plus className="mr-2 h-4 w-4" /> Create Order
