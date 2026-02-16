@@ -17,7 +17,7 @@
       "destination": "/index.html"
     }
   ],
-  "buildCommand": "yarn build",
+  "buildCommand": "corepack enable && yarn build",
   "outputDirectory": "dist",
-  "installCommand": "yarn install"
+  "installCommand": "corepack enable && yarn install"
 }

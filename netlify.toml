@@ -1,5 +1,5 @@
 [build]
-  command = "yarn build"
+  command = "corepack enable && yarn build"
   publish = "dist"
 
 [[redirects]]
