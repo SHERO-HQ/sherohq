@@ -98,7 +98,7 @@ const Process = () => {
                       <span className="inline-block py-1 px-3 rounded mb-3 text-sm font-mono font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 uppercase">
                         Step {index + 1}
                       </span>
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors font-sora">
                         {step.title}
                       </h3>
                       <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">

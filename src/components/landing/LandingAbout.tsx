@@ -125,23 +125,23 @@ const LandingAbout = () => {
             {/* Floating Elements (Orbiting) */}
             <FloatingCard
               icon={
-                <Globe2 className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-blue-600 dark:text-blue-500" />
+                <Globe2 className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-blue-800 dark:text-blue-700" />
               }
               className="absolute sm:top-10 sm:right-20 md:top-8 md:right-28 top-30 left-10 z-10"
               // delay={0.8}
             />
             <FloatingCard
               icon={
-                <Cpu className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-indigo-600 dark:text-indigo-500" />
+                <Cpu className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-indigo-800 dark:text-indigo-700" />
               }
-              className="absolute bottom-35 sm:left-40 md:left-20 left-0 z-30"
+              className="absolute bottom-25 sm:left-40 md:left-20 left-15 z-30"
               // delay={0.6}
             />
             <FloatingCard
               icon={
-                <Code2 className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-emerald-600 dark:text-emerald-500" />
+                <Code2 className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-emerald-800 dark:text-teal-600" />
               }
-              className="absolute sm:bottom-1/3 sm:right-38 md:right-14 bottom-40 right-4 -translate-y-10 z-10"
+              className="absolute sm:bottom-1/3 sm:right-38 md:right-14 bottom-60 right-2 -translate-y-10 z-10"
               // delay={0.8}
             />
 
@@ -164,7 +164,7 @@ const FloatingCard = ({
   label?: string;
   className?: string;
 }) => (
-  <div className={className}>
+  <div className={`${className}`}>
     <Card
       className={`flex items-center justify-center ${label ? "gap-3 px-4 py-2" : "p-3"} border-none bg-transparent transition-all duration-300 shadow-none`}
     >

@@ -147,7 +147,7 @@ const AboutStory = () => {
 
             <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800">
               <div className="pb-8 md:pb-0 md:pr-10">
-                <h4 className="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                <h4 className="font-bold font-sora text-slate-900 dark:text-white mb-3 flex items-center gap-2">
                   <span>🎯</span> End-to-End Solutions
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -156,8 +156,8 @@ const AboutStory = () => {
                 </p>
               </div>
               <div className="py-8 md:py-0 md:px-10">
-                <h4 className="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                  <span>💡</span> Local Expertise, Global Standards
+                <h4 className="font-bold font-sora text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                  <span>🌍</span> Local Expertise, Global Standards
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                   Deep understanding of the African market combined with
@@ -165,7 +165,7 @@ const AboutStory = () => {
                 </p>
               </div>
               <div className="pt-8 md:pt-0 md:pl-10">
-                <h4 className="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
+                <h4 className="font-bold font-sora text-slate-900 dark:text-white mb-3 flex items-center gap-2">
                   <span>🤝</span> Customer-Centric Approach
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">

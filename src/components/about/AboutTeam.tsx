@@ -1,10 +1,11 @@
+import { useState, type ElementType } from "react";
 import { motion } from "motion/react";
-import { Github, Linkedin, Users, Twitter } from "lucide-react";
-import type { ElementType } from "react";
+import { Github, Linkedin, Users } from "lucide-react";
 import { useTeam } from "@/hooks/queries/useTeam";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/utils";
 import type { TeamMember } from "@/services/api";
+import { TwitterXIcon } from "@/assets/icons/icons";
 
 interface TeamMemberWithPlaceholder extends TeamMember {
   isPlaceholder?: boolean;
@@ -22,6 +23,7 @@ const getInitials = (name: string) => {
 
 const AboutTeam = () => {
   const { data: team = [], isLoading } = useTeam();
+  const [activeBioId, setActiveBioId] = useState<string | null>(null);
 
   const renderContent = () => {
     if (isLoading) {
@@ -31,6 +33,7 @@ const AboutTeam = () => {
             <div key={`team-skeleton-${i}`} className="space-y-4">
               <Skeleton className="h-64 w-full rounded" />
               <Skeleton className="h-4 w-2/3" />
+              <Skeleton className="h-4 w-1/3" />
               <Skeleton className="h-4 w-1/3" />
             </div>
           ))}
@@ -63,8 +66,11 @@ const AboutTeam = () => {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
+              onClick={() =>
+                setActiveBioId(activeBioId === member.id ? null : member.id)
+              }
               className={cn(
-                "group relative p-4 transition-colors duration-500 hover:bg-slate-50/50 dark:hover:bg-white/2",
+                "group relative p-4 transition-colors duration-500 hover:bg-slate-50/50 dark:hover:bg-white/2 cursor-pointer",
                 // Horizontal borders
                 "border-b border-slate-200 dark:border-white/10",
                 // Vertical borders logic
@@ -74,14 +80,14 @@ const AboutTeam = () => {
                 (index + 1) % 4 === 0 && "lg:border-r-0", // Remove every 4th on lg
               )}
             >
-              {/* Coming Soon Badge for placeholders (no image) */}
+              {/* Coming Soon Badge for placeholders (no image)
               {!member.image && (
                 <div className="absolute top-4 left-4 z-10">
                   <span className="px-2 py-0.5 text-[8px] font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20 uppercase tracking-tighter">
                     Coming Soon
                   </span>
                 </div>
-              )}
+              )} */}
               <div className="relative overflow-hidden bg-slate-100 dark:bg-slate-800 mb-4 aspect-square transition-colors duration-300">
                 {member.image ? (
                   <img
@@ -91,7 +97,7 @@ const AboutTeam = () => {
                     height={400}
                     loading="lazy"
                     decoding="async"
-                    className="object-cover w-full h-full transition-all duration-700 filter grayscale group-hover:grayscale-0 group-hover:scale-110"
+                    className="object-cover w-full h-full rounded transition-all duration-700 filter grayscale group-hover:grayscale-0 group-hover:scale-110"
                   />
                 ) : (
                   <div className="w-full h-full bg-linear-to-br from-blue-600/20 to-emerald-600/20 flex items-center justify-center text-slate-400 dark:text-slate-500 font-bold text-5xl tracking-tighter transition-all duration-700 group-hover:from-blue-600 group-hover:to-emerald-600 group-hover:text-white">
@@ -101,8 +107,22 @@ const AboutTeam = () => {
 
                 {/* Overlay with bio */}
                 {member.bio && (
-                  <div className="absolute inset-0 bg-linear-to-t from-slate-950/90 via-slate-950/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8 backdrop-blur-[2px]">
-                    <p className="text-white text-sm leading-relaxed font-medium translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                  <div
+                    className={cn(
+                      "absolute inset-0 bg-linear-to-t from-slate-950/90 via-slate-950/40 to-transparent transition-opacity duration-300 flex flex-col justify-end p-8 backdrop-blur-[2px]",
+                      activeBioId === member.id
+                        ? "opacity-100"
+                        : "opacity-0 group-hover:opacity-100",
+                    )}
+                  >
+                    <p
+                      className={cn(
+                        "text-white text-sm leading-relaxed font-medium transition-transform duration-500",
+                        activeBioId === member.id
+                          ? "translate-y-0"
+                          : "translate-y-4 group-hover:translate-y-0",
+                      )}
+                    >
                       {member.bio}
                     </p>
                   </div>
@@ -120,9 +140,12 @@ const AboutTeam = () => {
                 </div>
 
                 <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-white/5">
-                  <div className="flex gap-4">
+                  <div className="flex gap-1 items-center">
                     {member.social?.twitter && (
-                      <SocialLink href={member.social.twitter} icon={Twitter} />
+                      <SocialLink
+                        href={member.social.twitter}
+                        icon={TwitterXIcon}
+                      />
                     )}
                     {member.social?.linkedin && (
                       <SocialLink
@@ -135,7 +158,7 @@ const AboutTeam = () => {
                     )}
                   </div>
 
-                  <div className="h-8 w-8 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300 text-slate-400">
+                  <div className="h-8 w-8 rounded bg-slate-100 dark:bg-white/5 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300 text-slate-400">
                     <Users className="w-4 h-4" />
                   </div>
                 </div>

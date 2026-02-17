@@ -116,7 +116,7 @@ const LandingPillars = () => {
                   <h4 className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2 uppercase tracking-wider transition-colors duration-300">
                     {pillar.subheader}
                   </h4>
-                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3 transition-colors duration-300">
+                  <h3 className="md:text-2xl text-lg font-sora font-bold text-slate-900 dark:text-white mb-3 transition-colors duration-300">
                     {pillar.header}
                   </h3>
                   <p className="text-slate-600 dark:text-slate-400 leading-relaxed group-hover:text-slate-900 dark:group-hover:text-slate-200 transition-colors">
