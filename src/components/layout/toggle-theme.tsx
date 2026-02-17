@@ -30,19 +30,19 @@ export const ToggleTheme = () => {
           onClick={() => setTheme("light")}
           className="cursor-pointer"
         >
-          <Sun className="h-4 w-4" /> Light
+          <Sun className="h-4 w-4" />{" "} Light
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => setTheme("dark")}
           className="cursor-pointer"
         >
-          <Moon className="h-4 w-4" /> Dark
+          <Moon className="h-4 w-4" />{" "} Dark
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => setTheme("system")}
           className="cursor-pointer"
         >
-          <Monitor className="h-4 w-4" /> System
+          <Monitor className="h-4 w-4" />{" "} System
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
