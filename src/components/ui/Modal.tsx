@@ -94,9 +94,9 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-slate-900 border border-white/10 rounded shadow-xl w-full max-w-lg overflow-hidden"
+            className="bg-slate-900 border border-white/10 rounded shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden"
           >
-            <div className="flex items-center justify-between p-4 border-b border-white/10">
+            <div className="flex items-center justify-between p-4 border-b border-white/10 shrink-0">
               <h2 id="modal-title" className="text-lg font-bold text-white">
                 {title}
               </h2>
@@ -109,7 +109,9 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="p-4">{children}</div>
+            <div className="p-6 overflow-y-auto custom-scrollbar">
+              {children}
+            </div>
           </motion.div>
         </motion.div>
       )}
