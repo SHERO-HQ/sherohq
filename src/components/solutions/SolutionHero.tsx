@@ -10,8 +10,9 @@ import {
   Cpu,
   Database,
 } from "lucide-react";
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { useIsMounted } from "@/hooks/useIsMounted";
 import dynamic from "next/dynamic";
 
 const ParticleField = dynamic(
@@ -47,8 +48,7 @@ const SolutionsHero = () => {
   };
 
   const prefersReducedMotion = usePrefersReducedMotion();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useIsMounted();
 
   return (
     <header
@@ -65,7 +65,9 @@ const SolutionsHero = () => {
       />
 
       {/* Particle Field — ssr:false ensures Math.random() never runs on server */}
-      {mounted && <ParticleField count={12} colorVariant="dual" opacity={0.3} />}
+      {mounted && (
+        <ParticleField count={12} colorVariant="dual" opacity={0.3} />
+      )}
 
       {/* Scanning Line Effect */}
       <div className="absolute inset-y-0 left-0 w-1 bg-emerald-500/20 hidden md:block" />

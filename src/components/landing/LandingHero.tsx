@@ -2,8 +2,9 @@
 import UniversalLink from "@/components/common/UniversalLink";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { fadeUp } from "@/components/motion/heroMotion";
-import { useRef, useState, useEffect } from "react";
+import { useRef } from "react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { useIsMounted } from "@/hooks/useIsMounted";
 import dynamic from "next/dynamic";
 
 const ParticleField = dynamic(
@@ -62,8 +63,7 @@ const LandingHero: React.FC = () => {
   };
 
   const prefersReducedMotion = usePrefersReducedMotion();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useIsMounted();
 
   return (
     <header
@@ -82,7 +82,9 @@ const LandingHero: React.FC = () => {
       />
 
       {/* Particle Field — only after mount so server HTML is always null */}
-      {mounted && <ParticleField count={8} colorVariant="single" opacity={0.2} />}
+      {mounted && (
+        <ParticleField count={8} colorVariant="single" opacity={0.2} />
+      )}
 
       {/* Scanning Line Effect (Horizontal) */}
       <div className="absolute inset-y-0 left-0 w-px bg-emerald-500/30 hidden md:block" />
