@@ -6,6 +6,7 @@ import { useCart } from "@/context/CartContext";
 import { useNotifications } from "@/hooks/useNotifications";
 import { getImageUrl } from "@/services/api";
 import { useWishlist } from "@/hooks/useWishlist";
+import ProductImage from "@/components/common/ProductImage";
 import type { Product } from "@/types/product";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { WhatsAppIcon } from "@/assets/icons/icons";
@@ -158,19 +159,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
         {product.image &&
         (product.image.startsWith("/uploads") ||
           product.image.startsWith("http")) ? (
-          <img
+          <ProductImage
             src={getImageUrl(product.image)}
             alt={product.name}
-            width={400}
-            height={400}
-            loading="lazy"
-            decoding="async"
-            className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
-            onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.src =
-                "https://placehold.co/600x400?text=No+Image";
-            }}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-6xl select-none opacity-50 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500">

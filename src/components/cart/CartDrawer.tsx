@@ -5,6 +5,7 @@ import { getImageUrl } from "@/services/api";
 import { X, Minus, Plus, ShoppingBag, Trash2, ArrowRight } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import ProductImage from "@/components/common/ProductImage";
 
 const CartDrawer = () => {
   const {
@@ -99,19 +100,15 @@ const CartDrawer = () => {
                     key={item.id}
                     className="flex sm:flex-row gap-3 sm:gap-4 group border-b border-slate-200 dark:border-slate-700 pb-4"
                   >
-                    <div className="w-fit h-32 sm:h-24 bg-slate-100 dark:bg-slate-800 rounded shrink-0 overflow-hidden">
+                    <div className="relative w-24 h-32 sm:h-24 bg-slate-100 dark:bg-slate-800 rounded shrink-0 overflow-hidden">
                       {item.image.startsWith("http") ||
                       item.image.startsWith("/uploads") ? (
-                        <img
+                        <ProductImage
                           src={getImageUrl(item.image)}
                           alt={item.name}
-                          loading="lazy"
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src =
-                              "https://placehold.co/200x200?text=No+Image";
-                          }}
+                          fill
+                          sizes="96px"
+                          className="object-cover"
                         />
                       ) : (
                         <div className="flex items-center justify-center text-4xl">

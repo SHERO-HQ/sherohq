@@ -7,6 +7,7 @@ import { X, Heart, Trash2, ShoppingCart } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { type WishlistItem } from "@/context/WishlistContextType";
+import ProductImage from "@/components/common/ProductImage";
 
 const WishlistDrawer = () => {
   const {
@@ -125,19 +126,15 @@ const WishlistDrawer = () => {
                     key={item.id}
                     className="flex flex-col sm:flex-row gap-3 sm:gap-4 group border-b border-slate-100 dark:border-slate-800 pb-4 sm:pb-0 sm:border-0"
                   >
-                    <div className="w-full sm:w-24 h-32 sm:h-24 bg-slate-100 dark:bg-slate-800 rounded shrink-0 overflow-hidden">
+                    <div className="relative w-full sm:w-24 h-32 sm:h-24 bg-slate-100 dark:bg-slate-800 rounded shrink-0 overflow-hidden">
                       {item.image.startsWith("http") ||
                       item.image.startsWith("/uploads") ? (
-                        <img
+                        <ProductImage
                           src={getImageUrl(item.image)}
                           alt={item.name}
-                          loading="lazy"
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src =
-                              "https://placehold.co/200x200?text=No+Image";
-                          }}
+                          fill
+                          sizes="(max-width: 640px) 100vw, 96px"
+                          className="object-cover"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-4xl">

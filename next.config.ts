@@ -34,6 +34,15 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "**.vercel.app",
       },
+      // Local dev when NEXT_PUBLIC_API_URL points to localhost
+      {
+        protocol: "http",
+        hostname: "localhost",
+      },
+      {
+        protocol: "http",
+        hostname: "127.0.0.1",
+      },
     ],
   },
 

@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { useProducts } from "@/hooks/queries/useProducts";
 import { getImageUrl } from "@/services/api";
+import ProductImage from "@/components/common/ProductImage";
 
 interface SearchBarProps {
   className?: string;
@@ -103,11 +104,13 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                       }}
                       className="w-full flex items-center gap-3 px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors text-left"
                     >
-                      <div className="w-10 h-10 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden">
-                        <img
-                          src={getImageUrl(product.image)}
-                          alt={product.name}
-                          className="w-full h-full object-cover"
+                      <div className="relative w-10 h-10 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden">
+                          <ProductImage
+                            src={getImageUrl(product.image)}
+                            alt={product.name}
+                            fill
+                            sizes="40px"
+                            className="object-cover"
                         />
                       </div>
                       <div>
@@ -223,11 +226,13 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                             }}
                             className="w-full flex items-center gap-4 p-3 rounded hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors text-left"
                           >
-                            <div className="w-14 h-14 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden">
-                              <img
+                            <div className="relative w-14 h-14 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden">
+                              <ProductImage
                                 src={getImageUrl(product.image)}
                                 alt={product.name}
-                                className="w-full h-full object-cover"
+                                fill
+                                sizes="56px"
+                                className="object-cover"
                               />
                             </div>
                             <div className="flex-1 min-w-0">

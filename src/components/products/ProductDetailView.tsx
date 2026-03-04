@@ -27,6 +27,7 @@ import ProductCard from "./ProductCard";
 import ProductReviews from "./ProductReviews";
 import { WhatsAppIcon } from "@/assets/icons/icons";
 import ShareButton from "@/components/common/ShareButton";
+import ProductImage from "@/components/common/ProductImage";
 
 interface ProductDetailViewProps {
   product: Product;
@@ -101,23 +102,18 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="w-full h-full flex items-center justify-center"
+                  className="relative w-full h-full flex items-center justify-center"
                 >
                   {images[selectedImage] &&
                   (images[selectedImage].startsWith("/uploads") ||
                     images[selectedImage].startsWith("http")) ? (
-                    <img
+                    <ProductImage
                       src={getImageUrl(images[selectedImage])}
                       alt={product.name}
-                      width={800}
-                      height={800}
-                      fetchPriority="high"
-                      className="w-full h-full object-contain p-4"
-                      onError={(e) => {
-                        e.currentTarget.onerror = null;
-                        e.currentTarget.src =
-                          "https://placehold.co/600x400?text=No+Image";
-                      }}
+                      fill
+                      priority
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      className="object-contain p-4"
                     />
                   ) : (
                     <div className="text-8xl select-none">
@@ -172,21 +168,15 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                         : "border-slate-200 dark:border-slate-800 hover:border-emerald-500/50"
                     }`}
                   >
-                    <div className="cursor-pointer w-full h-full flex items-center justify-center">
+                    <div className="relative cursor-pointer w-full h-full flex items-center justify-center">
                       {img &&
                       (img.startsWith("/uploads") || img.startsWith("http")) ? (
-                        <img
+                        <ProductImage
                           src={getImageUrl(img)}
                           alt={`Thumbnail ${idx}`}
-                          width={200}
-                          height={200}
-                          loading="lazy"
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src =
-                              "https://placehold.co/200x200?text=NA";
-                          }}
+                          fill
+                          sizes="200px"
+                          className="object-cover"
                         />
                       ) : (
                         <div className="text-2xl select-none">{img}</div>
