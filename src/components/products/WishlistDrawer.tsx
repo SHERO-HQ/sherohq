@@ -1,3 +1,4 @@
+"use client";
 import { motion, AnimatePresence } from "motion/react";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useCart } from "@/context/CartContext";

@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import type { User } from "@/services/api";
 import type { ProfileInput } from "@/lib/validations/profile";

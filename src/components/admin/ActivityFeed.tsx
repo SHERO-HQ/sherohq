@@ -1,3 +1,4 @@
+"use client";
 import { type ActivityLog } from "@/services/api";
 import {
   Package,

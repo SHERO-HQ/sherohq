@@ -1,3 +1,4 @@
+"use client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   fetchAdminUsers,
@@ -5,6 +6,8 @@ import {
   updateAdminUserRole,
   deleteAdminUser,
   updateAdminProfile,
+  adminResetStaffPassword,
+  adminToggleStaffActive,
 } from "@/services/api";
 
 export const ADMIN_USERS_KEYS = {
@@ -58,6 +61,27 @@ export const useUpdateAdminProfile = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ADMIN_USERS_KEYS.all });
       queryClient.invalidateQueries({ queryKey: ADMIN_USERS_KEYS.me });
+    },
+  });
+};
+
+export const useResetStaffPassword = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: adminResetStaffPassword,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ADMIN_USERS_KEYS.all });
+    },
+  });
+};
+
+export const useToggleStaffActive = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ userId, isActive }: { userId: string; isActive: boolean }) =>
+      adminToggleStaffActive(userId, isActive),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ADMIN_USERS_KEYS.all });
     },
   });
 };

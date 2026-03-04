@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useState } from "react";
 import { ThemeProviderContext } from "./ThemeContext";
 
@@ -15,11 +16,21 @@ export function ThemeProvider({
   storageKey = "vite-ui-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme,
-  );
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Load theme from localStorage on client side only
+  useEffect(() => {
+    const savedTheme = localStorage.getItem(storageKey) as Theme;
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+    setIsLoaded(true);
+  }, [storageKey]);
 
   useEffect(() => {
+    if (!isLoaded) return;
+
     const root = window.document.documentElement;
 
     const applyTheme = (resolvedTheme: "light" | "dark") => {
@@ -45,7 +56,7 @@ export function ThemeProvider({
     }
 
     applyTheme(theme);
-  }, [theme]);
+  }, [theme, isLoaded]);
 
   const value = {
     theme,

@@ -1,3 +1,4 @@
+"use client";
 import { motion } from "motion/react";
 import { ShoppingCart, Heart, Eye, Star, CreditCard } from "lucide-react";
 import { useUniversalNavigate } from "@/hooks/useUniversalNavigate";

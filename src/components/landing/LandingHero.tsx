@@ -1,7 +1,15 @@
+"use client";
 import UniversalLink from "@/components/common/UniversalLink";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { fadeUp } from "@/components/motion/heroMotion";
-import { useMemo, useRef, useState } from "react";
+import { useRef } from "react";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import dynamic from "next/dynamic";
+
+const ParticleField = dynamic(
+  () => import("@/components/common/ParticleField"),
+  { ssr: false },
+);
 import { RocketIcon } from "@/assets/icons/icons";
 import {
   CircleCheckBig,
@@ -12,7 +20,6 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Logo from "@/assets/logo/shero.svg";
 
 // Type Definitions
 interface HeroContent {
@@ -34,17 +41,6 @@ const LandingHero: React.FC = () => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Particle State (Lazy Initializer for Stability - Elite Tuning)
-  const [particles] = useState(() =>
-    Array.from({ length: 8 }, (_, idx) => ({
-      id: idx,
-      x: Math.random() * 100 + "%",
-      y: Math.random() * 100 + "%",
-      opacity: Math.random() * 0.3, // More subtle
-      duration: Math.random() * 20 + 30, // Much slower (30-50s)
-    })),
-  );
-
   // Spring physics for smooth movement
   const springConfig = { damping: 25, stiffness: 150 };
   const smoothX = useSpring(mouseX, springConfig);
@@ -65,11 +61,7 @@ const LandingHero: React.FC = () => {
     mouseY.set(y);
   };
 
-  // Check reduced motion once on mount
-  const prefersReducedMotion = useMemo(
-    () => globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches,
-    [],
-  );
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   return (
     <header
@@ -87,29 +79,8 @@ const LandingHero: React.FC = () => {
         className="absolute inset-0 pattern-dots pointer-events-none"
       />
 
-      {/* Particle Field (Subtle) */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
-        {particles.map((p) => (
-          <motion.div
-            key={p.id}
-            initial={{
-              x: p.x,
-              y: p.y,
-              opacity: p.opacity,
-            }}
-            animate={{
-              y: [null, "-20%"],
-              opacity: [0, 1, 0],
-            }}
-            transition={{
-              duration: p.duration,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            className="absolute w-1 h-1 bg-primary rounded-full"
-          />
-        ))}
-      </div>
+      {/* Particle Field — ssr:false ensures Math.random() never runs on server */}
+      <ParticleField count={8} colorVariant="single" opacity={0.2} />
 
       {/* Scanning Line Effect (Horizontal) */}
       <div className="absolute inset-y-0 left-0 w-px bg-emerald-500/30 hidden md:block" />
@@ -247,7 +218,7 @@ const LandingHero: React.FC = () => {
                 rotateY,
                 transformStyle: "preserve-3d",
               }}
-              className="relative w-full max-w-md h-[400px] flex items-center justify-center"
+              className="relative w-full max-w-md h-100 flex items-center justify-center"
             >
               {/* Layer 1: Main Capability Table */}
               <motion.div
@@ -261,7 +232,7 @@ const LandingHero: React.FC = () => {
                   <div className="flex items-center gap-3">
                     <div className="flex items-center justify-center">
                       <img
-                        src={Logo}
+                        src="/assets/logo/shero.svg"
                         alt="SHERO"
                         width={40}
                         height={40}

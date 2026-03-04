@@ -1,3 +1,4 @@
+"use client";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import {
   Code,
@@ -9,7 +10,14 @@ import {
   Cpu,
   Database,
 } from "lucide-react";
-import { useRef, useMemo, useState } from "react";
+import { useRef } from "react";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import dynamic from "next/dynamic";
+
+const ParticleField = dynamic(
+  () => import("@/components/common/ParticleField"),
+  { ssr: false },
+);
 
 const SolutionsHero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -17,17 +25,6 @@ const SolutionsHero = () => {
   // Mouse Tracking for Kinetic Effects
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-
-  // Particle State
-  const [particles] = useState(() =>
-    Array.from({ length: 12 }, (_, idx) => ({
-      id: idx,
-      x: Math.random() * 100 + "%",
-      y: Math.random() * 100 + "%",
-      opacity: Math.random() * 0.2 + 0.1,
-      duration: Math.random() * 20 + 30,
-    })),
-  );
 
   // Spring physics
   const springConfig = { damping: 25, stiffness: 150 };
@@ -49,10 +46,7 @@ const SolutionsHero = () => {
     mouseY.set(y);
   };
 
-  const prefersReducedMotion = useMemo(
-    () => globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches,
-    [],
-  );
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   return (
     <header
@@ -68,25 +62,8 @@ const SolutionsHero = () => {
         className="absolute inset-0 pattern-dots pointer-events-none"
       />
 
-      {/* Particle Field */}
-      <div className="absolute inset-0 opacity-30 pointer-events-none">
-        {particles.map((p) => (
-          <motion.div
-            key={p.id}
-            initial={{ x: p.x, y: p.y, opacity: p.opacity }}
-            animate={{
-              y: [null, "-20%"],
-              opacity: [0, p.opacity, 0],
-            }}
-            transition={{
-              duration: p.duration,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            className={`absolute w-1 h-1 rounded-full ${p.id % 2 === 0 ? "bg-blue-500" : "bg-emerald-500"}`}
-          />
-        ))}
-      </div>
+      {/* Particle Field — ssr:false ensures Math.random() never runs on server */}
+      <ParticleField count={12} colorVariant="dual" opacity={0.3} />
 
       {/* Scanning Line Effect */}
       <div className="absolute inset-y-0 left-0 w-1 bg-emerald-500/20 hidden md:block" />
@@ -214,7 +191,7 @@ const SolutionsHero = () => {
                 rotateY,
                 transformStyle: "preserve-3d",
               }}
-              className="relative w-full max-w-md h-[400px] flex items-center justify-center"
+              className="relative w-full max-w-md h-100 flex items-center justify-center"
             >
               {/* Layer 1: System Analytics Card */}
               <motion.div

@@ -1,3 +1,4 @@
+"use client";
 import { motion, AnimatePresence } from "motion/react";
 import { useCart } from "@/context/CartContext";
 import { getImageUrl } from "@/services/api";

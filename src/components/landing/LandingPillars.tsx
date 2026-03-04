@@ -1,3 +1,4 @@
+"use client";
 import { motion } from "motion/react";
 import Reveal from "@/components/motion/Reveal";
 import type React from "react";

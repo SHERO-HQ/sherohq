@@ -1,3 +1,4 @@
+"use client";
 import { easeOut, motion } from "motion/react";
 import {
   Smartphone,

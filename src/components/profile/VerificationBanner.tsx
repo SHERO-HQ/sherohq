@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { AlertCircle, Loader2, Send } from "lucide-react";
 

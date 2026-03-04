@@ -2,7 +2,15 @@ import type { Product } from "@/types/product";
 
 // Construct API_BASE: prioritize explicit env var, then current origin proxy, fallback to Railway
 const getApiBase = () => {
-  const envUrl = import.meta.env.VITE_API_URL;
+  // Support both Vite (import.meta.env) and Next.js (process.env) environments
+  const envUrl =
+    (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_API_URL) ||
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ((globalThis as any).import_meta_env?.VITE_API_URL as string | undefined) ||
+    (typeof import.meta !== "undefined"
+      ? (import.meta as unknown as { env?: Record<string, string> }).env
+          ?.VITE_API_URL
+      : undefined);
   if (envUrl) {
     // If it's a relative path, use it as is
     if (envUrl.startsWith("/")) return envUrl;
@@ -86,12 +94,21 @@ export async function handleResponse<T>(response: Response): Promise<T> {
     if (contentType?.includes("application/json")) {
       try {
         const errorData = JSON.parse(text);
-        errorMessage =
-          errorData.error ||
-          errorData.message ||
-          errorData.detail ||
-          (Array.isArray(errorData.errors) && errorData.errors[0]?.message) ||
-          errorMessage;
+        // If the server returned Zod validation issues, surface them
+        if (Array.isArray(errorData.issues) && errorData.issues.length > 0) {
+          errorMessage = errorData.issues
+            .map((i: { field?: string; message: string }) =>
+              i.field ? `${i.field}: ${i.message}` : i.message,
+            )
+            .join("; ");
+        } else {
+          errorMessage =
+            errorData.error ||
+            errorData.message ||
+            errorData.detail ||
+            (Array.isArray(errorData.errors) && errorData.errors[0]?.message) ||
+            errorMessage;
+        }
       } catch {
         // Fallback to status-based messages if JSON parsing fails
       }
@@ -692,6 +709,7 @@ export interface AdminUser {
   role: string;
   phone?: string;
   avatar?: string;
+  isActive?: boolean;
   createdAt?: string;
 }
 
@@ -1190,6 +1208,7 @@ export interface AdminUserListItem {
   phone: string | null;
   avatar: string | null;
   emailVerified: boolean;
+  isActive: boolean;
   createdAt: string;
 }
 
@@ -1250,12 +1269,23 @@ export async function fetchCustomers(
 export async function registerAdminUser(data: {
   username: string;
   email: string;
-  password?: string;
+  password: string;
+  phone?: string;
   role: string;
 }): Promise<{ success: boolean; admin: AdminUser }> {
+  // Strip empty optional fields so Zod doesn't try to validate blank strings
+  const payload: Record<string, string> = {
+    username: data.username,
+    email: data.email,
+    password: data.password,
+    role: data.role,
+  };
+  if (data.phone && data.phone.trim() !== "") {
+    payload.phone = data.phone.trim();
+  }
   const response = await authFetch(`${API_BASE}/admin/register`, {
     method: "POST",
-    body: JSON.stringify(data),
+    body: JSON.stringify(payload),
   });
   return handleResponse(response);
 }
@@ -1300,11 +1330,53 @@ export async function deleteAdminUser(
   return handleResponse(response);
 }
 
+export async function adminResetStaffPassword(
+  userId: string,
+): Promise<{ success: boolean; message: string }> {
+  const response = await authFetch(
+    `${API_BASE}/admin/users/${userId}/reset-password`,
+    { method: "POST" },
+  );
+  return handleResponse(response);
+}
+
+export async function adminToggleStaffActive(
+  userId: string,
+  isActive: boolean,
+): Promise<{ success: boolean }> {
+  const response = await authFetch(`${API_BASE}/admin/users/${userId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ isActive }),
+  });
+  return handleResponse(response);
+}
+
 export async function deleteCustomer(
   userId: string,
 ): Promise<{ success: boolean; message: string }> {
   const response = await authFetch(`${API_BASE}/admin/customers/${userId}`, {
     method: "DELETE",
+  });
+  return handleResponse(response);
+}
+
+export async function adminResetUserPassword(
+  userId: string,
+): Promise<{ success: boolean; message: string }> {
+  const response = await authFetch(
+    `${API_BASE}/admin/customers/${userId}/reset-password`,
+    { method: "POST" },
+  );
+  return handleResponse(response);
+}
+
+export async function adminToggleUserActive(
+  userId: string,
+  isActive: boolean,
+): Promise<{ success: boolean }> {
+  const response = await authFetch(`${API_BASE}/admin/customers/${userId}`, {
+    method: "PATCH",
+    body: JSON.stringify({ isActive }),
   });
   return handleResponse(response);
 }

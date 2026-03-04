@@ -1,5 +1,6 @@
+"use client";
 import UniversalLink from "@/components/common/UniversalLink";
-import SheroLight from "@/assets/logo/shero-light.svg";
+
 import { ArrowRight, BadgeCheck, Mail, Phone } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -44,7 +45,7 @@ const Footer = () => {
       <div className="absolute inset-0 bg-linear-to-t from-background via-background/90 to-background/50 pointer-events-none transition-all duration-300" />
 
       {/* Glow Effect */}
-      <div className="absolute -bottom-1/2 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute -bottom-1/2 left-1/2 -translate-x-1/2 w-200 h-125 bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 lg:mb-32 mb-4">
@@ -53,12 +54,12 @@ const Footer = () => {
             <div>
               <UniversalLink to="/" className="inline-block mb-3">
                 <img
-                  src={SheroLight}
+                  src="/assets/logo/shero-light.svg"
                   alt="Shero Logo"
                   className="h-10 w-auto dark:block hidden"
                 />
                 <img
-                  src={SheroLight} // Using light logo for both as it usually works on dark footer
+                  src="/assets/logo/shero-light.svg"
                   alt="Shero Logo"
                   className="h-10 w-auto dark:hidden block brightness-0"
                 />
@@ -193,7 +194,9 @@ const Footer = () => {
         <div className="relative pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6 transition-colors duration-300">
           {/* Copyright & Legal */}
           <div className="flex flex-col md:flex-row items-center gap-6 text-sm text-slate-500">
-            <p className="font-sora">&copy;{new Date().getFullYear()} Shero Group.</p>
+            <p className="font-sora">
+              &copy;{new Date().getFullYear()} Shero Group.
+            </p>
             <div className="flex items-center gap-6">
               <UniversalLink
                 to="/terms"

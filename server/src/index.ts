@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
@@ -180,11 +180,13 @@ app.use(express.urlencoded({ extended: true }));
 import { csrfProtection } from "./middleware/csrfProtection";
 app.use(csrfProtection);
 
-// Request Logging Middleware
-app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  next();
-});
+// Request Logging Middleware — dev only
+if (process.env.NODE_ENV !== "production") {
+  app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+  });
+}
 
 // Global Rate Limiting - Disabled in development, 500 requests per 15 minutes in production
 const globalLimiter = rateLimit({
@@ -257,6 +259,39 @@ app.get("/", (req: Request, res: Response) => {
 // API 404 handler - only for /api routes that weren't matched above
 app.use("/api", (req: Request, res: Response) => {
   res.status(404).json({ error: "API route not found" });
+});
+
+// ─── Global Express Error Handler ────────────────────────────────────────────
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.use(
+  (
+    err: Error & { status?: number },
+    req: Request,
+    res: Response,
+    _next: NextFunction,
+  ) => {
+    const isDev = process.env.NODE_ENV !== "production";
+    console.error(
+      `[${new Date().toISOString()}] Error on ${req.method} ${req.url}:`,
+      err,
+    );
+    if (res.headersSent) return;
+    res.status(err.status ?? 500).json({
+      error: isDev ? err.message : "Internal server error",
+      ...(isDev && { stack: err.stack }),
+    });
+  },
+);
+
+// ─── Process-level crash guards ───────────────────────────────────────────────
+process.on("uncaughtException", (err) => {
+  console.error("💥 uncaughtException — shutting down:", err);
+  process.exit(1);
+});
+
+process.on("unhandledRejection", (reason) => {
+  console.error("💥 unhandledRejection:", reason);
+  process.exit(1);
 });
 
 // Removed catch-all route for static files since frontend is deployed independently

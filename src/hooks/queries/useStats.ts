@@ -1,3 +1,4 @@
+"use client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchStats, createStat, updateStat, deleteStat } from "@/services/api";
 import type { SiteStat } from "@/types/stat";

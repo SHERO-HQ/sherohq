@@ -6,7 +6,7 @@ import tseslint from "typescript-eslint";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-  globalIgnores(["dist", "server/dist"]),
+  globalIgnores(["dist", "server/dist", ".next"]),
   {
     files: ["**/*.{ts,tsx}"],
     extends: [
@@ -18,6 +18,18 @@ export default defineConfig([
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+    },
+  },
+  // Next.js App Router layouts/pages export metadata + viewport alongside components
+  // and the router-compat shim exports both components and hooks by design
+  {
+    files: [
+      "src/app/**/layout.tsx",
+      "src/app/**/page.tsx",
+      "src/lib/router-compat.tsx",
+    ],
+    rules: {
+      "react-refresh/only-export-components": "off",
     },
   },
 ]);

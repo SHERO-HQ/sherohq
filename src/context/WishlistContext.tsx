@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useNotifications } from "@/hooks/useNotifications";
 import { type WishlistItem, WishlistContext } from "./WishlistContextType";
@@ -5,25 +6,29 @@ import { type WishlistItem, WishlistContext } from "./WishlistContextType";
 export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [wishlist, setWishlist] = useState<WishlistItem[]>(() => {
+  const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
+  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const { addNotification } = useNotifications();
+
+  // Load wishlist from localStorage on client side only
+  useEffect(() => {
     const savedWishlist = localStorage.getItem("wishlist");
     if (savedWishlist) {
       try {
-        return JSON.parse(savedWishlist);
+        setWishlist(JSON.parse(savedWishlist));
       } catch (e) {
         console.error("Failed to parse wishlist from localStorage", e);
       }
     }
-    return [];
-  });
-
-  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
-
-  const { addNotification } = useNotifications();
+    setIsLoaded(true);
+  }, []);
 
   useEffect(() => {
+    if (!isLoaded) return;
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
-  }, [wishlist]);
+  }, [wishlist, isLoaded]);
 
   const addToWishlist = useCallback(
     (product: WishlistItem) => {

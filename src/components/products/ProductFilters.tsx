@@ -1,3 +1,4 @@
+"use client";
 import { motion, AnimatePresence } from "motion/react";
 import { X, SlidersHorizontal, Check } from "lucide-react";
 import { useState } from "react";

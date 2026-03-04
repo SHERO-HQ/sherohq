@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Package, Settings, LogOut, BadgeCheck } from "lucide-react";
 import type { User } from "@/services/api";

@@ -1,3 +1,4 @@
+"use client";
 import { Navigate } from "react-router-dom";
 import { useAdmin } from "@/context/AdminContext";
 import { getSubdomain } from "@/utils/subdomain";

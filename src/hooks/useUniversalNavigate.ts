@@ -1,3 +1,4 @@
+"use client";
 import { useNavigate } from "react-router-dom";
 import type { NavigateOptions, To } from "react-router-dom";
 import { getAbsoluteUrl } from "@/utils/subdomain";

@@ -1,3 +1,4 @@
+"use client";
 import { useState, useMemo, useEffect } from "react";
 import ProductHero from "./ProductsHero";
 import { defaultCategories } from "@/utils/defaultCategories";
@@ -147,7 +148,7 @@ const ShopPage = () => {
   // Handle search - only update URL params, searchQuery is derived from URL
   const handleSearch = (query: string) => {
     if (query) {
-      setSearchParams({ search: query });
+      setSearchParams(new URLSearchParams({ search: query }));
     } else {
       searchParams.delete("search");
       setSearchParams(searchParams);

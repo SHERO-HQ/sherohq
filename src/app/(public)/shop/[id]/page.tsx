@@ -1,0 +1,78 @@
+import type { Metadata } from "next";
+import ProductDetail from "@/views/ProductDetail";
+
+type Props = { params: Promise<{ id: string }> };
+
+/** Resolve a product image path to a fully-qualified URL for social crawlers. */
+function resolveOgImage(image: string | undefined): string {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
+  const fallback = `${siteUrl}/shero.png`;
+  if (!image) return fallback;
+  if (image.startsWith("http")) return image;
+  if (image.startsWith("/uploads")) {
+    const apiRoot = (
+      process.env.NEXT_PUBLIC_API_URL || "https://api.sherohq.com"
+    ).replace(/\/api$/, "");
+    return `${apiRoot}${image}`;
+  }
+  return fallback;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
+
+  try {
+    const apiBase = (
+      process.env.NEXT_PUBLIC_API_URL || "https://api.sherohq.com"
+    ).replace(/\/?$/, "");
+    const endpoint = apiBase.endsWith("/api")
+      ? `${apiBase}/products/${id}`
+      : `${apiBase}/api/products/${id}`;
+
+    const res = await fetch(endpoint, { next: { revalidate: 3600 } });
+    if (!res.ok) throw new Error("product not found");
+
+    const product = await res.json();
+    const imageUrl = resolveOgImage(product.image);
+    const description: string = product.description
+      ? String(product.description).slice(0, 160)
+      : `${product.name} — GH₵${product.price}`;
+
+    return {
+      title: product.name,
+      description,
+      openGraph: {
+        type: "website",
+        title: `${product.name} | SHERO`,
+        description,
+        url: `${siteUrl}/shop/${id}`,
+        images: [
+          {
+            url: imageUrl,
+            width: 1200,
+            height: 630,
+            alt: product.name,
+          },
+        ],
+        siteName: "SHERO",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${product.name} | SHERO`,
+        description,
+        images: [imageUrl],
+      },
+    };
+  } catch {
+    // Fallback metadata if product fetch fails
+    return {
+      title: "Product | SHERO",
+      description: "Explore our range of tech solutions at SHERO.",
+    };
+  }
+}
+
+export default function ProductDetailPage() {
+  return <ProductDetail />;
+}

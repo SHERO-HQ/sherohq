@@ -272,6 +272,14 @@ router.post(
         return res.status(401).json({ error: "Invalid credentials" });
       }
 
+      // Check if account is active
+      if (user.isActive === false) {
+        console.warn(`🚫 Login blocked: Account deactivated for ${email}`);
+        return res.status(403).json({
+          error: "Your account has been deactivated. Please contact support.",
+        });
+      }
+
       // Check for password expiration (6 months)
       const sixMonthsAgo = new Date();
       sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
@@ -333,6 +341,13 @@ router.get("/me", async (req, res) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+    const passwordExpired = user.passwordUpdatedAt
+      ? new Date(user.passwordUpdatedAt) < sixMonthsAgo
+      : false;
+    const mustReset = !!user.passwordResetRequired || passwordExpired;
+
     res.json({
       user: {
         id: user.id,
@@ -344,6 +359,7 @@ router.get("/me", async (req, res) => {
           ? JSON.parse(user.shippingAddress)
           : null,
       },
+      mustReset,
     });
   } catch (error) {
     console.error("Get Me error:", error);

@@ -1,3 +1,4 @@
+"use client";
 import React, { Component, type ReactNode } from "react";
 import { AlertTriangle, RefreshCw, Home } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -43,7 +44,7 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="min-h-[400px] flex items-center justify-center p-8">
+        <div className="min-h-100 flex items-center justify-center p-8">
           <div className="text-center max-w-md">
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 mb-6">
               <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
@@ -58,7 +59,7 @@ export class ErrorBoundary extends Component<Props, State> {
               or return to the home page.
             </p>
 
-            {import.meta.env.DEV && this.state.error && (
+            {process.env.NODE_ENV === "development" && this.state.error && (
               <details className="mb-6 text-left">
                 <summary className="text-sm text-slate-500 cursor-pointer hover:text-slate-700 dark:hover:text-slate-300">
                   Error details

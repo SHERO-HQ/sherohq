@@ -1,3 +1,4 @@
+"use client";
 import {
   Target,
   Heart,
@@ -6,7 +7,7 @@ import {
   Clover,
   SearchCheck,
 } from "lucide-react";
-import aboutImage from "@/assets/aboutImg.png";
+
 import Reveal from "@/components/motion/Reveal";
 import {
   StaggerContainer,
@@ -26,7 +27,7 @@ const AboutStory = () => {
           <Reveal direction="right" distance={40}>
             <div className="relative">
               <img
-                src={aboutImage}
+                src="/assets/aboutImg.png"
                 alt="SHERO Technologies"
                 width={600}
                 height={400}

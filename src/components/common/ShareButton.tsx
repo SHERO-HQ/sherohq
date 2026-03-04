@@ -1,3 +1,4 @@
+"use client";
 import { useState, useRef, useEffect } from "react";
 import { Share2, Link, Check, X } from "lucide-react";
 import { WhatsAppIcon } from "@/assets/icons/icons";

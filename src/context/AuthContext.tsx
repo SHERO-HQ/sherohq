@@ -1,3 +1,4 @@
+"use client";
 import {
   createContext,
   useContext,
@@ -50,6 +51,12 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
   const [isLoading, setIsLoading] = useState(true);
 
   const checkAuth = useCallback(async () => {
+    // Check if running on client side
+    if (typeof window === "undefined") {
+      setIsLoading(false);
+      return;
+    }
+
     const initialToken = localStorage.getItem("userToken");
     try {
       if (!initialToken) {

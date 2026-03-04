@@ -1,3 +1,4 @@
+"use client";
 import { NavLink } from "react-router-dom";
 import { getAbsoluteUrl } from "@/utils/subdomain";
 import { cn } from "@/lib/utils";

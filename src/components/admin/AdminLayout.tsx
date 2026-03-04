@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import AdminSidebar from "./AdminSidebar";
 import AdminHeader from "./AdminHeader";
@@ -95,7 +96,7 @@ export default function AdminLayout({ children }: Readonly<AdminLayoutProps>) {
           <p>
             {" "}
             &copy; {new Date().getFullYear()}{" "}
-            <span className="text-primary">SHERO</span> Technologies Admin
+            <span className="text-primary font-bold uppercase font-logo">SHERO Technologies</span> Admin
             Panel. Built with precision.
           </p>
         </footer>

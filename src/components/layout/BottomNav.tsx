@@ -1,3 +1,4 @@
+"use client";
 import { Home, ShoppingBag, ShoppingCart, Heart } from "lucide-react";
 import UniversalLink from "@/components/common/UniversalLink";
 import { useCart } from "@/context/CartContext";

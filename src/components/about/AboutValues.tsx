@@ -1,3 +1,4 @@
+"use client";
 import { motion } from "motion/react";
 import { Lightbulb, ShieldCheck, Handshake, Rocket } from "lucide-react";
 import { cn } from "@/lib/utils";

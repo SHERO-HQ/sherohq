@@ -1,8 +1,11 @@
+"use client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   fetchCustomers,
   fetchCustomerDetails,
   deleteCustomer,
+  adminResetUserPassword,
+  adminToggleUserActive,
 } from "@/services/api";
 
 export const USER_KEYS = {
@@ -37,6 +40,29 @@ export const useDeleteCustomer = () => {
 
   return useMutation({
     mutationFn: deleteCustomer,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: USER_KEYS.all });
+    },
+  });
+};
+
+export const useResetUserPassword = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: adminResetUserPassword,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: USER_KEYS.all });
+    },
+  });
+};
+
+export const useToggleUserActive = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ userId, isActive }: { userId: string; isActive: boolean }) =>
+      adminToggleUserActive(userId, isActive),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: USER_KEYS.all });
     },

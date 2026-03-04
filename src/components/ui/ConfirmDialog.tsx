@@ -1,3 +1,4 @@
+"use client";
 import { motion, AnimatePresence } from "motion/react";
 import { AlertTriangle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";

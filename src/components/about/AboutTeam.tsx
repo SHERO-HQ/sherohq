@@ -1,3 +1,4 @@
+"use client";
 import { useState, type ElementType } from "react";
 import { motion } from "motion/react";
 import { Github, Linkedin, Users } from "lucide-react";

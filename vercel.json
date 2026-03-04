@@ -1,23 +1,10 @@
 {
+  "buildCommand": "corepack enable && yarn build",
+  "installCommand": "corepack enable && yarn install",
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://sherotech.onrender.com/api/$1"
-    },
-    {
-      "source": "/uploads/(.*)",
-      "destination": "https://sherotech.onrender.com/uploads/$1"
-    },
     {
       "source": "/og/:id",
       "destination": "/api/og/:id"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
-  ],
-  "buildCommand": "corepack enable && yarn build",
-  "outputDirectory": "dist",
-  "installCommand": "corepack enable && yarn install"
+  ]
 }

@@ -1,3 +1,4 @@
+"use client";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import {
   BadgeCheck,
@@ -48,7 +49,10 @@ const ProductHero = () => {
   };
 
   const prefersReducedMotion = useMemo(
-    () => globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () =>
+      typeof window !== "undefined" && typeof window.matchMedia === "function"
+        ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        : false,
     [],
   );
 
@@ -190,7 +194,7 @@ const ProductHero = () => {
                 rotateY,
                 transformStyle: "preserve-3d",
               }}
-              className="relative w-full max-w-md h-[400px] flex items-center justify-center"
+              className="relative w-full max-w-md h-100 flex items-center justify-center"
             >
               {/* Layer 1: Store Insights Card */}
               <motion.div

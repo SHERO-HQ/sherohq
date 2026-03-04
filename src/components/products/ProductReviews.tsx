@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect, useCallback } from "react";
 import { Star, User, Loader2 } from "lucide-react";
 import {

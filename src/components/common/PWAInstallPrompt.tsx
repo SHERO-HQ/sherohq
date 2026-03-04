@@ -1,6 +1,10 @@
+"use client";
 import { useState, useEffect } from "react";
-import { X, Download, Smartphone } from "lucide-react";
+import { X, Download } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import Image from "next/image";
+import logoLight from "@/assets/logo/shero-light.svg";
+import logoDark from "@/assets/logo/shero-dark.svg";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -99,8 +103,9 @@ const PWAInstallPrompt = () => {
         >
           <div className="p-4">
             <div className="flex items-start gap-3">
-              <div className="shrink-0 w-12 h-12 bg-linear-to-br from-emerald-500 to-blue-600 rounded flex items-center justify-center">
-                <Smartphone className="w-6 h-6 text-white" />
+              <div className="shrink-0 w-12 h-12 rounded bg-slate-900 dark:bg-white flex items-center justify-center overflow-hidden p-1.5">
+                <Image src={logoLight} alt="SHERO" className="block dark:hidden w-full h-full object-contain" />
+                <Image src={logoDark} alt="SHERO" className="hidden dark:block w-full h-full object-contain" />
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-bold text-slate-900 dark:text-white">

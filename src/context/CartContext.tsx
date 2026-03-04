@@ -1,3 +1,4 @@
+"use client";
 import React, {
   createContext,
   useContext,
@@ -33,15 +34,27 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    const saved = localStorage.getItem("sherotech_cart");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Load cart from localStorage on client side only
+  useEffect(() => {
+    const saved = localStorage.getItem("sherotech_cart");
+    if (saved) {
+      try {
+        setCart(JSON.parse(saved));
+      } catch (e) {
+        console.error("Failed to parse cart from localStorage", e);
+      }
+    }
+    setIsLoaded(true);
+  }, []);
 
   useEffect(() => {
+    if (!isLoaded) return;
     localStorage.setItem("sherotech_cart", JSON.stringify(cart));
-  }, [cart]);
+  }, [cart, isLoaded]);
 
   const addItem = (newItem: Omit<CartItem, "quantity">) => {
     setCart((prev) => {

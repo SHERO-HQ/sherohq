@@ -1,3 +1,4 @@
+"use client";
 import { Check, SlidersHorizontal, ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 import type { FilterState } from "./ProductFilters";

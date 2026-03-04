@@ -1,3 +1,4 @@
+"use client";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import {
   ShieldCheck,
@@ -49,7 +50,10 @@ const AboutHero = () => {
   };
 
   const prefersReducedMotion = useMemo(
-    () => globalThis.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () =>
+      typeof window !== "undefined" && typeof window.matchMedia === "function"
+        ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        : false,
     [],
   );
 
@@ -205,7 +209,7 @@ const AboutHero = () => {
                 rotateY,
                 transformStyle: "preserve-3d",
               }}
-              className="relative w-full max-w-md h-[420px] flex items-center justify-center"
+              className="relative w-full max-w-md h-105 flex items-center justify-center"
             >
               {/* Layer 1: Core Values Card */}
               <motion.div
@@ -287,7 +291,7 @@ const AboutHero = () => {
                   y: useTransform(mouseY, [-0.5, 0.5], [20, 20]),
                   rotate: -12,
                 }}
-                className="absolute top-0 left-0 w-fit p-3 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/30 shadow-2xl z-20 pointer-events-none"
+                className="absolute top-0 left-0 w-fit p-3 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/30 shadow-2xl z-20 pointer-events-none hidden"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-linear-to-br from-emerald-600 to-blue-400 flex items-center justify-center shadow-lg">

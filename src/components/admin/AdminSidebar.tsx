@@ -1,3 +1,4 @@
+"use client";
 import UniversalLink from "@/components/common/UniversalLink";
 import {
   LayoutDashboard,

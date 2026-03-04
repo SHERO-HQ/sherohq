@@ -1,3 +1,4 @@
+"use client";
 import { motion } from "motion/react";
 import UniversalLink from "@/components/common/UniversalLink";
 import { ShoppingCart, ArrowRight } from "lucide-react";

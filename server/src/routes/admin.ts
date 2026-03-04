@@ -78,6 +78,16 @@ router.post(
         return res.status(401).json({ error: "Invalid credentials" });
       }
 
+      // Check if account is active
+      if ((admin as AdminUserRow & { isActive?: boolean }).isActive === false) {
+        console.warn(
+          `🚫 Admin login blocked: Account deactivated for ${username}`,
+        );
+        return res.status(403).json({
+          error: "This account has been deactivated. Contact a superadmin.",
+        });
+      }
+
       // Check for password expiration (6 months)
       const sixMonthsAgo = new Date();
       sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
@@ -400,7 +410,7 @@ router.get(
     try {
       const { id } = req.params;
       const result = await db.query(
-        'SELECT id, username, email, role, avatar, "createdAt" FROM admin_users WHERE id = $1',
+        'SELECT id, username, email, role, phone, avatar, "isActive", "createdAt" FROM admin_users WHERE id = $1',
         [id],
       );
 
@@ -424,12 +434,127 @@ router.get(
   async (req: AdminRequest, res: Response) => {
     try {
       const result = await db.query(
-        'SELECT id, username, email, role, avatar, "createdAt" FROM admin_users ORDER BY "createdAt" DESC',
+        'SELECT id, username, email, role, phone, avatar, "isActive", "createdAt" FROM admin_users ORDER BY "createdAt" DESC',
       );
       res.json({ success: true, users: result.rows });
     } catch (error) {
       console.error("Fetch admins error:", error);
       res.status(500).json({ error: "Failed to fetch admin users" });
+    }
+  },
+);
+
+// POST /api/admin/users/:id/reset-password - Force staff member to reset password on next login
+router.post(
+  "/users/:id/reset-password",
+  adminAuth,
+  requireRole("admin"),
+  async (req: AdminRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+
+      if (id === req.admin?.id) {
+        return res.status(400).json({
+          error: "Use the change-password endpoint to reset your own password",
+        });
+      }
+
+      const userRes = await db.query(
+        "SELECT id, username, role FROM admin_users WHERE id = $1",
+        [id],
+      );
+      if (userRes.rowCount === 0) {
+        return res.status(404).json({ error: "Admin user not found" });
+      }
+
+      const target = userRes.rows[0];
+      const creatorRole = req.admin?.role || "admin";
+
+      // Only superadmin can reset superadmin passwords
+      if (target.role === "superadmin" && creatorRole !== "superadmin") {
+        return res.status(403).json({
+          error: "Only superadmins can reset other superadmin passwords",
+        });
+      }
+
+      // Flag for mandatory reset and revoke all sessions
+      await db.query(
+        'UPDATE admin_users SET "passwordResetRequired" = true WHERE id = $1',
+        [id],
+      );
+      await db.query('DELETE FROM sessions WHERE "adminId" = $1', [id]);
+
+      await logActivity(
+        req.admin!.id,
+        "admin_password_reset",
+        "warning",
+        `Forced password reset for admin: ${target.username}`,
+      );
+
+      console.log(
+        `🔑 Password reset flagged for admin: ${target.username} by ${req.admin?.username}`,
+      );
+
+      res.json({
+        success: true,
+        message: `${target.username} will be required to set a new password on next login.`,
+      });
+    } catch (error) {
+      console.error("Reset admin password error:", error);
+      res.status(500).json({ error: "Failed to reset password" });
+    }
+  },
+);
+
+// PATCH /api/admin/users/:id - Toggle active/inactive (superadmin only)
+router.patch(
+  "/users/:id",
+  adminAuth,
+  requireRole("superadmin"),
+  async (req: AdminRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+      const { isActive } = req.body as { isActive?: boolean };
+
+      if (isActive === undefined) {
+        return res.status(400).json({ error: "isActive field is required" });
+      }
+
+      if (id === req.admin?.id) {
+        return res
+          .status(400)
+          .json({ error: "Cannot deactivate your own account" });
+      }
+
+      const userRes = await db.query(
+        "SELECT id, username FROM admin_users WHERE id = $1",
+        [id],
+      );
+      if (userRes.rowCount === 0) {
+        return res.status(404).json({ error: "Admin user not found" });
+      }
+
+      await db.query('UPDATE admin_users SET "isActive" = $1 WHERE id = $2', [
+        isActive,
+        id,
+      ]);
+
+      // Revoke all sessions when deactivating
+      if (!isActive) {
+        await db.query('DELETE FROM sessions WHERE "adminId" = $1', [id]);
+      }
+
+      await logActivity(
+        req.admin!.id,
+        isActive ? "admin_account_reactivated" : "admin_account_deactivated",
+        "warning",
+        `${isActive ? "Reactivated" : "Deactivated"} admin account: ${userRes.rows[0].username}`,
+      );
+
+      res.json({ success: true, isActive });
+    } catch (error) {
+      console.error("Toggle admin active error:", error);
+      res.status(500).json({ error: "Failed to update account status" });
     }
   },
 );

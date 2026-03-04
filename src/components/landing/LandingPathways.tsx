@@ -1,3 +1,4 @@
+"use client";
 import { NavLink } from "react-router-dom";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import {

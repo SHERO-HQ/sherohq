@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import { Lock, ShieldCheck, AlertCircle, Loader2 } from "lucide-react";
 import { adminChangePassword } from "@/services/api";

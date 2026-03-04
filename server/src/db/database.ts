@@ -336,7 +336,8 @@ export async function initializeDatabase() {
       ALTER TABLE admin_users 
       ADD COLUMN IF NOT EXISTS phone TEXT,
       ADD COLUMN IF NOT EXISTS "passwordResetRequired" BOOLEAN DEFAULT true,
-      ADD COLUMN IF NOT EXISTS "passwordUpdatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+      ADD COLUMN IF NOT EXISTS "passwordUpdatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      ADD COLUMN IF NOT EXISTS "isActive" BOOLEAN DEFAULT true;
     `);
 
     // Migration: Add passwordResetRequired and passwordUpdatedAt to users

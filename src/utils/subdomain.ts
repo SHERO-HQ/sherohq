@@ -12,6 +12,10 @@
  * @returns {string | null} The subdomain or null if none/root
  */
 export const getSubdomain = (): string | null => {
+  if (typeof globalThis === "undefined" || !globalThis.location) {
+    return null;
+  }
+
   const hostname = globalThis.location.hostname;
 
   // Handle localhost and IP addresses
@@ -99,6 +103,10 @@ const getTargetSubdomain = (
 };
 
 export const getAbsoluteUrl = (path: string): string => {
+  if (typeof globalThis === "undefined" || !globalThis.location) {
+    return path;
+  }
+
   const hostname = globalThis.location.hostname;
   const protocol = globalThis.location.protocol;
 

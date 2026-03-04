@@ -1,3 +1,4 @@
+"use client";
 import {
   Search,
   Menu,
@@ -7,7 +8,7 @@ import {
   Globe,
 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
-import { useLocation } from "react-router-dom";
+import { usePathname } from "next/navigation";
 import UniversalLink from "@/components/common/UniversalLink";
 import { useBreadcrumb } from "@/context/BreadcrumbContext";
 import {
@@ -36,11 +37,9 @@ export default function AdminHeader({
   isSidebarOpen,
 }: Readonly<HeaderProps>) {
   const { admin, logout } = useAdmin();
-  const location = useLocation();
+  const pathname = usePathname() ?? "";
   const { customLabels } = useBreadcrumb();
-  const pathnames = location.pathname
-    .split("/")
-    .filter((x) => x && x !== "admin");
+  const pathnames = pathname.split("/").filter((x) => x && x !== "admin");
 
   // Get display label for a path segment
   const getDisplayLabel = (segment: string, fullPath: string) => {
@@ -59,7 +58,7 @@ export default function AdminHeader({
     <header
       className={cn(
         "fixed top-0 right-0 z-30 flex h-20 items-center justify-between border-b border-white/5 bg-slate-900/80 backdrop-blur-xl px-4 md:px-6 lg:px-8 transition-all duration-300",
-        isSidebarOpen ? "lg:left-[260px]" : "lg:left-20",
+        isSidebarOpen ? "lg:left-65" : "lg:left-20",
         "left-0",
       )}
     >
@@ -137,7 +136,10 @@ export default function AdminHeader({
         {/* User Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="flex items-center hover:bg-transparent p-0">
+            <Button
+              variant="ghost"
+              className="flex items-center hover:bg-transparent p-0"
+            >
               <div className="flex items-center justify-center p-1 w-10 h-10 overflow-hidden hover:bg-white/5 rounded backdrop-blur-md border border-white/10 hover:border-white/5 transition-all outline-none">
                 {admin?.avatar ? (
                   <img

@@ -1,3 +1,4 @@
+"use client";
 import { motion } from "motion/react";
 import { CheckCircle, Truck } from "lucide-react";
 

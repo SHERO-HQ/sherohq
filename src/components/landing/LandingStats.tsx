@@ -1,3 +1,4 @@
+"use client";
 import { useInView } from "motion/react";
 import { Activity, Globe, Users, Trophy, Box } from "lucide-react";
 import { useRef, useEffect, useState, useMemo } from "react";

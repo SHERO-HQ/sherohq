@@ -11,6 +11,7 @@ interface UserRow {
   phone: string | null;
   avatar: string | null;
   emailVerified: boolean;
+  isActive: boolean;
   createdAt: string;
 }
 
@@ -59,7 +60,7 @@ router.get("/", adminAuth, async (req: AdminRequest, res: Response) => {
     const offset = (page - 1) * limit;
 
     let query = `
-      SELECT id, email, name, phone, avatar, "emailVerified", "createdAt"
+      SELECT id, email, name, phone, avatar, "emailVerified", "isActive", "createdAt"
       FROM users
     `;
     let countQuery = `SELECT COUNT(*) as total FROM users`;
@@ -107,7 +108,7 @@ router.get("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
 
     // Get user details
     const userRes = await db.query(
-      `SELECT id, email, name, phone, avatar, "emailVerified", "shippingAddress", "createdAt"
+      `SELECT id, email, name, phone, avatar, "emailVerified", "isActive", "shippingAddress", "createdAt"
        FROM users WHERE id = $1`,
       [id],
     );
@@ -157,7 +158,7 @@ router.get("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
 router.patch("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, phone, emailVerified } = req.body;
+    const { name, phone, emailVerified, isActive } = req.body;
 
     const updates: string[] = [];
     const values: (string | boolean | string[])[] = [];
@@ -175,6 +176,10 @@ router.patch("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
       updates.push(`"emailVerified" = $${paramIndex++}`);
       values.push(emailVerified);
     }
+    if (isActive !== undefined) {
+      updates.push(`"isActive" = $${paramIndex++}`);
+      values.push(isActive);
+    }
 
     if (updates.length === 0) {
       return res.status(400).json({ error: "No fields to update" });
@@ -190,12 +195,57 @@ router.patch("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
       return res.status(404).json({ error: "User not found" });
     }
 
+    // Revoke all sessions when deactivating the account
+    if (isActive === false) {
+      await db.query('DELETE FROM user_sessions WHERE "userId" = $1', [id]);
+    }
+
     res.json({ success: true, user: result.rows[0] });
   } catch (error) {
     console.error("Error updating user:", error);
     res.status(500).json({ error: "Failed to update user" });
   }
 });
+
+// Reset password — forces user to change password on next login
+router.post(
+  "/:id/reset-password",
+  adminAuth,
+  async (req: AdminRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+
+      const userRes = await db.query(
+        "SELECT id, email, name FROM users WHERE id = $1",
+        [id],
+      );
+      if (userRes.rows.length === 0) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Flag account for mandatory password reset
+      await db.query(
+        'UPDATE users SET "passwordResetRequired" = true WHERE id = $1',
+        [id],
+      );
+
+      // Invalidate all existing sessions so the user must log in again
+      await db.query('DELETE FROM user_sessions WHERE "userId" = $1', [id]);
+
+      console.log(
+        `🔑 Password reset flagged for user: ${userRes.rows[0].email}`,
+      );
+
+      res.json({
+        success: true,
+        message: "User will be prompted to set a new password on next login.",
+      });
+    } catch (error) {
+      console.error("Error resetting user password:", error);
+      res.status(500).json({ error: "Failed to reset password" });
+    }
+  },
+);
 
 // Delete user account
 router.delete("/:id", adminAuth, async (req: AdminRequest, res: Response) => {

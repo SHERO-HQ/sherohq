@@ -1,3 +1,4 @@
+"use client";
 import { useContext } from "react";
 import { WishlistContext } from "@/context/WishlistContextType";
 

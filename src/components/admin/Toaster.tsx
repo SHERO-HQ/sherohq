@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { CheckCircle, XCircle, AlertTriangle, Info, X } from "lucide-react";

@@ -1,3 +1,4 @@
+"use client";
 import UniversalLink from "@/components/common/UniversalLink";
 import { motion } from "motion/react";
 import {
@@ -9,7 +10,6 @@ import {
   Info,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import Logo from "@/assets/logo/shero.svg";
 
 const LandingAbout = () => {
   const features = [
@@ -84,7 +84,7 @@ const LandingAbout = () => {
           </motion.div>
 
           {/* RIGHT COLUMN: Tech Nexus Visualization */}
-          <div className="w-full lg:w-1/2 relative h-[500px] flex items-center justify-center">
+          <div className="w-full lg:w-1/2 relative h-125 flex items-center justify-center">
             <div className="absolute inset-0 pattern-dots mask-radial-faded" />
 
             <motion.div
@@ -104,7 +104,7 @@ const LandingAbout = () => {
 
                 {/* The Icon itself (Restored) */}
                 <img
-                  src={Logo}
+                  src="/assets/logo/shero.svg"
                   alt="SHERO"
                   className="relative z-20 w-16 h-16 text-emerald-600 dark:text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]"
                 />
