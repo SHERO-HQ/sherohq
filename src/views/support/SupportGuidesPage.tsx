@@ -29,8 +29,8 @@ const SupportGuidesPage = () => {
   return (
     <div className="pt-24 pb-12 bg-background min-h-screen text-foreground relative overflow-hidden transition-colors duration-300">
       {/* Ambient Background Glows */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[120px] -z-10 animate-pulse" />
-      <div className="absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[100px] -z-10" />
+      <div className="absolute top-0 left-1/4 w-125 h-125 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[120px] -z-10 animate-pulse" />
+      <div className="absolute bottom-1/4 right-0 w-100 h-100 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[100px] -z-10" />
 
       <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}

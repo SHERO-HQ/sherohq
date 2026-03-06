@@ -105,12 +105,12 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                       className="w-full flex items-center gap-3 px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors text-left"
                     >
                       <div className="relative w-10 h-10 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden">
-                          <ProductImage
-                            src={getImageUrl(product.image)}
-                            alt={product.name}
-                            fill
-                            sizes="40px"
-                            className="object-cover"
+                        <ProductImage
+                          src={getImageUrl(product.image)}
+                          alt={product.name}
+                          fill
+                          sizes="40px"
+                          className="object-cover"
                         />
                       </div>
                       <div>

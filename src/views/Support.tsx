@@ -66,8 +66,8 @@ const Support = () => {
     <>
       <div className="pt-24 pb-12 bg-background min-h-screen text-foreground relative overflow-hidden transition-colors duration-300">
         {/* Ambient Background Glows - Visible in both but subtle */}
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[120px] -z-10 animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[120px] -z-10" />
+        <div className="absolute top-0 left-1/4 w-125 h-125 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[120px] -z-10 animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-125 h-125 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[120px] -z-10" />
 
         <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back Button */}
@@ -127,7 +127,7 @@ const Support = () => {
                 className="bg-card/40 dark:bg-slate-900/40 backdrop-blur-md p-8 rounded border border-border hover:border-emerald-500/30 hover:bg-card/60 dark:hover:bg-slate-900/60 transition-all group relative overflow-hidden shadow-sm hover:shadow-xl"
               >
                 {/* Pattern dots on hover */}
-                <div className="absolute pattern-dots pattern-emerald-500/10 pattern-opacity-100 pattern-size-4 top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 -z-10"/>
+                <div className="absolute pattern-dots pattern-emerald-500/10 pattern-opacity-100 pattern-size-4 top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 -z-10" />
 
                 <div className="absolute -top-15 -right-15 w-44 h-44 bg-linear-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-full" />
 
