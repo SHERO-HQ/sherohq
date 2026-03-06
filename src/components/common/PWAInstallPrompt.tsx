@@ -38,13 +38,28 @@ const PWAInstallPrompt = () => {
       }
     }
 
-    // Listen for the install prompt
+    // Listen for the install prompt (in case it fires after mount)
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       // Show the prompt after a short delay
       setTimeout(() => setShowPrompt(true), 3000);
     };
+
+    // Check if the event was already captured globally before this component mounted
+    const captured = (
+      globalThis as unknown as {
+        __pwaPromptEvent?: BeforeInstallPromptEvent | null;
+      }
+    ).__pwaPromptEvent;
+    if (captured) {
+      handleBeforeInstallPrompt(captured);
+      (
+        globalThis as unknown as {
+          __pwaPromptEvent?: BeforeInstallPromptEvent | null;
+        }
+      ).__pwaPromptEvent = null;
+    }
 
     globalThis.addEventListener(
       "beforeinstallprompt",
@@ -104,8 +119,16 @@ const PWAInstallPrompt = () => {
           <div className="p-4">
             <div className="flex items-start gap-3">
               <div className="shrink-0 w-12 h-12 rounded bg-slate-900 dark:bg-white flex items-center justify-center overflow-hidden p-1.5">
-                <Image src={logoLight} alt="SHERO" className="block dark:hidden w-full h-full object-contain" />
-                <Image src={logoDark} alt="SHERO" className="hidden dark:block w-full h-full object-contain" />
+                <Image
+                  src={logoLight}
+                  alt="SHERO"
+                  className="block dark:hidden w-full h-full object-contain"
+                />
+                <Image
+                  src={logoDark}
+                  alt="SHERO"
+                  className="hidden dark:block w-full h-full object-contain"
+                />
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-bold text-slate-900 dark:text-white">

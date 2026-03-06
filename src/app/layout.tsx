@@ -2,17 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Sora, JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { Providers } from "@/components/providers";
-import dynamic from "next/dynamic";
+import { ServiceWorkerRegistration } from "@/components/common/ServiceWorkerRegistration";
 import "../index.css";
-
-// Service worker registration is client-only and non-critical — lazy load it
-const ServiceWorkerRegistration = dynamic(
-  () =>
-    import("@/components/common/ServiceWorkerRegistration").then((m) => ({
-      default: m.ServiceWorkerRegistration,
-    })),
-  { ssr: false },
-);
 
 const inter = Inter({
   subsets: ["latin"],
@@ -98,6 +89,16 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${jetbrainsMono.variable} ${inter.variable} ${sora.variable} ${aubette.variable}`}
     >
+      <head>
+        {/* Capture the PWA install prompt event before React hydrates.
+            Dynamic-imported PWAInstallPrompt may mount after the event fires,
+            so we stash it globally for the component to pick up later. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.__pwaPromptEvent=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.__pwaPromptEvent=e});`,
+          }}
+        />
+      </head>
       <body className="font-primary transition-colors duration-500">
         <Providers>
           {/* Skip to main content link for accessibility */}

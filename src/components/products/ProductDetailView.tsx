@@ -388,6 +388,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 <ShareButton
                   title={product.name}
                   description={`Check out ${product.name} - GH₵${product.price}`}
+                  image={getImageUrl(product.image)}
                 />
               </div>
 

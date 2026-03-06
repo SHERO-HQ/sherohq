@@ -20,6 +20,7 @@ interface ShareButtonProps {
   url?: string;
   title: string;
   description?: string;
+  image?: string;
   className?: string;
 }
 
@@ -27,6 +28,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
   url,
   title,
   description = "",
+  image,
   className = "",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -59,11 +61,32 @@ const ShareButton: React.FC<ShareButtonProps> = ({
     // Use native Web Share API if available (mobile)
     if (navigator.share) {
       try {
-        await navigator.share({
+        const shareData: ShareData = {
           title,
           text: description,
           url: shareUrl,
-        });
+        };
+
+        // Share the product image as a file if available and supported
+        if (image && navigator.canShare) {
+          try {
+            const response = await fetch(image);
+            const blob = await response.blob();
+            const ext = blob.type.split("/")[1] || "png";
+            const file = new File([blob], `${title}.${ext}`, {
+              type: blob.type,
+            });
+            const dataWithFile = { ...shareData, files: [file] };
+            if (navigator.canShare(dataWithFile)) {
+              await navigator.share(dataWithFile);
+              return;
+            }
+          } catch {
+            // Image fetch failed — fall through to share without image
+          }
+        }
+
+        await navigator.share(shareData);
         return;
       } catch {
         // User cancelled or error - fall through to dropdown
