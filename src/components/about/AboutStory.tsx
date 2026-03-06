@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 
 import Reveal from "@/components/motion/Reveal";
+import Image from "next/image";
 import {
   StaggerContainer,
   StaggerItem,
@@ -26,13 +27,12 @@ const AboutStory = () => {
           {/* Image Side */}
           <Reveal direction="right" distance={40}>
             <div className="relative">
-              <img
+              <Image
                 src="/assets/aboutImg.png"
                 alt="SHERO Technologies"
                 width={600}
                 height={400}
                 loading="lazy"
-                decoding="async"
                 className="relative w-full object-cover"
               />
 

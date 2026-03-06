@@ -41,6 +41,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
+import ProductImage from "@/components/common/ProductImage";
 import type {
   AdminUserListItem,
   AdminUserDetails,
@@ -183,12 +184,14 @@ const UserTableRow = ({
   >
     <td className="px-6 py-4">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded bg-linear-to-br from-emerald-500 to-emerald-500/60 font-bold text-lg font-sora flex items-center justify-center text-white">
+        <div className="relative w-10 h-10 rounded bg-linear-to-br from-emerald-500 to-emerald-500/60 font-bold text-lg font-sora flex items-center justify-center text-white overflow-hidden">
           {user.avatar ? (
-            <img
+            <ProductImage
               src={user.avatar}
               alt={user.name}
-              className="w-full h-full rounded object-cover"
+              fill
+              sizes="40px"
+              className="object-cover rounded"
             />
           ) : (
             user.name.charAt(0).toUpperCase()
@@ -602,12 +605,14 @@ const UserDetailsModal = ({
               <div className="p-6 space-y-6 overflow-y-auto max-h-[calc(80vh-80px)]">
                 {/* User Info */}
                 <div className="flex items-start gap-4">
-                  <div className="w-16 h-16 rounded bg-linear-to-br from-emerald-500 to-blue-500 flex items-center justify-center text-white text-2xl font-bold">
+                  <div className="relative w-16 h-16 rounded bg-linear-to-br from-emerald-500 to-blue-500 flex items-center justify-center text-white text-2xl font-bold overflow-hidden">
                     {user.avatar ? (
-                      <img
+                      <ProductImage
                         src={user.avatar}
                         alt={user.name}
-                        className="w-full h-full object-cover"
+                        fill
+                        sizes="64px"
+                        className="object-cover"
                       />
                     ) : (
                       user.name.charAt(0).toUpperCase()

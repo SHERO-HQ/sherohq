@@ -32,6 +32,7 @@ import { Badge } from "@/components/ui/badge";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useBreadcrumb } from "@/context/BreadcrumbContext";
 import { cn } from "@/lib/utils";
+import ProductImage from "@/components/common/ProductImage";
 
 interface Category {
   id: string;
@@ -332,10 +333,12 @@ export default function ProductForm() {
                           : "border-white/5",
                       )}
                     >
-                      <img
+                      <ProductImage
                         src={url}
                         alt="Product"
-                        className="w-full h-full object-cover"
+                        fill
+                        sizes="(max-width: 640px) 50vw, 25vw"
+                        className="object-cover"
                       />
 
                       {/* Permanent Positioned Actions */}

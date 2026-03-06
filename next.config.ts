@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   // Use the src/ directory for app router
   // App directory at src/app/
 
+  // Compress responses for faster delivery
+  compress: true,
+
   // Proxy API requests to the Express backend
   async rewrites() {
     const apiUrl = process.env.API_URL || "http://127.0.0.1:5000";
@@ -67,6 +70,35 @@ const nextConfig: NextConfig = {
 
   // Suppress hydration warnings during migration
   reactStrictMode: true,
+
+  // Optimise production builds
+  productionBrowserSourceMaps: false,
+
+  // Cache headers for static assets
+  async headers() {
+    return [
+      {
+        // Cache static assets aggressively (fonts, images, JS/CSS chunks)
+        source:
+          "/:path*.(woff2|woff|ttf|otf|ico|svg|png|jpg|jpeg|webp|avif|gif)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

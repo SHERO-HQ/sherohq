@@ -17,6 +17,7 @@ import {
 import { useNotifications } from "@/hooks/useNotifications";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { uploadImage } from "@/services/api";
+import ProductImage from "@/components/common/ProductImage";
 
 const AdminGuideEditor = () => {
   const navigate = useNavigate();
@@ -266,14 +267,13 @@ const AdminGuideEditor = () => {
                     className="bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600"
                   />
                   {coverImage && (
-                    <div className="mt-2 h-20 rounded overflow-hidden bg-slate-800 border border-white/5">
-                      <img
+                    <div className="relative mt-2 h-20 rounded overflow-hidden bg-slate-800 border border-white/5">
+                      <ProductImage
                         src={coverImage}
                         alt="Cover preview"
-                        className="w-full h-full object-cover"
-                        onError={(e) =>
-                          (e.currentTarget.style.display = "none")
-                        }
+                        fill
+                        sizes="100%"
+                        className="object-cover"
                       />
                     </div>
                   )}

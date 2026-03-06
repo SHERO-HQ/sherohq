@@ -33,6 +33,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import ProductImage from "@/components/common/ProductImage";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -311,19 +312,16 @@ export default function OrderDetails() {
                     key={item.id}
                     className="p-6 flex items-center gap-6 group"
                   >
-                    <div className="w-20 h-20 rounded bg-slate-800 border border-white/5 overflow-hidden flex items-center justify-center shrink-0">
+                    <div className="relative w-20 h-20 rounded bg-slate-800 border border-white/5 overflow-hidden flex items-center justify-center shrink-0">
                       {item.image &&
                       (item.image.startsWith("/uploads") ||
                         item.image.startsWith("http")) ? (
-                        <img
+                        <ProductImage
                           src={getImageUrl(item.image)}
                           alt={item.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          onError={(e) => {
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src =
-                              "https://placehold.co/200x200?text=No+Image";
-                          }}
+                          fill
+                          sizes="80px"
+                          className="object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                       ) : (
                         <div className="text-3xl select-none">{item.image}</div>

@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { type Project } from "@/services/api";
+import ProductImage from "@/components/common/ProductImage";
 
 const Portfolio = () => {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -147,14 +148,12 @@ const Portfolio = () => {
                   (project.image.startsWith("http") ||
                     project.image.startsWith("/") ||
                     project.image.includes(".")) ? (
-                    <img
+                    <ProductImage
                       src={project.image}
                       alt={project.title}
-                      width={600}
-                      height={400}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover group-hover:scale-110 transition-transform duration-300"
                     />
                   ) : (
                     <div className="text-7xl group-hover:scale-110 transition-transform duration-300">
@@ -229,10 +228,13 @@ const Portfolio = () => {
                 (selectedProject.image.startsWith("http") ||
                   selectedProject.image.startsWith("/") ||
                   selectedProject.image.includes(".")) ? (
-                  <img
+                  <ProductImage
                     src={selectedProject.image}
                     alt={selectedProject.title}
-                    className="w-full h-full object-cover"
+                    width={800}
+                    height={500}
+                    sizes="(max-width: 768px) 100vw, 800px"
+                    className="w-full h-auto object-cover"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-8xl">

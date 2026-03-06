@@ -9,6 +9,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import ProductImage from "@/components/common/ProductImage";
 
 export default function AdminProfile() {
   useTitle("Admin Settings");
@@ -100,12 +101,14 @@ export default function AdminProfile() {
               <div className="px-6 pb-6 relative">
                 <div className="flex justify-center -mt-12 mb-4">
                   <div className="relative group">
-                    <div className="w-24 h-24 rounded bg-background border-4 border-card overflow-hidden shadow-2xl">
+                    <div className="relative w-24 h-24 rounded bg-background border-4 border-card overflow-hidden shadow-2xl">
                       {avatar ? (
-                        <img
+                        <ProductImage
                           src={getImageUrl(avatar)}
-                          alt={admin?.username}
-                          className="w-full h-full object-cover"
+                          alt={admin?.username ?? "Admin avatar"}
+                          fill
+                          sizes="96px"
+                          className="object-cover"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center bg-muted">

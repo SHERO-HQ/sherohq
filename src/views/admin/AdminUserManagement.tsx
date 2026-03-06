@@ -46,6 +46,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import ProductImage from "@/components/common/ProductImage";
 
 const roleConfig: Record<
   string,
@@ -402,12 +403,14 @@ export default function AdminUserManagement() {
 
                   <div className="flex items-start gap-4">
                     <div className="relative">
-                      <div className="w-14 h-14 rounded bg-slate-800 flex items-center justify-center text-xl font-bold text-white overflow-hidden border border-white/5 shadow-inner">
+                      <div className="relative w-14 h-14 rounded bg-slate-800 flex items-center justify-center text-xl font-bold text-white overflow-hidden border border-white/5 shadow-inner">
                         {user.avatar ? (
-                          <img
+                          <ProductImage
                             src={user.avatar}
                             alt={user.username}
-                            className="w-full h-full object-cover"
+                            fill
+                            sizes="56px"
+                            className="object-cover"
                           />
                         ) : (
                           user.username.charAt(0).toUpperCase()

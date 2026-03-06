@@ -6,6 +6,7 @@ import { useTitle } from "@/hooks/useTitle";
 import { useGuides } from "@/hooks/queries/useGuides";
 import { ArrowLeft, Search, Monitor, Settings, ArrowRight } from "lucide-react";
 import UniversalLink from "@/components/common/UniversalLink";
+import ProductImage from "@/components/common/ProductImage";
 
 const SupportGuidesPage = () => {
   const { category } = useParams<{ category: "hardware" | "software" }>();
@@ -127,10 +128,12 @@ const SupportGuidesPage = () => {
 
                     {guide.coverImage && (
                       <div className="h-48 overflow-hidden bg-secondary relative">
-                        <img
+                        <ProductImage
                           src={guide.coverImage}
                           alt={guide.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          className="object-cover group-hover:scale-110 transition-transform duration-700"
                         />
                         <div className="absolute inset-0 bg-linear-to-t from-slate-950/60 to-transparent" />
                       </div>

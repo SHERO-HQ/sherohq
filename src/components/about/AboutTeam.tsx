@@ -7,6 +7,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/utils";
 import type { TeamMember } from "@/services/api";
 import { TwitterXIcon } from "@/assets/icons/icons";
+import ProductImage from "@/components/common/ProductImage";
 
 interface TeamMemberWithPlaceholder extends TeamMember {
   isPlaceholder?: boolean;
@@ -91,14 +92,12 @@ const AboutTeam = () => {
               )} */}
               <div className="relative overflow-hidden bg-slate-100 dark:bg-slate-800 mb-4 aspect-square transition-colors duration-300">
                 {member.image ? (
-                  <img
+                  <ProductImage
                     src={member.image}
                     alt={member.name}
-                    width={400}
-                    height={400}
-                    loading="lazy"
-                    decoding="async"
-                    className="object-cover w-full h-full rounded transition-all duration-700 filter grayscale group-hover:grayscale-0 group-hover:scale-110"
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    className="object-cover rounded transition-all duration-700 filter grayscale group-hover:grayscale-0 group-hover:scale-110"
                   />
                 ) : (
                   <div className="w-full h-full bg-linear-to-br from-blue-600/20 to-emerald-600/20 flex items-center justify-center text-slate-400 dark:text-slate-500 font-bold text-5xl tracking-tighter transition-all duration-700 group-hover:from-blue-600 group-hover:to-emerald-600 group-hover:text-white">

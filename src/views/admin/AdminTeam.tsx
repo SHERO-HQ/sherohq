@@ -24,6 +24,7 @@ import { Modal } from "@/components/ui/Modal";
 import { Label } from "@/components/ui/label";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Textarea } from "@/components/ui/textarea";
+import ProductImage from "@/components/common/ProductImage";
 
 const AdminTeam = () => {
   const { data: team = [], isLoading } = useTeam();
@@ -204,12 +205,14 @@ const AdminTeam = () => {
                   <GripVertical className="w-5 h-5" />
                 </div>
 
-                <div className="w-12 h-12 rounded bg-slate-700/50 overflow-hidden shrink-0">
+                <div className="relative w-12 h-12 rounded bg-slate-700/50 overflow-hidden shrink-0">
                   {member.image ? (
-                    <img
+                    <ProductImage
                       src={member.image}
                       alt={member.name}
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="48px"
+                      className="object-cover"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-slate-400 font-bold">

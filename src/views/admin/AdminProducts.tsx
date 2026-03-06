@@ -4,6 +4,7 @@ import UniversalLink from "@/components/common/UniversalLink";
 import { getImageUrl } from "@/services/api";
 import { useNotifications } from "@/hooks/useNotifications";
 import type { Product, Category } from "@/types/product";
+import ProductImage from "@/components/common/ProductImage";
 import {
   Search,
   Plus,
@@ -314,11 +315,13 @@ export default function AdminProducts() {
                     >
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded bg-slate-800 overflow-hidden shrink-0 border border-white/5">
-                            <img
+                          <div className="relative w-10 h-10 rounded bg-slate-800 overflow-hidden shrink-0 border border-white/5">
+                            <ProductImage
                               src={getImageUrl(product.image)}
                               alt={product.name}
-                              className="w-full h-full object-cover"
+                              fill
+                              sizes="40px"
+                              className="object-cover"
                             />
                           </div>
                           <div>

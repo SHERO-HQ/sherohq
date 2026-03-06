@@ -9,6 +9,7 @@ import { useTitle } from "@/hooks/useTitle";
 import { getGuideBySlug, type SupportGuide } from "@/services/guides";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import ProductImage from "@/components/common/ProductImage";
 import UniversalLink from "@/components/common/UniversalLink";
 
 const SupportGuideDetail = () => {
@@ -121,10 +122,13 @@ const SupportGuideDetail = () => {
             {/* Cover Image */}
             {guide.coverImage && (
               <div className="h-64 md:h-96 overflow-hidden bg-secondary relative">
-                <img
+                <ProductImage
                   src={guide.coverImage}
                   alt={guide.title}
-                  className="w-full h-full object-cover"
+                  fill
+                  priority
+                  sizes="100vw"
+                  className="object-cover"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-transparent to-transparent" />
               </div>

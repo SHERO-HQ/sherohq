@@ -25,6 +25,7 @@ import {
 import { useAdmin } from "@/context/AdminContext";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "motion/react";
+import ProductImage from "@/components/common/ProductImage";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -295,12 +296,14 @@ export default function AdminSidebar({
                 !isOpen && "justify-center px-0",
               )}
             >
-              <div className="w-8 h-8 flex items-center justify-center shrink-0 overflow-hidden">
+              <div className="relative w-8 h-8 flex items-center justify-center shrink-0 overflow-hidden">
                 {admin?.avatar ? (
-                  <img
+                  <ProductImage
                     src={admin.avatar}
                     alt={admin.username}
-                    className="w-full h-full object-cover"
+                    fill
+                    sizes="32px"
+                    className="object-cover"
                   />
                 ) : (
                   <User className="w-4 h-4 text-slate-400" />

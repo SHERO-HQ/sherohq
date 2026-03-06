@@ -10,6 +10,7 @@ import {
 import { useState, useEffect, useCallback } from "react";
 import FeedbackModal from "@/components/common/FeedbackModal";
 import { useTestimonials } from "@/hooks/queries/useTestimonials";
+import ProductImage from "@/components/common/ProductImage";
 
 // Helper to get initials
 const getInitials = (name: string) => {
@@ -130,16 +131,14 @@ const AboutTestimonials = () => {
 
                           <div className="mt-auto flex items-center gap-4">
                             {/* Avatar with Fallback */}
-                            <div className="w-14 h-14 rounded shadow border border-slate-200 dark:border-white/10 overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 transition-colors duration-300">
+                            <div className="relative w-14 h-14 rounded shadow border border-slate-200 dark:border-white/10 overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 transition-colors duration-300">
                               {item.image ? (
-                                <img
+                                <ProductImage
                                   src={item.image}
                                   alt={item.author}
-                                  width={56}
-                                  height={56}
-                                  loading="lazy"
-                                  decoding="async"
-                                  className="w-full h-full object-cover"
+                                  fill
+                                  sizes="56px"
+                                  className="object-cover"
                                 />
                               ) : (
                                 <div className="w-full h-full bg-linear-to-br from-blue-600 to-emerald-600 flex items-center justify-center text-white font-bold text-sm tracking-wider">

@@ -1,16 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "@fontsource-variable/inter";
-@import "@fontsource-variable/jetbrains-mono";
-@import "@fontsource-variable/sora";
 
-@font-face {
-    font-family: "AubetteArchiType";
-    src: url("@/assets/font/AubetteArchiType.woff2");
-    font-weight: 700;
-    font-style: bold;
-    font-display: swap;
-}
+/* Fonts loaded via next/font in layout.tsx for automatic subsetting,
+   preloading, zero-CLS loading, and self-hosting optimization. */
 
 /* Thin Scrollbar */
 * {
@@ -84,11 +76,7 @@
 
 :root {
     font-size: 15px;
-    /* Fonts Registration */
-    --font-primary: "JetBrains Mono Variable", "JetBrains Mono", "monospace", "system-ui";
-    --font-inter: "Inter Variable", "Inter", "system-ui", "sans-serif";
-    --font-sora: "Sora Variable", sans-serif;
-    --font-logo: "AubetteArchiType", sans-serif;
+    /* Font variables are set by next/font classes on <html> */
 
     color-scheme: light dark;
     --radius: 0.5rem;
@@ -241,6 +229,7 @@
 
 /* Accessibility: Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {

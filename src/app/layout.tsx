@@ -1,7 +1,43 @@
 import type { Metadata, Viewport } from "next";
+import { Inter, Sora, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import { Providers } from "@/components/providers";
-import { ServiceWorkerRegistration } from "@/components/common/ServiceWorkerRegistration";
+import dynamic from "next/dynamic";
 import "../index.css";
+
+// Service worker registration is client-only and non-critical — lazy load it
+const ServiceWorkerRegistration = dynamic(
+  () =>
+    import("@/components/common/ServiceWorkerRegistration").then((m) => ({
+      default: m.ServiceWorkerRegistration,
+    })),
+  { ssr: false },
+);
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const sora = Sora({
+  subsets: ["latin"],
+  variable: "--font-sora",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-primary",
+  display: "swap",
+});
+
+const aubette = localFont({
+  src: "../assets/font/AubetteArchiType.woff2",
+  variable: "--font-logo",
+  weight: "700",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -57,7 +93,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${jetbrainsMono.variable} ${inter.variable} ${sora.variable} ${aubette.variable}`}
+    >
       <body className="font-primary transition-colors duration-500">
         <Providers>
           {/* Skip to main content link for accessibility */}

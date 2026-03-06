@@ -25,6 +25,7 @@ import { Badge } from "@/components/ui/badge";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useBreadcrumb } from "@/context/BreadcrumbContext";
 import { cn } from "@/lib/utils";
+import ProductImage from "@/components/common/ProductImage";
 
 export default function ProjectForm() {
   const { id } = useParams<{ id: string }>();
@@ -352,10 +353,12 @@ export default function ProjectForm() {
               <div className="space-y-4">
                 {projectData.image ? (
                   <div className="relative aspect-video rounded overflow-hidden border border-white/10">
-                    <img
+                    <ProductImage
                       src={projectData.image}
                       alt="Project"
-                      className="w-full h-full object-cover"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 800px"
+                      className="object-cover"
                     />
                     <button
                       type="button"

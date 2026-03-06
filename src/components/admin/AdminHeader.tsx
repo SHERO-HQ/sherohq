@@ -22,6 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import NotificationCenter from "./NotificationCenter";
 import { cn } from "@/lib/utils";
+import ProductImage from "@/components/common/ProductImage";
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -140,12 +141,14 @@ export default function AdminHeader({
               variant="ghost"
               className="flex items-center hover:bg-transparent p-0"
             >
-              <div className="flex items-center justify-center p-1 w-10 h-10 overflow-hidden hover:bg-white/5 rounded backdrop-blur-md border border-white/10 hover:border-white/5 transition-all outline-none">
+              <div className="relative flex items-center justify-center p-1 w-10 h-10 overflow-hidden hover:bg-white/5 rounded backdrop-blur-md border border-white/10 hover:border-white/5 transition-all outline-none">
                 {admin?.avatar ? (
-                  <img
+                  <ProductImage
                     src={admin.avatar}
                     alt=""
-                    className="w-full h-full object-cover"
+                    fill
+                    sizes="40px"
+                    className="object-cover"
                   />
                 ) : (
                   <User className="w-4 h-4 text-emerald-400" />

@@ -1,10 +1,27 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Nav from "@/components/layout/Nav";
-import CartDrawer from "@/components/cart/CartDrawer";
-import WishlistDrawer from "@/components/products/WishlistDrawer";
-import PWAInstallPrompt from "@/components/common/PWAInstallPrompt";
-import { UserChangePasswordModal } from "@/components/auth/UserChangePasswordModal";
+
+// Lazy-load components that are hidden by default (drawers, modals, prompts)
+const CartDrawer = dynamic(() => import("@/components/cart/CartDrawer"), {
+  ssr: false,
+});
+const WishlistDrawer = dynamic(
+  () => import("@/components/products/WishlistDrawer"),
+  { ssr: false },
+);
+const PWAInstallPrompt = dynamic(
+  () => import("@/components/common/PWAInstallPrompt"),
+  { ssr: false },
+);
+const UserChangePasswordModal = dynamic(
+  () =>
+    import("@/components/auth/UserChangePasswordModal").then((m) => ({
+      default: m.UserChangePasswordModal,
+    })),
+  { ssr: false },
+);
 
 export default function PublicLayout({
   children,
