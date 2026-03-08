@@ -15,63 +15,43 @@ const PWAInstallPrompt = () => {
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
-  const [isInstalled] = useState(() => {
-    // Check if already installed (run only on initial render)
-    return (
+  const isInstalled = useState(
+    () =>
       globalThis.matchMedia?.("(display-mode: standalone)").matches ||
       (globalThis.navigator as Navigator & { standalone?: boolean })
-        ?.standalone === true
-    );
-  });
+        ?.standalone === true,
+  )[0];
 
   useEffect(() => {
-    // Already installed or not in browser
     if (isInstalled) return;
 
-    // Check if user has dismissed the prompt recently
     const dismissed = localStorage.getItem("pwa-prompt-dismissed");
-    if (dismissed) {
-      const dismissedTime = Number.parseInt(dismissed, 10);
-      // Don't show again for 7 days
-      if (Date.now() - dismissedTime < 7 * 24 * 60 * 60 * 1000) {
-        return;
-      }
+    if (dismissed && Date.now() - Number(dismissed) < 7 * 24 * 60 * 60 * 1000) {
+      return;
     }
 
-    // Listen for the install prompt (in case it fires after mount)
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      // Show the prompt after a short delay
       setTimeout(() => setShowPrompt(true), 3000);
     };
 
-    // Check if the event was already captured globally before this component mounted
-    const captured = (
-      globalThis as unknown as {
-        __pwaPromptEvent?: BeforeInstallPromptEvent | null;
-      }
-    ).__pwaPromptEvent;
+    type PWAGlobal = { __pwaPromptEvent?: BeforeInstallPromptEvent | null };
+    const captured = (globalThis as unknown as PWAGlobal).__pwaPromptEvent;
     if (captured) {
       handleBeforeInstallPrompt(captured);
-      (
-        globalThis as unknown as {
-          __pwaPromptEvent?: BeforeInstallPromptEvent | null;
-        }
-      ).__pwaPromptEvent = null;
+      (globalThis as unknown as PWAGlobal).__pwaPromptEvent = null;
     }
 
-    globalThis.addEventListener(
-      "beforeinstallprompt",
-      handleBeforeInstallPrompt,
-    );
-
-    // Listen for successful install
     const handleAppInstalled = () => {
       setShowPrompt(false);
       setDeferredPrompt(null);
     };
 
+    globalThis.addEventListener(
+      "beforeinstallprompt",
+      handleBeforeInstallPrompt,
+    );
     globalThis.addEventListener("appinstalled", handleAppInstalled);
 
     return () => {
@@ -104,7 +84,6 @@ const PWAInstallPrompt = () => {
     localStorage.setItem("pwa-prompt-dismissed", Date.now().toString());
   };
 
-  // Don't render if already installed or no prompt available
   if (isInstalled || !deferredPrompt) return null;
 
   return (

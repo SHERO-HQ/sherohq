@@ -17,6 +17,13 @@ dist-ssr
 out/
 next-env.d.ts
 
+# Test artifacts
+playwright-report/
+test-results/
+
+# Build info
+tsconfig.tsbuildinfo
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

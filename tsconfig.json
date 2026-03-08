@@ -35,7 +35,6 @@
     "node_modules",
     "server",
     "scripts",
-    "check_db.ts",
     "src/**/*.test.ts",
     "src/**/*.spec.ts"
   ]
