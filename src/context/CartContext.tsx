@@ -43,12 +43,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     const saved = localStorage.getItem("sherotech_cart");
     if (saved) {
       try {
-        setCart(JSON.parse(saved));
+        const parsed = JSON.parse(saved);
+        queueMicrotask(() => setCart(parsed));
       } catch (e) {
         console.error("Failed to parse cart from localStorage", e);
       }
     }
-    setIsLoaded(true);
+    queueMicrotask(() => setIsLoaded(true));
   }, []);
 
   useEffect(() => {

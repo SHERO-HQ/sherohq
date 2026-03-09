@@ -1,15 +1,21 @@
 "use client";
-import { useParams, Navigate } from "react-router-dom";
-import Footer from "@/components/layout/Footer";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 import ProductDetailView from "@/components/products/ProductDetailView";
-import Seo from "@/components/common/Seo";
 import { Loader2 } from "lucide-react";
 import { useProduct } from "@/hooks/queries/useProducts";
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
 
   const { data: product, isLoading: loading, isError } = useProduct(id || "");
+
+  useEffect(() => {
+    if (isError || (!loading && !product)) {
+      router.replace("/shop");
+    }
+  }, [isError, loading, product, router]);
 
   if (loading) {
     return (
@@ -20,24 +26,10 @@ const ProductDetail = () => {
   }
 
   if (isError || (!loading && !product)) {
-    return <Navigate to="/shop" replace />;
+    return null;
   }
 
-  return (
-    <>
-      {product && (
-        <Seo
-          title={product.name}
-          description={product.description}
-          image={product.image}
-          url={`/shop/${product.sku || product.id}`}
-          type="product"
-        />
-      )}
-      {product && <ProductDetailView product={product} />}
-      <Footer />
-    </>
-  );
+  return <>{product && <ProductDetailView product={product} />}</>;
 };
 
 export default ProductDetail;

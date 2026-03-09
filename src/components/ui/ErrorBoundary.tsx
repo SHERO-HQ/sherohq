@@ -1,7 +1,7 @@
 "use client";
 import React, { Component, type ReactNode } from "react";
 import { AlertTriangle, RefreshCw, Home } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 interface Props {
   children: ReactNode;
@@ -80,7 +80,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </button>
 
               <Link
-                to="/"
+                href="/"
                 className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors"
               >
                 <Home className="w-4 h-4" />

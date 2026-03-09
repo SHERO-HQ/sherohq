@@ -2,17 +2,15 @@
 import { useState, useRef } from "react";
 import { User, Save, Loader2, Shield, Camera, AlertCircle } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
-import { useTitle } from "@/hooks/useTitle";
 import { updateAdminProfile, uploadImage, getImageUrl } from "@/services/api";
 import { useNotifications } from "@/hooks/useNotifications";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 export default function AdminProfile() {
-  useTitle("Admin Settings");
   const { admin, setAdmin } = useAdmin();
   const { addNotification } = useNotifications();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -103,7 +101,7 @@ export default function AdminProfile() {
                   <div className="relative group">
                     <div className="relative w-24 h-24 rounded bg-background border-4 border-card overflow-hidden shadow-2xl">
                       {avatar ? (
-                        <ProductImage
+                        <AppImage
                           src={getImageUrl(avatar)}
                           alt={admin?.username ?? "Admin avatar"}
                           fill

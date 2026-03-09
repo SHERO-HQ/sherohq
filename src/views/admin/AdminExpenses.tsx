@@ -33,7 +33,6 @@ import {
   isWithinInterval,
   parse,
 } from "date-fns";
-import { useTitle } from "@/hooks/useTitle";
 import { cn } from "@/lib/utils";
 import {
   Popover,
@@ -70,7 +69,7 @@ const Textarea = (props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) => (
   <textarea
     {...props}
     className={cn(
-      "flex min-h-[80px] w-full rounded-md border border-white/5 bg-slate-800 px-3 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 disabled:cursor-not-allowed disabled:opacity-50",
+      "flex min-h-[80px] w-full rounded border border-white/5 bg-slate-800 px-3 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 disabled:cursor-not-allowed disabled:opacity-50",
       props.className,
     )}
   />
@@ -123,7 +122,6 @@ const CATEGORIES = [
 ];
 
 export default function AdminExpenses() {
-  useTitle("Expenses | Admin");
   const { addNotification } = useNotifications();
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [isLoading, setIsLoading] = useState(true);

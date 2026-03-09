@@ -1,10 +1,5 @@
-"use client";
-import Footer from "@/components/layout/Footer";
-import { useTitle } from "@/hooks/useTitle";
 
 const Privacy = () => {
-  useTitle("Privacy Policy");
-
   return (
     <>
       <div className="pt-24 pb-12 bg-slate-50 dark:bg-slate-950 min-h-screen">
@@ -100,7 +95,6 @@ const Privacy = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

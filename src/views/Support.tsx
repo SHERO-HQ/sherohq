@@ -21,14 +21,11 @@ import {
   InstagramIcon,
   WhatsAppIcon,
 } from "@/assets/icons/icons";
-import Footer from "@/components/layout/Footer";
-import { useTitle } from "@/hooks/useTitle";
 import SupportTicketForm from "@/components/support/SupportTicketForm";
-import UniversalLink from "@/components/common/UniversalLink";
+import Link from "next/link";
 import { COMPANY_EMAILS } from "@/constants/emails";
 
 const Support = () => {
-  useTitle("Support Center");
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
 
   const resources = [
@@ -72,13 +69,13 @@ const Support = () => {
         <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back Button */}
           <div className="mb-8">
-            <UniversalLink
-              to="/"
+            <Link
+              href="/"
               className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span>Back to Home</span>
-            </UniversalLink>
+            </Link>
           </div>
 
           {/* Header */}
@@ -156,13 +153,13 @@ const Support = () => {
                     ))}
                   </div>
                 ) : (
-                  <UniversalLink
-                    to={item.link!}
+                  <Link
+                    href={item.link!}
                     className="inline-flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold group-hover:gap-3 transition-all hover:text-emerald-700 dark:hover:text-emerald-300"
                   >
                     <span>Browse Guides</span>
                     <ArrowRight className="w-5 h-5" />
-                  </UniversalLink>
+                  </Link>
                 )}
               </motion.div>
             ))}
@@ -221,7 +218,6 @@ const Support = () => {
           </motion.div>
         </div>
       </div>
-      <Footer />
       <SupportTicketForm
         isOpen={isTicketModalOpen}
         onClose={() => setIsTicketModalOpen(false)}

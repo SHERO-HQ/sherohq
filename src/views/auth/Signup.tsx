@@ -1,22 +1,21 @@
 "use client";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema, type SignupInput } from "@/lib/validations/auth";
 import { useAuth } from "@/context/AuthContext";
-import { useTitle } from "@/hooks/useTitle";
 import { Mail, Lock, User, Phone, ArrowRight, Eye, EyeOff } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const Signup = () => {
-  useTitle("Create Account");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const { register: signupUser } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const {
     register,
@@ -38,7 +37,7 @@ const Signup = () => {
 
     try {
       await signupUser(data);
-      navigate("/profile");
+      router.push("/profile");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to create account");
     }
@@ -52,7 +51,10 @@ const Signup = () => {
             <img
               src="/assets/logo/shero.svg"
               alt="Shero"
-              className="h-12 mx-auto mb-4"
+              width={48}
+              height={48}
+              className="h-12 w-auto mx-auto mb-4"
+              suppressHydrationWarning
             />
             <h1 className="text-2xl font-bold font-sora text-slate-900 dark:text-white">
               Create Account
@@ -159,7 +161,7 @@ const Signup = () => {
           <div className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
             Already have an account?{" "}
             <Link
-              to="/login"
+              href="/login"
               className="text-emerald-600! dark:text-emerald-400 font-semibold hover:underline"
             >
               Sign in

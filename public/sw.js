@@ -1,6 +1,6 @@
 // SHERO Service Worker — Cache strategies for offline-capable PWA
 
-const CACHE_VERSION = "v1";
+const CACHE_VERSION = "v2";
 const STATIC_CACHE = `shero-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `shero-dynamic-${CACHE_VERSION}`;
 

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import UniversalLink from "@/components/common/UniversalLink";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,7 +18,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import { ArrowLeft } from "lucide-react";
 
 const AdminGuides = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { data: guides = [], isLoading } = useAdminGuides();
   const updateMutation = useUpdateGuide();
   const deleteMutation = useDeleteGuide();
@@ -92,7 +92,7 @@ const AdminGuides = () => {
           className="bg-emerald-600 text-slate-100 hover:bg-emerald-500"
           asChild
         >
-          <UniversalLink to="/admin/guides/new">Create Guide</UniversalLink>
+          <Link href="/admin/guides/new">Create Guide</Link>
         </Button>
       </div>
     );
@@ -174,17 +174,17 @@ const AdminGuides = () => {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-end gap-2">
-                      <UniversalLink
-                        to={`/support/${guide.category}/${guide.slug}`}
+                      <Link
+                        href={`/support/${guide.category}/${guide.slug}`}
                         target="_blank"
                         className="text-slate-400 hover:text-white"
                       >
                         View
-                      </UniversalLink>
+                      </Link>
                       <button
                         className="text-slate-400 hover:text-white ml-4"
                         onClick={() =>
-                          navigate(`/admin/guides/edit/${guide.id}`)
+                          router.push(`/admin/guides/edit/${guide.id}`)
                         }
                       >
                         Edit
@@ -214,13 +214,13 @@ const AdminGuides = () => {
         <div className="flex flex-col gap-4">
           {/* Back Button */}
           <div>
-            <UniversalLink
-              to="/admin/dashboard"
+            <Link
+              href="/admin/dashboard"
               className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span>Back to Dashboard</span>
-            </UniversalLink>
+            </Link>
           </div>
 
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -243,7 +243,7 @@ const AdminGuides = () => {
                 className="bg-emerald-600 hover:bg-emerald-500 text-white"
                 asChild
               >
-                <UniversalLink to="/admin/guides/new">New Guide</UniversalLink>
+                <Link href="/admin/guides/new">New Guide</Link>
               </Button>
             </div>
           </div>

@@ -48,7 +48,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Modal } from "@/components/ui/Modal";
 import AdminLayout from "@/components/admin/AdminLayout";
-import UniversalLink from "@/components/common/UniversalLink";
+import Link from "next/link";
 
 const AdminSupport = () => {
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
@@ -257,13 +257,13 @@ const AdminSupport = () => {
         <div className="flex flex-col gap-4">
           {/* Back Button */}
           <div>
-            <UniversalLink
-              to="/admin/dashboard"
+            <Link
+              href="/admin/dashboard"
               className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span>Back to Dashboard</span>
-            </UniversalLink>
+            </Link>
           </div>
 
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">

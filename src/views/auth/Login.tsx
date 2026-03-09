@@ -1,22 +1,21 @@
 "use client";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { useAuth } from "@/context/AuthContext";
-import { useTitle } from "@/hooks/useTitle";
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const Login = () => {
-  useTitle("Login");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const { login } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const {
     register,
@@ -35,7 +34,7 @@ const Login = () => {
 
     try {
       await login(data);
-      navigate("/profile");
+      router.push("/profile");
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to login");
     }
@@ -49,7 +48,10 @@ const Login = () => {
             <img
               src="/assets/logo/shero.svg"
               alt="Shero"
-              className="h-12 mx-auto mb-4"
+              width={48}
+              height={48}
+              className="h-12 w-auto mx-auto mb-4"
+              suppressHydrationWarning
             />
             <h1 className="text-2xl font-bold font-sora text-slate-900 dark:text-white">
               Welcome Back
@@ -121,7 +123,7 @@ const Login = () => {
           <div className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
             Don't have an account?{" "}
             <Link
-              to="/signup"
+              href="/signup"
               className="text-emerald-600! dark:text-emerald-400 font-semibold hover:underline"
             >
               Sign up

@@ -268,7 +268,7 @@ function getDateRange(range: string, startDate?: string, endDate?: string) {
     queryConditions = ` AND "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date`;
     params.push(startDate, endDate);
     dateRangeStart = new Date(startDate + "T00:00:00");
-    dateRangeEnd = new Date(endDate + "T00:00:00");
+    dateRangeEnd = new Date(endDate + "T23:59:59.999");
   } else {
     let days = 7;
     if (range === "30d") days = 30;

@@ -101,7 +101,6 @@ export async function initializeDatabase() {
         "shippingInfo" JSONB NOT NULL,
         "paymentMethod" TEXT,
         status TEXT DEFAULT 'pending',
-        status TEXT DEFAULT 'pending',
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         "referralCode" TEXT
       )

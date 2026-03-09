@@ -1,8 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { useTitle } from "@/hooks/useTitle";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
 // Hooks
@@ -20,8 +19,7 @@ import ProfileSettings from "@/components/profile/ProfileSettings";
 type Tab = "orders" | "settings";
 
 const Profile = () => {
-  useTitle("My Account");
-  const navigate = useNavigate();
+  const router = useRouter();
   const {
     user,
     logout,
@@ -53,13 +51,13 @@ const Profile = () => {
     if (authLoading) return;
 
     if (!isAuthenticated) {
-      navigate("/login");
+      router.push("/login");
     }
-  }, [authLoading, isAuthenticated, navigate]);
+  }, [authLoading, isAuthenticated, router]);
 
   const handleLogout = async () => {
     await logout();
-    navigate("/");
+    router.push("/");
   };
 
   if (authLoading) {

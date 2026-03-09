@@ -10,7 +10,7 @@ import {
 import { useState, useEffect, useCallback } from "react";
 import FeedbackModal from "@/components/common/FeedbackModal";
 import { useTestimonials } from "@/hooks/queries/useTestimonials";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 // Helper to get initials
 const getInitials = (name: string) => {
@@ -133,7 +133,7 @@ const AboutTestimonials = () => {
                             {/* Avatar with Fallback */}
                             <div className="relative w-14 h-14 rounded shadow border border-slate-200 dark:border-white/10 overflow-hidden bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 transition-colors duration-300">
                               {item.image ? (
-                                <ProductImage
+                                <AppImage
                                   src={item.image}
                                   alt={item.author}
                                   fill

@@ -3,6 +3,9 @@ import { Inter, Sora, JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { Providers } from "@/components/providers";
 import { ServiceWorkerRegistration } from "@/components/common/ServiceWorkerRegistration";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import Script from "next/script";
 import "../index.css";
 
 const inter = Inter({
@@ -93,7 +96,9 @@ export default function RootLayout({
         {/* Capture the PWA install prompt event before React hydrates.
             Dynamic-imported PWAInstallPrompt may mount after the event fires,
             so we stash it globally for the component to pick up later. */}
-        <script
+        <Script
+          id="pwa-prompt"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `window.__pwaPromptEvent=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.__pwaPromptEvent=e});`,
           }}
@@ -110,8 +115,10 @@ export default function RootLayout({
           >
             Skip to main content
           </a>
-          <div id="main-content">{children}</div>
+          {children}
         </Providers>
+        <Analytics />
+        <SpeedInsights />
         <ServiceWorkerRegistration />
       </body>
     </html>

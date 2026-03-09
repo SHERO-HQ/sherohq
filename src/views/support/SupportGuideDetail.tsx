@@ -1,24 +1,20 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams } from "next/navigation";
 import { format } from "date-fns";
 import { motion } from "motion/react";
 import { ArrowLeft, Calendar, User, Monitor, Settings } from "lucide-react";
-import Footer from "@/components/layout/Footer";
-import { useTitle } from "@/hooks/useTitle";
 import { getGuideBySlug, type SupportGuide } from "@/services/guides";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import ProductImage from "@/components/common/ProductImage";
-import UniversalLink from "@/components/common/UniversalLink";
+import AppImage from "@/components/common/AppImage";
+import Link from "next/link";
 
 const SupportGuideDetail = () => {
   const { category, slug } = useParams<{ category: string; slug: string }>();
   const [guide, setGuide] = useState<SupportGuide | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  useTitle(guide?.title || "Loading...");
 
   const categoryTitle =
     category === "software" ? "Software Guides" : "Hardware Guides";
@@ -61,7 +57,6 @@ const SupportGuideDetail = () => {
             </div>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -79,16 +74,15 @@ const SupportGuideDetail = () => {
             <h2 className="text-2xl font-bold text-white mb-4">
               {error || "Guide not found"}
             </h2>
-            <UniversalLink
-              to={`/support/${category}`}
+            <Link
+              href={`/support/${category}`}
               className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to {categoryTitle}
-            </UniversalLink>
+            </Link>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -103,13 +97,13 @@ const SupportGuideDetail = () => {
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Breadcrumb */}
           <div className="mb-8">
-            <UniversalLink
-              to={`/support/${category}`}
+            <Link
+              href={`/support/${category}`}
               className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span>Back to {categoryTitle}</span>
-            </UniversalLink>
+            </Link>
           </div>
 
           <motion.article
@@ -122,7 +116,7 @@ const SupportGuideDetail = () => {
             {/* Cover Image */}
             {guide.coverImage && (
               <div className="h-64 md:h-96 overflow-hidden bg-secondary relative">
-                <ProductImage
+                <AppImage
                   src={guide.coverImage}
                   alt={guide.title}
                   fill
@@ -194,7 +188,6 @@ const SupportGuideDetail = () => {
           </motion.article>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

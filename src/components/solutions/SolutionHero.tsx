@@ -11,7 +11,7 @@ import {
   Database,
 } from "lucide-react";
 import { useRef } from "react";
-import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import dynamic from "next/dynamic";
 
@@ -47,7 +47,7 @@ const SolutionsHero = () => {
     mouseY.set(y);
   };
 
-  const prefersReducedMotion = usePrefersReducedMotion();
+  const prefersReducedMotion = useReducedMotion();
   const mounted = useIsMounted();
 
   return (

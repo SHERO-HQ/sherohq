@@ -44,7 +44,7 @@ export default function OfflinePage() {
           <ReloadButton />
           <Link
             href="/"
-            className="inline-flex items-center justify-center px-6 py-2.5 rounded-lg
+            className="inline-flex items-center justify-center px-6 py-2.5 rounded
               border border-input bg-background text-sm font-medium hover:bg-accent
               hover:text-accent-foreground transition-colors"
           >

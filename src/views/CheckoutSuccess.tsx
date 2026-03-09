@@ -1,17 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import { CheckCircle, AlertCircle } from "lucide-react";
 import { trackOrder, type Order } from "@/services/api";
 import { useCart } from "@/context/CartContext";
 import OrderRatingModal from "@/components/checkout/OrderRatingModal";
-import { useTitle } from "@/hooks/useTitle";
 
 const CheckoutSuccess = () => {
-  useTitle("Order Confirmed");
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const { clearCart } = useCart();
   const orderId = searchParams.get("orderId");
 
@@ -24,7 +22,7 @@ const CheckoutSuccess = () => {
   // Poll for payment success
   useEffect(() => {
     if (!orderId) {
-      navigate("/");
+      router.push("/");
       return;
     }
 
@@ -61,7 +59,7 @@ const CheckoutSuccess = () => {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [orderId, navigate, clearCart]);
+  }, [orderId, router, clearCart]);
 
   if (!orderId) return null;
 
@@ -98,7 +96,7 @@ const CheckoutSuccess = () => {
             order history.
           </p>
           <button
-            onClick={() => navigate("/shop")}
+            onClick={() => router.push("/shop")}
             className="px-8 py-2 bg-emerald-600 text-white rounded font-bold hover:bg-emerald-700 transition-colors"
           >
             Return to Shop
@@ -138,13 +136,13 @@ const CheckoutSuccess = () => {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
-            onClick={() => navigate("/shop")}
+            onClick={() => router.push("/shop")}
             className="px-8 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-all shadow-lg shadow-emerald-500/20"
           >
             Continue Shopping
           </button>
           <button
-            onClick={() => navigate("/")}
+            onClick={() => router.push("/")}
             className="px-8 py-2 border-2 border-slate-200 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
           >
             Return Home

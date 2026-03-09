@@ -297,7 +297,7 @@ process.on("unhandledRejection", (reason) => {
 // Removed catch-all route for static files since frontend is deployed independently
 
 // Start server immediately to bind port (crucial for Render/Railway startup checks)
-app.listen(PORT, () => {
+app.listen(PORT as number, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
 

@@ -1,12 +1,11 @@
 "use client";
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "next/navigation";
+import Link from "next/link";
 import { format } from "date-fns";
-import { useTitle } from "@/hooks/useTitle";
 import { useGuides } from "@/hooks/queries/useGuides";
 import { ArrowLeft, Search, Monitor, Settings, ArrowRight } from "lucide-react";
-import UniversalLink from "@/components/common/UniversalLink";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 const SupportGuidesPage = () => {
   const { category } = useParams<{ category: "hardware" | "software" }>();
@@ -18,8 +17,6 @@ const SupportGuidesPage = () => {
     category === "software"
       ? "OS updates, driver downloads, and software guides"
       : "Detailed guides and manuals for all hardware products";
-
-  useTitle(title);
 
   const filteredGuides = guides.filter(
     (guide) =>
@@ -36,13 +33,13 @@ const SupportGuidesPage = () => {
       <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <div className="mb-8">
-          <UniversalLink
-            to="/support"
+          <Link
+            href="/support"
             className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             <span>Back to Support Hub</span>
-          </UniversalLink>
+          </Link>
         </div>
 
         {/* Header */}
@@ -121,14 +118,14 @@ const SupportGuidesPage = () => {
               {filteredGuides.map((guide) => (
                 <div key={guide.id}>
                   <Link
-                    to={`/support/${category}/${guide.slug}`}
+                    href={`/support/${category}/${guide.slug}`}
                     className="block bg-card dark:bg-slate-900/40 backdrop-blur-md rounded border border-border hover:border-emerald-500/30 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300 overflow-hidden group h-full relative"
                   >
                     <div className="absolute inset-0 bg-linear-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
                     {guide.coverImage && (
                       <div className="h-48 overflow-hidden bg-secondary relative">
-                        <ProductImage
+                        <AppImage
                           src={guide.coverImage}
                           alt={guide.title}
                           fill

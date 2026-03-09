@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { useUniversalNavigate } from "@/hooks/useUniversalNavigate";
+import { useRouter } from "next/navigation";
 import {
   ShoppingCart,
   Heart,
@@ -27,7 +27,7 @@ import ProductCard from "./ProductCard";
 import ProductReviews from "./ProductReviews";
 import { WhatsAppIcon } from "@/assets/icons/icons";
 import ShareButton from "@/components/common/ShareButton";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 interface ProductDetailViewProps {
   product: Product;
@@ -36,7 +36,7 @@ interface ProductDetailViewProps {
 const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
   const { addItem } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
-  const navigate = useUniversalNavigate();
+  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
@@ -84,7 +84,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back Button */}
         <button
-          onClick={() => navigate("/shop")}
+          onClick={() => router.push("/shop")}
           className="cursor-pointer flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 mb-8 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -107,7 +107,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   {images[selectedImage] &&
                   (images[selectedImage].startsWith("/uploads") ||
                     images[selectedImage].startsWith("http")) ? (
-                    <ProductImage
+                    <AppImage
                       src={getImageUrl(images[selectedImage])}
                       alt={product.name}
                       fill
@@ -171,7 +171,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     <div className="relative cursor-pointer w-full h-full flex items-center justify-center">
                       {img &&
                       (img.startsWith("/uploads") || img.startsWith("http")) ? (
-                        <ProductImage
+                        <AppImage
                           src={getImageUrl(img)}
                           alt={`Thumbnail ${idx}`}
                           fill
@@ -353,7 +353,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 <button
                   onClick={() => {
                     handleAddToCart();
-                    navigate("/checkout");
+                    router.push("/checkout");
                   }}
                   disabled={!product.inStock}
                   className="cursor-pointer flex-1 flex items-center justify-center gap-2 px-8 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white rounded font-bold transition-all shadow-lg shadow-emerald-500/20 w-full"

@@ -53,7 +53,7 @@ export function ChangePasswordModal() {
       <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300">
         <div className="p-6 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-amber-500/10 rounded-lg">
+            <div className="p-2 bg-amber-500/10 rounded">
               <ShieldCheck className="w-6 h-6 text-amber-500" />
             </div>
             <div>

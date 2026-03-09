@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "motion/react";
+import { useRouter } from "next/navigation";
 import ProductCard from "./ProductCard";
 import type { Product } from "@/types/product";
 import { PackageX } from "lucide-react";
@@ -20,6 +21,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
   columns = 3,
   onReset,
 }) => {
+  const router = useRouter();
   const gridCols = {
     2: "lg:grid-cols-2",
     3: "lg:grid-cols-3",
@@ -73,7 +75,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
             </p>
           </div>
           <button
-            onClick={() => (onReset ? onReset() : globalThis.location.reload())}
+            onClick={() => (onReset ? onReset() : router.refresh())}
             className="cursor-pointer px-6 py-2 rounded bg-emerald-600 text-white font-semibold
                      hover:bg-emerald-700 transition-colors"
           >

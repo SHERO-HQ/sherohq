@@ -1,5 +1,5 @@
 "use client";
-import UniversalLink from "@/components/common/UniversalLink";
+import Link from "next/link";
 import { motion } from "motion/react";
 import {
   ArrowRight,
@@ -73,13 +73,13 @@ const LandingAbout = () => {
 
             {/* CTA */}
             <div className="pt-2">
-              <UniversalLink
-                to="/about-us"
+              <Link
+                href="/about-us"
                 className="group inline-flex items-center gap-2 text-slate-900 dark:text-white font-semibold border-b-2 border-emerald-500 pb-1 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
               >
                 Discover Our Story
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </UniversalLink>
+              </Link>
             </div>
           </motion.div>
 
@@ -106,7 +106,10 @@ const LandingAbout = () => {
                 <img
                   src="/assets/logo/shero.svg"
                   alt="SHERO"
-                  className="relative z-20 w-16 h-16 text-emerald-600 dark:text-emerald-400 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]"
+                  width={64}
+                  height={64}
+                  className="relative z-20 w-16 h-16 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]"
+                  suppressHydrationWarning
                 />
               </div>
 

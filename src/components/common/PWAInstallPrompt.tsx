@@ -15,12 +15,15 @@ const PWAInstallPrompt = () => {
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
-  const isInstalled = useState(
-    () =>
+  const [isInstalled, setIsInstalled] = useState(false);
+
+  useEffect(() => {
+    const installed =
       globalThis.matchMedia?.("(display-mode: standalone)").matches ||
       (globalThis.navigator as Navigator & { standalone?: boolean })
-        ?.standalone === true,
-  )[0];
+        ?.standalone === true;
+    queueMicrotask(() => setIsInstalled(installed));
+  }, []);
 
   useEffect(() => {
     if (isInstalled) return;

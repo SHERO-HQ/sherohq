@@ -1,11 +1,11 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Search, X } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { useProducts } from "@/hooks/queries/useProducts";
 import { getImageUrl } from "@/services/api";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 interface SearchBarProps {
   className?: string;
@@ -16,7 +16,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(alwaysOpen);
   const inputRef = useRef<HTMLInputElement>(null);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   // Live search from DB
   const { data: allProducts = [], isLoading: searchLoading } = useProducts(
@@ -29,7 +29,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
-      navigate(`/shop?search=${encodeURIComponent(query)}`);
+      router.push(`/shop?search=${encodeURIComponent(query)}`);
       closeSearch();
     }
   };
@@ -99,13 +99,13 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                     <button
                       key={product.id}
                       onClick={() => {
-                        navigate(`/shop/${product.id}`);
+                        router.push(`/shop/${product.id}`);
                         setQuery("");
                       }}
                       className="w-full flex items-center gap-3 px-4 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition-colors text-left"
                     >
                       <div className="relative w-10 h-10 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden">
-                        <ProductImage
+                        <AppImage
                           src={getImageUrl(product.image)}
                           alt={product.name}
                           fill
@@ -221,13 +221,13 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                           <button
                             key={product.id}
                             onClick={() => {
-                              navigate(`/shop/${product.id}`);
+                              router.push(`/shop/${product.id}`);
                               closeSearch();
                             }}
                             className="w-full flex items-center gap-4 p-3 rounded hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors text-left"
                           >
                             <div className="relative w-14 h-14 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0 overflow-hidden">
-                              <ProductImage
+                              <AppImage
                                 src={getImageUrl(product.image)}
                                 alt={product.name}
                                 fill

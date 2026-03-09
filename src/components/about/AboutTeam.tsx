@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/utils";
 import type { TeamMember } from "@/services/api";
 import { TwitterXIcon } from "@/assets/icons/icons";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 interface TeamMemberWithPlaceholder extends TeamMember {
   isPlaceholder?: boolean;
@@ -92,7 +92,7 @@ const AboutTeam = () => {
               )} */}
               <div className="relative overflow-hidden bg-slate-100 dark:bg-slate-800 mb-4 aspect-square transition-colors duration-300">
                 {member.image ? (
-                  <ProductImage
+                  <AppImage
                     src={member.image}
                     alt={member.name}
                     fill

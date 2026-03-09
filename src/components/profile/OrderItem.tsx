@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import type { Order, User } from "@/services/api";
 import { getImageUrl } from "@/services/api";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 interface OrderItemProps {
   order: Order;
@@ -103,7 +103,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
                   {item.image &&
                   (item.image.startsWith("/uploads") ||
                     item.image.startsWith("http")) ? (
-                    <ProductImage
+                    <AppImage
                       src={getImageUrl(item.image)}
                       alt={item.name}
                       fill

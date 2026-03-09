@@ -1,5 +1,5 @@
 "use client";
-import { NavLink } from "react-router-dom";
+import Link from "next/link";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import {
   ShoppingBag,
@@ -84,13 +84,13 @@ const LandingPathways = () => {
               Tailored gateways to the technology solutions you need.
             </p>
           </div>
-          <NavLink
-            to="/solutions"
+          <Link
+            href="/solutions"
             className="group w-fit flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b-2 border-emerald-500 pb-1"
           >
             All Services{" "}
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-          </NavLink>
+          </Link>
         </header>
 
         {/* Bento Grid */}
@@ -191,15 +191,15 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
         className="relative z-10 pt-6"
         style={{ transform: "translateZ(30px)" }}
       >
-        <NavLink
-          to={path.link}
+        <Link
+          href={path.link}
           className={`inline-flex items-center justify-center w-fit h-9 px-4 rounded border border-slate-200 dark:border-slate-800 text-slate-900! dark:text-white! group-hover:bg-emerald-500 group-hover:border-emerald-500 group-hover:text-white transition-all`}
         >
           <span className="text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white">
             Explore
           </span>
           <ArrowRight className="w-5 h-5" />
-        </NavLink>
+        </Link>
       </div>
     </motion.div>
   );

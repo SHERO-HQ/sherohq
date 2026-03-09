@@ -1,9 +1,9 @@
 "use client";
-import UniversalLink from "@/components/common/UniversalLink";
+import Link from "next/link";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { fadeUp } from "@/components/motion/heroMotion";
 import { useRef } from "react";
-import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import dynamic from "next/dynamic";
 
@@ -62,7 +62,7 @@ const LandingHero: React.FC = () => {
     mouseY.set(y);
   };
 
-  const prefersReducedMotion = usePrefersReducedMotion();
+  const prefersReducedMotion = useReducedMotion();
   const mounted = useIsMounted();
 
   return (
@@ -102,7 +102,7 @@ const LandingHero: React.FC = () => {
             >
               <RocketIcon className="w-4 h-4 text-emerald-500" />
               <span className="text-[10px] md:text-xs font-mono font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
-                Innovation at Scale
+                Innovate to Scale
               </span>
             </motion.div>
 
@@ -159,21 +159,21 @@ const LandingHero: React.FC = () => {
                 size="lg"
                 className="w-full sm:w-auto h-9 px-8 text-sm shadow-2xl shadow-emerald-500/20 group"
               >
-                <UniversalLink to="/solutions">
+                <Link href="/solutions">
                   <span>Explore Solutions</span>
                   <Layers className="w-5 h-5 transition-transform group-hover:rotate-12" />
-                </UniversalLink>
+                </Link>
               </Button>
 
-              <UniversalLink
-                to="/consultation"
+              <Link
+                href="/consultation"
                 className="group flex items-center justify-center gap-3 font-mono text-sm font-bold text-primary tracking-tight border-2  hover:border-primary/50! rounded px-4 py-2 h-10 w-full border-border pb-1 transition-all"
                 role="button"
                 aria-label="Request a Quote"
               >
                 Request a Quote
                 <MessageSquareDot className="w-5 h-5 text-primary" />
-              </UniversalLink>
+              </Link>
             </motion.div>
 
             {/* Trust Indicators: Simplified Mono */}
@@ -240,9 +240,8 @@ const LandingHero: React.FC = () => {
                         alt="SHERO"
                         width={40}
                         height={40}
-                        fetchPriority="high"
-                        decoding="async"
                         className="sm:w-10 sm:h-10 w-8 h-8"
+                        suppressHydrationWarning
                       />
                     </div>
                     <div>

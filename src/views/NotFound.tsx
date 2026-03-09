@@ -1,11 +1,8 @@
 "use client";
-import { NavLink } from "react-router-dom";
-import { useTitle } from "@/hooks/useTitle";
+import Link from "next/link";
 import { ArrowLeft, Home } from "lucide-react";
 
 const NotFound = () => {
-  useTitle("Page Not Found");
-
   return (
     <main className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
       <div className="container max-w-xl mx-auto px-4 text-center">
@@ -24,15 +21,15 @@ const NotFound = () => {
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row sm:w-full items-center justify-center gap-4">
-          <NavLink
-            to="/"
+          <Link
+            href="/"
             className="inline-flex items-center justify-center gap-2 px-6 py-2 rounded
                      bg-emerald-600 text-white font-semibold
                      hover:bg-emerald-700 transition-colors duration-300 cursor-pointer w-full"
           >
             <Home className="w-5 h-5" />
             <span>Go Home</span>
-          </NavLink>
+          </Link>
 
           <button
             onClick={() => window.history.back()}

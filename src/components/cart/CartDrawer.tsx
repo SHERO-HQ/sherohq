@@ -4,10 +4,12 @@ import { useCart } from "@/context/CartContext";
 import { getImageUrl } from "@/services/api";
 import { X, Minus, Plus, ShoppingBag, Trash2, ArrowRight } from "lucide-react";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 const CartDrawer = () => {
+  const router = useRouter();
   const {
     cart,
     isCartOpen,
@@ -103,7 +105,7 @@ const CartDrawer = () => {
                     <div className="relative w-24 h-32 sm:h-24 bg-slate-100 dark:bg-slate-800 rounded shrink-0 overflow-hidden">
                       {item.image.startsWith("http") ||
                       item.image.startsWith("/uploads") ? (
-                        <ProductImage
+                        <AppImage
                           src={getImageUrl(item.image)}
                           alt={item.name}
                           fill
@@ -190,7 +192,7 @@ const CartDrawer = () => {
                 <Button
                   onClick={() => {
                     setIsCartOpen(false);
-                    globalThis.location.href = "/checkout";
+                    router.push("/checkout");
                   }}
                   variant="brand"
                   className="w-full h-12 font-bold group"

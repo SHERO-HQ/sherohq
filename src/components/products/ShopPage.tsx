@@ -9,7 +9,7 @@ import CategorySidebar from "./CategorySidebar";
 import ProductGrid from "./ProductsGrid";
 import type { Product } from "@/types/product";
 import { SlidersHorizontal, Package } from "lucide-react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import ProductSearch from "./ProductSearch";
 import { useProducts } from "@/hooks/queries/useProducts";
 import { useCategories } from "@/hooks/queries/useCategories";
@@ -20,7 +20,9 @@ interface ApiCategory {
 }
 
 const ShopPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
 
   // TanStack Query
   const { data: products = [], isLoading: productsLoading } = useProducts();
@@ -147,12 +149,13 @@ const ShopPage = () => {
 
   // Handle search - only update URL params, searchQuery is derived from URL
   const handleSearch = (query: string) => {
+    const params = new URLSearchParams(searchParams.toString());
     if (query) {
-      setSearchParams(new URLSearchParams({ search: query }));
+      params.set("search", query);
     } else {
-      searchParams.delete("search");
-      setSearchParams(searchParams);
+      params.delete("search");
     }
+    router.push(`${pathname}?${params.toString()}`);
   };
 
   // Handle category change

@@ -11,7 +11,7 @@ import {
   updateOrderPaymentMethod,
 } from "@/services/api";
 import { motion, AnimatePresence } from "motion/react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import {
   ShoppingBag,
   Truck,
@@ -40,10 +40,10 @@ import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import OrderSummary from "./OrderSummary";
 import PaymentFailureSupport from "./PaymentFailureSupport";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 const CheckoutFlow = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const {
     cart,
     updateQuantity,
@@ -116,7 +116,7 @@ const CheckoutFlow = () => {
 
   // Redirect if cart is empty
   if (cart.length === 0 && currentStep < 4) {
-    navigate("/products");
+    router.push("/products");
     return null;
   }
 
@@ -455,7 +455,7 @@ const CheckoutFlow = () => {
                                 {item.image &&
                                 (item.image.startsWith("/uploads") ||
                                   item.image.startsWith("http")) ? (
-                                  <ProductImage
+                                  <AppImage
                                     src={getImageUrl(item.image)}
                                     alt={item.name}
                                     fill
@@ -897,14 +897,14 @@ const CheckoutFlow = () => {
 
                       <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <Button
-                          onClick={() => navigate("/products")}
+                          onClick={() => router.push("/products")}
                           variant="outline"
                           className="font-bold px-8 border-slate-300 dark:border-slate-700"
                         >
                           Continue Shopping
                         </Button>
                         <Button
-                          onClick={() => navigate("/")}
+                          onClick={() => router.push("/")}
                           variant="brand"
                           className="font-bold px-8"
                         >
@@ -939,7 +939,7 @@ const CheckoutFlow = () => {
                   improve.
                 </p>
                 <Button
-                  onClick={() => navigate("/contact-us")}
+                  onClick={() => router.push("/contact-us")}
                   variant="brand"
                   className="w-full font-bold px-8"
                 >

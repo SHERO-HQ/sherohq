@@ -7,7 +7,7 @@ import { X, Heart, Trash2, ShoppingCart } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { type WishlistItem } from "@/context/WishlistContextType";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 const WishlistDrawer = () => {
   const {
@@ -129,7 +129,7 @@ const WishlistDrawer = () => {
                     <div className="relative w-full sm:w-24 h-32 sm:h-24 bg-slate-100 dark:bg-slate-800 rounded shrink-0 overflow-hidden">
                       {item.image.startsWith("http") ||
                       item.image.startsWith("/uploads") ? (
-                        <ProductImage
+                        <AppImage
                           src={getImageUrl(item.image)}
                           alt={item.name}
                           fill

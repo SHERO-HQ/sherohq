@@ -9,7 +9,8 @@ import {
   TrendingUp,
   Star,
 } from "lucide-react";
-import { useRef, useMemo, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const AboutHero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -18,16 +19,24 @@ const AboutHero = () => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Particle State - Emerald/Blue theme
-  const [particles] = useState(() =>
-    Array.from({ length: 15 }, (_, idx) => ({
-      id: idx,
-      x: Math.random() * 100 + "%",
-      y: Math.random() * 100 + "%",
-      opacity: Math.random() * 0.2 + 0.1,
-      duration: Math.random() * 20 + 30,
-    })),
-  );
+  // Particle State — deferred to useEffect to avoid Math.random() hydration mismatch
+  const [particles, setParticles] = useState<
+    { id: number; x: string; y: string; opacity: number; duration: number }[]
+  >([]);
+
+  useEffect(() => {
+    queueMicrotask(() => {
+      setParticles(
+        Array.from({ length: 15 }, (_, idx) => ({
+          id: idx,
+          x: Math.random() * 100 + "%",
+          y: Math.random() * 100 + "%",
+          opacity: Math.random() * 0.2 + 0.1,
+          duration: Math.random() * 20 + 30,
+        })),
+      );
+    });
+  }, []);
 
   // Spring physics
   const springConfig = { damping: 25, stiffness: 150 };
@@ -49,13 +58,7 @@ const AboutHero = () => {
     mouseY.set(y);
   };
 
-  const prefersReducedMotion = useMemo(
-    () =>
-      typeof window !== "undefined" && typeof window.matchMedia === "function"
-        ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        : false,
-    [],
-  );
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <header

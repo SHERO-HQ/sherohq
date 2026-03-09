@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Loader2, ShoppingBag } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import OrderItem from "./OrderItem";
 import type { Order, User } from "@/services/api";
 
@@ -20,7 +20,7 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
   expandedOrder,
   onToggleExpand,
 }) => {
-  const navigate = useNavigate();
+  const router = useRouter();
 
   if (loading) {
     return (
@@ -44,7 +44,7 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
           Looks like you haven't made any purchases yet.
         </p>
         <button
-          onClick={() => navigate("/products")}
+          onClick={() => router.push("/products")}
           className="cursor-pointer px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded transition-colors"
         >
           Start Shopping

@@ -2,8 +2,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Plus, Minus, HelpCircle } from "lucide-react";
-import Footer from "@/components/layout/Footer";
-import Seo from "@/components/common/Seo";
 
 const FAQ = () => {
   const faqs = [
@@ -54,11 +52,6 @@ const FAQ = () => {
 
   return (
     <>
-      <Seo
-        title="FAQ"
-        description="Frequently Asked Questions about Shero Technologies' products, services, shipping, and payments."
-        url="/faq"
-      />
       <div className="pt-24 pb-12 bg-slate-50 dark:bg-slate-950 min-h-screen">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -92,7 +85,6 @@ const FAQ = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

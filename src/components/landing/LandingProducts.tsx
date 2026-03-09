@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "motion/react";
-import UniversalLink from "@/components/common/UniversalLink";
+import Link from "next/link";
 import { ShoppingCart, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -42,6 +42,15 @@ const LandingProducts = () => {
         const shuffled = [...inStockProducts].sort(() => 0.5 - Math.random());
         setProducts(shuffled);
       } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        if (
+          message.toLowerCase().includes("offline") ||
+          message.toLowerCase().includes("failed to fetch")
+        ) {
+          setProducts([]);
+          return;
+        }
+
         console.error("Failed to load landing products:", error);
       } finally {
         setIsLoading(false);
@@ -145,8 +154,8 @@ const LandingProducts = () => {
           transition={{ delay: 0.5, duration: 0.6 }}
           className="text-center"
         >
-          <UniversalLink
-            to="/shop"
+          <Link
+            href="/shop"
             className="inline-flex items-center gap-3 px-8 py-2 rounded
                      border-2 border-slate-300 dark:border-slate-700
                      text-slate-700 dark:text-slate-300 font-semibold
@@ -157,7 +166,7 @@ const LandingProducts = () => {
           >
             <span>Visit the Shop</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </UniversalLink>
+          </Link>
         </motion.div>
       </div>
     </section>

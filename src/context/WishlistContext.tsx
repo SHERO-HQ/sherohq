@@ -17,12 +17,13 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({
     const savedWishlist = localStorage.getItem("wishlist");
     if (savedWishlist) {
       try {
-        setWishlist(JSON.parse(savedWishlist));
+        const parsed = JSON.parse(savedWishlist);
+        queueMicrotask(() => setWishlist(parsed));
       } catch (e) {
         console.error("Failed to parse wishlist from localStorage", e);
       }
     }
-    setIsLoaded(true);
+    queueMicrotask(() => setIsLoaded(true));
   }, []);
 
   useEffect(() => {

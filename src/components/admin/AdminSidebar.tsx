@@ -1,5 +1,5 @@
 "use client";
-import UniversalLink from "@/components/common/UniversalLink";
+import NavLink from "@/components/common/NavLink";
 import {
   LayoutDashboard,
   Package,
@@ -25,7 +25,7 @@ import {
 import { useAdmin } from "@/context/AdminContext";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "motion/react";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -144,9 +144,9 @@ export default function AdminSidebar({
                 return true;
               })
               .map((item) => (
-                <UniversalLink
+                <NavLink
                   key={item.href}
-                  to={item.href}
+                  href={item.href}
                   onClick={() => {
                     if (globalThis.innerWidth < 1024) setIsOpen(false);
                   }}
@@ -189,7 +189,7 @@ export default function AdminSidebar({
                       )}
                     </>
                   )}
-                </UniversalLink>
+                </NavLink>
               ))}
 
             {/* Quick Actions Section */}
@@ -200,8 +200,8 @@ export default function AdminSidebar({
                 </p>
               )}
               <div className="space-y-1">
-                <UniversalLink
-                  to="/admin/products/new"
+                <NavLink
+                  href="/admin/products/new"
                   className={({ isActive }) =>
                     cn(
                       "flex items-center gap-2 px-3 py-2 rounded transition-all duration-200 group relative",
@@ -215,9 +215,9 @@ export default function AdminSidebar({
                   {isOpen && (
                     <span className="text-xs font-medium">New Product</span>
                   )}
-                </UniversalLink>
-                <UniversalLink
-                  to="/admin/orders?status=pending"
+                </NavLink>
+                <NavLink
+                  href="/admin/orders?status=pending"
                   className={({ isActive }) =>
                     cn(
                       "flex items-center gap-2 px-3 py-2 rounded transition-all duration-200 group relative",
@@ -231,9 +231,9 @@ export default function AdminSidebar({
                   {isOpen && (
                     <span className="text-xs font-medium">Review Orders</span>
                   )}
-                </UniversalLink>
-                <UniversalLink
-                  to="/admin/orders/new"
+                </NavLink>
+                <NavLink
+                  href="/admin/orders/new"
                   className={({ isActive }) =>
                     cn(
                       "flex items-center gap-2 px-3 py-2 rounded transition-all duration-200 group relative",
@@ -247,9 +247,9 @@ export default function AdminSidebar({
                   {isOpen && (
                     <span className="text-xs font-medium">Create Invoice</span>
                   )}
-                </UniversalLink>
-                <UniversalLink
-                  to="/admin/expenses?action=new"
+                </NavLink>
+                <NavLink
+                  href="/admin/expenses?action=new"
                   className={({ isActive }) =>
                     cn(
                       "flex items-center gap-2 px-3 py-2 rounded transition-all duration-200 group relative",
@@ -263,7 +263,7 @@ export default function AdminSidebar({
                   {isOpen && (
                     <span className="text-xs font-medium">New Expense</span>
                   )}
-                </UniversalLink>
+                </NavLink>
               </div>
             </div>
           </nav>
@@ -298,7 +298,7 @@ export default function AdminSidebar({
             >
               <div className="relative w-8 h-8 flex items-center justify-center shrink-0 overflow-hidden">
                 {admin?.avatar ? (
-                  <ProductImage
+                  <AppImage
                     src={admin.avatar}
                     alt={admin.username}
                     fill

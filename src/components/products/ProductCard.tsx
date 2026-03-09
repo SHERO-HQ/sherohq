@@ -1,12 +1,12 @@
 "use client";
 import { motion } from "motion/react";
 import { ShoppingCart, Heart, Eye, Star, CreditCard } from "lucide-react";
-import { useUniversalNavigate } from "@/hooks/useUniversalNavigate";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useNotifications } from "@/hooks/useNotifications";
 import { getImageUrl } from "@/services/api";
 import { useWishlist } from "@/hooks/useWishlist";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 import type { Product } from "@/types/product";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { WhatsAppIcon } from "@/assets/icons/icons";
@@ -20,7 +20,7 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
   const { addItem } = useCart();
   const { addNotification } = useNotifications();
-  const navigate = useUniversalNavigate();
+  const router = useRouter();
   const { toggleWishlist: globalToggleWishlist, isInWishlist } = useWishlist();
   const isWishlisted = isInWishlist(product.id);
 
@@ -57,7 +57,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       image: product.image,
       category: product.category,
     });
-    navigate("/checkout");
+    router.push("/checkout");
   };
 
   const handleQuickView = (e: React.MouseEvent) => {
@@ -66,7 +66,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
     if (onQuickView) {
       onQuickView(product);
     } else {
-      navigate(`/products/${product.slug || product.sku || product.id}`);
+      router.push(`/products/${product.slug || product.sku || product.id}`);
     }
   };
 
@@ -83,7 +83,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
   };
 
   const handleCardClick = () => {
-    navigate(`/products/${product.slug || product.sku || product.id}`);
+    router.push(`/products/${product.slug || product.sku || product.id}`);
   };
 
   const getConditionStyles = (condition: string) => {
@@ -159,7 +159,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
         {product.image &&
         (product.image.startsWith("/uploads") ||
           product.image.startsWith("http")) ? (
-          <ProductImage
+          <AppImage
             src={getImageUrl(product.image)}
             alt={product.name}
             fill

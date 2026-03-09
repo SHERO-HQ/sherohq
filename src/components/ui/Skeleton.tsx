@@ -1,4 +1,3 @@
-"use client";
 /**
  * Skeleton loading components for better perceived performance
  */

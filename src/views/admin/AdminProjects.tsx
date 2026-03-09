@@ -1,6 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
-import UniversalLink from "@/components/common/UniversalLink";
+import Link from "next/link";
 import { useNotifications } from "@/hooks/useNotifications";
 import {
   Search,
@@ -120,10 +120,10 @@ export default function AdminProjects() {
               className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4"
               asChild
             >
-              <UniversalLink to="/admin/projects/new">
+              <Link href="/admin/projects/new">
                 <Plus className="w-4 h-4 mr-2" />
                 Add Project
-              </UniversalLink>
+              </Link>
             </Button>
           </div>
         </div>
@@ -240,11 +240,11 @@ export default function AdminProjects() {
                             className="h-8 w-8 text-slate-400 hover:text-white"
                             asChild
                           >
-                            <UniversalLink
-                              to={`/admin/projects/${project.id}/edit`}
+                            <Link
+                              href={`/admin/projects/${project.id}/edit`}
                             >
                               <Edit2 className="w-4 h-4" />
-                            </UniversalLink>
+                            </Link>
                           </Button>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>

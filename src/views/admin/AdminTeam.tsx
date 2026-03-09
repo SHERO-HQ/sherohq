@@ -24,7 +24,7 @@ import { Modal } from "@/components/ui/Modal";
 import { Label } from "@/components/ui/label";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Textarea } from "@/components/ui/textarea";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 const AdminTeam = () => {
   const { data: team = [], isLoading } = useTeam();
@@ -207,7 +207,7 @@ const AdminTeam = () => {
 
                 <div className="relative w-12 h-12 rounded bg-slate-700/50 overflow-hidden shrink-0">
                   {member.image ? (
-                    <ProductImage
+                    <AppImage
                       src={member.image}
                       alt={member.name}
                       fill

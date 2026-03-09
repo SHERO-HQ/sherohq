@@ -1,7 +1,5 @@
 "use client";
-import Seo from "@/components/common/Seo";
 import ContactForm from "@/components/common/ContactForm";
-import Footer from "@/components/layout/Footer";
 import { motion } from "motion/react";
 import { Mail, MapPin, MessagesSquare, Phone } from "lucide-react";
 import { COMPANY_EMAILS } from "@/constants/emails";
@@ -9,11 +7,6 @@ import { COMPANY_EMAILS } from "@/constants/emails";
 const Contact = () => {
   return (
     <>
-      <Seo
-        title="Contact Us"
-        description="Get in touch with Shero Technologies. We are ready to help you build the future with our tech solutions and consultation services."
-        url="/contact-us"
-      />
       <div className="relative pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden dark:bg-slate-950 bg-slate-50 min-h-screen">
         {/* Dot Pattern Background */}
         <div className="absolute inset-0 pattern-dots opacity-30 dark:opacity-20 pointer-events-none" />
@@ -116,7 +109,6 @@ const Contact = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

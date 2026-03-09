@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useRouter } from "next/navigation";
 import {
   fetchProduct,
   fetchCategories,
@@ -32,7 +32,7 @@ import { Badge } from "@/components/ui/badge";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useBreadcrumb } from "@/context/BreadcrumbContext";
 import { cn } from "@/lib/utils";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 interface Category {
   id: string;
@@ -41,7 +41,7 @@ interface Category {
 
 export default function ProductForm() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  const router = useRouter();
   const { addNotification } = useNotifications();
   const { setLabel, clearLabel } = useBreadcrumb();
   const isEdit = Boolean(id);
@@ -144,7 +144,7 @@ export default function ProductForm() {
         await createProductMutation.mutateAsync(finalData as ProductInput);
         addNotification("Success", "Product created successfully", "success");
       }
-      navigate("/admin/products");
+      router.push("/admin/products");
     } catch (err) {
       addNotification("Error", "Failed to save product", "error");
       console.error(err);
@@ -258,7 +258,7 @@ export default function ProductForm() {
               variant="ghost"
               size="icon"
               className="text-slate-400 hover:text-white"
-              onClick={() => navigate("/admin/products")}
+              onClick={() => router.push("/admin/products")}
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
@@ -276,7 +276,7 @@ export default function ProductForm() {
             <Button
               variant="ghost"
               className="text-slate-400 hover:text-white"
-              onClick={() => navigate("/admin/products")}
+              onClick={() => router.push("/admin/products")}
             >
               Cancel
             </Button>
@@ -333,7 +333,7 @@ export default function ProductForm() {
                           : "border-white/5",
                       )}
                     >
-                      <ProductImage
+                      <AppImage
                         src={url}
                         alt="Product"
                         fill

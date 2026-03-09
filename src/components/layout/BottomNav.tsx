@@ -1,6 +1,6 @@
 "use client";
 import { Home, ShoppingBag, ShoppingCart, Heart } from "lucide-react";
-import UniversalLink from "@/components/common/UniversalLink";
+import NavLink from "@/components/common/NavLink";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/hooks/useWishlist";
 
@@ -58,9 +58,9 @@ const BottomNav = () => {
             );
           }
           return (
-            <UniversalLink
+            <NavLink
               key={item.label}
-              to={item.path}
+              href={item.path}
               className={({ isActive }) =>
                 `flex flex-col items-center justify-center w-full h-full gap-1 transition-colors ${
                   isActive
@@ -71,7 +71,7 @@ const BottomNav = () => {
             >
               <item.icon className="w-6 h-6" strokeWidth={2} />
               <span className="text-[12px] font-medium">{item.label}</span>
-            </UniversalLink>
+            </NavLink>
           );
         })}
       </nav>

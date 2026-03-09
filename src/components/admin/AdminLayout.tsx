@@ -93,11 +93,13 @@ export default function AdminLayout({ children }: Readonly<AdminLayoutProps>) {
 
         {/* Simple Footer */}
         <footer className="py-3 md:px-8 border-t border-white/5 text-center text-slate-500 text-xs print:hidden font-sora">
-          <p>
+          <p suppressHydrationWarning>
             {" "}
             &copy; {new Date().getFullYear()}{" "}
-            <span className="text-primary font-bold uppercase font-logo">SHERO Technologies</span> Admin
-            Panel. Built with precision.
+            <span className="text-primary font-bold uppercase font-logo">
+              SHERO Technologies
+            </span>{" "}
+            Admin Panel. Built with precision.
           </p>
         </footer>
       </div>

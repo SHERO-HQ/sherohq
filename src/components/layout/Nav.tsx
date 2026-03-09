@@ -5,7 +5,7 @@ import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { useWishlist } from "@/hooks/useWishlist";
 import { LogOut, ShoppingCart, User, Heart } from "lucide-react";
-import UniversalLink from "@/components/common/UniversalLink";
+import NavLink from "@/components/common/NavLink";
 
 import { AnimatePresence, easeOut, motion } from "motion/react";
 import { navLinkClass, navLinkClassVariant } from "@/lib/utils";
@@ -82,7 +82,7 @@ const Nav = () => {
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 lg:h-20">
             {/* Logo */}
-            <UniversalLink to="/" className="flex items-center z-50">
+            <NavLink href="/" className="flex items-center z-50">
               {/* Mobile & Desktop Logos */}
               <div className="md:hidden">
                 <img
@@ -93,6 +93,7 @@ const Nav = () => {
                   fetchPriority="high"
                   decoding="async"
                   className="h-10 w-auto"
+                  suppressHydrationWarning
                 />
               </div>
 
@@ -105,6 +106,7 @@ const Nav = () => {
                   fetchPriority="high"
                   decoding="async"
                   className="h-10 w-auto dark:block hidden"
+                  suppressHydrationWarning
                 />
                 <img
                   src="/assets/logo/shero-dark.svg"
@@ -114,9 +116,10 @@ const Nav = () => {
                   fetchPriority="high"
                   decoding="async"
                   className="h-10 w-auto dark:hidden block"
+                  suppressHydrationWarning
                 />
               </div>
-            </UniversalLink>
+            </NavLink>
 
             {/* Right Groups Wrapper */}
             <div className="flex items-center gap-2 lg:space-x-2 ml-auto">
@@ -124,12 +127,12 @@ const Nav = () => {
               <ul className="hidden lg:flex items-center gap-3">
                 {navLinks.map((item) => (
                   <li key={item}>
-                    <UniversalLink
+                    <NavLink
                       className={({ isActive }) => navLinkClass(isActive)}
-                      to={`/${item.toLowerCase().replace(" ", "-")}`}
+                      href={`/${item.toLowerCase().replace(" ", "-")}`}
                     >
                       {item}
-                    </UniversalLink>
+                    </NavLink>
                   </li>
                 ))}
               </ul>
@@ -140,8 +143,8 @@ const Nav = () => {
                 <SearchBar className="hidden lg:block" />
 
                 {/* Contact Us - Desktop Only */}
-                <UniversalLink
-                  to="/contact-us"
+                <NavLink
+                  href="/contact-us"
                   className="hidden lg:inline-flex group items-center gap-1
                            text-white dark:text-slate-900 bg-emerald-600 dark:bg-emerald-500
                            px-6 py-2 rounded font-semibold text-sm
@@ -162,7 +165,7 @@ const Nav = () => {
                   >
                     <path d="M5 12H19M19 12L13 6M19 12L13 18" />
                   </svg>
-                </UniversalLink>
+                </NavLink>
 
                 {/* Wishlist Button */}
                 <button
@@ -210,13 +213,13 @@ const Nav = () => {
                       </div>
                     </button>
                   ) : (
-                    <UniversalLink
-                      to="/login"
+                    <NavLink
+                      href="/login"
                       className="cursor-pointer p-2 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors block"
                       aria-label="Login"
                     >
                       <User className="w-6 h-6" />
-                    </UniversalLink>
+                    </NavLink>
                   )}
 
                   {/* Dropdown Menu (Only when authenticated) */}
@@ -230,12 +233,12 @@ const Nav = () => {
                           {user?.email}
                         </p>
                       </div>
-                      <UniversalLink
-                        to="/profile"
+                      <NavLink
+                        href="/profile"
                         className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
                       >
                         <User className="w-4 h-4" /> Profile & Orders
-                      </UniversalLink>
+                      </NavLink>
                       <button
                         onClick={() => logout()}
                         className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
@@ -331,15 +334,15 @@ const Nav = () => {
                       initial="initial"
                       animate="animate"
                     >
-                      <UniversalLink
+                      <NavLink
                         className={({ isActive }) =>
                           navLinkClassVariant(isActive, "mobile")
                         }
-                        to={`/${item.toLowerCase().replace(" ", "-")}`}
+                        href={`/${item.toLowerCase().replace(" ", "-")}`}
                         onClick={() => setIsOpen(false)}
                       >
                         {item}
-                      </UniversalLink>
+                      </NavLink>
                     </motion.li>
                   ))}
                 </ul>
@@ -362,8 +365,8 @@ const Nav = () => {
                         </div>
                       </div>
                       <div className="grid grid-cols-1 gap-2">
-                        <UniversalLink
-                          to="/profile"
+                        <NavLink
+                          href="/profile"
                           onClick={() => setIsOpen(false)}
                           className="flex items-center gap-3 px-4 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded transition-all duration-200 group/item"
                         >
@@ -373,7 +376,7 @@ const Nav = () => {
                           <span className="font-semibold">
                             Profile & Orders
                           </span>
-                        </UniversalLink>
+                        </NavLink>
                         <button
                           onClick={() => {
                             logout();
@@ -389,8 +392,8 @@ const Nav = () => {
                       </div>
                     </div>
                   ) : (
-                    <UniversalLink
-                      to="/login"
+                    <NavLink
+                      href="/login"
                       onClick={() => setIsOpen(false)}
                       className="flex items-center gap-4 px-5 py-2 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 rounded transition-all duration-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800/50 group"
                     >
@@ -405,7 +408,7 @@ const Nav = () => {
                           Access your account & orders
                         </span>
                       </div>
-                    </UniversalLink>
+                    </NavLink>
                   )}
                 </div>
 
@@ -414,8 +417,8 @@ const Nav = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0, transition: { delay: 0.4 } }}
                 >
-                  <UniversalLink
-                    to="/contact-us"
+                  <NavLink
+                    href="/contact-us"
                     onClick={() => setIsOpen(false)}
                     className="flex w-full items-center justify-center gap-2
                                text-white bg-emerald-600 dark:bg-emerald-500
@@ -435,7 +438,7 @@ const Nav = () => {
                     >
                       <path d="M5 12H19M19 12L13 6M19 12L13 18" />
                     </svg>
-                  </UniversalLink>
+                  </NavLink>
                 </motion.div>
               </motion.div>
             </>

@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { usePathname } from "next/navigation";
-import UniversalLink from "@/components/common/UniversalLink";
+import Link from "next/link";
 import { useBreadcrumb } from "@/context/BreadcrumbContext";
 import {
   DropdownMenu,
@@ -22,7 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import NotificationCenter from "./NotificationCenter";
 import { cn } from "@/lib/utils";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 interface HeaderProps {
   onMenuClick: () => void;
@@ -75,12 +75,12 @@ export default function AdminHeader({
         <nav aria-label="Breadcrumb" className="hidden sm:flex overflow-hidden">
           <ol className="flex items-center space-x-2 text-sm">
             <li>
-              <UniversalLink
-                to="/admin"
+              <Link
+                href="/admin"
                 className="text-slate-400 font-sora hover:text-white transition-colors"
               >
                 Admin
-              </UniversalLink>
+              </Link>
             </li>
             {pathnames.map((value, index) => {
               const to = `/admin/${pathnames.slice(0, index + 1).join("/")}`;
@@ -95,12 +95,12 @@ export default function AdminHeader({
                       {displayLabel}
                     </span>
                   ) : (
-                    <UniversalLink
-                      to={to}
+                    <Link
+                      href={to}
                       className="text-slate-400 font-sora hover:text-white transition-colors capitalize"
                     >
                       {displayLabel}
-                    </UniversalLink>
+                    </Link>
                   )}
                 </li>
               );
@@ -122,14 +122,14 @@ export default function AdminHeader({
         </div>
 
         {/* View Site */}
-        <UniversalLink
-          to="/"
+        <Link
+          href="/"
           className="hidden md:flex items-center px-3 py-2 text-sm text-slate-400 font-sora hover:text-white hover:bg-emerald-500/5 rounded transition-colors"
           title="View Site"
         >
-          <Globe className="w-4 h-4" />
+          <Globe className="w-4 h-4 mr-1" />
           <span>View Site</span>
-        </UniversalLink>
+        </Link>
 
         {/* Notifications */}
         <NotificationCenter />
@@ -143,7 +143,7 @@ export default function AdminHeader({
             >
               <div className="relative flex items-center justify-center p-1 w-10 h-10 overflow-hidden hover:bg-white/5 rounded backdrop-blur-md border border-white/10 hover:border-white/5 transition-all outline-none">
                 {admin?.avatar ? (
-                  <ProductImage
+                  <AppImage
                     src={admin.avatar}
                     alt=""
                     fill
@@ -174,13 +174,13 @@ export default function AdminHeader({
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-white/5" />
             <DropdownMenuItem asChild>
-              <UniversalLink
-                to="/admin/profile"
+              <Link
+                href="/admin/profile"
                 className="flex items-center cursor-pointer hover:bg-white/5"
               >
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile</span>
-              </UniversalLink>
+              </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-white/5" />
             <DropdownMenuItem

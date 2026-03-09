@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import Nav from "@/components/layout/Nav";
+import Footer from "@/components/layout/Footer";
 
 // Lazy-load components that are hidden by default (drawers, modals, prompts)
 const CartDrawer = dynamic(() => import("@/components/cart/CartDrawer"), {
@@ -35,7 +36,10 @@ export default function PublicLayout({
       <WishlistDrawer />
       <PWAInstallPrompt />
       <UserChangePasswordModal />
-      {children}
+      <main id="main-content" className="min-h-screen">
+        {children}
+      </main>
+      <Footer />
     </>
   );
 }

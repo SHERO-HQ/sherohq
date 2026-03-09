@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { format } from "date-fns";
@@ -120,6 +121,7 @@ const isTimeSlotPassed = (timeSlot: string, forDate: Date): boolean => {
 // --- Scheduler Component ---
 
 const Scheduler = () => {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -217,7 +219,7 @@ const Scheduler = () => {
           A confirmation email has been sent to {formData.email}
         </p>
         <Button
-          onClick={() => window.location.reload()}
+          onClick={() => router.refresh()}
           variant="outline"
           className="rounded"
         >

@@ -35,8 +35,13 @@ const ShareButton: React.FC<ShareButtonProps> = ({
   const [copied, setCopied] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const shareUrl =
-    url || (globalThis.window ? globalThis.window.location.href : "");
+  const [currentUrl, setCurrentUrl] = useState("");
+
+    if (!url) {
+      queueMicrotask(() => setCurrentUrl(window.location.href));
+    }
+
+  const shareUrl = url || currentUrl;
   const encodedUrl = encodeURIComponent(shareUrl);
   const encodedTitle = encodeURIComponent(title);
 

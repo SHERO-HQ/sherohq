@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { type Project } from "@/services/api";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 const Portfolio = () => {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -148,7 +148,7 @@ const Portfolio = () => {
                   (project.image.startsWith("http") ||
                     project.image.startsWith("/") ||
                     project.image.includes(".")) ? (
-                    <ProductImage
+                    <AppImage
                       src={project.image}
                       alt={project.title}
                       fill
@@ -228,7 +228,7 @@ const Portfolio = () => {
                 (selectedProject.image.startsWith("http") ||
                   selectedProject.image.startsWith("/") ||
                   selectedProject.image.includes(".")) ? (
-                  <ProductImage
+                  <AppImage
                     src={selectedProject.image}
                     alt={selectedProject.title}
                     width={800}

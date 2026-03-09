@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import {
   Bell,
   Check,
@@ -142,7 +142,7 @@ export default function NotificationCenter() {
                       </p>
                       {notification.link && (
                         <Link
-                          to={notification.link}
+                          href={notification.link}
                           onClick={() => {
                             markAsRead(notification.id);
                             setIsOpen(false);

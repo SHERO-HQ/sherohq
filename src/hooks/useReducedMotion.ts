@@ -14,9 +14,10 @@ import { useState, useEffect } from "react";
  */
 export const useReducedMotion = (): boolean => {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
-    // Use lazy initializer to get the value on first render without needing an effect
-    if (typeof window === "undefined") return false;
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (typeof window !== "undefined") {
+      return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    }
+    return false;
   });
 
   useEffect(() => {

@@ -46,7 +46,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 const roleConfig: Record<
   string,
@@ -243,7 +243,7 @@ export default function AdminUserManagement() {
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="bg-slate-900 border border-white/10 rounded-md px-3 py-2 text-sm text-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-500/20 appearance-none min-w-35"
+            className="bg-slate-900 border border-white/10 rounded px-3 py-2 text-sm text-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-500/20 appearance-none min-w-35"
           >
             <option value="all">All Roles</option>
             {Object.entries(roleConfig).map(([role, cfg]) => (
@@ -405,7 +405,7 @@ export default function AdminUserManagement() {
                     <div className="relative">
                       <div className="relative w-14 h-14 rounded bg-slate-800 flex items-center justify-center text-xl font-bold text-white overflow-hidden border border-white/5 shadow-inner">
                         {user.avatar ? (
-                          <ProductImage
+                          <AppImage
                             src={user.avatar}
                             alt={user.username}
                             fill
@@ -573,7 +573,7 @@ export default function AdminUserManagement() {
                 onChange={(e) =>
                   setFormData({ ...formData, role: e.target.value })
                 }
-                className="w-full bg-slate-900 border border-white/10 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500/20 appearance-none"
+                className="w-full bg-slate-900 border border-white/10 rounded px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500/20 appearance-none"
               >
                 {Object.entries(roleConfig).map(([role, cfg]) => {
                   if (role === "superadmin" && !isSuperAdmin) return null;

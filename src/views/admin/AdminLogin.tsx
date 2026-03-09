@@ -1,8 +1,7 @@
 "use client";
-import { useState, type FormEvent } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useState, useEffect, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { useAdmin } from "@/context/AdminContext";
-import { useTitle } from "@/hooks/useTitle";
 import {
   Lock,
   User,
@@ -15,9 +14,8 @@ import {
 import { getSubdomain } from "@/utils/subdomain";
 
 export default function AdminLogin() {
-  useTitle("Admin Login");
   const { login, isAuthenticated, isLoading: isChecking } = useAdmin();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -26,6 +24,17 @@ export default function AdminLogin() {
   const [isLoading, setIsLoading] = useState(false);
 
   // Redirect if already authenticated
+  useEffect(() => {
+    let isMounted = true;
+    if (!isChecking && isAuthenticated && isMounted) {
+      const subdomain = getSubdomain();
+      const dashboardPath =
+        subdomain === "admin" ? "/dashboard" : "/admin/dashboard";
+      router.replace(dashboardPath);
+    }
+    return () => { isMounted = false; };
+  }, [isChecking, isAuthenticated, router]);
+
   if (isChecking) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
@@ -35,10 +44,7 @@ export default function AdminLogin() {
   }
 
   if (isAuthenticated) {
-    const subdomain = getSubdomain();
-    const dashboardPath =
-      subdomain === "admin" ? "/dashboard" : "/admin/dashboard";
-    return <Navigate to={dashboardPath} replace />;
+    return null;
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -48,10 +54,6 @@ export default function AdminLogin() {
 
     try {
       await login(username, password);
-      const subdomain = getSubdomain();
-      const dashboardPath =
-        subdomain === "admin" ? "/dashboard" : "/admin/dashboard";
-      navigate(dashboardPath);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
     } finally {

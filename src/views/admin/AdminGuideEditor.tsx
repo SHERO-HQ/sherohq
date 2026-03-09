@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useRouter, useParams } from "next/navigation";
 import { ArrowLeft, Save, Plus, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,10 +17,10 @@ import {
 import { useNotifications } from "@/hooks/useNotifications";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { uploadImage } from "@/services/api";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 const AdminGuideEditor = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const { id } = useParams<{ id: string }>();
   const isEditing = !!id;
   const { addNotification } = useNotifications();
@@ -51,7 +51,7 @@ const AdminGuideEditor = () => {
           setPublished(guide.published);
         } else {
           addNotification("Error", "Guide not found", "error");
-          navigate("/admin/guides");
+          router.push("/admin/guides");
         }
       } catch (error) {
         console.error("Failed to load guide:", error);
@@ -60,7 +60,7 @@ const AdminGuideEditor = () => {
         setIsLoading(false);
       }
     },
-    [navigate, addNotification],
+    [router, addNotification],
   );
 
   useEffect(() => {
@@ -114,7 +114,7 @@ const AdminGuideEditor = () => {
         await createGuide(data);
         addNotification("Success", "Guide created successfully", "success");
       }
-      navigate("/admin/guides");
+      router.push("/admin/guides");
     } catch (error) {
       console.error("Failed to save guide:", error);
       addNotification("Error", "Failed to save guide", "error");
@@ -148,7 +148,7 @@ const AdminGuideEditor = () => {
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-4">
               <button
-                onClick={() => navigate("/admin/guides")}
+                onClick={() => router.push("/admin/guides")}
                 className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
@@ -268,7 +268,7 @@ const AdminGuideEditor = () => {
                   />
                   {coverImage && (
                     <div className="relative mt-2 h-20 rounded overflow-hidden bg-slate-800 border border-white/5">
-                      <ProductImage
+                      <AppImage
                         src={coverImage}
                         alt="Cover preview"
                         fill

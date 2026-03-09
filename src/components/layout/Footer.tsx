@@ -1,6 +1,5 @@
 "use client";
-import UniversalLink from "@/components/common/UniversalLink";
-
+import Link from "next/link";
 import { ArrowRight, BadgeCheck, Mail, Phone } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -52,18 +51,20 @@ const Footer = () => {
           {/* LEFT: Branding & Contact */}
           <div className="lg:col-span-5 space-y-6">
             <div>
-              <UniversalLink to="/" className="inline-block mb-3">
+              <Link href="/" className="inline-block mb-3">
                 <img
                   src="/assets/logo/shero-light.svg"
                   alt="Shero Logo"
                   className="h-10 w-auto dark:block hidden"
+                  suppressHydrationWarning
                 />
                 <img
                   src="/assets/logo/shero-light.svg"
                   alt="Shero Logo"
                   className="h-10 w-auto dark:hidden block brightness-0"
+                  suppressHydrationWarning
                 />
-              </UniversalLink>
+              </Link>
               <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed max-w-md transition-colors duration-300">
                 Engineering the future of technology with focus on clarity,
                 performance, and scalability with long term value to Redefine
@@ -130,13 +131,13 @@ const Footer = () => {
                 <ul className="space-y-4">
                   {companyLinks.map((link) => (
                     <li key={link}>
-                      <UniversalLink
-                        to={`/${link.toLowerCase().replace(" ", "-")}`}
+                      <Link
+                        href={`/${link.toLowerCase().replace(" ", "-")}`}
                         className="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors text-sm"
                       >
                         <ArrowRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                         {link}
-                      </UniversalLink>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -150,13 +151,13 @@ const Footer = () => {
                 <ul className="space-y-4">
                   {resourceLinks.map((link) => (
                     <li key={link}>
-                      <UniversalLink
-                        to={`/${link.toLowerCase().replace(" ", "-")}`}
+                      <Link
+                        href={`/${link.toLowerCase().replace(" ", "-")}`}
                         className="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors text-sm"
                       >
                         <ArrowRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                         {link}
-                      </UniversalLink>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -194,28 +195,28 @@ const Footer = () => {
         <div className="relative pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6 transition-colors duration-300">
           {/* Copyright & Legal */}
           <div className="flex flex-col md:flex-row items-center gap-6 text-sm text-slate-500">
-            <p className="font-sora">
+            <p className="font-sora" suppressHydrationWarning>
               &copy;{new Date().getFullYear()} Shero Group.
             </p>
             <div className="flex items-center gap-6">
-              <UniversalLink
-                to="/terms"
+              <Link
+                href="/terms"
                 className="hover:text-slate-900 dark:hover:text-white transition-colors"
               >
                 Terms
-              </UniversalLink>
-              <UniversalLink
-                to="/privacy"
+              </Link>
+              <Link
+                href="/privacy"
                 className="hover:text-slate-900 dark:hover:text-white transition-colors"
               >
                 Privacy
-              </UniversalLink>
-              <UniversalLink
-                to="/cookies"
+              </Link>
+              <Link
+                href="/cookies"
                 className="hover:text-slate-900 dark:hover:text-white transition-colors"
               >
                 Cookies
-              </UniversalLink>
+              </Link>
             </div>
           </div>
 

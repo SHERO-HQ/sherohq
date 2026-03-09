@@ -1,10 +1,10 @@
 "use client";
 import { useState, useMemo } from "react";
-import UniversalLink from "@/components/common/UniversalLink";
+import Link from "next/link";
 import { getImageUrl } from "@/services/api";
 import { useNotifications } from "@/hooks/useNotifications";
 import type { Product, Category } from "@/types/product";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 import {
   Search,
   Plus,
@@ -213,10 +213,10 @@ export default function AdminProducts() {
               className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4"
               asChild
             >
-              <UniversalLink to="/admin/products/new">
+              <Link href="/admin/products/new">
                 <Plus className="w-4 h-4 mr-2" />
                 Add Product
-              </UniversalLink>
+              </Link>
             </Button>
           </div>
         </div>
@@ -316,7 +316,7 @@ export default function AdminProducts() {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="relative w-10 h-10 rounded bg-slate-800 overflow-hidden shrink-0 border border-white/5">
-                            <ProductImage
+                            <AppImage
                               src={getImageUrl(product.image)}
                               alt={product.name}
                               fill
@@ -325,12 +325,12 @@ export default function AdminProducts() {
                             />
                           </div>
                           <div>
-                            <UniversalLink
-                              to={`/admin/products/${product.slug || product.sku || product.id}/edit`}
+                            <Link
+                              href={`/admin/products/${product.slug || product.sku || product.id}/edit`}
                               className="text-sm font-semibold text-white hover:text-emerald-400 font-sora transition-colors"
                             >
                               {product.name}
-                            </UniversalLink>
+                            </Link>
                             <p className="text-xs text-slate-500 font-mono">
                               ID: {product.id.slice(0, 8)}
                             </p>
@@ -392,11 +392,11 @@ export default function AdminProducts() {
                             className="h-8 w-8 text-slate-400 hover:text-white"
                             asChild
                           >
-                            <UniversalLink
-                              to={`/admin/products/${product.slug || product.sku || product.id}/edit`}
+                            <Link
+                              href={`/admin/products/${product.slug || product.sku || product.id}/edit`}
                             >
                               <Edit2 className="w-4 h-4" />
-                            </UniversalLink>
+                            </Link>
                           </Button>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>

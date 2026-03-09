@@ -26,7 +26,7 @@ import { Modal } from "@/components/ui/Modal";
 import { Label } from "@/components/ui/label";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Textarea } from "@/components/ui/textarea";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 
 const AdminTestimonials = () => {
   const { data: testimonials = [], isLoading } = useAdminTestimonials();
@@ -195,7 +195,7 @@ const AdminTestimonials = () => {
 
                   <div className="relative w-12 h-12 rounded bg-slate-700/50 overflow-hidden shrink-0 flex items-center justify-center">
                     {t.image ? (
-                      <ProductImage
+                      <AppImage
                         src={t.image}
                         alt={t.author}
                         fill

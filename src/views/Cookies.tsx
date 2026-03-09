@@ -1,10 +1,5 @@
-"use client";
-import Footer from "@/components/layout/Footer";
-import { useTitle } from "@/hooks/useTitle";
 
 const Cookies = () => {
-  useTitle("Cookie Policy");
-
   return (
     <>
       <div className="pt-24 pb-12 bg-slate-50 dark:bg-slate-950 min-h-screen">
@@ -84,7 +79,6 @@ const Cookies = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

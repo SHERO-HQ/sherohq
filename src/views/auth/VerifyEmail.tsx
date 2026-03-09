@@ -1,13 +1,12 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { verifyEmail } from "@/services/api";
-import { useTitle } from "@/hooks/useTitle";
 import { CheckCircle, XCircle, Loader2 } from "lucide-react";
 
 const VerifyEmail = () => {
-  useTitle("Verify Email");
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const hasAttemptedVerification = useRef(false);
 
@@ -66,7 +65,7 @@ const VerifyEmail = () => {
                 {message}
               </p>
               <Link
-                to="/profile"
+                href="/profile"
                 className="inline-block px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded transition-colors"
               >
                 Go to Profile
@@ -86,7 +85,7 @@ const VerifyEmail = () => {
                 {message}
               </p>
               <Link
-                to="/login"
+                href="/login"
                 className="inline-block px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded transition-colors"
               >
                 Go to Login

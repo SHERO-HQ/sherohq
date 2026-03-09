@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { useParams, useNavigate } from "react-router-dom";
-import UniversalLink from "@/components/common/UniversalLink";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   fetchOrderById,
   updateOrderStatus,
@@ -33,7 +33,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import ProductImage from "@/components/common/ProductImage";
+import AppImage from "@/components/common/AppImage";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,7 +44,7 @@ import {
 
 export default function OrderDetails() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [order, setOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -174,9 +174,9 @@ export default function OrderDetails() {
             className="text-white border-white/10 hover:bg-white/5"
             asChild
           >
-            <UniversalLink to="/admin/orders">
+            <Link href="/admin/orders">
               <ArrowLeft className="w-4 h-4 mr-2" /> Back to Orders
-            </UniversalLink>
+            </Link>
           </Button>
         </div>
       </AdminLayout>
@@ -195,7 +195,7 @@ export default function OrderDetails() {
               variant="ghost"
               size="icon"
               className="text-slate-400 hover:text-white hover:bg-white/5"
-              onClick={() => navigate(-1)}
+              onClick={() => router.back()}
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
@@ -316,7 +316,7 @@ export default function OrderDetails() {
                       {item.image &&
                       (item.image.startsWith("/uploads") ||
                         item.image.startsWith("http")) ? (
-                        <ProductImage
+                        <AppImage
                           src={getImageUrl(item.image)}
                           alt={item.name}
                           fill
@@ -405,7 +405,10 @@ export default function OrderDetails() {
                   </div>
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-slate-500">Updated</p>
-                    <p className="text-sm text-slate-300">
+                    <p
+                      className="text-sm text-slate-300"
+                      suppressHydrationWarning
+                    >
                       {new Date().toLocaleString()}
                     </p>
                   </div>
@@ -481,13 +484,13 @@ export default function OrderDetails() {
                     `${order.shippingInfo.address}, ${order.shippingInfo.city}, ${order.shippingInfo.region}`,
                   );
                   return (
-                    <UniversalLink
-                      to={`https://www.google.com/maps/search/?api=1&query=${query}`}
+                    <Link
+                      href={`https://www.google.com/maps/search/?api=1&query=${query}`}
                       target="_blank"
                       className="flex items-center gap-2 text-xs text-emerald-400 hover:text-emerald-300 transition-colors font-bold uppercase tracking-wider"
                     >
                       View on Maps <ExternalLink className="w-3 h-3" />
-                    </UniversalLink>
+                    </Link>
                   );
                 })()}
               </div>

@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * Subdomain-based routing middleware.
+ * Subdomain-based routing proxy.
  *
  * Rewrites requests from subdomains to their corresponding path prefix:
  *   admin.sherohq.com/dashboard → /admin/dashboard
  *   support.sherohq.com/faq     → /support/faq
  *   shop.sherohq.com/product-1  → /shop/product-1
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Never rewrite API or uploads requests: they must hit backend proxies directly

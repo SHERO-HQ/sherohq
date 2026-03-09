@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter, useSearchParams } from "next/navigation";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,7 +34,8 @@ interface InvoiceItem {
 }
 
 export default function AdminCreateInvoice() {
-  const navigate = useNavigate();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { addNotification } = useNotifications();
   const createOrderMutation = useCreateAdminOrder();
 
@@ -43,8 +44,7 @@ export default function AdminCreateInvoice() {
 
   // Customer Info
   const [customer, setCustomer] = useState(() => {
-    const params = new URLSearchParams(globalThis.location.search);
-    if (params.get("walkin") === "true") {
+    if (searchParams.get("walkin") === "true") {
       return {
         firstName: "Walk-in",
         lastName: "Guest",
@@ -140,11 +140,10 @@ export default function AdminCreateInvoice() {
   }, [addNotification]);
 
   useEffect(() => {
-    const params = new URLSearchParams(globalThis.location.search);
-    if (params.get("walkin") === "true") {
+    if (searchParams.get("walkin") === "true") {
       addNotification("Success", "Walk-in details pre-filled!", "success");
     }
-  }, [addNotification]);
+  }, [addNotification, searchParams]);
 
   const handleSubmit = async () => {
     if (
@@ -183,7 +182,7 @@ export default function AdminCreateInvoice() {
         `${mode === "invoice" ? "Invoice" : "Quote"} created successfully!`,
         "success",
       );
-      navigate(`/admin/orders/${result.order.id}`);
+      router.push(`/admin/orders/${result.order.id}`);
     } catch (error) {
       addNotification(
         "Error",
@@ -202,7 +201,7 @@ export default function AdminCreateInvoice() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate("/admin/orders")}
+              onClick={() => router.push("/admin/orders")}
               className="text-slate-400 hover:text-white hover:bg-white/5"
             >
               <ArrowLeft className="w-5 h-5" />

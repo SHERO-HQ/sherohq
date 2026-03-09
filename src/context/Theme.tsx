@@ -13,7 +13,7 @@ type ThemeProviderProps = {
 export function ThemeProvider({
   children,
   defaultTheme = "system",
-  storageKey = "vite-ui-theme",
+  storageKey = "shero-ui-theme",
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
@@ -23,9 +23,9 @@ export function ThemeProvider({
   useEffect(() => {
     const savedTheme = localStorage.getItem(storageKey) as Theme;
     if (savedTheme) {
-      setTheme(savedTheme);
+      queueMicrotask(() => setTheme(savedTheme));
     }
-    setIsLoaded(true);
+    queueMicrotask(() => setIsLoaded(true));
   }, [storageKey]);
 
   useEffect(() => {

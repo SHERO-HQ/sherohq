@@ -31,7 +31,6 @@ import {
   type RecentOrder,
   type RegionalData,
 } from "@/services/api";
-import { useTitle } from "@/hooks/useTitle";
 import {
   PieChart as PieChartIcon,
   DollarSign,
@@ -95,7 +94,6 @@ const getOrderStatusColor = (status: string) => {
 };
 
 export default function AdminReports() {
-  useTitle("Reports & Analytics");
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [analytics, setAnalytics] = useState<AnalyticsData[]>([]);
   const [topProducts, setTopProducts] = useState<TopProduct[]>([]);

@@ -29,7 +29,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "motion/react";
-import UniversalLink from "@/components/common/UniversalLink";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
 import {
@@ -231,20 +231,20 @@ export default function AdminOrders() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <UniversalLink to="/admin/orders/new?walkin=true">
+            <Link href="/admin/orders/new?walkin=true">
               <Button
                 variant="outline"
                 className="border-white/10 text-emerald-400 hover:bg-emerald-500/10 font-bold"
               >
                 <Plus className="mr-2 h-4 w-4" /> Record Walk-in
               </Button>
-            </UniversalLink>
+            </Link>
 
-            <UniversalLink to="/admin/orders/new">
+            <Link href="/admin/orders/new">
               <Button className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-all shadow-lg shadow-emerald-500/20">
                 <Plus className="mr-2 h-4 w-4" /> Create Order
               </Button>
-            </UniversalLink>
+            </Link>
           </div>
         </div>
 
@@ -352,12 +352,12 @@ export default function AdminOrders() {
                         className="hover:bg-white/5 transition-colors group"
                       >
                         <td className="px-6 py-4">
-                          <UniversalLink
-                            to={`/admin/orders/${order.id}`}
+                          <Link
+                            href={`/admin/orders/${order.id}`}
                             className="text-xs font-mono text-slate-400 hover:text-emerald-400 transition-colors"
                           >
                             #{order.id.slice(0, 12)}
-                          </UniversalLink>
+                          </Link>
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex flex-col">
@@ -402,9 +402,9 @@ export default function AdminOrders() {
                               className="h-8 w-8 text-slate-400 hover:text-white"
                               asChild
                             >
-                              <UniversalLink to={`/admin/orders/${order.id}`}>
+                              <Link href={`/admin/orders/${order.id}`}>
                                 <Eye className="w-4 h-4" />
-                              </UniversalLink>
+                              </Link>
                             </Button>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>

@@ -1,10 +1,5 @@
-"use client";
-import Footer from "@/components/layout/Footer";
-import { useTitle } from "@/hooks/useTitle";
 
 const Terms = () => {
-  useTitle("Terms of Service");
-
   return (
     <>
       <div className="pt-24 pb-12 bg-slate-50 dark:bg-slate-950 min-h-screen">
@@ -112,7 +107,6 @@ const Terms = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };
