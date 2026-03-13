@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
  *   admin.sherohq.com/dashboard → /admin/dashboard
  *   support.sherohq.com/faq     → /support/faq
  *   shop.sherohq.com/product-1  → /shop/product-1
+ *   api.sherohq.com/users       → /api/users
  */
 export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -39,6 +40,16 @@ export function proxy(request: NextRequest) {
 
   if (subdomain === "shop" && !url.pathname.startsWith("/shop")) {
     url.pathname = `/shop${url.pathname}`;
+    return NextResponse.rewrite(url);
+  }
+
+  // Route API subdomain to backend API proxy routes.
+  // Examples:
+  // - api.sherohq.com/ -> /api/health
+  // - api.sherohq.com/products -> /api/products
+  if (subdomain === "api" && !url.pathname.startsWith("/api")) {
+    url.pathname =
+      url.pathname === "/" ? "/api/health" : `/api${url.pathname}`;
     return NextResponse.rewrite(url);
   }
 
