@@ -48,32 +48,48 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ? String(product.description).slice(0, 160)
       : `${product.name} — GH₵${product.price}`;
 
+    const cacheBustedImageUrl = `${imageUrl}${imageUrl.includes("?") ? "&" : "?"}v=whatsapp-v2`;
+
     return {
       title: product.name,
       description,
+      metadataBase: new URL(shopSiteUrl),
+      alternates: {
+        canonical: `${shopSiteUrl}/${id}`,
+      },
       openGraph: {
         type: "website",
         title: `${product.name} | SHERO`,
         description,
         url: `${shopSiteUrl}/${id}`,
+        siteName: "SHERO",
         images: [
           {
-            url: imageUrl,
-            secureUrl: imageUrl.startsWith("https") ? imageUrl : imageUrl.replace("http://", "https://"),
+            url: cacheBustedImageUrl,
+            secureUrl: cacheBustedImageUrl,
             width: 1200,
             height: 630,
             alt: product.name,
-            type: "image/jpeg", // Assuming jpeg as it's common for product images
           },
+          {
+            // Fallback smaller image for picky crawlers like WhatsApp
+            url: `${siteUrl}/shero.png`,
+            width: 400,
+            height: 400,
+            alt: "SHERO Logo",
+          }
         ],
-        siteName: "SHERO",
       },
       twitter: {
         card: "summary_large_image",
         title: `${product.name} | SHERO`,
         description,
-        images: [imageUrl],
+        images: [cacheBustedImageUrl],
       },
+      other: {
+        "image_src": cacheBustedImageUrl, // Legacy tag
+        "thumbnail": cacheBustedImageUrl,
+      }
     };
   } catch {
     // Fallback metadata if product fetch fails
