@@ -1,9 +1,9 @@
 "use client";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { useRouter } from "next/navigation";
 import ProductCard from "./ProductCard";
 import type { Product } from "@/types/product";
-import { PackageX } from "lucide-react";
+import { PackageX, Sparkles, RefreshCcw } from "lucide-react";
 import { ProductGridSkeleton } from "@/components/ui/Skeleton";
 
 interface ProductGridProps {
@@ -28,88 +28,69 @@ const ProductGrid: React.FC<ProductGridProps> = ({
     4: "lg:grid-cols-4",
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  // Convert columns to skeleton count
-  const skeletonCountArg = {
-    2: 6,
-    3: 9,
-    4: 8,
-  }[columns];
-  const skeletonCount = skeletonCountArg || 8;
-
   // Loading State - Show skeleton grid
   if (loading) {
-    return <ProductGridSkeleton count={skeletonCount} />;
+    return <ProductGridSkeleton count={12} />;
   }
 
   // Empty State
   if (products.length === 0) {
     return (
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full py-20"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full py-24 flex flex-col items-center justify-center text-center"
       >
-        <div className="flex flex-col items-center justify-center gap-3 text-center">
-          <div
-            className="w-24 h-24 rounded-full bg-slate-100 dark:bg-slate-800 
-                        flex items-center justify-center"
-          >
-            <PackageX className="w-12 h-12 text-slate-400" />
+        <div className="relative mb-8 group">
+          <div className="absolute inset-0  blur-[50px]  group-hover:bg-emerald-500/30 transition-colors duration-500" />
+          <div className="relative w-32 h-32  backdrop-blur-3xl flex items-center justify-center shadow-2xl">
+            <PackageX className="w-16 h-16 text-slate-300 dark:text-slate-700" />
+            <Sparkles className="absolute top-4 right-4 w-6 h-6 text-emerald-500 animate-pulse" />
           </div>
-          <div>
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-              No Products Found
-            </h3>
-            <p className="text-slate-600 dark:text-slate-400">
-              Try adjusting your filters or search terms
-            </p>
-          </div>
-          <button
-            onClick={() => (onReset ? onReset() : router.refresh())}
-            className="cursor-pointer px-6 py-2 rounded bg-emerald-600 text-white font-semibold
-                     hover:bg-emerald-700 transition-colors"
-          >
-            Reset Filters
-          </button>
         </div>
+
+        <h3 className="text-3xl font-black font-sora text-slate-900 dark:text-white uppercase tracking-tighter mb-3">
+          No <span className="text-emerald-500">Discoveries</span> Found
+        </h3>
+        <p className="text-sm font-medium text-slate-500 uppercase tracking-widest mb-10 max-w-md">
+          Our sensors couldn't locate match for your current criteria. Perhaps a broader perspective?
+        </p>
+
+        <button
+          onClick={() => (onReset ? onReset() : router.refresh())}
+          className="group flex items-center gap-3 px-10 h-16 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest text-xs rounded shadow-xl shadow-emerald-500/20 active:scale-95 transition-all"
+        >
+          <RefreshCcw size={18} className="group-hover:rotate-180 transition-transform duration-700" />
+          Reset Search
+        </button>
       </motion.div>
     );
   }
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.4 },
-    },
-  };
-
   // Products Grid
   return (
-    <motion.div
-      key={products.map((p) => p.id).join(",")}
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className={`grid grid-cols-2 min-[500px]:grid-cols-3 lg:grid-cols-4 ${gridCols[columns]} gap-3`}
-    >
-      {products.map((product) => (
-        <motion.div key={product.id} variants={itemVariants}>
-          <ProductCard product={product} onQuickView={onQuickView} />
-        </motion.div>
-      ))}
-    </motion.div>
+    <div className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 ${gridCols[columns]} gap-x-6 gap-y-10`}>
+      <AnimatePresence mode="popLayout">
+        {products.map((product, idx) => (
+          <motion.div
+            key={product.id}
+            layout
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ 
+              duration: 0.5, 
+              delay: idx * 0.05,
+              type: "spring",
+              damping: 25,
+              stiffness: 120
+            }}
+          >
+            <ProductCard product={product} onQuickView={onQuickView} />
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    </div>
   );
 };
 

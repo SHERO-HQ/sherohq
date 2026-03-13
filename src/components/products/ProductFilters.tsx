@@ -1,7 +1,7 @@
 "use client";
 import { motion, AnimatePresence } from "motion/react";
-import { X, SlidersHorizontal, Check } from "lucide-react";
-import { useState } from "react";
+import { X, SlidersHorizontal, Check, Trash2, ArrowRight, Star } from "lucide-react";
+import { useState, useEffect } from "react";
 import type { Category } from "./ProductsCategories";
 import { Button } from "@/components/ui/button";
 
@@ -33,22 +33,24 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
   onCategoryChange,
 }) => {
   const [tempFilters, setTempFilters] = useState<FilterState>(filters);
+
+  // Sync internal state with props when modal opens or props change
+  useEffect(() => {
+    if (isOpen) {
+      setTempFilters(filters);
+    }
+  }, [filters, isOpen]);
+
   const [activeTab, setActiveTab] = useState<
-    "category" | "sort" | "price" | "brand" | "rating"
-  >("category"); // Default to category on mobile per request? Or sort? Let's check tab order.
+    "classification" | "sort" | "price" | "brand" | "rating" | "stock"
+  >("classification");
 
   const brands = [
-    "Apple",
-    "Samsung",
-    "Sony",
-    "Logitech",
-    "Razer",
-    "Dell",
-    "HP",
-    "Lenovo",
+    "Apple", "Samsung", "Sony", "Logitech", "Razer", "Dell", "HP", "Lenovo",
   ];
+  
   const sortOptions = [
-    { value: "newest", label: "Newest First" },
+    { value: "newest", label: "Newest Arrivals" },
     { value: "price-low", label: "Price: Low to High" },
     { value: "price-high", label: "Price: High to Low" },
     { value: "rating", label: "Highest Rated" },
@@ -56,14 +58,12 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
   ];
 
   const priceRanges = [
-    { label: "Under GH₵500", range: [0, 500] as [number, number] },
-    { label: "GH₵500 - GH₵1,000", range: [500, 1000] as [number, number] },
-    { label: "GH₵1,000 - GH₵3,000", range: [1000, 3000] as [number, number] },
-    { label: "GH₵3,000 - GH₵5,000", range: [3000, 5000] as [number, number] },
-    { label: "Above GH₵5,000", range: [5000, 1000000] as [number, number] },
+    { label: "Elite Selection (Above GH₵5,000)", range: [5000, 1000000] as [number, number] },
+    { label: "Premium Range (GH₵3,000 - GH₵5,000)", range: [3000, 5000] as [number, number] },
+    { label: "Mid-Tier Luxury (GH₵1,000 - GH₵3,000)", range: [1000, 3000] as [number, number] },
+    { label: "Standard Class (GH₵500 - GH₵1,000)", range: [500, 1000] as [number, number] },
+    { label: "Accessible Entry (Under GH₵500)", range: [0, 500] as [number, number] },
   ];
-
-  const ratings = [5, 4, 3, 2, 1];
 
   const handleApply = () => {
     onFilterChange(tempFilters);
@@ -71,369 +71,280 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
   };
 
   const handleReset = () => {
-    const resetFilters = {
-      priceRange: [0, 1000000] as [number, number],
+    const resetFilters: FilterState = {
+      priceRange: [0, 1000000],
       brands: [],
       minRating: 0,
       inStock: false,
       sortBy: "newest",
     };
     setTempFilters(resetFilters);
-    onFilterChange(resetFilters);
   };
 
   const isPriceRangeActive = (range: [number, number]) => {
-    return (
-      tempFilters.priceRange[0] === range[0] &&
-      tempFilters.priceRange[1] === range[1]
-    );
-  };
-
-  const getActiveFilterCount = () => {
-    let count = 0;
-    if (tempFilters.brands.length > 0) count += tempFilters.brands.length;
-    if (tempFilters.minRating > 0) count += 1;
-    if (tempFilters.inStock) count += 1;
-    if (
-      tempFilters.priceRange[0] !== 0 ||
-      tempFilters.priceRange[1] !== 1000000
-    )
-      count += 1;
-    return count;
+    return tempFilters.priceRange[0] === range[0] && tempFilters.priceRange[1] === range[1];
   };
 
   const tabs = [
-    { id: "category" as const, label: "Category", count: 0 },
-    { id: "sort" as const, label: "Sort", count: 0 },
-    {
-      id: "price" as const,
-      label: "Price",
-      count:
-        tempFilters.priceRange[0] !== 0 || tempFilters.priceRange[1] !== 1000000
-          ? 1
-          : 0,
-    },
-    { id: "brand" as const, label: "Brand", count: tempFilters.brands.length },
-    {
-      id: "rating" as const,
-      label: "Rating",
-      count: tempFilters.minRating > 0 ? 1 : 0,
-    },
+    { id: "classification" as const, label: "Classification" },
+    { id: "sort" as const, label: "Sort By" },
+    { id: "price" as const, label: "Investment" },
+    { id: "brand" as const, label: "Origin" },
+    { id: "rating" as const, label: "Satisfaction" },
+    { id: "stock" as const, label: "Availability" },
   ];
 
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 z-50 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/60 z-100 backdrop-blur-md"
           />
 
-          {/* Bottom Sheet */}
           <motion.div
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
+            initial={{ y: "100%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: "100%", opacity: 0 }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed inset-x-0 bottom-0 z-50 dark:bg-slate-900 bg-slate-200 
-                       border-t border-white/10
-                     rounded shadow-2xl max-h-[85vh] flex flex-col"
+            className="fixed md:right-8 md:bottom-8 inset-x-0 bottom-0 md:inset-x-auto z-101 
+                       dark:bg-slate-900/90 bg-white/95 backdrop-blur-3xl 
+                       border-t md:border border-white/10 rounded-t md:rounded-xl shadow-2xl 
+                       max-h-[85vh] md:max-h-[80vh] w-full md:max-w-2xl flex flex-col overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Handle Bar */}
-            <div className="flex justify-center pt-3 pb-2">
-              <div className="w-12 h-1.5 dark:bg-slate-700 bg-slate-600 hover:bg-slate-800 rounded" />
+            {/* Grab Handle */}
+            <div className="flex justify-center pt-4 pb-2">
+              <div className="w-16 h-1.5 dark:bg-white/10 bg-slate-200 rounded" />
             </div>
 
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-2 dark:border-b dark:border-white/5 border-b border-white/5">
-              <div className="flex items-center gap-3">
-                <SlidersHorizontal className="w-5 h-5 dark:text-emerald-400 text-emerald-900" />
-                <h2 className="text-xl font-bold text-emerald-900 dark:text-white">
-                  Filters
-                </h2>
-                {getActiveFilterCount() > 0 && (
-                  <span className="px-2 py-1 text-xs font-semibold bg-emerald-600 text-white rounded">
-                    {getActiveFilterCount()}
-                  </span>
-                )}
+            <div className="px-8 py-6 flex items-center justify-between border-b border-white/5">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-emerald-500/10 rounded">
+                  <SlidersHorizontal className="w-6 h-6 text-emerald-500" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-black font-sora text-slate-900 dark:text-white uppercase tracking-tighter">
+                    Refine <span className="text-emerald-500">Search</span>
+                  </h2>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Fine-tune your technical requirements</p>
+                </div>
               </div>
               <button
                 onClick={onClose}
-                className="w-10 h-10 rounded dark:bg-white/5 bg-red-400
-                         flex items-center justify-center
-                         hover:bg-red-500/90 hover:text-white transition-colors cursor-pointer"
+                className="p-4 bg-slate-100 dark:bg-white/5 rounded hover:bg-red-500 hover:text-white transition-all active:scale-95"
               >
-                <X className="w-5 h-5 text-white" />
+                <X size={20} />
               </button>
             </div>
 
-            {/* Tabs */}
-            <div className="flex border-b dark:border-white/5 border-slate-300 px-4 overflow-x-auto">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-2 font-medium whitespace-nowrap
-                           border-b-2 transition-colors cursor-pointer ${
-                             activeTab === tab.id
-                               ? "dark:border-emerald-400 border-emerald-900 dark:text-emerald-400 text-emerald-900"
-                               : "dark:border-transparent border-transparent dark:text-slate-400 text-slate-700"
-                           }`}
-                >
-                  <span>{tab.label}</span>
-                  {tab.count > 0 && (
-                    <span className="cursor-pointer px-1.5 py-0.5 text-xs font-semibold bg-emerald-600 text-white rounded shadow-sm shadow-emerald-500/20">
-                      {tab.count}
-                    </span>
-                  )}
-                </button>
-              ))}
-            </div>
-
-            {/* Content */}
-            <div className="flex-1 overflow-y-auto px-6 py-2">
-              {/* Category Tab */}
-              {activeTab === "category" && (
-                <div className="space-y-2">
-                  {categories.map((category) => (
-                    <button
-                      key={category.id}
-                      onClick={() => onCategoryChange(category.id)}
-                      className={`flex items-center justify-between w-full p-4 rounded
-                                transition-all cursor-pointer ${
-                                  activeCategory === category.id
-                                    ? "dark:bg-emerald-900/20 bg-emerald-100/50 border border-emerald-600/50"
-                                    : "dark:bg-slate-800/50 bg-slate-200/50 border border-transparent"
-                                }`}
-                    >
-                      <span className="flex items-center gap-3">
-                        <span className="text-xl dark:text-gray-300 text-gray-600">
-                          {/* We don't have the icon object easily stringifiable here unless active, but we rendered node in Category type. 
-                              Wait, Category type has icon: React.ReactNode. We can render it! */}
-                          {category.icon}
-                        </span>
-                        <span
-                          className={`font-medium ${
-                            activeCategory === category.id
-                              ? "dark:text-emerald-400 text-emerald-700"
-                              : "dark:text-slate-400 text-slate-700"
-                          }`}
-                        >
-                          {category.name}
-                        </span>
-                      </span>
-                      {activeCategory === category.id && (
-                        <Check className="w-5 h-5 dark:text-emerald-400 text-emerald-700" />
-                      )}
-                      {category.count !== undefined && (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 dark:text-slate-400 text-slate-600 font-medium">
-                          {category.count}
-                        </span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
-              {/* Sort Tab */}
-              {activeTab === "sort" && (
-                <div className="space-y-2">
-                  {sortOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      onClick={() =>
-                        setTempFilters({ ...tempFilters, sortBy: option.value })
-                      }
-                      className={`w-full flex items-center justify-between p-4 rounded
-                                transition-all cursor-pointer ${
-                                  tempFilters.sortBy === option.value
-                                    ? "dark:bg-emerald-900/20 bg-emerald-300/20 border border-emerald-600/50"
-                                    : "dark:bg-slate-800/50 bg-slate-300/70 border border-transparent"
-                                }`}
-                    >
-                      <span
-                        className={`font-medium ${
-                          tempFilters.sortBy === option.value
-                            ? "dark:text-emerald-400 text-emerald-800"
-                            : "dark:text-slate-400 text-slate-700"
-                        }`}
-                      >
-                        {option.label}
-                      </span>
-                      {tempFilters.sortBy === option.value && (
-                        <Check className="cursor-pointer w-6 h-6 dark:text-emerald-400 text-emerald-800" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
-
-              {/* Price Tab */}
-              {activeTab === "price" && (
-                <div className="space-y-3">
-                  {priceRanges.map((range) => (
-                    <button
-                      key={range.label}
-                      onClick={() =>
-                        setTempFilters({
-                          ...tempFilters,
-                          priceRange: range.range,
-                        })
-                      }
-                      className={`w-full flex items-center justify-between p-4 rounded
-                                transition-all ${
-                                  isPriceRangeActive(range.range)
-                                    ? "dark:bg-emerald-900/20 bg-emerald-300/20 border dark:border-emerald-600/50 border-emerald-300/50"
-                                    : "dark:bg-slate-800/50 bg-slate-300/70 border border-transparent"
-                                }`}
-                    >
-                      <span
-                        className={`font-medium ${
-                          isPriceRangeActive(range.range)
-                            ? "dark:text-emerald-400 text-emerald-800"
-                            : "dark:text-slate-400 text-slate-700"
-                        }`}
-                      >
-                        {range.label}
-                      </span>
-                      {isPriceRangeActive(range.range) && (
-                        <Check className="cursor-pointer w-6 h-6 dark:text-emerald-400 text-emerald-800" />
-                      )}
-                    </button>
-                  ))}
-
-                  {/* Stock Filter */}
-                  <label className="flex items-center justify-between p-4 rounded dark:bg-slate-800/50 bg-slate-300/70 cursor-pointer">
-                    <span className="font-medium dark:text-slate-400 text-slate-700">
-                      In Stock Only
-                    </span>
-                    <input
-                      type="checkbox"
-                      checked={tempFilters.inStock}
-                      onChange={(e) =>
-                        setTempFilters({
-                          ...tempFilters,
-                          inStock: e.target.checked,
-                        })
-                      }
-                      className="w-6 h-6 rounded dark:border-slate-600 border-slate-300/70 dark:bg-slate-700 bg-slate-300/30
-                                text-emerald-600 dark:focus:ring-emerald-500 focus:ring-emerald-500 cursor-pointer"
-                    />
-                  </label>
-                </div>
-              )}
-
-              {/* Brand Tab */}
-              {activeTab === "brand" && (
-                <div className="space-y-2">
-                  {brands.map((brand) => (
-                    <label
-                      key={brand}
-                      className="flex items-center justify-between p-4 rounded dark:bg-slate-800/50 bg-slate-300/70 cursor-pointer
-                               active:bg-slate-700 transition-colors"
-                    >
-                      <span className="font-medium dark:text-slate-400 text-slate-700">
-                        {brand}
-                      </span>
-                      <input
-                        type="checkbox"
-                        checked={tempFilters.brands.includes(brand)}
-                        onChange={(e) => {
-                          const newBrands = e.target.checked
-                            ? [...tempFilters.brands, brand]
-                            : tempFilters.brands.filter((b) => b !== brand);
-                          setTempFilters({ ...tempFilters, brands: newBrands });
-                        }}
-                        className="w-6 h-6 rounded dark:border-slate-600 border-slate-300/70 dark:bg-slate-700 bg-slate-300/30
-                                 text-emerald-600 dark:focus:ring-emerald-500 focus:ring-emerald-500 cursor-pointer"
-                      />
-                    </label>
-                  ))}
-                </div>
-              )}
-
-              {/* Rating Tab */}
-              {activeTab === "rating" && (
-                <div className="space-y-2">
-                  {ratings.map((rating) => (
-                    <button
-                      key={rating}
-                      onClick={() =>
-                        setTempFilters({ ...tempFilters, minRating: rating })
-                      }
-                      className={`w-full flex items-center justify-between p-4 rounded
-                                transition-all cursor-pointer ${
-                                  tempFilters.minRating === rating
-                                    ? "dark:bg-emerald-900/20 bg-emerald-300/20 border dark:border-emerald-600/50 border-emerald-300/50"
-                                    : "dark:bg-slate-800/50 bg-slate-300/70 border border-transparent"
-                                }`}
-                    >
-                      <div className="cursor-pointer flex items-center gap-2">
-                        <span className="text-xl">{"⭐".repeat(rating)}</span>
-                        <span
-                          className={`font-medium ${
-                            tempFilters.minRating === rating
-                              ? "dark:text-emerald-300 text-emerald-800"
-                              : "dark:text-slate-400 text-slate-700"
-                          }`}
-                        >
-                          {rating} & Up
-                        </span>
-                      </div>
-                      {tempFilters.minRating === rating && (
-                        <Check className="w-6 h-6 dark:text-amber-400 text-emerald-800" />
-                      )}
-                    </button>
-                  ))}
+            <div className="flex flex-col md:flex-row flex-1 overflow-hidden">
+              {/* Responsive Tabs/Sidebar */}
+              <div className="flex md:flex-col overflow-x-auto md:overflow-y-auto no-scrollbar border-b md:border-b-0 md:border-r border-white/5 shrink-0">
+                {tabs.map((tab) => (
                   <button
-                    onClick={() =>
-                      setTempFilters({ ...tempFilters, minRating: 0 })
-                    }
-                    className={`w-full flex items-center justify-between p-4 rounded
-                             transition-all cursor-pointer ${
-                               tempFilters.minRating === 0
-                                 ? "dark:bg-emerald-900/20 bg-emerald-300/20 border dark:border-emerald-600/50 border-emerald-300/50"
-                                 : "dark:bg-slate-800/50 bg-slate-300/70 border border-transparent"
-                             }`}
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`relative px-6 py-4 md:px-8 md:py-6 text-left transition-all duration-300 flex-1 md:flex-none whitespace-nowrap md:whitespace-normal ${
+                      activeTab === tab.id
+                        ? "text-emerald-500 bg-emerald-500/5 md:bg-transparent"
+                        : "text-slate-400 hover:text-slate-600 dark:hover:text-white"
+                    }`}
                   >
-                    <span
-                      className={`font-medium ${
-                        tempFilters.minRating === 0
-                          ? "dark:text-emerald-300 text-emerald-800"
-                          : "dark:text-slate-400 text-slate-700"
-                      }`}
-                    >
-                      All Ratings
-                    </span>
-                    {tempFilters.minRating === 0 && (
-                      <Check className="cursor-pointer w-6 h-6 dark:text-emerald-400 text-emerald-800" />
+                    <span className="hidden md:block text-[10px] font-black uppercase tracking-widest mb-1">Filter</span>
+                    <span className="text-[10px] md:text-xs font-black uppercase tracking-tight">{tab.label}</span>
+                    {activeTab === tab.id && (
+                      <motion.div
+                        layoutId="activeTabIndicator"
+                        className="absolute bottom-0 left-0 right-0 h-0.5 md:h-8 md:w-1 md:right-0 md:left-auto md:top-1/2 md:-translate-y-1/2 bg-emerald-500 md:rounded-l-full shadow-[0_0_12px_rgba(16,185,129,0.5)]"
+                      />
                     )}
                   </button>
-                </div>
-              )}
+                ))}
+              </div>
+
+              {/* Main Content Areas */}
+              <div className="flex-1 overflow-y-auto p-4 sm:p-10 space-y-8 no-scrollbar">
+                {activeTab === "classification" && (
+                  <div className="grid grid-cols-1 gap-3">
+                    {categories.map((category) => (
+                      <button
+                        key={category.id}
+                        onClick={() => onCategoryChange(category.id)}
+                        className={`flex items-center justify-between p-4 sm:p-6 rounded transition-all border-2 ${
+                          activeCategory === category.id
+                            ? "bg-emerald-500/10 border-emerald-500/50"
+                            : "bg-slate-50 dark:bg-white/5 border-transparent"
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 sm:gap-4">
+                           <div className={`p-2 sm:p-3 rounded transition-colors ${
+                              activeCategory === category.id ? "bg-emerald-500 text-white" : "dark:bg-white/10 bg-slate-200 text-slate-500"
+                           }`}>
+                             {category.icon}
+                           </div>
+                           <span className={`font-black uppercase tracking-tight text-xs sm:text-sm ${
+                             activeCategory === category.id ? "text-emerald-500" : "text-slate-500"
+                           }`}>
+                             {category.name}
+                           </span>
+                        </div>
+                        <span className="text-[9px] sm:text-[10px] font-mono font-bold dark:text-slate-600 text-slate-400">
+                          [{category.count || 0}]
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {activeTab === "sort" && (
+                  <div className="grid grid-cols-1 gap-3">
+                    {sortOptions.map((option) => (
+                      <button
+                        key={option.value}
+                        onClick={() => setTempFilters({ ...tempFilters, sortBy: option.value })}
+                        className={`group flex items-center justify-between p-4 sm:p-6 rounded transition-all border-2 ${
+                          tempFilters.sortBy === option.value
+                            ? "bg-emerald-500/10 border-emerald-500/50"
+                            : "bg-slate-50 dark:bg-white/5 border-transparent hover:border-white/10"
+                        }`}
+                      >
+                        <span className={`font-black uppercase tracking-tight text-xs sm:text-sm ${
+                          tempFilters.sortBy === option.value ? "text-emerald-500" : "text-slate-500"
+                        }`}>
+                          {option.label}
+                        </span>
+                        {tempFilters.sortBy === option.value && (
+                          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                            <Check size={14} className="text-white" />
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {activeTab === "price" && (
+                  <div className="grid grid-cols-1 gap-4">
+                    {priceRanges.map((range) => (
+                      <button
+                        key={range.label}
+                        onClick={() => setTempFilters({ ...tempFilters, priceRange: range.range })}
+                        className={`flex items-center justify-between p-4 sm:p-6 rounded transition-all border-2 ${
+                          isPriceRangeActive(range.range)
+                            ? "bg-emerald-500/10 border-emerald-500/50"
+                            : "bg-slate-50 dark:bg-white/5 border-transparent"
+                        }`}
+                      >
+                        <span className={`font-black uppercase tracking-tight text-[10px] sm:text-xs ${
+                          isPriceRangeActive(range.range) ? "text-emerald-500" : "text-slate-500"
+                        }`}>
+                          {range.label}
+                        </span>
+                        {isPriceRangeActive(range.range) && (
+                          <Check size={14} className="text-emerald-500" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {activeTab === "brand" && (
+                  <div className="grid grid-cols-2 sm:grid-cols-2 gap-3">
+                    {brands.map((brand) => (
+                      <button
+                        key={brand}
+                        onClick={() => {
+                          const newBrands = tempFilters.brands.includes(brand)
+                            ? tempFilters.brands.filter(b => b !== brand)
+                            : [...tempFilters.brands, brand];
+                          setTempFilters({ ...tempFilters, brands: newBrands });
+                        }}
+                        className={`px-4 py-3 sm:px-6 sm:py-4 rounded font-black uppercase tracking-widest text-[9px] sm:text-[10px] border-2 transition-all ${
+                          tempFilters.brands.includes(brand)
+                            ? "bg-emerald-500 border-emerald-500 text-white shadow-lg shadow-emerald-500/20"
+                            : "bg-slate-50 dark:bg-white/5 border-transparent text-slate-500"
+                        }`}
+                      >
+                        {brand}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {activeTab === "rating" && (
+                  <div className="grid grid-cols-1 gap-3">
+                    {[5, 4, 3, 2, 1].map((r) => (
+                      <button
+                        key={r}
+                        onClick={() => setTempFilters({ ...tempFilters, minRating: r })}
+                        className={`flex items-center justify-between p-4 sm:p-6 rounded transition-all border-2 ${
+                          tempFilters.minRating === r
+                            ? "bg-emerald-500/10 border-emerald-500/50"
+                            : "bg-slate-50 dark:bg-white/5 border-transparent"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                           <div className="flex items-center">
+                             {[...Array(5)].map((_, i) => (
+                               <Star key={i} size={14} className={`${i < r ? "fill-amber-400 text-amber-400" : "text-slate-200 dark:text-slate-800"}`} />
+                             ))}
+                           </div>
+                           <span className="ml-1 sm:ml-2 font-black text-[10px] sm:text-xs uppercase tracking-tight text-slate-500">{r} & Up</span>
+                        </div>
+                        {tempFilters.minRating === r && <Check size={14} className="text-emerald-500" />}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {activeTab === "stock" && (
+                  <div className="space-y-6">
+                    <button
+                      onClick={() => setTempFilters({ ...tempFilters, inStock: !tempFilters.inStock })}
+                      className={`w-full flex items-center justify-between p-6 sm:p-8 rounded transition-all border-2 ${
+                        tempFilters.inStock
+                          ? "bg-emerald-500/10 border-emerald-500/50"
+                          : "bg-slate-50 dark:bg-white/5 border-transparent"
+                      }`}
+                    >
+                      <div className="text-left">
+                        <span className="block font-black uppercase tracking-tighter text-lg sm:text-xl text-slate-900 dark:text-white mb-1">Immediate Access</span>
+                        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-slate-500 line-clamp-1">Items in local fulfillment centers</span>
+                      </div>
+                      <div className={`w-10 h-5 sm:w-12 sm:h-6 rounded-full relative transition-colors shrink-0 ${
+                        tempFilters.inStock ? "bg-emerald-500" : "bg-slate-300 dark:bg-white/10"
+                      }`}>
+                        <motion.div 
+                          animate={{ x: tempFilters.inStock ? 26 : 4 }}
+                          className="absolute top-1 w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full shadow-lg" 
+                        />
+                      </div>
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Footer Actions */}
-            <div className="flex gap-3 p-6 border-t border-white/5 dark:bg-slate-900 bg-slate-100">
-              <Button
-                variant="outline"
+            {/* Actions Footer */}
+            <div className="px-6 py-6 border-t border-white/5 bg-slate-50/50 dark:bg-white/5 backdrop-blur-3xl flex flex-row items-center gap-3">
+              <button
                 onClick={handleReset}
-                className="flex-1 h-12 font-bold border-slate-300 dark:border-slate-700 dark:text-slate-300 text-slate-700 hover:bg-red-500 hover:text-white dark:hover:bg-red-600 dark:hover:text-white transition-colors"
+                className="flex items-center justify-center gap-2 px-4 h-12 rounded font-black uppercase tracking-widest text-[9px] text-slate-500 hover:text-red-500 transition-colors border border-transparent hover:border-red-500/20"
               >
-                Reset
-              </Button>
-              <Button
-                variant="brand"
+                <Trash2 size={14} /> <span className="hidden sm:inline">Reset</span>
+              </button>
+              <button
                 onClick={handleApply}
-                className="flex-1 h-12 font-bold shadow-lg shadow-emerald-500/20"
+                className="flex-1 flex items-center justify-center gap-3 h-12 bg-emerald-600 text-white rounded font-black uppercase tracking-widest text-[10px] hover:bg-emerald-500 shadow-xl shadow-emerald-500/20 active:scale-[0.98] transition-all group"
               >
-                Apply Filters
-              </Button>
+                Apply Filters <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
+              </button>
             </div>
           </motion.div>
         </>

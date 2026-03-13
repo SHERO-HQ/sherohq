@@ -4,6 +4,7 @@ import { ToggleTheme } from "./toggle-theme";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { useWishlist } from "@/hooks/useWishlist";
+import { useIsMounted } from "@/hooks/useIsMounted";
 import { LogOut, ShoppingCart, User, Heart } from "lucide-react";
 import NavLink from "@/components/common/NavLink";
 
@@ -19,6 +20,7 @@ const Nav = () => {
   const { totalQuantity, setIsCartOpen } = useCart();
   const { wishlist, setIsWishlistOpen } = useWishlist();
   const { user, isAuthenticated, logout } = useAuth();
+  const mounted = useIsMounted();
 
   // Animation variants
   const menuVars = {
@@ -124,9 +126,9 @@ const Nav = () => {
             {/* Right Groups Wrapper */}
             <div className="flex items-center gap-2 lg:space-x-2 ml-auto">
               {/* Desktop Menu */}
-              <ul className="hidden lg:flex items-center gap-3">
+              <ul className="hidden lg:flex items-center gap-3" suppressHydrationWarning>
                 {navLinks.map((item) => (
-                  <li key={item}>
+                  <li key={item} suppressHydrationWarning>
                     <NavLink
                       className={({ isActive }) => navLinkClass(isActive)}
                       href={`/${item.toLowerCase().replace(" ", "-")}`}
@@ -142,30 +144,6 @@ const Nav = () => {
                 {/* Search */}
                 <SearchBar className="hidden lg:block" />
 
-                {/* Contact Us - Desktop Only */}
-                <NavLink
-                  href="/contact-us"
-                  className="hidden lg:inline-flex group items-center gap-1
-                           text-white dark:text-slate-900 bg-emerald-600 dark:bg-emerald-500
-                           px-6 py-2 rounded font-semibold text-sm
-                           hover:bg-emerald-700 dark:hover:bg-emerald-600
-                           hover:shadow-lg hover:shadow-emerald-500/25
-                           hover:gap-0.5
-                           transition-all duration-300"
-                >
-                  <span>Contact Us</span>
-                  <svg
-                    className="w-4 h-4 transition-transform"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M5 12H19M19 12L13 6M19 12L13 18" />
-                  </svg>
-                </NavLink>
 
                 {/* Wishlist Button */}
                 <button
@@ -174,9 +152,9 @@ const Nav = () => {
                   aria-label="Open Wishlist"
                 >
                   <Heart
-                    className={`w-6 h-6 ${wishlist.length > 0 ? "fill-red-500 text-red-500" : ""}`}
+                    className={`w-6 h-6 ${mounted && wishlist.length > 0 ? "fill-red-500 text-red-500" : ""}`}
                   />
-                  {wishlist.length > 0 && (
+                  {mounted && wishlist.length > 0 && (
                     <Badge
                       variant="destructive"
                       className="absolute -top-2 -right-2 h-5 min-w-5 px-1 flex items-center justify-center rounded-full text-[10px] ring-2 ring-background animate-in zoom-in"
@@ -193,7 +171,7 @@ const Nav = () => {
                   aria-label="Open Cart"
                 >
                   <ShoppingCart className="w-6 h-6" />
-                  {totalQuantity > 0 && (
+                  {mounted && totalQuantity > 0 && (
                     <Badge
                       variant="emerald"
                       className="absolute -top-2 -right-2 h-5 min-w-5 px-1 flex items-center justify-center rounded-full text-[10px] ring-2 ring-background animate-in zoom-in"
@@ -205,7 +183,7 @@ const Nav = () => {
 
                 {/* User Dropdown */}
                 <div className="hidden lg:block relative group">
-                  {isAuthenticated ? (
+                  {mounted && isAuthenticated ? (
                     <button className="cursor-pointer p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                       <span className="sr-only">User Menu</span>
                       <div className="w-8 h-8 rounded  font-sora font-bold bg-linear-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-sm text-white shrink-0 shadow">
@@ -223,7 +201,7 @@ const Nav = () => {
                   )}
 
                   {/* Dropdown Menu (Only when authenticated) */}
-                  {isAuthenticated && (
+                  {mounted && isAuthenticated && (
                     <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded shadow-lg border border-slate-200 dark:border-slate-800 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                       <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
                         <p className="text-sm font-bold font-sora text-slate-900 dark:text-white line-clamp-1">
@@ -349,7 +327,7 @@ const Nav = () => {
 
                 {/* Mobile Profile Section */}
                 <div className="pt-6 mb-8 border-t border-slate-200 dark:border-slate-800">
-                  {isAuthenticated ? (
+                  {mounted && isAuthenticated ? (
                     <div className="space-y-4">
                       <div className="flex items-center gap-3 px-2">
                         <div className="w-10 h-10 rounded  font-sora font-bold bg-linear-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-xl text-white shrink-0 ">
@@ -412,34 +390,7 @@ const Nav = () => {
                   )}
                 </div>
 
-                {/* Mobile CTA */}
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0, transition: { delay: 0.4 } }}
-                >
-                  <NavLink
-                    href="/contact-us"
-                    onClick={() => setIsOpen(false)}
-                    className="flex w-full items-center justify-center gap-2
-                               text-white bg-emerald-600 dark:bg-emerald-500
-                               px-6 py-2 rounded font-semibold
-                               hover:bg-emerald-700 dark:hover:bg-emerald-600
-                               transition-all duration-300 shadow-lg shadow-emerald-500/25"
-                  >
-                    <span>Contact Us</span>
-                    <svg
-                      className="w-5 h-5"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M5 12H19M19 12L13 6M19 12L13 18" />
-                    </svg>
-                  </NavLink>
-                </motion.div>
+
               </motion.div>
             </>
           )}

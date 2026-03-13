@@ -31,22 +31,31 @@ const Contact = () => {
               className="space-y-12"
             >
               <div>
-                <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-500 uppercase tracking-wider transition-colors duration-300">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  Secure Transmission
+                <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-500/40 uppercase tracking-wider transition-colors duration-300">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  Contact SHERO
                 </span>
                 <h1 className="text-4xl md:text-6xl font-sora font-bold text-slate-900 dark:text-white mb-6 leading-tight">
-                  Let's Build the
+                  Speak with a team that ships
                   <br />
                   <span className="text-transparent bg-clip-text bg-linear-to-r dark:from-emerald-400 dark:to-cyan-400  from-primary to-cyan-600">
-                    Future Together
+                    real outcomes
                   </span>
                 </h1>
                 <p className="text-base text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed">
-                  Ready to redefine your vision into possibilities? Our team of
-                  developers and technicians is standing by to bring your ideas
-                  to life.
+                  Tell us your goals and constraints. We will recommend the
+                  right mix of products, software, and support for your stage of
+                  growth.
                 </p>
+
+                <div className="flex flex-wrap gap-3 mt-7">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
+                    24h Initial Response
+                  </span>
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
+                    Consultative Guidance
+                  </span>
+                </div>
               </div>
 
               {/* Contact Details */}

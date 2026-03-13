@@ -100,9 +100,12 @@ const AboutTeam = () => {
                     className="object-cover rounded transition-all duration-700 filter grayscale group-hover:grayscale-0 group-hover:scale-110"
                   />
                 ) : (
-                  <div className="w-full h-full bg-linear-to-br from-blue-600/20 to-emerald-600/20 flex items-center justify-center text-slate-400 dark:text-slate-500 font-bold text-5xl tracking-tighter transition-all duration-700 group-hover:from-blue-600 group-hover:to-emerald-600 group-hover:text-white">
-                    {getInitials(member.name)}
-                  </div>
+                  <>
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-100/50 via-white to-slate-50 dark:from-slate-900/50 dark:via-slate-950 dark:to-black pointer-events-none transition-all duration-500" />
+                    <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-slate-500 font-bold text-5xl tracking-tighter transition-all duration-700 group-hover:from-blue-600 group-hover:to-emerald-600 group-hover:text-white">
+                      {getInitials(member.name)}
+                    </div>
+                  </>
                 )}
 
                 {/* Overlay with bio */}
@@ -179,7 +182,7 @@ const AboutTeam = () => {
               <Users className="w-4 h-4" />
               Our Team
             </span>
-            <h2 className="text-3xl md:text-4xl font-sora font-bold text-slate-900 dark:text-white transition-colors duration-300">
+            <h2 className="text-3xl md:text-5xl font-black font-sora text-slate-900 dark:text-white uppercase tracking-tighter transition-colors duration-300">
               Meet the Minds
             </h2>
             <p className="text-slate-600 dark:text-slate-400 max-w-2xl mt-2 transition-colors duration-300">

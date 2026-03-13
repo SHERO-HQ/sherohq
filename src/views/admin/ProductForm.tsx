@@ -8,6 +8,8 @@ import {
   type ProductInput,
 } from "@/services/api";
 import type { Product } from "@/types/product";
+import { Card } from "@/components/ui/card";
+import { v4 as uuidv4 } from "uuid";
 import {
   Save,
   X,
@@ -34,9 +36,17 @@ import { useBreadcrumb } from "@/context/BreadcrumbContext";
 import { cn } from "@/lib/utils";
 import AppImage from "@/components/common/AppImage";
 
+
+
 interface Category {
   id: string;
   name: string;
+}
+
+interface SpecRow {
+  id: string;
+  key: string;
+  value: string;
 }
 
 export default function ProductForm() {
@@ -69,9 +79,7 @@ export default function ProductForm() {
     stockQuantity: 100,
   });
 
-  const [specsList, setSpecsList] = useState<{ key: string; value: string }[]>(
-    [],
-  );
+  const [specsList, setSpecsList] = useState<SpecRow[]>([]);
   const [newFeature, setNewFeature] = useState("");
 
   useEffect(() => {
@@ -95,6 +103,7 @@ export default function ProductForm() {
             if (product.specifications) {
               setSpecsList(
                 Object.entries(product.specifications).map(([key, value]) => ({
+                  id: uuidv4(),
                   key,
                   value,
                 })),
@@ -219,22 +228,20 @@ export default function ProductForm() {
   };
 
   const addSpecRow = () => {
-    setSpecsList((prev) => [...prev, { key: "", value: "" }]);
+    setSpecsList((prev) => [...prev, { id: uuidv4(), key: "", value: "" }]);
   };
 
-  const removeSpecRow = (index: number) => {
-    setSpecsList((prev) => prev.filter((_, i) => i !== index));
+  const removeSpecRow = (id: string) => {
+    setSpecsList((prev) => prev.filter((s) => s.id !== id));
   };
 
   const updateSpecRow = (
-    index: number,
+    id: string,
     field: "key" | "value",
     newValue: string,
   ) => {
     setSpecsList((prev) => {
-      const newList = [...prev];
-      newList[index] = { ...newList[index], [field]: newValue };
-      return newList;
+      return prev.map((s) => (s.id === id ? { ...s, [field]: newValue } : s));
     });
   };
 
@@ -499,9 +506,9 @@ export default function ProductForm() {
                 </div>
 
                 <div className="space-y-3">
-                  {specsList.map((spec, index) => (
+                  {specsList.map((spec) => (
                     <div
-                      key={`spec-${index}-${spec.key}`}
+                      key={spec.id}
                       className="flex gap-3 items-start p-3 rounded bg-slate-800/30 border border-white/5 animate-in fade-in slide-in-from-top-1 duration-200"
                     >
                       <div className="flex-1 space-y-1">
@@ -509,7 +516,7 @@ export default function ProductForm() {
                           placeholder="Key (e.g. RAM)"
                           value={spec.key}
                           onChange={(e) =>
-                            updateSpecRow(index, "key", e.target.value)
+                            updateSpecRow(spec.id, "key", e.target.value)
                           }
                           className="bg-slate-800/50 border-white/5 text-white h-9 text-sm"
                         />
@@ -519,14 +526,14 @@ export default function ProductForm() {
                           placeholder="Value (e.g. 16GB)"
                           value={spec.value}
                           onChange={(e) =>
-                            updateSpecRow(index, "value", e.target.value)
+                            updateSpecRow(spec.id, "value", e.target.value)
                           }
                           className="bg-slate-800/50 border-white/5 text-white h-9 text-sm"
                         />
                       </div>
                       <Button
                         type="button"
-                        onClick={() => removeSpecRow(index)}
+                        onClick={() => removeSpecRow(spec.id)}
                         variant="ghost"
                         size="icon"
                         className="h-9 w-9 text-slate-500 hover:text-rose-400 hover:bg-rose-950/20 shrink-0"
@@ -810,18 +817,5 @@ export default function ProductForm() {
         </form>
       </div>
     </AdminLayout>
-  );
-}
-
-// Sub-components used
-function Card({
-  children,
-  className,
-  ...props
-}: { children: React.ReactNode } & React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={cn("rounded border", className)} {...props}>
-      {children}
-    </div>
   );
 }

@@ -55,17 +55,21 @@ const FAQ = () => {
       <div className="pt-24 pb-12 bg-slate-50 dark:bg-slate-950 min-h-screen">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-sm font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-500/20 uppercase">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-500/20 uppercase tracking-wider">
               <HelpCircle className="w-4 h-4" />
               <span className="text-emerald-600 dark:text-emerald-400">
                 Help Center
               </span>
             </div>
-            <h1 className="text-3xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white mb-6">
-              Frequently Asked Questions
+            <h1 className="text-3xl md:text-6xl font-sora font-bold text-slate-900 dark:text-white mb-6 tracking-tight">
+              Answers to common{" "}
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-500 to-blue-600 dark:to-blue-400">
+                product questions
+              </span>
             </h1>
-            <p className="text-slate-600 dark:text-slate-400">
-              Everything you need to know about our products and services.
+            <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto text-base leading-relaxed">
+              Fast answers on orders, warranty, services, and support so you can
+              make decisions confidently.
             </p>
           </div>
 

@@ -86,17 +86,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
     router.push(`/products/${product.slug || product.sku || product.id}`);
   };
 
-  const getConditionStyles = (condition: string) => {
-    switch (condition) {
-      case "New":
-        return "bg-emerald-600 shadow-emerald-900/20";
-      case "Refurbished":
-        return "bg-blue-600 shadow-blue-900/20";
-      default:
-        return "bg-amber-600 shadow-amber-900/20";
-    }
-  };
-
   const whatsappMessage = encodeURIComponent(
     `Hi SHERO, I'm interested in inquiring about ${product.name}. Is it still available?`,
   );
@@ -107,181 +96,139 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      whileHover={{ y: -8 }}
+      whileHover={{ y: -5 }}
       onClick={handleCardClick}
       className="group relative rounded overflow-hidden
-               dark:bg-slate-900/60 bg-white backdrop-blur-md
-               border border-slate-300 dark:border-white/10 shadow-md
-               hover:border-emerald-500/50 dark:hover:border-emerald-400/40
-               hover:shadow-2xl hover:shadow-emerald-500/20 dark:hover:shadow-emerald-400/10
-               transition-all duration-500 cursor-pointer
-               flex flex-col h-full"
+                 dark:bg-white/5 bg-white backdrop-blur-xl
+                 border border-slate-200 dark:border-white/10 shadow-xl shadow-black/5
+                 hover:border-emerald-500/50 dark:hover:border-emerald-400/30
+                 transition-all duration-500 cursor-pointer
+                 flex flex-col h-full"
     >
-      {/* Hover Glow Effect */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-linear-to-b from-emerald-500/15 dark:from-emerald-400/8 to-transparent transition-opacity duration-500 pointer-events-none" />
-
-      {/* Badges */}
-      <div className="absolute top-2 sm:top-3 left-2 sm:left-3 z-20 flex flex-col items-start gap-1">
-        {product.badge && (
-          <span className="px-2 py-1 rounded text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-emerald-600 text-white shadow-lg shadow-emerald-900/20">
-            {product.badge}
-          </span>
-        )}
-        {discount > 0 && (
-          <span className="px-2 py-1 rounded text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-red-600 text-white shadow-lg shadow-red-900/20 w-fit">
-            -{discount}%
-          </span>
-        )}
-      </div>
-
-      {/* Wishlist Button */}
-      <button
-        onClick={toggleWishlist}
-        aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-        className="absolute top-2 sm:top-3 right-2 sm:right-3 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded
-                 bg-black/20 backdrop-blur-md border border-white/10
-                 flex items-center justify-center
-                 hover:bg-red-500 hover:border-red-400
-                 transition-all duration-300 group/heart cursor-pointer"
-      >
-        <Heart
-          className={`w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 ${
-            isWishlisted
-              ? "fill-red-600 text-red-600 group-hover/heart:text-white hover:scale-110"
-              : "text-white/70 group-hover/heart:text-white"
-          }`}
-        />
-      </button>
+      {/* Immersive Hover Background */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-linear-to-b from-emerald-500/5 via-transparent to-transparent transition-opacity duration-500 pointer-events-none" />
 
       {/* Image Container */}
-      <div className="relative aspect-square bg-linear-to-br from-slate-800 to-slate-900 overflow-hidden shrink-0">
-        {/* Render Image or Emoji */}
+      <div className="relative aspect-square bg-slate-100 dark:bg-slate-900 overflow-hidden shrink-0">
         {product.image &&
-        (product.image.startsWith("/uploads") ||
-          product.image.startsWith("http")) ? (
+        (product.image.startsWith("/uploads") || product.image.startsWith("http")) ? (
           <AppImage
             src={getImageUrl(product.image)}
             alt={product.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+            className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center text-6xl select-none opacity-50 grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-500">
+          <div className="absolute inset-0 flex items-center justify-center text-6xl select-none opacity-30 group-hover:scale-110 transition-transform duration-700">
             {product.image}
           </div>
         )}
 
-        {/* Quick View Overlay */}
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+        {/* Floating Quick Actions (Top) */}
+        <div className="absolute top-3 right-3 z-20 flex flex-col gap-2">
+          <button
+            onClick={toggleWishlist}
+            className="w-9 h-9 rounded-full bg-white/80 dark:bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all duration-300 shadow-lg"
+          >
+            <Heart size={16} className={isWishlisted ? "fill-current text-red-500" : ""} />
+          </button>
           <button
             onClick={handleQuickView}
-            aria-label={`View details for ${product.name}`}
-            className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300
-                           flex items-center gap-2 px-5 py-2 rounded
-                           bg-white/10 backdrop-blur-md border border-white/20
-                           text-white font-medium text-sm
-                           hover:bg-emerald-600 hover:border-emerald-500 cursor-pointer"
+            className="w-9 h-9 rounded-full bg-white/80 dark:bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all duration-300 shadow-lg"
           >
-            <Eye className="w-4 h-4" />
-            View Details
+            <Eye size={16} />
           </button>
         </div>
-        <div className="absolute bottom-2 left-2 z-20 pointer-events-none flex flex-wrap gap-1">
-          {product.condition && (
-            <span
-              className={`px-2 py-1 rounded text-[10px] sm:text-xs font-bold uppercase tracking-wider text-white shadow-lg ${getConditionStyles(product.condition)}`}
-            >
-              {product.condition}
+
+        {/* Badges (Bottom Left) */}
+        <div className="absolute bottom-3 left-3 z-20 flex flex-wrap gap-1">
+          {product.badge && (
+            <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-emerald-600 text-white shadow-lg shadow-emerald-900/40">
+              {product.badge}
+            </span>
+          )}
+          {discount > 0 && (
+            <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-red-600 text-white shadow-lg shadow-red-900/40">
+              -{discount}%
             </span>
           )}
           {!product.inStock && (
-            <span className="px-2 py-1 rounded text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-slate-700 text-slate-300 shadow-lg shadow-black/20">
+            <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-slate-900/80 text-white backdrop-blur-md">
               Sold Out
             </span>
           )}
         </div>
       </div>
 
-      {/* Product Info */}
-      <div className="p-3 sm:p-4 relative z-10 cursor-pointer flex-1 flex flex-col">
-        <div className="flex flex-col justify-between items-start flex-1">
-          <div className="inline-flex items-center justify-between w-full mb-1.5 sm:mb-2">
-            <p className="text-[10px] sm:text-xs font-medium dark:bg-white/5 bg-emerald-100 px-1 sm:px-1.5 py-0.5 rounded dark:text-emerald-400 text-emerald-800 uppercase tracking-wide">
+      {/* Content Area */}
+      <div className="p-4 flex flex-col flex-1">
+        <div className="flex-1">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[10px] font-bold font-mono text-emerald-600 dark:text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-2 py-0.5 rounded">
               {product.category}
-            </p>
-            <span className="flex items-center gap-0.5 sm:gap-1 dark:bg-white/5 bg-slate-300/60 px-1 sm:px-1.5 py-0.5 rounded text-[11px] sm:text-sm dark:text-slate-300 text-slate-900">
-              <Star className={`w-3 h-3 fill-amber-400 text-amber-400`} />
-              <span className="ml-0.5 sm:ml-1 text-xs">{product.rating}</span>
             </span>
+            <div className="flex items-center gap-1">
+              <Star size={10} className="fill-amber-400 text-amber-400" />
+              <span className="text-[10px] font-bold dark:text-slate-400">{product.rating}</span>
+            </div>
           </div>
-          <h3 className="text-sm sm:text-base font-bold dark:text-white text-slate-900 leading-tight dark:group-hover:text-emerald-300 group-hover:text-emerald-600 transition-colors line-clamp-2">
+          
+          <h3 className="text-sm sm:text-base font-black font-sora dark:text-white text-slate-800 leading-tight group-hover:text-emerald-500 transition-colors line-clamp-1 mb-1">
             {product.name}
           </h3>
-          {product.specifications &&
-            Object.values(product.specifications).length > 0 && (
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mt-1 min-h-[2.5em]">
-                {Object.values(product.specifications).slice(0, 3).join(" •")}
-              </p>
-            )}
-          {!product.specifications && product.description && (
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mt-1 min-h-[2.5em]">
-              {product.description}
-            </p>
-          )}
+          
+          <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed h-10">
+            {product.description || (product.specifications ? Object.values(product.specifications).slice(0, 2).join(" • ") : "")}
+          </p>
         </div>
 
-        <div className="flex items-end justify-between mt-2 sm:mt-3 gap-1">
-          <div className="flex flex-col gap-1 min-w-0 shrink">
+        {/* Pricing & CTA Bar */}
+        <div className="mt-4 pt-4 border-t border-slate-100 dark:border-white/5 flex flex-col gap-4">
+          <div className="flex flex-col">
             {product.originalPrice && (
-              <span className="text-[10px] sm:text-xs text-slate-500 line-through truncate">
+              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 line-through mb-1">
                 {formatCurrency(product.originalPrice)}
               </span>
             )}
-            <span className="text-sm sm:text-lg font-sora font-bold dark:text-white text-slate-900 truncate">
-              {formatCurrency(product.price)}
-            </span>
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-xl sm:text-2xl font-black font-sora dark:text-white text-slate-900 leading-none">
+                {formatCurrency(product.price)}
+              </span>
+              {!product.inStock && (
+                <span className="shrink-0 text-[8px] font-black uppercase text-red-500 bg-red-500/10 px-2 py-1 rounded border border-red-500/20">
+                  Out of Stock
+                </span>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="flex gap-1 sm:gap-2 shrink-0 mt-2">
-          <button
-            onClick={handleAddToCart}
-            disabled={!product.inStock}
-            aria-label={`Add ${product.name} to cart`}
-            className={` p-2 rounded flex items-center justify-center transition-all duration-300 cursor-pointer border w-full
-                           ${
-                             product.inStock
-                               ? "border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
-                               : "border-slate-700 bg-slate-800 text-slate-600 cursor-not-allowed"
-                           }`}
-          >
-            <ShoppingCart className="w-3.5 h-3.5 sm:w-5 sm:h-5" />
-          </button>
-
-          <button
-            onClick={handleBuyNow}
-            disabled={!product.inStock}
-            className={`p-2 rounded flex items-center justify-center gap-1 transition-all duration-300 cursor-pointer text-[10px] sm:text-sm font-bold w-full
-                           ${
-                             product.inStock
-                               ? "dark:bg-emerald-600 bg-emerald-600 text-white hover:bg-emerald-500 hover:scale-105 shadow-lg shadow-emerald-500/20"
-                               : "bg-slate-800 text-slate-600 cursor-not-allowed"
-                           }`}
-          >
-            <CreditCard className="w-3 h-3 sm:w-4 sm:h-4" />
-            <span>Buy</span>
-          </button>
-
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="w-full p-2 rounded flex items-center justify-center bg-[#25D366] hover:bg-[#20bd5a] text-white transition-all duration-300 shadow-lg shadow-[#25D366]/20"
-            aria-label="Inquire via WhatsApp"
-          >
-            <WhatsAppIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-          </a>
+          
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={handleAddToCart}
+              disabled={!product.inStock}
+              className="flex-1 h-10 rounded flex items-center justify-center gap-2 transition-all bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-600 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed border border-emerald-500/20 shadow-lg shadow-emerald-500/5 group/cart"
+            >
+              <ShoppingCart size={14} className="group-hover/cart:scale-110 transition-transform" />
+              <span className="text-[10px] font-black uppercase tracking-wider hidden min-[400px]:inline">Add</span>
+            </button>
+            <button
+              onClick={handleBuyNow}
+              disabled={!product.inStock}
+              className="flex-1 h-10 rounded bg-emerald-600 text-white font-black text-[10px] uppercase tracking-widest hover:bg-emerald-500 shadow-lg shadow-emerald-600/20 disabled:opacity-50 transition-all"
+            >
+              Buy Now
+            </button>
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="w-10 h-10 rounded flex items-center justify-center bg-[#25D366] text-white hover:bg-[#20bd5a] transition-all shadow-lg shadow-[#25D366]/20 shrink-0"
+            >
+              <WhatsAppIcon className="w-4 h-4" />
+            </a>
+          </div>
         </div>
       </div>
     </motion.div>

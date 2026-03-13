@@ -1,11 +1,11 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import Nav from "@/components/layout/Nav";
+import Nav from "@/components/layout/NavigationBar";
 import Footer from "@/components/layout/Footer";
 
 // Lazy-load components that are hidden by default (drawers, modals, prompts)
-const CartDrawer = dynamic(() => import("@/components/cart/CartDrawer"), {
+const CartDrawer = dynamic(() => import("@/components/cart/CartDrawerUI"), {
   ssr: false,
 });
 const WishlistDrawer = dynamic(

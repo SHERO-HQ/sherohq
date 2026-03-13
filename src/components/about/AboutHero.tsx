@@ -118,7 +118,7 @@ const AboutHero = () => {
           <div className="w-full lg:w-[60%] flex flex-col items-start space-y-4">
             {/* Badge */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm mb-4"
             >
@@ -131,9 +131,7 @@ const AboutHero = () => {
             {/* Main Heading */}
             <div className="relative">
               <motion.h1
-                initial={
-                  prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 30 }
-                }
+                initial={false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={
                   prefersReducedMotion
@@ -152,7 +150,7 @@ const AboutHero = () => {
 
             {/* Description */}
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
               className="text-sm text-slate-600 dark:text-slate-400 mb-10 leading-relaxed max-w-xl"

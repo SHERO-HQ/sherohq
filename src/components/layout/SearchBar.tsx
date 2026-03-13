@@ -45,18 +45,25 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
     setQuery("");
   }, [alwaysOpen]);
 
-  // Close on Escape key
+  // Close on Escape key & lock scroll for desktop overlay only
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeSearch();
     };
     if (isOpen) {
       document.addEventListener("keydown", handleEsc);
-      document.body.style.overflow = "hidden";
+      // Only lock body scroll for the desktop overlay — the mobile
+      // inline search (alwaysOpen) lives inside NavigationBar's menu
+      // which already manages its own scroll lock.
+      if (!alwaysOpen) {
+        document.body.style.overflow = "hidden";
+      }
     }
     return () => {
       document.removeEventListener("keydown", handleEsc);
-      document.body.style.overflow = "unset";
+      if (!alwaysOpen) {
+        document.body.style.overflow = "unset";
+      }
     };
   }, [isOpen, alwaysOpen, closeSearch]);
 

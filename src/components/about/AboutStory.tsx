@@ -22,7 +22,7 @@ const AboutStory = () => {
       <div className="absolute inset-0 hero-grid-pattern" />
 
       <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-24">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center border-b border-slate-200 dark:border-slate-400/50 pb-5 mb-16">
           {/* Image Side */}
           {/* Image Side */}
           <Reveal direction="right" distance={40}>
@@ -74,7 +74,8 @@ const AboutStory = () => {
                 Our Story
               </span>
               <h2 className="text-3xl md:text-4xl font-sora font-bold text-slate-900 dark:text-white mb-6">
-                Driven by Purpose
+                Driven by
+                <span className="text-emerald-500"> Purpose</span>
               </h2>
             </div>
             <div className="prose prose-lg dark:prose-invert max-w-none">
@@ -102,14 +103,14 @@ const AboutStory = () => {
         <StaggerContainer className="grid md:grid-cols-2 gap-8 mb-16 lg:grid-cols-2!">
           {/* Mission */}
           <StaggerItem>
-            <div className="h-full bg-linear-to-br from-emerald-50 to-white dark:from-emerald-900/10 dark:to-slate-900 p-8 rounded border border-emerald-200 dark:border-emerald-800/30">
-              <div className="w-14 h-14 bg-emerald-600 dark:bg-emerald-500 rounded flex items-center justify-center mb-6">
-                <Target className="w-7 h-7 text-white" />
+            <div className="group h-full bg-linear-to-br from-white to-slate-50 dark:from-slate-900/40 dark:to-slate-950 p-8 lg:p-10 rounded border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 transition-all duration-500 shadow-sm hover:shadow-2xl hover:shadow-emerald-500/5">
+              <div className="w-16 h-16 bg-emerald-500 rounded flex items-center justify-center mb-8 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+                <Target className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold font-sora text-slate-900 dark:text-white mb-4">
+              <h3 className="text-2xl lg:text-3xl font-black font-sora text-slate-900 dark:text-white mb-4 uppercase tracking-tighter">
                 Our Mission
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-base lg:text-lg font-light">
                 To democratize access to enterprise-grade technology solutions
                 across Africa, empowering businesses of all sizes to compete
                 globally through innovative hardware, software, and IT services.
@@ -119,14 +120,14 @@ const AboutStory = () => {
 
           {/* Vision */}
           <StaggerItem>
-            <div className="h-full bg-linear-to-br from-blue-50 to-white dark:from-blue-900/10 dark:to-slate-900 p-8 rounded border border-blue-200 dark:border-blue-800/30">
-              <div className="w-14 h-14 bg-blue-600 dark:bg-blue-500 rounded flex items-center justify-center mb-6">
-                <Globe className="w-7 h-7 text-white" />
+            <div className="group h-full bg-linear-to-br from-white to-slate-50 dark:from-slate-900/40 dark:to-slate-950 p-8 lg:p-10 rounded border border-slate-200 dark:border-white/5 hover:border-blue-500/30 transition-all duration-500 shadow-sm hover:shadow-2xl hover:shadow-blue-500/5">
+              <div className="w-16 h-16 bg-blue-600 rounded flex items-center justify-center mb-8 shadow-lg shadow-blue-600/20 group-hover:scale-110 transition-transform">
+                <Globe className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold font-sora text-slate-900 dark:text-white mb-4">
+              <h3 className="text-2xl lg:text-3xl font-black font-sora text-slate-900 dark:text-white mb-4 uppercase tracking-tighter">
                 Our Vision
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+              <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-base lg:text-lg font-light">
                 To become West Africa's most trusted technology partner,
                 recognized for our commitment to quality, innovation, and
                 customer success. We envision a future where every business has

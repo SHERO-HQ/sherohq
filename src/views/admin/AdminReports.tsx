@@ -500,11 +500,11 @@ function RevenueChartSection({
                 }}
                 itemStyle={{ color: "#f8fafc" }}
                 formatter={(
-                  value: number | undefined,
-                  name: string | undefined,
+                  value: any,
+                  name: any,
                 ) => [
-                  `GH₵${(value ?? 0).toLocaleString()}`,
-                  (name ?? "").charAt(0).toUpperCase() + (name ?? "").slice(1),
+                  `GH₵${(Number(value) || 0).toLocaleString()}`,
+                  String(name || "").charAt(0).toUpperCase() + String(name || "").slice(1),
                 ]}
                 labelFormatter={(label: unknown) => {
                   try {
@@ -570,8 +570,8 @@ function RevenueChartSection({
                   color: "#f8fafc",
                 }}
                 itemStyle={{ color: "#f8fafc" }}
-                formatter={(value: number | undefined) => [
-                  `GH₵${(value ?? 0).toLocaleString()}`,
+                formatter={(value: any) => [
+                  `GH₵${(Number(value) || 0).toLocaleString()}`,
                   "Revenue",
                 ]}
                 labelFormatter={(label: unknown) => {
@@ -727,8 +727,8 @@ function RegionalSalesChart({ data }: { readonly data: RegionalData[] }) {
                 borderColor: "#1e293b",
                 color: "#f8fafc",
               }}
-              formatter={(value: number | undefined) => [
-                `GH₵${(value ?? 0).toLocaleString()}`,
+              formatter={(value: any) => [
+                `GH₵${(Number(value) || 0).toLocaleString()}`,
                 "Revenue",
               ]}
             />

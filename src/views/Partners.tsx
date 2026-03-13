@@ -37,20 +37,34 @@ const Partners = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto mb-20"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-500/20 uppercase">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-500/20 uppercase tracking-wider">
               <Handshake className="w-4 h-4" />
               <span className="text-emerald-600 dark:text-emerald-400">
-                Partner With Us
+                Strategic Partnerships
               </span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white mb-6">
-              Building the Future Together
+            <h1 className="text-4xl md:text-6xl font-sora font-bold text-slate-900 dark:text-white mb-6 tracking-tight">
+              Grow your reach{" "}
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-500 to-blue-600 dark:to-blue-400">
+                with SHERO
+              </span>
             </h1>
-            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-              Join our network of industry leaders and technology innovators.
-              Together, we can deliver exceptional value and drive digital
-              transformation across Africa.
+            <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+              Collaborate on enterprise projects, unlock distribution
+              opportunities, and deliver measurable value across markets.
             </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
+                Wholesale Access
+              </span>
+              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
+                Dedicated Account Team
+              </span>
+              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
+                Co-Marketing Support
+              </span>
+            </div>
           </motion.div>
 
           {/* Current Partners Grid */}

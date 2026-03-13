@@ -59,10 +59,10 @@
     --color-chart-4: var(--chart-4);
     --color-chart-5: var(--chart-5);
     /* Fonts Registration */
-    --font-primary: var(--font-primary);
-    --font-inter: var(--font-inter);
-    --font-sora: var(--font-sora);
-    --font-logo: var(--font-logo);
+    --font-primary: "JetBrains Mono Variable", monospace;
+    --font-inter: "Inter Variable", sans-serif;
+    --font-sora: "Sora Variable", sans-serif;
+    --font-logo: var(--font-logo-next);
 
     --color-sidebar: var(--sidebar);
     --color-sidebar-foreground: var(--sidebar-foreground);

@@ -22,9 +22,9 @@ const ServicesGrid = () => {
   const services: Service[] = [
     {
       icon: <Smartphone className="w-8 h-8" />,
-      title: "Custom Web & Mobile Apps",
+      title: "Apps That Grow Your Business",
       description:
-        "Scalable, user-friendly applications built with modern frameworks tailored to your business needs.",
+        "From customer-facing mobile apps to internal tools — we design, build, and maintain software that works for you.",
       features: [
         "Responsive web applications",
         "iOS & Android mobile apps",
@@ -35,9 +35,9 @@ const ServicesGrid = () => {
     },
     {
       icon: <Cloud className="w-8 h-8" />,
-      title: "SaaS Platform Development",
+      title: "Cloud Platforms, Built to Scale",
       description:
-        "Build your software-as-a-service platform with subscription management, multi-tenancy, and more.",
+        "Launch your own cloud product with built-in subscriptions, user management, and analytics — ready from day one.",
       features: [
         "Multi-tenant architecture",
         "Subscription & billing integration",
@@ -48,12 +48,12 @@ const ServicesGrid = () => {
     },
     {
       icon: <Settings className="w-8 h-8" />,
-      title: "IT Support & Infrastructure",
+      title: "Keep Your Systems Running 24/7",
       description:
-        "End-to-end hardware setup and managed services. We configure your physical infrastructure for maximum uptime.",
+        "Complete IT setup and ongoing support — from server configuration to workstation deployment. We keep your tech running smoothly.",
       features: [
-        "Server & Network configurations",
-        "Hardware setup (POS, Workstations)",
+        "Server & network configurations",
+        "Hardware setup (POS, workstations)",
         "Proactive system maintenance",
         "Secure enterprise infrastructure",
       ],
@@ -61,9 +61,9 @@ const ServicesGrid = () => {
     },
     {
       icon: <Workflow className="w-8 h-8" />,
-      title: "API Development & Integration",
+      title: "Connect Your Tools Seamlessly",
       description:
-        "Build robust APIs and seamlessly integrate third-party services into your existing systems.",
+        "Link your payment systems, inventory, CRM, and more into one smooth workflow. No more switching between disconnected tools.",
       features: [
         "RESTful & GraphQL APIs",
         "Third-party integrations",
@@ -115,8 +115,8 @@ const ServicesGrid = () => {
             What We Do
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            End-to-end software solutions designed to solve your business
-            challenges
+            From custom apps to complete IT management — solutions designed
+            to help your business grow
           </p>
         </motion.div>
 

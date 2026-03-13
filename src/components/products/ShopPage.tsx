@@ -1,6 +1,6 @@
 "use client";
 import { useState, useMemo, useEffect } from "react";
-import ProductHero from "./ProductsHero";
+import ProductSpotlight from "./ProductSpotlight";
 import { defaultCategories } from "@/utils/defaultCategories";
 import type { Category } from "./ProductsCategories";
 import ProductFilters from "./ProductFilters";
@@ -19,7 +19,8 @@ interface ApiCategory {
   name: string;
 }
 
-const ShopPage = () => {
+const ShopView = () => {
+  const [mounted, setMounted] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -47,7 +48,9 @@ const ShopPage = () => {
     sortBy: "newest",
   });
 
-  // Fetching moved to useProducts hook above
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   //useEffect(() => { ... }, []);
 
   // Merge API categories with hardcoded icons and count
@@ -67,7 +70,7 @@ const ShopPage = () => {
         icon: defaultCategories.find((c) => c.id === cat.id)?.icon || (
           <Package className="w-6 h-6" />
         ),
-        count: products.filter((p: Product) => p.category === cat.id).length,
+        count: products.filter((p: Product) => (p.categoryId || p.category) === cat.id).length,
       }),
     );
 
@@ -88,7 +91,7 @@ const ShopPage = () => {
 
     // Filter by category
     if (activeCategory !== "all") {
-      filtered = filtered.filter((p) => p.category === activeCategory);
+      filtered = filtered.filter((p) => (p.categoryId || p.category) === activeCategory);
     }
 
     // Filter by search query
@@ -189,84 +192,102 @@ const ShopPage = () => {
       inStock: false,
       sortBy: "newest",
     });
+    setActiveCategory("all");
+    handleSearch("");
   };
 
   return (
     <div className="min-h-screen dark:bg-slate-950">
-      {/* Hero Section - Reduced props */}
-      <ProductHero />
+      {/* Hero Section - Product Spotlight */}
+      <ProductSpotlight products={products} isLoading={productsLoading} />
 
       {/* Main Content */}
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Desktop Sidebar (Hidden on Mobile) */}
-          <div className="hidden lg:block w-64 shrink-0">
-            <div className="sticky top-24">
-              <CategorySidebar
-                filters={filters}
-                onFilterChange={handleFilterChange}
-                categories={categoriesWithCount}
-                activeCategory={activeCategory}
-                onCategoryChange={handleCategoryChange}
-              />
+        <div className="flex flex-col gap-8">
+          {/* Horizontal Filter Bar - Sticky */}
+          <div className="sticky top-20 sm:top-24 z-30 -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div className="flex flex-col gap-4 sm:gap-6 bg-white/5 dark:bg-slate-950/80 backdrop-blur-xl border border-white/10 p-3 sm:p-4 sm:rounded shadow-2xl shadow-black/20">
+              <div className="flex flex-col md:flex-row items-center gap-3 sm:gap-4">
+                <div className="flex-1 w-full">
+                  <ProductSearch
+                    onSearch={handleSearch}
+                    initialQuery={searchQuery}
+                    className="mb-0"
+                  />
+                </div>
+                <div className="flex items-center gap-2 w-full md:w-auto">
+                  <button
+                    onClick={() => setShowMobileFilters(true)}
+                    className="flex-1 md:flex-none flex items-center justify-center gap-2 cursor-pointer px-3 py-2 sm:px-4 sm:py-2 dark:bg-white/5 bg-slate-100 hover:bg-emerald-500/10 backdrop-blur-md border border-white/10 rounded font-bold dark:text-slate-200 text-slate-800 transition-all hover:border-emerald-500/50 group text-xs sm:text-base"
+                  >
+                    <SlidersHorizontal size={16} className="group-hover:rotate-180 transition-transform duration-500 sm:w-[18px] sm:h-[18px]" />
+                    <span>Advanced Filters</span>
+                  </button>
+                  <div className="relative group flex-1 md:flex-none">
+                    <select
+                      value={filters.sortBy}
+                      onChange={(e) =>
+                        handleFilterChange({ ...filters, sortBy: e.target.value })
+                      }
+                      className="w-full text-[10px] sm:text-sm border-white/10 bg-slate-100 dark:bg-white/5 rounded font-bold dark:text-white text-slate-800 focus:ring-emerald-500 cursor-pointer py-3 px-3 sm:px-4 appearance-none pr-8 sm:pr-10"
+                    >
+                      <option value="newest">Sort: Newest</option>
+                      <option value="price-low">Price: Low to High</option>
+                      <option value="price-high">Price: High to Low</option>
+                      <option value="rating">Top Rated</option>
+                    </select>
+                    <div className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                      <Package size={12} className="sm:w-[14px] sm:h-[14px]" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Horizontal Category Pill List */}
+              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1 touch-pan-x">
+                {categoriesWithCount.map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => handleCategoryChange(cat.id)}
+                    className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2.5 rounded whitespace-nowrap transition-all border duration-300 ${
+                      activeCategory === cat.id
+                        ? "bg-emerald-600 border-emerald-500 text-white shadow-lg shadow-emerald-500/40 scale-105"
+                        : "bg-white/5 border-white/10 text-slate-600 dark:text-slate-400 hover:bg-white/10 hover:border-emerald-500/30"
+                    }`}
+                  >
+                    <span className="text-lg sm:text-xl group-hover:scale-110 transition-transform">{cat.icon}</span>
+                    <span className="text-[10px] sm:text-sm font-bold tracking-tight">{cat.name}</span>
+                    <span className={`text-[8px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded font-mono ${
+                      activeCategory === cat.id ? "bg-white/20 text-white" : "bg-slate-200 dark:bg-white/10 text-slate-500 dark:text-slate-400"
+                    }`}>
+                      {mounted ? cat.count : "0"}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-          {/* Mobile Filter Toggle (Visible only on Mobile) */}
-          <div className="lg:hidden mb-4">
-            <button
-              onClick={() => setShowMobileFilters(true)}
-              className="w-full flex items-center justify-center gap-2 cursor-pointer px-4 py-2 dark:bg-slate-900/80 bg-slate-400/20 hover:bg-emerald-400/20 backdrop-blur-md border border-white/10 rounded font-medium dark:text-slate-200 text-slate-800 shadow-md hover:border-emerald-500/50 transition-colors"
-            >
-              <SlidersHorizontal />
-              <span>Filter Shop</span>
-              <span className="bg-emerald-600 text-white px-2 py-0.5 rounded text-xs font-bold shadow-sm shadow-emerald-500/20">
-                {filteredProducts.length}
-              </span>
-            </button>
-          </div>
-          {/* Products Grid */}
+
+          {/* Products Results */}
           <main className="flex-1 min-w-0">
-            {/* Search Bar - Moved from Hero */}
-            <ProductSearch
-              onSearch={handleSearch}
-              initialQuery={searchQuery}
-              className="mb-8"
-            />
-
-            {/* Results Header (Desktop) */}
-            <div className="hidden lg:flex items-center justify-between mb-6">
+            {/* Results Header (Desktop) - Optional now, keeping it subtle */}
+            <div className="flex items-center justify-between mb-8 px-2">
               <div>
-                <h2 className="text-2xl font-bold dark:text-white text-slate-800">
+                <h2 className="text-xl font-black font-sora dark:text-white text-slate-800 tracking-tight uppercase">
                   {activeCategory === "all"
-                    ? "Shop All"
-                    : categoriesWithCount.find((c) => c.id === activeCategory)
-                        ?.name}
+                    ? "Browsing All"
+                    : `Exploring ${categoriesWithCount.find((c) => c.id === activeCategory)?.name}`}
                 </h2>
-                <p className="text-sm dark:text-slate-400 text-slate-500 mt-1">
-                  {filteredProducts.length}{" "}
-                  {filteredProducts.length === 1 ? "item" : "items"} found
-                </p>
-              </div>
-
-              {/* Sort Dropdown could go here */}
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-slate-500">Sort by:</span>
-                <select
-                  value={filters.sortBy}
-                  onChange={(e) =>
-                    handleFilterChange({ ...filters, sortBy: e.target.value })
-                  }
-                  className="text-sm border-none bg-transparent font-medium text-white focus:ring-0 cursor-pointer [&>option]:text-slate-900 custom-select pr-8"
-                >
-                  <option value="newest">Newest</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="rating">Top Rated</option>
-                  <option value="popular">Most Popular</option>
-                </select>
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="h-1 w-8 bg-emerald-500 rounded" />
+                  <p className="text-xs font-mono dark:text-slate-500 text-slate-500 uppercase tracking-widest">
+                    {filteredProducts.length}{" "}
+                    {filteredProducts.length === 1 ? "result" : "results"} found
+                  </p>
+                </div>
               </div>
             </div>
-            {/* Products */}
+
             <ProductGrid
               products={filteredProducts}
               loading={loading}
@@ -291,4 +312,4 @@ const ShopPage = () => {
   );
 };
 
-export default ShopPage;
+export default ShopView;

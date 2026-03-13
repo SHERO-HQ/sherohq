@@ -1,10 +1,10 @@
 "use client";
-import ShopPage from "@/components/products/ShopPage";
+import ShopView from "@/components/products/ShopPage";
 
 const Products = () => {
   return (
     <>
-      <ShopPage />
+      <ShopView />
     </>
   );
 };

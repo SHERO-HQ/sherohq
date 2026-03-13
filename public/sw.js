@@ -1,6 +1,6 @@
 // SHERO Service Worker — Cache strategies for offline-capable PWA
 
-const CACHE_VERSION = "v2";
+const CACHE_VERSION = "v3";
 const STATIC_CACHE = `shero-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `shero-dynamic-${CACHE_VERSION}`;
 
@@ -66,9 +66,10 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // 2. Next.js built assets (_next/static) → cache-first
+  // 2. Next.js built assets (_next/static) → network-first
+  // Prevents caching unhashed dev chunks which break HMR and hydration
   if (url.pathname.startsWith("/_next/static/")) {
-    event.respondWith(cacheFirst(request, STATIC_CACHE));
+    event.respondWith(networkFirstAsset(request, STATIC_CACHE));
     return;
   }
 
@@ -102,6 +103,21 @@ async function networkOnly(request) {
       status: 503,
       headers: { "Content-Type": "application/json" },
     });
+  }
+}
+
+async function networkFirstAsset(request, cacheName) {
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      const cache = await caches.open(cacheName);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch {
+    const cached = await caches.match(request);
+    if (cached) return cached;
+    return new Response("Offline", { status: 503 });
   }
 }
 

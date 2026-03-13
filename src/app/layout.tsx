@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Sora, JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
+import "@fontsource-variable/inter/index.css";
+import "@fontsource-variable/sora/index.css";
+import "@fontsource-variable/jetbrains-mono/index.css";
 import { Providers } from "@/components/providers";
 import { ServiceWorkerRegistration } from "@/components/common/ServiceWorkerRegistration";
 import { Analytics } from "@vercel/analytics/next";
@@ -8,27 +10,9 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import "../index.css";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const sora = Sora({
-  subsets: ["latin"],
-  variable: "--font-sora",
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-primary",
-  display: "swap",
-});
-
 const aubette = localFont({
   src: "../assets/font/AubetteArchiType.woff2",
-  variable: "--font-logo",
+  variable: "--font-logo-next",
   weight: "700",
   display: "swap",
 });
@@ -90,9 +74,9 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${jetbrainsMono.variable} ${inter.variable} ${sora.variable} ${aubette.variable}`}
+      className={`${aubette.variable}`}
     >
-      <head>
+      <body className="font-primary transition-colors duration-500">
         {/* Capture the PWA install prompt event before React hydrates.
             Dynamic-imported PWAInstallPrompt may mount after the event fires,
             so we stash it globally for the component to pick up later. */}
@@ -103,8 +87,6 @@ export default function RootLayout({
             __html: `window.__pwaPromptEvent=null;window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();window.__pwaPromptEvent=e});`,
           }}
         />
-      </head>
-      <body className="font-primary transition-colors duration-500">
         <Providers>
           {/* Skip to main content link for accessibility */}
           <a

@@ -114,9 +114,15 @@ const CheckoutFlow = () => {
     }
   }, [isAuthenticated, user, setValue]);
 
-  // Redirect if cart is empty
+  // Redirect if cart is empty (must be in useEffect to avoid setState during render)
+  useEffect(() => {
+    if (cart.length === 0 && currentStep < 4) {
+      router.push("/products");
+    }
+  }, [cart.length, currentStep, router]);
+
+  // Show nothing while redirecting
   if (cart.length === 0 && currentStep < 4) {
-    router.push("/products");
     return null;
   }
 
@@ -177,7 +183,7 @@ const CheckoutFlow = () => {
 
       if (paymentResponse.success && paymentResponse.checkoutUrl) {
         clearCart();
-        globalThis.location.href = paymentResponse.checkoutUrl;
+        window.location.href = paymentResponse.checkoutUrl;
       } else {
         setPaymentError(true);
       }
@@ -446,9 +452,8 @@ const CheckoutFlow = () => {
 
                       <div className="space-y-4">
                         {cart.map((item) => (
-                          <>
+                          <div key={item.id} className="space-y-2">
                             <div
-                              key={item.id}
                               className="flex flex-row sm:flex-row gap-4 p-4 rounded border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 transition-colors"
                             >
                               <div className="relative w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center overflow-hidden shrink-0">
@@ -505,7 +510,7 @@ const CheckoutFlow = () => {
                                 Remove
                               </button>
                             </div>
-                          </>
+                          </div>
                         ))}
                       </div>
 
@@ -624,6 +629,7 @@ const CheckoutFlow = () => {
                               { value: "Savannah", label: "Savannah" },
                               { value: "North East", label: "North East" },
                               { value: "Oti", label: "Oti" },
+                              { value: "Volta", label: "Volta" },
                               {
                                 value: "Western North",
                                 label: "Western North",

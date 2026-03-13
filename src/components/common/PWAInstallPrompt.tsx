@@ -36,7 +36,7 @@ const PWAInstallPrompt = () => {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setTimeout(() => setShowPrompt(true), 3000);
+      setTimeout(() => setShowPrompt(true), 30000);
     };
 
     type PWAGlobal = { __pwaPromptEvent?: BeforeInstallPromptEvent | null };

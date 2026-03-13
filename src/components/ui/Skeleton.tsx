@@ -16,25 +16,29 @@ export function Skeleton({ className = "" }: SkeletonProps) {
 
 export function ProductCardSkeleton() {
   return (
-    <div className="bg-white dark:bg-slate-900/80 rounded overflow-hidden border border-slate-100 dark:border-slate-800">
-      {/* Image skeleton - responsive height matching ProductCard */}
-      <div className="h-40 sm:h-52 bg-slate-200 dark:bg-slate-800 animate-pulse" />
+    <div className="bg-white dark:bg-slate-900/80 rounded overflow-hidden border border-slate-100 dark:border-slate-800 animate-pulse">
+      {/* Image skeleton */}
+      <div className="h-40 sm:h-52 bg-slate-200 dark:bg-slate-800" />
 
       {/* Content skeleton */}
-      <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
-        {/* Category and rating row */}
+      <div className="p-3 sm:p-4 space-y-3">
+        {/* Category row */}
         <div className="flex items-center justify-between">
           <Skeleton className="h-3 w-14 sm:w-16" />
-          <Skeleton className="h-3 w-10 sm:w-12" />
+          <Skeleton className="h-2 w-8 rounded-full" />
         </div>
 
         {/* Title */}
         <Skeleton className="h-4 sm:h-5 w-3/4" />
+        <Skeleton className="h-3 w-full opacity-50" />
 
-        {/* Price and button */}
-        <div className="flex items-center justify-between pt-1 sm:pt-2">
-          <Skeleton className="h-5 sm:h-6 w-16 sm:w-20" />
-          <Skeleton className="h-8 sm:h-10 w-10 sm:w-12 rounded" />
+        {/* Pricing and buttons bar */}
+        <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-3">
+          <Skeleton className="h-6 w-20" />
+          <div className="flex gap-1.5 ">
+            <Skeleton className="h-9 flex-1 rounded" />
+            <Skeleton className="h-9 flex-1 rounded" />
+          </div>
         </div>
       </div>
     </div>

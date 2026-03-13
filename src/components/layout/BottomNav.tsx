@@ -3,10 +3,12 @@ import { Home, ShoppingBag, ShoppingCart, Heart } from "lucide-react";
 import NavLink from "@/components/common/NavLink";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/hooks/useWishlist";
+import { useIsMounted } from "@/hooks/useIsMounted";
 
 const BottomNav = () => {
   const { setIsCartOpen, totalQuantity } = useCart();
   const { setIsWishlistOpen, wishlist } = useWishlist();
+  const mounted = useIsMounted();
   const navItems = [
     { icon: Home, label: "Home", path: "/" },
     { icon: ShoppingBag, label: "Shop", path: "/shop" },
@@ -28,7 +30,7 @@ const BottomNav = () => {
               >
                 <item.icon className="w-6 h-6" strokeWidth={2} />
                 <span className="text-[12px] font-medium">{item.label}</span>
-                {totalQuantity > 0 && (
+                {mounted && totalQuantity > 0 && (
                   <span className="absolute top-1 right-1/2 translate-x-4 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-600 text-[8px] font-bold text-white">
                     {totalQuantity}
                   </span>
@@ -45,11 +47,11 @@ const BottomNav = () => {
                 className="cursor-pointer flex flex-col items-center justify-center w-full h-full gap-1 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors relative"
               >
                 <item.icon
-                  className={`w-6 h-6 ${wishlist.length > 0 ? "fill-red-500 text-red-500" : ""}`}
+                  className={`w-6 h-6 ${mounted && wishlist.length > 0 ? "fill-red-500 text-red-500" : ""}`}
                   strokeWidth={2}
                 />
                 <span className="text-[12px] font-medium">{item.label}</span>
-                {wishlist.length > 0 && (
+                {mounted && wishlist.length > 0 && (
                   <span className="absolute top-1 right-1/2 translate-x-4 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[8px] font-bold text-white">
                     {wishlist.length}
                   </span>

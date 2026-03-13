@@ -2,24 +2,23 @@
 import { motion } from "motion/react";
 import Link from "next/link";
 import { ShoppingCart, ArrowRight } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProductCard from "@/components/products/ProductCard";
-import type { Product } from "@/types/product";
-import { fetchProducts } from "@/services/api";
+import { useProducts } from "@/hooks/queries/useProducts";
 import { defaultCategories } from "@/utils/defaultCategories";
 
 const ProductSkeleton = () => (
   <div className="rounded overflow-hidden bg-slate-200/60 dark:bg-slate-900/40 border border-white/5 animate-pulse">
     <div className="h-40 sm:h-52 bg-slate-300 dark:bg-slate-800" />
     <div className="p-3 sm:p-4 space-y-3">
-      <div className="flex justify-between">
-        <div className="h-4 w-16 bg-slate-300 dark:bg-slate-700 rounded" />
-        <div className="h-4 w-10 bg-slate-300 dark:bg-slate-700 rounded" />
+      <div className="flex justify-between items-center mb-1">
+        <div className="h-3.5 w-16 bg-slate-300 dark:bg-slate-700 rounded" />
+        <div className="h-3 w-8 bg-slate-300 dark:bg-slate-700 rounded-full" />
       </div>
       <div className="h-5 w-3/4 bg-slate-300 dark:bg-slate-700 rounded" />
-      <div className="h-4 w-1/2 bg-slate-300 dark:bg-slate-700 rounded" />
-      <div className="flex gap-2 mt-2">
+      <div className="h-8 w-1/2 bg-slate-300 dark:bg-slate-700 rounded mt-4" />
+      <div className="flex gap-1.5 mt-2">
         <div className="h-9 flex-1 bg-slate-300 dark:bg-slate-700 rounded" />
         <div className="h-9 flex-1 bg-slate-300 dark:bg-slate-700 rounded" />
       </div>
@@ -28,37 +27,21 @@ const ProductSkeleton = () => (
 );
 
 const LandingProducts = () => {
-  const [products, setProducts] = useState<Product[]>([]);
+  const { data: rawProducts, isLoading } = useProducts();
+  const allProducts = useMemo(() => rawProducts ?? [], [rawProducts]);
   const [activeCategory, setActiveCategory] = useState<string>("All");
-  const [isLoading, setIsLoading] = useState(true);
 
+  const [shuffledProducts, setShuffledProducts] = useState<typeof allProducts>([]);
+
+  // Filter for in-stock items and shuffle for "random suggestions"
   useEffect(() => {
-    const loadProducts = async () => {
-      setIsLoading(true);
-      try {
-        const allProducts = await fetchProducts();
-        // Filter for in-stock items and shuffle for "random suggestions"
-        const inStockProducts = allProducts.filter((p) => p.inStock);
-        const shuffled = [...inStockProducts].sort(() => 0.5 - Math.random());
-        setProducts(shuffled);
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        if (
-          message.toLowerCase().includes("offline") ||
-          message.toLowerCase().includes("failed to fetch")
-        ) {
-          setProducts([]);
-          return;
-        }
+    if (allProducts.length > 0) {
+      const inStock = allProducts.filter((p) => p.inStock);
+      setShuffledProducts([...inStock].sort(() => 0.5 - Math.random()));
+    }
+  }, [allProducts]);
 
-        console.error("Failed to load landing products:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadProducts();
-  }, []);
+  const products = shuffledProducts.length > 0 ? shuffledProducts : allProducts.filter((p) => p.inStock);
 
   const categories = defaultCategories.map((category) => category.name);
 
@@ -66,12 +49,17 @@ const LandingProducts = () => {
     if (activeCategory === "All") {
       return products;
     }
-    return products.filter(
-      (product) =>
-        product.category.toLowerCase() === activeCategory.toLowerCase() ||
-        (activeCategory === "Laptops" &&
-          product.category.toLowerCase() === "laptop"),
-    );
+    return products.filter((product) => {
+      const categoryName = product.category.toLowerCase();
+      const categoryId = (product.categoryId || "").toLowerCase();
+      const target = activeCategory.toLowerCase();
+      
+      return (
+        categoryName === target ||
+        categoryId === target ||
+        (target === "laptops" && categoryName === "laptop")
+      );
+    });
   };
 
   const filteredProducts = getFilteredProducts();
@@ -95,8 +83,8 @@ const LandingProducts = () => {
             Shop Premium Tech
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Elevate your tech experience with our collection of high-quality
-            products to enhance your digital lifestyle
+            Shop laptops, phones, accessories and more — with free delivery
+            on orders over GH₵500
           </p>
         </motion.div>
 

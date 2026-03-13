@@ -255,18 +255,30 @@ export const CreateInquirySchema = z.object({
 });
 
 export const CreateConsultationSchema = z.object({
-  name: z.string().min(1, "Name is required").max(100),
+  firstName: z.string().min(1, "First name is required").max(50),
+  lastName: z.string().min(1, "Last name is required").max(50),
   email: z.string().email("Invalid email address"),
   phone: z
     .string()
     .regex(/^(02|05)\d{8}$/, "Invalid Ghana phone number")
     .optional(),
   service: z.string().min(1, "Service is required").max(200),
-  date: z.string().datetime("Invalid date format"),
-  time: z
-    .string()
-    .regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Invalid time format (HH:MM)"),
+  date: z.string().min(1, "Date is required"),
+  time: z.string().min(1, "Time is required"),
   message: z.string().max(1000).optional(),
+});
+
+export const ChangePasswordSchema = z.object({
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/\d/, "Password must contain at least one number")
+    .regex(
+      /[@$!%*?&#]/,
+      "Password must contain at least one special character",
+    ),
 });
 
 // ============ Guide Schemas ============
@@ -394,3 +406,6 @@ export type ShippingInfo = z.infer<typeof ShippingInfoSchema>;
 export type CreateTicketInput = z.infer<typeof CreateTicketSchema>;
 export type CreateGuideInput = z.infer<typeof CreateGuideSchema>;
 export type AdminLoginInput = z.infer<typeof AdminLoginSchema>;
+export type ChangePasswordInput = z.infer<typeof ChangePasswordSchema>;
+export type CreateConsultationInput = z.infer<typeof CreateConsultationSchema>;
+export type CreateInquiryInput = z.infer<typeof CreateInquirySchema>;

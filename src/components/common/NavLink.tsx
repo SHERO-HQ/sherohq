@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -18,6 +19,9 @@ interface NavLinkProps extends Omit<
 /**
  * A thin wrapper around next/link that provides `isActive` detection
  * via `usePathname()`.
+ *
+ * `isActive` is deferred to after hydration to prevent SSR mismatch —
+ * on the server and first client render, `isActive` is always `false`.
  */
 const NavLink = ({
   href,
@@ -29,10 +33,18 @@ const NavLink = ({
 }: NavLinkProps) => {
   const pathname = usePathname();
   const hrefStr = typeof href === "string" ? href : (href.pathname ?? "");
+  const [mounted, setMounted] = useState(false);
 
-  const isActive = end
-    ? pathname === hrefStr
-    : pathname.startsWith(hrefStr) && (hrefStr !== "/" || pathname === "/");
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Only compute isActive after hydration to prevent SSR mismatch
+  const isActive = mounted
+    ? end
+      ? pathname === hrefStr
+      : pathname.startsWith(hrefStr) && (hrefStr !== "/" || pathname === "/")
+    : false;
 
   const finalClassName =
     typeof className === "function"

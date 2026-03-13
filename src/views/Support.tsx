@@ -27,6 +27,7 @@ import { COMPANY_EMAILS } from "@/constants/emails";
 
 const Support = () => {
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const resources = [
     {
@@ -83,21 +84,33 @@ const Support = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 rounded border border-emerald-200 dark:border-emerald-500/20 uppercase tracking-wider"
+              className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-200 dark:border-emerald-500/20 uppercase tracking-wider"
             >
               <LifeBuoy className="w-4 h-4" />
-              <span>Support Center</span>
+              <span>Customer Support</span>
             </motion.div>
-            <h1 className="md:text-5xl text-4xl font-sora font-bold text-foreground mb-6 tracking-tight">
-              How can we{" "}
+            <h1 className="md:text-6xl text-4xl font-sora font-bold text-foreground mb-6 tracking-tight">
+              Get help{" "}
               <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-500 to-blue-600 dark:to-blue-400">
-                help?
+                in minutes
               </span>
             </h1>
-            <p className="text-muted-foreground text-sm max-w-2xl mx-auto mb-10 leading-relaxed">
-              Find answers, download drivers, or contact our dedicated support
-              team for assistance.
+            <p className="text-muted-foreground text-base max-w-2xl mx-auto mb-8 leading-relaxed">
+              Search guides, download updates, or connect directly with our team
+              for fast, reliable assistance.
             </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded-full border border-border bg-card/60">
+                24h Response SLA
+              </span>
+              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded-full border border-border bg-card/60">
+                Dedicated Support Team
+              </span>
+              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded-full border border-border bg-card/60">
+                Human + Self-Service
+              </span>
+            </div>
 
             {/* Search */}
             <div className="max-w-2xl mx-auto flex flex-col sm:flex-row items-center gap-4">
@@ -105,6 +118,8 @@ const Support = () => {
                 <input
                   type="text"
                   placeholder="Search for articles, guides, and more..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full pl-12 pr-4 py-4 bg-card/40 dark:bg-slate-900/40 backdrop-blur-md border border-border rounded focus:ring-2 focus:ring-emerald-500/50 outline-none transition-all shadow text-foreground placeholder:text-muted-foreground"
                 />
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-emerald-500 transition-colors" />
@@ -114,55 +129,64 @@ const Support = () => {
 
           {/* Resources Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
-            {resources.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-card/40 dark:bg-slate-900/40 backdrop-blur-md p-8 rounded border border-border hover:border-emerald-500/30 hover:bg-card/60 dark:hover:bg-slate-900/60 transition-all group relative overflow-hidden shadow-sm hover:shadow-xl"
-              >
-                {/* Pattern dots on hover */}
-                <div className="absolute pattern-dots pattern-emerald-500/10 pattern-opacity-100 pattern-size-4 top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 -z-10" />
+            {resources
+              .filter((item) => {
+                if (!searchQuery.trim()) return true;
+                const q = searchQuery.toLowerCase();
+                return (
+                  item.title.toLowerCase().includes(q) ||
+                  item.description.toLowerCase().includes(q)
+                );
+              })
+              .map((item, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="bg-card/40 dark:bg-slate-900/40 backdrop-blur-md p-8 rounded border border-border hover:border-emerald-500/30 hover:bg-card/60 dark:hover:bg-slate-900/60 transition-all group relative overflow-hidden shadow-sm hover:shadow-xl"
+                >
+                  {/* Pattern dots on hover */}
+                  <div className="absolute pattern-dots pattern-emerald-500/10 pattern-opacity-100 pattern-size-4 top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 -z-10" />
 
-                <div className="absolute -top-15 -right-15 w-44 h-44 bg-linear-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-full" />
+                  <div className="absolute -top-15 -right-15 w-44 h-44 bg-linear-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-full" />
 
-                <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/40 rounded flex items-center justify-center mb-6 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500 dark:group-hover:bg-emerald-700/80 group-hover:text-white transition-all duration-300 shadow-lg shadow-emerald-500/10">
-                  <item.icon className="w-7 h-7" />
-                </div>
-                <h3 className="text-2xl font-sora font-bold text-foreground mb-3 tracking-snug">
-                  {item.title}
-                </h3>
-                <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
-                  {item.description}
-                </p>
-
-                {item.socials ? (
-                  <div className="flex gap-5">
-                    {item.socials.map((social, i) => (
-                      <a
-                        key={i}
-                        href={social.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 rounded bg-secondary text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-500/10 transition-all transform hover:-translate-y-1"
-                      >
-                        <social.icon className="w-5 h-5" />
-                      </a>
-                    ))}
+                  <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/40 rounded flex items-center justify-center mb-6 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500 dark:group-hover:bg-emerald-700/80 group-hover:text-white transition-all duration-300 shadow-lg shadow-emerald-500/10">
+                    <item.icon className="w-7 h-7" />
                   </div>
-                ) : (
-                  <Link
-                    href={item.link!}
-                    className="inline-flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold group-hover:gap-3 transition-all hover:text-emerald-700 dark:hover:text-emerald-300"
-                  >
-                    <span>Browse Guides</span>
-                    <ArrowRight className="w-5 h-5" />
-                  </Link>
-                )}
-              </motion.div>
-            ))}
+                  <h3 className="text-2xl font-sora font-bold text-foreground mb-3 tracking-snug">
+                    {item.title}
+                  </h3>
+                  <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
+                    {item.description}
+                  </p>
+
+                  {item.socials ? (
+                    <div className="flex gap-5">
+                      {item.socials.map((social, i) => (
+                        <a
+                          key={i}
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 rounded bg-secondary text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-500/10 transition-all transform hover:-translate-y-1"
+                        >
+                          <social.icon className="w-5 h-5" />
+                        </a>
+                      ))}
+                    </div>
+                  ) : (
+                    <Link
+                      href={item.link!}
+                      className="inline-flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold group-hover:gap-3 transition-all hover:text-emerald-700 dark:hover:text-emerald-300"
+                    >
+                      <span>Browse Guides</span>
+                      <ArrowRight className="w-5 h-5" />
+                    </Link>
+                  )}
+                </motion.div>
+              ))}
           </div>
 
           {/* Contact Section */}

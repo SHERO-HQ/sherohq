@@ -13,6 +13,7 @@ import {
   VerifyEmailSchema,
   ResendVerificationSchema,
   UpdateAvatarSchema,
+  ChangePasswordSchema,
 } from "../schemas";
 
 const router = express.Router();
@@ -499,7 +500,7 @@ router.put("/avatar", validateBody(UpdateAvatarSchema), async (req, res) => {
 });
 
 // Change Password
-router.post("/change-password", async (req, res) => {
+router.post("/change-password", authLimiter, validateBody(ChangePasswordSchema), async (req, res) => {
   try {
     const user = await getUserFromToken(req.headers.authorization);
 

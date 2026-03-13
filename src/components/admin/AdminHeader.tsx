@@ -4,7 +4,7 @@ import {
   Menu,
   User,
   LogOut,
-  // ChevronDown,
+  ChevronDown,
   Globe,
 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
@@ -117,8 +117,11 @@ export default function AdminHeader({
           <input
             type="text"
             placeholder="Search everything..."
-            className="w-64 bg-slate-800/50 border border-white/5 rounded py-2 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500/50 transition-all"
+            className="w-64 bg-slate-800/50 border border-white/5 rounded py-2 pl-10 pr-12 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500/50 transition-all"
           />
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none flex items-center justify-center -mt-px w-6 h-5 rounded-[4px] bg-slate-800 border border-slate-700 text-[10px] font-medium text-slate-400">
+            ⌘K
+          </div>
         </div>
 
         {/* View Site */}
@@ -141,7 +144,7 @@ export default function AdminHeader({
               variant="ghost"
               className="flex items-center hover:bg-transparent p-0"
             >
-              <div className="relative flex items-center justify-center p-1 w-10 h-10 overflow-hidden hover:bg-white/5 rounded backdrop-blur-md border border-white/10 hover:border-white/5 transition-all outline-none">
+              <div className="relative flex items-center justify-center p-1 w-10 h-10 shrink-0 overflow-hidden hover:bg-white/5 rounded backdrop-blur-md border border-white/10 hover:border-white/5 transition-all outline-none">
                 {admin?.avatar ? (
                   <AppImage
                     src={admin.avatar}
@@ -154,15 +157,15 @@ export default function AdminHeader({
                   <User className="w-4 h-4 text-emerald-400" />
                 )}
               </div>
-              {/* <div className="hidden sm:flex flex-col items-start">
+              <div className="hidden sm:flex flex-col items-start ml-3">
                 <span className="text-sm font-semibold text-white capitalize font-sora leading-none mb-1">
                   {admin?.username || "Admin"}
                 </span>
                 <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">
                   {admin?.role || "Super Admin"}
                 </span>
-              </div> */}
-              {/* <ChevronDown className="w-4 h-4 text-slate-500 ml-1 hidden sm:block" /> */}
+              </div>
+              <ChevronDown className="w-4 h-4 text-slate-500 ml-2 hidden sm:block" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent

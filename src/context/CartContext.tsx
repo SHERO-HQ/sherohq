@@ -4,6 +4,7 @@ import React, {
   useContext,
   useEffect,
   useState,
+  useCallback,
   useMemo,
 } from "react";
 
@@ -57,7 +58,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem("sherotech_cart", JSON.stringify(cart));
   }, [cart, isLoaded]);
 
-  const addItem = (newItem: Omit<CartItem, "quantity">) => {
+  const addItem = useCallback((newItem: Omit<CartItem, "quantity">) => {
     setCart((prev) => {
       const existing = prev.find((item) => item.id === newItem.id);
       let updated;
@@ -73,17 +74,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.setItem("sherotech_cart", JSON.stringify(updated));
       return updated;
     });
-  };
+  }, []);
 
-  const removeItem = (id: string) => {
+  const removeItem = useCallback((id: string) => {
     setCart((prev) => {
       const updated = prev.filter((item) => item.id !== id);
       localStorage.setItem("sherotech_cart", JSON.stringify(updated));
       return updated;
     });
-  };
+  }, []);
 
-  const updateQuantity = (id: string, delta: number) => {
+  const updateQuantity = useCallback((id: string, delta: number) => {
     setCart((prev) => {
       const updated = prev
         .map((item) =>
@@ -95,12 +96,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.setItem("sherotech_cart", JSON.stringify(updated));
       return updated;
     });
-  };
+  }, []);
 
-  const clearCart = () => {
-    setCart([]);
+  const clearCart = useCallback(() => {
+    // Avoid setting a new empty array when cart is already empty.
+    setCart((prev) => (prev.length === 0 ? prev : []));
     localStorage.removeItem("sherotech_cart");
-  };
+  }, []);
 
   const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cart.reduce(
@@ -120,7 +122,16 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
       isCartOpen,
       setIsCartOpen,
     }),
-    [cart, isCartOpen, totalQuantity, totalPrice],
+    [
+      cart,
+      addItem,
+      removeItem,
+      updateQuantity,
+      clearCart,
+      isCartOpen,
+      totalQuantity,
+      totalPrice,
+    ],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

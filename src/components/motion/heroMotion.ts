@@ -7,7 +7,7 @@ import type { Variants } from "motion/react";
 export const ANIMATION_CONFIG = {
   FADE_UP: {
     Y_OFFSET: 12,
-    DURATION: 0.8,
+    DURATION: 0.5,
   },
   // Add more animation configs here as needed
 } as const;

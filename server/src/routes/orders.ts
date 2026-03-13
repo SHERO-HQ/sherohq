@@ -134,10 +134,10 @@ router.post(
         message: `${isQuote ? "Quote" : "Order"} created successfully`,
       });
     } catch (error) {
-      console.error("Error deleting order:", error);
+      console.error("Error creating order:", error);
       const isDev = process.env.NODE_ENV === "development";
       res.status(500).json({
-        error: "Failed to delete order",
+        error: "Failed to create order",
         ...(isDev && {
           details: error instanceof Error ? error.message : "Unknown error",
         }),
@@ -147,7 +147,7 @@ router.post(
 );
 
 // POST /api/orders - Create new order
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", validateBody(CreateOrderSchema), async (req: Request, res: Response) => {
   try {
     const {
       guestId,

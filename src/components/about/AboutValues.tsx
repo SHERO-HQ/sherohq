@@ -38,7 +38,7 @@ const AboutValues = () => {
   return (
     <section className="py-24 bg-white dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
       {/* Background Ambience */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-100/50 via-white to-slate-50 dark:from-slate-900/50 dark:via-slate-950 dark:to-black pointer-events-none transition-all duration-500" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-100/50 via-white to-slate-50 dark:from-slate-900/50 dark:via-slate-950 dark:to-black pointer-events-none transition-all duration-500" />
 
       <div className="container px-4 md:px-6 mx-auto w-full md:max-w-10/12 relative z-10">
         <div className="text-center mb-16">
@@ -63,28 +63,28 @@ const AboutValues = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
-              whileHover={{ y: -5 }}
-              className="group p-8 rounded bg-slate-50/50 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 dark:hover:border-white/10 hover:shadow-2xl hover:shadow-emerald-900/10 transition-all duration-300"
+              whileHover={{ y: -8 }}
+              className="group p-8 rounded bg-white dark:bg-slate-900/40 backdrop-blur-3xl border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 shadow-sm hover:shadow-2xl hover:shadow-emerald-500/5 transition-all duration-500"
             >
               <div
                 className={cn(
-                  "w-12 h-12 rounded flex items-center justify-center mb-6 transition-all duration-300 border border-slate-200 dark:border-white/5",
+                  "w-12 h-12 rounded flex items-center justify-center mb-8 transition-all duration-500 border border-slate-200/50 dark:border-white/5 shadow-sm",
                   item.color === "emerald" &&
-                    "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500/70 group-hover:text-white group-hover:shadow-lg group-hover:shadow-emerald-500/30",
+                    "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-emerald-500/30",
                   item.color === "blue" &&
-                    "bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:bg-blue-500/70 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/30",
+                    "bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/30",
                   item.color === "violet" &&
-                    "bg-violet-500/10 text-violet-600 dark:text-violet-400 group-hover:bg-violet-500/70 group-hover:text-white group-hover:shadow-lg group-hover:shadow-violet-500/30",
+                    "bg-violet-500/10 text-violet-600 dark:text-violet-400 group-hover:bg-violet-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-violet-500/30",
                   item.color === "amber" &&
-                    "bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:bg-amber-500/70 group-hover:text-white group-hover:shadow-lg group-hover:shadow-amber-500/30",
+                    "bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:bg-amber-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-amber-500/30",
                 )}
               >
                 <item.icon className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold font-sora text-slate-900 dark:text-white mb-3 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+              <h3 className="text-xl font-black font-sora text-slate-900 dark:text-white mb-3 uppercase tracking-tighter group-hover:text-emerald-500 transition-colors">
                 {item.title}
               </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed group-hover:text-slate-800 dark:group-hover:text-slate-300 transition-colors">
+              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light group-hover:text-slate-800 dark:group-hover:text-slate-300 transition-colors line-clamp-3">
                 {item.description}
               </p>
             </motion.div>

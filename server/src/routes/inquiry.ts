@@ -3,6 +3,8 @@ import { notificationService } from "../services/NotificationService";
 import db from "../db/database";
 import { adminAuth } from "../middleware/adminAuth";
 import { v4 as uuidv4 } from "uuid";
+import { validateBody } from "../middleware/validate";
+import { CreateConsultationSchema, CreateInquirySchema } from "../schemas";
 
 const router = express.Router();
 
@@ -33,7 +35,7 @@ router.get("/list", adminAuth, async (req, res) => {
 });
 
 // Schedule Consultation
-router.post("/schedule", async (req, res) => {
+router.post("/schedule", validateBody(CreateConsultationSchema), async (req, res) => {
   try {
     const { email, firstName, lastName, service, date, time } = req.body;
 
@@ -70,7 +72,7 @@ router.post("/schedule", async (req, res) => {
 });
 
 // Contact Form
-router.post("/contact", async (req, res) => {
+router.post("/contact", validateBody(CreateInquirySchema), async (req, res) => {
   try {
     const { email, name, subject, message } = req.body;
 

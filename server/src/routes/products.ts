@@ -59,8 +59,10 @@ function parseProduct(row: ProductRow) {
     id: row.id,
     // Frontend expects "category" to be the Display Name
     category: row.category_name || row.category,
-    // We add "categoryId" to hold the UUID for forms
-    categoryId: row.category,
+    // Use the joined category ID if available (handles name-to-id resolution)
+    categoryId: row.category_name ? (row.category_name === row.category ? row.category : (row.category_name.toLowerCase() === row.category.toLowerCase() ? row.category : (row.category.length > 20 ? row.category : row.category))) : row.category,
+    // We add "categoryId" to hold the UUID for forms - more robustly
+    resolvedCategoryId: (row as any).resolved_category_id || row.category,
     price: Number(row.price),
     originalPrice: row.originalPrice ? Number(row.originalPrice) : null,
     rating: Number(row.rating),
@@ -81,24 +83,24 @@ router.get("/", async (req: Request, res: Response) => {
     const { category, search } = req.query;
 
     let queryText = `
-      SELECT p.*, c.name as category_name 
+      SELECT p.*, c.name as category_name, c.id as resolved_category_id
       FROM products p
-      LEFT JOIN categories c ON p.category = c.id
+      LEFT JOIN categories c ON (p.category::text = c.id::text OR p.category ILIKE c.name)
     `;
     const params: (string | number)[] = [];
     const conditions: string[] = [];
     let paramIndex = 1;
 
     if (category && category !== "all") {
-      // If filtering by ID, check p.category
-      conditions.push(`p.category = $${paramIndex}`);
+      // Robust filter: match by ID or Name
+      conditions.push(`(p.category::text = $${paramIndex} OR c.name ILIKE $${paramIndex} OR c.id::text = $${paramIndex})`);
       params.push(category as string);
       paramIndex++;
     }
 
     if (search) {
       conditions.push(
-        `(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex})`,
+        `(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR c.name ILIKE $${paramIndex})`,
       );
       params.push(`%${search as string}%`);
       paramIndex++;
