@@ -22,15 +22,15 @@ const ConsultationHero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-5 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/40 dark:border-emerald-800/50 rounded-full uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-5 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/40 dark:border-emerald-800/50 rounded uppercase tracking-wider">
             <MessageSquare className="size-4" />
-            <span>Consultation Session</span>
+            <span>Consultation</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-sora font-bold text-slate-900 dark:text-slate-100 mb-6 leading-tight tracking-tight">
-            Turn your roadmap into{" "}
+            Let's Have A{" "} <br />
             <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400">
-              execution
+              Conversation
             </span>
           </h1>
 
