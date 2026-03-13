@@ -381,17 +381,17 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         {(relatedLoading || relatedProducts.length > 0) && (
           <div className="mt-24 border-t border-slate-200 dark:border-white/10 pt-20">
             <div className="flex items-center justify-between mb-12">
-              <h2 className="text-3xl font-black font-sora text-slate-900 dark:text-white uppercase tracking-tighter">
+              <h2 className="text-xl sm:text-3xl font-black font-sora text-slate-900 dark:text-white uppercase tracking-tighter">
                 You Might <span className="text-emerald-500">Also Like</span>
               </h2>
               <button 
                 onClick={() => window.location.href = getAbsoluteUrl("/shop")}
                 className="text-sm font-black uppercase tracking-widest text-emerald-600 hover:underline"
               >
-                View Collection
+                View Shop
               </button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
               {relatedLoading
                 ? [1, 2, 3, 4].map((i) => (
                     <ProductCardSkeleton key={`related-skeleton-${i}`} />

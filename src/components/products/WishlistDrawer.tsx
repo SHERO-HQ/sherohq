@@ -174,7 +174,7 @@ const WishlistDrawer = () => {
                           className="h-8 gap-2 text-xs font-bold w-full sm:w-auto"
                         >
                           <ShoppingCart className="w-3 h-3" />
-                          Add to Cart
+                          Add
                         </Button>
                       </div>
                     </div>
