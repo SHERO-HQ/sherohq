@@ -34,7 +34,7 @@ dotenv.config();
 
 // Validate required environment variables at startup
 function validateEnvironment() {
-  const required = ["DATABASE_URL", "SUPABASE_URL", "SUPABASE_KEY", "PORT"];
+  const required = ["DATABASE_URL", "PORT"];
 
   const missing = required.filter((key) => !process.env[key]);
 
@@ -45,16 +45,24 @@ function validateEnvironment() {
     process.exit(1);
   }
 
-  // Validate DATABASE_URL format
-  if (!process.env.DATABASE_URL?.startsWith("postgresql://")) {
+  // Accept both postgres:// and postgresql:// connection string schemes.
+  const dbUrl = process.env.DATABASE_URL ?? "";
+  const isPostgresUrl =
+    dbUrl.startsWith("postgresql://") || dbUrl.startsWith("postgres://");
+
+  if (!isPostgresUrl) {
     console.error(
-      "❌ FATAL: DATABASE_URL must be a valid PostgreSQL connection string",
+      "❌ FATAL: DATABASE_URL must start with postgresql:// or postgres://",
     );
     process.exit(1);
   }
 
-  // Validate Supabase URL
-  if (!process.env.SUPABASE_URL?.includes("supabase.co")) {
+  // Supabase is optional for non-upload/database-only deployments.
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_KEY) {
+    console.warn(
+      "⚠️ WARNING: SUPABASE_URL/SUPABASE_KEY missing. Upload features may fail.",
+    );
+  } else if (!process.env.SUPABASE_URL.includes("supabase.co")) {
     console.warn("⚠️ WARNING: SUPABASE_URL looks invalid. Uploads may fail.");
   }
 

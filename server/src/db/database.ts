@@ -3,10 +3,31 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
+function getDatabaseConnectionString(): string {
+  const raw = process.env.DATABASE_URL?.trim();
+  if (!raw) {
+    throw new Error("DATABASE_URL is not set");
+  }
+
+  // Some providers use postgres:// while others use postgresql://.
+  return raw.startsWith("postgres://")
+    ? raw.replace("postgres://", "postgresql://")
+    : raw;
+}
+
+function getSslConfig(): false | { rejectUnauthorized: boolean } {
+  // Set DATABASE_SSL=false to disable TLS for local/dev databases.
+  const sslDisabled = process.env.DATABASE_SSL === "false";
+  return sslDisabled ? false : { rejectUnauthorized: false };
+}
+
+const connectionString = getDatabaseConnectionString();
+const ssl = getSslConfig();
+
 // Initialize PostgreSQL connection pool
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false }, // Allow self-signed certs in all environments
+  connectionString,
+  ssl,
   max: 20, // Increased pool size
   idleTimeoutMillis: 60000, // 60 seconds
   connectionTimeoutMillis: 60000, // 60 seconds - allow time for initialization
@@ -47,8 +68,8 @@ export async function initializeDatabase() {
 
   // Use a direct client for initialization to bypass pooler issues with DDL
   const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
+    connectionString,
+    ssl,
   });
 
   await client.connect();
