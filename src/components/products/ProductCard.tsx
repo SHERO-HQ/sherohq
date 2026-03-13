@@ -216,7 +216,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             </button>
             <button
               onClick={() => {
-                addItem();
+                addItem({
+                  id: product.id,
+                  name: product.name,
+                  price: product.price,
+                  image: product.image,
+                  category: product.category,
+                });
                 window.location.href = getAbsoluteUrl("/checkout");
               }}
               disabled={!product.inStock}
