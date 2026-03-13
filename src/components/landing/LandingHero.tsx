@@ -15,7 +15,7 @@ import { RocketIcon } from "@/assets/icons/icons";
 import {
   ArrowRight,
   BriefcaseBusiness,
-  Headset,
+  // Headset,
   ShieldCheck,
   ShoppingCart,
   Users,

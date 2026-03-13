@@ -2,6 +2,7 @@
   "framework": "nextjs",
   "buildCommand": "corepack enable && yarn build",
   "installCommand": "corepack enable && yarn install",
+  "outputDirectory": ".next",
   "rewrites": [
     {
       "source": "/og/:id",
