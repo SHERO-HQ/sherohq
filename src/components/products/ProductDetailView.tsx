@@ -308,7 +308,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 </div>
                 <a
                   href={`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}?text=${encodeURIComponent(
-                    `Inquiry: ${product.name} (GH₵${product.price})`
+                    `Hello Shero, I'm interested in the ${product.name} (GH₵${product.price}), could you please provide more details or assist me with the purchase? Thank you!`,
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"

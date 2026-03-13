@@ -37,12 +37,17 @@ const ShareButton: React.FC<ShareButtonProps> = ({
 
   const [currentUrl, setCurrentUrl] = useState("");
 
-    if (!url) {
-      queueMicrotask(() => setCurrentUrl(window.location.href));
+  useEffect(() => {
+    if (!url && typeof window !== "undefined") {
+      setCurrentUrl(window.location.href);
     }
+  }, [url]);
 
-  const shareUrl = url || currentUrl;
-  const encodedUrl = encodeURIComponent(shareUrl);
+  const resolvedShareUrl =
+    url ||
+    currentUrl ||
+    (typeof window !== "undefined" ? window.location.href : "");
+  const encodedUrl = encodeURIComponent(resolvedShareUrl);
   const encodedTitle = encodeURIComponent(title);
 
   // Close dropdown when clicking outside
@@ -62,48 +67,77 @@ const ShareButton: React.FC<ShareButtonProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpen]);
 
-  const handleShare = async () => {
-    // Use native Web Share API if available (mobile)
-    if (navigator.share) {
-      try {
-        const shareData: ShareData = {
-          title,
-          text: description,
-          url: shareUrl,
-        };
+  const handleShare = () => {
+    setIsOpen((prev) => !prev);
+  };
 
-        // Share the product image as a file if available and supported
-        if (image && navigator.canShare) {
-          try {
-            const response = await fetch(image);
-            const blob = await response.blob();
-            const ext = blob.type.split("/")[1] || "png";
-            const file = new File([blob], `${title}.${ext}`, {
-              type: blob.type,
-            });
-            const dataWithFile = { ...shareData, files: [file] };
-            if (navigator.canShare(dataWithFile)) {
-              await navigator.share(dataWithFile);
-              return;
-            }
-          } catch {
-            // Image fetch failed — fall through to share without image
+  const handleNativeShare = async () => {
+    if (typeof navigator === "undefined" || !navigator.share) return;
+
+    const shareUrl =
+      resolvedShareUrl ||
+      (typeof window !== "undefined" ? window.location.href : "");
+
+    try {
+      const shareData: ShareData = {
+        title,
+        text: description,
+        url: shareUrl,
+      };
+
+      if (image && navigator.canShare) {
+        try {
+          const response = await fetch(image);
+          const blob = await response.blob();
+          const ext = blob.type.split("/")[1] || "png";
+          const file = new File([blob], `${title}.${ext}`, {
+            type: blob.type,
+          });
+          const dataWithFile = { ...shareData, files: [file] };
+
+          if (navigator.canShare(dataWithFile)) {
+            await navigator.share(dataWithFile);
+            setIsOpen(false);
+            return;
           }
+        } catch {
+          // Continue with plain share payload when image share is unavailable
         }
-
-        await navigator.share(shareData);
-        return;
-      } catch {
-        // User cancelled or error - fall through to dropdown
       }
+
+      await navigator.share(shareData);
+      setIsOpen(false);
+    } catch {
+      // User cancelled or share was blocked
     }
-    // Otherwise show dropdown
-    setIsOpen(!isOpen);
   };
 
   const handleCopyLink = async () => {
+    const shareUrl =
+      resolvedShareUrl ||
+      (typeof window !== "undefined" ? window.location.href : "");
+
+    if (!shareUrl) return;
+
     try {
-      await navigator.clipboard.writeText(shareUrl);
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = shareUrl;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        const successful = document.execCommand("copy");
+        document.body.removeChild(textArea);
+
+        if (!successful) {
+          throw new Error("Copy command failed");
+        }
+      }
+
       setCopied(true);
       setTimeout(() => {
         setCopied(false);
@@ -140,6 +174,15 @@ const ShareButton: React.FC<ShareButtonProps> = ({
       color: "text-[#1877F2]",
     },
   ];
+
+  if (typeof navigator !== "undefined" && navigator.share) {
+    shareOptions.unshift({
+      name: "More Options",
+      icon: Share2,
+      onClick: handleNativeShare,
+      color: "text-slate-600 dark:text-slate-400",
+    });
+  }
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
