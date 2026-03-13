@@ -62,11 +62,31 @@ const getBaseDomain = (hostname: string): string => {
   return hostname;
 };
 
+const ROOT_DOMAIN_PATHS = [
+  "/about-us",
+  "/contact-us",
+  "/faq",
+  "/partners",
+  "/privacy",
+  "/terms",
+  "/cookies",
+  "/solutions",
+  "/consultation",
+  "/login",
+  "/signup",
+  "/profile",
+];
+
 const getTargetSubdomain = (
   path: string,
 ): { subdomain: string; path: string } => {
   const lowercasePath = path.toLowerCase();
-  
+
+  // Explicitly keep these on the root domain
+  if (ROOT_DOMAIN_PATHS.some((p) => lowercasePath.startsWith(p)) || path === "/") {
+    return { subdomain: "www", path };
+  }
+
   // Shop subdomain: All e-commerce related paths
   if (
     lowercasePath.startsWith("/shop") ||
@@ -75,32 +95,30 @@ const getTargetSubdomain = (
     lowercasePath.startsWith("/cart") ||
     lowercasePath.startsWith("/wishlist")
   ) {
-    const cleanPath = path.replace(/^\/shop|^\/products|^\/checkout|^\/cart|^\/wishlist/, "");
-    const finalPath =
-      !cleanPath || cleanPath === "/"
-        ? "/"
-        : cleanPath.startsWith("/")
-          ? cleanPath
-          : "/" + cleanPath;
+    let internalPath = "/";
 
-    // Preserve the prefix for paths that are part of the shop app's internal routing
-    let shopPath = finalPath;
-    if (path.startsWith("/checkout")) shopPath = "/checkout" + finalPath;
-    if (path.startsWith("/cart")) shopPath = "/cart" + finalPath;
-    if (path.startsWith("/wishlist")) shopPath = "/wishlist" + finalPath;
-    if (path.startsWith("/products")) shopPath = "/products" + finalPath;
+    if (lowercasePath.startsWith("/shop")) {
+      internalPath = path.replace(/^\/shop/, "") || "/";
+    } else if (lowercasePath.startsWith("/products")) {
+      internalPath = path.replace(/^\/products/, "") || "/";
+    } else if (lowercasePath.startsWith("/checkout")) {
+      internalPath = path; // Maps to shop.sherohq.com/checkout
+    } else if (lowercasePath.startsWith("/cart")) {
+      internalPath = path;
+    } else if (lowercasePath.startsWith("/wishlist")) {
+      internalPath = path;
+    }
 
-    return { subdomain: "shop", path: shopPath };
+    // Ensure it starts with a slash
+    if (!internalPath.startsWith("/")) internalPath = "/" + internalPath;
+
+    return { subdomain: "shop", path: internalPath };
   }
 
   // Admin subdomain
   if (path.startsWith("/admin")) {
     const cleanPath = path.replace("/admin", "");
-    if (!cleanPath || cleanPath === "/")
-      return { subdomain: "admin", path: "/" };
-
-    const finalPath = cleanPath.startsWith("/") ? cleanPath : "/" + cleanPath;
-    return { subdomain: "admin", path: finalPath };
+    return { subdomain: "admin", path: cleanPath || "/" };
   }
 
   // Support subdomain
@@ -111,7 +129,7 @@ const getTargetSubdomain = (
     };
   }
 
-  // Everything else goes to the root domain (represented by 'www' in our utility)
+  // Default to root
   return { subdomain: "www", path };
 };
 
