@@ -55,13 +55,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         type: "website",
         title: `${product.name} | SHERO`,
         description,
-        url: `${shopSiteUrl}/products/${id}`,
+        url: `${shopSiteUrl}/${id}`,
         images: [
           {
             url: imageUrl,
+            secureUrl: imageUrl.startsWith("https") ? imageUrl : imageUrl.replace("http://", "https://"),
             width: 1200,
             height: 630,
             alt: product.name,
+            type: "image/jpeg", // Assuming jpeg as it's common for product images
           },
         ],
         siteName: "SHERO",
