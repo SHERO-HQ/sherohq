@@ -136,7 +136,7 @@ const Nav = () => {
                   <li key={item} suppressHydrationWarning>
                     <NavLink
                       className={({ isActive }) => navLinkClass(isActive)}
-                      href={`/${item.toLowerCase().replace(" ", "-")}`}
+                      href={getAbsoluteUrl(`/${item.toLowerCase().replace(" ", "-")}`)}
                     >
                       {item}
                     </NavLink>
@@ -196,7 +196,7 @@ const Nav = () => {
                     </button>
                   ) : (
                     <NavLink
-                      href="/login"
+                      href={getAbsoluteUrl("/login")}
                       className="cursor-pointer p-2 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors block"
                       aria-label="Login"
                     >
@@ -216,7 +216,7 @@ const Nav = () => {
                         </p>
                       </div>
                       <NavLink
-                        href="/profile"
+                        href={getAbsoluteUrl("/profile")}
                         className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
                       >
                         <User className="w-4 h-4" /> Profile & Orders
@@ -320,7 +320,7 @@ const Nav = () => {
                         className={({ isActive }) =>
                           navLinkClassVariant(isActive, "mobile")
                         }
-                        href={`/${item.toLowerCase().replace(" ", "-")}`}
+                        href={getAbsoluteUrl(`/${item.toLowerCase().replace(" ", "-")}`)}
                         onClick={() => setIsOpen(false)}
                       >
                         {item}
@@ -348,7 +348,7 @@ const Nav = () => {
                       </div>
                       <div className="grid grid-cols-1 gap-2">
                         <NavLink
-                          href="/profile"
+                          href={getAbsoluteUrl("/profile")}
                           onClick={() => setIsOpen(false)}
                           className="flex items-center gap-3 px-4 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded transition-all duration-200 group/item"
                         >
@@ -375,7 +375,7 @@ const Nav = () => {
                     </div>
                   ) : (
                     <NavLink
-                      href="/login"
+                      href={getAbsoluteUrl("/login")}
                       onClick={() => setIsOpen(false)}
                       className="flex items-center gap-4 px-5 py-2 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 rounded transition-all duration-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800/50 group"
                     >

@@ -65,12 +65,17 @@ const getBaseDomain = (hostname: string): string => {
 const getTargetSubdomain = (
   path: string,
 ): { subdomain: string; path: string } => {
+  const lowercasePath = path.toLowerCase();
+  
+  // Shop subdomain: All e-commerce related paths
   if (
-    path.startsWith("/shop") ||
-    path.startsWith("/products") ||
-    path.startsWith("/checkout")
+    lowercasePath.startsWith("/shop") ||
+    lowercasePath.startsWith("/products") ||
+    lowercasePath.startsWith("/checkout") ||
+    lowercasePath.startsWith("/cart") ||
+    lowercasePath.startsWith("/wishlist")
   ) {
-    const cleanPath = path.replace(/^\/shop|^\/products|^\/checkout/, "");
+    const cleanPath = path.replace(/^\/shop|^\/products|^\/checkout|^\/cart|^\/wishlist/, "");
     const finalPath =
       !cleanPath || cleanPath === "/"
         ? "/"
@@ -78,13 +83,17 @@ const getTargetSubdomain = (
           ? cleanPath
           : "/" + cleanPath;
 
-    // Maintain checkout prefix for routing within the shop subdomain
-    const shopPath = path.startsWith("/checkout")
-      ? "/checkout" + finalPath
-      : finalPath;
+    // Preserve the prefix for paths that are part of the shop app's internal routing
+    let shopPath = finalPath;
+    if (path.startsWith("/checkout")) shopPath = "/checkout" + finalPath;
+    if (path.startsWith("/cart")) shopPath = "/cart" + finalPath;
+    if (path.startsWith("/wishlist")) shopPath = "/wishlist" + finalPath;
+    if (path.startsWith("/products")) shopPath = "/products" + finalPath;
 
     return { subdomain: "shop", path: shopPath };
   }
+
+  // Admin subdomain
   if (path.startsWith("/admin")) {
     const cleanPath = path.replace("/admin", "");
     if (!cleanPath || cleanPath === "/")
@@ -93,12 +102,16 @@ const getTargetSubdomain = (
     const finalPath = cleanPath.startsWith("/") ? cleanPath : "/" + cleanPath;
     return { subdomain: "admin", path: finalPath };
   }
+
+  // Support subdomain
   if (path.startsWith("/support")) {
     return {
       subdomain: "support",
       path: path === "/support" ? "/" : path.replace("/support", ""),
     };
   }
+
+  // Everything else goes to the root domain (represented by 'www' in our utility)
   return { subdomain: "www", path };
 };
 

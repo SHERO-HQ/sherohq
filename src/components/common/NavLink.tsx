@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -40,11 +40,31 @@ const NavLink = ({
   }, []);
 
   // Only compute isActive after hydration to prevent SSR mismatch
-  const isActive = mounted
-    ? end
-      ? pathname === hrefStr
-      : pathname.startsWith(hrefStr) && (hrefStr !== "/" || pathname === "/")
-    : false;
+  const isActive = useMemo(() => {
+    if (!mounted) return false;
+
+    let targetPath = hrefStr;
+    
+    // If it's an absolute URL, check if it points to the current domain
+    if (hrefStr.startsWith("http")) {
+      try {
+        const url = new URL(hrefStr);
+        if (url.hostname === window.location.hostname) {
+          targetPath = url.pathname;
+        } else {
+          return false; // Pointing to a different subdomain or domain
+        }
+      } catch {
+        return false;
+      }
+    }
+
+    if (end) {
+      return pathname === targetPath;
+    }
+    
+    return pathname.startsWith(targetPath) && (targetPath !== "/" || pathname === "/");
+  }, [mounted, pathname, hrefStr, end]);
 
   const finalClassName =
     typeof className === "function"

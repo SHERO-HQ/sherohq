@@ -9,18 +9,27 @@ function resolveOgImage(image: string | undefined): string {
   const fallback = `${siteUrl}/shero.png`;
   if (!image) return fallback;
   if (image.startsWith("http")) return image;
+
+  const apiRoot = (
+    process.env.NEXT_PUBLIC_API_URL || "https://api.sherohq.com"
+  ).replace(/\/api$/, "");
+
+  // Handle both leading slash and non-leading slash paths
   if (image.startsWith("/uploads")) {
-    const apiRoot = (
-      process.env.NEXT_PUBLIC_API_URL || "https://api.sherohq.com"
-    ).replace(/\/api$/, "");
     return `${apiRoot}${image}`;
   }
+  if (image.startsWith("uploads/")) {
+    return `${apiRoot}/${image}`;
+  }
+
   return fallback;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
+  // If sharing from the shop, the canonical URL for social platforms should be on the shop subdomain
+  const shopSiteUrl = siteUrl.includes("shop.") ? siteUrl : siteUrl.replace("://", "://shop.");
 
   try {
     const apiBase = (
@@ -46,7 +55,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         type: "website",
         title: `${product.name} | SHERO`,
         description,
-        url: `${siteUrl}/shop/${id}`,
+        url: `${shopSiteUrl}/products/${id}`,
         images: [
           {
             url: imageUrl,

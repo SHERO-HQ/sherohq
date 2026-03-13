@@ -14,6 +14,7 @@ import { getImageUrl } from "@/services/api";
 import type { Product } from "@/types/product";
 import AppImage from "@/components/common/AppImage";
 import { formatCurrency } from "@/utils/format";
+import { getAbsoluteUrl } from "@/utils/subdomain";
 
 interface ProductSpotlightProps {
   products: Product[];
@@ -152,7 +153,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                 </div>
 
                 <Link
-                  href={`/products/${currentProduct.slug || currentProduct.sku || currentProduct.id}`}
+                  href={getAbsoluteUrl(`/products/${currentProduct.slug || currentProduct.sku || currentProduct.id}`)}
                   className="group w-full sm:w-auto flex items-center justify-center gap-4 px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded font-black uppercase tracking-widest text-[10px] hover:bg-emerald-600 dark:hover:bg-emerald-500 dark:hover:text-white transition-all shadow-2xl shadow-black/20"
                 >
                   See Details

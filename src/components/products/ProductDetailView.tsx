@@ -34,6 +34,7 @@ import { WhatsAppIcon } from "@/assets/icons/icons";
 import ShareButton from "@/components/common/ShareButton";
 import AppImage from "@/components/common/AppImage";
 import { formatCurrency } from "@/utils/format";
+import { getAbsoluteUrl } from "@/utils/subdomain";
 import { ProductCardSkeleton } from "@/components/ui/Skeleton";
 
 interface ProductDetailViewProps {
@@ -86,7 +87,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         {/* Navigation & Actions Header */}
         <div className="flex items-center justify-between mb-8">
           <button
-            onClick={() => router.push("/shop")}
+            onClick={() => window.location.href = getAbsoluteUrl("/shop")}
             className="group flex items-center gap-2 text-sm font-black uppercase tracking-widest text-slate-500 hover:text-emerald-500 transition-colors"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
@@ -196,7 +197,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
 
           {/* Details Content (5 columns) */}
           <div className="lg:col-span-5 flex flex-col gap-8">
-            <div className="p-8 rounded bg-white dark:bg-white/5 backdrop-blur-3xl border border-slate-200 dark:border-white/10 shadow-xl">
+            <div className="p-8 rounded bg-white dark:bg-white/5 backdrop-blur-3xl border border-slate-200 dark:border-white/10 shadow">
               <div className="flex items-center justify-between mb-4">
                 <span className="px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                   {product.category}
@@ -238,7 +239,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between mb-6 px-1">
+              <div className="flex flex-col sm:flex-row items-center justify-between mb-6 px-1">
                 <div className="flex flex-col">
                   {product.originalPrice && (
                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 line-through">
@@ -254,7 +255,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-600" 
                     : "bg-red-500/5 border-red-500/20 text-red-600"
                 }`}>
-                  {product.inStock ? "Currently In Stock" : "Backorder Only"}
+                  {product.inStock ? "In Stock" : "Out of Stock"}
                 </div>
               </div>
 
@@ -264,7 +265,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   <button
                     onClick={handleAddToCart}
                     disabled={!product.inStock || isAddedToCart}
-                    className={`flex-1 flex items-center justify-center gap-2 h-14 rounded font-black text-[11px] uppercase tracking-widest transition-all border-2 ${
+                    className={`flex-1 flex items-center justify-center gap-2 h-14 px-4 rounded font-black text-[11px] uppercase tracking-widest transition-all border-2 ${
                       isAddedToCart
                         ? "bg-emerald-500 border-emerald-500 text-white"
                         : "bg-white dark:bg-white/5 border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500 hover:text-white"
@@ -281,10 +282,10 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   <button
                     onClick={() => {
                       handleAddToCart();
-                      router.push("/checkout");
+                      window.location.href = getAbsoluteUrl("/checkout");
                     }}
                     disabled={!product.inStock}
-                    className="flex-1 h-14 bg-emerald-600 text-white rounded font-black text-[11px] uppercase tracking-widest hover:bg-emerald-500 shadow-xl shadow-emerald-500/10 disabled:opacity-50"
+                    className="flex-1 px-2 h-14 bg-emerald-600 text-white rounded font-black text-[11px] uppercase tracking-widest hover:bg-emerald-500 shadow-xl shadow-emerald-500/10 disabled:opacity-50"
                   >
                     Buy Now
                   </button>
@@ -356,7 +357,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 <thead>
                   <tr className="border-b border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/5">
                     <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Parameter</th>
-                    <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Configuration</th>
+                    <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Specification</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-white/5">
@@ -384,7 +385,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 You Might <span className="text-emerald-500">Also Like</span>
               </h2>
               <button 
-                onClick={() => router.push("/shop")}
+                onClick={() => window.location.href = getAbsoluteUrl("/shop")}
                 className="text-sm font-black uppercase tracking-widest text-emerald-600 hover:underline"
               >
                 View Collection

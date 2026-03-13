@@ -12,6 +12,8 @@ import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { WhatsAppIcon } from "@/assets/icons/icons";
 import { formatCurrency } from "@/utils/format";
 
+import { getAbsoluteUrl } from "@/utils/subdomain";
+
 interface ProductCardProps {
   product: Product;
   onQuickView?: (product: Product) => void;
@@ -57,7 +59,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       image: product.image,
       category: product.category,
     });
-    router.push("/checkout");
+    window.location.href = getAbsoluteUrl("/checkout");
   };
 
   const handleQuickView = (e: React.MouseEvent) => {
@@ -66,7 +68,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
     if (onQuickView) {
       onQuickView(product);
     } else {
-      router.push(`/products/${product.slug || product.sku || product.id}`);
+      window.location.href = getAbsoluteUrl(`/products/${product.slug || product.sku || product.id}`);
     }
   };
 
@@ -83,7 +85,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
   };
 
   const handleCardClick = () => {
-    router.push(`/products/${product.slug || product.sku || product.id}`);
+    window.location.href = getAbsoluteUrl(`/products/${product.slug || product.sku || product.id}`);
   };
 
   const whatsappMessage = encodeURIComponent(
@@ -213,7 +215,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
               <span className="text-[10px] font-black uppercase tracking-wider hidden min-[400px]:inline">Add</span>
             </button>
             <button
-              onClick={handleBuyNow}
+              onClick={() => {
+                addItem();
+                window.location.href = getAbsoluteUrl("/checkout");
+              }}
               disabled={!product.inStock}
               className="flex-1 h-10 rounded bg-emerald-600 text-white font-black text-[10px] uppercase tracking-widest hover:bg-emerald-500 shadow-lg shadow-emerald-600/20 disabled:opacity-50 transition-all"
             >

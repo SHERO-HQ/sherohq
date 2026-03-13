@@ -9,6 +9,7 @@ import {
   TwitterXIcon,
 } from "@/assets/icons/icons";
 import { COMPANY_EMAILS } from "@/constants/emails";
+import { getAbsoluteUrl } from "@/utils/subdomain";
 
 const Footer = () => {
   const companyLinks = ["Shop", "Solutions", "About Us", "Contact Us"];
@@ -51,7 +52,7 @@ const Footer = () => {
           {/* LEFT: Branding & Contact */}
           <div className="lg:col-span-5 space-y-6">
             <div>
-              <Link href="/" className="inline-block mb-3">
+              <Link href={getAbsoluteUrl("/")} className="inline-block mb-3">
                 <img
                   src="/assets/logo/shero-light.svg"
                   alt="Shero Logo"
@@ -159,7 +160,7 @@ const Footer = () => {
                   {companyLinks.map((link) => (
                     <li key={link}>
                       <Link
-                        href={`/${link.toLowerCase().replace(" ", "-")}`}
+                        href={getAbsoluteUrl(`/${link.toLowerCase().replace(" ", "-")}`)}
                         className="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors text-sm"
                       >
                         <ArrowRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
@@ -179,7 +180,7 @@ const Footer = () => {
                   {resourceLinks.map((link) => (
                     <li key={link}>
                       <Link
-                        href={`/${link.toLowerCase().replace(" ", "-")}`}
+                        href={getAbsoluteUrl(`/${link.toLowerCase().replace(" ", "-")}`)}
                         className="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors text-sm"
                       >
                         <ArrowRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
@@ -227,19 +228,19 @@ const Footer = () => {
             </p>
             <div className="flex items-center gap-6">
               <Link
-                href="/terms"
+                href={getAbsoluteUrl("/terms")}
                 className="hover:text-slate-900 dark:hover:text-white transition-colors"
               >
                 Terms
               </Link>
               <Link
-                href="/privacy"
+                href={getAbsoluteUrl("/privacy")}
                 className="hover:text-slate-900 dark:hover:text-white transition-colors"
               >
                 Privacy
               </Link>
               <Link
-                href="/cookies"
+                href={getAbsoluteUrl("/cookies")}
                 className="hover:text-slate-900 dark:hover:text-white transition-colors"
               >
                 Cookies

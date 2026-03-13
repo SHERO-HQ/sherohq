@@ -61,12 +61,12 @@ const LandingPartners = () => {
                            transition-all duration-500
                            cursor-pointer group/card grayscale hover:grayscale-0"
               >
-                <div className="relative w-32 h-32 flex items-center justify-center">
+                <div className="relative sm:w-32 sm:h-32 w-20 h-20 flex items-center justify-center">
                   <Image
                     src={partner.logo}
                     alt={`${partner.name} logo`}
                     fill
-                    className="object-contain transition-transform duration-500 group-hover/card:scale-110"
+                    className="object-contain transition-transform duration-500 group-hover/card:scale-110 pointer-events-none md:pointer-events-auto select-none"
                     sizes="250px"
                   />
                 </div>

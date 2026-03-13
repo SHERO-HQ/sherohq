@@ -13,9 +13,9 @@ const BottomNav = () => {
   const homeHref = getAbsoluteUrl("/");
   const navItems = [
     { icon: Home, label: "Home", path: homeHref },
-    { icon: ShoppingBag, label: "Shop", path: "/shop" },
-    { icon: Heart, label: "Wishlist", path: "/wishlist" },
-    { icon: ShoppingCart, label: "Cart", path: "/cart" },
+    { icon: ShoppingBag, label: "Shop", path: getAbsoluteUrl("/shop") },
+    { icon: Heart, label: "Wishlist", path: getAbsoluteUrl("/wishlist") },
+    { icon: ShoppingCart, label: "Cart", path: getAbsoluteUrl("/cart") },
   ];
 
   return (
