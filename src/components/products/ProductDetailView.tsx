@@ -239,7 +239,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row items-center justify-between mb-6 px-1">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 px-1">
                 <div className="flex flex-col">
                   {product.originalPrice && (
                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 line-through">
@@ -250,7 +250,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     {formatCurrency(product.price)}
                   </span>
                 </div>
-                <div className={`px-4 py-2 rounded text-[10px] font-black uppercase tracking-tighter border-2 ${
+                <div className={`px-4 py-1 rounded text-[10px] font-black uppercase tracking-tighter border-2 ${
                   product.inStock 
                     ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-600" 
                     : "bg-red-500/5 border-red-500/20 text-red-600"
