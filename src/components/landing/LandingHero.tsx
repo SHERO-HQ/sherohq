@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
-import { fadeUp } from "@/components/motion/heroMotion";
+import { fadeUp, fadeUpAccessible } from "@/components/motion/heroMotion";
 import { useRef, useEffect } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useIsMounted } from "@/hooks/useIsMounted";
@@ -155,7 +155,7 @@ const LandingHero: React.FC = () => {
             <motion.div
               initial="hidden"
               animate="visible"
-              variants={prefersReducedMotion ? {} : fadeUp}
+              variants={fadeUpAccessible(prefersReducedMotion)}
               transition={{ delay: 0.25 }}
               className="flex flex-col sm:flex-row items-center gap-4 pt-2 w-full sm:w-auto"
             >

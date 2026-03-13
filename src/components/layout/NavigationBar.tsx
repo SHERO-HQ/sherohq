@@ -13,6 +13,7 @@ import { navLinkClass, navLinkClassVariant } from "@/lib/utils";
 import BottomNav from "./BottomNav";
 import SearchBar from "./SearchBar";
 import { Badge } from "@/components/ui/badge";
+import { getAbsoluteUrl } from "@/utils/subdomain";
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,6 +22,7 @@ const Nav = () => {
   const { wishlist, setIsWishlistOpen } = useWishlist();
   const { user, isAuthenticated, logout } = useAuth();
   const mounted = useIsMounted();
+  const homeHref = getAbsoluteUrl("/");
 
   // Animation variants
   const menuVars = {
@@ -84,7 +86,7 @@ const Nav = () => {
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 lg:h-20">
             {/* Logo */}
-            <NavLink href="/" className="flex items-center z-50">
+            <NavLink href={homeHref} className="flex items-center z-50">
               {/* Mobile & Desktop Logos */}
               <div className="md:hidden">
                 <img
@@ -126,7 +128,10 @@ const Nav = () => {
             {/* Right Groups Wrapper */}
             <div className="flex items-center gap-2 lg:space-x-2 ml-auto">
               {/* Desktop Menu */}
-              <ul className="hidden lg:flex items-center gap-3" suppressHydrationWarning>
+              <ul
+                className="hidden lg:flex items-center gap-3"
+                suppressHydrationWarning
+              >
                 {navLinks.map((item) => (
                   <li key={item} suppressHydrationWarning>
                     <NavLink
@@ -143,7 +148,6 @@ const Nav = () => {
               <div className="flex items-center gap-2 mr-2">
                 {/* Search */}
                 <SearchBar className="hidden lg:block" />
-
 
                 {/* Wishlist Button */}
                 <button
@@ -389,8 +393,6 @@ const Nav = () => {
                     </NavLink>
                   )}
                 </div>
-
-
               </motion.div>
             </>
           )}

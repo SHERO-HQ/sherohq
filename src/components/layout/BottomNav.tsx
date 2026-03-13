@@ -4,13 +4,15 @@ import NavLink from "@/components/common/NavLink";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useIsMounted } from "@/hooks/useIsMounted";
+import { getAbsoluteUrl } from "@/utils/subdomain";
 
 const BottomNav = () => {
   const { setIsCartOpen, totalQuantity } = useCart();
   const { setIsWishlistOpen, wishlist } = useWishlist();
   const mounted = useIsMounted();
+  const homeHref = getAbsoluteUrl("/");
   const navItems = [
-    { icon: Home, label: "Home", path: "/" },
+    { icon: Home, label: "Home", path: homeHref },
     { icon: ShoppingBag, label: "Shop", path: "/shop" },
     { icon: Heart, label: "Wishlist", path: "/wishlist" },
     { icon: ShoppingCart, label: "Cart", path: "/cart" },

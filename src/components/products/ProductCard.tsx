@@ -217,7 +217,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
               disabled={!product.inStock}
               className="flex-1 h-10 rounded bg-emerald-600 text-white font-black text-[10px] uppercase tracking-widest hover:bg-emerald-500 shadow-lg shadow-emerald-600/20 disabled:opacity-50 transition-all"
             >
-              Buy Now
+              Buy
             </button>
             <a
               href={whatsappUrl}

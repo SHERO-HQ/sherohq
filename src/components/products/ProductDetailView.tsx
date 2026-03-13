@@ -286,7 +286,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     disabled={!product.inStock}
                     className="flex-1 h-14 bg-emerald-600 text-white rounded font-black text-[11px] uppercase tracking-widest hover:bg-emerald-500 shadow-xl shadow-emerald-500/10 disabled:opacity-50"
                   >
-                    Purchase Now
+                    Buy Now
                   </button>
 
                   <button

@@ -34,7 +34,7 @@ const LandingValueProps = () => {
   return (
     <section className="relative w-full py-8 lg:py-10 bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-900 transition-colors duration-300">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8">
           {values.map((item, index) => (
             <motion.div
               key={item.title}
