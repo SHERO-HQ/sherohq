@@ -3,8 +3,11 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { ArrowRight, WandSparkles } from "lucide-react";
 import { RocketIcon } from "@/assets/icons/icons";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const LandingFinalCTA = () => {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <section className="relative w-full py-16 lg:py-16 overflow-hidden dark:bg-slate-950">
       {/* Container */}
@@ -17,8 +20,10 @@ const LandingFinalCTA = () => {
           transition={{ duration: 0.8 }}
           className="relative overflow-hidden rounded bg-slate-900 border border-white/10"
         >
-          {/* Warp Speed Background */}
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-20 hover:scale-105 transition-transform duration-[2s]" />
+          {/* Lightweight layered background (avoids heavy remote image repaint cost) */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.24),transparent_55%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(6,182,212,0.20),transparent_55%)]" />
+          <div className="absolute inset-0 pattern-dots opacity-10" />
           <div className="absolute inset-0 bg-linear-to-r from-slate-950 via-slate-950/80 to-slate-900/50" />
 
           <div className="relative z-10 p-8 md:p-16 lg:p-20 flex flex-col lg:flex-row items-center justify-between">
@@ -27,7 +32,7 @@ const LandingFinalCTA = () => {
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded bg-white/5 border border-emerald-400/50 backdrop-blur-sm">
                 <WandSparkles className="w-4 h-4 text-emerald-400" />
                 <span className="text-xs font-medium text-emerald-100 uppercase">
-                  Unlock Your Potential
+                  Unleash Your Potential
                 </span>
               </div>
 
@@ -39,8 +44,8 @@ const LandingFinalCTA = () => {
               </h2>
 
               <p className="text-sm text-slate-300 leading-relaxed">
-                Join the league of visionaries who are redefining their
-                industries with SHERO's cutting-edge ecosystem.
+                Go from idea to launch with product engineering, cloud, and
+                growth systems built for measurable business outcomes.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
@@ -48,7 +53,7 @@ const LandingFinalCTA = () => {
                   href="/contact-us"
                   className="group inline-flex items-center justify-center gap-2 px-8 py-2 rounded bg-emerald-600 text-white font-bold hover:bg-emerald-500 hover:shadow-lg hover:shadow-emerald-500/25 hover:-translate-y-1 transition duration-300"
                 >
-                  Start Your Journey
+                  Book a Strategy Call
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
@@ -65,26 +70,42 @@ const LandingFinalCTA = () => {
               <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center">
                 {/* Glowing Core */}
                 <motion.div
-                  animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  className="absolute inset-0 bg-emerald-500/20 rounded-full blur-3xl"
+                  animate={
+                    prefersReducedMotion
+                      ? undefined
+                      : { scale: [1, 1.15, 1], opacity: [0.2, 0.35, 0.2] }
+                  }
+                  transition={
+                    prefersReducedMotion
+                      ? undefined
+                      : {
+                          duration: 3.5,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }
+                  }
+                  className="absolute inset-0 bg-emerald-500/20 rounded-full blur-2xl"
                 />
 
                 {/* Glass Circle Container */}
                 <div className="relative z-10 w-full h-full backdrop-blur-sm flex items-center justify-center">
                   <motion.div
-                    animate={{
-                      y: [-20, 20, -20],
-                    }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
+                    animate={
+                      prefersReducedMotion
+                        ? undefined
+                        : {
+                            y: [-16, 16, -16],
+                          }
+                    }
+                    transition={
+                      prefersReducedMotion
+                        ? undefined
+                        : {
+                            duration: 4.5,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }
+                    }
                     whileHover={{
                       scale: 1.1,
                       y: -20,
@@ -95,16 +116,36 @@ const LandingFinalCTA = () => {
                     <RocketIcon className="w-32 h-32 text-emerald-400 drop-shadow-sm" />
                     {/* Engine Flame */}
                     <motion.div
-                      animate={{ height: [0, 20, 0], opacity: [0, 1, 0] }}
-                      transition={{ duration: 0.5, repeat: Infinity }}
+                      animate={
+                        prefersReducedMotion
+                          ? undefined
+                          : { height: [0, 18, 0], opacity: [0, 1, 0] }
+                      }
+                      transition={
+                        prefersReducedMotion
+                          ? undefined
+                          : { duration: 0.7, repeat: Infinity }
+                      }
                       className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-4 bg-orange-500 blur-sm rounded-full"
                     />
                   </motion.div>
                 </div>
 
                 {/* Orbiting Particles */}
-                <div className="absolute inset-0 rounded-full border border-white/5 animate-[spin_10s_linear_infinite]" />
-                <div className="absolute inset-[15%] rounded-full border border-white/5 animate-[spin_7s_linear_infinite_reverse]" />
+                <div
+                  className={`absolute inset-0 rounded-full border border-white/5 ${
+                    prefersReducedMotion
+                      ? ""
+                      : "animate-[spin_12s_linear_infinite]"
+                  }`}
+                />
+                <div
+                  className={`absolute inset-[15%] rounded-full border border-white/5 ${
+                    prefersReducedMotion
+                      ? ""
+                      : "animate-[spin_8s_linear_infinite_reverse]"
+                  }`}
+                />
               </div>
             </div>
           </div>

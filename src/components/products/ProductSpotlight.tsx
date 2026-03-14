@@ -196,7 +196,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.8, duration: 0.5 }}
-                    className="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 p-2 sm:p-4 rounded bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm border border-white/20 shadow-lg z-20"
+                    className="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 p-2 rounded bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm border border-white/20 shadow-lg z-20"
                   >
                     <div className="flex items-center gap-2 sm:gap-3">
                       <div className="w-6 h-6 sm:w-10 sm:h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
