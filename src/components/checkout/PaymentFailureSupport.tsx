@@ -41,7 +41,7 @@ const PaymentFailureSupport = ({
       animate={{ opacity: 1, y: 0 }}
       className="max-w-2xl mx-auto"
     >
-      <div className="bg-white dark:bg-slate-900 rounded border border-red-100 dark:border-red-900/30 overflow-hidden shadow-xl shadow-red-500/5">
+      <div className="bg-white dark:bg-slate-900 rounded border border-red-100 dark:border-red-900/30 overflow-hidden shadow-md shadow-red-500/5">
         {/* Header Section */}
         <div className="bg-red-50 dark:bg-red-900/10 p-8 text-center border-b border-red-100 dark:border-red-900/20">
           <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-red-600 dark:text-red-400">

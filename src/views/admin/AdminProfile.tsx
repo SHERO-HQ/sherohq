@@ -99,7 +99,7 @@ export default function AdminProfile() {
               <div className="px-6 pb-6 relative">
                 <div className="flex justify-center -mt-12 mb-4">
                   <div className="relative group">
-                    <div className="relative w-24 h-24 rounded bg-background border-4 border-card overflow-hidden shadow-2xl">
+                    <div className="relative w-24 h-24 rounded bg-background border-4 border-card overflow-hidden shadow-lg">
                       {avatar ? (
                         <AppImage
                           src={getImageUrl(avatar)}

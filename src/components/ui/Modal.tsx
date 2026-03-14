@@ -95,7 +95,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-slate-900 border border-white/10 rounded shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden"
+            className="bg-slate-900 border border-white/10 rounded shadow-md w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden"
           >
             <div className="flex items-center justify-between p-4 border-b border-white/10 shrink-0">
               <h2 id="modal-title" className="text-lg font-bold text-white">

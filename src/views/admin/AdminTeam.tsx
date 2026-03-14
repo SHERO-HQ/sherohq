@@ -199,7 +199,7 @@ const AdminTeam = () => {
             {filteredTeam.map((member) => (
               <div
                 key={member.id}
-                className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center gap-4 group hover:border-emerald-500/30 transition-all"
+                className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center gap-4 group hover:border-emerald-500/30 transition"
               >
                 <div className="text-slate-600 cursor-move opacity-0 group-hover:opacity-100 transition-opacity">
                   <GripVertical className="w-5 h-5" />

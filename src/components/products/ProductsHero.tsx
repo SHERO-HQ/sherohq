@@ -204,7 +204,7 @@ const ProductHero = () => {
               {/* Layer 1: Store Insights Card */}
               <motion.div
                 style={{ z: 0 }}
-                className="w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-3xl border border-slate-200 dark:border-slate-800 rounded shadow-2xl p-6 sm:p-8 relative overflow-hidden z-10 select-none"
+                className="w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded shadow-lg p-6 sm:p-8 relative overflow-hidden z-10 select-none"
               >
                 <div className="absolute inset-0 pattern-dots opacity-5 pointer-events-none" />
 
@@ -268,7 +268,7 @@ const ProductHero = () => {
                   y: useTransform(mouseY, [-0.5, 0.5], [15, 15]),
                   rotate: 12,
                 }}
-                className="absolute bottom-8 left-0 w-fit p-3 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-emerald-500/20 shadow-2xl z-20 pointer-events-none scale-75 sm:scale-100"
+                className="absolute bottom-8 left-0 w-fit p-3 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border border-emerald-500/20 shadow-lg z-20 pointer-events-none scale-75 sm:scale-100"
               >
                 <div className="flex items-center gap-2">
                   <div className="w-8 h-8 rounded bg-emerald-500/10 flex items-center justify-center">
@@ -292,7 +292,7 @@ const ProductHero = () => {
                   x: useTransform(mouseX, [-0.5, 0.5], [-8, 8]),
                   y: useTransform(mouseY, [-0.5, 0.5], [-8, 8]),
                 }}
-                className="absolute top-4 right-4 bg-emerald-600  w-16 h-16 rounded-full shadow-2xl shadow-emerald-500/50 flex-col items-center justify-center -rotate-6 z-30 pointer-events-none aspect-square scale-75 sm:scale-100 flex"
+                className="absolute top-4 right-4 bg-emerald-600  w-16 h-16 rounded-full shadow-lg shadow-emerald-500/50 flex-col items-center justify-center -rotate-6 z-30 pointer-events-none aspect-square scale-75 sm:scale-100 flex"
               >
                 <BadgeCheck className="text-white w-8 h-8 drop-shadow-lg" />
                 <span className="text-[7px] font-bold text-white uppercase tracking-tighter mt-1 whitespace-nowrap">

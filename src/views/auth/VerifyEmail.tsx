@@ -40,7 +40,7 @@ const VerifyEmail = () => {
   return (
     <div className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 bg-slate-50 dark:bg-slate-950">
       <div className="w-full max-w-md">
-        <div className="bg-white dark:bg-slate-900 rounded shadow-xl border border-slate-200 dark:border-slate-800 p-8 text-center">
+        <div className="bg-white dark:bg-slate-900 rounded shadow-md border border-slate-200 dark:border-slate-800 p-8 text-center">
           {status === "loading" && (
             <>
               <Loader2 className="w-16 h-16 mx-auto text-emerald-600 animate-spin mb-6" />

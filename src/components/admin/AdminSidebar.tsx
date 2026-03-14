@@ -98,7 +98,7 @@ export default function AdminSidebar({
         }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
         className={cn(
-          "fixed top-0 left-0 h-full bg-slate-900/40 backdrop-blur-2xl border-r border-white/10 z-50 overflow-hidden",
+          "fixed top-0 left-0 h-full bg-slate-900/40 backdrop-blur-sm border-r border-white/10 z-50 overflow-hidden",
           !isOpen && "lg:w-20",
         )}
       >
@@ -152,9 +152,9 @@ export default function AdminSidebar({
                   }}
                   className={({ isActive }) =>
                     cn(
-                      "flex items-center gap-3 px-3 py-3 rounded transition-all duration-300 group relative",
+                      "flex items-center gap-3 px-3 py-3 rounded transition duration-300 group relative",
                       isActive
-                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_15px_-3px_rgba(16,185,129,0.2)]"
+                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-sm"
                         : "text-slate-400 hover:text-white hover:bg-white/5 border border-transparent",
                     )
                   }
@@ -204,7 +204,7 @@ export default function AdminSidebar({
                   href="/admin/products/new"
                   className={({ isActive }) =>
                     cn(
-                      "flex items-center gap-2 px-3 py-2 rounded transition-all duration-200 group relative",
+                      "flex items-center gap-2 px-3 py-2 rounded transition duration-200 group relative",
                       isActive
                         ? "bg-emerald-500/10 text-emerald-400"
                         : "text-slate-400 hover:text-white hover:bg-white/5",
@@ -220,7 +220,7 @@ export default function AdminSidebar({
                   href="/admin/orders?status=pending"
                   className={({ isActive }) =>
                     cn(
-                      "flex items-center gap-2 px-3 py-2 rounded transition-all duration-200 group relative",
+                      "flex items-center gap-2 px-3 py-2 rounded transition duration-200 group relative",
                       isActive
                         ? "bg-amber-500/10 text-amber-400"
                         : "text-slate-400 hover:text-white hover:bg-white/5",
@@ -236,7 +236,7 @@ export default function AdminSidebar({
                   href="/admin/orders/new"
                   className={({ isActive }) =>
                     cn(
-                      "flex items-center gap-2 px-3 py-2 rounded transition-all duration-200 group relative",
+                      "flex items-center gap-2 px-3 py-2 rounded transition duration-200 group relative",
                       isActive
                         ? "bg-blue-500/10 text-blue-400"
                         : "text-slate-400 hover:text-white hover:bg-white/5",
@@ -252,7 +252,7 @@ export default function AdminSidebar({
                   href="/admin/expenses?action=new"
                   className={({ isActive }) =>
                     cn(
-                      "flex items-center gap-2 px-3 py-2 rounded transition-all duration-200 group relative",
+                      "flex items-center gap-2 px-3 py-2 rounded transition duration-200 group relative",
                       isActive
                         ? "bg-rose-500/10 text-rose-400"
                         : "text-slate-400 hover:text-white hover:bg-white/5",
@@ -272,7 +272,7 @@ export default function AdminSidebar({
           <div className="p-3 border-t border-white/5 space-y-2">
             <button
               onClick={() => logout()}
-              className="w-full flex items-center gap-3 px-3 py-3 rounded text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-all duration-200 group"
+              className="w-full flex items-center gap-3 px-3 py-3 rounded text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition duration-200 group"
             >
               <LogOut className="w-5 h-5 shrink-0" />
               <AnimatePresence mode="wait">
@@ -292,7 +292,7 @@ export default function AdminSidebar({
             {/* Profile Summary */}
             <div
               className={cn(
-                "flex items-center gap-3 px-3 py-4 backdrop-blur-md border border-white/10 mt-4",
+                "flex items-center gap-3 px-3 py-4 backdrop-blur-sm border border-white/10 mt-4",
                 !isOpen && "justify-center px-0",
               )}
             >
@@ -334,7 +334,7 @@ export default function AdminSidebar({
 
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="absolute right-0 top-16 w-8 h-8 p-2 hidden lg:flex items-center justify-center text-slate-500 hover:text-emerald-400 transition-all z-50 group shadow-lg"
+          className="absolute right-0 top-16 w-8 h-8 p-2 hidden lg:flex items-center justify-center text-slate-500 hover:text-emerald-400 transition z-50 group shadow-lg"
         >
           <div>
             {isOpen ? (

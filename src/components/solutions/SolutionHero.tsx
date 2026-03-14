@@ -131,8 +131,8 @@ const SolutionsHero = () => {
                 href="/consultation"
                 className="inline-flex items-center justify-center gap-3 px-10 py-2 rounded
                          bg-emerald-600 text-white font-bold
-                         hover:bg-emerald-700 hover:shadow-2xl hover:shadow-emerald-700
-                         hover:-translate-y-1 transition-all duration-300
+                         hover:bg-emerald-700 hover:shadow-lg hover:shadow-emerald-700
+                         hover:-translate-y-1 transition duration-300
                          w-full sm:w-auto text-sm uppercase tracking-wid"
                 role="button"
                 aria-label="Request a Quote"
@@ -142,7 +142,7 @@ const SolutionsHero = () => {
               </a>
               <a
                 href="#services"
-                className="group flex items-center justify-center gap-3 text-foreground font-bold tracking-tight border-2 border-border hover:border-emerald-600/50! rounded px-8 py-2 w-full sm:w-auto transition-all text-sm uppercase"
+                className="group flex items-center justify-center gap-3 text-foreground font-bold tracking-tight border-2 border-border hover:border-emerald-600/50! rounded px-8 py-2 w-full sm:w-auto transition text-sm uppercase"
                 role="button"
                 aria-label="Explore Services"
               >
@@ -203,7 +203,7 @@ const SolutionsHero = () => {
               {/* Layer 1: System Architecture Card */}
               <motion.div
                 style={{ z: 0 }}
-                className="w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-3xl border border-slate-200 dark:border-slate-800 rounded shadow-2xl p-6 sm:p-8 relative overflow-hidden z-10 select-none"
+                className="w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded shadow-lg p-6 sm:p-8 relative overflow-hidden z-10 select-none"
               >
                 <div className="absolute inset-0 pattern-dots opacity-5 pointer-events-none" />
 
@@ -279,7 +279,7 @@ const SolutionsHero = () => {
                   y: useTransform(mouseY, [-0.5, 0.5], [15, 15]),
                   rotate: -8,
                 }}
-                className="absolute sm:-top-4 -top-5 sm:-left-4 left-2 sm:block w-fit p-4 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-2xl border border-blue-500/20 shadow-xl z-20 pointer-events-none"
+                className="absolute sm:-top-4 -top-5 sm:-left-4 left-2 sm:block w-fit p-4 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border border-blue-500/20 shadow-md z-20 pointer-events-none"
               >
                 <div className="h-10 flex items-end gap-1.5 mb-2">
                   {[
@@ -315,7 +315,7 @@ const SolutionsHero = () => {
                   x: useTransform(mouseX, [-0.5, 0.5], [-10, 10]),
                   y: useTransform(mouseY, [-0.5, 0.5], [-10, 10]),
                 }}
-                className="absolute -bottom-6 -right-2 bg-blue-600 p-4 rounded shadow-2xl shadow-blue-500/40 flex flex-col items-center justify-center rotate-12 z-30 pointer-events-none"
+                className="absolute -bottom-6 -right-2 bg-blue-600 p-4 rounded shadow-lg shadow-blue-500/40 flex flex-col items-center justify-center rotate-12 z-30 pointer-events-none"
               >
                 <Shield className="text-white w-5 h-5 mb-1.5 drop-shadow-md" />
                 <span className="text-[9px] font-bold text-white uppercase tracking-wider">

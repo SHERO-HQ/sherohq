@@ -43,7 +43,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
           <div className="bg-white dark:bg-slate-900 p-1 rounded border border-slate-200 dark:border-slate-800 flex shadow-sm">
             <button
               onClick={() => setActiveTab("orders")}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 rounded font-bold text-sm transition-all ${
+              className={`flex-1 flex items-center justify-center gap-2 py-2 rounded font-bold text-sm transition ${
                 activeTab === "orders"
                   ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/20"
                   : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
@@ -54,7 +54,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
             </button>
             <button
               onClick={() => setActiveTab("settings")}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 rounded font-bold text-sm transition-all ${
+              className={`flex-1 flex items-center justify-center gap-2 py-2 rounded font-bold text-sm transition ${
                 activeTab === "settings"
                   ? "bg-emerald-600 text-white shadow-md shadow-emerald-500/20"
                   : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"

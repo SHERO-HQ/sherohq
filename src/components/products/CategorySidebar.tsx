@@ -81,7 +81,7 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({
           <button
             key={category.id}
             onClick={() => onCategoryChange(category.id)}
-            className={`flex items-center justify-between w-full px-3 py-2 text-sm rounded transition-all group ${
+            className={`flex items-center justify-between w-full px-3 py-2 text-sm rounded transition group ${
               activeCategory === category.id
                 ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 font-semibold"
                 : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200"
@@ -158,7 +158,7 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({
                   className="flex items-center gap-3 cursor-pointer group"
                 >
                   <div
-                    className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
+                    className={`w-4 h-4 rounded border flex items-center justify-center transition ${
                       isPriceRangeActive(range.range)
                         ? "bg-emerald-600 border-emerald-600"
                         : "border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 group-hover:border-emerald-500"
@@ -209,7 +209,7 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({
                   className="flex items-center gap-3 cursor-pointer group"
                 >
                   <div
-                    className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
+                    className={`w-4 h-4 rounded border flex items-center justify-center transition ${
                       filters.brands.includes(brand)
                         ? "bg-emerald-600 border-emerald-600"
                         : "border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 group-hover:border-emerald-500"

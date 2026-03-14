@@ -64,7 +64,7 @@ const LandingPillars = () => {
   return (
     <section className="relative w-full py-12 bg-white dark:bg-slate-950 overflow-hidden transition-colors duration-300">
       {/* Background Ambience */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-100 via-white to-slate-50 dark:from-slate-900 dark:via-slate-950 dark:to-black transition-all duration-500 opacity-50 dark:opacity-100" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-100 via-white to-slate-50 dark:from-slate-900 dark:via-slate-950 dark:to-black transition duration-500 opacity-50 dark:opacity-100" />
       <div className="absolute inset-0 hero-grid-pattern transition-opacity duration-300" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -76,7 +76,7 @@ const LandingPillars = () => {
             </span>
           </Reveal>
           <Reveal direction="up" distance={30} delay={0.1}>
-            <h2 className="text-4xl lg:text-5xl font-sora font-bold mb-6 transition-all duration-300">
+            <h2 className="text-4xl lg:text-5xl font-sora font-bold mb-6 transition duration-300">
               Our Expertise
             </h2>
           </Reveal>
@@ -97,7 +97,7 @@ const LandingPillars = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
               whileHover={{ y: -5 }}
-              className={`group relative overflow-hidden rounded bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 p-8 hover:border-emerald-500/50 dark:hover:border-white/20 transition-all duration-300 ${pillar.className}`}
+              className={`group relative overflow-hidden rounded bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 p-8 hover:border-emerald-500/50 dark:hover:border-white/20 transition duration-300 ${pillar.className}`}
             >
               {/* Hover Gradient Overlay */}
               <div
@@ -107,7 +107,7 @@ const LandingPillars = () => {
               {/* Content */}
               <div className="relative z-10 h-full flex flex-col">
                 <div className="flex items-start justify-between mb-8">
-                  <div className="p-3 rounded bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white group-hover:scale-110 transition-all duration-300">
+                  <div className="p-3 rounded bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white group-hover:scale-110 transition duration-300">
                     {pillar.icon}
                   </div>
                   <ArrowUpRight className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-emerald-600 dark:group-hover:text-white transition-colors" />

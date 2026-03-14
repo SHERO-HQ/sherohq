@@ -69,7 +69,7 @@ export function ConfirmDialog({
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
             transition={{ type: "spring", duration: 0.3 }}
-            className="bg-slate-900 border border-white/10 rounded shadow-2xl w-full max-w-md overflow-hidden"
+            className="bg-slate-900 border border-white/10 rounded shadow-lg w-full max-w-md overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-start justify-between p-6 pb-0">

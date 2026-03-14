@@ -43,7 +43,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
       >
         <div className="relative mb-8 group">
           <div className="absolute inset-0  blur-[50px]  group-hover:bg-emerald-500/30 transition-colors duration-500" />
-          <div className="relative w-32 h-32  backdrop-blur-3xl flex items-center justify-center shadow-2xl">
+          <div className="relative w-32 h-32  backdrop-blur-sm flex items-center justify-center shadow-lg">
             <PackageX className="w-16 h-16 text-slate-300 dark:text-slate-700" />
             <Sparkles className="absolute top-4 right-4 w-6 h-6 text-emerald-500 animate-pulse" />
           </div>
@@ -58,7 +58,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
 
         <button
           onClick={() => (onReset ? onReset() : router.refresh())}
-          className="group flex items-center gap-3 px-10 h-16 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest text-xs rounded shadow-xl shadow-emerald-500/20 active:scale-95 transition-all"
+          className="group flex items-center gap-3 px-10 h-16 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest text-xs rounded shadow-md shadow-emerald-500/20 active:scale-95 transition"
         >
           <RefreshCcw size={18} className="group-hover:rotate-180 transition-transform duration-700" />
           Reset Search

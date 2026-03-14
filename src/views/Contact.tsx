@@ -31,7 +31,7 @@ const Contact = () => {
               className="space-y-12"
             >
               <div>
-                <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-500/40 uppercase tracking-wider transition-colors duration-300">
+                <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 rounded border border-emerald-500/40 uppercase tracking-wider transition-colors duration-300">
                   <span className="w-2 h-2 rounded-full bg-emerald-500" />
                   Contact SHERO
                 </span>
@@ -95,7 +95,7 @@ const Contact = () => {
               className="relative"
             >
               {/* Form Container */}
-              <div className="relative bg-white/70 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded p-8 shadow-lg">
+              <div className="relative bg-white/70 dark:bg-slate-900/40 backdrop-blur-sm border border-slate-200 dark:border-white/10 rounded p-8 shadow-lg">
                 <div className="absolute top-0 right-0 p-6 opacity-20">
                   <MessagesSquare className="w-12 h-12" />
                 </div>

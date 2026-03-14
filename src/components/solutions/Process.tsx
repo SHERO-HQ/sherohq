@@ -92,7 +92,7 @@ const Process = () => {
                   {/* Content Card */}
                   <div className="w-full pl-14 md:pl-0 md:w-5/12">
                     <div
-                      className={`p-6 rounded bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/5 backdrop-blur-sm hover:border-emerald-500/30 transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-emerald-900/20 group ${
+                      className={`p-6 rounded bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/5 backdrop-blur-sm hover:border-emerald-500/30 transition hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-900/20 group ${
                         isEven ? "md:text-right" : "md:text-left"
                       }`}
                     >

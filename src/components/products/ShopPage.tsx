@@ -206,7 +206,7 @@ const ShopView = () => {
         <div className="flex flex-col gap-8">
           {/* Horizontal Filter Bar - Sticky */}
           <div className="sticky top-20 sm:top-24 z-30 -mx-4 px-4 sm:mx-0 sm:px-0">
-            <div className="flex flex-col gap-4 sm:gap-6 bg-white/5 dark:bg-slate-950/80 backdrop-blur-xl border border-white/10 p-3 sm:p-4 sm:rounded shadow-2xl shadow-black/20">
+            <div className="flex flex-col gap-4 sm:gap-6 bg-white/5 dark:bg-slate-950/80 backdrop-blur-sm border border-white/10 p-3 sm:p-4 sm:rounded shadow-lg shadow-black/20">
               <div className="flex flex-col md:flex-row items-center gap-3 sm:gap-4">
                 <div className="flex-1 w-full">
                   <ProductSearch
@@ -218,7 +218,7 @@ const ShopView = () => {
                 <div className="flex items-center gap-2 w-full md:w-auto">
                   <button
                     onClick={() => setShowMobileFilters(true)}
-                    className="flex-1 md:flex-none flex items-center justify-center gap-2 cursor-pointer px-3 py-2 sm:px-4 sm:py-2 dark:bg-white/5 bg-slate-100 hover:bg-emerald-500/10 backdrop-blur-md border border-white/10 rounded font-bold dark:text-slate-200 text-slate-800 transition-all hover:border-emerald-500/50 group text-xs sm:text-base"
+                    className="flex-1 md:flex-none flex items-center justify-center gap-2 cursor-pointer px-3 py-2 sm:px-4 sm:py-2 dark:bg-white/5 bg-slate-100 hover:bg-emerald-500/10 backdrop-blur-sm border border-white/10 rounded font-bold dark:text-slate-200 text-slate-800 transition hover:border-emerald-500/50 group text-xs sm:text-base"
                   >
                     <SlidersHorizontal size={16} className="group-hover:rotate-180 transition-transform duration-500 sm:w-[18px] sm:h-[18px]" />
                     <span>Advanced Filters</span>
@@ -249,7 +249,7 @@ const ShopView = () => {
                   <button
                     key={cat.id}
                     onClick={() => handleCategoryChange(cat.id)}
-                    className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2.5 rounded whitespace-nowrap transition-all border duration-300 ${
+                    className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2.5 rounded whitespace-nowrap transition border duration-300 ${
                       activeCategory === cat.id
                         ? "bg-emerald-600 border-emerald-500 text-white shadow-lg shadow-emerald-500/40 scale-105"
                         : "bg-white/5 border-white/10 text-slate-600 dark:text-slate-400 hover:bg-white/10 hover:border-emerald-500/30"

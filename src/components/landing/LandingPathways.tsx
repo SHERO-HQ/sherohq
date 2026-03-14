@@ -150,7 +150,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
       initial={{ opacity: 0, scale: 0.95 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
-      className={`group relative ${path.span} col-span-1 min-h-[240px] p-8 rounded border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between overflow-hidden transition-colors hover:border-emerald-500/50 hover:shadow-2xl shadow-emerald-500/5`}
+      className={`group relative ${path.span} col-span-1 min-h-[240px] p-8 rounded border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between overflow-hidden transition-colors hover:border-emerald-500/50 hover:shadow-lg shadow-emerald-500/5`}
     >
       {/* Dynamic Glow Layer */}
       <motion.div
@@ -172,7 +172,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
 
       <div className="relative z-10" style={{ transform: "translateZ(40px)" }}>
         <div
-          className={`w-14 h-14 rounded bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-6 text-slate-900 dark:text-white border border-slate-100 dark:border-slate-700 group-hover:scale-110 group-hover:text-emerald-500 transition-all shadow-sm`}
+          className={`w-14 h-14 rounded bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-6 text-slate-900 dark:text-white border border-slate-100 dark:border-slate-700 group-hover:scale-110 group-hover:text-emerald-500 transition shadow-sm`}
         >
           {path.icon}
         </div>
@@ -193,7 +193,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
       >
         <Link
           href={path.link}
-          className={`inline-flex items-center justify-center w-fit h-9 px-4 rounded border border-slate-200 dark:border-slate-800 text-slate-900! dark:text-white! group-hover:bg-emerald-500 group-hover:border-emerald-500 group-hover:text-white transition-all`}
+          className={`inline-flex items-center justify-center w-fit h-9 px-4 rounded border border-slate-200 dark:border-slate-800 text-slate-900! dark:text-white! group-hover:bg-emerald-500 group-hover:border-emerald-500 group-hover:text-white transition`}
         >
           <span className="text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white">
             Explore

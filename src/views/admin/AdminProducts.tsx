@@ -222,7 +222,7 @@ export default function AdminProducts() {
         </div>
 
         {/* Filters */}
-        <Card className="bg-slate-900/40 backdrop-blur-xl border-white/10 p-4">
+        <Card className="bg-slate-900/40 backdrop-blur-sm border-white/10 p-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -264,7 +264,7 @@ export default function AdminProducts() {
         </Card>
 
         {/* Products Table */}
-        <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded overflow-hidden">
+        <div className="bg-slate-900/40 backdrop-blur-sm border border-white/10 rounded overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
@@ -370,7 +370,7 @@ export default function AdminProducts() {
                           <div className="w-24 h-1 bg-slate-800 rounded-full overflow-hidden">
                             <div
                               className={cn(
-                                "h-full rounded-full transition-all duration-500",
+                                "h-full rounded-full transition duration-500",
                                 product.quantity === 0
                                   ? "bg-rose-500"
                                   : product.quantity <= 5

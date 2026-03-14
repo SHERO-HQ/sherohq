@@ -365,10 +365,10 @@ export default function ProductForm() {
                           type="button"
                           onClick={() => setMainImage(url)}
                           className={cn(
-                            "w-full py-2 px-3 rounded text-xs font-bold uppercase tracking-wider transition-all shadow-md",
+                            "w-full py-2 px-3 rounded text-xs font-bold uppercase tracking-wider transition shadow-md",
                             productData.image === url
                               ? "bg-emerald-500 text-white cursor-default"
-                              : "bg-white/20 hover:bg-white/30 text-white backdrop-blur-md",
+                              : "bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm",
                           )}
                           disabled={productData.image === url}
                         >
@@ -390,7 +390,7 @@ export default function ProductForm() {
                   {(!productData.images || productData.images.length < 5) && (
                     <label
                       className={cn(
-                        "aspect-square rounded w-full border-2 border-dashed flex flex-col items-center justify-center gap-2 cursor-pointer transition-all",
+                        "aspect-square rounded w-full border-2 border-dashed flex flex-col items-center justify-center gap-2 cursor-pointer transition",
                         isUploading
                           ? "bg-slate-800/50 border-emerald-500/20 pointer-events-none"
                           : "border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5",

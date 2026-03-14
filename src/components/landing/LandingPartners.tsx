@@ -58,7 +58,7 @@ const LandingPartners = () => {
                 key={`${partner.name}-${idx}`}
                 title={partner.name}
                 className="shrink-0 flex items-center justify-center mx-4
-                           transition-all duration-500
+                           transition duration-500
                            cursor-pointer group/card grayscale hover:grayscale-0"
               >
                 <div className="relative sm:w-32 sm:h-32 w-20 h-20 flex items-center justify-center">

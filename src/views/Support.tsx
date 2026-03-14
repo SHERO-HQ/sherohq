@@ -84,15 +84,15 @@ const Support = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-200 dark:border-emerald-500/20 uppercase tracking-wider"
+              className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 rounded border border-emerald-200 dark:border-emerald-500/20 uppercase tracking-wider"
             >
               <LifeBuoy className="w-4 h-4" />
               <span>Customer Support</span>
             </motion.div>
             <h1 className="md:text-6xl text-4xl font-sora font-bold text-foreground mb-6 tracking-tight">
-              Get help{" "}
+              Get Help in{" "}
               <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-500 to-blue-600 dark:to-blue-400">
-                in minutes
+                 Minutes
               </span>
             </h1>
             <p className="text-muted-foreground text-base max-w-2xl mx-auto mb-8 leading-relaxed">
@@ -101,13 +101,13 @@ const Support = () => {
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded-full border border-border bg-card/60">
-                24h Response SLA
+              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-border bg-card/60">
+                24h Response
               </span>
-              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded-full border border-border bg-card/60">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-border bg-card/60">
                 Dedicated Support Team
               </span>
-              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded-full border border-border bg-card/60">
+              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-border bg-card/60">
                 Human + Self-Service
               </span>
             </div>
@@ -120,7 +120,7 @@ const Support = () => {
                   placeholder="Search for articles, guides, and more..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-card/40 dark:bg-slate-900/40 backdrop-blur-md border border-border rounded focus:ring-2 focus:ring-emerald-500/50 outline-none transition-all shadow text-foreground placeholder:text-muted-foreground"
+                  className="w-full pl-12 pr-4 py-4 bg-card/40 dark:bg-slate-900/40 backdrop-blur-sm border border-border rounded focus:ring-2 focus:ring-emerald-500/50 outline-none transition shadow text-foreground placeholder:text-muted-foreground"
                 />
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-emerald-500 transition-colors" />
               </div>
@@ -145,14 +145,14 @@ const Support = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="bg-card/40 dark:bg-slate-900/40 backdrop-blur-md p-8 rounded border border-border hover:border-emerald-500/30 hover:bg-card/60 dark:hover:bg-slate-900/60 transition-all group relative overflow-hidden shadow-sm hover:shadow-xl"
+                  className="bg-card/40 dark:bg-slate-900/40 backdrop-blur-sm p-8 rounded border border-border hover:border-emerald-500/30 hover:bg-card/60 dark:hover:bg-slate-900/60 transition group relative overflow-hidden shadow-sm hover:shadow-md"
                 >
                   {/* Pattern dots on hover */}
                   <div className="absolute pattern-dots pattern-emerald-500/10 pattern-opacity-100 pattern-size-4 top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 -z-10" />
 
                   <div className="absolute -top-15 -right-15 w-44 h-44 bg-linear-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-full" />
 
-                  <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/40 rounded flex items-center justify-center mb-6 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500 dark:group-hover:bg-emerald-700/80 group-hover:text-white transition-all duration-300 shadow-lg shadow-emerald-500/10">
+                  <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/40 rounded flex items-center justify-center mb-6 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500 dark:group-hover:bg-emerald-700/80 group-hover:text-white transition duration-300 shadow-lg shadow-emerald-500/10">
                     <item.icon className="w-7 h-7" />
                   </div>
                   <h3 className="text-2xl font-sora font-bold text-foreground mb-3 tracking-snug">
@@ -170,7 +170,7 @@ const Support = () => {
                           href={social.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-2 rounded bg-secondary text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-500/10 transition-all transform hover:-translate-y-1"
+                          className="p-2 rounded bg-secondary text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-500/10 transition transform hover:-translate-y-1"
                         >
                           <social.icon className="w-5 h-5" />
                         </a>
@@ -179,7 +179,7 @@ const Support = () => {
                   ) : (
                     <Link
                       href={item.link!}
-                      className="inline-flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold group-hover:gap-3 transition-all hover:text-emerald-700 dark:hover:text-emerald-300"
+                      className="inline-flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold group-hover:gap-3 transition hover:text-emerald-700 dark:hover:text-emerald-300"
                     >
                       <span>Browse Guides</span>
                       <ArrowRight className="w-5 h-5" />
@@ -194,7 +194,7 @@ const Support = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-col lg:flex-row items-center justify-between bg-linear-to-br from-card via-card to-emerald-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-900/20 backdrop-blur-xl rounded  p-8 md:p-16 border border-border text-center lg:text-left relative overflow-hidden shadow-md pattern-dots pattern-emerald-500/90 pattern-opacity-100 pattern-size-4pattern-dots pattern-emerald-500/10 pattern-opacity-100 pattern-size-4"
+            className="flex flex-col lg:flex-row items-center justify-between bg-linear-to-br from-card via-card to-emerald-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-900/20 backdrop-blur-sm rounded  p-8 md:p-16 border border-border text-center lg:text-left relative overflow-hidden shadow-md pattern-dots pattern-emerald-500/90 pattern-opacity-100 pattern-size-4pattern-dots pattern-emerald-500/10 pattern-opacity-100 pattern-size-4"
           >
             <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
@@ -216,7 +216,7 @@ const Support = () => {
                 <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
                   <button
                     onClick={() => setIsTicketModalOpen(true)}
-                    className="flex items-center gap-3 px-8 py-2 rounded bg-emerald-600 text-white dark:text-slate-950 font-bold hover:bg-emerald-500 transition-all shadow-md shadow-emerald-500/20 hover:scale-[1.02] active:scale-95 w-full md:w-auto justify-center"
+                    className="flex items-center gap-3 px-8 py-2 rounded bg-emerald-600 text-white dark:text-slate-950 font-bold hover:bg-emerald-500 transition shadow-md shadow-emerald-500/20 hover:scale-[1.02] active:scale-95 w-full md:w-auto justify-center"
                     aria-label="Submit a Ticket"
                   >
                     <Ticket className="w-5 h-5" />
@@ -224,14 +224,14 @@ const Support = () => {
                   </button>
                   <a
                     href={`mailto:${COMPANY_EMAILS.SUPPORT}`}
-                    className="flex items-center gap-3 px-8 py-2 rounded bg-secondary text-foreground font-bold hover:bg-accent transition-all backdrop-blur-sm border border-border w-full md:w-auto justify-center"
+                    className="flex items-center gap-3 px-8 py-2 rounded bg-secondary text-foreground font-bold hover:bg-accent transition backdrop-blur-sm border border-border w-full md:w-auto justify-center"
                   >
                     <Mail className="w-5 h-5" />
                     <span>Email Us</span>
                   </a>
                   <a
                     href="tel:+233548711582"
-                    className="flex items-center gap-3 px-8 py-2 rounded border-2 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-bold hover:bg-emerald-500/10 transition-all w-full md:w-auto justify-center"
+                    className="flex items-center gap-3 px-8 py-2 rounded border-2 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-bold hover:bg-emerald-500/10 transition w-full md:w-auto justify-center"
                   >
                     <Phone className="w-5 h-5" />
                     <span>Call Support</span>

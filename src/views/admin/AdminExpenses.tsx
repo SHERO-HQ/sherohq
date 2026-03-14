@@ -343,7 +343,7 @@ export default function AdminExpenses() {
 
         {/* Stats Summary */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-sora">
-          <Card className="bg-slate-900/40 backdrop-blur-xl border-white/5 p-6">
+          <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 p-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded bg-emerald-500/10 flex items-center justify-center">
                 <DollarSign className="w-6 h-6 text-emerald-500" />
@@ -358,7 +358,7 @@ export default function AdminExpenses() {
               </div>
             </div>
           </Card>
-          <Card className="bg-slate-900/40 backdrop-blur-xl border-white/5 p-6">
+          <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 p-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded bg-blue-500/10 flex items-center justify-center">
                 <Tag className="w-6 h-6 text-blue-500" />
@@ -373,7 +373,7 @@ export default function AdminExpenses() {
               </div>
             </div>
           </Card>
-          <Card className="bg-slate-900/40 backdrop-blur-xl border-white/5 p-6">
+          <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 p-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded bg-purple-500/10 flex items-center justify-center">
                 <TrendingUp className="w-6 h-6 text-purple-500" />
@@ -393,7 +393,7 @@ export default function AdminExpenses() {
         </div>
 
         {/* Filters */}
-        <Card className="bg-slate-900/40 backdrop-blur-xl border-white/5 p-4">
+        <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 p-4">
           <div className="flex flex-wrap gap-4 font-sora">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -427,7 +427,7 @@ export default function AdminExpenses() {
                   type="button"
                   onClick={() => setDateFilter(opt.value)}
                   className={cn(
-                    "px-3 py-1 rounded text-xs font-medium transition-all",
+                    "px-3 py-1 rounded text-xs font-medium transition",
                     dateFilter === opt.value
                       ? "bg-slate-700 text-white shadow"
                       : "text-slate-400 hover:text-white",
@@ -507,7 +507,7 @@ export default function AdminExpenses() {
         </Card>
 
         {/* Expenses List */}
-        <Card className="bg-slate-900/40 backdrop-blur-xl border-white/5 overflow-hidden">
+        <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
@@ -625,7 +625,7 @@ export default function AdminExpenses() {
         {/* Form Modal (Simple Overlay) */}
         {isFormOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <Card className="w-full max-w-md bg-slate-900 border-white/10 shadow-2xl p-6 relative">
+            <Card className="w-full max-w-md bg-slate-900 border-white/10 shadow-lg p-6 relative">
               <button
                 onClick={handleCloseForm}
                 className="absolute right-4 top-4 p-1 text-slate-400 hover:text-white"

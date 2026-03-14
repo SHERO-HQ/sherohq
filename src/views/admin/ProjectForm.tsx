@@ -373,7 +373,7 @@ export default function ProjectForm() {
                 ) : (
                   <label
                     className={cn(
-                      "aspect-video rounded border-2 border-dashed flex flex-col items-center justify-center gap-2 cursor-pointer transition-all",
+                      "aspect-video rounded border-2 border-dashed flex flex-col items-center justify-center gap-2 cursor-pointer transition",
                       isUploading
                         ? "bg-slate-800/50 pointer-events-none"
                         : "border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5",

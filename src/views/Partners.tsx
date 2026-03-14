@@ -37,7 +37,7 @@ const Partners = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto mb-20"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 rounded-full border border-emerald-500/20 uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 rounded border border-emerald-500/20 uppercase tracking-wider">
               <Handshake className="w-4 h-4" />
               <span className="text-emerald-600 dark:text-emerald-400">
                 Strategic Partnerships
@@ -80,7 +80,7 @@ const Partners = () => {
                   whileInView={{ opacity: 1, scale: 1 }}
                   transition={{ delay: idx * 0.1 }}
                   viewport={{ once: true }}
-                  className="bg-white dark:bg-slate-900 p-8 rounded border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center gap-4 hover:border-emerald-500/30 hover:shadow-lg transition-all group"
+                  className="bg-white dark:bg-slate-900 p-8 rounded border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center gap-4 hover:border-emerald-500/30 hover:shadow-lg transition group"
                 >
                   <span className="text-4xl group-hover:scale-110 transition-transform duration-300">
                     {partner.logo}
@@ -94,7 +94,7 @@ const Partners = () => {
           </section>
 
           {/* Become a Partner CTA */}
-          <div className="grid md:grid-cols-2 gap-12 items-center bg-white dark:bg-slate-900 rounded p-8 md:p-12 border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden relative">
+          <div className="grid md:grid-cols-2 gap-12 items-center bg-white dark:bg-slate-900 rounded p-8 md:p-12 border border-slate-200 dark:border-slate-800 shadow-md overflow-hidden relative">
             <div className="relative z-10">
               <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">
                 Become a Solution Partner
@@ -111,7 +111,7 @@ const Partners = () => {
               </ul>
               <button
                 onClick={handleApplyClick}
-                className="group cursor-pointer inline-flex items-center gap-2 px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition-all duration-300 shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 hover:scale-105 active:scale-95"
+                className="group cursor-pointer inline-flex items-center gap-2 px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition duration-300 shadow-lg shadow-emerald-500/25 hover:shadow-md hover:shadow-emerald-500/30 hover:scale-105 active:scale-95"
               >
                 <span>Apply Now</span>
                 <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />

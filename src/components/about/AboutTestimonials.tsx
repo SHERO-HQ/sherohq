@@ -56,7 +56,7 @@ const AboutTestimonials = () => {
       <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-emerald-500/20 to-transparent" />
 
       {/* Soft Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none transition-colors duration-300" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-125 bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none transition-colors duration-300" />
 
       <div className="container px-4 md:px-6 relative z-10 w-full mx-auto md:w-10/12">
         <div className="text-center mb-16">
@@ -85,10 +85,10 @@ const AboutTestimonials = () => {
             <ChevronRight className="w-6 h-6" />
           </button>
 
-          <div className="overflow-hidden relative min-h-[400px]">
+          <div className="overflow-hidden relative min-h-100">
             {isLoading ? (
               <div className="w-full h-full flex items-center justify-center">
-                <div className="w-full max-w-2xl bg-slate-50/50 dark:bg-slate-900/40 backdrop-blur-md p-8 md:p-12 rounded border border-slate-200 dark:border-white/5 animate-pulse">
+                <div className="w-full max-w-2xl bg-slate-50/50 dark:bg-slate-900/40 backdrop-blur-sm p-8 md:p-12 rounded border border-slate-200 dark:border-white/5 animate-pulse">
                   <div className="h-6 w-3/4 bg-slate-200 dark:bg-slate-800 rounded mb-4" />
                   <div className="h-4 w-full bg-slate-200 dark:bg-slate-800 rounded mb-2" />
                   <div className="h-4 w-2/3 bg-slate-200 dark:bg-slate-800 rounded mb-10" />
@@ -120,7 +120,7 @@ const AboutTestimonials = () => {
                         key={item.id || item.author}
                         className="w-full shrink-0 sm:px-4"
                       >
-                        <div className="h-full bg-slate-50/50 dark:bg-slate-900/40 backdrop-blur-md sm:p-8 p-6 md:p-12 rounded border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 transition-all duration-300 flex flex-col relative group">
+                        <div className="h-full bg-slate-50/50 dark:bg-slate-900/40 backdrop-blur-sm sm:p-8 p-6 md:p-12 rounded border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 transition duration-300 flex flex-col relative group">
                           <div className="absolute lg:top-8 top-3 right-3 p-3 transition-colors duration-300">
                             <Quote className="size-10 text-emerald-500/40 -z-10" />
                           </div>
@@ -180,7 +180,7 @@ const AboutTestimonials = () => {
                   <button
                     key={`dot-${item.author}`}
                     onClick={() => setCurrentIndex(testimonials.indexOf(item))}
-                    className={`h-2 rounded transition-all duration-300 ${
+                    className={`h-2 rounded transition duration-300 ${
                       testimonials.indexOf(item) === currentIndex
                         ? "w-8 bg-emerald-500"
                         : "w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-500"
@@ -201,7 +201,7 @@ const AboutTestimonials = () => {
                 <button
                   key={`desktop-dot-${item.author}`}
                   onClick={() => setCurrentIndex(testimonials.indexOf(item))}
-                  className={`h-2 rounded transition-all duration-300 ${
+                  className={`h-2 rounded transition duration-300 ${
                     testimonials.indexOf(item) === currentIndex
                       ? "w-8 bg-emerald-500"
                       : "w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-500"
@@ -218,7 +218,7 @@ const AboutTestimonials = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex flex-col items-center gap-4 p-8 rounded bg-linear-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-white/10 shadow-xl dark:shadow-2xl relative overflow-hidden max-w-lg mx-auto w-full transition-all duration-300"
+            className="inline-flex flex-col items-center gap-4 p-8 rounded bg-linear-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-white/10 shadow-md dark:shadow-lg relative overflow-hidden max-w-lg mx-auto w-full transition duration-300"
           >
             <div className="p-3 bg-emerald-500/10 rounded text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 transition-colors duration-300">
               <MessageSquarePlus className="w-6 h-6" />

@@ -280,7 +280,7 @@ export default function AdminUserManagement() {
               return (
                 <div
                   key={user.id}
-                  className="group relative bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded p-6 hover:border-emerald-500/30 transition-all duration-500"
+                  className="group relative bg-slate-900/40 backdrop-blur-sm border border-white/5 rounded p-6 hover:border-emerald-500/30 transition duration-500"
                 >
                   <div className="absolute top-4 right-4 ring-offset-slate-950">
                     <DropdownMenu>

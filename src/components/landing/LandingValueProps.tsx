@@ -44,7 +44,7 @@ const LandingValueProps = () => {
               transition={{ delay: index * 0.08, duration: 0.4 }}
               className="flex items-center gap-4 group"
             >
-              <div className="shrink-0 w-12 h-12 rounded bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white group-hover:border-emerald-500 transition-all duration-300 shadow-sm">
+              <div className="shrink-0 w-12 h-12 rounded bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white group-hover:border-emerald-500 transition duration-300 shadow-sm">
                 <item.icon className="w-5 h-5" />
               </div>
               <div>

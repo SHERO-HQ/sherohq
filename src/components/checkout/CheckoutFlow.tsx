@@ -307,7 +307,7 @@ const CheckoutFlow = () => {
           {/* Progress Bar Line */}
           <div className="mt-4 h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
             <div
-              className="h-full bg-emerald-600 rounded-full transition-all duration-300"
+              className="h-full bg-emerald-600 rounded-full transition duration-300"
               style={{ width: `${(currentStep / steps.length) * 100}%` }}
             />
           </div>
@@ -319,7 +319,7 @@ const CheckoutFlow = () => {
             {/* Progress Track & Line */}
             <div className="absolute top-6 left-6 right-6 h-1 bg-slate-200 dark:bg-slate-800 -translate-y-1/2 rounded-full">
               <div
-                className="h-full bg-emerald-600 transition-all duration-300 rounded-full"
+                className="h-full bg-emerald-600 transition duration-300 rounded-full"
                 style={{
                   width: `${((currentStep - 1) / (steps.length - 1)) * 100}%`,
                 }}
@@ -348,7 +348,7 @@ const CheckoutFlow = () => {
                     className="flex flex-col items-center gap-2 relative z-20 w-12"
                   >
                     <div
-                      className={`w-12 h-12 rounded-full flex items-center justify-center transition-all border-4 ${stepBaseStyle}`}
+                      className={`w-12 h-12 rounded-full flex items-center justify-center transition border-4 ${stepBaseStyle}`}
                     >
                       <Icon className="w-5 h-5" />
                     </div>

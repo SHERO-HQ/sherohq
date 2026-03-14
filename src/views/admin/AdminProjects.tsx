@@ -129,7 +129,7 @@ export default function AdminProjects() {
         </div>
 
         {/* Filters */}
-        <Card className="bg-slate-900/40 backdrop-blur-xl border-white/10 p-4">
+        <Card className="bg-slate-900/40 backdrop-blur-sm border-white/10 p-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="relative col-span-2">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -159,7 +159,7 @@ export default function AdminProjects() {
         </Card>
 
         {/* Projects Table */}
-        <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded overflow-hidden">
+        <div className="bg-slate-900/40 backdrop-blur-sm border border-white/10 rounded overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>

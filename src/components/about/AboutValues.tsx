@@ -38,7 +38,7 @@ const AboutValues = () => {
   return (
     <section className="py-24 bg-white dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
       {/* Background Ambience */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-100/50 via-white to-slate-50 dark:from-slate-900/50 dark:via-slate-950 dark:to-black pointer-events-none transition-all duration-500" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-100/50 via-white to-slate-50 dark:from-slate-900/50 dark:via-slate-950 dark:to-black pointer-events-none transition duration-500" />
 
       <div className="container px-4 md:px-6 mx-auto w-full md:max-w-10/12 relative z-10">
         <div className="text-center mb-16">
@@ -64,11 +64,11 @@ const AboutValues = () => {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
               whileHover={{ y: -8 }}
-              className="group p-8 rounded bg-white dark:bg-slate-900/40 backdrop-blur-3xl border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 shadow-sm hover:shadow-2xl hover:shadow-emerald-500/5 transition-all duration-500"
+              className="group p-8 rounded bg-white dark:bg-slate-900/40 backdrop-blur-sm border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 shadow-sm hover:shadow-lg hover:shadow-emerald-500/5 transition duration-500"
             >
               <div
                 className={cn(
-                  "w-12 h-12 rounded flex items-center justify-center mb-8 transition-all duration-500 border border-slate-200/50 dark:border-white/5 shadow-sm",
+                  "w-12 h-12 rounded flex items-center justify-center mb-8 transition duration-500 border border-slate-200/50 dark:border-white/5 shadow-sm",
                   item.color === "emerald" &&
                     "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-emerald-500/30",
                   item.color === "blue" &&

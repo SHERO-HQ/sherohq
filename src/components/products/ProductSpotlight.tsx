@@ -93,7 +93,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                 }}
                 className="relative z-10 flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1 w-full lg:w-1/2 mt-8 pt-4 md:pt-auto lg:mt-0 bg-slate-200/90 dark:bg-slate-800/90 md:bg-transparent md:dark:bg-transparent"
               >
-                <div className="inline-flex items-center gap-2 px-3 py-1 mb-2 lg:mb-3 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-md">
+                <div className="inline-flex items-center gap-2 px-3 py-1 mb-2 lg:mb-3 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm">
                   <ShoppingBag className="size-3 text-emerald-500" />
                   <span className="text-[10px] font-mono font-black tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
                     Featured Spotlight
@@ -154,7 +154,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
 
                 <Link
                   href={getAbsoluteUrl(`/products/${currentProduct.slug || currentProduct.sku || currentProduct.id}`)}
-                  className="group w-full sm:w-auto flex items-center justify-center gap-4 px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded font-black uppercase tracking-widest text-[10px] hover:bg-emerald-600 dark:hover:bg-emerald-500 dark:hover:text-white transition-all shadow-2xl shadow-black/20"
+                  className="group w-full sm:w-auto flex items-center justify-center gap-4 px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded font-black uppercase tracking-widest text-[10px] hover:bg-emerald-600 dark:hover:bg-emerald-500 dark:hover:text-white transition shadow-lg shadow-black/20"
                 >
                   See Details
                   <ArrowRight
@@ -181,7 +181,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                   <div className="absolute inset-0 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-2xl sm:blur-3xl group-hover/image:scale-110 transition-transform duration-1000" />
 
                   {/* The Image */}
-                  <div className="relative w-full h-full drop-shadow-[0_10px_30px_rgba(0,0,0,0.1)] dark:drop-shadow-[0_10px_30px_rgba(0,0,0,0.3)] group-hover/image:-translate-y-4 transition-transform duration-700 ease-out z-0">
+                  <div className="relative w-full h-full drop-shadow-sm dark:drop-shadow-sm group-hover/image:-translate-y-4 transition-transform duration-700 ease-out z-0">
                     <AppImage
                       src={getImageUrl(currentProduct.image)}
                       alt={currentProduct.name}
@@ -196,7 +196,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.8, duration: 0.5 }}
-                    className="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 p-2 sm:p-4 rounded bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/20 shadow-2xl z-20"
+                    className="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 p-2 sm:p-4 rounded bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm border border-white/20 shadow-lg z-20"
                   >
                     <div className="flex items-center gap-2 sm:gap-3">
                       <div className="w-6 h-6 sm:w-10 sm:h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
@@ -234,7 +234,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                   setCurrentIndex(i);
                   setIsAutoPlaying(false);
                 }}
-                className={`h-1 transition-all duration-500 rounded-full ${
+                className={`h-1 transition duration-500 rounded-full ${
                   i === currentIndex
                     ? "w-8 sm:w-12 bg-emerald-500"
                     : "w-2 sm:w-4 bg-slate-300 dark:bg-white/10 hover:bg-slate-400 dark:hover:bg-white/20"
@@ -249,7 +249,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                 prevSlide();
                 setIsAutoPlaying(false);
               }}
-              className="p-3 sm:p-4 rounded bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 text-slate-600 dark:text-slate-400 hover:text-emerald-500 transition-all active:scale-95"
+              className="p-3 sm:p-4 rounded bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 text-slate-600 dark:text-slate-400 hover:text-emerald-500 transition active:scale-95"
             >
               <ChevronLeft size={20} className="sm:size-6" />
             </button>
@@ -258,7 +258,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                 nextSlide();
                 setIsAutoPlaying(false);
               }}
-              className="p-3 sm:p-4 rounded bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 text-slate-600 dark:text-slate-400 hover:text-emerald-500 transition-all active:scale-95"
+              className="p-3 sm:p-4 rounded bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 text-slate-600 dark:text-slate-400 hover:text-emerald-500 transition active:scale-95"
             >
               <ChevronRight size={20} className="sm:size-6" />
             </button>

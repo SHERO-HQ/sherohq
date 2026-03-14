@@ -185,7 +185,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
     <div className={`relative ${className}`} ref={dropdownRef}>
       <button
         onClick={handleToggleDropdown}
-        className="cursor-pointer px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 hover:border-emerald-500 transition-all flex items-center justify-center gap-2"
+        className="cursor-pointer px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 hover:border-emerald-500 transition flex items-center justify-center gap-2"
         aria-label="Share this product"
       >
         <Share2 className="w-5 h-5 text-slate-600 dark:text-slate-400" />
@@ -199,7 +199,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-900 rounded-lg shadow-2xl border border-slate-200 dark:border-slate-700 z-50 overflow-hidden"
+            className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-900 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 z-50 overflow-hidden"
           >
             <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-white/5">
               <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">
@@ -214,7 +214,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
               {canNativeShare && (
                 <button
                   onClick={handleNativeShare}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 text-xs font-bold rounded-md hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all group/native"
+                  className="w-full flex items-center gap-3 px-3 py-2.5 text-xs font-bold rounded-md hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 transition group/native"
                 >
                   <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center group-hover/native:bg-emerald-500/20 transition-colors">
                     <Share2 className="w-4 h-4" />
@@ -229,7 +229,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
               <div className={`grid ${canNativeShare ? "grid-cols-1 pt-1.5 border-t border-slate-100 dark:border-white/5 mt-1.5" : "grid-cols-1"}`}>
                 {shareOptions.map((option) => {
                   const Icon = option.icon;
-                  const baseClass = "w-full flex items-center gap-3 px-3 py-2 rounded-md text-xs font-medium hover:bg-slate-100 dark:hover:bg-white/5 transition-all text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
+                  const baseClass = "w-full flex items-center gap-3 px-3 py-2 rounded-md text-xs font-medium hover:bg-slate-100 dark:hover:bg-white/5 transition text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white";
 
                   if (option.href) {
                     return (

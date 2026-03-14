@@ -42,7 +42,7 @@ const LandingAbout = () => {
 
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-sora font-bold text-slate-900 dark:text-slate-100 leading-tight transition-colors duration-300">
                 Redefining{" "}
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-700 dark:from-blue-700 dark:to-emerald-500 transition-all duration-500">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-700 dark:from-blue-700 dark:to-emerald-500 transition duration-500">
                   Possibilities
                 </span>
               </h2>
@@ -108,13 +108,13 @@ const LandingAbout = () => {
                   alt="SHERO"
                   width={64}
                   height={64}
-                  className="relative z-20 w-16 h-16 drop-shadow-[0_0_8px_rgba(16,185,129,0.3)]"
+                  className="relative z-20 w-16 h-16 drop-shadow-sm"
                   suppressHydrationWarning
                 />
               </div>
 
               {/* Floating Badge Overlay */}
-              <div className="absolute -top-24 right-0 dark:bg-emerald-50/10 bg-white/40 backdrop-blur-md border border-white/20 dark:border-emerald-500/20 px-4 py-2 font-sora rounded transform translate-y-1/2 shadow-lg">
+              <div className="absolute -top-24 right-0 dark:bg-emerald-50/10 bg-white/40 backdrop-blur-sm border border-white/20 dark:border-emerald-500/20 px-4 py-2 font-sora rounded transform translate-y-1/2 shadow-lg">
                 <p className="text-sm font-bold dark:text-white text-slate-600 tracking-wider">
                   10x
                 </p>
@@ -169,7 +169,7 @@ const FloatingCard = ({
 }) => (
   <div className={`${className}`}>
     <Card
-      className={`flex items-center justify-center ${label ? "gap-3 px-4 py-2" : "p-3"} border-none bg-transparent transition-all duration-300 shadow-none`}
+      className={`flex items-center justify-center ${label ? "gap-3 px-4 py-2" : "p-3"} border-none bg-transparent transition duration-300 shadow-none`}
     >
       {icon}
       {label && (

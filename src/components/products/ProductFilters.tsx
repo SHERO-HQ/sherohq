@@ -103,7 +103,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 z-100 backdrop-blur-md"
+            className="fixed inset-0 bg-black/60 z-100 backdrop-blur-sm"
           />
 
           <motion.div
@@ -112,8 +112,8 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
             exit={{ y: "100%", opacity: 0 }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
             className="fixed md:right-8 md:bottom-8 inset-x-0 bottom-0 md:inset-x-auto z-101 
-                       dark:bg-slate-900/90 bg-white/95 backdrop-blur-3xl 
-                       border-t md:border border-white/10 rounded-t md:rounded-xl shadow-2xl 
+                       dark:bg-slate-900/90 bg-white/95 backdrop-blur-sm 
+                       border-t md:border border-white/10 rounded-t md:rounded-xl shadow-lg 
                        max-h-[85vh] md:max-h-[80vh] w-full md:max-w-2xl flex flex-col overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
@@ -137,7 +137,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
               </div>
               <button
                 onClick={onClose}
-                className="p-4 bg-slate-100 dark:bg-white/5 rounded hover:bg-red-500 hover:text-white transition-all active:scale-95"
+                className="p-4 bg-slate-100 dark:bg-white/5 rounded hover:bg-red-500 hover:text-white transition active:scale-95"
               >
                 <X size={20} />
               </button>
@@ -150,7 +150,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`relative px-6 py-4 md:px-8 md:py-6 text-left transition-all duration-300 flex-1 md:flex-none whitespace-nowrap md:whitespace-normal ${
+                    className={`relative px-6 py-4 md:px-8 md:py-6 text-left transition duration-300 flex-1 md:flex-none whitespace-nowrap md:whitespace-normal ${
                       activeTab === tab.id
                         ? "text-emerald-500 bg-emerald-500/5 md:bg-transparent"
                         : "text-slate-400 hover:text-slate-600 dark:hover:text-white"
@@ -161,7 +161,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                     {activeTab === tab.id && (
                       <motion.div
                         layoutId="activeTabIndicator"
-                        className="absolute bottom-0 left-0 right-0 h-0.5 md:h-8 md:w-1 md:right-0 md:left-auto md:top-1/2 md:-translate-y-1/2 bg-emerald-500 md:rounded-l-full shadow-[0_0_12px_rgba(16,185,129,0.5)]"
+                        className="absolute bottom-0 left-0 right-0 h-0.5 md:h-8 md:w-1 md:right-0 md:left-auto md:top-1/2 md:-translate-y-1/2 bg-emerald-500 md:rounded-l-full shadow-sm"
                       />
                     )}
                   </button>
@@ -176,7 +176,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                       <button
                         key={category.id}
                         onClick={() => onCategoryChange(category.id)}
-                        className={`flex items-center justify-between p-4 sm:p-6 rounded transition-all border-2 ${
+                        className={`flex items-center justify-between p-4 sm:p-6 rounded transition border-2 ${
                           activeCategory === category.id
                             ? "bg-emerald-500/10 border-emerald-500/50"
                             : "bg-slate-50 dark:bg-white/5 border-transparent"
@@ -208,7 +208,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                       <button
                         key={option.value}
                         onClick={() => setTempFilters({ ...tempFilters, sortBy: option.value })}
-                        className={`group flex items-center justify-between p-4 sm:p-6 rounded transition-all border-2 ${
+                        className={`group flex items-center justify-between p-4 sm:p-6 rounded transition border-2 ${
                           tempFilters.sortBy === option.value
                             ? "bg-emerald-500/10 border-emerald-500/50"
                             : "bg-slate-50 dark:bg-white/5 border-transparent hover:border-white/10"
@@ -235,7 +235,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                       <button
                         key={range.label}
                         onClick={() => setTempFilters({ ...tempFilters, priceRange: range.range })}
-                        className={`flex items-center justify-between p-4 sm:p-6 rounded transition-all border-2 ${
+                        className={`flex items-center justify-between p-4 sm:p-6 rounded transition border-2 ${
                           isPriceRangeActive(range.range)
                             ? "bg-emerald-500/10 border-emerald-500/50"
                             : "bg-slate-50 dark:bg-white/5 border-transparent"
@@ -265,7 +265,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                             : [...tempFilters.brands, brand];
                           setTempFilters({ ...tempFilters, brands: newBrands });
                         }}
-                        className={`px-4 py-3 sm:px-6 sm:py-4 rounded font-black uppercase tracking-widest text-[9px] sm:text-[10px] border-2 transition-all ${
+                        className={`px-4 py-3 sm:px-6 sm:py-4 rounded font-black uppercase tracking-widest text-[9px] sm:text-[10px] border-2 transition ${
                           tempFilters.brands.includes(brand)
                             ? "bg-emerald-500 border-emerald-500 text-white shadow-lg shadow-emerald-500/20"
                             : "bg-slate-50 dark:bg-white/5 border-transparent text-slate-500"
@@ -283,7 +283,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                       <button
                         key={r}
                         onClick={() => setTempFilters({ ...tempFilters, minRating: r })}
-                        className={`flex items-center justify-between p-4 sm:p-6 rounded transition-all border-2 ${
+                        className={`flex items-center justify-between p-4 sm:p-6 rounded transition border-2 ${
                           tempFilters.minRating === r
                             ? "bg-emerald-500/10 border-emerald-500/50"
                             : "bg-slate-50 dark:bg-white/5 border-transparent"
@@ -307,7 +307,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                   <div className="space-y-6">
                     <button
                       onClick={() => setTempFilters({ ...tempFilters, inStock: !tempFilters.inStock })}
-                      className={`w-full flex items-center justify-between p-6 sm:p-8 rounded transition-all border-2 ${
+                      className={`w-full flex items-center justify-between p-6 sm:p-8 rounded transition border-2 ${
                         tempFilters.inStock
                           ? "bg-emerald-500/10 border-emerald-500/50"
                           : "bg-slate-50 dark:bg-white/5 border-transparent"
@@ -332,7 +332,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
             </div>
 
             {/* Actions Footer */}
-            <div className="px-6 py-6 border-t border-white/5 bg-slate-50/50 dark:bg-white/5 backdrop-blur-3xl flex flex-row items-center gap-3">
+            <div className="px-6 py-6 border-t border-white/5 bg-slate-50/50 dark:bg-white/5 backdrop-blur-sm flex flex-row items-center gap-3">
               <button
                 onClick={handleReset}
                 className="flex items-center justify-center gap-2 px-4 h-12 rounded font-black uppercase tracking-widest text-[9px] text-slate-500 hover:text-red-500 transition-colors border border-transparent hover:border-red-500/20"
@@ -341,7 +341,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
               </button>
               <button
                 onClick={handleApply}
-                className="flex-1 flex items-center justify-center gap-3 h-12 bg-emerald-600 text-white rounded font-black uppercase tracking-widest text-[10px] hover:bg-emerald-500 shadow-xl shadow-emerald-500/20 active:scale-[0.98] transition-all group"
+                className="flex-1 flex items-center justify-center gap-3 h-12 bg-emerald-600 text-white rounded font-black uppercase tracking-widest text-[10px] hover:bg-emerald-500 shadow-md shadow-emerald-500/20 active:scale-[0.98] transition group"
               >
                 Apply Filters <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
               </button>

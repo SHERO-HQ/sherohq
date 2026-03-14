@@ -95,7 +95,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
               <span className="text-xs font-black uppercase tracking-widest">Gathering Experiences...</span>
             </div>
           ) : reviews.length === 0 ? (
-            <div className="rounded bg-white dark:bg-white/5 backdrop-blur-3xl border border-slate-200 dark:border-white/10 p-12 text-center">
+            <div className="rounded bg-white dark:bg-white/5 backdrop-blur-sm border border-slate-200 dark:border-white/10 p-12 text-center">
               <MessageSquare className="w-12 h-12 text-slate-300 dark:text-slate-700 mx-auto mb-4" />
               <p className="text-slate-500 dark:text-slate-400 font-bold">
                 No reviews yet. Be the first to share your thoughts.
@@ -110,7 +110,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.1 }}
-                    className="p-8 rounded bg-white dark:bg-white/5 backdrop-blur-3xl border border-slate-200 dark:border-white/10 shadow-lg shadow-black/5"
+                    className="p-8 rounded bg-white dark:bg-white/5 backdrop-blur-sm border border-slate-200 dark:border-white/10 shadow-lg shadow-black/5"
                   >
                     <div className="flex items-start justify-between mb-6">
                       <div className="flex items-center gap-4">
@@ -152,7 +152,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
 
         {/* Review Form */}
         <div className="lg:col-span-5 h-fit lg:sticky lg:top-24">
-          <div className="p-8 rounded bg-white dark:bg-white/5 backdrop-blur-3xl border border-slate-200 dark:border-white/10 shadow-xl overflow-hidden relative group">
+          <div className="p-8 rounded bg-white dark:bg-white/5 backdrop-blur-sm border border-slate-200 dark:border-white/10 shadow-md overflow-hidden relative group">
             <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700" />
             
             <div className="relative">
@@ -173,13 +173,13 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
                         onClick={() => setRating(star)}
                         onMouseEnter={() => setHoveredRating(star)}
                         onMouseLeave={() => setHoveredRating(0)}
-                        className="focus:outline-none transition-all duration-300 hover:scale-125 hover:-translate-y-1"
+                        className="focus:outline-none transition duration-300 hover:scale-125 hover:-translate-y-1"
                       >
                         <Star
                           size={28}
-                          className={`transition-all ${
+                          className={`transition ${
                             star <= (hoveredRating || rating)
-                              ? "text-amber-400 fill-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]"
+                              ? "text-amber-400 fill-amber-400 drop-shadow-sm"
                               : "text-slate-200 dark:text-slate-700"
                           }`}
                         />
@@ -195,7 +195,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full px-6 py-4 rounded border-2 border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-emerald-500 focus:bg-white dark:focus:bg-black/40 outline-none transition-all"
+                      className="w-full px-6 py-4 rounded border-2 border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-emerald-500 focus:bg-white dark:focus:bg-black/40 outline-none transition"
                       placeholder="Your Public Name"
                     />
                   </div>
@@ -206,7 +206,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
                       value={comment}
                       onChange={(e) => setComment(e.target.value)}
                       rows={4}
-                      className="w-full px-6 py-4 rounded border-2 border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-emerald-500 focus:bg-white dark:focus:bg-black/40 outline-none transition-all resize-none"
+                      className="w-full px-6 py-4 rounded border-2 border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-emerald-500 focus:bg-white dark:focus:bg-black/40 outline-none transition resize-none"
                       placeholder="What was your experience like?"
                     />
                   </div>
@@ -215,7 +215,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full h-14 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-black uppercase tracking-widest text-xs rounded shadow-xl shadow-emerald-500/20 transition-all active:scale-[0.98] flex items-center justify-center gap-3"
+                  className="w-full h-14 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-black uppercase tracking-widest text-xs rounded shadow-md shadow-emerald-500/20 transition active:scale-[0.98] flex items-center justify-center gap-3"
                 >
                   {submitting ? (
                     <>

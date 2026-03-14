@@ -43,7 +43,7 @@ const Login = () => {
   return (
     <div className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 dark:bg-slate-950">
       <div className="w-full max-w-md">
-        <div className="bg-white dark:bg-slate-900 rounded shadow-xl border border-slate-200 dark:border-slate-800 p-8">
+        <div className="bg-white dark:bg-slate-900 rounded shadow-md border border-slate-200 dark:border-slate-800 p-8">
           <div className="text-center mb-8">
             <img
               src="/assets/logo/shero.svg"

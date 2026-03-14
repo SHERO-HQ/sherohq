@@ -241,7 +241,7 @@ export default function AdminOrders() {
             </Link>
 
             <Link href="/admin/orders/new">
-              <Button className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition-all shadow-lg shadow-emerald-500/20">
+              <Button className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition shadow-lg shadow-emerald-500/20">
                 <Plus className="mr-2 h-4 w-4" /> Create Order
               </Button>
             </Link>
@@ -283,7 +283,7 @@ export default function AdminOrders() {
                     setCurrentPage(1);
                   }}
                   className={cn(
-                    "px-4 py-1 rounded text-sm font-medium transition-all whitespace-nowrap",
+                    "px-4 py-1 rounded text-sm font-medium transition whitespace-nowrap",
                     statusFilter === status.id
                       ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20"
                       : "text-slate-400 hover:text-white hover:bg-white/5",
@@ -297,7 +297,7 @@ export default function AdminOrders() {
         </Card>
 
         {/* Orders Table */}
-        <div className="bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded overflow-hidden">
+        <div className="bg-slate-900/40 backdrop-blur-sm border border-white/10 rounded overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left min-w-[1000px]">
               <thead>

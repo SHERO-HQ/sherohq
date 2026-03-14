@@ -55,7 +55,7 @@ const ContactForm = () => {
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
-              className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+              className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition"
               placeholder="John Doe"
             />
           </div>
@@ -74,7 +74,7 @@ const ContactForm = () => {
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
-              className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+              className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition"
               placeholder="john@example.com"
             />
           </div>
@@ -94,7 +94,7 @@ const ContactForm = () => {
               onChange={(e) =>
                 setFormData({ ...formData, subject: e.target.value })
               }
-              className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer appearance-none"
+              className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition cursor-pointer appearance-none"
             >
               <option value="general">General Inquiry</option>
               <option value="project">New Project</option>
@@ -125,7 +125,7 @@ const ContactForm = () => {
             onChange={(e) =>
               setFormData({ ...formData, message: e.target.value })
             }
-            className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all resize-none"
+            className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition resize-none"
             placeholder="Tell us about your project..."
           />
         </div>
@@ -134,7 +134,7 @@ const ContactForm = () => {
           <Button
             type="submit"
             disabled={status !== "idle"}
-            className="w-full h-10 text-md font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded shadow-lg shadow-emerald-500/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full h-10 text-md font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded shadow-lg shadow-emerald-500/20 transition hover:scale-[1.02] active:scale-[0.98]"
           >
             {status === "idle" && (
               <>

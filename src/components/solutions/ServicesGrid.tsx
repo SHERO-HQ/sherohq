@@ -136,8 +136,8 @@ const ServicesGrid = () => {
               className="group relative bg-white dark:bg-slate-900 rounded p-8
                        border-2 border-slate-200 dark:border-slate-800
                        hover:border-transparent
-                       shadow-lg hover:shadow-2xl
-                       transition-all duration-300 overflow-hidden"
+                       shadow-lg hover:shadow-lg
+                       transition duration-300 overflow-hidden"
             >
               {/* Gradient border on hover */}
               <div
@@ -183,7 +183,7 @@ const ServicesGrid = () => {
               <a
                 href="/consultation"
                 className="inline-flex items-center gap-2 mt-6 text-emerald-600 dark:text-emerald-400 font-semibold
-                         hover:gap-3 transition-all group/link"
+                         hover:gap-3 transition group/link"
               >
                 <span>Get Started</span>
                 <ArrowRight className="w-4 h-4" />

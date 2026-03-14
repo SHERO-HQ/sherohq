@@ -67,7 +67,7 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
   return (
     <aside className={`w-full ${className}`}>
       {/* Glass Container */}
-      <div className="dark:bg-slate-900/60 bg-slate-200/60 backdrop-blur-xl border border-white/5 rounded p-6 shadow-xl">
+      <div className="dark:bg-slate-900/60 bg-slate-200/60 backdrop-blur-sm border border-white/5 rounded p-6 shadow-md">
         <div className="flex items-center gap-2 mb-8 border-b dark:border-white/5 border-slate-300 pb-4">
           <SlidersHorizontal className="w-5 h-5 text-slate-500" />
           <h3 className="font-bold text-lg dark:text-white text-slate-800">
@@ -140,7 +140,7 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
                     className="flex items-center gap-3 cursor-pointer group"
                   >
                     <div
-                      className={`w-4 h-4 rounded border border-emerald-700 flex items-center justify-center transition-all duration-200
+                      className={`w-4 h-4 rounded border border-emerald-700 flex items-center justify-center transition duration-200
                       ${isPriceRangeActive(range.range) ? "bg-emerald-400 border-emerald-400" : "dark:bg-slate-800/50 group-hover:border-emerald-500"}`}
                     >
                       {isPriceRangeActive(range.range) && (
@@ -189,7 +189,7 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
                     className="flex items-center gap-3 cursor-pointer group"
                   >
                     <div
-                      className={`w-4 h-4 rounded border dark:border-white/5 border-slate-600 flex items-center justify-center transition-all duration-200
+                      className={`w-4 h-4 rounded border dark:border-white/5 border-slate-600 flex items-center justify-center transition duration-200
                       ${filters.brands.includes(brand) ? "bg-emerald-400 border-emerald-700" : "dark:bg-slate-800/50 group-hover:border-emerald-500"}`}
                     >
                       {filters.brands.includes(brand) && (

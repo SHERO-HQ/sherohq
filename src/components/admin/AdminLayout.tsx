@@ -67,7 +67,7 @@ export default function AdminLayout({ children }: Readonly<AdminLayoutProps>) {
       {/* Main Content Area */}
       <div
         className={cn(
-          "transition-all duration-300 min-h-screen flex flex-col pt-20 relative z-10",
+          "transition duration-300 min-h-screen flex flex-col pt-20 relative z-10",
           isSidebarOpen ? "lg:pl-65" : "lg:pl-20",
           "pl-0 print:pl-0",
         )}

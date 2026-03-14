@@ -55,7 +55,7 @@ const AboutTeam = () => {
     }
 
     return (
-      <div className="relative border border-slate-200 dark:border-white/10 overflow-hidden shadow-2xl shadow-slate-200/50 dark:shadow-none">
+      <div className="relative border border-slate-200 dark:border-white/10 overflow-hidden shadow-lg shadow-slate-200/50 dark:shadow-none">
         <div className="grid grid-cols-1 sm:grid-cols-2 min-[470px]:grid-cols-2 lg:grid-cols-4 relative">
           {/* Decorative background blur */}
           <div className="absolute -top-24 -left-24 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -97,12 +97,12 @@ const AboutTeam = () => {
                     alt={member.name}
                     fill
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                    className="object-cover rounded transition-all duration-700 filter grayscale group-hover:grayscale-0 group-hover:scale-110"
+                    className="object-cover rounded transition duration-700 filter grayscale group-hover:grayscale-0 group-hover:scale-110"
                   />
                 ) : (
                   <>
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-100/50 via-white to-slate-50 dark:from-slate-900/50 dark:via-slate-950 dark:to-black pointer-events-none transition-all duration-500" />
-                    <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-slate-500 font-bold text-5xl tracking-tighter transition-all duration-700 group-hover:from-blue-600 group-hover:to-emerald-600 group-hover:text-white">
+                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-100/50 via-white to-slate-50 dark:from-slate-900/50 dark:via-slate-950 dark:to-black pointer-events-none transition duration-500" />
+                    <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-slate-500 font-bold text-5xl tracking-tighter transition duration-700 group-hover:from-blue-600 group-hover:to-emerald-600 group-hover:text-white">
                       {getInitials(member.name)}
                     </div>
                   </>
@@ -161,7 +161,7 @@ const AboutTeam = () => {
                     )}
                   </div>
 
-                  <div className="h-8 w-8 rounded bg-slate-100 dark:bg-white/5 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300 text-slate-400">
+                  <div className="h-8 w-8 rounded bg-slate-100 dark:bg-white/5 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition duration-300 text-slate-400">
                     <Users className="w-4 h-4" />
                   </div>
                 </div>

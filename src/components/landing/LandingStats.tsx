@@ -43,7 +43,7 @@ const LandingStats = () => {
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* The Hub Container */}
-        <div className="relative flex flex-col md:flex-row items-center border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded overflow-hidden shadow-2xl shadow-emerald-500/5 group/hub">
+        <div className="relative flex flex-col md:flex-row items-center border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded overflow-hidden shadow-lg shadow-emerald-500/5 group/hub">
           {/* Pulsing Aura */}
           <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover/hub:opacity-100 transition-opacity duration-1000 animate-pulse pointer-events-none" />
 
@@ -73,7 +73,7 @@ const LandingStats = () => {
                 stats.map((stat, idx) => (
                   <div
                     key={stat.label}
-                    className={`relative flex-1 w-full py-10 px-8 flex flex-col items-center md:items-start transition-all hover:bg-slate-50 dark:hover:bg-slate-800/50
+                    className={`relative flex-1 w-full py-10 px-8 flex flex-col items-center md:items-start transition hover:bg-slate-50 dark:hover:bg-slate-800/50
                                ${idx === stats.length - 1 ? "" : "border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800"}`}
                   >
                     {/* Corner Accent (Top Left) */}
@@ -146,7 +146,7 @@ const StatItem = ({ stat }: { stat: Stat }) => {
       {/* Mini Progress Line */}
       <div className="mt-4 w-12 h-0.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
         <div
-          className="h-full bg-emerald-500 transition-all duration-1000 ease-out"
+          className="h-full bg-emerald-500 transition duration-1000 ease-out"
           style={{ width: isInView ? "100%" : "0%" }}
         />
       </div>

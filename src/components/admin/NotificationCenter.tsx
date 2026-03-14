@@ -63,11 +63,11 @@ export default function NotificationCenter() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "relative p-2 rounded transition-all duration-300",
+          "relative p-2 rounded transition duration-300",
           isOpen
             ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
             : "text-slate-400 hover:text-white hover:bg-white/5 border-white/5",
-          "border backdrop-blur-md",
+          "border backdrop-blur-sm",
         )}
         title="Notifications"
       >
@@ -81,7 +81,7 @@ export default function NotificationCenter() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-slate-900 border border-slate-800 rounded shadow-xl z-50 overflow-hidden">
+        <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-slate-900 border border-slate-800 rounded shadow-md z-50 overflow-hidden">
           {/* Header */}
           <div className="p-4 border-b border-slate-800 flex items-center justify-between">
             <h3 className="font-semibold font-sora text-white">

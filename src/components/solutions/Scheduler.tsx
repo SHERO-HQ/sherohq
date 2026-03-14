@@ -192,7 +192,7 @@ const Scheduler = () => {
 
   if (status === "success") {
     return (
-      <div className="max-w-xl mx-auto p-8 md:p-10 bg-white dark:bg-slate-900 rounded shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 text-center">
+      <div className="max-w-xl mx-auto p-8 md:p-10 bg-white dark:bg-slate-900 rounded shadow-md shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 text-center">
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -232,7 +232,7 @@ const Scheduler = () => {
   return (
     <div
       ref={scrollRef}
-      className="max-w-[1240px] mx-auto bg-white dark:bg-slate-900 rounded shadow-2xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 overflow-hidden flex flex-col justify-center md:flex-row min-h-[500px] md:min-h-[600px]"
+      className="max-w-[1240px] mx-auto bg-white dark:bg-slate-900 rounded shadow-lg shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 overflow-hidden flex flex-col justify-center md:flex-row min-h-[500px] md:min-h-[600px]"
     >
       {/* Sidebar / Progress */}
       <div className="w-full md:w-80 bg-slate-50 dark:bg-slate-950 p-6 md:p-8 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0">
@@ -250,7 +250,7 @@ const Scheduler = () => {
           {/* Vertical Line for Desktop */}
           <div className="hidden md:block absolute left-4 top-2 bottom-1 w-0.5 bg-slate-200 dark:bg-slate-800 -z-10">
             <div
-              className="w-full bg-emerald-500 transition-all duration-500 ease-out"
+              className="w-full bg-emerald-500 transition duration-500 ease-out"
               style={{ height: `${((step - 1) / 2) * 100}%` }}
             />
           </div>
@@ -258,7 +258,7 @@ const Scheduler = () => {
           {/* Horizontal Line for Mobile */}
           <div className="md:hidden absolute top-4 left-12 right-12 h-0.5 bg-slate-200 dark:bg-slate-800 -z-10">
             <div
-              className="h-full bg-emerald-500 transition-all duration-500 ease-out"
+              className="h-full bg-emerald-500 transition duration-500 ease-out"
               style={{ width: `${((step - 1) / 2) * 100}%` }}
             />
           </div>
@@ -270,7 +270,7 @@ const Scheduler = () => {
             >
               <div
                 className={cn(
-                  "w-8 h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-bold relative z-10 transition-all duration-300 shrink-0 border-2",
+                  "w-8 h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-bold relative z-10 transition duration-300 shrink-0 border-2",
                   step === s
                     ? "bg-emerald-600 border-emerald-600 text-white shadow-lg shadow-emerald-500/30 ring-4 ring-emerald-50 dark:ring-emerald-900/20"
                     : step > s
@@ -355,7 +355,7 @@ const Scheduler = () => {
                         setFormData({ ...formData, service: service.id })
                       }
                       className={cn(
-                        "flex items-start md:items-center p-4 rounded border-2 transition-all duration-200 text-left hover:border-emerald-500/50 hover:bg-emerald-50 dark:hover:bg-emerald-900/10 group relative overflow-hidden cursor-pointer",
+                        "flex items-start md:items-center p-4 rounded border-2 transition duration-200 text-left hover:border-emerald-500/50 hover:bg-emerald-50 dark:hover:bg-emerald-900/10 group relative overflow-hidden cursor-pointer",
                         formData.service === service.id
                           ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-900/10 shadow-sm"
                           : "border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900",
@@ -469,7 +469,7 @@ const Scheduler = () => {
                               onClick={() => setFormData({ ...formData, time })}
                               disabled={isPassed}
                               className={cn(
-                                "px-3 py-2 rounded text-sm font-medium transition-all text-center border cursor-pointer",
+                                "px-3 py-2 rounded text-sm font-medium transition text-center border cursor-pointer",
                                 slotClass,
                               )}
                             >
@@ -543,7 +543,7 @@ const Scheduler = () => {
                             firstName: e.target.value,
                           })
                         }
-                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition-all"
+                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition"
                         placeholder="John"
                       />
                     </div>
@@ -559,7 +559,7 @@ const Scheduler = () => {
                         onChange={(e) =>
                           setFormData({ ...formData, lastName: e.target.value })
                         }
-                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition-all"
+                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition"
                         placeholder="Doe"
                       />
                     </div>
@@ -577,7 +577,7 @@ const Scheduler = () => {
                         onChange={(e) =>
                           setFormData({ ...formData, email: e.target.value })
                         }
-                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition-all"
+                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition"
                         placeholder="john@company.com"
                       />
                     </div>
@@ -593,7 +593,7 @@ const Scheduler = () => {
                         onChange={(e) =>
                           setFormData({ ...formData, phone: e.target.value })
                         }
-                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition-all"
+                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition"
                         placeholder="+233 123 456 7890"
                       />
                     </div>
@@ -609,7 +609,7 @@ const Scheduler = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, message: e.target.value })
                       }
-                      className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition-all resize-none"
+                      className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition resize-none"
                       placeholder="Anything specific to discuss?"
                     />
                   </div>

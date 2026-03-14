@@ -42,7 +42,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({
                    border dark:border-white/10 border-slate-200
                    dark:text-white text-slate-700 placeholder:text-slate-500
                    focus:outline-none focus:ring-2 focus:ring-emerald-600/50 focus:border-emerald-600/50
-                   transition-all shadow-sm"
+                   transition shadow-sm"
         />
       </div>
 
@@ -50,7 +50,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({
         type="submit"
         className="hidden sm:block px-8 py-2 rounded bg-emerald-600 text-white font-semibold
                  hover:bg-emerald-500 hover:shadow-md hover:shadow-emerald-500/25
-                 transition-all cursor-pointer whitespace-nowrap"
+                 transition cursor-pointer whitespace-nowrap"
       >
         Search
       </button>

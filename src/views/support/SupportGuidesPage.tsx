@@ -38,7 +38,7 @@ const SupportGuidesPage = () => {
             className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            <span>Back to Support Hub</span>
+            <span>Back</span>
           </Link>
         </div>
 
@@ -48,9 +48,9 @@ const SupportGuidesPage = () => {
             <div className="flex items-center gap-5">
               <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 rounded flex items-center justify-center text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 shadow-lg shadow-emerald-500/10 shrink-0">
                 {category === "software" ? (
-                  <Settings className="w-9 h-9" />
+                  <Settings className="md:w-9 md:h-9 w-6 h-6" />
                 ) : (
-                  <Monitor className="w-9 h-9" />
+                  <Monitor className="md:w-9 md:h-9 w-6 h-6" />
                 )}
               </div>
               <div>
@@ -68,7 +68,7 @@ const SupportGuidesPage = () => {
                 placeholder="Search guides..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3.5 bg-card/40 dark:bg-slate-900/40 backdrop-blur-md border border-border rounded focus:ring-2 focus:ring-emerald-500/50 outline-none transition-all text-foreground placeholder:text-muted-foreground"
+                className="w-full pl-12 pr-4 py-3.5 bg-card/40 dark:bg-slate-900/40 backdrop-blur-sm border border-border rounded focus:ring-2 focus:ring-emerald-500/50 outline-none transition text-foreground placeholder:text-muted-foreground"
               />
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-emerald-500 transition-colors" />
             </div>
@@ -119,7 +119,7 @@ const SupportGuidesPage = () => {
                 <div key={guide.id}>
                   <Link
                     href={`/support/${category}/${guide.slug}`}
-                    className="block bg-card dark:bg-slate-900/40 backdrop-blur-md rounded border border-border hover:border-emerald-500/30 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300 overflow-hidden group h-full relative"
+                    className="block bg-card dark:bg-slate-900/40 backdrop-blur-sm rounded border border-border hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/10 transition duration-300 overflow-hidden group h-full relative"
                   >
                     <div className="absolute inset-0 bg-linear-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
@@ -154,7 +154,7 @@ const SupportGuidesPage = () => {
                             </span>
                           )}
                         </div>
-                        <ArrowRight className="w-5 h-5 text-emerald-500 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                        <ArrowRight className="w-5 h-5 text-emerald-500 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition duration-300" />
                       </div>
                     </div>
                   </Link>

@@ -64,7 +64,7 @@ const SolutionsHero = () => {
             transition={{ duration: 1, type: "spring", damping: 20 }}
             className="relative z-10 flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1 w-full lg:w-1/2"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-6 lg:mb-8 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-md">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-6 lg:mb-8 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm">
                <Code className="size-4 text-emerald-500" />
                <span className="text-[10px] sm:text-xs font-mono font-black tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
                  Software & IT Solutions
@@ -92,7 +92,7 @@ const SolutionsHero = () => {
 
             <Link
               href="/consultation"
-              className="group w-full sm:w-auto flex items-center justify-center gap-6 px-12 h-12 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded font-black uppercase tracking-widest text-xs hover:bg-emerald-600 dark:hover:bg-emerald-500 dark:hover:text-white transition-all shadow-2xl shadow-black/20"
+              className="group w-full sm:w-auto flex items-center justify-center gap-6 px-12 h-12 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded font-black uppercase tracking-widest text-xs hover:bg-emerald-600 dark:hover:bg-emerald-500 dark:hover:text-white transition shadow-lg shadow-black/20"
             >
                Let's Talk
               <ArrowRight size={20} className="group-hover:translate-x-3 transition-transform" />
@@ -113,21 +113,21 @@ const SolutionsHero = () => {
               <div className="absolute top-1/2 left-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-blue-500/5 dark:bg-blue-500/5 blur-[80px] rounded-full pointer-events-none translate-x-10" />
               
               {/* Main Visual Card */}
-              <div className="relative w-full h-full drop-shadow-2xl group-hover/visual:-translate-y-6 transition-transform duration-1000 ease-out flex items-center justify-center">
+              <div className="relative w-full h-full drop-shadow-lg group-hover/visual:-translate-y-6 transition-transform duration-1000 ease-out flex items-center justify-center">
                 <div className="w-full h-full relative overflow-hidden flex items-center justify-center shadow-inner">
                    <div className="absolute inset-0 pattern-dots opacity-40" />
                    
                    {/* Central Iconography */}
                    <div className="relative z-10 w-32 h-32 sm:w-48 sm:h-48 flex items-center justify-center">
                       <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full animate-pulse" />
-                      <Zap className="size-full text-emerald-500 drop-shadow-[0_0_30px_rgba(16,185,129,0.4)] relative z-10" />
+                      <Zap className="size-full text-emerald-500 drop-shadow-sm relative z-10" />
                    </div>
                    
                    {/* Floating Tech Badges */}
                    {/* <motion.div 
                       animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
                       transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                      className="absolute top-12 right-12 w-12 h-12 sm:w-16 sm:h-16 rounded bg-blue-500/20 backdrop-blur-xl flex items-center justify-center text-blue-500 border border-blue-500/30 shadow-xl"
+                      className="absolute top-12 right-12 w-12 h-12 sm:w-16 sm:h-16 rounded bg-blue-500/20 backdrop-blur-sm flex items-center justify-center text-blue-500 border border-blue-500/30 shadow-md"
                     >
                       <Cpu size={28} className="sm:size-32" />
                    </motion.div>
@@ -135,7 +135,7 @@ const SolutionsHero = () => {
                    <motion.div 
                       animate={{ y: [0, 20, 0], rotate: [0, -8, 0] }}
                       transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                      className="absolute bottom-16 left-12 w-16 h-16 sm:w-20 sm:h-20 rounded bg-indigo-500/20 backdrop-blur-xl flex items-center justify-center text-indigo-500 border border-indigo-500/30 shadow-xl"
+                      className="absolute bottom-16 left-12 w-16 h-16 sm:w-20 sm:h-20 rounded bg-indigo-500/20 backdrop-blur-sm flex items-center justify-center text-indigo-500 border border-indigo-500/30 shadow-md"
                     >
                       <Shield size={32} className="sm:size-40" />
                    </motion.div>
@@ -143,7 +143,7 @@ const SolutionsHero = () => {
                    <motion.div 
                       animate={{ x: [0, 15, 0] }}
                       transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                      className="absolute top-24 left-16 w-10 h-10 rounded bg-emerald-500/20 backdrop-blur-lg flex items-center justify-center text-emerald-500 border border-emerald-500/30"
+                      className="absolute top-24 left-16 w-10 h-10 rounded bg-emerald-500/20 backdrop-blur-sm flex items-center justify-center text-emerald-500 border border-emerald-500/30"
                     >
                       <Zap size={20} />
                    </motion.div> */}
@@ -155,10 +155,10 @@ const SolutionsHero = () => {
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 1, duration: 0.8 }}
-                className="absolute -bottom-4 -right-4 p-4 sm:p-6 rounded bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border border-white/40 shadow-2xl z-20"
+                className="absolute -bottom-4 -right-4 p-4 sm:p-6 rounded bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-white/40 shadow-lg z-20"
               >
                 <div className="flex items-center gap-4">
-                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-emerald-500 flex items-center justify-center text-white shadow-xl shadow-emerald-500/30">
+                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-emerald-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/30">
                       <Server size={20} className="sm:size-24" />
                    </div>
                    <div className="flex flex-col">

@@ -100,7 +100,7 @@ const LandingProducts = () => {
                 <TabsTrigger
                   key={category}
                   value={category}
-                  className="px-6 py-2 text-sm whitespace-nowrap data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300"
+                  className="px-6 py-2 text-sm whitespace-nowrap data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-md transition duration-300"
                 >
                   {category}
                 </TabsTrigger>
@@ -150,7 +150,7 @@ const LandingProducts = () => {
                      hover:border-emerald-500 dark:hover:border-emerald-500
                      hover:text-emerald-600 dark:hover:text-emerald-400
                      hover:shadow-lg
-                     transition-all duration-300 group"
+                     transition duration-300 group"
           >
             <span>Visit the Shop</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

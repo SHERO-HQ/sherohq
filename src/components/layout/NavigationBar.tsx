@@ -78,8 +78,8 @@ const Nav = () => {
   return (
     <>
       <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-300
-          ${isOpen || scrolled ? "bg-background/80 backdrop-blur-md shadow-sm border-b border-slate-200 dark:border-slate-800" : "bg-transparent"}`}
+        className={`fixed top-0 w-full z-50 transition duration-300
+          ${isOpen || scrolled ? "bg-background/80 backdrop-blur-sm shadow-sm border-b border-slate-200 dark:border-slate-800" : "bg-transparent"}`}
         aria-label="main navigation"
         id="nav-menu"
       >
@@ -206,7 +206,7 @@ const Nav = () => {
 
                   {/* Dropdown Menu (Only when authenticated) */}
                   {mounted && isAuthenticated && (
-                    <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded shadow-lg border border-slate-200 dark:border-slate-800 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded shadow-lg border border-slate-200 dark:border-slate-800 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-200 z-50">
                       <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
                         <p className="text-sm font-bold font-sora text-slate-900 dark:text-white line-clamp-1">
                           {user?.name}
@@ -269,7 +269,7 @@ const Nav = () => {
                           ? "M18 6L6 18M6 6L18 18"
                           : "M5 17H13M5 12H19M11 7H19"
                       }
-                      className="transition-all duration-300"
+                      className="transition duration-300"
                     />
                   </svg>
                 </button>
@@ -300,7 +300,7 @@ const Nav = () => {
                 className="fixed top-16 left-0 w-full h-[calc(100vh-4rem)]
                          bg-white dark:bg-slate-900
                          border-b border-t border-slate-200 dark:border-slate-800
-                         shadow-2xl overflow-y-auto origin-top lg:hidden z-50 p-4"
+                         shadow-lg overflow-y-auto origin-top lg:hidden z-50 p-4"
                 id="mobile-nav-menu"
               >
                 {/* Nav Links */}
@@ -350,7 +350,7 @@ const Nav = () => {
                         <NavLink
                           href={getAbsoluteUrl("/profile")}
                           onClick={() => setIsOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded transition-all duration-200 group/item"
+                          className="flex items-center gap-3 px-4 py-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/50 rounded transition duration-200 group/item"
                         >
                           <div className="p-2 rounded bg-slate-100 dark:bg-slate-800 group-hover/item:bg-emerald-100 dark:group-hover/item:bg-emerald-900/30 transition-colors">
                             <User className="w-5 h-5 text-slate-600 dark:text-slate-400 group-hover/item:text-emerald-600 dark:group-hover/item:text-emerald-400" />
@@ -364,7 +364,7 @@ const Nav = () => {
                             logout();
                             setIsOpen(false);
                           }}
-                          className="flex items-center gap-3 px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-all duration-200 group/logout"
+                          className="flex items-center gap-3 px-4 py-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition duration-200 group/logout"
                         >
                           <div className="p-2 rounded bg-red-50 dark:bg-red-900/10 group-hover/logout:bg-red-100 dark:group-hover/logout:bg-red-900/30 transition-colors">
                             <LogOut className="w-5 h-5" />
@@ -377,7 +377,7 @@ const Nav = () => {
                     <NavLink
                       href={getAbsoluteUrl("/login")}
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-4 px-5 py-2 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 rounded transition-all duration-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800/50 group"
+                      className="flex items-center gap-4 px-5 py-2 text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 rounded transition duration-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800/50 group"
                     >
                       <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-md group-hover:scale-110 transition-transform">
                         <User className="w-6 h-6" />

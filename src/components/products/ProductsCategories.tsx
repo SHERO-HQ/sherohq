@@ -20,7 +20,7 @@ const ProductCategories: React.FC<ProductCategoriesProps> = ({
   onCategoryChange,
 }) => {
   return (
-    <section className="w-full py-4 sm:py-8 border-b border-slate-200 dark:border-slate-800 sticky top-16 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md transition-all duration-300">
+    <section className="w-full py-4 sm:py-8 border-b border-slate-200 dark:border-slate-800 sticky top-16 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm transition duration-300">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title - Hidden on mobile to save space, or kept small */}
         <div className="hidden sm:flex items-center justify-between mb-6">
@@ -42,7 +42,7 @@ const ProductCategories: React.FC<ProductCategoriesProps> = ({
               transition={{ delay: index * 0.05 }}
               onClick={() => onCategoryChange(category.id)}
               className={`group relative shrink-0 flex items-center gap-2 p-2 rounded
-                       border transition-all duration-300 snap-start cursor-pointer
+                       border transition duration-300 snap-start cursor-pointer
                        ${
                          activeCategory === category.id
                            ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 shadow-sm"
@@ -52,7 +52,7 @@ const ProductCategories: React.FC<ProductCategoriesProps> = ({
               {/* Icon */}
               <div
                 className={`w-6 h-6 sm:w-8 sm:h-8 rounded p-1 sm:rounded flex items-center justify-center
-                         transition-all duration-300
+                         transition duration-300
                          ${
                            activeCategory === category.id
                              ? "bg-emerald-600 text-white"

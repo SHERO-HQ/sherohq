@@ -103,7 +103,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         <div className="grid lg:grid-cols-12 gap-12 lg:items-start">
           {/* STICKY Gallery Section (7 columns) */}
           <div className="lg:col-span-7 space-y-6 lg:sticky lg:top-28">
-            <div className="relative aspect-4/5 max-h-[400px] sm:max-h-[500px] lg:max-h-[600px] bg-white dark:bg-white/5 backdrop-blur-3xl rounded overflow-hidden border border-slate-200 dark:border-white/10 shadow-2xl shadow-black/10 flex items-center justify-center">
+            <div className="relative aspect-4/5 max-h-100 sm:max-h-125 lg:max-h-150 bg-white dark:bg-white/5 rounded overflow-hidden border border-slate-200 dark:border-white/10 shadow-md flex items-center justify-center">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={selectedImage}
@@ -135,13 +135,13 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 <div className="absolute inset-0 flex items-center justify-between px-4 pointer-events-none">
                   <button
                     onClick={prevImage}
-                    className="pointer-events-auto p-3 bg-white/80 dark:bg-black/40 backdrop-blur-xl rounded border border-white/20 hover:bg-emerald-500 hover:text-white transition-all shadow-xl"
+                    className="pointer-events-auto p-3 bg-white/90 dark:bg-slate-900 rounded border border-slate-200 dark:border-white/10 hover:bg-emerald-500 hover:text-white transition-colors"
                   >
                     <ChevronLeft size={24} />
                   </button>
                   <button
                     onClick={nextImage}
-                    className="pointer-events-auto p-3 bg-white/80 dark:bg-black/40 backdrop-blur-xl rounded border border-white/20 hover:bg-emerald-500 hover:text-white transition-all shadow-xl"
+                    className="pointer-events-auto p-3 bg-white/90 dark:bg-slate-900 rounded border border-slate-200 dark:border-white/10 hover:bg-emerald-500 hover:text-white transition-colors"
                   >
                     <ChevronRight size={24} />
                   </button>
@@ -151,17 +151,17 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
               {/* Badges Overlay */}
               <div className="absolute top-6 left-6 flex flex-col gap-2">
                 {product.badge && (
-                  <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-emerald-600 text-white shadow-lg shadow-emerald-900/40">
+                  <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-emerald-600 text-white">
                     {product.badge}
                   </span>
                 )}
                 {discount > 0 && (
-                  <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-red-600 text-white shadow-lg shadow-red-900/40">
+                  <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-red-600 text-white">
                     -{discount}%
                   </span>
                 )}
                 {!product.inStock && (
-                  <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-slate-900/80 text-white backdrop-blur-md">
+                  <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-slate-900/90 text-white">
                     Sold Out
                   </span>
                 )}
@@ -175,9 +175,9 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   <button
                     key={`detail-thumb-${idx}`}
                     onClick={() => setSelectedImage(idx)}
-                    className={`shrink-0 w-14 h-14 rounded overflow-hidden border-2 transition-all duration-300 ${
+                    className={`shrink-0 w-14 h-14 rounded overflow-hidden border-2 transition duration-200 ${
                       idx === selectedImage
-                        ? "border-emerald-500 scale-105 shadow-lg shadow-emerald-500/20"
+                        ? "border-emerald-500 scale-105"
                         : "border-transparent bg-white dark:bg-white/5 opacity-50 hover:opacity-100"
                     }`}
                   >
@@ -204,7 +204,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
 
           {/* Details Content (5 columns) */}
           <div className="lg:col-span-5 flex flex-col gap-8">
-            <div className="p-8 rounded bg-white dark:bg-white/5 backdrop-blur-3xl border border-slate-200 dark:border-white/10 shadow">
+            <div className="p-8 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <span className="px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                   {product.category}
@@ -236,7 +236,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 <div className="flex items-center gap-1 bg-white dark:bg-black/20 rounded border border-slate-200 dark:border-white/10 p-1">
                   <button
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded transition-all"
+                    className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded transition-colors"
                   >
                     <Minus size={14} />
                   </button>
@@ -245,7 +245,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   </span>
                   <button
                     onClick={() => setQuantity((q) => q + 1)}
-                    className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded transition-all"
+                    className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded transition-colors"
                   >
                     <Plus size={14} />
                   </button>
@@ -280,7 +280,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   <button
                     onClick={handleAddToCart}
                     disabled={!product.inStock || isAddedToCart}
-                    className={`flex-1 flex items-center justify-center gap-2 h-14 px-4 rounded font-black text-[11px] uppercase tracking-widest transition-all border-2 ${
+                    className={`flex-1 flex items-center justify-center gap-2 h-14 px-4 rounded font-black text-[11px] uppercase tracking-widest transition-colors border-2 ${
                       isAddedToCart
                         ? "bg-emerald-500 border-emerald-500 text-white"
                         : "bg-white dark:bg-white/5 border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500 hover:text-white"
@@ -300,7 +300,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                       window.location.href = getAbsoluteUrl("/checkout");
                     }}
                     disabled={!product.inStock}
-                    className="flex-1 px-2 h-14 bg-emerald-600 text-white rounded font-black text-[11px] uppercase tracking-widest hover:bg-emerald-500 shadow-xl shadow-emerald-500/10 disabled:opacity-50"
+                    className="flex-1 px-2 h-14 bg-emerald-600 text-white rounded font-black text-[11px] uppercase tracking-widest hover:bg-emerald-500 transition-colors disabled:opacity-50"
                   >
                     Buy Now
                   </button>
@@ -315,7 +315,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                         category: product.category,
                       })
                     }
-                    className={`w-14 h-14 rounded flex items-center justify-center border-2 transition-all shrink-0 ${
+                    className={`w-14 h-14 rounded flex items-center justify-center border-2 transition-colors shrink-0 ${
                       isWishlisted
                         ? "bg-red-500 border-red-500 text-white"
                         : "border-slate-200 dark:border-white/10 text-slate-500 hover:border-red-500 hover:text-red-500"
@@ -333,7 +333,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-3 h-14 bg-[#25D366] text-white rounded font-black text-sm uppercase tracking-widest hover:bg-[#20bd5a] transition-all shadow-xl shadow-green-500/20"
+                  className="flex items-center justify-center gap-3 h-14 bg-[#25D366] text-white rounded font-black text-sm uppercase tracking-widest hover:bg-[#20bd5a] transition-colors"
                 >
                   <WhatsAppIcon className="w-5 h-5" />
                   Chat on WhatsApp
@@ -376,10 +376,10 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   Technical{" "}
                   <span className="text-emerald-500">Specifications</span>
                 </h2>
-                <div className="h-1.5 w-12 bg-emerald-500 rounded-full mt-4 shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
+                <div className="h-1.5 w-12 bg-emerald-500 rounded-full mt-4" />
               </div>
 
-              <div className="max-w-4xl mx-auto overflow-hidden rounded border border-slate-200 dark:border-white/10 shadow-2xl shadow-black/5 bg-white dark:bg-white/5 backdrop-blur-3xl">
+              <div className="max-w-4xl mx-auto overflow-hidden rounded border border-slate-200 dark:border-white/10 shadow-sm bg-white dark:bg-white/5">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="border-b border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/5">
@@ -448,7 +448,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
       </div>
 
       {/* MOBILE FLOATING CTA BAR */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl border-t border-white/10">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-4 bg-white/95 dark:bg-slate-900/95 border-t border-slate-200 dark:border-white/10">
         <div className="flex items-center gap-3">
           <div className="flex flex-col shrink-0">
             <span className="text-[10px] text-slate-500 font-bold uppercase">
@@ -461,7 +461,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
           <button
             onClick={handleAddToCart}
             disabled={!product.inStock || isAddedToCart}
-            className="flex-1 h-12 bg-emerald-600 text-white rounded font-black text-xs uppercase tracking-widest shadow-lg shadow-emerald-500/20 active:scale-95 transition-transform"
+            className="flex-1 h-12 bg-emerald-600 text-white rounded font-black text-xs uppercase tracking-widest active:scale-95 transition-transform"
           >
             {isAddedToCart ? "Added!" : "Quick Buy"}
           </button>

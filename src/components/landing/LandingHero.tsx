@@ -163,7 +163,7 @@ const LandingHero: React.FC = () => {
                 asChild
                 variant="brand"
                 size="lg"
-                className="w-full sm:w-auto h-11 px-8 text-sm shadow-xl shadow-emerald-500/20 group"
+                className="w-full sm:w-auto h-11 px-8 text-sm shadow-md shadow-emerald-500/20 group"
               >
                 <Link href="/shop">
                   <span>Shop Products</span>
@@ -226,7 +226,7 @@ const LandingHero: React.FC = () => {
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.7 }}
-                className="w-full bg-white/85 dark:bg-slate-900/85 backdrop-blur-2xl border border-slate-200 dark:border-slate-800 rounded shadow p-5 sm:p-7 relative overflow-hidden"
+                className="w-full bg-white/85 dark:bg-slate-900/85 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded shadow p-5 sm:p-7 relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-linear-to-br from-white/35 to-transparent dark:from-slate-800/25 pointer-events-none" />
                 <div className="absolute inset-0 pattern-dots opacity-10 pointer-events-none" />

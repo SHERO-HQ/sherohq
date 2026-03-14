@@ -189,7 +189,7 @@ const AdminCategories = () => {
             {filteredCategories.map((cat) => (
               <div
                 key={cat.id}
-                className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center justify-between group hover:border-emerald-500/30 transition-all"
+                className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center justify-between group hover:border-emerald-500/30 transition"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded bg-emerald-500/10 flex items-center justify-center text-emerald-400">

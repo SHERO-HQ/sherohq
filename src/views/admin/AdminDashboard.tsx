@@ -103,7 +103,7 @@ const MagneticStatCard = ({
       }}
       className="perspective-distant"
     >
-      <Card className="bg-slate-900/40 backdrop-blur-xl border-white/10 hover:border-emerald-500/40 transition-colors duration-500 group relative overflow-hidden h-full">
+      <Card className="bg-slate-900/40 backdrop-blur-sm border-white/10 hover:border-emerald-500/40 transition-colors duration-500 group relative overflow-hidden h-full">
         {/* Subtle Glow Overlay */}
         <div className="absolute inset-0 bg-radial-gradient from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
@@ -331,7 +331,7 @@ export default function AdminDashboard() {
                     setPeriod(opt.value as "today" | "week" | "month" | "year")
                   }
                   className={cn(
-                    "px-3 py-1 text-xs font-semibold rounded transition-all",
+                    "px-3 py-1 text-xs font-semibold rounded transition",
                     period === opt.value
                       ? "bg-emerald-600 text-white shadow-lg"
                       : "text-slate-400 hover:text-white hover:bg-white/5",
@@ -392,7 +392,7 @@ export default function AdminDashboard() {
         {/* Charts & Actions Section */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Revenue Chart */}
-          <Card className="lg:col-span-2 bg-slate-900/40 backdrop-blur-xl border-white/10 p-2">
+          <Card className="lg:col-span-2 bg-slate-900/40 backdrop-blur-sm border-white/10 p-2">
             <CardHeader className="flex flex-row items-center justify-between">
               <div>
                 <CardTitle className="text-lg text-white font-sora">
@@ -533,7 +533,7 @@ export default function AdminDashboard() {
 
           {/* Quick Actions Card */}
           <div className="space-y-6">
-            <Card className="bg-slate-900/40 backdrop-blur-xl border-white/10 overflow-hidden">
+            <Card className="bg-slate-900/40 backdrop-blur-sm border-white/10 overflow-hidden">
               <div className="p-6 bg-linear-to-br from-emerald-600/20 to-transparent border-b border-white/5">
                 <h3 className="text-lg font-bold text-white font-sora">
                   Quick Launch
@@ -572,7 +572,7 @@ export default function AdminDashboard() {
                   <Link
                     key={action.title}
                     href={action.link}
-                    className="flex items-center justify-between p-3 rounded hover:bg-white/5 transition-all group"
+                    className="flex items-center justify-between p-3 rounded hover:bg-white/5 transition group"
                   >
                     <div className="flex items-center gap-3">
                       <div className={cn("p-2 rounded", action.color)}>
@@ -582,13 +582,13 @@ export default function AdminDashboard() {
                         {action.title}
                       </span>
                     </div>
-                    <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-emerald-500 transition-all opacity-0 group-hover:opacity-100 group-hover:translate-x-1" />
+                    <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-emerald-500 transition opacity-0 group-hover:opacity-100 group-hover:translate-x-1" />
                   </Link>
                 ))}
               </div>
             </Card>
 
-            <Card className="bg-slate-900/40 backdrop-blur-xl border-white/10">
+            <Card className="bg-slate-900/40 backdrop-blur-sm border-white/10">
               <CardHeader className="pb-4 border-b border-white/5">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-sora text-white">
@@ -640,7 +640,7 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="bg-slate-900/40 backdrop-blur-xl border-white/10">
+            <Card className="bg-slate-900/40 backdrop-blur-sm border-white/10">
               <CardHeader className="pb-4 border-b border-white/5">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-sm font-sora text-white">
@@ -660,7 +660,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Recent Orders Table */}
-        <Card className="bg-slate-900/40 backdrop-blur-xl border-white/10 overflow-hidden">
+        <Card className="bg-slate-900/40 backdrop-blur-sm border-white/10 overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between border-b border-white/5">
             <div>
               <CardTitle className="text-lg text-white font-sora">

@@ -232,7 +232,7 @@ export default function AdminReports() {
                     type="button"
                     onClick={() => setRange(option.value)}
                     className={cn(
-                      "px-4 py-1 rounded text-sm font-medium transition-all",
+                      "px-4 py-1 rounded text-sm font-medium transition",
                       range === option.value
                         ? "bg-slate-700 text-white shadow"
                         : "text-slate-400 hover:text-white",
@@ -325,7 +325,7 @@ export default function AdminReports() {
                   key={opt.value}
                   type="button"
                   onClick={() => setKpiPeriod(opt.value as KpiPeriod)}
-                  className={`px-3 py-1 text-[10px] font-bold rounded transition-all ${
+                  className={`px-3 py-1 text-[10px] font-bold rounded transition ${
                     kpiPeriod === opt.value
                       ? "bg-purple-600 text-white shadow"
                       : "text-slate-400 hover:text-white"

@@ -398,7 +398,7 @@ const AdminSupport = () => {
                 filteredTickets.map((ticket) => (
                   <Card
                     key={ticket.id}
-                    className={`bg-slate-900/40 hover:bg-slate-900/60 border-white/10 transition-all group ${selectedTicketId === ticket.id ? "ring-1 ring-emerald-500/50" : ""}`}
+                    className={`bg-slate-900/40 hover:bg-slate-900/60 border-white/10 transition group ${selectedTicketId === ticket.id ? "ring-1 ring-emerald-500/50" : ""}`}
                   >
                     <CardContent className="p-6">
                       <div className="flex flex-col lg:flex-row justify-between gap-6">
@@ -534,7 +534,7 @@ const AdminSupport = () => {
                 filteredConsultations.map((c) => (
                   <Card
                     key={c.id}
-                    className="bg-slate-900/40 border-white/10 hover:border-emerald-500/30 transition-all flex flex-col h-full"
+                    className="bg-slate-900/40 border-white/10 hover:border-emerald-500/30 transition flex flex-col h-full"
                   >
                     <CardHeader className="pb-4">
                       <div className="flex justify-between items-start">

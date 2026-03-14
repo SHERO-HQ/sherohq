@@ -103,7 +103,7 @@ const Portfolio = () => {
                 <TabsTrigger
                   key={category}
                   value={category}
-                  className="px-6 py-2 text-sm whitespace-nowrap data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300"
+                  className="px-6 py-2 text-sm whitespace-nowrap data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-md transition duration-300"
                 >
                   {category}
                 </TabsTrigger>
@@ -139,7 +139,7 @@ const Portfolio = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="group bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 overflow-hidden hover:border-emerald-500 dark:hover:border-emerald-500 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300"
+                className="group bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 overflow-hidden hover:border-emerald-500 dark:hover:border-emerald-500 hover:shadow-lg hover:shadow-emerald-500/10 transition duration-300"
                 onClick={() => setSelectedProject(project)}
               >
                 {/* Project Image */}
@@ -334,7 +334,7 @@ const Portfolio = () => {
                     href={selectedProject.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/25 w-full active:scale-[0.98]"
+                    className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded transition duration-300 hover:shadow-lg hover:shadow-emerald-500/25 w-full active:scale-[0.98]"
                   >
                     Launch Live Project
                     <ExternalLink className="size-5" />
