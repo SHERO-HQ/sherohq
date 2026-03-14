@@ -166,7 +166,7 @@ const LandingHero: React.FC = () => {
                 className="w-full sm:w-auto h-11 px-8 text-sm shadow-md shadow-emerald-500/20 group"
               >
                 <Link href="/shop">
-                  <span>Shop Products</span>
+                  <span className="font-sora">Shop Products</span>
                   <ShoppingCart className="w-5 h-5" />
                 </Link>
               </Button>
