@@ -1,26 +1,18 @@
 "use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import {
   Heart,
-  Share2,
   ShoppingCart,
   ChevronRight,
   ChevronLeft,
   Check,
   Star,
-  Truck,
-  ShieldCheck,
-  Zap,
-  Tag,
-  Scale,
   ArrowLeft,
   Plus,
   Minus,
   BadgeCheck,
-  Package,
-  Shield,
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/hooks/useWishlist";
@@ -44,7 +36,7 @@ interface ProductDetailViewProps {
 const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
   const { addItem } = useCart();
   const { toggleWishlist: globalToggleWishlist, isInWishlist } = useWishlist();
-  const router = useRouter();
+  // const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
@@ -64,6 +56,9 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
     .filter((p: Product) => p.id !== product.id)
     .slice(0, 4);
 
+  const shareSlug = product.slug || product.sku || product.id;
+  const shareUrl = getAbsoluteUrl(`/shop/${shareSlug}`);
+
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
       addItem({
@@ -78,8 +73,10 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
     setTimeout(() => setIsAddedToCart(false), 2000);
   };
 
-  const nextImage = () => setSelectedImage((prev) => (prev + 1) % images.length);
-  const prevImage = () => setSelectedImage((prev) => (prev - 1 + images.length) % images.length);
+  const nextImage = () =>
+    setSelectedImage((prev) => (prev + 1) % images.length);
+  const prevImage = () =>
+    setSelectedImage((prev) => (prev - 1 + images.length) % images.length);
 
   return (
     <div className="min-h-screen dark:bg-slate-950 bg-slate-50 pt-24 pb-24">
@@ -87,7 +84,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         {/* Navigation & Actions Header */}
         <div className="flex items-center justify-between mb-8">
           <button
-            onClick={() => window.location.href = getAbsoluteUrl("/shop")}
+            onClick={() => (window.location.href = getAbsoluteUrl("/shop"))}
             className="group flex items-center gap-2 text-sm font-black uppercase tracking-widest text-slate-500 hover:text-emerald-500 transition-colors"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
@@ -95,6 +92,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
           </button>
           <div className="flex items-center gap-2">
             <ShareButton
+              url={shareUrl}
               title={product.name}
               description={`Check out ${product.name}`}
               image={getImageUrl(product.image)}
@@ -116,7 +114,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   className="relative w-full h-full p-8"
                 >
                   {images[selectedImage] &&
-                  (images[selectedImage].startsWith("/uploads") || images[selectedImage].startsWith("http")) ? (
+                  (images[selectedImage].startsWith("/uploads") ||
+                    images[selectedImage].startsWith("http")) ? (
                     <AppImage
                       src={getImageUrl(images[selectedImage])}
                       alt={product.name}
@@ -152,20 +151,20 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
               {/* Badges Overlay */}
               <div className="absolute top-6 left-6 flex flex-col gap-2">
                 {product.badge && (
-            <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-emerald-600 text-white shadow-lg shadow-emerald-900/40">
-              {product.badge}
-            </span>
-          )}
-          {discount > 0 && (
-            <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-red-600 text-white shadow-lg shadow-red-900/40">
-              -{discount}%
-            </span>
-          )}
-          {!product.inStock && (
-            <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-slate-900/80 text-white backdrop-blur-md">
-              Sold Out
-            </span>
-          )}
+                  <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-emerald-600 text-white shadow-lg shadow-emerald-900/40">
+                    {product.badge}
+                  </span>
+                )}
+                {discount > 0 && (
+                  <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-red-600 text-white shadow-lg shadow-red-900/40">
+                    -{discount}%
+                  </span>
+                )}
+                {!product.inStock && (
+                  <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-slate-900/80 text-white backdrop-blur-md">
+                    Sold Out
+                  </span>
+                )}
               </div>
             </div>
 
@@ -183,10 +182,18 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     }`}
                   >
                     <div className="relative w-full h-full p-2">
-                      {img && (img.startsWith("/uploads") || img.startsWith("http")) ? (
-                        <AppImage src={getImageUrl(img)} alt="Thumbnail" fill className="object-contain" />
+                      {img &&
+                      (img.startsWith("/uploads") || img.startsWith("http")) ? (
+                        <AppImage
+                          src={getImageUrl(img)}
+                          alt="Thumbnail"
+                          fill
+                          className="object-contain"
+                        />
                       ) : (
-                        <div className="text-3xl flex items-center justify-center h-full">{img}</div>
+                        <div className="text-3xl flex items-center justify-center h-full">
+                          {img}
+                        </div>
                       )}
                     </div>
                   </button>
@@ -205,7 +212,10 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 <div className="flex items-center gap-1.5">
                   <Star size={14} className="fill-amber-400 text-amber-400" />
                   <span className="text-sm font-black dark:text-slate-300">
-                    {product.rating} <span className="text-slate-500 font-medium ml-1 text-xs">({product.reviews} Reviews)</span>
+                    {product.rating}{" "}
+                    <span className="text-slate-500 font-medium ml-1 text-xs">
+                      ({product.reviews} Reviews)
+                    </span>
                   </span>
                 </div>
               </div>
@@ -214,14 +224,15 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 {product.name}
               </h1>
 
-
               <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-8">
                 {product.description}
               </p>
 
               {/* Quantity Selector */}
               <div className="flex justify-between items-center gap-6 mb-8 px-4 py-3 rounded bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5">
-                <span className="text-xs font-black uppercase tracking-widest text-slate-500">Quantity</span>
+                <span className="text-xs font-black uppercase tracking-widest text-slate-500">
+                  Quantity
+                </span>
                 <div className="flex items-center gap-1 bg-white dark:bg-black/20 rounded border border-slate-200 dark:border-white/10 p-1">
                   <button
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
@@ -229,7 +240,9 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   >
                     <Minus size={14} />
                   </button>
-                  <span className="w-8 text-center font-black text-sm">{quantity}</span>
+                  <span className="w-8 text-center font-black text-sm">
+                    {quantity}
+                  </span>
                   <button
                     onClick={() => setQuantity((q) => q + 1)}
                     className="p-2 hover:bg-slate-100 dark:hover:bg-white/5 rounded transition-all"
@@ -250,11 +263,13 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     {formatCurrency(product.price)}
                   </span>
                 </div>
-                <div className={`px-4 py-1 rounded text-[10px] font-black uppercase tracking-tighter border-2 ${
-                  product.inStock 
-                    ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-600" 
-                    : "bg-red-500/5 border-red-500/20 text-red-600"
-                }`}>
+                <div
+                  className={`px-4 py-1 rounded text-[10px] font-black uppercase tracking-tighter border-2 ${
+                    product.inStock
+                      ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-600"
+                      : "bg-red-500/5 border-red-500/20 text-red-600"
+                  }`}
+                >
                   {product.inStock ? "In Stock" : "Out of Stock"}
                 </div>
               </div>
@@ -291,25 +306,30 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   </button>
 
                   <button
-                    onClick={() => globalToggleWishlist({
-                      id: product.id,
-                      name: product.name,
-                      price: product.price,
-                      image: product.image,
-                      category: product.category,
-                    })}
+                    onClick={() =>
+                      globalToggleWishlist({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        image: product.image,
+                        category: product.category,
+                      })
+                    }
                     className={`w-14 h-14 rounded flex items-center justify-center border-2 transition-all shrink-0 ${
-                      isWishlisted 
-                      ? "bg-red-500 border-red-500 text-white" 
-                      : "border-slate-200 dark:border-white/10 text-slate-500 hover:border-red-500 hover:text-red-500"
+                      isWishlisted
+                        ? "bg-red-500 border-red-500 text-white"
+                        : "border-slate-200 dark:border-white/10 text-slate-500 hover:border-red-500 hover:text-red-500"
                     }`}
                   >
-                    <Heart size={20} className={isWishlisted ? "fill-current" : ""} />
+                    <Heart
+                      size={20}
+                      className={isWishlisted ? "fill-current" : ""}
+                    />
                   </button>
                 </div>
                 <a
                   href={`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}?text=${encodeURIComponent(
-                    `Hello Shero, I'm interested in the ${product.name} (GH₵${product.price}). Here is the link: ${getAbsoluteUrl(`/products/${product.id}`)}\n\nCould you please provide more details or assist me with the purchase? Thank you!`,
+                    `Hello Shero, I'm interested in the ${product.name} (GH₵${product.price}). Here is the link:\n${shareUrl}\n\nCould you please provide more details or assist me with the purchase? Thank you!`,
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -329,11 +349,16 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 </h3>
                 <div className="grid grid-cols-1 gap-4">
                   {product.features.map((feature: string, i: number) => (
-                    <div key={`feature-${i}`} className="flex items-center gap-4">
+                    <div
+                      key={`feature-${i}`}
+                      className="flex items-center gap-4"
+                    >
                       <div className="mt-1 w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
                         <Check size={10} className="text-emerald-600" />
                       </div>
-                      <span className="text-sm text-slate-600 dark:text-slate-400">{feature}</span>
+                      <span className="text-sm text-slate-600 dark:text-slate-400">
+                        {feature}
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -343,39 +368,52 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         </div>
 
         {/* Specifications Section - Premium Table */}
-        {product.specifications && Object.keys(product.specifications).length > 0 && (
-          <div className="mt-24">
-            <div className="flex flex-col items-center mb-12">
-              <h2 className="text-3xl font-black font-sora text-slate-900 dark:text-white uppercase tracking-tighter">
-                Technical <span className="text-emerald-500">Specifications</span>
-              </h2>
-              <div className="h-1.5 w-12 bg-emerald-500 rounded-full mt-4 shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
-            </div>
-            
-            <div className="max-w-4xl mx-auto overflow-hidden rounded border border-slate-200 dark:border-white/10 shadow-2xl shadow-black/5 bg-white dark:bg-white/5 backdrop-blur-3xl">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="border-b border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/5">
-                    <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Parameter</th>
-                    <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Specification</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-white/5">
-                  {Object.entries(product.specifications).map(([key, value]) => (
-                    <tr key={`spec-${key}`} className="group hover:bg-emerald-500/5 transition-colors">
-                      <td className="px-8 py-6 text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white w-1/3 border-r border-slate-100 dark:border-white/5">
-                        <span className="group-hover:text-emerald-500 transition-colors">{key}</span>
-                      </td>
-                      <td className="px-8 py-6 text-sm font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
-                        {value as string}
-                      </td>
+        {product.specifications &&
+          Object.keys(product.specifications).length > 0 && (
+            <div className="mt-24">
+              <div className="flex flex-col items-center mb-12">
+                <h2 className="text-3xl font-black font-sora text-slate-900 dark:text-white uppercase tracking-tighter">
+                  Technical{" "}
+                  <span className="text-emerald-500">Specifications</span>
+                </h2>
+                <div className="h-1.5 w-12 bg-emerald-500 rounded-full mt-4 shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
+              </div>
+
+              <div className="max-w-4xl mx-auto overflow-hidden rounded border border-slate-200 dark:border-white/10 shadow-2xl shadow-black/5 bg-white dark:bg-white/5 backdrop-blur-3xl">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/5">
+                      <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+                        Parameter
+                      </th>
+                      <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+                        Specification
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-white/5">
+                    {Object.entries(product.specifications).map(
+                      ([key, value]) => (
+                        <tr
+                          key={`spec-${key}`}
+                          className="group hover:bg-emerald-500/5 transition-colors"
+                        >
+                          <td className="px-8 py-6 text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white w-1/3 border-r border-slate-100 dark:border-white/5">
+                            <span className="group-hover:text-emerald-500 transition-colors">
+                              {key}
+                            </span>
+                          </td>
+                          <td className="px-8 py-6 text-sm font-bold text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
+                            {value as string}
+                          </td>
+                        </tr>
+                      ),
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
         {/* Related Products */}
         {(relatedLoading || relatedProducts.length > 0) && (
@@ -384,8 +422,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
               <h2 className="text-xl sm:text-3xl font-black font-sora text-slate-900 dark:text-white uppercase tracking-tighter">
                 You Might <span className="text-emerald-500">Also Like</span>
               </h2>
-              <button 
-                onClick={() => window.location.href = getAbsoluteUrl("/shop")}
+              <button
+                onClick={() => (window.location.href = getAbsoluteUrl("/shop"))}
                 className="text-sm font-black uppercase tracking-widest text-emerald-600 hover:underline"
               >
                 View Shop
@@ -413,8 +451,12 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-3xl border-t border-white/10">
         <div className="flex items-center gap-3">
           <div className="flex flex-col shrink-0">
-            <span className="text-[10px] text-slate-500 font-bold uppercase">Price</span>
-            <span className="text-lg font-black text-emerald-600 dark:text-emerald-400">{formatCurrency(product.price)}</span>
+            <span className="text-[10px] text-slate-500 font-bold uppercase">
+              Price
+            </span>
+            <span className="text-lg font-black text-emerald-600 dark:text-emerald-400">
+              {formatCurrency(product.price)}
+            </span>
           </div>
           <button
             onClick={handleAddToCart}
@@ -424,15 +466,19 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
             {isAddedToCart ? "Added!" : "Quick Buy"}
           </button>
           <button
-            onClick={() => globalToggleWishlist({
-              id: product.id,
-              name: product.name,
-              price: product.price,
-              image: product.image,
-              category: product.category,
-            })}
+            onClick={() =>
+              globalToggleWishlist({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+                category: product.category,
+              })
+            }
             className={`w-12 h-12 rounded border flex items-center justify-center ${
-              isWishlisted ? "bg-red-500 border-red-500 text-white" : "border-slate-200 dark:border-white/10 text-slate-500"
+              isWishlisted
+                ? "bg-red-500 border-red-500 text-white"
+                : "border-slate-200 dark:border-white/10 text-slate-500"
             }`}
           >
             <Heart size={20} className={isWishlisted ? "fill-current" : ""} />

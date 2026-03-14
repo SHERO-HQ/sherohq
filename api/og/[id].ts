@@ -24,6 +24,9 @@ const SOCIAL_CRAWLERS = [
   "Applebot",
 ];
 
+const SHOP_SITE_URL = "https://shop.sherohq.com";
+const PUBLIC_API_BASE = `${SHOP_SITE_URL}/api`;
+
 // Check if the request is from a social media crawler
 function isSocialCrawler(userAgent: string | undefined): boolean {
   if (!userAgent) return false;
@@ -41,8 +44,7 @@ async function fetchProduct(productId: string): Promise<{
   category: string;
 } | null> {
   try {
-    const apiUrl = "https://api.sherohq.com";
-    const response = await fetch(`${apiUrl}/products/${productId}`, {
+    const response = await fetch(`${PUBLIC_API_BASE}/products/${productId}`, {
       headers: { "Content-Type": "application/json" },
     });
 
@@ -55,12 +57,15 @@ async function fetchProduct(productId: string): Promise<{
 
 // Get the full image URL
 function getImageUrl(image: string | undefined): string {
-  if (!image) return "https://sherohq.com/og-image.png";
+  if (!image) return `${SHOP_SITE_URL}/shero.png`;
   if (image.startsWith("http")) return image;
   if (image.startsWith("/uploads")) {
-    return `https://api.sherohq.com${image}`;
+    return `${SHOP_SITE_URL}${image}`;
   }
-  return "https://sherohq.com/og-image.png";
+  if (image.startsWith("uploads/")) {
+    return `${SHOP_SITE_URL}/${image}`;
+  }
+  return `${SHOP_SITE_URL}/shero.png`;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -70,14 +75,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // If not a social crawler or no product ID, redirect to the SPA
   if (!productId || !isSocialCrawler(userAgent)) {
-    return res.redirect(302, `/shop/${productId || ""}`);
+    return res.redirect(302, `${SHOP_SITE_URL}/${productId || ""}`);
   }
 
   // Fetch product data
   const product = await fetchProduct(productId);
 
   if (!product) {
-    return res.redirect(302, `/shop/${productId}`);
+    return res.redirect(302, `${SHOP_SITE_URL}/${productId}`);
   }
 
   // Prepare OG data
@@ -86,7 +91,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     product.description || `${product.name} - GH₵${product.price}`;
   const truncatedDesc =
     description.length > 160 ? description.slice(0, 157) + "..." : description;
-  const pageUrl = `https://sherohq.com/shop/${productId}`;
+  const pageUrl = `${SHOP_SITE_URL}/${productId}`;
 
   // Return HTML with OG tags
   res.setHeader("Content-Type", "text/html; charset=utf-8");
