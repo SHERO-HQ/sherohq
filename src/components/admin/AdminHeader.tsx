@@ -13,6 +13,7 @@ import { useAdmin } from "@/context/AdminContext";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useBreadcrumb } from "@/context/BreadcrumbContext";
+import { getAbsoluteUrl } from "@/utils/subdomain";
 import {
  DropdownMenu,
  DropdownMenuContent,
@@ -133,14 +134,14 @@ export default function AdminHeader({
     </div>
 
     {/* View Site */}
-    <Link
-     href="/"
+    <a
+     href={getAbsoluteUrl("/")}
      className="hidden md:flex items-center px-3 py-2 text-sm text-slate-400 hover:text-white hover:bg-emerald-500/5 rounded transition-colors"
      title="View Site"
     >
      <Globe className="w-4 h-4 mr-1" />
      <span>View Site</span>
-    </Link>
+    </a>
 
     {/* Notifications */}
     <NotificationCenter />

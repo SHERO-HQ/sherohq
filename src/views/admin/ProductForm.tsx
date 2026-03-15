@@ -81,7 +81,7 @@ export default function ProductForm() {
  specifications: {},
  badge: "",
  images: [],
- stockQuantity: 100,
+ stockQuantity: undefined,
  });
 
  const [specsList, setSpecsList] = useState<SpecRow[]>([]);
@@ -853,34 +853,57 @@ export default function ProductForm() {
         </select>
        </div>
 
-       <div className="flex items-center justify-between p-4 rounded bg-slate-800/30 border border-white/5">
-        <div className="flex items-center gap-2">
-         <Package className="w-4 h-4 text-emerald-400" />
-         <span className="text-sm text-white font-medium">
-          In Stock Status
-         </span>
+        <div className="space-y-2">
+          <label
+            htmlFor="stockQuantity"
+            className="text-sm font-medium text-slate-400"
+          >
+            Stock Quantity
+          </label>
+          <Input
+            id="stockQuantity"
+            type="number"
+            placeholder="Available stock (Optional)"
+            value={productData.stockQuantity ?? ""}
+            onChange={(e) =>
+              setProductData((prev) => ({
+                ...prev,
+                stockQuantity: e.target.value ? Number.parseInt(e.target.value) : undefined,
+                quantity: e.target.value ? Number.parseInt(e.target.value) : undefined,
+              }))
+            }
+            className="bg-slate-800/50 border-white/5 text-white"
+          />
         </div>
-        <button
-         type="button"
-         onClick={() =>
-          setProductData((prev) => ({
-           ...prev,
-           inStock: !prev.inStock,
-          }))
-         }
-         className={cn(
-          "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
-          productData.inStock ? "bg-emerald-600" : "bg-slate-700",
-         )}
-        >
-         <span
+
+        <div className="flex items-center justify-between p-4 rounded bg-slate-800/30 border border-white/5">
+         <div className="flex items-center gap-2">
+          <Package className="w-4 h-4 text-emerald-400" />
+          <span className="text-sm text-white font-medium">
+           In Stock Status
+          </span>
+         </div>
+         <button
+          type="button"
+          onClick={() =>
+           setProductData((prev) => ({
+            ...prev,
+            inStock: !prev.inStock,
+           }))
+          }
           className={cn(
-           "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
-           productData.inStock ? "translate-x-6" : "translate-x-1",
+           "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
+           productData.inStock ? "bg-emerald-600" : "bg-slate-700",
           )}
-         />
-        </button>
-       </div>
+         >
+          <span
+           className={cn(
+            "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+            productData.inStock ? "translate-x-6" : "translate-x-1",
+           )}
+          />
+         </button>
+        </div>
       </Card>
      </div>
     </form>

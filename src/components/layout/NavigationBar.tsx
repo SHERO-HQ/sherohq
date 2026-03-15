@@ -173,21 +173,29 @@ const Nav = () => {
  }, []);
 
  // Track active nav link index for indicator animation
- useEffect(() => {
- if (mounted) {
- const navLinks = ["Shop", "Solutions", "Consultation", "About Us"];
- let found = -1;
+	useEffect(() => {
+		if (mounted) {
+			const navLinks = ["Shop", "Solutions", "Consultation", "About Us"];
+			let found = -1;
 
- navLinks.forEach((item, index) => {
- const linkPath = `/${item.toLowerCase().replace(" ", "-")}`;
- if (pathname === linkPath || pathname === getAbsoluteUrl(linkPath)) {
- found = index;
- }
- });
+			navLinks.forEach((item, index) => {
+				const linkPath = `/${item.toLowerCase().replace(" ", "-")}`;
+				const absoluteUrl = getAbsoluteUrl(linkPath);
+				try {
+					const url = new URL(absoluteUrl);
+					if (pathname === url.pathname) {
+						found = index;
+					}
+				} catch {
+					if (pathname === linkPath) {
+						found = index;
+					}
+				}
+			});
 
- setActiveNavIndex(found);
- }
- }, [pathname, mounted]);
+			setActiveNavIndex(found);
+		}
+	}, [pathname, mounted]);
 
  // Measure indicator dimensions for active link
  useEffect(() => {

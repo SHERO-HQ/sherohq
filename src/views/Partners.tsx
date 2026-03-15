@@ -44,9 +44,9 @@ const Partners = () => {
  </span>
  </div>
  <h1 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight">
- Grow your reach{" "}
+ Grow with{" "}
  <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-500 to-blue-600 dark:to-blue-400">
- with SHERO
+SHERO
  </span>
  </h1>
  <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">

@@ -23,7 +23,7 @@ const ServicesGrid = () => {
   const services: Service[] = [
     {
       icon: <Smartphone className="w-8 h-8" />,
-      title: "Apps That Grow Your Business",
+      title: "Custom Apps",
       description:
         "From customer-facing mobile apps to internal tools — we design, build, and maintain software that works for you.",
       features: [
@@ -37,7 +37,7 @@ const ServicesGrid = () => {
     },
     {
       icon: <Cloud className="w-8 h-8" />,
-      title: "Cloud Platforms, Built to Scale",
+      title: "Cloud Platforms",
       description:
         "Launch your own cloud product with built-in subscriptions, user management, and analytics — ready from day one.",
       features: [
@@ -51,12 +51,12 @@ const ServicesGrid = () => {
     },
     {
       icon: <Settings className="w-8 h-8" />,
-      title: "Keep Your Systems Running 24/7",
+      title: "IT Management",
       description:
         "Complete IT setup and ongoing support — from server configuration to workstation deployment. We keep your tech running smoothly.",
       features: [
         "Server & network configurations",
-        "Hardware setup (POS, workstations)",
+        "Hardware setup",
         "Proactive system maintenance",
         "Secure enterprise infrastructure",
       ],

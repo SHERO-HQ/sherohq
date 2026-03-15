@@ -78,7 +78,7 @@ export default function AdminProducts() {
  // Filtered products for stock filter (searching is handled by the hook)
  const filteredProducts = useMemo(() => {
  return allProducts.filter((product) => {
- const stock = product.stockQuantity ?? product.quantity;
+ const stock = product.stockQuantity ?? product.quantity ?? 0;
  if (stockFilter === "low") return stock > 0 && stock <= 5;
  if (stockFilter === "out") return stock === 0;
  return true;
@@ -358,27 +358,27 @@ export default function AdminProducts() {
  <span
  className={cn(
  "text-sm font-medium",
- product.quantity === 0
+ (product.quantity ?? 0) === 0
  ? "text-rose-400"
- : product.quantity <= 5
+ : (product.quantity ?? 0) <= 5
  ? "text-amber-400"
  : "text-emerald-400",
  )}
  >
-  in stock
+ {(product.quantity || 0) === 0 ? 'Out of stock' : `${product.quantity || 0} in stock`}
  </span>
  <div className="w-12 h-1 bg-slate-800 rounded-full overflow-hidden">
  <div
  className={cn(
  "h-full rounded-full transition duration-500",
- product.quantity === 0
+ (product.quantity ?? 0) === 0
  ? "bg-rose-500"
- : product.quantity <= 5
+ : (product.quantity ?? 0) <= 5
  ? "bg-amber-500"
  : "bg-emerald-500",
  )}
  style={{
- width: `${Math.min(100, (product.quantity / 20) * 100)}%`,
+ width: `${Math.min(100, ((product.quantity || 0) / 20) * 100)}%`,
  }}
  />
  </div>

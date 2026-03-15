@@ -55,10 +55,17 @@ export const getSubdomain = (): string | null => {
  * @returns {string} - The absolute URL (prod) or relative path (local)
  */
 
+const KNOWN_SUBDOMAINS = ["admin", "shop", "support", "www"];
+
 const getBaseDomain = (hostname: string): string => {
   const parts = hostname.split(".");
+  // If we identify a known subdomain at the start, the rest is the base domain
+  if (KNOWN_SUBDOMAINS.includes(parts[0].toLowerCase())) {
+    return parts.slice(1).join(".");
+  }
+  // Default fallback: if it looks like a standard domain (e.g., sherohq.com), return as is
   if (parts.length === 2) return hostname;
-  if (parts.length >= 3) return parts.slice(1).join(".");
+  // For Vercel/Netlify preview domains (e.g., project-id.vercel.app), treating the whole thing as base
   return hostname;
 };
 
@@ -95,22 +102,11 @@ const getTargetSubdomain = (
     lowercasePath.startsWith("/cart") ||
     lowercasePath.startsWith("/wishlist")
   ) {
-    let internalPath = "/";
+    let internalPath = path;
 
-    if (lowercasePath.startsWith("/shop")) {
-      internalPath = path.replace(/^\/shop/, "") || "/";
-    } else if (lowercasePath.startsWith("/products")) {
-      internalPath = path.replace(/^\/products/, "") || "/";
-    } else if (lowercasePath.startsWith("/checkout")) {
-      internalPath = path; // Maps to shop.sherohq.com/checkout
-    } else if (lowercasePath.startsWith("/cart")) {
-      internalPath = path;
-    } else if (lowercasePath.startsWith("/wishlist")) {
-      internalPath = path;
-    }
-
-    // Ensure it starts with a slash
-    if (!internalPath.startsWith("/")) internalPath = "/" + internalPath;
+    // We do NOT strip the prefix because the app structure keeps them
+    // Example: shop.sherohq.com/shop or shop.sherohq.com/products
+    // This matches the src/app/(public) structure where these are subdirectories
 
     return { subdomain: "shop", path: internalPath };
   }

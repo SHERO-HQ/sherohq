@@ -20,7 +20,7 @@ export interface Product {
   badge?: string;
   inStock: boolean;
   condition?: "New" | "Used" | "Refurbished";
-  quantity: number;
+  quantity?: number;
   stockQuantity?: number;
   description?: string;
   features?: string[];
