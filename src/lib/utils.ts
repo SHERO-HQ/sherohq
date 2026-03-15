@@ -24,8 +24,6 @@ const NAV_LINK_STYLES = {
     "dark:focus:ring-offset-slate-900",
   ],
   active: [
-    "border-b-2",
-    "border-emerald-500",
     "bg-transparent",
     "text-emerald-900 dark:text-emerald-500",
     "font-medium",

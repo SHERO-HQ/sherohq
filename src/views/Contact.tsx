@@ -35,11 +35,10 @@ const Contact = () => {
                   <span className="w-2 h-2 rounded-full bg-emerald-500" />
                   Contact SHERO
                 </span>
-                <h1 className="text-4xl md:text-6xl font-sora font-bold text-slate-900 dark:text-white mb-6 leading-tight">
-                  Speak with a team that ships
-                  <br />
-                  <span className="text-transparent bg-clip-text bg-linear-to-r dark:from-emerald-400 dark:to-cyan-400  from-primary to-cyan-600">
-                    real outcomes
+                <h1 className="text-3xl md:text-5xl font-sora font-bold text-slate-900 dark:text-white mb-6 leading-tight">
+                  Start The{" "}
+                  <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-cyan-600 dark:from-emerald-400 dark:to-cyan-400">
+                    Conversation
                   </span>
                 </h1>
                 <p className="text-base text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed">

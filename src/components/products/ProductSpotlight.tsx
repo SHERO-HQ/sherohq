@@ -77,7 +77,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
           className="w-full"
         >
           {/* Background Ambient Glow */}
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-emerald-500/10 dark:bg-emerald-500/5 blur-[80px] sm:blur-[120px] rounded-full pointer-events-none" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-75 sm:w-150 h-75 sm:h-150 bg-emerald-500/10 dark:bg-emerald-500/5 blur-[80px] sm:blur-[120px] rounded-full pointer-events-none" />
 
           <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col lg:flex-row gap-1 lg:gap-8 items-center lg:items-center">
@@ -91,7 +91,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                   type: "spring",
                   damping: 20,
                 }}
-                className="relative z-10 flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1 w-full lg:w-1/2 mt-8 pt-4 md:pt-auto lg:mt-0 bg-slate-200/90 dark:bg-slate-800/90 md:bg-transparent md:dark:bg-transparent"
+                className="relative z-10 flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1 w-full lg:w-1/2 mt-36 pt-4 md:pt-auto lg:mt-0 bg-slate-200/90 dark:bg-slate-800/90 md:bg-transparent md:dark:bg-transparent"
               >
                 <div className="inline-flex items-center gap-2 px-3 py-1 mb-2 lg:mb-3 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm">
                   <ShoppingBag className="size-3 text-emerald-500" />
@@ -108,12 +108,12 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                   ))}
                 </h2>
 
-                <p className="text-sm lg:text-lg text-slate-600 dark:text-slate-400 mb-6 lg:mb-8 max-w-lg leading-relaxed line-clamp-3 lg:line-clamp-none">
+                <p className="text-sm lg:text-lg text-slate-600 dark:text-slate-400 mb-4 lg:mb-8 max-w-lg leading-relaxed line-clamp-3 lg:line-clamp-none">
                   {currentProduct.description ||
                     "Unlocking the next level of performance with precision engineering and state-of-the-art technology."}
                 </p>
 
-                <div className="flex items-center justify-center lg:justify-start gap-6 mb-8 lg:mb-10 w-full lg:w-auto">
+                <div className="flex items-center justify-center lg:justify-start gap-6 mb-4 lg:mb-10 w-full lg:w-auto">
                   <div className="flex flex-col">
                     <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">
                       Price
@@ -153,7 +153,9 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                 </div>
 
                 <Link
-                  href={getAbsoluteUrl(`/products/${currentProduct.slug || currentProduct.sku || currentProduct.id}`)}
+                  href={getAbsoluteUrl(
+                    `/products/${currentProduct.slug || currentProduct.sku || currentProduct.id}`,
+                  )}
                   className="group w-full sm:w-auto flex items-center justify-center gap-4 px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded font-black uppercase tracking-widest text-[10px] hover:bg-emerald-600 dark:hover:bg-emerald-500 dark:hover:text-white transition shadow-lg shadow-black/20"
                 >
                   See Details
@@ -176,7 +178,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                 }}
                 className="relative flex items-center justify-center order-1 lg:order-2 w-full lg:w-1/2 mb-4 lg:mb-0"
               >
-                <div className="relative w-full h-[260px] sm:h-[340px] lg:h-[420px] group/image flex items-center justify-center p-6 sm:p-10">
+                <div className="relative w-full h-65 sm:h-85 lg:h-105 group/image flex items-center justify-center p-6 sm:p-10">
                   {/* Decorative Elements */}
                   <div className="absolute inset-0 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-2xl sm:blur-3xl group-hover/image:scale-110 transition-transform duration-1000" />
 

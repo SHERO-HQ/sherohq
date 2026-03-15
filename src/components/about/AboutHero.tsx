@@ -5,8 +5,6 @@ import {
   SmartphoneCharging,
   Lightbulb,
   Target,
-  Compass,
-  TrendingUp,
   Star,
 } from "lucide-react";
 import { useRef, useState, useEffect } from "react";

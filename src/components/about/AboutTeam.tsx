@@ -1,7 +1,7 @@
 "use client";
 import { useState, type ElementType } from "react";
 import { motion } from "motion/react";
-import { Github, Linkedin, Users } from "lucide-react";
+import { ArrowRight, Github, Linkedin, Users } from "lucide-react";
 import { useTeam } from "@/hooks/queries/useTeam";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/utils";
@@ -192,7 +192,7 @@ const AboutTeam = () => {
           </div>
           <div className="pt-2">
             <button className="cursor-pointer text-emerald-600 dark:text-emerald-400 font-semibold hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors flex items-center gap-2 mx-auto uppercase tracking-wider text-sm">
-              Join the team <span aria-hidden="true">→</span>
+              Join the team <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>

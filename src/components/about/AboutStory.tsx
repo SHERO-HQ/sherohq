@@ -107,7 +107,7 @@ const AboutStory = () => {
               <div className="w-16 h-16 bg-emerald-500 rounded flex items-center justify-center mb-8 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
                 <Target className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl lg:text-3xl font-black font-sora text-slate-900 dark:text-white mb-4 uppercase tracking-tighter">
+              <h3 className="text-xl lg:text-3xl font-black font-sora text-slate-900 dark:text-white mb-4 tracking-tighter">
                 Our Mission
               </h3>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-base lg:text-lg font-light">
@@ -124,7 +124,7 @@ const AboutStory = () => {
               <div className="w-16 h-16 bg-blue-600 rounded flex items-center justify-center mb-8 shadow-lg shadow-blue-600/20 group-hover:scale-110 transition-transform">
                 <Globe className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-2xl lg:text-3xl font-black font-sora text-slate-900 dark:text-white mb-4 uppercase tracking-tighter">
+              <h3 className="text-xl lg:text-3xl font-black font-sora text-slate-900 dark:text-white mb-4 tracking-tighter">
                 Our Vision
               </h3>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-base lg:text-lg font-light">

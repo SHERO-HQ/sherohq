@@ -1,10 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ToggleTheme } from "./toggle-theme";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useIsMounted } from "@/hooks/useIsMounted";
+import { useReducedMotion} from "@/hooks/useReducedMotion";
+import { usePathname } from "next/navigation";
 import { LogOut, ShoppingCart, User, Heart } from "lucide-react";
 import NavLink from "@/components/common/NavLink";
 
@@ -18,10 +20,21 @@ import { getAbsoluteUrl } from "@/utils/subdomain";
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [activeNavIndex, setActiveNavIndex] = useState<number | null>(null);
+  const [indicatorDims, setIndicatorDims] = useState({ width: 0, x: 0 });
   const { totalQuantity, setIsCartOpen } = useCart();
   const { wishlist, setIsWishlistOpen } = useWishlist();
   const { user, isAuthenticated, logout } = useAuth();
+  const pathname = usePathname();
   const mounted = useIsMounted();
+  const prefersReducedMotion = useReducedMotion();
+  const userMenuRef = useRef<HTMLDivElement>(null);
+  const userMenuButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
+  const previousIsOpenRef = useRef(false);
+  const navMenuRef = useRef<HTMLUListElement>(null);
   const homeHref = getAbsoluteUrl("/");
 
   // Animation variants
@@ -55,16 +68,100 @@ const Nav = () => {
     }),
   };
 
-  // Lock body scroll when menu open
+  // Lock body scroll when mobile menu is open (with scrollbar compensation)
   useEffect(() => {
     if (isOpen) {
+      const scrollBarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = "hidden";
-      document.body.style.paddingRight = "0.5rem";
+      document.body.style.paddingRight =
+        scrollBarWidth > 0 ? `${scrollBarWidth}px` : "";
     } else {
       document.body.style.overflow = "unset";
       document.body.style.paddingRight = "";
     }
+
+    return () => {
+      document.body.style.overflow = "unset";
+      document.body.style.paddingRight = "";
+    };
   }, [isOpen]);
+
+  // Keep keyboard focus within navigation flow on mobile menu open/close.
+  useEffect(() => {
+    if (isOpen) {
+      const focusables = mobileMenuRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      focusables?.[0]?.focus();
+    } else if (previousIsOpenRef.current) {
+      mobileMenuButtonRef.current?.focus();
+    }
+
+    previousIsOpenRef.current = isOpen;
+  }, [isOpen]);
+
+  // Global keyboard support for dismissing open nav layers
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        setIsUserMenuOpen(false);
+      }
+
+      if (isOpen && event.key === "Tab" && mobileMenuRef.current) {
+        const focusables = Array.from(
+          mobileMenuRef.current.querySelectorAll<HTMLElement>(
+            'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+          ),
+        ).filter((el) => !el.hasAttribute("disabled"));
+
+        if (!focusables.length) return;
+
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        const active = document.activeElement as HTMLElement | null;
+
+        if (!event.shiftKey && active === last) {
+          event.preventDefault();
+          first.focus();
+        }
+
+        if (event.shiftKey && active === first) {
+          event.preventDefault();
+          last.focus();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [isOpen]);
+
+  // Close desktop user menu when clicking outside
+  useEffect(() => {
+    const onPointerDown = (event: MouseEvent) => {
+      if (!isUserMenuOpen) return;
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target as Node)
+      ) {
+        setIsUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", onPointerDown);
+    return () => document.removeEventListener("mousedown", onPointerDown);
+  }, [isUserMenuOpen]);
+
+  // Move focus into desktop user menu when it opens.
+  useEffect(() => {
+    if (!isUserMenuOpen || !userMenuRef.current) return;
+    const focusables = userMenuRef.current.querySelectorAll<HTMLElement>(
+      '[role="menuitem"], a[href], button:not([disabled])',
+    );
+    focusables[0]?.focus();
+  }, [isUserMenuOpen]);
 
   // Scroll effect for nav background
   useEffect(() => {
@@ -75,18 +172,56 @@ const Nav = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Track active nav link index for indicator animation
+  useEffect(() => {
+    if (mounted) {
+      const navLinks = ["Shop", "Solutions", "Consultation", "About Us"];
+      let found = -1;
+
+      navLinks.forEach((item, index) => {
+        const linkPath = `/${item.toLowerCase().replace(" ", "-")}`;
+        if (pathname === linkPath || pathname === getAbsoluteUrl(linkPath)) {
+          found = index;
+        }
+      });
+
+      setActiveNavIndex(found);
+    }
+  }, [pathname, mounted]);
+
+  // Measure indicator dimensions for active link
+  useEffect(() => {
+    if (activeNavIndex !== null && activeNavIndex >= 0 && navMenuRef.current) {
+      const children = Array.from(navMenuRef.current.children) as HTMLElement[];
+      const activeElement = children[activeNavIndex];
+
+      if (activeElement) {
+        const width = activeElement.clientWidth;
+        const x = children
+          .slice(0, activeNavIndex)
+          .reduce((sum, el) => sum + el.clientWidth + 12, 0);
+        setIndicatorDims({ width, x });
+      }
+    } else {
+      setIndicatorDims({ width: 0, x: 0 });
+    }
+  }, [activeNavIndex]);
+
   return (
     <>
       <nav
-        className={`fixed top-0 w-full z-50 transition duration-300
-          ${isOpen || scrolled ? "bg-background/80 backdrop-blur-sm shadow-sm border-b border-slate-200 dark:border-slate-800" : "bg-transparent"}`}
+        className={`fixed font-sora top-0 w-full z-50 transition duration-300 ${isOpen || scrolled ? "bg-background/80 backdrop-blur-sm shadow-sm border-b border-slate-200 dark:border-slate-800" : "bg-transparent"}`}
         aria-label="main navigation"
         id="nav-menu"
       >
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 lg:h-20">
             {/* Logo */}
-            <NavLink href={homeHref} className="flex items-center z-50">
+            <NavLink
+              href={homeHref}
+              className="flex items-center z-50"
+              onClick={() => setIsOpen(false)}
+            >
               {/* Mobile & Desktop Logos */}
               <div className="md:hidden">
                 <img
@@ -129,19 +264,39 @@ const Nav = () => {
             <div className="flex items-center gap-2 lg:space-x-2 ml-auto">
               {/* Desktop Menu */}
               <ul
-                className="hidden lg:flex items-center gap-3"
+                ref={navMenuRef}
+                className="hidden lg:flex items-center gap-3 relative"
                 suppressHydrationWarning
               >
                 {navLinks.map((item) => (
                   <li key={item} suppressHydrationWarning>
                     <NavLink
                       className={({ isActive }) => navLinkClass(isActive)}
-                      href={getAbsoluteUrl(`/${item.toLowerCase().replace(" ", "-")}`)}
+                      href={getAbsoluteUrl(
+                        `/${item.toLowerCase().replace(" ", "-")}`,
+                      )}
                     >
                       {item}
                     </NavLink>
                   </li>
                 ))}
+
+                {/* Active Link Indicator */}
+                {activeNavIndex !== null && activeNavIndex >= 0 && (
+                  <motion.div
+                    className="absolute -bottom-0.5 h-0.5 bg-linear-to-r from-emerald-500 to-emerald-600"
+                    initial={false}
+                    animate={{
+                      width: indicatorDims.width,
+                      x: indicatorDims.x,
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 30,
+                    }}
+                  />
+                )}
               </ul>
 
               {/* Global Actions */}
@@ -152,7 +307,7 @@ const Nav = () => {
                 {/* Wishlist Button */}
                 <button
                   onClick={() => setIsWishlistOpen(true)}
-                  className="cursor-pointer relative p-1 text-slate-700 dark:text-slate-300 hover:text-red-500 dark:hover:text-red-400 transition-colors rounded border-none"
+                  className="cursor-pointer relative p-1 text-slate-700 dark:text-slate-300 hover:text-red-500 dark:hover:text-red-400 transition-all hover:scale-110 rounded border-none"
                   aria-label="Open Wishlist"
                 >
                   <Heart
@@ -161,7 +316,7 @@ const Nav = () => {
                   {mounted && wishlist.length > 0 && (
                     <Badge
                       variant="destructive"
-                      className="absolute -top-2 -right-2 h-5 min-w-5 px-1 flex items-center justify-center rounded-full text-[10px] ring-2 ring-background animate-in zoom-in"
+                      className={`absolute -top-2 -right-2 h-5 min-w-5 px-1 flex items-center justify-center rounded-full text-[10px] ring-2 ring-background ${!prefersReducedMotion ? "animate-in zoom-in" : ""}`}
                     >
                       {wishlist.length}
                     </Badge>
@@ -171,14 +326,14 @@ const Nav = () => {
                 {/* Cart Button */}
                 <button
                   onClick={() => setIsCartOpen(true)}
-                  className="cursor-pointer relative p-1 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors rounded border-none"
+                  className="cursor-pointer relative p-1 text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all hover:scale-110 rounded border-none"
                   aria-label="Open Cart"
                 >
                   <ShoppingCart className="w-6 h-6" />
                   {mounted && totalQuantity > 0 && (
                     <Badge
                       variant="emerald"
-                      className="absolute -top-2 -right-2 h-5 min-w-5 px-1 flex items-center justify-center rounded-full text-[10px] ring-2 ring-background animate-in zoom-in"
+                      className={`absolute -top-2 -right-2 h-5 min-w-5 px-1 flex items-center justify-center rounded-full text-[10px] ring-2 ring-background ${!prefersReducedMotion ? "animate-in zoom-in" : ""}`}
                     >
                       {totalQuantity}
                     </Badge>
@@ -186,9 +341,23 @@ const Nav = () => {
                 </button>
 
                 {/* User Dropdown */}
-                <div className="hidden lg:block relative group">
+                <div className="hidden lg:block relative" ref={userMenuRef}>
                   {mounted && isAuthenticated ? (
-                    <button className="cursor-pointer p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                    <button
+                      ref={userMenuButtonRef}
+                      type="button"
+                      onKeyDown={(event) => {
+                        if (event.key === "ArrowDown") {
+                          event.preventDefault();
+                          setIsUserMenuOpen(true);
+                        }
+                      }}
+                      onClick={() => setIsUserMenuOpen((prev) => !prev)}
+                      className="cursor-pointer p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800 transition-all hover:scale-110"
+                      aria-haspopup="menu"
+                      aria-expanded={isUserMenuOpen}
+                      aria-controls="desktop-user-menu"
+                    >
                       <span className="sr-only">User Menu</span>
                       <div className="w-8 h-8 rounded  font-sora font-bold bg-linear-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-sm text-white shrink-0 shadow">
                         {user?.name?.charAt(0)}
@@ -205,8 +374,67 @@ const Nav = () => {
                   )}
 
                   {/* Dropdown Menu (Only when authenticated) */}
-                  {mounted && isAuthenticated && (
-                    <div className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded shadow-lg border border-slate-200 dark:border-slate-800 py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-200 z-50">
+                  {mounted && isAuthenticated && isUserMenuOpen && (
+                    <div
+                      id="desktop-user-menu"
+                      role="menu"
+                      aria-label="User menu"
+                      onKeyDown={(event) => {
+                        const menu = userMenuRef.current;
+                        if (!menu) return;
+
+                        const items = Array.from(
+                          menu.querySelectorAll<HTMLElement>(
+                            '[role="menuitem"], a[href], button:not([disabled])',
+                          ),
+                        );
+
+                        if (!items.length) return;
+
+                        const currentIndex = items.indexOf(
+                          document.activeElement as HTMLElement,
+                        );
+
+                        if (event.key === "Escape") {
+                          event.preventDefault();
+                          setIsUserMenuOpen(false);
+                          userMenuButtonRef.current?.focus();
+                          return;
+                        }
+
+                        if (event.key === "ArrowDown") {
+                          event.preventDefault();
+                          const nextIndex =
+                            currentIndex < items.length - 1
+                              ? currentIndex + 1
+                              : 0;
+                          items[nextIndex]?.focus();
+                          return;
+                        }
+
+                        if (event.key === "ArrowUp") {
+                          event.preventDefault();
+                          const prevIndex =
+                            currentIndex > 0
+                              ? currentIndex - 1
+                              : items.length - 1;
+                          items[prevIndex]?.focus();
+                          return;
+                        }
+
+                        if (event.key === "Home") {
+                          event.preventDefault();
+                          items[0]?.focus();
+                          return;
+                        }
+
+                        if (event.key === "End") {
+                          event.preventDefault();
+                          items[items.length - 1]?.focus();
+                        }
+                      }}
+                      className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded shadow-lg border border-slate-200 dark:border-slate-800 py-1 transition duration-200 z-50"
+                    >
                       <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
                         <p className="text-sm font-bold font-sora text-slate-900 dark:text-white line-clamp-1">
                           {user?.name}
@@ -217,12 +445,19 @@ const Nav = () => {
                       </div>
                       <NavLink
                         href={getAbsoluteUrl("/profile")}
+                        role="menuitem"
+                        onClick={() => setIsUserMenuOpen(false)}
                         className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
                       >
                         <User className="w-4 h-4" /> Profile & Orders
                       </NavLink>
                       <button
-                        onClick={() => logout()}
+                        type="button"
+                        role="menuitem"
+                        onClick={() => {
+                          setIsUserMenuOpen(false);
+                          logout();
+                        }}
                         className="w-full text-left flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
                       >
                         <LogOut className="w-4 h-4" />
@@ -239,9 +474,8 @@ const Nav = () => {
               <div className="flex items-center lg:hidden">
                 {/* Hamburger Button */}
                 <button
-                  className={`relative w-9 h-9 rounded flex items-center justify-center
-                           transition-colors duration-200 cursor-pointer shadow
-                           ${
+                  ref={mobileMenuButtonRef}
+                  className={`relative w-9 h-9 rounded flex items-center justify-center transition-all duration-200 cursor-pointer shadow hover:scale-105 ${
                              isOpen
                                ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border border-red-400"
                                : "bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-300 border border-slate-200 dark:border-slate-800"
@@ -293,14 +527,12 @@ const Nav = () => {
 
               {/* Menu Panel */}
               <motion.div
+                ref={mobileMenuRef}
                 variants={menuVars}
                 initial="initial"
                 animate="animate"
                 exit="exit"
-                className="fixed top-16 left-0 w-full h-[calc(100vh-4rem)]
-                         bg-white dark:bg-slate-900
-                         border-b border-t border-slate-200 dark:border-slate-800
-                         shadow-lg overflow-y-auto origin-top lg:hidden z-50 p-4"
+                className="fixed top-16 left-0 w-full h-[calc(100vh-4rem)] bg-white dark:bg-slate-900 border-b border-t border-slate-200 dark:border-slate-800 shadow-lg overflow-y-auto origin-top lg:hidden z-50 p-4"
                 id="mobile-nav-menu"
               >
                 {/* Nav Links */}
@@ -320,7 +552,9 @@ const Nav = () => {
                         className={({ isActive }) =>
                           navLinkClassVariant(isActive, "mobile")
                         }
-                        href={getAbsoluteUrl(`/${item.toLowerCase().replace(" ", "-")}`)}
+                        href={getAbsoluteUrl(
+                          `/${item.toLowerCase().replace(" ", "-")}`,
+                        )}
                         onClick={() => setIsOpen(false)}
                       >
                         {item}

@@ -42,7 +42,7 @@ const AboutValues = () => {
 
       <div className="container px-4 md:px-6 mx-auto w-full md:max-w-10/12 relative z-10">
         <div className="text-center mb-16">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/70 dark:border-emerald-800/50 rounded uppercase transition-colors duration-300">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/70 dark:border-emerald-800/50 rounded transition-colors duration-300">
             <Lightbulb className="w-4 h-4" />
             Core Values
           </span>
@@ -81,7 +81,7 @@ const AboutValues = () => {
               >
                 <item.icon className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-black font-sora text-slate-900 dark:text-white mb-3 uppercase tracking-tighter group-hover:text-emerald-500 transition-colors">
+              <h3 className="text-xl font-black font-sora text-slate-900 dark:text-white mb-3 tracking-tighter group-hover:text-emerald-500 transition-colors">
                 {item.title}
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light group-hover:text-slate-800 dark:group-hover:text-slate-300 transition-colors line-clamp-3">

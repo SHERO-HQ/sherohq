@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -33,18 +33,19 @@ const NavLink = ({
 }: NavLinkProps) => {
   const pathname = usePathname();
   const hrefStr = typeof href === "string" ? href : (href.pathname ?? "");
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // Hydration-safe mounted flag without setState-in-effect.
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   // Only compute isActive after hydration to prevent SSR mismatch
   const isActive = useMemo(() => {
     if (!mounted) return false;
 
     let targetPath = hrefStr;
-    
+
     // If it's an absolute URL, check if it points to the current domain
     if (hrefStr.startsWith("http")) {
       try {
@@ -62,14 +63,35 @@ const NavLink = ({
     if (end) {
       return pathname === targetPath;
     }
-    
-    return pathname.startsWith(targetPath) && (targetPath !== "/" || pathname === "/");
+
+    return (
+      pathname.startsWith(targetPath) &&
+      (targetPath !== "/" || pathname === "/")
+    );
   }, [mounted, pathname, hrefStr, end]);
 
   const finalClassName =
     typeof className === "function"
       ? className({ isActive })
       : cn(className, isActive && activeClassName);
+
+  const isCrossOrigin = useMemo(() => {
+    if (!mounted || !hrefStr.startsWith("http")) return false;
+    try {
+      const url = new URL(hrefStr);
+      return url.origin !== window.location.origin;
+    } catch {
+      return false;
+    }
+  }, [mounted, hrefStr]);
+
+  if (isCrossOrigin) {
+    return (
+      <a href={hrefStr} className={finalClassName} {...props}>
+        {typeof children === "function" ? children({ isActive }) : children}
+      </a>
+    );
+  }
 
   return (
     <Link href={href} className={finalClassName} {...props}>

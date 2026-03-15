@@ -1,5 +1,6 @@
 "use client";
-import Link from "next/link";
+import NavLink from "@/components/common/NavLink";
+import { getAbsoluteUrl } from "@/utils/subdomain";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { fadeUp, fadeUpAccessible } from "@/components/motion/heroMotion";
 import { useRef, useEffect } from "react";
@@ -165,21 +166,21 @@ const LandingHero: React.FC = () => {
                 size="lg"
                 className="w-full sm:w-auto h-11 px-8 text-sm shadow-md shadow-emerald-500/20 group"
               >
-                <Link href="/shop">
+                <NavLink href={getAbsoluteUrl("/shop")}>
                   <span className="font-sora">Shop Products</span>
                   <ShoppingCart className="w-5 h-5" />
-                </Link>
+                </NavLink>
               </Button>
 
-              <Link
-                href="/solutions"
-                className="group flex items-center justify-center gap-2 font-sora text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-primary rounded px-2 py-2 h-11 w-full sm:w-auto transition-colors"
+              <NavLink
+                href={getAbsoluteUrl("/solutions")}
+                className="group flex items-center justify-center gap-2 font-sora text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-primary! rounded px-4 py-2 h-11 w-full sm:w-auto transition-colors border-2 border-slate-200 dark:border-slate-800 hover:border-primary!"
                 role="button"
                 aria-label="Explore solutions"
               >
                 <span>Explore Solutions</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </Link>
+              </NavLink>
             </motion.div>
 
             {/* <motion.div

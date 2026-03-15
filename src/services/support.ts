@@ -177,7 +177,6 @@ export async function updateInquiryStatus(
   );
   return handleResponse(response);
 }
-
 export async function deleteInquiry(
   id: string,
 ): Promise<{ success: boolean; message: string }> {
