@@ -146,11 +146,12 @@ export const getAbsoluteUrl = (path: string): string => {
   }
 
   const baseDomain = getBaseDomain(hostname);
+  const port = globalThis.location.port ? `:${globalThis.location.port}` : "";
   const { subdomain, path: targetPath } = getTargetSubdomain(path);
 
   if (subdomain === "www") {
-    return `${protocol}//${baseDomain}${targetPath}`;
+    return `${protocol}//${baseDomain}${port}${targetPath}`;
   }
 
-  return `${protocol}//${subdomain}.${baseDomain}${targetPath}`;
+  return `${protocol}//${subdomain}.${baseDomain}${port}${targetPath}`;
 };
