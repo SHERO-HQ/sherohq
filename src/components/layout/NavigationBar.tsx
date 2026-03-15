@@ -87,19 +87,26 @@ const Nav = () => {
  };
  }, [isOpen]);
 
- // Keep keyboard focus within navigation flow on mobile menu open/close.
- useEffect(() => {
- if (isOpen) {
- const focusables = mobileMenuRef.current?.querySelectorAll<HTMLElement>(
- 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
- );
- focusables?.[0]?.focus();
- } else if (previousIsOpenRef.current) {
- mobileMenuButtonRef.current?.focus();
- }
+	// Keep keyboard focus within navigation flow on mobile menu open/close.
+	useEffect(() => {
+		if (isOpen) {
+			const focusables = mobileMenuRef.current?.querySelectorAll<HTMLElement>(
+				'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+			);
+			
+			// Try to find the first navigation link to avoid auto-focusing the search bar input on mobile
+			const firstLink = mobileMenuRef.current?.querySelector<HTMLElement>('a[href]');
+			if (firstLink) {
+				firstLink.focus();
+			} else {
+				focusables?.[0]?.focus();
+			}
+		} else if (previousIsOpenRef.current) {
+			mobileMenuButtonRef.current?.focus();
+		}
 
- previousIsOpenRef.current = isOpen;
- }, [isOpen]);
+		previousIsOpenRef.current = isOpen;
+	}, [isOpen]);
 
  // Global keyboard support for dismissing open nav layers
  useEffect(() => {
