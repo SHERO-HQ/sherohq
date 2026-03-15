@@ -200,9 +200,12 @@ const Nav = () => {
 				}
 			});
 
-			setActiveNavIndex(found);
+			// Avoid calling setState synchronously in effect body
+			if (activeNavIndex !== found) {
+				queueMicrotask(() => setActiveNavIndex(found));
+			}
 		}
-	}, [pathname, mounted]);
+	}, [pathname, mounted, activeNavIndex]);
 
  // Measure indicator dimensions for active link
  useEffect(() => {
