@@ -21,7 +21,13 @@ const getApiBase = () => {
     return envUrl;
   }
 
-  // Same-origin /api proxy (Vercel/Netlify rewrites)
+  // Server-side (SSR) requires absolute URLs
+  if (typeof window === "undefined") {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    return `${siteUrl.replace(/\/$/, "")}/api`;
+  }
+
+  // Client-side can use relative same-origin /api proxy (Vercel/Netlify rewrites)
   return "/api";
 };
 

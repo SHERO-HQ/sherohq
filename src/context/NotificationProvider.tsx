@@ -5,69 +5,69 @@ import { type Notification, type NotificationType } from "@/types/notification";
 import { NotificationContext } from "./NotificationContextType";
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+ const [notifications, setNotifications] = useState<Notification[]>([]);
 
-  // Calculate unread count
-  const unreadCount = notifications.filter((n) => !n.read).length;
+ // Calculate unread count
+ const unreadCount = notifications.filter((n) => !n.read).length;
 
-  const addNotification = useCallback(
-    (
-      title: string,
-      message: string,
-      type: NotificationType = "info",
-      link?: string,
-    ) => {
-      const newNotification: Notification = {
-        id: uuidv4(),
-        title,
-        message,
-        type,
-        read: false,
-        createdAt: new Date().toISOString(),
-        link,
-      };
+ const addNotification = useCallback(
+ (
+ title: string,
+ message: string,
+ type: NotificationType = "info",
+ link?: string,
+ ) => {
+ const newNotification: Notification = {
+ id: uuidv4(),
+ title,
+ message,
+ type,
+ read: false,
+ createdAt: new Date().toISOString(),
+ link,
+ };
 
-      setNotifications((prev) => [newNotification, ...prev]);
-    },
-    [],
-  );
+ setNotifications((prev) => [newNotification, ...prev]);
+ },
+ [],
+ );
 
-  const markAsRead = useCallback((id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
-    );
-  }, []);
+ const markAsRead = useCallback((id: string) => {
+ setNotifications((prev) =>
+ prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
+ );
+ }, []);
 
-  const markAllAsRead = useCallback(() => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-  }, []);
+ const markAllAsRead = useCallback(() => {
+ setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+ }, []);
 
-  const clearAll = useCallback(() => {
-    setNotifications([]);
-  }, []);
+ const clearAll = useCallback(() => {
+ setNotifications([]);
+ }, []);
 
-  const contextValue = useMemo(
-    () => ({
-      notifications,
-      unreadCount,
-      addNotification,
-      markAsRead,
-      markAllAsRead,
-      clearAll,
-    }),
-    [
-      notifications,
-      unreadCount,
-      addNotification,
-      markAsRead,
-      markAllAsRead,
-      clearAll,
-    ],
-  );
+ const contextValue = useMemo(
+ () => ({
+ notifications,
+ unreadCount,
+ addNotification,
+ markAsRead,
+ markAllAsRead,
+ clearAll,
+ }),
+ [
+ notifications,
+ unreadCount,
+ addNotification,
+ markAsRead,
+ markAllAsRead,
+ clearAll,
+ ],
+ );
 
-  return (
-    <NotificationContext.Provider value={contextValue}>
-      {children}
-    </NotificationContext.Provider>
-  );
+ return (
+ <NotificationContext.Provider value={contextValue}>
+ {children}
+ </NotificationContext.Provider>
+ );
 }

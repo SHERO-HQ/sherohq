@@ -1,13 +1,13 @@
 "use client";
 import { easeOut, motion } from "motion/react";
 import {
-  Smartphone,
-  Cloud,
-  Workflow,
-  Settings,
-  CheckCircle,
-  Briefcase,
-  ArrowRight,
+ Smartphone,
+ Cloud,
+ Workflow,
+ Settings,
+ CheckCircle,
+ Briefcase,
+ ArrowRight,
 } from "lucide-react";
 
 interface Service {
@@ -16,6 +16,7 @@ interface Service {
   description: string;
   features: string[];
   gradient: string;
+  textClass: string;
 }
 
 const ServicesGrid = () => {
@@ -32,6 +33,7 @@ const ServicesGrid = () => {
         "Cross-platform development",
       ],
       gradient: "from-blue-500 to-blue-600",
+      textClass: "text-blue-600 dark:text-blue-400",
     },
     {
       icon: <Cloud className="w-8 h-8" />,
@@ -45,6 +47,7 @@ const ServicesGrid = () => {
         "Analytics & reporting dashboards",
       ],
       gradient: "from-emerald-500 to-emerald-600",
+      textClass: "text-emerald-600 dark:text-emerald-400",
     },
     {
       icon: <Settings className="w-8 h-8" />,
@@ -58,6 +61,7 @@ const ServicesGrid = () => {
         "Secure enterprise infrastructure",
       ],
       gradient: "from-indigo-500 to-indigo-600",
+      textClass: "text-indigo-600 dark:text-indigo-400",
     },
     {
       icon: <Workflow className="w-8 h-8" />,
@@ -71,6 +75,7 @@ const ServicesGrid = () => {
         "Microservices architecture",
       ],
       gradient: "from-purple-500 to-purple-600",
+      textClass: "text-purple-600 dark:text-purple-400",
     },
   ];
 
@@ -98,7 +103,7 @@ const ServicesGrid = () => {
   };
 
   return (
-    <section id="services" className="w-full py-20 bg-white dark:bg-slate-950">
+    <section id="services" className="w-full pb-16 bg-white dark:bg-slate-950">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
@@ -111,7 +116,7 @@ const ServicesGrid = () => {
             <Briefcase className="size-5" />
             Our Services
           </span>
-          <h2 className="text-4xl md:text-5xl font-sora font-bold text-slate-900 dark:text-slate-100 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-slate-100 mb-4">
             What We Do
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
@@ -134,29 +139,29 @@ const ServicesGrid = () => {
               variants={cardVariants}
               whileHover={{ y: -8 }}
               className="group relative bg-white dark:bg-slate-900 rounded p-8
-                       border-2 border-slate-200 dark:border-slate-800
-                       hover:border-transparent
-                       shadow-lg hover:shadow-lg
-                       transition duration-300 overflow-hidden"
+              border-2 border-slate-200 dark:border-slate-800
+              hover:border-transparent
+              shadow-lg hover:shadow-lg
+              transition duration-300 overflow-hidden"
             >
               {/* Gradient border on hover */}
               <div
                 className={`absolute inset-0 bg-linear-to-br ${service.gradient} 
-                            opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10`}
+                opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10`}
               />
               <div className="absolute inset-0.5 bg-white dark:bg-slate-900 rounded -z-10" />
 
               {/* Icon */}
               <div
                 className={`inline-flex items-center justify-center w-16 h-16 rounded mb-6
-                            bg-linear-to-br ${service.gradient} text-white
-                            group-hover:scale-110 transition-transform duration-300`}
+                bg-linear-to-br ${service.gradient} text-white
+                group-hover:scale-110 transition-transform duration-300`}
               >
                 {service.icon}
               </div>
 
               {/* Title */}
-              <h3 className="text-2xl font-sora font-bold text-slate-900 dark:text-slate-100 mb-3">
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3">
                 {service.title}
               </h3>
 
@@ -170,7 +175,7 @@ const ServicesGrid = () => {
                 {service.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-3">
                     <CheckCircle
-                      className={`w-5 h-5 mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400`}
+                      className={`w-5 h-5 mt-0.5 shrink-0 ${service.textClass}`}
                     />
                     <span className="text-sm text-slate-700 dark:text-slate-300">
                       {feature}
@@ -182,8 +187,8 @@ const ServicesGrid = () => {
               {/* Learn More Link */}
               <a
                 href="/consultation"
-                className="inline-flex items-center gap-2 mt-6 text-emerald-600 dark:text-emerald-400 font-semibold
-                         hover:gap-3 transition group/link"
+                className={`inline-flex items-center gap-2 mt-6 ${service.textClass} font-semibold
+                hover:gap-3 transition group/link`}
               >
                 <span>Get Started</span>
                 <ArrowRight className="w-4 h-4" />

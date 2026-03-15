@@ -7,16 +7,16 @@ import AboutTestimonials from "@/components/about/AboutTestimonials";
 import AboutStory from "@/components/about/AboutStory";
 
 const About = () => {
-  return (
-    <>
-      {/* <AboutHero /> */}
-      <AboutStory />
-      <LandingStats />
-      <AboutValues />
-      <AboutTestimonials />
-      <AboutTeam />
-    </>
-  );
+ return (
+ <>
+ {/* <AboutHero /> */}
+ <AboutStory />
+ <LandingStats />
+ <AboutValues />
+ <AboutTestimonials />
+ <AboutTeam />
+ </>
+ );
 };
 
 export default About;

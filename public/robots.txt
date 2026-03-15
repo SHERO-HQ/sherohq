@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Exclude admin and account routes from search indexing
+Disallow: /admin/
+Disallow: /profile/
+Disallow: /login/
+Disallow: /signup/
+
+# Sitemaps
+Sitemap: https://sherohq.com/sitemap.xml

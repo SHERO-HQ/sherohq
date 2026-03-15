@@ -2,11 +2,11 @@
 import CheckoutFlow from "@/components/checkout/CheckoutFlow";
 
 const Checkout = () => {
-  return (
-    <>
-      <CheckoutFlow />
-    </>
-  );
+ return (
+ <>
+ <CheckoutFlow />
+ </>
+ );
 };
 
 export default Checkout;

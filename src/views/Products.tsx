@@ -2,11 +2,11 @@
 import ShopView from "@/components/products/ShopPage";
 
 const Products = () => {
-  return (
-    <>
-      <ShopView />
-    </>
-  );
+ return (
+ <>
+ <ShopView />
+ </>
+ );
 };
 
 export default Products;

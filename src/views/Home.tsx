@@ -7,16 +7,16 @@ import LandingProducts from "@/components/landing/LandingProducts";
 import LandingFinalCTA from "@/components/landing/LandingFinalCTA";
 
 const Home = () => {
-  return (
-    <>
-      <LandingHero />
-      <LandingValueProps />
-      <LandingPartners />
-      <LandingPillars />
-      <LandingProducts />
-      <LandingFinalCTA />
-    </>
-  );
+ return (
+ <>
+ <LandingHero />
+ <LandingValueProps />
+ <LandingPartners />
+ <LandingPillars />
+ <LandingProducts />
+ <LandingFinalCTA />
+ </>
+ );
 };
 
 export default Home;

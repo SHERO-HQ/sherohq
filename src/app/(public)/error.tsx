@@ -3,11 +3,11 @@
 import ErrorPage from "@/components/ui/ErrorPage";
 
 export default function PublicError({
-  error,
-  reset,
+ error,
+ reset,
 }: {
-  error: Error & { digest?: string };
-  reset: () => void;
+ error: Error & { digest?: string };
+ reset: () => void;
 }) {
-  return <ErrorPage error={error} reset={reset} />;
+ return <ErrorPage error={error} reset={reset} />;
 }

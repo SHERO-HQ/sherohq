@@ -1,10 +1,7 @@
 "use client";
 
-/**
- * global-error.tsx — catches errors thrown in the root layout itself.
- * Must include its own <html> and <body> since the root layout is bypassed.
- */
-import { useEffect } from "react";
+import { AlertTriangle, Home, RefreshCw } from "lucide-react";
+import { motion } from "motion/react";
 
 export default function GlobalError({
   error,
@@ -13,47 +10,55 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  useEffect(() => {
-    // Log to an error reporting service in production
-    if (process.env.NODE_ENV === "production") {
-      // e.g. Sentry.captureException(error);
-    }
-  }, [error]);
-
   return (
     <html lang="en">
-      <body className="min-h-screen flex items-center justify-center bg-slate-950 text-white p-8">
-        <div className="text-center max-w-md">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-900/30 mb-6">
-            <svg
-              className="w-8 h-8 text-red-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
-              />
-            </svg>
-          </div>
-          <h1 className="text-2xl font-bold mb-2">Something went wrong</h1>
-          <p className="text-slate-400 mb-6">
-            A critical error occurred. Our team has been notified.
-          </p>
-          {process.env.NODE_ENV === "development" && (
-            <pre className="mb-6 p-3 bg-slate-900 rounded text-xs text-red-400 text-left overflow-auto">
-              {error.message}
-            </pre>
-          )}
-          <button
-            onClick={reset}
-            className="px-6 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded transition-colors"
+      <body className="antialiased">
+        <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-slate-950 text-white">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="max-w-md w-full text-center space-y-8"
           >
-            Try Again
-          </button>
+            <div className="relative inline-flex mb-4">
+              <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full" />
+              <div className="relative w-24 h-24 bg-linear-to-br from-slate-800 to-slate-900 rounded-3xl border border-white/10 flex items-center justify-center text-emerald-500 shadow-2xl">
+                <AlertTriangle className="size-12" />
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <h1 className="text-4xl font-black uppercase tracking-tighter">
+                Critical Failure
+              </h1>
+              <p className="text-slate-400">
+                A top-level system error has occurred. We've been notified and
+                are working on a fix.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-4">
+              <button
+                onClick={() => reset()}
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-emerald-600 text-white rounded font-bold transition hover:bg-emerald-500 active:scale-[0.98]"
+              >
+                <RefreshCw className="size-5" />
+                Reset Application
+              </button>
+              <a
+                href="/"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/5 text-slate-300 rounded font-bold border border-white/10 transition hover:bg-white/10"
+              >
+                <Home className="size-5" />
+                Reload Root
+              </a>
+            </div>
+
+            <div className="pt-8 opacity-20">
+                <div className="text-[10px] font-mono uppercase tracking-[0.3em]">
+                    System Debug: {error.digest || 'ROOT_LAYER_EXCEPTION'}
+                </div>
+            </div>
+          </motion.div>
         </div>
       </body>
     </html>
