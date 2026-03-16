@@ -1,50 +1,65 @@
-"use client";
-import { useState } from "react";
+import Image from "next/image";
+import { useState, useEffect } from "react";
 
 interface AppImageProps {
- src: string;
- alt: string;
- fill?: boolean;
- width?: number;
- height?: number;
- sizes?: string;
- priority?: boolean;
- className?: string;
- placeholderText?: string;
+  src: string;
+  alt: string;
+  fill?: boolean;
+  width?: number;
+  height?: number;
+  sizes?: string;
+  priority?: boolean;
+  className?: string;
+  placeholderText?: string;
 }
 
 export default function AppImage({
- src,
- alt,
- fill,
- width,
- height,
- priority = false,
- className = "",
- placeholderText = "No Image",
+  src,
+  alt,
+  fill,
+  width,
+  height,
+  priority = false,
+  className = "",
+  placeholderText = "No Image",
+  sizes,
 }: AppImageProps) {
- const [error, setError] = useState(false);
+  const [error, setError] = useState(false);
 
- const fallbackSrc = `https://placehold.co/${width ?? 400}x${height ?? 400}?text=${encodeURIComponent(placeholderText)}`;
+  // Reset error state if src changes
+  useEffect(() => {
+    setError(false);
+  }, [src]);
 
- if (error || !src) {
- return (
- /* eslint-disable-next-line @next/next/no-img-element */
- <img src={fallbackSrc} alt={alt} className={className} />
- );
- }
+  const fallbackSrc = `https://placehold.co/${width ?? 400}x${height ?? 400}?text=${encodeURIComponent(placeholderText)}`;
 
- return (
- /* eslint-disable-next-line @next/next/no-img-element */
- <img
- src={src}
- alt={alt}
- width={!fill ? width : undefined}
- height={!fill ? height : undefined}
- loading={priority ? "eager" : "lazy"}
- decoding="async"
- className={className}
- onError={() => setError(true)}
- />
- );
+  if (error || !src) {
+    return (
+      <Image 
+        src={fallbackSrc} 
+        alt={alt} 
+        width={!fill ? (width ?? 400) : undefined} 
+        height={!fill ? (height ?? 400) : undefined} 
+        fill={fill}
+        className={className} 
+      />
+    );
+  }
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={!fill ? width : undefined}
+      height={!fill ? height : undefined}
+      fill={fill}
+      priority={priority}
+      sizes={sizes || (fill ? "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" : undefined)}
+      className={className}
+      onError={() => {
+        console.warn(`Image failed to load: ${src}`);
+        setError(true);
+      }}
+    />
+  );
 }

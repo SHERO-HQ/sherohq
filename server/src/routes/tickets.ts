@@ -100,4 +100,28 @@ router.patch("/:id/status", adminAuth, async (req, res) => {
   }
 });
 
+// GET /api/tickets/track/:id - Public ticket tracking
+router.get("/track/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // Support tracking by UUID or ticket_no
+    const query = isNaN(Number(id)) 
+      ? 'SELECT id, ticket_no, name, subject, status, "createdAt", category FROM tickets WHERE id = $1'
+      : 'SELECT id, ticket_no, name, subject, status, "createdAt", category FROM tickets WHERE ticket_no = $1';
+    
+    const result = await db.query(query, [id]);
+
+    if (result.rowCount === 0) {
+      res.status(404).json({ error: "Ticket not found" });
+      return;
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error("Error tracking ticket:", error);
+    res.status(500).json({ error: "Failed to track ticket" });
+  }
+});
+
 export default router;

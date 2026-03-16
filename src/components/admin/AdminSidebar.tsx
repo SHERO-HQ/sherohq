@@ -1,24 +1,26 @@
 "use client";
 import NavLink from "@/components/common/NavLink";
+import Link from "next/link";
 import {
- LayoutDashboard,
- Package,
- ShoppingCart,
- BarChart3,
- User,
- Users,
- LogOut,
- Plus,
- Headset,
- BookOpen,
- ShieldCheck,
- Briefcase,
- Tag,
- Star,
- MessageSquareQuote,
- BarChart,
- FileText,
- DollarSign,
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  BarChart3,
+  User,
+  Users,
+  LogOut,
+  Plus,
+  Headset,
+  BookOpen,
+  ShieldCheck,
+  Briefcase,
+  Tag,
+  Star,
+  MessageSquareQuote,
+  BarChart,
+  FileText,
+  DollarSign,
+  Brain,
 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { cn } from "@/lib/utils";
@@ -26,38 +28,39 @@ import { motion, AnimatePresence } from "motion/react";
 import AppImage from "@/components/common/AppImage";
 
 interface SidebarProps {
- isOpen: boolean;
- setIsOpen: (open: boolean) => void;
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
 }
 
 const navItems = [
- { icon: LayoutDashboard, label: "Dashboard", href: "/admin/dashboard" },
- { icon: Package, label: "Products", href: "/admin/products" },
- { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
- { icon: BarChart3, label: "Reports", href: "/admin/reports" },
- { icon: DollarSign, label: "Expenses", href: "/admin/expenses" },
- { icon: Headset, label: "Support", href: "/admin/support" },
- { icon: BookOpen, label: "Guides", href: "/admin/guides" },
- { icon: Tag, label: "Categories", href: "/admin/categories" },
- { icon: Star, label: "Reviews", href: "/admin/reviews" },
- { icon: Users, label: "Team", href: "/admin/team" },
- { icon: ShieldCheck, label: "Staff", href: "/admin/staff" },
- { icon: Briefcase, label: "Projects", href: "/admin/projects" },
- {
-  icon: MessageSquareQuote,
-  label: "Testimonials",
-  href: "/admin/testimonials",
- },
- { icon: BarChart, label: "Site Stats", href: "/admin/stats" },
- { icon: Users, label: "Customers", href: "/admin/users" },
- { icon: User, label: "Profile", href: "/admin/profile" },
+  { icon: LayoutDashboard, label: "Dashboard", href: "/admin/dashboard" },
+  { icon: Package, label: "Products", href: "/admin/products" },
+  { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
+  { icon: BarChart3, label: "Reports", href: "/admin/reports" },
+  { icon: Brain, label: "Intelligence", href: "/admin/ai-analytics" },
+  { icon: DollarSign, label: "Expenses", href: "/admin/expenses" },
+  { icon: Headset, label: "Support", href: "/admin/support" },
+  { icon: BookOpen, label: "Guides", href: "/admin/guides" },
+  { icon: Tag, label: "Categories", href: "/admin/categories" },
+  { icon: Star, label: "Reviews", href: "/admin/reviews" },
+  { icon: Users, label: "Team", href: "/admin/team" },
+  { icon: ShieldCheck, label: "Staff", href: "/admin/staff" },
+  { icon: Briefcase, label: "Projects", href: "/admin/projects" },
+  {
+    icon: MessageSquareQuote,
+    label: "Testimonials",
+    href: "/admin/testimonials",
+  },
+  { icon: BarChart, label: "Site Stats", href: "/admin/stats" },
+  { icon: Users, label: "Customers", href: "/admin/users" },
+  { icon: User, label: "Profile", href: "/admin/profile" },
 ];
 
 export default function AdminSidebar({
- isOpen,
- setIsOpen,
+  isOpen,
+  setIsOpen,
 }: Readonly<SidebarProps>) {
- const { admin, logout } = useAdmin();
+  const { admin, logout } = useAdmin();
 
  // Logic for width and visibility
  const sidebarWidth = isOpen ? "260px" : "80px";
@@ -92,9 +95,12 @@ export default function AdminSidebar({
    >
     <div className="flex flex-col h-full relative">
      {/* Logo Section */}
-     <div className="h-20 flex items-center px-6 border-b border-white/5 shrink-0">
+     <Link 
+      href="/admin/dashboard"
+      className="h-20 flex items-center px-6 border-b border-white/5 shrink-0 hover:bg-white/5 transition-colors group"
+     >
       <div className="flex items-center gap-3 overflow-hidden">
-       <div className="w-8 h-8 rounded bg-emerald-600 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/20">
+       <div className="w-8 h-8 rounded bg-emerald-600 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
         <span className="text-white font-bold text-xl">
          S
         </span>
@@ -112,7 +118,7 @@ export default function AdminSidebar({
         )}
        </AnimatePresence>
       </div>
-     </div>
+     </Link>
 
      {/* Navigation */}
      <nav className="flex-1 py-6 px-3 space-y-2 overflow-y-auto custom-scrollbar">

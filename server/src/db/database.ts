@@ -207,6 +207,32 @@ export async function initializeDatabase() {
       )
     `);
 
+    // AI Chat Logs table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS ai_chat_logs (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        "guestId" TEXT,
+        "userId" TEXT,
+        query TEXT NOT NULL,
+        response TEXT NOT NULL,
+        intent TEXT,
+        "recommendedProducts" JSONB,
+        "hasImage" BOOLEAN DEFAULT false,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Catalog Gaps table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS catalog_gaps (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        "keyword" TEXT UNIQUE NOT NULL,
+        "queryCount" INTEGER DEFAULT 1,
+        "lastRequested" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        "isResolved" BOOLEAN DEFAULT false
+      )
+    `);
+
     // Reviews table
     await client.query(`
       CREATE TABLE IF NOT EXISTS reviews (

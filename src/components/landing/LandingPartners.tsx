@@ -67,7 +67,7 @@ const LandingPartners = () => {
  alt={`${partner.name} logo`}
  fill
  className="object-contain transition-transform duration-500 group-hover/card:scale-110 pointer-events-none md:pointer-events-auto select-none"
- sizes="250px"
+  sizes="(max-width: 640px) 80px, 128px"
  />
  </div>
  </div>

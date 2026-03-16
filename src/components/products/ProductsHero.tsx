@@ -173,7 +173,7 @@ const ProductHero = () => {
  ].map((item) => (
  <div
  key={item.label}
- className="rounded-lg border border-border bg-white/70 dark:bg-slate-900/60 backdrop-blur px-4 py-3"
+ className="rounded border border-border bg-white/70 dark:bg-slate-900/60 backdrop-blur px-4 py-3"
  >
  <div className="flex items-center gap-2 mb-1">
  <item.icon

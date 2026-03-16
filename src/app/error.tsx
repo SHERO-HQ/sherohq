@@ -26,7 +26,7 @@ export default function Error({
       >
         <div className="relative inline-flex mb-4">
           <div className="absolute inset-0 bg-red-500/20 blur-2xl rounded-full" />
-          <div className="relative w-20 h-20 bg-linear-to-br from-red-500 to-rose-600 rounded-2xl flex items-center justify-center text-white shadow-xl">
+          <div className="relative w-20 h-20 bg-linear-to-br from-red-500 to-rose-600 rounded flex items-center justify-center text-white shadow-xl">
             <AlertTriangle className="size-10" />
           </div>
         </div>

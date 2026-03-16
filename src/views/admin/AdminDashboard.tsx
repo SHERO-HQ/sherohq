@@ -20,6 +20,7 @@ import {
  Plus,
  TrendingUp,
  Settings,
+  Brain,
  RefreshCw,
 } from "lucide-react";
 import AdminLayout from "@/components/admin/AdminLayout";
@@ -562,12 +563,18 @@ export default function AdminDashboard() {
           link: "/admin/products?stock=low",
           color: "bg-amber-500/10 text-amber-400",
          },
-         {
-          title: "Admin Settings",
-          icon: Settings,
-          link: "/admin/profile",
-          color: "bg-slate-500/10 text-slate-400",
-         },
+          {
+            title: "AI Intelligence Hub",
+            icon: Brain,
+            link: "/admin/ai-analytics",
+            color: "bg-purple-500/10 text-purple-400",
+          },
+          {
+            title: "Admin Settings",
+            icon: Settings,
+            link: "/admin/profile",
+            color: "bg-slate-500/10 text-slate-400",
+          },
         ].map((action) => (
          <Link
           key={action.title}

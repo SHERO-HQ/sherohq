@@ -30,6 +30,7 @@ import {
  useUpdateProduct,
  useCreateProduct,
  } from "@/hooks/queries/useProducts";
+import { useFormDraft } from "@/hooks/useFormDraft";
 import { Badge } from "@/components/ui/badge";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useBreadcrumb } from "@/context/BreadcrumbContext";
@@ -69,19 +70,19 @@ export default function ProductForm() {
  const createProductMutation = useCreateProduct();
  const updateProductMutation = useUpdateProduct();
 
- const [productData, setProductData] = useState<Partial<Product>>({
- name: "",
- category: "",
- price: 0,
- originalPrice: undefined,
- image: "",
- inStock: true,
- description: "",
- features: [],
- specifications: {},
- badge: "",
- images: [],
- stockQuantity: undefined,
+ const [productData, setProductData, clearDraft] = useFormDraft<Partial<Product>>("admin_product", {
+  name: "",
+  category: "",
+  price: 0,
+  originalPrice: undefined,
+  image: "",
+  inStock: true,
+  description: "",
+  features: [],
+  specifications: {},
+  badge: "",
+  images: [],
+  stockQuantity: undefined,
  });
 
  const [specsList, setSpecsList] = useState<SpecRow[]>([]);
@@ -173,6 +174,7 @@ export default function ProductForm() {
     await createProductMutation.mutateAsync(finalData as ProductInput);
     addNotification("Success", "Product created successfully", "success");
    }
+   clearDraft();
    router.push("/admin/products");
   } catch (err: unknown) {
    // Show explicit error message from API if available

@@ -8,6 +8,7 @@ import {
  Globe,
  PanelLeftOpen,
  PanelLeftClose,
+ LayoutDashboard,
 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { usePathname } from "next/navigation";
@@ -43,7 +44,9 @@ export default function AdminHeader({
  const { admin, logout } = useAdmin();
  const pathname = usePathname() ?? "";
  const { customLabels } = useBreadcrumb();
- const pathnames = pathname.split("/").filter((x) => x && x !== "admin");
+ const pathnames = pathname
+  .split("/")
+  .filter((x) => x && x !== "admin" && x !== "dashboard");
 
  // Get display label for a path segment
  const getDisplayLabel = (segment: string, fullPath: string) => {
@@ -85,10 +88,11 @@ export default function AdminHeader({
      <ol className="flex items-center space-x-2 text-sm">
       <li>
        <Link
-        href="/admin"
-        className="text-slate-400 hover:text-white transition-colors"
+        href="/admin/dashboard"
+        className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors"
        >
-        Admin
+        <LayoutDashboard className="w-3.5 h-3.5" />
+        <span>Dashboard</span>
        </Link>
       </li>
       {pathnames.map((value, index) => {

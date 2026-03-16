@@ -1,9 +1,10 @@
 "use client";
 import NavLink from "@/components/common/NavLink";
 import { getAbsoluteUrl } from "@/utils/subdomain";
+import Image from "next/image";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { fadeUp, fadeUpAccessible } from "@/components/motion/heroMotion";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import dynamic from "next/dynamic";
@@ -44,14 +45,24 @@ const LandingHero: React.FC = () => {
  const mouseX = useMotionValue(0);
  const mouseY = useMotionValue(0);
 
+ // Defer heavy physics initialization until after mount to relieve hydration
+ const [isKineticReady, setIsKineticReady] = useState(false);
+ useEffect(() => {
+  setIsKineticReady(true);
+ }, []);
+
  // Spring physics for smooth movement
  const springConfig = { damping: 25, stiffness: 150 };
  const smoothX = useSpring(mouseX, springConfig);
  const smoothY = useSpring(mouseY, springConfig);
 
  // Keep hero motion subtle for a cleaner premium feel.
- const translateX = useTransform(smoothX, [-0.5, 0.5], [-6, 6]);
- const translateY = useTransform(smoothY, [-0.5, 0.5], [-6, 6]);
+ const rawTranslateX = useTransform(smoothX, [-0.5, 0.5], [-6, 6]);
+ const rawTranslateY = useTransform(smoothY, [-0.5, 0.5], [-6, 6]);
+
+ // Only apply transforms when kinetic is ready
+ const translateX = isKineticReady ? rawTranslateX : 0;
+ const translateY = isKineticReady ? rawTranslateY : 0;
 
  useEffect(() => {
  if (!containerRef.current) return;
@@ -119,7 +130,7 @@ const LandingHero: React.FC = () => {
  {/* Headline: Sora Font + Scan line Reveal */}
  <div className="relative overflow-hidden group">
  <motion.h1
- initial={false}
+ initial="visible"
  animate="visible"
  variants={prefersReducedMotion ? {} : fadeUp}
  className=" font-extrabold leading-[1.1] text-5xl sm:text-6xl md:text-7xl lg:text-8xl 
@@ -235,14 +246,14 @@ const LandingHero: React.FC = () => {
  <div className="flex items-center justify-between mb-6 pb-5 border-b border-slate-200/70 dark:border-slate-800">
  <div className="flex items-center gap-3">
  <div className="flex items-center justify-center">
- <img
- src="/assets/logo/shero.svg"
- alt="SHERO"
- width={40}
- height={40}
- className="sm:w-10 sm:h-10 w-8 h-8"
- suppressHydrationWarning
- />
+  <Image
+    src="/assets/logo/shero.svg"
+    alt="SHERO"
+    width={40}
+    height={40}
+    priority
+    className="sm:w-10 sm:h-10 w-8 h-8"
+  />
  </div>
  <div>
  <h4 className="text-sm font-bold text-slate-900 dark:text-white">

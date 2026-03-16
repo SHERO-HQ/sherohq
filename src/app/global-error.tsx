@@ -21,7 +21,7 @@ export default function GlobalError({
           >
             <div className="relative inline-flex mb-4">
               <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full" />
-              <div className="relative w-24 h-24 bg-linear-to-br from-slate-800 to-slate-900 rounded-3xl border border-white/10 flex items-center justify-center text-emerald-500 shadow-2xl">
+              <div className="relative w-24 h-24 bg-linear-to-br from-slate-800 to-slate-900 rounded border border-white/10 flex items-center justify-center text-emerald-500 shadow-2xl">
                 <AlertTriangle className="size-12" />
               </div>
             </div>

@@ -62,7 +62,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
   const currentProduct = spotlightItems[currentIndex];
 
   return (
-    <section className="relative w-full min-h-screen lg:h-[80vh] overflow-hidden group/spotlight flex items-center py-16 lg:py-0">
+    <section className="relative w-full h-auto lg:h-screen overflow-hidden group/spotlight flex items-start lg:items-center lg:py-0 pt-20">
       {/* Background kinetic pattern */}
       <div className="absolute inset-0 pattern-dots opacity-80 pointer-events-none" />
       <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-white dark:to-slate-950 pointer-events-none" />
@@ -80,193 +80,164 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-75 sm:w-150 h-75 sm:h-150 bg-emerald-500/10 dark:bg-emerald-500/5 blur-[80px] sm:blur-[120px] rounded-full pointer-events-none" />
 
           <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col lg:flex-row gap-1 lg:gap-8 items-center lg:items-center">
-              {/* Product Info Block */}
+            <div className="flex flex-col items-center w-full max-w-5xl mx-auto">
+              {/* Product Hero Block */}
               <motion.div
-                initial={false}
-                animate={{ x: 0, opacity: 1 }}
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
                 transition={{
-                  delay: 0.2,
                   duration: 0.8,
                   type: "spring",
                   damping: 20,
                 }}
-                className="relative z-10 flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1 w-full lg:w-1/2 mt-36 pt-4 md:pt-auto lg:mt-0 bg-slate-200/90 dark:bg-slate-800/90 md:bg-transparent md:dark:bg-transparent"
+                className="relative w-full"
               >
-                <div className="inline-flex items-center gap-2 px-3 py-1 mb-2 lg:mb-3 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm">
-                  <ShoppingBag className="size-3 text-emerald-500" />
-                  <span className="text-[10px] font-mono font-black tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
-                    Featured Spotlight
-                  </span>
-                </div>
-
-                <h2 className="text-xl lg:text-5xl font-black text-slate-900 dark:text-white leading-[1.1] tracking-tighter mb-4 lg:mb-6 uppercase">
-                  {currentProduct.name.split(" ").map((word, i) => (
-                    <span key={i} className={i === 0 ? "text-emerald-500" : ""}>
-                      {word}{" "}
-                    </span>
-                  ))}
-                </h2>
-
-                <p className="text-sm lg:text-lg text-slate-600 dark:text-slate-400 mb-4 lg:mb-8 max-w-lg leading-relaxed line-clamp-3 lg:line-clamp-none">
-                  {currentProduct.description ||
-                    "Unlocking the next level of performance with precision engineering and state-of-the-art technology."}
-                </p>
-
-                <div className="flex items-center justify-center lg:justify-start gap-6 mb-4 lg:mb-10 w-full lg:w-auto">
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">
-                      Price
-                    </span>
-                    <span className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white">
-                      {formatCurrency(currentProduct.price)}
-                    </span>
-                  </div>
-                  <div className="h-10 w-px bg-slate-200 dark:bg-white/10" />
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">
-                      Category
-                    </span>
-                    <span className="text-xs lg:text-sm font-bold uppercase text-emerald-600 dark:text-emerald-400">
-                      {currentProduct.category}
-                    </span>
-                  </div>
-                  {currentProduct.rating > 0 && (
-                    <>
-                      <div className="h-10 w-px bg-slate-200 dark:bg-white/10" />
-                      <div className="flex flex-col">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">
-                          Satisfaction
-                        </span>
-                        <div className="flex items-center gap-1.5 justify-center lg:justify-start">
-                          <Star
-                            size={12}
-                            className="fill-amber-400 text-amber-400"
-                          />
-                          <span className="text-xs lg:text-sm font-black dark:text-slate-200">
-                            {currentProduct.rating}
-                          </span>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-
-                <Link
-                  href={getAbsoluteUrl(
-                    `/shop/${currentProduct.slug || currentProduct.sku || currentProduct.id}`,
-                  )}
-                  className="group w-full sm:w-auto flex items-center justify-center gap-4 px-8 py-4 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded font-black uppercase tracking-widest text-[10px] hover:bg-emerald-600 dark:hover:bg-emerald-500 dark:hover:text-white transition shadow-lg shadow-black/20"
-                >
-                  See Details
-                  <ArrowRight
-                    size={16}
-                    className="group-hover:translate-x-2 transition-transform"
-                  />
-                </Link>
-              </motion.div>
-
-              {/* Product Visual Block */}
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{
-                  delay: 0.3,
-                  duration: 1,
-                  type: "spring",
-                  damping: 15,
-                }}
-                className="relative flex items-center justify-center order-1 lg:order-2 w-full lg:w-1/2 mb-4 lg:mb-0"
-              >
-                <div className="relative w-full h-65 sm:h-85 lg:h-105 group/image flex items-center justify-center p-6 sm:p-10">
+                {/* Image Container with Overlay */}
+                <div className="relative w-full h-[500px] lg:h-[650px] group/image flex items-center justify-center p-0 rounded overflow-hidden shadow border border-white/10">
                   {/* Decorative Elements */}
-                  <div className="absolute inset-0 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-2xl sm:blur-3xl group-hover/image:scale-110 transition-transform duration-1000" />
+                  <div className="absolute inset-0 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-3xl group-hover/image:scale-110 transition-transform duration-1000" />
 
                   {/* The Image */}
-                  <div className="relative w-full h-full drop-shadow-sm dark:drop-shadow-sm group-hover/image:-translate-y-4 transition-transform duration-700 ease-out z-0">
+                  <div className="absolute inset-0 z-0">
                     <AppImage
                       src={getImageUrl(currentProduct.image)}
                       alt={currentProduct.name}
                       fill
                       priority
-                      className="object-contain"
+                      className="object-cover transition-transform duration-700 group-hover/image:scale-105"
                     />
                   </div>
 
-                  {/* Glass Card Floating Badge */}
-                  <motion.div
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.8, duration: 0.5 }}
-                    className="absolute -bottom-2 -right-2 sm:-bottom-4 sm:-right-4 p-2 rounded bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm border border-white/20 shadow-lg z-20"
-                  >
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <div className="w-6 h-6 sm:w-10 sm:h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
-                        <Package className="w-3 h-3 sm:w-5 sm:h-5" />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-[7px] sm:text-[10px] font-black uppercase tracking-widest text-slate-500">
-                          Available
-                        </span>
-                        <span
-                          className={`text-[9px] sm:text-xs font-bold ${currentProduct.inStock ? "text-emerald-500" : "text-red-500"}`}
-                        >
-                          {currentProduct.inStock
-                            ? "In Stock"
-                            : "Limited Stock"}
+                  {/* Gradient Overlay & Info */}
+                  <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/40 to-transparent z-10 flex flex-col justify-end p-6 sm:p-8 lg:p-12">
+                    <motion.div
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{ delay: 0.4 }}
+                      className="max-w-2xl"
+                    >
+                      <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 lg:mb-4 rounded border border-emerald-500/20 bg-emerald-500/10 backdrop-blur-md">
+                        <ShoppingBag className="size-3 text-emerald-500" />
+                        <span className="text-[10px] font-mono font-black tracking-widest uppercase text-emerald-400">
+                          Spotlight
                         </span>
                       </div>
+
+                      <h2 className="text-3xl lg:text-6xl font-black text-white leading-[1.1] tracking-tighter mb-4 uppercase">
+                        {currentProduct.name.split(" ").map((word, i) => (
+                          <span
+                            key={i}
+                            className={i === 0 ? "text-emerald-500" : ""}
+                          >
+                            {word}{" "}
+                          </span>
+                        ))}
+                      </h2>
+
+                      <p className="text-sm lg:text-lg text-slate-300 mb-6 lg:mb-8 line-clamp-2 lg:line-clamp-none max-w-xl leading-relaxed">
+                        {currentProduct.description ||
+                          "Unlocking the next level of performance with precision engineering and state-of-the-art technology."}
+                      </p>
+
+                      <div className="flex flex-wrap items-center gap-6 sm:gap-8 lg:gap-12">
+                        <div className="flex flex-col">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
+                            Price
+                          </span>
+                          <span className="text-2xl lg:text-4xl font-black text-white">
+                            {formatCurrency(currentProduct.price)}
+                          </span>
+                        </div>
+
+                        {currentProduct.rating > 0 && (
+                          <div className="flex flex-col">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
+                              Satisfaction
+                            </span>
+                            <div className="flex items-center gap-1.5">
+                              <Star
+                                size={14}
+                                className="fill-amber-400 text-amber-400"
+                              />
+                              <span className="text-sm lg:text-lg font-black text-white">
+                                {currentProduct.rating}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Integrated Action Button */}
+                        <div className="ml-auto pointer-events-auto">
+                          <Link
+                            href={getAbsoluteUrl(
+                              `/shop/${currentProduct.slug || currentProduct.sku || currentProduct.id}`,
+                            )}
+                            className="group flex items-center justify-center gap-3 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-white rounded font-black uppercase tracking-widest text-[10px] transition-all shadow-lg shadow-emerald-500/20 hover:-translate-y-0.5"
+                          >
+                            Details
+                            <ArrowRight
+                              size={14}
+                              className="group-hover:translate-x-1 transition-transform"
+                            />
+                          </Link>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
+                  {/* Carousel Navigation - Integrated */}
+                  <div className="absolute inset-0 z-20 pointer-events-none">
+                    {/* Arrows */}
+                    <div className="absolute inset-y-0 left-0 right-0 flex items-center justify-between px-4 sm:px-6 mb-4">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          prevSlide();
+                          setIsAutoPlaying(false);
+                        }}
+                        className="p-2 rounded bg-black/40 hover:bg-emerald-500 text-white backdrop-blur-md border border-white/10 transition-all active:scale-95 pointer-events-auto group/nav"
+                      >
+                        <ChevronLeft className="size-5 sm:size-7 group-hover/nav:-translate-x-1 transition-transform" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          nextSlide();
+                          setIsAutoPlaying(false);
+                        }}
+                        className="p-2 rounded bg-black/40 hover:bg-emerald-500 text-white backdrop-blur-md border border-white/10 transition-all active:scale-95 pointer-events-auto group/nav"
+                      >
+                        <ChevronRight className="size-5 sm:size-7 group-hover/nav:translate-x-1 transition-transform" />
+                      </button>
                     </div>
-                  </motion.div>
+
+                    {/* Dots - Bottom Center */}
+                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 pointer-events-auto">
+                      {spotlightItems.map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            setCurrentIndex(i);
+                            setIsAutoPlaying(false);
+                          }}
+                          className={`h-1 transition-all duration-500 rounded-full ${
+                            i === currentIndex
+                              ? "w-8 bg-emerald-500"
+                              : "w-2 bg-white/40 hover:bg-white/60"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             </div>
           </div>
         </motion.div>
       </AnimatePresence>
-
-      {/* Navigation Controls */}
-      <div className="absolute bottom-0 pb-3 lg:bottom-10 left-0 right-0 z-30 pointer-events-none bg-slate-200/90 dark:bg-slate-800/90 md:bg-transparent md:dark:bg-transparent pt-4 md:pt-auto">
-        <div className="container max-w-7xl mx-auto px-4 flex md:flex-col-reverse justify-around ">
-          <div className="flex items-center gap-2 sm:gap-4 pointer-events-auto mt-2">
-            {spotlightItems.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => {
-                  setCurrentIndex(i);
-                  setIsAutoPlaying(false);
-                }}
-                className={`h-1 transition duration-500 rounded-full ${
-                  i === currentIndex
-                    ? "w-8 sm:w-12 bg-emerald-500"
-                    : "w-2 sm:w-4 bg-slate-300 dark:bg-white/10 hover:bg-slate-400 dark:hover:bg-white/20"
-                }`}
-              />
-            ))}
-          </div>
-
-          <div className="flex items-center gap-2 sm:gap-3 pointer-events-auto sm:mb-5 mb-0">
-            <button
-              onClick={() => {
-                prevSlide();
-                setIsAutoPlaying(false);
-              }}
-              className="p-2 rounded bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 text-slate-600 dark:text-slate-400 hover:text-emerald-500 transition active:scale-95"
-            >
-              <ChevronLeft size={20} className="sm:size-6" />
-            </button>
-            <button
-              onClick={() => {
-                nextSlide();
-                setIsAutoPlaying(false);
-              }}
-              className="p-2 rounded bg-white/5 hover:bg-white/10 backdrop-blur-sm border border-white/10 text-slate-600 dark:text-slate-400 hover:text-emerald-500 transition active:scale-95"
-            >
-              <ChevronRight size={20} className="sm:size-6" />
-            </button>
-          </div>
-        </div>
-      </div>
 
       {/* Autoplay Progress Bar */}
       {isAutoPlaying && (

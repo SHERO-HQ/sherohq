@@ -172,7 +172,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
           </div>
 
           <h3 className="text-sm sm:text-base font-black dark:text-white text-slate-800 leading-tight group-hover:text-emerald-500 transition-colors line-clamp-1 mb-1">
-            {product.name}
+            {product.name.split(" ").map((word, i) => (
+              <span key={i} className={i === 0 ? "text-emerald-500" : ""}>
+                {word}{" "}
+              </span>
+            ))}
           </h3>
 
           <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed h-10">

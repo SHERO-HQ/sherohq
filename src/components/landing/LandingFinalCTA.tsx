@@ -1,30 +1,41 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, WandSparkles } from "lucide-react";
 import { RocketIcon } from "@/assets/icons/icons";
 
 const LandingFinalCTA = () => {
   return (
-    <section className="relative w-full py-16 lg:py-16 overflow-hidden dark:bg-slate-950">
+    <section className="relative w-full py-8 lg:py-8 overflow-hidden dark:bg-slate-950">
       {/* Container */}
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Massive Glass Card */}
         <div
-          className="relative overflow-hidden rounded bg-slate-900 border border-white/10"
+          className="relative overflow-hidden rounded bg-slate-900 border border-white/10 min-h-[400px] flex items-center"
           suppressHydrationWarning
         >
-          {/* Lightweight layered background gradients */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(16,185,129,0.15),transparent_55%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(6,182,212,0.15),transparent_55%)]" />
-          <div className="absolute inset-0 bg-linear-to-r from-slate-950 via-slate-950/80 to-slate-900/50" />
+          {/* Warp Speed Background */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
+              alt="Space Technology Background"
+              fill
+              className="object-cover opacity-60 hover:scale-105 transition-transform duration-[4s]"
+              priority
+            />
+            <div className="absolute inset-0 bg-linear-to-r from-slate-950 via-slate-950/60 to-slate-900/30" />
+          </div>
 
-          <div className="relative z-10 p-8 md:p-16 lg:p-20 flex flex-col lg:flex-row items-center justify-between">
+          {/* Subtle Glows */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,rgba(16,185,129,0.1),transparent_70%)]" />
+
+          <div className="relative z-20 p-16 flex flex-col lg:flex-row items-center justify-between w-full">
             {/* Content Left */}
             <div className="max-w-xl space-y-4 text-center md:text-left">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded bg-white/5 border border-emerald-400/50 backdrop-blur-sm">
                 <WandSparkles className="w-4 h-4 text-emerald-400" />
                 <span className="text-xs font-medium text-emerald-100 uppercase">
-                  Build Faster With SHERO
+                  Let's Make Magic Happen
                 </span>
               </div>
 
@@ -61,17 +72,14 @@ const LandingFinalCTA = () => {
             <div className="relative flex items-center justify-center">
               <div className="relative w-80 h-80 md:w-96 md:h-96 flex items-center justify-center rounded-full">
                 {/* Brighter inner glow */}
-                <div className="absolute inset-8 bg-emerald-400/15 rounded-full blur-2xl" />
+                <div className="absolute inset-8 bg-amber-400/5 rounded-full blur-2xl" />
 
                 {/* Glass circle container */}
                 <div className="relative z-10 flex items-center justify-center">
                   <RocketIcon className="w-40 h-40 text-emerald-400 drop-shadow-lg" />
                 </div>
 
-                {/* Static Orbiting Circles */}
-                <div className="absolute inset-0 rounded-full border border-white/10" />
-                <div className="absolute inset-[15%] rounded-full border border-white/10" />
-                <div className="absolute inset-[30%] rounded-full border border-white/5" />
+    
               </div>
             </div>
           </div>

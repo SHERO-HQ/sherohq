@@ -113,7 +113,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  transition={{ type: "spring", damping: 30, stiffness: 300 }}
  className="fixed md:right-8 md:bottom-8 inset-x-0 bottom-0 md:inset-x-auto z-101 
  dark:bg-slate-900/90 bg-white/95 backdrop-blur-sm 
- border-t md:border border-white/10 rounded-t md:rounded-xl shadow-lg 
+ border-t md:border border-white/10 rounded-t md:rounded shadow-lg 
  max-h-[85vh] md:max-h-[80vh] w-full md:max-w-2xl flex flex-col overflow-hidden"
  onClick={(e) => e.stopPropagation()}
  >

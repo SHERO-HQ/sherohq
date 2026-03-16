@@ -12,6 +12,11 @@ import Toaster from "@/components/admin/Toaster";
 import ScrollToTop from "@/components/common/ScrollToTop";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import { useState } from "react";
+import dynamic from "next/dynamic";
+
+const AIChatAssistant = dynamic(() => import("@/components/ai/AIChatAssistant"), {
+  ssr: false,
+});
 
 export function Providers({ children }: { children: React.ReactNode }) {
  const [queryClient] = useState(
@@ -38,6 +43,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
          <Toaster />
          <ScrollToTop />
          <ErrorBoundary>{children}</ErrorBoundary>
+         <AIChatAssistant />
         </AdminProvider>
        </WishlistProvider>
       </NotificationProvider>

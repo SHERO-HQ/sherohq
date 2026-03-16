@@ -21,6 +21,7 @@ import {
  useUpdateProject,
  useCreateProject,
 } from "@/hooks/queries/useProjects";
+import { useFormDraft } from "@/hooks/useFormDraft";
 import { Badge } from "@/components/ui/badge";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useBreadcrumb } from "@/context/BreadcrumbContext";
@@ -41,7 +42,7 @@ export default function ProjectForm() {
  const createProjectMutation = useCreateProject();
  const updateProjectMutation = useUpdateProject();
 
- const [projectData, setProjectData] = useState<Partial<Project>>({
+ const [projectData, setProjectData, clearDraft] = useFormDraft<Partial<Project>>("admin_project", {
  title: "",
  category: "",
  client: "",
@@ -98,6 +99,7 @@ export default function ProjectForm() {
  await createProjectMutation.mutateAsync(projectData);
  addNotification("Success", "Project created successfully", "success");
  }
+ clearDraft();
  router.push("/admin/projects");
  } catch (err) {
  addNotification("Error", "Failed to save project", "error");

@@ -85,7 +85,7 @@ router.get("/", async (req: Request, res: Response) => {
     let queryText = `
       SELECT p.*, c.name as category_name, c.id as resolved_category_id
       FROM products p
-      LEFT JOIN categories c ON (p.category::text = c.id::text OR p.category ILIKE c.name)
+      LEFT JOIN categories c ON (p.category = c.id::text OR p.category = c.name)
     `;
     const params: (string | number)[] = [];
     const conditions: string[] = [];

@@ -1,21 +1,23 @@
 "use client";
 import LandingHero from "@/components/landing/LandingHero";
-import LandingValueProps from "@/components/landing/LandingValueProps";
-import LandingPartners from "@/components/landing/LandingPartners";
-import LandingPillars from "@/components/landing/LandingPillars";
-import LandingProducts from "@/components/landing/LandingProducts";
-import LandingFinalCTA from "@/components/landing/LandingFinalCTA";
+import dynamic from "next/dynamic";
+
+const LandingValueProps = dynamic(() => import("@/components/landing/LandingValueProps"));
+const LandingPartners = dynamic(() => import("@/components/landing/LandingPartners"));
+const LandingPillars = dynamic(() => import("@/components/landing/LandingPillars"));
+const LandingProducts = dynamic(() => import("@/components/landing/LandingProducts"));
+const LandingFinalCTA = dynamic(() => import("@/components/landing/LandingFinalCTA"));
 
 const Home = () => {
  return (
- <>
- <LandingHero />
- <LandingValueProps />
- <LandingPartners />
- <LandingPillars />
- <LandingProducts />
- <LandingFinalCTA />
- </>
+  <>
+  <LandingHero />
+  <LandingValueProps />
+  <LandingPartners />
+  <LandingPillars />
+  <LandingProducts />
+  <LandingFinalCTA />
+  </>
  );
 };
 

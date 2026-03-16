@@ -63,6 +63,15 @@ const CheckoutFlow = () => {
 
  const [paymentError, setPaymentError] = useState(false);
  const [isUpdatingOffline, setIsUpdatingOffline] = useState(false);
+  useEffect(() => {
+    if (currentStep >= 4) return;
+    const timer = setTimeout(() => {
+      window.dispatchEvent(new CustomEvent("shoro-ai-trigger", {
+        detail: { message: `I've been on the ${steps[currentStep-1].title} step for a while. I might need some help or clarification.` }
+      }));
+    }, 45000);
+    return () => clearTimeout(timer);
+  }, [currentStep]);
 
  const {
  register,
@@ -186,10 +195,12 @@ const CheckoutFlow = () => {
  window.location.href = paymentResponse.checkoutUrl;
  } else {
  setPaymentError(true);
+        window.dispatchEvent(new CustomEvent("shoro-ai-trigger", { detail: { message: "I encountered a payment connection error during checkout. Can you help?" } }));
  }
  } catch (error) {
  console.error("Payment initialization failed:", error);
  setPaymentError(true);
+      window.dispatchEvent(new CustomEvent("shoro-ai-trigger", { detail: { message: "The payment system is busy and I cannot complete my order. What should I do?" } }));
  addNotification(
  "Payment System Busy",
  "We couldn't connect to the payment provider. We've saved your order!",
