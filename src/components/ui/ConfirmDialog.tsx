@@ -13,6 +13,7 @@ interface ConfirmDialogProps {
  cancelText?: string;
  variant?: "danger" | "warning" | "info";
  isLoading?: boolean;
+ showCancel?: boolean;
 }
 
 const variantStyles = {
@@ -40,6 +41,7 @@ export function ConfirmDialog({
  cancelText = "Cancel",
  variant = "danger",
  isLoading = false,
+ showCancel = true,
 }: Readonly<ConfirmDialogProps>) {
  const styles = variantStyles[variant];
 
@@ -99,6 +101,7 @@ export function ConfirmDialog({
 
  {/* Actions */}
  <div className="flex items-center justify-end gap-3 p-6 pt-0">
+ {showCancel && (
  <Button
  onClick={onClose}
  disabled={isLoading}
@@ -106,6 +109,7 @@ export function ConfirmDialog({
  >
  {cancelText}
  </Button>
+ )}
  <Button
  onClick={handleConfirm}
  disabled={isLoading}

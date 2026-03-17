@@ -8,6 +8,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { NotificationProvider } from "@/context/NotificationProvider";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { AdminProvider } from "@/context/AdminContext";
+import { DialogProvider } from "@/components/ui/DialogProvider";
 import Toaster from "@/components/admin/Toaster";
 import ScrollToTop from "@/components/common/ScrollToTop";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
@@ -40,10 +41,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <NotificationProvider>
        <WishlistProvider>
         <AdminProvider>
-         <Toaster />
-         <ScrollToTop />
-         <ErrorBoundary>{children}</ErrorBoundary>
-         <AIChatAssistant />
+         <DialogProvider>
+          <Toaster />
+          <ScrollToTop />
+          <ErrorBoundary>{children}</ErrorBoundary>
+          <AIChatAssistant />
+         </DialogProvider>
         </AdminProvider>
        </WishlistProvider>
       </NotificationProvider>

@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { ShoppingCart, Package, Ticket, Calendar, Brain } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useDialog } from "@/hooks/useDialog";
 
 const LiveTrackingCard = ({ id, type }: { id: string, type: 'order' | 'ticket' }) => {
   const [data, setData] = useState<any>(null);
@@ -75,6 +76,7 @@ const LiveTrackingCard = ({ id, type }: { id: string, type: 'order' | 'ticket' }
 
 export default function AIChatAssistant() {
   const { cart, addItem, setIsCartOpen } = useCart();
+  const dialog = useDialog();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -202,8 +204,8 @@ export default function AIChatAssistant() {
     }
   };
 
-  const clearHistory = () => {
-    if (window.confirm("Are you sure you want to clear our conversation history?")) {
+  const clearHistory = async () => {
+    if (await dialog.confirm("Are you sure you want to clear our conversation history?")) {
       const initialMessage = [messages[0]];
       setMessages(initialMessage);
       localStorage.removeItem("shoro_chat_history");
@@ -287,7 +289,7 @@ export default function AIChatAssistant() {
       setIsRecording(true);
     } catch (err) {
       console.error("Mic access denied or recorder init failed:", err);
-      alert("Microphone access is required for voice input. Please ensure you have granted permission.");
+      dialog.alert("Microphone access is required for voice input. Please ensure you have granted permission.");
     }
   };
 
