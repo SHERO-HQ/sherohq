@@ -2,9 +2,16 @@ import { NextResponse } from "next/server";
 import type { Product } from "@/types/product";
 import { CATALOG_SUMMARY, SUPPORT_KNOWLEDGE } from "./knowledge";
 
+/** Resolve the internal backend URL (server-side only) */
+const BACKEND_URL = (
+  process.env.API_URL ||
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://127.0.0.1:5000"
+).replace(/\/$/, "");
+
 async function fetchDynamicCatalogSummary(): Promise<string> {
   try {
-    const res = await fetch("http://localhost:5000/api/products");
+    const res = await fetch(`${BACKEND_URL}/api/products`);
     if (!res.ok) return CATALOG_SUMMARY; // Fallback
     const products: Product[] = await res.json();
     
@@ -74,12 +81,11 @@ function formatGhs(amount: number): string {
 
 async function fetchRecommendedProducts(query: string) {
   try {
-    const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:5000";
-    console.log(`🔍 AI Fetching products for: "${query}" using ${apiUrl}`);
+    console.log(`🔍 AI Fetching products for: "${query}" using ${BACKEND_URL}`);
 
     // Empty or generic query: return featured products
     if (!query || query === "latest products" || query === "featured") {
-      const response = await fetch(`${apiUrl}/api/products`);
+      const response = await fetch(`${BACKEND_URL}/api/products`);
       if (response.ok) {
         const prod = await response.json();
         return Array.isArray(prod) ? prod.slice(0, 3) : [];
@@ -89,7 +95,7 @@ async function fetchRecommendedProducts(query: string) {
 
     // Attempt 1: Search match
     const response = await fetch(
-      `${apiUrl}/api/products?search=${encodeURIComponent(query)}`,
+      `${BACKEND_URL}/api/products?search=${encodeURIComponent(query)}`,
     );
     if (!response.ok) return [];
     let products = await response.json();
@@ -98,7 +104,7 @@ async function fetchRecommendedProducts(query: string) {
     if (!Array.isArray(products) || products.length === 0) {
       console.log(`⚠️ No search matches for "${query}". Trying category fetch...`);
       const catResponse = await fetch(
-        `${apiUrl}/api/products?category=${encodeURIComponent(query)}`,
+        `${BACKEND_URL}/api/products?category=${encodeURIComponent(query)}`,
       );
       if (catResponse.ok) {
         products = await catResponse.json();
@@ -418,7 +424,7 @@ export async function POST(request: Request) {
                     recommendedProducts.length > 0 ? "product_recommend" : "casual";
 
       // Fire and forget (don't await to avoid delaying response)
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"}/api/analytics/chat`, {
+      fetch(`${BACKEND_URL}/api/analytics/chat`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",

@@ -1,10 +1,20 @@
 import express from "express";
+import { rateLimit } from "express-rate-limit";
 import { v4 as uuidv4 } from "uuid";
 import db from "../db/database";
 import { adminAuth, AdminRequest } from "../middleware/adminAuth";
 import { logActivity } from "./activity";
 
 const router = express.Router();
+
+// Rate limit review submission to prevent fake review spam
+const reviewSubmitLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 5,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many review submissions, please try again later." },
+});
 
 // GET all reviews (Admin)
 router.get("/", adminAuth, async (req: AdminRequest, res) => {
@@ -35,7 +45,7 @@ router.get("/:productId", async (req, res) => {
 });
 
 // POST a new review
-router.post("/:productId", async (req, res) => {
+router.post("/:productId", reviewSubmitLimiter, async (req, res) => {
   try {
     const { productId } = req.params;
     const { userName, rating, comment } = req.body;

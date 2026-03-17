@@ -59,8 +59,10 @@ class NotificationService {
           pass: SMTP_PASS,
         },
         tls: {
-          // Do not fail on invalid certs (common with some SMTP providers)
-          rejectUnauthorized: false,
+          // In production, enforce certificate validation. Some shared SMTP
+          // providers use self-signed certs; set SMTP_ALLOW_SELF_SIGNED=true
+          // in those environments only (never in production).
+          rejectUnauthorized: process.env.NODE_ENV === "production" && process.env.SMTP_ALLOW_SELF_SIGNED !== "true",
         },
         family: 4,
         connectionTimeout: 10000,

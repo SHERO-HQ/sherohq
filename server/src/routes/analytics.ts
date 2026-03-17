@@ -14,6 +14,29 @@ const chatAnalyticsLimiter = rateLimit({
   message: { error: "Too many requests, please slow down." },
 });
 
+/**
+ * Determines whether a chat interaction should be logged as a catalog gap.
+ * A gap is logged when:
+ *   - The AI explicitly reported it could not find matching products (`recommend_failed`), or
+ *   - The user query is substantive (>3 chars) and the AI response mentioned a shortlist,
+ *     indicating the query was routed to a fallback product list rather than a direct match.
+ */
+function shouldLogCatalogGap(
+  intent: unknown,
+  userQuery: string,
+  response: unknown,
+): boolean {
+  if (intent === "recommend_failed") return true;
+  if (
+    userQuery.length > 3 &&
+    typeof response === "string" &&
+    response.includes("shortlist")
+  ) {
+    return true;
+  }
+  return false;
+}
+
 // POST /api/analytics/chat - Log a chat interaction
 router.post("/chat", chatAnalyticsLimiter, async (req, res) => {
   try {
@@ -29,8 +52,8 @@ router.post("/chat", chatAnalyticsLimiter, async (req, res) => {
       [guestId, userId, userQuery, response, intent, JSON.stringify(recommendedProducts), hasImage || false]
     );
 
-    // If intent is "recommend_failed" or similar, log it as a gap
-    if (intent === "recommend_failed" || (userQuery.length > 3 && typeof response === "string" && response.includes("shortlist"))) {
+    // Log catalog gap when the AI couldn't satisfy the request
+    if (shouldLogCatalogGap(intent, userQuery, response)) {
       const keyword = userQuery.split(" ").slice(0, 3).join(" ").toLowerCase();
       await query(
         `INSERT INTO catalog_gaps (keyword) VALUES ($1)

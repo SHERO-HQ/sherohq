@@ -131,6 +131,13 @@ export function verifyPaystackSignature(secret: string) {
 export function verifyHubtelSignature(secret: string) {
     return (req: Request, res: Response, next: NextFunction) => {
         try {
+            if (!secret) {
+                console.error("❌ PAYMENT_WEBHOOK_SECRET not configured for Hubtel");
+                return res.status(500).json({
+                    error: "Webhook verification not configured",
+                });
+            }
+
             const signature = req.headers["x-hubtel-signature"] as string;
 
             if (!signature) {
@@ -143,7 +150,21 @@ export function verifyHubtelSignature(secret: string) {
             const payload = JSON.stringify(req.body);
             const hash = crypto.createHmac("sha256", secret).update(payload).digest("hex");
 
-            if (hash !== signature) {
+            // Lengths must match before timingSafeEqual, or it throws a RangeError
+            if (hash.length !== signature.length) {
+                console.error("🔴 Hubtel signature length mismatch");
+                return res.status(401).json({
+                    error: "Invalid Hubtel signature",
+                });
+            }
+
+            // Use timing-safe comparison to prevent timing attacks
+            const isValid = crypto.timingSafeEqual(
+                Buffer.from(hash),
+                Buffer.from(signature),
+            );
+
+            if (!isValid) {
                 console.error("🔴 Hubtel signature verification failed");
                 return res.status(401).json({
                     error: "Invalid Hubtel signature",
