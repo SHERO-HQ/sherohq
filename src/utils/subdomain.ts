@@ -102,7 +102,7 @@ const getTargetSubdomain = (
     lowercasePath.startsWith("/cart") ||
     lowercasePath.startsWith("/wishlist")
   ) {
-    const internalPath = path;
+    let internalPath = path;
 
     // We do NOT strip the prefix because the app structure keeps them
     // Example: shop.sherohq.com/shop or shop.sherohq.com/products
