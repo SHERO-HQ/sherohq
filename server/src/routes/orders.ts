@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
+import { rateLimit } from "express-rate-limit";
 import db from "../db/database";
 import { adminAuth, AdminRequest } from "../middleware/adminAuth";
 import { logActivity } from "./activity";
@@ -8,6 +9,9 @@ import { validateBody } from "../middleware/validate";
 import { CreateOrderSchema, UpdateOrderStatusSchema } from "../schemas";
 
 const router = Router();
+
+/** UUID v4 format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx */
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 interface OrderItem {
   id: string;
@@ -71,6 +75,15 @@ const ORDER_STATUSES = new Set([
   "quote",
 ]);
 
+// Rate limiter for the guest orders lookup to slow down enumeration
+const guestOrdersLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  limit: 20,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many requests, please try again later." },
+});
+
 // POST /api/orders/admin - Admin Create Order/Quote
 router.post(
   "/admin",
@@ -80,10 +93,9 @@ router.post(
     try {
       const { items, total, shippingInfo } = req.body;
 
-      const status = "pending"; // Default to pending for admin orders
-
-      // Determine type based on status or infer logic
-      const isQuote = false; // Admin orders are not quotes by default
+      // Determine type: use "quote" status to create a quote, otherwise "pending"
+      const isQuote = req.body.status === "quote";
+      const status = isQuote ? "quote" : "pending";
 
       const orderId = uuidv4();
       // guestId is required by DB currently, so generate one or use a placeholder
@@ -245,9 +257,14 @@ router.get("/user/:userId", async (req: Request, res: Response) => {
 });
 
 // GET /api/orders/guest/:guestId - Get orders by guest ID
-router.get("/guest/:guestId", async (req: Request, res: Response) => {
+router.get("/guest/:guestId", guestOrdersLimiter, async (req: Request, res: Response) => {
   try {
     const { guestId } = req.params;
+
+    // Validate that guestId is a proper UUID to prevent arbitrary DB lookups
+    if (typeof guestId !== "string" || !UUID_RE.test(guestId)) {
+      return res.status(400).json({ error: "Invalid guest ID" });
+    }
 
     const result = await db.query(
       `

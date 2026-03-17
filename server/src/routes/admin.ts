@@ -58,11 +58,6 @@ router.post(
 
       const admin = result.rows[0] as AdminUserRow | undefined;
 
-      if (!admin) {
-        console.warn(`❌ Admin login failed: Admin not found (${username})`);
-        return res.status(401).json({ error: "Wrong username" });
-      }
-
       // Always run bcrypt to prevent timing attacks
       const fakeHash =
         "$2a$10$fakeHashForTimingConsistencyPreventionXXXXXXXXXXXXXXXXXXXXXXXX";
