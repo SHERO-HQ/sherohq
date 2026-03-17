@@ -90,31 +90,16 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                   type: "spring",
                   damping: 20,
                 }}
-                className="relative w-full"
+                className="relative w-full bg-linear-to-br from-white/5 to-transparent dark:from-white/2 lg:dark:from-transparent rounded-3xl lg:rounded-none overflow-hidden"
               >
-                {/* Image Container with Overlay */}
-                <div className="relative w-full h-[500px] lg:h-[650px] group/image flex items-center justify-center p-0 rounded overflow-hidden shadow border border-white/10">
-                  {/* Decorative Elements */}
-                  <div className="absolute inset-0 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-3xl group-hover/image:scale-110 transition-transform duration-1000" />
-
-                  {/* The Image */}
-                  <div className="absolute inset-0 z-0">
-                    <AppImage
-                      src={getImageUrl(currentProduct.image)}
-                      alt={currentProduct.name}
-                      fill
-                      priority
-                      className="object-cover transition-transform duration-700 group-hover/image:scale-105"
-                    />
-                  </div>
-
-                  {/* Gradient Overlay & Info */}
-                  <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/40 to-transparent z-10 flex flex-col justify-end p-6 sm:p-8 lg:p-12">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:gap-12 relative">
+                  {/* Left Side: Info (Overlay on Mobile, Split on LG) */}
+                  <div className="absolute inset-x-0 bottom-0 z-20 lg:relative lg:inset-auto lg:w-1/2 flex flex-col justify-end lg:justify-center p-6 sm:p-8 lg:p-0 bg-linear-to-t from-slate-950/90 via-slate-950/60 to-transparent lg:bg-none lg:backdrop-blur-0">
                     <motion.div
                       initial={{ y: 20, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.4 }}
-                      className="max-w-2xl"
+                      className="max-w-xl"
                     >
                       <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 lg:mb-4 rounded border border-emerald-500/20 bg-emerald-500/10 backdrop-blur-md">
                         <ShoppingBag className="size-3 text-emerald-500" />
@@ -123,7 +108,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                         </span>
                       </div>
 
-                      <h2 className="text-3xl lg:text-6xl font-black text-white leading-[1.1] tracking-tighter mb-4 uppercase">
+                      <h2 className="text-3xl lg:text-7xl font-black text-white lg:text-slate-900 lg:dark:text-white leading-[1.05] tracking-tighter mb-4 uppercase">
                         {currentProduct.name.split(" ").map((word, i) => (
                           <span
                             key={i}
@@ -134,24 +119,24 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                         ))}
                       </h2>
 
-                      <p className="text-sm lg:text-lg text-slate-300 mb-6 lg:mb-8 line-clamp-2 lg:line-clamp-none max-w-xl leading-relaxed">
+                      <p className="text-xs lg:text-base text-slate-300 lg:text-slate-600 lg:dark:text-slate-400 mb-6 lg:mb-8 line-clamp-2 lg:line-clamp-none max-w-xl leading-relaxed">
                         {currentProduct.description ||
                           "Unlocking the next level of performance with precision engineering and state-of-the-art technology."}
                       </p>
 
-                      <div className="flex flex-wrap items-center gap-6 sm:gap-8 lg:gap-12">
+                      <div className="flex flex-wrap items-center gap-6 sm:gap-8 lg:gap-10">
                         <div className="flex flex-col">
-                          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 lg:text-slate-500 mb-1">
                             Price
                           </span>
-                          <span className="text-2xl lg:text-4xl font-black text-white">
+                          <span className="text-2xl lg:text-4xl font-black text-white lg:text-slate-900 lg:dark:text-white">
                             {formatCurrency(currentProduct.price)}
                           </span>
                         </div>
 
                         {currentProduct.rating > 0 && (
                           <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 lg:text-slate-500 mb-1">
                               Satisfaction
                             </span>
                             <div className="flex items-center gap-1.5">
@@ -159,20 +144,19 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                                 size={14}
                                 className="fill-amber-400 text-amber-400"
                               />
-                              <span className="text-sm lg:text-lg font-black text-white">
+                              <span className="text-sm lg:text-lg font-black text-white lg:text-slate-900 lg:dark:text-white">
                                 {currentProduct.rating}
                               </span>
                             </div>
                           </div>
                         )}
 
-                        {/* Integrated Action Button */}
-                        <div className="ml-auto pointer-events-auto">
+                        <div className="ml-auto lg:ml-0 pointer-events-auto">
                           <Link
                             href={getAbsoluteUrl(
                               `/shop/${currentProduct.slug || currentProduct.sku || currentProduct.id}`,
                             )}
-                            className="group flex items-center justify-center gap-3 px-6 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-white rounded font-black uppercase tracking-widest text-[10px] transition-all shadow-lg shadow-emerald-500/20 hover:-translate-y-0.5"
+                            className="group flex items-center justify-center gap-3 px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-white rounded font-black uppercase tracking-widest text-[10px] transition-all shadow-xl shadow-emerald-500/20 hover:-translate-y-0.5"
                           >
                             Details
                             <ArrowRight
@@ -184,10 +168,21 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                       </div>
                     </motion.div>
                   </div>
-                  {/* Carousel Navigation - Integrated */}
-                  <div className="absolute inset-0 z-20 pointer-events-none">
-                    {/* Arrows */}
-                    <div className="absolute inset-y-0 left-0 right-0 flex items-center justify-between px-4 sm:px-6 mb-4">
+
+                  {/* Right Side: Image with Content Wrapper (Background on Mobile, Relative Fixed on LG) */}
+                  <div className="relative w-full lg:w-1/2 aspect-square sm:aspect-video lg:aspect-auto h-[500px] lg:h-[650px] group/image overflow-hidden lg:rounded-3xl shadow-2xl border border-white/5">
+                    {/* Image */}
+                    <AppImage
+                      src={getImageUrl(currentProduct.image)}
+                      alt={currentProduct.name}
+                      fill
+                      priority
+                      className="object-cover transition-transform duration-1000 group-hover/image:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-emerald-500/5 group-hover/image:bg-transparent transition-colors duration-700" />
+                    
+                    {/* Carousel Navigation - Arrows (Only on Image for Desktop) */}
+                    <div className="absolute inset-0 z-30 pointer-events-none flex items-center justify-between px-4 sm:px-6">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -195,9 +190,9 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           prevSlide();
                           setIsAutoPlaying(false);
                         }}
-                        className="p-2 rounded bg-black/40 hover:bg-emerald-500 text-white backdrop-blur-md border border-white/10 transition-all active:scale-95 pointer-events-auto group/nav"
+                        className="p-3 rounded-full bg-black/40 hover:bg-emerald-500 text-white backdrop-blur-md border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
                       >
-                        <ChevronLeft className="size-5 sm:size-7 group-hover/nav:-translate-x-1 transition-transform" />
+                        <ChevronLeft className="size-5 sm:size-6 lg:size-7 group-hover/nav:-translate-x-0.5 transition-transform" />
                       </button>
                       <button
                         onClick={(e) => {
@@ -206,14 +201,14 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           nextSlide();
                           setIsAutoPlaying(false);
                         }}
-                        className="p-2 rounded bg-black/40 hover:bg-emerald-500 text-white backdrop-blur-md border border-white/10 transition-all active:scale-95 pointer-events-auto group/nav"
+                        className="p-3 rounded-full bg-black/40 hover:bg-emerald-500 text-white backdrop-blur-md border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
                       >
-                        <ChevronRight className="size-5 sm:size-7 group-hover/nav:translate-x-1 transition-transform" />
+                        <ChevronRight className="size-5 sm:size-6 lg:size-7 group-hover/nav:translate-x-0.5 transition-transform" />
                       </button>
                     </div>
 
-                    {/* Dots - Bottom Center */}
-                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 pointer-events-auto">
+                    {/* Dots - Integrated in Image Bottom for Desktop */}
+                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 pointer-events-auto">
                       {spotlightItems.map((_, i) => (
                         <button
                           key={i}

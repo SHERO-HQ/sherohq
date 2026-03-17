@@ -77,9 +77,19 @@ function formatGhs(amount: number): string {
 
 async function fetchRecommendedProducts(query: string) {
   try {
-    const apiUrl = process.env.API_URL || "http://127.0.0.1:5000";
+    const apiUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:5000";
     console.log(`🔍 AI Fetching products for: "${query}" using ${apiUrl}`);
-    
+
+    // Empty or generic query: return featured products
+    if (!query || query === "latest products" || query === "featured") {
+      const response = await fetch(`${apiUrl}/api/products`);
+      if (response.ok) {
+        const prod = await response.json();
+        return Array.isArray(prod) ? prod.slice(0, 3) : [];
+      }
+      return [];
+    }
+
     // Attempt 1: Search match
     const response = await fetch(
       `${apiUrl}/api/products?search=${encodeURIComponent(query)}`,
@@ -177,7 +187,7 @@ function buildFallbackReply(
     return "I'm sorry to hear that. For technical issues like crashes or errors, please create a support ticket so our team can help you immediately. [TICKET]";
   }
 
-  return "I can help you find any product or IT service on SHERO. Tell me what you need and your budget (GHS). [RECOMMEND: latest products]";
+  return "I can help you find any product or IT service on SHERO. Tell me what you need and your budget (GHS). [RECOMMEND: laptops]";
 }
 
 export async function POST(request: Request) {
