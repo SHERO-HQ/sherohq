@@ -222,7 +222,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
               </span>
             </button>
             <button
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 addItem({
                   id: product.id,
                   name: product.name,
