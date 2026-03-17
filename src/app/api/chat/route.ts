@@ -49,9 +49,9 @@ type ChatHistoryMessage = {
 };
 
 const GEMINI_MODEL_CANDIDATES = [
-  "gemini-flash-latest",
-  "gemini-2.5-flash",
   "gemini-2.0-flash",
+  "gemini-1.5-flash",
+  "gemini-1.5-pro",
 ];
 
 function extractBudgetGhs(input: string): number | null {
@@ -168,6 +168,10 @@ function buildFallbackReply(
     return "I can assisted with cloud solutions and infrastructure. Tell me your top goal, and I'll propose a next step.";
   }
 
+  if (normalized.includes("book") || normalized.includes("consultation") || normalized.includes("call")) {
+    return "I can schedule a professional consultation for you to discuss your IT needs in detail. [BOOK: Enterprise Consultation]";
+  }
+
   const supportKeywords = ["crash", "broken", "os", "boot", "error", "problem", "issue", "failing", "slow", "help", "trouble"];
   if (supportKeywords.some(k => normalized.includes(k))) {
     return "I'm sorry to hear that. For technical issues like crashes or errors, please create a support ticket so our team can help you immediately. [TICKET]";
@@ -181,130 +185,118 @@ export async function POST(request: Request) {
     const { message, history, imageData, audioData } = await request.json();
     const catalogSummary = await fetchDynamicCatalogSummary();
 
-    if (!process.env.GEMINI_API_KEY) {
-      return NextResponse.json(
-        {
-          id: crypto.randomUUID(),
-          role: "assistant",
-          content: buildFallbackReply(message, history),
-        },
-        { status: 200 },
-      );
-    }
+    let replyContent = "";
 
-    // Gemini uses "user" and "model" roles for conversational turns.
-    const contents = history.map((msg: { role: string; content: string; imageData?: string }) => {
-      const parts: any[] = [{ text: msg.content }];
-      if (msg.imageData) {
-        const mimeType = msg.imageData.split(";")[0].split(":")[1];
-        const data = msg.imageData.split(",")[1];
-        parts.push({
+    if (!process.env.GEMINI_API_KEY) {
+      replyContent = buildFallbackReply(message, history);
+    } else {
+      // Gemini uses "user" and "model" roles for conversational turns.
+      const contents = history.map((msg: { role: string; content: string; imageData?: string }) => {
+        const parts: any[] = [{ text: msg.content }];
+        if (msg.imageData) {
+          const mimeType = msg.imageData.split(";")[0].split(":")[1];
+          const data = msg.imageData.split(",")[1];
+          parts.push({
+            inline_data: {
+              mime_type: mimeType,
+              data: data,
+            },
+          });
+        }
+        return {
+          role: msg.role === "assistant" ? "model" : "user",
+          parts,
+        };
+      });
+
+      const currentParts: any[] = [{ text: message }];
+      if (imageData) {
+        const mimeType = imageData.split(";")[0].split(":")[1];
+        const data = imageData.split(",")[1];
+        currentParts.push({
           inline_data: {
             mime_type: mimeType,
             data: data,
           },
         });
       }
-      return {
-        role: msg.role === "assistant" ? "model" : "user",
-        parts,
-      };
-    });
 
-    const currentParts: any[] = [{ text: message }];
-    if (imageData) {
-      const mimeType = imageData.split(";")[0].split(":")[1];
-      const data = imageData.split(",")[1];
-      currentParts.push({
-        inline_data: {
-          mime_type: mimeType,
-          data: data,
-        },
-      });
-    }
-
-    if (audioData) {
-      const mimeType = audioData.split(";")[0].split(":")[1];
-      const data = audioData.split(",")[1];
-      currentParts.push({
-        inline_data: {
-          mime_type: mimeType,
-          data: data,
-        },
-      });
-    }
-
-    contents.push({
-      role: "user",
-      parts: currentParts,
-    });
-
-    let response: Response | null = null;
-    let lastError: unknown = null;
-
-    for (const model of GEMINI_MODEL_CANDIDATES) {
-      const currentResponse = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+      if (audioData) {
+        const mimeType = audioData.split(";")[0].split(":")[1];
+        const data = audioData.split(",")[1];
+        currentParts.push({
+          inline_data: {
+            mime_type: mimeType,
+            data: data,
           },
-          body: JSON.stringify({
-            systemInstruction: {
-              parts: [{ text: getSystemPrompt(catalogSummary) }],
-            },
-            contents,
-            generationConfig: {
-              temperature: 0.7,
-            },
-          }),
-        },
-      );
-
-      // Stop at first success
-      if (currentResponse.ok) {
-        response = currentResponse;
-        break;
+        });
       }
 
-      const errorData = await currentResponse.json();
-      lastError = {
-        model,
-        status: errorData?.error?.status,
-        message: errorData?.error?.message,
-        httpStatus: currentResponse.status,
-      };
+      contents.push({
+        role: "user",
+        parts: currentParts,
+      });
 
-      // Retry next model only for model/quota/provider availability cases
-      const status = errorData?.error?.status as string | undefined;
-      if (
-        status !== "RESOURCE_EXHAUSTED" &&
-        status !== "NOT_FOUND" &&
-        currentResponse.status !== 404 &&
-        currentResponse.status !== 429
-      ) {
-        // Non-retriable provider failure; stop trying additional models.
-        break;
+      let response: Response | null = null;
+      let lastError: unknown = null;
+
+      for (const model of GEMINI_MODEL_CANDIDATES) {
+        const currentResponse = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              systemInstruction: {
+                parts: [{ text: getSystemPrompt(catalogSummary) }],
+              },
+              contents,
+              generationConfig: {
+                temperature: 0.7,
+              },
+            }),
+          },
+        );
+
+        // Stop at first success
+        if (currentResponse.ok) {
+          response = currentResponse;
+          break;
+        }
+
+        const errorData = await currentResponse.json();
+        lastError = {
+          model,
+          status: errorData?.error?.status,
+          message: errorData?.error?.message,
+          httpStatus: currentResponse.status,
+        };
+
+        // Retry next model only for model/quota/provider availability cases
+        const status = errorData?.error?.status as string | undefined;
+        if (
+          status !== "RESOURCE_EXHAUSTED" &&
+          status !== "NOT_FOUND" &&
+          currentResponse.status !== 404 &&
+          currentResponse.status !== 429
+        ) {
+          // Non-retriable provider failure; stop trying additional models.
+          break;
+        }
+      }
+
+      if (response) {
+        const data = await response.json();
+        replyContent =
+          data?.candidates?.[0]?.content?.parts?.[0]?.text ||
+          "I'm sorry, I couldn't generate a response.";
+      } else {
+        console.error("Chat API provider error: no successful model", lastError);
+        replyContent = buildFallbackReply(message, history);
       }
     }
-
-    if (!response) {
-      console.error("Chat API provider error: no successful model", lastError);
-      return NextResponse.json(
-        {
-          id: crypto.randomUUID(),
-          role: "assistant",
-          content: buildFallbackReply(message, history),
-        },
-        { status: 200 },
-      );
-    }
-
-    const data = await response.json();
-    let replyContent =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text ||
-      "I'm sorry, I couldn't generate a response.";
 
     // Extract query and search for products
     let recommendedProducts: Product[] = [];
