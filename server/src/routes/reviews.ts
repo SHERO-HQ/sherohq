@@ -89,7 +89,7 @@ router.post("/:productId", async (req, res) => {
     });
   } catch (error) {
     console.error("Error submitting review:", error);
-    res.status(501).json({ error: "Failed to submit review" });
+    res.status(500).json({ error: "Failed to submit review" });
   }
 });
 

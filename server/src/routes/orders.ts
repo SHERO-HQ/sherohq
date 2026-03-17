@@ -80,10 +80,9 @@ router.post(
     try {
       const { items, total, shippingInfo } = req.body;
 
-      const status = "pending"; // Default to pending for admin orders
-
-      // Determine type based on status or infer logic
-      const isQuote = false; // Admin orders are not quotes by default
+      // Determine type: use "quote" status to create a quote, otherwise "pending"
+      const isQuote = req.body.status === "quote";
+      const status = isQuote ? "quote" : "pending";
 
       const orderId = uuidv4();
       // guestId is required by DB currently, so generate one or use a placeholder

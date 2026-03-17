@@ -33,6 +33,14 @@ export function verifyWebhookSignature(secret: string) {
                 .update(payload)
                 .digest("hex");
 
+            // Lengths must match before timingSafeEqual, or it throws a RangeError
+            if (signature.length !== expectedSignature.length) {
+                console.error("🔴 Webhook signature length mismatch");
+                return res.status(401).json({
+                    error: "Invalid webhook signature",
+                });
+            }
+
             // Use timing-safe comparison to prevent timing attacks
             const isValid = crypto.timingSafeEqual(
                 Buffer.from(signature),
@@ -66,6 +74,13 @@ export function verifyWebhookSignature(secret: string) {
 export function verifyPaystackSignature(secret: string) {
     return (req: Request, res: Response, next: NextFunction) => {
         try {
+            if (!secret) {
+                console.error("❌ PAYMENT_WEBHOOK_SECRET not configured");
+                return res.status(500).json({
+                    error: "Webhook verification not configured",
+                });
+            }
+
             const signature = req.headers["x-paystack-signature"] as string;
 
             if (!signature) {
@@ -78,7 +93,21 @@ export function verifyPaystackSignature(secret: string) {
             const payload = JSON.stringify(req.body);
             const hash = crypto.createHmac("sha512", secret).update(payload).digest("hex");
 
-            if (hash !== signature) {
+            // Lengths must match before timingSafeEqual, or it throws a RangeError
+            if (hash.length !== signature.length) {
+                console.error("🔴 Paystack signature length mismatch");
+                return res.status(401).json({
+                    error: "Invalid Paystack signature",
+                });
+            }
+
+            // Use timing-safe comparison to prevent timing attacks
+            const isValid = crypto.timingSafeEqual(
+                Buffer.from(hash),
+                Buffer.from(signature),
+            );
+
+            if (!isValid) {
                 console.error("🔴 Paystack signature verification failed");
                 return res.status(401).json({
                     error: "Invalid Paystack signature",

@@ -85,6 +85,7 @@ export async function initializeDatabase() {
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         sku TEXT UNIQUE,
+        slug TEXT UNIQUE,
         category TEXT NOT NULL,
         price DECIMAL(10, 2) NOT NULL,
         "originalPrice" DECIMAL(10, 2),
@@ -98,8 +99,16 @@ export async function initializeDatabase() {
         description TEXT,
         features JSONB,
         specifications JSONB,
+        condition TEXT DEFAULT 'New',
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
+    `);
+
+    // Migration: add slug and condition columns to existing products tables
+    await client.query(`
+      ALTER TABLE products
+      ADD COLUMN IF NOT EXISTS slug TEXT,
+      ADD COLUMN IF NOT EXISTS condition TEXT DEFAULT 'New';
     `);
 
     // Categories table

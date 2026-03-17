@@ -1,7 +1,5 @@
 import { Router, Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
-import fs from "node:fs";
-import path from "node:path";
 import db from "../db/database";
 import { adminAuth, AdminRequest, requireRole } from "../middleware/adminAuth";
 import { logActivity } from "./activity";
@@ -508,21 +506,7 @@ router.put("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
       product: parseProduct(product),
     });
   } catch (error) {
-    // For debugging: also write to a file in the workspace
-    const logPath = path.join(process.cwd(), "product_update_error.log");
-    const logContent = JSON.stringify(
-      {
-        timestamp: new Date().toISOString(),
-        productId: req.params.id,
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-        body: req.body,
-      },
-      null,
-      2,
-    );
-    fs.appendFileSync(logPath, logContent + "\n---\n");
-
+    console.error("Error updating product:", error, { productId: req.params.id, body: req.body });
     res.status(500).json({
       error:
         error instanceof Error

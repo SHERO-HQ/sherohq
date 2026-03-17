@@ -1,13 +1,27 @@
 import express from "express";
+import { rateLimit } from "express-rate-limit";
 import { query } from "../db/database";
 import { adminAuth } from "../middleware/adminAuth";
 
 const router = express.Router();
 
+// Rate limiting for chat analytics to prevent spam
+const chatAnalyticsLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  limit: 30,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: { error: "Too many requests, please slow down." },
+});
+
 // POST /api/analytics/chat - Log a chat interaction
-router.post("/chat", async (req, res) => {
+router.post("/chat", chatAnalyticsLimiter, async (req, res) => {
   try {
     const { guestId, userId, query: userQuery, response, intent, recommendedProducts, hasImage } = req.body;
+
+    if (!userQuery || typeof userQuery !== "string") {
+      return res.status(400).json({ error: "query is required" });
+    }
 
     await query(
       `INSERT INTO ai_chat_logs ("guestId", "userId", query, response, intent, "recommendedProducts", "hasImage")
@@ -16,7 +30,7 @@ router.post("/chat", async (req, res) => {
     );
 
     // If intent is "recommend_failed" or similar, log it as a gap
-    if (intent === "recommend_failed" || (userQuery.length > 3 && response.includes("shortlist"))) {
+    if (intent === "recommend_failed" || (userQuery.length > 3 && typeof response === "string" && response.includes("shortlist"))) {
       const keyword = userQuery.split(" ").slice(0, 3).join(" ").toLowerCase();
       await query(
         `INSERT INTO catalog_gaps (keyword) VALUES ($1)

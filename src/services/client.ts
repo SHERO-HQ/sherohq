@@ -160,6 +160,7 @@ export async function userAuthFetch(url: string, options: RequestInit = {}) {
   const headers: HeadersInit = {
     "Content-Type": "application/json",
     Authorization: `Bearer ${token}`,
+    "X-CSRF-Protection": "1",
     ...options.headers,
   };
 

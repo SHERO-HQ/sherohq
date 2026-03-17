@@ -135,9 +135,12 @@ export const CreateOrderSchema = z.object({
     .max(50, "Too many items in order"),
   total: z.number().positive("Total must be positive"),
   shippingInfo: ShippingInfoSchema,
-  paymentMethod: z.enum(["card", "momo", "cash", "paystack", "store_pickup"], {
-    message: "Invalid payment method",
-  }),
+  paymentMethod: z.enum(
+    ["card", "momo", "cash", "cod", "cash_on_delivery", "paystack", "store_pickup", "invoice_payment"],
+    {
+      message: "Invalid payment method",
+    },
+  ),
 });
 
 export const UpdateOrderStatusSchema = z.object({
