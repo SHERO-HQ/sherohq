@@ -14,11 +14,12 @@ async function fetchDynamicCatalogSummary(): Promise<string> {
     const res = await fetch(`${BACKEND_URL}/api/products`);
     if (!res.ok) return CATALOG_SUMMARY; // Fallback
     const products: Product[] = await res.json();
-    
+
     // Group by category and pick top items
-    const summary = products.slice(0, 10).map(p => 
-      `- ${p.name} (GHS ${p.price}) ID: ${p.id}`
-    ).join("\n");
+    const summary = products
+      .slice(0, 10)
+      .map((p) => `- ${p.name} (GHS ${p.price}) ID: ${p.id}`)
+      .join("\n");
 
     return summary || CATALOG_SUMMARY;
   } catch (error) {
@@ -99,10 +100,12 @@ async function fetchRecommendedProducts(query: string) {
     );
     if (!response.ok) return [];
     let products = await response.json();
-    
+
     // Attempt 2: Category fallback if search returns nothing
     if (!Array.isArray(products) || products.length === 0) {
-      console.log(`⚠️ No search matches for "${query}". Trying category fetch...`);
+      console.log(
+        `⚠️ No search matches for "${query}". Trying category fetch...`,
+      );
       const catResponse = await fetch(
         `${BACKEND_URL}/api/products?category=${encodeURIComponent(query)}`,
       );
@@ -123,36 +126,60 @@ function buildFallbackReply(
   history: ChatHistoryMessage[] = [],
 ): string {
   const normalized = userMessage.toLowerCase();
-  
+
   // 1. Repetition Guard: If the user is repeating the exact same thing or getting stuck in a loop
-  const userHistory = history.filter(m => m.role === "user");
-  const isRepeating = userHistory.length > 0 && userHistory[userHistory.length - 1].content.toLowerCase() === normalized;
-  
+  const userHistory = history.filter((m) => m.role === "user");
+  const isRepeating =
+    userHistory.length > 0 &&
+    userHistory[userHistory.length - 1].content.toLowerCase() === normalized;
+
   if (isRepeating) {
     return "I notice we're repeating. To get you the best help quickly, I recommend speaking with an expert or opening a ticket. [TICKET] [BOOK: Personal Support]";
   }
 
   // 2. Intent-based hardcoding (Smarter triggers)
-  if (normalized.includes("book") || normalized.includes("consultation") || normalized.includes("call") || normalized.includes("meeting") || normalized.includes("talk to someone")) {
+  if (
+    normalized.includes("book") ||
+    normalized.includes("consultation") ||
+    normalized.includes("call") ||
+    normalized.includes("meeting") ||
+    normalized.includes("talk to someone")
+  ) {
     return "I've flagged this for a professional consultation. You can schedule a time here: [BOOK: Enterprise IT Consultation]";
   }
 
-  const supportKeywords = ["crash", "broken", "os", "boot", "error", "problem", "issue", "failing", "slow", "help", "trouble", "don't work", "repair"];
-  if (supportKeywords.some(k => normalized.includes(k))) {
+  const supportKeywords = [
+    "crash",
+    "broken",
+    "os",
+    "boot",
+    "error",
+    "problem",
+    "issue",
+    "failing",
+    "slow",
+    "help",
+    "trouble",
+    "don't work",
+    "repair",
+  ];
+  if (supportKeywords.some((k) => normalized.includes(k))) {
     return "Technical issues are best handled via our direct support channel. Please open a ticket: [TICKET]";
   }
 
   // 3. Product Discovery Fallback
   const laptopKeywords = ["laptop", "pc", "computer", "macbook", "hp", "dell"];
-  if (laptopKeywords.some(k => normalized.includes(k))) {
+  if (laptopKeywords.some((k) => normalized.includes(k))) {
     const budget = extractBudgetGhs(userMessage);
-    if (budget && budget < 6000) return `I recommend these entry-level laptops within your ${formatGhs(budget)} budget: [RECOMMEND: student laptop]`;
-    if (budget) return `I've found some premium options for your ${formatGhs(budget)} budget: [RECOMMEND: laptop]`;
+    if (budget && budget < 6000)
+      return `I recommend these entry-level laptops within your ${formatGhs(budget)} budget: [RECOMMEND: student laptop]`;
+    if (budget)
+      return `I've found some premium options for your ${formatGhs(budget)} budget: [RECOMMEND: laptop]`;
     return "I can help you browse our current laptop inventory: [RECOMMEND: laptop]";
   }
 
   const networkKeywords = ["network", "router", "switch", "wifi", "internet"];
-  if (networkKeywords.some(k => normalized.includes(k))) {
+  if (networkKeywords.some((k) => normalized.includes(k))) {
     return "Check out our networking hardware including routers and switches: [RECOMMEND: router switch]";
   }
 
@@ -181,25 +208,30 @@ export async function POST(request: Request) {
       replyContent = buildFallbackReply(message, history);
     } else {
       // Gemini uses "user" and "model" roles for conversational turns.
-      const contents = history.map((msg: { role: string; content: string; imageData?: string }) => {
-        const parts: any[] = [{ text: msg.content }];
-        if (msg.imageData) {
-          const mimeType = msg.imageData.split(";")[0].split(":")[1];
-          const data = msg.imageData.split(",")[1];
-          parts.push({
-            inline_data: {
-              mime_type: mimeType,
-              data: data,
-            },
-          });
-        }
-        return {
-          role: msg.role === "assistant" ? "model" : "user",
-          parts,
-        };
-      });
+      type ContentPart =
+        | { text: string }
+        | { inline_data: { mime_type: string; data: string } };
+      const contents = history.map(
+        (msg: { role: string; content: string; imageData?: string }) => {
+          const parts: ContentPart[] = [{ text: msg.content }];
+          if (msg.imageData) {
+            const mimeType = msg.imageData.split(";")[0].split(":")[1];
+            const data = msg.imageData.split(",")[1];
+            parts.push({
+              inline_data: {
+                mime_type: mimeType,
+                data: data,
+              },
+            });
+          }
+          return {
+            role: msg.role === "assistant" ? "model" : "user",
+            parts,
+          };
+        },
+      );
 
-      const currentParts: any[] = [{ text: message }];
+      const currentParts: ContentPart[] = [{ text: message }];
       if (imageData) {
         const mimeType = imageData.split(";")[0].split(":")[1];
         const data = imageData.split(",")[1];
@@ -272,7 +304,7 @@ export async function POST(request: Request) {
           currentResponse.status !== 404 &&
           currentResponse.status !== 429
         ) {
-          // Non-retriable provider failure; stop trying additional models.
+          // Non-re-triable provider failure; stop trying additional models.
           break;
         }
       }
@@ -283,7 +315,10 @@ export async function POST(request: Request) {
           data?.candidates?.[0]?.content?.parts?.[0]?.text ||
           "I'm sorry, I couldn't generate a response.";
       } else {
-        console.error("Chat API provider error: no successful model", lastError);
+        console.error(
+          "Chat API provider error: no successful model",
+          lastError,
+        );
         replyContent = buildFallbackReply(message, history);
       }
     }
@@ -338,45 +373,62 @@ export async function POST(request: Request) {
       replyContent = replyContent.replace("[CONTACT]", "").trim();
     }
 
-    let queryMatch = replyContent.match(/\[(?:RECOMMEND|QUERY|SEARCH):\s*(.*?)\]/i);
-    
+    let queryMatch = replyContent.match(
+      /\[(?:RECOMMEND|QUERY|SEARCH):\s*(.*?)\]/i,
+    );
+
     // Fallback: If AI forgot the tag or didn't trigger
     if (!queryMatch && !supportAction && !guideSlug) {
       const lowerReply = replyContent.toLowerCase();
       const lowerMessage = message.toLowerCase();
-      
+
       // 1. Check for specific product names from current catalog summary
-      const catalogNames = catalogSummary.split("\n")
-        .filter(line => line.includes("("))
-        .map(line => {
+      const catalogNames = catalogSummary
+        .split("\n")
+        .filter((line) => line.includes("("))
+        .map((line) => {
           const match = line.match(/^\s*-\s*(.*?)\s*\(/);
           return match ? match[1].trim() : null;
         })
         .filter(Boolean) as string[];
 
-      let mentionedProduct = catalogNames.find(name => 
-        lowerReply.includes(name.toLowerCase()) || 
-        lowerMessage.includes(name.toLowerCase())
+      let mentionedProduct = catalogNames.find(
+        (name) =>
+          lowerReply.includes(name.toLowerCase()) ||
+          lowerMessage.includes(name.toLowerCase()),
       );
 
       // 2. If nothing found in current turn, scan history
       if (!mentionedProduct && history.length > 0) {
         for (let i = history.length - 1; i >= 0; i--) {
           const histContent = history[i].content.toLowerCase();
-          const found = catalogNames.find(name => histContent.includes(name.toLowerCase()));
+          const found = catalogNames.find((name) =>
+            histContent.includes(name.toLowerCase()),
+          );
           if (found) {
             mentionedProduct = found;
             break;
           }
         }
       }
-      
+
       if (mentionedProduct) {
-        queryMatch = [null, mentionedProduct] as any;
+        queryMatch = ["", mentionedProduct] as RegExpMatchArray;
       } else {
         // 2. Escalation Detection
-        const escalationKeywords = ["human", "ticket", "expert", "didn't work", "still broken", "nothing works", "help me", "representative"];
-        const isEscalation = escalationKeywords.some(k => lowerMessage.includes(k));
+        const escalationKeywords = [
+          "human",
+          "ticket",
+          "expert",
+          "didn't work",
+          "still broken",
+          "nothing works",
+          "help me",
+          "representative",
+        ];
+        const isEscalation = escalationKeywords.some((k) =>
+          lowerMessage.includes(k),
+        );
 
         if (isEscalation) {
           supportAction = "ticket";
@@ -384,16 +436,46 @@ export async function POST(request: Request) {
 
         if (!supportAction) {
           // 3. Generic Product keywords
-          const productKeywords = ["laptop", "pc", "router", "switch", "networking", "server", "printer", "phone", "monitor", "storage", "audio", "accessory"];
-          const intentSignals = ["here are", "options", "recommend", "look at", "check out", "available", "find", "budget", "ghs", "cost"];
-          
-          const hasProduct = productKeywords.some(k => lowerMessage.includes(k) || lowerReply.includes(k));
-          const hasIntent = intentSignals.some(s => lowerReply.includes(s) || lowerMessage.includes(s));
+          const productKeywords = [
+            "laptop",
+            "pc",
+            "router",
+            "switch",
+            "networking",
+            "server",
+            "printer",
+            "phone",
+            "monitor",
+            "storage",
+            "audio",
+            "accessory",
+          ];
+          const intentSignals = [
+            "here are",
+            "options",
+            "recommend",
+            "look at",
+            "check out",
+            "available",
+            "find",
+            "budget",
+            "ghs",
+            "cost",
+          ];
+
+          const hasProduct = productKeywords.some(
+            (k) => lowerMessage.includes(k) || lowerReply.includes(k),
+          );
+          const hasIntent = intentSignals.some(
+            (s) => lowerReply.includes(s) || lowerMessage.includes(s),
+          );
 
           if (hasProduct || hasIntent) {
-            const found = productKeywords.filter(k => lowerMessage.includes(k) || lowerReply.includes(k));
+            const found = productKeywords.filter(
+              (k) => lowerMessage.includes(k) || lowerReply.includes(k),
+            );
             const query = found[0] || "featured";
-            queryMatch = [null, query] as any;
+            queryMatch = ["", query] as RegExpMatchArray;
           }
         }
       }
@@ -403,7 +485,9 @@ export async function POST(request: Request) {
       const query = queryMatch[1].trim();
       recommendedProducts = await fetchRecommendedProducts(query);
       // Clean up the reply content
-      replyContent = replyContent.replace(/\[(?:RECOMMEND|QUERY|SEARCH):\s*.*?\]/gi, "").trim();
+      replyContent = replyContent
+        .replace(/\[(?:RECOMMEND|QUERY|SEARCH):\s*.*?\]/gi, "")
+        .trim();
     }
 
     // FINAL GUARDRAIL: Force brevity but allow more helpfulness
@@ -416,28 +500,35 @@ export async function POST(request: Request) {
 
     // GOD TIER: AI Analytics Logging
     try {
-      const intent = cartProduct ? "cart_add" : 
-                    trackOrder ? "track_order" : 
-                    trackTicket ? "track_ticket" : 
-                    bookStore ? "book_consult" : 
-                    guideSlug ? "view_guide" : 
-                    recommendedProducts.length > 0 ? "product_recommend" : "casual";
+      const intent = cartProduct
+        ? "cart_add"
+        : trackOrder
+          ? "track_order"
+          : trackTicket
+            ? "track_ticket"
+            : bookStore
+              ? "book_consult"
+              : guideSlug
+                ? "view_guide"
+                : recommendedProducts.length > 0
+                  ? "product_recommend"
+                  : "casual";
 
       // Fire and forget (don't await to avoid delaying response)
       fetch(`${BACKEND_URL}/api/analytics/chat`, {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
-          "X-CSRF-Protection": "1"
+          "X-CSRF-Protection": "1",
         },
         body: JSON.stringify({
           query: message,
           response: replyContent,
           intent,
-          recommendedProducts: recommendedProducts.map(p => p.id),
-          hasImage: !!imageData
+          recommendedProducts: recommendedProducts.map((p) => p.id),
+          hasImage: !!imageData,
         }),
-      }).catch(e => console.error("Analytics log failed:", e));
+      }).catch((e) => console.error("Analytics log failed:", e));
     } catch (e) {
       console.error("Analytics preparation failed:", e);
     }
