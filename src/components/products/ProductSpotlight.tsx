@@ -90,7 +90,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                   type: "spring",
                   damping: 20,
                 }}
-                className="relative w-full bg-linear-to-br from-white/5 to-transparent dark:from-white/2 lg:dark:from-transparent rounded-3xl lg:rounded-none overflow-hidden"
+                className="relative w-full bg-linear-to-br from-white/5 to-transparent dark:from-white/2 lg:dark:from-transparent rounded lg:rounded-none overflow-hidden"
               >
                 <div className="flex flex-col lg:flex-row lg:items-center lg:gap-12 relative">
                   {/* Left Side: Info (Overlay on Mobile, Split on LG) */}
@@ -170,7 +170,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                   </div>
 
                   {/* Right Side: Image with Content Wrapper (Background on Mobile, Relative Fixed on LG) */}
-                  <div className="relative w-full lg:w-1/2 aspect-square sm:aspect-video lg:aspect-auto h-[500px] lg:h-[650px] group/image overflow-hidden lg:rounded-3xl shadow-2xl border border-white/5">
+                  <div className="relative w-full lg:w-1/2 aspect-square sm:aspect-video lg:aspect-auto h-[500px] lg:h-[650px] group/image overflow-hidden lg:rounded shadow-2xl border border-white/5">
                     {/* Image */}
                     <AppImage
                       src={getImageUrl(currentProduct.image)}

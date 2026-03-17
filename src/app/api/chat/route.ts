@@ -21,26 +21,23 @@ async function fetchDynamicCatalogSummary(): Promise<string> {
 }
 
 function getSystemPrompt(catalog: string) {
-  return `HELPFUL SHERO EXPERT.
-RULE 1: Response must be UNDER 40 WORDS. Be helpful, graceful, and natural.
-RULE 2: MUST USE [RECOMMEND: "Product Name"] for links if suggesting specific products.
-RULE 3: USE [CART: "Product Name"] if user wants to buy or add to cart.
-RULE 4: USE [TRACK_ORDER: id] or [TRACK_TICKET: id] for status queries.
-RULE 5: USE [BOOK: service] to offer professional consultation for complex needs. (Link: /consultation)
-RULE 6: Suggest [GUIDE: slug] if there's a specific technical guide that matches. If not, give general helpful advice.
-RULE 7: ESCALATION: If the user is frustrated or needs direct help, suggest opening a ticket with [TICKET]. (Link: /support)
-RULE 8: If the user provides AUDIO or IMAGE, analyze it carefully to provide technical feedback or product matches.
-RULE 9: FLEXIBLE INTELLIGENCE: You are a tech expert. Feel free to give general hardware/software advice even if it's not explicitly in your knowledge base files or from our support page.
-RULE 10: DO NOT say "I cannot help with that because it is not on our support page". Always make a helpful suggestion based on your general knowledge.
+  return `DIRECT DISPATCHER (SHERO TECH). 
+RULE 1: Be EXTREMELY BRIEF (Under 20 words). No pleasantries.
+RULE 2: Your GOAL is to trigger a TAG ([RECOMMEND], [BOOK], [CART], [TICKET]) as fast as possible.
+RULE 3: If a user mentions a product category or need, immediately output [RECOMMEND: "query"].
+RULE 4: If a user is frustrated, angry, or has a technical fault, immediately output [TICKET].
+RULE 5: If a user mentions "meeting", "call", "consult", or "expert", output [BOOK: "Consultation"].
+RULE 6: Use [CART: "Name"] only if they explicitly say "buy", "add to cart", or "order".
+RULE 7: If the user message is vague, ask ONLY one clarifying question (e.g., "GHS budget?").
 
-KNOWLEDGE BASE:
+KNOWLEDGE:
 ${catalog}
 ${SUPPORT_KNOWLEDGE}
 
 EXAMPLES:
-User: "I want to buy the Elitebook" -> "Great choice! I've added the HP Elitebook 840 G6 to your cart. [CART: HP Elitebook 840 G6]"
-User: "How do I fix my screen?" -> "I'm sorry to hear that! You can try a hard reset first. If that fails, check our [GUIDE: troubleshooting-power] or open a [TICKET] on the support page."
-User: "Need a pro call" -> "I can schedule a professional consultation for you to discuss this in detail. [BOOK: Enterprise Consultation]"`;
+User: "I need a fast laptop for coding" -> "I recommend these high-performance options for developers: [RECOMMEND: coding laptop]"
+User: "My windows is corrupted" -> "I'm sorry to hear that. Please open a support ticket for technical repair. [TICKET]"
+User: "Can we talk about a server setup?" -> "I've scheduled a professional consultation for your infrastructure needs. [BOOK: Server Infrastructure]"`;
 }
 
 type ChatHistoryMessage = {
@@ -120,74 +117,51 @@ function buildFallbackReply(
   history: ChatHistoryMessage[] = [],
 ): string {
   const normalized = userMessage.toLowerCase();
-  const budget = extractBudgetGhs(userMessage);
-  const hasTimeline =
-    normalized.includes("today") ||
-    normalized.includes("tomorrow") ||
-    normalized.includes("week") ||
-    normalized.includes("month") ||
-    normalized.includes("asap") ||
-    normalized.includes("urgent") ||
-    normalized.includes("immediately");
-  const lastAssistantMessage = [...history]
-    .reverse()
-    .find((msg) => msg.role === "assistant")
-    ?.content.toLowerCase();
-
-  const discussingLaptop =
-    normalized.includes("laptop") || normalized.includes("pc");
-  const discussingNetwork =
-    normalized.includes("network") ||
-    normalized.includes("router") ||
-    normalized.includes("switch");
-  const discussingCloud =
-    normalized.includes("cloud") ||
-    normalized.includes("migration") ||
-    normalized.includes("server");
-
-  // Budget-only follow-up: move the conversation forward instead of repeating.
-  if (budget && !discussingLaptop && !discussingNetwork && !discussingCloud) {
-    return `Great, noted budget around ${formatGhs(budget)}. To recommend the best fit, tell me which option you need: laptops for a team, networking equipment, or cloud/server support.`;
+  
+  // 1. Repetition Guard: If the user is repeating the exact same thing or getting stuck in a loop
+  const userHistory = history.filter(m => m.role === "user");
+  const isRepeating = userHistory.length > 0 && userHistory[userHistory.length - 1].content.toLowerCase() === normalized;
+  
+  if (isRepeating) {
+    return "I notice we're repeating. To get you the best help quickly, I recommend speaking with an expert or opening a ticket. [TICKET] [BOOK: Personal Support]";
   }
 
-  if (discussingLaptop) {
-    if (budget) {
-      if (budget < 5000) {
-        return `I've found some reliable student laptops within your ${formatGhs(budget)} budget. [RECOMMEND: student laptop budget 4500 GHS]`;
-      }
-
-      if (budget <= 10000) {
-        return `Here are some mid-range laptops around ${formatGhs(budget)} suitable for your needs. [RECOMMEND: laptop 8000 GHS]`;
-      }
-
-      return `I've shortlisted some high-performance laptops for your ${formatGhs(budget)} budget. [RECOMMEND: high performance laptop]`;
-    }
-
-    return "I can help you find a laptop. Here are some of our currently available models. [RECOMMEND: laptop]";
+  // 2. Intent-based hardcoding (Smarter triggers)
+  if (normalized.includes("book") || normalized.includes("consultation") || normalized.includes("call") || normalized.includes("meeting") || normalized.includes("talk to someone")) {
+    return "I've flagged this for a professional consultation. You can schedule a time here: [BOOK: Enterprise IT Consultation]";
   }
 
-  if (discussingNetwork) {
-    if (budget) {
-      return `Here is some networking gear for your ${formatGhs(budget)} budget. [RECOMMEND: router switch budget ${budget}]`;
-    }
-
-    return "I can help with networking equipment. Here is a look at our current inventory. [RECOMMEND: router switch]";
-  }
-
-  if (discussingCloud) {
-    return "I can assisted with cloud solutions and infrastructure. Tell me your top goal, and I'll propose a next step.";
-  }
-
-  if (normalized.includes("book") || normalized.includes("consultation") || normalized.includes("call")) {
-    return "I can schedule a professional consultation for you to discuss your IT needs in detail. [BOOK: Enterprise Consultation]";
-  }
-
-  const supportKeywords = ["crash", "broken", "os", "boot", "error", "problem", "issue", "failing", "slow", "help", "trouble"];
+  const supportKeywords = ["crash", "broken", "os", "boot", "error", "problem", "issue", "failing", "slow", "help", "trouble", "don't work", "repair"];
   if (supportKeywords.some(k => normalized.includes(k))) {
-    return "I'm sorry to hear that. For technical issues like crashes or errors, please create a support ticket so our team can help you immediately. [TICKET]";
+    return "Technical issues are best handled via our direct support channel. Please open a ticket: [TICKET]";
   }
 
-  return "I can help you find any product or IT service on SHERO. Tell me what you need and your budget (GHS). [RECOMMEND: laptops]";
+  // 3. Product Discovery Fallback
+  const laptopKeywords = ["laptop", "pc", "computer", "macbook", "hp", "dell"];
+  if (laptopKeywords.some(k => normalized.includes(k))) {
+    const budget = extractBudgetGhs(userMessage);
+    if (budget && budget < 6000) return `I recommend these entry-level laptops within your ${formatGhs(budget)} budget: [RECOMMEND: student laptop]`;
+    if (budget) return `I've found some premium options for your ${formatGhs(budget)} budget: [RECOMMEND: laptop]`;
+    return "I can help you browse our current laptop inventory: [RECOMMEND: laptop]";
+  }
+
+  const networkKeywords = ["network", "router", "switch", "wifi", "internet"];
+  if (networkKeywords.some(k => normalized.includes(k))) {
+    return "Check out our networking hardware including routers and switches: [RECOMMEND: router switch]";
+  }
+
+  // 4. Budget-only check
+  const budgetOnly = extractBudgetGhs(userMessage);
+  if (budgetOnly) {
+    return `Noted budget: ${formatGhs(budgetOnly)}. What specifically are you looking for? (Laptops, Networking, or Repair)`;
+  }
+
+  // 5. Generic catch-all with variety based on history length
+  if (history.length > 4) {
+    return "I want to make sure you get the right answer. Would you like to browse our latest laptops [RECOMMEND: laptops] or talk to a consultant? [BOOK: IT Support]";
+  }
+
+  return "I can help you find hardware or IT services. What's your need and budget (GHS)? [RECOMMEND: laptops]";
 }
 
 export async function POST(request: Request) {
