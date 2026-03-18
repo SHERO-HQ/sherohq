@@ -21,7 +21,6 @@ import {
   useUpdateProject,
   useCreateProject,
 } from "@/hooks/queries/useProjects";
-import { useFormDraft } from "@/hooks/useFormDraft";
 import { Badge } from "@/components/ui/badge";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useBreadcrumb } from "@/context/BreadcrumbContext";
@@ -42,9 +41,7 @@ export default function ProjectForm() {
   const createProjectMutation = useCreateProject();
   const updateProjectMutation = useUpdateProject();
 
-  const [projectData, setProjectData, clearDraft] = useFormDraft<
-    Partial<Project>
-  >("admin_project", {
+  const [projectData, setProjectData] = useState<Partial<Project>>({
     title: "",
     category: "",
     client: "",
@@ -101,7 +98,6 @@ export default function ProjectForm() {
         await createProjectMutation.mutateAsync(projectData);
         addNotification("Success", "Project created successfully", "success");
       }
-      clearDraft();
       router.push("/admin/projects");
     } catch (err) {
       addNotification("Error", "Failed to save project", "error");
@@ -118,7 +114,7 @@ export default function ProjectForm() {
     try {
       setIsUploading(true);
       const { imageUrls } = await uploadImages(files);
-      setProjectData((prev) => ({
+      setProjectData((prev: Partial<Project>) => ({
         ...prev,
         image: imageUrls[0],
       }));
@@ -134,7 +130,7 @@ export default function ProjectForm() {
 
   const addTech = () => {
     if (!newTech.trim()) return;
-    setProjectData((prev) => ({
+    setProjectData((prev: Partial<Project>) => ({
       ...prev,
       technologies: [...(prev.technologies || []), newTech.trim()],
     }));
@@ -142,7 +138,7 @@ export default function ProjectForm() {
   };
 
   const removeTech = (index: number) => {
-    setProjectData((prev) => ({
+    setProjectData((prev: Partial<Project>) => ({
       ...prev,
       technologies: prev.technologies?.filter((_, i) => i !== index),
     }));
@@ -237,7 +233,7 @@ export default function ProjectForm() {
                     placeholder="e.g. Enterprise E-commerce Platform"
                     value={projectData.title || ""}
                     onChange={(e) =>
-                      setProjectData((prev) => ({
+                      setProjectData((prev: Partial<Project>) => ({
                         ...prev,
                         title: e.target.value,
                       }))
@@ -259,7 +255,7 @@ export default function ProjectForm() {
                     placeholder="What problem were you solving?"
                     value={projectData.description || ""}
                     onChange={(e) =>
-                      setProjectData((prev) => ({
+                      setProjectData((prev: Partial<Project>) => ({
                         ...prev,
                         description: e.target.value,
                       }))
@@ -281,7 +277,7 @@ export default function ProjectForm() {
                     placeholder="How did you solve it?"
                     value={projectData.useCase || ""}
                     onChange={(e) =>
-                      setProjectData((prev) => ({
+                      setProjectData((prev: Partial<Project>) => ({
                         ...prev,
                         useCase: e.target.value,
                       }))
@@ -365,7 +361,7 @@ export default function ProjectForm() {
                     <button
                       type="button"
                       onClick={() =>
-                        setProjectData((prev) => ({ ...prev, image: "" }))
+                        setProjectData((prev: Partial<Project>) => ({ ...prev, image: "" }))
                       }
                       className="absolute top-2 right-2 p-1.5 bg-rose-500 text-white rounded shadow-lg hover:bg-rose-600 transition-colors"
                     >
@@ -417,7 +413,7 @@ export default function ProjectForm() {
                     className="w-full bg-slate-800 border-white/5 text-white rounded px-3 py-2 outline-none focus:ring-1 focus:ring-emerald-500/50"
                     value={projectData.category}
                     onChange={(e) =>
-                      setProjectData((prev) => ({
+                      setProjectData((prev: Partial<Project>) => ({
                         ...prev,
                         category: e.target.value,
                       }))
@@ -445,7 +441,7 @@ export default function ProjectForm() {
                     placeholder="e.g. Acme Innovations"
                     value={projectData.client || ""}
                     onChange={(e) =>
-                      setProjectData((prev) => ({
+                      setProjectData((prev: Partial<Project>) => ({
                         ...prev,
                         client: e.target.value,
                       }))
@@ -466,7 +462,7 @@ export default function ProjectForm() {
                     placeholder="https://example.com"
                     value={projectData.link || ""}
                     onChange={(e) =>
-                      setProjectData((prev) => ({
+                      setProjectData((prev: Partial<Project>) => ({
                         ...prev,
                         link: e.target.value,
                       }))

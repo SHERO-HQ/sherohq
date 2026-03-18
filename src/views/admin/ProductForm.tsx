@@ -30,7 +30,6 @@ import {
   useUpdateProduct,
   useCreateProduct,
 } from "@/hooks/queries/useProducts";
-import { useFormDraft } from "@/hooks/useFormDraft";
 import { Badge } from "@/components/ui/badge";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useBreadcrumb } from "@/context/BreadcrumbContext";
@@ -65,11 +64,7 @@ export default function ProductForm() {
   const createProductMutation = useCreateProduct();
   const updateProductMutation = useUpdateProduct();
 
-  const draftKey = isEdit ? `admin_product_edit_${id}` : "admin_product_new";
-
-  const [productData, setProductData, clearDraft] = useFormDraft<
-    Partial<Product>
-  >(draftKey, {
+  const [productData, setProductData] = useState<Partial<Product>>({
     name: "",
     category: "",
     price: 0,
@@ -179,7 +174,6 @@ export default function ProductForm() {
         await createProductMutation.mutateAsync(finalData as ProductInput);
         addNotification("Success", "Product created successfully", "success");
       }
-      clearDraft();
       router.push("/admin/products");
     } catch (err: unknown) {
       // Show explicit error message from API if available
@@ -228,7 +222,7 @@ export default function ProductForm() {
         }
       }
 
-      setProductData((prev) => ({
+      setProductData((prev: Partial<Product>) => ({
         ...prev,
         image: prev.image || uploadedUrls[0],
         images: [...(prev.images || []), ...uploadedUrls],
@@ -248,7 +242,7 @@ export default function ProductForm() {
   };
 
   const removeImage = (url: string) => {
-    setProductData((prev) => {
+    setProductData((prev: Partial<Product>) => {
       const newImages = (prev.images || []).filter((img) => img !== url);
       return {
         ...prev,
