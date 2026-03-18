@@ -4,6 +4,7 @@ import db from "../db/database";
 import { adminAuth, AdminRequest, requireRole } from "../middleware/adminAuth";
 import { logActivity } from "./activity";
 import { generateSku } from "../utils/sku";
+import { generateUniqueSlug } from "../utils/slug";
 
 const router = Router();
 
@@ -324,12 +325,8 @@ router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
     const finalSku = generateSku(productId, sku);
 
     // Auto-generate Slug if not provided
-    const finalSlug =
-      slug ||
-      name
-        .toLowerCase()
-        .replaceAll(/[^a-z0-9]+/g, "-")
-        .replaceAll(/(^-|-$)/g, "");
+    const baseSlug = slug || name;
+    const finalSlug = await generateUniqueSlug(baseSlug);
 
     // Handle quantity alias if stockQuantity is not explicitly provided
     const finalStockQuantity =
@@ -387,8 +384,20 @@ router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
       success: true,
       product: parseProduct(product),
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error creating product:", error);
+    
+    // Handle unique constraint violations (Postgres error 23505)
+    if (error && typeof error === 'object' && 'code' in error && error.code === '23505') {
+      const detail = String((error as { detail?: string }).detail || "");
+      if (detail.includes('sku')) {
+        return res.status(400).json({ error: "A product with this SKU already exists." });
+      }
+      if (detail.includes('slug')) {
+        return res.status(400).json({ error: "A product with this URL slug already exists." });
+      }
+    }
+
     res.status(500).json({ error: "Failed to create product" });
   }
 });
@@ -481,6 +490,12 @@ router.put("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
 
     const productId = check.rows[0].id;
 
+    // Handle slug uniqueness if name or slug is provided
+    if (req.body.name || req.body.slug) {
+      const baseSlug = req.body.slug || req.body.name;
+      req.body.slug = await generateUniqueSlug(baseSlug, productId);
+    }
+
     const { updates, values, paramIndex } = processUpdateFields(req.body);
 
     if (updates.length === 0) {
@@ -538,8 +553,20 @@ router.put("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
       success: true,
       product: parseProduct(product),
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Error updating product:", error, { productId: req.params.id, body: req.body });
+    
+    // Handle unique constraint violations (Postgres error 23505)
+    if (error && typeof error === 'object' && 'code' in error && error.code === '23505') {
+      const detail = String((error as { detail?: string }).detail || "");
+      if (detail.includes('sku')) {
+        return res.status(400).json({ error: "A product with this SKU already exists." });
+      }
+      if (detail.includes('slug')) {
+        return res.status(400).json({ error: "A product with this URL slug already exists." });
+      }
+    }
+
     res.status(500).json({
       error:
         error instanceof Error
