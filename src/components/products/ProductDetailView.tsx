@@ -302,7 +302,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   <button
                     onClick={handleAddToCart}
                     disabled={!product.inStock || isAddedToCart}
-                    className={`flex-1 flex items-center justify-center gap-2 h-14 px-4 rounded font-black text-[11px] uppercase tracking-widest transition-colors border-2 ${
+                    className={`flex-1 flex items-center justify-center gap-2 h-14 px-4 rounded font-black text-[10px] uppercase tracking-widest transition-colors border-2 ${
                       isAddedToCart
                         ? "bg-emerald-500 border-emerald-500 text-white"
                         : "bg-white dark:bg-white/5 border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500 hover:text-white"
