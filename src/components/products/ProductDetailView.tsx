@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   Heart,
   ShoppingCart,
@@ -36,9 +36,9 @@ interface ProductDetailViewProps {
 }
 
 const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
+  const router = useRouter();
   const { addItem } = useCart();
   const { toggleWishlist: globalToggleWishlist, isInWishlist } = useWishlist();
-  // const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
@@ -319,7 +319,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   <button
                     onClick={() => {
                       handleAddToCart();
-                      window.location.href = getAbsoluteUrl("/checkout");
+                      router.push("/shop/checkout");
                     }}
                     disabled={!product.inStock}
                     className="flex-1 px-2 h-14 bg-emerald-600 text-white rounded font-black text-[11px] uppercase tracking-widest hover:bg-emerald-500 transition-colors disabled:opacity-50"

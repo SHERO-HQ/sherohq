@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "motion/react";
 import { ShoppingCart, Heart, Eye, Star } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useNotifications } from "@/hooks/useNotifications";
 import { getImageUrl } from "@/services/api";
@@ -19,6 +20,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
+  const router = useRouter();
   const { addItem } = useCart();
   const { addNotification } = useNotifications();
   const { toggleWishlist: globalToggleWishlist, isInWishlist } = useWishlist();
@@ -232,7 +234,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
                   image: product.image,
                   category: product.category,
                 });
-                window.location.href = getAbsoluteUrl("/checkout");
+                router.push("/shop/checkout");
               }}
               disabled={!product.inStock}
               className="flex-1 h-10 rounded bg-emerald-600 text-white font-black text-[10px] uppercase tracking-widest hover:bg-emerald-500 shadow-lg shadow-emerald-600/20 disabled:opacity-50 transition"

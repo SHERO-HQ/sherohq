@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface AppImageProps {
   src: string;
@@ -24,24 +24,19 @@ export default function AppImage({
   placeholderText = "No Image",
   sizes,
 }: AppImageProps) {
-  const [error, setError] = useState(false);
-
-  // Reset error state if src changes
-  useEffect(() => {
-    setError(false);
-  }, [src]);
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
 
   const fallbackSrc = `https://placehold.co/${width ?? 400}x${height ?? 400}?text=${encodeURIComponent(placeholderText)}`;
 
-  if (error || !src) {
+  if (!src || failedSrc === src) {
     return (
-      <Image 
-        src={fallbackSrc} 
-        alt={alt} 
-        width={!fill ? (width ?? 400) : undefined} 
-        height={!fill ? (height ?? 400) : undefined} 
+      <Image
+        src={fallbackSrc}
+        alt={alt}
+        width={!fill ? (width ?? 400) : undefined}
+        height={!fill ? (height ?? 400) : undefined}
         fill={fill}
-        className={className} 
+        className={className}
       />
     );
   }
@@ -54,11 +49,16 @@ export default function AppImage({
       height={!fill ? height : undefined}
       fill={fill}
       priority={priority}
-      sizes={sizes || (fill ? "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" : undefined)}
+      sizes={
+        sizes ||
+        (fill
+          ? "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          : undefined)
+      }
       className={className}
       onError={() => {
         console.warn(`Image failed to load: ${src}`);
-        setError(true);
+        setFailedSrc(src);
       }}
     />
   );
