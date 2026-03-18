@@ -117,7 +117,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         <div className="grid lg:grid-cols-12 gap-12 lg:items-start">
           {/* STICKY Gallery Section (7 columns) */}
           <div className="lg:col-span-7 space-y-6 lg:sticky lg:top-28">
-            <div className="group relative aspect-4/5 max-h-100 sm:max-h-125 lg:max-h-150 bg-white dark:bg-white/5 sm:rounded overflow-hidden sm:border border-y sm:border-x border-slate-200 dark:border-white/10 sm:shadow-md flex items-center justify-center -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full">
+            <div className="group relative aspect-4/5 max-h-110 sm:max-h-135 lg:max-h-170 bg-white dark:bg-white/5 sm:rounded overflow-hidden sm:border border-y sm:border-x border-slate-200 dark:border-white/10 sm:shadow-md flex items-center justify-center -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full">
               <button
                 onClick={() => setIsPreviewOpen(true)}
                 className="absolute top-6 right-6 lg:opacity-0 group-hover:opacity-100 transition-opacity p-2.5 bg-white/90 dark:bg-slate-900/90 rounded border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-emerald-600 hover:border-emerald-500 z-20 shadow-sm"
@@ -132,7 +132,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 1.05 }}
                   transition={{ duration: 0.4 }}
-                  className="relative w-full h-full py-8 px-12 sm:px-20 flex items-center justify-center cursor-zoom-in"
+                  className="relative w-full h-full py-4 sm:py-6 px-6 sm:px-12 lg:px-16 flex items-center justify-center cursor-zoom-in"
                   onClick={() => setIsPreviewOpen(true)}
                 >
                   {images[selectedImage] &&

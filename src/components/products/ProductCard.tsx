@@ -102,7 +102,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-linear-to-b from-emerald-500/5 via-transparent to-transparent transition-opacity duration-500 pointer-events-none" />
 
       {/* Image Container */}
-      <div className="relative aspect-square bg-slate-100 dark:bg-slate-900 overflow-hidden shrink-0">
+      <div className="relative aspect-3/4 sm:aspect-4/5 lg:aspect-3/4 bg-slate-100 dark:bg-slate-900 overflow-hidden shrink-0">
         {product.image &&
         (product.image.startsWith("/uploads") ||
           product.image.startsWith("http")) ? (
@@ -111,7 +111,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             alt={product.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+            className="object-contain object-center p-2 group-hover:scale-110 transition-transform duration-700 ease-out"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-6xl select-none opacity-30 group-hover:scale-110 transition-transform duration-700">

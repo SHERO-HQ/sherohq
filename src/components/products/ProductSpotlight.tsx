@@ -170,17 +170,17 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                   </div>
 
                   {/* Right Side: Image with Content Wrapper (Background on Mobile, Relative Fixed on LG) */}
-                  <div className="relative w-full lg:w-1/2 aspect-square sm:aspect-video lg:aspect-auto h-[500px] lg:h-[650px] group/image overflow-hidden lg:rounded shadow-2xl border border-white/5">
+                  <div className="relative w-full lg:w-[56%] aspect-4/5 sm:aspect-16/10 lg:aspect-auto h-140 lg:h-190 group/image overflow-hidden lg:rounded shadow-2xl border border-white/5">
                     {/* Image */}
                     <AppImage
                       src={getImageUrl(currentProduct.image)}
                       alt={currentProduct.name}
                       fill
                       priority
-                      className="object-cover transition-transform duration-1000 group-hover/image:scale-105"
+                      className="object-contain object-center transition-transform duration-1000 group-hover/image:scale-105"
                     />
                     <div className="absolute inset-0 bg-emerald-500/5 group-hover/image:bg-transparent transition-colors duration-700" />
-                    
+
                     {/* Carousel Navigation - Arrows (Only on Image for Desktop) */}
                     <div className="absolute inset-0 z-30 pointer-events-none flex items-center justify-between px-4 sm:px-6">
                       <button
