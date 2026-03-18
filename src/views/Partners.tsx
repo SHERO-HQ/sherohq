@@ -55,13 +55,13 @@ SHERO
  </p>
 
  <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
- <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
+ <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
  Wholesale Access
  </span>
- <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
+ <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
  Dedicated Account Team
  </span>
- <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
+ <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
  Co-Marketing Support
  </span>
  </div>

@@ -36,7 +36,7 @@ const AboutStory = () => {
  className="relative w-full object-cover"
  />
 
- <div className="absolute sm:bottom-46 md:bottom-35 sm:-left-4 md:-left-20 -bottom-5 -left-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-3 py-2 sm:px-4 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
+ <div className="absolute sm:bottom-46 md:bottom-35 sm:-left-4 md:-left-20 -bottom-5 -left-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm p-2 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
  <div className="size-8 sm:size-10 bg-emerald-100 dark:bg-emerald-900/30 rounded flex items-center justify-center">
  <SearchCheck className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 dark:text-emerald-400" />
  </div>
@@ -50,8 +50,8 @@ const AboutStory = () => {
  </div>
  </div>
 
- <div className="absolute sm:top-20 sm:right-5 -top-5 right-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-3 py-2 sm:px-4 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
- <div className="size-8 sm:size-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center">
+ <div className="absolute sm:top-20 sm:right-5 -top-5 right-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm p-2 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
+ <div className="size-8 sm:size-10 bg-emerald-100 dark:bg-emerald-900/30 rounded flex items-center justify-center">
  <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 dark:text-emerald-400" />
  </div>
  <div>

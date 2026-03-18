@@ -10,6 +10,7 @@ async function verifyCounts() {
     "tickets",
     "consultations",
     "inquiries",
+    "newsletter_subscribers",
     "support_guides",
     "activity_logs",
     "team_members",

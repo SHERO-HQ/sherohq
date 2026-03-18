@@ -1,7 +1,7 @@
 "use client";
 import ContactForm from "@/components/common/ContactForm";
 import { motion } from "motion/react";
-import { Mail, MapPin, MessagesSquare, Phone } from "lucide-react";
+import { Mail, MapPin, MessageSquareLock, MessagesSquare, Phone } from "lucide-react";
 import { COMPANY_EMAILS } from "@/constants/emails";
 
 const Contact = () => {
@@ -9,7 +9,7 @@ const Contact = () => {
  <>
  <div className="relative pt-32 pb-20 lg:pt-40 lg:pb-28 overflow-hidden dark:bg-slate-950 bg-slate-50 min-h-screen">
  {/* Dot Pattern Background */}
- <div className="absolute inset-0 pattern-dots opacity-30 dark:opacity-20 pointer-events-none" />
+ <div className="absolute inset-0 pattern-dots opacity-70 dark:opacity-50 pointer-events-none" />
 
  {/* Deep Space Background - Dark Mode Only */}
  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black opacity-0 dark:opacity-100 transition-opacity duration-500" />
@@ -31,10 +31,10 @@ const Contact = () => {
  className="space-y-12"
  >
  <div>
- <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 rounded border border-emerald-500/40 uppercase tracking-wider transition-colors duration-300">
- <span className="w-2 h-2 rounded-full bg-emerald-500" />
+ <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 rounded border border-emerald-500/40 uppercase tracking-wider transition-colors duration-300">
+ <MessageSquareLock  className="w-4 h-4" />
  Contact SHERO
- </span>
+ </div>
  <h1 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
  Start{" "}
  <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-cyan-600 dark:from-emerald-400 dark:to-cyan-400">

@@ -12,6 +12,7 @@ async function cleanDatabase() {
       "tickets",
       "consultations",
       "inquiries",
+      "newsletter_subscribers",
       "orders",
       "user_sessions",
       "users",

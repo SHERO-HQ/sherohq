@@ -29,6 +29,7 @@ import testimonialRoutes from "./routes/testimonials";
 import statRoutes from "./routes/stats";
 import expensesRoutes from "./routes/expenses";
 import analyticsRoutes from "./routes/analytics";
+import newsletterRoutes from "./routes/newsletter";
 
 // Load environment variables
 dotenv.config();
@@ -253,6 +254,7 @@ app.use("/api/testimonials", testimonialRoutes);
 app.use("/api/stats", statRoutes);
 app.use("/api/expenses", expensesRoutes);
 app.use("/api/analytics", analyticsRoutes);
+app.use("/api/newsletter", newsletterRoutes);
 
 // Root route - information about the API
 app.get("/", (req: Request, res: Response) => {

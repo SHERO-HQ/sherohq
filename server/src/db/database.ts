@@ -295,6 +295,23 @@ export async function initializeDatabase() {
       )
     `);
 
+    // Newsletter subscribers table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+        id TEXT PRIMARY KEY,
+        email TEXT UNIQUE NOT NULL,
+        name TEXT,
+        source TEXT DEFAULT 'footer',
+        status TEXT DEFAULT 'active',
+        "unsubscribeToken" TEXT UNIQUE NOT NULL,
+        "subscribedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        "unsubscribedAt" TIMESTAMP,
+        "lastCampaignAt" TIMESTAMP,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
     // Projects table
     await client.query(`
       CREATE TABLE IF NOT EXISTS projects (
@@ -467,6 +484,17 @@ export async function initializeDatabase() {
     // Categories index
     await client.query(
       "CREATE INDEX IF NOT EXISTS idx_categories_name ON categories(name)",
+    );
+
+    // Newsletter subscribers indexes
+    await client.query(
+      "CREATE INDEX IF NOT EXISTS idx_newsletter_subscribers_status ON newsletter_subscribers(status)",
+    );
+    await client.query(
+      "CREATE INDEX IF NOT EXISTS idx_newsletter_subscribers_email ON newsletter_subscribers(email)",
+    );
+    await client.query(
+      'CREATE INDEX IF NOT EXISTS idx_newsletter_subscribers_token ON newsletter_subscribers("unsubscribeToken")',
     );
 
     console.log("⚡ Indexes ensured.");

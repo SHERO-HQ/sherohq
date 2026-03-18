@@ -638,12 +638,67 @@ class NotificationService {
     );
   }
 
+  public async sendNewsletterWelcome(email: string) {
+    await this.ensureInitialized();
+
+    const baseUrl =
+      process.env.FRONTEND_URL?.replace(/\/$/, "") || "https://sherohq.com";
+    const logoUrl = `${baseUrl}/shero.png`;
+
+    const htmlContent = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <img src="${logoUrl}" alt="SHERO" style="height: 40px;" />
+        </div>
+        <h1 style="color: #059669; text-align: center;">Welcome to SHERO Updates</h1>
+        <p>Thanks for subscribing to SHERO newsletter updates.</p>
+        <p>You will receive product drops, practical guides, and selected offers from our team.</p>
+        <p style="font-size: 12px; color: #666; text-align: center; margin-top: 30px;">
+          SHERO TECHNOLOGIES
+        </p>
+      </div>
+    `;
+
+    await this.sendEmail(
+      email,
+      "Subscription Confirmed - SHERO TECHNOLOGIES",
+      htmlContent,
+      "info",
+    );
+  }
+
+  public async sendNewsletterCampaignEmail(
+    email: string,
+    subject: string,
+    content: string,
+    unsubscribeUrl: string,
+  ): Promise<boolean> {
+    await this.ensureInitialized();
+
+    const htmlContent = `
+      <div style="font-family: sans-serif; max-width: 700px; margin: auto; padding: 20px; border: 1px solid #e5e7eb; border-radius: 10px;">
+        <div style="margin-bottom: 20px; color: #0f172a; line-height: 1.6;">
+          ${content}
+        </div>
+        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;" />
+        <p style="font-size: 12px; color: #64748b; margin: 0;">
+          You are receiving this because you subscribed to SHERO updates.
+        </p>
+        <p style="font-size: 12px; margin-top: 8px;">
+          <a href="${unsubscribeUrl}" style="color: #059669;">Unsubscribe</a>
+        </p>
+      </div>
+    `;
+
+    return this.sendEmail(email, subject, htmlContent, "info");
+  }
+
   private async sendEmail(
     to: string,
     subject: string,
     html: string,
     fromType: "info" | "support" | "noreply" = "info",
-  ) {
+  ): Promise<boolean> {
     const fromEmails = {
       info: "info@sherohq.com",
       support: "support@sherohq.com",
@@ -676,13 +731,15 @@ class NotificationService {
               "💡 TIP: onboarding@resend.dev only sends to your own Resend account email.",
             );
           }
-          return;
+          return false;
         }
         console.log(`✅ Email sent via Resend to: ${to} | ID: ${data?.id}`);
+        return true;
       } catch (error) {
         console.error("❌ Resend error:", error);
+        return false;
       }
-      return;
+      return false;
     }
 
     if (this.transporter) {
@@ -696,14 +753,19 @@ class NotificationService {
           html,
         });
         console.log(`✅ Email sent via SMTP to: ${to} | Subject: ${subject}`);
+        return true;
       } catch (error) {
         console.error("❌ Failed to send SMTP email:", error);
+        return false;
       }
     } else {
       console.log(
         `📝 [SIMULATION] Email to ${to} [from: ${senderEmail}]: "${subject}"`,
       );
+      return true;
     }
+
+    return false;
   }
 }
 

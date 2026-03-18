@@ -137,7 +137,7 @@ const AboutTeam = () => {
  <h3 className="text-2xl font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-300">
  {member.name}
  </h3>
- <p className="text-emerald-600 dark:text-emerald-500 text-sm font-bold mt-1 uppercase tracking-widest">
+ <p className="text-emerald-600 dark:text-emerald-500 text-xs font-bold mt-1 uppercase tracking-widest">
  {member.role}
  </p>
  </div>

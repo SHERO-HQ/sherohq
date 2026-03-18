@@ -285,10 +285,15 @@ const products: SeedProduct[] = [
     badge: "Student Choice",
     inStock: true,
     stockQuantity: 25,
-    description: "Reliable business-grade laptop perfect for students. Featuring Intel Core i5, 8GB RAM, and 256GB SSD.",
+    description:
+      "Reliable business-grade laptop perfect for students. Featuring Intel Core i5, 8GB RAM, and 256GB SSD.",
     features: ["Durable design", "Backlit keyboard", "Fast SSD storage"],
     condition: "Refurbished",
-    specifications: { Processor: "Intel Core i5", RAM: "8GB", Storage: "256GB SSD" },
+    specifications: {
+      Processor: "Intel Core i5",
+      RAM: "8GB",
+      Storage: "256GB SSD",
+    },
   },
   {
     id: "11",
@@ -304,10 +309,15 @@ const products: SeedProduct[] = [
     badge: "Best Value",
     inStock: true,
     stockQuantity: 15,
-    description: "Premium business ultrabook at a student-friendly price. Lightweight and powerful for assignments.",
+    description:
+      "Premium business ultrabook at a student-friendly price. Lightweight and powerful for assignments.",
     features: ["FHD Display", "Long battery life", "Compact Pro design"],
     condition: "Refurbished",
-    specifications: { Processor: "Intel Core i7", RAM: "16GB", Storage: "512GB SSD" },
+    specifications: {
+      Processor: "Intel Core i7",
+      RAM: "16GB",
+      Storage: "512GB SSD",
+    },
   },
   {
     id: "12",
@@ -323,10 +333,15 @@ const products: SeedProduct[] = [
     badge: "Reliable",
     inStock: true,
     stockQuantity: 20,
-    description: "The legendary ThinkPad durability. Ideal for long research sessions and multitasking.",
+    description:
+      "The legendary ThinkPad durability. Ideal for long research sessions and multitasking.",
     features: ["Dual Battery system", "Best-in-class keyboard", "Very durable"],
     condition: "Refurbished",
-    specifications: { Processor: "Intel Core i5", RAM: "8GB", Storage: "256GB SSD" },
+    specifications: {
+      Processor: "Intel Core i5",
+      RAM: "8GB",
+      Storage: "256GB SSD",
+    },
   },
 ];
 
@@ -729,6 +744,7 @@ export async function flushAllData() {
       "reviews",
       "consultations",
       "inquiries",
+      "newsletter_subscribers",
       "orders",
       "products",
       "categories",

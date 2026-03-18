@@ -185,3 +185,93 @@ export async function deleteInquiry(
   });
   return handleResponse(response);
 }
+
+// ---------------------------------------------------------------------------
+// Newsletter
+// ---------------------------------------------------------------------------
+
+export interface NewsletterSubscriber {
+  id: string;
+  email: string;
+  name?: string | null;
+  source?: string | null;
+  status: "active" | "unsubscribed";
+  subscribedAt: string;
+  unsubscribedAt?: string | null;
+  lastCampaignAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export async function subscribeToNewsletter(data: {
+  email: string;
+  name?: string;
+  source?: string;
+}): Promise<{ success: boolean; message: string }> {
+  const response = await fetch(`${API_BASE}/newsletter/subscribe`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Protection": "1",
+    },
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+}
+
+export async function fetchNewsletterSubscribers(params?: {
+  status?: "all" | "active" | "unsubscribed";
+  search?: string;
+}): Promise<{
+  subscribers: NewsletterSubscriber[];
+  counts: {
+    total: number;
+    active: number;
+    unsubscribed: number;
+  };
+}> {
+  const query = new URLSearchParams();
+  if (params?.status) query.set("status", params.status);
+  if (params?.search) query.set("search", params.search);
+
+  const url = `${API_BASE}/newsletter/subscribers${query.toString() ? `?${query.toString()}` : ""}`;
+  const response = await authFetch(url);
+  return handleResponse(response);
+}
+
+export async function updateNewsletterSubscriberStatus(
+  id: string,
+  status: "active" | "unsubscribed",
+): Promise<{ success: boolean; subscriber: NewsletterSubscriber }> {
+  const response = await authFetch(
+    `${API_BASE}/newsletter/subscribers/${id}/status`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ status }),
+    },
+  );
+  return handleResponse(response);
+}
+
+export async function sendNewsletterCampaign(data: {
+  subject: string;
+  content: string;
+  testEmail?: string;
+  batchSize?: number;
+  sendDelayMs?: number;
+  limit?: number;
+}): Promise<{
+  success: boolean;
+  sent: number;
+  failed: number;
+  totalTargets: number;
+  batchSize: number;
+  sendDelayMs: number;
+  message: string;
+}> {
+  const response = await authFetch(`${API_BASE}/newsletter/campaigns/send`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+}

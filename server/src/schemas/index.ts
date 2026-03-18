@@ -136,7 +136,16 @@ export const CreateOrderSchema = z.object({
   total: z.number().positive("Total must be positive"),
   shippingInfo: ShippingInfoSchema,
   paymentMethod: z.enum(
-    ["card", "momo", "cash", "cod", "cash_on_delivery", "paystack", "store_pickup", "invoice_payment"],
+    [
+      "card",
+      "momo",
+      "cash",
+      "cod",
+      "cash_on_delivery",
+      "paystack",
+      "store_pickup",
+      "invoice_payment",
+    ],
     {
       message: "Invalid payment method",
     },
@@ -269,6 +278,21 @@ export const CreateConsultationSchema = z.object({
   date: z.string().min(1, "Date is required"),
   time: z.string().min(1, "Time is required"),
   message: z.string().max(1000).optional(),
+});
+
+export const NewsletterSubscribeSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  name: z.string().min(1).max(100).optional(),
+  source: z.string().min(1).max(50).optional(),
+});
+
+export const NewsletterCampaignSchema = z.object({
+  subject: z.string().min(3, "Subject is required").max(200),
+  content: z.string().min(10, "Content must be at least 10 characters"),
+  testEmail: z.string().email("Invalid test email").optional(),
+  batchSize: z.number().int().min(1).max(500).optional(),
+  sendDelayMs: z.number().int().min(0).max(10000).optional(),
+  limit: z.number().int().min(1).max(50000).optional(),
 });
 
 export const ChangePasswordSchema = z.object({
