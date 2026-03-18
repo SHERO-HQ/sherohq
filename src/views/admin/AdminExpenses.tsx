@@ -6,757 +6,755 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
- Plus,
- Search,
- Trash2,
- Edit2,
- Download,
- DollarSign,
- Tag,
- FileText,
- Loader2,
- X,
- Calendar as CalendarIcon,
+  Plus,
+  Search,
+  Trash2,
+  Edit2,
+  Download,
+  DollarSign,
+  Tag,
+  FileText,
+  Loader2,
+  X,
+  Calendar as CalendarIcon,
 } from "lucide-react";
 import {
- DropdownMenu,
- DropdownMenuContent,
- DropdownMenuItem,
- DropdownMenuTrigger,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useNotifications } from "@/hooks/useNotifications";
 import { authFetch, handleResponse, API_BASE } from "@/services/api";
 import {
- format,
- startOfDay,
- endOfDay,
- isWithinInterval,
- parse,
+  format,
+  startOfDay,
+  endOfDay,
+  isWithinInterval,
+  parse,
 } from "date-fns";
 import { cn } from "@/lib/utils";
 import {
- Popover,
- PopoverContent,
- PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import type { DateRange } from "react-day-picker";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
 
 interface Expense {
- id: string;
- title: string;
- amount: number;
- category: string;
- date: string;
- description: string | null;
- adminId: string | null;
- createdAt: string;
+  id: string;
+  title: string;
+  amount: number;
+  category: string;
+  date: string;
+  description: string | null;
+  adminId: string | null;
+  createdAt: string;
 }
 
 // Sub-components used in this file
 const Label = ({
- children,
- className,
+  children,
+  className,
 }: {
- children: React.ReactNode;
- className?: string;
+  children: React.ReactNode;
+  className?: string;
 }) => (
- <label className={cn("text-sm font-medium", className)}>{children}</label>
+  <label className={cn("text-sm font-medium", className)}>{children}</label>
 );
 
 const Textarea = (props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) => (
- <textarea
- {...props}
- className={cn(
- "flex min-h-[80px] w-full rounded border border-white/5 bg-slate-800 px-3 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 disabled:cursor-not-allowed disabled:opacity-50",
- props.className,
- )}
- />
+  <textarea
+    {...props}
+    className={cn(
+      "flex min-h-20 w-full rounded border border-white/5 bg-slate-800 px-3 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 disabled:cursor-not-allowed disabled:opacity-50",
+      props.className,
+    )}
+  />
 );
 
 const Save = ({ className }: { className?: string }) => (
- <svg
- xmlns="http://www.w3.org/2000/svg"
- viewBox="0 0 24 24"
- fill="none"
- stroke="currentColor"
- strokeWidth="2"
- strokeLinecap="round"
- strokeLinejoin="round"
- className={className}
- >
- <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
- <polyline points="17 21 17 13 7 13 7 21" />
- <polyline points="7 3 7 8 15 8" />
- </svg>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+    <polyline points="17 21 17 13 7 13 7 21" />
+    <polyline points="7 3 7 8 15 8" />
+  </svg>
 );
 
 const TrendingUp = ({ className }: { className?: string }) => (
- <svg
- xmlns="http://www.w3.org/2000/svg"
- viewBox="0 0 24 24"
- fill="none"
- stroke="currentColor"
- strokeWidth="2"
- strokeLinecap="round"
- strokeLinejoin="round"
- className={className}
- >
- <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
- <polyline points="17 6 23 6 23 12" />
- </svg>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+    <polyline points="17 6 23 6 23 12" />
+  </svg>
 );
 
 const CATEGORIES = [
- "Salary",
- "Rent",
- "Utilities",
- "Supplies",
- "Marketing",
- "Equipment",
- "Maintenance",
- "Transport",
- "Internet",
- "Other",
+  "Salary",
+  "Rent",
+  "Utilities",
+  "Supplies",
+  "Marketing",
+  "Equipment",
+  "Maintenance",
+  "Transport",
+  "Internet",
+  "Other",
 ];
 
 export default function AdminExpenses() {
- const { addNotification } = useNotifications();
- const [expenses, setExpenses] = useState<Expense[]>([]);
- const [isLoading, setIsLoading] = useState(true);
- const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const { addNotification } = useNotifications();
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
- // Filters
- const [search, setSearch] = useState("");
- const [categoryFilter, setCategoryFilter] = useState("all");
- const [dateFilter, setDateFilter] = useState("all"); // 7d, 30d, all, range
- const [customRange, setCustomRange] = useState<DateRange | undefined>({
- from: new Date(new Date().setDate(new Date().getDate() - 7)),
- to: new Date(),
- });
+  // Filters
+  const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState("all"); // 7d, 30d, all, range
+  const [customRange, setCustomRange] = useState<DateRange | undefined>({
+    from: new Date(new Date().setDate(new Date().getDate() - 7)),
+    to: new Date(),
+  });
 
- // Form State
- const [isFormOpen, setIsFormOpen] = useState(false);
- const [isSaving, setIsSaving] = useState(false);
- const [editingId, setEditingId] = useState<string | null>(null);
- const [formData, setFormData] = useState({
- title: "",
- amount: "",
- category: "Other",
- date: format(new Date(), "yyyy-MM-dd"),
- description: "",
- });
+  // Form State
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    title: "",
+    amount: "",
+    category: "Other",
+    date: format(new Date(), "yyyy-MM-dd"),
+    description: "",
+  });
 
- const fetchExpenses = useCallback(async () => {
- setIsLoading(true);
- try {
- const query = new URLSearchParams();
- if (categoryFilter !== "all") query.append("category", categoryFilter);
+  const fetchExpenses = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const query = new URLSearchParams();
+      if (categoryFilter !== "all") query.append("category", categoryFilter);
 
- const response = await authFetch(
- `${API_BASE}/expenses?${query.toString()}`,
- );
- const data = await handleResponse<Expense[]>(response);
- setExpenses(data);
- } catch (error) {
- console.error("Failed to fetch expenses:", error);
- addNotification("Error", "Failed to load expenses", "error");
- } finally {
- setIsLoading(false);
- }
- }, [categoryFilter, addNotification]);
+      const response = await authFetch(
+        `${API_BASE}/expenses?${query.toString()}`,
+      );
+      const data = await handleResponse<Expense[]>(response);
+      setExpenses(data);
+    } catch (error) {
+      console.error("Failed to fetch expenses:", error);
+      addNotification("Error", "Failed to load expenses", "error");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [categoryFilter, addNotification]);
 
- useEffect(() => {
- fetchExpenses();
- }, [fetchExpenses]);
+  useEffect(() => {
+    fetchExpenses();
+  }, [fetchExpenses]);
 
- const filteredExpenses = useMemo(() => {
- return expenses.filter((e) => {
- const matchesSearch =
- e.title.toLowerCase().includes(search.toLowerCase()) ||
- e.description?.toLowerCase().includes(search.toLowerCase());
+  const filteredExpenses = useMemo(() => {
+    return expenses.filter((e) => {
+      const matchesSearch =
+        e.title.toLowerCase().includes(search.toLowerCase()) ||
+        e.description?.toLowerCase().includes(search.toLowerCase());
 
- let matchesDate = true;
- if (dateFilter === "7d") {
- const sevenDaysAgo = new Date();
- sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
- matchesDate = new Date(e.date) >= sevenDaysAgo;
- } else if (dateFilter === "30d") {
- const thirtyDaysAgo = new Date();
- thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
- matchesDate = new Date(e.date) >= thirtyDaysAgo;
- } else if (dateFilter === "range" && customRange?.from) {
- const expenseDate = new Date(e.date);
- const start = startOfDay(customRange.from);
- const end = customRange.to
- ? endOfDay(customRange.to)
- : endOfDay(customRange.from);
- matchesDate = isWithinInterval(expenseDate, { start, end });
- }
+      let matchesDate = true;
+      if (dateFilter === "7d") {
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        matchesDate = new Date(e.date) >= sevenDaysAgo;
+      } else if (dateFilter === "30d") {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        matchesDate = new Date(e.date) >= thirtyDaysAgo;
+      } else if (dateFilter === "range" && customRange?.from) {
+        const expenseDate = new Date(e.date);
+        const start = startOfDay(customRange.from);
+        const end = customRange.to
+          ? endOfDay(customRange.to)
+          : endOfDay(customRange.from);
+        matchesDate = isWithinInterval(expenseDate, { start, end });
+      }
 
- return matchesSearch && matchesDate;
- });
- }, [expenses, search, dateFilter, customRange]);
+      return matchesSearch && matchesDate;
+    });
+  }, [expenses, search, dateFilter, customRange]);
 
- const totalAmount = useMemo(() => {
- return filteredExpenses.reduce((sum, e) => sum + Number(e.amount), 0);
- }, [filteredExpenses]);
+  const totalAmount = useMemo(() => {
+    return filteredExpenses.reduce((sum, e) => sum + Number(e.amount), 0);
+  }, [filteredExpenses]);
 
- const parseDate = (dateStr: string) => {
- if (!dateStr) return new Date();
- return parse(dateStr, "yyyy-MM-dd", new Date());
- };
+  const parseDate = (dateStr: string) => {
+    if (!dateStr) return new Date();
+    return parse(dateStr, "yyyy-MM-dd", new Date());
+  };
 
- const handleOpenForm = (expense?: Expense) => {
- if (expense) {
- setEditingId(expense.id);
- setFormData({
- title: expense.title,
- amount: expense.amount.toString(),
- category: expense.category,
- date: format(new Date(expense.date), "yyyy-MM-dd"),
- description: expense.description || "",
- });
- } else {
- setEditingId(null);
- setFormData({
- title: "",
- amount: "",
- category: "Other",
- date: format(new Date(), "yyyy-MM-dd"),
- description: "",
- });
- }
- setIsFormOpen(true);
- };
+  const handleOpenForm = (expense?: Expense) => {
+    if (expense) {
+      setEditingId(expense.id);
+      setFormData({
+        title: expense.title,
+        amount: expense.amount.toString(),
+        category: expense.category,
+        date: format(new Date(expense.date), "yyyy-MM-dd"),
+        description: expense.description || "",
+      });
+    } else {
+      setEditingId(null);
+      setFormData({
+        title: "",
+        amount: "",
+        category: "Other",
+        date: format(new Date(), "yyyy-MM-dd"),
+        description: "",
+      });
+    }
+    setIsFormOpen(true);
+  };
 
- const handleCloseForm = () => {
- setIsFormOpen(false);
- setEditingId(null);
- };
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+    setEditingId(null);
+  };
 
- const handleSubmit = async (e: React.BaseSyntheticEvent) => {
- e.preventDefault();
- if (!formData.title || !formData.amount || !formData.date) {
- addNotification("Warning", "Please fill required fields", "warning");
- return;
- }
+  const handleSubmit = async (e: React.BaseSyntheticEvent) => {
+    e.preventDefault();
+    if (!formData.title || !formData.amount || !formData.date) {
+      addNotification("Warning", "Please fill required fields", "warning");
+      return;
+    }
 
- setIsSaving(true);
- try {
- const url = editingId
- ? `${API_BASE}/expenses/${editingId}`
- : `${API_BASE}/expenses`;
- const method = editingId ? "PATCH" : "POST";
+    setIsSaving(true);
+    try {
+      const url = editingId
+        ? `${API_BASE}/expenses/${editingId}`
+        : `${API_BASE}/expenses`;
+      const method = editingId ? "PATCH" : "POST";
 
- const response = await authFetch(url, {
- method,
- headers: { "Content-Type": "application/json" },
- body: JSON.stringify(formData),
- });
+      const response = await authFetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
- await handleResponse(response);
- addNotification(
- "Success",
- `Expense ${editingId ? "updated" : "added"} successfully`,
- "success",
- );
- handleCloseForm();
- fetchExpenses();
- } catch (error) {
- console.error("Save failed:", error);
- addNotification("Error", "Failed to save expense", "error");
- } finally {
- setIsSaving(false);
- }
- };
+      await handleResponse(response);
+      addNotification(
+        "Success",
+        `Expense ${editingId ? "updated" : "added"} successfully`,
+        "success",
+      );
+      handleCloseForm();
+      fetchExpenses();
+    } catch (error) {
+      console.error("Save failed:", error);
+      addNotification("Error", "Failed to save expense", "error");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
- const handleDelete = async (id: string) => {
- if (!globalThis.confirm?.("Are you sure you want to delete this record?"))
- return;
+  const handleDelete = async (id: string) => {
+    if (!globalThis.confirm?.("Are you sure you want to delete this record?"))
+      return;
 
- setIsDeleting(id);
- try {
- const response = await authFetch(`${API_BASE}/expenses/${id}`, {
- method: "DELETE",
- });
- await handleResponse(response);
- addNotification("Success", "Expense deleted", "success");
- setExpenses(expenses.filter((e) => e.id !== id));
- } catch (error) {
- console.error("Delete failed:", error);
- addNotification("Error", "Failed to delete expense", "error");
- } finally {
- setIsDeleting(null);
- }
- };
+    setIsDeleting(id);
+    try {
+      const response = await authFetch(`${API_BASE}/expenses/${id}`, {
+        method: "DELETE",
+      });
+      await handleResponse(response);
+      addNotification("Success", "Expense deleted", "success");
+      setExpenses(expenses.filter((e) => e.id !== id));
+    } catch (error) {
+      console.error("Delete failed:", error);
+      addNotification("Error", "Failed to delete expense", "error");
+    } finally {
+      setIsDeleting(null);
+    }
+  };
 
- const handleExport = (format: "csv" | "excel" | "pdf") => {
- const data = filteredExpenses.map((e) => ({
- Title: e.title,
- Amount: e.amount,
- Category: e.category,
- Date: e.date,
- Description: e.description || "",
- }));
+  const handleExport = (format: "csv" | "excel" | "pdf") => {
+    const data = filteredExpenses.map((e) => ({
+      Title: e.title,
+      Amount: e.amount,
+      Category: e.category,
+      Date: e.date,
+      Description: e.description || "",
+    }));
 
- const fileName = `expenses_report_${new Date().toISOString().split("T")[0]}`;
- const columns = ["Title", "Amount", "Category", "Date", "Description"];
+    const fileName = `expenses_report_${new Date().toISOString().split("T")[0]}`;
+    const columns = ["Title", "Amount", "Category", "Date", "Description"];
 
- if (format === "csv")
- exportToCSV(data as Record<string, unknown>[], fileName);
- else if (format === "excel")
- exportToExcel(data as Record<string, unknown>[], fileName);
- else
- exportToPDF(
- data as Record<string, unknown>[],
- columns,
- fileName,
- "Expenses Report",
- );
- };
+    if (format === "csv")
+      exportToCSV(data as Record<string, unknown>[], fileName);
+    else if (format === "excel")
+      exportToExcel(data as Record<string, unknown>[], fileName);
+    else
+      exportToPDF(
+        data as Record<string, unknown>[],
+        columns,
+        fileName,
+        "Expenses Report",
+      );
+  };
 
- return (
- <AdminLayout>
- <div className="space-y-6">
- {/* Header */}
- <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
- <div>
- <h1 className="text-2xl font-bold text-white">
- Expenses
- </h1>
- <p className="text-slate-400 text-sm">
- Track your business spending and overheads
- </p>
- </div>
- <div className="flex items-center gap-3">
- <Button
- onClick={() => handleOpenForm()}
- className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold"
- >
- <Plus className="w-4 h-4 mr-2" />
- Add Expense
- </Button>
- </div>
- </div>
+  return (
+    <AdminLayout>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-white">Expenses</h1>
+            <p className="text-slate-400 text-sm">
+              Track your business spending and overheads
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={() => handleOpenForm()}
+              className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Expense
+            </Button>
+          </div>
+        </div>
 
- {/* Stats Summary */}
- <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
- <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 p-6">
- <div className="flex items-center gap-4">
- <div className="w-12 h-12 rounded bg-emerald-500/10 flex items-center justify-center">
- <DollarSign className="w-6 h-6 text-emerald-500" />
- </div>
- <div>
- <p className="text-slate-400 text-sm font-medium">
- Total Expenses
- </p>
- <p className="text-2xl font-bold text-white mt-1">
- GH₵{totalAmount.toLocaleString()}
- </p>
- </div>
- </div>
- </Card>
- <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 p-6">
- <div className="flex items-center gap-4">
- <div className="w-12 h-12 rounded bg-blue-500/10 flex items-center justify-center">
- <Tag className="w-6 h-6 text-blue-500" />
- </div>
- <div>
- <p className="text-slate-400 text-sm font-medium">
- Items Count
- </p>
- <p className="text-2xl font-bold text-white mt-1">
- {filteredExpenses.length} Records
- </p>
- </div>
- </div>
- </Card>
- <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 p-6">
- <div className="flex items-center gap-4">
- <div className="w-12 h-12 rounded bg-purple-500/10 flex items-center justify-center">
- <TrendingUp className="w-6 h-6 text-purple-500" />
- </div>
- <div>
- <p className="text-slate-400 text-sm font-medium">
- Top Category
- </p>
- <p className="text-2xl font-bold text-white mt-1">
- {filteredExpenses.length > 0
- ? filteredExpenses[0].category
- : "N/A"}
- </p>
- </div>
- </div>
- </Card>
- </div>
+        {/* Stats Summary */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 p-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded bg-emerald-500/10 flex items-center justify-center">
+                <DollarSign className="w-6 h-6 text-emerald-500" />
+              </div>
+              <div>
+                <p className="text-slate-400 text-sm font-medium">
+                  Total Expenses
+                </p>
+                <p className="text-2xl font-bold text-white mt-1">
+                  GH₵{totalAmount.toLocaleString()}
+                </p>
+              </div>
+            </div>
+          </Card>
+          <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 p-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded bg-blue-500/10 flex items-center justify-center">
+                <Tag className="w-6 h-6 text-blue-500" />
+              </div>
+              <div>
+                <p className="text-slate-400 text-sm font-medium">
+                  Items Count
+                </p>
+                <p className="text-2xl font-bold text-white mt-1">
+                  {filteredExpenses.length} Records
+                </p>
+              </div>
+            </div>
+          </Card>
+          <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 p-6">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded bg-purple-500/10 flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-purple-500" />
+              </div>
+              <div>
+                <p className="text-slate-400 text-sm font-medium">
+                  Top Category
+                </p>
+                <p className="text-2xl font-bold text-white mt-1">
+                  {filteredExpenses.length > 0
+                    ? filteredExpenses[0].category
+                    : "N/A"}
+                </p>
+              </div>
+            </div>
+          </Card>
+        </div>
 
- {/* Filters */}
- <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 p-4">
- <div className="flex flex-wrap gap-4">
- <div className="relative">
- <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
- <Input
- placeholder="Search description..."
- value={search}
- onChange={(e) => setSearch(e.target.value)}
- className="pl-9 bg-slate-800/50 border-white/5 text-white"
- />
- </div>
- <select
- value={categoryFilter}
- onChange={(e) => setCategoryFilter(e.target.value)}
- className="bg-slate-800/50 border border-white/5 rounded text-sm text-white p-2"
- >
- <option value="all">All Categories</option>
- {CATEGORIES.map((cat) => (
- <option key={cat} value={cat}>
- {cat}
- </option>
- ))}
- </select>
- <div className="flex bg-slate-800/50 border border-white/5 rounded p-1 w-fit">
- {[
- { value: "all", label: "All" },
- { value: "7d", label: "7d" },
- { value: "30d", label: "30d" },
- ].map((opt) => (
- <button
- key={opt.value}
- type="button"
- onClick={() => setDateFilter(opt.value)}
- className={cn(
- "px-3 py-1 rounded text-xs font-medium transition",
- dateFilter === opt.value
- ? "bg-slate-700 text-white shadow"
- : "text-slate-400 hover:text-white",
- )}
- >
- {opt.label}
- </button>
- ))}
- </div>
+        {/* Filters */}
+        <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 p-4">
+          <div className="flex flex-wrap gap-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <Input
+                placeholder="Search description..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-9 bg-slate-800/50 border-white/5 text-white"
+              />
+            </div>
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="bg-slate-800/50 border border-white/5 rounded text-sm text-white p-2"
+            >
+              <option value="all">All Categories</option>
+              {CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+            <div className="flex bg-slate-800/50 border border-white/5 rounded p-1 w-fit">
+              {[
+                { value: "all", label: "All" },
+                { value: "7d", label: "7d" },
+                { value: "30d", label: "30d" },
+              ].map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => setDateFilter(opt.value)}
+                  className={cn(
+                    "px-3 py-1 rounded text-xs font-medium transition",
+                    dateFilter === opt.value
+                      ? "bg-slate-700 text-white shadow"
+                      : "text-slate-400 hover:text-white",
+                  )}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
 
- <Popover>
- <PopoverTrigger asChild>
- <Button
- type="button"
- variant="outline"
- size="sm"
- className={cn(
- "bg-slate-800/50 border-white/10 text-slate-300 hover:text-white h-9 py-0",
- dateFilter === "range" &&
- "bg-slate-700 text-white border-emerald-500/50",
- )}
- onClick={() => setDateFilter("range")}
- >
- Range
- </Button>
- </PopoverTrigger>
- <PopoverContent
- className="w-auto p-0 dark border-slate-800 bg-slate-900"
- align="end"
- >
- <Calendar
- mode="range"
- defaultMonth={customRange?.from}
- selected={customRange}
- onSelect={setCustomRange}
- numberOfMonths={1}
- />
- </PopoverContent>
- </Popover>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className={cn(
+                    "bg-slate-800/50 border-white/10 text-slate-300 hover:text-white h-9 py-0",
+                    dateFilter === "range" &&
+                      "bg-slate-700 text-white border-emerald-500/50",
+                  )}
+                  onClick={() => setDateFilter("range")}
+                >
+                  Range
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-auto p-0 dark border-slate-800 bg-slate-900"
+                align="end"
+              >
+                <Calendar
+                  mode="range"
+                  defaultMonth={customRange?.from}
+                  selected={customRange}
+                  onSelect={setCustomRange}
+                  numberOfMonths={1}
+                />
+              </PopoverContent>
+            </Popover>
 
- <div className="flex items-center gap-2 md:justify-end">
- <DropdownMenu>
- <DropdownMenuTrigger asChild>
- <Button
- variant="outline"
- className="border-white/5 text-slate-400 hover:text-white py-0"
- >
- <Download className="w-4 h-4 mr-2" /> Export
- </Button>
- </DropdownMenuTrigger>
- <DropdownMenuContent
- align="end"
- className="bg-slate-900 border-white/10"
- >
- <DropdownMenuItem
- onClick={() => handleExport("csv")}
- className="text-white hover:bg-white/5 gap-2"
- >
- <FileText className="w-4 h-4" /> CSV
- </DropdownMenuItem>
- <DropdownMenuItem
- onClick={() => handleExport("excel")}
- className="text-white hover:bg-white/5 gap-2"
- >
- <FileText className="w-4 h-4" /> Excel
- </DropdownMenuItem>
- <DropdownMenuItem
- onClick={() => handleExport("pdf")}
- className="text-white hover:bg-white/5 gap-2"
- >
- <FileText className="w-4 h-4" /> PDF
- </DropdownMenuItem>
- </DropdownMenuContent>
- </DropdownMenu>
- </div>
- </div>
- </Card>
+            <div className="flex items-center gap-2 md:justify-end">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="border-white/5 text-slate-400 hover:text-white py-0"
+                  >
+                    <Download className="w-4 h-4 mr-2" /> Export
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="bg-slate-900 border-white/10"
+                >
+                  <DropdownMenuItem
+                    onClick={() => handleExport("csv")}
+                    className="text-white hover:bg-white/5 gap-2"
+                  >
+                    <FileText className="w-4 h-4" /> CSV
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleExport("excel")}
+                    className="text-white hover:bg-white/5 gap-2"
+                  >
+                    <FileText className="w-4 h-4" /> Excel
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleExport("pdf")}
+                    className="text-white hover:bg-white/5 gap-2"
+                  >
+                    <FileText className="w-4 h-4" /> PDF
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+        </Card>
 
- {/* Expenses List */}
- <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 overflow-hidden">
- <div className="overflow-x-auto">
- <table className="w-full text-left">
- <thead>
- <tr className="bg-slate-800/50 border-b border-white/5">
- <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase">
- Expense
- </th>
- <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase">
- Category
- </th>
- <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase">
- Date
- </th>
- <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase text-right">
- Amount
- </th>
- <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase text-right">
- Actions
- </th>
- </tr>
- </thead>
- <tbody className="divide-y divide-white/5">
- {isLoading &&
- ["sk1", "sk2", "sk3", "sk4", "sk5"].map((id) => (
- <tr key={id} className="animate-pulse">
- <td colSpan={5} className="px-6 py-8">
- <div className="h-4 bg-slate-800 rounded w-full" />
- </td>
- </tr>
- ))}
+        {/* Expenses List */}
+        <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-slate-800/50 border-b border-white/5">
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase">
+                    Expense
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase">
+                    Category
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase">
+                    Date
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase text-right">
+                    Amount
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase text-right">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {isLoading &&
+                  ["sk1", "sk2", "sk3", "sk4", "sk5"].map((id) => (
+                    <tr key={id} className="animate-pulse">
+                      <td colSpan={5} className="px-6 py-8">
+                        <div className="h-4 bg-slate-800 rounded w-full" />
+                      </td>
+                    </tr>
+                  ))}
 
- {!isLoading && filteredExpenses.length === 0 && (
- <tr>
- <td
- colSpan={5}
- className="px-6 py-12 text-center text-slate-500"
- >
- No expense records found.
- </td>
- </tr>
- )}
+                {!isLoading && filteredExpenses.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="px-6 py-12 text-center text-slate-500"
+                    >
+                      No expense records found.
+                    </td>
+                  </tr>
+                )}
 
- {!isLoading &&
- filteredExpenses.length > 0 &&
- filteredExpenses.map((expense) => (
- <tr
- key={expense.id}
- className="hover:bg-white/5 transition-colors"
- >
- <td className="px-6 py-4">
- <div className="flex items-start gap-3">
- <div className="w-8 h-8 rounded bg-slate-800 flex items-center justify-center shrink-0">
- <FileText className="w-4 h-4 text-slate-400" />
- </div>
- <div>
- <p className="text-white font-medium">
- {expense.title}
- </p>
- {expense.description && (
- <p className="text-xs text-slate-500 line-clamp-1">
- {expense.description}
- </p>
- )}
- </div>
- </div>
- </td>
- <td className="px-6 py-4">
- <Badge
- variant="outline"
- className="bg-blue-500/10 text-blue-400 border-none px-2 py-0"
- >
- {expense.category}
- </Badge>
- </td>
- <td className="px-6 py-4 text-sm text-slate-300">
- {format(new Date(expense.date), "MMM dd, yyyy")}
- </td>
- <td className="px-6 py-4 text-right">
- <p className="text-white font-bold">
- GH₵{Number(expense.amount).toLocaleString()}
- </p>
- </td>
- <td className="px-6 py-4 text-right">
- <div className="flex items-center justify-end gap-2">
- <Button
- variant="ghost"
- size="icon"
- className="h-8 w-8 text-slate-400 hover:text-white"
- onClick={() => handleOpenForm(expense)}
- >
- <Edit2 className="w-4 h-4" />
- </Button>
- <Button
- variant="ghost"
- size="icon"
- className="h-8 w-8 text-slate-400 hover:text-rose-400"
- onClick={() => handleDelete(expense.id)}
- disabled={isDeleting === expense.id}
- >
- {isDeleting === expense.id ? (
- <Loader2 className="w-4 h-4 animate-spin" />
- ) : (
- <Trash2 className="w-4 h-4" />
- )}
- </Button>
- </div>
- </td>
- </tr>
- ))}
- </tbody>
- </table>
- </div>
- </Card>
+                {!isLoading &&
+                  filteredExpenses.length > 0 &&
+                  filteredExpenses.map((expense) => (
+                    <tr
+                      key={expense.id}
+                      className="hover:bg-white/5 transition-colors"
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-start gap-3">
+                          <div className="w-8 h-8 rounded bg-slate-800 flex items-center justify-center shrink-0">
+                            <FileText className="w-4 h-4 text-slate-400" />
+                          </div>
+                          <div>
+                            <p className="text-white font-medium">
+                              {expense.title}
+                            </p>
+                            {expense.description && (
+                              <p className="text-xs text-slate-500 line-clamp-1">
+                                {expense.description}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <Badge
+                          variant="outline"
+                          className="bg-blue-500/10 text-blue-400 border-none px-2 py-0"
+                        >
+                          {expense.category}
+                        </Badge>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-slate-300">
+                        {format(new Date(expense.date), "MMM dd, yyyy")}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <p className="text-white font-bold">
+                          GH₵{Number(expense.amount).toLocaleString()}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-slate-400 hover:text-white"
+                            onClick={() => handleOpenForm(expense)}
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 text-slate-400 hover:text-rose-400"
+                            onClick={() => handleDelete(expense.id)}
+                            disabled={isDeleting === expense.id}
+                          >
+                            {isDeleting === expense.id ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Trash2 className="w-4 h-4" />
+                            )}
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
 
- {/* Form Modal (Simple Overlay) */}
- {isFormOpen && (
- <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
- <Card className="w-full max-w-md bg-slate-900 border-white/10 shadow-lg p-6 relative">
- <button
- onClick={handleCloseForm}
- className="absolute right-4 top-4 p-1 text-slate-400 hover:text-white"
- >
- <X className="w-5 h-5" />
- </button>
+        {/* Form Modal (Simple Overlay) */}
+        {isFormOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <Card className="w-full max-w-md bg-slate-900 border-white/10 shadow-lg p-6 relative">
+              <button
+                onClick={handleCloseForm}
+                className="absolute right-4 top-4 p-1 text-slate-400 hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
 
- <h2 className="text-xl font-bold text-white mb-6">
- {editingId ? "Edit Expense" : "Add New Expense"}
- </h2>
+              <h2 className="text-xl font-bold text-white mb-6">
+                {editingId ? "Edit Expense" : "Add New Expense"}
+              </h2>
 
- <form onSubmit={handleSubmit} className="space-y-4">
- <div className="space-y-2">
- <Label className="text-white">Title *</Label>
- <Input
- value={formData.title}
- onChange={(e) =>
- setFormData({ ...formData, title: e.target.value })
- }
- placeholder="e.g., Office Rent - Feb"
- className="bg-slate-800 border-white/5 text-white"
- required
- />
- </div>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-white">Title *</Label>
+                  <Input
+                    value={formData.title}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
+                    placeholder="e.g., Office Rent - Feb"
+                    className="bg-slate-800 border-white/5 text-white"
+                    required
+                  />
+                </div>
 
- <div className="grid grid-cols-2 gap-4">
- <div className="space-y-2">
- <Label className="text-white">Amount (GH₵) *</Label>
- <Input
- type="number"
- value={formData.amount}
- onChange={(e) =>
- setFormData({ ...formData, amount: e.target.value })
- }
- placeholder="0.00"
- className="bg-slate-800 border-white/5 text-white"
- required
- />
- </div>
- <div className="space-y-2">
- <Label className="text-white">Date *</Label>
- <Popover>
- <PopoverTrigger asChild>
- <Button
- variant="outline"
- className={cn(
- "w-full bg-slate-800 border-white/5 text-slate-300 justify-start font-normal h-10 overflow-hidden",
- !formData.date && "text-slate-500",
- )}
- >
- <CalendarIcon className="mr-2 h-4 w-4 text-emerald-500 shrink-0" />
- <span className="truncate">
- {formData.date
- ? format(parseDate(formData.date), "PPP")
- : "Pick a date"}
- </span>
- </Button>
- </PopoverTrigger>
- <PopoverContent className="w-auto p-0" align="start">
- <Calendar
- mode="single"
- selected={parseDate(formData.date)}
- onSelect={(date) =>
- setFormData({
- ...formData,
- date: date ? format(date, "yyyy-MM-dd") : "",
- })
- }
- />
- </PopoverContent>
- </Popover>
- </div>
- </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-white">Amount (GH₵) *</Label>
+                    <Input
+                      type="number"
+                      value={formData.amount}
+                      onChange={(e) =>
+                        setFormData({ ...formData, amount: e.target.value })
+                      }
+                      placeholder="0.00"
+                      className="bg-slate-800 border-white/5 text-white"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-white">Date *</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full bg-slate-800 border-white/5 text-slate-300 justify-start font-normal h-10 overflow-hidden",
+                            !formData.date && "text-slate-500",
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4 text-emerald-500 shrink-0" />
+                          <span className="truncate">
+                            {formData.date
+                              ? format(parseDate(formData.date), "PPP")
+                              : "Pick a date"}
+                          </span>
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={parseDate(formData.date)}
+                          onSelect={(date) =>
+                            setFormData({
+                              ...formData,
+                              date: date ? format(date, "yyyy-MM-dd") : "",
+                            })
+                          }
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                </div>
 
- <div className="space-y-2">
- <Label className="text-white">Category *</Label>
- <select
- value={formData.category}
- onChange={(e) =>
- setFormData({ ...formData, category: e.target.value })
- }
- className="w-full bg-slate-800 border-white/5 border rounded text-white p-2 h-10"
- >
- {CATEGORIES.map((cat) => (
- <option key={cat} value={cat}>
- {cat}
- </option>
- ))}
- </select>
- </div>
+                <div className="space-y-2">
+                  <Label className="text-white">Category *</Label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
+                    className="w-full bg-slate-800 border-white/5 border rounded text-white p-2 h-10"
+                  >
+                    {CATEGORIES.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
- <div className="space-y-2">
- <Label className="text-white">Description</Label>
- <Textarea
- value={formData.description}
- onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
- setFormData({ ...formData, description: e.target.value })
- }
- placeholder="Additional notes..."
- className="bg-slate-800 border-white/5 text-white"
- rows={3}
- />
- </div>
+                <div className="space-y-2">
+                  <Label className="text-white">Description</Label>
+                  <Textarea
+                    value={formData.description}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
+                    placeholder="Additional notes..."
+                    className="bg-slate-800 border-white/5 text-white"
+                    rows={3}
+                  />
+                </div>
 
- <div className="flex gap-3 pt-4">
- <Button
- type="button"
- variant="ghost"
- className="flex-1 text-slate-400 hover:text-white"
- onClick={handleCloseForm}
- >
- Cancel
- </Button>
- <Button
- type="submit"
- disabled={isSaving}
- className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold"
- >
- {isSaving ? (
- <Loader2 className="w-4 h-4 animate-spin mr-2" />
- ) : (
- <Save className="w-4 h-4 mr-2" />
- )}
- {editingId ? "Update" : "Save"} Record
- </Button>
- </div>
- </form>
- </Card>
- </div>
- )}
- </div>
- </AdminLayout>
- );
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="flex-1 text-slate-400 hover:text-white"
+                    onClick={handleCloseForm}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={isSaving}
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold"
+                  >
+                    {isSaving ? (
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    ) : (
+                      <Save className="w-4 h-4 mr-2" />
+                    )}
+                    {editingId ? "Update" : "Save"} Record
+                  </Button>
+                </div>
+              </form>
+            </Card>
+          </div>
+        )}
+      </div>
+    </AdminLayout>
+  );
 }
