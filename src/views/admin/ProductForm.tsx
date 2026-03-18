@@ -36,7 +36,6 @@ import { useNotifications } from "@/hooks/useNotifications";
 import { useBreadcrumb } from "@/context/BreadcrumbContext";
 import { cn } from "@/lib/utils";
 import AppImage from "@/components/common/AppImage";
-import { CropModal } from "@/components/admin/CropModal";
 import { compressImage } from "@/utils/image-utils";
 
 interface Category {
@@ -62,10 +61,6 @@ export default function ProductForm() {
   const [isUploading, setIsUploading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
 
-  // Image handling states
-  const [pendingFiles, setPendingFiles] = useState<File[]>([]);
-  const [currentCropImage, setCurrentCropImage] = useState<string | null>(null);
-  const [showCropModal, setShowCropModal] = useState(false);
 
   const createProductMutation = useCreateProduct();
   const updateProductMutation = useUpdateProduct();
@@ -215,64 +210,36 @@ export default function ProductForm() {
 
     if (validFiles.length === 0) return;
 
-    // Set pending and open crop for the first one
-    setPendingFiles(validFiles);
-    const reader = new FileReader();
-    reader.onload = () => {
-      setCurrentCropImage(reader.result as string);
-      setShowCropModal(true);
-    };
-    reader.readAsDataURL(validFiles[0]);
-
-    // Reset input
-    e.target.value = "";
-  };
-
-  const onCropComplete = async (croppedBlob: Blob) => {
-    setShowCropModal(false);
-    const currentFile = pendingFiles[0];
-    const croppedFile = new File([croppedBlob], currentFile.name, {
-      type: "image/webp",
-    });
-
     try {
       setIsUploading(true);
+      addNotification("Processing", `Handling ${validFiles.length} image(s)...`, "info");
 
-      // Optimize
-      const optimizedFile = await compressImage(croppedFile);
-
-      // Upload
-      const { imageUrls } = await uploadImages([optimizedFile]);
+      // Optimize and upload each file
+      const uploadedUrls: string[] = [];
+      for (const file of validFiles) {
+        const optimizedFile = await compressImage(file);
+        const { imageUrls } = await uploadImages([optimizedFile]);
+        if (imageUrls?.[0]) {
+          uploadedUrls.push(imageUrls[0]);
+        }
+      }
 
       setProductData((prev) => ({
         ...prev,
-        image: prev.image || imageUrls[0],
-        images: [...(prev.images || []), ...imageUrls],
+        image: prev.image || uploadedUrls[0],
+        images: [...(prev.images || []), ...uploadedUrls],
       }));
 
-      addNotification("Success", "Image processed and uploaded", "success");
+      addNotification("Success", "Images uploaded successfully", "success");
     } catch (err: unknown) {
       const message =
-        err instanceof Error ? err.message : "Failed to upload image";
+        err instanceof Error ? err.message : "Failed to upload images";
       addNotification("Error", message, "error");
       console.error(err);
     } finally {
       setIsUploading(false);
-
-      // Process next file if any
-      const remaining = pendingFiles.slice(1);
-      if (remaining.length > 0) {
-        setPendingFiles(remaining);
-        const reader = new FileReader();
-        reader.onload = () => {
-          setCurrentCropImage(reader.result as string);
-          setShowCropModal(true);
-        };
-        reader.readAsDataURL(remaining[0]);
-      } else {
-        setPendingFiles([]);
-        setCurrentCropImage(null);
-      }
+      // Reset input
+      e.target.value = "";
     }
   };
 
@@ -470,7 +437,7 @@ export default function ProductForm() {
                     <label
                       className={cn(
                         "aspect-square rounded w-full border-2 border-dashed flex flex-col items-center justify-center gap-2 cursor-pointer transition",
-                        isUploading || showCropModal
+                        isUploading
                           ? "bg-slate-800/50 border-emerald-500/20 pointer-events-none"
                           : "border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5",
                       )}
@@ -921,20 +888,6 @@ export default function ProductForm() {
         </form>
       </div>
 
-      {/* Crop Modal */}
-      {currentCropImage && (
-        <CropModal
-          isOpen={showCropModal}
-          image={currentCropImage}
-          onClose={() => {
-            setShowCropModal(false);
-            setPendingFiles([]);
-            setCurrentCropImage(null);
-          }}
-          onCropComplete={onCropComplete}
-          aspectRatio={1}
-        />
-      )}
     </AdminLayout>
   );
 }

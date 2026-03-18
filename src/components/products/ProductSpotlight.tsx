@@ -62,7 +62,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
   const currentProduct = spotlightItems[currentIndex];
 
   return (
-    <section className="relative w-full h-auto lg:h-screen overflow-hidden group/spotlight flex items-start lg:items-center lg:py-0 pt-20">
+    <section className="relative w-full h-auto lg:min-h-[calc(100vh-5rem)] overflow-hidden group/spotlight flex items-start lg:items-center pt-20 lg:pt-20">
       {/* Background kinetic pattern */}
       <div className="absolute inset-0 pattern-dots opacity-80 pointer-events-none" />
       <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-white dark:to-slate-950 pointer-events-none" />
@@ -170,14 +170,14 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                   </div>
 
                   {/* Right Side: Image with Content Wrapper (Background on Mobile, Relative Fixed on LG) */}
-                  <div className="relative w-full lg:w-[56%] aspect-4/5 sm:aspect-16/10 lg:aspect-auto h-140 lg:h-190 group/image overflow-hidden lg:rounded shadow-2xl border border-white/5">
+                  <div className="relative w-full lg:w-[56%] aspect-4/5 sm:aspect-16/10 lg:aspect-auto h-160 lg:h-190 group/image overflow-hidden lg:rounded shadow-2xl border border-white/5">
                     {/* Image */}
                     <AppImage
                       src={getImageUrl(currentProduct.image)}
                       alt={currentProduct.name}
                       fill
                       priority
-                      className="object-contain object-center transition-transform duration-1000 group-hover/image:scale-105"
+                      className="object-cover object-center transition-transform duration-1000 group-hover/image:scale-105"
                     />
                     <div className="absolute inset-0 bg-emerald-500/5 group-hover/image:bg-transparent transition-colors duration-700" />
 

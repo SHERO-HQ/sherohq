@@ -111,7 +111,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             alt={product.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-contain object-center p-2 group-hover:scale-110 transition-transform duration-700 ease-out"
+            className="object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-out"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-6xl select-none opacity-30 group-hover:scale-110 transition-transform duration-700">
@@ -193,7 +193,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
         <div className="mt-4 pt-4 border-t border-slate-100 dark:border-white/5 flex flex-col gap-4">
           <div className="flex flex-col">
             {product.originalPrice && (
-              <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 line-through mb-1">
+              <span className="text-[10px] font-black uppercase tracking-widest text-red-400 line-through mb-1">
                 {formatCurrency(product.originalPrice)}
               </span>
             )}
@@ -213,7 +213,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             <button
               onClick={handleAddToCart}
               disabled={!product.inStock}
-              className="flex-1 h-10 rounded flex items-center justify-center gap-2 transition bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-600 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed border border-emerald-500/20 shadow-lg shadow-emerald-500/5 group/cart"
+              className="flex-1 h-10 rounded flex items-center justify-center gap-2 transition bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-600 hover:text-white! disabled:opacity-50 disabled:cursor-not-allowed border border-emerald-500/20 shadow-lg shadow-emerald-500/5 group/cart"
             >
               <ShoppingCart
                 size={14}
