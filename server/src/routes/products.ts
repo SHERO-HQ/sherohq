@@ -30,6 +30,7 @@ interface ProductRow {
   specifications: string | null;
   condition: "New" | "Used" | "Refurbished" | null;
   createdAt: Date;
+  resolved_category_id?: string | null;
 }
 
 // Helper to parse JSON fields and numbers
@@ -57,10 +58,10 @@ function parseProduct(row: ProductRow) {
     id: row.id,
     // Frontend expects "category" to be the Display Name
     category: row.category_name || row.category,
-    // Use the joined category ID if available (handles name-to-id resolution)
-    categoryId: row.category_name ? (row.category_name === row.category ? row.category : (row.category_name.toLowerCase() === row.category.toLowerCase() ? row.category : (row.category.length > 20 ? row.category : row.category))) : row.category,
+    // Use the joined category ID when available, otherwise keep the stored value.
+    categoryId: row.resolved_category_id || row.category,
     // We add "categoryId" to hold the UUID for forms - more robustly
-    resolvedCategoryId: (row as any).resolved_category_id || row.category,
+    resolvedCategoryId: row.resolved_category_id || row.category,
     price: Number(row.price),
     originalPrice: row.originalPrice ? Number(row.originalPrice) : null,
     rating: Number(row.rating),
@@ -81,9 +82,13 @@ router.get("/", async (req: Request, res: Response) => {
     const { category, search } = req.query;
 
     let queryText = `
-      SELECT p.*, c.name as category_name, c.id as resolved_category_id
+      SELECT
+        p.*,
+        COALESCE(c_by_id.name, c_by_name.name) as category_name,
+        COALESCE(c_by_id.id, c_by_name.id) as resolved_category_id
       FROM products p
-      LEFT JOIN categories c ON (p.category = c.id::text OR p.category = c.name)
+      LEFT JOIN categories c_by_id ON p.category = c_by_id.id
+      LEFT JOIN categories c_by_name ON p.category = c_by_name.name
     `;
     const params: (string | number)[] = [];
     const conditions: string[] = [];
@@ -91,14 +96,16 @@ router.get("/", async (req: Request, res: Response) => {
 
     if (category && category !== "all") {
       // Robust filter: match by ID or Name
-      conditions.push(`(p.category::text = $${paramIndex} OR c.name ILIKE $${paramIndex} OR c.id::text = $${paramIndex})`);
+      conditions.push(
+        `(p.category = $${paramIndex} OR c_by_id.id = $${paramIndex} OR c_by_name.name = $${paramIndex})`,
+      );
       params.push(category as string);
       paramIndex++;
     }
 
     if (search) {
       conditions.push(
-        `(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR c.name ILIKE $${paramIndex})`,
+        `(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR c_by_id.name ILIKE $${paramIndex} OR c_by_name.name ILIKE $${paramIndex})`,
       );
       params.push(`%${search as string}%`);
       paramIndex++;
@@ -112,6 +119,7 @@ router.get("/", async (req: Request, res: Response) => {
 
     const result = await db.query(queryText, params);
     const products = result.rows as ProductRow[];
+    res.set("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
     res.json(products.map(parseProduct));
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -125,9 +133,13 @@ router.get("/:id", async (req: Request, res: Response) => {
     const id = String(req.params.id);
     // Query by ID, SKU, or Slug - Cast ID to text to avoid UUID type mismatch
     const query = `
-      SELECT p.*, c.name as category_name
+      SELECT
+        p.*,
+        COALESCE(c_by_id.name, c_by_name.name) as category_name,
+        COALESCE(c_by_id.id, c_by_name.id) as resolved_category_id
       FROM products p
-      LEFT JOIN categories c ON p.category = c.id
+      LEFT JOIN categories c_by_id ON p.category = c_by_id.id
+      LEFT JOIN categories c_by_name ON p.category = c_by_name.name
       WHERE p.id::text = $1 OR p.sku = $1 OR p.slug = $1
     `;
 
@@ -138,6 +150,7 @@ router.get("/:id", async (req: Request, res: Response) => {
       return res.status(404).json({ error: "Product not found" });
     }
 
+    res.set("Cache-Control", "public, max-age=120, stale-while-revalidate=600");
     res.json(parseProduct(product as ProductRow));
   } catch (error) {
     console.error("Error fetching product:", error);
@@ -149,6 +162,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 router.get("/categories/list", async (req: Request, res: Response) => {
   try {
     const result = await db.query("SELECT * FROM categories");
+    res.set("Cache-Control", "public, max-age=300, stale-while-revalidate=900");
     res.json(result.rows);
   } catch (error) {
     console.error("Error fetching categories:", error);
