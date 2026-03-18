@@ -1,5 +1,4 @@
-"use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useNotifications } from "./useNotifications";
 
 /**
@@ -12,9 +11,13 @@ import { useNotifications } from "./useNotifications";
 export function useFormDraft<T>(key: string, initialData: T) {
   const [data, setData] = useState<T>(initialData);
   const { addNotification } = useNotifications();
+  const initialDataRef = useRef(initialData);
 
-  // Load draft on mount
+  // Load draft on mount or key change
   useEffect(() => {
+    // Reset data to initial whenever the key changes to prevent crosstalk
+    setData(initialDataRef.current);
+
     const saved = localStorage.getItem(`shoro_draft_${key}`);
     if (saved) {
       try {
@@ -29,15 +32,18 @@ export function useFormDraft<T>(key: string, initialData: T) {
 
   // Sync draft on change
   useEffect(() => {
-    if (JSON.stringify(data) !== JSON.stringify(initialData)) {
+    // Only save if data is actually different from initial state
+    const isDefault = JSON.stringify(data) === JSON.stringify(initialDataRef.current);
+    
+    if (!isDefault) {
       localStorage.setItem(`shoro_draft_${key}`, JSON.stringify(data));
     }
-  }, [key, data, initialData]);
+  }, [key, data]);
 
   const clearDraft = useCallback(() => {
     localStorage.removeItem(`shoro_draft_${key}`);
-    setData(initialData);
-  }, [key, initialData]);
+    setData(initialDataRef.current);
+  }, [key]);
 
   return [data, setData, clearDraft] as const;
 }

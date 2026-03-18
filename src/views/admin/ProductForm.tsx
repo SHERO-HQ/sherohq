@@ -65,9 +65,11 @@ export default function ProductForm() {
   const createProductMutation = useCreateProduct();
   const updateProductMutation = useUpdateProduct();
 
+  const draftKey = isEdit ? `admin_product_edit_${id}` : "admin_product_new";
+
   const [productData, setProductData, clearDraft] = useFormDraft<
     Partial<Product>
-  >("admin_product", {
+  >(draftKey, {
     name: "",
     category: "",
     price: 0,

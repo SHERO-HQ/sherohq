@@ -67,7 +67,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
   const currentProduct = spotlightItems[currentIndex];
 
   return (
-    <section className="relative w-full h-auto lg:min-h-[calc(100vh-5rem)] overflow-hidden group/spotlight flex items-start lg:items-center pt-20 lg:pt-20">
+    <section className="relative w-full h-full lg:min-h-[calc(90vh-5rem)] overflow-hidden group/spotlight flex items-start lg:items-center pt-16 lg:pt-20">
       {/* Background kinetic pattern */}
       <div className="absolute inset-0 pattern-dots opacity-80 pointer-events-none" />
       <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-white dark:to-slate-950 pointer-events-none" />
@@ -184,7 +184,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                       priority
                       className="object-contain object-center transition-transform duration-1000 group-hover/image:scale-105"
                     />
-                    <div className="absolute inset-0 bg-emerald-500/5 group-hover/image:bg-transparent transition-colors duration-700" />
+                    <div className="absolute inset-0 group-hover/image:bg-transparent transition-colors duration-700" />
 
                     {/* Carousel Navigation - Arrows (Only on Image for Desktop) */}
                     <div className="absolute inset-0 z-30 pointer-events-none flex items-center justify-between px-4 sm:px-6">
