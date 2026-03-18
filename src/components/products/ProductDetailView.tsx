@@ -149,8 +149,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
           <div className="flex items-center gap-2">
             <ShareButton
               url={shareUrl}
-              title={product.name}
-              description={`Check out ${product.name}`}
+              title={`${product.name} — ${formatCurrency(product.price)}`}
+              description={`Check out ${product.name} for ${formatCurrency(product.price)} on SHERO.`}
               image={getImageUrl(product.image)}
             />
           </div>
