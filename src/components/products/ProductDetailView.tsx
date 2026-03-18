@@ -277,7 +277,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 px-1">
                 <div className="flex flex-col">
                   {product.originalPrice && (
-                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 line-through">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-red-400 line-through">
                       Was {formatCurrency(product.originalPrice)}
                     </span>
                   )}

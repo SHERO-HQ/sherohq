@@ -177,7 +177,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                       alt={currentProduct.name}
                       fill
                       priority
-                      className="object-cover object-center transition-transform duration-1000 group-hover/image:scale-105"
+                      className="object-contain object-center transition-transform duration-1000 group-hover/image:scale-105"
                     />
                     <div className="absolute inset-0 bg-emerald-500/5 group-hover/image:bg-transparent transition-colors duration-700" />
 
@@ -190,7 +190,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           prevSlide();
                           setIsAutoPlaying(false);
                         }}
-                        className="p-3 rounded-full bg-black/40 hover:bg-emerald-500 text-white backdrop-blur-md border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
+                        className="p-2 rounded bg-black/40 hover:bg-emerald-500 text-white backdrop-blur-md border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
                       >
                         <ChevronLeft className="size-5 sm:size-6 lg:size-7 group-hover/nav:-translate-x-0.5 transition-transform" />
                       </button>
@@ -201,14 +201,14 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           nextSlide();
                           setIsAutoPlaying(false);
                         }}
-                        className="p-3 rounded-full bg-black/40 hover:bg-emerald-500 text-white backdrop-blur-md border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
+                        className="p-2 rounded bg-black/40 hover:bg-emerald-500 text-white backdrop-blur-md border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
                       >
                         <ChevronRight className="size-5 sm:size-6 lg:size-7 group-hover/nav:translate-x-0.5 transition-transform" />
                       </button>
                     </div>
 
                     {/* Dots - Integrated in Image Bottom for Desktop */}
-                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 pointer-events-auto">
+                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 pointer-events-auto">
                       {spotlightItems.map((_, i) => (
                         <button
                           key={i}
@@ -236,7 +236,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
 
       {/* Autoplay Progress Bar */}
       {isAutoPlaying && (
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-slate-100 dark:bg-white/5 overflow-hidden">
+        <div className="absolute z-20 bottom-0 left-0 right-0 h-1 bg-slate-100 dark:bg-white/5 overflow-hidden">
           <motion.div
             key={currentIndex}
             initial={{ x: "-100%" }}

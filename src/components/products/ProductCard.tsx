@@ -79,8 +79,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
     );
   };
 
+  const shareLink = getAbsoluteUrl(`/shop/${product.slug || product.sku || product.id}`);
   const whatsappMessage = encodeURIComponent(
-    `Hi SHERO, I'm interested in inquiring about ${product.name}. Is it still available?`,
+    `Hello Shero, I'm interested in the ${product.name} (${formatCurrency(product.price)}). Here is the link:\n${shareLink}\n\nCould you please provide more details or assist me with the purchase? Thank you!`,
   );
   const whatsappUrl = `https://wa.me/${COMPANY_CONTACTS.WHATSAPP}?text=${whatsappMessage}`;
 
@@ -111,7 +112,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             alt={product.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-cover object-center group-hover:scale-110 transition-transform duration-700 ease-out"
+            className="object-contain object-center p-2 group-hover:scale-110 transition-transform duration-700 ease-out"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-6xl select-none opacity-30 group-hover:scale-110 transition-transform duration-700">

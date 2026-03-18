@@ -36,7 +36,8 @@ export function useFormDraft<T>(key: string, initialData: T) {
 
   const clearDraft = useCallback(() => {
     localStorage.removeItem(`shoro_draft_${key}`);
-  }, [key]);
+    setData(initialData);
+  }, [key, initialData]);
 
   return [data, setData, clearDraft] as const;
 }
