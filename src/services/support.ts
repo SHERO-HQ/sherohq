@@ -193,6 +193,7 @@ export async function deleteInquiry(
 export interface NewsletterSubscriber {
   id: string;
   email: string;
+  phone?: string | null;
   name?: string | null;
   source?: string | null;
   status: "active" | "unsubscribed";
@@ -203,9 +204,37 @@ export interface NewsletterSubscriber {
   updatedAt: string;
 }
 
+export interface NewsletterCampaign {
+  id: string;
+  channel: "email" | "sms" | "whatsapp";
+  subject: string;
+  whatsappTemplateName?: string | null;
+  whatsappTemplateLanguage?: string | null;
+  whatsappTemplateParams?: string[] | null;
+  status: "draft" | "scheduled" | "sending" | "sent" | "failed";
+  audienceStatus: "active" | "unsubscribed" | "all";
+  audienceSource?: string | null;
+  audienceSubscribedAfter?: string | null;
+  audienceSubscribedBefore?: string | null;
+  recipientLimit?: number | null;
+  batchSize: number;
+  sendDelayMs: number;
+  isTest: boolean;
+  testEmail?: string | null;
+  testPhone?: string | null;
+  totalTargets: number;
+  sentCount: number;
+  failedCount: number;
+  scheduledAt?: string | null;
+  sentAt?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export async function subscribeToNewsletter(data: {
   email: string;
   name?: string;
+  phone?: string;
   source?: string;
 }): Promise<{ success: boolean; message: string }> {
   const response = await fetch(`${API_BASE}/newsletter/subscribe`, {
@@ -253,25 +282,77 @@ export async function updateNewsletterSubscriberStatus(
   return handleResponse(response);
 }
 
+export async function updateNewsletterSubscriberContact(
+  id: string,
+  data: {
+    phone?: string | null;
+    name?: string | null;
+  },
+): Promise<{ success: boolean; subscriber: NewsletterSubscriber }> {
+  const response = await authFetch(
+    `${API_BASE}/newsletter/subscribers/${id}/contact`,
+    {
+      method: "PATCH",
+      body: JSON.stringify(data),
+    },
+  );
+  return handleResponse(response);
+}
+
 export async function sendNewsletterCampaign(data: {
+  channel?: "email" | "sms" | "whatsapp";
   subject: string;
   content: string;
   testEmail?: string;
+  testPhone?: string;
+  whatsappTemplateName?: string;
+  whatsappTemplateLanguage?: string;
+  whatsappTemplateParams?: string[];
   batchSize?: number;
   sendDelayMs?: number;
   limit?: number;
+  scheduleAt?: string;
+  audienceStatus?: "active" | "unsubscribed" | "all";
+  audienceSource?: string;
+  audienceSubscribedAfter?: string;
+  audienceSubscribedBefore?: string;
 }): Promise<{
   success: boolean;
-  sent: number;
-  failed: number;
-  totalTargets: number;
-  batchSize: number;
-  sendDelayMs: number;
+  campaignId?: string;
+  status?: "scheduled";
+  sent?: number;
+  failed?: number;
+  totalTargets?: number;
+  batchSize?: number;
+  sendDelayMs?: number;
   message: string;
 }> {
   const response = await authFetch(`${API_BASE}/newsletter/campaigns/send`, {
     method: "POST",
     body: JSON.stringify(data),
   });
+  return handleResponse(response);
+}
+
+export async function fetchNewsletterCampaigns(limit = 20): Promise<{
+  campaigns: NewsletterCampaign[];
+}> {
+  const response = await authFetch(
+    `${API_BASE}/newsletter/campaigns?limit=${limit}`,
+  );
+  return handleResponse(response);
+}
+
+export async function processScheduledNewsletterCampaigns(): Promise<{
+  success: boolean;
+  processed: number;
+  message: string;
+}> {
+  const response = await authFetch(
+    `${API_BASE}/newsletter/campaigns/process-scheduled`,
+    {
+      method: "POST",
+    },
+  );
   return handleResponse(response);
 }

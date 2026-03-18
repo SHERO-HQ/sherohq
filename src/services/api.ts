@@ -125,6 +125,7 @@ export {
   type Consultation,
   type Inquiry,
   type NewsletterSubscriber,
+  type NewsletterCampaign,
   createTicket,
   fetchSupportTickets,
   updateTicketStatus,
@@ -139,7 +140,10 @@ export {
   subscribeToNewsletter,
   fetchNewsletterSubscribers,
   updateNewsletterSubscriberStatus,
+  updateNewsletterSubscriberContact,
   sendNewsletterCampaign,
+  fetchNewsletterCampaigns,
+  processScheduledNewsletterCampaigns,
 } from "./support";
 
 // Team, projects, testimonials, site stats

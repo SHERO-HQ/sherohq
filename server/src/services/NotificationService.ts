@@ -693,6 +693,116 @@ class NotificationService {
     return this.sendEmail(email, subject, htmlContent, "info");
   }
 
+  private normalizePhone(phone: string): string {
+    const compact = phone.replace(/[\s()-]/g, "").trim();
+    if (compact.startsWith("00")) {
+      return `+${compact.slice(2)}`;
+    }
+    return compact;
+  }
+
+  public async sendNewsletterCampaignWhatsApp(
+    phone: string,
+    options: {
+      mode?: "text" | "template";
+      content?: string;
+      templateName?: string;
+      languageCode?: string;
+      templateParams?: string[];
+    },
+  ): Promise<boolean> {
+    await this.ensureInitialized();
+
+    const normalizedPhone = this.normalizePhone(phone);
+    const token = process.env.WHATSAPP_ACCESS_TOKEN;
+    const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+    const mode = options.mode || "text";
+    const languageCode = options.languageCode || "en";
+
+    const payload =
+      mode === "template"
+        ? {
+            messaging_product: "whatsapp",
+            recipient_type: "individual",
+            to: normalizedPhone,
+            type: "template",
+            template: {
+              name: options.templateName,
+              language: { code: languageCode },
+              ...(options.templateParams && options.templateParams.length > 0
+                ? {
+                    components: [
+                      {
+                        type: "body",
+                        parameters: options.templateParams.map((param) => ({
+                          type: "text",
+                          text: param,
+                        })),
+                      },
+                    ],
+                  }
+                : {}),
+            },
+          }
+        : {
+            messaging_product: "whatsapp",
+            recipient_type: "individual",
+            to: normalizedPhone,
+            type: "text",
+            text: {
+              preview_url: false,
+              body: (options.content || "").slice(0, 4096),
+            },
+          };
+
+    if (mode === "template" && !options.templateName) {
+      console.error("❌ WhatsApp template mode requires templateName");
+      return false;
+    }
+
+    if (token && phoneNumberId) {
+      try {
+        const response = await fetch(
+          `https://graph.facebook.com/v22.0/${phoneNumberId}/messages`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+          },
+        );
+
+        if (!response.ok) {
+          const errorBody = await response.text();
+          console.error(
+            `❌ WhatsApp API failed for ${normalizedPhone}: ${response.status} ${errorBody}`,
+          );
+          return false;
+        }
+
+        console.log(`✅ WhatsApp message sent to ${normalizedPhone}`);
+        return true;
+      } catch (error) {
+        console.error(`❌ WhatsApp send error for ${normalizedPhone}:`, error);
+        return false;
+      }
+    }
+
+    if (mode === "template") {
+      console.log(
+        `📝 [SIMULATION] WhatsApp template to ${normalizedPhone}: ${options.templateName} (${languageCode})`,
+      );
+    } else {
+      console.log(
+        `📝 [SIMULATION] WhatsApp to ${normalizedPhone}: ${(options.content || "").slice(0, 120)}`,
+      );
+    }
+
+    return true;
+  }
+
   private async sendEmail(
     to: string,
     subject: string,

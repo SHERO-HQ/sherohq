@@ -300,6 +300,7 @@ export async function initializeDatabase() {
       CREATE TABLE IF NOT EXISTS newsletter_subscribers (
         id TEXT PRIMARY KEY,
         email TEXT UNIQUE NOT NULL,
+        phone TEXT,
         name TEXT,
         source TEXT DEFAULT 'footer',
         status TEXT DEFAULT 'active',
@@ -310,6 +311,68 @@ export async function initializeDatabase() {
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
+    `);
+
+    // Newsletter campaigns table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS newsletter_campaigns (
+        id TEXT PRIMARY KEY,
+        channel TEXT DEFAULT 'email',
+        subject TEXT NOT NULL,
+        content TEXT NOT NULL,
+        status TEXT DEFAULT 'draft',
+        "audienceStatus" TEXT DEFAULT 'active',
+        "audienceSource" TEXT,
+        "audienceSubscribedAfter" TIMESTAMP,
+        "audienceSubscribedBefore" TIMESTAMP,
+        "recipientLimit" INTEGER,
+        "batchSize" INTEGER DEFAULT 100,
+        "sendDelayMs" INTEGER DEFAULT 0,
+        "isTest" BOOLEAN DEFAULT false,
+        "testEmail" TEXT,
+        "testPhone" TEXT,
+        "whatsappTemplateName" TEXT,
+        "whatsappTemplateLanguage" TEXT,
+        "whatsappTemplateParams" JSONB,
+        "totalTargets" INTEGER DEFAULT 0,
+        "sentCount" INTEGER DEFAULT 0,
+        "failedCount" INTEGER DEFAULT 0,
+        "scheduledAt" TIMESTAMP,
+        "sentAt" TIMESTAMP,
+        "createdBy" TEXT REFERENCES admin_users(id) ON DELETE SET NULL,
+        "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await client.query(`
+      ALTER TABLE newsletter_campaigns
+      ADD COLUMN IF NOT EXISTS channel TEXT DEFAULT 'email';
+    `);
+
+    await client.query(`
+      ALTER TABLE newsletter_subscribers
+      ADD COLUMN IF NOT EXISTS phone TEXT;
+    `);
+
+    await client.query(`
+      ALTER TABLE newsletter_campaigns
+      ADD COLUMN IF NOT EXISTS "testPhone" TEXT;
+    `);
+
+    await client.query(`
+      ALTER TABLE newsletter_campaigns
+      ADD COLUMN IF NOT EXISTS "whatsappTemplateName" TEXT;
+    `);
+
+    await client.query(`
+      ALTER TABLE newsletter_campaigns
+      ADD COLUMN IF NOT EXISTS "whatsappTemplateLanguage" TEXT;
+    `);
+
+    await client.query(`
+      ALTER TABLE newsletter_campaigns
+      ADD COLUMN IF NOT EXISTS "whatsappTemplateParams" JSONB;
     `);
 
     // Projects table
@@ -494,7 +557,24 @@ export async function initializeDatabase() {
       "CREATE INDEX IF NOT EXISTS idx_newsletter_subscribers_email ON newsletter_subscribers(email)",
     );
     await client.query(
+      "CREATE INDEX IF NOT EXISTS idx_newsletter_subscribers_phone ON newsletter_subscribers(phone)",
+    );
+    await client.query(
       'CREATE INDEX IF NOT EXISTS idx_newsletter_subscribers_token ON newsletter_subscribers("unsubscribeToken")',
+    );
+
+    // Newsletter campaign indexes
+    await client.query(
+      "CREATE INDEX IF NOT EXISTS idx_newsletter_campaigns_status ON newsletter_campaigns(status)",
+    );
+    await client.query(
+      'CREATE INDEX IF NOT EXISTS idx_newsletter_campaigns_scheduled ON newsletter_campaigns("scheduledAt")',
+    );
+    await client.query(
+      'CREATE INDEX IF NOT EXISTS idx_newsletter_campaigns_created ON newsletter_campaigns("createdAt" DESC)',
+    );
+    await client.query(
+      "CREATE INDEX IF NOT EXISTS idx_newsletter_campaigns_channel ON newsletter_campaigns(channel)",
     );
 
     console.log("⚡ Indexes ensured.");

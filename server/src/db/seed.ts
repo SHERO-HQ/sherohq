@@ -745,6 +745,7 @@ export async function flushAllData() {
       "consultations",
       "inquiries",
       "newsletter_subscribers",
+      "newsletter_campaigns",
       "orders",
       "products",
       "categories",

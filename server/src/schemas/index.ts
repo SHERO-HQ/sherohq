@@ -283,16 +283,33 @@ export const CreateConsultationSchema = z.object({
 export const NewsletterSubscribeSchema = z.object({
   email: z.string().email("Invalid email address"),
   name: z.string().min(1).max(100).optional(),
+  phone: z
+    .string()
+    .regex(/^\+?[1-9]\d{7,14}$/, "Invalid phone number format")
+    .optional(),
   source: z.string().min(1).max(50).optional(),
 });
 
 export const NewsletterCampaignSchema = z.object({
+  channel: z.enum(["email", "sms", "whatsapp"]).default("email"),
   subject: z.string().min(3, "Subject is required").max(200),
   content: z.string().min(10, "Content must be at least 10 characters"),
   testEmail: z.string().email("Invalid test email").optional(),
+  testPhone: z
+    .string()
+    .regex(/^\+?[1-9]\d{7,14}$/, "Invalid test phone number")
+    .optional(),
   batchSize: z.number().int().min(1).max(500).optional(),
   sendDelayMs: z.number().int().min(0).max(10000).optional(),
   limit: z.number().int().min(1).max(50000).optional(),
+  whatsappTemplateName: z.string().min(1).max(100).optional(),
+  whatsappTemplateLanguage: z.string().min(2).max(10).optional(),
+  whatsappTemplateParams: z.array(z.string().max(200)).max(10).optional(),
+  scheduleAt: z.string().datetime().optional(),
+  audienceStatus: z.enum(["active", "unsubscribed", "all"]).optional(),
+  audienceSource: z.string().min(1).max(50).optional(),
+  audienceSubscribedAfter: z.string().datetime().optional(),
+  audienceSubscribedBefore: z.string().datetime().optional(),
 });
 
 export const ChangePasswordSchema = z.object({

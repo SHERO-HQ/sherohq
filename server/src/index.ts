@@ -30,6 +30,7 @@ import statRoutes from "./routes/stats";
 import expensesRoutes from "./routes/expenses";
 import analyticsRoutes from "./routes/analytics";
 import newsletterRoutes from "./routes/newsletter";
+import { processDueScheduledCampaigns } from "./routes/newsletter";
 
 // Load environment variables
 dotenv.config();
@@ -76,6 +77,61 @@ validateEnvironment();
 const app = express();
 app.set("trust proxy", 1); // Trust Render proxy
 const PORT = process.env.PORT || 5000;
+
+const NEWSLETTER_SCHEDULER_ENABLED =
+  process.env.NEWSLETTER_SCHEDULER_ENABLED === "true";
+const NEWSLETTER_SCHEDULER_INTERVAL_MS = Number.parseInt(
+  process.env.NEWSLETTER_SCHEDULER_INTERVAL_MS || "60000",
+  10,
+);
+const NEWSLETTER_MAX_CAMPAIGNS_PER_TICK = Number.parseInt(
+  process.env.NEWSLETTER_MAX_CAMPAIGNS_PER_TICK || "3",
+  10,
+);
+
+let newsletterSchedulerRunning = false;
+
+function startNewsletterScheduler() {
+  if (!NEWSLETTER_SCHEDULER_ENABLED) {
+    console.log(
+      "📭 Newsletter scheduler disabled (set NEWSLETTER_SCHEDULER_ENABLED=true to enable)",
+    );
+    return;
+  }
+
+  const intervalMs = Number.isInteger(NEWSLETTER_SCHEDULER_INTERVAL_MS)
+    ? Math.max(10000, NEWSLETTER_SCHEDULER_INTERVAL_MS)
+    : 60000;
+  const maxPerTick = Number.isInteger(NEWSLETTER_MAX_CAMPAIGNS_PER_TICK)
+    ? Math.max(1, NEWSLETTER_MAX_CAMPAIGNS_PER_TICK)
+    : 3;
+
+  console.log(
+    `⏲️ Newsletter scheduler enabled: interval=${intervalMs}ms, maxPerTick=${maxPerTick}`,
+  );
+
+  setInterval(async () => {
+    if (newsletterSchedulerRunning) {
+      return;
+    }
+
+    newsletterSchedulerRunning = true;
+    try {
+      const processed = await processDueScheduledCampaigns({
+        maxToProcess: maxPerTick,
+      });
+      if (processed > 0) {
+        console.log(
+          `📨 Scheduler processed ${processed} scheduled campaign(s)`,
+        );
+      }
+    } catch (error) {
+      console.error("❌ Newsletter scheduler tick failed:", error);
+    } finally {
+      newsletterSchedulerRunning = false;
+    }
+  }, intervalMs);
+}
 
 // Validate DATABASE_URL for common issues (unencoded special characters)
 if (process.env.DATABASE_URL) {
@@ -319,6 +375,7 @@ app.listen(PORT as number, "0.0.0.0", () => {
       console.time("⏱️ Database Startup");
       await initializeDatabase();
       await seedAdminUser();
+      startNewsletterScheduler();
       console.timeEnd("⏱️ Database Startup");
       console.log("✅ Database is ready to handle requests.");
     } catch (err) {
