@@ -440,7 +440,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   Technical{" "}
                   <span className="text-emerald-500">Specifications</span>
                 </h2>
-                <div className="h-1.5 w-12 bg-emerald-500 rounded-full mt-4" />
+                <div className="h-1.5 w-12 bg-emerald-500 rounded-full mt-2" />
               </div>
 
               <div className="max-w-4xl mx-auto overflow-hidden rounded border border-slate-200 dark:border-white/10 shadow-sm bg-white dark:bg-white/5">
