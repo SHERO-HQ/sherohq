@@ -92,8 +92,50 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
     };
   }, [isPreviewOpen]);
 
+  // JSON-LD Structured Data for SEO
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    image: images.map((img) => getImageUrl(img)),
+    description: product.description || `Buy ${product.name} at SHERO`,
+    sku: product.sku || product.id,
+    brand: {
+      "@type": "Brand",
+      name: "SHERO",
+    },
+    offers: {
+      "@type": "Offer",
+      url: shareUrl,
+      priceCurrency: "GHS",
+      price: product.price,
+      itemCondition: product.condition === "Used" 
+        ? "https://schema.org/UsedCondition" 
+        : product.condition === "Refurbished" 
+        ? "https://schema.org/RefurbishedCondition"
+        : "https://schema.org/NewCondition",
+      availability: product.inStock 
+        ? "https://schema.org/InStock" 
+        : "https://schema.org/OutOfStock",
+      seller: {
+        "@type": "Organization",
+        name: "SHERO",
+      },
+    },
+    aggregateRating: product.reviews > 0 ? {
+      "@type": "AggregateRating",
+      ratingValue: product.rating,
+      reviewCount: product.reviews,
+    } : undefined,
+  };
+
   return (
-    <div className="min-h-screen dark:bg-slate-950 bg-slate-50 pt-24 pb-24">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <div className="min-h-screen dark:bg-slate-950 bg-slate-50 pt-24 pb-24">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Navigation & Actions Header */}
         <div className="flex items-center justify-between mb-8">
@@ -568,6 +610,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         )}
       </AnimatePresence>
     </div>
+    </>
   );
 };
 
