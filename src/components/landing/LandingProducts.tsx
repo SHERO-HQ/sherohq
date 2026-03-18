@@ -36,8 +36,12 @@ const LandingProducts = () => {
  // Filter for in-stock items and shuffle for "random suggestions"
  useEffect(() => {
  if (allProducts.length > 0) {
- const inStock = allProducts.filter((p) => p.inStock);
- setShuffledProducts([...inStock].sort(() => 0.5 - Math.random()));
+  const inStock = allProducts.filter((p) => p.inStock);
+  const featured = inStock.filter(p => p.isFeatured);
+  const regular = inStock.filter(p => !p.isFeatured);
+  const shuffledFeatured = [...featured].sort(() => 0.5 - Math.random());
+  const shuffledRegular = [...regular].sort(() => 0.5 - Math.random());
+  setShuffledProducts([...shuffledFeatured, ...shuffledRegular]);
  }
  }, [allProducts]);
 

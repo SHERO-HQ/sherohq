@@ -80,6 +80,8 @@ export default function ProductForm() {
     badge: "",
     images: [],
     stockQuantity: undefined,
+    isSpotlight: false,
+    isFeatured: false,
   });
 
   const [specsList, setSpecsList] = useState<SpecRow[]>([]);
@@ -882,6 +884,58 @@ export default function ProductForm() {
                     )}
                   />
                 </button>
+              </div>
+            </Card>
+
+            {/* Visibility & Promotion */}
+            <Card className="bg-slate-900 border-white/5 p-6 space-y-6">
+              <div className="flex items-center gap-2 pb-2 border-b border-white/5">
+                <Tag className="w-5 h-5 text-amber-500" />
+                <h3 className="text-lg font-bold text-white">
+                  Promotion & Visibility
+                </h3>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 bg-slate-800/30 border border-white/5 rounded transition-colors hover:bg-slate-800/50 group">
+                  <div>
+                    <span className="block text-sm font-medium text-white">Show in Spotlight</span>
+                    <span className="text-[10px] text-slate-500 leading-tight block mt-0.5">Hero Spotlight carousel.</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setProductData(prev => ({ ...prev, isSpotlight: !prev.isSpotlight }))}
+                    className={cn(
+                      "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
+                      productData.isSpotlight ? "bg-emerald-600 shadow-[0_0_10px_rgba(16,185,129,0.3)]" : "bg-slate-700"
+                    )}
+                  >
+                    <span className={cn(
+                      "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+                      productData.isSpotlight ? "translate-x-6" : "translate-x-1"
+                    )} />
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between p-3 bg-slate-800/30 border border-white/5 rounded transition-colors hover:bg-slate-800/50 group">
+                  <div>
+                    <span className="block text-sm font-medium text-white">Featured Product</span>
+                    <span className="text-[10px] text-slate-500 leading-tight block mt-0.5">Prioritize in recommendations.</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setProductData(prev => ({ ...prev, isFeatured: !prev.isFeatured }))}
+                    className={cn(
+                      "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
+                      productData.isFeatured ? "bg-emerald-600 shadow-[0_0_10px_rgba(16,185,129,0.3)]" : "bg-slate-700"
+                    )}
+                  >
+                    <span className={cn(
+                      "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+                      productData.isFeatured ? "translate-x-6" : "translate-x-1"
+                    )} />
+                  </button>
+                </div>
               </div>
             </Card>
           </div>

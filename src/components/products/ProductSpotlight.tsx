@@ -25,10 +25,15 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  // Filter for items with images and preferably rating/reviews to look premium
+  // Filter for dynamic spotlight items (flagged as isSpotlight)
   const spotlightItems = useMemo(() => {
     if (!products.length) return [];
-    // Prioritize products with images, limit to first 5
+    
+    // 1. Try to find products specifically flagged for spotlight
+    const flagged = products.filter(p => p.isSpotlight && p.image);
+    if (flagged.length > 0) return flagged;
+
+    // 2. Fallback: Prioritize products with images, limit to 5
     const filtered = products.filter((p) => p.image).slice(0, 5);
     return filtered.length > 0 ? filtered : products.slice(0, 5);
   }, [products]);

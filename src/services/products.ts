@@ -91,6 +91,8 @@ export interface ProductInput {
   specifications?: Record<string, string>;
   condition?: "New" | "Used" | "Refurbished";
   slug?: string;
+  isSpotlight?: boolean;
+  isFeatured?: boolean;
 }
 
 export async function createProduct(
