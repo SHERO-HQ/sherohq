@@ -100,15 +100,19 @@ export async function initializeDatabase() {
         features JSONB,
         specifications JSONB,
         condition TEXT DEFAULT 'New',
+        "isSpotlight" BOOLEAN DEFAULT false,
+        "isFeatured" BOOLEAN DEFAULT false,
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
 
-    // Migration: add slug and condition columns to existing products tables
+    // Migration: add slug, condition, isSpotlight, and isFeatured columns to existing products tables
     await client.query(`
       ALTER TABLE products
       ADD COLUMN IF NOT EXISTS slug TEXT,
-      ADD COLUMN IF NOT EXISTS condition TEXT DEFAULT 'New';
+      ADD COLUMN IF NOT EXISTS condition TEXT DEFAULT 'New',
+      ADD COLUMN IF NOT EXISTS "isSpotlight" BOOLEAN DEFAULT false,
+      ADD COLUMN IF NOT EXISTS "isFeatured" BOOLEAN DEFAULT false;
     `);
 
     // Categories table

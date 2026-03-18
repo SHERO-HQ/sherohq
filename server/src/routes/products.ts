@@ -29,6 +29,8 @@ interface ProductRow {
   features: string | null;
   specifications: string | null;
   condition: "New" | "Used" | "Refurbished" | null;
+  isSpotlight: boolean;
+  isFeatured: boolean;
   createdAt: Date;
   resolved_category_id?: string | null;
 }
@@ -72,7 +74,10 @@ function parseProduct(row: ProductRow) {
     sku: row.sku || null,
     slug: row.slug || null, // Return slug
     quantity: row.stockQuantity, // Alias for frontend compatibility
+    stockQuantity: row.stockQuantity,
     condition: row.condition || "New",
+    isSpotlight: Boolean(row.isSpotlight),
+    isFeatured: Boolean(row.isFeatured),
   };
 }
 
@@ -297,12 +302,14 @@ router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
       reviews = 0,
       badge,
       inStock = true,
-      stockQuantity = 100,
       description,
       features,
       specifications,
       condition,
       slug,
+      isSpotlight = false,
+      isFeatured = false,
+      quantity, // Alias support for create
     } = req.body;
 
     if (!name || !category || !price) {
@@ -324,10 +331,18 @@ router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
         .replaceAll(/[^a-z0-9]+/g, "-")
         .replaceAll(/(^-|-$)/g, "");
 
+    // Handle quantity alias if stockQuantity is not explicitly provided
+    const finalStockQuantity =
+      req.body.stockQuantity !== undefined
+        ? req.body.stockQuantity
+        : quantity !== undefined
+          ? quantity
+          : 0; // Default to 0 instead of 100 for better control
+
     await db.query(
       `
-      INSERT INTO products (id, name, sku, category, price, "originalPrice", image, images, rating, reviews, badge, "inStock", "stockQuantity", description, features, specifications, condition, slug)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+      INSERT INTO products (id, name, sku, category, price, "originalPrice", image, images, rating, reviews, badge, "inStock", "stockQuantity", description, features, specifications, condition, slug, "isSpotlight", "isFeatured")
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
     `,
       [
         productId,
@@ -342,12 +357,14 @@ router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
         reviews,
         badge || null,
         inStock,
-        stockQuantity,
+        finalStockQuantity,
         description || null,
         features ? JSON.stringify(features) : null,
         specifications ? JSON.stringify(specifications) : null,
         condition || "New",
         finalSlug,
+        isSpotlight,
+        isFeatured,
       ],
     );
 
@@ -426,6 +443,8 @@ function processUpdateFields(body: Record<string, unknown>) {
     "specifications",
     "condition",
     "slug",
+    "isSpotlight",
+    "isFeatured",
   ];
 
   for (const field of allowedFields) {
