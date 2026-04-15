@@ -157,7 +157,7 @@ const LandingHero: React.FC = () => {
               animate="visible"
               variants={fadeUpAccessible(prefersReducedMotion)}
               transition={{ delay: 0.25 }}
-              className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 pt-1.5 w-full sm:w-auto"
+              className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 pt-1.5 w-full sm:w-auto mb-10 sm:mb-0"
             >
               <Button
                 asChild
