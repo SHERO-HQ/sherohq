@@ -6,6 +6,7 @@ import * as dotenv from "dotenv";
 
 // Database
 import { initializeDatabase } from "./db/database";
+import { checkDatabaseHealth } from "./db/database";
 import { seedAdminUser } from "./db/seed";
 import { adminAuth } from "./middleware/adminAuth";
 
@@ -280,11 +281,23 @@ app.use("/api", globalLimiter);
 //   }),
 // );
 
-// Health check route
-app.get("/api/health", (req: Request, res: Response) => {
-  res.json({
+// Health check route (process + real DB check)
+app.get("/api/health", async (req: Request, res: Response) => {
+  const db = await checkDatabaseHealth(5000);
+
+  if (!db.ok) {
+    return res.status(503).json({
+      status: "degraded",
+      message: "Sherotech API is running but database is unavailable",
+      db,
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  return res.json({
     status: "ok",
-    message: "Sherotech API is running",
+    message: "Sherotech API and database are healthy",
+    db,
     timestamp: new Date().toISOString(),
   });
 });

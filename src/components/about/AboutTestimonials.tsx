@@ -48,8 +48,6 @@ const AboutTestimonials = () => {
  return () => clearInterval(timer);
  }, [nextSlide, testimonials.length]);
 
- if (!isLoading && testimonials.length === 0) return null;
-
  return (
  <section className="py-24 bg-white dark:bg-slate-950 overflow-hidden relative border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
  {/* Background decoration */}

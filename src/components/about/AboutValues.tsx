@@ -70,13 +70,13 @@ const AboutValues = () => {
  className={cn(
  "w-12 h-12 rounded flex items-center justify-center mb-8 transition duration-500 border border-slate-200/50 dark:border-white/5 shadow-sm",
  item.color === "emerald" &&
- "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-emerald-500/30",
+ "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-600/50 group-hover:text-white group-hover:shadow-lg group-hover:shadow-emerald-500/30",
  item.color === "blue" &&
- "bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:bg-blue-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/30",
+ "bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600/50 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/30",
  item.color === "violet" &&
- "bg-violet-500/10 text-violet-600 dark:text-violet-400 group-hover:bg-violet-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-violet-500/30",
+ "bg-violet-500/10 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600/50 group-hover:text-white group-hover:shadow-lg group-hover:shadow-violet-500/30",
  item.color === "amber" &&
- "bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:bg-amber-500 group-hover:text-white group-hover:shadow-lg group-hover:shadow-amber-500/30",
+ "bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:bg-amber-600/50 group-hover:text-white group-hover:shadow-lg group-hover:shadow-amber-500/30",
  )}
  >
  <item.icon className="w-6 h-6" />

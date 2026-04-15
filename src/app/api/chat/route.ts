@@ -6,7 +6,9 @@ import { CATALOG_SUMMARY, GUIDE_MAPPING, SUPPORT_KNOWLEDGE } from "./knowledge";
 const BACKEND_URL = (
   process.env.API_URL ||
   process.env.NEXT_PUBLIC_API_URL ||
-  "http://127.0.0.1:5000"
+  (process.env.NODE_ENV === "production"
+    ? "https://api.sherohq.com"
+    : "http://127.0.0.1:5000")
 ).replace(/\/$/, "");
 
 async function fetchDynamicCatalogSummary(): Promise<string> {

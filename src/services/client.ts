@@ -12,17 +12,24 @@ export type { Product, Project, Testimonial, SiteStat };
 
 const getApiBase = () => {
   const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  const serverEnvUrl =
+    typeof window === "undefined" ? process.env.API_URL : undefined;
+  const resolvedEnvUrl = envUrl || serverEnvUrl;
 
-  if (envUrl) {
-    if (envUrl.startsWith("/")) return envUrl;
-    if (envUrl.includes(".") && !envUrl.startsWith("http")) {
-      return `https://${envUrl}`;
+  if (resolvedEnvUrl) {
+    if (resolvedEnvUrl.startsWith("/")) return resolvedEnvUrl;
+    if (resolvedEnvUrl.includes(".") && !resolvedEnvUrl.startsWith("http")) {
+      return `https://${resolvedEnvUrl}`;
     }
-    return envUrl;
+    return resolvedEnvUrl;
   }
 
   // Server-side (SSR) requires absolute URLs
   if (typeof window === "undefined") {
+    if (process.env.NODE_ENV === "production") {
+      return "https://api.sherohq.com/api";
+    }
+
     const siteUrl =
       process.env.NEXT_PUBLIC_SITE_URL ||
       process.env.SITE_URL ||

@@ -22,6 +22,10 @@ function resolveApiOrigin(): string {
   const publicApi = toAbsoluteUrl(process.env.NEXT_PUBLIC_API_URL);
   if (publicApi) return publicApi;
 
+  if (process.env.NODE_ENV === "production") {
+    return "https://api.sherohq.com";
+  }
+
   return "http://127.0.0.1:5000";
 }
 

@@ -49,7 +49,10 @@ function getShopSiteUrl(siteUrl: string): string {
 }
 
 function getApiBaseUrl(siteUrl: string): string {
-  const apiUrl = toAbsoluteBaseUrl(process.env.NEXT_PUBLIC_API_URL, siteUrl);
+  const apiUrl = toAbsoluteBaseUrl(
+    process.env.API_URL || process.env.NEXT_PUBLIC_API_URL,
+    siteUrl,
+  );
   return apiUrl.endsWith("/api") ? apiUrl : `${apiUrl}/api`;
 }
 

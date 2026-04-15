@@ -71,6 +71,36 @@ export const query = async (text: string, params?: unknown[]) => {
 
 export const getClient = async () => pool.connect();
 
+export async function checkDatabaseHealth(timeoutMs = 5000): Promise<{
+  ok: boolean;
+  latencyMs: number;
+  error?: string;
+}> {
+  const start = Date.now();
+
+  try {
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      const timer = setTimeout(() => {
+        clearTimeout(timer);
+        reject(new Error(`Database health check timed out after ${timeoutMs}ms`));
+      }, timeoutMs);
+    });
+
+    await Promise.race([pool.query("SELECT 1"), timeoutPromise]);
+
+    return {
+      ok: true,
+      latencyMs: Date.now() - start,
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      latencyMs: Date.now() - start,
+      error: error instanceof Error ? error.message : "Unknown DB health error",
+    };
+  }
+}
+
 // Create tables
 export async function initializeDatabase() {
   const host = connectionString.split("@")[1]?.split(":")[0] || "unknown host";
@@ -126,6 +156,12 @@ export async function initializeDatabase() {
       ADD COLUMN IF NOT EXISTS condition TEXT DEFAULT 'New',
       ADD COLUMN IF NOT EXISTS "isSpotlight" BOOLEAN DEFAULT false,
       ADD COLUMN IF NOT EXISTS "isFeatured" BOOLEAN DEFAULT false;
+    `);
+
+    // Backward-compat migration for older schemas that predate camelCase timestamp columns.
+    await client.query(`
+      ALTER TABLE products
+      ADD COLUMN IF NOT EXISTS "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
     `);
 
     // Categories table
@@ -626,4 +662,4 @@ export async function initializeDatabase() {
   }
 }
 
-export default { query, getClient };
+export default { query, getClient, checkDatabaseHealth };
