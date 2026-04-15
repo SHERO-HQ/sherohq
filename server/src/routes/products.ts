@@ -85,7 +85,13 @@ function parseProduct(row: ProductRow) {
 // GET /api/products - List all products
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const { category, search } = req.query;
+    const { category, search, limit, offset } = req.query;
+
+    const safeLimit = Math.min(
+      200,
+      Math.max(1, Number.parseInt(String(limit), 10) || 200),
+    );
+    const safeOffset = Math.max(0, Number.parseInt(String(offset), 10) || 0);
 
     let queryText = `
       SELECT
@@ -121,7 +127,8 @@ router.get("/", async (req: Request, res: Response) => {
       queryText += " WHERE " + conditions.join(" AND ");
     }
 
-    queryText += ' ORDER BY p."createdAt" DESC';
+    queryText += ` ORDER BY p."createdAt" DESC LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
+    params.push(safeLimit, safeOffset);
 
     const result = await db.query(queryText, params);
     const products = result.rows as ProductRow[];
@@ -386,15 +393,24 @@ router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
     });
   } catch (error: unknown) {
     console.error("Error creating product:", error);
-    
+
     // Handle unique constraint violations (Postgres error 23505)
-    if (error && typeof error === 'object' && 'code' in error && error.code === '23505') {
+    if (
+      error &&
+      typeof error === "object" &&
+      "code" in error &&
+      error.code === "23505"
+    ) {
       const detail = String((error as { detail?: string }).detail || "");
-      if (detail.includes('sku')) {
-        return res.status(400).json({ error: "A product with this SKU already exists." });
+      if (detail.includes("sku")) {
+        return res
+          .status(400)
+          .json({ error: "A product with this SKU already exists." });
       }
-      if (detail.includes('slug')) {
-        return res.status(400).json({ error: "A product with this URL slug already exists." });
+      if (detail.includes("slug")) {
+        return res
+          .status(400)
+          .json({ error: "A product with this URL slug already exists." });
       }
     }
 
@@ -554,16 +570,28 @@ router.put("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
       product: parseProduct(product),
     });
   } catch (error: unknown) {
-    console.error("Error updating product:", error, { productId: req.params.id, body: req.body });
-    
+    console.error("Error updating product:", error, {
+      productId: req.params.id,
+      body: req.body,
+    });
+
     // Handle unique constraint violations (Postgres error 23505)
-    if (error && typeof error === 'object' && 'code' in error && error.code === '23505') {
+    if (
+      error &&
+      typeof error === "object" &&
+      "code" in error &&
+      error.code === "23505"
+    ) {
       const detail = String((error as { detail?: string }).detail || "");
-      if (detail.includes('sku')) {
-        return res.status(400).json({ error: "A product with this SKU already exists." });
+      if (detail.includes("sku")) {
+        return res
+          .status(400)
+          .json({ error: "A product with this SKU already exists." });
       }
-      if (detail.includes('slug')) {
-        return res.status(400).json({ error: "A product with this URL slug already exists." });
+      if (detail.includes("slug")) {
+        return res
+          .status(400)
+          .json({ error: "A product with this URL slug already exists." });
       }
     }
 

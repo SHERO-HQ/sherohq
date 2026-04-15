@@ -34,8 +34,8 @@ A modern, responsive e-commerce web application built for the Ghanaian market, s
 
 ### Frontend
 
-- **Framework**: [React](https://react.dev/) with [TypeScript](https://www.typescriptlang.org/)
-- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Framework**: [Next.js](https://nextjs.org/) (App Router) with [React](https://react.dev/) and [TypeScript](https://www.typescriptlang.org/)
+- **Build/Runtime**: Next.js (`next dev`, `next build`, `next start`)
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
 - **Icons**: [Lucide React](https://lucide.dev/)
@@ -59,35 +59,36 @@ Follow these instructions to set up the project locally.
 
 ### Installation
 
-1.  **Clone the repository**
+1. **Clone the repository**
 
-    ```bash
-    git clone <repository-url>
-    cd sherotech
-    ```
+   ```bash
+   git clone <repository-url>
+   cd sherotech
+   ```
 
-2.  **Install Frontend Dependencies**
+2. **Install Frontend Dependencies**
 
-    ```bash
-    yarn install
-    ```
+   ```bash
+   yarn install
+   ```
 
-3.  **Install Backend Dependencies**
+3. **Install Backend Dependencies**
 
-    ```bash
-    cd server
-    yarn install
-    cd ..
-    ```
+   ```bash
+   cd server
+   yarn install
+   cd ..
+   ```
 
-4.  **Environment Setup**
-    Create a `.env` file in the `server/` directory. You can copy the structure from `.env.example` if available.
-    ```env
-    PORT=5000
-    DATABASE_URL=your_database_connection_string
-    SKIP_SEEDING=true  # Set to true to prevent automatic re-seeding of test data
-    # Add other necessary API keys here
-    ```
+4. **Environment Setup**
+   Create a `.env` file in the `server/` directory. You can copy the structure from `.env.example` if available.
+
+   ```env
+   PORT=5000
+   DATABASE_URL=your_database_connection_string
+   SKIP_SEEDING=true  # Set to true to prevent automatic re-seeding of test data
+   # Add other necessary API keys here
+   ```
 
 ## 🏃‍♂️ Running the Project
 
@@ -97,8 +98,8 @@ To run both the frontend and backend servers concurrently:
 yarn dev:all
 ```
 
-- **Frontend**: http://localhost:5173
-- **Backend Server**: http://localhost:5000
+- **Frontend**: [http://localhost:3000](http://localhost:3000)
+- **Backend Server**: [http://localhost:5000](http://localhost:5000)
 
 ### Other Commands
 
@@ -130,7 +131,7 @@ Built with Playwright for user journey validation.
 
 ## 📂 Project Structure
 
-```
+```text
 sherotech/
 ├── public/              # Static assets
 ├── server/              # Node.js/Express Backend

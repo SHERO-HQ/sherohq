@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
+import { createHash, randomBytes } from "node:crypto";
 import { rateLimit } from "express-rate-limit";
 import db from "../db/database";
 import { adminAuth, AdminRequest } from "../middleware/adminAuth";
@@ -7,11 +8,17 @@ import { logActivity } from "./activity";
 import { notificationService } from "../services/NotificationService";
 import { validateBody } from "../middleware/validate";
 import { CreateOrderSchema, UpdateOrderStatusSchema } from "../schemas";
+import {
+  ADMIN_SESSION_COOKIE,
+  USER_SESSION_COOKIE,
+  getTokenFromRequest,
+} from "../utils/sessionAuth";
 
 const router = Router();
 
 /** UUID v4 format: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx */
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 interface OrderItem {
   id: string;
@@ -44,12 +51,106 @@ interface ShippingInfo {
 }
 
 interface CreateOrderBody {
-  guestId: string;
+  guestId?: string;
   items: OrderItem[];
   total: number;
   shippingInfo: ShippingInfo;
   paymentMethod: string;
   referralCode?: string;
+}
+
+interface ProductPricingRow {
+  id: string;
+  name: string;
+  price: string | number;
+  image?: string | null;
+  stockQuantity: number;
+  inStock: boolean;
+}
+
+interface OrderAccessContext {
+  userId: string | null;
+  adminId: string | null;
+  hasValidOrderAccessToken: boolean;
+}
+
+const ORDER_PAYMENT_METHODS = new Set([
+  "card",
+  "momo",
+  "cash",
+  "cod",
+  "cash_on_delivery",
+  "paystack",
+  "store_pickup",
+  "invoice_payment",
+]);
+
+const PAYMENT_METHOD_ALIASES: Record<string, string> = {
+  mobile_money: "momo",
+};
+
+const roundCurrency = (value: number): number =>
+  Math.round((value + Number.EPSILON) * 100) / 100;
+
+const normalizePaymentMethod = (value: string): string =>
+  PAYMENT_METHOD_ALIASES[value] || value;
+
+const hashOrderAccessToken = (token: string): string =>
+  createHash("sha256").update(token).digest("hex");
+
+const readOrderAccessToken = (req: Request): string | null => {
+  const tokenHeader = req.headers["x-order-access-token"];
+  if (typeof tokenHeader !== "string") return null;
+
+  const token = tokenHeader.trim();
+  return token.length > 0 ? token : null;
+};
+
+async function resolveUserIdFromRequest(req: Request): Promise<string | null> {
+  const token = getTokenFromRequest(req, USER_SESSION_COOKIE);
+  if (!token) return null;
+
+  const result = await db.query(
+    `SELECT "userId" FROM user_sessions WHERE token = $1 AND "expiresAt" > NOW()`,
+    [token],
+  );
+
+  return result.rows[0]?.userId || null;
+}
+
+async function resolveAdminIdFromRequest(req: Request): Promise<string | null> {
+  const token = getTokenFromRequest(req, ADMIN_SESSION_COOKIE);
+  if (!token) return null;
+
+  const result = await db.query(
+    `SELECT "adminId" FROM sessions WHERE token = $1 AND "expiresAt" > NOW()`,
+    [token],
+  );
+
+  return result.rows[0]?.adminId || null;
+}
+
+async function resolveOrderAccessContext(
+  req: Request,
+  orderAccessTokenHash: string | null,
+): Promise<OrderAccessContext> {
+  const [userId, adminId] = await Promise.all([
+    resolveUserIdFromRequest(req),
+    resolveAdminIdFromRequest(req),
+  ]);
+
+  const providedOrderAccessToken = readOrderAccessToken(req);
+  const hasValidOrderAccessToken =
+    Boolean(providedOrderAccessToken) &&
+    Boolean(orderAccessTokenHash) &&
+    hashOrderAccessToken(String(providedOrderAccessToken)) ===
+      orderAccessTokenHash;
+
+  return {
+    userId,
+    adminId,
+    hasValidOrderAccessToken,
+  };
 }
 
 // Database row type (items and shippingInfo are stored as JSON strings)
@@ -159,71 +260,210 @@ router.post(
 );
 
 // POST /api/orders - Create new order
-router.post("/", validateBody(CreateOrderSchema), async (req: Request, res: Response) => {
-  try {
-    const {
-      guestId,
-      userId,
-      items,
-      total,
-      shippingInfo,
-      paymentMethod,
-      referralCode,
-    }: CreateOrderBody & { userId?: string } = req.body;
+router.post(
+  "/",
+  validateBody(CreateOrderSchema),
+  async (req: Request, res: Response) => {
+    const client = await db.getClient();
 
-    // Validate required fields
-    if (!guestId || !items || !total || !shippingInfo) {
-      return res.status(400).json({ error: "Missing required fields" });
-    }
-
-    const orderId = uuidv4();
-
-    await db.query(
-      `
-      INSERT INTO orders (id, "guestId", "userId", items, total, "shippingInfo", "paymentMethod", status, "referralCode")
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-    `,
-      [
-        orderId,
+    try {
+      const {
         guestId,
-        userId || null, // Optional userId
-        JSON.stringify(items),
-        total,
-        JSON.stringify(shippingInfo),
-        paymentMethod || "cash_on_delivery",
-        "pending",
-        referralCode || null,
-      ],
-    );
+        items,
+        shippingInfo,
+        paymentMethod,
+        referralCode,
+      }: CreateOrderBody = req.body;
 
-    console.log(`📦 New order created: ${orderId} for guest ${guestId}`);
+      const requesterUserId = await resolveUserIdFromRequest(req);
 
-    // 🔥 Send Notifications (Async)
-    notificationService
-      .sendOrderConfirmation(orderId, shippingInfo, items, total)
-      .catch((err) => console.error("Notification trigger failed:", err));
+      // Validate required fields
+      if (!items || !shippingInfo) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
 
-    res.status(201).json({
-      success: true,
-      orderId,
-      message: "Order created successfully",
-    });
-  } catch (error) {
-    console.error("Order creation error:", error);
-    const isDev = process.env.NODE_ENV === "development";
-    res.status(500).json({
-      error: "Failed to create order",
-      ...(isDev && {
-        details: error instanceof Error ? error.message : "Unknown error",
-      }),
-    });
-  }
-});
+      const normalizedPaymentMethod = normalizePaymentMethod(paymentMethod);
+      if (!ORDER_PAYMENT_METHODS.has(normalizedPaymentMethod)) {
+        return res.status(400).json({ error: "Invalid payment method" });
+      }
+
+      const requestedQuantities = new Map<string, number>();
+      for (const item of items) {
+        requestedQuantities.set(
+          item.id,
+          (requestedQuantities.get(item.id) || 0) + item.quantity,
+        );
+      }
+
+      const productIds = [...requestedQuantities.keys()];
+      if (productIds.length === 0) {
+        return res
+          .status(400)
+          .json({ error: "Order must include at least one item" });
+      }
+
+      const orderId = uuidv4();
+      const orderAccessToken = randomBytes(32).toString("hex");
+      const orderAccessTokenHash = hashOrderAccessToken(orderAccessToken);
+
+      await client.query("BEGIN");
+
+      const productsRes = await client.query(
+        `
+      SELECT
+        id,
+        name,
+        price,
+        image,
+        "stockQuantity",
+        "inStock"
+      FROM products
+      WHERE id = ANY($1::text[])
+      FOR UPDATE
+      `,
+        [productIds],
+      );
+
+      const productRows = productsRes.rows as ProductPricingRow[];
+      const productMap = new Map(productRows.map((row) => [row.id, row]));
+
+      if (productMap.size !== productIds.length) {
+        const missing = productIds.filter((id) => !productMap.has(id));
+        await client.query("ROLLBACK");
+        return res.status(400).json({
+          error: "Some products no longer exist",
+          missingProductIds: missing,
+        });
+      }
+
+      const normalizedItems: OrderItem[] = [];
+      let serverTotal = 0;
+
+      for (const item of items) {
+        const product = productMap.get(item.id);
+        if (!product) {
+          await client.query("ROLLBACK");
+          return res
+            .status(400)
+            .json({ error: `Product not found: ${item.id}` });
+        }
+
+        if (!product.inStock || product.stockQuantity < item.quantity) {
+          await client.query("ROLLBACK");
+          return res.status(400).json({
+            error: `Insufficient stock for ${product.name}`,
+          });
+        }
+
+        const unitPrice = roundCurrency(Number(product.price));
+        serverTotal += unitPrice * item.quantity;
+
+        normalizedItems.push({
+          id: product.id,
+          name: product.name,
+          price: unitPrice,
+          quantity: item.quantity,
+          image: product.image || undefined,
+        });
+      }
+
+      for (const [productId, quantity] of requestedQuantities.entries()) {
+        const product = productMap.get(productId);
+        if (!product) continue;
+
+        const newQuantity = product.stockQuantity - quantity;
+        await client.query(
+          `
+        UPDATE products
+        SET "stockQuantity" = $1,
+            "inStock" = $2
+        WHERE id = $3
+        `,
+          [newQuantity, newQuantity > 0, productId],
+        );
+      }
+
+      const finalTotal = roundCurrency(serverTotal);
+      const resolvedGuestId = guestId || uuidv4();
+
+      await client.query(
+        `
+      INSERT INTO orders (id, "guestId", "userId", items, total, "shippingInfo", "paymentMethod", status, "referralCode", "orderAccessTokenHash")
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+    `,
+        [
+          orderId,
+          resolvedGuestId,
+          requesterUserId,
+          JSON.stringify(normalizedItems),
+          finalTotal,
+          JSON.stringify(shippingInfo),
+          normalizedPaymentMethod,
+          "pending",
+          referralCode || null,
+          orderAccessTokenHash,
+        ],
+      );
+
+      await client.query("COMMIT");
+
+      console.log(
+        `📦 New order created: ${orderId} for guest ${resolvedGuestId}`,
+      );
+
+      // 🔥 Send Notifications (Async)
+      notificationService
+        .sendOrderConfirmation(
+          orderId,
+          shippingInfo,
+          normalizedItems,
+          finalTotal,
+        )
+        .catch((err) => console.error("Notification trigger failed:", err));
+
+      res.status(201).json({
+        success: true,
+        orderId,
+        total: finalTotal,
+        orderAccessToken,
+        message: "Order created successfully",
+      });
+    } catch (error) {
+      try {
+        await client.query("ROLLBACK");
+      } catch {
+        // noop
+      }
+
+      console.error("Order creation error:", error);
+      const isDev = process.env.NODE_ENV === "development";
+      res.status(500).json({
+        error: "Failed to create order",
+        ...(isDev && {
+          details: error instanceof Error ? error.message : "Unknown error",
+        }),
+      });
+    } finally {
+      client.release();
+    }
+  },
+);
 
 // GET /api/orders/user/:userId - Get orders by User ID
 router.get("/user/:userId", async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
+    const requesterUserId = await resolveUserIdFromRequest(req);
+
+    if (!requesterUserId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    if (requesterUserId !== userId) {
+      return res
+        .status(403)
+        .json({ error: "Unauthorized to access these orders" });
+    }
 
     const result = await db.query(
       `
@@ -231,7 +471,7 @@ router.get("/user/:userId", async (req: Request, res: Response) => {
       WHERE "userId" = $1
       ORDER BY "createdAt" DESC
     `,
-      [userId],
+      [requesterUserId],
     );
 
     const orders = result.rows as OrderRow[];
@@ -257,58 +497,92 @@ router.get("/user/:userId", async (req: Request, res: Response) => {
 });
 
 // GET /api/orders/guest/:guestId - Get orders by guest ID
-router.get("/guest/:guestId", guestOrdersLimiter, async (req: Request, res: Response) => {
-  try {
-    const { guestId } = req.params;
+router.get(
+  "/guest/:guestId",
+  guestOrdersLimiter,
+  async (req: Request, res: Response) => {
+    try {
+      const { guestId } = req.params;
 
-    // Validate that guestId is a proper UUID to prevent arbitrary DB lookups
-    if (typeof guestId !== "string" || !UUID_RE.test(guestId)) {
-      return res.status(400).json({ error: "Invalid guest ID" });
-    }
+      // Validate that guestId is a proper UUID to prevent arbitrary DB lookups
+      if (typeof guestId !== "string" || !UUID_RE.test(guestId)) {
+        return res.status(400).json({ error: "Invalid guest ID" });
+      }
 
-    const result = await db.query(
-      `
+      const result = await db.query(
+        `
       SELECT * FROM orders
       WHERE "guestId" = $1
       ORDER BY "createdAt" DESC
     `,
-      [guestId],
-    );
+        [guestId],
+      );
 
-    const orders = result.rows as OrderRow[];
+      const orders = result.rows as OrderRow[];
 
-    const parsedOrders = orders.map((order) => ({
-      ...order,
-      items: safeParse(order.items),
-      shippingInfo: safeParse(order.shippingInfo),
-      total: Number(order.total),
-    }));
+      const parsedOrders = orders.map((order) => ({
+        id: order.id,
+        guestId: order.guestId,
+        status: order.status,
+        total: Number(order.total),
+        createdAt: order.createdAt,
+        paymentMethod: order.paymentMethod,
+        referralCode: order.referralCode,
+      }));
 
-    res.json(parsedOrders);
-  } catch (error) {
-    console.error("Error fetching orders:", error);
-    const isDev = process.env.NODE_ENV === "development";
-    res.status(500).json({
-      error: "Failed to fetch orders",
-      ...(isDev && {
-        details: error instanceof Error ? error.message : "Unknown error",
-      }),
-    });
-  }
-});
+      res.json(parsedOrders);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      const isDev = process.env.NODE_ENV === "development";
+      res.status(500).json({
+        error: "Failed to fetch orders",
+        ...(isDev && {
+          details: error instanceof Error ? error.message : "Unknown error",
+        }),
+      });
+    }
+  },
+);
 
 // GET /api/orders/track/:orderId - Track specific order
 router.get("/track/:orderId", async (req: Request, res: Response) => {
   try {
     const { orderId } = req.params;
 
-    const result = await db.query("SELECT * FROM orders WHERE id = $1", [
-      orderId,
-    ]);
-    const order = result.rows[0] as OrderRow | undefined;
+    const result = await db.query(
+      `
+      SELECT *, "orderAccessTokenHash"
+      FROM orders
+      WHERE id = $1
+      `,
+      [orderId],
+    );
+    const order = result.rows[0] as
+      | (OrderRow & { userId?: string; orderAccessTokenHash?: string })
+      | undefined;
 
     if (!order) {
       return res.status(404).json({ error: "Order not found" });
+    }
+
+    const accessContext = await resolveOrderAccessContext(
+      req,
+      order.orderAccessTokenHash || null,
+    );
+
+    const isAuthorized =
+      Boolean(accessContext.adminId) ||
+      (Boolean(accessContext.userId) &&
+        Boolean(order.userId) &&
+        accessContext.userId === order.userId) ||
+      accessContext.hasValidOrderAccessToken;
+
+    if (!isAuthorized) {
+      return res.json({
+        id: order.id,
+        status: order.status,
+        createdAt: order.createdAt,
+      });
     }
 
     res.json({
@@ -316,6 +590,7 @@ router.get("/track/:orderId", async (req: Request, res: Response) => {
       items: safeParse(order.items),
       shippingInfo: safeParse(order.shippingInfo),
       total: Number(order.total),
+      orderAccessTokenHash: undefined,
     });
   } catch (error) {
     console.error("Error tracking order:", error);
@@ -330,15 +605,20 @@ router.get("/track/:orderId", async (req: Request, res: Response) => {
 router.patch("/:id/payment-method", async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { paymentMethod, guestId, userId } = req.body;
+    const { paymentMethod } = req.body;
 
     if (!paymentMethod) {
       return res.status(400).json({ error: "Payment method is required" });
     }
 
+    const normalizedPaymentMethod = normalizePaymentMethod(paymentMethod);
+    if (!ORDER_PAYMENT_METHODS.has(normalizedPaymentMethod)) {
+      return res.status(400).json({ error: "Invalid payment method" });
+    }
+
     // Verify order ownership
     const check = await db.query(
-      'SELECT "guestId", "userId", status FROM orders WHERE id = $1',
+      'SELECT "guestId", "userId", status, "orderAccessTokenHash" FROM orders WHERE id = $1',
       [id],
     );
 
@@ -347,11 +627,18 @@ router.patch("/:id/payment-method", async (req: Request, res: Response) => {
     }
 
     const order = check.rows[0];
+    const accessContext = await resolveOrderAccessContext(
+      req,
+      order.orderAccessTokenHash || null,
+    );
 
-    // Security: Ensure the requester matches guestId or userId
+    // Security: Ensure the requester is an authenticated owner or has valid per-order guest token.
     const isOwner =
-      (guestId && order.guestId === guestId) ||
-      (userId && order.userId === userId);
+      Boolean(accessContext.adminId) ||
+      (Boolean(accessContext.userId) &&
+        Boolean(order.userId) &&
+        order.userId === accessContext.userId) ||
+      accessContext.hasValidOrderAccessToken;
 
     if (!isOwner) {
       return res
@@ -367,7 +654,7 @@ router.patch("/:id/payment-method", async (req: Request, res: Response) => {
     }
 
     await db.query('UPDATE orders SET "paymentMethod" = $1 WHERE id = $2', [
-      paymentMethod,
+      normalizedPaymentMethod,
       id,
     ]);
 
@@ -384,6 +671,10 @@ router.patch("/:id/payment-method", async (req: Request, res: Response) => {
 router.get("/", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
     const { status, limit = 100, startDate, endDate } = req.query;
+    const safeLimit = Math.min(
+      200,
+      Math.max(1, Number.parseInt(String(limit), 10) || 100),
+    );
 
     let queryText = "SELECT * FROM orders";
     const params: (string | number)[] = [];
@@ -413,7 +704,7 @@ router.get("/", adminAuth, async (req: AdminRequest, res: Response) => {
     }
 
     queryText += ` ORDER BY "createdAt" DESC LIMIT $${paramIndex}`;
-    params.push(Number(limit));
+    params.push(safeLimit);
 
     const result = await db.query(queryText, params);
     const orders = result.rows as OrderRow[];

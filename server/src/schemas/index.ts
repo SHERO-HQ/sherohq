@@ -139,6 +139,7 @@ export const CreateOrderSchema = z.object({
     [
       "card",
       "momo",
+      "mobile_money",
       "cash",
       "cod",
       "cash_on_delivery",

@@ -15,6 +15,12 @@ import {
   UpdateAvatarSchema,
   ChangePasswordSchema,
 } from "../schemas";
+import {
+  USER_SESSION_COOKIE,
+  getTokenFromRequest,
+  getSessionCookieOptions,
+  getClearSessionCookieOptions,
+} from "../utils/sessionAuth";
 
 const router = express.Router();
 
@@ -29,26 +35,22 @@ const authLimiter = rateLimit({
 });
 
 // Helper function to get user from token
-async function getUserFromToken(authHeader: string | undefined) {
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+async function getUserFromRequest(req: express.Request) {
+  const token = getTokenFromRequest(req, USER_SESSION_COOKIE);
+  if (!token) {
     return null;
   }
-
-  const token = authHeader.split(" ")[1];
 
   const result = await db.query(
     `SELECT users.*, user_sessions."expiresAt" as "sessionExpiry" FROM user_sessions
        JOIN users ON user_sessions."userId" = users.id
-       WHERE user_sessions.token = $1`,
+       WHERE user_sessions.token = $1 AND user_sessions."expiresAt" > NOW()`,
     [token],
   );
 
   const session = result.rows[0];
 
   if (!session) return null;
-
-  // Check expiration
-  if (new Date(session.sessionExpiry) < new Date()) return null;
 
   return session;
 }
@@ -106,6 +108,12 @@ router.post(
       await db.query(
         'INSERT INTO user_sessions (id, "userId", token, "expiresAt") VALUES ($1, $2, $3, $4)',
         [sessionId, userId, token, expiresAt],
+      );
+
+      res.cookie(
+        USER_SESSION_COOKIE,
+        token,
+        getSessionCookieOptions(30 * 24 * 60 * 60 * 1000),
       );
 
       // Send verification email (async, don't block response)
@@ -300,6 +308,12 @@ router.post(
         'INSERT INTO user_sessions (id, "userId", token, "expiresAt") VALUES ($1, $2, $3, $4)',
         [sessionId, user.id, token, expiresAt],
       );
+
+      res.cookie(
+        USER_SESSION_COOKIE,
+        token,
+        getSessionCookieOptions(30 * 24 * 60 * 60 * 1000),
+      );
       console.timeEnd(`  📝 Create Session [${email}]`);
 
       console.log(`✅ User logged in: ${email}`);
@@ -336,7 +350,7 @@ router.post(
 // Get User (Me)
 router.get("/me", async (req, res) => {
   try {
-    const user = await getUserFromToken(req.headers.authorization);
+    const user = await getUserFromRequest(req);
 
     if (!user) {
       return res.status(401).json({ error: "Unauthorized" });
@@ -377,7 +391,7 @@ router.get("/me", async (req, res) => {
 // Update Profile
 router.put("/profile", validateBody(UpdateProfileSchema), async (req, res) => {
   try {
-    const user = await getUserFromToken(req.headers.authorization);
+    const user = await getUserFromRequest(req);
 
     if (!user) {
       return res.status(401).json({ error: "Unauthorized" });
@@ -452,11 +466,12 @@ router.put("/profile", validateBody(UpdateProfileSchema), async (req, res) => {
 // Logout
 router.post("/logout", async (req, res) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-      const token = authHeader.split(" ")[1];
+    const token = getTokenFromRequest(req, USER_SESSION_COOKIE);
+    if (token) {
       await db.query("DELETE FROM user_sessions WHERE token = $1", [token]);
     }
+
+    res.cookie(USER_SESSION_COOKIE, "", getClearSessionCookieOptions());
     res.json({ success: true });
   } catch (error) {
     console.error("Logout error:", error);
@@ -467,7 +482,7 @@ router.post("/logout", async (req, res) => {
 // Upload Avatar
 router.put("/avatar", validateBody(UpdateAvatarSchema), async (req, res) => {
   try {
-    const user = await getUserFromToken(req.headers.authorization);
+    const user = await getUserFromRequest(req);
 
     if (!user) {
       return res.status(401).json({ error: "Unauthorized" });
@@ -500,38 +515,43 @@ router.put("/avatar", validateBody(UpdateAvatarSchema), async (req, res) => {
 });
 
 // Change Password
-router.post("/change-password", authLimiter, validateBody(ChangePasswordSchema), async (req, res) => {
-  try {
-    const user = await getUserFromToken(req.headers.authorization);
+router.post(
+  "/change-password",
+  authLimiter,
+  validateBody(ChangePasswordSchema),
+  async (req, res) => {
+    try {
+      const user = await getUserFromRequest(req);
 
-    if (!user) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
+      if (!user) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
 
-    const { password } = req.body;
+      const { password } = req.body;
 
-    if (!password || password.length < 8) {
-      return res
-        .status(400)
-        .json({ error: "Password must be at least 8 characters long" });
-    }
+      if (!password || password.length < 8) {
+        return res
+          .status(400)
+          .json({ error: "Password must be at least 8 characters long" });
+      }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-    await db.query(
-      `UPDATE users 
+      await db.query(
+        `UPDATE users 
              SET "passwordHash" = $1, "passwordResetRequired" = false, "passwordUpdatedAt" = CURRENT_TIMESTAMP 
              WHERE id = $2`,
-      [hashedPassword, user.id],
-    );
+        [hashedPassword, user.id],
+      );
 
-    console.log(`🔐 Password changed for user: ${user.email}`);
+      console.log(`🔐 Password changed for user: ${user.email}`);
 
-    res.json({ success: true, message: "Password updated successfully" });
-  } catch (error) {
-    console.error("Change password error:", error);
-    res.status(500).json({ error: "Failed to update password" });
-  }
-});
+      res.json({ success: true, message: "Password updated successfully" });
+    } catch (error) {
+      console.error("Change password error:", error);
+      res.status(500).json({ error: "Failed to update password" });
+    }
+  },
+);
 
 export default router;

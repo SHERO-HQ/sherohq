@@ -1,4 +1,5 @@
 import { API_BASE, handleResponse, authFetch } from "./client";
+import { getOrderAccessToken } from "@/utils/orderAccess";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -37,6 +38,8 @@ export interface CreateOrderPayload {
 export interface CreateOrderResponse {
   success: boolean;
   orderId: string;
+  total?: number;
+  orderAccessToken?: string;
   message: string;
 }
 
@@ -65,31 +68,55 @@ export async function createOrder(
       "Content-Type": "application/json",
       "X-CSRF-Protection": "1",
     },
+    credentials: "include",
     body: JSON.stringify(payload),
   });
   return handleResponse<CreateOrderResponse>(response);
 }
 
 export async function fetchGuestOrders(guestId: string): Promise<Order[]> {
-  const response = await fetch(`${API_BASE}/orders/guest/${guestId}`);
+  const response = await fetch(`${API_BASE}/orders/guest/${guestId}`, {
+    credentials: "include",
+  });
   return handleResponse<Order[]>(response);
 }
 
-export async function trackOrder(orderId: string): Promise<Order> {
-  const response = await fetch(`${API_BASE}/orders/track/${orderId}`);
+export async function trackOrder(
+  orderId: string,
+  orderAccessToken?: string,
+): Promise<Order> {
+  const resolvedToken = orderAccessToken || getOrderAccessToken(orderId);
+  const headers: HeadersInit = {};
+
+  if (resolvedToken) {
+    (headers as Record<string, string>)["X-Order-Access-Token"] = resolvedToken;
+  }
+
+  const response = await fetch(`${API_BASE}/orders/track/${orderId}`, {
+    headers,
+    credentials: "include",
+  });
   return handleResponse<Order>(response);
 }
 
 export async function updateOrderPaymentMethod(
   id: string,
-  payload: { paymentMethod: string; guestId?: string; userId?: string },
+  payload: { paymentMethod: string; orderAccessToken?: string },
 ): Promise<{ success: boolean }> {
+  const resolvedToken = payload.orderAccessToken || getOrderAccessToken(id);
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    "X-CSRF-Protection": "1",
+  };
+
+  if (resolvedToken) {
+    (headers as Record<string, string>)["X-Order-Access-Token"] = resolvedToken;
+  }
+
   const response = await fetch(`${API_BASE}/orders/${id}/payment-method`, {
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Protection": "1",
-    },
+    headers,
+    credentials: "include",
     body: JSON.stringify(payload),
   });
   return handleResponse(response);
@@ -167,9 +194,21 @@ export async function initializePayment(
   description?: string,
   provider?: "hubtel" | "paystack",
 ): Promise<{ success: boolean; checkoutUrl: string }> {
+  const orderAccessToken = getOrderAccessToken(orderId);
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    "X-CSRF-Protection": "1",
+  };
+
+  if (orderAccessToken) {
+    (headers as Record<string, string>)["X-Order-Access-Token"] =
+      orderAccessToken;
+  }
+
   const response = await fetch(`${API_BASE}/payments/initialize`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
+    credentials: "include",
     body: JSON.stringify({ orderId, totalAmount, description, provider }),
   });
   return handleResponse(response);

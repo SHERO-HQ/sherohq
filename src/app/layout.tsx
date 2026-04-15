@@ -11,6 +11,12 @@ import dynamic from "next/dynamic";
 import { PageTransition } from "@/components/common/PageTransition";
 import "../index.css";
 
+const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com"
+).replace(/\/$/, "");
+
+const DEFAULT_PREVIEW_IMAGE = `${SITE_URL}/shero.png`;
+
 const aubette = localFont({
   src: "../assets/font/AubetteArchiType.woff2",
   variable: "--font-logo-next",
@@ -44,20 +50,28 @@ export const metadata: Metadata = {
     "custom software solutions",
     "IT services Accra",
   ],
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com",
-  ),
+  metadataBase: new URL(SITE_URL),
   openGraph: {
     type: "website",
     title: "SHERO - Redefine Possible",
     description: "Innovative technology solutions",
-    url: "https://sherohq.com",
+    url: SITE_URL,
     siteName: "SHERO",
+    images: [
+      {
+        url: DEFAULT_PREVIEW_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: "SHERO - Redefine Possible",
+        type: "image/png",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "SHERO - Redefine Possible",
     description: "Innovative technology solutions",
+    images: [DEFAULT_PREVIEW_IMAGE],
   },
   robots: { index: true, follow: true },
   icons: {
@@ -88,7 +102,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className={`${aubette.variable}`}>
       <head>
         {/* Critical CSS for LCP: Ensure H1 is visible immediately and has correct font-family */}
-        <style dangerouslySetInnerHTML={{ __html: `
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
           h1 { opacity: 1 !important; visibility: visible !important; }
           .font-primary { font-family: 'Sora Variable', sans-serif; }
           @media (max-width: 640px) {
@@ -105,7 +121,9 @@ export default function RootLayout({
               display: flex !important;
             }
           }
-        `}} />
+        `,
+          }}
+        />
       </head>
       <body
         className="font-primary transition-colors duration-500"

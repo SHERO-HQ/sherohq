@@ -12,6 +12,12 @@ import {
   AdminRegisterSchema,
   AdminUpdateProfileSchema,
 } from "../schemas";
+import {
+  ADMIN_SESSION_COOKIE,
+  getTokenFromRequest,
+  getSessionCookieOptions,
+  getClearSessionCookieOptions,
+} from "../utils/sessionAuth";
 
 const router = Router();
 
@@ -105,6 +111,12 @@ router.post(
         [uuidv4(), admin.id, token, expiresAt.toISOString()],
       );
 
+      res.cookie(
+        ADMIN_SESSION_COOKIE,
+        token,
+        getSessionCookieOptions(7 * 24 * 60 * 60 * 1000),
+      );
+
       console.log(`✅ Admin logged in: ${admin.username}`);
       await logActivity(
         admin.id,
@@ -141,11 +153,12 @@ router.post(
 // POST /api/admin/logout
 router.post("/logout", adminAuth, async (req: AdminRequest, res: Response) => {
   try {
-    const authHeader = req.headers.authorization;
-    if (authHeader?.startsWith("Bearer ")) {
-      const token = authHeader.substring(7);
+    const token = getTokenFromRequest(req, ADMIN_SESSION_COOKIE);
+    if (token) {
       await db.query("DELETE FROM sessions WHERE token = $1", [token]);
     }
+
+    res.cookie(ADMIN_SESSION_COOKIE, "", getClearSessionCookieOptions());
 
     console.log(`🔓 Admin logout: ${req.admin?.username}`);
     if (req.admin?.id) {

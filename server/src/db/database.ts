@@ -18,7 +18,14 @@ function getDatabaseConnectionString(): string {
 function getSslConfig(): false | { rejectUnauthorized: boolean } {
   // Set DATABASE_SSL=false to disable TLS for local/dev databases.
   const sslDisabled = process.env.DATABASE_SSL === "false";
-  return sslDisabled ? false : { rejectUnauthorized: false };
+
+  if (sslDisabled) return false;
+
+  const allowSelfSigned =
+    process.env.DATABASE_SSL_ALLOW_SELF_SIGNED === "true" ||
+    process.env.NODE_ENV !== "production";
+
+  return { rejectUnauthorized: !allowSelfSigned };
 }
 
 const connectionString = getDatabaseConnectionString();
@@ -62,18 +69,24 @@ export const query = async (text: string, params?: unknown[]) => {
   }
 };
 
+export const getClient = async () => pool.connect();
+
 // Create tables
 export async function initializeDatabase() {
-  console.log("🔌 Attempting to connect to the database...");
+  const host = connectionString.split("@")[1]?.split(":")[0] || "unknown host";
+  console.log(`🔌 Attempting to connect to the database (Host: ${host})...`);
 
   // Use a direct client for initialization to bypass pooler issues with DDL
   const client = new Client({
     connectionString,
     ssl,
+    connectionTimeoutMillis: 15000,
   });
 
-  await client.connect();
   try {
+    console.log("🛠️ Starting DB connection handshake...");
+    await client.connect();
+
     console.log(
       "📡 Connected to database. Running migrations/initialization...",
     );
@@ -135,6 +148,7 @@ export async function initializeDatabase() {
         "shippingInfo" JSONB NOT NULL,
         "paymentMethod" TEXT,
         status TEXT DEFAULT 'pending',
+        "orderAccessTokenHash" TEXT,
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         "referralCode" TEXT
       )
@@ -144,6 +158,11 @@ export async function initializeDatabase() {
     await client.query(`
           ALTER TABLE orders ADD COLUMN IF NOT EXISTS "referralCode" TEXT;
         `);
+
+    await client.query(`
+      ALTER TABLE orders
+      ADD COLUMN IF NOT EXISTS "orderAccessTokenHash" TEXT;
+    `);
 
     await client.query(`
       CREATE TABLE IF NOT EXISTS users (
@@ -169,9 +188,15 @@ export async function initializeDatabase() {
         id TEXT PRIMARY KEY,
         "userId" TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
         token TEXT UNIQUE NOT NULL,
-        "expiresAt" TEXT NOT NULL,
+        "expiresAt" TIMESTAMPTZ NOT NULL,
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
+    `);
+
+    await client.query(`
+      ALTER TABLE user_sessions
+      ALTER COLUMN "expiresAt" TYPE TIMESTAMPTZ
+      USING "expiresAt"::timestamptz;
     `);
 
     // Admin users table
@@ -196,9 +221,15 @@ export async function initializeDatabase() {
         id TEXT PRIMARY KEY,
         "adminId" TEXT NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
         token TEXT UNIQUE NOT NULL,
-        "expiresAt" TEXT NOT NULL,
+        "expiresAt" TIMESTAMPTZ NOT NULL,
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
+    `);
+
+    await client.query(`
+      ALTER TABLE sessions
+      ALTER COLUMN "expiresAt" TYPE TIMESTAMPTZ
+      USING "expiresAt"::timestamptz;
     `);
 
     // Support Tickets table
@@ -518,6 +549,9 @@ export async function initializeDatabase() {
     await client.query(
       'CREATE INDEX IF NOT EXISTS idx_orders_composite ON orders(status, "createdAt")',
     );
+    await client.query(
+      'CREATE INDEX IF NOT EXISTS idx_orders_access_token_hash ON orders("orderAccessTokenHash")',
+    );
 
     // Sessions (critical for authentication performance)
     await client.query(
@@ -592,4 +626,4 @@ export async function initializeDatabase() {
   }
 }
 
-export default { query };
+export default { query, getClient };

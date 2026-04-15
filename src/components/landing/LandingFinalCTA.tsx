@@ -11,7 +11,7 @@ const LandingFinalCTA = () => {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Massive Glass Card */}
         <div
-          className="relative overflow-hidden rounded bg-slate-900 border border-white/10 min-h-[400px] flex items-center"
+          className="relative overflow-hidden rounded bg-slate-900 border border-white/10 min-h-100 flex items-center"
           suppressHydrationWarning
         >
           {/* Warp Speed Background */}
@@ -56,7 +56,7 @@ const LandingFinalCTA = () => {
                   href="/contact-us"
                   className="group inline-flex items-center justify-center gap-2 px-8 py-2 rounded bg-emerald-600 text-white font-bold hover:bg-emerald-500 hover:shadow-lg hover:shadow-emerald-500/25 hover:-translate-y-1 transition duration-300"
                 >
-                  Book a Strategy Call
+                  Lets Talk
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
@@ -69,7 +69,7 @@ const LandingFinalCTA = () => {
             </div>
 
             {/* Visual Right (Rocket/Abstract) */}
-            <div className="relative flex items-center justify-center">
+            <div className="relative md:flex items-center justify-center hidden">
               <div className="relative w-80 h-80 md:w-96 md:h-96 flex items-center justify-center rounded-full">
                 {/* Brighter inner glow */}
                 <div className="absolute inset-8 bg-amber-400/5 rounded-full blur-2xl" />
@@ -78,8 +78,6 @@ const LandingFinalCTA = () => {
                 <div className="relative z-10 flex items-center justify-center">
                   <RocketIcon className="w-40 h-40 text-emerald-400 drop-shadow-lg" />
                 </div>
-
-    
               </div>
             </div>
           </div>

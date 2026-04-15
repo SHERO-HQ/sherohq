@@ -111,87 +111,109 @@ const Footer = () => {
               </p>
             </div>
 
-            {/* Newsletter Signup */}
-            <div className="space-y-3">
-              <h4 className="text-sm font-semibold text-slate-900 dark:text-white">
-                Stay Updated
-              </h4>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Get the latest deals, product drops, and tech news.
-              </p>
-              <form
-                onSubmit={handleNewsletterSubmit}
-                className="flex gap-2 relative"
-              >
-                <input
-                  type="email"
-                  required
-                  value={newsletterEmail}
-                  onChange={(e) => {
-                    setNewsletterEmail(e.target.value);
-                    if (newsletterStatus !== "idle") {
-                      setNewsletterStatus("idle");
-                    }
-                  }}
-                  autoComplete="email"
-                  placeholder="Enter your email"
-                  className="flex-1 px-4 py-3 text-sm bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-emerald-500/50 outline-none transition"
-                />
-                <button
-                  type="submit"
-                  disabled={newsletterStatus === "submitting"}
-                  className="absolute right-1 top-1 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded transition-colors flex items-center gap-1.5"
-                >
-                  <Send className="w-3.5 h-3.5" />
-                  {newsletterStatus === "submitting"
-                    ? "Sending..."
-                    : "Subscribe"}
-                </button>
-              </form>
-              {newsletterStatus === "success" && (
-                <p className="text-xs text-emerald-600 dark:text-emerald-400">
-                  You are subscribed. Check your inbox for confirmation.
-                </p>
-              )}
-              {newsletterStatus === "error" && (
-                <p className="text-xs text-red-600 dark:text-red-400">
-                  Subscription failed. Please try again in a moment.
-                </p>
-              )}
-            </div>
-
             {/* Contact Card */}
-            <div className="p-1 rounded border border-slate-200 dark:border-slate-800 ring-2 ring-emerald-500/20 ring-offset-2 ring-offset-background backdrop-blur-sm transition duration-300">
-              <div className="bg-background rounded p-6 transition-colors duration-300">
-                <h4 className="text-slate-900 dark:text-white font-semibold mb-6 flex items-center gap-2 transition-colors duration-300">
-                  Contact Details{" "}
-                  <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                </h4>
+            <div className="rounded border border-slate-200/80 dark:border-slate-700/70 shadow-[0_18px_40px_-28px_rgba(15,23,42,0.5)] overflow-hidden backdrop-blur-sm transition duration-300">
+              <div className="grid grid-cols-[auto_1fr_auto] items-center h-10 px-4 border-b border-slate-200/80 dark:border-slate-800/80 bg-linear-to-b from-slate-100/95 to-slate-200/80 dark:from-slate-900/95 dark:to-slate-950/95">
+                <div className="flex items-center gap-2" aria-hidden="true">
+                  <span className="h-3 w-3 rounded-full bg-[#ff5f57] ring-1 ring-black/15 dark:ring-black/40" />
+                  <span className="h-3 w-3 rounded-full bg-[#febc2e] ring-1 ring-black/15 dark:ring-black/40" />
+                  <span className="h-3 w-3 rounded-full bg-[#28c840] ring-1 ring-black/15 dark:ring-black/40" />
+                </div>
+               
+                <div
+                  className="justify-self-end flex items-center gap-1.5"
+                  aria-hidden="true"
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-slate-400/80 dark:bg-slate-500/80" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-slate-400/60 dark:bg-slate-500/60" />
+                  <span className="h-1.5 w-1.5 rounded-full bg-slate-400/40 dark:bg-slate-500/40" />
+                </div>
+              </div>
 
-                <div className="space-y-4">
-                  <a
-                    href={`mailto:${COMPANY_EMAILS.INFO}`}
-                    className="flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors group"
-                  >
-                    <div className="p-2 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 group-hover:border-emerald-500/50 transition-colors">
-                      <Mail className="w-4 h-4" />
-                    </div>
-                    <span className="text-sm font-medium">
-                      {COMPANY_EMAILS.INFO}
-                    </span>
-                  </a>
+              <div className="bg-background/95 p-6 space-y-6 transition-colors duration-300">
+                <div>
+                  <h4 className="text-slate-900 dark:text-white font-semibold mb-4 flex items-center gap-2 transition-colors duration-300">
+                    Contact Details
+                    <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                  </h4>
 
-                  <a
-                    href="tel:+233548711582"
-                    className="flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors group"
+                  <div className="space-y-4">
+                    <a
+                      href={`mailto:${COMPANY_EMAILS.INFO}`}
+                      className="flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors group"
+                    >
+                      <div className="p-2 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 group-hover:border-emerald-500/50 transition-colors">
+                        <Mail className="w-4 h-4" />
+                      </div>
+                      <span className="text-sm font-medium">
+                        {COMPANY_EMAILS.INFO}
+                      </span>
+                    </a>
+
+                    <a
+                      href="tel:+233548711582"
+                      className="flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors group"
+                    >
+                      <div className="p-2 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 group-hover:border-emerald-500/50 transition-colors">
+                        <Phone className="w-4 h-4" />
+                      </div>
+                      <span className="text-sm font-medium">
+                        +233 (54) 871-1582
+                      </span>
+                    </a>
+                  </div>
+                </div>
+
+                <div className="rounded border border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 p-4 space-y-3">
+                  <div>
+                    <h5 className="text-sm font-semibold text-slate-900 dark:text-white">
+                      Stay Updated
+                    </h5>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                      Get the latest deals, product drops, and tech news.
+                    </p>
+                  </div>
+
+                  <form
+                    onSubmit={handleNewsletterSubmit}
+                    className="flex gap-2"
                   >
-                    <div className="p-2 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 group-hover:border-emerald-500/50 transition-colors">
-                      <Phone className="w-4 h-4" />
-                    </div>
-                    <span className="text-sm font-medium">
-                      +233 (54) 871-1582
-                    </span>
-                  </a>
+                    <input
+                      type="email"
+                      required
+                      value={newsletterEmail}
+                      onChange={(e) => {
+                        setNewsletterEmail(e.target.value);
+                        if (newsletterStatus !== "idle") {
+                          setNewsletterStatus("idle");
+                        }
+                      }}
+                      autoComplete="email"
+                      placeholder="Enter your email"
+                      className="flex-1 px-3 py-2.5 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-emerald-500/50 outline-none transition"
+                    />
+                    <button
+                      type="submit"
+                      disabled={newsletterStatus === "submitting"}
+                      className="px-3 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold rounded transition-colors flex items-center gap-1.5"
+                    >
+                      <Send className="w-3.5 h-3.5" />
+                      {newsletterStatus === "submitting"
+                        ? "Sending..."
+                        : "Subscribe"}
+                    </button>
+                  </form>
+
+                  {newsletterStatus === "success" && (
+                    <p className="text-xs text-emerald-600 dark:text-emerald-400">
+                      You are subscribed. Check your inbox for confirmation.
+                    </p>
+                  )}
+                  {newsletterStatus === "error" && (
+                    <p className="text-xs text-red-600 dark:text-red-400">
+                      Subscription failed. Please try again in a moment.
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

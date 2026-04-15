@@ -1,5 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import db from "../db/database";
+import {
+  ADMIN_SESSION_COOKIE,
+  getTokenFromRequest,
+} from "../utils/sessionAuth";
 
 // Extended request type with admin user
 export interface AdminRequest extends Request {
@@ -39,19 +43,16 @@ export async function adminAuth(
   next: NextFunction,
 ) {
   try {
-    // Get token from Authorization header (Bearer token)
-    const authHeader = req.headers.authorization;
-    if (!authHeader?.startsWith("Bearer ")) {
+    const token = getTokenFromRequest(req, ADMIN_SESSION_COOKIE);
+    if (!token) {
       return res.status(401).json({ error: "No authorization token provided" });
     }
 
-    const token = authHeader.substring(7); // Remove "Bearer " prefix
-
-    // Find valid session (expiresAt is stored as TEXT in ISO format)
+    // Find valid session
     const sessionRes = await db.query(
       `
       SELECT * FROM sessions 
-      WHERE token = $1 AND "expiresAt"::timestamp > NOW()
+      WHERE token = $1 AND "expiresAt" > NOW()
     `,
       [token],
     );

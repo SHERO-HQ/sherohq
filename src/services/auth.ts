@@ -46,12 +46,11 @@ export async function userRegister(data: {
       "Content-Type": "application/json",
       "X-CSRF-Protection": "1",
     },
+    credentials: "include",
     body: JSON.stringify(data),
   });
 
-  const result = await handleResponse<UserLoginResponse>(response);
-  localStorage.setItem("userToken", result.token);
-  return result;
+  return handleResponse<UserLoginResponse>(response);
 }
 
 export async function userLogin(data: {
@@ -64,25 +63,29 @@ export async function userLogin(data: {
       "Content-Type": "application/json",
       "X-CSRF-Protection": "1",
     },
+    credentials: "include",
     body: JSON.stringify(data),
   });
 
-  const result = await handleResponse<UserLoginResponse>(response);
-  localStorage.setItem("userToken", result.token);
-  return result;
+  return handleResponse<UserLoginResponse>(response);
 }
 
 export async function userLogout(): Promise<void> {
   const token = localStorage.getItem("userToken");
+  const headers: HeadersInit = {
+    "X-CSRF-Protection": "1",
+  };
+
   if (token) {
-    await fetch(`${API_BASE}/auth/logout`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "X-CSRF-Protection": "1",
-      },
-    });
+    (headers as Record<string, string>).Authorization = `Bearer ${token}`;
   }
+
+  await fetch(`${API_BASE}/auth/logout`, {
+    method: "POST",
+    headers,
+    credentials: "include",
+  });
+
   localStorage.removeItem("userToken");
 }
 
@@ -91,16 +94,31 @@ export async function getUserMe(): Promise<{
   mustReset?: boolean;
 }> {
   const token = localStorage.getItem("userToken");
-  if (!token) throw new Error("No token found");
+  const headers: HeadersInit = {};
+
+  if (token) {
+    (headers as Record<string, string>).Authorization = `Bearer ${token}`;
+  }
 
   const response = await fetch(`${API_BASE}/auth/me`, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers,
+    credentials: "include",
   });
   return handleResponse<{ user: User; mustReset?: boolean }>(response);
 }
 
 export async function getUserOrders(userId: string): Promise<Order[]> {
-  const response = await fetch(`${API_BASE}/orders/user/${userId}`);
+  const token = localStorage.getItem("userToken");
+  const headers: HeadersInit = {};
+
+  if (token) {
+    (headers as Record<string, string>).Authorization = `Bearer ${token}`;
+  }
+
+  const response = await fetch(`${API_BASE}/orders/user/${userId}`, {
+    headers,
+    credentials: "include",
+  });
   return handleResponse<Order[]>(response);
 }
 
@@ -117,6 +135,7 @@ export async function verifyEmail(
       "Content-Type": "application/json",
       "X-CSRF-Protection": "1",
     },
+    credentials: "include",
     body: JSON.stringify({ token }),
   });
   return handleResponse(response);
@@ -131,6 +150,7 @@ export async function resendVerificationEmail(
       "Content-Type": "application/json",
       "X-CSRF-Protection": "1",
     },
+    credentials: "include",
     body: JSON.stringify({ email }),
   });
   return handleResponse(response);
@@ -146,14 +166,19 @@ export async function updateUserProfile(data: {
   shippingAddress?: ShippingAddress | null;
 }): Promise<{ success: boolean; user: User }> {
   const token = localStorage.getItem("userToken");
-  if (!token) throw new Error("Not authenticated");
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    "X-CSRF-Protection": "1",
+  };
+
+  if (token) {
+    (headers as Record<string, string>).Authorization = `Bearer ${token}`;
+  }
 
   const response = await fetch(`${API_BASE}/auth/profile`, {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+    headers,
+    credentials: "include",
     body: JSON.stringify(data),
   });
   return handleResponse(response);
@@ -163,15 +188,19 @@ export async function userChangePassword(
   password: string,
 ): Promise<{ success: boolean }> {
   const token = localStorage.getItem("userToken");
-  if (!token) throw new Error("Not authenticated");
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    "X-CSRF-Protection": "1",
+  };
+
+  if (token) {
+    (headers as Record<string, string>).Authorization = `Bearer ${token}`;
+  }
 
   const response = await fetch(`${API_BASE}/auth/change-password`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-      "X-CSRF-Protection": "1",
-    },
+    headers,
+    credentials: "include",
     body: JSON.stringify({ password }),
   });
   return handleResponse(response);

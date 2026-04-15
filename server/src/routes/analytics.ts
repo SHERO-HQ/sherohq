@@ -40,7 +40,15 @@ function shouldLogCatalogGap(
 // POST /api/analytics/chat - Log a chat interaction
 router.post("/chat", chatAnalyticsLimiter, async (req, res) => {
   try {
-    const { guestId, userId, query: userQuery, response, intent, recommendedProducts, hasImage } = req.body;
+    const {
+      guestId,
+      userId,
+      query: userQuery,
+      response,
+      intent,
+      recommendedProducts,
+      hasImage,
+    } = req.body;
 
     if (!userQuery || typeof userQuery !== "string") {
       return res.status(400).json({ error: "query is required" });
@@ -49,7 +57,15 @@ router.post("/chat", chatAnalyticsLimiter, async (req, res) => {
     await query(
       `INSERT INTO ai_chat_logs ("guestId", "userId", query, response, intent, "recommendedProducts", "hasImage")
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [guestId, userId, userQuery, response, intent, JSON.stringify(recommendedProducts), hasImage || false]
+      [
+        guestId,
+        userId,
+        userQuery,
+        response,
+        intent,
+        JSON.stringify(recommendedProducts),
+        hasImage || false,
+      ],
     );
 
     // Log catalog gap when the AI couldn't satisfy the request
@@ -58,7 +74,7 @@ router.post("/chat", chatAnalyticsLimiter, async (req, res) => {
       await query(
         `INSERT INTO catalog_gaps (keyword) VALUES ($1)
          ON CONFLICT (keyword) DO UPDATE SET "queryCount" = catalog_gaps."queryCount" + 1, "lastRequested" = CURRENT_TIMESTAMP`,
-        [keyword]
+        [keyword],
       );
     }
 
@@ -73,16 +89,55 @@ router.post("/chat", chatAnalyticsLimiter, async (req, res) => {
 router.get("/summary", adminAuth, async (req, res) => {
   try {
     const topIntents = await query(
-      `SELECT intent, COUNT(*) as count FROM ai_chat_logs GROUP BY intent ORDER BY count DESC LIMIT 5`
+      `
+      SELECT COALESCE(intent, 'unknown') as intent, COUNT(*)::int as count
+      FROM ai_chat_logs
+      WHERE "createdAt" >= CURRENT_DATE - INTERVAL '30 days'
+      GROUP BY intent
+      ORDER BY count DESC
+      LIMIT 6
+      `,
     );
 
     const topGaps = await query(
-      `SELECT keyword, "queryCount", "lastRequested" FROM catalog_gaps WHERE "isResolved" = false ORDER BY "queryCount" DESC LIMIT 10`
+      `SELECT keyword, "queryCount", "lastRequested" FROM catalog_gaps WHERE "isResolved" = false ORDER BY "queryCount" DESC LIMIT 10`,
     );
 
     const volume = await query(
-      `SELECT DATE("createdAt") as day, COUNT(*) as count FROM ai_chat_logs GROUP BY day ORDER BY day DESC LIMIT 7`
+      `
+      SELECT DATE("createdAt") as day, COUNT(*)::int as count
+      FROM ai_chat_logs
+      WHERE "createdAt" >= CURRENT_DATE - INTERVAL '29 days'
+      GROUP BY day
+      ORDER BY day ASC
+      `,
     );
+
+    const totalsResult = await query(
+      `
+      SELECT
+        COUNT(*)::int AS "totalInteractions",
+        COUNT(*) FILTER (WHERE "hasImage" = true)::int AS "imageInteractions",
+        COUNT(*) FILTER (WHERE intent = 'recommend_failed')::int AS "failedRecommendations"
+      FROM ai_chat_logs
+      WHERE "createdAt" >= CURRENT_DATE - INTERVAL '30 days'
+      `,
+    );
+
+    const gapVolumeResult = await query(
+      `
+      SELECT COALESCE(SUM("queryCount"), 0)::int AS "openGapRequests"
+      FROM catalog_gaps
+      WHERE "isResolved" = false
+      `,
+    );
+
+    const totals = {
+      totalInteractions: totalsResult.rows[0]?.totalInteractions || 0,
+      imageInteractions: totalsResult.rows[0]?.imageInteractions || 0,
+      failedRecommendations: totalsResult.rows[0]?.failedRecommendations || 0,
+      openGapRequests: gapVolumeResult.rows[0]?.openGapRequests || 0,
+    };
 
     res.json({
       success: true,
@@ -90,7 +145,8 @@ router.get("/summary", adminAuth, async (req, res) => {
         topIntents: topIntents.rows,
         topGaps: topGaps.rows,
         dailyVolume: volume.rows,
-      }
+        totals,
+      },
     });
   } catch (error) {
     console.error("Failed to fetch analytics:", error);

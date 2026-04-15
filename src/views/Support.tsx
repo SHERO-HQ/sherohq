@@ -10,7 +10,6 @@ import {
  Phone,
  Mail,
  ArrowRight,
- ArrowLeft,
  Ticket,
  HeadsetIcon,
 } from "lucide-react";
@@ -68,16 +67,6 @@ const Support = () => {
  <div className="absolute bottom-0 right-1/4 w-125 h-125 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[120px] -z-10" />
 
  <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
- {/* Back Button */}
- <div className="mb-8">
- <Link
- href="/"
- className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors group"
- >
- <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
- <span>Back to Home</span>
- </Link>
- </div>
 
  {/* Header */}
  <div className="text-center mb-16 relative">

@@ -154,7 +154,6 @@ const allowedOrigins = [
   "https://products.sherohq.com",
   "https://shop.sherohq.com",
   "https://api.sherohq.com",
-  "http://localhost:5173",
   "http://localhost:5175",
   "http://localhost:3000",
 ];
@@ -201,6 +200,7 @@ app.use(
       "Content-Type",
       "Authorization",
       "X-CSRF-Protection",
+      "X-Order-Access-Token",
       "X-Requested-With",
     ],
     credentials: true,

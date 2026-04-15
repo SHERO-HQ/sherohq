@@ -38,6 +38,8 @@ tsconfig.tsbuildinfo
 
 # Server
 server/.env
+server/test-db*.js
+server/test-db*.mjs
 
 # Yarn
 .yarn/*

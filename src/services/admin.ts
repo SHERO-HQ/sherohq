@@ -131,12 +131,11 @@ export async function adminLogin(
       "Content-Type": "application/json",
       "X-CSRF-Protection": "1",
     },
+    credentials: "include",
     body: JSON.stringify({ username, password }),
   });
 
-  const data = await handleResponse<LoginResponse>(response);
-  localStorage.setItem("adminToken", data.token);
-  return data;
+  return handleResponse<LoginResponse>(response);
 }
 
 export async function adminChangePassword(

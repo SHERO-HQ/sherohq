@@ -16,26 +16,70 @@ import AppImage from "@/components/common/AppImage";
 import { formatCurrency } from "@/utils/format";
 import { getAbsoluteUrl } from "@/utils/subdomain";
 
+type SpotlightProduct = Product & {
+  createdAt?: string | Date;
+};
+
 interface ProductSpotlightProps {
-  products: Product[];
+  products: SpotlightProduct[];
   isLoading?: boolean;
 }
+
+const stableHash = (value: string) => {
+  let hash = 0;
+  for (let i = 0; i < value.length; i++) {
+    hash = (hash << 5) - hash + value.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+};
+
+const FALLBACK_RANDOM_SEED =
+  typeof crypto !== "undefined"
+    ? crypto.getRandomValues(new Uint32Array(1))[0]
+    : 0;
+
+const getCreatedAtTime = (product: SpotlightProduct): number | null => {
+  if (!product.createdAt) return null;
+
+  const timestamp = new Date(product.createdAt).getTime();
+  return Number.isNaN(timestamp) ? null : timestamp;
+};
 
 const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  // Filter for dynamic spotlight items (flagged as isSpotlight)
+  // Show newest uploads first; fallback to random products when timestamps are unavailable.
   const spotlightItems = useMemo(() => {
     if (!products.length) return [];
-    
-    // 1. Try to find products specifically flagged for spotlight
-    const flagged = products.filter(p => p.isSpotlight && p.image);
-    if (flagged.length > 0) return flagged;
 
-    // 2. Fallback: Prioritize products with images, limit to 5
-    const filtered = products.filter((p) => p.image).slice(0, 5);
-    return filtered.length > 0 ? filtered : products.slice(0, 5);
+    const productsWithImages = products.filter((p) => Boolean(p.image));
+    const source =
+      productsWithImages.length > 0 ? productsWithImages : products;
+
+    const newest = source
+      .map((product) => ({
+        product,
+        createdAtTime: getCreatedAtTime(product),
+      }))
+      .filter((item) => item.createdAtTime !== null)
+      .sort((a, b) => (b.createdAtTime as number) - (a.createdAtTime as number))
+      .map((item) => item.product)
+      .slice(0, 5);
+
+    if (newest.length > 0) {
+      return newest;
+    }
+
+    const seed = source.map((product) => product.id).join("|");
+    return [...source]
+      .sort(
+        (a, b) =>
+          stableHash(`${FALLBACK_RANDOM_SEED}:${seed}:${a.id}`) -
+          stableHash(`${FALLBACK_RANDOM_SEED}:${seed}:${b.id}`),
+      )
+      .slice(0, 5);
   }, [products]);
 
   const nextSlide = useCallback(() => {
@@ -64,7 +108,8 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
     );
   }
 
-  const currentProduct = spotlightItems[currentIndex];
+  const safeCurrentIndex = currentIndex % spotlightItems.length;
+  const currentProduct = spotlightItems[safeCurrentIndex];
 
   return (
     <section className="relative w-full h-full lg:min-h-[calc(90vh-5rem)] overflow-hidden group/spotlight flex items-start lg:items-center pt-16 lg:pt-20">
@@ -224,7 +269,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                             setIsAutoPlaying(false);
                           }}
                           className={`h-1 transition-all duration-500 rounded-full ${
-                            i === currentIndex
+                            i === safeCurrentIndex
                               ? "w-8 bg-emerald-500"
                               : "w-2 bg-white/40 hover:bg-white/60"
                           }`}
@@ -243,7 +288,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
       {isAutoPlaying && (
         <div className="absolute z-20 bottom-0 left-0 right-0 h-1 bg-slate-100 dark:bg-white/5 overflow-hidden">
           <motion.div
-            key={currentIndex}
+            key={safeCurrentIndex}
             initial={{ x: "-100%" }}
             animate={{ x: "0%" }}
             transition={{ duration: 8, ease: "linear" }}

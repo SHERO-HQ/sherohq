@@ -61,7 +61,13 @@ export function getImageUrl(path: string | undefined): string {
 }
 
 function getAuthToken(): string | null {
+  if (typeof window === "undefined") return null;
   return localStorage.getItem("adminToken");
+}
+
+function getUserAuthToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("userToken");
 }
 
 function getStatusErrorMessage(status: number): string | null {
@@ -154,15 +160,19 @@ export async function authFetch(url: string, options: RequestInit = {}) {
 
 // User-authenticated fetch (uses userToken instead of adminToken)
 export async function userAuthFetch(url: string, options: RequestInit = {}) {
-  const token = localStorage.getItem("userToken");
-  if (!token) throw new Error("Not authenticated");
+  const token = getUserAuthToken();
 
   const headers: HeadersInit = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
+    ...(options.body instanceof FormData
+      ? {}
+      : { "Content-Type": "application/json" }),
     "X-CSRF-Protection": "1",
     ...options.headers,
   };
 
-  return fetch(url, { ...options, headers });
+  if (token) {
+    (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
+  }
+
+  return fetch(url, { ...options, headers, credentials: "include" });
 }

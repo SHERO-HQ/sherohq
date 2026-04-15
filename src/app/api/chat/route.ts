@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { Product } from "@/types/product";
-import { CATALOG_SUMMARY, SUPPORT_KNOWLEDGE } from "./knowledge";
+import { CATALOG_SUMMARY, GUIDE_MAPPING, SUPPORT_KNOWLEDGE } from "./knowledge";
 
 /** Resolve the internal backend URL (server-side only) */
 const BACKEND_URL = (
@@ -29,23 +29,31 @@ async function fetchDynamicCatalogSummary(): Promise<string> {
 }
 
 function getSystemPrompt(catalog: string) {
-  return `DIRECT DISPATCHER (SHERO TECH). 
-RULE 1: Be EXTREMELY BRIEF (Under 20 words). No pleasantries.
-RULE 2: Your GOAL is to trigger a TAG ([RECOMMEND], [BOOK], [CART], [TICKET]) as fast as possible.
-RULE 3: If a user mentions a product category or need, immediately output [RECOMMEND: "query"].
-RULE 4: If a user is frustrated, angry, or has a technical fault, immediately output [TICKET].
-RULE 5: If a user mentions "meeting", "call", "consult", or "expert", output [BOOK: "Consultation"].
-RULE 6: Use [CART: "Name"] only if they explicitly say "buy", "add to cart", or "order".
-RULE 7: If the user message is vague, ask ONLY one clarifying question (e.g., "GHS budget?").
+  return `You are SHERO's product and IT support assistant for Ghana-based users.
 
-KNOWLEDGE:
+OBJECTIVE
+- Give a direct, useful answer first.
+- Be concise (1-3 short sentences) but not robotic.
+- Ask one clarifying question only when needed.
+
+TAGGING RULES
+- Use [RECOMMEND: query] when the user is asking for products, options, pricing, or comparisons.
+- Use [BOOK: topic] only when the user explicitly asks to consult, schedule, call, or speak to an expert.
+- Use [TICKET] only after troubleshooting guidance was attempted and the user says it still failed or they cannot follow the guide.
+- Use [CART: product name] only when user explicitly asks to buy/add/order now.
+- Use [TRACK_ORDER: id] or [TRACK_TICKET: id] only when the user provides a valid ID.
+
+IMPORTANT
+- Do NOT default to [BOOK] or [TICKET] for normal product questions.
+- Do NOT claim actions were completed unless a tag indicates the action.
+- If tracking is requested without an ID, ask for the order/ticket ID.
+- For budget requests, reflect Ghana cedi context (GHS).
+- Never recommend products above the user's stated budget cap.
+- If no SHERO troubleshooting guide is available, provide concise general troubleshooting steps before escalating to support.
+
+KNOWLEDGE
 ${catalog}
-${SUPPORT_KNOWLEDGE}
-
-EXAMPLES:
-User: "I need a fast laptop for coding" -> "I recommend these high-performance options for developers: [RECOMMEND: coding laptop]"
-User: "My windows is corrupted" -> "I'm sorry to hear that. Please open a support ticket for technical repair. [TICKET]"
-User: "Can we talk about a server setup?" -> "I've scheduled a professional consultation for your infrastructure needs. [BOOK: Server Infrastructure]"`;
+${SUPPORT_KNOWLEDGE}`;
 }
 
 type ChatHistoryMessage = {
@@ -61,13 +69,41 @@ const GEMINI_MODEL_CANDIDATES = [
 
 function extractBudgetGhs(input: string): number | null {
   const normalized = input.toLowerCase();
-  const hasBudgetSignal =
-    normalized.includes("ghs") ||
-    normalized.includes("cedi") ||
+
+  const hasCurrencySignal =
+    /\bghs?\b/.test(normalized) ||
+    /\bcedi(?:s)?\b/.test(normalized) ||
+    normalized.includes("¢");
+
+  const hasBudgetKeyword =
     normalized.includes("budget") ||
+    normalized.includes("under") ||
+    normalized.includes("below") ||
+    normalized.includes("max") ||
+    normalized.includes("maximum") ||
+    normalized.includes("up to") ||
+    normalized.includes("upto") ||
+    normalized.includes("within") ||
+    normalized.includes("less than") ||
+    normalized.includes("at most") ||
+    normalized.includes("not exceed") ||
+    normalized.includes("no more than") ||
+    normalized.includes("<=");
+
+  const hasBudgetSignal =
+    hasCurrencySignal ||
+    hasBudgetKeyword ||
     /^\s*\d[\d,]*(?:\.\d+)?\s*$/.test(normalized);
 
   if (!hasBudgetSignal) return null;
+
+  const kMatch = normalized.match(/(\d+(?:\.\d+)?)\s*k\b/);
+  if (kMatch) {
+    const parsedK = Number(kMatch[1]);
+    if (Number.isFinite(parsedK)) {
+      return parsedK * 1000;
+    }
+  }
 
   const match = normalized.match(/(\d[\d,]*(?:\.\d+)?)/);
   if (!match) return null;
@@ -76,45 +112,324 @@ function extractBudgetGhs(input: string): number | null {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+function resolveBudgetFromConversation(
+  message: string,
+  history: ChatHistoryMessage[] = [],
+): number | null {
+  const currentBudget = extractBudgetGhs(message);
+  if (currentBudget && currentBudget > 0) return currentBudget;
+
+  for (let i = history.length - 1; i >= 0; i--) {
+    const turn = history[i];
+    if (turn.role !== "user") continue;
+
+    const historicalBudget = extractBudgetGhs(turn.content);
+    if (historicalBudget && historicalBudget > 0) {
+      return historicalBudget;
+    }
+  }
+
+  return null;
+}
+
 function formatGhs(amount: number): string {
   return `GHS ${amount.toLocaleString("en-GH")}`;
 }
 
-async function fetchRecommendedProducts(query: string) {
-  try {
-    console.log(`🔍 AI Fetching products for: "${query}" using ${BACKEND_URL}`);
+function inferGuideSlug(userMessage: string): string | undefined {
+  const normalized = userMessage.toLowerCase();
+  let bestMatch: { slug: string; score: number } | null = null;
 
-    // Empty or generic query: return featured products
-    if (!query || query === "latest products" || query === "featured") {
-      const response = await fetch(`${BACKEND_URL}/api/products`);
-      if (response.ok) {
-        const prod = await response.json();
-        return Array.isArray(prod) ? prod.slice(0, 3) : [];
-      }
-      return [];
+  for (const guide of GUIDE_MAPPING) {
+    const score = guide.keywords.reduce((acc, keyword) => {
+      return acc + (normalized.includes(keyword.toLowerCase()) ? 1 : 0);
+    }, 0);
+
+    if (score <= 0) continue;
+    if (!bestMatch || score > bestMatch.score) {
+      bestMatch = { slug: guide.slug, score };
     }
+  }
 
-    // Attempt 1: Search match
-    const response = await fetch(
-      `${BACKEND_URL}/api/products?search=${encodeURIComponent(query)}`,
+  return bestMatch?.slug;
+}
+
+function hasGuideAttemptContext(history: ChatHistoryMessage[] = []): boolean {
+  return history.some((message) => {
+    if (message.role !== "assistant") return false;
+
+    const content = message.content.toLowerCase();
+    return (
+      content.includes("guide") ||
+      content.includes("troubleshoot") ||
+      content.includes("step") ||
+      content.includes("try this")
     );
-    if (!response.ok) return [];
-    let products = await response.json();
+  });
+}
 
-    // Attempt 2: Category fallback if search returns nothing
-    if (!Array.isArray(products) || products.length === 0) {
-      console.log(
-        `⚠️ No search matches for "${query}". Trying category fetch...`,
+function shouldEscalateToSupport(
+  userMessage: string,
+  history: ChatHistoryMessage[] = [],
+): boolean {
+  const normalized = userMessage.toLowerCase();
+
+  const unableSignals = [
+    "didn't work",
+    "didnt work",
+    "not working",
+    "still broken",
+    "still not",
+    "still failing",
+    "can't fix",
+    "cant fix",
+    "cannot fix",
+    "can't follow",
+    "cant follow",
+    "cannot follow",
+    "too hard",
+    "too difficult",
+    "confusing",
+    "not able",
+    "unable to",
+    "i tried",
+    "tried that",
+    "followed the guide",
+    "guide didn't",
+    "guide did not",
+    "nothing works",
+  ];
+
+  const hasUnableSignal = unableSignals.some((signal) =>
+    normalized.includes(signal),
+  );
+  if (!hasUnableSignal) return false;
+
+  return hasGuideAttemptContext(history) || normalized.includes("guide");
+}
+
+function hasTroubleshootingIntent(userMessage: string): boolean {
+  const normalized = userMessage.toLowerCase();
+
+  const issueSignals = [
+    "fix",
+    "issue",
+    "problem",
+    "error",
+    "slow",
+    "sluggish",
+    "lag",
+    "laggy",
+    "freez",
+    "broken",
+    "crash",
+    "boot",
+    "not turning on",
+    "won't",
+    "wont",
+    "overheating",
+    "troubleshoot",
+    "repair",
+  ];
+
+  const productSignals = [
+    "laptop",
+    "pc",
+    "router",
+    "switch",
+    "network",
+    "printer",
+    "phone",
+    "monitor",
+    "storage",
+    "audio",
+    "accessory",
+    "recommend",
+    "buy",
+    "order",
+    "price",
+    "budget",
+  ];
+
+  const hasIssueSignal = issueSignals.some((signal) =>
+    normalized.includes(signal),
+  );
+
+  if (hasIssueSignal) return true;
+
+  const asksForHelp =
+    normalized.includes("help") || normalized.includes("assist");
+  const isShoppingIntent = productSignals.some((signal) =>
+    normalized.includes(signal),
+  );
+
+  return asksForHelp && !isShoppingIntent;
+}
+
+function buildInlineTroubleshootingSteps(userMessage: string): string {
+  const normalized = userMessage.toLowerCase();
+
+  if (
+    normalized.includes("slow") ||
+    normalized.includes("sluggish") ||
+    normalized.includes("lag")
+  ) {
+    return "Try this first: 1) Restart and disable heavy startup apps. 2) Keep at least 15% free storage and install OS updates. 3) Run a full malware scan. If still slow, share your OS and laptop model for deeper checks.";
+  }
+
+  if (
+    normalized.includes("boot") ||
+    normalized.includes("not turning on") ||
+    normalized.includes("black screen") ||
+    normalized.includes("power")
+  ) {
+    return "Try this first: 1) Disconnect charger and peripherals, hold power for 15 seconds, then restart. 2) Try another charger or outlet. 3) Run BIOS or hardware diagnostics if available. If it still fails, share any lights, beeps, or error messages.";
+  }
+
+  if (normalized.includes("overheating") || normalized.includes("hot")) {
+    return "Try this first: 1) Clean vents and use the laptop on a hard surface. 2) Close heavy apps and apply system and driver updates. 3) Check fan health with diagnostics. If temperature still spikes, tell me when it happens and the exact model.";
+  }
+
+  return "Let's troubleshoot this: 1) Restart the device and install pending updates. 2) Check storage, memory, and background apps. 3) Run built-in diagnostics and share any error code so I can guide the next fix.";
+}
+
+async function fetchRecommendedProducts(query: string, budgetCap?: number) {
+  try {
+    const normalizedQuery = query.trim().toLowerCase();
+    console.log(
+      `🔍 AI Fetching products for: "${normalizedQuery || query}" using ${BACKEND_URL}`,
+    );
+
+    const genericQueries = new Set([
+      "",
+      "latest products",
+      "featured",
+      "products",
+      "options",
+    ]);
+
+    const stopWords = new Set([
+      "for",
+      "with",
+      "and",
+      "the",
+      "need",
+      "want",
+      "best",
+      "good",
+      "help",
+      "my",
+      "a",
+      "an",
+      "to",
+      "in",
+    ]);
+
+    const keywordMappings: Array<{ pattern: RegExp; term: string }> = [
+      { pattern: /laptop|notebook|macbook|pc/, term: "laptop" },
+      { pattern: /router|switch|wifi|network/, term: "router" },
+      { pattern: /printer|printing/, term: "printer" },
+      { pattern: /server|hosting|infrastructure/, term: "server" },
+      { pattern: /monitor|display|screen/, term: "monitor" },
+      { pattern: /phone|mobile|smartphone/, term: "phone" },
+      { pattern: /camera|webcam/, term: "camera" },
+      { pattern: /audio|speaker|headset|earbuds/, term: "audio" },
+    ];
+
+    const dedupeProducts = (products: Product[]): Product[] => {
+      const seen = new Set<string>();
+      return products.filter((product) => {
+        if (!product?.id || seen.has(product.id)) return false;
+        seen.add(product.id);
+        return true;
+      });
+    };
+
+    const applyBudgetCap = (products: Product[]): Product[] => {
+      if (!budgetCap || budgetCap <= 0) return products;
+
+      return products.filter((product) => {
+        const price = Number(product.price);
+        return Number.isFinite(price) && price <= budgetCap;
+      });
+    };
+
+    const finalizeRecommendations = (products: Product[]): Product[] => {
+      const deduped = dedupeProducts(products);
+      const inStock = deduped.filter((product) => product.inStock);
+      const prioritized = inStock.length > 0 ? inStock : deduped;
+      return applyBudgetCap(prioritized).slice(0, 4);
+    };
+
+    const fetchByParam = async (
+      param: "search" | "category",
+      term: string,
+    ): Promise<Product[]> => {
+      const response = await fetch(
+        `${BACKEND_URL}/api/products?${param}=${encodeURIComponent(term)}&limit=40`,
       );
-      const catResponse = await fetch(
-        `${BACKEND_URL}/api/products?category=${encodeURIComponent(query)}`,
-      );
-      if (catResponse.ok) {
-        products = await catResponse.json();
+      if (!response.ok) return [];
+
+      const payload = await response.json();
+      return Array.isArray(payload) ? (payload as Product[]) : [];
+    };
+
+    const fetchFeatured = async (): Promise<Product[]> => {
+      const response = await fetch(`${BACKEND_URL}/api/products?limit=40`);
+      if (!response.ok) return [];
+
+      const payload = await response.json();
+      if (!Array.isArray(payload)) return [];
+
+      const products = payload as Product[];
+      return finalizeRecommendations(products);
+    };
+
+    if (genericQueries.has(normalizedQuery)) {
+      return fetchFeatured();
+    }
+
+    const searchTerms = new Set<string>();
+    searchTerms.add(normalizedQuery);
+
+    for (const mapping of keywordMappings) {
+      if (mapping.pattern.test(normalizedQuery)) {
+        searchTerms.add(mapping.term);
       }
     }
 
-    return Array.isArray(products) ? products.slice(0, 3) : [];
+    for (const token of normalizedQuery.split(/\s+/)) {
+      if (token.length < 3 || stopWords.has(token)) continue;
+      searchTerms.add(token);
+    }
+
+    const terms = [...searchTerms].slice(0, 6);
+    const collected: Product[] = [];
+
+    for (const term of terms) {
+      const searchResults = await fetchByParam("search", term);
+      if (searchResults.length > 0) {
+        collected.push(...searchResults);
+      }
+      if (collected.length >= 4) break;
+    }
+
+    if (collected.length < 3) {
+      for (const term of terms) {
+        const categoryResults = await fetchByParam("category", term);
+        if (categoryResults.length > 0) {
+          collected.push(...categoryResults);
+        }
+        if (collected.length >= 4) break;
+      }
+    }
+
+    const finalizedFromCollected = finalizeRecommendations(collected);
+    if (finalizedFromCollected.length > 0) {
+      return finalizedFromCollected;
+    }
+
+    return fetchFeatured();
   } catch (error) {
     console.error("Error fetching recommended products:", error);
     return [];
@@ -125,19 +440,48 @@ function buildFallbackReply(
   userMessage: string,
   history: ChatHistoryMessage[] = [],
 ): string {
-  const normalized = userMessage.toLowerCase();
+  const normalized = userMessage.toLowerCase().trim();
+  const guideSlug = inferGuideSlug(userMessage) || GUIDE_MAPPING[0]?.slug;
+  const escalatesToSupport = shouldEscalateToSupport(userMessage, history);
 
-  // 1. Repetition Guard: If the user is repeating the exact same thing or getting stuck in a loop
-  const userHistory = history.filter((m) => m.role === "user");
-  const isRepeating =
-    userHistory.length > 0 &&
-    userHistory[userHistory.length - 1].content.toLowerCase() === normalized;
+  // Tracking intents should be handled first to support quick actions reliably.
+  const orderIdMatch = userMessage.match(
+    /(?:order(?:\s*id)?[:#\s-]*)([a-zA-Z0-9-]{5,})/i,
+  );
+  const ticketIdMatch = userMessage.match(
+    /(?:ticket(?:\s*id)?[:#\s-]*)([a-zA-Z0-9-]{4,})/i,
+  );
 
-  if (isRepeating) {
-    return "I notice we're repeating. To get you the best help quickly, I recommend speaking with an expert or opening a ticket. [TICKET] [BOOK: Personal Support]";
+  if (normalized.includes("track") && normalized.includes("order")) {
+    if (orderIdMatch?.[1]) {
+      return `Got it. Tracking your order now. [TRACK_ORDER:${orderIdMatch[1]}]`;
+    }
+    return "Sure. Share your order ID and I will track it for you.";
   }
 
-  // 2. Intent-based hardcoding (Smarter triggers)
+  if (normalized.includes("track") && normalized.includes("ticket")) {
+    if (ticketIdMatch?.[1]) {
+      return `Got it. Tracking your ticket now. [TRACK_TICKET:${ticketIdMatch[1]}]`;
+    }
+    return "Sure. Share your ticket ID and I will check the status.";
+  }
+
+  // Repetition guard: robust against clients that may include current message in history.
+  const userHistory = history
+    .filter((m) => m.role === "user")
+    .map((m) => m.content.toLowerCase().trim());
+
+  const lastUser = userHistory[userHistory.length - 1] || null;
+  const previousUser =
+    lastUser === normalized
+      ? userHistory[userHistory.length - 2] || null
+      : lastUser;
+
+  if (previousUser === normalized) {
+    return "I understand. Give me one detail so I can help better: your use case, budget (GHS), or exact issue.";
+  }
+
+  // Intent-based hardcoding (Smarter triggers)
   if (
     normalized.includes("book") ||
     normalized.includes("consultation") ||
@@ -153,24 +497,47 @@ function buildFallbackReply(
     "broken",
     "os",
     "boot",
+    "won't boot",
+    "wont boot",
+    "blue screen",
+    "not turning on",
+    "overheating",
     "error",
     "problem",
     "issue",
     "failing",
-    "slow",
-    "help",
     "trouble",
     "don't work",
     "repair",
   ];
+  if (escalatesToSupport) {
+    return "Thanks for trying those steps. I will connect you with direct support now so we can resolve this faster. [TICKET]";
+  }
+
   if (supportKeywords.some((k) => normalized.includes(k))) {
-    return "Technical issues are best handled via our direct support channel. Please open a ticket: [TICKET]";
+    if (!guideSlug) {
+      return buildInlineTroubleshootingSteps(userMessage);
+    }
+    return `Let's troubleshoot this first. Start with this step-by-step guide and tell me where you get stuck: [GUIDE: ${guideSlug}]`;
+  }
+
+  if (normalized.includes("help") && hasTroubleshootingIntent(userMessage)) {
+    if (!guideSlug) {
+      return buildInlineTroubleshootingSteps(userMessage);
+    }
+    return `I can help you fix this. Start with this guide and I will walk you through each step: [GUIDE: ${guideSlug}]`;
   }
 
   // 3. Product Discovery Fallback
   const laptopKeywords = ["laptop", "pc", "computer", "macbook", "hp", "dell"];
   if (laptopKeywords.some((k) => normalized.includes(k))) {
     const budget = extractBudgetGhs(userMessage);
+    if (normalized.includes("slow")) {
+      if (!guideSlug) {
+        return buildInlineTroubleshootingSteps(userMessage);
+      }
+      return `I can help fix laptop performance first. Start with this troubleshooting guide, then tell me exactly which step didn't help: [GUIDE: ${guideSlug}]`;
+    }
     if (budget && budget < 6000)
       return `I recommend these entry-level laptops within your ${formatGhs(budget)} budget: [RECOMMEND: student laptop]`;
     if (budget)
@@ -191,7 +558,7 @@ function buildFallbackReply(
 
   // 5. Generic catch-all with variety based on history length
   if (history.length > 4) {
-    return "I want to make sure you get the right answer. Would you like to browse our latest laptops [RECOMMEND: laptops] or talk to a consultant? [BOOK: IT Support]";
+    return "I can narrow this quickly. Tell me your exact use case and budget (GHS), and I will recommend the best options.";
   }
 
   return "I can help you find hardware or IT services. What's your need and budget (GHS)? [RECOMMEND: laptops]";
@@ -200,18 +567,22 @@ function buildFallbackReply(
 export async function POST(request: Request) {
   try {
     const { message, history, imageData, audioData } = await request.json();
+    const safeHistory: ChatHistoryMessage[] = Array.isArray(history)
+      ? history
+      : [];
+    const budgetCap = resolveBudgetFromConversation(message, safeHistory);
     const catalogSummary = await fetchDynamicCatalogSummary();
 
     let replyContent = "";
 
     if (!process.env.GEMINI_API_KEY) {
-      replyContent = buildFallbackReply(message, history);
+      replyContent = buildFallbackReply(message, safeHistory);
     } else {
       // Gemini uses "user" and "model" roles for conversational turns.
       type ContentPart =
         | { text: string }
         | { inline_data: { mime_type: string; data: string } };
-      const contents = history.map(
+      const contents = safeHistory.map(
         (msg: { role: string; content: string; imageData?: string }) => {
           const parts: ContentPart[] = [{ text: msg.content }];
           if (msg.imageData) {
@@ -319,7 +690,7 @@ export async function POST(request: Request) {
           "Chat API provider error: no successful model",
           lastError,
         );
-        replyContent = buildFallbackReply(message, history);
+        replyContent = buildFallbackReply(message, safeHistory);
       }
     }
 
@@ -382,112 +753,191 @@ export async function POST(request: Request) {
       const lowerReply = replyContent.toLowerCase();
       const lowerMessage = message.toLowerCase();
 
-      // 1. Check for specific product names from current catalog summary
-      const catalogNames = catalogSummary
-        .split("\n")
-        .filter((line) => line.includes("("))
-        .map((line) => {
-          const match = line.match(/^\s*-\s*(.*?)\s*\(/);
-          return match ? match[1].trim() : null;
-        })
-        .filter(Boolean) as string[];
+      const isOrderTrackIntent =
+        lowerMessage.includes("track") && lowerMessage.includes("order");
+      const isTicketTrackIntent =
+        lowerMessage.includes("track") && lowerMessage.includes("ticket");
 
-      let mentionedProduct = catalogNames.find(
-        (name) =>
-          lowerReply.includes(name.toLowerCase()) ||
-          lowerMessage.includes(name.toLowerCase()),
-      );
-
-      // 2. If nothing found in current turn, scan history
-      if (!mentionedProduct && history.length > 0) {
-        for (let i = history.length - 1; i >= 0; i--) {
-          const histContent = history[i].content.toLowerCase();
-          const found = catalogNames.find((name) =>
-            histContent.includes(name.toLowerCase()),
-          );
-          if (found) {
-            mentionedProduct = found;
-            break;
-          }
+      if (isOrderTrackIntent) {
+        const extractedOrderId = message.match(
+          /(?:order(?:\s*id)?[:#\s-]*)([a-zA-Z0-9-]{5,})/i,
+        );
+        if (extractedOrderId?.[1]) {
+          trackOrder = extractedOrderId[1];
+        } else {
+          replyContent =
+            "Please share your order ID so I can track it for you.";
         }
-      }
-
-      if (mentionedProduct) {
-        queryMatch = ["", mentionedProduct] as RegExpMatchArray;
+      } else if (isTicketTrackIntent) {
+        const extractedTicketId = message.match(
+          /(?:ticket(?:\s*id)?[:#\s-]*)([a-zA-Z0-9-]{4,})/i,
+        );
+        if (extractedTicketId?.[1]) {
+          trackTicket = extractedTicketId[1];
+        } else {
+          replyContent =
+            "Please share your ticket ID so I can check the latest status.";
+        }
       } else {
-        // 2. Escalation Detection
-        const escalationKeywords = [
-          "human",
-          "ticket",
-          "expert",
-          "didn't work",
-          "still broken",
-          "nothing works",
-          "help me",
-          "representative",
-        ];
-        const isEscalation = escalationKeywords.some((k) =>
-          lowerMessage.includes(k),
+        // 1. Check for specific product names from current catalog summary
+        const catalogNames = catalogSummary
+          .split("\n")
+          .filter((line) => line.includes("("))
+          .map((line) => {
+            const match = line.match(/^\s*-\s*(.*?)\s*\(/);
+            return match ? match[1].trim() : null;
+          })
+          .filter(Boolean) as string[];
+
+        let mentionedProduct = catalogNames.find(
+          (name) =>
+            lowerReply.includes(name.toLowerCase()) ||
+            lowerMessage.includes(name.toLowerCase()),
         );
 
-        if (isEscalation) {
-          supportAction = "ticket";
+        // 2. If nothing found in current turn, scan history
+        if (!mentionedProduct && safeHistory.length > 0) {
+          for (let i = safeHistory.length - 1; i >= 0; i--) {
+            const histContent = safeHistory[i].content.toLowerCase();
+            const found = catalogNames.find((name) =>
+              histContent.includes(name.toLowerCase()),
+            );
+            if (found) {
+              mentionedProduct = found;
+              break;
+            }
+          }
         }
 
-        if (!supportAction) {
-          // 3. Generic Product keywords
-          const productKeywords = [
-            "laptop",
-            "pc",
-            "router",
-            "switch",
-            "networking",
-            "server",
-            "printer",
-            "phone",
-            "monitor",
-            "storage",
-            "audio",
-            "accessory",
-          ];
-          const intentSignals = [
-            "here are",
-            "options",
-            "recommend",
-            "look at",
-            "check out",
-            "available",
-            "find",
-            "budget",
-            "ghs",
-            "cost",
-          ];
+        if (mentionedProduct) {
+          queryMatch = ["", mentionedProduct] as RegExpMatchArray;
+        } else {
+          // 3. Escalation Detection
+          const wantsHuman =
+            lowerMessage.includes("human") ||
+            lowerMessage.includes("agent") ||
+            lowerMessage.includes("representative");
+          const asksExpert =
+            lowerMessage.includes("expert") || lowerMessage.includes("consult");
 
-          const hasProduct = productKeywords.some(
-            (k) => lowerMessage.includes(k) || lowerReply.includes(k),
-          );
-          const hasIntent = intentSignals.some(
-            (s) => lowerReply.includes(s) || lowerMessage.includes(s),
-          );
+          const inferredGuide = inferGuideSlug(message);
+          const shouldOfferInlineTroubleshooting =
+            hasTroubleshootingIntent(message);
 
-          if (hasProduct || hasIntent) {
-            const found = productKeywords.filter(
+          const canEscalateNow = shouldEscalateToSupport(message, safeHistory);
+
+          if (canEscalateNow) {
+            supportAction = "ticket";
+            if (!replyContent) {
+              replyContent =
+                "Thanks for trying those steps. I will connect you with support so we can resolve this quickly.";
+            }
+          } else if (inferredGuide) {
+            guideSlug = inferredGuide;
+            if (!replyContent) {
+              replyContent =
+                "Let's try a guided fix first. Open this troubleshooting guide and tell me what happens at each step.";
+            }
+          } else if (shouldOfferInlineTroubleshooting) {
+            if (!replyContent) {
+              replyContent = buildInlineTroubleshootingSteps(message);
+            }
+          } else if (asksExpert) {
+            bookStore = "Expert Support";
+          } else if (wantsHuman) {
+            supportAction = "contact";
+          }
+
+          if (!supportAction && !bookStore && !guideSlug) {
+            // 4. Generic Product keywords
+            const productKeywords = [
+              "laptop",
+              "pc",
+              "router",
+              "switch",
+              "networking",
+              "server",
+              "printer",
+              "phone",
+              "monitor",
+              "storage",
+              "audio",
+              "accessory",
+            ];
+            const intentSignals = [
+              "here are",
+              "options",
+              "recommend",
+              "look at",
+              "check out",
+              "available",
+              "find",
+              "budget",
+              "ghs",
+              "cost",
+            ];
+
+            const hasProduct = productKeywords.some(
               (k) => lowerMessage.includes(k) || lowerReply.includes(k),
             );
-            const query = found[0] || "featured";
-            queryMatch = ["", query] as RegExpMatchArray;
+            const hasIntent = intentSignals.some(
+              (s) => lowerReply.includes(s) || lowerMessage.includes(s),
+            );
+
+            if (hasProduct || hasIntent) {
+              const found = productKeywords.filter(
+                (k) => lowerMessage.includes(k) || lowerReply.includes(k),
+              );
+              const query = found[0] || "featured";
+              queryMatch = ["", query] as RegExpMatchArray;
+            }
           }
         }
       }
     }
 
+    const hasRecommendationIntent = Boolean(queryMatch);
+
     if (queryMatch) {
       const query = queryMatch[1].trim();
-      recommendedProducts = await fetchRecommendedProducts(query);
+      recommendedProducts = await fetchRecommendedProducts(
+        query,
+        budgetCap || undefined,
+      );
       // Clean up the reply content
       replyContent = replyContent
         .replace(/\[(?:RECOMMEND|QUERY|SEARCH):\s*.*?\]/gi, "")
         .trim();
+    }
+
+    if (
+      hasRecommendationIntent &&
+      budgetCap &&
+      recommendedProducts.length === 0
+    ) {
+      replyContent = `I could not find products at or below ${formatGhs(budgetCap)} right now. If you share a higher budget or another category, I can refine the shortlist.`;
+    }
+
+    if (!replyContent) {
+      if (recommendedProducts.length > 0) {
+        replyContent = "Here are the best matches I found for you:";
+      } else if (guideSlug) {
+        replyContent =
+          "Start with this troubleshooting guide, then tell me exactly where you get stuck so I can help further.";
+      } else if (trackOrder) {
+        replyContent = "Here is your latest order status:";
+      } else if (trackTicket) {
+        replyContent = "Here is your latest ticket status:";
+      } else if (supportAction === "ticket") {
+        replyContent = "I can help you open a support ticket for this issue.";
+      } else if (supportAction === "contact") {
+        replyContent = "I can connect you with our support team.";
+      } else if (bookStore) {
+        replyContent = "You can schedule a consultation from here.";
+      } else {
+        replyContent =
+          "Tell me what you need and your budget (GHS), and I will recommend the best fit.";
+      }
     }
 
     // FINAL GUARDRAIL: Force brevity but allow more helpfulness

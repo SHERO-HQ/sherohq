@@ -1,8 +1,57 @@
 import type { Metadata } from "next";
 import ProductDetail from "@/views/ProductDetail";
-import { API_BASE } from "@/services/client";
 
 type Props = { params: Promise<{ id: string }> };
+
+function toAbsoluteBaseUrl(
+  value: string | undefined,
+  fallback: string,
+): string {
+  const raw = value?.trim();
+  if (!raw) return fallback;
+
+  if (raw.startsWith("http://") || raw.startsWith("https://")) {
+    return raw.replace(/\/$/, "");
+  }
+
+  if (raw.startsWith("/")) {
+    return `${fallback}${raw}`.replace(/\/$/, "");
+  }
+
+  return `https://${raw}`.replace(/\/$/, "");
+}
+
+function getShopSiteUrl(siteUrl: string): string {
+  try {
+    const parsed = new URL(siteUrl);
+    const port = parsed.port ? `:${parsed.port}` : "";
+
+    if (
+      parsed.hostname === "localhost" ||
+      parsed.hostname === "127.0.0.1" ||
+      parsed.hostname.startsWith("192.168.")
+    ) {
+      return `${parsed.protocol}//${parsed.hostname}${port}`;
+    }
+
+    if (parsed.hostname.startsWith("shop.")) {
+      return `${parsed.protocol}//${parsed.hostname}${port}`;
+    }
+
+    const rootHost = parsed.hostname.startsWith("www.")
+      ? parsed.hostname.slice(4)
+      : parsed.hostname;
+
+    return `${parsed.protocol}//shop.${rootHost}${port}`;
+  } catch {
+    return siteUrl;
+  }
+}
+
+function getApiBaseUrl(siteUrl: string): string {
+  const apiUrl = toAbsoluteBaseUrl(process.env.NEXT_PUBLIC_API_URL, siteUrl);
+  return apiUrl.endsWith("/api") ? apiUrl : `${apiUrl}/api`;
+}
 
 /** Resolve a product image path to a fully-qualified URL for social crawlers. */
 function resolveOgImage(
@@ -11,34 +60,26 @@ function resolveOgImage(
 ): string {
   const fallback = `${shopSiteUrl}/shero.png`;
   if (!image) return fallback;
+  if (image.startsWith("data:") || image.startsWith("blob:")) return fallback;
   if (image.startsWith("http")) return image;
+  if (image.startsWith("//")) return `https:${image}`;
 
-  // Handle both leading slash and non-leading slash paths
-  if (image.startsWith("/uploads")) {
-    return `${shopSiteUrl}${image}`;
-  }
-  if (image.startsWith("uploads/")) {
-    return `${shopSiteUrl}/${image}`;
-  }
-
-  return fallback;
+  const normalizedPath = image.startsWith("/") ? image : `/${image}`;
+  return `${shopSiteUrl}${normalizedPath}`;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const siteUrl = (
-    process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com"
-  ).replace(/\/$/, "");
-  // If sharing from the shop, the canonical URL for social platforms should be on the shop subdomain
-  const shopSiteUrl = (
-    siteUrl.includes("shop.") ? siteUrl : siteUrl.replace("://", "://shop.")
-  ).replace(/\/$/, "");
-  const pageUrl = `${shopSiteUrl}/${id}`;
+  const siteUrl = toAbsoluteBaseUrl(
+    process.env.NEXT_PUBLIC_SITE_URL,
+    "https://sherohq.com",
+  );
+  const shopSiteUrl = getShopSiteUrl(siteUrl);
+  const pageUrl = `${shopSiteUrl}/shop/${id}`;
   const fallbackImageUrl = `${shopSiteUrl}/shero.png`;
 
   try {
-    // Use the reliable API_BASE directly to avoid edge proxy resolution errors
-    const endpoint = `${API_BASE}/products/${id}`;
+    const endpoint = `${getApiBaseUrl(siteUrl)}/products/${id}`;
 
     const res = await fetch(endpoint, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error("product not found");

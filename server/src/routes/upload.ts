@@ -38,6 +38,62 @@ const upload = multer({
   },
 });
 
+function detectImageMime(buffer: Buffer): string | null {
+  if (buffer.length < 12) return null;
+
+  const isJpeg = buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
+  if (isJpeg) return "image/jpeg";
+
+  const isPng =
+    buffer[0] === 0x89 &&
+    buffer[1] === 0x50 &&
+    buffer[2] === 0x4e &&
+    buffer[3] === 0x47;
+  if (isPng) return "image/png";
+
+  const isGif =
+    buffer[0] === 0x47 &&
+    buffer[1] === 0x49 &&
+    buffer[2] === 0x46 &&
+    buffer[3] === 0x38 &&
+    (buffer[4] === 0x37 || buffer[4] === 0x39) &&
+    buffer[5] === 0x61;
+  if (isGif) return "image/gif";
+
+  const isWebp =
+    buffer[0] === 0x52 &&
+    buffer[1] === 0x49 &&
+    buffer[2] === 0x46 &&
+    buffer[3] === 0x46 &&
+    buffer[8] === 0x57 &&
+    buffer[9] === 0x45 &&
+    buffer[10] === 0x42 &&
+    buffer[11] === 0x50;
+  if (isWebp) return "image/webp";
+
+  return null;
+}
+
+function validateImageFile(file: Express.Multer.File): string | null {
+  const detectedMime = detectImageMime(file.buffer);
+  if (!detectedMime) {
+    return "File signature is not a valid supported image";
+  }
+
+  if (detectedMime !== file.mimetype) {
+    // Treat image/jpg and image/jpeg as equivalent.
+    const isJpegAlias =
+      (detectedMime === "image/jpeg" && file.mimetype === "image/jpg") ||
+      (detectedMime === "image/jpeg" && file.mimetype === "image/jpeg");
+
+    if (!isJpegAlias) {
+      return "Uploaded file content does not match declared image type";
+    }
+  }
+
+  return null;
+}
+
 async function uploadToSupabase(file: Express.Multer.File): Promise<string> {
   const fileExt = path.extname(file.originalname);
   const fileName = `${uuidv4()}${fileExt}`;
@@ -72,6 +128,11 @@ router.post(
         return res.status(400).json({ error: "No image file provided" });
       }
 
+      const validationError = validateImageFile(req.file);
+      if (validationError) {
+        return res.status(400).json({ error: validationError });
+      }
+
       console.log(`📤 Uploading ${req.file.originalname} to Supabase...`);
       const imageUrl = await uploadToSupabase(req.file);
       console.log(`✅ Upload successful: ${imageUrl}`);
@@ -102,6 +163,15 @@ router.post(
 
       if (!files || files.length === 0) {
         return res.status(400).json({ error: "No image files provided" });
+      }
+
+      for (const file of files) {
+        const validationError = validateImageFile(file);
+        if (validationError) {
+          return res
+            .status(400)
+            .json({ error: `${file.originalname}: ${validationError}` });
+        }
       }
 
       console.log(

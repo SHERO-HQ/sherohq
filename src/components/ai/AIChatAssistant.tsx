@@ -32,6 +32,13 @@ type TriggerDetail = {
   open?: boolean;
 };
 
+const INITIAL_ASSISTANT_MESSAGE: ChatMessage = {
+  id: "initial",
+  role: "assistant",
+  content:
+    "Hi! I'm your Shero Expert. How can I help you with IT solutions or products today?",
+};
+
 const LiveTrackingCard = ({
   id,
   type,
@@ -132,12 +139,7 @@ export default function AIChatAssistant() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: "initial",
-      role: "assistant",
-      content:
-        "Hi! I'm your Shero Expert. How can I help you with IT solutions or products today?",
-    },
+    INITIAL_ASSISTANT_MESSAGE,
   ]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -149,8 +151,13 @@ export default function AIChatAssistant() {
   const recordingStartTimeRef = useRef<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isInitialized = useRef(false);
+  const messagesRef = useRef<ChatMessage[]>([INITIAL_ASSISTANT_MESSAGE]);
 
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
 
   // Auto-scroll to latest
   useEffect(() => {
@@ -194,6 +201,26 @@ export default function AIChatAssistant() {
     localStorage.setItem("shoro_chat_input", input);
   }, [input]);
 
+  useEffect(() => {
+    const handleKeyboardShortcuts = (event: KeyboardEvent) => {
+      const key = event.key.toLowerCase();
+      if ((event.metaKey || event.ctrlKey) && key === "k") {
+        event.preventDefault();
+        setIsOpen(true);
+        setIsMinimized(false);
+      }
+
+      if (event.key === "Escape" && isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyboardShortcuts);
+    return () => {
+      window.removeEventListener("keydown", handleKeyboardShortcuts);
+    };
+  }, [isOpen]);
+
   const speak = useCallback(
     (text: string) => {
       if (!isSpeaking) return;
@@ -207,12 +234,20 @@ export default function AIChatAssistant() {
 
   const processMessage = useCallback(
     async (text: string, imageData?: string) => {
+      const trimmedText = text.trim();
+      if (!trimmedText && !imageData) return;
+
       const userMessage: ChatMessage = {
         id: crypto.randomUUID(),
         role: "user",
-        content: text,
+        content:
+          trimmedText ||
+          "Please analyze this image and help me decide the best option.",
         imageData: imageData, // NEW: Support visual data
       };
+
+      // `message` carries the current user turn, so history should include prior turns only.
+      const historyForRequest = messagesRef.current.slice(-15);
 
       setMessages((prev) => [...prev, userMessage]);
       setIsTyping(true);
@@ -220,7 +255,7 @@ export default function AIChatAssistant() {
       try {
         const response = await sendChatMessage({
           message: userMessage.content,
-          history: messages,
+          history: historyForRequest,
           imageData: imageData,
         });
 
@@ -248,11 +283,20 @@ export default function AIChatAssistant() {
         }
       } catch (error) {
         console.error("AI chat error", error);
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: crypto.randomUUID(),
+            role: "assistant",
+            content:
+              "I hit a temporary issue while processing that. Please retry in a moment.",
+          },
+        ]);
       } finally {
         setIsTyping(false);
       }
     },
-    [addItem, isSpeaking, messages, setIsCartOpen, speak],
+    [addItem, isSpeaking, setIsCartOpen, speak],
   );
 
   // PROACTIVE: Listen for external triggers
@@ -279,8 +323,7 @@ export default function AIChatAssistant() {
         "Are you sure you want to clear our conversation history?",
       )
     ) {
-      const initialMessage = [messages[0]];
-      setMessages(initialMessage);
+      setMessages([INITIAL_ASSISTANT_MESSAGE]);
       localStorage.removeItem("shoro_chat_history");
     }
   };
@@ -384,13 +427,16 @@ export default function AIChatAssistant() {
       audioData: audioData,
     };
 
+    // `message` carries the current user turn, so history should include prior turns only.
+    const historyForRequest = messagesRef.current.slice(-15);
+
     setMessages((prev) => [...prev, userMessage]);
     setIsTyping(true);
 
     try {
       const response = await sendChatMessage({
         message: userMessage.content,
-        history: messages,
+        history: historyForRequest,
         audioData: audioData,
       });
 
@@ -497,7 +543,10 @@ export default function AIChatAssistant() {
                 ].map((action) => (
                   <button
                     key={action.label}
-                    onClick={() => setInput(action.label)}
+                    onClick={() => {
+                      void processMessage(action.label);
+                    }}
+                    disabled={isTyping}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-[10px] font-bold text-slate-600 dark:text-slate-400 hover:border-emerald-500 hover:text-emerald-600 transition-all"
                   >
                     <action.icon size={12} className="text-emerald-500" />
@@ -519,7 +568,7 @@ export default function AIChatAssistant() {
                       }`}
                     >
                       <div
-                        className={`p-3 rounded-xl text-sm ${
+                        className={`p-3 rounded text-sm ${
                           msg.role === "user"
                             ? "bg-primary text-white rounded-br-sm"
                             : "bg-white dark:bg-white/10 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 rounded-bl-sm"
