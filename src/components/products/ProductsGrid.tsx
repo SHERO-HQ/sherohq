@@ -50,15 +50,15 @@ const ProductGrid: React.FC<ProductGridProps> = ({
  </div>
 
  <h3 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter mb-3">
- No <span className="text-emerald-500">Discoveries</span> Found
+ No <span className="text-emerald-500">Products</span> Found
  </h3>
  <p className="text-sm font-medium text-slate-500 uppercase tracking-widest mb-10 max-w-md">
- Our sensors couldn't locate match for your current criteria. Perhaps a broader perspective?
+    Try adjusting your filters or explore our full collection of innovative tech solutions.
  </p>
 
  <button
  onClick={() => (onReset ? onReset() : router.refresh())}
- className="group flex items-center gap-3 px-10 h-16 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest text-xs rounded shadow-md shadow-emerald-500/20 active:scale-95 transition"
+ className="group flex items-center gap-3 px-10 h-12 bg-emerald-600 hover:bg-emerald-500 text-white font-black uppercase tracking-widest text-xs rounded shadow-md shadow-emerald-500/20 active:scale-95 transition"
  >
  <RefreshCcw size={18} className="group-hover:rotate-180 transition-transform duration-700" />
  Reset Search
