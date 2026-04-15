@@ -26,8 +26,8 @@ const aubette = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: "SHERO - Redefine Possible",
-    template: "%s | SHERO",
+    default: "SHERO",
+    template: "%s | Shero",
   },
   description:
     "SHERO - Premium technology solutions, custom software development, and quality tech hardware. Redefine possible with our innovative expertise.",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   openGraph: {
     type: "website",
-    title: "SHERO - Redefine Possible",
+    title: "SHERO",
     description: "Innovative technology solutions",
     url: SITE_URL,
     siteName: "SHERO",
@@ -62,14 +62,14 @@ export const metadata: Metadata = {
         url: DEFAULT_PREVIEW_IMAGE,
         width: 1200,
         height: 630,
-        alt: "SHERO - Redefine Possible",
+        alt: "SHERO",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "SHERO - Redefine Possible",
+    title: "SHERO",
     description: "Innovative technology solutions",
     images: [DEFAULT_PREVIEW_IMAGE],
   },
@@ -81,6 +81,11 @@ export const metadata: Metadata = {
     ],
     shortcut: "/favicon.ico",
     apple: "/apple-touch-icon.png",
+  },
+  appleWebApp: {
+    title: "SHERO",
+    capable: true,
+    statusBarStyle: "default",
   },
   manifest: "/site.webmanifest",
 };

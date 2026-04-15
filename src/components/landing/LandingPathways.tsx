@@ -150,7 +150,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
  initial={{ opacity: 0, scale: 0.95 }}
  whileInView={{ opacity: 1, scale: 1 }}
  viewport={{ once: true }}
- className={`group relative ${path.span} col-span-1 min-h-[240px] p-8 rounded border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between overflow-hidden transition-colors hover:border-emerald-500/50 hover:shadow-lg shadow-emerald-500/5`}
+ className={`group relative ${path.span} col-span-1 min-h-60 p-8 rounded border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between overflow-hidden transition-colors hover:border-emerald-500/50 hover:shadow-lg shadow-emerald-500/5`}
  >
  {/* Dynamic Glow Layer */}
  <motion.div
@@ -182,7 +182,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
  {path.title}
  </h3>
- <p className="text-slate-600 dark:text-slate-400 text-sm max-w-[240px] leading-relaxed">
+ <p className="text-slate-600 dark:text-slate-400 text-sm max-w-60 leading-relaxed">
  {path.description}
  </p>
  </div>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import HomePage from "@/views/Home";
 
 export const metadata: Metadata = {
- title: { absolute: "SHERO - Redefine Possible" },
+ title: { absolute: "SHERO" },
  description:
  "Innovative technology solutions that scale to elevate people, businesses, and communities. Premium tech products, consultation, partnerships, and custom software development.",
 };
