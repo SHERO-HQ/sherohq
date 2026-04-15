@@ -21,11 +21,28 @@ function getSslConfig(): false | { rejectUnauthorized: boolean } {
 
   if (sslDisabled) return false;
 
-  const allowSelfSigned =
-    process.env.DATABASE_SSL_ALLOW_SELF_SIGNED === "true" ||
-    process.env.NODE_ENV !== "production";
+  // Explicit env override always wins.
+  if (process.env.DATABASE_SSL_ALLOW_SELF_SIGNED === "true") {
+    return { rejectUnauthorized: false };
+  }
 
-  return { rejectUnauthorized: !allowSelfSigned };
+  // Supabase pooler endpoints (*.pooler.supabase.com) serve TLS certificates
+  // issued for *.supabase.co, which causes a hostname-mismatch rejection when
+  // rejectUnauthorized is true.  Auto-detect and relax for these hosts.
+  const dbUrl = process.env.DATABASE_URL ?? "";
+  const isSupabasePooler = dbUrl.includes("pooler.supabase.com");
+
+  if (isSupabasePooler) {
+    return { rejectUnauthorized: false };
+  }
+
+  // Non-production environments: allow self-signed certs for convenience.
+  if (process.env.NODE_ENV !== "production") {
+    return { rejectUnauthorized: false };
+  }
+
+  // Default production: enforce strict TLS validation.
+  return { rejectUnauthorized: true };
 }
 
 const connectionString = getDatabaseConnectionString();
@@ -82,7 +99,9 @@ export async function checkDatabaseHealth(timeoutMs = 5000): Promise<{
     const timeoutPromise = new Promise<never>((_, reject) => {
       const timer = setTimeout(() => {
         clearTimeout(timer);
-        reject(new Error(`Database health check timed out after ${timeoutMs}ms`));
+        reject(
+          new Error(`Database health check timed out after ${timeoutMs}ms`),
+        );
       }, timeoutMs);
     });
 
@@ -504,8 +523,22 @@ export async function initializeDatabase() {
         image TEXT,
         "order" INTEGER DEFAULT 0,
         active BOOLEAN DEFAULT true,
+        "externalSource" TEXT,
+        "externalId" TEXT,
+        rating INTEGER,
+        "reviewUrl" TEXT,
+        "publishedAt" TIMESTAMP,
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
+    `);
+
+    await client.query(`
+      ALTER TABLE testimonials
+      ADD COLUMN IF NOT EXISTS "externalSource" TEXT,
+      ADD COLUMN IF NOT EXISTS "externalId" TEXT,
+      ADD COLUMN IF NOT EXISTS rating INTEGER,
+      ADD COLUMN IF NOT EXISTS "reviewUrl" TEXT,
+      ADD COLUMN IF NOT EXISTS "publishedAt" TIMESTAMP;
     `);
 
     // Site Stats table
@@ -621,6 +654,14 @@ export async function initializeDatabase() {
     // Categories index
     await client.query(
       "CREATE INDEX IF NOT EXISTS idx_categories_name ON categories(name)",
+    );
+
+    // Testimonials indexes
+    await client.query(
+      'CREATE INDEX IF NOT EXISTS idx_testimonials_order_created ON testimonials("order", "createdAt" DESC)',
+    );
+    await client.query(
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_testimonials_external_unique ON testimonials("externalSource", "externalId")',
     );
 
     // Newsletter subscribers indexes

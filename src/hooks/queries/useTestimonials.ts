@@ -6,6 +6,7 @@ import {
   createTestimonial,
   updateTestimonial,
   deleteTestimonial,
+  syncTrustpilotTestimonials,
 } from "@/services/api";
 import type { Testimonial } from "@/types/testimonial";
 
@@ -55,6 +56,17 @@ export const useDeleteTestimonial = () => {
     mutationFn: deleteTestimonial,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: TESTIMONIAL_KEYS.all });
+    },
+  });
+};
+
+export const useSyncTrustpilotTestimonials = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (limit?: number) => syncTrustpilotTestimonials(limit ?? 20),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: TESTIMONIAL_KEYS.all });
+      queryClient.invalidateQueries({ queryKey: TESTIMONIAL_KEYS.admin() });
     },
   });
 };

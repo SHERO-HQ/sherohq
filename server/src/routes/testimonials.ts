@@ -2,6 +2,7 @@ import { Router } from "express";
 import { v4 as uuidv4 } from "uuid";
 import { query } from "../db/database";
 import { adminAuth } from "../middleware/adminAuth";
+import { fetchTrustpilotReviews } from "../services/TrustpilotService";
 
 const router = Router();
 
@@ -28,6 +29,89 @@ router.get("/admin", adminAuth, async (req, res) => {
   } catch (err) {
     console.error("Error fetching admin testimonials:", err);
     res.status(500).json({ error: "Failed to fetch admin testimonials" });
+  }
+});
+
+// POST sync testimonials from Trustpilot (Admin only)
+router.post("/sync/trustpilot", adminAuth, async (req, res) => {
+  try {
+    const limit = req.body?.limit;
+    const reviews = await fetchTrustpilotReviews(limit);
+
+    let inserted = 0;
+    let updated = 0;
+
+    for (const [idx, review] of reviews.entries()) {
+      const generatedId = uuidv4();
+      const nextOrder = idx;
+
+      const result = await query(
+        `
+        INSERT INTO testimonials (
+          id,
+          quote,
+          author,
+          role,
+          company,
+          image,
+          "order",
+          active,
+          "externalSource",
+          "externalId",
+          rating,
+          "reviewUrl",
+          "publishedAt"
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, true, 'trustpilot', $8, $9, $10, $11)
+        ON CONFLICT ("externalSource", "externalId")
+        DO UPDATE SET
+          quote = EXCLUDED.quote,
+          author = EXCLUDED.author,
+          role = EXCLUDED.role,
+          company = EXCLUDED.company,
+          image = EXCLUDED.image,
+          "order" = EXCLUDED."order",
+          active = EXCLUDED.active,
+          rating = EXCLUDED.rating,
+          "reviewUrl" = EXCLUDED."reviewUrl",
+          "publishedAt" = EXCLUDED."publishedAt"
+        RETURNING (xmax = 0) AS inserted
+        `,
+        [
+          generatedId,
+          review.quote,
+          review.author,
+          "Verified Customer",
+          "Trustpilot",
+          review.image,
+          nextOrder,
+          review.externalId,
+          review.rating,
+          review.reviewUrl,
+          review.publishedAt,
+        ],
+      );
+
+      const wasInserted = Boolean(result.rows[0]?.inserted);
+      if (wasInserted) {
+        inserted += 1;
+      } else {
+        updated += 1;
+      }
+    }
+
+    res.json({
+      message: "Trustpilot sync completed",
+      fetched: reviews.length,
+      inserted,
+      updated,
+    });
+  } catch (err) {
+    console.error("Error syncing Trustpilot testimonials:", err);
+    res.status(500).json({
+      error: "Failed to sync Trustpilot testimonials",
+      detail: err instanceof Error ? err.message : "Unknown error",
+    });
   }
 });
 

@@ -7,5 +7,10 @@ export interface Testimonial {
   image?: string;
   order: number;
   active: boolean;
+  externalSource?: string;
+  externalId?: string;
+  rating?: number;
+  reviewUrl?: string;
+  publishedAt?: string;
   createdAt?: string;
 }

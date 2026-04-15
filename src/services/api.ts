@@ -166,6 +166,7 @@ export {
   createTestimonial,
   updateTestimonial,
   deleteTestimonial,
+  syncTrustpilotTestimonials,
   fetchStats,
   createStat,
   updateStat,

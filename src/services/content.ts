@@ -153,6 +153,25 @@ export async function deleteTestimonial(
   return handleResponse<{ message: string }>(response);
 }
 
+export async function syncTrustpilotTestimonials(limit = 20): Promise<{
+  message: string;
+  fetched: number;
+  inserted: number;
+  updated: number;
+}> {
+  const response = await authFetch(`${API_BASE}/testimonials/sync/trustpilot`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ limit }),
+  });
+  return handleResponse<{
+    message: string;
+    fetched: number;
+    inserted: number;
+    updated: number;
+  }>(response);
+}
+
 // ---------------------------------------------------------------------------
 // Site Stats
 // ---------------------------------------------------------------------------
