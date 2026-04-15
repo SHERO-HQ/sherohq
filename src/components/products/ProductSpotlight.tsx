@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   ChevronLeft,
   ChevronRight,
-  ShoppingBag,
   ArrowRight,
   Star,
   Package,
@@ -151,13 +150,6 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                       transition={{ delay: 0.4 }}
                       className="max-w-xl"
                     >
-                      <div className="inline-flex items-center gap-2 px-3 py-1 mb-3 lg:mb-4 rounded border border-emerald-500/20 bg-emerald-500/10 backdrop-blur-md">
-                        <ShoppingBag className="size-3 text-emerald-500" />
-                        <span className="text-[10px] font-mono font-black tracking-widest uppercase text-emerald-400">
-                          Spotlight
-                        </span>
-                      </div>
-
                       <h2 className="text-3xl lg:text-7xl font-black text-white lg:text-slate-900 lg:dark:text-white leading-[1.05] tracking-tighter mb-4 uppercase">
                         {currentProduct.name.split(" ").map((word, i) => (
                           <span
@@ -220,14 +212,14 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                   </div>
 
                   {/* Right Side: Image with Content Wrapper (Background on Mobile, Relative Fixed on LG) */}
-                  <div className="relative w-full lg:w-[56%] aspect-4/5 sm:aspect-16/10 lg:aspect-auto h-160 lg:h-190 group/image overflow-hidden lg:rounded shadow-2xl border border-white/5">
+                  <div className="relative w-full lg:w-[56%] aspect-4/5 sm:aspect-16/10 lg:aspect-auto h-[75vh] sm:h-[65vh] lg:h-190 group/image overflow-hidden lg:rounded shadow-2xl border border-white/5">
                     {/* Image */}
                     <AppImage
                       src={getImageUrl(currentProduct.image)}
                       alt={currentProduct.name}
                       fill
                       priority
-                      className="object-contain object-center transition-transform duration-1000 group-hover/image:scale-105"
+                      className="object-cover object-center lg:object-contain transition-transform duration-1000 group-hover/image:scale-105"
                     />
                     <div className="absolute inset-0 group-hover/image:bg-transparent transition-colors duration-700" />
 
