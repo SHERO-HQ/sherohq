@@ -241,27 +241,27 @@ const Scheduler = () => {
  Consultation
  </h3>
  <p className="text-sm text-slate-500 dark:text-slate-400 hidden md:block mt-1">
- Schedule your meeting in 3 simple steps.
+ Schedule your meeting in 3 easy steps.
  </p>
  </div>
 
  {/* Horizontal Steps on Mobile / Vertical on Desktop */}
- <div className="flex md:flex-col justify-between md:justify-start gap-40 md:space-y-8 relative mb-4 md:mb-0 isolate">
- {/* Vertical Line for Desktop */}
- <div className="hidden md:block absolute left-4 top-2 bottom-1 w-0.5 bg-slate-200 dark:bg-slate-800 -z-10">
- <div
- className="w-full bg-emerald-500 transition duration-500 ease-out"
- style={{ height: `${((step - 1) / 2) * 100}%` }}
- />
- </div>
+    <div className="flex md:flex-col justify-between md:justify-start gap-4 sm:gap-14 md:gap-0 md:space-y-8 relative mb-4 md:mb-0 isolate">
+      {/* Vertical Line for Desktop */}
+      <div className="hidden md:block absolute left-4 top-2 bottom-1 w-0.5 bg-slate-200 dark:bg-slate-800 -z-10">
+        <div
+          className="w-full bg-emerald-500 transition duration-500 ease-out"
+          style={{ height: `${((step - 1) / 2) * 100}%` }}
+        />
+      </div>
 
- {/* Horizontal Line for Mobile */}
- <div className="md:hidden absolute top-4 sm:left-14 sm:right-14 left-10 right-10 h-0.5 bg-slate-200 dark:bg-slate-800 -z-10">
- <div
- className="h-full bg-emerald-500 transition duration-500 ease-out"
- style={{ width: `${((step - 1) / 2) * 100}%` }}
- />
- </div>
+      {/* Horizontal Line for Mobile */}
+      <div className="md:hidden absolute top-4 sm:left-20 sm:right-20 left-12 right-12 h-0.5 bg-slate-200 dark:bg-slate-800 -z-10">
+        <div
+          className="h-full bg-emerald-500 transition duration-500 ease-out"
+          style={{ width: `${((step - 1) / 2) * 100}%` }}
+        />
+      </div>
 
           {([
             { id: 1, label: "Service", icon: Briefcase },
