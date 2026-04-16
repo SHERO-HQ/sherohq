@@ -27,7 +27,7 @@ export default function GlobalError({
             </div>
 
             <div className="space-y-3">
-              <h1 className="text-4xl font-black uppercase tracking-tighter">
+              <h1 className="text-4xl font-bold uppercase tracking-tighter">
                 Critical Failure
               </h1>
               <p className="text-slate-400">

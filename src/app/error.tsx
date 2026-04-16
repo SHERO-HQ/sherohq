@@ -32,7 +32,7 @@ export default function Error({
         </div>
 
         <div className="space-y-3">
-          <h1 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white uppercase tracking-tighter">
             Something went wrong
           </h1>
           <p className="text-slate-600 dark:text-slate-400">
