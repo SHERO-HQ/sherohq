@@ -130,7 +130,7 @@ const Footer = () => {
                 </div>
               </div>
 
-              <div className="bg-background/95 p-6 space-y-6 transition-colors duration-300">
+              <div className="bg-background/95 p-4 space-y-6 transition-colors duration-300">
                 <div>
                   <h4 className="text-slate-900 dark:text-white font-semibold mb-4 flex items-center gap-2 transition-colors duration-300">
                     Contact Details

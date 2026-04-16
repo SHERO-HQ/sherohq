@@ -30,7 +30,7 @@ const SolutionsHero = () => {
 
   const features = [
     { label: "Custom Software", icon: Code },
-    { label: "Cloud Architecture", icon: Server },
+    { label: "Cloud Solutions", icon: Server },
     { label: "Managed IT", icon: Shield },
     { label: "API Integrations", icon: Zap },
   ];

@@ -65,7 +65,7 @@ const ServicesGrid = () => {
     },
     {
       icon: <Workflow className="w-8 h-8" />,
-      title: "Connect Your Tools Seamlessly",
+      title: "Connect Tools Seamlessly",
       description:
         "Link your payment systems, inventory, CRM, and more into one smooth workflow. No more switching between disconnected tools.",
       features: [
