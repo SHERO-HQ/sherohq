@@ -235,7 +235,7 @@ const Scheduler = () => {
  className="max-w-[1240px] mx-auto bg-white dark:bg-slate-900 rounded shadow-lg shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 overflow-hidden flex flex-col justify-center md:flex-row min-h-[500px] md:min-h-[600px]"
  >
  {/* Sidebar / Progress */}
- <div className="w-full md:w-80 bg-slate-50 dark:bg-slate-950 p-6 md:p-8 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0">
+ <div className="w-full md:w-80 bg-slate-50 dark:bg-slate-950 px-3 py-6 md:p-8 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0">
  <div className="mb-6 md:mb-8">
  <h3 className="text-lg font-bold text-slate-900 dark:text-slate-100">
  Consultation
@@ -246,7 +246,7 @@ const Scheduler = () => {
  </div>
 
  {/* Horizontal Steps on Mobile / Vertical on Desktop */}
- <div className="flex md:flex-col justify-between md:justify-start gap-4 md:space-y-8 relative mb-4 md:mb-0 isolate">
+ <div className="flex md:flex-col justify-between md:justify-start gap-40 md:space-y-8 relative mb-4 md:mb-0 isolate">
  {/* Vertical Line for Desktop */}
  <div className="hidden md:block absolute left-4 top-2 bottom-1 w-0.5 bg-slate-200 dark:bg-slate-800 -z-10">
  <div
@@ -256,48 +256,52 @@ const Scheduler = () => {
  </div>
 
  {/* Horizontal Line for Mobile */}
- <div className="md:hidden absolute top-4 left-12 right-12 h-0.5 bg-slate-200 dark:bg-slate-800 -z-10">
+ <div className="md:hidden absolute top-4 sm:left-14 sm:right-14 left-10 right-10 h-0.5 bg-slate-200 dark:bg-slate-800 -z-10">
  <div
  className="h-full bg-emerald-500 transition duration-500 ease-out"
  style={{ width: `${((step - 1) / 2) * 100}%` }}
  />
  </div>
 
- {[1, 2, 3].map((s) => (
- <div
- key={s}
- className="relative flex md:items-center gap-3 md:gap-4 flex-1 md:flex-none flex-col md:flex-row items-center text-center md:text-left"
- >
- <div
- className={cn(
- "w-8 h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-bold relative z-10 transition duration-300 shrink-0 border-2",
- step === s
- ? "bg-emerald-600 border-emerald-600 text-white shadow-lg shadow-emerald-500/30 ring-4 ring-emerald-50 dark:ring-emerald-900/20"
- : step > s
- ? "bg-emerald-100 dark:bg-emerald-900 border-emerald-500 text-emerald-600 dark:text-emerald-400"
- : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500",
- )}
- >
- {step > s ? (
- <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5" />
- ) : (
- s
- )}
- </div>
- <div>
- <p
- className={cn(
- "text-xs md:text-sm font-medium whitespace-nowrap",
- step === s
- ? "text-slate-900 dark:text-slate-100"
- : "text-slate-500 dark:text-slate-400",
- )}
- >
- {s === 1 ? "Service" : s === 2 ? "Time" : "Details"}
- </p>
- </div>
- </div>
- ))}
+          {([
+            { id: 1, label: "Service", icon: Briefcase },
+            { id: 2, label: "Time", icon: Clock },
+            { id: 3, label: "Details", icon: User },
+          ] as const).map((s) => (
+            <div
+              key={s.id}
+              className="relative flex md:items-center gap-3 md:gap-4 flex-1 md:flex-none flex-col md:flex-row items-center text-center md:text-left"
+            >
+              <div
+                className={cn(
+                  "w-8 h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-bold relative z-10 transition duration-300 shrink-0 border-2",
+                  step === s.id
+                    ? "bg-emerald-600 border-emerald-600 text-white shadow-lg shadow-emerald-500/30 ring-4 ring-emerald-50 dark:ring-emerald-900/20"
+                    : step > s.id
+                      ? "bg-emerald-100 dark:bg-emerald-900 border-emerald-500 text-emerald-600 dark:text-emerald-400"
+                      : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500",
+                )}
+              >
+                {step > s.id ? (
+                  <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5" />
+                ) : (
+                  <s.icon className="w-4 h-4 md:w-5 md:h-5" />
+                )}
+              </div>
+              <div>
+                <p
+                  className={cn(
+                    "text-xs md:text-sm font-medium whitespace-nowrap",
+                    step === s.id
+                      ? "text-slate-900 dark:text-slate-100"
+                      : "text-slate-500 dark:text-slate-400",
+                  )}
+                >
+                  {s.label}
+                </p>
+              </div>
+            </div>
+          ))}
  </div>
 
  {/* Selected Summary (Desktop Only) */}
