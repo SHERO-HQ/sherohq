@@ -62,8 +62,8 @@ const Nav = () => {
   const navLinks = [
     { name: "Shop", icon: ShoppingBag, desc: "Explore catalog", href: "/shop" },
     { name: "Solutions", icon: Cpu, desc: "Business innovations", href: "/solutions" },
-    { name: "Consultation", icon: MessageSquare, desc: "Expert tech advice", href: "/consultations" },
-    { name: "About Us", icon: Info, desc: "Our mission", href: "/about" },
+    { name: "Consultation", icon: MessageSquare, desc: "Expert tech advice", href: "/consultation" },
+    { name: "About Us", icon: Info, desc: "Our mission", href: "/about-us" },
   ];
 
   const linkVars = {
