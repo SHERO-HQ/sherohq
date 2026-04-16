@@ -623,7 +623,7 @@ export default function AdminExpenses() {
         {/* Form Modal (Simple Overlay) */}
         {isFormOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-            <Card className="w-full max-w-md bg-slate-900 border-white/10 shadow-lg p-6 relative">
+            <Card className="w-full max-w-md bg-slate-900 border-white/10 shadow p-6 relative">
               <button
                 onClick={handleCloseForm}
                 className="absolute right-4 top-4 p-1 text-slate-400 hover:text-white"

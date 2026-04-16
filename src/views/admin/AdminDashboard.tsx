@@ -335,7 +335,7 @@ export default function AdminDashboard() {
          className={cn(
           "px-3 py-1 text-xs font-semibold rounded transition",
           period === opt.value
-           ? "bg-emerald-600 text-white shadow-lg"
+           ? "bg-emerald-600 text-white shadow"
            : "text-slate-400 hover:text-white hover:bg-white/5",
          )}
         >

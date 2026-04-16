@@ -102,7 +102,7 @@ export default function AdminSidebar({
             className="h-20 flex items-center px-6 border-b border-white/5 shrink-0 hover:bg-white/5 transition-colors group"
           >
             <div className="flex items-center gap-3 overflow-hidden">
-              <div className="w-8 h-8 rounded bg-emerald-600 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+              <div className="w-8 h-8 rounded bg-emerald-600 flex items-center justify-center shrink-0 shadow shadow-emerald-500/20 group-hover:scale-110 transition-transform">
                 <span className="text-white font-bold text-xl">S</span>
               </div>
               <AnimatePresence mode="wait">

@@ -80,7 +80,7 @@ export default function OrderRatingModal({
  initial={{ opacity: 0, scale: 0.95, y: 20 }}
  animate={{ opacity: 1, scale: 1, y: 0 }}
  exit={{ opacity: 0, scale: 0.95, y: 20 }}
- className="relative w-full max-w-sm bg-white dark:bg-slate-900 rounded shadow-lg border border-slate-200 dark:border-slate-800 overflow-hidden"
+ className="relative w-full max-w-sm bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 overflow-hidden"
  >
  {/* Header */}
  <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">

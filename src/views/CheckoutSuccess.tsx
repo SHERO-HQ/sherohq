@@ -141,7 +141,7 @@ const CheckoutSuccess = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={() => router.push("/shop")}
-            className="px-8 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition shadow-lg shadow-emerald-500/20"
+            className="px-8 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition shadow shadow-emerald-500/20"
           >
             Continue Shopping
           </button>
@@ -162,7 +162,7 @@ const CheckoutSuccess = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-slate-900 rounded shadow-md border border-slate-200 dark:border-slate-800 p-8 sm:p-12 text-center"
+          className="bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 p-8 sm:p-12 text-center"
         >
           {renderContent()}
         </motion.div>

@@ -410,7 +410,7 @@ const Nav = () => {
                       id="desktop-user-menu"
                       role="menu"
                       aria-label="User menu"
-                      className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded shadow-lg border border-slate-200 dark:border-slate-800 py-1 transition duration-200 z-50"
+                      className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 py-1 transition duration-200 z-50"
                     >
                       <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
                         <p className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">
@@ -506,7 +506,7 @@ const Nav = () => {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="absolute top-0 left-0 w-[65%] sm:w-[400px] h-full bg-white dark:bg-slate-950 shadow-2xl flex flex-col overflow-hidden"
+              className="absolute top-0 left-0 w-[65%] sm:w-[400px] h-full bg-white dark:bg-slate-950 shadow flex flex-col overflow-hidden"
               id="mobile-nav-menu"
             >
               {/* Top Header */}
@@ -560,7 +560,7 @@ const Nav = () => {
                   {mounted && isAuthenticated ? (
                     <div className="space-y-6">
                       <div className="flex items-center gap-4 p-4 rounded bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800/50">
-                        <div className="w-12 h-12 rounded font-bold bg-linear-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-xl text-white shadow-lg shadow-emerald-500/20">
+                        <div className="w-12 h-12 rounded font-bold bg-linear-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-xl text-white shadow shadow-emerald-500/20">
                           {user?.name?.charAt(0)}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -599,7 +599,7 @@ const Nav = () => {
                       onClick={() => setIsOpen(false)}
                       className="flex items-center gap-4 p-2 text-emerald-600 dark:text-emerald-400 bg-emerald-50/50 dark:bg-emerald-950/30 rounded transition-all duration-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 border border-emerald-100 dark:border-emerald-800/50 group shadow-sm shadow-emerald-500/5"
                     >
-                      <div className="w-8 h-8 rounded bg-emerald-600 text-white flex items-center justify-center shadow-lg shadow-emerald-600/20 group-hover:scale-105 transition-transform">
+                      <div className="w-8 h-8 rounded bg-emerald-600 text-white flex items-center justify-center shadow shadow-emerald-600/20 group-hover:scale-105 transition-transform">
                         <User className="w-4 h-4" />
                       </div>
                       <div className="flex-1">

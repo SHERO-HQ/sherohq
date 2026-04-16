@@ -371,7 +371,7 @@ const CheckoutFlow = () => {
                     "bg-emerald-600 border-emerald-600 text-white";
                 } else if (isActive) {
                   stepBaseStyle =
-                    "bg-emerald-600 border-emerald-100 dark:border-emerald-900/50 text-white shadow-lg shadow-emerald-500/30";
+                    "bg-emerald-600 border-emerald-100 dark:border-emerald-900/50 text-white shadow shadow-emerald-500/30";
                 }
 
                 return (

@@ -39,7 +39,7 @@ const LandingValueProps = () => {
               transition={{ delay: index * 0.08, duration: 0.4 }}
               className="flex items-center gap-4 group py-4 lg:py-2 lg:px-6 lg:first:pl-0 lg:last:pr-0"
             >
-              <div className="shrink-0 w-12 h-12 flex items-center justify-center text-emerald-600 dark:text-emerald-400 transition duration-300 shadow-sm">
+              <div className="shrink-0 w-12 h-12 flex items-center justify-center text-emerald-600 dark:text-emerald-400 transition duration-300">
                 <item.icon className="w-6 h-6" />
               </div>
               <div>

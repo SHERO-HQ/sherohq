@@ -43,7 +43,7 @@ const LandingStats = () => {
 
  <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
  {/* The Hub Container */}
- <div className="relative flex flex-col md:flex-row items-center border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded overflow-hidden shadow-lg shadow-emerald-500/5 group/hub">
+ <div className="relative flex flex-col md:flex-row items-center border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded overflow-hidden shadow shadow-emerald-500/5 group/hub">
  {/* Pulsing Aura */}
  <div className="absolute inset-0 bg-emerald-500/5 opacity-0 group-hover/hub:opacity-100 transition-opacity duration-1000 animate-pulse pointer-events-none" />
 

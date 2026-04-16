@@ -81,7 +81,7 @@ export default function NotificationCenter() {
  </button>
 
  {isOpen && (
- <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-slate-900 border border-slate-800 rounded shadow-md z-50 overflow-hidden">
+ <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-slate-900 border border-slate-800 rounded shadow z-50 overflow-hidden">
  {/* Header */}
  <div className="p-4 border-b border-slate-800 flex items-center justify-between">
  <h3 className="font-semibold text-white">

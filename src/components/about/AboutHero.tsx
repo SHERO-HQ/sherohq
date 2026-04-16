@@ -216,7 +216,7 @@ const AboutHero = () => {
  {/* Layer 1: Core Values Card */}
  <motion.div
  style={{ z: 0 }}
- className="w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded shadow-lg p-6 sm:p-8 relative overflow-hidden z-10 select-none"
+ className="w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded shadow p-6 sm:p-8 relative overflow-hidden z-10 select-none"
  >
  <div className="absolute inset-0 pattern-dots opacity-5 pointer-events-none" />
 
@@ -282,13 +282,13 @@ const AboutHero = () => {
  x: useTransform(mouseX, [-0.5, 0.5], [-12, 12]),
  y: useTransform(mouseY, [-0.5, 0.5], [-12, 12]),
  }}
- className="absolute -bottom-6 -right-5 w-fit p-4 bg-linear-to-r from-blue-600 to-blue-500 rounded shadow-lg shadow-blue-500/40 flex flex-col items-center justify-center rotate-6 z-30 pointer-events-none"
+ className="absolute -bottom-6 -right-5 w-fit p-4 bg-linear-to-r from-blue-600 to-blue-500 rounded shadow shadow-blue-500/40 flex flex-col items-center justify-center rotate-6 z-30 pointer-events-none"
  >
  <div className="flex gap-0.5">
  {[1, 2, 3, 4, 5].map((item) => (
  <Star
  key={item}
- className={`text-yellow-400 w-3.5 h-3.5 mb-1.5 drop-shadow-md ${item <= 4 ? "fill-yellow-400" : ""}`}
+ className={`text-yellow-400 w-3.5 h-3.5 mb-1.5 drop-shadow ${item <= 4 ? "fill-yellow-400" : ""}`}
  />
  ))}
  </div>

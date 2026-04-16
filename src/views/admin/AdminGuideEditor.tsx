@@ -196,8 +196,8 @@ const AdminGuideEditor = () => {
  setCategory(e.target.value as "hardware" | "software")
  }
  options={[
- { value: "hardware", label: "🖥️ Hardware" },
- { value: "software", label: "⚙️ Software" },
+  { value: "hardware", label: "Hardware" },
+  { value: "software", label: "Software" },
  ]}
  className="bg-slate-900/50 border-white/10 text-white"
  />

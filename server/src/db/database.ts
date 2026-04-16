@@ -129,16 +129,47 @@ export async function initializeDatabase() {
   const client = new Client({
     connectionString,
     ssl,
-    connectionTimeoutMillis: 15000,
+    connectionTimeoutMillis: 60000, // Increased to 60s for initialization
   });
 
-  try {
-    console.log("🛠️ Starting DB connection handshake...");
-    await client.connect();
+  const maxRetries = 3;
+  let retryCount = 0;
+  let lastError: Error | null = null;
 
-    console.log(
-      "📡 Connected to database. Running migrations/initialization...",
-    );
+  while (retryCount < maxRetries) {
+    try {
+      const retryDelay = retryCount * 2000; // Exponential backoff: 0s, 2s, 4s
+      if (retryCount > 0) {
+        console.log(
+          `🔄 Retry attempt ${retryCount}/${maxRetries} to connect to DB (Delay: ${retryDelay}ms)...`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, retryDelay));
+      } else {
+        console.log("🛠️ Starting DB connection handshake...");
+      }
+
+      await client.connect();
+
+      console.log(
+        `📡 Connected to database (Host: ${host}) after ${retryCount + 1} attempt(s). Running migrations/initialization...`,
+      );
+      break; // Exit loop on success
+    } catch (err) {
+      retryCount++;
+      lastError = err instanceof Error ? err : new Error(String(err));
+      console.error(
+        `❌ DB Connection attempt ${retryCount}/${maxRetries} failed:`,
+        lastError.message,
+      );
+
+      if (retryCount >= maxRetries) {
+        console.error("💥 All database connection attempts failed.");
+        throw lastError;
+      }
+    }
+  }
+
+  try {
 
     // Products table
     console.log("📦 Initializing products table...");

@@ -110,7 +110,7 @@ export default function FeedbackModal({
  animate={{ opacity: 1, scale: 1, y: 0 }}
  exit={{ opacity: 0, scale: 0.95, y: 20 }}
  transition={{ type: "spring", damping: 25, stiffness: 300 }}
- className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded shadow-lg border border-slate-200 dark:border-slate-800 overflow-hidden"
+ className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 overflow-hidden"
  >
  {/* Header */}
  <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">

@@ -462,7 +462,7 @@ export default function AIChatAssistant() {
               setIsOpen(true);
               setIsMinimized(false);
             }}
-            className="fixed bottom-20 right-6 z-50 p-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full shadow-lg hover:shadow-emerald-500/20 hover:scale-105 transition-all group flex items-center justify-center"
+            className="fixed bottom-20 right-6 z-50 p-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full shadow hover:shadow-emerald-500/20 hover:scale-105 transition-all group flex items-center justify-center"
             aria-label="AI Assistant"
           >
             <Sparkles className="w-6 h-6 animate-pulse text-emerald-400 dark:text-emerald-600" />
@@ -485,7 +485,7 @@ export default function AIChatAssistant() {
               scale: 1,
             }}
             exit={{ y: 20, opacity: 0, scale: 0.95 }}
-            className={`fixed inset-x-0 bottom-0 sm:inset-auto sm:bottom-6 sm:right-6 z-60 w-full sm:w-100 border border-slate-200 dark:border-white/10 shadow-2xl bg-white dark:bg-slate-950 flex flex-col overflow-hidden transition-all duration-300 ${
+            className={`fixed inset-x-0 bottom-0 sm:inset-auto sm:bottom-6 sm:right-6 z-60 w-full sm:w-100 border border-slate-200 dark:border-white/10 shadow bg-white dark:bg-slate-950 flex flex-col overflow-hidden transition-all duration-300 ${
               isMinimized ? "h-16" : "h-150 sm:h-137.5 sm:rounded"
             }`}
           >
@@ -748,7 +748,7 @@ export default function AIChatAssistant() {
                       </div>
                       <button
                         onClick={() => setSelectedImage(null)}
-                        className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] shadow-lg hover:bg-red-600 transition-colors"
+                        className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] shadow hover:bg-red-600 transition-colors"
                       >
                         <X size={10} />
                       </button>
@@ -780,7 +780,7 @@ export default function AIChatAssistant() {
                           <motion.div
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="bg-red-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow-lg flex items-center gap-2 border border-white/20"
+                            className="bg-red-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full shadow flex items-center gap-2 border border-white/20"
                           >
                             <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
                             RECORDING... SPEAK NOW

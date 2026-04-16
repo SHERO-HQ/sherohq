@@ -323,7 +323,7 @@ const AdminSupport = () => {
           <TabsList className="bg-slate-900/50 border border-white/5 p-1 mb-8 flex justify-center items-center flex-wrap sm:flex-nowrap overflow-x-auto scrollbar-hide w-fit">
             <TabsTrigger
               value="tickets"
-              className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-emerald-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
+              className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white data-[state=active]:shadow data-[state=active]:shadow-emerald-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
             >
               <Headset className="w-4 h-4 mr-1 sm:mr-2" />
               <span className="hidden xs:inline">Support </span>Tickets
@@ -333,7 +333,7 @@ const AdminSupport = () => {
             </TabsTrigger>
             <TabsTrigger
               value="consultations"
-              className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-emerald-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
+              className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white data-[state=active]:shadow data-[state=active]:shadow-emerald-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
             >
               <Calendar className="w-4 h-4 mr-1 sm:mr-2" />
               Consultations
@@ -343,7 +343,7 @@ const AdminSupport = () => {
             </TabsTrigger>
             <TabsTrigger
               value="inquiries"
-              className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-emerald-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
+              className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white data-[state=active]:shadow data-[state=active]:shadow-emerald-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
             >
               <MessageSquare className="w-4 h-4 mr-1 sm:mr-2" />
               <span className="hidden xs:inline">Contact </span>Messages

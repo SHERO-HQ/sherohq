@@ -7,6 +7,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProductCard from "@/components/products/ProductCard";
 import { useProducts } from "@/hooks/queries/useProducts";
 import { defaultCategories } from "@/utils/defaultCategories";
+import { ErrorState } from "../common/ErrorState";
 
 const ProductSkeleton = () => (
  <div className="rounded overflow-hidden bg-slate-200/60 dark:bg-slate-900/40 border border-white/5 animate-pulse">
@@ -27,7 +28,13 @@ const ProductSkeleton = () => (
 );
 
 const LandingProducts = () => {
- const { data: rawProducts, isLoading } = useProducts();
+  const { 
+    data: rawProducts, 
+    isLoading, 
+    isError, 
+    error,
+    refetch 
+  } = useProducts();
  const allProducts = useMemo(() => rawProducts ?? [], [rawProducts]);
  const [activeCategory, setActiveCategory] = useState<string>("All");
 
@@ -104,7 +111,7 @@ const LandingProducts = () => {
  <TabsTrigger
  key={category}
  value={category}
- className="px-6 py-2 text-sm whitespace-nowrap data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-md transition duration-300"
+ className="px-6 py-2 text-sm whitespace-nowrap data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow transition duration-300"
  >
  {category}
  </TabsTrigger>
@@ -114,29 +121,37 @@ const LandingProducts = () => {
  </div>
 
  {/* Products Grid */}
- <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mb-6">
- {isLoading && (
- <>
- {[0, 1, 2, 3].map((i) => (
- <ProductSkeleton key={`skeleton-${i}`} />
- ))}
- </>
- )}
- {!isLoading && filteredProducts.length > 0 && (
- <>
- {filteredProducts.slice(0, 4).map((product) => (
- <ProductCard key={product.id} product={product} />
- ))}
- </>
- )}
- {!isLoading && filteredProducts.length === 0 && (
- <div className="col-span-full text-center py-12">
- <p className="text-slate-500 dark:text-slate-400 text-lg">
- No products found in this category
- </p>
- </div>
- )}
- </div>
+  <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mb-6">
+    {isLoading && (
+      <>
+        {[0, 1, 2, 3].map((i) => (
+          <ProductSkeleton key={`skeleton-${i}`} />
+        ))}
+      </>
+    )}
+    {!isLoading && isError && (
+      <div className="col-span-full">
+        <ErrorState 
+          message={error instanceof Error ? error.message : "Connect to server failed"}
+          onRetry={refetch}
+        />
+      </div>
+    )}
+    {!isLoading && !isError && filteredProducts.length > 0 && (
+      <>
+        {filteredProducts.slice(0, 4).map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </>
+    )}
+    {!isLoading && !isError && filteredProducts.length === 0 && (
+      <div className="col-span-full text-center py-12">
+        <p className="text-slate-500 dark:text-slate-400 text-lg">
+          No products found in this category
+        </p>
+      </div>
+    )}
+  </div>
 
  {/* View All CTA */}
  <motion.div
@@ -153,7 +168,7 @@ const LandingProducts = () => {
  text-slate-700 dark:text-slate-300 font-semibold
  hover:border-emerald-500 dark:hover:border-emerald-500
  hover:text-emerald-600 dark:hover:text-emerald-400
- hover:shadow-lg
+ hover:shadow
  transition duration-300 group"
  >
  <span>Visit the Shop</span>

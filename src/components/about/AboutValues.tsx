@@ -55,7 +55,7 @@ const AboutValues = () => {
  </p>
  </div>
 
- <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+ <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
  {values.map((item, index) => (
  <motion.div
  key={item.title}
@@ -64,19 +64,19 @@ const AboutValues = () => {
  viewport={{ once: true }}
  transition={{ delay: index * 0.1, duration: 0.5 }}
  whileHover={{ y: -8 }}
- className="group p-8 rounded bg-white dark:bg-slate-900/40 backdrop-blur-sm border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 shadow-sm hover:shadow-lg hover:shadow-emerald-500/5 transition duration-500"
+ className="group p-8 rounded bg-white dark:bg-slate-900/40 backdrop-blur-sm border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 shadow-sm hover:shadow hover:shadow-emerald-500/5 transition duration-500"
  >
  <div
  className={cn(
- "w-12 h-12 rounded flex items-center justify-center mb-8 transition duration-500 border border-slate-200/50 dark:border-white/5 shadow-sm",
+ "w-12 h-12 rounded flex items-center justify-center mb-4 transition duration-500 border border-slate-200/50 dark:border-white/5 shadow-sm",
  item.color === "emerald" &&
- "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-600/50 group-hover:text-white group-hover:shadow-lg group-hover:shadow-emerald-500/30",
+ "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-emerald-500/30",
  item.color === "blue" &&
- "bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600/50 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/30",
+ "bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-blue-500/30",
  item.color === "violet" &&
- "bg-violet-500/10 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600/50 group-hover:text-white group-hover:shadow-lg group-hover:shadow-violet-500/30",
+ "bg-violet-500/10 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-violet-500/30",
  item.color === "amber" &&
- "bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:bg-amber-600/50 group-hover:text-white group-hover:shadow-lg group-hover:shadow-amber-500/30",
+ "bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:bg-amber-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-amber-500/30",
  )}
  >
  <item.icon className="w-6 h-6" />

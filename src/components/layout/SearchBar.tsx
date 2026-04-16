@@ -98,7 +98,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
  initial={{ opacity: 0, y: 10 }}
  animate={{ opacity: 1, y: 0 }}
  exit={{ opacity: 0, y: 10 }}
- className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-900 rounded shadow-md border border-slate-200 dark:border-slate-800 max-h-96 overflow-y-auto z-50"
+ className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 max-h-96 overflow-y-auto z-50"
  >
  {filteredProducts.length > 0 ? (
  <div className="py-2">
@@ -174,7 +174,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
  animate={{ opacity: 1, y: 0 }}
  exit={{ opacity: 0, y: -20 }}
  transition={{ type: "spring", damping: 25, stiffness: 300 }}
- className="fixed top-0 left-0 right-0 bg-white dark:bg-slate-900 shadow-lg z-101 p-4 border-b border-slate-200 dark:border-slate-800"
+ className="fixed top-0 left-0 right-0 bg-white dark:bg-slate-900 shadow z-101 p-4 border-b border-slate-200 dark:border-slate-800"
  >
  <div className="container max-w-3xl mx-auto">
  <form onSubmit={handleSearch} className="relative">

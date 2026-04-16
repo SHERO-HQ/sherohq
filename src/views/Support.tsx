@@ -134,14 +134,14 @@ const Support = () => {
  whileInView={{ opacity: 1, y: 0 }}
  transition={{ delay: index * 0.1 }}
  viewport={{ once: true }}
- className="bg-card/40 dark:bg-slate-900/40 backdrop-blur-sm p-8 rounded border border-border hover:border-emerald-500/30 hover:bg-card/60 dark:hover:bg-slate-900/60 transition group relative overflow-hidden shadow-sm hover:shadow-md"
+ className="bg-card/40 dark:bg-slate-900/40 backdrop-blur-sm p-8 rounded border border-border hover:border-emerald-500/30 hover:bg-card/60 dark:hover:bg-slate-900/60 transition group relative overflow-hidden shadow-sm hover:shadow"
  >
  {/* Pattern dots on hover */}
  <div className="absolute pattern-dots pattern-emerald-500/10 pattern-opacity-100 pattern-size-4 top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 -z-10" />
 
  <div className="absolute -top-15 -right-15 w-44 h-44 bg-linear-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-full" />
 
- <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/40 rounded flex items-center justify-center mb-6 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500 dark:group-hover:bg-emerald-700/80 group-hover:text-white transition duration-300 shadow-lg shadow-emerald-500/10">
+ <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/40 rounded flex items-center justify-center mb-6 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500 dark:group-hover:bg-emerald-700/80 group-hover:text-white transition duration-300 shadow shadow-emerald-500/10">
  <item.icon className="w-7 h-7" />
  </div>
  <h3 className="text-2xl font-bold text-foreground mb-3 tracking-snug">
@@ -183,7 +183,7 @@ const Support = () => {
  initial={{ opacity: 0, y: 30 }}
  whileInView={{ opacity: 1, y: 0 }}
  viewport={{ once: true }}
- className="flex flex-col lg:flex-row items-center justify-between bg-linear-to-br from-card via-card to-emerald-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-900/20 backdrop-blur-sm rounded p-8 md:p-16 border border-border text-center lg:text-left relative overflow-hidden shadow-md pattern-dots pattern-emerald-500/90 pattern-opacity-100 pattern-size-4pattern-dots pattern-emerald-500/10 pattern-opacity-100 pattern-size-4"
+ className="flex flex-col lg:flex-row items-center justify-between bg-linear-to-br from-card via-card to-emerald-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-900/20 backdrop-blur-sm rounded p-8 md:p-16 border border-border text-center lg:text-left relative overflow-hidden shadow pattern-dots pattern-emerald-500/90 pattern-opacity-100 pattern-size-4pattern-dots pattern-emerald-500/10 pattern-opacity-100 pattern-size-4"
  >
  <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
  <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
@@ -205,7 +205,7 @@ const Support = () => {
  <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
  <button
  onClick={() => setIsTicketModalOpen(true)}
- className="flex items-center gap-3 px-8 py-2 rounded bg-emerald-600 text-white dark:text-slate-950 font-bold hover:bg-emerald-500 transition shadow-md shadow-emerald-500/20 hover:scale-[1.02] active:scale-95 w-full md:w-auto justify-center"
+ className="flex items-center gap-3 px-8 py-2 rounded bg-emerald-600 text-white dark:text-slate-950 font-bold hover:bg-emerald-500 transition shadow shadow-emerald-500/20 hover:scale-[1.02] active:scale-95 w-full md:w-auto justify-center"
  aria-label="Submit a Ticket"
  >
  <Ticket className="w-5 h-5" />

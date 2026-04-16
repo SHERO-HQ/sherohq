@@ -1,5 +1,5 @@
 "use client";
-import { Check, SlidersHorizontal, ChevronDown, ChevronUp } from "lucide-react";
+import { Check, SlidersHorizontal, ChevronDown, ChevronUp, Star } from "lucide-react";
 import { useState } from "react";
 import type { FilterState } from "./ProductFilters";
 import type { Category } from "./ProductsCategories";
@@ -49,11 +49,11 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
  ];
 
  const priceRanges = [
- { label: "Under GH₵500", range: [0, 500] as [number, number] },
- { label: "GH₵500 - GH₵1,000", range: [500, 1000] as [number, number] },
- { label: "GH₵1,000 - GH₵3,000", range: [1000, 3000] as [number, number] },
- { label: "GH₵3,000 - GH₵5,000", range: [3000, 5000] as [number, number] },
- { label: "Above GH₵5,000", range: [5000, 1000000] as [number, number] },
+  { label: "Elite (Above GH₵5,000)", range: [5000, 1000000] as [number, number] },
+  { label: "Premium (GH₵3,000 - GH₵5,000)", range: [3000, 5000] as [number, number] },
+  { label: "Mid-Tier (GH₵1,000 - GH₵3,000)", range: [1000, 3000] as [number, number] },
+  { label: "Standard (GH₵500 - GH₵1,000)", range: [500, 1000] as [number, number] },
+  { label: "Entry (Under GH₵500)", range: [0, 500] as [number, number] },
  ];
 
  const ratings = [5, 4, 3, 2, 1];
@@ -67,7 +67,7 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
  return (
  <aside className={`w-full ${className}`}>
  {/* Glass Container */}
- <div className="dark:bg-slate-900/60 bg-slate-200/60 backdrop-blur-sm border border-white/5 rounded p-6 shadow-md">
+ <div className="dark:bg-slate-900 bg-slate-100 border border-slate-200 dark:border-white/5 rounded p-6 shadow">
  <div className="flex items-center gap-2 mb-8 border-b dark:border-white/5 border-slate-300 pb-4">
  <SlidersHorizontal className="w-5 h-5 text-slate-500" />
  <h3 className="font-bold text-lg dark:text-white text-slate-800">
@@ -242,14 +242,12 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
  }
  className="flex items-center gap-2 w-full group cursor-pointer"
  >
- <div className="flex items-center space-x-0.5">
+ <div className="flex items-center space-x-1">
  {Array.from({ length: 5 }).map((_, i) => (
- <span
+ <Star
  key={`star-${i}`}
- className={`text-2xl ${i < rating ? "text-amber-400" : "text-slate-700"}`}
- >
- ★
- </span>
+ className={`w-4 h-4 ${i < rating ? "text-amber-400 fill-amber-400" : "text-slate-300 dark:text-slate-700"}`}
+ />
  ))}
  </div>
  <span

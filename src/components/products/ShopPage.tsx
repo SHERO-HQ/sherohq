@@ -8,11 +8,14 @@ import type { FilterState } from "./ProductFilters";
 import CategorySidebar from "./CategorySidebar";
 import ProductGrid from "./ProductsGrid";
 import type { Product } from "@/types/product";
-import { SlidersHorizontal, Package } from "lucide-react";
+import { SlidersHorizontal, Package, ChevronDown } from "lucide-react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import ProductSearch from "./ProductSearch";
 import { useProducts } from "@/hooks/queries/useProducts";
 import { useCategories } from "@/hooks/queries/useCategories";
+import { ErrorState } from "@/components/common/ErrorState";
+import { ActiveFilters } from "./ActiveFilters";
+import ProductFiltersSidebar from "./ProductFiltersSidebar";
 
 interface ApiCategory {
   id: string;
@@ -25,11 +28,23 @@ const ShopView = () => {
   const pathname = usePathname();
 
   // TanStack Query
-  const { data: products = [], isLoading: productsLoading } = useProducts();
-  const { data: apiCategories = [], isLoading: categoriesLoading } =
-    useCategories();
+  const { 
+    data: products = [], 
+    isLoading: productsLoading,
+    isError: productsError,
+    error: productError,
+    refetch: refetchProducts
+  } = useProducts();
+  
+  const { 
+    data: apiCategories = [], 
+    isLoading: categoriesLoading,
+    isError: categoriesError,
+    refetch: refetchCategories
+  } = useCategories();
 
   const loading = productsLoading || categoriesLoading;
+  const isError = productsError || categoriesError;
 
   const [activeCategory, setActiveCategory] = useState("all");
   // Derive searchQuery from URL params instead of using useEffect + setState
@@ -201,10 +216,24 @@ const ShopView = () => {
 
       {/* Main Content */}
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-        <div className="flex flex-col gap-8">
+        <div className="grid lg:grid-cols-[280px_1fr] gap-10">
+          {/* Desktop Sidebar - Hidden on Mobile */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-32">
+              <ProductFiltersSidebar
+                filters={filters}
+                onFilterChange={handleFilterChange}
+                categories={categoriesWithCount}
+                activeCategory={activeCategory}
+                onCategoryChange={handleCategoryChange}
+              />
+            </div>
+          </aside>
+
+          <div className="flex flex-col gap-8 min-w-0">
           {/* Horizontal Filter Bar - Sticky */}
-          <div className="sticky top-20 sm:top-24 z-30 -mx-4 px-4 sm:mx-0 sm:px-0">
-            <div className="flex flex-col gap-4 sm:gap-6 bg-white/5 dark:bg-slate-950/80 backdrop-blur-sm border border-white/10 p-3 sm:p-4 sm:rounded shadow-lg shadow-black/20">
+          <div className="sticky top-20 sm:top-24 z-30 px-1 sm:px-0">
+            <div className="flex flex-col gap-4 sm:gap-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-3 sm:p-5 rounded shadow shadow-black/20">
               <div className="flex flex-col md:flex-row items-center gap-3 sm:gap-4">
                 <div className="flex-1 w-full">
                   <ProductSearch
@@ -216,15 +245,36 @@ const ShopView = () => {
                 <div className="flex items-center gap-2 w-full md:w-auto">
                   <button
                     onClick={() => setShowMobileFilters(true)}
-                    className="flex-1 md:flex-none flex items-center justify-center gap-2 cursor-pointer px-3 py-2 sm:px-4 sm:py-2 dark:bg-white/5 bg-slate-100 hover:bg-emerald-500/10 backdrop-blur-sm border border-white/10 rounded font-bold dark:text-slate-200 text-slate-800 transition hover:border-emerald-500/50 group text-xs sm:text-base"
+                    className="flex-1 flex items-center justify-center gap-2 cursor-pointer px-3 py-2 sm:px-4 sm:py-2 dark:bg-white/5 bg-slate-100 hover:bg-emerald-500/10 border border-slate-200 dark:border-white/10 rounded font-bold dark:text-slate-200 text-slate-800 transition hover:border-emerald-500/50 group text-xs sm:text-base h-[42px] sm:h-auto"
                   >
                     <SlidersHorizontal
                       size={16}
                       className="group-hover:rotate-180 transition-transform duration-500 sm:w-4.5 sm:h-4.5"
                     />
-                    <span>Advanced Filters</span>
+                    <span>Filters</span>
                   </button>
-                  <div className="relative group flex-1 md:flex-none">
+
+                  {/* Category Dropdown - Mobile/Tablet Only */}
+                  <div className="relative flex-1 lg:hidden">
+                    <select
+                      value={activeCategory}
+                      onChange={(e) => handleCategoryChange(e.target.value)}
+                      className="w-full text-xs sm:text-sm font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded h-[42px] px-4 appearance-none text-slate-800 dark:text-white cursor-pointer focus:ring-2 focus:ring-emerald-500/50 transition-all shadow-sm"
+                    >
+                      {categoriesWithCount.map((cat) => (
+                        <option key={cat.id} value={cat.id}>
+                          {cat.name} ({cat.count})
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-emerald-500 flex items-center gap-2">
+                      <span className="text-xl">{categoriesWithCount.find(c => c.id === activeCategory)?.icon}</span>
+                      <ChevronDown size={16} />
+                    </div>
+                  </div>
+
+                  {/* Sort - Desktop Only in this bar */}
+                  <div className="relative group hidden lg:block lg:w-48">
                     <select
                       value={filters.sortBy}
                       onChange={(e) =>
@@ -233,40 +283,38 @@ const ShopView = () => {
                           sortBy: e.target.value,
                         })
                       }
-                      className="w-full text-[10px] sm:text-sm border-white/10 bg-slate-100 dark:bg-white/5 rounded font-bold dark:text-white text-slate-800 focus:ring-emerald-500 cursor-pointer py-3 px-3 sm:px-4 appearance-none pr-8 sm:pr-10"
+                      className="w-full text-sm border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 rounded font-bold dark:text-white text-slate-800 focus:ring-emerald-500 cursor-pointer py-2 px-4 appearance-none pr-10"
                     >
                       <option value="newest">Sort: Newest</option>
                       <option value="price-low">Price: Low to High</option>
                       <option value="price-high">Price: High to Low</option>
                       <option value="rating">Top Rated</option>
                     </select>
-                    <div className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                      <Package size={12} className="sm:w-3.5 sm:h-3.5" />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                      <ChevronDown size={16} />
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Horizontal Category Pill List */}
-              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1 touch-pan-x">
+              {/* Desktop Category Pills - Hidden on Mobile */}
+              <div className="hidden lg:flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
                 {categoriesWithCount.map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => handleCategoryChange(cat.id)}
-                    className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2.5 rounded whitespace-nowrap transition border duration-300 ${
+                    className={`flex items-center gap-2 px-4 py-2 rounded whitespace-nowrap transition border duration-300 ${
                       activeCategory === cat.id
-                        ? "bg-emerald-600 border-emerald-500 text-white shadow-lg shadow-emerald-500/40 scale-105"
-                        : "bg-white/5 border-white/10 text-slate-600 dark:text-slate-400 hover:bg-white/10 hover:border-emerald-500/30"
+                        ? "bg-emerald-600 border-emerald-500 text-white shadow shadow-emerald-500/40"
+                        : "bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 hover:border-emerald-500/30"
                     }`}
                   >
-                    <span className="text-lg sm:text-xl group-hover:scale-110 transition-transform">
-                      {cat.icon}
-                    </span>
-                    <span className="text-[10px] sm:text-sm font-bold tracking-tight">
+                    <span className="text-lg">{cat.icon}</span>
+                    <span className="text-sm font-bold tracking-tight">
                       {cat.name}
                     </span>
                     <span
-                      className={`text-[8px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded font-mono ${
+                      className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
                         activeCategory === cat.id
                           ? "bg-white/20 text-white"
                           : "bg-slate-200 dark:bg-white/10 text-slate-500 dark:text-slate-400"
@@ -281,7 +329,25 @@ const ShopView = () => {
           </div>
 
           {/* Products Results */}
-          <main className="flex-1 min-w-0">
+          <main className="flex-1 min-w-0 pt-6 lg:pt-0">
+            {/* Active Filters Summary */}
+            <ActiveFilters 
+              filters={filters}
+              activeCategory={activeCategory}
+              categories={categoriesWithCount}
+              onRemoveCategory={() => handleCategoryChange("all")}
+              onRemoveFilter={(key, value) => {
+                if (key === "brands") {
+                  setFilters({ ...filters, brands: filters.brands.filter(b => b !== value) });
+                } else if (key === "priceRange") {
+                  setFilters({ ...filters, priceRange: [0, 1000000] });
+                } else {
+                  setFilters({ ...filters, [key]: value });
+                }
+              }}
+              onClearAll={handleReset}
+            />
+
             {/* Results Header (Desktop) - Optional now, keeping it subtle */}
             <div className="flex items-center justify-between mb-8 px-2">
               <div>
@@ -300,13 +366,24 @@ const ShopView = () => {
               </div>
             </div>
 
-            <ProductGrid
-              products={filteredProducts}
-              loading={loading}
-              columns={3}
-              onReset={handleReset}
-            />
+            {isError ? (
+              <ErrorState 
+                message={productError instanceof Error ? productError.message : "We're having trouble loading products. Please try again."}
+                onRetry={() => {
+                  refetchProducts();
+                  refetchCategories();
+                }}
+              />
+            ) : (
+              <ProductGrid
+                products={filteredProducts}
+                loading={loading}
+                columns={3}
+                onReset={handleReset}
+              />
+            )}
           </main>
+          </div>
         </div>
       </div>
 
@@ -316,9 +393,6 @@ const ShopView = () => {
         onFilterChange={handleFilterChange}
         isOpen={showMobileFilters}
         onClose={() => setShowMobileFilters(false)}
-        categories={categoriesWithCount}
-        activeCategory={activeCategory}
-        onCategoryChange={handleCategoryChange}
       />
     </div>
   );

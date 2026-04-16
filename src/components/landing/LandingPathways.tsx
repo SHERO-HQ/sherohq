@@ -150,7 +150,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
  initial={{ opacity: 0, scale: 0.95 }}
  whileInView={{ opacity: 1, scale: 1 }}
  viewport={{ once: true }}
- className={`group relative ${path.span} col-span-1 min-h-60 p-8 rounded border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between overflow-hidden transition-colors hover:border-emerald-500/50 hover:shadow-lg shadow-emerald-500/5`}
+ className={`group relative ${path.span} col-span-1 min-h-60 p-8 rounded border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between overflow-hidden transition-colors hover:border-emerald-500/50 hover:shadow shadow-emerald-500/5`}
  >
  {/* Dynamic Glow Layer */}
  <motion.div

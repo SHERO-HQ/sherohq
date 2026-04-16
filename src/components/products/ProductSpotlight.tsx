@@ -198,7 +198,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                             href={getAbsoluteUrl(
                               `/shop/${currentProduct.slug || currentProduct.sku || currentProduct.id}`,
                             )}
-                            className="group flex items-center justify-center gap-3 px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-white rounded font-black uppercase tracking-widest text-[10px] transition-all shadow-xl shadow-emerald-500/20 hover:-translate-y-0.5"
+                            className="group flex items-center justify-center gap-3 px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-white rounded font-black uppercase tracking-widest text-[10px] transition-all shadow shadow-emerald-500/20 hover:-translate-y-0.5"
                           >
                             Details
                             <ArrowRight
@@ -212,7 +212,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                   </div>
 
                   {/* Right Side: Image with Content Wrapper (Background on Mobile, Relative Fixed on LG) */}
-                  <div className="relative w-full lg:w-[56%] aspect-4/5 sm:aspect-16/10 lg:aspect-auto h-[75vh] sm:h-[65vh] lg:h-190 group/image overflow-hidden lg:rounded shadow-2xl border border-white/5">
+                  <div className="relative w-full lg:w-[56%] aspect-4/5 sm:aspect-16/10 lg:aspect-auto h-[75vh] sm:h-[65vh] lg:h-190 group/image overflow-hidden lg:rounded">
                     {/* Image */}
                     <AppImage
                       src={getImageUrl(currentProduct.image)}
@@ -263,7 +263,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           className={`h-1 transition-all duration-500 rounded-full ${
                             i === safeCurrentIndex
                               ? "w-8 bg-emerald-500"
-                              : "w-2 bg-white/40 hover:bg-white/60"
+                              : "w-2 dark:bg-white/40 bg-slate-600/40 hover:bg-white/60"
                           }`}
                         />
                       ))}

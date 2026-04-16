@@ -46,7 +46,7 @@ const SupportGuidesPage = () => {
  <div className="mb-16">
  <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
  <div className="flex items-center gap-5">
- <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 rounded flex items-center justify-center text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 shadow-lg shadow-emerald-500/10 shrink-0">
+ <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/40 rounded flex items-center justify-center text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20 shadow shadow-emerald-500/10 shrink-0">
  {category === "software" ? (
  <Settings className="md:w-9 md:h-9 w-6 h-6" />
  ) : (
@@ -119,7 +119,7 @@ const SupportGuidesPage = () => {
  <div key={guide.id}>
  <Link
  href={`/support/${category}/${guide.slug}`}
- className="block bg-card dark:bg-slate-900/40 backdrop-blur-sm rounded border border-border hover:border-emerald-500/30 hover:shadow-lg hover:shadow-emerald-500/10 transition duration-300 overflow-hidden group h-full relative"
+ className="block bg-card dark:bg-slate-900/40 backdrop-blur-sm rounded border border-border hover:border-emerald-500/30 hover:shadow hover:shadow-emerald-500/10 transition duration-300 overflow-hidden group h-full relative"
  >
  <div className="absolute inset-0 bg-linear-to-br from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 

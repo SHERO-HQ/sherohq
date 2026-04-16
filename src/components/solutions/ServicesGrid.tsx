@@ -141,7 +141,7 @@ const ServicesGrid = () => {
               className="group relative bg-white dark:bg-slate-900 rounded p-8
               border-2 border-slate-200 dark:border-slate-800
               hover:border-transparent
-              shadow-lg hover:shadow-lg
+              shadow hover:shadow
               transition duration-300 overflow-hidden"
             >
               {/* Gradient border on hover */}

@@ -241,7 +241,7 @@ const AboutTestimonials = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex flex-col items-center gap-4 p-8 rounded bg-linear-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-white/10 shadow-md dark:shadow-lg relative overflow-hidden max-w-lg mx-auto w-full transition duration-300"
+            className="inline-flex flex-col items-center gap-4 p-8 rounded bg-linear-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-white/10 shadow dark:shadow relative overflow-hidden max-w-lg mx-auto w-full transition duration-300"
           >
             <div className="p-3 bg-emerald-500/10 rounded text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 transition-colors duration-300">
               <MessageSquarePlus className="w-6 h-6" />
@@ -255,7 +255,7 @@ const AboutTestimonials = () => {
               </p>
               <button
                 onClick={() => setIsFeedbackModalOpen(true)}
-                className="cursor-pointer px-8 py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-900/20 w-full sm:w-auto"
+                className="cursor-pointer px-8 py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700 transition-colors shadow shadow-emerald-900/20 w-full sm:w-auto"
               >
                 Share Your Thoughts
               </button>

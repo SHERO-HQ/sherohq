@@ -222,7 +222,7 @@ export default function AdminCreateInvoice() {
  className={cn(
  "px-4 py-2 rounded text-sm font-bold transition flex items-center gap-2",
  mode === "invoice"
- ? "bg-emerald-600 text-white shadow-lg"
+ ? "bg-emerald-600 text-white shadow"
  : "text-slate-400 hover:text-white",
  )}
  >
@@ -233,7 +233,7 @@ export default function AdminCreateInvoice() {
  className={cn(
  "px-4 py-2 rounded text-sm font-bold transition flex items-center gap-2",
  mode === "quote"
- ? "bg-blue-600 text-white shadow-lg"
+ ? "bg-blue-600 text-white shadow"
  : "text-slate-400 hover:text-white",
  )}
  >
@@ -349,7 +349,7 @@ export default function AdminCreateInvoice() {
  className="bg-slate-950 border-white/10"
  />
  {searchQuery && products.length > 0 && (
- <div className="absolute top-full left-0 right-0 mt-1 bg-slate-800 border border-white/10 rounded shadow-md z-50 max-h-60 overflow-y-auto">
+ <div className="absolute top-full left-0 right-0 mt-1 bg-slate-800 border border-white/10 rounded shadow z-50 max-h-60 overflow-y-auto">
  {isLoadingProducts ? (
  <div className="p-4 text-center text-slate-400">
  <Loader2 className="w-5 h-5 animate-spin mx-auto" />

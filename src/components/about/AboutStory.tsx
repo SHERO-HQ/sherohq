@@ -6,6 +6,9 @@ import {
  Globe,
  Clover,
  SearchCheck,
+ Handshake,
+ Users,
+ Globe2,
 } from "lucide-react";
 
 import Reveal from "@/components/motion/Reveal";
@@ -103,14 +106,14 @@ const AboutStory = () => {
  <StaggerContainer className="grid md:grid-cols-2 gap-8 mb-16 lg:grid-cols-2!">
  {/* Mission */}
  <StaggerItem>
- <div className="group h-full bg-linear-to-br from-white to-slate-50 dark:from-slate-900/40 dark:to-slate-950 p-8 lg:p-10 rounded border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 transition duration-500 shadow-sm hover:shadow-lg hover:shadow-emerald-500/5">
- <div className="w-16 h-16 bg-emerald-500 rounded flex items-center justify-center mb-8 shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+ <div className="group h-full bg-linear-to-br from-white to-slate-50 dark:from-slate-900/40 dark:to-slate-950 p-8 lg:p-10 rounded border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 transition duration-500 shadow-sm hover:shadow hover:shadow-emerald-500/5">
+ <div className="w-16 h-16 bg-emerald-500 rounded flex items-center justify-center mb-4 shadow shadow-emerald-500/20 group-hover:scale-110 transition-transform">
  <Target className="w-8 h-8 text-white" />
  </div>
  <h3 className="text-xl lg:text-3xl font-black text-slate-900 dark:text-white mb-4 tracking-tighter">
  Our Mission
  </h3>
- <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-base lg:text-lg font-light">
+ <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">
  To democratize access to enterprise-grade technology solutions
  across Africa, empowering businesses of all sizes to compete
  globally through innovative hardware, software, and IT services.
@@ -120,14 +123,14 @@ const AboutStory = () => {
 
  {/* Vision */}
  <StaggerItem>
- <div className="group h-full bg-linear-to-br from-white to-slate-50 dark:from-slate-900/40 dark:to-slate-950 p-8 lg:p-10 rounded border border-slate-200 dark:border-white/5 hover:border-blue-500/30 transition duration-500 shadow-sm hover:shadow-lg hover:shadow-blue-500/5">
- <div className="w-16 h-16 bg-blue-600 rounded flex items-center justify-center mb-8 shadow-lg shadow-blue-600/20 group-hover:scale-110 transition-transform">
+ <div className="group h-full bg-linear-to-br from-white to-slate-50 dark:from-slate-900/40 dark:to-slate-950 p-8 lg:p-10 rounded border border-slate-200 dark:border-white/5 hover:border-blue-500/30 transition duration-500 shadow-sm hover:shadow hover:shadow-blue-500/5">
+ <div className="w-16 h-16 bg-blue-600 rounded flex items-center justify-center mb-4 shadow shadow-blue-600/20 group-hover:scale-110 transition-transform">
  <Globe className="w-8 h-8 text-white" />
  </div>
  <h3 className="text-xl lg:text-3xl font-black text-slate-900 dark:text-white mb-4 tracking-tighter">
  Our Vision
  </h3>
- <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-base lg:text-lg font-light">
+ <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">
  To become West Africa's most trusted technology partner,
  recognized for our commitment to quality, innovation, and
  customer success. We envision a future where every business has
@@ -150,7 +153,7 @@ const AboutStory = () => {
  <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800">
  <div className="pb-8 md:pb-0 md:pr-10">
  <h4 className="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
- <span>🎯</span> End-to-End Solutions
+ <Target className="size-5 text-emerald-500" /> End-to-End Solutions
  </h4>
  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
  From hardware procurement to custom software development and
@@ -159,7 +162,7 @@ const AboutStory = () => {
  </div>
  <div className="py-8 md:py-0 md:px-10">
  <h4 className="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
- <span>🌍</span> Local Expertise, Global Standards
+ <Globe2 className="size-5 text-emerald-500" /> Local Expertise, Global Standards
  </h4>
  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
  Deep understanding of the African market combined with
@@ -168,7 +171,7 @@ const AboutStory = () => {
  </div>
  <div className="pt-8 md:pt-0 md:pl-10">
  <h4 className="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
- <span>🤝</span> Customer-Centric Approach
+ <Users className="size-5 text-emerald-500" /> Customer-Centric Approach
  </h4>
  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
  We don't just sell products—we build long-term partnerships,

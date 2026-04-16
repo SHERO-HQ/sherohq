@@ -363,7 +363,7 @@ export default function ProjectForm() {
                       onClick={() =>
                         setProjectData((prev: Partial<Project>) => ({ ...prev, image: "" }))
                       }
-                      className="absolute top-2 right-2 p-1.5 bg-rose-500 text-white rounded shadow-lg hover:bg-rose-600 transition-colors"
+                      className="absolute top-2 right-2 p-1.5 bg-rose-500 text-white rounded shadow hover:bg-rose-600 transition-colors"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>

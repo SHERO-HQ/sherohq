@@ -18,9 +18,6 @@ interface ProductFiltersProps {
  onFilterChange: (filters: FilterState) => void;
  isOpen: boolean;
  onClose: () => void;
- categories: Category[];
- activeCategory: string;
- onCategoryChange: (categoryId: string) => void;
 }
 
 const ProductFilters: React.FC<ProductFiltersProps> = ({
@@ -28,9 +25,6 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  onFilterChange,
  isOpen,
  onClose,
- categories,
- activeCategory,
- onCategoryChange,
 }) => {
  const [tempFilters, setTempFilters] = useState<FilterState>(filters);
 
@@ -42,8 +36,8 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  }, [filters, isOpen]);
 
  const [activeTab, setActiveTab] = useState<
- "classification" | "sort" | "price" | "brand" | "rating" | "stock"
- >("classification");
+ "sort" | "price" | "brand" | "rating" | "stock"
+ >("sort");
 
  const brands = [
  "Apple", "Samsung", "Sony", "Logitech", "Razer", "Dell", "HP", "Lenovo",
@@ -58,11 +52,11 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  ];
 
  const priceRanges = [
- { label: "Elite Selection (Above GH₵5,000)", range: [5000, 1000000] as [number, number] },
- { label: "Premium Range (GH₵3,000 - GH₵5,000)", range: [3000, 5000] as [number, number] },
- { label: "Mid-Tier Luxury (GH₵1,000 - GH₵3,000)", range: [1000, 3000] as [number, number] },
- { label: "Standard Class (GH₵500 - GH₵1,000)", range: [500, 1000] as [number, number] },
- { label: "Accessible Entry (Under GH₵500)", range: [0, 500] as [number, number] },
+  { label: "Elite (Above GH₵5,000)", range: [5000, 1000000] as [number, number] },
+  { label: "Premium (GH₵3,000 - GH₵5,000)", range: [3000, 5000] as [number, number] },
+  { label: "Mid-Tier (GH₵1,000 - GH₵3,000)", range: [1000, 3000] as [number, number] },
+  { label: "Standard (GH₵500 - GH₵1,000)", range: [500, 1000] as [number, number] },
+  { label: "Entry (Under GH₵500)", range: [0, 500] as [number, number] },
  ];
 
  const handleApply = () => {
@@ -86,12 +80,11 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  };
 
  const tabs = [
- { id: "classification" as const, label: "Classification" },
- { id: "sort" as const, label: "Sort By" },
- { id: "price" as const, label: "Investment" },
- { id: "brand" as const, label: "Origin" },
- { id: "rating" as const, label: "Satisfaction" },
- { id: "stock" as const, label: "Availability" },
+  { id: "sort" as const, label: "Sort By" },
+  { id: "price" as const, label: "Price Range" },
+  { id: "brand" as const, label: "Brand" },
+  { id: "rating" as const, label: "Rating" },
+  { id: "stock" as const, label: "Availability" },
  ];
 
  return (
@@ -113,7 +106,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  transition={{ type: "spring", damping: 30, stiffness: 300 }}
  className="fixed md:right-8 md:bottom-8 inset-x-0 bottom-0 md:inset-x-auto z-101 
  dark:bg-slate-900/90 bg-white/95 backdrop-blur-sm 
- border-t md:border border-white/10 rounded-t md:rounded shadow-lg 
+ border-t md:border border-white/10 rounded-t md:rounded shadow 
  max-h-[85vh] md:max-h-[80vh] w-full md:max-w-2xl flex flex-col overflow-hidden"
  onClick={(e) => e.stopPropagation()}
  >
@@ -130,9 +123,9 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  </div>
  <div>
  <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">
- Refine <span className="text-emerald-500">Search</span>
+ Filter <span className="text-emerald-500">Products</span>
  </h2>
- <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Fine-tune your technical requirements</p>
+ <p className="text-xs text-slate-500">Filter your technical requirements</p>
  </div>
  </div>
  <button
@@ -170,57 +163,25 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
 
  {/* Main Content Areas */}
  <div className="flex-1 overflow-y-auto p-4 sm:p-10 space-y-8 no-scrollbar">
- {activeTab === "classification" && (
- <div className="grid grid-cols-1 gap-3">
- {categories.map((category) => (
- <button
- key={category.id}
- onClick={() => onCategoryChange(category.id)}
- className={`flex items-center justify-between p-4 sm:p-6 rounded transition border-2 ${
- activeCategory === category.id
- ? "bg-emerald-500/10 border-emerald-500/50"
- : "bg-slate-50 dark:bg-white/5 border-transparent"
- }`}
- >
- <div className="flex items-center gap-3 sm:gap-4">
- <div className={`p-2 sm:p-3 rounded transition-colors ${
- activeCategory === category.id ? "bg-emerald-500 text-white" : "dark:bg-white/10 bg-slate-200 text-slate-500"
- }`}>
- {category.icon}
- </div>
- <span className={`font-black uppercase tracking-tight text-xs sm:text-sm ${
- activeCategory === category.id ? "text-emerald-500" : "text-slate-500"
- }`}>
- {category.name}
- </span>
- </div>
- <span className="text-[9px] sm:text-[10px] font-mono font-bold dark:text-slate-600 text-slate-400">
- [{category.count || 0}]
- </span>
- </button>
- ))}
- </div>
- )}
-
  {activeTab === "sort" && (
  <div className="grid grid-cols-1 gap-3">
  {sortOptions.map((option) => (
  <button
  key={option.value}
  onClick={() => setTempFilters({ ...tempFilters, sortBy: option.value })}
- className={`group flex items-center justify-between p-4 sm:p-6 rounded transition border-2 ${
+ className={`group flex items-center justify-between p-2 sm:p-4 rounded transition border-2 ${
  tempFilters.sortBy === option.value
  ? "bg-emerald-500/10 border-emerald-500/50"
  : "bg-slate-50 dark:bg-white/5 border-transparent hover:border-white/10"
  }`}
  >
- <span className={`font-black uppercase tracking-tight text-xs sm:text-sm ${
+ <span className={`font-semibold tracking-tight text-xs sm:text-sm ${
  tempFilters.sortBy === option.value ? "text-emerald-500" : "text-slate-500"
  }`}>
  {option.label}
  </span>
  {tempFilters.sortBy === option.value && (
- <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+ <div className="w-6 h-6 sm:w-8 sm:h-8 rounded bg-emerald-500 flex items-center justify-center shadow shadow-emerald-500/20">
  <Check size={14} className="text-white" />
  </div>
  )}
@@ -235,13 +196,13 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  <button
  key={range.label}
  onClick={() => setTempFilters({ ...tempFilters, priceRange: range.range })}
- className={`flex items-center justify-between p-4 sm:p-6 rounded transition border-2 ${
+ className={`flex items-center justify-between p-2 sm:p-4 rounded transition border-2 ${
  isPriceRangeActive(range.range)
  ? "bg-emerald-500/10 border-emerald-500/50"
  : "bg-slate-50 dark:bg-white/5 border-transparent"
  }`}
  >
- <span className={`font-black uppercase tracking-tight text-[10px] sm:text-xs ${
+ <span className={`font-semibold tracking-tight text-[10px] sm:text-xs ${
  isPriceRangeActive(range.range) ? "text-emerald-500" : "text-slate-500"
  }`}>
  {range.label}
@@ -265,9 +226,9 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  : [...tempFilters.brands, brand];
  setTempFilters({ ...tempFilters, brands: newBrands });
  }}
- className={`px-4 py-3 sm:px-6 sm:py-4 rounded font-black uppercase tracking-widest text-[9px] sm:text-[10px] border-2 transition ${
+ className={`px-4 py-2 sm:px-6 sm:py-4 rounded font-semibold tracking-tight text-xs border-2 transition ${
  tempFilters.brands.includes(brand)
- ? "bg-emerald-500 border-emerald-500 text-white shadow-lg shadow-emerald-500/20"
+ ? "bg-emerald-500 border-emerald-500 text-white shadow shadow-emerald-500/20"
  : "bg-slate-50 dark:bg-white/5 border-transparent text-slate-500"
  }`}
  >
@@ -295,7 +256,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  <Star key={i} size={14} className={`${i < r ? "fill-amber-400 text-amber-400" : "text-slate-200 dark:text-slate-800"}`} />
  ))}
  </div>
- <span className="ml-1 sm:ml-2 font-black text-[10px] sm:text-xs uppercase tracking-tight text-slate-500">{r} & Up</span>
+ <span className="ml-1 sm:ml-2 font-semibold text-[10px] sm:text-xs tracking-tight text-slate-500">{r} & Up</span>
  </div>
  {tempFilters.minRating === r && <Check size={14} className="text-emerald-500" />}
  </button>
@@ -314,15 +275,15 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  }`}
  >
  <div className="text-left">
- <span className="block font-black uppercase tracking-tighter text-lg sm:text-xl text-slate-900 dark:text-white mb-1">Immediate Access</span>
- <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-slate-500 line-clamp-1">Items in local fulfillment centers</span>
+ <span className="block font-semibold tracking-tighter text-lg sm:text-xl text-slate-900 dark:text-white mb-1">Immediate Access</span>
+ <span className="text-[9px] sm:text-[10px] font-semibold tracking-tight text-slate-500 line-clamp-1">Items in local centers</span>
  </div>
  <div className={`w-10 h-5 sm:w-12 sm:h-6 rounded-full relative transition-colors shrink-0 ${
  tempFilters.inStock ? "bg-emerald-500" : "bg-slate-300 dark:bg-white/10"
  }`}>
  <motion.div 
  animate={{ x: tempFilters.inStock ? 26 : 4 }}
- className="absolute top-1 w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full shadow-lg" 
+ className="absolute top-1 w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full shadow" 
  />
  </div>
  </button>
@@ -332,16 +293,16 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  </div>
 
  {/* Actions Footer */}
- <div className="px-6 py-6 border-t border-white/5 bg-slate-50/50 dark:bg-white/5 backdrop-blur-sm flex flex-row items-center gap-3">
+ <div className="px-6 py-6 border-t border-slate-200 dark:border-white/5 bg-slate-100 dark:bg-slate-900 flex flex-row items-center gap-3">
  <button
  onClick={handleReset}
- className="flex items-center justify-center gap-2 px-4 h-12 rounded font-black uppercase tracking-widest text-[9px] text-slate-500 hover:text-red-500 transition-colors border border-transparent hover:border-red-500/20"
+ className="flex items-center justify-center gap-2 px-4 h-10 rounded font-semibold tracking-tight text-sm text-slate-500 hover:text-red-500 transition-colors border border-transparent hover:border-red-500/20"
  >
  <Trash2 size={14} /> <span className="hidden sm:inline">Reset</span>
  </button>
  <button
  onClick={handleApply}
- className="flex-1 flex items-center justify-center gap-3 h-12 bg-emerald-600 text-white rounded font-black uppercase tracking-widest text-[10px] hover:bg-emerald-500 shadow-md shadow-emerald-500/20 active:scale-[0.98] transition group"
+ className="flex-1 flex items-center justify-center gap-3 h-10 bg-emerald-600 text-white rounded font-semibold tracking-tight text-sm hover:bg-emerald-500 shadow shadow-emerald-500/20 active:scale-[0.98] transition group"
  >
  Apply Filters <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
  </button>

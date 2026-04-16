@@ -102,7 +102,7 @@ const SupportTicketForm = ({
  initial={{ opacity: 0, y: 100, scale: 0.95 }}
  animate={{ opacity: 1, y: 0, scale: 1 }}
  exit={{ opacity: 0, y: 100, scale: 0.95 }}
- className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white dark:bg-slate-900 rounded shadow-lg z-50 p-6 border border-slate-200 dark:border-slate-800"
+ className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white dark:bg-slate-900 rounded shadow z-50 p-6 border border-slate-200 dark:border-slate-800"
  >
  <button
  onClick={onClose}

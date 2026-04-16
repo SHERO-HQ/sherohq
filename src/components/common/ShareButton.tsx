@@ -199,7 +199,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
  animate={{ opacity: 1, y: 0, scale: 1 }}
  exit={{ opacity: 0, y: 10, scale: 0.95 }}
  transition={{ duration: 0.2, ease: "easeOut" }}
- className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-900 rounded shadow-lg border border-slate-200 dark:border-slate-700 z-50 overflow-hidden"
+ className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-700 z-50 overflow-hidden"
  >
  <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 dark:border-white/5">
  <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-slate-400">

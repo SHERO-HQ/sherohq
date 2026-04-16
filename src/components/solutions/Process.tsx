@@ -92,7 +92,7 @@ const Process = () => {
  {/* Content Card */}
  <div className="w-full pl-14 md:pl-0 md:w-5/12">
  <div
- className={`p-6 rounded bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/5 backdrop-blur-sm hover:border-emerald-500/30 transition hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-900/20 group ${
+ className={`p-6 rounded bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/5 backdrop-blur-sm hover:border-emerald-500/30 transition hover:-translate-y-1 hover:shadow hover:shadow-emerald-900/20 group ${
  isEven ? "md:text-right" : "md:text-left"
  }`}
  >
@@ -110,7 +110,7 @@ const Process = () => {
 
  {/* Timeline Icon */}
  <div className="absolute left-8 md:left-1/2 md:-translate-x-1/2 -translate-x-1/2 flex items-center justify-center">
- <div className="w-12 h-12 md:w-20 md:h-20 rounded-full bg-emerald-600 dark:bg-emerald-500 shadow-lg shadow-emerald-500/30 flex items-center justify-center border-4 border-white dark:border-slate-900 z-10 transition-transform hover:scale-110">
+ <div className="w-12 h-12 md:w-20 md:h-20 rounded-full bg-emerald-600 dark:bg-emerald-500 shadow shadow-emerald-500/30 flex items-center justify-center border-4 border-white dark:border-slate-900 z-10 transition-transform hover:scale-110">
  <Icon className="w-6 h-6 md:w-10 md:h-10 text-white" />
  </div>
  </div>

@@ -109,7 +109,7 @@ const SupportGuideDetail = () => {
  <motion.article
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
- className="bg-card/40 dark:bg-slate-900/40 backdrop-blur-sm rounded border border-border overflow-hidden shadow-lg relative"
+ className="bg-card/40 dark:bg-slate-900/40 backdrop-blur-sm rounded border border-border overflow-hidden shadow relative"
  >
  <div className="absolute inset-0 bg-linear-to-br from-emerald-500/5 to-transparent pointer-events-none" />
 
@@ -173,7 +173,7 @@ const SupportGuideDetail = () => {
  prose-headings: prose-headings:text-foreground prose-headings:tracking-tight
  prose-p:text-muted-foreground prose-p:leading-relaxed
  prose-a:text-emerald-600 dark:prose-a:text-emerald-400 prose-a:font-bold hover:prose-a:text-emerald-700 dark:hover:prose-a:text-emerald-300 prose-a:transition-colors
- prose-img:rounded prose-img:shadow-lg
+ prose-img:rounded prose-img:shadow
  prose-strong:text-emerald-600 dark:prose-strong:text-emerald-400
  prose-code:text-emerald-700 dark:prose-code:text-emerald-300 prose-code:bg-emerald-500/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none
  prose-pre:bg-secondary/50 dark:prose-pre:bg-slate-800/50 prose-pre:border prose-pre:border-border prose-pre:rounded

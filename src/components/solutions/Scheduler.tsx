@@ -192,7 +192,7 @@ const Scheduler = () => {
 
  if (status === "success") {
  return (
- <div className="max-w-xl mx-auto p-8 md:p-10 bg-white dark:bg-slate-900 rounded shadow-md shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 text-center">
+ <div className="max-w-xl mx-auto p-8 md:p-10 bg-white dark:bg-slate-900 rounded shadow shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 text-center">
  <motion.div
  initial={{ scale: 0 }}
  animate={{ scale: 1 }}
@@ -232,7 +232,7 @@ const Scheduler = () => {
  return (
  <div
  ref={scrollRef}
- className="max-w-[1240px] mx-auto bg-white dark:bg-slate-900 rounded shadow-lg shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 overflow-hidden flex flex-col justify-center md:flex-row min-h-[500px] md:min-h-[600px]"
+ className="max-w-[1240px] mx-auto bg-white dark:bg-slate-900 rounded shadow shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 overflow-hidden flex flex-col justify-center md:flex-row min-h-[500px] md:min-h-[600px]"
  >
  {/* Sidebar / Progress */}
  <div className="w-full md:w-80 bg-slate-50 dark:bg-slate-950 px-3 py-6 md:p-8 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0">
@@ -276,7 +276,7 @@ const Scheduler = () => {
                 className={cn(
                   "w-8 h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-bold relative z-10 transition duration-300 shrink-0 border-2",
                   step === s.id
-                    ? "bg-emerald-600 border-emerald-600 text-white shadow-lg shadow-emerald-500/30 ring-4 ring-emerald-50 dark:ring-emerald-900/20"
+                    ? "bg-emerald-600 border-emerald-600 text-white shadow shadow-emerald-500/30 ring-4 ring-emerald-50 dark:ring-emerald-900/20"
                     : step > s.id
                       ? "bg-emerald-100 dark:bg-emerald-900 border-emerald-500 text-emerald-600 dark:text-emerald-400"
                       : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500",
@@ -464,7 +464,7 @@ const Scheduler = () => {
  "bg-slate-100 dark:bg-slate-800/50 text-slate-400 dark:text-slate-600 border-slate-200 dark:border-slate-700 opacity-50 !cursor-not-allowed";
  } else if (formData.time === time) {
  slotClass =
- "bg-emerald-600 text-white border-emerald-600 shadow-md shadow-emerald-500/20 scale-105";
+ "bg-emerald-600 text-white border-emerald-600 shadow shadow-emerald-500/20 scale-105";
  }
 
  return (
@@ -632,7 +632,7 @@ const Scheduler = () => {
  type="submit"
  disabled={status === "submitting"}
  size="lg"
- className="flex-1 md:flex-none rounded px-8 bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-500/30"
+ className="flex-1 md:flex-none rounded px-8 bg-emerald-600 hover:bg-emerald-700 text-white shadow shadow-emerald-500/30"
  >
  {status === "submitting"
  ? "Confirming..."

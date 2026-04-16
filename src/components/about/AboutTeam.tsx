@@ -55,7 +55,7 @@ const AboutTeam = () => {
  }
 
  return (
- <div className="relative border border-slate-200 dark:border-white/10 overflow-hidden shadow-lg shadow-slate-200/50 dark:shadow-none">
+ <div className="relative border border-slate-200 dark:border-white/10 overflow-hidden shadow shadow-slate-200/50 dark:shadow-none">
  <div className="grid grid-cols-1 sm:grid-cols-2 min-[470px]:grid-cols-2 lg:grid-cols-4 relative">
  {/* Decorative background blur */}
  <div className="absolute -top-24 -left-24 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl pointer-events-none" />

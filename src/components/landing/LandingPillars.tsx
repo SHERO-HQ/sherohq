@@ -9,6 +9,7 @@ import {
  MessageSquare,
  Code,
  ArrowUpRight,
+ Server,
 } from "lucide-react";
 
 // Type definitions
@@ -36,7 +37,7 @@ const PILLARS: PillarsProps[] = [
  subheader: "Built to Scale",
  content:
  "Professional setup and management of server systems, POS, and secure enterprise networks.",
- icon: <ArrowUpRight className="w-6 h-6" />,
+ icon: <Server className="w-6 h-6" />,
  className: "md:col-span-1",
  gradient: "from-emerald-500/20 to-green-500/20",
  },
@@ -101,7 +102,7 @@ const LandingPillars = () => {
  >
  {/* Hover Gradient Overlay */}
  <div
- className={`absolute inset-0 bg-gradient-to-br ${pillar.gradient} opacity-0 group-hover:opacity-40 dark:group-hover:opacity-100 transition-opacity duration-500`}
+ className={`absolute inset-0 bg-linear-to-br ${pillar.gradient} opacity-0 group-hover:opacity-40 dark:group-hover:opacity-100 transition-opacity duration-500`}
  />
 
  {/* Content */}
@@ -114,7 +115,7 @@ const LandingPillars = () => {
  </div>
 
  <div className="mt-auto">
- <h4 className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-2 uppercase tracking-wider transition-colors duration-300">
+ <h4 className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1 uppercase tracking-wider transition-colors duration-300">
  {pillar.subheader}
  </h4>
  <h3 className="md:text-2xl text-lg font-bold text-slate-900 dark:text-white mb-3 transition-colors duration-300">

@@ -99,7 +99,7 @@ export default function AdminProfile() {
  <div className="px-6 pb-6 relative">
  <div className="flex justify-center -mt-12 mb-4">
  <div className="relative group">
- <div className="relative w-24 h-24 rounded bg-background border-4 border-card overflow-hidden shadow-lg">
+ <div className="relative w-24 h-24 rounded bg-background border-4 border-card overflow-hidden shadow">
  {avatar ? (
  <AppImage
  src={getImageUrl(avatar)}
@@ -117,7 +117,7 @@ export default function AdminProfile() {
  <button
  type="button"
  onClick={() => fileInputRef.current?.click()}
- className="absolute bottom-1 right-1 p-1.5 bg-emerald-500 rounded text-white hover:bg-emerald-400 transition-colors shadow-lg"
+ className="absolute bottom-1 right-1 p-1.5 bg-emerald-500 rounded text-white hover:bg-emerald-400 transition-colors shadow"
  disabled={isUpdating}
  >
  {isUpdating ? (

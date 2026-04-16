@@ -242,7 +242,7 @@ export default function AdminOrders() {
  </Link>
 
  <Link href="/admin/orders/new">
- <Button className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition shadow-lg shadow-emerald-500/20">
+ <Button className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition shadow shadow-emerald-500/20">
  <Plus className="mr-2 h-4 w-4" /> Create Order
  </Button>
  </Link>
@@ -286,7 +286,7 @@ export default function AdminOrders() {
  className={cn(
  "px-4 py-1 rounded text-sm font-medium transition whitespace-nowrap",
  statusFilter === status.id
- ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20"
+ ? "bg-emerald-600 text-white shadow shadow-emerald-500/20"
  : "text-slate-400 hover:text-white hover:bg-white/5",
  )}
  >

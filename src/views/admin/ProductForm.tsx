@@ -378,7 +378,7 @@ export default function ProductForm() {
                     <div
                       key={url}
                       className={cn(
-                        "relative aspect-square w-full rounded bg-slate-800 border-2 overflow-hidden shadow-lg",
+                        "relative aspect-square w-full rounded bg-slate-800 border-2 overflow-hidden shadow",
                         productData.image === url
                           ? "border-emerald-500 shadow-emerald-500/10"
                           : "border-white/5",
@@ -397,7 +397,7 @@ export default function ProductForm() {
                         <button
                           type="button"
                           onClick={() => removeImage(url)}
-                          className="p-2 bg-rose-500 text-white rounded shadow-lg hover:bg-rose-600 transition-colors"
+                          className="p-2 bg-rose-500 text-white rounded shadow hover:bg-rose-600 transition-colors"
                           title="Remove Image"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -409,7 +409,7 @@ export default function ProductForm() {
                           type="button"
                           onClick={() => setMainImage(url)}
                           className={cn(
-                            "w-full py-2 px-3 rounded text-xs font-bold uppercase tracking-wider transition shadow-md",
+                            "w-full py-2 px-3 rounded text-xs font-bold uppercase tracking-wider transition shadow",
                             productData.image === url
                               ? "bg-emerald-500 text-white cursor-default"
                               : "bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm",
@@ -423,7 +423,7 @@ export default function ProductForm() {
                       </div>
 
                       {productData.image === url && (
-                        <div className="absolute top-2 left-2 px-2 py-1 bg-emerald-500 text-[10px] font-bold text-white rounded shadow-lg uppercase tracking-tight">
+                        <div className="absolute top-2 left-2 px-2 py-1 bg-emerald-500 text-[10px] font-bold text-white rounded shadow uppercase tracking-tight">
                           Primary
                         </div>
                       )}

@@ -47,7 +47,7 @@ export default function Toaster() {
  animate={{ opacity: 1, scale: 1, x: 0 }}
  exit={{ opacity: 0, scale: 0.9, x: 20 }}
  className={cn(
- "pointer-events-auto flex items-start gap-3 p-4 rounded border shadow-lg backdrop-blur-sm",
+ "pointer-events-auto flex items-start gap-3 p-4 rounded border shadow backdrop-blur-sm",
  notification.type === "success" &&
  "bg-emerald-950/90 border-emerald-500/20 text-emerald-50",
  notification.type === "error" &&

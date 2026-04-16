@@ -3,8 +3,7 @@ import { useState, useEffect } from "react";
 import { X, Download } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
-import logoLight from "@/assets/logo/shero-light.svg";
-import logoDark from "@/assets/logo/shero-dark.svg";
+import sheroIcon from "@/assets/logo/shero.svg";
 
 interface BeforeInstallPromptEvent extends Event {
  prompt: () => Promise<void>;
@@ -96,20 +95,15 @@ const PWAInstallPrompt = () => {
  initial={{ opacity: 0, y: 100 }}
  animate={{ opacity: 1, y: 0 }}
  exit={{ opacity: 0, y: 100 }}
- className="fixed bottom-20 md:bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-sm z-60 bg-white dark:bg-slate-900 rounded shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden"
+ className="fixed bottom-20 md:bottom-6 left-4 right-4 md:left-auto md:right-6 md:max-w-sm z-60 bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-700 overflow-hidden"
  >
  <div className="p-4">
  <div className="flex items-start gap-3">
- <div className="shrink-0 w-12 h-12 rounded bg-slate-900 dark:bg-white flex items-center justify-center overflow-hidden p-1.5">
+ <div className="shrink-0 w-12 h-12 rounded bg-slate-900 dark:bg-white flex items-center justify-center overflow-hidden p-2">
  <Image
- src={logoLight}
+ src={sheroIcon}
  alt="SHERO"
- className="block dark:hidden w-full h-full object-contain"
- />
- <Image
- src={logoDark}
- alt="SHERO"
- className="hidden dark:block w-full h-full object-contain"
+ className="w-full h-full object-contain"
  />
  </div>
  <div className="flex-1 min-w-0">

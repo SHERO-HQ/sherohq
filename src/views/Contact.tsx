@@ -94,7 +94,7 @@ const Contact = () => {
  className="relative"
  >
  {/* Form Container */}
- <div className="relative bg-white/70 dark:bg-slate-900/40 backdrop-blur-sm border border-slate-200 dark:border-white/10 rounded p-8 shadow-lg">
+ <div className="relative bg-white/70 dark:bg-slate-900/40 backdrop-blur-sm border border-slate-200 dark:border-white/10 rounded p-8 shadow">
  <div className="absolute top-0 right-0 p-6 opacity-20">
  <MessagesSquare className="w-12 h-12" />
  </div>

@@ -163,7 +163,7 @@ const LandingHero: React.FC = () => {
                 asChild
                 variant="brand"
                 size="lg"
-                className="text-base w-full sm:w-auto h-11 px-8 shadow-md shadow-emerald-500/20 group transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-500/25"
+                className="text-base w-full sm:w-auto h-11 px-8 shadow shadow-emerald-500/20 group transition-all hover:-translate-y-0.5 hover:shadow hover:shadow-emerald-500/25"
               >
                 <NavLink href={getAbsoluteUrl("/shop")}>
                   <span className="text-base">Shop Products</span>
@@ -324,7 +324,7 @@ const LandingHero: React.FC = () => {
  x: useTransform(smoothX, [-0.5, 0.5], [6, -6]),
  y: useTransform(smoothY, [-0.5, 0.5], [4, -4]),
  }}
- className="absolute -bottom-6 right-4 rounded border border-primary/30 bg-white/95 dark:bg-slate-900/95 backdrop-blur px-4 py-3 shadow-lg select-none pointer-events-none hidden sm:block"
+ className="absolute -bottom-6 right-4 rounded border border-primary/30 bg-white/95 dark:bg-slate-900/95 backdrop-blur px-4 py-3 shadow select-none pointer-events-none hidden sm:block"
  >
  <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500">
  Procurement
