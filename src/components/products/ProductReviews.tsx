@@ -77,10 +77,10 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
  <div className="space-y-12">
  <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
  <div>
- <h2 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter mb-2">
+ <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tighter mb-2">
  Customer <span className="text-emerald-500">Feedback</span>
  </h2>
- <p className="text-sm font-medium text-slate-500 uppercase tracking-widest">
+ <p className="text-sm font-medium text-slate-500 tracking-widest">
  {reviews.length} Verified Reviews
  </p>
  </div>
@@ -97,7 +97,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
  ) : reviews.length === 0 ? (
  <div className="rounded bg-white dark:bg-white/5 backdrop-blur-sm border border-slate-200 dark:border-white/10 p-12 text-center">
  <MessageSquare className="w-12 h-12 text-slate-300 dark:text-slate-700 mx-auto mb-4" />
- <p className="text-slate-500 dark:text-slate-400 font-bold">
+ <p className="text-slate-500 dark:text-slate-400">
  No reviews yet. Be the first to share your thoughts.
  </p>
  </div>
@@ -140,7 +140,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
  ))}
  </div>
  </div>
- <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+ <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
  "{review.comment}"
  </p>
  </motion.div>
@@ -157,12 +157,12 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
  
  <div className="relative">
  <h3 className="text-xl font-black text-slate-900 dark:text-white mb-6 uppercase tracking-tight flex items-center gap-2">
- <PenLine size={20} className="text-emerald-500" /> Shape the <span className="text-emerald-500">Future</span>
+ <PenLine size={20} className="text-emerald-500" />Leave a<span className="text-emerald-500">Review</span>
  </h3>
  
- <form onSubmit={handleSubmit} className="space-y-6">
+ <form onSubmit={handleSubmit} className="space-y-4">
  <div>
- <label className="block text-[10px] font-black uppercase tracking-widest text-slate-500 mb-4">
+ <label className="block text-sm tracking-widest text-slate-500 mb-2">
  Product Experience
  </label>
  <div className="flex gap-2">
@@ -195,8 +195,8 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
  required
  value={name}
  onChange={(e) => setName(e.target.value)}
- className="w-full px-6 py-4 rounded border-2 border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-emerald-500 focus:bg-white dark:focus:bg-black/40 outline-none transition"
- placeholder="Your Public Name"
+ className="w-full px-4 py-3 rounded border-2 border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-emerald-500 focus:bg-white dark:focus:bg-black/40 outline-none transition"
+ placeholder="Your Name"
  />
  </div>
 
@@ -206,7 +206,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
  value={comment}
  onChange={(e) => setComment(e.target.value)}
  rows={4}
- className="w-full px-6 py-4 rounded border-2 border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white font-bold placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-emerald-500 focus:bg-white dark:focus:bg-black/40 outline-none transition resize-none"
+ className="w-full px-4 py-3 rounded border-2 border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-emerald-500 focus:bg-white dark:focus:bg-black/40 outline-none transition resize-none"
  placeholder="What was your experience like?"
  />
  </div>
@@ -215,15 +215,15 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
  <button
  type="submit"
  disabled={submitting}
- className="w-full h-14 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-black uppercase tracking-widest text-xs rounded shadow shadow-emerald-500/20 transition active:scale-[0.98] flex items-center justify-center gap-3"
+ className="w-full h-12 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-semibold uppercase tracking-widest text-xs rounded shadow shadow-emerald-500/20 transition active:scale-[0.98] flex items-center justify-center gap-3"
  >
  {submitting ? (
  <>
  <Loader2 className="w-5 h-5 animate-spin" /> 
- <span className="animate-pulse">Broadcasting...</span>
+ <span className="animate-pulse">Sending...</span>
  </>
  ) : (
- "Publish Review"
+ "Review"
  )}
  </button>
  </form>

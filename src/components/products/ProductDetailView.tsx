@@ -141,10 +141,10 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         <div className="flex items-center justify-between mb-8">
           <button
             onClick={() => (window.location.href = getAbsoluteUrl("/shop"))}
-            className="group flex items-center gap-2 text-sm font-black uppercase tracking-widest text-slate-500 hover:text-emerald-500 transition-colors"
+            className="group flex items-center gap-2 text-sm font-black tracking-widest text-slate-500 hover:text-emerald-500 transition-colors"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            Back to Shop
+            Shop
           </button>
           <div className="flex items-center gap-2">
             <ShareButton
@@ -199,13 +199,13 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 <div className="absolute inset-0 flex items-center justify-between px-4 pointer-events-none">
                   <button
                     onClick={prevImage}
-                    className="pointer-events-auto p-3 bg-white/90 dark:bg-slate-900 rounded border border-slate-200 dark:border-white/10 hover:bg-emerald-500 hover:text-white transition-colors"
+                    className="pointer-events-auto p-1.5 bg-white/90 dark:bg-slate-900/60 rounded border border-slate-200 dark:border-white/10 hover:bg-emerald-500 hover:text-white transition-colors"
                   >
                     <ChevronLeft size={24} />
                   </button>
                   <button
                     onClick={nextImage}
-                    className="pointer-events-auto p-3 bg-white/90 dark:bg-slate-900 rounded border border-slate-200 dark:border-white/10 hover:bg-emerald-500 hover:text-white transition-colors"
+                    className="pointer-events-auto p-1.5 bg-white/90 dark:bg-slate-900/60 rounded border border-slate-200 dark:border-white/10 hover:bg-emerald-500 hover:text-white transition-colors"
                   >
                     <ChevronRight size={24} />
                   </button>
@@ -284,7 +284,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 </div>
               </div>
 
-              <h1 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white leading-tight mb-4">
+              <h1 className="text-2xl md:text-4xl font-black text-slate-900 dark:text-white leading-tight mb-4">
                 {product.name}
               </h1>
 
@@ -293,7 +293,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
               </p>
 
               {/* Quantity Selector */}
-              <div className="flex justify-between items-center gap-6 mb-8 px-4 py-3 rounded bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5">
+              <div className="flex justify-between items-center gap-6 mb-8 px-2 py-1 rounded bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/5">
                 <span className="text-xs font-black uppercase tracking-widest text-slate-500">
                   Quantity
                 </span>
@@ -319,7 +319,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 px-1">
                 <div className="flex flex-col">
                   {product.originalPrice && (
-                    <span className="text-[10px] font-black uppercase tracking-widest text-red-400 line-through">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-red-400 line-through">
                       Was {formatCurrency(product.originalPrice)}
                     </span>
                   )}
@@ -328,10 +328,10 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   </span>
                 </div>
                 <div
-                  className={`px-4 py-1 rounded text-[10px] font-black uppercase tracking-tighter border-2 ${
+                  className={`text-[10px] font-semibold tracking-tighter w-fit border border-emerald-500/30 p-1 rounded${
                     product.inStock
-                      ? "bg-emerald-500/5 border-emerald-500/20 text-emerald-600"
-                      : "bg-red-500/5 border-red-500/20 text-red-600"
+                      ? " text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/10"
+                      : " text-red-600 dark:text-red-400 bg-red-500/10 dark:bg-red-500/10"
                   }`}
                 >
                   {product.inStock ? "In Stock" : "Out of Stock"}
@@ -344,7 +344,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   <button
                     onClick={handleAddToCart}
                     disabled={!product.inStock || isAddedToCart}
-                    className={`flex-1 flex items-center justify-center gap-2 h-14 px-4 rounded font-black text-[10px] uppercase tracking-widest transition-colors border-2 ${
+                    className={`flex-1 flex items-center justify-center gap-2 h-12 px-4 rounded font-semibold text-sm uppercase tracking-widest transition-colors border-2 ${
                       isAddedToCart
                         ? "bg-emerald-500 border-emerald-500 text-white"
                         : "bg-white dark:bg-white/5 border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500 hover:text-white"
@@ -355,7 +355,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     ) : (
                       <ShoppingCart className="w-5 h-5" />
                     )}
-                    {isAddedToCart ? "Added" : "Add to Cart"}
+                    {isAddedToCart ? "Added" : "Add"}
                   </button>
 
                   <button
@@ -364,9 +364,9 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                       router.push("/shop/checkout");
                     }}
                     disabled={!product.inStock}
-                    className="flex-1 px-2 h-14 bg-emerald-600 text-white rounded font-black text-[11px] uppercase tracking-widest hover:bg-emerald-500 transition-colors disabled:opacity-50"
+                    className="flex-1 px-2 h-12 bg-emerald-600 text-white rounded font-semibold text-sm uppercase tracking-widest hover:bg-emerald-500 transition-colors disabled:opacity-50"
                   >
-                    Buy Now
+                    Buy
                   </button>
 
                   <button
@@ -379,7 +379,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                         category: product.category,
                       })
                     }
-                    className={`w-14 h-14 rounded flex items-center justify-center border-2 transition-colors shrink-0 ${
+                    className={`w-12 h-12 rounded flex items-center justify-center border-2 transition-colors shrink-0 ${
                       isWishlisted
                         ? "bg-red-500 border-red-500 text-white"
                         : "border-slate-200 dark:border-white/10 text-slate-500 hover:border-red-500 hover:text-red-500"
@@ -397,7 +397,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-3 h-14 bg-[#25D366] text-white rounded font-black text-sm uppercase tracking-widest hover:bg-[#20bd5a] transition-colors"
+                  className="flex items-center justify-center gap-3 h-12 bg-[#25D366] text-white rounded font-semibold text-sm uppercase tracking-widest hover:bg-[#20bd5a] transition-colors"
                 >
                   <WhatsAppIcon className="w-5 h-5" />
                   Chat on WhatsApp
@@ -434,9 +434,9 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         {/* Specifications Section - Premium Table */}
         {product.specifications &&
           Object.keys(product.specifications).length > 0 && (
-            <div className="mt-24">
+            <div className="mt-12">
               <div className="flex flex-col items-center mb-12">
-                <h2 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">
+                <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">
                   Technical{" "}
                   <span className="text-emerald-500">Specifications</span>
                 </h2>
@@ -481,8 +481,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
 
         {/* Related Products */}
         {(relatedLoading || relatedProducts.length > 0) && (
-          <div className="mt-24 border-t border-slate-200 dark:border-white/10 pt-20">
-            <div className="flex items-center justify-between mb-12">
+          <div className="mt-12 border-t border-slate-200 dark:border-white/10 pt-6">
+            <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">
                 You Might <span className="text-emerald-500">Also Like</span>
               </h2>
@@ -493,7 +493,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 View Shop
               </button>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {relatedLoading
                 ? [1, 2, 3, 4].map((i) => (
                     <ProductCardSkeleton key={`related-skeleton-${i}`} />
@@ -506,7 +506,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         )}
 
         {/* Product Reviews */}
-        <div className="mt-24 border-t border-slate-200 dark:border-white/10 pt-20">
+        <div className="mt-12 border-t border-slate-200 dark:border-white/10 pt-12">
           <ProductReviews productId={product.id} />
         </div>
       </div>

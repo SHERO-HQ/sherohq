@@ -68,7 +68,7 @@ const ShopView = () => {
     const allCategory: Category = {
       id: "all",
       name: "All Products",
-      icon: <Package className="w-6 h-6" />,
+      icon: <Package className="w-5 h-5" />,
       count: products.length,
     };
 
@@ -77,7 +77,7 @@ const ShopView = () => {
         id: cat.id,
         name: cat.name,
         icon: defaultCategories.find((c) => c.id === cat.id)?.icon || (
-          <Package className="w-6 h-6" />
+          <Package className="w-5 h-5" />
         ),
         count: products.filter(
           (p: Product) => (p.categoryId || p.category) === cat.id,
@@ -256,10 +256,13 @@ const ShopView = () => {
 
                   {/* Category Dropdown - Mobile/Tablet Only */}
                   <div className="relative flex-1 lg:hidden">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none flex items-center text-slate-400">
+                      <span className="text-base">{categoriesWithCount.find(c => c.id === activeCategory)?.icon}</span>
+                    </div>
                     <select
                       value={activeCategory}
                       onChange={(e) => handleCategoryChange(e.target.value)}
-                      className="w-full text-xs sm:text-sm font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded h-[42px] px-4 appearance-none text-slate-800 dark:text-white cursor-pointer focus:ring-2 focus:ring-emerald-500/50 transition-all shadow-sm"
+                      className="w-full text-xs sm:text-sm font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded h-[42px] pl-10 pr-10 appearance-none text-slate-800 dark:text-white cursor-pointer focus:ring-2 focus:ring-emerald-500/50 transition-all shadow-sm"
                     >
                       {categoriesWithCount.map((cat) => (
                         <option key={cat.id} value={cat.id}>
@@ -267,8 +270,7 @@ const ShopView = () => {
                         </option>
                       ))}
                     </select>
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-emerald-500 flex items-center gap-2">
-                      <span className="text-xl">{categoriesWithCount.find(c => c.id === activeCategory)?.icon}</span>
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
                       <ChevronDown size={16} />
                     </div>
                   </div>

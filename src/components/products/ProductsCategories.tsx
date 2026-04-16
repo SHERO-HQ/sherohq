@@ -51,7 +51,7 @@ const ProductCategories: React.FC<ProductCategoriesProps> = ({
  >
  {/* Icon */}
  <div
- className={`w-6 h-6 sm:w-8 sm:h-8 rounded p-1 sm:rounded flex items-center justify-center
+ className={`w-4 h-4 sm:w-6 sm:h-6 rounded p-1 sm:rounded flex items-center justify-center
  transition duration-300
  ${
  activeCategory === category.id
