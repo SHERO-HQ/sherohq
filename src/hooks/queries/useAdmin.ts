@@ -47,10 +47,11 @@ export const useRecentOrders = (refetchInterval?: number | false) => {
   });
 };
 
-export const useAnalytics = (period = "7d") => {
+export const useAnalytics = (period = "7d", refetchInterval?: number | false) => {
   return useQuery({
     queryKey: ADMIN_KEYS.analytics(period),
     queryFn: () => fetchAnalytics(period),
+    refetchInterval,
     placeholderData: (previousData: AnalyticsData[] | undefined) =>
       previousData,
   });

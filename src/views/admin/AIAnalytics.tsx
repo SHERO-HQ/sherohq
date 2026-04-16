@@ -76,15 +76,7 @@ export default function AIAnalytics() {
     fetchData();
   }, []);
 
-  if (loading)
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950">
-        <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-
-  const totals = data?.totals || EMPTY_TOTALS;
-
+  // All hooks must be called unconditionally (before any early return)
   const dailyVolumeData = useMemo(() => {
     const rows = (data?.dailyVolume || []).map((entry) => ({
       day: entry.day,
@@ -118,6 +110,8 @@ export default function AIAnalytics() {
     [data?.topGaps],
   );
 
+  const totals = data?.totals || EMPTY_TOTALS;
+
   const totalInteractions =
     totals.totalInteractions ||
     dailyVolumeData.reduce((acc, curr) => acc + curr.count, 0);
@@ -140,6 +134,16 @@ export default function AIAnalytics() {
       : 0;
 
   const COLORS = ["#10b981", "#3b82f6", "#f59e0b", "#8b5cf6", "#ef4444"];
+
+  if (loading) {
+    return (
+      <AdminLayout>
+        <div className="min-h-[60vh] flex items-center justify-center">
+          <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+        </div>
+      </AdminLayout>
+    );
+  }
 
   return (
     <AdminLayout>

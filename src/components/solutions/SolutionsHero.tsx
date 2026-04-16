@@ -39,7 +39,7 @@ const SolutionsHero = () => {
     <header
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative w-full min-h-screen lg:h-[90vh] flex items-center pt-24 pb-20 lg:py-0 overflow-hidden bg-slate-50 dark:bg-slate-950"
+      className="relative w-full min-h-screen lg:h-[80vh] flex items-center pt-24 pb-20 lg:py-0 overflow-hidden bg-slate-50 dark:bg-slate-950"
     >
       <HeroBackground />
 
@@ -52,15 +52,15 @@ const SolutionsHero = () => {
             transition={{ duration: 1, type: "spring", damping: 20 }}
             className="relative z-10 flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1 w-full lg:w-1/2"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-6 lg:mb-8 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-3 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm">
               <Code className="size-4 text-emerald-500" />
-              <span className="text-xs sm:text-base font-mono font-black tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
+              <span className="text-xs font-mono tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
                 Software & IT Solutions
               </span>
             </div>
 
-            <h1 className="text-7xl sm:text-8xl md:text-9xl lg:text-[9.5rem] font-black font-sora text-slate-900 dark:text-white leading-[1.01] tracking-tighter mb-6 lg:mb-8">
-              {["Software", "and", "IT", "Built", "for", "Scale"].map(
+            <h1 className="text-7xl sm:text-7xl md:text-8xl font-black font-sora text-slate-900 dark:text-white leading-[1.01] tracking-tighter mb-6 lg:mb-8">
+              {["Software", "and", "IT", "Built", "to", "Scale"].map(
                 (word, i) => (
                   <span
                     key={i}
@@ -72,19 +72,19 @@ const SolutionsHero = () => {
               )}
             </h1>
 
-            <p className="text-xl sm:text-2xl lg:text-3xl text-slate-600 dark:text-slate-400 mb-8 lg:mb-10 max-w-2xl leading-relaxed">
+            <p className="text-base text-slate-600 dark:text-slate-400 mb-8 lg:mb-10 max-w-2xl leading-relaxed">
               From high-performance custom platforms to managed enterprise
               infrastructure, we engineer systems that grow with your ambitions.
             </p>
 
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mb-10 lg:mb-12">
+            <div className="grid grid-cols-2 items-center justify-center lg:justify-start gap-3 mb-10 lg:mb-12">
               {features.map((feature, i) => (
                 <div
                   key={i}
                   className="flex items-center gap-2.5 px-4 py-2 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-sm transition-colors hover:border-emerald-500/30"
                 >
                   <feature.icon className="size-3.5 text-emerald-500" />
-                  <span className="text-sm sm:text-base font-black uppercase tracking-tight text-slate-600 dark:text-slate-300">
+                  <span className="text-xs font-semibold uppercase tracking-tight text-slate-600 dark:text-slate-300">
                     {feature.label}
                   </span>
                 </div>
@@ -93,7 +93,7 @@ const SolutionsHero = () => {
 
             <Link
               href="/consultation"
-              className="group w-full sm:w-auto flex items-center justify-center gap-6 px-12 h-12 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded font-black uppercase tracking-widest text-base hover:bg-emerald-600 dark:hover:bg-emerald-500 dark:hover:text-white transition shadow-lg shadow-black/20"
+              className="group w-full sm:w-auto flex items-center justify-center gap-6 px-12 h-12 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded font-bold uppercase tracking-widest text-base hover:bg-emerald-600 dark:hover:bg-emerald-500 dark:hover:text-white transition shadow-lg shadow-black/20"
             >
               Let's Talk
               <ArrowRight

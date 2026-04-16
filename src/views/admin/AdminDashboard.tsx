@@ -176,7 +176,7 @@ export default function AdminDashboard() {
   data: analytics,
   isLoading: analyticsLoading,
   refetch: refetchAnalytics,
- } = useAnalytics(period);
+ } = useAnalytics(period, 30000);
 
  const {
   data: recentOrders,
