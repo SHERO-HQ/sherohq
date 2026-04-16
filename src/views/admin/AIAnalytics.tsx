@@ -1,6 +1,7 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
-import { authFetch } from "@/services/client";
+import { useMemo } from "react";
+import { useAIAnalyticsSummary } from "@/hooks/queries/useAdmin";
+import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import AdminLayout from "@/components/admin/AdminLayout";
 import {
   Card,
@@ -56,25 +57,8 @@ const EMPTY_TOTALS: AnalyticsTotals = {
 };
 
 export default function AIAnalytics() {
-  const [data, setData] = useState<AnalyticsData | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await authFetch("/api/analytics/summary");
-        const result = await res.json();
-        if (result.success) {
-          setData(result.data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch AI analytics:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+  const { data: result, isLoading: loading } = useAIAnalyticsSummary(ADMIN_POLLING_INTERVAL);
+  const data = result?.success ? result.data : null;
 
   // All hooks must be called unconditionally (before any early return)
   const dailyVolumeData = useMemo(() => {

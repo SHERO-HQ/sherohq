@@ -23,6 +23,7 @@ import {
   Brain,
  RefreshCw,
 } from "lucide-react";
+import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import AdminLayout from "@/components/admin/AdminLayout";
 import {
  Card,
@@ -170,25 +171,25 @@ export default function AdminDashboard() {
   isLoading: statsLoading,
   error: statsError,
   refetch: refetchStats,
- } = useAdminStats(30000);
+ } = useAdminStats(ADMIN_POLLING_INTERVAL);
 
  const {
   data: analytics,
   isLoading: analyticsLoading,
   refetch: refetchAnalytics,
- } = useAnalytics(period, 30000);
+ } = useAnalytics(period, ADMIN_POLLING_INTERVAL);
 
  const {
   data: recentOrders,
   isLoading: ordersLoading,
   refetch: refetchOrders,
- } = useRecentOrders(30000);
+ } = useRecentOrders(ADMIN_POLLING_INTERVAL);
 
  const {
   data: activityLogs,
   isLoading: activityLoading,
   refetch: refetchActivity,
- } = useActivityLogs(30000);
+ } = useActivityLogs(ADMIN_POLLING_INTERVAL);
 
  const [isRefreshing, setIsRefreshing] = useState(false);
 

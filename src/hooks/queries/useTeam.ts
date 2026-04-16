@@ -12,10 +12,11 @@ export const TEAM_KEYS = {
   all: ["team"] as const,
 };
 
-export const useTeam = () => {
+export const useTeam = (refetchInterval?: number | false) => {
   return useQuery({
     queryKey: TEAM_KEYS.all,
     queryFn: fetchTeam,
+    refetchInterval,
   });
 };
 

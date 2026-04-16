@@ -117,6 +117,7 @@ export {
   deleteCustomer,
   adminResetUserPassword,
   adminToggleUserActive,
+  fetchAIAnalyticsSummary,
 } from "./admin";
 
 // Support tickets, consultations, inquiries

@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { getImageUrl } from "@/services/api";
 import { useNotifications } from "@/hooks/useNotifications";
+import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import type { Product, Category } from "@/types/product";
 import AppImage from "@/components/common/AppImage";
 import {
@@ -65,6 +66,7 @@ export default function AdminProducts() {
   } = useProducts(
     selectedCategory === "all" ? undefined : selectedCategory,
     search,
+    ADMIN_POLLING_INTERVAL,
   );
 
   const { data: categories = [], isLoading: categoriesLoading } =

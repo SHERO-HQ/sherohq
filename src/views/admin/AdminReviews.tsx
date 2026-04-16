@@ -3,6 +3,7 @@ import { useState } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { MessageSquare, Trash2, Search, Star, Loader2 } from "lucide-react";
 import { useAdminReviews, useDeleteReview } from "@/hooks/queries/useReviews";
+import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import { useNotifications } from "@/hooks/useNotifications";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 
 const AdminReviews = () => {
- const { data: reviews = [], isLoading } = useAdminReviews();
+ const { data: reviews = [], isLoading } = useAdminReviews(ADMIN_POLLING_INTERVAL);
  const deleteMutation = useDeleteReview();
  const { addNotification } = useNotifications();
 

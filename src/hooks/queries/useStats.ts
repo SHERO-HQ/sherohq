@@ -7,10 +7,11 @@ export const STAT_KEYS = {
   all: ["site-stats"] as const,
 };
 
-export const useStats = () => {
+export const useStats = (refetchInterval?: number | false) => {
   return useQuery({
     queryKey: STAT_KEYS.all,
     queryFn: fetchStats,
+    refetchInterval,
   });
 };
 

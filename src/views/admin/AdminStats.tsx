@@ -21,6 +21,7 @@ import {
  useUpdateStat,
  useDeleteStat,
 } from "@/hooks/queries/useStats";
+import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import { useNotifications } from "@/hooks/useNotifications";
 import { type SiteStat } from "@/services/api";
 import { Button } from "@/components/ui/button";
@@ -39,7 +40,7 @@ const iconOptions = [
 ];
 
 const AdminStats = () => {
- const { data: stats = [], isLoading } = useStats();
+ const { data: stats = [], isLoading } = useStats(ADMIN_POLLING_INTERVAL);
  const createMutation = useCreateStat();
  const updateMutation = useUpdateStat();
  const deleteMutation = useDeleteStat();

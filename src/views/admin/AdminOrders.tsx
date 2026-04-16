@@ -1,6 +1,7 @@
 "use client";
 import { useState, useMemo } from "react";
 import { useNotifications } from "@/hooks/useNotifications";
+import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import {
  Search,
  Eye,
@@ -59,7 +60,7 @@ export default function AdminOrders() {
  error: queryError,
  } = useAdminOrdersQuery({
  status: statusFilter === "all" ? undefined : statusFilter,
- });
+ }, ADMIN_POLLING_INTERVAL);
 
  const updateStatusMutation = useUpdateOrderStatus();
 

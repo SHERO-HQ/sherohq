@@ -16,19 +16,22 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import {
-  fetchSupportTickets,
-  fetchConsultations,
-  fetchInquiries,
-  updateTicketStatus,
-  updateConsultationStatus,
-  deleteConsultation,
-  updateInquiryStatus,
-  deleteInquiry,
   type SupportTicket,
   type Consultation,
   type Inquiry,
 } from "@/services/api";
+import {
+  useSupportTickets,
+  useConsultations,
+  useInquiries,
+  useUpdateTicketStatus,
+  useUpdateConsultationStatus,
+  useDeleteConsultation,
+  useUpdateInquiryStatus,
+  useDeleteInquiry,
+} from "@/hooks/queries/useSupport";
 import { useNotifications } from "@/hooks/useNotifications";
+import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import {
   Card,
   CardContent,
@@ -51,10 +54,22 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import Link from "next/link";
 
 const AdminSupport = () => {
-  const [tickets, setTickets] = useState<SupportTicket[]>([]);
-  const [consultations, setConsultations] = useState<Consultation[]>([]);
-  const [inquiries, setInquiries] = useState<Inquiry[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: tickets = [], isLoading: ticketsLoading } =
+    useSupportTickets(ADMIN_POLLING_INTERVAL);
+  const { data: consultations = [], isLoading: consultationsLoading } =
+    useConsultations(ADMIN_POLLING_INTERVAL);
+  const { data: inquiries = [], isLoading: inquiriesLoading } =
+    useInquiries(ADMIN_POLLING_INTERVAL);
+
+  const resolveTicketMutation = useUpdateTicketStatus();
+  const updateConsultationStatusMutation = useUpdateConsultationStatus();
+  const updateInquiryStatusMutation = useUpdateInquiryStatus();
+  const deleteConsultationMutation = useDeleteConsultation();
+  const deleteInquiryMutation = useDeleteInquiry();
+
+  const isLoading =
+    ticketsLoading || consultationsLoading || inquiriesLoading;
+
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const { addNotification } = useNotifications();
@@ -70,33 +85,9 @@ const AdminSupport = () => {
     id: null,
   });
 
-  const loadData = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const [ticketsData, consultationsData, inquiriesData] = await Promise.all(
-        [fetchSupportTickets(), fetchConsultations(), fetchInquiries()],
-      );
-      setTickets(ticketsData);
-      setConsultations(consultationsData);
-      setInquiries(inquiriesData);
-    } catch (err) {
-      console.error("Failed to load support data:", err);
-      addNotification("Error", "Failed to load support data", "error");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [addNotification]);
-
-  useEffect(() => {
-    loadData();
-  }, [loadData]);
-
   const handleResolveTicket = async (id: string) => {
     try {
-      await updateTicketStatus(id, "Resolved");
-      setTickets((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, status: "Resolved" } : t)),
-      );
+      await resolveTicketMutation.mutateAsync({ id, status: "Resolved" });
       addNotification("Success", "Ticket marked as resolved", "success");
     } catch (err) {
       console.error("Failed to resolve ticket:", err);
@@ -111,15 +102,9 @@ const AdminSupport = () => {
   ) => {
     try {
       if (type === "consultation") {
-        await updateConsultationStatus(id, status);
-        setConsultations((prev) =>
-          prev.map((c) => (c.id === id ? { ...c, status } : c)),
-        );
+        await updateConsultationStatusMutation.mutateAsync({ id, status });
       } else {
-        await updateInquiryStatus(id, status);
-        setInquiries((prev) =>
-          prev.map((i) => (i.id === id ? { ...i, status } : i)),
-        );
+        await updateInquiryStatusMutation.mutateAsync({ id, status });
       }
       addNotification("Success", `Status updated to ${status}`, "success");
     } catch (err) {
@@ -138,11 +123,9 @@ const AdminSupport = () => {
 
     try {
       if (type === "consultation") {
-        await deleteConsultation(id);
-        setConsultations((prev) => prev.filter((c) => c.id !== id));
+        await deleteConsultationMutation.mutateAsync(id);
       } else {
-        await deleteInquiry(id);
-        setInquiries((prev) => prev.filter((i) => i.id !== id));
+        await deleteInquiryMutation.mutateAsync(id);
       }
       setDeleteModal({ isOpen: false, type: null, id: null });
       addNotification("Success", `${type} deleted successfully`, "success");

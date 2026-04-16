@@ -20,10 +20,15 @@ export const PRODUCT_KEYS = {
   categories: () => ["categories"] as const,
 };
 
-export const useProducts = (category?: string, search?: string) => {
+export const useProducts = (
+  category?: string,
+  search?: string,
+  refetchInterval?: number | false,
+) => {
   return useQuery({
     queryKey: PRODUCT_KEYS.list({ category, search }),
     queryFn: () => fetchProducts(category, search),
+    refetchInterval,
     placeholderData: (previousData) => previousData,
   });
 };

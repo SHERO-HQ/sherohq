@@ -76,10 +76,10 @@ router.post(
       const hashedPassword = await bcrypt.hash(password, 10);
       const userId = uuidv4();
 
-      // Generate verification token (expires in 24 hours)
+      // Generate verification token (expires in 30 minutes)
       const verificationToken = randomBytes(32).toString("hex");
       const verificationExpiry = new Date(
-        Date.now() + 24 * 60 * 60 * 1000,
+        Date.now() + 30 * 60 * 1000,
       ).toISOString();
 
       await db.query(
@@ -214,10 +214,10 @@ router.post(
         return res.status(400).json({ error: "Email is already verified" });
       }
 
-      // Generate new token
+      // Generate new token (expires in 30 minutes)
       const verificationToken = randomBytes(32).toString("hex");
       const verificationExpiry = new Date(
-        Date.now() + 24 * 60 * 60 * 1000,
+        Date.now() + 30 * 60 * 1000,
       ).toISOString();
 
       await db.query(

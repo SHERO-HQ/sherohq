@@ -539,7 +539,7 @@ class NotificationService {
           </p>
         </div>
 
-        <p style="color: #666; font-size: 12px; margin-top: 30px;">This link expires in 24 hours. If you didn't create an account, please ignore this email.</p>
+        <p style="color: #666; font-size: 12px; margin-top: 30px;">This link expires in 30 minutes. If you didn't create an account, please ignore this email.</p>
         
         <p style="font-size: 12px; color: #666; text-align: center; margin-top: 30px;">
           SHERO TECHNOLOGIES - Ghana's Leading Tech Store

@@ -8,10 +8,11 @@ import {
 } from "@/services/api";
 import { PRODUCT_KEYS } from "./useProducts";
 
-export const useCategories = () => {
+export const useCategories = (refetchInterval?: number | false) => {
   return useQuery({
     queryKey: PRODUCT_KEYS.categories(),
     queryFn: fetchCategories,
+    refetchInterval,
   });
 };
 

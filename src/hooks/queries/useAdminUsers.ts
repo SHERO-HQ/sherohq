@@ -16,10 +16,11 @@ export const ADMIN_USERS_KEYS = {
   me: ["adminMe"] as const,
 };
 
-export const useAdminUsers = () => {
+export const useAdminUsers = (refetchInterval?: number | false) => {
   return useQuery({
     queryKey: ADMIN_USERS_KEYS.all,
     queryFn: fetchAdminUsers,
+    refetchInterval,
   });
 };
 

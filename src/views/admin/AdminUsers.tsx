@@ -32,6 +32,7 @@ import {
  useResetUserPassword,
  useToggleUserActive,
 } from "@/hooks/queries/useUsers";
+import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -885,7 +886,7 @@ export default function AdminUsers() {
  page,
  limit: 20,
  search: debouncedSearch,
- });
+ }, ADMIN_POLLING_INTERVAL);
 
  const users = usersData?.users || [];
  const pagination = usersData?.pagination || {

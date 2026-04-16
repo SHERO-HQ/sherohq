@@ -18,6 +18,7 @@ import {
 } from "@/hooks/queries/useTeam";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useAdmin } from "@/context/AdminContext";
+import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/Modal";
@@ -27,7 +28,7 @@ import { Textarea } from "@/components/ui/textarea";
 import AppImage from "@/components/common/AppImage";
 
 const AdminTeam = () => {
-  const { data: team = [], isLoading } = useTeam();
+  const { data: team = [], isLoading } = useTeam(ADMIN_POLLING_INTERVAL);
   const createMutation = useCreateTeamMember();
   const updateMutation = useUpdateTeamMember();
   const deleteMutation = useDeleteTeamMember();

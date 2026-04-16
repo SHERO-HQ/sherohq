@@ -9,6 +9,7 @@ import {
  useDeleteCategory,
 } from "@/hooks/queries/useCategories";
 import { useNotifications } from "@/hooks/useNotifications";
+import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/Modal";
@@ -70,7 +71,7 @@ const IconSelector = ({
 };
 
 const AdminCategories = () => {
- const { data: categories = [], isLoading } = useCategories();
+ const { data: categories = [], isLoading } = useCategories(ADMIN_POLLING_INTERVAL);
  const createMutation = useCreateCategory();
  const updateMutation = useUpdateCategory();
  const deleteMutation = useDeleteCategory();

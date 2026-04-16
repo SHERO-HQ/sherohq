@@ -32,14 +32,18 @@ export const useUserOrders = (userId: string) => {
   });
 };
 
-export const useAdminOrdersQuery = (filters: {
-  status?: string;
-  start?: string;
-  end?: string;
-}) => {
+export const useAdminOrdersQuery = (
+  filters: {
+    status?: string;
+    start?: string;
+    end?: string;
+  },
+  refetchInterval?: number | false,
+) => {
   return useQuery({
     queryKey: ORDER_KEYS.admin(filters),
     queryFn: () => fetchAllOrders(filters.status, filters.start, filters.end),
+    refetchInterval,
     placeholderData: (previousData) => previousData,
   });
 };

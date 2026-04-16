@@ -15,14 +15,18 @@ export const USER_KEYS = {
   detail: (userId: string) => [...USER_KEYS.all, "detail", userId] as const,
 };
 
-export const useCustomers = (params: {
-  page: number;
-  limit: number;
-  search: string;
-}) => {
+export const useCustomers = (
+  params: {
+    page: number;
+    limit: number;
+    search: string;
+  },
+  refetchInterval?: number | false,
+) => {
   return useQuery({
     queryKey: USER_KEYS.list(params),
     queryFn: () => fetchCustomers(params.page, params.limit, params.search),
+    refetchInterval,
     placeholderData: (previousData) => previousData,
   });
 };

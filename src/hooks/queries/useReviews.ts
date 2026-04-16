@@ -41,10 +41,11 @@ export const useSubmitReview = () => {
   });
 };
 
-export const useAdminReviews = () => {
+export const useAdminReviews = (refetchInterval?: number | false) => {
   return useQuery({
     queryKey: REVIEW_KEYS.admin(),
     queryFn: fetchAdminReviews,
+    refetchInterval,
   });
 };
 

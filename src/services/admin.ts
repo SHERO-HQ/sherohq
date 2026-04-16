@@ -452,3 +452,8 @@ export async function fetchRecentOrders(
   const response = await authFetch(url);
   return handleResponse<RecentOrder[]>(response);
 }
+
+export async function fetchAIAnalyticsSummary(): Promise<any> {
+  const response = await authFetch(`${API_BASE}/analytics/summary`);
+  return handleResponse(response);
+}

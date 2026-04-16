@@ -5,6 +5,7 @@ import {
   fetchActivityLogs,
   fetchRecentOrders,
   fetchAnalytics,
+  fetchAIAnalyticsSummary,
   type AdminStats,
   type ActivityLog,
   type RecentOrder,
@@ -18,6 +19,7 @@ export const ADMIN_KEYS = {
   recentOrders: () => [...ADMIN_KEYS.all, "recent-orders"] as const,
   analytics: (period: string) =>
     [...ADMIN_KEYS.all, "analytics", period] as const,
+  aiAnalytics: () => [...ADMIN_KEYS.all, "ai-analytics"] as const,
 };
 
 export const useAdminStats = (refetchInterval?: number | false) => {
@@ -54,5 +56,13 @@ export const useAnalytics = (period = "7d", refetchInterval?: number | false) =>
     refetchInterval,
     placeholderData: (previousData: AnalyticsData[] | undefined) =>
       previousData,
+  });
+};
+
+export const useAIAnalyticsSummary = (refetchInterval?: number | false) => {
+  return useQuery({
+    queryKey: ADMIN_KEYS.aiAnalytics(),
+    queryFn: fetchAIAnalyticsSummary,
+    refetchInterval,
   });
 };
