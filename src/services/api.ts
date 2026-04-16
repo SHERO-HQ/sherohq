@@ -91,6 +91,8 @@ export {
   type AdminUserDetailsResponse,
   type CustomersResponse,
   type CustomerDetailsResponse,
+  type AIAnalyticsSummary,
+  type AIAnalyticsTotals,
   adminLogin,
   adminChangePassword,
   adminLogout,

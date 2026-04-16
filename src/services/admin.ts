@@ -117,6 +117,20 @@ export interface CustomerDetailsResponse {
   stats: AdminUserStats;
 }
 
+export interface AIAnalyticsTotals {
+  totalInteractions: number;
+  imageInteractions: number;
+  failedRecommendations: number;
+  openGapRequests: number;
+}
+
+export interface AIAnalyticsSummary {
+  topIntents: { intent: string; count: string | number }[];
+  topGaps: { keyword: string; queryCount: number; lastRequested: string }[];
+  dailyVolume: { day: string; count: string | number }[];
+  totals: AIAnalyticsTotals;
+}
+
 // ---------------------------------------------------------------------------
 // Admin Auth
 // ---------------------------------------------------------------------------
@@ -453,7 +467,10 @@ export async function fetchRecentOrders(
   return handleResponse<RecentOrder[]>(response);
 }
 
-export async function fetchAIAnalyticsSummary(): Promise<any> {
+export async function fetchAIAnalyticsSummary(): Promise<{
+  success: boolean;
+  data: AIAnalyticsSummary;
+}> {
   const response = await authFetch(`${API_BASE}/analytics/summary`);
   return handleResponse(response);
 }

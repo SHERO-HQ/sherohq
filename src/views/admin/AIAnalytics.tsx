@@ -35,21 +35,12 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-interface AnalyticsTotals {
-  totalInteractions: number;
-  imageInteractions: number;
-  failedRecommendations: number;
-  openGapRequests: number;
-}
+import {
+  type AIAnalyticsSummary,
+  type AIAnalyticsTotals,
+} from "@/services/api";
 
-interface AnalyticsData {
-  topIntents: { intent: string; count: string | number }[];
-  topGaps: { keyword: string; queryCount: number; lastRequested: string }[];
-  dailyVolume: { day: string; count: string | number }[];
-  totals: AnalyticsTotals;
-}
-
-const EMPTY_TOTALS: AnalyticsTotals = {
+const EMPTY_TOTALS: AIAnalyticsTotals = {
   totalInteractions: 0,
   imageInteractions: 0,
   failedRecommendations: 0,
@@ -62,7 +53,7 @@ export default function AIAnalytics() {
 
   // All hooks must be called unconditionally (before any early return)
   const dailyVolumeData = useMemo(() => {
-    const rows = (data?.dailyVolume || []).map((entry) => ({
+    const rows = (data?.dailyVolume || []).map((entry: { day: string; count: string | number }) => ({
       day: entry.day,
       count: Number(entry.count) || 0,
       label: new Date(entry.day).toLocaleDateString("en-US", {
@@ -78,7 +69,7 @@ export default function AIAnalytics() {
 
   const intentData = useMemo(
     () =>
-      (data?.topIntents || []).map((entry) => ({
+      (data?.topIntents || []).map((entry: { intent: string; count: string | number }) => ({
         intent: entry.intent || "unknown",
         count: Number(entry.count) || 0,
       })),
@@ -87,7 +78,7 @@ export default function AIAnalytics() {
 
   const gapPressureData = useMemo(
     () =>
-      (data?.topGaps || []).slice(0, 6).map((entry) => ({
+      (data?.topGaps || []).slice(0, 6).map((entry: { keyword: string; queryCount: number }) => ({
         keyword: entry.keyword,
         queryCount: Number(entry.queryCount) || 0,
       })),
