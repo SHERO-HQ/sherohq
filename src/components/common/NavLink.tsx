@@ -60,14 +60,13 @@ const NavLink = ({
  }
  }
 
- if (end) {
- return pathname === targetPath;
- }
+    if (end) {
+      return pathname === targetPath;
+    }
 
- return (
- pathname.startsWith(targetPath) &&
- (targetPath !== "/" || pathname === "/")
- );
+    return targetPath === "/"
+      ? pathname === "/"
+      : pathname === targetPath || pathname.startsWith(targetPath + "/");
  }, [mounted, pathname, hrefStr, end]);
 
  const finalClassName =

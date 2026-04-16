@@ -196,17 +196,30 @@ const Nav = () => {
         const absoluteUrl = getAbsoluteUrl(linkPath);
         try {
           const url = new URL(absoluteUrl);
-          if (pathname === url.pathname) {
+          const targetPath = url.pathname;
+          
+          // Use robust "starts with" logic to keep parent menu items active on sub-pages
+          // Avoid partial matches like "/shop" matching "/shopping"
+          const isActive = 
+            targetPath === "/" 
+              ? pathname === "/" 
+              : pathname === targetPath || pathname.startsWith(targetPath + "/");
+
+          if (isActive) {
             found = index;
           }
         } catch {
-          if (pathname === linkPath) {
+          const isActive = 
+            linkPath === "/" 
+              ? pathname === "/" 
+              : pathname === linkPath || pathname.startsWith(linkPath + "/");
+
+          if (isActive) {
             found = index;
           }
         }
       });
 
-      // Avoid calling setState synchronously in effect body
       if (activeNavIndex !== found) {
         queueMicrotask(() => setActiveNavIndex(found));
       }
@@ -221,9 +234,7 @@ const Nav = () => {
 
       if (activeElement) {
         const width = activeElement.clientWidth;
-        const x = children
-          .slice(0, activeNavIndex)
-          .reduce((sum, el) => sum + el.clientWidth + 24, 0); // 24px because of gap-6
+        const x = activeElement.offsetLeft;
         setIndicatorDims({ width, x });
       }
     } else {
@@ -516,8 +527,8 @@ const Nav = () => {
                   <SearchBar alwaysOpen={true} />
                 </div>
 
-                <div className="space-y-4">
-                  <ul className="space-y-3">
+                <div className="space-y-3 mt-4">
+                  <ul className="space-y-5">
                     {navLinks.map((item, i) => (
                       <motion.li
                         key={item.name}
@@ -530,24 +541,14 @@ const Nav = () => {
                           href={getAbsoluteUrl(item.href)}
                           onClick={() => setIsOpen(false)}
                           className={({ isActive }) =>
-                            `group flex items-center gap-4 p-3 rounded transition-all duration-300 ${
+                            `block px-4 py-2 rounded transition-all duration-300 text-base ${
                               isActive
-                                ? "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400"
-                                : "hover:bg-slate-50 dark:hover:bg-slate-900/50 text-slate-700 dark:text-slate-300"
+                                ? "bg-emerald-600 text-white font-semibold"
+                                : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900/80 hover:translate-x-1"
                             }`
                           }
                         >
-                          <div className={`p-2.5 rounded shrink-0 transition-all duration-300 flex items-center justify-center ${
-                            pathname === item.href
-                              ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/20"
-                              : "bg-slate-100 dark:bg-slate-800 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30 group-hover:text-emerald-600 dark:group-hover:text-emerald-400"
-                          }`}>
-                            <item.icon className="w-5 h-5" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <span className="block font-bold text-sm leading-tight tracking-tight">{item.name}</span>
-                            <span className="block text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">{item.desc}</span>
-                          </div>
+                          {item.name}
                         </NavLink>
                       </motion.li>
                     ))}

@@ -122,7 +122,7 @@ const LandingHero: React.FC = () => {
                 initial={false}
                 animate="visible"
                 variants={prefersReducedMotion ? {} : fadeUp}
-                className="font-extrabold leading-[1.01] text-7xl sm:text-8xl md:text-8xl lg:text-[9rem] tracking-tight text-slate-900 dark:text-white relative z-10"
+                className="font-extrabold leading-[1.01] text-7xl sm:text-8xl md:text-8xl lg:text-9xl tracking-tight text-slate-900 dark:text-white relative z-10"
               >
                 {HERO_CONTENT.mainHeader.split(" ").map((word, i) =>
                   word === "\n" ? (
