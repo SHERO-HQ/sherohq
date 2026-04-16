@@ -112,7 +112,7 @@ const Footer = () => {
             </div>
 
             {/* Contact Card */}
-            <div className="rounded border border-slate-200/80 dark:border-slate-700/70 shadow-[0_18px_40px_-28px_rgba(15,23,42,0.5)] overflow-hidden backdrop-blur-sm transition duration-300">
+            <div className="rounded border border-slate-200/80 dark:border-slate-700/70 overflow-hidden backdrop-blur-sm transition duration-300">
               <div className="grid grid-cols-[auto_1fr_auto] items-center h-10 px-4 border-b border-slate-200/80 dark:border-slate-800/80 bg-linear-to-b from-slate-100/95 to-slate-200/80 dark:from-slate-900/95 dark:to-slate-950/95">
                 <div className="flex items-center gap-2" aria-hidden="true">
                   <span className="h-3 w-3 rounded-full bg-[#ff5f57] ring-1 ring-black/15 dark:ring-black/40" />
