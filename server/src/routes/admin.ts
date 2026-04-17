@@ -11,6 +11,7 @@ import {
   AdminLoginSchema,
   AdminRegisterSchema,
   AdminUpdateProfileSchema,
+  ChangePasswordSchema,
 } from "../schemas";
 import {
   ADMIN_SESSION_COOKIE,
@@ -341,10 +342,29 @@ router.put(
       // Users cannot update their own username/email here.
 
       if (password) {
+        if (!req.admin?.id) return res.status(401).json({ error: "Not authenticated" });
+
+        const { currentPassword } = req.body;
+        if (!currentPassword) {
+          return res.status(400).json({ error: "Current password is required to change password" });
+        }
+
+        const adminRes = await db.query('SELECT "passwordHash" FROM admin_users WHERE id = $1', [req.admin.id]);
+        const adminData = adminRes.rows[0];
+
+        const isMatch = await bcrypt.compare(currentPassword, adminData.passwordHash);
+        if (!isMatch) {
+          return res.status(401).json({ error: "Incorrect current password" });
+        }
+
         const passwordHash = await bcrypt.hash(password, 10);
         updates.push(`"passwordHash" = $${paramIndex}`);
         params.push(passwordHash);
         paramIndex++;
+
+        // Also update the passwordUpdatedAt timestamp
+        updates.push(`"passwordUpdatedAt" = CURRENT_TIMESTAMP`);
+        updates.push(`"passwordResetRequired" = false`);
       }
 
       if (avatar) {
@@ -715,19 +735,27 @@ router.put(
   },
 );
 
-// POST /api/admin/change-password - Force password reset
+// POST /api/admin/change-password - Forced password reset (Self-Service)
 router.post(
   "/change-password",
   adminAuth,
+  validateBody(ChangePasswordSchema),
   async (req: AdminRequest, res: Response) => {
     try {
-      const { password } = req.body;
+      const { currentPassword, password } = req.body;
       const adminId = req.admin?.id;
 
-      if (!password || password.length < 6) {
-        return res
-          .status(400)
-          .json({ error: "Password must be at least 6 characters" });
+      if (!adminId) {
+        return res.status(401).json({ error: "Not authenticated" });
+      }
+
+      // Verify current password
+      const adminRes = await db.query('SELECT "passwordHash" FROM admin_users WHERE id = $1', [adminId]);
+      const adminData = adminRes.rows[0];
+
+      const isMatch = await bcrypt.compare(currentPassword, adminData.passwordHash);
+      if (!isMatch) {
+        return res.status(401).json({ error: "Incorrect current password" });
       }
 
       const passwordHash = await bcrypt.hash(password, 10);
@@ -743,7 +771,7 @@ router.post(
 
       console.log(`🔐 Password changed for admin: ${req.admin?.username}`);
       await logActivity(
-        adminId!,
+        adminId,
         "admin_password_reset",
         "info",
         `Admin changed their own password`,

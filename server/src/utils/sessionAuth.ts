@@ -21,10 +21,16 @@ function parseCookies(
 function getSessionCookieDomain(): string | undefined {
   const configuredDomain = process.env.SESSION_COOKIE_DOMAIN?.trim();
   if (configuredDomain) {
+    if (configuredDomain === "none" || configuredDomain === "false") {
+      return undefined;
+    }
     return configuredDomain;
   }
 
   if (process.env.NODE_ENV === "production") {
+    // Default to the main domain, but allow the app to work without it if explicitly configured
+    // Note: If the backend is on Render and the frontend is on Vercel,
+    // they MUST share a top-level domain for cookie-based auth to work.
     return ".sherohq.com";
   }
 

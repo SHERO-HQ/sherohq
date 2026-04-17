@@ -3,6 +3,11 @@ import { v4 as uuidv4 } from "uuid";
 import db from "../db/database";
 import { adminAuth, AdminRequest, requireRole } from "../middleware/adminAuth";
 import { logActivity } from "./activity";
+import { validateBody, validateQuery } from "../middleware/validate";
+import {
+  CreateProductSchema,
+  ProductQuerySchema,
+} from "../schemas";
 import { generateSku } from "../utils/sku";
 import { generateUniqueSlug } from "../utils/slug";
 
@@ -83,15 +88,12 @@ function parseProduct(row: ProductRow) {
 }
 
 // GET /api/products - List all products
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", validateQuery(ProductQuerySchema), async (req: Request, res: Response) => {
   try {
-    const { category, search, limit, offset } = req.query;
+    const { category, search, limit = 50, offset = 0 } = req.query;
 
-    const safeLimit = Math.min(
-      200,
-      Math.max(1, Number.parseInt(String(limit), 10) || 200),
-    );
-    const safeOffset = Math.max(0, Number.parseInt(String(offset), 10) || 0);
+    const safeLimit = Number(limit);
+    const safeOffset = Number(offset);
 
     let queryText = `
       SELECT
@@ -296,8 +298,12 @@ router.delete(
 );
 
 // POST /api/products - Create new product (Admin)
-router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
-  try {
+router.post(
+  "/",
+  adminAuth,
+  validateBody(CreateProductSchema),
+  async (req: AdminRequest, res: Response) => {
+    try {
     const {
       name,
       sku,

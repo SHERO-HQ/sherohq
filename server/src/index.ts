@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
+import { v4 as uuidv4 } from "uuid";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
 import * as dotenv from "dotenv";
@@ -76,7 +77,12 @@ function validateEnvironment() {
 validateEnvironment();
 
 const app = express();
-app.set("trust proxy", 1); // Trust Render proxy
+
+/**
+ * Trust the first proxy in front of the app (e.g., Render, Vercel, Cloudflare).
+ * This is essential for correct client IP detection, rate limiting, and secure cookies.
+ */
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 5000;
 
 const NEWSLETTER_SCHEDULER_ENABLED =
@@ -247,13 +253,37 @@ app.use(express.urlencoded({ extended: true }));
 import { csrfProtection } from "./middleware/csrfProtection";
 app.use(csrfProtection);
 
-// Request Logging Middleware — dev only
-if (process.env.NODE_ENV !== "production") {
-  app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-    next();
+// Request Logging & Metadata Middleware
+app.use((req, res, next) => {
+  const requestId = uuidv4().substring(0, 8);
+  const start = Date.now();
+
+  // Attach request metadata
+  (req as any).id = requestId;
+
+  // Log on response finish
+  res.on("finish", () => {
+    const duration = Date.now() - start;
+    const status = res.statusCode;
+    const method = req.method;
+    const url = req.url;
+
+    const logMsg = `[${requestId}] ${method} ${url} ${status} - ${duration}ms`;
+
+    if (status >= 500) {
+      console.error(`🔴 ${logMsg}`);
+    } else if (status >= 400) {
+      console.warn(`🟡 ${logMsg}`);
+    } else {
+      const isHealth = url.includes("/health");
+      if (!isHealth || process.env.DEBUG === "true") {
+        console.log(`🟢 ${logMsg}`);
+      }
+    }
   });
-}
+
+  next();
+});
 
 // Global Rate Limiting - Disabled in development, 500 requests per 15 minutes in production
 const globalLimiter = rateLimit({

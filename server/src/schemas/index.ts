@@ -90,6 +90,7 @@ export const AdminRegisterSchema = z.object({
 export const AdminUpdateProfileSchema = z.object({
   username: z.string().min(3).max(50).optional(),
   email: z.string().email().optional(),
+  currentPassword: z.string().min(1).optional(),
   password: z
     .string()
     .min(8)
@@ -314,6 +315,7 @@ export const NewsletterCampaignSchema = z.object({
 });
 
 export const ChangePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Current password is required"),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
