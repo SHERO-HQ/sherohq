@@ -397,10 +397,10 @@ export default function ProductForm() {
                         <button
                           type="button"
                           onClick={() => removeImage(url)}
-                          className="p-2 bg-rose-500 text-white rounded shadow hover:bg-rose-600 transition-colors"
+                          className="p-1 bg-rose-500 text-white rounded shadow hover:bg-rose-600 transition-colors"
                           title="Remove Image"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-3 h-3" />
                         </button>
                       </div>
 
@@ -409,7 +409,7 @@ export default function ProductForm() {
                           type="button"
                           onClick={() => setMainImage(url)}
                           className={cn(
-                            "w-full py-2 px-3 rounded text-[10px] font-medium uppercase tracking-wider transition shadow",
+                            "w-full py-1 px-2 rounded text-[9px] font-medium tracking-wider transition shadow",
                             productData.image === url
                               ? "bg-emerald-500 text-white cursor-default"
                               : "bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm",
@@ -417,16 +417,16 @@ export default function ProductForm() {
                           disabled={productData.image === url}
                         >
                           {productData.image === url
-                            ? "Main"
-                            : "Set Main"}
+                            ? "Primary"
+                            : "Set Primary"}
                         </button>
                       </div>
 
-                      {productData.image === url && (
-                        <div className="absolute top-2 left-2 px-2 py-1 bg-emerald-500 text-[10px] font-bold text-white rounded shadow uppercase tracking-tight">
+                      {/* {productData.image === url && (
+                        <div className="absolute top-2 left-2 px-1 py-0.5 bg-emerald-500 text-[10px] text-white rounded shadow uppercase tracking-tight">
                           Primary
                         </div>
-                      )}
+                      )} */}
                     </div>
                   ))}
 
