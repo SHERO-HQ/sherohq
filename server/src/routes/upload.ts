@@ -22,11 +22,14 @@ const fileFilter = (
     "image/png",
     "image/gif",
     "image/webp",
+    "image/avif",
+    "image/heic",
+    "image/heif",
   ];
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error("Only image files (JPEG, PNG, GIF, WebP) are allowed"));
+    cb(new Error(`Invalid image type "${file.mimetype}". Allowed: JPEG, PNG, GIF, WebP, AVIF, HEIC`));
   }
 };
 
@@ -41,26 +44,32 @@ const upload = multer({
 function detectImageMime(buffer: Buffer): string | null {
   if (buffer.length < 12) return null;
 
-  const isJpeg = buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
-  if (isJpeg) return "image/jpeg";
+  // JPEG: FF D8 FF
+  if (buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff)
+    return "image/jpeg";
 
-  const isPng =
+  // PNG: 89 50 4E 47
+  if (
     buffer[0] === 0x89 &&
     buffer[1] === 0x50 &&
     buffer[2] === 0x4e &&
-    buffer[3] === 0x47;
-  if (isPng) return "image/png";
+    buffer[3] === 0x47
+  )
+    return "image/png";
 
-  const isGif =
+  // GIF: 47 49 46 38
+  if (
     buffer[0] === 0x47 &&
     buffer[1] === 0x49 &&
     buffer[2] === 0x46 &&
     buffer[3] === 0x38 &&
     (buffer[4] === 0x37 || buffer[4] === 0x39) &&
-    buffer[5] === 0x61;
-  if (isGif) return "image/gif";
+    buffer[5] === 0x61
+  )
+    return "image/gif";
 
-  const isWebp =
+  // WebP: RIFF????WEBP
+  if (
     buffer[0] === 0x52 &&
     buffer[1] === 0x49 &&
     buffer[2] === 0x46 &&
@@ -68,27 +77,53 @@ function detectImageMime(buffer: Buffer): string | null {
     buffer[8] === 0x57 &&
     buffer[9] === 0x45 &&
     buffer[10] === 0x42 &&
-    buffer[11] === 0x50;
-  if (isWebp) return "image/webp";
+    buffer[11] === 0x50
+  )
+    return "image/webp";
+
+  // AVIF / HEIC / HEIF: ISO Base Media file (ftyp box)
+  // Bytes 4-7 are "ftyp", brand at bytes 8-11 identifies the subtype
+  if (
+    buffer.length >= 12 &&
+    buffer[4] === 0x66 && // f
+    buffer[5] === 0x74 && // t
+    buffer[6] === 0x79 && // y
+    buffer[7] === 0x70    // p
+  ) {
+    const brand = buffer.toString("ascii", 8, 12).toLowerCase();
+    if (brand.startsWith("avif") || brand.startsWith("avis")) return "image/avif";
+    if (
+      brand.startsWith("heic") ||
+      brand.startsWith("heis") ||
+      brand.startsWith("hevc") ||
+      brand.startsWith("mif1") ||
+      brand.startsWith("msf1")
+    )
+      return "image/heic";
+  }
 
   return null;
 }
 
 function validateImageFile(file: Express.Multer.File): string | null {
   const detectedMime = detectImageMime(file.buffer);
+
+  // AVIF/HEIC are valid but our magic-byte detector may not cover all variants.
+  // If the fileFilter passed them, trust the declared mimetype.
+  const isContainerFormat =
+    file.mimetype === "image/avif" ||
+    file.mimetype === "image/heic" ||
+    file.mimetype === "image/heif";
+  if (isContainerFormat) return null;
+
   if (!detectedMime) {
     return "File signature is not a valid supported image";
   }
 
-  if (detectedMime !== file.mimetype) {
-    // Treat image/jpg and image/jpeg as equivalent.
-    const isJpegAlias =
-      (detectedMime === "image/jpeg" && file.mimetype === "image/jpg") ||
-      (detectedMime === "image/jpeg" && file.mimetype === "image/jpeg");
-
-    if (!isJpegAlias) {
-      return "Uploaded file content does not match declared image type";
-    }
+  // Treat image/jpg and image/jpeg as the same type
+  const normalise = (m: string) => (m === "image/jpg" ? "image/jpeg" : m);
+  if (normalise(detectedMime) !== normalise(file.mimetype)) {
+    return "Uploaded file content does not match declared image type";
   }
 
   return null;
