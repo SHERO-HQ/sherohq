@@ -8,14 +8,15 @@ export async function compressImage(file: File): Promise<File> {
     maxSizeMB: 1,
     maxWidthOrHeight: 1200,
     useWebWorker: true,
-    fileType: 'image/webp'
+    // Do NOT force a specific output format — let the compressor preserve
+    // the original MIME type so the server's magic-byte check passes.
   };
-  
+
   try {
     const compressedFile = await imageCompression(file, options);
-    // Create a new file with a .webp extension if it was converted
-    return new File([compressedFile], file.name.replace(/\.[^/.]+$/, "") + ".webp", {
-      type: 'image/webp',
+    // Return with the original filename and the compressor's output type
+    return new File([compressedFile], file.name, {
+      type: compressedFile.type || file.type,
       lastModified: Date.now(),
     });
   } catch (error) {
