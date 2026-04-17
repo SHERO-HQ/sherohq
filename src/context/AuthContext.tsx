@@ -78,6 +78,9 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
     setIsLoading(true);
     try {
       const response = await userLogin(data);
+      if (response.token) {
+        localStorage.setItem("userToken", response.token);
+      }
       setUser(response.user);
       setMustReset(!!response.mustReset);
       setIsLoading(false);
@@ -96,6 +99,9 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
     setIsLoading(true);
     try {
       const response = await userRegister(data);
+      if (response.token) {
+        localStorage.setItem("userToken", response.token);
+      }
       setUser(response.user);
       setIsLoading(false);
     } catch (error) {

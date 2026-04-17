@@ -73,6 +73,9 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
     setIsLoading(true);
     try {
       const response = await apiLogin(username, password);
+      if (response.token) {
+        localStorage.setItem("adminToken", response.token);
+      }
       setAdmin(response.admin);
       setMustReset(!!response.mustReset);
       setIsLoading(false);
