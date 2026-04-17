@@ -26,7 +26,11 @@ const getApiBase = () => {
 
   // Server-side (SSR) requires absolute URLs
   if (typeof window === "undefined") {
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.NODE_ENV === "production" && !resolvedEnvUrl) {
+      console.warn(
+        "⚠️ [API] Falling back to hardcoded production URL: https://api.sherohq.com/api. " +
+          "Ensure NEXT_PUBLIC_API_URL or API_URL is set in your deployment environment.",
+      );
       return "https://api.sherohq.com/api";
     }
 
@@ -131,7 +135,8 @@ export async function handleResponse<T>(response: Response): Promise<T> {
       errorMessage = getStatusErrorMessage(response.status) || errorMessage;
     }
 
-    throw new Error(errorMessage);
+    // Append status to aid debugging in production
+    throw new Error(`${errorMessage} (Status: ${response.status})`);
   }
 
   if (!text) {
@@ -141,8 +146,11 @@ export async function handleResponse<T>(response: Response): Promise<T> {
   try {
     return JSON.parse(text) as T;
   } catch {
-    console.error("JSON Parse Error:", text.substring(0, 200));
-    throw new Error("Failed to parse server response.");
+    const snippet = text.substring(0, 100).replace(/\n/g, " ");
+    console.error("JSON Parse Error Snippet:", snippet);
+    throw new Error(
+      `Failed to parse server response. The server might be returning an error page instead of JSON. (Status: ${response.status})`,
+    );
   }
 }
 

@@ -70,10 +70,13 @@ export function formatAuthError(error: unknown): string {
 
   // Return the original message if it seems helpful
   if (
-    originalMessage.length < 100 &&
-    !originalMessage.includes("Error") &&
-    !originalMessage.includes("{")
+    originalMessage.length < 150 &&
+    !originalMessage.includes("{") &&
+    !originalMessage.includes("<!doctype")
   ) {
+    if (lowerMessage.includes("failed to fetch") || lowerMessage.includes("networkerror")) {
+      return "Network Error: Could not reach the server. Please check your internet connection or if the backend service is running.";
+    }
     return originalMessage;
   }
 

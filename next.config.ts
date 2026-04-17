@@ -22,7 +22,11 @@ function resolveApiOrigin(): string {
   const publicApi = toAbsoluteUrl(process.env.NEXT_PUBLIC_API_URL);
   if (publicApi) return publicApi;
 
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === "production" && !directApi && !publicApi) {
+    console.warn(
+      "⚠️ [NextConfig] Falling back to hardcoded production API origin: https://api.sherohq.com. " +
+        "Ensure API_URL or NEXT_PUBLIC_API_URL is set.",
+    );
     return "https://api.sherohq.com";
   }
 
