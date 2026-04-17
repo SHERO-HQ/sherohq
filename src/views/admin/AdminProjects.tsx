@@ -320,6 +320,6 @@ export default function AdminProjects() {
  </div>
  )}
  </div>
- </div>
+  </div>
   );
 }

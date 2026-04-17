@@ -834,7 +834,7 @@ export default function OrderDetails() {
  </div>,
  document.body,
  )}
- </div>
+  </div>
   );
 }
 
