@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { useAdmin } from "@/context/AdminContext";
 import {
  BarChart,
  Plus,
@@ -126,8 +126,7 @@ const AdminStats = () => {
  };
 
  return (
- <AdminLayout>
- <div className="space-y-6">
+ <div className="space-y-8 animate-in fade-in duration-500 pb-12">
  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
  <div>
  <h1 className="text-2xl font-bold text-white flex items-center gap-3">
@@ -360,7 +359,6 @@ const AdminStats = () => {
  variant="danger"
  />
  </div>
- </AdminLayout>
  );
 };
 

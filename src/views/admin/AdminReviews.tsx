@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { useAdmin } from "@/context/AdminContext";
 import { MessageSquare, Trash2, Search, Star, Loader2 } from "lucide-react";
 import { useAdminReviews, useDeleteReview } from "@/hooks/queries/useReviews";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
@@ -99,7 +99,6 @@ const AdminReviews = () => {
  };
 
  return (
- <AdminLayout>
  <div className="space-y-6">
  <div className="flex items-center justify-between">
  <div>
@@ -134,7 +133,6 @@ const AdminReviews = () => {
  variant="danger"
  />
  </div>
- </AdminLayout>
  );
 };
 

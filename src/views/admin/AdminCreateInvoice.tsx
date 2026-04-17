@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { useAdmin } from "@/context/AdminContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -193,7 +193,6 @@ export default function AdminCreateInvoice() {
  };
 
  return (
- <AdminLayout>
  <div className="max-w-5xl mx-auto pb-20 space-y-8">
  {/* Header */}
  <div className="flex items-center justify-between">
@@ -510,6 +509,5 @@ export default function AdminCreateInvoice() {
  </div>
  </div>
  </div>
- </AdminLayout>
  );
 }

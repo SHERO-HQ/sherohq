@@ -44,7 +44,7 @@ import {
  Printer,
  type LucideIcon,
 } from "lucide-react";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { useAdmin } from "@/context/AdminContext";
 import { cn } from "@/lib/utils";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
 import { Button } from "@/components/ui/button";
@@ -74,7 +74,6 @@ import {
  PopoverTrigger,
 } from "@/components/ui/popover";
 import type { DateRange } from "react-day-picker";
-import { useAdmin } from "@/context/AdminContext";
 
 type KpiPeriod = "today" | "week" | "month" | "year" | "custom";
 
@@ -202,7 +201,7 @@ export default function AdminReports() {
  };
 
  return (
- <AdminLayout>
+    <div className="space-y-8 pb-12">
  <ErrorBoundary>
  <div className="space-y-8">
  {/* Header */}
@@ -372,8 +371,8 @@ export default function AdminReports() {
  )}
  </div>
  </ErrorBoundary>
- </AdminLayout>
- );
+    </div>
+  );
 }
 
 const getTrendStyles = (trend: number) => {

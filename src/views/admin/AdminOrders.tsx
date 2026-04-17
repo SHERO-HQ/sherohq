@@ -18,7 +18,7 @@ import {
  PackageCheck,
  Plus,
 } from "lucide-react";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { useAdmin } from "@/context/AdminContext";
 import { Button } from "@/components/ui/button";
 import {
  DropdownMenu,
@@ -171,7 +171,6 @@ export default function AdminOrders() {
  const error = queryError instanceof Error ? queryError.message : "";
 
  return (
- <AdminLayout>
  <div className="space-y-6 relative">
  {isPlaceholderData && (
  <div className="absolute inset-0 bg-slate-900/10 backdrop-blur-[1px] z-10 pointer-events-none transition-opacity" />
@@ -495,7 +494,6 @@ export default function AdminOrders() {
  </Button>
  </div>
  )}
- </div>
- </AdminLayout>
- );
+    </div>
+  );
 }

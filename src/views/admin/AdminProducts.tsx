@@ -20,7 +20,6 @@ import {
   RefreshCw,
   MoreVertical,
 } from "lucide-react";
-import AdminLayout from "@/components/admin/AdminLayout";
 import { useAdmin } from "@/context/AdminContext";
 import { Button } from "@/components/ui/button";
 import {
@@ -148,8 +147,7 @@ export default function AdminProducts() {
   };
 
   return (
-    <AdminLayout>
-      <div className="space-y-6 relative">
+    <div className="space-y-6 relative">
         {isPlaceholderData && (
           <div className="absolute inset-0 bg-slate-900/10 backdrop-blur-[1px] z-10 pointer-events-none transition-opacity" />
         )}
@@ -513,6 +511,5 @@ export default function AdminProducts() {
           )}
         </div>
       </div>
-    </AdminLayout>
   );
 }

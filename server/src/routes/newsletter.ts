@@ -263,6 +263,14 @@ async function sendCampaignToAudience(params: {
             return { id: subscriber.id, delivered };
           }
 
+          if (params.channel === "sms" && subscriber.phone) {
+            const delivered = await notificationService.sendNewsletterCampaignSMS(
+              subscriber.phone,
+              params.content,
+            );
+            return { id: subscriber.id, delivered };
+          }
+
           return { id: subscriber.id, delivered: false };
         }),
       );
@@ -333,26 +341,6 @@ async function processCampaign(
   campaign: NewsletterCampaignRow,
   baseUrl: string,
 ) {
-  if (campaign.channel === "sms") {
-    await db.query(
-      `
-        UPDATE newsletter_campaigns
-        SET
-          status = 'failed',
-          "failedCount" = COALESCE("totalTargets", 0),
-          "sentAt" = NOW(),
-          "updatedAt" = NOW()
-        WHERE id = $1
-      `,
-      [campaign.id],
-    );
-
-    return {
-      sent: 0,
-      failed: campaign.totalTargets,
-      totalTargets: campaign.totalTargets,
-    };
-  }
 
   if (campaign.isTest) {
     const delivered =
@@ -381,7 +369,12 @@ async function processCampaign(
                     ),
                   },
             )
-          : false;
+          : campaign.channel === "sms" && campaign.testPhone
+            ? await notificationService.sendNewsletterCampaignSMS(
+                campaign.testPhone,
+                campaign.content,
+              )
+            : false;
 
     await db.query(
       `

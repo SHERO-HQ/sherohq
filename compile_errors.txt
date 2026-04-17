@@ -1,0 +1,7 @@
+src/views/admin/AdminGuideEditor.tsx(136,6): error TS17008: JSX element 'div' has no corresponding closing tag.
+src/views/admin/AdminGuideEditor.tsx(137,3): error TS17008: JSX element 'div' has no corresponding closing tag.
+src/views/admin/AdminGuideEditor.tsx(164,3): error TS17008: JSX element 'form' has no corresponding closing tag.
+src/views/admin/AdminGuideEditor.tsx(291,3): error TS17008: JSX element 'div' has no corresponding closing tag.
+src/views/admin/AdminGuideEditor.tsx(302,3): error TS17008: JSX element 'p' has no corresponding closing tag.
+src/views/admin/AdminGuideEditor.tsx(476,1): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/views/admin/AdminGuideEditor.tsx(479,1): error TS1005: '</' expected.

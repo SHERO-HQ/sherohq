@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { useAdmin } from "@/context/AdminContext";
 import { Tag, Plus, Search, Loader2, Trash2, Edit2 } from "lucide-react";
 import {
  useCategories,
@@ -143,7 +143,6 @@ const AdminCategories = () => {
  };
 
  return (
- <AdminLayout>
  <div className="space-y-6">
  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
  <div>
@@ -280,7 +279,6 @@ const AdminCategories = () => {
  variant="danger"
  />
  </div>
- </AdminLayout>
  );
 };
 

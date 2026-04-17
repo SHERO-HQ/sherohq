@@ -4,7 +4,6 @@ import { User, Save, Loader2, Shield, Camera, AlertCircle } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { updateAdminProfile, uploadImage, getImageUrl } from "@/services/api";
 import { useNotifications } from "@/hooks/useNotifications";
-import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -81,8 +80,7 @@ export default function AdminProfile() {
  }
 
  return (
- <AdminLayout>
- <div className="max-w-5xl mx-auto space-y-8 pb-12">
+ <div className="max-w-4xl mx-auto space-y-8 pb-12">
  <div className="space-y-1">
  <h1 className="text-3xl font-bold text-white">
  Account Settings
@@ -291,8 +289,7 @@ export default function AdminProfile() {
  </div>
  </div>
  </div>
- </AdminLayout>
- );
+  );
 }
 
 function Card({

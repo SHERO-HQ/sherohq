@@ -14,7 +14,7 @@ import {
  MoreVertical,
  Briefcase,
 } from "lucide-react";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { useAdmin } from "@/context/AdminContext";
 import { Button } from "@/components/ui/button";
 import {
  DropdownMenu,
@@ -91,8 +91,7 @@ export default function AdminProjects() {
  ];
 
  return (
- <AdminLayout>
- <div className="space-y-6 relative">
+ <div className="space-y-6">
  {/* Header */}
  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
  <div>
@@ -322,6 +321,5 @@ export default function AdminProjects() {
  )}
  </div>
  </div>
- </AdminLayout>
- );
+  );
 }

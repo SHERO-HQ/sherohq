@@ -13,7 +13,7 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { useAdmin } from "@/context/AdminContext";
 import { useNotifications } from "@/hooks/useNotifications";
 import {
   fetchNewsletterSubscribers,
@@ -134,14 +134,19 @@ export default function AdminNewsletter() {
     );
   }, [subscribers]);
 
-  const channelLabel = channel === "whatsapp" ? "WhatsApp" : "Email";
+  const channelLabel =
+    channel === "whatsapp" ? "WhatsApp" : channel === "sms" ? "SMS" : "Email";
   const testTargetLabel =
-    channel === "whatsapp" ? "Test Recipient Phone" : "Test Recipient Email";
+    channel === "whatsapp" || channel === "sms"
+      ? "Test Recipient Phone"
+      : "Test Recipient Email";
   const testTargetPlaceholder =
-    channel === "whatsapp" ? "+233XXXXXXXXX" : "name@example.com";
+    channel === "whatsapp" || channel === "sms"
+      ? "+233XXXXXXXXX"
+      : "name@example.com";
   const contentPlaceholder =
-    channel === "whatsapp"
-      ? "Write your WhatsApp broadcast message (plain text)..."
+    channel === "whatsapp" || channel === "sms"
+      ? "Write your plain text message (standard SMS/WhatsApp)..."
       : "Write HTML content for your email campaign...";
 
   const handleStatusChange = async (
@@ -415,8 +420,7 @@ export default function AdminNewsletter() {
   };
 
   return (
-    <AdminLayout>
-      <div className="space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in fade-in duration-500">
         <div className="space-y-3">
           <Link
             href="/admin/dashboard"
@@ -540,9 +544,7 @@ export default function AdminNewsletter() {
                         className="w-full h-10 rounded border border-white/10 bg-slate-900/50 px-3 text-sm text-white outline-none focus:ring-2 focus:ring-emerald-500/30"
                       >
                         <option value="email">Email</option>
-                        <option value="sms" disabled>
-                          SMS (coming soon)
-                        </option>
+                        <option value="sms">SMS</option>
                         <option value="whatsapp">WhatsApp</option>
                       </select>
                     </div>
@@ -1087,6 +1089,5 @@ export default function AdminNewsletter() {
           </TabsContent>
         </Tabs>
       </div>
-    </AdminLayout>
   );
 }

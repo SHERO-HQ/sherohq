@@ -481,13 +481,52 @@ class NotificationService {
     );
   }
 
+  private async sendHubtelSMS(phone: string, content: string): Promise<boolean> {
+    const clientId = process.env.HUBTEL_CLIENT_ID;
+    const clientSecret = process.env.HUBTEL_CLIENT_SECRET;
+    const senderId = process.env.HUBTEL_SENDER_ID || "SHERO";
+
+    const normalizedPhone = this.normalizePhone(phone);
+
+    if (clientId && clientSecret) {
+      try {
+        const auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+        const response = await fetch("https://smsc.hubtel.com/v1/messages/send", {
+          method: "POST",
+          headers: {
+            Authorization: `Basic ${auth}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            from: senderId,
+            to: normalizedPhone,
+            content: content,
+            registeredDelivery: true,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error(`❌ Hubtel SMS API failed for ${normalizedPhone}:`, errorText);
+          return false;
+        }
+
+        console.log(`✅ SMS sent via Hubtel to ${normalizedPhone}`);
+        return true;
+      } catch (error) {
+        console.error(`❌ Hubtel SMS error for ${normalizedPhone}:`, error);
+        return false;
+      }
+    }
+
+    console.log(`📱 [SIMULATION] SMS to ${normalizedPhone}: "${content}"`);
+    return true;
+  }
+
   private async sendSMS(orderId: string, shippingInfo: ShippingInfo) {
     const message = `SHERO TECHNOLOGIES: Order #${orderId.substring(0, 8)} confirmed! Total items will be delivered to ${shippingInfo.city}. Thanks for shopping with us!`;
 
-    // In a real app, you'd use Twilio, Vonage, etc.
-    console.log(
-      `📱 [SIMULATION] SMS sent to ${shippingInfo.phone}: "${message}"`,
-    );
+    await this.sendHubtelSMS(shippingInfo.phone, message);
   }
 
   public async sendVerificationEmail(
@@ -699,6 +738,14 @@ class NotificationService {
       return `+${compact.slice(2)}`;
     }
     return compact;
+  }
+
+  public async sendNewsletterCampaignSMS(
+    phone: string,
+    content: string,
+  ): Promise<boolean> {
+    await this.ensureInitialized();
+    return this.sendHubtelSMS(phone, content);
   }
 
   public async sendNewsletterCampaignWhatsApp(

@@ -14,7 +14,7 @@ import {
  useUpdateGuide,
  useDeleteGuide,
 } from "@/hooks/queries/useGuides";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { useAdmin } from "@/context/AdminContext";
 import { ArrowLeft } from "lucide-react";
 
 const AdminGuides = () => {
@@ -209,7 +209,6 @@ const AdminGuides = () => {
  }
 
  return (
- <AdminLayout>
  <div className="space-y-8 animate-in fade-in duration-500">
  <div className="flex flex-col gap-4">
  {/* Back Button */}
@@ -263,7 +262,6 @@ const AdminGuides = () => {
  isLoading={isDeleting}
  />
  </div>
- </AdminLayout>
  );
 };
 

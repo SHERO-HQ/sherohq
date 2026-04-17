@@ -2,7 +2,7 @@
 import { useMemo } from "react";
 import { useAIAnalyticsSummary } from "@/hooks/queries/useAdmin";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { useAdmin } from "@/context/AdminContext";
 import {
   Card,
   CardContent,
@@ -112,17 +112,17 @@ export default function AIAnalytics() {
 
   if (loading) {
     return (
-      <AdminLayout>
-        <div className="min-h-[60vh] flex items-center justify-center">
-          <div className="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-slate-400 font-medium">Loading intelligence data...</p>
         </div>
-      </AdminLayout>
+      </div>
     );
   }
 
   return (
-    <AdminLayout>
-      <div className="space-y-8">
+    <div className="space-y-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1">
             <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
@@ -469,7 +469,6 @@ export default function AIAnalytics() {
             </table>
           </div>
         </Card>
-      </div>
-    </AdminLayout>
+    </div>
   );
 }

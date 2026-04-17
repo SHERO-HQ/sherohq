@@ -14,7 +14,7 @@ import {
   List,
   Link as LinkIcon,
 } from "lucide-react";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { useAdmin } from "@/context/AdminContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -146,17 +146,17 @@ export default function ProjectForm() {
 
   if (isLoading) {
     return (
-      <AdminLayout>
-        <div className="flex items-center justify-center min-h-100">
-          <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+      <div className="flex flex-col items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-slate-400 font-medium">Loading project details...</p>
         </div>
-      </AdminLayout>
+      </div>
     );
   }
 
   return (
-    <AdminLayout>
-      <div className="max-w-5xl mx-auto space-y-6 pb-20">
+    <div className="max-w-4xl mx-auto space-y-8 pb-20">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
@@ -475,7 +475,6 @@ export default function ProjectForm() {
           </div>
         </form>
       </div>
-    </AdminLayout>
   );
 }
 

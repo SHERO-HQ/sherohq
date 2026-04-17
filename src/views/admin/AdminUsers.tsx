@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { useAdmin } from "@/context/AdminContext";
 import {
  Users,
  Search,
@@ -1000,7 +1000,6 @@ export default function AdminUsers() {
  };
 
  return (
- <AdminLayout>
  <div className="space-y-6 relative">
  {isPlaceholderData && (
  <div className="absolute inset-0 bg-slate-900/10 backdrop-blur-[1px] z-10 pointer-events-none transition-opacity" />
@@ -1062,6 +1061,5 @@ export default function AdminUsers() {
  isPending={deleteMutation.isPending}
  />
  </div>
- </AdminLayout>
  );
 }

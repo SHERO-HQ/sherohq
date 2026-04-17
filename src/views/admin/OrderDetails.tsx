@@ -29,7 +29,7 @@ import {
  Loader2,
  FileText,
 } from "lucide-react";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { useAdmin } from "@/context/AdminContext";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -144,50 +144,34 @@ export default function OrderDetails() {
  }
  };
 
- if (isLoading) {
- return (
- <AdminLayout>
- <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
- <Loader2 className="w-10 h-10 animate-spin text-emerald-500" />
- <p className="text-slate-500 font-medium">
- Fetching order details...
- </p>
- </div>
- </AdminLayout>
- );
- }
+ if (isLoading) return (
+      <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
+        <Loader2 className="w-10 h-10 animate-spin text-emerald-500" />
+        <p className="text-slate-500 font-medium">Fetching order details...</p>
+      </div>
+    );
 
- if (error || !order) {
- return (
- <AdminLayout>
- <div className="max-w-2xl mx-auto py-12 text-center space-y-6">
- <div className="w-20 h-20 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto">
- <XCircle className="w-10 h-10 text-rose-500" />
- </div>
- <h1 className="text-2xl font-bold text-white">Order Not Found</h1>
- <p className="text-slate-400">
- {error ||
- "The order you are looking for does not exist or has been removed."}
- </p>
- <Button
- variant="outline"
- className="text-white border-white/10 hover:bg-white/5"
- asChild
- >
- <Link href="/admin/orders">
- <ArrowLeft className="w-4 h-4 mr-2" /> Back to Orders
- </Link>
- </Button>
- </div>
- </AdminLayout>
- );
- }
+ if (error || !order) return (
+      <div className="max-w-2xl mx-auto py-12 text-center space-y-6">
+        <div className="w-20 h-20 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto">
+          <XCircle className="w-10 h-10 text-rose-500" />
+        </div>
+        <h1 className="text-2xl font-bold text-white">Order Not Found</h1>
+        <p className="text-slate-400">
+          {error || "The order you are looking for does not exist or has been removed."}
+        </p>
+        <Button variant="outline" className="text-white border-white/10 hover:bg-white/5" asChild>
+          <Link href="/admin/orders">
+            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Orders
+          </Link>
+        </Button>
+      </div>
+    );
 
  const statusConfig = getStatusConfig(order.status);
 
  return (
- <AdminLayout>
- <div className="max-w-6xl mx-auto space-y-6 pb-20">
+    <div className="max-w-6xl mx-auto space-y-6 pb-20">
  {/* Header Actions */}
  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
  <div className="flex items-center gap-4 text-white">
@@ -851,8 +835,7 @@ export default function OrderDetails() {
  document.body,
  )}
  </div>
- </AdminLayout>
- );
+  );
 }
 
 function Card({

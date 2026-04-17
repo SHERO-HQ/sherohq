@@ -32,7 +32,12 @@ export function validateQuery(schema: ZodSchema) {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
             const validated = await schema.parseAsync(req.query);
-            req.query = validated as unknown as Request["query"];
+            Object.defineProperty(req, "query", {
+                value: validated,
+                writable: true,
+                configurable: true,
+                enumerable: true,
+            });
             next();
         } catch (error) {
             if (error instanceof ZodError) {
@@ -56,7 +61,12 @@ export function validateParams(schema: ZodSchema) {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
             const validated = await schema.parseAsync(req.params);
-            req.params = validated as unknown as Request["params"];
+            Object.defineProperty(req, "params", {
+                value: validated,
+                writable: true,
+                configurable: true,
+                enumerable: true,
+            });
             next();
         } catch (error) {
             if (error instanceof ZodError) {
@@ -83,10 +93,22 @@ export function validate(options: { body?: ZodSchema; query?: ZodSchema; params?
                 req.body = await options.body.parseAsync(req.body);
             }
             if (options.query) {
-                req.query = (await options.query.parseAsync(req.query)) as unknown as Request["query"];
+                const validatedQuery = await options.query.parseAsync(req.query);
+                Object.defineProperty(req, "query", {
+                    value: validatedQuery,
+                    writable: true,
+                    configurable: true,
+                    enumerable: true,
+                });
             }
             if (options.params) {
-                req.params = (await options.params.parseAsync(req.params)) as unknown as Request["params"];
+                const validatedParams = await options.params.parseAsync(req.params);
+                Object.defineProperty(req, "params", {
+                    value: validatedParams,
+                    writable: true,
+                    configurable: true,
+                    enumerable: true,
+                });
             }
             next();
         } catch (error) {

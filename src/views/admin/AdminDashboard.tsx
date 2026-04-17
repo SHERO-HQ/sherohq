@@ -24,7 +24,7 @@ import {
  RefreshCw,
 } from "lucide-react";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { Button } from "@/components/ui/button";
 import {
  Card,
  CardContent,
@@ -32,7 +32,6 @@ import {
  CardTitle,
  CardDescription,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import {
  AreaChart,
  Area,
@@ -275,74 +274,71 @@ export default function AdminDashboard() {
 
  if (error) {
   return (
-   <AdminLayout>
-    <div className="flex flex-col items-center justify-center min-h-100 text-center">
-     <div className="p-4 rounded bg-rose-500/10 mb-4">
-      <XCircle className="w-12 h-12 text-rose-500" />
-     </div>
-     <h2 className="text-xl font-bold text-white mb-2">
-      Failed to load dashboard
-     </h2>
-     <p className="text-slate-400 mb-6 max-w-md">
-      {error}
-      <br />
-      <span className="text-xs text-slate-500 mt-2 block">
-       Target: {process.env.NEXT_PUBLIC_API_URL || "/api"}
-      </span>
-     </p>
-     <Button
-      onClick={handleManualRefresh}
-      variant="outline"
-      className="border-white/10 hover:bg-white/5"
-     >
-      Try Again
-     </Button>
+   <div className="flex flex-col items-center justify-center min-h-100 text-center">
+    <div className="p-4 rounded bg-rose-500/10 mb-4">
+     <XCircle className="w-12 h-12 text-rose-500" />
     </div>
-   </AdminLayout>
+    <h2 className="text-xl font-bold text-white mb-2">
+     Failed to load dashboard
+    </h2>
+    <p className="text-slate-400 mb-6 max-w-md">
+     {error}
+     <br />
+     <span className="text-xs text-slate-500 mt-2 block">
+      Target: {process.env.NEXT_PUBLIC_API_URL || "/api"}
+     </span>
+    </p>
+    <Button
+     onClick={handleManualRefresh}
+     variant="outline"
+     className="border-white/10 hover:bg-white/5"
+    >
+     Try Again
+    </Button>
+   </div>
   );
  }
 
  return (
-  <AdminLayout>
-   <div className="space-y-8">
-    {/* Header Section */}
-    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-     <div className="space-y-1">
-      <h1 className="text-3xl font-bold tracking-tight text-white">
-       Dashboard Overview
-      </h1>
-      <p className="text-slate-400 text-sm">
-       Welcome back,{" "}
-       <span className="text-emerald-400 font-semibold">
-        {admin?.username}
-       </span>
-       . Here's your store's performance at a glance.
-      </p>
+  <div className="space-y-8">
+   {/* Header Section */}
+   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="space-y-1">
+     <h1 className="text-3xl font-bold tracking-tight text-white">
+      Dashboard Overview
+     </h1>
+     <p className="text-slate-400 text-sm">
+      Welcome back,{" "}
+      <span className="text-emerald-400 font-semibold">
+       {admin?.username}
+      </span>
+      . Here's your store's performance at a glance.
+     </p>
+    </div>
+    <div className="flex items-center flex-wrap gap-3">
+     <div className="flex bg-slate-900/50 p-1 rounded border border-white/5">
+      {[
+       { value: "today", label: "Today" },
+       { value: "week", label: "Week" },
+       { value: "month", label: "Month" },
+       { value: "year", label: "Year" },
+      ].map((opt) => (
+       <button
+        key={opt.value}
+        onClick={() =>
+         setPeriod(opt.value as "today" | "week" | "month" | "year")
+        }
+        className={cn(
+         "px-3 py-1 text-xs font-semibold rounded transition",
+         period === opt.value
+          ? "bg-emerald-600 text-white shadow"
+          : "text-slate-400 hover:text-white hover:bg-white/5",
+        )}
+       >
+        {opt.label}
+       </button>
+      ))}
      </div>
-     <div className="flex items-center flex-wrap gap-3">
-      <div className="flex bg-slate-900/50 p-1 rounded border border-white/5">
-       {[
-        { value: "today", label: "Today" },
-        { value: "week", label: "Week" },
-        { value: "month", label: "Month" },
-        { value: "year", label: "Year" },
-       ].map((opt) => (
-        <button
-         key={opt.value}
-         onClick={() =>
-          setPeriod(opt.value as "today" | "week" | "month" | "year")
-         }
-         className={cn(
-          "px-3 py-1 text-xs font-semibold rounded transition",
-          period === opt.value
-           ? "bg-emerald-600 text-white shadow"
-           : "text-slate-400 hover:text-white hover:bg-white/5",
-         )}
-        >
-         {opt.label}
-        </button>
-       ))}
-      </div>
       <Button
        variant="outline"
        size="icon"
@@ -365,7 +361,7 @@ export default function AdminDashboard() {
        </Link>
       </Button>
       <Button
-       className="bg-emerald-600 hover:bg-emerald-500 text-white"
+       className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold"
        asChild
       >
        <Link href="/admin/products/new">
@@ -811,6 +807,5 @@ export default function AdminDashboard() {
      </Card>
     </div>
    </div>
-  </AdminLayout>
- );
+  );
 }

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import AdminLayout from "@/components/admin/AdminLayout";
+import { useAdmin } from "@/context/AdminContext";
 import {
  Users,
  Plus,
@@ -28,9 +28,8 @@ import {
  useDeleteAdminUser,
  useResetStaffPassword,
  useToggleStaffActive,
-} from "@/hooks/queries/useAdminUsers";
+ } from "@/hooks/queries/useAdminUsers";
 import { useNotifications } from "@/hooks/useNotifications";
-import { useAdmin } from "@/context/AdminContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/Modal";
@@ -204,8 +203,7 @@ export default function AdminUserManagement() {
  };
 
  return (
- <AdminLayout>
- <div className="space-y-8">
+    <div className="space-y-6">
  {/* Header */}
  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
  <div>
@@ -632,6 +630,5 @@ export default function AdminUserManagement() {
  variant="danger"
  />
  </div>
- </AdminLayout>
- );
+  );
 }
