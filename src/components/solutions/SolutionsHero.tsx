@@ -123,7 +123,7 @@ const SolutionsHero = () => {
 
               {/* Main Visual Card */}
               <div className="relative w-full h-full drop-shadow group-hover/visual:-translate-y-6 transition-transform duration-1000 ease-out flex items-center justify-center">
-                <div className="w-full h-full relative overflow-hidden flex items-center justify-center shadow-inner">
+                <div className="w-full h-full relative overflow-hidden flex items-center justify-center">
                   <div className="absolute inset-0 pattern-dots opacity-40" />
 
                   {/* Central Iconography */}

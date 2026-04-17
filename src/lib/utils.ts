@@ -15,33 +15,24 @@ export function cn(...inputs: ClassValue[]) {
  */
 const NAV_LINK_STYLES = {
   base: [
-    "px-2 py-1",
-    "rounded", // Add for better visual consistency
-    "transition-colors duration-200 ease-in-out",
-    // Focus states (CRITICAL for accessibility)
-    "focus:ring-primary",
-    "focus:ring-offset-2",
-    "dark:focus:ring-offset-slate-900",
+    "px-3 py-1.5",
+    "rounded-md",
+    "transition-all duration-300 ease-in-out",
+    // Focus states
+    // "focus:ring-2 focus:ring-emerald-500/50",
+    "focus:outline-none",
   ],
   active: [
-    "bg-transparent",
-    "text-emerald-900 dark:text-emerald-500",
-    "font-medium",
-    "rounded-none",
-    // Hover states for active
-    "hover:bg-emerald-500/10",
-    "hover:border-secondary",
+    "text-emerald-600 dark:text-emerald-400",
+    "font-semibold",
   ],
   inactive: [
-    "border-b-2",
-    "border-transparent", // Prevent layout shift
-    "text-slate-700 dark:text-slate-400",
+    "bg-transparent",
+    "text-slate-600 dark:text-slate-400",
     "font-normal",
-    // Hover states for inactive
-    "hover:bg-emerald-500/10 dark:hover:bg-emerald-500/10",
-    "hover:border-emerald-500 dark:hover:border-emerald-700 border-dashed",
-    "hover:rounded-none",
-    "hover:text-emerald-900 dark:hover:text-emerald-300",
+    // Hover states
+    "hover:text-slate-900 dark:hover:text-white",
+    "hover:bg-slate-500/10 dark:hover:bg-white/5",
   ],
 } as const;
 
@@ -123,18 +114,21 @@ export function navLinkClassVariant(
     },
     mobile: {
       base: [
-        "block py-2 px-4",
-        "rounded",
+        "relative block py-2.5 px-4",
+        "rounded-md",
         "text-base font-medium",
-        "transition-colors duration-200",
+        "transition-all duration-300",
       ],
       active: [
-        "bg-emerald-50 dark:bg-emerald-900/20",
+        "bg-emerald-500/10",
         "text-emerald-600 dark:text-emerald-400",
+        "font-bold",
+        "shadow-xs",
       ],
       inactive: [
+        "bg-transparent",
         "text-slate-700 dark:text-slate-300",
-        "hover:bg-slate-50 dark:hover:bg-slate-800",
+        "hover:bg-slate-50 dark:hover:bg-slate-900/50",
       ],
     },
   };

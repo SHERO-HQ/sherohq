@@ -295,14 +295,14 @@ const Nav = () => {
             </NavLink>
 
             {/* Center Navigation Links - Desktop */}
-            <div className="hidden lg:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-center z-10 pointer-events-none">
+            <div className="hidden lg:flex absolute left-1/2 top-0 h-full -translate-x-1/2 items-center justify-center z-10 pointer-events-none">
               <ul
                 ref={navMenuRef}
-                className="flex items-center gap-6 relative pointer-events-auto"
+                className="flex items-center gap-6 h-full relative pointer-events-auto"
                 suppressHydrationWarning
               >
                 {navLinks.map((item) => (
-                  <li key={item.name} suppressHydrationWarning>
+                  <li key={item.name} className="h-full flex items-center" suppressHydrationWarning>
                     <NavLink
                       className={({ isActive }) => navLinkClass(isActive)}
                       href={getAbsoluteUrl(item.href)}
@@ -312,10 +312,10 @@ const Nav = () => {
                   </li>
                 ))}
 
-                {/* Active Link Indicator */}
+                {/* Active Link Indicator - Glides on the bottom border */}
                 {activeNavIndex !== null && activeNavIndex >= 0 && (
                   <motion.div
-                    className="absolute -bottom-1 h-0.5 bg-linear-to-r from-emerald-500 to-emerald-600 rounded-full"
+                    className="absolute bottom-0 h-1 bg-emerald-500 rounded-t-full shadow-[0_-1px_4px_rgba(16,185,129,0.2)]"
                     initial={false}
                     animate={{
                       width: indicatorDims.width,
@@ -323,8 +323,8 @@ const Nav = () => {
                     }}
                     transition={{
                       type: "spring",
-                      stiffness: 300,
-                      damping: 30,
+                      stiffness: 350,
+                      damping: 32,
                     }}
                   />
                 )}
@@ -541,14 +541,20 @@ const Nav = () => {
                           href={getAbsoluteUrl(item.href)}
                           onClick={() => setIsOpen(false)}
                           className={({ isActive }) =>
-                            `block px-4 py-2 rounded transition-all duration-300 text-base ${
-                              isActive
-                                ? "bg-emerald-600 text-white font-semibold"
-                                : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-900/80 hover:translate-x-1"
-                            }`
+                            navLinkClassVariant(isActive, "mobile")
                           }
                         >
-                          {item.name}
+                          {({ isActive }) => (
+                            <>
+                              {item.name}
+                              {isActive && (
+                                <motion.div
+                                  layoutId="mobile-nav-indicator"
+                                  className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-emerald-500 rounded-r-full"
+                                />
+                              )}
+                            </>
+                          )}
                         </NavLink>
                       </motion.li>
                     ))}

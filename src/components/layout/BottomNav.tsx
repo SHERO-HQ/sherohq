@@ -1,6 +1,7 @@
 "use client";
 import { Home, ShoppingBag, ShoppingCart, Heart } from "lucide-react";
 import NavLink from "@/components/common/NavLink";
+import { motion } from "motion/react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useIsMounted } from "@/hooks/useIsMounted";
@@ -65,16 +66,26 @@ const BottomNav = () => {
  <NavLink
  key={item.label}
  href={item.path}
- className={({ isActive }) =>
- `flex flex-col items-center justify-center w-full h-full gap-1 transition-colors ${
- isActive
- ? "text-emerald-600 dark:text-emerald-400"
- : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
- }`
- }
+  className={({ isActive }) =>
+  `relative flex flex-col items-center justify-center w-full h-full gap-1 transition-all duration-300 rounded-md py-1 ${
+  isActive
+  ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold shadow-xs"
+  : "bg-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
+  }`
+  }
  >
- <item.icon className="w-6 h-6" strokeWidth={2} />
- <span className="text-[12px] font-medium">{item.label}</span>
+  {({ isActive }) => (
+    <>
+      <item.icon className="w-6 h-6" strokeWidth={2} />
+      <span className="text-[12px] font-medium">{item.label}</span>
+      {isActive && (
+        <motion.div
+          layoutId="bottom-nav-indicator"
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-[0.1rem] bg-emerald-500 rounded-full"
+        />
+      )}
+    </>
+  )}
  </NavLink>
  );
  })}

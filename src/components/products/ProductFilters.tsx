@@ -143,9 +143,9 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  <button
  key={tab.id}
  onClick={() => setActiveTab(tab.id)}
- className={`relative px-6 py-2 md:px-8 text-left transition duration-300 flex-1 md:flex-none whitespace-nowrap md:whitespace-normal ${
+ className={`relative px-6 py-3 md:px-8 text-left transition-all duration-300 flex-1 md:flex-none whitespace-nowrap md:whitespace-normal ${
  activeTab === tab.id
- ? "text-emerald-500 bg-emerald-500/5 md:bg-transparent"
+ ? "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 font-bold shadow-xs"
  : "text-slate-400 hover:text-slate-600 dark:hover:text-white"
  }`}
  >
@@ -154,7 +154,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  {activeTab === tab.id && (
  <motion.div
  layoutId="activeTabIndicator"
- className="absolute bottom-0 left-0 right-0 h-0.5 md:h-8 md:w-1 md:right-0 md:left-auto md:top-1/2 md:-translate-y-1/2 bg-emerald-500 md:rounded-l-full shadow-sm"
+ className="absolute bottom-0 left-0 right-0 h-0.5 md:h-8 md:w-1 md:left-0 md:top-1/2 md:-translate-y-1/2 bg-emerald-500 md:rounded-r-full shadow-sm"
  />
  )}
  </button>
