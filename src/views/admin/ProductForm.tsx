@@ -210,7 +210,7 @@ export default function ProductForm() {
 
     try {
       setIsUploading(true);
-      addNotification("Processing", `Handling ${validFiles.length} image(s)...`, "info");
+      addNotification("Processing", `Uploading ${validFiles.length} image(s)...`, "info");
 
       // Optimize and upload each file
       const uploadedUrls: string[] = [];
