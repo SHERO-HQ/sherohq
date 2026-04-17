@@ -28,10 +28,10 @@ const getApiBase = () => {
   if (typeof window === "undefined") {
     if (process.env.NODE_ENV === "production" && !resolvedEnvUrl) {
       console.warn(
-        "⚠️ [API] Falling back to hardcoded production URL: https://api.sherohq.com/api. " +
+        "⚠️ [API] Falling back to hardcoded production URL: https://sherotech.onrender.com/api. " +
           "Ensure NEXT_PUBLIC_API_URL or API_URL is set in your deployment environment.",
       );
-      return "https://api.sherohq.com/api";
+      return "https://sherotech.onrender.com/api";
     }
 
     const siteUrl =
