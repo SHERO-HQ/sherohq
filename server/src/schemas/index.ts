@@ -220,6 +220,16 @@ export const CreateReviewSchema = z.object({
   comment: z.string().max(1000, "Comment is too long").optional(),
 });
 
+export const ReviewBodySchema = z.object({
+  userName: z.string().min(1, "Name is required").max(100),
+  rating: z
+    .number()
+    .int()
+    .min(1, "Rating must be at least 1")
+    .max(5, "Rating cannot exceed 5"),
+  comment: z.string().max(1000, "Comment is too long").optional(),
+});
+
 export const UpdateReviewSchema = z.object({
   rating: z.number().int().min(1).max(5).optional(),
   comment: z.string().max(1000).optional(),
@@ -281,6 +291,13 @@ export const CreateConsultationSchema = z.object({
   time: z.string().min(1, "Time is required"),
   message: z.string().max(1000).optional(),
 });
+export const UpdateConsultationStatusSchema = z.object({
+  status: z.enum(["pending", "confirmed", "completed", "cancelled"]),
+});
+
+export const UpdateInquiryStatusSchema = z.object({
+  status: z.enum(["pending", "resolved", "closed"]),
+});
 
 export const NewsletterSubscribeSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -290,6 +307,18 @@ export const NewsletterSubscribeSchema = z.object({
     .regex(/^\+?[1-9]\d{7,14}$/, "Invalid phone number format")
     .optional(),
   source: z.string().min(1).max(50).optional(),
+});
+
+export const UpdateNewsletterSubscriberStatusSchema = z.object({
+  status: z.enum(["active", "unsubscribed"]),
+});
+
+export const UpdateNewsletterSubscriberContactSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  phone: z
+    .string()
+    .regex(/^\+?[1-9]\d{7,14}$/, "Invalid phone number format")
+    .optional(),
 });
 
 export const NewsletterCampaignSchema = z.object({
@@ -413,6 +442,18 @@ export const CreateStatSchema = z.object({
 });
 
 export const UpdateStatSchema = CreateStatSchema.partial();
+
+// ============ Expense Schemas ============
+
+export const CreateExpenseSchema = z.object({
+  title: z.string().min(1, "Title is required").max(200),
+  amount: z.number().positive("Amount must be positive"),
+  category: z.string().min(1, "Category is required").max(100),
+  date: z.string().min(1, "Date is required"),
+  description: z.string().max(500).optional(),
+});
+
+export const UpdateExpenseSchema = CreateExpenseSchema.partial();
 
 // ============ Upload Schemas ============
 

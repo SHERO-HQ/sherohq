@@ -3,6 +3,9 @@ import db from "../db/database";
 import { adminAuth, AdminRequest } from "../middleware/adminAuth";
 import { v4 as uuidv4 } from "uuid";
 
+import { validateBody } from "../middleware/validate";
+import { CreateExpenseSchema, UpdateExpenseSchema } from "../schemas";
+
 const router = express.Router();
 
 // GET /api/expenses - Get all expenses (Admin)
@@ -44,14 +47,11 @@ router.get("/", adminAuth, async (req: AdminRequest, res: express.Response) => {
 router.post(
   "/",
   adminAuth,
+  validateBody(CreateExpenseSchema),
   async (req: AdminRequest, res: express.Response) => {
     try {
       const { title, amount, category, date, description } = req.body;
       const adminId = req.admin?.id;
-
-      if (!title || !amount || !category || !date) {
-        return res.status(400).json({ error: "Missing required fields" });
-      }
 
       const result = await db.query(
         'INSERT INTO expenses (id, title, amount, category, date, description, "adminId") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
@@ -78,6 +78,7 @@ router.post(
 router.patch(
   "/:id",
   adminAuth,
+  validateBody(UpdateExpenseSchema),
   async (req: AdminRequest, res: express.Response) => {
     try {
       const { id } = req.params;

@@ -4,6 +4,8 @@ import { v4 as uuidv4 } from "uuid";
 import db from "../db/database";
 import { adminAuth, AdminRequest } from "../middleware/adminAuth";
 import { logActivity } from "./activity";
+import { validateBody } from "../middleware/validate";
+import { ReviewBodySchema } from "../schemas";
 
 const router = express.Router();
 
@@ -45,15 +47,14 @@ router.get("/:productId", async (req, res) => {
 });
 
 // POST a new review
-router.post("/:productId", reviewSubmitLimiter, async (req, res) => {
-  try {
-    const { productId } = req.params;
-    const { userName, rating, comment } = req.body;
-
-    if (!userName || !rating) {
-      res.status(400).json({ error: "Name and rating are required" });
-      return;
-    }
+router.post(
+  "/:productId",
+  reviewSubmitLimiter,
+  validateBody(ReviewBodySchema),
+  async (req, res) => {
+    try {
+      const { productId } = req.params;
+      const { userName, rating, comment } = req.body;
 
     const reviewId = uuidv4();
 

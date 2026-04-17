@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 import { query } from "../db/database";
 import { adminAuth } from "../middleware/adminAuth";
 import { fetchTrustpilotReviews } from "../services/TrustpilotService";
+import { validateBody } from "../middleware/validate";
+import { CreateTestimonialSchema, UpdateTestimonialSchema } from "../schemas";
 
 const router = Router();
 
@@ -116,12 +118,8 @@ router.post("/sync/trustpilot", adminAuth, async (req, res) => {
 });
 
 // POST create new testimonial (Admin only)
-router.post("/", adminAuth, async (req, res) => {
+router.post("/", adminAuth, validateBody(CreateTestimonialSchema), async (req, res) => {
   const { quote, author, role, company, image, order, active } = req.body;
-
-  if (!quote || !author) {
-    return res.status(400).json({ error: "Quote and author are required" });
-  }
 
   try {
     const id = uuidv4();
@@ -140,7 +138,7 @@ router.post("/", adminAuth, async (req, res) => {
 });
 
 // PUT update testimonial (Admin only)
-router.put("/:id", adminAuth, async (req, res) => {
+router.put("/:id", adminAuth, validateBody(UpdateTestimonialSchema), async (req, res) => {
   const { id } = req.params;
   const { quote, author, role, company, image, order, active } = req.body;
 

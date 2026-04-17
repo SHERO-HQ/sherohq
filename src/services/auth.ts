@@ -185,6 +185,7 @@ export async function updateUserProfile(data: {
 }
 
 export async function userChangePassword(
+  currentPassword: string,
   password: string,
 ): Promise<{ success: boolean }> {
   const token = localStorage.getItem("userToken");
@@ -201,7 +202,7 @@ export async function userChangePassword(
     method: "POST",
     headers,
     credentials: "include",
-    body: JSON.stringify({ password }),
+    body: JSON.stringify({ currentPassword, password }),
   });
   return handleResponse(response);
 }

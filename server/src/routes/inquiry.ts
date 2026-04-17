@@ -4,7 +4,12 @@ import db from "../db/database";
 import { adminAuth } from "../middleware/adminAuth";
 import { v4 as uuidv4 } from "uuid";
 import { validateBody } from "../middleware/validate";
-import { CreateConsultationSchema, CreateInquirySchema } from "../schemas";
+import {
+  CreateConsultationSchema,
+  CreateInquirySchema,
+  UpdateConsultationStatusSchema,
+  UpdateInquiryStatusSchema,
+} from "../schemas";
 
 const router = express.Router();
 
@@ -103,15 +108,14 @@ router.post("/contact", validateBody(CreateInquirySchema), async (req, res) => {
 });
 
 // PATCH /api/inquiry/consultations/:id/status - Update consultation status (Admin)
-router.patch("/consultations/:id/status", adminAuth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { status } = req.body;
-
-    if (!status) {
-      res.status(400).json({ error: "Missing status" });
-      return;
-    }
+router.patch(
+  "/consultations/:id/status",
+  adminAuth,
+  validateBody(UpdateConsultationStatusSchema),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
 
     const result = await db.query(
       "UPDATE consultations SET status = $1 WHERE id = $2 RETURNING *",
@@ -155,15 +159,14 @@ router.delete("/consultations/:id", adminAuth, async (req, res) => {
 });
 
 // PATCH /api/inquiry/inquiries/:id/status - Update inquiry status (Admin)
-router.patch("/inquiries/:id/status", adminAuth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { status } = req.body;
-
-    if (!status) {
-      res.status(400).json({ error: "Missing status" });
-      return;
-    }
+router.patch(
+  "/inquiries/:id/status",
+  adminAuth,
+  validateBody(UpdateInquiryStatusSchema),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
 
     const result = await db.query(
       "UPDATE inquiries SET status = $1 WHERE id = $2 RETURNING *",

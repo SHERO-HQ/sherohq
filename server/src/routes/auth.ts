@@ -527,12 +527,12 @@ router.post(
         return res.status(401).json({ error: "Unauthorized" });
       }
 
-      const { password } = req.body;
+      const { currentPassword, password } = req.body;
 
-      if (!password || password.length < 8) {
-        return res
-          .status(400)
-          .json({ error: "Password must be at least 8 characters long" });
+      // Verify current password
+      const isMatch = await bcrypt.compare(currentPassword, user.passwordHash);
+      if (!isMatch) {
+        return res.status(401).json({ error: "Incorrect current password" });
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);

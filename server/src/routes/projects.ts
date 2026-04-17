@@ -3,6 +3,8 @@ import { v4 as uuidv4 } from "uuid";
 import db from "../db/database";
 import { adminAuth, AdminRequest } from "../middleware/adminAuth";
 import { logActivity } from "./activity";
+import { validateBody } from "../middleware/validate";
+import { CreateProjectSchema, UpdateProjectSchema } from "../schemas";
 
 const router = Router();
 
@@ -83,22 +85,22 @@ router.get("/:id", async (req: Request, res: Response) => {
 // ============ ADMIN ROUTES (Protected) ============
 
 // POST /api/projects - Create new project
-router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
-  try {
-    const {
-      title,
-      category,
-      client,
-      description,
-      useCase,
-      technologies,
-      image,
-      link,
-    } = req.body;
-
-    if (!title || !category) {
-      return res.status(400).json({ error: "Title and category are required" });
-    }
+router.post(
+  "/",
+  adminAuth,
+  validateBody(CreateProjectSchema),
+  async (req: AdminRequest, res: Response) => {
+    try {
+      const {
+        title,
+        category,
+        client,
+        description,
+        useCase,
+        technologies,
+        image,
+        link,
+      } = req.body;
 
     const projectId = uuidv4();
 
@@ -145,19 +147,23 @@ router.post("/", adminAuth, async (req: AdminRequest, res: Response) => {
 });
 
 // PUT /api/projects/:id - Update project
-router.put("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
-  try {
-    const { id } = req.params;
-    const {
-      title,
-      category,
-      client,
-      description,
-      useCase,
-      technologies,
-      image,
-      link,
-    } = req.body;
+router.put(
+  "/:id",
+  adminAuth,
+  validateBody(UpdateProjectSchema),
+  async (req: AdminRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+      const {
+        title,
+        category,
+        client,
+        description,
+        useCase,
+        technologies,
+        image,
+        link,
+      } = req.body;
 
     const check = await db.query("SELECT id FROM projects WHERE id = $1", [id]);
     if (check.rowCount === 0) {

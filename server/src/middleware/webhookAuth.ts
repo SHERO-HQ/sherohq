@@ -181,3 +181,27 @@ export function verifyHubtelSignature(secret: string) {
         }
     };
 }
+/**
+ * Unified middleware to verify webhooks from multiple providers
+ */
+export function verifyProviderWebhook() {
+    return (req: Request, res: Response, next: NextFunction) => {
+        const paystackSignature = req.headers["x-paystack-signature"];
+        const hubtelSignature = req.headers["x-hubtel-signature"] || req.headers["authorization"];
+
+        if (paystackSignature) {
+            console.log("🔍 Detected Paystack webhook");
+            return verifyPaystackSignature(process.env.PAYSTACK_SECRET_KEY || "")(req, res, next);
+        }
+
+        if (hubtelSignature) {
+            console.log("🔍 Detected Hubtel webhook");
+            // Hubtel can use HMAC or a static token in Authorization header
+            const secret = process.env.HUBTEL_WEBHOOK_SECRET || process.env.HUBTEL_CLIENT_SECRET || "";
+            return verifyHubtelSignature(secret)(req, res, next);
+        }
+
+        console.warn("🛑 Unknown webhook provider: No recognized signature headers found");
+        return res.status(401).json({ error: "Unrecognized webhook provider" });
+    };
+}

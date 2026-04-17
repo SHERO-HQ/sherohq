@@ -1,6 +1,9 @@
 import { Router } from "express";
 import { query } from "../db/database";
 import { v4 as uuidv4 } from "uuid";
+import { adminAuth } from "../middleware/adminAuth";
+import { validateBody } from "../middleware/validate";
+import { CreateGuideSchema, UpdateGuideSchema } from "../schemas";
 
 const router = Router();
 
@@ -40,7 +43,7 @@ router.get("/", async (req, res) => {
 });
 
 // GET /api/guides/admin - List all guides for admin (requires auth)
-router.get("/admin", async (req, res) => {
+router.get("/admin", adminAuth, async (req, res) => {
   try {
     const result = await query(`
       SELECT g.*, au.username as "authorName"
@@ -81,7 +84,7 @@ router.get("/:slug", async (req, res) => {
 });
 
 // POST /api/guides - Create new guide (admin only)
-router.post("/", async (req, res) => {
+router.post("/", adminAuth, validateBody(CreateGuideSchema), async (req, res) => {
   try {
     const {
       title,
@@ -93,17 +96,6 @@ router.post("/", async (req, res) => {
       authorId,
     } = req.body;
 
-    if (!title || !content || !category) {
-      return res
-        .status(400)
-        .json({ error: "Title, content, and category are required" });
-    }
-
-    if (category !== "hardware" && category !== "software") {
-      return res
-        .status(400)
-        .json({ error: "Category must be 'hardware' or 'software'" });
-    }
 
     const id = uuidv4();
     let slug = createSlug(title);
@@ -144,7 +136,7 @@ router.post("/", async (req, res) => {
 });
 
 // PUT /api/guides/:id - Update guide (admin only)
-router.put("/:id", async (req, res) => {
+router.put("/:id", adminAuth, validateBody(UpdateGuideSchema), async (req, res) => {
   try {
     const { id } = req.params;
     const { title, content, summary, category, coverImage, published } =
@@ -196,7 +188,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // DELETE /api/guides/:id - Delete guide (admin only)
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", adminAuth, async (req, res) => {
   try {
     const { id } = req.params;
 

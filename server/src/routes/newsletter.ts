@@ -11,6 +11,8 @@ import { validateBody } from "../middleware/validate";
 import {
   NewsletterSubscribeSchema,
   NewsletterCampaignSchema,
+  UpdateNewsletterSubscriberStatusSchema,
+  UpdateNewsletterSubscriberContactSchema,
 } from "../schemas";
 import { notificationService } from "../services/NotificationService";
 
@@ -574,15 +576,11 @@ router.patch(
   "/subscribers/:id/status",
   adminAuth,
   requireRole("manager"),
+  validateBody(UpdateNewsletterSubscriberStatusSchema),
   async (req: AdminRequest, res: Response) => {
     try {
       const { id } = req.params;
-      const status = (req.body.status as string | undefined)?.toLowerCase();
-
-      if (status !== "active" && status !== "unsubscribed") {
-        res.status(400).json({ error: "Invalid status" });
-        return;
-      }
+      const status = (req.body.status as string).toLowerCase();
 
       const result = await db.query(
         `
@@ -616,41 +614,21 @@ router.patch(
   "/subscribers/:id/contact",
   adminAuth,
   requireRole("manager"),
+  validateBody(UpdateNewsletterSubscriberContactSchema),
   async (req: AdminRequest, res: Response) => {
     try {
       const { id } = req.params;
-      const rawPhone = req.body.phone as string | null | undefined;
-      const rawName = req.body.name as string | null | undefined;
-
-      const hasPhone = typeof rawPhone !== "undefined";
-      const hasName = typeof rawName !== "undefined";
-
-      if (!hasPhone && !hasName) {
-        res.status(400).json({ error: "Provide phone or name to update." });
-        return;
-      }
+      const rawPhone = req.body.phone as string | undefined;
+      const rawName = req.body.name as string | undefined;
 
       let phone: string | null = null;
-      if (hasPhone) {
-        const normalized = String(rawPhone ?? "").trim();
-        if (normalized.length > 0) {
-          const parsed = normalizePhone(normalized);
-          if (!/^\+?[1-9]\d{7,14}$/.test(parsed)) {
-            res.status(400).json({ error: "Invalid phone number format." });
-            return;
-          }
-          phone = parsed;
-        }
+      if (rawPhone) {
+        phone = normalizePhone(rawPhone.trim());
       }
 
       let name: string | null = null;
-      if (hasName) {
-        const normalizedName = String(rawName ?? "").trim();
-        if (normalizedName.length > 100) {
-          res.status(400).json({ error: "Name is too long." });
-          return;
-        }
-        name = normalizedName || null;
+      if (rawName) {
+        name = rawName.trim() || null;
       }
 
       const result = await db.query(
@@ -664,7 +642,7 @@ router.patch(
           RETURNING id, email, phone, name, source, status,
             "subscribedAt", "unsubscribedAt", "lastCampaignAt", "createdAt", "updatedAt"
         `,
-        [hasPhone, phone, hasName, name, id],
+        [Boolean(rawPhone), phone, Boolean(rawName), name, id],
       );
 
       if (result.rowCount === 0) {

@@ -3,6 +3,9 @@ import { v4 as uuidv4 } from "uuid";
 import db from "../db/database";
 import { adminAuth } from "../middleware/adminAuth";
 
+import { validateBody } from "../middleware/validate";
+import { CreateTicketSchema, UpdateTicketSchema } from "../schemas";
+
 const router = express.Router();
 
 // GET /api/tickets - Get all support tickets (Admin)
@@ -19,7 +22,7 @@ router.get("/", adminAuth, async (req, res) => {
 });
 
 // Create a new support ticket
-router.post("/", async (req, res) => {
+router.post("/", validateBody(CreateTicketSchema), async (req, res) => {
   try {
     const {
       name,
@@ -31,11 +34,6 @@ router.post("/", async (req, res) => {
       productId,
       userId,
     } = req.body;
-
-    if (!name || !email || !subject || !message || !category) {
-      res.status(400).json({ error: "Missing required fields" });
-      return;
-    }
 
     const id = uuidv4();
 
@@ -68,20 +66,36 @@ router.post("/", async (req, res) => {
   }
 });
 
-// PATCH /api/tickets/:id/status - Update ticket status (Admin)
-router.patch("/:id/status", adminAuth, async (req, res) => {
+// PATCH /api/tickets/:id - Update ticket (Admin)
+router.patch("/:id", adminAuth, validateBody(UpdateTicketSchema), async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const { status, priority } = req.body;
 
-    if (!status) {
-      res.status(400).json({ error: "Missing status" });
-      return;
+    const updates: string[] = [];
+    const values: any[] = [];
+    let paramIndex = 1;
+
+    if (status) {
+      updates.push(`status = $${paramIndex}`);
+      values.push(status);
+      paramIndex++;
     }
 
+    if (priority) {
+      updates.push(`priority = $${paramIndex}`);
+      values.push(priority);
+      paramIndex++;
+    }
+
+    if (updates.length === 0) {
+      return res.status(400).json({ error: "No fields to update" });
+    }
+
+    values.push(id);
     const result = await db.query(
-      "UPDATE tickets SET status = $1 WHERE id = $2 RETURNING *",
-      [status, id],
+      `UPDATE tickets SET ${updates.join(", ")} WHERE id = $${paramIndex} RETURNING *`,
+      values,
     );
 
     if (result.rowCount === 0) {
@@ -91,12 +105,12 @@ router.patch("/:id/status", adminAuth, async (req, res) => {
 
     res.json({
       success: true,
-      message: "Ticket status updated successfully",
+      message: "Ticket updated successfully",
       ticket: result.rows[0],
     });
   } catch (error) {
-    console.error("Error updating ticket status:", error);
-    res.status(500).json({ error: "Failed to update ticket status" });
+    console.error("Error updating ticket:", error);
+    res.status(500).json({ error: "Failed to update ticket" });
   }
 });
 

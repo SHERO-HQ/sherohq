@@ -153,11 +153,12 @@ export async function adminLogin(
 }
 
 export async function adminChangePassword(
+  currentPassword: string,
   password: string,
 ): Promise<{ success: boolean }> {
   const response = await authFetch(`${API_BASE}/admin/change-password`, {
     method: "POST",
-    body: JSON.stringify({ password }),
+    body: JSON.stringify({ currentPassword, password }),
   });
   return handleResponse(response);
 }

@@ -2,6 +2,8 @@ import { Router } from "express";
 import { v4 as uuidv4 } from "uuid";
 import { query } from "../db/database";
 import { adminAuth, requireAnyRole } from "../middleware/adminAuth";
+import { validateBody } from "../middleware/validate";
+import { CreateTeamMemberSchema, UpdateTeamMemberSchema } from "../schemas";
 
 const router = Router();
 
@@ -23,12 +25,9 @@ router.post(
   "/",
   adminAuth,
   requireAnyRole(["superadmin", "admin"]),
+  validateBody(CreateTeamMemberSchema),
   async (req, res) => {
     const { name, role, bio, image, social, order } = req.body;
-
-    if (!name || !role) {
-      return res.status(400).json({ error: "Name and role are required" });
-    }
 
     try {
       const id = uuidv4();
@@ -52,6 +51,7 @@ router.put(
   "/:id",
   adminAuth,
   requireAnyRole(["superadmin", "admin"]),
+  validateBody(UpdateTeamMemberSchema),
   async (req, res) => {
     const { id } = req.params;
     const { name, role, bio, image, social, order } = req.body;

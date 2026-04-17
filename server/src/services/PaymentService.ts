@@ -166,6 +166,31 @@ class PaymentService {
       throw error;
     }
   }
+
+  /**
+   * Utilities for Webhook processing
+   */
+  public parseWebhookAmount(provider: string, payload: any): number {
+    if (provider === "paystack") {
+      // Paystack amount is in kobo/pesewas (minor units)
+      return (payload.data?.amount || 0) / 100;
+    }
+    if (provider === "hubtel") {
+      // Hubtel amount is already in major units (GHS)
+      return payload.Amount || 0;
+    }
+    return 0;
+  }
+
+  public getTransactionId(provider: string, payload: any): string {
+    if (provider === "paystack") {
+      return payload.data?.id || "N/A";
+    }
+    if (provider === "hubtel") {
+      return payload.TransactionId || "N/A";
+    }
+    return "N/A";
+  }
 }
 
 export const paymentService = new PaymentService();

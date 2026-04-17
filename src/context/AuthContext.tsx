@@ -38,7 +38,7 @@ interface AuthContextType {
     phone?: string;
     shippingAddress?: ShippingAddress | null;
   }) => Promise<void>;
-  changePassword: (password: string) => Promise<void>;
+  changePassword: (currentPassword: string, password: string) => Promise<void>;
   refreshUser: () => Promise<void>;
   setMustReset: (mustReset: boolean) => void;
 }
@@ -129,8 +129,8 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
     setUser(response.user);
   }
 
-  async function changePassword(password: string) {
-    await userChangePassword(password);
+  async function changePassword(currentPassword: string, password: string) {
+    await userChangePassword(currentPassword, password);
     setMustReset(false);
   }
 
