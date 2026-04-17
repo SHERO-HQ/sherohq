@@ -84,7 +84,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
   { id: "price" as const, label: "Price Range" },
   { id: "brand" as const, label: "Brand" },
   { id: "rating" as const, label: "Rating" },
-  { id: "stock" as const, label: "Availability" },
+//   { id: "stock" as const, label: "Availability" },
  ];
 
  return (
@@ -130,7 +130,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  </div>
  <button
  onClick={onClose}
- className="p-4 bg-slate-100 dark:bg-white/5 rounded hover:bg-red-500 hover:text-white transition active:scale-95"
+ className="p-2 bg-slate-100 dark:bg-white/5 rounded hover:bg-red-500 hover:text-white transition active:scale-95"
  >
  <X size={20} />
  </button>
@@ -143,14 +143,14 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  <button
  key={tab.id}
  onClick={() => setActiveTab(tab.id)}
- className={`relative px-6 py-4 md:px-8 md:py-6 text-left transition duration-300 flex-1 md:flex-none whitespace-nowrap md:whitespace-normal ${
+ className={`relative px-6 py-2 md:px-8 text-left transition duration-300 flex-1 md:flex-none whitespace-nowrap md:whitespace-normal ${
  activeTab === tab.id
  ? "text-emerald-500 bg-emerald-500/5 md:bg-transparent"
  : "text-slate-400 hover:text-slate-600 dark:hover:text-white"
  }`}
  >
- <span className="hidden md:block text-[10px] font-black uppercase tracking-widest mb-1">Filter</span>
- <span className="text-[10px] md:text-xs font-black uppercase tracking-tight">{tab.label}</span>
+ {/* <span className="hidden md:block text-[10px] font-black uppercase tracking-widest mb-1">Filter</span> */}
+ <span className="md:text-base text-sm font-semibold tracking-tight">{tab.label}</span>
  {activeTab === tab.id && (
  <motion.div
  layoutId="activeTabIndicator"
@@ -164,24 +164,24 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  {/* Main Content Areas */}
  <div className="flex-1 overflow-y-auto p-4 sm:p-10 space-y-8 no-scrollbar">
  {activeTab === "sort" && (
- <div className="grid grid-cols-1 gap-3">
+ <div className="grid grid-cols-1 gap-4">
  {sortOptions.map((option) => (
  <button
  key={option.value}
  onClick={() => setTempFilters({ ...tempFilters, sortBy: option.value })}
- className={`group flex items-center justify-between p-2 sm:p-4 rounded transition border-2 ${
+ className={`group flex items-center justify-between p-2 rounded transition border-2 ${
  tempFilters.sortBy === option.value
  ? "bg-emerald-500/10 border-emerald-500/50"
  : "bg-slate-50 dark:bg-white/5 border-transparent hover:border-white/10"
  }`}
  >
- <span className={`font-semibold tracking-tight text-xs sm:text-sm ${
+ <span className={`font-medium tracking-tight text-xs sm:text-sm ${
  tempFilters.sortBy === option.value ? "text-emerald-500" : "text-slate-500"
  }`}>
  {option.label}
  </span>
  {tempFilters.sortBy === option.value && (
- <div className="w-6 h-6 sm:w-8 sm:h-8 rounded bg-emerald-500 flex items-center justify-center shadow shadow-emerald-500/20">
+ <div className="w-6 h-6 rounded bg-emerald-500 flex items-center justify-center shadow shadow-emerald-500/20">
  <Check size={14} className="text-white" />
  </div>
  )}
@@ -196,13 +196,13 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  <button
  key={range.label}
  onClick={() => setTempFilters({ ...tempFilters, priceRange: range.range })}
- className={`flex items-center justify-between p-2 sm:p-4 rounded transition border-2 ${
+ className={`flex items-center justify-between p-2 rounded transition border-2 ${
  isPriceRangeActive(range.range)
  ? "bg-emerald-500/10 border-emerald-500/50"
  : "bg-slate-50 dark:bg-white/5 border-transparent"
  }`}
  >
- <span className={`font-semibold tracking-tight text-[10px] sm:text-xs ${
+ <span className={`font-medium tracking-tight text-xs md:text-sm ${
  isPriceRangeActive(range.range) ? "text-emerald-500" : "text-slate-500"
  }`}>
  {range.label}
@@ -216,7 +216,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  )}
 
  {activeTab === "brand" && (
- <div className="grid grid-cols-2 sm:grid-cols-2 gap-3">
+ <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
  {brands.map((brand) => (
  <button
  key={brand}
@@ -226,7 +226,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  : [...tempFilters.brands, brand];
  setTempFilters({ ...tempFilters, brands: newBrands });
  }}
- className={`px-4 py-2 sm:px-6 sm:py-4 rounded font-semibold tracking-tight text-xs border-2 transition ${
+ className={`px-4 py-2 rounded font-medium tracking-tight text-xs md:text-sm border-2 transition ${
  tempFilters.brands.includes(brand)
  ? "bg-emerald-500 border-emerald-500 text-white shadow shadow-emerald-500/20"
  : "bg-slate-50 dark:bg-white/5 border-transparent text-slate-500"
@@ -244,7 +244,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  <button
  key={r}
  onClick={() => setTempFilters({ ...tempFilters, minRating: r })}
- className={`flex items-center justify-between p-4 sm:p-6 rounded transition border-2 ${
+ className={`flex items-center justify-between py-3 px-6 rounded transition border-2 ${
  tempFilters.minRating === r
  ? "bg-emerald-500/10 border-emerald-500/50"
  : "bg-slate-50 dark:bg-white/5 border-transparent"
@@ -253,10 +253,10 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  <div className="flex items-center gap-2">
  <div className="flex items-center">
  {[...Array(5)].map((_, i) => (
- <Star key={i} size={14} className={`${i < r ? "fill-amber-400 text-amber-400" : "text-slate-200 dark:text-slate-800"}`} />
+ <Star key={i} size={14} className={`${i < r ? "fill-amber-400 text-amber-400" : "text-slate-200 dark:text-slate-600"}`} />
  ))}
  </div>
- <span className="ml-1 sm:ml-2 font-semibold text-[10px] sm:text-xs tracking-tight text-slate-500">{r} & Up</span>
+ <span className="ml-1 sm:ml-2 font-medium text-xs md:text-sm tracking-tight text-slate-500">{r} & Up</span>
  </div>
  {tempFilters.minRating === r && <Check size={14} className="text-emerald-500" />}
  </button>
@@ -264,11 +264,11 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  </div>
  )}
 
- {activeTab === "stock" && (
+ {/* {activeTab === "stock" && (
  <div className="space-y-6">
  <button
  onClick={() => setTempFilters({ ...tempFilters, inStock: !tempFilters.inStock })}
- className={`w-full flex items-center justify-between p-6 sm:p-8 rounded transition border-2 ${
+ className={`w-full flex items-center justify-between p-3 sm:p-4 rounded transition border-2 ${
  tempFilters.inStock
  ? "bg-emerald-500/10 border-emerald-500/50"
  : "bg-slate-50 dark:bg-white/5 border-transparent"
@@ -288,7 +288,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  </div>
  </button>
  </div>
- )}
+ )} */}
  </div>
  </div>
 
