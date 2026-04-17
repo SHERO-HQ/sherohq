@@ -93,8 +93,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       whileHover={{ y: -5 }}
       onClick={handleCardClick}
       className="group relative rounded overflow-hidden
- dark:bg-white/5 bg-white backdrop-blur-sm
- border border-slate-200 dark:border-white/10 shadow-sm shadow-black/5
+ dark:bg-white/5 bg-white
+ border border-slate-200 dark:border-white/10
  hover:border-emerald-500/50 dark:hover:border-emerald-400/30
  transition duration-500 cursor-pointer
  flex flex-col h-full"
@@ -124,7 +124,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
         <div className="absolute top-3 right-3 z-20 flex flex-col gap-2">
           <button
             onClick={toggleWishlist}
-            className="w-9 h-9 rounded-full bg-white/80 dark:bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-red-500 hover:text-white transition duration-300 shadow"
+            className="w-9 h-9 rounded-full bg-white/80 dark:bg-black/40 border border-white/20 flex items-center justify-center hover:bg-red-500 hover:text-white transition duration-300"
           >
             <Heart
               size={16}
@@ -133,7 +133,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
           </button>
           <button
             onClick={handleQuickView}
-            className="w-9 h-9 rounded-full bg-white/80 dark:bg-black/40 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition duration-300 shadow"
+            className="w-9 h-9 rounded-full bg-white/80 dark:bg-black/40 border border-white/20 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition duration-300"
           >
             <Eye size={16} />
           </button>
@@ -142,12 +142,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
         {/* Badges (Bottom Left) */}
         <div className="absolute bottom-3 left-3 z-20 flex flex-wrap gap-1">
           {product.badge && (
-            <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-emerald-600 text-white shadow shadow-emerald-900/40">
+            <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-emerald-600 text-white">
               {product.badge}
             </span>
           )}
           {discount > 0 && (
-            <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-red-600 text-white shadow shadow-red-900/40">
+            <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-red-600 text-white">
               -{discount}%
             </span>
           )}
@@ -214,7 +214,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             <button
               onClick={handleAddToCart}
               disabled={!product.inStock}
-              className="flex-1 h-10 rounded flex items-center justify-center gap-2 transition bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-600 hover:text-white! disabled:opacity-50 disabled:cursor-not-allowed border border-emerald-500/20 shadow shadow-emerald-500/5 group/cart"
+              className="flex-1 h-10 rounded flex items-center justify-center gap-2 transition bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-600 hover:text-white! disabled:opacity-50 disabled:cursor-not-allowed border border-emerald-500/20 group/cart"
             >
               <ShoppingCart
                 size={14}
@@ -238,7 +238,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
                 router.push("/shop/checkout");
               }}
               disabled={!product.inStock}
-              className="flex-1 h-10 rounded bg-emerald-600 text-white font-black text-[10px] uppercase tracking-widest hover:bg-emerald-500 shadow shadow-emerald-600/20 disabled:opacity-50 transition"
+              className="flex-1 h-10 rounded bg-emerald-600 text-white font-black text-[10px] uppercase tracking-widest hover:bg-emerald-500 disabled:opacity-50 transition"
             >
               Buy
             </button>
@@ -247,7 +247,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="w-10 h-10 rounded flex items-center justify-center bg-[#25D366] text-white hover:bg-[#20bd5a] transition shadow shadow-[#25D366]/20 shrink-0"
+              className="w-10 h-10 rounded flex items-center justify-center bg-[#25D366] text-white hover:bg-[#20bd5a] transition shrink-0"
             >
               <WhatsAppIcon className="w-4 h-4" />
             </a>

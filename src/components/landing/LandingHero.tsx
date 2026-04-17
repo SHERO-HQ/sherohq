@@ -108,7 +108,7 @@ const LandingHero: React.FC = () => {
               initial={{ x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-emerald-500/25 bg-white/70 dark:bg-slate-900/70 shadow-sm backdrop-blur-md"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-emerald-500/25 bg-white/70 dark:bg-slate-900/70"
             >
               <RocketIcon className="w-4 h-4 text-emerald-500" />
               <span className="text-xs sm:text-sm font-mono font-semibold tracking-widest uppercase text-emerald-700 dark:text-emerald-300">
@@ -163,7 +163,7 @@ const LandingHero: React.FC = () => {
                 asChild
                 variant="brand"
                 size="lg"
-                className="text-base w-full sm:w-auto h-11 px-8 shadow shadow-emerald-500/20 group transition-all hover:-translate-y-0.5 hover:shadow hover:shadow-emerald-500/25"
+                className="text-base w-full sm:w-auto h-11 px-8 group transition-all hover:-translate-y-0.5"
               >
                 <NavLink href={getAbsoluteUrl("/shop")}>
                   <span className="text-base">Shop Products</span>
@@ -226,7 +226,7 @@ const LandingHero: React.FC = () => {
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.7 }}
-                className="w-full bg-white/95 dark:bg-slate-900/92 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700/70 rounded shadow-[0_26px_54px_-20px_rgba(15,23,42,0.25)] relative overflow-hidden"
+                className="w-full bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700/70 rounded relative overflow-hidden"
               >
                 <div className="absolute inset-0 bg-linear-to-br from-white/55 via-transparent to-slate-100/35 dark:from-slate-800/30 dark:to-slate-950/35 pointer-events-none" />
                 <div className="absolute inset-x-0 top-0 h-px bg-white/90 dark:bg-white/10 pointer-events-none" />
@@ -340,7 +340,7 @@ const LandingHero: React.FC = () => {
  </div>
  </motion.div> */}
 
-              <div className="absolute -z-10 inset-0 bg-radial-gradient from-emerald-500/10 to-transparent blur-3xl rounded-full scale-125 pointer-events-none" />
+                {/* Removed decorative blur for performance */}
             </motion.div>
           </div>
         </div>

@@ -27,12 +27,12 @@ const LandingFinalCTA = () => {
           </div>
 
           {/* Subtle Glows */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,rgba(16,185,129,0.1),transparent_70%)]" />
+          {/* Removed subtle glow for performance */}
 
           <div className="relative z-20 md:p-16 p-8 flex flex-col lg:flex-row items-center justify-between w-full">
             {/* Content Left */}
             <div className="max-w-xl space-y-4 text-center md:text-left">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded bg-white/5 border border-emerald-400/50 backdrop-blur-sm">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded bg-white/5 border border-emerald-400/50">
                 <WandSparkles className="w-4 h-4 text-emerald-400" />
                 <span className="text-xs font-medium text-emerald-100 uppercase">
                   Let's Make Magic Happen
@@ -54,7 +54,7 @@ const LandingFinalCTA = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                 <Link
                   href="/contact-us"
-                  className="group inline-flex items-center justify-center gap-2 px-8 py-2 rounded bg-emerald-600 text-white font-bold hover:bg-emerald-500 hover:shadow hover:shadow-emerald-500/25 hover:-translate-y-1 transition duration-300"
+                  className="group inline-flex items-center justify-center gap-2 px-8 py-2 rounded bg-emerald-600 text-white font-bold hover:bg-emerald-500 transition duration-300"
                 >
                   Lets Talk
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -72,11 +72,11 @@ const LandingFinalCTA = () => {
             <div className="relative md:flex items-center justify-center hidden">
               <div className="relative w-80 h-80 md:w-96 md:h-96 flex items-center justify-center rounded-full">
                 {/* Brighter inner glow */}
-                <div className="absolute inset-8 bg-amber-400/5 rounded-full blur-2xl" />
+                {/* Removed inner glow for performance */}
 
                 {/* Glass circle container */}
                 <div className="relative z-10 flex items-center justify-center">
-                  <RocketIcon className="w-40 h-40 text-emerald-400 drop-shadow" />
+                  <RocketIcon className="w-40 h-40 text-emerald-400" />
                 </div>
               </div>
             </div>

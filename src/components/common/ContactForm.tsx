@@ -134,7 +134,7 @@ const ContactForm = () => {
  <Button
  type="submit"
  disabled={status !== "idle"}
- className="w-full h-10 text-md font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded shadow-sm transition hover:scale-[1.02] active:scale-[0.98]"
+ className="w-full h-10 text-md font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded transition hover:scale-[1.02] active:scale-[0.98]"
  >
  {status === "idle" && (
  <>

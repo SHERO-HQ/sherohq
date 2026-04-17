@@ -141,7 +141,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         <div className="flex items-center justify-between mb-8">
           <button
             onClick={() => (window.location.href = getAbsoluteUrl("/shop"))}
-            className="group flex items-center gap-2 text-sm font-black tracking-widest text-slate-500 hover:text-emerald-500 transition-colors"
+            className="group flex items-center gap-2 text-sm tracking-widest text-slate-500 hover:text-emerald-500 transition-colors"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             Shop
@@ -159,10 +159,10 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         <div className="grid lg:grid-cols-12 gap-12 lg:items-start">
           {/* STICKY Gallery Section (7 columns) */}
           <div className="lg:col-span-7 space-y-6 lg:sticky lg:top-28">
-            <div className="group relative aspect-4/5 max-h-110 sm:max-h-135 lg:max-h-170 bg-white dark:bg-white/5 sm:rounded overflow-hidden sm:border border-y sm:border-x border-slate-200 dark:border-white/10 sm:shadow flex items-center justify-center -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full">
+            <div className="group relative aspect-4/5 max-h-110 sm:max-h-135 lg:max-h-170 bg-white dark:bg-white/5 sm:rounded overflow-hidden sm:border border-y sm:border-x border-slate-200 dark:border-white/10 flex items-center justify-center -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full">
               <button
                 onClick={() => setIsPreviewOpen(true)}
-                className="absolute top-6 right-6 lg:opacity-0 group-hover:opacity-100 transition-opacity p-2.5 bg-white/90 dark:bg-slate-900/90 rounded border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-emerald-600 hover:border-emerald-500 z-20 shadow-sm"
+                className="absolute top-6 right-6 lg:opacity-0 group-hover:opacity-100 transition-opacity p-2.5 bg-white/90 dark:bg-slate-900/90 rounded border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-emerald-600 hover:border-emerald-500 z-20"
                 aria-label="View Fullscreen"
               >
                 <Maximize2 size={20} />
@@ -268,7 +268,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
 
           {/* Details Content (5 columns) */}
           <div className="lg:col-span-5 flex flex-col gap-8">
-            <div className="p-8 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-sm">
+            <div className="p-8 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10">
               <div className="flex items-center justify-between mb-4">
                 <span className="px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                   {product.category}
@@ -443,7 +443,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 <div className="h-1.5 w-12 bg-emerald-500 rounded-full mt-2" />
               </div>
 
-              <div className="max-w-4xl mx-auto overflow-hidden rounded border border-slate-200 dark:border-white/10 shadow-sm bg-white dark:bg-white/5">
+              <div className="max-w-4xl mx-auto overflow-hidden rounded border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="border-b border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/5">
@@ -462,7 +462,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                           key={`spec-${key}`}
                           className="group hover:bg-emerald-500/5 transition-colors"
                         >
-                          <td className="px-8 py-6 text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white w-1/3 border-r border-slate-100 dark:border-white/5">
+                          <td className="px-8 py-6 text-xs uppercase tracking-wider text-slate-900 dark:text-white w-1/3 border-r border-slate-100 dark:border-white/5">
                             <span className="group-hover:text-emerald-500 transition-colors">
                               {key}
                             </span>
@@ -488,7 +488,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
               </h2>
               <button
                 onClick={() => (window.location.href = getAbsoluteUrl("/shop"))}
-                className="text-sm font-black uppercase tracking-widest text-emerald-600 hover:underline"
+                className="text-sm tracking-widest text-emerald-600 hover:underline"
               >
                 View Shop
               </button>
@@ -557,7 +557,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-100 bg-black/95 backdrop-blur-md flex items-center justify-center"
+            className="fixed inset-0 z-100 bg-black/95 flex items-center justify-center"
             onClick={() => setIsPreviewOpen(false)}
           >
             <button
@@ -591,7 +591,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     e.stopPropagation();
                     prevImage();
                   }}
-                  className="pointer-events-auto p-2 bg-white/10 text-white rounded hover:bg-emerald-500 hover:text-white transition-colors backdrop-blur-sm border border-white/10"
+                  className="pointer-events-auto p-2 bg-white/10 text-white rounded hover:bg-emerald-500 hover:text-white transition-colors border border-white/10"
                 >
                   <ChevronLeft size={24} />
                 </button>
@@ -600,7 +600,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     e.stopPropagation();
                     nextImage();
                   }}
-                  className="pointer-events-auto p-2 bg-white/10 text-white rounded hover:bg-emerald-500 hover:text-white transition-colors backdrop-blur-sm border border-white/10"
+                  className="pointer-events-auto p-2 bg-white/10 text-white rounded hover:bg-emerald-500 hover:text-white transition-colors border border-white/10"
                 >
                   <ChevronRight size={24} />
                 </button>
