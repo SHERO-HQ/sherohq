@@ -161,6 +161,7 @@ const allowedOrigins = [
   "https://products.sherohq.com",
   "https://shop.sherohq.com",
   "https://api.sherohq.com",
+  "https://sherotech.onrender.com", // Ensure own domain is allowed
   "http://localhost:5175",
   "http://localhost:3000",
 ];
@@ -225,7 +226,7 @@ app.use(
         imgSrc: ["'self'", "data:", "https:"],
         connectSrc: [
           "'self'",
-          "https://sherotech.onrender.com",
+          ...allowedOrigins.filter((o) => o.startsWith("https://")),
           "https://api.sherohq.com",
         ],
         frameSrc: ["'none'"],

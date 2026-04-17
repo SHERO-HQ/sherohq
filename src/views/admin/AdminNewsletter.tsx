@@ -24,6 +24,8 @@ import {
   updateNewsletterSubscriberStatus,
   type NewsletterCampaign,
   type NewsletterSubscriber,
+  deleteNewsletterCampaign,
+  cancelNewsletterCampaign,
 } from "@/services/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -74,6 +76,12 @@ export default function AdminNewsletter() {
   const [isCampaignHistoryLoading, setIsCampaignHistoryLoading] =
     useState(true);
   const [isProcessingScheduled, setIsProcessingScheduled] = useState(false);
+  const [isDeletingCampaign, setIsDeletingCampaign] = useState<string | null>(
+    null,
+  );
+  const [isCancellingCampaign, setIsCancellingCampaign] = useState<
+    string | null
+  >(null);
 
   const { addNotification } = useNotifications();
 
@@ -326,9 +334,7 @@ export default function AdminNewsletter() {
       addNotification(
         "Success",
         result.message ||
-          (result.status === "scheduled"
-            ? "Campaign scheduled successfully."
-            : `Sent ${result.sent ?? 0}/${result.totalTargets ?? 0} ${channelLabel.toLowerCase()} messages successfully.`),
+          "Campaign started in the background. Check history for progress.",
         "success",
       );
 
@@ -337,8 +343,8 @@ export default function AdminNewsletter() {
         setContent("");
       }
 
-      await loadSubscribers();
-      await loadCampaigns();
+      void loadSubscribers();
+      void loadCampaigns();
     } catch (error) {
       console.error("Newsletter campaign failed:", error);
       addNotification("Error", "Failed to send campaign", "error");
@@ -367,6 +373,44 @@ export default function AdminNewsletter() {
       );
     } finally {
       setIsProcessingScheduled(false);
+    }
+  };
+
+  const handleCancelCampaign = async (id: string) => {
+    if (!confirm("Are you sure you want to cancel this scheduled campaign?"))
+      return;
+
+    try {
+      setIsCancellingCampaign(id);
+      await cancelNewsletterCampaign(id);
+      addNotification("Success", "Campaign cancelled", "success");
+      void loadCampaigns();
+    } catch (error) {
+      console.error("Failed to cancel campaign:", error);
+      addNotification("Error", "Failed to cancel campaign", "error");
+    } finally {
+      setIsCancellingCampaign(null);
+    }
+  };
+
+  const handleDeleteCampaign = async (id: string) => {
+    if (
+      !confirm(
+        "Are you sure you want to delete this campaign? This cannot be undone.",
+      )
+    )
+      return;
+
+    try {
+      setIsDeletingCampaign(id);
+      await deleteNewsletterCampaign(id);
+      addNotification("Success", "Campaign deleted", "success");
+      void loadCampaigns();
+    } catch (error) {
+      console.error("Failed to delete campaign:", error);
+      addNotification("Error", "Failed to delete campaign", "error");
+    } finally {
+      setIsDeletingCampaign(null);
     }
   };
 
@@ -775,7 +819,8 @@ export default function AdminNewsletter() {
                           <th className="py-3 pr-4">Audience</th>
                           <th className="py-3 pr-4">Results</th>
                           <th className="py-3 pr-4">Scheduled</th>
-                          <th className="py-3 pr-0">Sent</th>
+                          <th className="py-3 pr-4">Sent</th>
+                          <th className="py-3 pr-0">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -836,6 +881,36 @@ export default function AdminNewsletter() {
                               {campaign.sentAt
                                 ? format(new Date(campaign.sentAt), "PPP p")
                                 : "-"}
+                            </td>
+                            <td className="py-3 pr-0 text-right">
+                              <div className="flex items-center justify-end gap-2">
+                                {campaign.status === "scheduled" && (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="h-8 border-blue-500/20 text-blue-400 hover:bg-blue-500/10"
+                                    onClick={() =>
+                                      void handleCancelCampaign(campaign.id)
+                                    }
+                                    disabled={
+                                      isCancellingCampaign === campaign.id
+                                    }
+                                  >
+                                    Cancel
+                                  </Button>
+                                )}
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="h-8 border-rose-500/20 text-rose-400 hover:bg-rose-500/10"
+                                  onClick={() =>
+                                    void handleDeleteCampaign(campaign.id)
+                                  }
+                                  disabled={isDeletingCampaign === campaign.id}
+                                >
+                                  Delete
+                                </Button>
+                              </div>
                             </td>
                           </tr>
                         ))}

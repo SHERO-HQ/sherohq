@@ -1,6 +1,7 @@
 "use client";
 import NavLink from "@/components/common/NavLink";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import {
   LayoutDashboard,
   Package,
@@ -22,6 +23,7 @@ import {
   DollarSign,
   Brain,
   Mail,
+  Download,
 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { cn } from "@/lib/utils";
@@ -63,6 +65,43 @@ export default function AdminSidebar({
   setIsOpen,
 }: Readonly<SidebarProps>) {
   const { admin, logout } = useAdmin();
+  const [pwaPrompt, setPwaPrompt] = useState<any>(null);
+
+  useEffect(() => {
+    // Check if app is already installed
+    const isInstalled =
+      globalThis.matchMedia?.("(display-mode: standalone)").matches ||
+      (globalThis.navigator as any)?.standalone === true;
+
+    if (isInstalled) return;
+
+    const handlePrompt = (e: any) => {
+      e.preventDefault();
+      setPwaPrompt(e);
+    };
+
+    // Check for captured event from layout.tsx
+    const captured = (globalThis as any).__pwaPromptEvent;
+    if (captured) {
+      setPwaPrompt(captured);
+      (globalThis as any).__pwaPromptEvent = null;
+    }
+
+    globalThis.addEventListener("beforeinstallprompt", handlePrompt);
+    return () =>
+      globalThis.removeEventListener("beforeinstallprompt", handlePrompt);
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!pwaPrompt) return;
+    try {
+      await pwaPrompt.prompt();
+      const { outcome } = await pwaPrompt.userChoice;
+      if (outcome === "accepted") setPwaPrompt(null);
+    } catch (err) {
+      console.error("PWA Install failed", err);
+    }
+  };
 
   // Logic for width and visibility
   const sidebarWidth = isOpen ? "260px" : "80px";
@@ -269,6 +308,31 @@ export default function AdminSidebar({
 
           {/* User & Settings */}
           <div className="p-3 border-t border-white/5 space-y-2 shrink-0">
+            {pwaPrompt && (
+              <button
+                onClick={() => void handleInstallClick()}
+                className={cn(
+                  "w-full flex items-center gap-3 px-3 py-3 rounded text-emerald-400 hover:bg-emerald-500/10 transition duration-200 group border border-emerald-500/20 mb-2",
+                  !isOpen && "justify-center px-0",
+                )}
+                title="Install app for offline access"
+              >
+                <Download className="w-5 h-5 shrink-0" />
+                <AnimatePresence mode="wait">
+                  {isOpen && (
+                    <motion.span
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      className="font-bold text-sm"
+                    >
+                      Install Desktop App
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </button>
+            )}
+
             <button
               onClick={() => logout()}
               className={cn(

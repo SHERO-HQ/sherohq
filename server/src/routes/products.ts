@@ -189,6 +189,7 @@ router.get("/categories/list", async (req: Request, res: Response) => {
 router.post(
   "/categories",
   adminAuth,
+  requireRole("manager"),
   async (req: AdminRequest, res: Response) => {
     try {
       const { name, icon } = req.body;
@@ -223,6 +224,7 @@ router.post(
 router.put(
   "/categories/:id",
   adminAuth,
+  requireRole("admin"),
   async (req: AdminRequest, res: Response) => {
     try {
       const { id } = req.params;
@@ -261,6 +263,7 @@ router.put(
 router.delete(
   "/categories/:id",
   adminAuth,
+  requireRole("admin"),
   async (req: AdminRequest, res: Response) => {
     try {
       const { id } = req.params;
@@ -301,6 +304,7 @@ router.delete(
 router.post(
   "/",
   adminAuth,
+  requireRole("manager"),
   validateBody(CreateProductSchema),
   async (req: AdminRequest, res: Response) => {
     try {
@@ -497,7 +501,11 @@ function processUpdateFields(body: Record<string, unknown>) {
 }
 
 // PUT /api/products/:id - Update product (Admin) - supports ID or SKU
-router.put("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
+router.put(
+  "/:id",
+  adminAuth,
+  requireRole("manager"),
+  async (req: AdminRequest, res: Response) => {
   try {
     const identifier = String(req.params.id);
 
@@ -615,6 +623,7 @@ router.put("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
 router.patch(
   "/:id/stock",
   adminAuth,
+  requireRole("manager"),
   async (req: AdminRequest, res: Response) => {
     try {
       const identifier = String(req.params.id);

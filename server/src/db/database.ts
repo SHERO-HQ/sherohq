@@ -348,8 +348,13 @@ export async function initializeDatabase() {
         intent TEXT,
         "recommendedProducts" JSONB,
         "hasImage" BOOLEAN DEFAULT false,
+        "source" TEXT DEFAULT 'general',
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
+    `);
+
+    await client.query(`
+      ALTER TABLE ai_chat_logs ADD COLUMN IF NOT EXISTS "source" TEXT DEFAULT 'general';
     `);
 
     // Catalog Gaps table

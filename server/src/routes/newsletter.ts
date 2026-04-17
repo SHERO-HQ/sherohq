@@ -143,6 +143,7 @@ function buildAudienceQuery(
   };
 }
 
+// Refactored for memory efficiency using streaming/batching
 async function sendCampaignToAudience(params: {
   campaignId: string;
   channel: "email" | "sms" | "whatsapp";
@@ -162,138 +163,146 @@ async function sendCampaignToAudience(params: {
     params.channel,
   );
 
-  const subscribersResult = await db.query(
-    `
-      SELECT id, email, "unsubscribeToken"
-      , phone
-      FROM newsletter_subscribers
-      ${whereSql}
-      ORDER BY "createdAt" DESC
-    `,
+  // 1. Get total target count first for accurate UI reporting
+  const countResult = await db.query(
+    `SELECT COUNT(*)::int as total FROM newsletter_subscribers ${whereSql}`,
     values,
   );
+  let totalTargets = countResult.rows[0].total;
 
-  const subscribers = subscribersResult.rows as Array<
-    Pick<NewsletterSubscriberRow, "id" | "email" | "phone" | "unsubscribeToken">
-  >;
+  if (params.limit && totalTargets > params.limit) {
+    totalTargets = params.limit;
+  }
 
-  const targets =
-    typeof params.limit === "number"
-      ? subscribers.slice(0, params.limit)
-      : subscribers;
-
-  if (targets.length === 0) {
+  if (totalTargets === 0) {
     await db.query(
-      `
-        UPDATE newsletter_campaigns
-        SET
-          status = 'failed',
-          "totalTargets" = 0,
-          "sentCount" = 0,
-          "failedCount" = 0,
-          "sentAt" = NOW(),
-          "updatedAt" = NOW()
-        WHERE id = $1
-      `,
+      `UPDATE newsletter_campaigns SET status = 'failed', "totalTargets" = 0, "sentCount" = 0, "failedCount" = 0, "sentAt" = NOW(), "updatedAt" = NOW() WHERE id = $1`,
       [params.campaignId],
     );
-
     return { sent: 0, failed: 0, totalTargets: 0 };
   }
 
+  // Update total targets in DB early so Admin can see it
+  await db.query(
+    `UPDATE newsletter_campaigns SET "totalTargets" = $1, "updatedAt" = NOW() WHERE id = $2`,
+    [totalTargets, params.campaignId],
+  );
+
   let sent = 0;
   let failed = 0;
-  const deliveredIds: string[] = [];
+  let lastId = "";
+  let processedTotal = 0;
+  const CHUNK_SIZE = 500;
 
-  for (let i = 0; i < targets.length; i += params.batchSize) {
-    const chunk = targets.slice(i, i + params.batchSize);
+  // 2. Stream audience in chunks using Seek Pagination (id > $lastId)
+  while (processedTotal < totalTargets) {
+    const remainingToProcess = totalTargets - processedTotal;
+    const currentChunkSize = Math.min(CHUNK_SIZE, remainingToProcess);
 
-    const chunkResults = await Promise.allSettled(
-      chunk.map(async (subscriber) => {
-        if (params.channel === "email") {
-          const unsubscribeUrl = `${params.baseUrl}/api/newsletter/unsubscribe/${subscriber.unsubscribeToken}`;
-          const delivered =
-            await notificationService.sendNewsletterCampaignEmail(
-              subscriber.email,
-              params.subject,
-              params.content,
-              unsubscribeUrl,
-            );
+    const chunkValues = [...values, lastId, currentChunkSize.toString()];
+    const seekClause = whereSql
+      ? `${whereSql} AND id > $${values.length + 1}`
+      : `WHERE id > $${values.length + 1}`;
 
-          return {
-            id: subscriber.id,
-            target: subscriber.email,
-            delivered,
-          };
-        }
-
-        if (params.channel === "whatsapp" && subscriber.phone) {
-          const useTemplate = Boolean(params.whatsappTemplateName);
-          const delivered =
-            await notificationService.sendNewsletterCampaignWhatsApp(
-              subscriber.phone,
-              useTemplate
-                ? {
-                    mode: "template",
-                    templateName: params.whatsappTemplateName,
-                    languageCode: params.whatsappTemplateLanguage || "en",
-                    templateParams: params.whatsappTemplateParams || [],
-                  }
-                : {
-                    mode: "text",
-                    content: buildWhatsAppMessage(
-                      params.subject,
-                      params.content,
-                    ),
-                  },
-            );
-          return {
-            id: subscriber.id,
-            target: subscriber.phone,
-            delivered,
-          };
-        }
-
-        return {
-          id: subscriber.id,
-          target: subscriber.email,
-          delivered: false,
-        };
-      }),
+    const subscribersResult = await db.query(
+      `
+        SELECT id, email, phone, "unsubscribeToken"
+        FROM newsletter_subscribers
+        ${seekClause}
+        ORDER BY id ASC
+        LIMIT $${values.length + 2}
+      `,
+      chunkValues,
     );
 
-    for (const result of chunkResults) {
-      if (result.status === "fulfilled") {
-        if (result.value.delivered) {
-          sent += 1;
-          deliveredIds.push(result.value.id);
+    const chunkSubscribers = subscribersResult.rows as Array<
+      Pick<NewsletterSubscriberRow, "id" | "email" | "phone" | "unsubscribeToken">
+    >;
+
+    if (chunkSubscribers.length === 0) break;
+
+    // 3. Process the current chunk in batches (batchSize)
+    for (let i = 0; i < chunkSubscribers.length; i += params.batchSize) {
+      const batch = chunkSubscribers.slice(i, i + params.batchSize);
+      const deliveredIds: string[] = [];
+
+      const batchResults = await Promise.allSettled(
+        batch.map(async (subscriber) => {
+          if (params.channel === "email") {
+            const unsubscribeUrl = `${params.baseUrl}/api/newsletter/unsubscribe/${subscriber.unsubscribeToken}`;
+            const delivered =
+              await notificationService.sendNewsletterCampaignEmail(
+                subscriber.email,
+                params.subject,
+                params.content,
+                unsubscribeUrl,
+              );
+            return { id: subscriber.id, delivered };
+          }
+
+          if (params.channel === "whatsapp" && subscriber.phone) {
+            const useTemplate = Boolean(params.whatsappTemplateName);
+            const delivered =
+              await notificationService.sendNewsletterCampaignWhatsApp(
+                subscriber.phone,
+                useTemplate
+                  ? {
+                      mode: "template",
+                      templateName: params.whatsappTemplateName,
+                      languageCode: params.whatsappTemplateLanguage || "en",
+                      templateParams: params.whatsappTemplateParams || [],
+                    }
+                  : {
+                      mode: "text",
+                      content: buildWhatsAppMessage(
+                        params.subject,
+                        params.content,
+                      ),
+                    },
+              );
+            return { id: subscriber.id, delivered };
+          }
+
+          return { id: subscriber.id, delivered: false };
+        }),
+      );
+
+      for (const result of batchResults) {
+        if (result.status === "fulfilled") {
+          if (result.value.delivered) {
+            sent += 1;
+            deliveredIds.push(result.value.id);
+          } else {
+            failed += 1;
+          }
         } else {
           failed += 1;
-          console.error(
-            `Campaign send failed for ${result.value.target}: provider delivery error`,
-          );
+          console.error("Batch send error:", result.reason);
         }
-      } else {
-        failed += 1;
-        console.error("Campaign send failed in batch:", result.reason);
+      }
+
+      // Update subscriber engagement timestamps
+      if (deliveredIds.length > 0) {
+        await db.query(
+          `UPDATE newsletter_subscribers SET "lastCampaignAt" = NOW(), "updatedAt" = NOW() WHERE id = ANY($1::text[])`,
+          [deliveredIds],
+        );
+      }
+
+      // Update campaign counters in DB so Admin can see live progress
+      await db.query(
+        `UPDATE newsletter_campaigns SET "sentCount" = $1, "failedCount" = $2, "updatedAt" = NOW() WHERE id = $3`,
+        [sent, failed, params.campaignId],
+      );
+
+      // Throttling delay between batches
+      if (params.batchSize < chunkSubscribers.length || processedTotal + chunkSubscribers.length < totalTargets) {
+          if (params.sendDelayMs > 0) await sleep(params.sendDelayMs);
       }
     }
 
-    const hasMoreBatches = i + params.batchSize < targets.length;
-    if (params.sendDelayMs > 0 && hasMoreBatches) {
-      await sleep(params.sendDelayMs);
-    }
-  }
-
-  if (deliveredIds.length > 0) {
-    await db.query(
-      `
-        UPDATE newsletter_subscribers
-        SET "lastCampaignAt" = NOW(), "updatedAt" = NOW()
-        WHERE id = ANY($1::text[])
-      `,
-      [deliveredIds],
-    );
+    processedTotal += chunkSubscribers.length;
+    lastId = chunkSubscribers[chunkSubscribers.length - 1].id;
   }
 
   await db.query(
@@ -310,14 +319,14 @@ async function sendCampaignToAudience(params: {
     `,
     [
       sent > 0 ? "sent" : "failed",
-      targets.length,
+      totalTargets,
       sent,
       failed,
       params.campaignId,
     ],
   );
 
-  return { sent, failed, totalTargets: targets.length };
+  return { sent, failed, totalTargets };
 }
 
 async function processCampaign(
@@ -806,29 +815,28 @@ router.post(
         return;
       }
 
-      const campaignRow = (
-        await db.query(
-          `SELECT * FROM newsletter_campaigns WHERE id = $1 LIMIT 1`,
-          [campaignId],
-        )
-      ).rows[0] as NewsletterCampaignRow;
-
-      const result = await processCampaign(campaignRow, baseUrl);
-
-      if (result.totalTargets === 0) {
-        res.status(400).json({ error: "No subscribers selected for campaign" });
-        return;
-      }
-
       res.json({
         success: true,
         campaignId,
-        sent: result.sent,
-        failed: result.failed,
-        totalTargets: result.totalTargets,
-        batchSize,
-        sendDelayMs,
-        message: `Campaign completed. ${result.sent} sent, ${result.failed} failed.`,
+        status: "sending",
+        message: "Campaign started in the background. Check history for progress.",
+      });
+
+      // Process in background to avoid timeout
+      setImmediate(async () => {
+        try {
+          const campaignRow = (
+            await db.query(
+              `SELECT * FROM newsletter_campaigns WHERE id = $1 LIMIT 1`,
+              [campaignId],
+            )
+          ).rows[0] as NewsletterCampaignRow;
+
+          await processCampaign(campaignRow, baseUrl);
+          console.log(`✅ Background campaign ${campaignId} completed.`);
+        } catch (error) {
+          console.error(`❌ Background campaign ${campaignId} failed:`, error);
+        }
       });
     } catch (error) {
       console.error("Newsletter campaign error:", error);
@@ -870,6 +878,65 @@ router.get(
     } catch (error) {
       console.error("Campaign history error:", error);
       res.status(500).json({ error: "Failed to fetch campaign history" });
+    }
+  },
+);
+
+// DELETE /api/newsletter/campaigns/:id - Admin delete campaign
+router.delete(
+  "/campaigns/:id",
+  adminAuth,
+  requireRole("admin"),
+  async (req: AdminRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+      const result = await db.query(
+        "DELETE FROM newsletter_campaigns WHERE id = $1 RETURNING id",
+        [id],
+      );
+
+      if (result.rowCount === 0) {
+        res.status(404).json({ error: "Campaign not found" });
+        return;
+      }
+
+      res.json({ success: true, message: "Campaign deleted successfully" });
+    } catch (error) {
+      console.error("Delete campaign error:", error);
+      res.status(500).json({ error: "Failed to delete campaign" });
+    }
+  },
+);
+
+// PATCH /api/newsletter/campaigns/:id/cancel - Admin cancel scheduled campaign
+router.patch(
+  "/campaigns/:id/cancel",
+  adminAuth,
+  requireRole("manager"),
+  async (req: AdminRequest, res: Response) => {
+    try {
+      const { id } = req.params;
+      const result = await db.query(
+        `
+        UPDATE newsletter_campaigns
+        SET status = 'failed', "updatedAt" = NOW()
+        WHERE id = $1 AND status = 'scheduled'
+        RETURNING id
+      `,
+        [id],
+      );
+
+      if (result.rowCount === 0) {
+        res
+          .status(400)
+          .json({ error: "Only scheduled campaigns can be cancelled" });
+        return;
+      }
+
+      res.json({ success: true, message: "Campaign cancelled" });
+    } catch (error) {
+      console.error("Cancel campaign error:", error);
+      res.status(500).json({ error: "Failed to cancel campaign" });
     }
   },
 );
@@ -925,11 +992,33 @@ router.get("/unsubscribe/:token", async (req: Request, res: Response) => {
       return;
     }
 
-    res
-      .status(200)
-      .send(
-        "<html><body style='font-family:sans-serif;padding:24px;'><h2>You have been unsubscribed.</h2><p>You will no longer receive SHERO newsletter campaigns.</p></body></html>",
-      );
+    res.status(200).send(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Unsubscribed | SHERO</title>
+          <style>
+            body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #020617; color: #f8fafc; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; padding: 20px; text-align: center; }
+            .card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 16px; max-width: 400px; width: 100%; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); }
+            .icon { background: #059669; color: white; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 32px; font-weight: bold; }
+            h2 { margin: 0 0 16px; font-size: 24px; letter-spacing: -0.025em; }
+            p { color: #94a3b8; line-height: 1.6; margin: 0; font-size: 15px; }
+            .logo { color: #059669; font-weight: 800; font-size: 18px; margin-top: 40px; display: block; text-decoration: none; border: 1px solid rgba(5, 150, 105, 0.3); padding: 8px 16px; border-radius: 8px; transition: all 0.3s; }
+            .logo:hover { background: rgba(5, 150, 105, 0.1); border-color: #059669; }
+          </style>
+        </head>
+        <body>
+          <div class="card">
+            <div class="icon">✓</div>
+            <h2>Unsubscribed</h2>
+            <p>You have been successfully removed from our mailing list. You will no longer receive SHERO newsletter campaigns.</p>
+            <a href="https://sherohq.com" class="logo">Visit SHERO</a>
+          </div>
+        </body>
+        </html>
+      `);
   } catch (error) {
     console.error("Newsletter unsubscribe error:", error);
     res.status(500).send("Failed to process unsubscribe request.");

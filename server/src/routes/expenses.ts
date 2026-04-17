@@ -1,6 +1,6 @@
 import express from "express";
 import db from "../db/database";
-import { adminAuth, AdminRequest } from "../middleware/adminAuth";
+import { adminAuth, AdminRequest, requireRole } from "../middleware/adminAuth";
 import { v4 as uuidv4 } from "uuid";
 
 import { validateBody } from "../middleware/validate";
@@ -9,7 +9,11 @@ import { CreateExpenseSchema, UpdateExpenseSchema } from "../schemas";
 const router = express.Router();
 
 // GET /api/expenses - Get all expenses (Admin)
-router.get("/", adminAuth, async (req: AdminRequest, res: express.Response) => {
+router.get(
+  "/",
+  adminAuth,
+  requireRole("manager"),
+  async (req: AdminRequest, res: express.Response) => {
   try {
     const { startDate, endDate, category } = req.query;
 
@@ -47,6 +51,7 @@ router.get("/", adminAuth, async (req: AdminRequest, res: express.Response) => {
 router.post(
   "/",
   adminAuth,
+  requireRole("manager"),
   validateBody(CreateExpenseSchema),
   async (req: AdminRequest, res: express.Response) => {
     try {
@@ -78,6 +83,7 @@ router.post(
 router.patch(
   "/:id",
   adminAuth,
+  requireRole("manager"),
   validateBody(UpdateExpenseSchema),
   async (req: AdminRequest, res: express.Response) => {
     try {
@@ -118,6 +124,7 @@ router.patch(
 router.delete(
   "/:id",
   adminAuth,
+  requireRole("admin"),
   async (req: AdminRequest, res: express.Response) => {
     try {
       const { id } = req.params;

@@ -1,6 +1,6 @@
 import { Router, Response } from "express";
 import db from "../db/database";
-import { adminAuth, AdminRequest } from "../middleware/adminAuth";
+import { adminAuth, AdminRequest, requireRole } from "../middleware/adminAuth";
 
 const router = Router();
 
@@ -27,6 +27,7 @@ interface OrderRow {
 router.get(
   "/stats/overview",
   adminAuth,
+  requireRole("manager"),
   async (_req: AdminRequest, res: Response) => {
     try {
       const [totalRes, verifiedRes, recentRes] = await Promise.all([
@@ -52,7 +53,11 @@ router.get(
 );
 
 // Get all users with pagination and search
-router.get("/", adminAuth, async (req: AdminRequest, res: Response) => {
+router.get(
+  "/",
+  adminAuth,
+  requireRole("manager"),
+  async (req: AdminRequest, res: Response) => {
   try {
     const page = Number.parseInt(req.query.page as string) || 1;
     const limit = Number.parseInt(req.query.limit as string) || 20;
@@ -102,7 +107,11 @@ router.get("/", adminAuth, async (req: AdminRequest, res: Response) => {
 });
 
 // Get user details with order history
-router.get("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
+router.get(
+  "/:id",
+  adminAuth,
+  requireRole("manager"),
+  async (req: AdminRequest, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -155,7 +164,11 @@ router.get("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
 });
 
 // Update user (e.g., toggle active status, update info)
-router.patch("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
+router.patch(
+  "/:id",
+  adminAuth,
+  requireRole("admin"),
+  async (req: AdminRequest, res: Response) => {
   try {
     const { id } = req.params;
     const { name, phone, emailVerified, isActive } = req.body;
@@ -211,6 +224,7 @@ router.patch("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
 router.post(
   "/:id/reset-password",
   adminAuth,
+  requireRole("admin"),
   async (req: AdminRequest, res: Response) => {
     try {
       const { id } = req.params;
@@ -248,7 +262,11 @@ router.post(
 );
 
 // Delete user account
-router.delete("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
+router.delete(
+  "/:id",
+  adminAuth,
+  requireRole("admin"),
+  async (req: AdminRequest, res: Response) => {
   try {
     const { id } = req.params;
 

@@ -2,7 +2,7 @@ import express from "express";
 import { rateLimit } from "express-rate-limit";
 import { v4 as uuidv4 } from "uuid";
 import db from "../db/database";
-import { adminAuth, AdminRequest } from "../middleware/adminAuth";
+import { adminAuth, AdminRequest, requireRole } from "../middleware/adminAuth";
 import { logActivity } from "./activity";
 import { validateBody } from "../middleware/validate";
 import { ReviewBodySchema } from "../schemas";
@@ -19,7 +19,7 @@ const reviewSubmitLimiter = rateLimit({
 });
 
 // GET all reviews (Admin)
-router.get("/", adminAuth, async (req: AdminRequest, res) => {
+router.get("/", adminAuth, requireRole("clerk"), async (req: AdminRequest, res) => {
   try {
     const result = await db.query(
       'SELECT * FROM reviews ORDER BY "createdAt" DESC',
@@ -105,7 +105,7 @@ router.post(
 });
 
 // DELETE a review (Admin)
-router.delete("/:id", adminAuth, async (req: AdminRequest, res) => {
+router.delete("/:id", adminAuth, requireRole("attendant"), async (req: AdminRequest, res) => {
   try {
     const { id } = req.params;
 

@@ -147,6 +147,8 @@ export {
   sendNewsletterCampaign,
   fetchNewsletterCampaigns,
   processScheduledNewsletterCampaigns,
+  deleteNewsletterCampaign,
+  cancelNewsletterCampaign,
 } from "./support";
 
 // Team, projects, testimonials, site stats

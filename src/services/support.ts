@@ -356,3 +356,24 @@ export async function processScheduledNewsletterCampaigns(): Promise<{
   );
   return handleResponse(response);
 }
+
+export async function deleteNewsletterCampaign(
+  id: string,
+): Promise<{ success: boolean; message: string }> {
+  const response = await authFetch(`${API_BASE}/newsletter/campaigns/${id}`, {
+    method: "DELETE",
+  });
+  return handleResponse(response);
+}
+
+export async function cancelNewsletterCampaign(
+  id: string,
+): Promise<{ success: boolean; message: string }> {
+  const response = await authFetch(
+    `${API_BASE}/newsletter/campaigns/${id}/cancel`,
+    {
+      method: "PATCH",
+    },
+  );
+  return handleResponse(response);
+}

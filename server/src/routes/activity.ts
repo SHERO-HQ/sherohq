@@ -1,12 +1,16 @@
 import { Router, Response } from "express";
 import db from "../db/database";
-import { adminAuth, AdminRequest } from "../middleware/adminAuth";
+import { adminAuth, AdminRequest, requireRole } from "../middleware/adminAuth";
 import { v4 as uuidv4 } from "uuid";
 
 const router = Router();
 
 // GET /api/admin/activity - Get recent activity logs
-router.get("/activity", adminAuth, async (req: AdminRequest, res: Response) => {
+router.get(
+  "/activity",
+  adminAuth,
+  requireRole("admin"),
+  async (req: AdminRequest, res: Response) => {
   try {
     const result = await db.query(`
       SELECT al.*, au.username as "adminName"

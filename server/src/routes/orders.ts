@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { createHash, randomBytes } from "node:crypto";
 import { rateLimit } from "express-rate-limit";
 import db from "../db/database";
-import { adminAuth, AdminRequest } from "../middleware/adminAuth";
+import { adminAuth, AdminRequest, requireRole } from "../middleware/adminAuth";
 import { logActivity } from "./activity";
 import { notificationService } from "../services/NotificationService";
 import { validateBody } from "../middleware/validate";
@@ -189,6 +189,7 @@ const guestOrdersLimiter = rateLimit({
 router.post(
   "/admin",
   adminAuth,
+  requireRole("admin"),
   validateBody(CreateOrderSchema),
   async (req: AdminRequest, res: Response) => {
     try {
@@ -668,7 +669,11 @@ router.patch("/:id/payment-method", async (req: Request, res: Response) => {
 // ============ ADMIN ROUTES (Protected) ============
 
 // GET /api/orders - Admin: List all orders with optional filtering
-router.get("/", adminAuth, async (req: AdminRequest, res: Response) => {
+router.get(
+  "/",
+  adminAuth,
+  requireRole("manager"),
+  async (req: AdminRequest, res: Response) => {
   try {
     const { status, limit = 100, startDate, endDate } = req.query;
     const safeLimit = Math.min(
@@ -727,7 +732,11 @@ router.get("/", adminAuth, async (req: AdminRequest, res: Response) => {
 });
 
 // GET /api/orders/:id - Admin: Get single order details
-router.get("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
+router.get(
+  "/:id",
+  adminAuth,
+  requireRole("manager"),
+  async (req: AdminRequest, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -758,6 +767,7 @@ router.get("/:id", adminAuth, async (req: AdminRequest, res: Response) => {
 router.patch(
   "/:id/status",
   adminAuth,
+  requireRole("manager"),
   validateBody(UpdateOrderStatusSchema),
   async (req: AdminRequest, res: Response) => {
     try {

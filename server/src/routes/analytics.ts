@@ -1,7 +1,7 @@
 import express from "express";
 import { rateLimit } from "express-rate-limit";
 import { query } from "../db/database";
-import { adminAuth } from "../middleware/adminAuth";
+import { adminAuth, requireRole } from "../middleware/adminAuth";
 
 const router = express.Router();
 
@@ -14,12 +14,21 @@ const chatAnalyticsLimiter = rateLimit({
   message: { error: "Too many requests, please slow down." },
 });
 
+// Common stop words to filter out of catalog gap keywords
+const STOP_WORDS = new Set([
+  "a", "an", "the", "and", "or", "but", "if", "then", "else", "when",
+  "at", "from", "by", "for", "with", "about", "against", "between",
+  "into", "through", "during", "before", "after", "above", "below",
+  "to", "up", "down", "in", "out", "on", "off", "over", "under",
+  "again", "further", "once", "here", "there", "where", "why", "how",
+  "all", "any", "both", "each", "few", "more", "most", "other", "some",
+  "such", "no", "nor", "not", "only", "own", "same", "so", "than",
+  "too", "very", "s", "t", "can", "will", "just", "don", "should", "now",
+  "do", "you", "have", "i", "want", "need", "looking", "for", "buy", "get"
+]);
+
 /**
  * Determines whether a chat interaction should be logged as a catalog gap.
- * A gap is logged when:
- *   - The AI explicitly reported it could not find matching products (`recommend_failed`), or
- *   - The user query is substantive (>3 chars) and the AI response mentioned a shortlist,
- *     indicating the query was routed to a fallback product list rather than a direct match.
  */
 function shouldLogCatalogGap(
   intent: unknown,
@@ -37,6 +46,17 @@ function shouldLogCatalogGap(
   return false;
 }
 
+/**
+ * Extracts meaningful keywords from a query by removing stop words.
+ */
+function extractGapKeywords(query: string): string {
+  const words = query.toLowerCase().split(/[^\w]+/).filter(w => w.length > 1);
+  const meaningful = words.filter(w => !STOP_WORDS.has(w));
+  
+  // Return up to 3 meaningful words as the gap keyword
+  return meaningful.slice(0, 3).join(" ").trim();
+}
+
 // POST /api/analytics/chat - Log a chat interaction
 router.post("/chat", chatAnalyticsLimiter, async (req, res) => {
   try {
@@ -48,6 +68,7 @@ router.post("/chat", chatAnalyticsLimiter, async (req, res) => {
       intent,
       recommendedProducts,
       hasImage,
+      source = "general",
     } = req.body;
 
     if (!userQuery || typeof userQuery !== "string") {
@@ -55,8 +76,8 @@ router.post("/chat", chatAnalyticsLimiter, async (req, res) => {
     }
 
     await query(
-      `INSERT INTO ai_chat_logs ("guestId", "userId", query, response, intent, "recommendedProducts", "hasImage")
-       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      `INSERT INTO ai_chat_logs ("guestId", "userId", query, response, intent, "recommendedProducts", "hasImage", "source")
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
       [
         guestId,
         userId,
@@ -65,17 +86,20 @@ router.post("/chat", chatAnalyticsLimiter, async (req, res) => {
         intent,
         JSON.stringify(recommendedProducts),
         hasImage || false,
+        source,
       ],
     );
 
     // Log catalog gap when the AI couldn't satisfy the request
     if (shouldLogCatalogGap(intent, userQuery, response)) {
-      const keyword = userQuery.split(" ").slice(0, 3).join(" ").toLowerCase();
-      await query(
-        `INSERT INTO catalog_gaps (keyword) VALUES ($1)
-         ON CONFLICT (keyword) DO UPDATE SET "queryCount" = catalog_gaps."queryCount" + 1, "lastRequested" = CURRENT_TIMESTAMP`,
-        [keyword],
-      );
+      const keyword = extractGapKeywords(userQuery);
+      if (keyword) {
+        await query(
+          `INSERT INTO catalog_gaps (keyword) VALUES ($1)
+           ON CONFLICT (keyword) DO UPDATE SET "queryCount" = catalog_gaps."queryCount" + 1, "lastRequested" = CURRENT_TIMESTAMP`,
+          [keyword],
+        );
+      }
     }
 
     res.json({ success: true });
@@ -86,7 +110,7 @@ router.post("/chat", chatAnalyticsLimiter, async (req, res) => {
 });
 
 // GET /api/analytics/summary - Admin only analytics
-router.get("/summary", adminAuth, async (req, res) => {
+router.get("/summary", adminAuth, requireRole("manager"), async (req, res) => {
   try {
     const topIntents = await query(
       `

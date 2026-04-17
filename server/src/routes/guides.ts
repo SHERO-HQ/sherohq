@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { query } from "../db/database";
 import { v4 as uuidv4 } from "uuid";
-import { adminAuth } from "../middleware/adminAuth";
+import { adminAuth, requireRole } from "../middleware/adminAuth";
 import { validateBody } from "../middleware/validate";
 import { CreateGuideSchema, UpdateGuideSchema } from "../schemas";
 
@@ -43,7 +43,7 @@ router.get("/", async (req, res) => {
 });
 
 // GET /api/guides/admin - List all guides for admin (requires auth)
-router.get("/admin", adminAuth, async (req, res) => {
+router.get("/admin", adminAuth, requireRole("clerk"), async (req, res) => {
   try {
     const result = await query(`
       SELECT g.*, au.username as "authorName"
@@ -84,7 +84,12 @@ router.get("/:slug", async (req, res) => {
 });
 
 // POST /api/guides - Create new guide (admin only)
-router.post("/", adminAuth, validateBody(CreateGuideSchema), async (req, res) => {
+router.post(
+  "/",
+  adminAuth,
+  requireRole("manager"),
+  validateBody(CreateGuideSchema),
+  async (req, res) => {
   try {
     const {
       title,
@@ -136,7 +141,12 @@ router.post("/", adminAuth, validateBody(CreateGuideSchema), async (req, res) =>
 });
 
 // PUT /api/guides/:id - Update guide (admin only)
-router.put("/:id", adminAuth, validateBody(UpdateGuideSchema), async (req, res) => {
+router.put(
+  "/:id",
+  adminAuth,
+  requireRole("manager"),
+  validateBody(UpdateGuideSchema),
+  async (req, res) => {
   try {
     const { id } = req.params;
     const { title, content, summary, category, coverImage, published } =
@@ -188,7 +198,7 @@ router.put("/:id", adminAuth, validateBody(UpdateGuideSchema), async (req, res) 
 });
 
 // DELETE /api/guides/:id - Delete guide (admin only)
-router.delete("/:id", adminAuth, async (req, res) => {
+router.delete("/:id", adminAuth, requireRole("admin"), async (req, res) => {
   try {
     const { id } = req.params;
 
