@@ -43,7 +43,7 @@ const ContactForm = () => {
  <div className="space-y-2">
  <label
  htmlFor="name"
- className="text-sm font-bold text-slate-900 dark:text-slate-300"
+ className="text-sm font-semibold text-slate-900 dark:text-slate-300"
  >
  Full Name
  </label>
@@ -55,14 +55,14 @@ const ContactForm = () => {
  onChange={(e) =>
  setFormData({ ...formData, name: e.target.value })
  }
- className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition"
+ className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition"
  placeholder="John Doe"
  />
  </div>
  <div className="space-y-2">
  <label
  htmlFor="email"
- className="text-sm font-bold text-slate-900 dark:text-slate-300"
+ className="text-sm font-semibold text-slate-900 dark:text-slate-300"
  >
  Email Address
  </label>
@@ -74,7 +74,7 @@ const ContactForm = () => {
  onChange={(e) =>
  setFormData({ ...formData, email: e.target.value })
  }
- className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition"
+ className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition"
  placeholder="john@example.com"
  />
  </div>
@@ -83,7 +83,7 @@ const ContactForm = () => {
  <div className="space-y-2">
  <label
  htmlFor="subject"
- className="text-sm font-bold text-slate-900 dark:text-slate-300"
+ className="text-sm font-semibold text-slate-900 dark:text-slate-300"
  >
  Subject
  </label>
@@ -94,7 +94,7 @@ const ContactForm = () => {
  onChange={(e) =>
  setFormData({ ...formData, subject: e.target.value })
  }
- className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition cursor-pointer appearance-none"
+ className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition cursor-pointer appearance-none"
  >
  <option value="general">General Inquiry</option>
  <option value="project">New Project</option>
@@ -113,7 +113,7 @@ const ContactForm = () => {
  <div className="space-y-2">
  <label
  htmlFor="message"
- className="text-sm font-bold text-slate-900 dark:text-slate-300"
+ className="text-sm font-semibold text-slate-900 dark:text-slate-300"
  >
  Message
  </label>
@@ -125,7 +125,7 @@ const ContactForm = () => {
  onChange={(e) =>
  setFormData({ ...formData, message: e.target.value })
  }
- className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition resize-none"
+ className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition resize-none"
  placeholder="Tell us about your project..."
  />
  </div>
@@ -134,7 +134,7 @@ const ContactForm = () => {
  <Button
  type="submit"
  disabled={status !== "idle"}
- className="w-full h-10 text-md font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded shadow shadow-emerald-500/20 transition hover:scale-[1.02] active:scale-[0.98]"
+ className="w-full h-10 text-md font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded shadow-sm transition hover:scale-[1.02] active:scale-[0.98]"
  >
  {status === "idle" && (
  <>

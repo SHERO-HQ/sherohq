@@ -49,7 +49,7 @@ const Contact = () => {
 
  <div className="flex flex-wrap gap-3 mt-7">
  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
- 24h Initial Response
+ 24h Response
  </span>
  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
  Consultative Guidance
@@ -94,7 +94,7 @@ const Contact = () => {
  className="relative"
  >
  {/* Form Container */}
- <div className="relative bg-white/70 dark:bg-slate-900/40 backdrop-blur-sm border border-slate-200 dark:border-white/10 rounded p-8 shadow">
+ <div className="relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm border border-slate-200 dark:border-white/10 rounded p-8 shadow">
  <div className="absolute top-0 right-0 p-6 opacity-20">
  <MessagesSquare className="w-12 h-12" />
  </div>
@@ -112,7 +112,7 @@ const Contact = () => {
  </div>
 
  {/* Decorative border glow */}
- <div className="absolute -inset-1 rounded bg-linear-to-br from-emerald-500/20 to-blue-500/20 blur-lg -z-10" />
+ <div className="absolute -inset-1 rounded bg-linear-to-br from-emerald-500/5 to-blue-500/5 blur-xl -z-10" />
  </motion.div>
  </div>
  </div>
