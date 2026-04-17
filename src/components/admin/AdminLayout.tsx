@@ -6,6 +6,7 @@ import { ChangePasswordModal } from "./ChangePasswordModal";
 import { cn } from "@/lib/utils";
 import { motion } from "motion/react";
 import { useAdmin } from "@/context/AdminContext";
+import { PageTransition } from "@/components/common/PageTransition";
 
 interface AdminLayoutProps {
  children: React.ReactNode;
@@ -81,13 +82,9 @@ export default function AdminLayout({ children }: Readonly<AdminLayoutProps>) {
 
     {/* Page Content */}
     <main className="flex-1 p-4 md:p-8 print:p-0">
-     <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-     >
+     <PageTransition>
       {children}
-     </motion.div>
+     </PageTransition>
     </main>
 
     {/* Simple Footer */}

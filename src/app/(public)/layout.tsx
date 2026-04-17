@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import Nav from "@/components/layout/NavigationBar";
 import Footer from "@/components/layout/Footer";
+import { PageTransition } from "@/components/common/PageTransition";
 
 // Lazy-load components that are hidden by default (drawers, modals, prompts)
 const CartDrawer = dynamic(() => import("@/components/cart/CartDrawerUI"), {
@@ -37,7 +38,7 @@ export default function PublicLayout({
  <PWAInstallPrompt />
  <UserChangePasswordModal />
  <main id="main-content" className="min-h-screen">
- {children}
+ <PageTransition>{children}</PageTransition>
  </main>
  <Footer />
  </>

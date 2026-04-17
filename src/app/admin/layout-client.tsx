@@ -19,7 +19,7 @@ export default function AdminLayoutClient({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const isLoginPage = pathname === "/admin/login";
+  const isLoginPage = pathname === "/admin/login" || pathname.startsWith("/admin/login/");
 
   return (
     <Suspense fallback={<AdminLoading />}>

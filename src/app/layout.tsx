@@ -8,7 +8,6 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import dynamic from "next/dynamic";
-import { PageTransition } from "@/components/common/PageTransition";
 import "../index.css";
 
 const SITE_URL = (
@@ -154,7 +153,7 @@ export default function RootLayout({
           >
             Skip to main content
           </a>
-          <PageTransition>{children}</PageTransition>
+          {children}
         </Providers>
         <Analytics />
         <SpeedInsights />
