@@ -182,7 +182,7 @@ export const CreateProductSchema = z.object({
     .nonnegative("Stock quantity cannot be negative"),
   inStock: z.boolean(),
   badge: z.string().max(50).optional(),
-  features: z.record(z.string(), z.string()).optional(),
+  features: z.array(z.string().max(500)).optional(),
   specifications: z.record(z.string(), z.string()).optional(),
 });
 

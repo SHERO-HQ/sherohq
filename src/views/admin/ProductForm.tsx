@@ -409,7 +409,7 @@ export default function ProductForm() {
                           type="button"
                           onClick={() => setMainImage(url)}
                           className={cn(
-                            "w-full py-2 px-3 rounded text-xs font-bold uppercase tracking-wider transition shadow",
+                            "w-full py-2 px-3 rounded text-[10px] font-medium uppercase tracking-wider transition shadow",
                             productData.image === url
                               ? "bg-emerald-500 text-white cursor-default"
                               : "bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm",
@@ -417,8 +417,8 @@ export default function ProductForm() {
                           disabled={productData.image === url}
                         >
                           {productData.image === url
-                            ? "Current Main"
-                            : "Set as Main"}
+                            ? "Main"
+                            : "Set Main"}
                         </button>
                       </div>
 
