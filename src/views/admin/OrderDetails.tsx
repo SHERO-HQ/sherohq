@@ -674,7 +674,7 @@ export default function OrderDetails() {
             </div>
 
             <div className="pt-4 border-t border-white/5">
-              <div className="bg-emerald-500/5 p-4 rounded-lg border border-emerald-500/10">
+              <div className="bg-emerald-500/5 p-4 rounded border border-emerald-500/10">
                 <div className="flex items-center gap-2 text-emerald-400 mb-1">
                   <Package className="w-4 h-4" />
                   <span className="text-xs font-bold uppercase">
@@ -690,7 +690,7 @@ export default function OrderDetails() {
           </Card>
 
           {/* Quick Actions */}
-          <div className="bg-slate-950/50 rounded-lg p-4 border border-white/5">
+          <div className="bg-slate-950/50 rounded p-4 border border-white/5">
             <h4 className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3">
               Internal Actions
             </h4>

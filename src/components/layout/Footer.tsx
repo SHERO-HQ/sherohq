@@ -182,32 +182,34 @@ const Footer = () => {
 
                   <form
                     onSubmit={handleNewsletterSubmit}
-                    className="flex gap-2"
+                    className="space-y-2"
                   >
-                    <input
-                      type="email"
-                      required
-                      value={newsletterEmail}
-                      onChange={(e) => {
-                        setNewsletterEmail(e.target.value);
-                        if (newsletterStatus !== "idle") {
-                          setNewsletterStatus("idle");
-                        }
-                      }}
-                      autoComplete="email"
-                      placeholder="Enter your email"
-                      className="flex-1 px-3 py-2.5 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-emerald-500/50 outline-none transition"
-                    />
-                    <button
-                      type="submit"
-                      disabled={newsletterStatus === "submitting"}
-                      className="px-3 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold rounded transition-colors flex items-center gap-1.5"
-                    >
-                      <Send className="w-3.5 h-3.5" />
-                      {newsletterStatus === "submitting"
-                        ? "Sending..."
-                        : "Subscribe"}
-                    </button>
+                    <div className="relative">
+                      <input
+                        type="email"
+                        required
+                        value={newsletterEmail}
+                        onChange={(e) => {
+                          setNewsletterEmail(e.target.value);
+                          if (newsletterStatus !== "idle") {
+                            setNewsletterStatus("idle");
+                          }
+                        }}
+                        autoComplete="email"
+                        placeholder="Enter your email"
+                        className="w-full pr-24 sm:pr-28 pl-3 py-2.5 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-emerald-500/50 outline-none transition"
+                      />
+                      <button
+                        type="submit"
+                        disabled={newsletterStatus === "submitting"}
+                        className="absolute right-1 top-1/2 -translate-y-1/2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:hover:bg-emerald-600 text-white text-xs font-semibold rounded transition-colors"
+                      >
+                        <Send className="w-3 h-3" />
+                        {newsletterStatus === "submitting"
+                          ? "Sending..."
+                          : "Subscribe"}
+                      </button>
+                    </div>
                   </form>
 
                   {newsletterStatus === "success" && (

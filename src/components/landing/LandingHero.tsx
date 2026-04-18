@@ -237,7 +237,7 @@ const LandingHero: React.FC = () => {
                     <span className="h-3 w-3 rounded-full bg-[#febc2e] ring-1 ring-black/15 dark:ring-black/40" />
                     <span className="h-3 w-3 rounded-full bg-[#28c840] ring-1 ring-black/15 dark:ring-black/40" />
                   </div>
-                  <div className="justify-self-center max-w-48 w-full rounded border border-slate-300/80 dark:border-slate-700/80 bg-white/70 dark:bg-slate-900/70 px-3 py-1 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.45)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+                  <div className="justify-self-center max-w-48 w-full rounded border border-slate-300/80 dark:border-slate-700/80 bg-white/70 dark:bg-slate-900/70 px-3 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.45)] dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
                     <span className="text-[10px] sm:text-xs font-mono text-slate-500 dark:text-slate-400 tracking-wide">
                       sherohq.com
                     </span>

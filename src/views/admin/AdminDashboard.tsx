@@ -403,7 +403,7 @@ export default function AdminDashboard() {
           ? new Array(4).fill(0).map((_, i) => (
               <div
                 key={`skeleton-stat-summary-${i}`}
-                className="h-36 rounded-xl bg-slate-900/40 backdrop-blur-sm border border-white/10 animate-pulse relative overflow-hidden"
+                className="h-36 rounded bg-slate-900/40 backdrop-blur-sm border border-white/10 animate-pulse relative overflow-hidden"
               >
                 <div className="p-6 space-y-4">
                   <div className="flex justify-between items-center">

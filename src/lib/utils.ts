@@ -16,16 +16,13 @@ export function cn(...inputs: ClassValue[]) {
 const NAV_LINK_STYLES = {
   base: [
     "px-3 py-1.5",
-    "rounded-md",
+    "rounded",
     "transition-all duration-300 ease-in-out",
     // Focus states
     // "focus:ring-2 focus:ring-emerald-500/50",
     "focus:outline-none",
   ],
-  active: [
-    "text-emerald-600 dark:text-emerald-400",
-    "font-semibold",
-  ],
+  active: ["text-emerald-600 dark:text-emerald-400", "font-semibold"],
   inactive: [
     "bg-transparent",
     "text-slate-600 dark:text-slate-400",
@@ -115,7 +112,7 @@ export function navLinkClassVariant(
     mobile: {
       base: [
         "relative block py-2.5 px-4",
-        "rounded-md",
+        "rounded",
         "text-base font-medium",
         "transition-all duration-300",
       ],
