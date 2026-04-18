@@ -93,7 +93,7 @@ export default function AdminProfile() {
  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
  <div className="lg:col-span-1 space-y-6">
  <Card className="bg-card border-border overflow-hidden">
- <div className="h-24 bg-linear-to-br from-emerald-600 to-blue-600" />
+ <div className="h-24 bg-linear-to-br from-brand-secondary-600 to-blue-600" />
  <div className="px-6 pb-6 relative">
  <div className="flex justify-center -mt-12 mb-4">
  <div className="relative group">
@@ -115,7 +115,7 @@ export default function AdminProfile() {
  <button
  type="button"
  onClick={() => fileInputRef.current?.click()}
- className="absolute bottom-1 right-1 p-1.5 bg-emerald-500 rounded text-white hover:bg-emerald-400 transition-colors shadow"
+ className="absolute bottom-1 right-1 p-1.5 bg-brand-secondary-500 rounded text-white hover:bg-brand-secondary-400 transition-colors shadow"
  disabled={isUpdating}
  >
  {isUpdating ? (
@@ -144,11 +144,11 @@ export default function AdminProfile() {
  </div>
  </Card>
 
- <Card className="bg-emerald-500/5 border-emerald-500/10 p-4">
+ <Card className="bg-brand-secondary-500/5 border-brand-secondary-500/10 p-4">
  <div className="flex gap-3">
- <Shield className="w-5 h-5 text-emerald-400 shrink-0" />
+ <Shield className="w-5 h-5 text-brand-secondary-400 shrink-0" />
  <div>
- <h4 className="text-sm font-bold text-emerald-400">
+ <h4 className="text-sm font-bold text-brand-secondary-400">
  Security Tip
  </h4>
  <p className="text-xs text-slate-400 mt-1">
@@ -211,7 +211,7 @@ export default function AdminProfile() {
  type="tel"
  value={phone}
  onChange={(e) => setPhone(e.target.value)}
- className="bg-muted/50 border-border text-foreground focus:ring-emerald-500/20"
+ className="bg-muted/50 border-border text-foreground focus:ring-brand-secondary-500/20"
  placeholder="02XXXXXXXX"
  />
  </div>

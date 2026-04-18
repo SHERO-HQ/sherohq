@@ -224,6 +224,14 @@ router.post(
         `📦 Admin created ${isQuote ? "Quote" : "Order"}: ${orderId} by ${req.admin?.username}`,
       );
 
+      // Log activity
+      await logActivity(
+        req.admin?.id || null,
+        isQuote ? "Quote Created" : "Order Created",
+        "info",
+        `Admin ${req.admin?.username} created a ${isQuote ? "quote" : "order"} (${orderId.substring(0, 8).toUpperCase()}) for ${shippingInfo.firstName} (Total: GH₵${total.toFixed(2)})`,
+      );
+
       // 🔥 Send Admin Invoice or Quote Notification
       if (isQuote) {
         notificationService
@@ -411,6 +419,14 @@ router.post(
       console.log(
         `📦 New order created: ${orderId} for guest ${resolvedGuestId}`,
       );
+
+      // Log activity to Admin Feed
+      logActivity(
+        null,
+        "New Order Received",
+        "success",
+        `New order ${orderId.substring(0, 8).toUpperCase()} placed by ${shippingInfo.firstName} ${shippingInfo.lastName} (Total: GH₵${finalTotal.toFixed(2)})`,
+      ).catch((err) => console.error("Activity logging failed:", err));
 
       // 🔥 Send Notifications (Async)
       notificationService

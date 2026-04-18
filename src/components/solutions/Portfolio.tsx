@@ -78,7 +78,7 @@ const Portfolio = () => {
  transition={{ duration: 0.6 }}
  className="text-center mb-12"
  >
- <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded uppercase">
+ <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-950/50 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase">
  <Wrench className="size-4" />
  Our Work
  </span>
@@ -103,7 +103,7 @@ const Portfolio = () => {
  <TabsTrigger
  key={category}
  value={category}
- className="px-6 py-2 text-sm whitespace-nowrap data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow transition duration-300"
+ className="px-6 py-2 text-sm whitespace-nowrap data-[state=active]:bg-brand-secondary-600 data-[state=active]:text-white data-[state=active]:shadow transition duration-300"
  >
  {category}
  </TabsTrigger>
@@ -139,7 +139,7 @@ const Portfolio = () => {
  whileInView={{ opacity: 1, y: 0 }}
  viewport={{ once: true }}
  transition={{ duration: 0.5, delay: idx * 0.1 }}
- className="group bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 overflow-hidden hover:border-emerald-500 dark:hover:border-emerald-500 hover:shadow hover:shadow-emerald-500/10 transition duration-300"
+ className="group bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 overflow-hidden hover:border-brand-secondary-500 dark:hover:border-brand-secondary-500 hover:shadow hover:shadow-brand-secondary-500/10 transition duration-300"
  onClick={() => setSelectedProject(project)}
  >
  {/* Project Image */}
@@ -162,7 +162,7 @@ const Portfolio = () => {
  )}
 
  {/* Overlay on Hover */}
- <div className="absolute inset-0 bg-emerald-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+ <div className="absolute inset-0 bg-brand-secondary-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
  <div className="flex flex-col items-center gap-2 text-white font-semibold">
  <span className="flex items-center gap-2">
  View Details
@@ -176,21 +176,21 @@ const Portfolio = () => {
  <div className="p-6">
  {/* Category Badge */}
  <div className="flex items-center gap-2 mb-3">
- <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-semibold rounded">
+ <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 text-brand-secondary-700 dark:text-brand-secondary-400 text-xs font-semibold rounded">
  {getCategoryIcon(project.category)}
  {project.category}
  </span>
  </div>
 
  {/* Title */}
- <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+ <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors">
  {project.title}
  </h3>
 
  {/* View Details Button and Project Link */}
  <div className="flex items-center justify-between mt-auto">
  <button
- className="inline-flex items-center gap-2 text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
+ className="inline-flex items-center gap-2 text-sm font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 hover:text-brand-secondary-700 dark:hover:text-brand-secondary-300 transition-colors"
  onClick={(e) => {
  e.stopPropagation();
  setSelectedProject(project);
@@ -203,7 +203,7 @@ const Portfolio = () => {
  href={project.link || "#"}
  target="_blank"
  rel="noopener noreferrer"
- className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+ className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors"
  onClick={(e) => e.stopPropagation()}
  >
  {project.link ? "Project Link" : "Link coming soon"}
@@ -245,7 +245,7 @@ const Portfolio = () => {
 
  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
  <div className="space-y-1">
- <h4 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+ <h4 className="text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest">
  Client / Partner
  </h4>
  <p className="text-base font-medium text-slate-900 dark:text-white">
@@ -253,7 +253,7 @@ const Portfolio = () => {
  </p>
  </div>
  <div className="space-y-1">
- <h4 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+ <h4 className="text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest">
  Industry / Category
  </h4>
  <div className="flex items-center gap-2 text-base font-medium text-slate-900 dark:text-white">
@@ -264,7 +264,7 @@ const Portfolio = () => {
  </div>
 
  <div className="space-y-3">
- <h4 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+ <h4 className="text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest">
  Project Overview
  </h4>
  <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-base">
@@ -273,10 +273,10 @@ const Portfolio = () => {
  </div>
 
  <div className="space-y-3">
- <h4 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+ <h4 className="text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest">
  Strategic Use Case
  </h4>
- <div className="p-5 bg-emerald-50 dark:bg-emerald-950/20 rounded border border-emerald-100 dark:border-emerald-500/20">
+ <div className="p-5 bg-brand-secondary-50 dark:bg-brand-secondary-950/20 rounded border border-brand-secondary-100 dark:border-brand-secondary-500/20">
  <p className="text-slate-700 dark:text-slate-300 italic leading-relaxed">
  "{selectedProject.useCase}"
  </p>
@@ -284,7 +284,7 @@ const Portfolio = () => {
  </div>
 
  <div className="space-y-3">
- <h4 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+ <h4 className="text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest">
  Technology Stack
  </h4>
  <div className="flex flex-wrap gap-2">
@@ -300,11 +300,11 @@ const Portfolio = () => {
  </div>
 
  <div className="space-y-3">
- <h4 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
+ <h4 className="text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest">
  Project Link
  </h4>
  <div className="flex items-center gap-2 p-3 bg-slate-100 dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 overflow-hidden">
- <Link className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+ <Link className="size-4 text-brand-secondary-600 dark:text-brand-secondary-400 shrink-0" />
  <code className="text-xs text-slate-600 dark:text-slate-400 truncate flex-1 block">
  {selectedProject.link ||
  `https://sherotech.io/projects/${selectedProject.id}`}
@@ -316,11 +316,11 @@ const Portfolio = () => {
  `https://sherotech.io/projects/${selectedProject.id}`,
  )
  }
- className="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400"
+ className="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors text-slate-500 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400"
  title="Copy to clipboard"
  >
  {copied ? (
- <Check className="size-4 text-emerald-600" />
+ <Check className="size-4 text-brand-secondary-600" />
  ) : (
  <Copy className="size-4" />
  )}
@@ -334,7 +334,7 @@ const Portfolio = () => {
  href={selectedProject.link}
  target="_blank"
  rel="noopener noreferrer"
- className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded transition duration-300 hover:shadow hover:shadow-emerald-500/25 w-full active:scale-[0.98]"
+ className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white font-bold rounded transition duration-300 hover:shadow hover:shadow-brand-secondary-500/25 w-full active:scale-[0.98]"
  >
  Launch Live Project
  <ExternalLink className="size-5" />

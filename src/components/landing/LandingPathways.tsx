@@ -31,7 +31,7 @@ const LandingPathways = () => {
  link: "/shop",
  pattern: "pattern-dots",
  span: "lg:col-span-4 lg:row-span-2",
- color: "text-emerald-500",
+ color: "text-brand-secondary-500",
  },
  {
  icon: <MessageSquare className="w-8 h-8" />,
@@ -74,7 +74,7 @@ const LandingPathways = () => {
  <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
  <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
  <div className="max-w-2xl">
- <span className="text-xs font-mono font-bold tracking-[0.3em] uppercase text-emerald-600 dark:text-emerald-400 mb-4 block">
+ <span className="text-xs font-mono font-bold tracking-[0.3em] uppercase text-brand-secondary-600 dark:text-brand-secondary-400 mb-4 block">
  Direct Access
  </span>
  <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">
@@ -86,7 +86,7 @@ const LandingPathways = () => {
  </div>
  <Link
  href="/solutions"
- className="group w-fit flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b-2 border-emerald-500 pb-1"
+ className="group w-fit flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-900 dark:text-white border-b-2 border-brand-secondary-500 pb-1"
  >
  All Services{" "}
  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -150,7 +150,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
  initial={{ opacity: 0, scale: 0.95 }}
  whileInView={{ opacity: 1, scale: 1 }}
  viewport={{ once: true }}
- className={`group relative ${path.span} col-span-1 min-h-60 p-8 rounded border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between overflow-hidden transition-colors hover:border-emerald-500/50 hover:shadow shadow-emerald-500/5`}
+ className={`group relative ${path.span} col-span-1 min-h-60 p-8 rounded border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between overflow-hidden transition-colors hover:border-brand-secondary-500/50 hover:shadow shadow-brand-secondary-500/5`}
  >
  {/* Dynamic Glow Layer */}
  <motion.div
@@ -172,7 +172,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
 
  <div className="relative z-10" style={{ transform: "translateZ(40px)" }}>
  <div
- className={`w-14 h-14 rounded bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-6 text-slate-900 dark:text-white border border-slate-100 dark:border-slate-700 group-hover:scale-110 group-hover:text-emerald-500 transition shadow-sm`}
+ className={`w-14 h-14 rounded bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-6 text-slate-900 dark:text-white border border-slate-100 dark:border-slate-700 group-hover:scale-110 group-hover:text-brand-secondary-500 transition shadow-sm`}
  >
  {path.icon}
  </div>
@@ -193,7 +193,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
  >
  <Link
  href={path.link}
- className={`inline-flex items-center justify-center w-fit h-9 px-4 rounded border border-slate-200 dark:border-slate-800 text-slate-900! dark:text-white! group-hover:bg-emerald-500 group-hover:border-emerald-500 group-hover:text-white transition`}
+ className={`inline-flex items-center justify-center w-fit h-9 px-4 rounded border border-slate-200 dark:border-slate-800 text-slate-900! dark:text-white! group-hover:bg-brand-secondary-500 group-hover:border-brand-secondary-500 group-hover:text-white transition`}
  >
  <span className="text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white">
  Explore

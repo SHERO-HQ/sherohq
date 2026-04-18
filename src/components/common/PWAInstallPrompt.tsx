@@ -132,7 +132,7 @@ const PWAInstallPrompt = () => {
               </button>
               <button
                 onClick={handleInstall}
-                className="cursor-pointer flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded transition-colors"
+                className="cursor-pointer flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm font-bold text-white bg-brand-secondary-600 hover:bg-brand-secondary-700 rounded transition-colors"
               >
                 <Download className="w-4 h-4" />
                 Install

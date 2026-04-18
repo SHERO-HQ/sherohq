@@ -63,7 +63,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
  {/* Personal Information */}
  <div className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6">
  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
- <UserIcon className="w-5 h-5 text-emerald-500" />
+ <UserIcon className="w-5 h-5 text-brand-secondary-500" />
  Personal Information
  </h3>
  <div className="grid sm:grid-cols-2 gap-6">
@@ -96,7 +96,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
  {/* Shipping Address */}
  <div className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6">
  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
- <MapPin className="w-5 h-5 text-emerald-500" />
+ <MapPin className="w-5 h-5 text-brand-secondary-500" />
  Default Shipping Address
  </h3>
  <div className="grid sm:grid-cols-2 gap-6">
@@ -171,7 +171,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
  <p
  className={`text-sm ${
  saveMessage.includes("success")
- ? "text-emerald-600"
+ ? "text-brand-secondary-600"
  : "text-red-600"
  }`}
  >

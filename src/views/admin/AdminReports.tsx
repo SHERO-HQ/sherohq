@@ -81,7 +81,7 @@ type KpiPeriod = "today" | "week" | "month" | "year" | "custom";
 const getOrderStatusColor = (status: string) => {
   switch (status) {
     case "delivered":
-      return "bg-emerald-900/30 text-emerald-400";
+      return "bg-brand-secondary-900/30 text-brand-secondary-400";
     case "pending":
       return "bg-amber-900/30 text-amber-400";
     case "processing":
@@ -256,7 +256,7 @@ export default function AdminReports() {
                     className={cn(
                       "bg-slate-800/50 border-white/10 text-slate-300 hover:text-white h-9",
                       range === "custom" &&
-                        "bg-slate-700 text-white border-emerald-500/50",
+                        "bg-slate-700 text-white border-brand-secondary-500/50",
                     )}
                     onClick={() => setRange("custom")}
                   >
@@ -382,7 +382,7 @@ export default function AdminReports() {
 }
 
 const getTrendStyles = (trend: number) => {
-  if (trend >= 0) return "bg-emerald-500/10 text-emerald-400";
+  if (trend >= 0) return "bg-brand-secondary-500/10 text-brand-secondary-400";
   return "bg-rose-500/10 text-rose-400";
 };
 
@@ -446,7 +446,7 @@ function RevenueChartSection({
   return (
     <div className="bg-slate-900/50 border border-slate-800 rounded p-6 relative">
       <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-        <DollarSign className="w-5 h-5 text-emerald-400" />
+        <DollarSign className="w-5 h-5 text-brand-secondary-400" />
         Revenue Over Time
       </h3>
       <div className="absolute top-6 right-6 bg-slate-800 rounded p-1 flex">
@@ -703,7 +703,7 @@ function RegionalSalesChart({ data }: { readonly data: RegionalData[] }) {
   return (
     <div className="bg-slate-900/50 border border-slate-800 rounded p-6">
       <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-        <TrendingUp className="w-5 h-5 text-emerald-400" />
+        <TrendingUp className="w-5 h-5 text-brand-secondary-400" />
         Sales by Region
       </h3>
       <div className="h-62">
@@ -782,7 +782,7 @@ function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
                 >
                   {order.status}
                 </span>
-                <span className="font-bold text-emerald-400 text-sm">
+                <span className="font-bold text-brand-secondary-400 text-sm">
                   GH₵{order.total.toLocaleString()}
                 </span>
               </div>
@@ -822,7 +822,7 @@ function TopProducts({ products }: { readonly products: TopProduct[] }) {
                 </p>
               </div>
             </div>
-            <span className="font-bold text-emerald-400 text-sm">
+            <span className="font-bold text-brand-secondary-400 text-sm">
               GH₵{product.revenue.toLocaleString()}
             </span>
           </div>
@@ -861,8 +861,8 @@ function StatsGrid({
         title="Total Revenue"
         value={`GH₵${(getKpiData(kpiPeriod)?.revenue ?? stats?.revenue ?? 0).toLocaleString()}`}
         icon={DollarSign}
-        color="text-emerald-400"
-        bg="bg-emerald-400/10"
+        color="text-brand-secondary-400"
+        bg="bg-brand-secondary-400/10"
         trend={getKpiData(kpiPeriod)?.revenueGrowth ?? 0}
         subtext={getSubtext(kpiPeriod)}
       />

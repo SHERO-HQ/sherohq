@@ -145,7 +145,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
           <div className="flex items-center justify-between mb-8">
             <button
               onClick={() => (window.location.href = getAbsoluteUrl("/shop"))}
-              className="group flex items-center gap-2 text-sm tracking-widest text-slate-500 hover:text-emerald-500 transition-colors"
+              className="group flex items-center gap-2 text-sm tracking-widest text-slate-500 hover:text-brand-secondary-500 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               Shop
@@ -166,7 +166,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
               <div className="group relative aspect-4/5 max-h-110 sm:max-h-135 lg:max-h-170 bg-white dark:bg-white/5 sm:rounded overflow-hidden sm:border border-y sm:border-x border-slate-200 dark:border-white/10 flex items-center justify-center -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full">
                 <button
                   onClick={() => setIsPreviewOpen(true)}
-                  className="absolute top-6 right-6 lg:opacity-0 group-hover:opacity-100 transition-opacity p-2.5 bg-white/90 dark:bg-slate-900/90 rounded border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-emerald-600 hover:border-emerald-500 z-20"
+                  className="absolute top-6 right-6 lg:opacity-0 group-hover:opacity-100 transition-opacity p-2.5 bg-white/90 dark:bg-slate-900/90 rounded border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-brand-secondary-600 hover:border-brand-secondary-500 z-20"
                   aria-label="View Fullscreen"
                 >
                   <Maximize2 size={20} />
@@ -203,13 +203,13 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   <div className="absolute inset-0 flex items-center justify-between px-4 pointer-events-none">
                     <button
                       onClick={prevImage}
-                      className="pointer-events-auto p-1.5 bg-white/20 dark:bg-slate-900/10 rounded border border-slate-200 dark:border-white/10 hover:bg-emerald-500 hover:text-white transition-colors"
+                      className="pointer-events-auto p-1.5 bg-white/20 dark:bg-slate-900/10 rounded border border-slate-200 dark:border-white/10 hover:bg-brand-secondary-500 hover:text-white transition-colors"
                     >
                       <ChevronLeft size={24} />
                     </button>
                     <button
                       onClick={nextImage}
-                      className="pointer-events-auto p-1.5 bg-white/20 dark:bg-slate-900/10 rounded border border-slate-200 dark:border-white/10 hover:bg-emerald-500 hover:text-white transition-colors"
+                      className="pointer-events-auto p-1.5 bg-white/20 dark:bg-slate-900/10 rounded border border-slate-200 dark:border-white/10 hover:bg-brand-secondary-500 hover:text-white transition-colors"
                     >
                       <ChevronRight size={24} />
                     </button>
@@ -219,7 +219,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 {/* Badges Overlay */}
                 <div className="absolute top-6 left-6 flex flex-col gap-2">
                   {product.badge && (
-                    <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-emerald-600 text-white">
+                    <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-brand-secondary-600 text-white">
                       {product.badge}
                     </span>
                   )}
@@ -245,7 +245,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                       onClick={() => setSelectedImage(idx)}
                       className={`shrink-0 w-14 h-14 rounded overflow-hidden border-2 transition duration-200 ${
                         idx === selectedImage
-                          ? "border-emerald-500 scale-105"
+                          ? "border-brand-secondary-500 scale-105"
                           : "border-transparent bg-white dark:bg-white/5 opacity-50 hover:opacity-100"
                       }`}
                     >
@@ -275,7 +275,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
             <div className="lg:col-span-5 flex flex-col gap-8">
               <div className="p-8 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+                  <span className="px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400">
                     {product.category}
                   </span>
                   <div className="flex items-center gap-1.5">
@@ -328,14 +328,14 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                         Was {formatCurrency(product.originalPrice)}
                       </span>
                     )}
-                    <span className="text-[2rem] font-black text-emerald-600 dark:text-emerald-400">
+                    <span className="text-[2rem] font-black text-brand-secondary-600 dark:text-brand-secondary-400">
                       {formatCurrency(product.price)}
                     </span>
                   </div>
                   <div
-                    className={`text-[10px] font-semibold tracking-tighter w-fit border border-emerald-500/30 p-1 rounded${
+                    className={`text-[10px] font-semibold tracking-tighter w-fit border border-brand-secondary-500/30 p-1 rounded${
                       product.inStock
-                        ? " text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/10"
+                        ? " text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-500/10 dark:bg-brand-secondary-500/10"
                         : " text-red-600 dark:text-red-400 bg-red-500/10 dark:bg-red-500/10"
                     }`}
                   >
@@ -351,8 +351,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                       disabled={!product.inStock || isAddedToCart}
                       className={`flex-1 flex items-center justify-center gap-2 h-10 px-4 rounded font-semibold text-sm uppercase tracking-widest transition-colors border-2 ${
                         isAddedToCart
-                          ? "bg-emerald-500 border-emerald-500 text-white"
-                          : "bg-white dark:bg-white/5 border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500 hover:text-white"
+                          ? "bg-brand-secondary-500 border-brand-secondary-500 text-white"
+                          : "bg-white dark:bg-white/5 border-brand-secondary-600 text-brand-secondary-600 dark:text-brand-secondary-400 hover:bg-brand-secondary-500 hover:text-white"
                       }`}
                     >
                       {isAddedToCart ? (
@@ -369,7 +369,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                         router.push("/shop/checkout");
                       }}
                       disabled={!product.inStock}
-                      className="flex-1 px-2 h-10 bg-emerald-600 text-white rounded font-semibold text-sm uppercase tracking-widest hover:bg-emerald-500 transition-colors disabled:opacity-50"
+                      className="flex-1 px-2 h-10 bg-brand-secondary-600 text-white rounded font-semibold text-sm uppercase tracking-widest hover:bg-brand-secondary-500 transition-colors disabled:opacity-50"
                     >
                       Buy
                     </button>
@@ -414,7 +414,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
               {product.features && product.features.length > 0 && (
                 <div className="p-8 rounded border border-slate-200 dark:border-white/10">
                   <h3 className="text-lg font-black mb-6 flex items-center gap-2">
-                    <BadgeCheck className="text-emerald-500" /> Key Features
+                    <BadgeCheck className="text-brand-secondary-500" /> Key Features
                   </h3>
                   <div className="grid grid-cols-1 gap-4">
                     {product.features.map((feature: string, i: number) => (
@@ -422,8 +422,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                         key={`feature-${i}`}
                         className="flex items-center gap-4"
                       >
-                        <div className="mt-1 w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
-                          <Check size={10} className="text-emerald-600" />
+                        <div className="mt-1 w-5 h-5 rounded-full bg-brand-secondary-500/10 flex items-center justify-center shrink-0">
+                          <Check size={10} className="text-brand-secondary-600" />
                         </div>
                         <span className="text-sm text-slate-600 dark:text-slate-400">
                           {feature}
@@ -443,9 +443,9 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 <div className="flex flex-col items-center mb-12">
                   <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">
                     Technical{" "}
-                    <span className="text-emerald-500">Specifications</span>
+                    <span className="text-brand-secondary-500">Specifications</span>
                   </h2>
-                  <div className="h-1.5 w-12 bg-emerald-500 rounded-full mt-2" />
+                  <div className="h-1.5 w-12 bg-brand-secondary-500 rounded-full mt-2" />
                 </div>
 
                 <div className="max-w-4xl mx-auto overflow-hidden rounded border border-slate-200 dark:border-white/10 bg-white dark:bg-white/5">
@@ -465,10 +465,10 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                         ([key, value]) => (
                           <tr
                             key={`spec-${key}`}
-                            className="group hover:bg-emerald-500/5 transition-colors"
+                            className="group hover:bg-brand-secondary-500/5 transition-colors"
                           >
                             <td className="px-8 py-6 text-xs uppercase tracking-wider text-slate-900 dark:text-white w-1/3 border-r border-slate-100 dark:border-white/5">
-                              <span className="group-hover:text-emerald-500 transition-colors">
+                              <span className="group-hover:text-brand-secondary-500 transition-colors">
                                 {key}
                               </span>
                             </td>
@@ -489,13 +489,13 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
             <div className="mt-12 border-t border-slate-200 dark:border-white/10 pt-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">
-                  You Might <span className="text-emerald-500">Also Like</span>
+                  You Might <span className="text-brand-secondary-500">Also Like</span>
                 </h2>
                 <button
                   onClick={() =>
                     (window.location.href = getAbsoluteUrl("/shop"))
                   }
-                  className="text-sm tracking-widest text-emerald-600 hover:underline"
+                  className="text-sm tracking-widest text-brand-secondary-600 hover:underline"
                 >
                   View Shop
                 </button>
@@ -525,14 +525,14 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
               <span className="text-[10px] text-slate-500 font-bold uppercase">
                 Price
               </span>
-              <span className="text-lg font-black text-emerald-600 dark:text-emerald-400">
+              <span className="text-lg font-black text-brand-secondary-600 dark:text-brand-secondary-400">
                 {formatCurrency(product.price)}
               </span>
             </div>
             <button
               onClick={handleAddToCart}
               disabled={!product.inStock || isAddedToCart}
-              className="flex-1 h-12 bg-emerald-600 text-white rounded font-black text-xs uppercase tracking-widest active:scale-95 transition-transform"
+              className="flex-1 h-12 bg-brand-secondary-600 text-white rounded font-black text-xs uppercase tracking-widest active:scale-95 transition-transform"
             >
               {isAddedToCart ? "Added!" : "Quick Buy"}
             </button>
@@ -598,7 +598,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                       e.stopPropagation();
                       prevImage();
                     }}
-                    className="pointer-events-auto p-2 bg-white/10 text-white rounded hover:bg-emerald-500 hover:text-white transition-colors border border-white/10"
+                    className="pointer-events-auto p-2 bg-white/10 text-white rounded hover:bg-brand-secondary-500 hover:text-white transition-colors border border-white/10"
                   >
                     <ChevronLeft size={24} />
                   </button>
@@ -607,7 +607,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                       e.stopPropagation();
                       nextImage();
                     }}
-                    className="pointer-events-auto p-2 bg-white/10 text-white rounded hover:bg-emerald-500 hover:text-white transition-colors border border-white/10"
+                    className="pointer-events-auto p-2 bg-white/10 text-white rounded hover:bg-brand-secondary-500 hover:text-white transition-colors border border-white/10"
                   >
                     <ChevronRight size={24} />
                   </button>

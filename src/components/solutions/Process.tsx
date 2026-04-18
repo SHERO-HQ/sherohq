@@ -56,7 +56,7 @@ const Process = () => {
 
  <div className="container max-w-5xl mx-auto px-4 relative z-10">
  <div className="text-center mb-15">
- <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded uppercase">
+ <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-950/50 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase">
  <Workflow className="size-4" />
  How We Work
  </span>
@@ -71,7 +71,7 @@ const Process = () => {
 
  <div className="relative">
  {/* Central Timeline Line */}
- <div className="absolute left-8 md:left-1/2 transform -translate-x-1/2 h-full w-px bg-linear-to-b from-transparent via-emerald-500/50 to-transparent" />
+ <div className="absolute left-8 md:left-1/2 transform -translate-x-1/2 h-full w-px bg-linear-to-b from-transparent via-brand-secondary-500/50 to-transparent" />
 
  <div className="space-y-16 md:space-y-24">
  {steps.map((step, index) => {
@@ -92,14 +92,14 @@ const Process = () => {
  {/* Content Card */}
  <div className="w-full pl-14 md:pl-0 md:w-5/12">
  <div
- className={`p-6 rounded bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/5 backdrop-blur-sm hover:border-emerald-500/30 transition hover:-translate-y-1 hover:shadow hover:shadow-emerald-900/20 group ${
+ className={`p-6 rounded bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-white/5  hover:border-brand-secondary-500/30 transition hover:-translate-y-1 hover:shadow hover:shadow-brand-secondary-900/20 group ${
  isEven ? "md:text-right" : "md:text-left"
  }`}
  >
- <span className="inline-block py-1 px-3 rounded mb-3 text-sm font-mono font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 uppercase">
+ <span className="inline-block py-1 px-3 rounded mb-3 text-sm font-mono font-semibold bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-500/20 uppercase">
  Step {index + 1}
  </span>
- <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
+ <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-brand-secondary-500 dark:group-hover:text-brand-secondary-400 transition-colors">
  {step.title}
  </h3>
  <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
@@ -110,7 +110,7 @@ const Process = () => {
 
  {/* Timeline Icon */}
  <div className="absolute left-8 md:left-1/2 md:-translate-x-1/2 -translate-x-1/2 flex items-center justify-center">
- <div className="w-12 h-12 md:w-20 md:h-20 rounded-full bg-emerald-600 dark:bg-emerald-500 shadow shadow-emerald-500/30 flex items-center justify-center border-4 border-white dark:border-slate-900 z-10 transition-transform hover:scale-110">
+ <div className="w-12 h-12 md:w-20 md:h-20 rounded-full bg-brand-secondary-600 dark:bg-brand-secondary-500 shadow shadow-brand-secondary-500/30 flex items-center justify-center border-4 border-white dark:border-slate-900 z-10 transition-transform hover:scale-110">
  <Icon className="w-6 h-6 md:w-10 md:h-10 text-white" />
  </div>
  </div>

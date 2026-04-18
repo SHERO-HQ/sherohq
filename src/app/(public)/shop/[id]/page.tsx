@@ -102,7 +102,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         : "image/jpeg";
 
     return {
-      title: product.name,
+      title: `${product.name} — GH₵${product.price} | SHERO`,
       description,
       metadataBase: new URL(shopSiteUrl),
       alternates: {
@@ -110,7 +110,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
       openGraph: {
         type: "website",
-        title: `${product.name} | SHERO`,
+        title: `${product.name} — GH₵${product.price} | SHERO`,
         description,
         url: pageUrl,
         siteName: "SHERO",

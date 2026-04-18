@@ -4,7 +4,7 @@ import { motion } from "motion/react";
 
 interface Props {
  count?: number;
- /** "single" = all use bg-primary; "dual" = alternates blue/emerald */
+ /** "single" = all use bg-primary; "dual" = alternates blue/brand-secondary */
  colorVariant?: "single" | "dual";
  opacity?: number;
 }
@@ -33,7 +33,7 @@ export default function ParticleField({
  colorVariant === "dual"
  ? id % 2 === 0
  ? "bg-blue-500"
- : "bg-emerald-500"
+ : "bg-brand-secondary-500"
  : "bg-primary";
 
  return (

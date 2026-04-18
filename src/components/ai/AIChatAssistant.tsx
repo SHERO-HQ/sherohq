@@ -89,22 +89,22 @@ const LiveTrackingCard = ({
 
   return (
     <div
-      className={`mt-3 w-full p-3 ${type === "order" ? "bg-emerald-50 border-emerald-100" : "bg-blue-50 border-blue-100"} border rounded`}
+      className={`mt-3 w-full p-3 ${type === "order" ? "bg-brand-secondary-50 border-brand-secondary-100" : "bg-blue-50 border-blue-100"} border rounded`}
     >
       <div className="flex items-center gap-3 mb-2">
         {type === "order" ? (
-          <Package size={16} className="text-emerald-600" />
+          <Package size={16} className="text-brand-secondary-600" />
         ) : (
           <Ticket size={16} className="text-blue-600" />
         )}
         <span
-          className={`text-[10px] font-bold ${type === "order" ? "text-emerald-600" : "text-blue-600"} uppercase`}
+          className={`text-[10px] font-bold ${type === "order" ? "text-brand-secondary-600" : "text-blue-600"} uppercase`}
         >
           Live {type} Status
         </span>
       </div>
       <div
-        className={`flex justify-between items-center bg-white p-2 rounded border ${type === "order" ? "border-emerald-100" : "border-blue-100"}`}
+        className={`flex justify-between items-center bg-white p-2 rounded border ${type === "order" ? "border-brand-secondary-100" : "border-blue-100"}`}
       >
         <div>
           <p className="text-[10px] text-slate-500 uppercase">{type} ID</p>
@@ -115,7 +115,7 @@ const LiveTrackingCard = ({
         <div className="text-right">
           <p className="text-[10px] text-slate-500 uppercase">Status</p>
           <div
-            className={`px-2 py-0.5 ${type === "order" ? "bg-emerald-100 text-emerald-700" : "bg-blue-100 text-blue-700"} rounded-full text-[9px] font-bold uppercase`}
+            className={`px-2 py-0.5 ${type === "order" ? "bg-brand-secondary-100 text-brand-secondary-700" : "bg-blue-100 text-blue-700"} rounded-full text-[9px] font-bold uppercase`}
           >
             {data.status}
           </div>
@@ -124,7 +124,7 @@ const LiveTrackingCard = ({
       {type === "order" && (
         <Link
           href={`/profile/orders`}
-          className="mt-2 block text-center text-[10px] font-bold text-emerald-600 hover:underline"
+          className="mt-2 block text-center text-[10px] font-bold text-brand-secondary-600 hover:underline"
         >
           View Full Details
         </Link>
@@ -467,9 +467,9 @@ export default function AIChatAssistant() {
             className="fixed bottom-20 right-6 z-50 p-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full hover:scale-105 transition-all group flex items-center justify-center"
             aria-label="AI Assistant"
           >
-            <Sparkles className="w-6 h-6 animate-pulse text-emerald-400 dark:text-emerald-600" />
+            <Sparkles className="w-6 h-6 animate-pulse text-brand-secondary-400 dark:text-brand-secondary-600" />
             <span className="max-w-0 overflow-hidden ml-0 whitespace-nowrap opacity-0 group-hover:max-w-xs group-hover:ml-2 group-hover:opacity-100 transition-all duration-300 font-bold tracking-tight text-sm">
-              Ask <span className="text-emerald-500">SHERO</span>
+              Ask <span className="text-brand-secondary-500">SHERO</span>
             </span>
           </motion.button>
         )}
@@ -495,10 +495,10 @@ export default function AIChatAssistant() {
             <div className="p-4 bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-white/10 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 flex items-center justify-center shrink-0">
-                  <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <Sparkles className="w-4 h-4 text-brand-secondary-600 dark:text-brand-secondary-400" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-black text-emerald-500 uppercase tracking-wider flex items-center">
+                  <h3 className="text-sm font-black text-brand-secondary-500 uppercase tracking-wider flex items-center">
                     SHERO
                   </h3>
                   <p className="text-[10px] text-slate-500 font-medium tracking-tight">
@@ -518,7 +518,7 @@ export default function AIChatAssistant() {
                 )}
                 <button
                   onClick={() => setIsMinimized(!isMinimized)}
-                  className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-white/10 rounded transition-colors hidden sm:block"
+                  className="p-2 text-slate-400 hover:text-brand-secondary-600 hover:bg-brand-secondary-50 dark:hover:bg-white/10 rounded transition-colors hidden sm:block"
                 >
                   {isMinimized ? (
                     <Maximize2 size={16} />
@@ -549,9 +549,9 @@ export default function AIChatAssistant() {
                       void processMessage(action.label);
                     }}
                     disabled={isTyping}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-[10px] font-bold text-slate-600 dark:text-slate-400 hover:border-emerald-500 hover:text-emerald-600 transition-all"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-[10px] font-bold text-slate-600 dark:text-slate-400 hover:border-brand-secondary-500 hover:text-brand-secondary-600 transition-all"
                   >
-                    <action.icon size={12} className="text-emerald-500" />
+                    <action.icon size={12} className="text-brand-secondary-500" />
                     {action.label}
                   </button>
                 ))}
@@ -601,7 +601,7 @@ export default function AIChatAssistant() {
                           {msg.supportAction === "ticket" && (
                             <Link
                               href="/support"
-                              className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-center text-xs font-bold transition-colors flex items-center justify-center gap-2"
+                              className="w-full py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded text-center text-xs font-bold transition-colors flex items-center justify-center gap-2"
                             >
                               Go to Support Page to Open Ticket
                               <ArrowRight size={14} />
@@ -661,7 +661,7 @@ export default function AIChatAssistant() {
                                   },
                                 ]);
                               }}
-                              className="flex-1 py-1.5 px-3 bg-white border border-slate-200 rounded text-[10px] font-bold text-slate-600 hover:bg-emerald-50 hover:border-emerald-200 hover:text-emerald-700 transition-all font-mono tracking-tighter"
+                              className="flex-1 py-1.5 px-3 bg-white border border-slate-200 rounded text-[10px] font-bold text-slate-600 hover:bg-brand-secondary-50 hover:border-brand-secondary-200 hover:text-brand-secondary-700 transition-all font-mono tracking-tighter"
                             >
                               YES, SOLVED
                             </button>
@@ -699,10 +699,10 @@ export default function AIChatAssistant() {
                             <div className="flex items-center gap-3">
                               <Calendar
                                 size={16}
-                                className="text-emerald-400"
+                                className="text-brand-secondary-400"
                               />
                               <div className="text-left">
-                                <p className="text-[10px] font-bold text-emerald-400 uppercase leading-none mb-1">
+                                <p className="text-[10px] font-bold text-brand-secondary-400 uppercase leading-none mb-1">
                                   Elite Consultation
                                 </p>
                                 <p className="text-xs font-medium opacity-90 tracking-tight">
@@ -723,11 +723,11 @@ export default function AIChatAssistant() {
                   {isTyping && (
                     <div className="flex flex-col gap-1.5 mr-auto">
                       <div className="w-12 h-8 bg-white dark:bg-white/10 border border-slate-200 dark:border-white/5 rounded rounded-bl-sm flex items-center justify-center gap-1 shrink-0">
-                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                        <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce"></span>
+                        <span className="w-1.5 h-1.5 bg-brand-secondary-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                        <span className="w-1.5 h-1.5 bg-brand-secondary-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                        <span className="w-1.5 h-1.5 bg-brand-secondary-500 rounded-full animate-bounce"></span>
                       </div>
-                      <span className="text-[9px] font-bold text-emerald-500/70 animate-pulse ml-1">
+                      <span className="text-[9px] font-bold text-brand-secondary-500/70 animate-pulse ml-1">
                         SHERO IS THINKING...
                       </span>
                     </div>
@@ -772,7 +772,7 @@ export default function AIChatAssistant() {
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
                       disabled={isTyping}
-                      className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-emerald-500 rounded-full hover:bg-slate-100 dark:hover:bg-white/5 transition-colors disabled:opacity-50"
+                      className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-brand-secondary-500 rounded-full hover:bg-slate-100 dark:hover:bg-white/5 transition-colors disabled:opacity-50"
                     >
                       <ImageIcon size={18} />
                     </button>
@@ -795,7 +795,7 @@ export default function AIChatAssistant() {
                         onChange={(e) => setInput(e.target.value)}
                         placeholder="e.g. Need laptops for 5 designers, budget 12,000 GHS"
                         disabled={isTyping}
-                        className="w-full pl-4 pr-26 py-3 bg-slate-100 dark:bg-black/20 border border-transparent dark:border-white/5 focus:border-emerald-500/50 focus:bg-white rounded text-sm outline-none transition-all disabled:opacity-50"
+                        className="w-full pl-4 pr-26 py-3 bg-slate-100 dark:bg-black/20 border border-transparent dark:border-white/5 focus:border-brand-secondary-500/50 focus:bg-white rounded text-sm outline-none transition-all disabled:opacity-50"
                       />
                     </div>
 
@@ -807,7 +807,7 @@ export default function AIChatAssistant() {
                           "w-8 h-8 flex items-center justify-center rounded-full transition-all",
                           isRecording
                             ? "bg-red-500 text-white animate-pulse"
-                            : "text-slate-400 hover:text-emerald-500 hover:bg-slate-100 dark:hover:bg-white/5",
+                            : "text-slate-400 hover:text-brand-secondary-500 hover:bg-slate-100 dark:hover:bg-white/5",
                         )}
                         title={isRecording ? "Stop Recording" : "Voice Input"}
                       >
@@ -820,8 +820,8 @@ export default function AIChatAssistant() {
                         className={cn(
                           "w-8 h-8 flex items-center justify-center rounded-full transition-all",
                           isSpeaking
-                            ? "bg-emerald-500 text-white"
-                            : "text-slate-400 hover:text-emerald-500 hover:bg-slate-100 dark:hover:bg-white/5",
+                            ? "bg-brand-secondary-500 text-white"
+                            : "text-slate-400 hover:text-brand-secondary-500 hover:bg-slate-100 dark:hover:bg-white/5",
                         )}
                         title="Voice Response (TTS)"
                       >
@@ -831,13 +831,13 @@ export default function AIChatAssistant() {
                       <button
                         type="submit"
                         disabled={(!input.trim() && !selectedImage) || isTyping}
-                        className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-emerald-500 disabled:opacity-50 transition-colors pointer-events-auto"
+                        className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-brand-secondary-500 disabled:opacity-50 transition-colors pointer-events-auto"
                       >
                         <Send
                           size={18}
                           className={
                             input.trim() || selectedImage
-                              ? "fill-emerald-500 text-emerald-500"
+                              ? "fill-brand-secondary-500 text-brand-secondary-500"
                               : ""
                           }
                         />

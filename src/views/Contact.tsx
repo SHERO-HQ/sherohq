@@ -24,7 +24,7 @@ const Contact = () => {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-blue-100/50 via-slate-50 to-white dark:opacity-0 transition-opacity duration-500" />
 
         {/* Animated Orbs */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-secondary-500/10 rounded-full blur-[120px] pointer-events-none" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -37,7 +37,7 @@ const Contact = () => {
               className="space-y-12"
             >
               <div>
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 rounded border border-emerald-500/40 uppercase tracking-wider transition-colors duration-300">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded border border-brand-secondary-500/40 uppercase tracking-wider transition-colors duration-300">
                   <MessageSquareLock className="w-4 h-4" />
                   Contact SHERO
                 </div>
@@ -67,7 +67,7 @@ const Contact = () => {
               <div className="space-y-6">
                 <ContactItem
                   icon={
-                    <Mail className="w-5 h-5 text-teal-700 dark:text-emerald-400" />
+                    <Mail className="w-5 h-5 text-teal-700 dark:text-brand-secondary-400" />
                   }
                   label="Email Us"
                   value={COMPANY_EMAILS.INFO}
@@ -90,6 +90,22 @@ const Contact = () => {
                   delay={0.4}
                 />
               </div>
+
+              {/* Office Details Card */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+                className="p-6 bg-slate-900/5 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded relative overflow-hidden group"
+              >
+                <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
+                  <MapPin className="w-12 h-12" />
+                </div>
+                <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-2">Global Presence</h4>
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Headquartered in Tamale, we serve the entire West African region with specialized logistics and on-site technical deployment teams.
+                </p>
+              </motion.div>
             </motion.div>
 
             {/* Right Column: Glass Form */}
@@ -100,7 +116,7 @@ const Contact = () => {
               className="relative"
             >
               {/* Form Container */}
-              <div className="relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm border border-slate-200 dark:border-white/10 rounded p-8 shadow">
+              <div className="relative bg-white/90 dark:bg-slate-900/90  border border-slate-200 dark:border-white/10 rounded p-8 shadow">
                 <div className="absolute top-0 right-0 p-6 opacity-20">
                   <MessagesSquare className="w-12 h-12" />
                 </div>
@@ -118,14 +134,58 @@ const Contact = () => {
               </div>
 
               {/* Decorative border glow */}
-              <div className="absolute -inset-1 rounded bg-linear-to-br from-emerald-500/5 to-blue-500/5 blur-xl -z-10" />
+              <div className="absolute -inset-1 rounded bg-linear-to-br from-brand-secondary-500/5 to-blue-500/5 blur-xl -z-10" />
             </motion.div>
           </div>
+
+          {/* Quick FAQ Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-32 pt-16 border-t border-slate-200 dark:border-slate-800"
+          >
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold dark:text-white text-slate-900 mb-4">Quick Answers</h2>
+              <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
+                Common questions before starting a conversation with our team.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {faqs.map((faq, idx) => (
+                <div key={idx} className="space-y-3">
+                  <h4 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <span className="text-brand-secondary-500 font-mono text-xs">0{idx + 1}</span>
+                    {faq.question}
+                  </h4>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {faq.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </div>
     </>
   );
 };
+
+const faqs = [
+  {
+    question: "How quickly do you ship hardware?",
+    answer: "In-stock enterprise gear typically dispatches within 24-48hrs. Custom configurations or bulk orders may take 5-7 business days."
+  },
+  {
+    question: "Do you provide on-site support?",
+    answer: "Yes, we offer on-site deployment and maintenance services across various regions in Ghana. Remote support is available globally."
+  },
+  {
+    question: "Do you offer wholesale pricing?",
+    answer: "Absolutely. Our Solution Partners and bulk purchasers access tiered wholesale rates that scale with volume."
+  }
+];
 
 const ContactItem = ({
   icon,

@@ -96,7 +96,7 @@ const Terms = () => {
                   at{" "}
                   <a
                     href="mailto:legal@sherohq.com"
-                    className="text-emerald-600 hover:underline"
+                    className="text-brand-secondary-600 hover:underline"
                   >
                     support@sherohq.com
                   </a>

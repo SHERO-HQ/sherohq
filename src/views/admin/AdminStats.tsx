@@ -57,7 +57,7 @@ const AdminStats = () => {
  suffix: "",
  prefix: "",
  icon: "Users",
- color: "text-emerald-500",
+ color: "text-brand-secondary-500",
  order: 0,
  });
 
@@ -73,7 +73,7 @@ const AdminStats = () => {
  suffix: "",
  prefix: "",
  icon: "Users",
- color: "text-emerald-500",
+ color: "text-brand-secondary-500",
  order: stats.length,
  });
  setIsModalOpen(true);
@@ -87,7 +87,7 @@ const AdminStats = () => {
  suffix: s.suffix || "",
  prefix: s.prefix || "",
  icon: s.icon || "Users",
- color: s.color || "text-emerald-500",
+ color: s.color || "text-brand-secondary-500",
  order: s.order || 0,
  });
  setIsModalOpen(true);
@@ -130,7 +130,7 @@ const AdminStats = () => {
  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
  <div>
  <h1 className="text-2xl font-bold text-white flex items-center gap-3">
- <BarChart className="w-7 h-7 text-emerald-400" />
+ <BarChart className="w-7 h-7 text-brand-secondary-400" />
  Site Statistics
  </h1>
  <p className="text-slate-400 text-sm mt-1">
@@ -139,7 +139,7 @@ const AdminStats = () => {
  </div>
  <Button
  onClick={handleOpenCreate}
- className="bg-emerald-600 hover:bg-emerald-500 text-white"
+ className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
  >
  <Plus className="w-4 h-4 mr-2" />
  Add Stat
@@ -153,14 +153,14 @@ const AdminStats = () => {
  placeholder="Search stats..."
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="pl-10 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-emerald-500/20"
+ className="pl-10 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
  />
  </div>
 
  {/* List */}
  {isLoading ? (
  <div className="flex items-center justify-center py-20">
- <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+ <Loader2 className="w-8 h-8 text-brand-secondary-500 animate-spin" />
  </div>
  ) : (
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -176,13 +176,13 @@ const AdminStats = () => {
  return (
  <div
  key={s.id}
- className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center gap-4 group hover:border-emerald-500/30 transition"
+ className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center gap-4 group hover:border-brand-secondary-500/30 transition"
  >
  <div className="text-slate-600 cursor-move opacity-0 group-hover:opacity-100 transition-opacity">
  <GripVertical className="w-5 h-5" />
  </div>
 
- <div className="w-12 h-12 rounded bg-emerald-500/10 flex items-center justify-center text-emerald-500 shrink-0">
+ <div className="w-12 h-12 rounded bg-brand-secondary-500/10 flex items-center justify-center text-brand-secondary-500 shrink-0">
  <IconComp className="w-6 h-6" />
  </div>
 
@@ -190,7 +190,7 @@ const AdminStats = () => {
  <h3 className="font-medium text-white truncate">
  {s.label}
  </h3>
- <p className="text-sm font-bold text-emerald-400">
+ <p className="text-sm font-bold text-brand-secondary-400">
  {s.prefix}
  {s.value}
  {s.suffix}
@@ -320,7 +320,7 @@ const AdminStats = () => {
  onChange={(e) =>
  setFormData({ ...formData, color: e.target.value })
  }
- placeholder="text-emerald-500"
+ placeholder="text-brand-secondary-500"
  className="bg-slate-800 border-white/10"
  />
  </div>
@@ -336,7 +336,7 @@ const AdminStats = () => {
  <Button
  type="submit"
  disabled={createMutation.isPending || updateMutation.isPending}
- className="bg-emerald-600 hover:bg-emerald-500 text-white"
+ className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
  >
  {createMutation.isPending || updateMutation.isPending ? (
  <Loader2 className="w-4 h-4 animate-spin mr-2" />

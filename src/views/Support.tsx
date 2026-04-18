@@ -63,7 +63,7 @@ const Support = () => {
     <>
       <div className="pt-8 pb-12 bg-background min-h-screen text-foreground relative overflow-hidden transition-colors duration-300">
         {/* Ambient Background Glows - Visible in both but subtle */}
-        <div className="absolute top-0 left-1/4 w-125 h-125 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[120px] -z-10 animate-pulse" />
+        <div className="absolute top-0 left-1/4 w-125 h-125 bg-brand-secondary-500/5 dark:bg-brand-secondary-500/10 rounded-full blur-[120px] -z-10 animate-pulse" />
         <div className="absolute bottom-0 right-1/4 w-125 h-125 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[120px] -z-10" />
 
         <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -72,7 +72,7 @@ const Support = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 rounded border border-emerald-200 dark:border-emerald-500/20 uppercase tracking-wider"
+              className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded border border-brand-secondary-200 dark:border-brand-secondary-500/20 uppercase tracking-wider"
             >
               <LifeBuoy className="w-4 h-4" />
               <span>Customer Support</span>
@@ -108,9 +108,9 @@ const Support = () => {
                   placeholder="Search for articles, guides, and more..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-card/40 dark:bg-slate-900/40 backdrop-blur-sm border border-border rounded focus:ring-2 focus:ring-emerald-500/50 outline-none transition shadow text-foreground placeholder:text-muted-foreground"
+                  className="w-full pl-12 pr-4 py-4 bg-card/40 dark:bg-slate-900/40  border border-border rounded focus:ring-2 focus:ring-brand-secondary-500/50 outline-none transition shadow text-foreground placeholder:text-muted-foreground"
                 />
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-emerald-500 transition-colors" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-brand-secondary-500 transition-colors" />
               </div>
             </div>
           </div>
@@ -133,14 +133,14 @@ const Support = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="bg-card/40 dark:bg-slate-900/40 backdrop-blur-sm p-8 rounded border border-border hover:border-emerald-500/30 hover:bg-card/60 dark:hover:bg-slate-900/60 transition group relative overflow-hidden shadow-sm hover:shadow"
+                  className="bg-card/40 dark:bg-slate-900/40  p-8 rounded border border-border hover:border-brand-secondary-500/30 hover:bg-card/60 dark:hover:bg-slate-900/60 transition group relative overflow-hidden shadow-sm hover:shadow"
                 >
                   {/* Pattern dots on hover */}
-                  <div className="absolute pattern-dots pattern-emerald-500/10 pattern-opacity-100 pattern-size-4 top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 -z-10" />
+                  <div className="absolute pattern-dots pattern-brand-secondary-500/10 pattern-opacity-100 pattern-size-4 top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 -z-10" />
 
-                  <div className="absolute -top-15 -right-15 w-44 h-44 bg-linear-to-br from-emerald-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-full" />
+                  <div className="absolute -top-15 -right-15 w-44 h-44 bg-linear-to-br from-brand-secondary-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-full" />
 
-                  <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/40 rounded flex items-center justify-center mb-6 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:bg-emerald-500 dark:group-hover:bg-emerald-700/80 group-hover:text-white transition duration-300 shadow shadow-emerald-500/10">
+                  <div className="w-14 h-14 bg-brand-secondary-100 dark:bg-brand-secondary-900/40 rounded flex items-center justify-center mb-6 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:scale-110 group-hover:bg-brand-secondary-500 dark:group-hover:bg-brand-secondary-700/80 group-hover:text-white transition duration-300 shadow shadow-brand-secondary-500/10">
                     <item.icon className="w-7 h-7" />
                   </div>
                   <h3 className="text-2xl font-bold text-foreground mb-3 tracking-snug">
@@ -158,7 +158,7 @@ const Support = () => {
                           href={social.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-2 rounded bg-secondary text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-500/10 transition transform hover:-translate-y-1"
+                          className="p-2 rounded bg-secondary text-muted-foreground hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 hover:bg-brand-secondary-500/10 transition transform hover:-translate-y-1"
                         >
                           <social.icon className="w-5 h-5" />
                         </a>
@@ -167,7 +167,7 @@ const Support = () => {
                   ) : (
                     <Link
                       href={item.link!}
-                      className="inline-flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold group-hover:gap-3 transition hover:text-emerald-700 dark:hover:text-emerald-300"
+                      className="inline-flex items-center gap-2 text-brand-secondary-600 dark:text-brand-secondary-400 font-bold group-hover:gap-3 transition hover:text-brand-secondary-700 dark:hover:text-brand-secondary-300"
                     >
                       <span>Browse Guides</span>
                       <ArrowRight className="w-5 h-5" />
@@ -182,14 +182,14 @@ const Support = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-col lg:flex-row items-center justify-between bg-linear-to-br from-card via-card to-emerald-50 dark:from-slate-900 dark:via-slate-900 dark:to-emerald-900/20 backdrop-blur-sm rounded p-8 md:p-16 border border-border text-center lg:text-left relative overflow-hidden shadow pattern-dots pattern-emerald-500/90 pattern-opacity-100 pattern-size-4pattern-dots pattern-emerald-500/10 pattern-opacity-100 pattern-size-4"
+            className="flex flex-col lg:flex-row items-center justify-between bg-linear-to-br from-card via-card to-brand-secondary-50 dark:from-slate-900 dark:via-slate-900 dark:to-brand-secondary-900/20  rounded p-8 md:p-16 border border-border text-center lg:text-left relative overflow-hidden shadow pattern-dots pattern-brand-secondary-500/90 pattern-opacity-100 pattern-size-4pattern-dots pattern-brand-secondary-500/10 pattern-opacity-100 pattern-size-4"
           >
-            <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute top-0 right-0 w-96 h-96 bg-brand-secondary-500/5 dark:bg-brand-secondary-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
 
             <div className="z-10 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 w-full">
               <div className="p-6 group shrink-0 flex">
-                <HeadsetIcon className="w-28 h-28 text-emerald-600 dark:text-emerald-400 group-hover:rotate-12 transition-transform duration-500" />
+                <HeadsetIcon className="w-28 h-28 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:rotate-12 transition-transform duration-500" />
               </div>
 
               <div className="flex-1">
@@ -204,7 +204,7 @@ const Support = () => {
                 <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
                   <button
                     onClick={() => setIsTicketModalOpen(true)}
-                    className="flex items-center gap-3 px-8 py-2 rounded bg-emerald-600 text-white dark:text-slate-950 font-bold hover:bg-emerald-500 transition shadow shadow-emerald-500/20 hover:scale-[1.02] active:scale-95 w-full md:w-auto justify-center"
+                    className="flex items-center gap-3 px-8 py-2 rounded bg-brand-secondary-600 text-white dark:text-slate-950 font-bold hover:bg-brand-secondary-500 transition shadow shadow-brand-secondary-500/20 hover:scale-[1.02] active:scale-95 w-full md:w-auto justify-center"
                     aria-label="Submit a Ticket"
                   >
                     <Ticket className="w-5 h-5" />
@@ -212,14 +212,14 @@ const Support = () => {
                   </button>
                   <a
                     href={`mailto:${COMPANY_EMAILS.SUPPORT}`}
-                    className="flex items-center gap-3 px-8 py-2 rounded bg-secondary text-foreground font-bold hover:bg-accent transition backdrop-blur-sm border border-border w-full md:w-auto justify-center"
+                    className="flex items-center gap-3 px-8 py-2 rounded bg-secondary text-foreground font-bold hover:bg-accent transition  border border-border w-full md:w-auto justify-center"
                   >
                     <Mail className="w-5 h-5" />
                     <span>Email Us</span>
                   </a>
                   <a
                     href="tel:+233548711582"
-                    className="flex items-center gap-3 px-8 py-2 rounded border-2 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-bold hover:bg-emerald-500/10 transition w-full md:w-auto justify-center"
+                    className="flex items-center gap-3 px-8 py-2 rounded border-2 border-brand-secondary-500/30 text-brand-secondary-600 dark:text-brand-secondary-400 font-bold hover:bg-brand-secondary-500/10 transition w-full md:w-auto justify-center"
                   >
                     <Phone className="w-5 h-5" />
                     <span>Call Support</span>

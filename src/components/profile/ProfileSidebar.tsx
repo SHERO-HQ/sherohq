@@ -23,7 +23,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
  {/* Mobile Header & Tabs (Visible < lg) */}
  <div className="lg:hidden mb-8 space-y-6">
  <div className="bg-white dark:bg-slate-900 rounded shadow-sm border border-slate-200 dark:border-slate-800 p-6 flex items-center gap-4">
- <div className="w-10 h-10 rounded font-bold bg-linear-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-xl text-white shrink-0 shadow">
+ <div className="w-10 h-10 rounded font-bold bg-linear-to-br from-brand-secondary-500 to-brand-secondary-600 flex items-center justify-center text-xl text-white shrink-0 shadow">
  {user.name.charAt(0)}
  </div>
  <div className="min-w-0">
@@ -33,7 +33,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
  <p className="text-sm text-slate-500 dark:text-slate-400 truncate flex items-center gap-1.5">
  {user.email}
  {user.emailVerified && (
- <BadgeCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-300 fill-emerald-500/50" />
+ <BadgeCheck className="w-3.5 h-3.5 text-brand-secondary-600 dark:text-brand-secondary-300 fill-brand-secondary-500/50" />
  )}
  </p>
  </div>
@@ -45,7 +45,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
  onClick={() => setActiveTab("orders")}
  className={`flex-1 flex items-center justify-center gap-2 py-2 rounded font-bold text-sm transition ${
  activeTab === "orders"
- ? "bg-emerald-600 text-white shadow shadow-emerald-500/20"
+ ? "bg-brand-secondary-600 text-white shadow shadow-brand-secondary-500/20"
  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
  }`}
  >
@@ -56,7 +56,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
  onClick={() => setActiveTab("settings")}
  className={`flex-1 flex items-center justify-center gap-2 py-2 rounded font-bold text-sm transition ${
  activeTab === "settings"
- ? "bg-emerald-600 text-white shadow shadow-emerald-500/20"
+ ? "bg-brand-secondary-600 text-white shadow shadow-brand-secondary-500/20"
  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
  }`}
  >
@@ -81,7 +81,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
  <div className="hidden lg:block lg:col-span-1">
  <div className="bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 p-6 sticky top-24">
  <div className="flex items-center gap-4 mb-6">
- <div className="w-16 h-16 rounded font-bold bg-linear-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-3xl text-white shrink-0 shadow">
+ <div className="w-16 h-16 rounded font-bold bg-linear-to-br from-brand-secondary-500 to-brand-secondary-600 flex items-center justify-center text-3xl text-white shrink-0 shadow">
  {user.name.charAt(0)}
  </div>
  <div>
@@ -91,7 +91,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
  <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-1 flex items-center gap-1">
  {user.email}
  {user.emailVerified && (
- <BadgeCheck className="w-4 h-4 text-emerald-700 dark:text-emerald-300 fill-emerald-500/40" />
+ <BadgeCheck className="w-4 h-4 text-brand-secondary-700 dark:text-brand-secondary-300 fill-brand-secondary-500/40" />
  )}
  </p>
  </div>
@@ -102,7 +102,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
  onClick={() => setActiveTab("orders")}
  className={`cursor-pointer w-full flex items-center gap-3 px-4 py-2 rounded font-medium transition-colors ${
  activeTab === "orders"
- ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400"
+ ? "bg-brand-secondary-50 dark:bg-brand-secondary-900/20 text-brand-secondary-600 dark:text-brand-secondary-400"
  : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
  }`}
  >
@@ -113,7 +113,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
  onClick={() => setActiveTab("settings")}
  className={`cursor-pointer w-full flex items-center gap-3 px-4 py-2 rounded font-medium transition-colors ${
  activeTab === "settings"
- ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400"
+ ? "bg-brand-secondary-50 dark:bg-brand-secondary-900/20 text-brand-secondary-600 dark:text-brand-secondary-400"
  : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
  }`}
  >

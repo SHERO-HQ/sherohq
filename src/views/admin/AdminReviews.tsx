@@ -41,7 +41,7 @@ const AdminReviews = () => {
  if (isLoading) {
  return (
  <div className="flex items-center justify-center py-20">
- <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+ <Loader2 className="w-8 h-8 text-brand-secondary-500 animate-spin" />
  </div>
  );
  }
@@ -116,7 +116,7 @@ const AdminReviews = () => {
  placeholder="Search reviews..."
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="pl-10 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-emerald-500/20"
+ className="pl-10 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
  />
  </div>
  </div>

@@ -72,15 +72,15 @@ const PaymentFailureSupport = ({
               <Button
                 onClick={onRetry}
                 variant="outline"
-                className="w-full h-14 justify-between group hover:border-emerald-500 transition-colors font-semibold"
+                className="w-full h-14 justify-between group hover:border-brand-secondary-500 transition-colors font-semibold"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30 group-hover:text-emerald-600 transition-colors">
+                  <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-brand-secondary-100 dark:group-hover:bg-brand-secondary-900/30 group-hover:text-brand-secondary-600 transition-colors">
                     <RefreshCw className="w-4 h-4" />
                   </div>
                   <span>Retry Payment</span>
                 </div>
-                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-500" />
+                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-brand-secondary-500" />
               </Button>
 
               <Button
@@ -102,10 +102,10 @@ const PaymentFailureSupport = ({
                 onClick={() => onSwitchToOffline("cod")}
                 disabled={isUpdatingOffline}
                 variant="outline"
-                className="w-full h-14 justify-between group hover:border-emerald-500 transition-colors font-semibold"
+                className="w-full h-14 justify-between group hover:border-brand-secondary-500 transition-colors font-semibold"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30 group-hover:text-emerald-600 transition-colors">
+                  <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-brand-secondary-100 dark:group-hover:bg-brand-secondary-900/30 group-hover:text-brand-secondary-600 transition-colors">
                     {isUpdatingOffline ? (
                       <RefreshCw className="w-4 h-4 animate-spin" />
                     ) : (
@@ -116,17 +116,17 @@ const PaymentFailureSupport = ({
                     {isUpdatingOffline ? "Processing..." : "Pay on Delivery"}
                   </span>
                 </div>
-                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-500" />
+                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-brand-secondary-500" />
               </Button>
 
               <Button
                 onClick={() => onSwitchToOffline("store_pickup")}
                 disabled={isUpdatingOffline}
                 variant="outline"
-                className="w-full h-14 justify-between group hover:border-emerald-500 transition-colors font-semibold"
+                className="w-full h-14 justify-between group hover:border-brand-secondary-500 transition-colors font-semibold"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30 group-hover:text-emerald-600 transition-colors">
+                  <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center group-hover:bg-brand-secondary-100 dark:group-hover:bg-brand-secondary-900/30 group-hover:text-brand-secondary-600 transition-colors">
                     {isUpdatingOffline ? (
                       <RefreshCw className="w-4 h-4 animate-spin" />
                     ) : (
@@ -137,13 +137,13 @@ const PaymentFailureSupport = ({
                     {isUpdatingOffline ? "Processing..." : "Store Pickup"}
                   </span>
                 </div>
-                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-500" />
+                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-brand-secondary-500" />
               </Button>
             </div>
           </div>
 
           <div className="mt-10 pt-8 border-t border-slate-100 dark:border-slate-800">
-            <div className="bg-emerald-50 dark:bg-emerald-900/10 rounded p-6 flex flex-col sm:flex-row items-center gap-6">
+            <div className="bg-brand-secondary-50 dark:bg-brand-secondary-900/10 rounded p-6 flex flex-col sm:flex-row items-center gap-6">
               <div className="flex-1 text-center sm:text-left">
                 <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
                   Need expert help?
@@ -158,7 +158,7 @@ const PaymentFailureSupport = ({
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded bg-[#25D366] text-white font-bold hover:bg-[#128C7E] transition-colors shadow shadow-emerald-500/10"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded bg-[#25D366] text-white font-bold hover:bg-[#128C7E] transition-colors shadow shadow-brand-secondary-500/10"
                 >
                   <WhatsAppIcon className="w-5 h-5 fill-current" />
                   Chat Support

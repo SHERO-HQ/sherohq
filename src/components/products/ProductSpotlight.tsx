@@ -126,7 +126,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
           className="w-full"
         >
           {/* Background Ambient Glow */}
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-75 sm:w-150 h-75 sm:h-150 bg-emerald-500/10 dark:bg-emerald-500/5 blur-[80px] sm:blur-[120px] rounded-full pointer-events-none" />
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-75 sm:w-150 h-75 sm:h-150 bg-brand-secondary-500/10 dark:bg-brand-secondary-500/5 blur-[80px] sm:blur-[120px] rounded-full pointer-events-none" />
 
           <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col items-center w-full max-w-5xl mx-auto">
@@ -143,7 +143,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
               >
                 <div className="flex flex-col lg:flex-row lg:items-center lg:gap-12 relative">
                   {/* Left Side: Info (Overlay on Mobile, Split on LG) */}
-                  <div className="absolute inset-x-0 bottom-0 z-20 lg:relative lg:inset-auto lg:w-1/2 flex flex-col justify-end lg:justify-center p-6 sm:p-8 lg:p-0 bg-linear-to-t from-slate-950/90 via-slate-950/60 to-transparent lg:bg-none lg:backdrop-blur-0">
+                  <div className="absolute inset-x-0 bottom-0 z-20 lg:relative lg:inset-auto lg:w-1/2 flex flex-col justify-end lg:justify-center p-6 sm:p-8 lg:p-0 bg-linear-to-t from-slate-950/90 via-slate-950/60 to-transparent lg:bg-none lg:-0">
                     <motion.div
                       initial={{ y: 20, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
@@ -154,7 +154,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                         {currentProduct.name.split(" ").map((word, i) => (
                           <span
                             key={i}
-                            className={i === 0 ? "text-emerald-500" : ""}
+                            className={i === 0 ? "text-brand-secondary-500" : ""}
                           >
                             {word}{" "}
                           </span>
@@ -198,7 +198,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                             href={getAbsoluteUrl(
                               `/shop/${currentProduct.slug || currentProduct.sku || currentProduct.id}`,
                             )}
-                            className="group flex items-center justify-center gap-3 px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-white rounded font-black uppercase tracking-widest text-[10px] transition-all shadow shadow-emerald-500/20 hover:-translate-y-0.5"
+                            className="group flex items-center justify-center gap-3 px-8 py-3 bg-brand-secondary-500 hover:bg-brand-secondary-400 text-white rounded font-black uppercase tracking-widest text-[10px] transition-all shadow shadow-brand-secondary-500/20 hover:-translate-y-0.5"
                           >
                             Details
                             <ArrowRight
@@ -218,7 +218,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                             prevSlide();
                             setIsAutoPlaying(false);
                           }}
-                          className="p-2 rounded bg-slate-100 dark:bg-slate-900 hover:bg-emerald-500 hover:text-white text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 transition-all active:scale-90 pointer-events-auto group/nav"
+                          className="p-2 rounded bg-slate-100 dark:bg-slate-900 hover:bg-brand-secondary-500 hover:text-white text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 transition-all active:scale-90 pointer-events-auto group/nav"
                         >
                           <ChevronLeft className="size-6 group-hover/nav:-translate-x-0.5 transition-transform" />
                         </button>
@@ -229,7 +229,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                             nextSlide();
                             setIsAutoPlaying(false);
                           }}
-                          className="p-2 rounded bg-slate-100 dark:bg-slate-900 hover:bg-emerald-500 hover:text-white text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 transition-all active:scale-90 pointer-events-auto group/nav"
+                          className="p-2 rounded bg-slate-100 dark:bg-slate-900 hover:bg-brand-secondary-500 hover:text-white text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 transition-all active:scale-90 pointer-events-auto group/nav"
                         >
                           <ChevronRight className="size-6 group-hover/nav:translate-x-0.5 transition-transform" />
                         </button>
@@ -246,7 +246,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                               }}
                               className={`h-1.5 transition-all duration-500 rounded-full ${
                                 i === safeCurrentIndex
-                                  ? "w-8 bg-emerald-500"
+                                  ? "w-8 bg-brand-secondary-500"
                                   : "w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600"
                               }`}
                             />
@@ -277,7 +277,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           prevSlide();
                           setIsAutoPlaying(false);
                         }}
-                        className="p-2 rounded bg-black/10 hover:bg-emerald-500 text-white backdrop-blur-md border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
+                        className="p-2 rounded bg-black/10 hover:bg-brand-secondary-500 text-white  border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
                       >
                         <ChevronLeft className="size-5 sm:size-6 lg:size-7 group-hover/nav:-translate-x-0.5 transition-transform" />
                       </button>
@@ -288,7 +288,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           nextSlide();
                           setIsAutoPlaying(false);
                         }}
-                        className="p-2 rounded bg-black/10 hover:bg-emerald-500 text-white backdrop-blur-md border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
+                        className="p-2 rounded bg-black/10 hover:bg-brand-secondary-500 text-white  border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
                       >
                         <ChevronRight className="size-5 sm:size-6 lg:size-7 group-hover/nav:translate-x-0.5 transition-transform" />
                       </button>
@@ -307,7 +307,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           }}
                           className={`h-1 transition-all duration-500 rounded-full ${
                             i === safeCurrentIndex
-                              ? "w-8 bg-emerald-500"
+                              ? "w-8 bg-brand-secondary-500"
                               : "w-2 dark:bg-white/40 bg-slate-600/40 hover:bg-white/60"
                           }`}
                         />
@@ -329,7 +329,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
             initial={{ x: "-100%" }}
             animate={{ x: "0%" }}
             transition={{ duration: 8, ease: "linear" }}
-            className="h-full bg-emerald-500"
+            className="h-full bg-brand-secondary-500"
           />
         </div>
       )}

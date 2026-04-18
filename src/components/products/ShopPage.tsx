@@ -244,7 +244,7 @@ const ShopView = () => {
                 <div className="flex items-center gap-2 w-full md:w-auto">
                   <button
                     onClick={() => setShowMobileFilters(true)}
-                    className="flex-1 flex items-center justify-center gap-2 cursor-pointer px-3 py-2 sm:px-4 sm:py-2 dark:bg-white/5 bg-slate-100 hover:bg-emerald-500/10 border border-slate-200 dark:border-white/10 rounded font-bold dark:text-slate-200 text-slate-800 transition hover:border-emerald-500/50 group text-xs sm:text-base h-9 sm:h-auto"
+                    className="flex-1 flex items-center justify-center gap-2 cursor-pointer px-3 py-2 sm:px-4 sm:py-2 dark:bg-white/5 bg-slate-100 hover:bg-brand-secondary-500/10 border border-slate-200 dark:border-white/10 rounded font-bold dark:text-slate-200 text-slate-800 transition hover:border-brand-secondary-500/50 group text-xs sm:text-base h-9 sm:h-auto"
                   >
                     <SlidersHorizontal
                       size={16}
@@ -261,7 +261,7 @@ const ShopView = () => {
                     <select
                       value={activeCategory}
                       onChange={(e) => handleCategoryChange(e.target.value)}
-                      className="w-full text-xs sm:text-sm font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded h-9 px-10 appearance-none text-slate-800 dark:text-white cursor-pointer focus:ring-2 focus:ring-emerald-500/50 transition-all shadow-sm"
+                      className="w-full text-xs sm:text-sm font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded h-9 px-10 appearance-none text-slate-800 dark:text-white cursor-pointer focus:ring-2 focus:ring-brand-secondary-500/50 transition-all shadow-sm"
                     >
                       {categoriesWithCount.map((cat) => (
                         <option key={cat.id} value={cat.id}>
@@ -284,7 +284,7 @@ const ShopView = () => {
                           sortBy: e.target.value,
                         })
                       }
-                      className="w-full text-sm border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 rounded font-bold dark:text-white text-slate-800 focus:ring-emerald-500 cursor-pointer py-2 px-4 appearance-none pr-10"
+                      className="w-full text-sm border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 rounded font-bold dark:text-white text-slate-800 focus:ring-brand-secondary-500 cursor-pointer py-2 px-4 appearance-none pr-10"
                     >
                       <option value="newest">Sort: Newest</option>
                       <option value="price-low">Price: Low to High</option>
@@ -306,8 +306,8 @@ const ShopView = () => {
                     onClick={() => handleCategoryChange(cat.id)}
                     className={`flex items-center gap-2 px-4 py-2 rounded whitespace-nowrap transition border duration-300 ${
                       activeCategory === cat.id
-                        ? "bg-emerald-600 border-emerald-500 text-white shadow shadow-emerald-500/40"
-                        : "bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 hover:border-emerald-500/30"
+                        ? "bg-brand-secondary-600 border-brand-secondary-500 text-white shadow shadow-brand-secondary-500/40"
+                        : "bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 hover:border-brand-secondary-500/30"
                     }`}
                   >
                     <span className="text-lg">{cat.icon}</span>
@@ -358,7 +358,7 @@ const ShopView = () => {
                     : `Exploring ${categoriesWithCount.find((c) => c.id === activeCategory)?.name}`}
                 </h2>
                 <div className="flex items-center gap-2 mt-1">
-                  <div className="h-1 w-8 bg-emerald-500 rounded" />
+                  <div className="h-1 w-8 bg-brand-secondary-500 rounded" />
                   <p className="text-xs font-mono dark:text-slate-500 text-slate-500 uppercase tracking-widest">
                     {filteredProducts.length}{" "}
                     {filteredProducts.length === 1 ? "result" : "results"} found

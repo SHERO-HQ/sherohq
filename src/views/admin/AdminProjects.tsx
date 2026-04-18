@@ -116,7 +116,7 @@ export default function AdminProjects() {
  </Button>
 
  <Button
- className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4"
+ className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-medium px-4"
  asChild
  >
  <Link href="/admin/projects/new">
@@ -128,7 +128,7 @@ export default function AdminProjects() {
  </div>
 
  {/* Filters */}
- <Card className="bg-slate-900/40 backdrop-blur-sm border-white/10 p-4">
+ <Card className="bg-slate-900/40  border-white/10 p-4">
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  <div className="relative col-span-2">
  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -145,7 +145,7 @@ export default function AdminProjects() {
  setSelectedCategory(e.target.value);
  setCurrentPage(1);
  }}
- className="bg-slate-800/50 border border-white/5 rounded text-sm text-white p-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+ className="bg-slate-800/50 border border-white/5 rounded text-sm text-white p-2 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
  >
  <option value="all">All Categories</option>
  {categories.map((cat) => (
@@ -158,7 +158,7 @@ export default function AdminProjects() {
  </Card>
 
  {/* Projects Table */}
- <div className="bg-slate-900/40 backdrop-blur-sm border border-white/10 rounded overflow-hidden">
+ <div className="bg-slate-900/40  border border-white/10 rounded overflow-hidden">
  <div className="overflow-x-auto">
  <table className="w-full text-left">
  <thead>
@@ -208,10 +208,10 @@ export default function AdminProjects() {
  <td className="px-6 py-4">
  <div className="flex items-center gap-3">
  <div className="w-10 h-10 rounded bg-slate-800 flex items-center justify-center shrink-0 border border-white/5">
- <Briefcase className="w-5 h-5 text-emerald-500" />
+ <Briefcase className="w-5 h-5 text-brand-secondary-500" />
  </div>
  <div>
- <p className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">
+ <p className="text-sm font-semibold text-white group-hover:text-brand-secondary-400 transition-colors">
  {project.title}
  </p>
  <p className="text-xs text-slate-500 line-clamp-1 max-w-xs">
@@ -223,7 +223,7 @@ export default function AdminProjects() {
  <td className="px-6 py-4">
  <Badge
  variant="outline"
- className="bg-emerald-500/10 text-emerald-400 border-none whitespace-nowrap"
+ className="bg-brand-secondary-500/10 text-brand-secondary-400 border-none whitespace-nowrap"
  >
  {project.category}
  </Badge>

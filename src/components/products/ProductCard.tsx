@@ -97,12 +97,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       className="group relative rounded overflow-hidden
  dark:bg-white/5 bg-white
  border border-slate-200 dark:border-white/10
- hover:border-emerald-500/50 dark:hover:border-emerald-400/30
+ hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30
  transition duration-500 cursor-pointer
  flex flex-col h-full"
     >
       {/* Immersive Hover Background */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-linear-to-b from-emerald-500/5 via-transparent to-transparent transition-opacity duration-500 pointer-events-none" />
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-linear-to-b from-brand-secondary-500/5 via-transparent to-transparent transition-opacity duration-500 pointer-events-none" />
 
       {/* Image Container */}
       <div className="relative aspect-3/4 sm:aspect-4/5 lg:aspect-3/4 bg-slate-100 dark:bg-slate-900 overflow-hidden shrink-0">
@@ -135,7 +135,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
           </button>
           <button
             onClick={handleQuickView}
-            className="w-9 h-9 rounded-full bg-white/80 dark:bg-black/40 border border-white/20 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition duration-300"
+            className="w-9 h-9 rounded-full bg-white/80 dark:bg-black/40 border border-white/20 flex items-center justify-center hover:bg-brand-secondary-500 hover:text-white transition duration-300"
           >
             <Eye size={16} />
           </button>
@@ -144,7 +144,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
         {/* Badges (Bottom Left) */}
         <div className="absolute bottom-3 left-3 z-20 flex flex-wrap gap-1">
           {product.badge && (
-            <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-emerald-600 text-white">
+            <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-brand-secondary-600 text-white">
               {product.badge}
             </span>
           )}
@@ -154,7 +154,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             </span>
           )}
           {!product.inStock && (
-            <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-slate-900/80 text-white backdrop-blur-sm">
+            <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-slate-900/80 text-white ">
               Sold Out
             </span>
           )}
@@ -165,7 +165,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       <div className="p-4 flex flex-col flex-1">
         <div className="flex-1">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-bold font-mono text-emerald-600 dark:text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-2 py-0.5 rounded">
+            <span className="text-[10px] font-bold font-mono text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest bg-brand-secondary-500/10 px-2 py-0.5 rounded">
               {product.category}
             </span>
             <div className="flex items-center gap-1">
@@ -176,9 +176,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             </div>
           </div>
 
-          <h3 className="text-sm sm:text-base font-black dark:text-white text-slate-800 leading-tight group-hover:text-emerald-500 transition-colors line-clamp-1 mb-1">
+          <h3 className="text-sm sm:text-base font-black dark:text-white text-slate-800 leading-tight group-hover:text-brand-secondary-500 transition-colors line-clamp-1 mb-1">
             {product.name.split(" ").map((word, i) => (
-              <span key={i} className={i === 0 ? "text-emerald-500" : ""}>
+              <span key={i} className={i === 0 ? "text-brand-secondary-500" : ""}>
                 {word}{" "}
               </span>
             ))}
@@ -216,7 +216,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             <button
               onClick={handleAddToCart}
               disabled={!product.inStock}
-              className="flex-1 h-10 rounded flex items-center justify-center gap-2 transition bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-600 hover:text-white! disabled:opacity-50 disabled:cursor-not-allowed border border-emerald-500/20 group/cart"
+              className="flex-1 h-10 rounded flex items-center justify-center gap-2 transition bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 hover:bg-brand-secondary-600 hover:text-white! disabled:opacity-50 disabled:cursor-not-allowed border border-brand-secondary-500/20 group/cart"
             >
               <ShoppingCart
                 size={14}
@@ -240,7 +240,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
                 router.push("/shop/checkout");
               }}
               disabled={!product.inStock}
-              className="flex-1 h-10 rounded bg-emerald-600 text-white font-black text-[10px] uppercase tracking-widest hover:bg-emerald-500 disabled:opacity-50 transition"
+              className="flex-1 h-10 rounded bg-brand-secondary-600 text-white font-black text-[10px] uppercase tracking-widest hover:bg-brand-secondary-500 disabled:opacity-50 transition"
             >
               Buy
             </button>

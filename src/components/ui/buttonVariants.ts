@@ -18,9 +18,9 @@ export const buttonVariants = cva(
         brandPrimary:
           "bg-brand-primary-700 text-white hover:bg-brand-primary-600",
         brandSecondary:
-          "bg-brand-secondary-600 text-white hover:bg-brand-secondary-500",
+          "bg-brand-secondary-500 text-white hover:bg-brand-secondary-600 shadow-sm transition-all active:scale-95",
         brandGhost:
-          "text-brand-secondary-700 dark:text-brand-secondary-300 hover:bg-brand-secondary-600/10",
+          "text-brand-secondary-600 dark:text-brand-secondary-400 hover:bg-brand-secondary-500/10 hover:text-brand-secondary-700 dark:hover:text-brand-secondary-300",
       },
       size: {
         sm: "h-8 px-3 py-1.5 text-xs",

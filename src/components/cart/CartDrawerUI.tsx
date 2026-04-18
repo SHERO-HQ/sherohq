@@ -39,7 +39,7 @@ const CartDrawer = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsCartOpen(false)}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-100"
+            className="fixed inset-0 bg-black/40  z-100"
           />
 
           {/* Drawer */}
@@ -53,7 +53,7 @@ const CartDrawer = () => {
             {/* Header */}
             <div className="p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <ShoppingBag className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                <ShoppingBag className="w-6 h-6 text-brand-secondary-600 dark:text-brand-secondary-400" />
                 <h2 className="text-xl font-bold text-slate-900 dark:text-white">
                   Your Cart ({totalQuantity})
                 </h2>

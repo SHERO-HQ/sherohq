@@ -55,7 +55,7 @@ const ContactForm = () => {
  onChange={(e) =>
  setFormData({ ...formData, name: e.target.value })
  }
- className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition"
+ className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500/10 focus:border-brand-secondary-500 transition"
  placeholder="John Doe"
  />
  </div>
@@ -74,7 +74,7 @@ const ContactForm = () => {
  onChange={(e) =>
  setFormData({ ...formData, email: e.target.value })
  }
- className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition"
+ className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500/10 focus:border-brand-secondary-500 transition"
  placeholder="john@example.com"
  />
  </div>
@@ -94,7 +94,7 @@ const ContactForm = () => {
  onChange={(e) =>
  setFormData({ ...formData, subject: e.target.value })
  }
- className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition cursor-pointer appearance-none"
+ className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500/10 focus:border-brand-secondary-500 transition cursor-pointer appearance-none"
  >
  <option value="general">General Inquiry</option>
  <option value="project">New Project</option>
@@ -125,7 +125,7 @@ const ContactForm = () => {
  onChange={(e) =>
  setFormData({ ...formData, message: e.target.value })
  }
- className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-500 transition resize-none"
+ className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500/10 focus:border-brand-secondary-500 transition resize-none"
  placeholder="Tell us about your project..."
  />
  </div>
@@ -134,7 +134,7 @@ const ContactForm = () => {
  <Button
  type="submit"
  disabled={status !== "idle"}
- className="w-full h-10 text-md font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded transition hover:scale-[1.02] active:scale-[0.98]"
+ className="w-full h-10 text-md font-bold bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded transition hover:scale-[1.02] active:scale-[0.98]"
  >
  {status === "idle" && (
  <>
@@ -154,7 +154,7 @@ const ContactForm = () => {
  <motion.div
  initial={{ opacity: 0, y: 10 }}
  animate={{ opacity: 1, y: 0 }}
- className="p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800/50 text-emerald-700 dark:text-emerald-400 rounded flex items-center gap-3"
+ className="p-4 bg-brand-secondary-50 dark:bg-brand-secondary-900/20 border border-brand-secondary-200 dark:border-brand-secondary-800/50 text-brand-secondary-700 dark:text-brand-secondary-400 rounded flex items-center gap-3"
  >
  <CheckCircle2 className="w-6 h-6 shrink-0" />
  <p className="text-sm font-medium">

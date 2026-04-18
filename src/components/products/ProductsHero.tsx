@@ -88,7 +88,7 @@ const ProductHero = () => {
               repeat: Infinity,
               ease: "linear",
             }}
-            className={`absolute w-1 h-1 rounded-full ${p.id % 2 === 0 ? "bg-emerald-500" : "bg-blue-500"}`}
+            className={`absolute w-1 h-1 rounded-full ${p.id % 2 === 0 ? "bg-brand-secondary-500" : "bg-blue-500"}`}
           />
         ))}
       </div>
@@ -103,7 +103,7 @@ const ProductHero = () => {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm mb-4"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded border border-brand-secondary-500/20 bg-brand-secondary-500/5  mb-4"
             >
               <ShoppingBag className="size-4 text-primary" />
               <span className="text-[10px] md:text-xs font-mono font-bold tracking-widest uppercase text-primary">
@@ -156,7 +156,7 @@ const ProductHero = () => {
                   label: "Fast Fulfillment",
                   sub: "Rapid delivery options",
                   icon: Package,
-                  color: "text-emerald-500",
+                  color: "text-brand-secondary-500",
                 },
                 {
                   label: "Nationwide Shipping",
@@ -173,11 +173,11 @@ const ProductHero = () => {
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="rounded border border-border bg-white/70 dark:bg-slate-900/60 backdrop-blur px-4 py-3"
+                  className="rounded border border-border bg-white/70 dark:bg-slate-900/60  px-4 py-3"
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <item.icon
-                      className={`w-4 h-4 ${item.color === "text-emerald-500" ? "text-primary" : item.color}`}
+                      className={`w-4 h-4 ${item.color === "text-brand-secondary-500" ? "text-primary" : item.color}`}
                     />
                     <span className="text-xs font-bold text-foreground uppercase tracking-tight">
                       {item.label}
@@ -204,7 +204,7 @@ const ProductHero = () => {
               {/* Layer 1: Store Insights Card */}
               <motion.div
                 style={{ z: 0 }}
-                className="w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded shadow p-6 sm:p-8 relative overflow-hidden z-10 select-none"
+                className="w-full bg-white/95 dark:bg-slate-900/95  border border-slate-200 dark:border-slate-800 rounded shadow p-6 sm:p-8 relative overflow-hidden z-10 select-none"
               >
                 <div className="absolute inset-0 pattern-dots opacity-5 pointer-events-none" />
 
@@ -222,7 +222,7 @@ const ProductHero = () => {
                       </p>
                     </div>
                   </div>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-brand-secondary-600 dark:text-brand-secondary-400">
                     Verified
                   </span>
                 </div>
@@ -232,7 +232,7 @@ const ProductHero = () => {
                     {
                       label: "Happy Customers",
                       val: "1.2k+",
-                      color: "text-emerald-500",
+                      color: "text-brand-secondary-500",
                     },
                     {
                       label: "Average Rating",
@@ -268,11 +268,11 @@ const ProductHero = () => {
                   y: useTransform(mouseY, [-0.5, 0.5], [15, 15]),
                   rotate: 12,
                 }}
-                className="absolute bottom-8 left-0 w-fit p-3 rounded bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border border-emerald-500/20 shadow z-20 pointer-events-none scale-75 sm:scale-100"
+                className="absolute bottom-8 left-0 w-fit p-3 rounded bg-white/95 dark:bg-slate-800/95  border border-brand-secondary-500/20 shadow z-20 pointer-events-none scale-75 sm:scale-100"
               >
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded bg-emerald-500/10 flex items-center justify-center">
-                    <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                  <div className="w-8 h-8 rounded bg-brand-secondary-500/10 flex items-center justify-center">
+                    <ShieldCheck className="w-4 h-4 text-brand-secondary-500" />
                   </div>
                   <div className="flex flex-col">
                     <span className="text-[8px] font-mono text-slate-500 uppercase">
@@ -292,7 +292,7 @@ const ProductHero = () => {
                   x: useTransform(mouseX, [-0.5, 0.5], [-8, 8]),
                   y: useTransform(mouseY, [-0.5, 0.5], [-8, 8]),
                 }}
-                className="absolute top-4 right-4 bg-emerald-600 w-16 h-16 rounded-full shadow shadow-emerald-500/50 flex-col items-center justify-center -rotate-6 z-30 pointer-events-none aspect-square scale-75 sm:scale-100 flex"
+                className="absolute top-4 right-4 bg-brand-secondary-600 w-16 h-16 rounded-full shadow shadow-brand-secondary-500/50 flex-col items-center justify-center -rotate-6 z-30 pointer-events-none aspect-square scale-75 sm:scale-100 flex"
               >
                 <BadgeCheck className="text-white w-8 h-8 drop-shadow" />
                 <span className="text-[7px] font-bold text-white uppercase tracking-tighter mt-1 whitespace-nowrap">
@@ -301,7 +301,7 @@ const ProductHero = () => {
               </motion.div>
 
               {/* Background Aura */}
-              <div className="absolute inset-0 bg-radial-gradient from-emerald-500/10 to-transparent blur-3xl rounded-full scale-150 pointer-events-none" />
+              <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/10 to-transparent blur-3xl rounded-full scale-150 pointer-events-none" />
             </motion.div>
           </div>
         </div>

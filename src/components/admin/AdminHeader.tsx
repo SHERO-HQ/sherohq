@@ -65,7 +65,7 @@ const AdminHeader = memo(({
  return (
   <header
    className={cn(
-    "fixed top-0 right-0 z-30 flex h-20 items-center justify-between border-b border-white/5 bg-slate-900/80 backdrop-blur-sm px-4 md:px-6 lg:px-8 transition-all duration-200 ease-in-out",
+    "fixed top-0 right-0 z-30 flex h-20 items-center justify-between border-b border-white/5 bg-slate-900/80  px-4 md:px-6 lg:px-8 transition-all duration-200 ease-in-out",
     isSidebarOpen ? "lg:left-64" : "lg:left-20",
     "left-0",
    )}
@@ -75,7 +75,7 @@ const AdminHeader = memo(({
     {/* Universal Sidebar Toggle */}
     <button
      onClick={onMenuClick}
-     className="p-2 rounded text-slate-400 hover:text-emerald-400 hover:bg-white/5 transition-all shrink-0 group ring-1 ring-white/5"
+     className="p-2 rounded text-slate-400 hover:text-brand-secondary-400 hover:bg-white/5 transition-all shrink-0 group ring-1 ring-white/5"
      aria-label={isSidebarOpen ? "Collapse Sidebar" : "Expand Sidebar"}
     >
      {isSidebarOpen ? (
@@ -105,7 +105,7 @@ const AdminHeader = memo(({
         <li key={to} className="flex items-center space-x-2">
          <span className="text-slate-600">/</span>
          {isLast ? (
-          <span className="text-emerald-400 font-medium capitalize">
+          <span className="text-brand-secondary-400 font-medium capitalize">
            {displayLabel}
           </span>
          ) : (
@@ -127,11 +127,11 @@ const AdminHeader = memo(({
    <div className="flex items-center gap-2">
     {/* Search Bar */}
     <div className="hidden lg:flex relative group">
-     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-emerald-500 transition-colors" />
+     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-brand-secondary-500 transition-colors" />
      <input
       type="text"
       placeholder="Search everything..."
-      className="w-64 bg-slate-800/50 border border-white/5 rounded py-2 pl-10 pr-12 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500/50 transition"
+      className="w-64 bg-slate-800/50 border border-white/5 rounded py-2 pl-10 pr-12 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/20 focus:border-brand-secondary-500/50 transition"
      />
      <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none flex items-center justify-center -mt-px w-6 h-5 rounded-[4px] bg-slate-800 border border-slate-700 text-[10px] font-medium text-slate-400">
       ⌘K
@@ -141,7 +141,7 @@ const AdminHeader = memo(({
     {/* View Site */}
     <a
      href={getAbsoluteUrl("/")}
-     className="hidden md:flex items-center px-3 py-2 text-sm text-slate-400 hover:text-white hover:bg-emerald-500/5 rounded transition-colors"
+     className="hidden md:flex items-center px-3 py-2 text-sm text-slate-400 hover:text-white hover:bg-brand-secondary-500/5 rounded transition-colors"
      title="View Site"
     >
      <Globe className="w-4 h-4 mr-1" />
@@ -158,7 +158,7 @@ const AdminHeader = memo(({
        variant="ghost"
        className="flex items-center hover:bg-transparent p-0"
       >
-       <div className="relative flex items-center justify-center p-1 w-10 h-10 shrink-0 overflow-hidden hover:bg-white/5 rounded backdrop-blur-sm border border-white/10 hover:border-white/5 transition outline-none">
+       <div className="relative flex items-center justify-center p-1 w-10 h-10 shrink-0 overflow-hidden hover:bg-white/5 rounded  border border-white/10 hover:border-white/5 transition outline-none">
         {admin?.avatar ? (
          <AppImage
           src={admin.avatar}
@@ -168,7 +168,7 @@ const AdminHeader = memo(({
           className="object-cover"
          />
         ) : (
-         <User className="w-4 h-4 text-emerald-400" />
+         <User className="w-4 h-4 text-brand-secondary-400" />
         )}
        </div>
        <div className="hidden sm:flex flex-col items-start ml-3">

@@ -45,7 +45,7 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
  </p>
  <button
  onClick={() => router.push("/products")}
- className="cursor-pointer px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded transition-colors"
+ className="cursor-pointer px-6 py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white font-bold rounded transition-colors"
  >
  Start Shopping
  </button>

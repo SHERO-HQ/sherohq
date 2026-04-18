@@ -46,8 +46,8 @@ const ServicesGrid = () => {
         "User management & authentication",
         "Analytics & reporting dashboards",
       ],
-      gradient: "from-emerald-500 to-emerald-600",
-      textClass: "text-emerald-600 dark:text-emerald-400",
+      gradient: "from-brand-secondary-500 to-brand-secondary-600",
+      textClass: "text-brand-secondary-600 dark:text-brand-secondary-400",
     },
     {
       icon: <Settings className="w-8 h-8" />,
@@ -112,7 +112,7 @@ const ServicesGrid = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/50 dark:border-emerald-800/50 rounded uppercase">
+          <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-950/50 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase">
             <Briefcase className="size-5" />
             Our Services
           </span>

@@ -63,7 +63,7 @@ const Profile = () => {
  if (authLoading) {
  return (
  <div className="min-h-screen pt-32 pb-16 flex items-center justify-center bg-slate-50 dark:bg-slate-950">
- <Loader2 className="w-10 h-10 animate-spin text-emerald-600" />
+ <Loader2 className="w-10 h-10 animate-spin text-brand-secondary-600" />
  </div>
  );
  }

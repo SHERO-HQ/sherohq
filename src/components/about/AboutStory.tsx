@@ -38,7 +38,7 @@ const AboutStory = () => {
                 className="relative w-full object-cover"
               />
 
-              <div className="absolute sm:bottom-46 md:bottom-35 sm:-left-4 md:-left-20 -bottom-5 -left-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm p-2 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
+              <div className="absolute sm:bottom-46 md:bottom-35 sm:-left-4 md:-left-20 -bottom-5 -left-2 bg-white/90 dark:bg-slate-900/90  p-2 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
                 <div className="size-8 sm:size-10 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded flex items-center justify-center">
                   <SearchCheck className="w-4 h-4 sm:w-5 sm:h-5 text-brand-secondary-700 dark:text-brand-secondary-400" />
                 </div>
@@ -52,7 +52,7 @@ const AboutStory = () => {
                 </div>
               </div>
 
-              <div className="absolute sm:top-20 sm:right-5 -top-5 right-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm p-2 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
+              <div className="absolute sm:top-20 sm:right-5 -top-5 right-0 bg-white/90 dark:bg-slate-900/90  p-2 rounded border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
                 <div className="size-8 sm:size-10 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded flex items-center justify-center">
                   <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-brand-secondary-700 dark:text-brand-secondary-400" />
                 </div>
@@ -108,8 +108,8 @@ const AboutStory = () => {
         <StaggerContainer className="grid md:grid-cols-2 gap-8 mb-16 lg:grid-cols-2!">
           {/* Mission */}
           <StaggerItem>
-            <div className="group h-full bg-linear-to-br from-white to-slate-50 dark:from-slate-900/40 dark:to-slate-950 p-8 lg:p-10 rounded border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 transition duration-500 shadow-sm hover:shadow hover:shadow-emerald-500/5">
-              <div className="w-12 h-12 bg-brand-primary-500 rounded flex items-center justify-center mb-4 shadow shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+            <div className="group h-full bg-linear-to-br from-white to-slate-50 dark:from-slate-900/40 dark:to-slate-950 p-8 lg:p-10 rounded border border-slate-200 dark:border-white/5 hover:border-brand-secondary-500/30 transition duration-500 shadow-sm hover:shadow hover:shadow-brand-secondary-500/5">
+              <div className="w-12 h-12 bg-brand-primary-500 rounded flex items-center justify-center mb-4 shadow shadow-brand-secondary-500/20 group-hover:scale-110 transition-transform">
                 <Target className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl lg:text-3xl font-black text-slate-900 dark:text-white mb-4 tracking-tighter">

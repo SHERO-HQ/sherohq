@@ -55,9 +55,9 @@ const FAQ = () => {
       <div className="pt-8 pb-12 bg-slate-50 dark:bg-slate-950 min-h-screen">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 rounded border border-emerald-500/20 uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded border border-brand-secondary-500/20 uppercase tracking-wider">
               <HelpCircle className="w-4 h-4" />
-              <span className="text-emerald-600 dark:text-emerald-400">
+              <span className="text-brand-secondary-600 dark:text-brand-secondary-400">
                 Help Center
               </span>
             </div>
@@ -109,11 +109,11 @@ const FAQItem = ({
         className="cursor-pointer w-full flex items-center justify-between p-6 text-left hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
       >
         <span
-          className={`font-semibold pr-8 ${isOpen ? "text-emerald-600 dark:text-emerald-400" : ""}`}
+          className={`font-semibold pr-8 ${isOpen ? "text-brand-secondary-600 dark:text-brand-secondary-400" : ""}`}
         >
           {question}
         </span>
-        <span className="text-emerald-600 dark:text-emerald-400 shrink-0">
+        <span className="text-brand-secondary-600 dark:text-brand-secondary-400 shrink-0">
           {isOpen ? (
             <Minus className="w-5 h-5" />
           ) : (

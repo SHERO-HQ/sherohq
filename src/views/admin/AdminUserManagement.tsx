@@ -60,8 +60,8 @@ const roleConfig: Record<
  admin: {
  label: "Administrator",
  icon: ShieldCheck,
- color: "text-emerald-400",
- bgColor: "bg-emerald-500/10",
+ color: "text-brand-secondary-400",
+ bgColor: "bg-brand-secondary-500/10",
  },
  manager: {
  label: "Manager",
@@ -218,7 +218,7 @@ export default function AdminUserManagement() {
  {canManageRoles && (
  <Button
  onClick={() => setIsRegisterModalOpen(true)}
- className="bg-emerald-600 hover:bg-emerald-500 text-white shadow shadow-emerald-500/20"
+ className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white shadow shadow-brand-secondary-500/20"
  >
  <Plus className="w-4 h-4 mr-2" />
  Add Admin User
@@ -235,13 +235,13 @@ export default function AdminUserManagement() {
  placeholder="Search by name, email or role..."
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="pl-10 bg-slate-900/40 border-white/10 text-white placeholder:text-slate-600 focus:ring-emerald-500/20"
+ className="pl-10 bg-slate-900/40 border-white/10 text-white placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
  />
  </div>
  <select
  value={roleFilter}
  onChange={(e) => setRoleFilter(e.target.value)}
- className="bg-slate-900 border border-white/10 rounded px-3 py-2 text-sm text-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-500/20 appearance-none min-w-35"
+ className="bg-slate-900 border border-white/10 rounded px-3 py-2 text-sm text-slate-300 focus:outline-none focus:ring-1 focus:ring-brand-secondary-500/20 appearance-none min-w-35"
  >
  <option value="all">All Roles</option>
  {Object.entries(roleConfig).map(([role, cfg]) => (
@@ -278,7 +278,7 @@ export default function AdminUserManagement() {
  return (
  <div
  key={user.id}
- className="group relative bg-slate-900/40 backdrop-blur-sm border border-white/5 rounded p-6 hover:border-emerald-500/30 transition duration-500"
+ className="group relative bg-slate-900/40  border border-white/5 rounded p-6 hover:border-brand-secondary-500/30 transition duration-500"
  >
  <div className="absolute top-4 right-4 ring-offset-slate-950">
  <DropdownMenu>
@@ -319,7 +319,7 @@ export default function AdminUserManagement() {
  className={cn(
  "flex items-center gap-2 cursor-pointer hover:bg-white/5",
  user.role === role &&
- "text-emerald-400 bg-emerald-500/5",
+ "text-brand-secondary-400 bg-brand-secondary-500/5",
  )}
  >
  <cfg.icon
@@ -348,7 +348,7 @@ export default function AdminUserManagement() {
  "cursor-pointer",
  user.isActive !== false
  ? "text-orange-400 hover:text-orange-300 hover:bg-orange-500/10"
- : "text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10",
+ : "text-brand-secondary-400 hover:text-brand-secondary-300 hover:bg-brand-secondary-500/10",
  )}
  >
  {user.isActive !== false ? (
@@ -437,14 +437,14 @@ export default function AdminUserManagement() {
  </div>
  <a
  href={`mailto:${user.email}`}
- className="text-xs text-slate-500 hover:text-emerald-400 transition-colors truncate mb-1 block"
+ className="text-xs text-slate-500 hover:text-brand-secondary-400 transition-colors truncate mb-1 block"
  >
  {user.email}
  </a>
  {user.phone && (
  <a
  href={`tel:${user.phone}`}
- className="text-[10px] text-slate-500 hover:text-emerald-400 transition-colors truncate flex items-center gap-1 mb-2"
+ className="text-[10px] text-slate-500 hover:text-brand-secondary-400 transition-colors truncate flex items-center gap-1 mb-2"
  >
  <Phone className="w-3 h-3 text-slate-600" />
  {user.phone}
@@ -474,7 +474,7 @@ export default function AdminUserManagement() {
  </div>
  {user.id === currentAdmin?.id && (
  <div className="flex justify-end">
- <Badge className="bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20 border-none text-[9px]">
+ <Badge className="bg-brand-secondary-500/20 text-brand-secondary-400 hover:bg-brand-secondary-500/20 border-none text-[9px]">
  YOU
  </Badge>
  </div>
@@ -504,7 +504,7 @@ export default function AdminUserManagement() {
  }
  required
  placeholder="e.g. john_doe"
- className="bg-slate-900 border-white/10 text-white placeholder:text-slate-700 focus:ring-emerald-500/20"
+ className="bg-slate-900 border-white/10 text-white placeholder:text-slate-700 focus:ring-brand-secondary-500/20"
  />
  </div>
 
@@ -521,7 +521,7 @@ export default function AdminUserManagement() {
  }
  required
  placeholder="john@example.com"
- className="bg-slate-900 border-white/10 text-white placeholder:text-slate-700 focus:ring-emerald-500/20"
+ className="bg-slate-900 border-white/10 text-white placeholder:text-slate-700 focus:ring-brand-secondary-500/20"
  />
  </div>
 
@@ -537,7 +537,7 @@ export default function AdminUserManagement() {
  setFormData({ ...formData, phone: e.target.value })
  }
  placeholder="02XXXXXXXX or 05XXXXXXXX"
- className="bg-slate-900 border-white/10 text-white placeholder:text-slate-700 focus:ring-emerald-500/20"
+ className="bg-slate-900 border-white/10 text-white placeholder:text-slate-700 focus:ring-brand-secondary-500/20"
  />
  </div>
 
@@ -554,7 +554,7 @@ export default function AdminUserManagement() {
  }
  required
  placeholder="••••••••"
- className="bg-slate-900 border-white/10 text-white placeholder:text-slate-700 focus:ring-emerald-500/20"
+ className="bg-slate-900 border-white/10 text-white placeholder:text-slate-700 focus:ring-brand-secondary-500/20"
  />
  <p className="text-[10px] text-slate-500">
  Min 8 characters — requires uppercase, lowercase, and a number.
@@ -571,7 +571,7 @@ export default function AdminUserManagement() {
  onChange={(e) =>
  setFormData({ ...formData, role: e.target.value })
  }
- className="w-full bg-slate-900 border border-white/10 rounded px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-emerald-500/20 appearance-none"
+ className="w-full bg-slate-900 border border-white/10 rounded px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-secondary-500/20 appearance-none"
  >
  {Object.entries(roleConfig).map(([role, cfg]) => {
  if (role === "superadmin" && !isSuperAdmin) return null;
@@ -596,7 +596,7 @@ export default function AdminUserManagement() {
  <Button
  type="submit"
  disabled={registerMutation.isPending}
- className="bg-emerald-600 hover:bg-emerald-500 text-white min-w-30"
+ className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-30"
  >
  {registerMutation.isPending ? (
  <Loader2 className="w-4 h-4 animate-spin" />

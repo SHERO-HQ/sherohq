@@ -20,7 +20,7 @@ const ProductCategories: React.FC<ProductCategoriesProps> = ({
  onCategoryChange,
 }) => {
  return (
- <section className="w-full py-4 sm:py-8 border-b border-slate-200 dark:border-slate-800 sticky top-16 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm transition duration-300">
+ <section className="w-full py-4 sm:py-8 border-b border-slate-200 dark:border-slate-800 sticky top-16 z-40 bg-white/95 dark:bg-slate-900/95  transition duration-300">
  <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
  {/* Section Title - Hidden on mobile to save space, or kept small */}
  <div className="hidden sm:flex items-center justify-between mb-6">
@@ -45,7 +45,7 @@ const ProductCategories: React.FC<ProductCategoriesProps> = ({
  border transition duration-300 snap-start cursor-pointer
  ${
  activeCategory === category.id
- ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 shadow-sm"
+ ? "border-brand-secondary-500 bg-brand-secondary-50 dark:bg-brand-secondary-900/20 shadow-sm"
  : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900"
  }`}
  >
@@ -55,8 +55,8 @@ const ProductCategories: React.FC<ProductCategoriesProps> = ({
  transition duration-300
  ${
  activeCategory === category.id
- ? "bg-emerald-600 text-white"
- : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/30 group-hover:text-emerald-600 dark:group-hover:text-emerald-400"
+ ? "bg-brand-secondary-600 text-white"
+ : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-brand-secondary-100 dark:group-hover:bg-brand-secondary-900/30 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400"
  }`}
  >
  {category.icon}
@@ -68,7 +68,7 @@ const ProductCategories: React.FC<ProductCategoriesProps> = ({
  className={`text-xs sm:text-sm font-semibold whitespace-nowrap transition-colors duration-300
  ${
  activeCategory === category.id
- ? "text-emerald-600 dark:text-emerald-400"
+ ? "text-brand-secondary-600 dark:text-brand-secondary-400"
  : "text-slate-700 dark:text-slate-300"
  }`}
  >
@@ -81,7 +81,7 @@ const ProductCategories: React.FC<ProductCategoriesProps> = ({
  className={`hidden sm:block text-xs mt-1 transition-colors duration-300
  ${
  activeCategory === category.id
- ? "text-emerald-600/80 dark:text-emerald-400/80"
+ ? "text-brand-secondary-600/80 dark:text-brand-secondary-400/80"
  : "text-slate-500 dark:text-slate-500"
  }`}
  >

@@ -43,7 +43,7 @@ const VerifyEmail = () => {
  <div className="bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 p-8 text-center">
  {status === "loading" && (
  <>
- <Loader2 className="w-16 h-16 mx-auto text-emerald-600 animate-spin mb-6" />
+ <Loader2 className="w-16 h-16 mx-auto text-brand-secondary-600 animate-spin mb-6" />
  <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
  Verifying Email...
  </h1>
@@ -55,8 +55,8 @@ const VerifyEmail = () => {
 
  {status === "success" && (
  <>
- <div className="w-20 h-20 mx-auto bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mb-6">
- <CheckCircle className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
+ <div className="w-20 h-20 mx-auto bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center mb-6">
+ <CheckCircle className="w-10 h-10 text-brand-secondary-600 dark:text-brand-secondary-400" />
  </div>
  <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
  Email Verified!
@@ -66,7 +66,7 @@ const VerifyEmail = () => {
  </p>
  <Link
  href="/profile"
- className="inline-block px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded transition-colors"
+ className="inline-block px-6 py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white font-bold rounded transition-colors"
  >
  Go to Profile
  </Link>
@@ -86,7 +86,7 @@ const VerifyEmail = () => {
  </p>
  <Link
  href="/login"
- className="inline-block px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded transition-colors"
+ className="inline-block px-6 py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white font-bold rounded transition-colors"
  >
  Go to Login
  </Link>

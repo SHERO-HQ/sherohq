@@ -96,7 +96,7 @@ const SupportTicketForm = ({
  animate={{ opacity: 1 }}
  exit={{ opacity: 0 }}
  onClick={onClose}
- className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+ className="fixed inset-0 bg-black/50  z-50"
  />
  <motion.div
  initial={{ opacity: 0, y: 100, scale: 0.95 }}
@@ -123,13 +123,13 @@ const SupportTicketForm = ({
 
  {success ? (
  <div className="flex flex-col items-center justify-center py-8 text-center">
- <CheckCircle2 className="w-16 h-16 text-emerald-500 mb-4" />
+ <CheckCircle2 className="w-16 h-16 text-brand-secondary-500 mb-4" />
  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
  Ticket Submitted!
  </h3>
  {ticketNo && (
- <div className="bg-emerald-500/10 border border-emerald-500/20 rounded px-4 py-2 mb-4">
- <span className="text-emerald-600 dark:text-emerald-400 font-mono font-bold text-lg">
+ <div className="bg-brand-secondary-500/10 border border-brand-secondary-500/20 rounded px-4 py-2 mb-4">
+ <span className="text-brand-secondary-600 dark:text-brand-secondary-400 font-mono font-bold text-lg">
  Ticket #{ticketNo}
  </span>
  </div>

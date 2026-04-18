@@ -19,10 +19,10 @@ const NAV_LINK_STYLES = {
     "rounded",
     "transition-all duration-300 ease-in-out",
     // Focus states
-    // "focus:ring-2 focus:ring-emerald-500/50",
+    // "focus:ring-2 focus:ring-brand-secondary-500/50",
     "focus:outline-none",
   ],
-  active: ["text-emerald-600 dark:text-emerald-400", "font-semibold"],
+  active: ["text-brand-secondary-600 dark:text-brand-secondary-400", "font-semibold"],
   inactive: [
     "bg-transparent",
     "text-slate-600 dark:text-slate-400",
@@ -90,7 +90,7 @@ export function navLinkClassVariant(
         "rounded",
         "w-full",
         "transition-colors duration-200",
-        "focus:outline-none focus:border-b-2 focus:border-emerald-500",
+        "focus:outline-none focus:border-b-2 focus:border-brand-secondary-500",
       ],
       active: ["bg-primary", "text-white", "font-semibold"],
       inactive: [
@@ -104,10 +104,10 @@ export function navLinkClassVariant(
         "px-2 py-1",
         "text-sm",
         "transition-colors duration-200",
-        "focus:outline-none focus:ring-2 focus:ring-emerald-400",
+        "focus:outline-none focus:ring-2 focus:ring-brand-secondary-400",
       ],
-      active: ["text-emerald-400", "font-medium", "underline"],
-      inactive: ["text-slate-200", "hover:text-emerald-400", "hover:underline"],
+      active: ["text-brand-secondary-400", "font-medium", "underline"],
+      inactive: ["text-slate-200", "hover:text-brand-secondary-400", "hover:underline"],
     },
     mobile: {
       base: [
@@ -117,8 +117,8 @@ export function navLinkClassVariant(
         "transition-all duration-300",
       ],
       active: [
-        "bg-emerald-500/10",
-        "text-emerald-600 dark:text-emerald-400",
+        "bg-brand-secondary-500/10",
+        "text-brand-secondary-600 dark:text-brand-secondary-400",
         "font-bold",
         "shadow-xs",
       ],

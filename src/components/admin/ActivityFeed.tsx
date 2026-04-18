@@ -43,7 +43,7 @@ const getIcon = (action: string, type: string) => {
 const getTypeColor = (type: string) => {
  switch (type) {
  case "success":
- return "text-emerald-400 bg-emerald-400/10";
+ return "text-brand-secondary-400 bg-brand-secondary-400/10";
  case "warning":
  return "text-amber-400 bg-amber-400/10";
  case "error":
@@ -122,7 +122,7 @@ export default function ActivityFeed({ logs, isLoading }: ActivityFeedProps) {
  </p>
  )}
  {log.adminName && (
- <p className="text-[10px] text-emerald-400 mt-1 uppercase tracking-wider font-bold">
+ <p className="text-[10px] text-brand-secondary-400 mt-1 uppercase tracking-wider font-bold">
  By {log.adminName}
  </p>
  )}

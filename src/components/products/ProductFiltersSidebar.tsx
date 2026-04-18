@@ -98,16 +98,16 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
  onClick={() => onCategoryChange(category.id)}
  className={`flex items-center justify-between w-full text-left group cursor-pointer ${
  activeCategory === category.id
- ? "text-emerald-600 dark:text-emerald-400 font-medium"
- : "text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400"
+ ? "text-brand-secondary-600 dark:text-brand-secondary-400 font-medium"
+ : "text-slate-600 dark:text-slate-400 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400"
  }`}
  >
  <span className="text-sm">{category.name}</span>
  <span
  className={`text-xs px-2 py-0.5 rounded-full transition-colors ${
  activeCategory === category.id
- ? "bg-emerald-600 text-white shadow-sm shadow-emerald-500/20"
- : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-emerald-50 dark:group-hover:bg-emerald-900/20"
+ ? "bg-brand-secondary-600 text-white shadow-sm shadow-brand-secondary-500/20"
+ : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 group-hover:bg-brand-secondary-50 dark:group-hover:bg-brand-secondary-900/20"
  }`}
  >
  {category.count}
@@ -140,11 +140,11 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
  className="flex items-center gap-3 cursor-pointer group"
  >
  <div
- className={`w-4 h-4 rounded border border-emerald-700 flex items-center justify-center transition duration-200
- ${isPriceRangeActive(range.range) ? "bg-emerald-400 border-emerald-400" : "dark:bg-slate-800/50 group-hover:border-emerald-500"}`}
+ className={`w-4 h-4 rounded border border-brand-secondary-700 flex items-center justify-center transition duration-200
+ ${isPriceRangeActive(range.range) ? "bg-brand-secondary-400 border-brand-secondary-400" : "dark:bg-slate-800/50 group-hover:border-brand-secondary-500"}`}
  >
  {isPriceRangeActive(range.range) && (
- <Check className="w-3 h-3 dark:text-white text-emerald-700" />
+ <Check className="w-3 h-3 dark:text-white text-brand-secondary-700" />
  )}
  </div>
  <input
@@ -157,7 +157,7 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
  }
  />
  <span
- className={`text-sm tracking-wide ${isPriceRangeActive(range.range) ? "dark:text-emerald-400 text-emerald-600 font-medium" : "dark:text-slate-400 text-slate-600 dark:group-hover:text-slate-300 group-hover:text-emerald-600 transition-colors"}`}
+ className={`text-sm tracking-wide ${isPriceRangeActive(range.range) ? "dark:text-brand-secondary-400 text-brand-secondary-600 font-medium" : "dark:text-slate-400 text-slate-600 dark:group-hover:text-slate-300 group-hover:text-brand-secondary-600 transition-colors"}`}
  >
  {range.label}
  </span>
@@ -190,10 +190,10 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
  >
  <div
  className={`w-4 h-4 rounded border dark:border-white/5 border-slate-600 flex items-center justify-center transition duration-200
- ${filters.brands.includes(brand) ? "bg-emerald-400 border-emerald-700" : "dark:bg-slate-800/50 group-hover:border-emerald-500"}`}
+ ${filters.brands.includes(brand) ? "bg-brand-secondary-400 border-brand-secondary-700" : "dark:bg-slate-800/50 group-hover:border-brand-secondary-500"}`}
  >
  {filters.brands.includes(brand) && (
- <Check className="w-3 h-3 dark:text-white text-emerald-700" />
+ <Check className="w-3 h-3 dark:text-white text-brand-secondary-700" />
  )}
  </div>
  <input
@@ -208,7 +208,7 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
  }}
  />
  <span
- className={`text-sm tracking-wide ${filters.brands.includes(brand) ? "text-emerald-600 font-medium" : "dark:text-slate-400 dark:group-hover:text-slate-300 group-hover:text-emerald-600 transition-colors"}`}
+ className={`text-sm tracking-wide ${filters.brands.includes(brand) ? "text-brand-secondary-600 font-medium" : "dark:text-slate-400 dark:group-hover:text-slate-300 group-hover:text-brand-secondary-600 transition-colors"}`}
  >
  {brand}
  </span>
@@ -278,7 +278,7 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
  {expandedSections.includes("stock") && (
  <label className="flex items-center gap-3 cursor-pointer group">
  <div
- className={`w-10 h-6 rounded-full p-1 transition-colors duration-300 ${filters.inStock ? "bg-emerald-600" : "dark:bg-slate-700 bg-slate-500"}`}
+ className={`w-10 h-6 rounded-full p-1 transition-colors duration-300 ${filters.inStock ? "bg-brand-secondary-600" : "dark:bg-slate-700 bg-slate-500"}`}
  >
  <div
  className={`w-4 h-4 rounded-full bg-white transform transition-transform duration-300 ${filters.inStock ? "translate-x-4" : "translate-x-0"}`}

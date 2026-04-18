@@ -163,7 +163,7 @@ const AdminTestimonials = () => {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <MessageSquareQuote className="w-7 h-7 text-emerald-400" />
+              <MessageSquareQuote className="w-7 h-7 text-brand-secondary-400" />
               Testimonials
             </h1>
             <p className="text-slate-400 text-sm mt-1">
@@ -185,7 +185,7 @@ const AdminTestimonials = () => {
             </Button>
             <Button
               onClick={handleOpenCreate}
-              className="bg-emerald-600 hover:bg-emerald-500 text-white"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Testimonial
@@ -200,14 +200,14 @@ const AdminTestimonials = () => {
             placeholder="Search testimonials..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-emerald-500/20"
+            className="pl-10 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
           />
         </div>
 
         {/* List */}
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+            <Loader2 className="w-8 h-8 text-brand-secondary-500 animate-spin" />
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4">
@@ -220,7 +220,7 @@ const AdminTestimonials = () => {
               filteredTestimonials.map((t) => (
                 <div
                   key={t.id}
-                  className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center gap-4 group hover:border-emerald-500/30 transition"
+                  className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center gap-4 group hover:border-brand-secondary-500/30 transition"
                 >
                   <div className="text-slate-600 cursor-move opacity-0 group-hover:opacity-100 transition-opacity">
                     <GripVertical className="w-5 h-5" />
@@ -236,7 +236,7 @@ const AdminTestimonials = () => {
                         className="object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-slate-400 font-bold bg-emerald-500/10">
+                      <div className="w-full h-full flex items-center justify-center text-slate-400 font-bold bg-brand-secondary-500/10">
                         {t.author.charAt(0)}
                       </div>
                     )}
@@ -266,7 +266,7 @@ const AdminTestimonials = () => {
                       title={t.active ? "Deactivate" : "Activate"}
                       className={
                         t.active
-                          ? "text-emerald-500 hover:text-emerald-400"
+                          ? "text-brand-secondary-500 hover:text-brand-secondary-400"
                           : "text-slate-500 hover:text-slate-400"
                       }
                     >
@@ -415,7 +415,7 @@ const AdminTestimonials = () => {
               <Button
                 type="submit"
                 disabled={createMutation.isPending || updateMutation.isPending}
-                className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
               >
                 {createMutation.isPending || updateMutation.isPending ? (
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />

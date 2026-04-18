@@ -161,14 +161,14 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
-            className="fixed inset-0 bg-black/50 z-40 lg:hidden backdrop-blur-sm"
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden "
           />
         )}
       </AnimatePresence>
 
       <aside
         className={cn(
-          "fixed top-0 left-0 h-full bg-slate-900/40 backdrop-blur-sm border-r border-white/10 z-50 transition-all duration-200 ease-in-out",
+          "fixed top-0 left-0 h-full bg-slate-900/40  border-r border-white/10 z-50 transition-all duration-200 ease-in-out",
           isOpen
             ? "w-64 translate-x-0"
             : "w-20 -translate-x-full lg:translate-x-0",
@@ -189,7 +189,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                 isOpen ? "gap-3" : "gap-0",
               )}
             >
-              <div className="w-8 h-8 rounded bg-emerald-600 flex items-center justify-center shrink-0 shadow shadow-emerald-500/20 group-hover:scale-110 transition-transform">
+              <div className="w-8 h-8 rounded bg-brand-secondary-600 flex items-center justify-center shrink-0 shadow shadow-brand-secondary-500/20 group-hover:scale-110 transition-transform">
                 <span className="text-white font-bold text-xl">S</span>
               </div>
               <span
@@ -235,7 +235,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                       "flex items-center px-3 py-3 rounded group relative transition-all duration-200",
                       isOpen ? "gap-3" : "gap-0",
                       isActive
-                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-sm"
+                        ? "bg-brand-secondary-500/10 text-brand-secondary-400 border border-brand-secondary-500/20 shadow-sm"
                         : "text-slate-400 hover:text-white hover:bg-white/5 border border-transparent",
                       !isOpen && "justify-center px-0",
                     )
@@ -247,7 +247,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                         className={cn(
                           "w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110",
                           isActive
-                            ? "text-emerald-400"
+                            ? "text-brand-secondary-400"
                             : "text-slate-400 group-hover:text-white",
                         )}
                       />
@@ -264,7 +264,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                       {isActive && (
                         <motion.div
                           layoutId="sidebar-active-indicator"
-                          className="absolute left-0 w-1 h-6 bg-emerald-500 rounded-r-full"
+                          className="absolute left-0 w-1 h-6 bg-brand-secondary-500 rounded-r-full"
                         />
                       )}
                     </>
@@ -292,7 +292,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                       "flex items-center px-3 py-2 rounded transition-all duration-200 group relative",
                       isOpen ? "gap-2" : "gap-0 justify-center px-0",
                       isActive
-                        ? "bg-emerald-500/10 text-emerald-400"
+                        ? "bg-brand-secondary-500/10 text-brand-secondary-400"
                         : "text-slate-400 hover:text-white hover:bg-white/5",
                     )
                   }
@@ -391,7 +391,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
               <button
                 onClick={() => void handleInstallClick()}
                 className={cn(
-                  "w-full flex items-center px-3 py-3 rounded text-emerald-400 hover:bg-emerald-500/10 transition-all duration-200 group border border-emerald-500/20 mb-2",
+                  "w-full flex items-center px-3 py-3 rounded text-brand-secondary-400 hover:bg-brand-secondary-500/10 transition-all duration-200 group border border-brand-secondary-500/20 mb-2",
                   isOpen ? "gap-3" : "gap-0 justify-center px-0",
                 )}
                 title="Install app for offline access"
@@ -433,7 +433,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
             {/* Profile Summary */}
             <div
               className={cn(
-                "flex items-center px-3 py-2 backdrop-blur-sm border border-white/10 mt-4 rounded transition-all duration-200",
+                "flex items-center px-3 py-2  border border-white/10 mt-4 rounded transition-all duration-200",
                 isOpen ? "gap-3" : "gap-0 justify-center px-0",
               )}
             >

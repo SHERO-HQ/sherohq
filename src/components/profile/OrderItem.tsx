@@ -33,7 +33,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
   const getStatusBadgeColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "delivered":
-        return "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400";
+        return "bg-brand-secondary-100 text-brand-secondary-700 dark:bg-brand-secondary-900/30 dark:text-brand-secondary-400";
       case "pending":
         return "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400";
       default:
@@ -79,7 +79,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
             <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
               Total
             </p>
-            <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+            <p className="text-sm font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
               GH₵{order.total.toFixed(2)}
             </p>
           </div>
@@ -108,7 +108,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
             <button
               type="button"
               onClick={() => void handleCopyOrderId()}
-              className="inline-flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+              className="inline-flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors"
               aria-label="Copy order ID"
               title="Copy order ID"
             >
@@ -197,7 +197,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
                   <Mail className="w-3.5 h-3.5 text-slate-400" />
                   <span>{user?.email}</span>
                 </div>
-                <div className="mt-2 p-2 bg-emerald-50 dark:bg-emerald-900/10 rounded text-emerald-700 dark:text-emerald-400 text-xs font-medium inline-block">
+                <div className="mt-2 p-2 bg-brand-secondary-50 dark:bg-brand-secondary-900/10 rounded text-brand-secondary-700 dark:text-brand-secondary-400 text-xs font-medium inline-block">
                   Paid via Mobile Money / Card
                 </div>
               </div>

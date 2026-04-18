@@ -69,7 +69,7 @@ const getStatusColor = (status: string) => {
     pending: "bg-yellow-500/20 text-yellow-400",
     processing: "bg-blue-500/20 text-blue-400",
     shipped: "bg-purple-500/20 text-purple-400",
-    delivered: "bg-emerald-500/20 text-emerald-400",
+    delivered: "bg-brand-secondary-500/20 text-brand-secondary-400",
     cancelled: "bg-red-500/20 text-red-400",
   };
   return colors[status.toLowerCase()] || "bg-slate-500/20 text-slate-400";
@@ -96,7 +96,7 @@ const AdminUsersHeader = ({
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
         <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-          <Users className="w-7 h-7 text-emerald-400" />
+          <Users className="w-7 h-7 text-brand-secondary-400" />
           Customers
         </h1>
         <p className="text-slate-400 text-sm">
@@ -115,7 +115,7 @@ const AdminUsersHeader = ({
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-6">
+            <Button className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-medium px-6">
               <Printer className="mr-2 h-4 w-4" /> Export
             </Button>
           </DropdownMenuTrigger>
@@ -155,7 +155,7 @@ const AdminUsersHeader = ({
           placeholder="Search by name or email..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 bg-slate-800/50 border border-white/10 rounded text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+          className="w-full pl-10 pr-4 py-2.5 bg-slate-800/50 border border-white/10 rounded text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
         />
       </div>
     </div>
@@ -186,7 +186,7 @@ const UserTableRow = ({
   >
     <td className="px-6 py-4">
       <div className="flex items-center gap-3">
-        <div className="relative w-10 h-10 rounded bg-linear-to-br from-emerald-500 to-emerald-500/60 font-bold text-lg flex items-center justify-center text-white overflow-hidden">
+        <div className="relative w-10 h-10 rounded bg-linear-to-br from-brand-secondary-500 to-brand-secondary-500/60 font-bold text-lg flex items-center justify-center text-white overflow-hidden">
           {user.avatar ? (
             <AppImage
               src={user.avatar}
@@ -222,7 +222,7 @@ const UserTableRow = ({
     <td className="px-6 py-4">
       <div className="space-y-1">
         {user.emailVerified ? (
-          <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-emerald-500/20 text-emerald-400">
+          <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-brand-secondary-500/20 text-brand-secondary-400">
             <BadgeCheck className="w-3 h-3" />
             Verified
           </span>
@@ -245,7 +245,7 @@ const UserTableRow = ({
       <div className="flex items-center justify-end gap-2">
         <button
           onClick={() => onOpenDetails(user.id)}
-          className="p-2 text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors"
+          className="p-2 text-slate-400 hover:text-brand-secondary-400 hover:bg-brand-secondary-500/10 rounded transition-colors"
           title="View Details"
         >
           <Eye className="w-4 h-4" />
@@ -263,7 +263,7 @@ const UserTableRow = ({
           className={`p-2 rounded transition-colors disabled:opacity-50 ${
             user.isActive
               ? "text-slate-400 hover:text-orange-400 hover:bg-orange-500/10"
-              : "text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10"
+              : "text-slate-400 hover:text-brand-secondary-400 hover:bg-brand-secondary-500/10"
           }`}
           title={user.isActive ? "Deactivate Account" : "Reactivate Account"}
         >
@@ -315,10 +315,10 @@ const StatsCards = ({ total, users }: StatsCardsProps) => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div className="bg-slate-800/30 backdrop-blur-sm border border-white/5 rounded p-4">
+      <div className="bg-slate-800/30  border border-white/5 rounded p-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-emerald-500/20 rounded">
-            <Users className="w-5 h-5 text-emerald-400" />
+          <div className="p-2 bg-brand-secondary-500/20 rounded">
+            <Users className="w-5 h-5 text-brand-secondary-400" />
           </div>
           <div>
             <p className="text-slate-400 text-sm">Total Customers</p>
@@ -326,7 +326,7 @@ const StatsCards = ({ total, users }: StatsCardsProps) => {
           </div>
         </div>
       </div>
-      <div className="bg-slate-800/30 backdrop-blur-sm border border-white/5 rounded p-4">
+      <div className="bg-slate-800/30  border border-white/5 rounded p-4">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-500/20 rounded">
             <BadgeCheck className="w-5 h-5 text-blue-400" />
@@ -337,7 +337,7 @@ const StatsCards = ({ total, users }: StatsCardsProps) => {
           </div>
         </div>
       </div>
-      <div className="bg-slate-800/30 backdrop-blur-sm border border-white/5 rounded p-4">
+      <div className="bg-slate-800/30  border border-white/5 rounded p-4">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-purple-500/20 rounded">
             <Calendar className="w-5 h-5 text-purple-400" />
@@ -364,7 +364,7 @@ const UserTable = ({
   if (loading && !users.length) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
+        <Loader2 className="w-8 h-8 text-brand-secondary-400 animate-spin" />
       </div>
     );
   }
@@ -467,7 +467,7 @@ interface UserStatsGridProps {
 const UserStatsGrid = ({ stats }: UserStatsGridProps) => (
   <div className="grid grid-cols-3 gap-4">
     <div className="bg-slate-800/50 rounded p-4 text-center">
-      <ShoppingBag className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
+      <ShoppingBag className="w-6 h-6 text-brand-secondary-400 mx-auto mb-2" />
       <p className="text-2xl font-bold text-white">{stats.totalOrders}</p>
       <p className="text-xs text-slate-400">Total Orders</p>
     </div>
@@ -564,7 +564,7 @@ const UserDetailsModal = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-black/70  z-50 flex items-center justify-center p-4"
         onClick={onClose}
       >
         <motion.div
@@ -590,7 +590,7 @@ const UserDetailsModal = ({
             if (loading) {
               return (
                 <div className="flex items-center justify-center py-20">
-                  <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
+                  <Loader2 className="w-8 h-8 text-brand-secondary-400 animate-spin" />
                 </div>
               );
             }
@@ -607,7 +607,7 @@ const UserDetailsModal = ({
               <div className="p-6 space-y-6 overflow-y-auto max-h-[calc(80vh-80px)]">
                 {/* User Info */}
                 <div className="flex items-start gap-4">
-                  <div className="relative w-16 h-16 rounded bg-linear-to-br from-emerald-500 to-blue-500 flex items-center justify-center text-white text-2xl font-bold overflow-hidden">
+                  <div className="relative w-16 h-16 rounded bg-linear-to-br from-brand-secondary-500 to-blue-500 flex items-center justify-center text-white text-2xl font-bold overflow-hidden">
                     {user.avatar ? (
                       <AppImage
                         src={user.avatar}
@@ -633,7 +633,7 @@ const UserDetailsModal = ({
                     <span
                       className={`px-3 py-1 rounded-full text-sm font-medium ${
                         user.emailVerified
-                          ? "bg-emerald-500/20 text-emerald-400"
+                          ? "bg-brand-secondary-500/20 text-brand-secondary-400"
                           : "bg-yellow-500/20 text-yellow-400"
                       }`}
                     >
@@ -684,7 +684,7 @@ const UserDetailsModal = ({
                       className={`flex items-center gap-2 px-4 py-2 border rounded transition-colors text-sm disabled:opacity-50 ${
                         user.isActive !== false
                           ? "bg-orange-500/10 text-orange-400 border-orange-500/20 hover:bg-orange-500/20"
-                          : "bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20"
+                          : "bg-brand-secondary-500/10 text-brand-secondary-400 border-brand-secondary-500/20 hover:bg-brand-secondary-500/20"
                       }`}
                     >
                       {user.isActive !== false ? (
@@ -746,7 +746,7 @@ const ResetPasswordModal = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-black/70  z-50 flex items-center justify-center p-4"
         onClick={onClose}
       >
         <motion.div
@@ -807,7 +807,7 @@ const DeleteConfirmationModal = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-black/70  z-50 flex items-center justify-center p-4"
         onClick={onClose}
       >
         <motion.div
@@ -1006,7 +1006,7 @@ export default function AdminUsers() {
   return (
     <div className="space-y-6 relative">
       {isPlaceholderData && (
-        <div className="absolute inset-0 bg-slate-900/10 backdrop-blur-[1px] z-10 pointer-events-none transition-opacity" />
+        <div className="absolute inset-0 bg-slate-900/10 -[1px] z-10 pointer-events-none transition-opacity" />
       )}
 
       <AdminUsersHeader
@@ -1020,7 +1020,7 @@ export default function AdminUsers() {
       <StatsCards total={pagination.total} users={users} />
 
       {/* Users Table */}
-      <div className="bg-slate-800/30 backdrop-blur-sm border border-white/5 rounded overflow-hidden relative">
+      <div className="bg-slate-800/30  border border-white/5 rounded overflow-hidden relative">
         <UserTable
           loading={loading}
           users={users}

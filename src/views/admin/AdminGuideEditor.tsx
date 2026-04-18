@@ -134,7 +134,7 @@ const AdminGuideEditor = () => {
     return (
       <div className="flex items-center justify-center min-h-100">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-12 h-12 border-4 border-brand-secondary-500 border-t-transparent rounded-full animate-spin" />
           <p className="text-slate-400 font-medium">Loading guide editor...</p>
         </div>
       </div>
@@ -161,7 +161,7 @@ const AdminGuideEditor = () => {
               handleSubmit(e as unknown as React.BaseSyntheticEvent)
             }
             disabled={isSaving}
-            className="bg-emerald-600 hover:bg-emerald-500 text-white"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
           >
             <Save className="w-4 h-4 mr-2" />
             {isSaving ? "Saving..." : "Save Guide"}
@@ -210,7 +210,7 @@ const AdminGuideEditor = () => {
                   id="published"
                   checked={published}
                   onChange={(e) => setPublished(e.target.checked)}
-                  className="w-4 h-4 rounded border-white/20 bg-slate-800 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-slate-900 cursor-pointer"
+                  className="w-4 h-4 rounded border-white/20 bg-slate-800 text-brand-secondary-500 focus:ring-brand-secondary-500 focus:ring-offset-slate-900 cursor-pointer"
                 />
                 <label
                   htmlFor="published"
@@ -236,7 +236,7 @@ const AdminGuideEditor = () => {
                 </p>
                 <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-white/10 rounded cursor-pointer bg-slate-900/50 hover:bg-slate-800/50 transition-colors">
                   {isUploadingImage ? (
-                    <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+                    <Loader2 className="w-8 h-8 animate-spin text-brand-secondary-500" />
                   ) : (
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                       <Plus className="w-8 h-8 text-slate-400 mb-2" />

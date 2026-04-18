@@ -54,7 +54,7 @@ const LandingFinalCTA = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                 <Link
                   href="/contact-us"
-                  className="group inline-flex items-center justify-center gap-2 px-8 py-2 rounded bg-emerald-600 text-white font-bold hover:bg-emerald-500 transition duration-300"
+                  className="group inline-flex items-center justify-center gap-2 px-8 py-2 rounded bg-brand-secondary-600 text-white font-bold hover:bg-brand-secondary-500 transition duration-300"
                 >
                   Lets Talk
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -76,7 +76,7 @@ const LandingFinalCTA = () => {
 
                 {/* Glass circle container */}
                 <div className="relative z-10 flex items-center justify-center">
-                  <RocketIcon className="w-40 h-40 text-emerald-400" />
+                  <RocketIcon className="w-40 h-40 text-brand-secondary-400" />
                 </div>
               </div>
             </div>

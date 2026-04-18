@@ -50,7 +50,7 @@ export function ChangePasswordModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/80  animate-in fade-in duration-300">
       <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow overflow-hidden animate-in zoom-in-95 duration-300">
         <div className="p-6 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5">
           <div className="flex items-center gap-3">
@@ -91,7 +91,7 @@ export function ChangePasswordModal() {
                   type="password"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition text-slate-900 dark:text-white"
+                  className="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 transition text-slate-900 dark:text-white"
                   placeholder="Enter current password"
                   required
                 />
@@ -112,7 +112,7 @@ export function ChangePasswordModal() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition text-slate-900 dark:text-white"
+                  className="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 transition text-slate-900 dark:text-white"
                   placeholder="At least 6 characters"
                   required
                 />
@@ -133,7 +133,7 @@ export function ChangePasswordModal() {
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 transition text-slate-900 dark:text-white"
+                  className="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 transition text-slate-900 dark:text-white"
                   placeholder="Confirm your new password"
                   required
                 />
@@ -145,7 +145,7 @@ export function ChangePasswordModal() {
             type="submit"
             disabled={isSubmitting}
             className={cn(
-              "w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition flex items-center justify-center gap-2",
+              "w-full py-2.5 px-4 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-semibold text-sm transition flex items-center justify-center gap-2",
               isSubmitting && "opacity-70 cursor-not-allowed",
             )}
           >

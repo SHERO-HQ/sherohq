@@ -102,8 +102,8 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
         <div className="flex flex-col items-center justify-center h-[70vh] space-y-4">
           <div className="relative">
-            <div className="w-16 h-16 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin"></div>
-            <Package className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-emerald-500" />
+            <div className="w-16 h-16 border-4 border-brand-secondary-500/20 border-t-brand-secondary-500 rounded-full animate-spin"></div>
+            <Package className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-brand-secondary-500" />
           </div>
           <p className="text-slate-500 font-medium animate-pulse">
             Locating your order...
@@ -127,7 +127,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
             {error || "The link might be broken or the order doesn't exist."}
           </p>
           <div className="pt-4">
-            <Button asChild className="bg-emerald-600 hover:bg-emerald-700">
+            <Button asChild className="bg-brand-secondary-600 hover:bg-brand-secondary-700">
               <Link href="/support">Contact Support</Link>
             </Button>
           </div>
@@ -144,12 +144,12 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
           <div className="space-y-2">
             <h1 className="text-sm font-medium dark:text-slate-500 text-slate-600 tracking-tight">
               Order ID:{" "}
-              <span className="text-emerald-500 text-lg">{readableId}</span>
+              <span className="text-brand-secondary-500 text-lg">{readableId}</span>
             </h1>
             <button
               type="button"
               onClick={() => void handleCopyOrderId()}
-              className="inline-flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+              className="inline-flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors"
               aria-label="Copy order ID"
               title="Copy order ID"
             >
@@ -175,7 +175,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
               "text-xs px-4 py-1 w-fit capitalize font-medium tracking-wider",
               order.status === "cancelled"
                 ? "bg-rose-500 text-white"
-                : "bg-emerald-500 text-white",
+                : "bg-brand-secondary-500 text-white",
             )}
           >
             {order.status}
@@ -190,7 +190,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
               <div className="absolute top-6 left-0 right-0 h-1 bg-slate-100 dark:bg-slate-800 z-0"></div>
               {/* Active Progress Line */}
               <div
-                className="absolute top-6 left-0 h-1 bg-emerald-500 transition-all duration-1000 ease-out z-0"
+                className="absolute top-6 left-0 h-1 bg-brand-secondary-500 transition-all duration-1000 ease-out z-0"
                 style={{
                   width: `${Math.max(0, (currentStep - 1) / (steps.length - 1)) * 100}%`,
                 }}
@@ -210,9 +210,9 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
                       className={cn(
                         "w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500",
                         isCompleted
-                          ? "bg-emerald-500 text-white"
+                          ? "bg-brand-secondary-500 text-white"
                           : isActive
-                            ? "bg-emerald-500 text-white scale-110 shadow-lg shadow-emerald-500/20"
+                            ? "bg-brand-secondary-500 text-white scale-110 shadow-lg shadow-brand-secondary-500/20"
                             : "bg-white dark:bg-slate-800 text-slate-400 border-2 border-slate-100 dark:border-slate-800",
                       )}
                     >
@@ -226,7 +226,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
                       className={cn(
                         "mt-4 text-[10px] md:text-xs font-bold uppercase tracking-wider",
                         isActive
-                          ? "text-emerald-500"
+                          ? "text-brand-secondary-500"
                           : "text-slate-400 dark:text-slate-500",
                       )}
                     >
@@ -250,13 +250,13 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
             </div>
           </Card>
         ) : (
-          <Card className="p-8 bg-emerald-500/5 border-emerald-500/10 flex items-center gap-4">
-            <div className="w-12 h-12 bg-emerald-500 text-white rounded-full flex items-center justify-center">
+          <Card className="p-8 bg-brand-secondary-500/5 border-brand-secondary-500/10 flex items-center gap-4">
+            <div className="w-12 h-12 bg-brand-secondary-500 text-white rounded-full flex items-center justify-center">
               <Package className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="font-bold text-emerald-600">Store Pickup Order</h3>
-              <p className="text-sm text-emerald-600/80">
+              <h3 className="font-bold text-brand-secondary-600">Store Pickup Order</h3>
+              <p className="text-sm text-brand-secondary-600/80">
                 This order will be collected in store, so delivery tracking is
                 not available.
               </p>
@@ -271,7 +271,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
             <Card className="dark:bg-slate-900 border-none shadow-sm overflow-hidden border">
               <div className="p-6 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/5">
                 <h3 className="font-bold flex items-center gap-2 dark:text-white">
-                  <ShoppingBag className="w-4 h-4 text-emerald-500" />
+                  <ShoppingBag className="w-4 h-4 text-brand-secondary-500" />
                   Package Contents
                 </h3>
               </div>
@@ -319,12 +319,12 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
                 )}
               </div>
               {hasOrderTotal && (
-                <div className="p-6 bg-emerald-500/5 border-t border-emerald-500/10">
+                <div className="p-6 bg-brand-secondary-500/5 border-t border-brand-secondary-500/10">
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
                       Total Payable
                     </span>
-                    <span className="text-xl font-black text-emerald-600 dark:text-emerald-400">
+                    <span className="text-xl font-black text-brand-secondary-600 dark:text-brand-secondary-400">
                       GH₵{Number(order.total).toLocaleString()}
                     </span>
                   </div>
@@ -405,11 +405,11 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
                   {shippingInfo ? (
                     <>
                       <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                        <Mail className="w-3.5 h-3.5 text-emerald-500" />
+                        <Mail className="w-3.5 h-3.5 text-brand-secondary-500" />
                         {shippingInfo.email}
                       </div>
                       <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                        <Phone className="w-3.5 h-3.5 text-emerald-500" />
+                        <Phone className="w-3.5 h-3.5 text-brand-secondary-500" />
                         {shippingInfo.phone}
                       </div>
                     </>
@@ -436,7 +436,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
               <p className="text-[10px] text-slate-400 uppercase tracking-widest leading-loose">
                 Thank you for choosing
                 <br />
-                <span className="text-emerald-500 font-black">
+                <span className="text-brand-secondary-500 font-black">
                   SHERO TECHNOLOGIES
                 </span>
               </p>

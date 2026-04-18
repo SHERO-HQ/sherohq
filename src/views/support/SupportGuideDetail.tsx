@@ -76,7 +76,7 @@ const SupportGuideDetail = () => {
             </h2>
             <Link
               href={`/support/${category}`}
-              className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors"
+              className="inline-flex items-center gap-2 text-brand-secondary-400 hover:text-brand-secondary-300 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to {categoryTitle}
@@ -90,7 +90,7 @@ const SupportGuideDetail = () => {
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden transition-colors duration-300">
       {/* Ambient Background Glows */}
-      <div className="absolute top-0 right-1/4 w-125 h-125 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-[120px] -z-10 animate-pulse" />
+      <div className="absolute top-0 right-1/4 w-125 h-125 bg-brand-secondary-500/5 dark:bg-brand-secondary-500/10 rounded-full blur-[120px] -z-10 animate-pulse" />
       <div className="absolute bottom-0 left-1/4 w-125 h-125 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[120px] -z-10" />
 
       <div className="pt-8 pb-12">
@@ -99,7 +99,7 @@ const SupportGuideDetail = () => {
           <div className="mb-8">
             <Link
               href={`/support/${category}`}
-              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors group"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span>Back to {categoryTitle}</span>
@@ -109,9 +109,9 @@ const SupportGuideDetail = () => {
           <motion.article
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-card/40 dark:bg-slate-900/40 backdrop-blur-sm rounded border border-border overflow-hidden shadow relative"
+            className="bg-card/40 dark:bg-slate-900/40  rounded border border-border overflow-hidden shadow relative"
           >
-            <div className="absolute inset-0 bg-linear-to-br from-emerald-500/5 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-linear-to-br from-brand-secondary-500/5 to-transparent pointer-events-none" />
 
             {/* Cover Image */}
             {guide.coverImage && (
@@ -131,7 +131,7 @@ const SupportGuideDetail = () => {
             <div className="pt-8 md:p-16 relative z-10">
               {/* Category Badge */}
               <div className="flex items-center gap-2 mb-8">
-                <span className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/40 rounded-full border border-emerald-200 dark:border-emerald-500/20 uppercase tracking-wider">
+                <span className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-900/40 rounded-full border border-brand-secondary-200 dark:border-brand-secondary-500/20 uppercase tracking-wider">
                   {category === "software" ? (
                     <Settings className="w-4 h-4" />
                   ) : (
@@ -149,12 +149,12 @@ const SupportGuideDetail = () => {
               {/* Meta */}
               <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground mb-10 pb-10 border-b border-border">
                 <span className="flex items-center gap-2 px-3 py-1.5 rounded bg-secondary border border-border">
-                  <Calendar className="w-4 h-4 text-emerald-500/60" />
+                  <Calendar className="w-4 h-4 text-brand-secondary-500/60" />
                   {format(new Date(guide.createdAt), "MMMM d, yyyy")}
                 </span>
                 {guide.authorName && (
                   <span className="flex items-center gap-2 px-3 py-1.5 rounded bg-secondary border border-border">
-                    <User className="w-4 h-4 text-emerald-500/60" />
+                    <User className="w-4 h-4 text-brand-secondary-500/60" />
                     {guide.authorName}
                   </span>
                 )}
@@ -172,12 +172,12 @@ const SupportGuideDetail = () => {
                 className="prose prose-lg prose-slate dark:prose-invert max-w-none 
  prose-headings: prose-headings:text-foreground prose-headings:tracking-tight
  prose-p:text-muted-foreground prose-p:leading-relaxed
- prose-a:text-emerald-600 dark:prose-a:text-emerald-400 prose-a:font-bold hover:prose-a:text-emerald-700 dark:hover:prose-a:text-emerald-300 prose-a:transition-colors
+ prose-a:text-brand-secondary-600 dark:prose-a:text-brand-secondary-400 prose-a:font-bold hover:prose-a:text-brand-secondary-700 dark:hover:prose-a:text-brand-secondary-300 prose-a:transition-colors
  prose-img:rounded prose-img:shadow
- prose-strong:text-emerald-600 dark:prose-strong:text-emerald-400
- prose-code:text-emerald-700 dark:prose-code:text-emerald-300 prose-code:bg-emerald-500/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none
+ prose-strong:text-brand-secondary-600 dark:prose-strong:text-brand-secondary-400
+ prose-code:text-brand-secondary-700 dark:prose-code:text-brand-secondary-300 prose-code:bg-brand-secondary-500/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none
  prose-pre:bg-secondary/50 dark:prose-pre:bg-slate-800/50 prose-pre:border prose-pre:border-border prose-pre:rounded
- prose-blockquote:border-l-4 prose-blockquote:border-emerald-500 prose-blockquote:bg-emerald-500/5 prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:rounded-r-2xl prose-blockquote:italic
+ prose-blockquote:border-l-4 prose-blockquote:border-brand-secondary-500 prose-blockquote:bg-brand-secondary-500/5 prose-blockquote:py-2 prose-blockquote:px-6 prose-blockquote:rounded-r-2xl prose-blockquote:italic
  "
               >
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>

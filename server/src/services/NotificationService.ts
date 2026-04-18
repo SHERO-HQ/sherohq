@@ -110,10 +110,97 @@ class NotificationService {
     await this.ensureInitialized();
     console.log(`\n--- 🔔 ORDER NOTIFICATION [Order: ${orderId}] ---`);
 
+    // 1. Notify Customer
     await this.sendOrderEmail(orderId, shippingInfo, items, total);
     await this.sendSMS(orderId, shippingInfo);
 
+    // 2. Notify Admin (Async)
+    this.sendAdminOrderAlert(orderId, shippingInfo, items, total).catch((err) =>
+      console.error("❌ Admin notification failed:", err),
+    );
+
+    // 3. Notify Customer via WhatsApp (Async)
+    this.sendCustomerWhatsApp(orderId, shippingInfo, total).catch((err: any) =>
+      console.error("❌ Customer WhatsApp notification failed:", err),
+    );
+
     console.log(`--- 🏁 END NOTIFICATION ---\n`);
+  }
+
+  private async sendCustomerWhatsApp(
+    orderId: string,
+    shippingInfo: ShippingInfo,
+    total: number,
+  ) {
+    const readableOrderId = toReadableOrderId(orderId);
+    const message = `SHERO TECHNOLOGIES: Order ${readableOrderId} confirmed! Total items (GH₵${total.toFixed(2)}) will be delivered to ${shippingInfo.city}. Thanks for shopping with us!\n\nTrack your order here: ${process.env.FRONTEND_URL}/track/${orderId}`;
+
+    if (
+      process.env.WHATSAPP_ACCESS_TOKEN &&
+      process.env.WHATSAPP_PHONE_NUMBER_ID
+    ) {
+      await this.sendNewsletterCampaignWhatsApp(shippingInfo.phone, {
+        content: message,
+        mode: "text",
+      });
+      console.log(`✅ Customer WhatsApp sent for ${readableOrderId}`);
+    }
+  }
+
+  private async sendAdminOrderAlert(
+    orderId: string,
+    shippingInfo: ShippingInfo,
+    items: OrderItem[],
+    total: number,
+  ) {
+    const adminEmail =
+      process.env.ADMIN_NOTIFICATION_EMAIL || "admin@sherohq.com";
+    const adminPhone = process.env.ADMIN_NOTIFICATION_PHONE;
+    const readableOrderId = toReadableOrderId(orderId);
+
+    console.log(`📣 Notifying Admin of new order: ${readableOrderId}`);
+
+    // 1. Email Alert to Admin
+    const itemsList = items
+      .map((i) => `${i.name} x${i.quantity}`)
+      .join(", ");
+    const subject = `🚨 NEW ORDER: ${readableOrderId}`;
+    const baseUrl =
+      process.env.FRONTEND_URL?.replace(/\/$/, "") || "https://sherohq.com";
+
+    const htmlContent = `
+      <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+        <h2 style="color: #059669;">New Order Received!</h2>
+        <p>A new order has been placed on SHERO TECHNOLOGIES.</p>
+        <div style="background: #f9fafb; padding: 15px; border-radius: 5px; margin: 20px 0;">
+          <p><strong>Order ID:</strong> ${readableOrderId}</p>
+          <p><strong>Customer:</strong> ${shippingInfo.firstName} ${shippingInfo.lastName} (${shippingInfo.email})</p>
+          <p><strong>Phone:</strong> ${shippingInfo.phone}</p>
+          <p><strong>Items:</strong> ${itemsList}</p>
+          <p><strong>Total:</strong> GH₵${total.toFixed(2)}</p>
+          <p><strong>Location:</strong> ${shippingInfo.city}, ${shippingInfo.region}</p>
+        </div>
+        <div style="text-align: center;">
+          <a href="${baseUrl}/admin/orders/${orderId}" style="display: inline-block; background: #059669; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">View in Admin Panel</a>
+        </div>
+      </div>
+    `;
+
+    await this.sendEmail(adminEmail, subject, htmlContent, "info");
+
+    // 2. SMS/WhatsApp Alert to Admin
+    if (adminPhone) {
+      const smsMessage = `🚨 SHERO Alert: NEW ORDER ${readableOrderId} by ${shippingInfo.firstName}. Total: GH₵${total.toFixed(2)}. Check Admin Panel!`;
+      await this.sendHubtelSMS(adminPhone, smsMessage);
+
+      // Also try WhatsApp if tokens are present
+      if (process.env.WHATSAPP_ACCESS_TOKEN && process.env.WHATSAPP_PHONE_NUMBER_ID) {
+        await this.sendNewsletterCampaignWhatsApp(adminPhone, {
+          content: smsMessage,
+          mode: "text",
+        }).catch((err: any) => console.error("Admin WhatsApp failed:", err));
+      }
+    }
   }
 
   private async sendOrderEmail(
@@ -367,6 +454,7 @@ class NotificationService {
     await this.ensureInitialized();
     console.log(`\n--- 🧾 PAYMENT RECEIPT [Order: ${orderId}] ---`);
 
+    // 1. Notify Customer
     await this.sendReceiptEmail(
       orderId,
       shippingInfo,
@@ -375,7 +463,67 @@ class NotificationService {
       paymentDetails,
     );
 
+    // 2. Notify Admin (Async)
+    this.sendAdminPaymentAlert(
+      orderId,
+      shippingInfo,
+      total,
+      paymentDetails,
+    ).catch((err: any) => console.error("❌ Admin payment notification failed:", err));
+
     console.log(`--- 🏁 END RECEIPT ---\n`);
+  }
+
+  private async sendAdminPaymentAlert(
+    orderId: string,
+    shippingInfo: ShippingInfo,
+    total: number,
+    paymentDetails?: { method: string; transactionId?: string },
+  ) {
+    const adminEmail =
+      process.env.ADMIN_NOTIFICATION_EMAIL || "admin@sherohq.com";
+    const adminPhone = process.env.ADMIN_NOTIFICATION_PHONE;
+    const readableOrderId = toReadableOrderId(orderId);
+
+    console.log(`💰 Notifying Admin of payment: ${readableOrderId}`);
+
+    // 1. Email Alert to Admin
+    const subject = `💰 PAYMENT RECEIVED: ${readableOrderId}`;
+    const baseUrl =
+      process.env.FRONTEND_URL?.replace(/\/$/, "") || "https://sherohq.com";
+
+    const htmlContent = `
+      <div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+        <h2 style="color: #059669;">Payment Confirmed!</h2>
+        <p>A payment has been successfully received for order ${readableOrderId}.</p>
+        <div style="background: #f0fdf4; padding: 15px; border-radius: 5px; margin: 20px 0; border: 1px solid #bbf7d0;">
+          <p><strong>Order ID:</strong> ${readableOrderId}</p>
+          <p><strong>Amount Paid:</strong> GH₵${total.toFixed(2)}</p>
+          <p><strong>Customer:</strong> ${shippingInfo.firstName} ${shippingInfo.lastName}</p>
+          <p><strong>Payment Method:</strong> ${paymentDetails?.method || "Online Payment"}</p>
+          ${paymentDetails?.transactionId ? `<p><strong>Transaction ID:</strong> ${paymentDetails.transactionId}</p>` : ""}
+        </div>
+        <div style="text-align: center;">
+          <a href="${baseUrl}/admin/orders/${orderId}" style="display: inline-block; background: #059669; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">Manage Order</a>
+        </div>
+      </div>
+    `;
+
+    await this.sendEmail(adminEmail, subject, htmlContent, "info");
+
+    // 2. WhatsApp Alert to Admin
+    if (adminPhone) {
+      const msg = `💰 SHERO Payment: GH₵${total.toFixed(2)} received for ${readableOrderId} (${shippingInfo.firstName}). Method: ${paymentDetails?.method || "Online"}. Check Admin Panel!`;
+
+      await this.sendHubtelSMS(adminPhone, msg);
+
+      if (process.env.WHATSAPP_ACCESS_TOKEN && process.env.WHATSAPP_PHONE_NUMBER_ID) {
+        await this.sendNewsletterCampaignWhatsApp(adminPhone, {
+          content: msg,
+          mode: "text",
+        }).catch((err: any) => console.error("Admin Payment WhatsApp failed:", err));
+      }
+    }
   }
 
   private async sendReceiptEmail(
@@ -620,6 +768,7 @@ class NotificationService {
     service: string,
     date: Date,
     time: string,
+    phone?: string,
   ) {
     await this.ensureInitialized();
     const formattedDate = date.toLocaleDateString("en-US", {
@@ -663,6 +812,63 @@ class NotificationService {
       htmlContent,
       "support",
     );
+
+    // 2. Admin Alert (WhatsApp)
+    const adminPhone = process.env.ADMIN_NOTIFICATION_PHONE;
+    const adminMsg = `🗓️ NEW CONSULTATION: ${name} booked ${service} for ${formattedDate} at ${time} GMT.`;
+    
+    if (adminPhone) {
+      this.sendNewsletterCampaignWhatsApp(adminPhone, { content: adminMsg, mode: "text" }).catch((e: any) => console.error("Admin Schedule WhatsApp failed:", e));
+    }
+
+    // 3. Customer WhatsApp
+    if (phone) {
+      const customerMsg = `SHERO: Consultation Confirmed! ${service} on ${formattedDate} at ${time} GMT. We will contact you shortly.`;
+      this.sendNewsletterCampaignWhatsApp(phone, { content: customerMsg, mode: "text" }).catch((e: any) => console.error("Customer Schedule WhatsApp failed:", e));
+    }
+  }
+
+  public async sendTicketNotification(ticket: {
+    ticket_no: number;
+    name: string;
+    email: string;
+    phone?: string;
+    subject: string;
+    category: string;
+    id: string;
+  }) {
+    await this.ensureInitialized();
+    const baseUrl = process.env.FRONTEND_URL || "https://sherohq.com";
+    const trackUrl = `${baseUrl}/track-ticket/${ticket.id}`;
+    
+    // 1. Email to Customer
+    const htmlContent = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+        <h2 style="color: #059669; text-align: center;">Support Ticket Created</h2>
+        <p>Hi ${ticket.name},</p>
+        <p>We've received your support request. A ticket has been created for you.</p>
+        <div style="background: #f9fafb; padding: 15px; border-radius: 5px; margin: 20px 0;">
+          <p><strong>Ticket #:</strong> ${ticket.ticket_no}</p>
+          <p><strong>Category:</strong> ${ticket.category}</p>
+          <p><strong>Subject:</strong> ${ticket.subject}</p>
+        </div>
+        <p>You can track the status of your ticket here: <a href="${trackUrl}">${trackUrl}</a></p>
+      </div>
+    `;
+    await this.sendEmail(ticket.email, `Ticket Created: #${ticket.ticket_no} - ${ticket.subject}`, htmlContent, "support");
+
+    // 2. Admin Alert (WhatsApp)
+    const adminPhone = process.env.ADMIN_NOTIFICATION_PHONE;
+    const adminMsg = `🎫 NEW TICKET #${ticket.ticket_no}: ${ticket.name} - ${ticket.subject} (Cat: ${ticket.category})`;
+    if (adminPhone) {
+      this.sendNewsletterCampaignWhatsApp(adminPhone, { content: adminMsg, mode: "text" }).catch((e: any) => console.error("Admin Ticket WhatsApp failed:", e));
+    }
+
+    // 3. Customer WhatsApp
+    if (ticket.phone) {
+      const customerMsg = `SHERO: Ticket #${ticket.ticket_no} created! We'll look into "${ticket.subject}" and get back to you. Track status here: ${trackUrl}`;
+      this.sendNewsletterCampaignWhatsApp(ticket.phone, { content: customerMsg, mode: "text" }).catch((e: any) => console.error("Customer Ticket WhatsApp failed:", e));
+    }
   }
 
   public async sendContactConfirmation(
@@ -696,6 +902,13 @@ class NotificationService {
       htmlContent,
       "support",
     );
+
+    // Admin Alert (WhatsApp)
+    const adminPhone = process.env.ADMIN_NOTIFICATION_PHONE;
+    if (adminPhone) {
+      const adminMsg = `📧 NEW INQUIRY: ${name} (${email}) - Subj: ${subject}.\nMsg: ${message.slice(0, 100)}${message.length > 100 ? "..." : ""}`;
+      this.sendNewsletterCampaignWhatsApp(adminPhone, { content: adminMsg, mode: "text" }).catch((e: any) => console.error("Admin Inquiry WhatsApp failed:", e));
+    }
   }
 
   public async sendNewsletterWelcome(email: string) {

@@ -75,7 +75,7 @@ function Calendar({
  }}
  modifiersClassNames={{
  selected:
- "bg-emerald-600 !text-white hover:bg-emerald-700 hover:!text-white focus:bg-emerald-700 focus:!text-white dark:bg-emerald-600 dark:!text-white shadow ring-1 ring-emerald-400 font-bold",
+ "bg-brand-secondary-600 !text-white hover:bg-brand-secondary-700 hover:!text-white focus:bg-brand-secondary-700 focus:!text-white dark:bg-brand-secondary-600 dark:!text-white shadow ring-1 ring-brand-secondary-400 font-bold",
  today:
  "bg-slate-100 text-slate-900 dark:bg-slate-800/80 dark:text-slate-100 font-semibold border border-slate-200 dark:border-slate-700",
  outside:

@@ -323,14 +323,14 @@ const CheckoutFlow = () => {
         <div className="mb-8 sm:hidden">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+              <p className="text-sm font-medium text-brand-secondary-600 dark:text-brand-secondary-400">
                 Step {currentStep} of {steps.length}
               </p>
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
                 {steps[currentStep - 1].title}
               </h2>
             </div>
-            <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+            <div className="w-12 h-12 rounded-full bg-brand-secondary-100 dark:bg-brand-secondary-900/30 flex items-center justify-center text-brand-secondary-600 dark:text-brand-secondary-400">
               {(() => {
                 const Icon = steps[currentStep - 1].icon;
                 return <Icon className="w-6 h-6" />;
@@ -340,7 +340,7 @@ const CheckoutFlow = () => {
           {/* Progress Bar Line */}
           <div className="mt-4 h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
             <div
-              className="h-full bg-emerald-600 rounded-full transition duration-300"
+              className="h-full bg-brand-secondary-600 rounded-full transition duration-300"
               style={{ width: `${(currentStep / steps.length) * 100}%` }}
             />
           </div>
@@ -352,7 +352,7 @@ const CheckoutFlow = () => {
             {/* Progress Track & Line */}
             <div className="absolute top-6 left-6 right-6 h-1 bg-slate-200 dark:bg-slate-800 -translate-y-1/2 rounded-full">
               <div
-                className="h-full bg-emerald-600 transition duration-300 rounded-full"
+                className="h-full bg-brand-secondary-600 transition duration-300 rounded-full"
                 style={{
                   width: `${((currentStep - 1) / (steps.length - 1)) * 100}%`,
                 }}
@@ -369,10 +369,10 @@ const CheckoutFlow = () => {
                   "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400";
                 if (isCompleted) {
                   stepBaseStyle =
-                    "bg-emerald-600 border-emerald-600 text-white";
+                    "bg-brand-secondary-600 border-brand-secondary-600 text-white";
                 } else if (isActive) {
                   stepBaseStyle =
-                    "bg-emerald-600 border-emerald-100 dark:border-emerald-900/50 text-white shadow shadow-emerald-500/30";
+                    "bg-brand-secondary-600 border-brand-secondary-100 dark:border-brand-secondary-900/50 text-white shadow shadow-brand-secondary-500/30";
                 }
 
                 return (
@@ -407,7 +407,7 @@ const CheckoutFlow = () => {
             onClick={() => setShowMobileSummary(!showMobileSummary)}
             className="w-full py-2 flex items-center justify-between text-left"
           >
-            <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-medium">
+            <div className="flex items-center gap-2 text-brand-secondary-600 dark:text-brand-secondary-400 font-medium">
               <ShoppingCart className="w-5 h-5" />
               <span>{showMobileSummary ? "Hide" : "Show"} Order Summary</span>
               {showMobileSummary ? (
@@ -486,7 +486,7 @@ const CheckoutFlow = () => {
                       <div className="space-y-4">
                         {cart.map((item) => (
                           <div key={item.id} className="space-y-2">
-                            <div className="flex flex-row sm:flex-row gap-4 p-4 rounded border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 transition-colors">
+                            <div className="flex flex-row sm:flex-row gap-4 p-4 rounded border border-slate-200 dark:border-slate-800 hover:border-brand-secondary-500 dark:hover:border-brand-secondary-500 transition-colors">
                               <div className="relative w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center overflow-hidden shrink-0">
                                 {item.image &&
                                 (item.image.startsWith("/uploads") ||
@@ -510,7 +510,7 @@ const CheckoutFlow = () => {
                                 <p className="text-sm text-slate-500 dark:text-slate-400">
                                   {item.category}
                                 </p>
-                                <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mt-2">
+                                <p className="text-lg font-bold text-brand-secondary-600 dark:text-brand-secondary-400 mt-2">
                                   GH₵{item.price}
                                 </p>
                               </div>
@@ -712,15 +712,15 @@ const CheckoutFlow = () => {
                           }
                           className={`w-full p-3 sm:p-6 rounded border-2 transition-colors text-left ${
                             paymentMethod === "store_pickup"
-                              ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
-                              : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
+                              ? "border-brand-secondary-500 bg-brand-secondary-50 dark:bg-brand-secondary-900/20"
+                              : "border-slate-200 dark:border-slate-800 hover:border-brand-secondary-500"
                           }`}
                         >
                           <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
                             <div
                               className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
                                 paymentMethod === "store_pickup"
-                                  ? "bg-emerald-600 text-white"
+                                  ? "bg-brand-secondary-600 text-white"
                                   : "bg-slate-100 dark:bg-slate-800 text-slate-600"
                               }`}
                             >
@@ -742,15 +742,15 @@ const CheckoutFlow = () => {
                           onClick={() => setValue("paymentMethod", "momo")}
                           className={`w-full p-3 sm:p-6 rounded border-2 transition-colors text-left ${
                             paymentMethod === "momo"
-                              ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
-                              : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
+                              ? "border-brand-secondary-500 bg-brand-secondary-50 dark:bg-brand-secondary-900/20"
+                              : "border-slate-200 dark:border-slate-800 hover:border-brand-secondary-500"
                           }`}
                         >
                           <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
                             <div
                               className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
                                 paymentMethod === "momo"
-                                  ? "bg-emerald-600 text-white"
+                                  ? "bg-brand-secondary-600 text-white"
                                   : "bg-slate-100 dark:bg-slate-800 text-slate-600"
                               }`}
                             >
@@ -772,15 +772,15 @@ const CheckoutFlow = () => {
                           onClick={() => setValue("paymentMethod", "card")}
                           className={`w-full p-3 sm:p-6 rounded border-2 transition-colors text-left ${
                             paymentMethod === "card"
-                              ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
-                              : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
+                              ? "border-brand-secondary-500 bg-brand-secondary-50 dark:bg-brand-secondary-900/20"
+                              : "border-slate-200 dark:border-slate-800 hover:border-brand-secondary-500"
                           }`}
                         >
                           <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
                             <div
                               className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
                                 paymentMethod === "card"
-                                  ? "bg-emerald-600 text-white"
+                                  ? "bg-brand-secondary-600 text-white"
                                   : "bg-slate-100 dark:bg-slate-800 text-slate-600"
                               }`}
                             >
@@ -802,15 +802,15 @@ const CheckoutFlow = () => {
                           onClick={() => setValue("paymentMethod", "paystack")}
                           className={`w-full p-3 sm:p-6 rounded border-2 transition-colors text-left ${
                             paymentMethod === "paystack"
-                              ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
-                              : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
+                              ? "border-brand-secondary-500 bg-brand-secondary-50 dark:bg-brand-secondary-900/20"
+                              : "border-slate-200 dark:border-slate-800 hover:border-brand-secondary-500"
                           }`}
                         >
                           <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
                             <div
                               className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
                                 paymentMethod === "paystack"
-                                  ? "bg-emerald-600 text-white"
+                                  ? "bg-brand-secondary-600 text-white"
                                   : "bg-slate-100 dark:bg-slate-800 text-slate-600"
                               }`}
                             >
@@ -832,15 +832,15 @@ const CheckoutFlow = () => {
                           onClick={() => setValue("paymentMethod", "cod")}
                           className={`w-full p-3 sm:p-6 rounded border-2 transition-colors text-left ${
                             paymentMethod === "cod"
-                              ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
-                              : "border-slate-200 dark:border-slate-800 hover:border-emerald-500"
+                              ? "border-brand-secondary-500 bg-brand-secondary-50 dark:bg-brand-secondary-900/20"
+                              : "border-slate-200 dark:border-slate-800 hover:border-brand-secondary-500"
                           }`}
                         >
                           <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
                             <div
                               className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
                                 paymentMethod === "cod"
-                                  ? "bg-emerald-600 text-white"
+                                  ? "bg-brand-secondary-600 text-white"
                                   : "bg-slate-100 dark:bg-slate-800 text-slate-600"
                               }`}
                             >
@@ -897,9 +897,9 @@ const CheckoutFlow = () => {
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ delay: 0.2, type: "spring" }}
-                        className="w-24 h-24 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-6"
+                        className="w-24 h-24 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center mx-auto mb-6"
                       >
-                        <CheckCircle className="w-12 h-12 text-emerald-600 dark:text-emerald-400" />
+                        <CheckCircle className="w-12 h-12 text-brand-secondary-600 dark:text-brand-secondary-400" />
                       </motion.div>
 
                       <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-4">
@@ -908,7 +908,7 @@ const CheckoutFlow = () => {
                       <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-md mx-auto">
                         Thank you for your order! We've sent a confirmation
                         email to{" "}
-                        <span className="font-semibold text-emerald-600 dark:text-emerald-400 block sm:inline wrap-break-word">
+                        <span className="font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 block sm:inline wrap-break-word">
                           {email}
                         </span>
                       </p>
@@ -927,7 +927,7 @@ const CheckoutFlow = () => {
                         <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
                           Order Total
                         </p>
-                        <p className="text-2xl sm:text-4xl font-bold text-emerald-600 dark:text-emerald-400 wrap-break-word">
+                        <p className="text-2xl sm:text-4xl font-bold text-brand-secondary-600 dark:text-brand-secondary-400 wrap-break-word">
                           GH₵{confirmedTotal.toFixed(2)}
                         </p>
                       </div>

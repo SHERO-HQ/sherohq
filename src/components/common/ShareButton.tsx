@@ -157,12 +157,12 @@ const ShareButton: React.FC<ShareButtonProps> = ({
  name: "Copy Link",
  icon: copied ? Check : Link,
  onClick: handleCopyLink,
- color: copied ? "text-emerald-500" : "text-slate-600 dark:text-slate-400",
+ color: copied ? "text-brand-secondary-500" : "text-slate-600 dark:text-slate-400",
  },
  {
  name: "WhatsApp",
  icon: WhatsAppIcon,
- href: `https://wa.me/?text=${encodeURIComponent(`${title}: ${resolvedShareUrl}`)}`,
+ href: `https://wa.me/?text=${encodeURIComponent(`🛍️ *Check out ${title} on SHERO*\n\n🔗 ${resolvedShareUrl}`)}`,
  color: "text-[#25D366]",
  },
  {
@@ -185,7 +185,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
  <div className={`relative ${className}`} ref={dropdownRef}>
  <button
  onClick={handleToggleDropdown}
- className="cursor-pointer px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 hover:border-emerald-500 transition flex items-center justify-center gap-2"
+ className="cursor-pointer px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 hover:border-brand-secondary-500 transition flex items-center justify-center gap-2"
  aria-label="Share this product"
  >
  <Share2 className="w-5 h-5 text-slate-600 dark:text-slate-400" />
@@ -214,9 +214,9 @@ const ShareButton: React.FC<ShareButtonProps> = ({
  {canNativeShare && (
  <button
  onClick={handleNativeShare}
- className="w-full flex items-center gap-3 px-3 py-2.5 text-xs font-bold rounded hover:bg-emerald-500/10 hover:text-emerald-600 dark:hover:text-emerald-400 transition group/native"
+ className="w-full flex items-center gap-3 px-3 py-2.5 text-xs font-bold rounded hover:bg-brand-secondary-500/10 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition group/native"
  >
- <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center group-hover/native:bg-emerald-500/20 transition-colors">
+ <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/5 flex items-center justify-center group-hover/native:bg-brand-secondary-500/20 transition-colors">
  <Share2 className="w-4 h-4" />
  </div>
  <div className="flex flex-col items-start">

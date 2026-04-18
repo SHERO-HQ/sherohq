@@ -39,7 +39,7 @@ const PILLARS: PillarsProps[] = [
       "Professional setup and management of server systems, POS, and secure enterprise networks.",
     icon: <Server className="w-6 h-6" />,
     className: "md:col-span-1",
-    gradient: "from-emerald-500/20 to-green-500/20",
+    gradient: "from-brand-secondary-500/20 to-green-500/20",
   },
   {
     header: "Managed Support",
@@ -98,7 +98,7 @@ const LandingPillars = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
               whileHover={{ y: -5 }}
-              className={`group relative overflow-hidden rounded bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 p-8 hover:border-emerald-500/50 dark:hover:border-white/20 transition duration-300 ${pillar.className}`}
+              className={`group relative overflow-hidden rounded bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 p-8 hover:border-brand-secondary-500/50 dark:hover:border-white/20 transition duration-300 ${pillar.className}`}
             >
               {/* Hover Gradient Overlay */}
               <div
@@ -111,11 +111,11 @@ const LandingPillars = () => {
                   <div className="p-3 rounded bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white group-hover:scale-110 transition duration-300">
                     {pillar.icon}
                   </div>
-                  <ArrowUpRight className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-emerald-600 dark:group-hover:text-white transition-colors" />
+                  <ArrowUpRight className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-brand-secondary-600 dark:group-hover:text-white transition-colors" />
                 </div>
 
                 <div className="mt-auto">
-                  <h4 className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-1 uppercase tracking-wider transition-colors duration-300">
+                  <h4 className="text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 mb-1 uppercase tracking-wider transition-colors duration-300">
                     {pillar.subheader}
                   </h4>
                   <h3 className="md:text-2xl text-lg font-bold text-slate-900 dark:text-white mb-3 transition-colors duration-300">

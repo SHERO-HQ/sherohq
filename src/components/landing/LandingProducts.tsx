@@ -116,7 +116,7 @@ const LandingProducts = () => {
                 <TabsTrigger
                   key={category}
                   value={category}
-                  className="px-6 py-2 text-sm whitespace-nowrap data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow transition duration-300"
+                  className="px-6 py-2 text-sm whitespace-nowrap data-[state=active]:bg-brand-secondary-600 data-[state=active]:text-white data-[state=active]:shadow transition duration-300"
                 >
                   {category}
                 </TabsTrigger>
@@ -175,8 +175,8 @@ const LandingProducts = () => {
             className="inline-flex items-center gap-3 px-8 py-2 rounded
  border-2 border-slate-300 dark:border-slate-700
  text-slate-700 dark:text-slate-300 font-semibold
- hover:border-emerald-500 dark:hover:border-emerald-500
- hover:text-emerald-600 dark:hover:text-emerald-400
+ hover:border-brand-secondary-500 dark:hover:border-brand-secondary-500
+ hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400
  hover:shadow
  transition duration-300 group"
           >

@@ -114,7 +114,7 @@ const LandingAbout = () => {
               </div>
 
               {/* Floating Badge Overlay */}
-              <div className="absolute -top-24 right-0 dark:bg-brand-secondary-50/10 bg-white/40 backdrop-blur-sm border border-white/20 dark:border-brand-secondary-600/20 px-4 py-2 rounded transform translate-y-1/2 shadow">
+              <div className="absolute -top-24 right-0 dark:bg-brand-secondary-50/10 bg-white/40  border border-white/20 dark:border-brand-secondary-600/20 px-4 py-2 rounded transform translate-y-1/2 shadow">
                 <p className="text-sm font-bold dark:text-white text-slate-600 tracking-wider">
                   10x
                 </p>

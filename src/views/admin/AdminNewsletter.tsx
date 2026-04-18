@@ -424,7 +424,7 @@ export default function AdminNewsletter() {
         <div className="space-y-3">
           <Link
             href="/admin/dashboard"
-            className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors group"
+            className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-brand-secondary-400 transition-colors group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
             <span>Back to Dashboard</span>
@@ -463,7 +463,7 @@ export default function AdminNewsletter() {
               <CardTitle className="text-sm text-slate-300">Active</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold text-emerald-400">
+              <p className="text-2xl font-bold text-brand-secondary-400">
                 {counts.active}
               </p>
             </CardContent>
@@ -486,21 +486,21 @@ export default function AdminNewsletter() {
           <TabsList className="mb-4 w-full justify-start bg-slate-900/50 text-slate-300">
             <TabsTrigger
               value="compose"
-              className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-300"
+              className="data-[state=active]:bg-brand-secondary-500/20 data-[state=active]:text-brand-secondary-300"
             >
               <Send className="mr-2 h-4 w-4" />
               Compose
             </TabsTrigger>
             <TabsTrigger
               value="history"
-              className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-300"
+              className="data-[state=active]:bg-brand-secondary-500/20 data-[state=active]:text-brand-secondary-300"
             >
               <History className="mr-2 h-4 w-4" />
               History
             </TabsTrigger>
             <TabsTrigger
               value="subscribers"
-              className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-emerald-300"
+              className="data-[state=active]:bg-brand-secondary-500/20 data-[state=active]:text-brand-secondary-300"
             >
               <Users className="mr-2 h-4 w-4" />
               Subscribers
@@ -513,9 +513,9 @@ export default function AdminNewsletter() {
                 <CardHeader>
                   <CardTitle className="text-white flex items-center gap-2">
                     {channel === "whatsapp" ? (
-                      <MessageCircle className="w-5 h-5 text-emerald-400" />
+                      <MessageCircle className="w-5 h-5 text-brand-secondary-400" />
                     ) : (
-                      <Mail className="w-5 h-5 text-emerald-400" />
+                      <Mail className="w-5 h-5 text-brand-secondary-400" />
                     )}
                     Campaign Composer
                   </CardTitle>
@@ -541,7 +541,7 @@ export default function AdminNewsletter() {
                             setWhatsAppTemplateParamsText("");
                           }
                         }}
-                        className="w-full h-10 rounded border border-white/10 bg-slate-900/50 px-3 text-sm text-white outline-none focus:ring-2 focus:ring-emerald-500/30"
+                        className="w-full h-10 rounded border border-white/10 bg-slate-900/50 px-3 text-sm text-white outline-none focus:ring-2 focus:ring-brand-secondary-500/30"
                       >
                         <option value="email">Email</option>
                         <option value="sms">SMS</option>
@@ -581,7 +581,7 @@ export default function AdminNewsletter() {
                       onChange={(e) => setContent(e.target.value)}
                       placeholder={contentPlaceholder}
                       rows={12}
-                      className="w-full rounded border border-white/10 bg-slate-900/50 p-3 text-sm text-white placeholder:text-slate-600 outline-none focus:ring-2 focus:ring-emerald-500/30"
+                      className="w-full rounded border border-white/10 bg-slate-900/50 p-3 text-sm text-white placeholder:text-slate-600 outline-none focus:ring-2 focus:ring-brand-secondary-500/30"
                     />
                   </div>
                 </CardContent>
@@ -691,7 +691,7 @@ export default function AdminNewsletter() {
                             e.target.value as AudienceStatusFilter,
                           )
                         }
-                        className="w-full h-10 rounded border border-white/10 bg-slate-900/50 px-3 text-sm text-white outline-none focus:ring-2 focus:ring-emerald-500/30"
+                        className="w-full h-10 rounded border border-white/10 bg-slate-900/50 px-3 text-sm text-white outline-none focus:ring-2 focus:ring-brand-secondary-500/30"
                       >
                         <option value="active">Active</option>
                         <option value="all">All</option>
@@ -765,7 +765,7 @@ export default function AdminNewsletter() {
                     />
                     <Button
                       disabled={isSending}
-                      className="w-full bg-emerald-600 hover:bg-emerald-500 text-white"
+                      className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
                       onClick={() => void handleSendCampaign("live")}
                     >
                       <Send className="w-4 h-4 mr-2" />
@@ -848,7 +848,7 @@ export default function AdminNewsletter() {
                               <Badge
                                 className={
                                   campaign.status === "sent"
-                                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                                    ? "bg-brand-secondary-500/10 text-brand-secondary-400 border-brand-secondary-500/20"
                                     : campaign.status === "scheduled"
                                       ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
                                       : campaign.status === "failed"
@@ -940,7 +940,7 @@ export default function AdminNewsletter() {
                     onChange={(e) =>
                       setStatusFilter(e.target.value as SubscriberFilter)
                     }
-                    className="rounded border border-white/10 bg-slate-900/50 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-emerald-500/30"
+                    className="rounded border border-white/10 bg-slate-900/50 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-brand-secondary-500/30"
                   >
                     <option value="all">All</option>
                     <option value="active">Active</option>
@@ -1010,7 +1010,7 @@ export default function AdminNewsletter() {
                             </td>
                             <td className="py-3 pr-4">
                               {subscriber.status === "active" ? (
-                                <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20">
+                                <Badge className="bg-brand-secondary-500/10 text-brand-secondary-400 border-brand-secondary-500/20">
                                   Active
                                 </Badge>
                               ) : (
@@ -1025,7 +1025,7 @@ export default function AdminNewsletter() {
                                   <>
                                     <Button
                                       size="sm"
-                                      className="h-8 bg-emerald-600 hover:bg-emerald-500 text-white"
+                                      className="h-8 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
                                       disabled={isSavingContact}
                                       onClick={() =>
                                         void handleSaveSubscriberContact(

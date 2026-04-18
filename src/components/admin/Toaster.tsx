@@ -47,9 +47,9 @@ export default function Toaster() {
  animate={{ opacity: 1, scale: 1, x: 0 }}
  exit={{ opacity: 0, scale: 0.9, x: 20 }}
  className={cn(
- "pointer-events-auto flex items-start gap-3 p-4 rounded border shadow backdrop-blur-sm",
+ "pointer-events-auto flex items-start gap-3 p-4 rounded border shadow ",
  notification.type === "success" &&
- "bg-emerald-950/90 border-emerald-500/20 text-emerald-50",
+ "bg-brand-secondary-950/90 border-brand-secondary-500/20 text-brand-secondary-50",
  notification.type === "error" &&
  "bg-rose-950/90 border-rose-500/20 text-rose-50",
  notification.type === "warning" &&
@@ -60,7 +60,7 @@ export default function Toaster() {
  >
  <div className="shrink-0 mt-0.5">
  {notification.type === "success" && (
- <CheckCircle className="w-5 h-5 text-emerald-400" />
+ <CheckCircle className="w-5 h-5 text-brand-secondary-400" />
  )}
  {notification.type === "error" && (
  <XCircle className="w-5 h-5 text-rose-400" />

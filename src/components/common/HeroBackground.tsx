@@ -64,7 +64,7 @@ const HeroBackground: React.FC<HeroBackgroundProps> = ({
  {/* Gradient Orbs */}
  {showOrbs && (
  <div className="absolute inset-0">
- <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-emerald-500/5 dark:bg-emerald-500/5 blur-[100px] rounded-full" />
+ <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-brand-secondary-500/5 dark:bg-brand-secondary-500/5 blur-[100px] rounded-full" />
  <div className="absolute top-1/2 left-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-blue-500/5 dark:bg-blue-500/5 blur-[80px] rounded-full translate-x-10" />
  </div>
  )}

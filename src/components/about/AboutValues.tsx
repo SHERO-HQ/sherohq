@@ -9,7 +9,7 @@ const values = [
     title: "Innovation First",
     description:
       "We don't just follow trends; we set them. Our approach combines creative problem-solving with cutting-edge technology.",
-    color: "emerald",
+    color: "brand-secondary",
   },
   {
     icon: ShieldCheck,
@@ -64,13 +64,13 @@ const AboutValues = () => {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
               whileHover={{ y: -8 }}
-              className="group p-8 rounded bg-white dark:bg-slate-900/40 backdrop-blur-sm border border-slate-200 dark:border-white/5 hover:border-emerald-500/30 shadow-sm hover:shadow hover:shadow-emerald-500/5 transition duration-500"
+              className="group p-8 rounded bg-white dark:bg-slate-900/40  border border-slate-200 dark:border-white/5 hover:border-brand-secondary-500/30 shadow-sm hover:shadow hover:shadow-brand-secondary-500/5 transition duration-500"
             >
               <div
                 className={cn(
                   "w-12 h-12 rounded flex items-center justify-center mb-4 transition duration-500 border border-slate-200/50 dark:border-white/5 shadow-sm",
-                  item.color === "emerald" &&
-                    "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:bg-emerald-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-emerald-500/30",
+                  item.color === "brand-secondary" &&
+                    "bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:bg-brand-secondary-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-brand-secondary-500/30",
                   item.color === "blue" &&
                     "bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-blue-500/30",
                   item.color === "violet" &&
@@ -81,7 +81,7 @@ const AboutValues = () => {
               >
                 <item.icon className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-black text-slate-900 dark:text-white mb-3 tracking-tighter group-hover:text-emerald-500 transition-colors">
+              <h3 className="text-xl font-black text-slate-900 dark:text-white mb-3 tracking-tighter group-hover:text-brand-secondary-500 transition-colors">
                 {item.title}
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light group-hover:text-slate-800 dark:group-hover:text-slate-300 transition-colors line-clamp-3">

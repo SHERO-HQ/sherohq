@@ -52,8 +52,8 @@ const SolutionsHero = () => {
             transition={{ duration: 1, type: "spring", damping: 20 }}
             className="relative z-10 flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1 w-full lg:w-1/2"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-3 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm">
-              <Code className="size-4 text-emerald-500" />
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-3 rounded border border-brand-secondary-500/20 bg-brand-secondary-500/5 ">
+              <Code className="size-4 text-brand-secondary-500" />
               <span className="text-xs font-semibold tracking-widest uppercase text-brand-secondary-600 dark:text-brand-secondary-500">
                 Software & IT Solutions
               </span>
@@ -64,7 +64,7 @@ const SolutionsHero = () => {
                 (word, i) => (
                   <span
                     key={i}
-                    className={i === 0 || i === 2 ? "text-emerald-500" : ""}
+                    className={i === 0 || i === 2 ? "text-brand-secondary-500" : ""}
                   >
                     {word}{" "}
                   </span>
@@ -81,9 +81,9 @@ const SolutionsHero = () => {
               {features.map((feature, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-2.5 px-4 py-2 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-sm transition-colors hover:border-emerald-500/30"
+                  className="flex items-center gap-2.5 px-4 py-2 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-sm transition-colors hover:border-brand-secondary-500/30"
                 >
-                  <feature.icon className="size-3.5 text-emerald-500" />
+                  <feature.icon className="size-3.5 text-brand-secondary-500" />
                   <span className="text-xs font-semibold uppercase tracking-tight text-slate-600 dark:text-slate-300">
                     {feature.label}
                   </span>
@@ -93,7 +93,7 @@ const SolutionsHero = () => {
 
             <Link
               href="/consultation"
-              className="group w-full sm:w-auto flex items-center justify-center gap-6 px-12 h-10 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded font-bold uppercase tracking-widest text-sm hover:bg-emerald-600 dark:hover:bg-emerald-500 dark:hover:text-white transition shadow shadow-black/20"
+              className="group w-full sm:w-auto flex items-center justify-center gap-6 px-12 h-10 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded font-bold uppercase tracking-widest text-sm hover:bg-brand-secondary-600 dark:hover:bg-brand-secondary-500 dark:hover:text-white transition shadow shadow-black/20"
             >
               Let's Talk
               <ArrowRight
@@ -118,7 +118,7 @@ const SolutionsHero = () => {
           >
             <div className="relative w-full aspect-square max-w-70 sm:max-w-112.5 lg:max-w-137.5 group/visual">
               {/* Background Ambient Glows */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-emerald-500/5 dark:bg-emerald-500/5 blur-[100px] rounded-full pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-brand-secondary-500/5 dark:bg-brand-secondary-500/5 blur-[100px] rounded-full pointer-events-none" />
               <div className="absolute top-1/2 left-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-blue-500/5 dark:bg-blue-500/5 blur-[80px] rounded-full pointer-events-none translate-x-10" />
 
               {/* Main Visual Card */}
@@ -128,15 +128,15 @@ const SolutionsHero = () => {
 
                   {/* Central Iconography */}
                   <div className="relative z-10 w-32 h-32 sm:w-48 sm:h-48 flex items-center justify-center">
-                    <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full animate-pulse" />
-                    <Zap className="size-full text-emerald-500 drop-shadow-sm relative z-10" />
+                    <div className="absolute inset-0 bg-brand-secondary-500/20 blur-3xl rounded-full animate-pulse" />
+                    <Zap className="size-full text-brand-secondary-500 drop-shadow-sm relative z-10" />
                   </div>
 
                   {/* Floating Tech Badges */}
                   {/* <motion.div 
                       animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
                       transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                      className="absolute top-12 right-12 w-12 h-12 sm:w-16 sm:h-16 rounded bg-blue-500/20 backdrop-blur-sm flex items-center justify-center text-blue-500 border border-blue-500/30 shadow"
+                      className="absolute top-12 right-12 w-12 h-12 sm:w-16 sm:h-16 rounded bg-blue-500/20  flex items-center justify-center text-blue-500 border border-blue-500/30 shadow"
                     >
                       <Cpu size={28} className="sm:size-32" />
                    </motion.div>
@@ -144,7 +144,7 @@ const SolutionsHero = () => {
                    <motion.div 
                       animate={{ y: [0, 20, 0], rotate: [0, -8, 0] }}
                       transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                      className="absolute bottom-16 left-12 w-16 h-16 sm:w-20 sm:h-20 rounded bg-indigo-500/20 backdrop-blur-sm flex items-center justify-center text-indigo-500 border border-indigo-500/30 shadow"
+                      className="absolute bottom-16 left-12 w-16 h-16 sm:w-20 sm:h-20 rounded bg-indigo-500/20  flex items-center justify-center text-indigo-500 border border-indigo-500/30 shadow"
                     >
                       <Shield size={32} className="sm:size-40" />
                    </motion.div>
@@ -152,7 +152,7 @@ const SolutionsHero = () => {
                    <motion.div 
                       animate={{ x: [0, 15, 0] }}
                       transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                      className="absolute top-24 left-16 w-10 h-10 rounded bg-emerald-500/20 backdrop-blur-sm flex items-center justify-center text-emerald-500 border border-emerald-500/30"
+                      className="absolute top-24 left-16 w-10 h-10 rounded bg-brand-secondary-500/20  flex items-center justify-center text-brand-secondary-500 border border-brand-secondary-500/30"
                     >
                       <Zap size={20} />
                    </motion.div> */}
@@ -164,15 +164,15 @@ const SolutionsHero = () => {
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 1, duration: 0.8 }}
-                className="absolute -bottom-4 -right-4 p-4 sm:p-6 rounded bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-white/40 shadow z-20"
+                className="absolute -bottom-4 -right-4 p-4 sm:p-6 rounded bg-white/80 dark:bg-slate-900/80  border border-white/40 shadow z-20"
               >
                 <div className="flex items-center gap-4">
-                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-emerald-500 flex items-center justify-center text-white shadow shadow-emerald-500/30">
+                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-brand-secondary-500 flex items-center justify-center text-white shadow shadow-brand-secondary-500/30">
                       <Server size={20} className="sm:size-24" />
                    </div>
                    <div className="flex flex-col">
                       <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-slate-500">Tier 1 Infrastructure</span>
-                      <span className="text-xs sm:text-sm font-black text-emerald-500">SYSTEMS VERIFIED</span>
+                      <span className="text-xs sm:text-sm font-black text-brand-secondary-500">SYSTEMS VERIFIED</span>
                    </div>
                 </div>
               </motion.div> */}

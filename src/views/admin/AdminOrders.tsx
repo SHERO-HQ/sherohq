@@ -65,14 +65,14 @@ const OrderRow = memo(
         <td className="px-6 py-4">
           <Link
             href={`/admin/orders/${order.id}`}
-            className="text-xs font-mono text-slate-400 hover:text-emerald-400 transition-colors"
+            className="text-xs font-mono text-slate-400 hover:text-brand-secondary-400 transition-colors"
           >
             {toReadableOrderId(order.id)}
           </Link>
         </td>
         <td className="px-6 py-4">
           <div className="flex flex-col">
-            <span className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">
+            <span className="text-sm font-semibold text-white group-hover:text-brand-secondary-400 transition-colors">
               {order.shippingInfo.firstName} {order.shippingInfo.lastName}
             </span>
             <span className="text-xs text-slate-500 truncate max-w-[150px]">
@@ -147,7 +147,7 @@ const OrderRow = memo(
                   onClick={() => handleUpdateStatus(order.id, "delivered")}
                   className="cursor-pointer hover:bg-white/5"
                 >
-                  <PackageCheck className="w-4 h-4 mr-2 text-emerald-400" />{" "}
+                  <PackageCheck className="w-4 h-4 mr-2 text-brand-secondary-400" />{" "}
                   Delivered
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-white/5" />
@@ -259,7 +259,7 @@ export default function AdminOrders() {
         return { color: "text-purple-400 bg-purple-500/10", icon: Truck };
       case "delivered":
         return {
-          color: "text-emerald-400 bg-emerald-500/10",
+          color: "text-brand-secondary-400 bg-brand-secondary-500/10",
           icon: CheckCircle2,
         };
       case "cancelled":
@@ -307,7 +307,7 @@ export default function AdminOrders() {
   return (
     <div className="space-y-6 relative">
       {isPlaceholderData && (
-        <div className="absolute inset-0 bg-slate-900/10 backdrop-blur-[1px] z-10 pointer-events-none transition-opacity" />
+        <div className="absolute inset-0 bg-slate-900/10 -[1px] z-10 pointer-events-none transition-opacity" />
       )}
 
       {/* Header */}
@@ -366,7 +366,7 @@ export default function AdminOrders() {
           </DropdownMenu>
 
           <Link href="/admin/orders/new">
-            <Button className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition shadow shadow-emerald-500/20">
+            <Button className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold transition shadow shadow-brand-secondary-500/20">
               <Plus className="mr-2 h-4 w-4" /> Create Order
             </Button>
           </Link>
@@ -410,7 +410,7 @@ export default function AdminOrders() {
                 className={cn(
                   "px-4 py-1 rounded text-sm font-medium transition whitespace-nowrap",
                   statusFilter === status.id
-                    ? "bg-emerald-600 text-white shadow shadow-emerald-500/20"
+                    ? "bg-brand-secondary-600 text-white shadow shadow-brand-secondary-500/20"
                     : "text-slate-400 hover:text-white hover:bg-white/5",
                 )}
               >
@@ -422,7 +422,7 @@ export default function AdminOrders() {
       </Card>
 
       {/* Orders Table */}
-      <div className="bg-slate-900/40 backdrop-blur-sm border border-white/10 rounded overflow-hidden">
+      <div className="bg-slate-900/40  border border-white/10 rounded overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left min-w-[1000px]">
             <thead>
@@ -506,14 +506,14 @@ export default function AdminOrders() {
                       <td className="px-6 py-4">
                         <Link
                           href={`/admin/orders/${order.id}`}
-                          className="text-xs font-mono text-slate-400 hover:text-emerald-400 transition-colors"
+                          className="text-xs font-mono text-slate-400 hover:text-brand-secondary-400 transition-colors"
                         >
                           {toReadableOrderId(order.id)}
                         </Link>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex flex-col">
-                          <span className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">
+                          <span className="text-sm font-semibold text-white group-hover:text-brand-secondary-400 transition-colors">
                             {order.shippingInfo.firstName}{" "}
                             {order.shippingInfo.lastName}
                           </span>
@@ -596,7 +596,7 @@ export default function AdminOrders() {
                                 }
                                 className="cursor-pointer hover:bg-white/5"
                               >
-                                <PackageCheck className="w-4 h-4 mr-2 text-emerald-400" />{" "}
+                                <PackageCheck className="w-4 h-4 mr-2 text-brand-secondary-400" />{" "}
                                 Delivered
                               </DropdownMenuItem>
                               <DropdownMenuSeparator className="bg-white/5" />

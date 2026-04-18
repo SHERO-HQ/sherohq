@@ -86,7 +86,7 @@ export default function AdminLogin() {
  </div>
 
  {/* Login Card */}
- <div className="bg-slate-900/50 backdrop-blur-sm border border-slate-800 rounded p-8">
+ <div className="bg-slate-900/50  border border-slate-800 rounded p-8">
  <form onSubmit={handleSubmit} className="space-y-6">
  {/* Error Message */}
  {error && (

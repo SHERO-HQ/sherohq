@@ -78,7 +78,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
  <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
  <div>
  <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tighter mb-2">
- Customer <span className="text-emerald-500">Feedback</span>
+ Customer <span className="text-brand-secondary-500">Feedback</span>
  </h2>
  <p className="text-sm font-medium text-slate-500 tracking-widest">
  {reviews.length} Verified Reviews
@@ -91,11 +91,11 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
  <div className="lg:col-span-7 space-y-8">
  {loading ? (
  <div className="flex flex-col items-center justify-center p-20 gap-4 text-slate-500">
- <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+ <Loader2 className="w-8 h-8 animate-spin text-brand-secondary-500" />
  <span className="text-xs font-black uppercase tracking-widest">Gathering Experiences...</span>
  </div>
  ) : reviews.length === 0 ? (
- <div className="rounded bg-white dark:bg-white/5 backdrop-blur-sm border border-slate-200 dark:border-white/10 p-12 text-center">
+ <div className="rounded bg-white dark:bg-white/5  border border-slate-200 dark:border-white/10 p-12 text-center">
  <MessageSquare className="w-12 h-12 text-slate-300 dark:text-slate-700 mx-auto mb-4" />
  <p className="text-slate-500 dark:text-slate-400">
  No reviews yet. Be the first to share your thoughts.
@@ -110,12 +110,12 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
  transition={{ delay: idx * 0.1 }}
- className="p-8 rounded bg-white dark:bg-white/5 backdrop-blur-sm border border-slate-200 dark:border-white/10 shadow shadow-black/5"
+ className="p-8 rounded bg-white dark:bg-white/5  border border-slate-200 dark:border-white/10 shadow shadow-black/5"
  >
  <div className="flex items-start justify-between mb-6">
  <div className="flex items-center gap-4">
- <div className="w-12 h-12 rounded bg-emerald-500/10 flex items-center justify-center border border-emerald-500/20">
- <User className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+ <div className="w-12 h-12 rounded bg-brand-secondary-500/10 flex items-center justify-center border border-brand-secondary-500/20">
+ <User className="w-6 h-6 text-brand-secondary-600 dark:text-brand-secondary-400" />
  </div>
  <div>
  <h4 className="font-black text-slate-900 dark:text-white uppercase tracking-tight">
@@ -152,12 +152,12 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
 
  {/* Review Form */}
  <div className="lg:col-span-5 h-fit lg:sticky lg:top-24">
- <div className="p-8 rounded bg-white dark:bg-white/5 backdrop-blur-sm border border-slate-200 dark:border-white/10 shadow overflow-hidden relative group">
- <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700" />
+ <div className="p-8 rounded bg-white dark:bg-white/5  border border-slate-200 dark:border-white/10 shadow overflow-hidden relative group">
+ <div className="absolute top-0 right-0 w-32 h-32 bg-brand-secondary-500/10 blur-3xl -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700" />
  
  <div className="relative">
  <h3 className="text-xl font-black text-slate-900 dark:text-white mb-6 uppercase tracking-tight flex items-center gap-2">
- <PenLine size={20} className="text-emerald-500" />Leave a<span className="text-emerald-500">Review</span>
+ <PenLine size={20} className="text-brand-secondary-500" />Leave a<span className="text-brand-secondary-500">Review</span>
  </h3>
  
  <form onSubmit={handleSubmit} className="space-y-4">
@@ -195,7 +195,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
  required
  value={name}
  onChange={(e) => setName(e.target.value)}
- className="w-full px-4 py-3 rounded border-2 border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-emerald-500 focus:bg-white dark:focus:bg-black/40 outline-none transition"
+ className="w-full px-4 py-3 rounded border-2 border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-brand-secondary-500 focus:bg-white dark:focus:bg-black/40 outline-none transition"
  placeholder="Your Name"
  />
  </div>
@@ -206,7 +206,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
  value={comment}
  onChange={(e) => setComment(e.target.value)}
  rows={4}
- className="w-full px-4 py-3 rounded border-2 border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-emerald-500 focus:bg-white dark:focus:bg-black/40 outline-none transition resize-none"
+ className="w-full px-4 py-3 rounded border-2 border-slate-100 dark:border-white/5 bg-slate-50 dark:bg-white/5 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 focus:border-brand-secondary-500 focus:bg-white dark:focus:bg-black/40 outline-none transition resize-none"
  placeholder="What was your experience like?"
  />
  </div>
@@ -215,7 +215,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
  <button
  type="submit"
  disabled={submitting}
- className="w-full h-12 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white font-semibold uppercase tracking-widest text-xs rounded shadow shadow-emerald-500/20 transition active:scale-[0.98] flex items-center justify-center gap-3"
+ className="w-full h-12 bg-brand-secondary-600 hover:bg-brand-secondary-500 disabled:opacity-50 text-white font-semibold uppercase tracking-widest text-xs rounded shadow shadow-brand-secondary-500/20 transition active:scale-[0.98] flex items-center justify-center gap-3"
  >
  {submitting ? (
  <>

@@ -139,7 +139,7 @@ const PWAInstallBanner = () => {
   if (!showIOSBanner && !showPWABanner) return null;
 
   return (
-    <div className="w-full md:hidden bg-slate-900/95 border-b border-slate-800 backdrop-blur-sm">
+    <div className="w-full md:hidden bg-slate-900/95 border-b border-slate-800 ">
       {showIOSBanner && isIPhone && (
         <div className="px-3 py-2 sm:px-4 sm:py-2.5">
           <div className="flex items-start gap-3">
@@ -151,7 +151,7 @@ const PWAInstallBanner = () => {
               />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-emerald-300">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-brand-secondary-300">
                 Install SHERO
               </p>
               <p className="mt-0.5 text-xs leading-4 text-slate-300">
@@ -161,7 +161,7 @@ const PWAInstallBanner = () => {
             <button
               type="button"
               onClick={handleIPhoneInstall}
-              className="mt-0.5 inline-flex shrink-0 px-2 py-1 rounded bg-emerald-300/50 hover:bg-emerald-700 text-white text-[10px] transition-colors whitespace-nowrap"
+              className="mt-0.5 inline-flex shrink-0 px-2 py-1 rounded bg-brand-secondary-300/50 hover:bg-brand-secondary-700 text-white text-[10px] transition-colors whitespace-nowrap"
             >
               <Download className="h-3.5 w-3.5 mr-1" />
               Install
@@ -181,11 +181,11 @@ const PWAInstallBanner = () => {
       {showPWABanner && isAndroid && deferredPrompt && (
         <div className="px-3 py-2 sm:px-4 sm:py-2.5">
           <div className="flex items-start gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/20 text-emerald-400">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-secondary-500/20 text-brand-secondary-400">
               <Download className="h-3.5 w-3.5" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-emerald-300">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-brand-secondary-300">
                 Install SHERO App
               </p>
               <p className="mt-0.5 text-xs leading-4 text-slate-300">
@@ -195,7 +195,7 @@ const PWAInstallBanner = () => {
             <button
               type="button"
               onClick={handleInstallPWA}
-              className="mt-0.5 shrink-0 px-2 py-1 rounded bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-semibold transition-colors whitespace-nowrap"
+              className="mt-0.5 shrink-0 px-2 py-1 rounded bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white text-[10px] font-semibold transition-colors whitespace-nowrap"
             >
               Install
             </button>

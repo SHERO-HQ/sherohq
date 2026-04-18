@@ -122,7 +122,7 @@ export default function AIAnalytics() {
     return (
       <div className="flex items-center justify-center min-h-100">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-12 h-12 border-4 border-brand-secondary-500 border-t-transparent rounded-full animate-spin" />
           <p className="text-slate-400 font-medium">
             Loading intelligence data...
           </p>
@@ -136,7 +136,7 @@ export default function AIAnalytics() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-            <Brain className="text-emerald-500" /> AI Intelligence Hub
+            <Brain className="text-brand-secondary-500" /> AI Intelligence Hub
           </h1>
           <p className="text-slate-400 text-sm">
             Real-time insights into user queries, intent patterns, and catalog
@@ -195,7 +195,7 @@ export default function AIAnalytics() {
         <Card className="bg-slate-900 border-white/10">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-slate-400 flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" /> Resolution
+              <ShieldCheck className="w-4 h-4 text-brand-secondary-400" /> Resolution
               Rate
             </CardTitle>
           </CardHeader>
@@ -448,7 +448,7 @@ export default function AIAnalytics() {
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-sm text-emerald-400 font-bold">
+                    <span className="text-sm text-brand-secondary-400 font-bold">
                       {gap.queryCount}
                     </span>
                   </td>

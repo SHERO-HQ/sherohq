@@ -82,7 +82,7 @@ export function CropModal({
               step={0.1}
               aria-labelledby="Zoom"
               onChange={(e) => setZoom(Number(e.target.value))}
-              className="w-full h-1.5 bg-slate-800 rounded appearance-none cursor-pointer accent-emerald-500"
+              className="w-full h-1.5 bg-slate-800 rounded appearance-none cursor-pointer accent-brand-secondary-500"
             />
           </div>
 
@@ -112,7 +112,7 @@ export function CropModal({
             <Button
               type="button"
               onClick={handleDone}
-              className="bg-emerald-600 hover:bg-emerald-500 text-white min-w-[120px]"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-[120px]"
             >
               <Check className="w-4 h-4 mr-2" />
               Apply Crop

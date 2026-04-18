@@ -75,7 +75,7 @@ const CheckoutSuccess = () => {
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="w-16 h-16 border-4 border-emerald-200 border-t-emerald-600 rounded-full mx-auto mb-6"
+            className="w-16 h-16 border-4 border-brand-secondary-200 border-t-brand-secondary-600 rounded-full mx-auto mb-6"
           />
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
             Verifying Payment...
@@ -102,7 +102,7 @@ const CheckoutSuccess = () => {
           </p>
           <button
             onClick={() => router.push("/shop")}
-            className="px-8 py-2 bg-emerald-600 text-white rounded font-bold hover:bg-emerald-700 transition-colors"
+            className="px-8 py-2 bg-brand-secondary-600 text-white rounded font-bold hover:bg-brand-secondary-700 transition-colors"
           >
             Return to Shop
           </button>
@@ -116,9 +116,9 @@ const CheckoutSuccess = () => {
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ type: "spring", delay: 0.2 }}
-          className="w-24 h-24 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-6"
+          className="w-24 h-24 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center mx-auto mb-6"
         >
-          <CheckCircle className="w-12 h-12 text-emerald-600 dark:text-emerald-400" />
+          <CheckCircle className="w-12 h-12 text-brand-secondary-600 dark:text-brand-secondary-400" />
         </motion.div>
 
         <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-4">
@@ -126,7 +126,7 @@ const CheckoutSuccess = () => {
         </h1>
         <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-md mx-auto">
           Thank you for your purchase. Your order{" "}
-          <span className="font-mono font-bold text-emerald-600">
+          <span className="font-mono font-bold text-brand-secondary-600">
             {order ? toReadableOrderId(order.id) : "ORD-UNKNOWN"}
           </span>{" "}
           has been confirmed.
@@ -134,7 +134,7 @@ const CheckoutSuccess = () => {
 
         <div className="bg-slate-50 dark:bg-slate-950 rounded p-6 mb-8 max-w-sm mx-auto border border-slate-100 dark:border-slate-800">
           <p className="text-sm text-slate-500 mb-1">Amount Paid</p>
-          <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+          <p className="text-3xl font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
             GH₵{order?.total.toFixed(2)}
           </p>
         </div>
@@ -142,13 +142,13 @@ const CheckoutSuccess = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={() => router.push("/shop")}
-            className="px-8 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition shadow shadow-emerald-500/20"
+            className="px-8 py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded font-bold transition shadow shadow-brand-secondary-500/20"
           >
             Continue Shopping
           </button>
           <button
             onClick={() => router.push("/")}
-            className="px-8 py-2 border-2 border-slate-200 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
+            className="px-8 py-2 border-2 border-slate-200 dark:border-slate-700 hover:border-brand-secondary-500 dark:hover:border-brand-secondary-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
           >
             Return Home
           </button>

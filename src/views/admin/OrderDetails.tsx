@@ -210,7 +210,7 @@ export default function OrderDetails() {
         return { color: "text-purple-400 bg-purple-500/10", icon: Truck };
       case "delivered":
         return {
-          color: "text-emerald-400 bg-emerald-500/10",
+          color: "text-brand-secondary-400 bg-brand-secondary-500/10",
           icon: CheckCircle2,
         };
       case "cancelled":
@@ -332,7 +332,7 @@ export default function OrderDetails() {
   if (isLoading)
     return (
       <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
-        <Loader2 className="w-10 h-10 animate-spin text-emerald-500" />
+        <Loader2 className="w-10 h-10 animate-spin text-brand-secondary-500" />
         <p className="text-slate-500 font-medium">Fetching order details...</p>
       </div>
     );
@@ -408,7 +408,7 @@ export default function OrderDetails() {
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
-                className="border-emerald-500/20 text-emerald-500 hover:bg-emerald-500/10 h-10 font-bold"
+                className="border-brand-secondary-500/20 text-brand-secondary-500 hover:bg-brand-secondary-500/10 h-10 font-bold"
               >
                 <Printer className="w-4 h-4 mr-2" />
                 Print
@@ -422,7 +422,7 @@ export default function OrderDetails() {
                 onClick={() => handlePrint("invoice")}
                 className="cursor-pointer hover:bg-white/5"
               >
-                <Printer className="w-4 h-4 mr-2 text-emerald-400" />
+                <Printer className="w-4 h-4 mr-2 text-brand-secondary-400" />
                 Print Invoice
               </DropdownMenuItem>
               <DropdownMenuItem
@@ -453,7 +453,7 @@ export default function OrderDetails() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold h-10"
+                className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold h-10"
                 disabled={isUpdating}
               >
                 {isUpdating ? (
@@ -484,7 +484,7 @@ export default function OrderDetails() {
                 onClick={() => handleUpdateStatus("delivered")}
                 className="cursor-pointer hover:bg-white/5"
               >
-                <CheckCircle2 className="w-4 h-4 mr-2 text-emerald-400" />{" "}
+                <CheckCircle2 className="w-4 h-4 mr-2 text-brand-secondary-400" />{" "}
                 Delivered
               </DropdownMenuItem>
               <DropdownMenuSeparator className="bg-white/5" />
@@ -505,7 +505,7 @@ export default function OrderDetails() {
           <Card className="bg-slate-900 border-white/5 overflow-hidden">
             <div className="p-6 border-b border-white/5 flex items-center justify-between">
               <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                <ShoppingBag className="w-5 h-5 text-emerald-400" />
+                <ShoppingBag className="w-5 h-5 text-brand-secondary-400" />
                 Order Items
               </h2>
               <Badge
@@ -541,7 +541,7 @@ export default function OrderDetails() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-white font-bold truncate group-hover:text-emerald-400 transition-colors">
+                    <p className="text-white font-bold truncate group-hover:text-brand-secondary-400 transition-colors">
                       {item.name}
                     </p>
                     <p className="text-sm text-slate-500 mt-1">
@@ -562,7 +562,7 @@ export default function OrderDetails() {
             <div className="p-6 bg-white/5 border-t border-white/5">
               <div className="flex justify-between items-center">
                 <span className="text-slate-400">Total Amount</span>
-                <span className="text-2xl font-bold text-emerald-400">
+                <span className="text-2xl font-bold text-brand-secondary-400">
                   GH₵{order.total.toLocaleString()}
                 </span>
               </div>
@@ -573,7 +573,7 @@ export default function OrderDetails() {
           <div className="grid md:grid-cols-2 gap-6">
             <Card className="bg-slate-900 border-white/5 p-6">
               <h3 className="text-white font-bold mb-4 flex items-center gap-2">
-                <Mail className="w-4 h-4 text-emerald-400" />
+                <Mail className="w-4 h-4 text-brand-secondary-400" />
                 Customer Contact
               </h3>
               <div className="space-y-4">
@@ -609,7 +609,7 @@ export default function OrderDetails() {
 
             <Card className="bg-slate-900 border-white/5 p-6">
               <h3 className="text-white font-bold mb-4 flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-emerald-400" />
+                <MapPin className="w-4 h-4 text-brand-secondary-400" />
                 Shipping Address
               </h3>
               <div className="text-sm text-slate-400 space-y-2">
@@ -674,8 +674,8 @@ export default function OrderDetails() {
             </div>
 
             <div className="pt-4 border-t border-white/5">
-              <div className="bg-emerald-500/5 p-4 rounded border border-emerald-500/10">
-                <div className="flex items-center gap-2 text-emerald-400 mb-1">
+              <div className="bg-brand-secondary-500/5 p-4 rounded border border-brand-secondary-500/10">
+                <div className="flex items-center gap-2 text-brand-secondary-400 mb-1">
                   <Package className="w-4 h-4" />
                   <span className="text-xs font-bold uppercase">
                     Inventory Note
@@ -797,7 +797,7 @@ export default function OrderDetails() {
               color: #666;
               letter-spacing: 0.08em;
             }
-            .text-emerald-600 { color: #059669 !important; }
+            .text-brand-secondary-600 { color: #059669 !important; }
             .bg-slate-100 { background-color: #f1f5f9 !important; }
           }
           `}
@@ -929,7 +929,7 @@ export default function OrderDetails() {
               <div className="print-document">
                 <div className="flex justify-between items-start mb-8">
                   <div>
-                    <h1 className="text-3xl font-bold text-emerald-600">
+                    <h1 className="text-3xl font-bold text-brand-secondary-600">
                       SHERO
                     </h1>
                     <p className="text-slate-500 text-sm">
@@ -1024,7 +1024,7 @@ export default function OrderDetails() {
                       <span className="text-slate-500">Tax (0%)</span>
                       <span>GH₵0.00</span>
                     </div>
-                    <div className="flex justify-between text-lg font-bold border-t border-slate-100 pt-3 text-emerald-600">
+                    <div className="flex justify-between text-lg font-bold border-t border-slate-100 pt-3 text-brand-secondary-600">
                       <span>Total</span>
                       <span>GH₵{order.total.toLocaleString()}</span>
                     </div>

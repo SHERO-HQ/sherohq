@@ -189,7 +189,7 @@ export default function AdminCreateInvoice() {
  className={cn(
  "px-4 py-2 rounded text-sm font-bold transition flex items-center gap-2",
  mode === "invoice"
- ? "bg-emerald-600 text-white shadow"
+ ? "bg-brand-secondary-600 text-white shadow"
  : "text-slate-400 hover:text-white",
  )}
  >
@@ -297,7 +297,7 @@ export default function AdminCreateInvoice() {
  variant="outline"
  size="sm"
  onClick={handleAddCustomItem}
- className="border-white/10 text-emerald-400 hover:bg-emerald-500/10"
+ className="border-white/10 text-brand-secondary-400 hover:bg-brand-secondary-500/10"
  >
  <Plus className="w-4 h-4 mr-2" /> Add Custom Item
  </Button>
@@ -338,7 +338,7 @@ export default function AdminCreateInvoice() {
  <p className="text-sm font-bold text-white truncate">
  {product.name}
  </p>
- <p className="text-xs text-emerald-400">
+ <p className="text-xs text-brand-secondary-400">
  GH₵{product.price.toLocaleString()}
  </p>
  </div>
@@ -445,7 +445,7 @@ export default function AdminCreateInvoice() {
  </div>
  <div className="border-t border-white/10 pt-3 flex justify-between items-center">
  <span className="font-bold text-white">Total</span>
- <span className="text-2xl font-bold text-emerald-400">
+ <span className="text-2xl font-bold text-brand-secondary-400">
  GH₵{totalAmount.toLocaleString()}
  </span>
  </div>
@@ -457,7 +457,7 @@ export default function AdminCreateInvoice() {
  className={cn(
  "w-full font-bold h-10 text-slate-100",
  mode === "invoice"
- ? "bg-emerald-600 hover:bg-emerald-500"
+ ? "bg-brand-secondary-600 hover:bg-brand-secondary-500"
  : "bg-blue-600 hover:bg-blue-500",
  )}
  >

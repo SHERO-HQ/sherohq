@@ -196,16 +196,16 @@ const Scheduler = () => {
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          className="w-20 h-20 bg-emerald-100 dark:bg-emerald-900/30 rounded flex items-center justify-center mx-auto mb-6"
+          className="w-20 h-20 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded flex items-center justify-center mx-auto mb-6"
         >
-          <CheckCircle2 className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
+          <CheckCircle2 className="w-10 h-10 text-brand-secondary-600 dark:text-brand-secondary-400" />
         </motion.div>
         <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4">
           Booking Confirmed!
         </h2>
         <p className="text-slate-600 dark:text-slate-400 mb-8 mx-auto leading-relaxed">
           Your{" "}
-          <strong className="text-emerald-600 dark:text-emerald-400 font-bold">
+          <strong className="text-brand-secondary-600 dark:text-brand-secondary-400 font-bold">
             {services.find((s) => s.id === formData.service)?.title}
           </strong>
           <br />
@@ -250,7 +250,7 @@ const Scheduler = () => {
           {/* Vertical Line for Desktop */}
           <div className="hidden md:block absolute left-4 top-2 bottom-1 w-0.5 bg-slate-200 dark:bg-slate-800 -z-10">
             <div
-              className="w-full bg-emerald-500 transition duration-500 ease-out"
+              className="w-full bg-brand-secondary-500 transition duration-500 ease-out"
               style={{ height: `${((step - 1) / 2) * 100}%` }}
             />
           </div>
@@ -258,7 +258,7 @@ const Scheduler = () => {
           {/* Horizontal Line for Mobile */}
           <div className="md:hidden absolute top-4 sm:left-20 sm:right-20 left-12 right-12 h-0.5 bg-slate-200 dark:bg-slate-800 -z-10">
             <div
-              className="h-full bg-emerald-500 transition duration-500 ease-out"
+              className="h-full bg-brand-secondary-500 transition duration-500 ease-out"
               style={{ width: `${((step - 1) / 2) * 100}%` }}
             />
           </div>
@@ -278,9 +278,9 @@ const Scheduler = () => {
                 className={cn(
                   "w-8 h-8 rounded-full flex items-center justify-center text-xs md:text-sm font-bold relative z-10 transition duration-300 shrink-0 border-2",
                   step === s.id
-                    ? "bg-emerald-600 border-emerald-600 text-white shadow shadow-emerald-500/30 ring-4 ring-emerald-50 dark:ring-emerald-900/20"
+                    ? "bg-brand-secondary-600 border-brand-secondary-600 text-white shadow shadow-brand-secondary-500/30 ring-4 ring-brand-secondary-50 dark:ring-brand-secondary-900/20"
                     : step > s.id
-                      ? "bg-emerald-100 dark:bg-emerald-900 border-emerald-500 text-emerald-600 dark:text-emerald-400"
+                      ? "bg-brand-secondary-100 dark:bg-brand-secondary-900 border-brand-secondary-500 text-brand-secondary-600 dark:text-brand-secondary-400"
                       : "bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500",
                 )}
               >
@@ -314,20 +314,20 @@ const Scheduler = () => {
             </h4>
             {formData.service && (
               <div className="flex items-center gap-2 mb-2 text-sm font-medium text-slate-800 dark:text-slate-200">
-                <Briefcase className="w-4 h-4 text-emerald-500" />
+                <Briefcase className="w-4 h-4 text-brand-secondary-500" />
                 {services.find((s) => s.id === formData.service)?.title}
               </div>
             )}
             {formData.date && (
               <div className="flex items-center font-semibold gap-2 mb-2 text-sm text-slate-600 dark:text-slate-300">
-                <CalendarIcon className="w-4 h-4 text-emerald-500" />
+                <CalendarIcon className="w-4 h-4 text-brand-secondary-500" />
                 {format(formData.date, "MMM do, yyyy")}
               </div>
             )}
 
             {formData.time && (
               <div className="flex items-center font-semibold gap-2 text-sm text-slate-600 dark:text-slate-300">
-                <Clock className="w-4 h-4 text-emerald-500" />
+                <Clock className="w-4 h-4 text-brand-secondary-500" />
                 {formData.time} GMT
               </div>
             )}
@@ -361,9 +361,9 @@ const Scheduler = () => {
                         setFormData({ ...formData, service: service.id })
                       }
                       className={cn(
-                        "flex items-start md:items-center p-4 rounded border-2 transition duration-200 text-left hover:border-emerald-500/50 hover:bg-emerald-50 dark:hover:bg-emerald-900/10 group relative overflow-hidden cursor-pointer",
+                        "flex items-start md:items-center p-4 rounded border-2 transition duration-200 text-left hover:border-brand-secondary-500/50 hover:bg-brand-secondary-50 dark:hover:bg-brand-secondary-900/10 group relative overflow-hidden cursor-pointer",
                         formData.service === service.id
-                          ? "border-emerald-500 bg-emerald-50/50 dark:bg-emerald-900/10 shadow-sm"
+                          ? "border-brand-secondary-500 bg-brand-secondary-50/50 dark:bg-brand-secondary-900/10 shadow-sm"
                           : "border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900",
                       )}
                     >
@@ -371,8 +371,8 @@ const Scheduler = () => {
                         className={cn(
                           "w-10 h-10 md:w-12 md:h-12 rounded flex items-center justify-center mr-4 transition-colors shrink-0",
                           formData.service === service.id
-                            ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400"
-                            : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:text-emerald-500",
+                            ? "bg-brand-secondary-100 dark:bg-brand-secondary-900/30 text-brand-secondary-600 dark:text-brand-secondary-400"
+                            : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:text-brand-secondary-500",
                         )}
                       >
                         {service.icon}
@@ -389,7 +389,7 @@ const Scheduler = () => {
                         className={cn(
                           "ml-3 w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 mt-1 md:mt-0",
                           formData.service === service.id
-                            ? "border-emerald-500 bg-emerald-500 text-white"
+                            ? "border-brand-secondary-500 bg-brand-secondary-500 text-white"
                             : "border-slate-200 dark:border-slate-700",
                         )}
                       >
@@ -459,14 +459,14 @@ const Scheduler = () => {
                           );
 
                           let slotClass =
-                            "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-emerald-500 hover:text-emerald-500";
+                            "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-secondary-500 hover:text-brand-secondary-500";
 
                           if (isPassed) {
                             slotClass =
                               "bg-slate-100 dark:bg-slate-800/50 text-slate-400 dark:text-slate-600 border-slate-200 dark:border-slate-700 opacity-50 !cursor-not-allowed";
                           } else if (formData.time === time) {
                             slotClass =
-                              "bg-emerald-600 text-white border-emerald-600 shadow shadow-emerald-500/20 scale-105";
+                              "bg-brand-secondary-600 text-white border-brand-secondary-600 shadow shadow-brand-secondary-500/20 scale-105";
                           }
 
                           return (
@@ -519,13 +519,13 @@ const Scheduler = () => {
                 {/* Mobile Summary in Step 3 */}
                 <div className="md:hidden mb-6 p-4 rounded bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 text-sm">
                   <div className="flex items-center gap-2 mb-1">
-                    <Briefcase className="w-4 h-4 text-emerald-500" />
+                    <Briefcase className="w-4 h-4 text-brand-secondary-500" />
                     <span className="font-semibold">
                       {services.find((s) => s.id === formData.service)?.title}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CalendarIcon className="w-4 h-4 text-emerald-500" />
+                    <CalendarIcon className="w-4 h-4 text-brand-secondary-500" />
                     <span>
                       {formData.date && format(formData.date, "MMM do")} at{" "}
                       {formData.time} GMT
@@ -549,7 +549,7 @@ const Scheduler = () => {
                             firstName: e.target.value,
                           })
                         }
-                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition"
+                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500 transition"
                         placeholder="John"
                       />
                     </div>
@@ -565,7 +565,7 @@ const Scheduler = () => {
                         onChange={(e) =>
                           setFormData({ ...formData, lastName: e.target.value })
                         }
-                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition"
+                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500 transition"
                         placeholder="Doe"
                       />
                     </div>
@@ -583,7 +583,7 @@ const Scheduler = () => {
                         onChange={(e) =>
                           setFormData({ ...formData, email: e.target.value })
                         }
-                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition"
+                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500 transition"
                         placeholder="john@company.com"
                       />
                     </div>
@@ -599,7 +599,7 @@ const Scheduler = () => {
                         onChange={(e) =>
                           setFormData({ ...formData, phone: e.target.value })
                         }
-                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition"
+                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500 transition"
                         placeholder="+233 123 456 7890"
                       />
                     </div>
@@ -615,7 +615,7 @@ const Scheduler = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, message: e.target.value })
                       }
-                      className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-emerald-500 transition resize-none"
+                      className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500 transition resize-none"
                       placeholder="Anything specific to discuss?"
                     />
                   </div>
@@ -634,7 +634,7 @@ const Scheduler = () => {
                       type="submit"
                       disabled={status === "submitting"}
                       size="lg"
-                      className="flex-1 md:flex-none rounded px-8 bg-emerald-600 hover:bg-emerald-700 text-white shadow shadow-emerald-500/30"
+                      className="flex-1 md:flex-none rounded px-8 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white shadow shadow-brand-secondary-500/30"
                     >
                       {status === "submitting"
                         ? "Confirming..."

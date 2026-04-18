@@ -146,7 +146,7 @@ const AdminSupport = () => {
     }
     if (s === "resolved" || s === "completed") {
       return (
-        <Badge className="bg-emerald-500/10 w-fit text-emerald-500 border-emerald-500/20 rounded">
+        <Badge className="bg-brand-secondary-500/10 w-fit text-brand-secondary-500 border-brand-secondary-500/20 rounded">
           Resolved
         </Badge>
       );
@@ -160,7 +160,7 @@ const AdminSupport = () => {
     }
     if (s === "confirmed") {
       return (
-        <Badge className="bg-emerald-500/10 w-fit text-emerald-500 border-emerald-500/20 rounded">
+        <Badge className="bg-brand-secondary-500/10 w-fit text-brand-secondary-500 border-brand-secondary-500/20 rounded">
           Confirmed
         </Badge>
       );
@@ -242,7 +242,7 @@ const AdminSupport = () => {
           <div>
             <Link
               href="/admin/dashboard"
-              className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors group"
+              className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-brand-secondary-400 transition-colors group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span>Back to Dashboard</span>
@@ -263,7 +263,7 @@ const AdminSupport = () => {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                 <Input
                   placeholder="Search inquiries..."
-                  className="pl-10 w-full sm:w-64 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-emerald-500/20"
+                  className="pl-10 w-full sm:w-64 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -323,7 +323,7 @@ const AdminSupport = () => {
           <TabsList className="bg-slate-900/50 border border-white/5 p-1 mb-8 flex justify-center items-center flex-wrap sm:flex-nowrap overflow-x-auto scrollbar-hide w-fit">
             <TabsTrigger
               value="tickets"
-              className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white data-[state=active]:shadow data-[state=active]:shadow-emerald-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
+              className="data-[state=active]:bg-brand-secondary-500 data-[state=active]:text-white data-[state=active]:shadow data-[state=active]:shadow-brand-secondary-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
             >
               <Headset className="w-4 h-4 mr-1 sm:mr-2" />
               <span className="hidden xs:inline">Support </span>Tickets
@@ -333,7 +333,7 @@ const AdminSupport = () => {
             </TabsTrigger>
             <TabsTrigger
               value="consultations"
-              className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white data-[state=active]:shadow data-[state=active]:shadow-emerald-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
+              className="data-[state=active]:bg-brand-secondary-500 data-[state=active]:text-white data-[state=active]:shadow data-[state=active]:shadow-brand-secondary-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
             >
               <Calendar className="w-4 h-4 mr-1 sm:mr-2" />
               Consultations
@@ -343,7 +343,7 @@ const AdminSupport = () => {
             </TabsTrigger>
             <TabsTrigger
               value="inquiries"
-              className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white data-[state=active]:shadow data-[state=active]:shadow-emerald-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
+              className="data-[state=active]:bg-brand-secondary-500 data-[state=active]:text-white data-[state=active]:shadow data-[state=active]:shadow-brand-secondary-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
             >
               <MessageSquare className="w-4 h-4 mr-1 sm:mr-2" />
               <span className="hidden xs:inline">Contact </span>Messages
@@ -381,7 +381,7 @@ const AdminSupport = () => {
                 filteredTickets.map((ticket) => (
                   <Card
                     key={ticket.id}
-                    className={`bg-slate-900/40 hover:bg-slate-900/60 border-white/10 transition group ${selectedTicketId === ticket.id ? "ring-1 ring-emerald-500/50" : ""}`}
+                    className={`bg-slate-900/40 hover:bg-slate-900/60 border-white/10 transition group ${selectedTicketId === ticket.id ? "ring-1 ring-brand-secondary-500/50" : ""}`}
                   >
                     <CardContent className="p-6">
                       <div className="flex flex-col lg:flex-row justify-between gap-6">
@@ -401,10 +401,10 @@ const AdminSupport = () => {
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <span className="text-emerald-500 font-mono font-bold">
+                              <span className="text-brand-secondary-500 font-mono font-bold">
                                 #{ticket.ticket_no}
                               </span>
-                              <h3 className="text-lg font-bold text-white group-hover:text-emerald-400 transition-colors uppercase tracking-tight">
+                              <h3 className="text-lg font-bold text-white group-hover:text-brand-secondary-400 transition-colors uppercase tracking-tight">
                                 {ticket.subject}
                               </h3>
                             </div>
@@ -416,8 +416,8 @@ const AdminSupport = () => {
                           </div>
                           <div className="flex flex-wrap items-center gap-6 pt-2 border-t border-white/5">
                             <div className="flex items-center gap-2">
-                              <div className="w-6 h-6 rounded-full bg-emerald-500/10 flex items-center justify-center">
-                                <span className="text-[10px] font-bold text-emerald-500">
+                              <div className="w-6 h-6 rounded-full bg-brand-secondary-500/10 flex items-center justify-center">
+                                <span className="text-[10px] font-bold text-brand-secondary-500">
                                   {ticket.name.charAt(0)}
                                 </span>
                               </div>
@@ -473,7 +473,7 @@ const AdminSupport = () => {
                           {ticket.status !== "Resolved" && (
                             <Button
                               onClick={() => handleResolveTicket(ticket.id)}
-                              className="bg-emerald-500 hover:bg-emerald-600 text-white rounded px-6"
+                              className="bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white rounded px-6"
                             >
                               Resolve
                             </Button>
@@ -517,12 +517,12 @@ const AdminSupport = () => {
                 filteredConsultations.map((c) => (
                   <Card
                     key={c.id}
-                    className="bg-slate-900/40 border-white/10 hover:border-emerald-500/30 transition flex flex-col h-full"
+                    className="bg-slate-900/40 border-white/10 hover:border-brand-secondary-500/30 transition flex flex-col h-full"
                   >
                     <CardHeader className="pb-4">
                       <div className="flex justify-between items-start">
                         <div className="flex flex-col gap-2">
-                          <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 max-w-fit">
+                          <Badge className="bg-brand-secondary-500/10 text-brand-secondary-500 border-brand-secondary-500/20 max-w-fit">
                             {c.service}
                           </Badge>
                           {getStatusBadge(c.status)}
@@ -611,17 +611,17 @@ const AdminSupport = () => {
                               c.name,
                             )
                           }
-                          className="flex items-center gap-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors w-full text-left"
+                          className="flex items-center gap-2 text-sm text-slate-400 hover:text-brand-secondary-400 transition-colors w-full text-left"
                         >
-                          <Mail className="w-4 h-4 text-emerald-500" />
+                          <Mail className="w-4 h-4 text-brand-secondary-500" />
                           {c.email}
                         </button>
                         {c.phone && (
                           <a
                             href={`tel:${c.phone}`}
-                            className="flex items-center gap-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors w-full text-left"
+                            className="flex items-center gap-2 text-sm text-slate-400 hover:text-brand-secondary-400 transition-colors w-full text-left"
                           >
-                            <Phone className="w-4 h-4 text-emerald-500" />
+                            <Phone className="w-4 h-4 text-brand-secondary-500" />
                             {c.phone}
                           </a>
                         )}
@@ -645,7 +645,7 @@ const AdminSupport = () => {
                               "Confirmed",
                             )
                           }
-                          className="w-full border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/10 rounded group"
+                          className="w-full border-brand-secondary-500/20 text-brand-secondary-400 hover:bg-brand-secondary-500/10 rounded group"
                         >
                           Confirm Appointment
                           <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -774,7 +774,7 @@ const AdminSupport = () => {
                                     )
                                   }
                                   title="Mark as Responded"
-                                  className="h-8 w-8 p-0 text-slate-500 hover:text-emerald-500 group-hover:bg-white/10"
+                                  className="h-8 w-8 p-0 text-slate-500 hover:text-brand-secondary-500 group-hover:bg-white/10"
                                 >
                                   <ArrowRight className="h-4 w-4" />
                                 </Button>

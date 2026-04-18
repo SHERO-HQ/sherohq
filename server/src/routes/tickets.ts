@@ -5,6 +5,7 @@ import { adminAuth } from "../middleware/adminAuth";
 
 import { validateBody } from "../middleware/validate";
 import { CreateTicketSchema, UpdateTicketSchema } from "../schemas";
+import { notificationService } from "../services/NotificationService";
 
 const router = express.Router();
 
@@ -60,6 +61,17 @@ router.post("/", validateBody(CreateTicketSchema), async (req, res) => {
       ticketId: id,
       ticketNo: result.rows[0].ticket_no,
     });
+
+    // Notify Customer and Admin (Async)
+    notificationService.sendTicketNotification({
+      id,
+      ticket_no: result.rows[0].ticket_no,
+      name,
+      email,
+      phone,
+      subject,
+      category,
+    }).catch(err => console.error("Ticket notification failed:", err));
   } catch (error) {
     console.error("Error creating ticket:", error);
     res.status(500).json({ error: "Failed to create ticket" });

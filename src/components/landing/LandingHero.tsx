@@ -108,10 +108,10 @@ const LandingHero: React.FC = () => {
               initial={{ x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-brand-secondary-600/25 bg-white/70 dark:bg-slate-900/70"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-brand-secondary-500/20 bg-brand-secondary-50/50 dark:bg-brand-secondary-900/20"
             >
-              <RocketIcon className="w-4 h-4 text-brand-secondary-600 dark:text-brand-secondary-400" />
-              <span className="text-xs sm:text-sm font-mono font-semibold tracking-widest uppercase text-brand-secondary-700 dark:text-brand-secondary-300">
+              <RocketIcon className="w-4 h-4 text-brand-secondary-500 dark:text-brand-secondary-400" />
+              <span className="text-xs sm:text-sm font-mono font-semibold tracking-widest uppercase text-brand-secondary-600 dark:text-brand-secondary-300">
                 Trusted Technology Partner
               </span>
             </motion.div>
@@ -132,7 +132,7 @@ const LandingHero: React.FC = () => {
                       key={`${word}-${i}-${word}`}
                       className={
                         word === "Possible"
-                          ? "text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400"
+                          ? "text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-500 dark:from-brand-primary-500 dark:to-brand-secondary-400"
                           : ""
                       }
                     >
@@ -173,7 +173,7 @@ const LandingHero: React.FC = () => {
 
               <NavLink
                 href={getAbsoluteUrl("/solutions")}
-                className="group flex items-center justify-center gap-2 text-base font-semibold text-slate-700 dark:text-slate-200 hover:text-primary! rounded px-4 py-2 h-10 w-full sm:w-auto transition-all border-2 border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-900 hover:border-primary!"
+                className="group flex items-center justify-center gap-2 text-base font- text-slate-700 dark:text-slate-200 hover:text-primary! rounded px-4 py-2 h-10 w-full sm:w-auto transition-all border-2 border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-900 hover:border-primary!"
                 role="button"
                 aria-label="Explore solutions"
               >
@@ -189,7 +189,7 @@ const LandingHero: React.FC = () => {
  className="w-full pt-6 border-t border-slate-200 dark:border-slate-800"
  >
  <div className="flex items-center gap-4">
- <div className="backdrop-blur px-4 py-3">
+ <div className=" px-4 py-3">
  <p className="flex items-center gap-2 mt-1 text-lg font-bold text-slate-900 dark:text-white">
  <Users className="w-5 h-5 inline" />
  1,500+
@@ -200,7 +200,7 @@ const LandingHero: React.FC = () => {
  
  </div>
  
- <div className="backdrop-blur px-4 py-3">
+ <div className=" px-4 py-3">
  
  <p className="mt-1 flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-white">
  <Headset className="w-5 h-5 inline" />
@@ -274,7 +274,7 @@ const LandingHero: React.FC = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="inline-flex items-center gap-2 rounded-full px-2.5 py-1 bg-brand-secondary-600/10 text-brand-secondary-700 dark:text-brand-secondary-300 text-xs font-mono font-semibold uppercase tracking-wide">
+                    <div className="inline-flex items-center gap-2 rounded-full px-2.5 py-1 bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 text-xs font-mono font-semibold uppercase tracking-wide">
                       <ShieldCheck className="w-3.5 h-3.5" />
                       Verified
                     </div>
@@ -302,7 +302,7 @@ const LandingHero: React.FC = () => {
                         key={item.title}
                         className="flex items-start gap-3 rounded border border-slate-200/70 dark:border-slate-800 p-3.5 bg-white/70 dark:bg-slate-900/60"
                       >
-                        <div className="rounded bg-brand-secondary-600/10 text-brand-secondary-700 dark:text-brand-secondary-300 p-2 mt-0.5">
+                        <div className="rounded bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 p-2 mt-0.5">
                           <item.icon className="w-4 h-4" />
                         </div>
                         <div>
@@ -324,7 +324,7 @@ const LandingHero: React.FC = () => {
  x: useTransform(smoothX, [-0.5, 0.5], [6, -6]),
  y: useTransform(smoothY, [-0.5, 0.5], [4, -4]),
  }}
- className="absolute -bottom-6 right-4 rounded border border-primary/30 bg-white/95 dark:bg-slate-900/95 backdrop-blur px-4 py-3 shadow select-none pointer-events-none hidden sm:block"
+ className="absolute -bottom-6 right-4 rounded border border-primary/30 bg-white/95 dark:bg-slate-900/95  px-4 py-3 shadow select-none pointer-events-none hidden sm:block"
  >
  <div className="text-[10px] font-mono uppercase tracking-wider text-slate-500">
  Procurement

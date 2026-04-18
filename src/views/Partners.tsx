@@ -31,6 +31,12 @@ const Partners = () => {
     { name: "AgriTech", icon: Sprout },
   ];
 
+  const steps = [
+    { title: "Application", desc: "Submit your partnership interest form with core business details." },
+    { title: "Validation", desc: "Our executive team reviews local alignment and technical capacity." },
+    { title: "Onboarding", desc: "Gain full access to the SHERO portal and tiered wholesale pricing." }
+  ];
+
   const benefits = [
     "Access to premium enterprise hardware at wholesale rates",
     "Priority technical support and dedicated account management",
@@ -48,9 +54,9 @@ const Partners = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto mb-20"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900/30 rounded border border-emerald-500/20 uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded border border-brand-secondary-500/20 uppercase tracking-wider">
               <Handshake className="w-4 h-4" />
-              <span className="text-emerald-600 dark:text-emerald-400">
+              <span className="text-brand-secondary-600 dark:text-brand-secondary-400">
                 Strategic Partnerships
               </span>
             </div>
@@ -70,7 +76,7 @@ const Partners = () => {
                 Wholesale Access
               </span>
               <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
-                Dedicated Account Team
+                Dedicated Team
               </span>
               <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
                 Co-Marketing Support
@@ -78,25 +84,52 @@ const Partners = () => {
             </div>
           </motion.div>
 
-          {/* Current Partners Grid */}
-          <section className="mb-24">
-            <h2 className="text-2xl font-bold text-center text-slate-900 dark:text-white mb-12">
-              Trusted by Industry Leaders
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
+          {/* Partnership Process */}
+          <section className="mb-32 py-16 border-y border-slate-200 dark:border-slate-800/50">
+            <div className="text-center mb-16">
+              <h2 className="text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest mb-3">The Path to Partnership</h2>
+              <p className="text-2xl font-bold dark:text-white text-slate-900">How we grow together</p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto px-4">
+              {steps.map((step, idx) => (
+                <div key={idx} className="relative">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="size-12 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-center font-mono font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
+                      0{idx + 1}
+                    </div>
+                    {idx < 3 && (
+                      <div className="hidden md:block h-px flex-1 bg-linear-to-r from-slate-200 to-transparent dark:from-slate-800" />
+                    )}
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">{step.title}</h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{step.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Ecosystem Grid */}
+          <section className="mb-32">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Strategic Ecosystem</h2>
+              <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
+                We empower industries that require high-availability enterprise infrastructure and specialized technical support.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-slate-200 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 overflow-hidden rounded">
               {partners.map((partner, idx) => (
                 <motion.div
                   key={idx}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: idx * 0.1 }}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  transition={{ delay: idx * 0.05 }}
                   viewport={{ once: true }}
-                  className="bg-white dark:bg-slate-900 p-8 rounded border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center gap-4 hover:border-emerald-500/30 hover:shadow transition group"
+                  className="bg-slate-50 dark:bg-slate-950 p-8 flex flex-col items-center justify-center gap-4 hover:bg-white dark:hover:bg-slate-900 transition-colors group cursor-default"
                 >
-                  <div className="flex items-center justify-center group-hover:scale-110 group-hover:border-emerald-500/40 transition-all duration-300">
-                    <partner.icon className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
+                  <div className="flex items-center justify-center group-hover:scale-110 group-hover:text-brand-secondary-500 transition-all duration-300">
+                    <partner.icon className="w-8 h-8 text-slate-400 dark:text-slate-600 group-hover:text-brand-secondary-500" />
                   </div>
-                  <span className="text-sm font-medium text-slate-600 dark:text-slate-400 text-center">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-500 text-center">
                     {partner.name}
                   </span>
                 </motion.div>
@@ -107,13 +140,16 @@ const Partners = () => {
           {/* Become a Partner CTA */}
           <div className="grid md:grid-cols-2 gap-12 items-center bg-white dark:bg-slate-900 rounded p-8 md:p-12 border border-slate-200 dark:border-slate-800 shadow overflow-hidden relative">
             <div className="relative z-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-[10px] font-bold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded border border-brand-secondary-500/20 uppercase tracking-widest">
+                Tiered Benefits
+              </div>
               <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">
                 Become a Solution Partner
               </h2>
-              <ul className="space-y-4 mb-8">
+              <ul className="space-y-4 mb-8 text-sm">
                 {benefits.map((benefit, idx) => (
                   <li key={idx} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 mt-0.5 shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-brand-secondary-500 mt-0.5 shrink-0" />
                     <span className="text-slate-600 dark:text-slate-400">
                       {benefit}
                     </span>
@@ -122,22 +158,22 @@ const Partners = () => {
               </ul>
               <button
                 onClick={handleApplyClick}
-                className="group cursor-pointer inline-flex items-center gap-2 px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-bold transition duration-300 shadow shadow-emerald-500/25 hover:shadow hover:shadow-emerald-500/30 hover:scale-105 active:scale-95"
+                className="group cursor-pointer inline-flex items-center gap-2 px-8 py-2.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded font-semibold transition duration-300 shadow shadow-brand-secondary-500/25 hover:shadow hover:shadow-brand-secondary-500/30 hover:scale-[1.02] active:scale-95"
               >
-                <span>Apply Now</span>
+                <span>Start Partnership</span>
                 <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
               </button>
             </div>
 
             <div className="relative z-10 flex justify-center">
-              <div className="w-64 h-64 bg-emerald-100 dark:bg-emerald-900/20 rounded-full flex items-center justify-center relative">
-                <div className="absolute inset-0 border-2 border-dashed border-emerald-500/30 rounded-full animate-spin-slow" />
-                <Building2 className="w-32 h-32 text-emerald-600 dark:text-emerald-400" />
+              <div className="w-64 h-64 bg-brand-secondary-100/50 dark:bg-brand-secondary-900/50 rounded-full flex items-center justify-center relative border border-brand-secondary-200/50 dark:border-brand-secondary-800/50 shadow-inner">
+                <div className="absolute inset-8 border border-dashed border-brand-secondary-500/20 rounded-full animate-spin-slow" />
+                <Handshake className="w-24 h-24 text-brand-secondary-600/90 dark:text-brand-secondary-400/90" />
               </div>
             </div>
 
             {/* Background Decoration */}
-            <div className="absolute top-0 right-0 w-full h-full bg-linear-to-bl from-emerald-500/5 to-transparent pointer-events-none" />
+            <div className="absolute top-0 right-0 w-full h-full bg-linear-to-bl from-brand-secondary-500/5 to-transparent pointer-events-none" />
           </div>
         </div>
       </div>

@@ -87,7 +87,7 @@ const AboutHero = () => {
               repeat: Infinity,
               ease: "linear",
             }}
-            className="absolute w-1 h-1 bg-emerald-500 rounded-full"
+            className="absolute w-1 h-1 bg-brand-secondary-500 rounded-full"
           />
         ))}
       </div>
@@ -98,7 +98,7 @@ const AboutHero = () => {
       {/* <div className="absolute inset-0 overflow-hidden pointer-events-none">
  <motion.div
  style={{ x: translateX, y: translateY }}
- className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-emerald-500/5 dark:bg-emerald-600/10 rounded-full blur-[120px]"
+ className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-brand-secondary-500/5 dark:bg-brand-secondary-600/10 rounded-full blur-[120px]"
  />
  <motion.div
  style={{
@@ -117,10 +117,10 @@ const AboutHero = () => {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm mb-4"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded border border-brand-secondary-500/20 bg-brand-secondary-500/5  mb-4"
             >
-              <SmartphoneCharging className="size-4 text-emerald-500" />
-              <span className="text-[9px] md:text-xs font-mono font-bold tracking-widest uppercase text-emerald-600 dark:text-emerald-300">
+              <SmartphoneCharging className="size-4 text-brand-secondary-500" />
+              <span className="text-[9px] md:text-xs font-mono font-bold tracking-widest uppercase text-brand-secondary-600 dark:text-brand-secondary-300">
                 About SHERO
               </span>
             </motion.div>
@@ -170,7 +170,7 @@ const AboutHero = () => {
                   label: "INNOVATION",
                   sub: "Cutting Edge",
                   icon: Lightbulb,
-                  color: "text-emerald-500",
+                  color: "text-brand-secondary-500",
                 },
                 {
                   label: "INTEGRITY",
@@ -182,12 +182,12 @@ const AboutHero = () => {
                   label: "IMPACT",
                   sub: "Results Driven",
                   icon: Target,
-                  color: "text-emerald-600",
+                  color: "text-brand-secondary-600",
                 },
               ].map((item) => (
                 <div
                   key={item.label}
-                  className="rounded border border-border bg-white/70 dark:bg-slate-900/60 backdrop-blur px-4 py-3"
+                  className="rounded border border-border bg-white/70 dark:bg-slate-900/60  px-4 py-3"
                 >
                   <div className="flex items-center gap-2">
                     <item.icon className={`w-4 h-4 ${item.color}`} />
@@ -216,13 +216,13 @@ const AboutHero = () => {
               {/* Layer 1: Core Values Card */}
               <motion.div
                 style={{ z: 0 }}
-                className="w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm border border-slate-200 dark:border-slate-800 rounded shadow p-6 sm:p-8 relative overflow-hidden z-10 select-none"
+                className="w-full bg-white/95 dark:bg-slate-900/95  border border-slate-200 dark:border-slate-800 rounded shadow p-6 sm:p-8 relative overflow-hidden z-10 select-none"
               >
                 <div className="absolute inset-0 pattern-dots opacity-5 pointer-events-none" />
 
                 <div className="flex items-center gap-4 mb-8 pb-5 border-b border-slate-100 dark:border-slate-800">
-                  <div className="w-12 h-12 rounded bg-emerald-500/10 flex items-center justify-center shadow-inner">
-                    <Target className="w-6 h-6 text-emerald-500" />
+                  <div className="w-12 h-12 rounded bg-brand-secondary-500/10 flex items-center justify-center shadow-inner">
+                    <Target className="w-6 h-6 text-brand-secondary-500" />
                   </div>
                   <div>
                     <h4 className="text-sm font-bold text-slate-900 dark:text-white">
@@ -240,7 +240,7 @@ const AboutHero = () => {
                       label: "Strategic Goals",
                       val: "Exceeded",
                       progress: 85,
-                      color: "bg-emerald-500",
+                      color: "bg-brand-secondary-500",
                     },
                     {
                       label: "Client Success",
@@ -252,7 +252,7 @@ const AboutHero = () => {
                       label: "Technical Excellence",
                       val: "Maintained",
                       progress: 94,
-                      color: "bg-emerald-600",
+                      color: "bg-brand-secondary-600",
                     },
                   ].map((item) => (
                     <div key={item.label} className="space-y-2">
@@ -298,7 +298,7 @@ const AboutHero = () => {
               </motion.div>
 
               {/* Background Aura */}
-              <div className="absolute inset-0 bg-radial-gradient from-emerald-500/15 to-transparent blur-3xl rounded-full scale-150 pointer-events-none" />
+              <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/15 to-transparent blur-3xl rounded-full scale-150 pointer-events-none" />
             </motion.div>
           </div>
         </div>

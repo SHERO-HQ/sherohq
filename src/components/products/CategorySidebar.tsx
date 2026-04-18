@@ -83,13 +83,13 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({
  onClick={() => onCategoryChange(category.id)}
  className={`flex items-center justify-between w-full px-3 py-2 text-sm rounded transition group ${
  activeCategory === category.id
- ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 font-semibold"
+ ? "bg-brand-secondary-50 dark:bg-brand-secondary-900/20 text-brand-secondary-700 dark:text-brand-secondary-400 font-semibold"
  : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-200"
  }`}
  >
  <div className="flex items-center gap-2">
  <span
- className={`transition-colors ${activeCategory === category.id ? "text-emerald-600 dark:text-emerald-400" : "text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300"}`}
+ className={`transition-colors ${activeCategory === category.id ? "text-brand-secondary-600 dark:text-brand-secondary-400" : "text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300"}`}
  >
  {category.icon}
  </span>
@@ -99,7 +99,7 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({
  <span
  className={`text-xs px-2 py-0.5 rounded-full ${
  activeCategory === category.id
- ? "bg-emerald-200 dark:bg-emerald-800 text-emerald-800 dark:text-emerald-200"
+ ? "bg-brand-secondary-200 dark:bg-brand-secondary-800 text-brand-secondary-800 dark:text-brand-secondary-200"
  : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-500"
  }`}
  >
@@ -128,7 +128,7 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({
  sortBy: "newest",
  })
  }
- className="text-xs text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center gap-1 transition-colors"
+ className="text-xs text-slate-500 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 flex items-center gap-1 transition-colors"
  >
  <RotateCcw className="w-3 h-3" />
  Reset
@@ -160,8 +160,8 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({
  <div
  className={`w-4 h-4 rounded border flex items-center justify-center transition ${
  isPriceRangeActive(range.range)
- ? "bg-emerald-600 border-emerald-600"
- : "border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 group-hover:border-emerald-500"
+ ? "bg-brand-secondary-600 border-brand-secondary-600"
+ : "border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 group-hover:border-brand-secondary-500"
  }`}
  >
  {isPriceRangeActive(range.range) && (
@@ -178,7 +178,7 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({
  }
  />
  <span
- className={`text-sm ${isPriceRangeActive(range.range) ? "text-emerald-700 dark:text-emerald-400 font-medium" : "text-slate-600 dark:text-slate-400"}`}
+ className={`text-sm ${isPriceRangeActive(range.range) ? "text-brand-secondary-700 dark:text-brand-secondary-400 font-medium" : "text-slate-600 dark:text-slate-400"}`}
  >
  {range.label}
  </span>
@@ -211,8 +211,8 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({
  <div
  className={`w-4 h-4 rounded border flex items-center justify-center transition ${
  filters.brands.includes(brand)
- ? "bg-emerald-600 border-emerald-600"
- : "border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 group-hover:border-emerald-500"
+ ? "bg-brand-secondary-600 border-brand-secondary-600"
+ : "border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 group-hover:border-brand-secondary-500"
  }`}
  >
  {filters.brands.includes(brand) && (
@@ -231,7 +231,7 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({
  }}
  />
  <span
- className={`text-sm ${filters.brands.includes(brand) ? "text-emerald-700 dark:text-emerald-400 font-medium" : "text-slate-600 dark:text-slate-400"}`}
+ className={`text-sm ${filters.brands.includes(brand) ? "text-brand-secondary-700 dark:text-brand-secondary-400 font-medium" : "text-slate-600 dark:text-slate-400"}`}
  >
  {brand}
  </span>
@@ -245,7 +245,7 @@ const CategorySidebar: React.FC<CategorySidebarProps> = ({
  <div className="pt-2 border-t border-slate-200 dark:border-slate-800">
  <label className="flex items-center gap-3 cursor-pointer group py-2">
  <div
- className={`shrink-0 w-10 h-6 rounded-full p-1 transition-colors duration-300 ${filters.inStock ? "bg-emerald-600" : "bg-slate-300 dark:bg-slate-700"}`}
+ className={`shrink-0 w-10 h-6 rounded-full p-1 transition-colors duration-300 ${filters.inStock ? "bg-brand-secondary-600" : "bg-slate-300 dark:bg-slate-700"}`}
  >
  <div
  className={`w-4 h-4 rounded-full bg-white transform transition-transform duration-300 ${filters.inStock ? "translate-x-4" : "translate-x-0"}`}

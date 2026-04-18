@@ -148,7 +148,7 @@ export default function ProjectForm() {
     return (
       <div className="flex flex-col items-center justify-center min-h-100">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-12 h-12 border-4 border-brand-secondary-500 border-t-transparent rounded-full animate-spin" />
           <p className="text-slate-400 font-medium">
             Loading project details...
           </p>
@@ -190,7 +190,7 @@ export default function ProjectForm() {
           <Button
             onClick={handleSubmit}
             disabled={isSaving}
-            className="bg-emerald-600 hover:bg-emerald-500 text-white min-w-30"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-30"
           >
             {isSaving ? (
               <>
@@ -216,7 +216,7 @@ export default function ProjectForm() {
           {/* Project Info */}
           <Card className="bg-slate-900 border-white/5 p-6 md:p-8 space-y-6">
             <div className="flex items-center gap-2 pb-2 border-b border-white/5">
-              <Briefcase className="w-5 h-5 text-emerald-400" />
+              <Briefcase className="w-5 h-5 text-brand-secondary-400" />
               <h3 className="text-lg font-bold text-white">Project Details</h3>
             </div>
 
@@ -260,7 +260,7 @@ export default function ProjectForm() {
                       description: e.target.value,
                     }))
                   }
-                  className="w-full min-h-30 bg-slate-800/50 border border-white/5 rounded p-3 text-white focus:outline-none focus:ring-1 focus:ring-emerald-500/50 resize-y"
+                  className="w-full min-h-30 bg-slate-800/50 border border-white/5 rounded p-3 text-white focus:outline-none focus:ring-1 focus:ring-brand-secondary-500/50 resize-y"
                   required
                 />
               </div>
@@ -282,7 +282,7 @@ export default function ProjectForm() {
                       useCase: e.target.value,
                     }))
                   }
-                  className="w-full min-h-30 bg-slate-800/50 border border-white/5 rounded p-3 text-white focus:outline-none focus:ring-1 focus:ring-emerald-500/50 resize-y"
+                  className="w-full min-h-30 bg-slate-800/50 border border-white/5 rounded p-3 text-white focus:outline-none focus:ring-1 focus:ring-brand-secondary-500/50 resize-y"
                 />
               </div>
             </div>
@@ -291,7 +291,7 @@ export default function ProjectForm() {
           {/* Technologies */}
           <Card className="bg-slate-900 border-white/5 p-6 md:p-8 space-y-6">
             <div className="flex items-center gap-2 pb-2 border-b border-white/5">
-              <List className="w-5 h-5 text-emerald-400" />
+              <List className="w-5 h-5 text-brand-secondary-400" />
               <h3 className="text-lg font-bold text-white">Technologies</h3>
             </div>
 
@@ -344,7 +344,7 @@ export default function ProjectForm() {
           {/* Project Image */}
           <Card className="bg-slate-900 border-white/5 p-6 space-y-4">
             <div className="flex items-center gap-2 pb-2 border-b border-white/5">
-              <ImageIcon className="w-5 h-5 text-emerald-400" />
+              <ImageIcon className="w-5 h-5 text-brand-secondary-400" />
               <h3 className="font-bold text-white">Cover Image</h3>
             </div>
 
@@ -377,7 +377,7 @@ export default function ProjectForm() {
                     "aspect-video rounded border-2 border-dashed flex flex-col items-center justify-center gap-2 cursor-pointer transition",
                     isUploading
                       ? "bg-slate-800/50 pointer-events-none"
-                      : "border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5",
+                      : "border-white/10 hover:border-brand-secondary-500/50 hover:bg-brand-secondary-500/5",
                   )}
                 >
                   <input
@@ -387,7 +387,7 @@ export default function ProjectForm() {
                     onChange={handleImageUpload}
                   />
                   {isUploading ? (
-                    <Loader2 className="w-6 h-6 text-emerald-500 animate-spin" />
+                    <Loader2 className="w-6 h-6 text-brand-secondary-500 animate-spin" />
                   ) : (
                     <>
                       <Plus className="w-6 h-6 text-slate-500" />
@@ -413,7 +413,7 @@ export default function ProjectForm() {
                 </label>
                 <select
                   id="category"
-                  className="w-full bg-slate-800 border-white/5 text-white rounded px-3 py-2 outline-none focus:ring-1 focus:ring-emerald-500/50"
+                  className="w-full bg-slate-800 border-white/5 text-white rounded px-3 py-2 outline-none focus:ring-1 focus:ring-brand-secondary-500/50"
                   value={projectData.category}
                   onChange={(e) =>
                     setProjectData((prev: Partial<Project>) => ({

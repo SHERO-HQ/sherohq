@@ -72,10 +72,10 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
  return (
  <div className={`relative ${className}`}>
  <form onSubmit={handleSearch} className="relative">
- <div className="flex items-center w-full rounded bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/30 transition-all pr-10">
+ <div className="flex items-center w-full rounded bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 focus-within:border-brand-secondary-500 focus-within:ring-2 focus-within:ring-brand-secondary-500/30 transition-all pr-10">
  <button
  type="submit"
- className="flex items-center justify-center w-10 h-10 text-slate-500 dark:text-slate-400 hover:text-emerald-600 transition-colors shrink-0"
+ className="flex items-center justify-center w-10 h-10 text-slate-500 dark:text-slate-400 hover:text-brand-secondary-600 transition-colors shrink-0"
  aria-label="Search"
  >
  <Search className="w-5 h-5" />
@@ -124,7 +124,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
  <div className="font-medium text-slate-900 dark:text-white line-clamp-1">
  {product.name}
  </div>
- <div className="text-emerald-600 dark:text-emerald-400 text-sm font-bold">
+ <div className="text-brand-secondary-600 dark:text-brand-secondary-400 text-sm font-bold">
  GH₵{product.price}
  </div>
  </div>
@@ -149,7 +149,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
  {/* Search Trigger Button */}
  <button
  onClick={openSearch}
- className="p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+ className="p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors"
  aria-label="Open Search"
  >
  <Search className="w-5 h-5" />
@@ -165,7 +165,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
  animate={{ opacity: 1 }}
  exit={{ opacity: 0 }}
  onClick={closeSearch}
- className="fixed inset-0 bg-black/50 backdrop-blur-sm z-100"
+ className="fixed inset-0 bg-black/50  z-100"
  />
 
  {/* Search Panel */}
@@ -179,7 +179,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
  <div className="container max-w-3xl mx-auto">
  <form onSubmit={handleSearch} className="relative">
  <div className="flex items-center gap-3">
- <div className="flex-1 flex items-center bg-slate-100 dark:bg-slate-800 rounded px-4 relative border border-slate-300 dark:border-slate-700 focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/30 transition-all">
+ <div className="flex-1 flex items-center bg-slate-100 dark:bg-slate-800 rounded px-4 relative border border-slate-300 dark:border-slate-700 focus-within:border-brand-secondary-500 focus-within:ring-2 focus-within:ring-brand-secondary-500/30 transition-all">
  <Search className="w-5 h-5 text-slate-400 shrink-0" />
  <input
  ref={inputRef}
@@ -192,7 +192,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
  />
  {searchLoading && (
  <div className="absolute right-12 top-1/2 -translate-y-1/2">
- <div className="w-5 h-5 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+ <div className="w-5 h-5 border-2 border-brand-secondary-500 border-t-transparent rounded-full animate-spin" />
  </div>
  )}
  {query && (
@@ -250,7 +250,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
  {product.category}
  </div>
  </div>
- <div className="text-emerald-600 dark:text-emerald-400 font-bold">
+ <div className="text-brand-secondary-600 dark:text-brand-secondary-400 font-bold">
  GH₵{product.price}
  </div>
  </button>
@@ -259,7 +259,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
  {filteredProducts.length > 8 && (
  <button
  onClick={handleSearch}
- className="w-full py-2 text-center text-emerald-600 dark:text-emerald-400 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors"
+ className="w-full py-2 text-center text-brand-secondary-600 dark:text-brand-secondary-400 font-medium hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors"
  >
  View all {filteredProducts.length} results →
  </button>

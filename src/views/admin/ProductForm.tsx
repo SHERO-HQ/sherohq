@@ -298,7 +298,7 @@ export default function ProductForm() {
     return (
       <div className="flex flex-col items-center justify-center min-h-100">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          <div className="w-12 h-12 border-4 border-brand-secondary-500 border-t-transparent rounded-full animate-spin" />
           <p className="text-slate-400 font-medium">
             Loading product details...
           </p>
@@ -341,7 +341,7 @@ export default function ProductForm() {
           <Button
             onClick={handleSubmit}
             disabled={isSaving}
-            className="bg-emerald-600 hover:bg-emerald-500 text-white min-w-30"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-30"
           >
             {isSaving ? (
               <>
@@ -368,7 +368,7 @@ export default function ProductForm() {
           <Card className="bg-slate-900 border-white/5 p-6 md:p-8 space-y-6">
             <div className="flex items-center justify-between pb-2 border-b border-white/5">
               <div className="flex items-center gap-2">
-                <ImageIcon className="w-5 h-5 text-emerald-400" />
+                <ImageIcon className="w-5 h-5 text-brand-secondary-400" />
                 <h3 className="font-bold text-white">Product Media</h3>
               </div>
               <span className="text-xs text-slate-500 font-medium">
@@ -385,7 +385,7 @@ export default function ProductForm() {
                     className={cn(
                       "relative aspect-square w-full rounded bg-slate-800 border-2 overflow-hidden shadow",
                       productData.image === url
-                        ? "border-emerald-500 shadow-emerald-500/10"
+                        ? "border-brand-secondary-500 shadow-brand-secondary-500/10"
                         : "border-white/5",
                     )}
                   >
@@ -416,8 +416,8 @@ export default function ProductForm() {
                         className={cn(
                           "w-full py-1 px-2 rounded text-[9px] font-medium tracking-wider transition shadow",
                           productData.image === url
-                            ? "bg-emerald-500 text-white cursor-default"
-                            : "bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm",
+                            ? "bg-brand-secondary-500 text-white cursor-default"
+                            : "bg-white/20 hover:bg-white/30 text-white ",
                         )}
                         disabled={productData.image === url}
                       >
@@ -426,7 +426,7 @@ export default function ProductForm() {
                     </div>
 
                     {/* {productData.image === url && (
-                        <div className="absolute top-2 left-2 px-1 py-0.5 bg-emerald-500 text-[10px] text-white rounded shadow uppercase tracking-tight">
+                        <div className="absolute top-2 left-2 px-1 py-0.5 bg-brand-secondary-500 text-[10px] text-white rounded shadow uppercase tracking-tight">
                           Primary
                         </div>
                       )} */}
@@ -439,8 +439,8 @@ export default function ProductForm() {
                     className={cn(
                       "aspect-square rounded w-full border-2 border-dashed flex flex-col items-center justify-center gap-2 cursor-pointer transition",
                       isUploading
-                        ? "bg-slate-800/50 border-emerald-500/20 pointer-events-none"
-                        : "border-white/10 hover:border-emerald-500/50 hover:bg-emerald-500/5",
+                        ? "bg-slate-800/50 border-brand-secondary-500/20 pointer-events-none"
+                        : "border-white/10 hover:border-brand-secondary-500/50 hover:bg-brand-secondary-500/5",
                     )}
                   >
                     <input
@@ -451,7 +451,7 @@ export default function ProductForm() {
                       onChange={handleImageUpload}
                     />
                     {isUploading ? (
-                      <Loader2 className="w-6 h-6 text-emerald-500 animate-spin" />
+                      <Loader2 className="w-6 h-6 text-brand-secondary-500 animate-spin" />
                     ) : (
                       <>
                         <Plus className="w-6 h-6 text-slate-500" />
@@ -477,7 +477,7 @@ export default function ProductForm() {
           <Card className="bg-slate-900 border-white/5 p-6 md:p-8 space-y-8">
             <div className="space-y-6">
               <div className="flex items-center gap-2 pb-2 border-b border-white/5">
-                <List className="w-5 h-5 text-emerald-400" />
+                <List className="w-5 h-5 text-brand-secondary-400" />
                 <h3 className="text-lg font-bold text-white">Features</h3>
               </div>
 
@@ -533,7 +533,7 @@ export default function ProductForm() {
             <div className="space-y-6 pt-4">
               <div className="flex items-center justify-between pb-2 border-b border-white/5">
                 <div className="flex items-center gap-2">
-                  <Tag className="w-5 h-5 text-emerald-400" />
+                  <Tag className="w-5 h-5 text-brand-secondary-400" />
                   <h3 className="text-lg font-bold text-white">
                     Specifications
                   </h3>
@@ -543,7 +543,7 @@ export default function ProductForm() {
                   onClick={addSpecRow}
                   variant="outline"
                   size="sm"
-                  className="border-white/10 text-white hover:bg-white/5 hover:text-emerald-400"
+                  className="border-white/10 text-white hover:bg-white/5 hover:text-brand-secondary-400"
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Spec
@@ -597,7 +597,7 @@ export default function ProductForm() {
                       type="button"
                       onClick={addSpecRow}
                       variant="link"
-                      className="text-emerald-400"
+                      className="text-brand-secondary-400"
                     >
                       Add your first specification
                     </Button>
@@ -613,7 +613,7 @@ export default function ProductForm() {
           {/* General Info */}
           <Card className="bg-slate-900 border-white/5 p-6 space-y-6">
             <div className="flex items-center gap-2 pb-2 border-b border-white/5">
-              <Info className="w-5 h-5 text-emerald-400" />
+              <Info className="w-5 h-5 text-brand-secondary-400" />
               <h3 className="text-lg font-bold text-white">
                 General Information
               </h3>
@@ -713,7 +713,7 @@ export default function ProductForm() {
                       description: e.target.value,
                     }))
                   }
-                  className="w-full min-h-37.5 bg-slate-800/50 border border-white/5 rounded p-3 text-white focus:outline-none focus:ring-1 focus:ring-emerald-500/50 resize-y"
+                  className="w-full min-h-37.5 bg-slate-800/50 border border-white/5 rounded p-3 text-white focus:outline-none focus:ring-1 focus:ring-brand-secondary-500/50 resize-y"
                   required
                 />
               </div>
@@ -786,7 +786,7 @@ export default function ProductForm() {
               </label>
               <select
                 id="category"
-                className="w-full bg-slate-800 border-white/5 text-white rounded px-4 py-2 outline-none focus:ring-1 focus:ring-emerald-500/50"
+                className="w-full bg-slate-800 border-white/5 text-white rounded px-4 py-2 outline-none focus:ring-1 focus:ring-brand-secondary-500/50"
                 value={productData.category}
                 onChange={(e) =>
                   setProductData((prev) => ({
@@ -814,7 +814,7 @@ export default function ProductForm() {
               </label>
               <select
                 id="condition"
-                className="w-full bg-slate-800 border-white/5 text-white rounded px-4 py-2 outline-none focus:ring-1 focus:ring-emerald-500/50"
+                className="w-full bg-slate-800 border-white/5 text-white rounded px-4 py-2 outline-none focus:ring-1 focus:ring-brand-secondary-500/50"
                 value={productData.condition || "New"}
                 onChange={(e) =>
                   setProductData((prev) => ({
@@ -858,7 +858,7 @@ export default function ProductForm() {
 
             <div className="flex items-center justify-between p-4 rounded bg-slate-800/30 border border-white/5">
               <div className="flex items-center gap-2">
-                <Package className="w-4 h-4 text-emerald-400" />
+                <Package className="w-4 h-4 text-brand-secondary-400" />
                 <span className="text-sm text-white font-medium">
                   In Stock Status
                 </span>
@@ -873,7 +873,7 @@ export default function ProductForm() {
                 }
                 className={cn(
                   "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
-                  productData.inStock ? "bg-emerald-600" : "bg-slate-700",
+                  productData.inStock ? "bg-brand-secondary-600" : "bg-slate-700",
                 )}
               >
                 <span
@@ -916,7 +916,7 @@ export default function ProductForm() {
                   className={cn(
                     "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
                     productData.isSpotlight
-                      ? "bg-emerald-600 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+                      ? "bg-brand-secondary-600 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
                       : "bg-slate-700",
                   )}
                 >
@@ -951,7 +951,7 @@ export default function ProductForm() {
                   className={cn(
                     "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
                     productData.isFeatured
-                      ? "bg-emerald-600 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
+                      ? "bg-brand-secondary-600 shadow-[0_0_10px_rgba(16,185,129,0.3)]"
                       : "bg-slate-700",
                   )}
                 >

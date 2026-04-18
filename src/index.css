@@ -119,18 +119,18 @@
     --brand-primary-900: #021d4e;
 
     --brand-secondary: #05735a;
-    --brand-secondary-50: #e8f8f3;
-    --brand-secondary-100: #cef2e7;
-    --brand-secondary-200: #9fe3d0;
-    --brand-secondary-300: #70d5b8;
-    --brand-secondary-400: #3fc8a0;
-    --brand-secondary-500: #14a37b;
-    --brand-secondary-600: #05735a;
-    --brand-secondary-700: #045a47;
-    --brand-secondary-800: #034335;
-    --brand-secondary-900: #022d24;
+    --brand-secondary-50: #ecfdf5;
+    --brand-secondary-100: #d1fae5;
+    --brand-secondary-200: #a7f3d0;
+    --brand-secondary-300: #6ee7b7;
+    --brand-secondary-400: #34d399;
+    --brand-secondary-500: #10b981;
+    --brand-secondary-600: #059669;
+    --brand-secondary-700: #047857;
+    --brand-secondary-800: #065f46;
+    --brand-secondary-900: #064e3b;
 
-    --background: oklch(1 0 0);
+    --background: oklch(0.99 0.005 240);
     --foreground: oklch(0.12 0.02 240);
     /* Deep Slate text #1e293b */
 
@@ -143,15 +143,15 @@
     --primary: var(--brand-primary-700);
     --primary-foreground: oklch(0.98 0 0);
 
-    --secondary: oklch(0.96 0.01 240);
-    /* Cool Gray */
-    --secondary-foreground: oklch(0.12 0.02 240);
+    --secondary: oklch(0.98 0.01 165);
+    /* Ultra-light brand mint background */
+    --secondary-foreground: oklch(0.24 0.02 240);
 
     --muted: oklch(0.96 0.01 240);
     --muted-foreground: oklch(0.45 0 0);
 
-    --accent: oklch(0.96 0.01 240);
-    --accent-foreground: oklch(0.12 0.02 240);
+    --accent: oklch(0.97 0.01 165);
+    --accent-foreground: oklch(0.2 0.02 240);
 
     --destructive: oklch(0.577 0.245 27.325);
     --destructive-foreground: oklch(0.985 0 0);
@@ -163,7 +163,7 @@
 
 .dark {
     /* Premium Dark Mode: Deep Blue-Black Slate - IMPROVED CONTRAST */
-    --background: oklch(0.12 0.02 240);
+    --background: oklch(0.14 0.03 240);
     --foreground: oklch(0.98 0 0);
 
     /* Cards: Better elevation from background */
@@ -250,7 +250,7 @@
         background-size: 24px 24px;
     }
 
-    .pattern-grid-emerald {
+    .pattern-grid-brand-secondary {
         background-image: radial-gradient(circle, #05735a20 1px, transparent 1px);
         background-size: 24px 24px;
     }

@@ -68,7 +68,7 @@ const ProductRow = memo(({
         <div>
           <Link
             href={`/admin/products/${product.slug || product.sku || product.id}/edit`}
-            className="text-sm font-semibold text-white hover:text-emerald-400 transition-colors"
+            className="text-sm font-semibold text-white hover:text-brand-secondary-400 transition-colors"
           >
             {product.name}
           </Link>
@@ -86,7 +86,7 @@ const ProductRow = memo(({
     <td className="px-6 py-4 bg-transparent">
       <Badge
         variant="outline"
-        className="bg-emerald-500/10 text-emerald-400 border-none capitalize"
+        className="bg-brand-secondary-500/10 text-brand-secondary-400 border-none capitalize"
       >
         {product.category}
       </Badge>
@@ -103,7 +103,7 @@ const ProductRow = memo(({
               ? "text-rose-400"
               : (product.quantity ?? 0) <= 5
                 ? "text-amber-400"
-                : "text-emerald-400",
+                : "text-brand-secondary-400",
           )}
         >
           {(product.quantity || 0) === 0
@@ -118,7 +118,7 @@ const ProductRow = memo(({
                 ? "bg-rose-500"
                 : (product.quantity ?? 0) <= 5
                   ? "bg-amber-500"
-                  : "bg-emerald-500",
+                  : "bg-brand-secondary-500",
             )}
             style={{
               width: `${Math.min(100, ((product.quantity || 0) / 20) * 100)}%`,
@@ -309,7 +309,7 @@ export default function AdminProducts() {
   return (
     <div className="space-y-6 relative">
         {isPlaceholderData && (
-          <div className="absolute inset-0 bg-slate-900/10 backdrop-blur-[1px] z-10 pointer-events-none transition-opacity" />
+          <div className="absolute inset-0 bg-slate-900/10 -[1px] z-10 pointer-events-none transition-opacity" />
         )}
 
         {/* Header */}
@@ -368,7 +368,7 @@ export default function AdminProducts() {
             </DropdownMenu>
 
             <Button
-              className="bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-medium px-4"
               asChild
             >
               <Link href="/admin/products/new">
@@ -380,7 +380,7 @@ export default function AdminProducts() {
         </div>
 
         {/* Filters */}
-        <Card className="bg-slate-900/40 backdrop-blur-sm border-white/10 p-4">
+        <Card className="bg-slate-900/40  border-white/10 p-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -397,7 +397,7 @@ export default function AdminProducts() {
                 setSelectedCategory(e.target.value);
                 setCurrentPage(1);
               }}
-              className="bg-slate-800/50 border border-white/5 rounded text-sm text-white p-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+              className="bg-slate-800/50 border border-white/5 rounded text-sm text-white p-2 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
             >
               <option value="all">All Categories</option>
               {categories.map((cat: Category) => (
@@ -412,7 +412,7 @@ export default function AdminProducts() {
                 setStockFilter(e.target.value);
                 setCurrentPage(1);
               }}
-              className="bg-slate-800/50 border border-white/5 rounded text-sm text-white p-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+              className="bg-slate-800/50 border border-white/5 rounded text-sm text-white p-2 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
             >
               <option value="all">All Stock Status</option>
               <option value="low">Low Stock (≤ 5)</option>
@@ -422,7 +422,7 @@ export default function AdminProducts() {
         </Card>
 
         {/* Products Table */}
-        <div className="bg-slate-900/40 backdrop-blur-sm border border-white/10 rounded overflow-hidden">
+        <div className="bg-slate-900/40  border border-white/10 rounded overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
@@ -533,7 +533,7 @@ export default function AdminProducts() {
                       className={cn(
                         "h-8 w-8 text-xs",
                         currentPage === i + 1
-                          ? "bg-emerald-600 hover:bg-emerald-500 border-none"
+                          ? "bg-brand-secondary-600 hover:bg-brand-secondary-500 border-none"
                           : "border-white/10 text-white",
                       )}
                       onClick={() => setCurrentPage(i + 1)}

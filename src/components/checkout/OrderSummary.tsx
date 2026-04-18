@@ -59,7 +59,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
             <span className="text-lg font-bold text-slate-900 dark:text-white">
               Total
             </span>
-            <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 whitespace-nowrap">
+            <span className="text-2xl font-bold text-brand-secondary-600 dark:text-brand-secondary-400 whitespace-nowrap">
               S{total.toFixed(2)}
             </span>
           </div>
@@ -69,13 +69,13 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
       {/* Trust Badges */}
       <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 grid grid-cols-2 place-items-center gap-2">
         <div className="flex items-center gap-2 text-center">
-          <Truck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+          <Truck className="w-4 h-4 text-brand-secondary-600 dark:text-brand-secondary-400" />
           <span className="text-xs text-slate-600 dark:text-slate-400">
             Fast Delivery
           </span>
         </div>
         <div className="flex items-center gap-2 text-center">
-          <CheckCircle className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+          <CheckCircle className="w-4 h-4 text-brand-secondary-600 dark:text-brand-secondary-400" />
           <span className="text-xs text-slate-600 dark:text-slate-400">
             Secure Payment
           </span>

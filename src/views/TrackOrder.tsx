@@ -44,7 +44,7 @@ const getStatusBadge = (status: string) => {
   if (s === "shipped")
     return "bg-purple-500/15 text-purple-600 dark:text-purple-400";
   if (s === "delivered")
-    return "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400";
+    return "bg-brand-secondary-500/15 text-brand-secondary-600 dark:text-brand-secondary-400";
   if (s === "cancelled")
     return "bg-rose-500/15 text-rose-600 dark:text-rose-400";
   return "bg-slate-500/15 text-slate-600 dark:text-slate-400";
@@ -117,7 +117,7 @@ export default function TrackOrder({
 
           {isLoading && (
             <div className="py-14 text-center">
-              <div className="w-10 h-10 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin mx-auto" />
+              <div className="w-10 h-10 rounded-full border-2 border-brand-secondary-500 border-t-transparent animate-spin mx-auto" />
               <p className="text-sm text-slate-500 dark:text-slate-400 mt-3">
                 Checking latest order status...
               </p>
@@ -152,7 +152,7 @@ export default function TrackOrder({
               </div>
 
               {isStorePickupOrder ? (
-                <div className="rounded border border-emerald-200/70 dark:border-emerald-800/60 bg-emerald-500/5 p-4 text-sm text-emerald-700 dark:text-emerald-300">
+                <div className="rounded border border-brand-secondary-200/70 dark:border-brand-secondary-800/60 bg-brand-secondary-500/5 p-4 text-sm text-brand-secondary-700 dark:text-brand-secondary-300">
                   This order is marked for store pickup. Delivery tracking is
                   not available.
                 </div>
@@ -171,7 +171,7 @@ export default function TrackOrder({
                     </p>
                   </div>
                   <div className="rounded border border-slate-200 dark:border-slate-700 p-3 text-center">
-                    <CheckCircle2 className="w-4 h-4 mx-auto text-emerald-500 mb-1" />
+                    <CheckCircle2 className="w-4 h-4 mx-auto text-brand-secondary-500 mb-1" />
                     <p className="text-[11px] text-slate-500 dark:text-slate-400">
                       Delivered
                     </p>
@@ -226,7 +226,7 @@ export default function TrackOrder({
         <div className="text-center">
           <Link
             href="/support"
-            className="text-sm text-emerald-600 dark:text-emerald-400 hover:underline"
+            className="text-sm text-brand-secondary-600 dark:text-brand-secondary-400 hover:underline"
           >
             Need help with this order?
           </Link>

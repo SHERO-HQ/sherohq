@@ -11,7 +11,7 @@ const ConsultationHero = () => {
       {/* Gradient Orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-20 left-1/4 w-96 h-96 bg-blue-500/8 dark:bg-blue-500/10 rounded-full blur-3xl" />
-        <div className="absolute -top-20 right-1/4 w-96 h-96 bg-emerald-500/8 dark:bg-emerald-500/10 rounded-full blur-3xl" />
+        <div className="absolute -top-20 right-1/4 w-96 h-96 bg-brand-secondary-500/8 dark:bg-brand-secondary-500/10 rounded-full blur-3xl" />
       </div>
 
       <div className="absolute top-0 left-0 right-0 h-28 bg-linear-to-b from-primary/8 to-transparent pointer-events-none" />
@@ -22,7 +22,7 @@ const ConsultationHero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-5 text-xs font-semibold text-emerald-600 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/50 border border-emerald-500/40 dark:border-emerald-800/50 rounded uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-5 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/40 dark:border-brand-secondary-800/50 rounded uppercase tracking-wider">
             <MessageSquare className="size-4" />
             <span>Consultation</span>
           </div>

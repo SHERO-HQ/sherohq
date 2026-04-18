@@ -63,7 +63,7 @@ export default function AIRecommendations({
     <div className="mt-24 border-t border-slate-200 dark:border-white/10 pt-20">
       <div className="flex flex-col items-center mb-12">
         <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter text-center flex items-center gap-2">
-          <Sparkles className="size-5 sm:size-8 text-emerald-500" />
+          <Sparkles className="size-5 sm:size-8 text-brand-secondary-500" />
           {title}
         </h2>
         <p className="text-sm text-slate-500 mt-2">Powered by SHERO AI</p>

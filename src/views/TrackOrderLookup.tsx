@@ -61,7 +61,7 @@ export default function TrackOrderLookup() {
                 value={orderId}
                 onChange={(event) => setOrderId(event.target.value)}
                 placeholder="e.g. ORD-1B83F872 or 1B83F872"
-                className="w-full rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                className="w-full rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/40"
               />
             </div>
 
@@ -77,7 +77,7 @@ export default function TrackOrderLookup() {
                 value={token}
                 onChange={(event) => setToken(event.target.value)}
                 placeholder="Paste token from your order link"
-                className="w-full rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
+                className="w-full rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/40"
               />
             </div>
 
@@ -89,7 +89,7 @@ export default function TrackOrderLookup() {
 
             <button
               type="submit"
-              className="w-full inline-flex items-center justify-center gap-2 rounded bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 transition-colors"
+              className="w-full inline-flex items-center justify-center gap-2 rounded bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white font-semibold px-4 py-2 transition-colors"
             >
               <Search className="w-4 h-4" />
               Track Order

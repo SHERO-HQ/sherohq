@@ -90,7 +90,7 @@ export const ActiveFilters = ({
 
       <button
         onClick={onClearAll}
-        className="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 hover:text-emerald-500 flex items-center gap-1 ml-2 transition-colors cursor-pointer"
+        className="text-[10px] font-black uppercase tracking-widest text-brand-secondary-600 dark:text-brand-secondary-400 hover:text-brand-secondary-500 flex items-center gap-1 ml-2 transition-colors cursor-pointer"
       >
         <RotateCcw size={10} />
         Clear All
@@ -104,7 +104,7 @@ const FilterChip = ({ label, onRemove }: { label: string; onRemove: () => void }
     initial={{ opacity: 0, scale: 0.8 }}
     animate={{ opacity: 1, scale: 1 }}
     exit={{ opacity: 0, scale: 0.8 }}
-    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full group hover:border-emerald-500/30 transition-all duration-300"
+    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-full group hover:border-brand-secondary-500/30 transition-all duration-300"
   >
     <span className="text-[10px] font-bold text-slate-700 dark:text-slate-300">
       {label}

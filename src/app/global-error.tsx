@@ -20,8 +20,8 @@ export default function GlobalError({
             className="max-w-md w-full text-center space-y-8"
           >
             <div className="relative inline-flex mb-4">
-              <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full" />
-              <div className="relative w-24 h-24 bg-linear-to-br from-slate-800 to-slate-900 rounded border border-white/10 flex items-center justify-center text-emerald-500 shadow">
+              <div className="absolute inset-0 bg-brand-secondary-500/20 blur-3xl rounded-full" />
+              <div className="relative w-24 h-24 bg-linear-to-br from-slate-800 to-slate-900 rounded border border-white/10 flex items-center justify-center text-brand-secondary-500 shadow">
                 <AlertTriangle className="size-12" />
               </div>
             </div>
@@ -39,7 +39,7 @@ export default function GlobalError({
             <div className="flex flex-col gap-4">
               <button
                 onClick={() => reset()}
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-emerald-600 text-white rounded font-bold transition hover:bg-emerald-500 active:scale-[0.98]"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-brand-secondary-600 text-white rounded font-bold transition hover:bg-brand-secondary-500 active:scale-[0.98]"
               >
                 <RefreshCw className="size-5" />
                 Reset Application

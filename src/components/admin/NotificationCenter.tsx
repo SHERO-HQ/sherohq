@@ -37,7 +37,7 @@ export default function NotificationCenter() {
  function getIcon(type: Notification["type"]) {
  switch (type) {
  case "success":
- return <CheckCircle className="w-5 h-5 text-emerald-400" />;
+ return <CheckCircle className="w-5 h-5 text-brand-secondary-400" />;
  case "warning":
  return <AlertTriangle className="w-5 h-5 text-yellow-400" />;
  case "error":
@@ -65,17 +65,17 @@ export default function NotificationCenter() {
  className={cn(
  "relative p-2 rounded transition duration-300",
  isOpen
- ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+ ? "bg-brand-secondary-500/10 text-brand-secondary-400 border-brand-secondary-500/20"
  : "text-slate-400 hover:text-white hover:bg-white/5 border-white/5",
- "border backdrop-blur-sm",
+ "border ",
  )}
  title="Notifications"
  >
  <Bell className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
  {unreadCount > 0 && (
  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center">
- <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
- <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-slate-900" />
+ <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-secondary-400 opacity-75" />
+ <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-brand-secondary-500 ring-2 ring-slate-900" />
  </span>
  )}
  </button>

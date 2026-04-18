@@ -63,7 +63,7 @@ const Cookies = () => {
                     href="https://www.allaboutcookies.org"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-emerald-600 hover:underline"
+                    className="text-brand-secondary-600 hover:underline"
                   >
                     www.allaboutcookies.org
                   </a>

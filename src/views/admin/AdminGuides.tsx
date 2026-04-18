@@ -89,7 +89,7 @@ const AdminGuides = () => {
  No guides found
  </h3>
  <Button
- className="bg-emerald-600 text-slate-100 hover:bg-emerald-500"
+ className="bg-brand-secondary-600 text-slate-100 hover:bg-brand-secondary-500"
  asChild
  >
  <Link href="/admin/guides/new">Create Guide</Link>
@@ -128,7 +128,7 @@ const AdminGuides = () => {
  >
  <td className="px-6 py-4">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 bg-slate-800 rounded flex items-center justify-center text-emerald-400">
+ <div className="w-10 h-10 bg-slate-800 rounded flex items-center justify-center text-brand-secondary-400">
  {guide.category === "hardware" ? "H" : "S"}
  </div>
  <div>
@@ -161,7 +161,7 @@ const AdminGuides = () => {
  <Badge
  className={
  guide.published
- ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+ ? "bg-brand-secondary-500/20 text-brand-secondary-400 border-brand-secondary-500/30"
  : "bg-slate-800 text-slate-400 border-slate-700"
  }
  >
@@ -215,7 +215,7 @@ const AdminGuides = () => {
  <div>
  <Link
  href="/admin/dashboard"
- className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-emerald-400 transition-colors group"
+ className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-brand-secondary-400 transition-colors group"
  >
  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
  <span>Back to Dashboard</span>
@@ -239,7 +239,7 @@ const AdminGuides = () => {
  onChange={(e) => setSearchQuery(e.target.value)}
  />
  <Button
- className="bg-emerald-600 hover:bg-emerald-500 text-white"
+ className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
  asChild
  >
  <Link href="/admin/guides/new">New Guide</Link>

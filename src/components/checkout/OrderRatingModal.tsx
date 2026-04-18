@@ -74,7 +74,7 @@ export default function OrderRatingModal({
  initial={{ opacity: 0 }}
  animate={{ opacity: 1 }}
  exit={{ opacity: 0 }}
- className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+ className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 "
  >
  <motion.div
  initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -99,8 +99,8 @@ export default function OrderRatingModal({
  <div className="p-6">
  {status === "success" ? (
  <div className="text-center py-4">
- <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
- <CheckCircle2 className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+ <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-brand-secondary-100 dark:bg-brand-secondary-900/30 flex items-center justify-center">
+ <CheckCircle2 className="w-8 h-8 text-brand-secondary-600 dark:text-brand-secondary-400" />
  </div>
  <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
  Thanks for feedback!
@@ -111,7 +111,7 @@ export default function OrderRatingModal({
  </p>
  <button
  onClick={handleClose}
- className="w-full py-2 bg-emerald-600 text-white rounded font-bold hover:bg-emerald-500 transition-colors"
+ className="w-full py-2 bg-brand-secondary-600 text-white rounded font-bold hover:bg-brand-secondary-500 transition-colors"
  >
  Close
  </button>
@@ -140,7 +140,7 @@ export default function OrderRatingModal({
  </button>
  ))}
  </div>
- <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400 h-5">
+ <span className="text-sm font-medium text-brand-secondary-600 dark:text-brand-secondary-400 h-5">
  {getRatingLabel(hoveredRating || rating)}
  </span>
  </div>
@@ -155,7 +155,7 @@ export default function OrderRatingModal({
  value={comment}
  onChange={(e) => setComment(e.target.value)}
  placeholder="The checkout was fast..."
- className="w-full px-3 py-2 text-sm rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none resize-none"
+ className="w-full px-3 py-2 text-sm rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-secondary-500/20 focus:border-brand-secondary-500 outline-none resize-none"
  />
  </div>
 
@@ -169,7 +169,7 @@ export default function OrderRatingModal({
  <button
  type="submit"
  disabled={rating === 0 || status === "submitting"}
- className="w-full py-2 bg-emerald-600 text-white rounded font-bold hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+ className="w-full py-2 bg-brand-secondary-600 text-white rounded font-bold hover:bg-brand-secondary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
  >
  {status === "submitting" ? (
  <>

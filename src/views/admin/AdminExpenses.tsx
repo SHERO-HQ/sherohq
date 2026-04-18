@@ -69,7 +69,7 @@ const Textarea = (props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) => (
   <textarea
     {...props}
     className={cn(
-      "flex min-h-20 w-full rounded border border-white/5 bg-slate-800 px-3 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 disabled:cursor-not-allowed disabled:opacity-50",
+      "flex min-h-20 w-full rounded border border-white/5 bg-slate-800 px-3 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 disabled:cursor-not-allowed disabled:opacity-50",
       props.className,
     )}
   />
@@ -330,7 +330,7 @@ export default function AdminExpenses() {
           <div className="flex items-center gap-3">
             <Button
               onClick={() => handleOpenForm()}
-              className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Expense
@@ -340,10 +340,10 @@ export default function AdminExpenses() {
 
         {/* Stats Summary */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 p-6">
+          <Card className="bg-slate-900/40  border-white/5 p-6">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded bg-emerald-500/10 flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-emerald-500" />
+              <div className="w-12 h-12 rounded bg-brand-secondary-500/10 flex items-center justify-center">
+                <DollarSign className="w-6 h-6 text-brand-secondary-500" />
               </div>
               <div>
                 <p className="text-slate-400 text-sm font-medium">
@@ -355,7 +355,7 @@ export default function AdminExpenses() {
               </div>
             </div>
           </Card>
-          <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 p-6">
+          <Card className="bg-slate-900/40  border-white/5 p-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded bg-blue-500/10 flex items-center justify-center">
                 <Tag className="w-6 h-6 text-blue-500" />
@@ -370,7 +370,7 @@ export default function AdminExpenses() {
               </div>
             </div>
           </Card>
-          <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 p-6">
+          <Card className="bg-slate-900/40  border-white/5 p-6">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded bg-purple-500/10 flex items-center justify-center">
                 <TrendingUp className="w-6 h-6 text-purple-500" />
@@ -390,7 +390,7 @@ export default function AdminExpenses() {
         </div>
 
         {/* Filters */}
-        <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 p-4">
+        <Card className="bg-slate-900/40  border-white/5 p-4">
           <div className="flex flex-wrap gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -444,7 +444,7 @@ export default function AdminExpenses() {
                   className={cn(
                     "bg-slate-800/50 border-white/10 text-slate-300 hover:text-white h-9 py-0",
                     dateFilter === "range" &&
-                      "bg-slate-700 text-white border-emerald-500/50",
+                      "bg-slate-700 text-white border-brand-secondary-500/50",
                   )}
                   onClick={() => setDateFilter("range")}
                 >
@@ -504,7 +504,7 @@ export default function AdminExpenses() {
         </Card>
 
         {/* Expenses List */}
-        <Card className="bg-slate-900/40 backdrop-blur-sm border-white/5 overflow-hidden">
+        <Card className="bg-slate-900/40  border-white/5 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
@@ -621,7 +621,7 @@ export default function AdminExpenses() {
 
         {/* Form Modal (Simple Overlay) */}
         {isFormOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 ">
             <Card className="w-full max-w-md bg-slate-900 border-white/10 shadow p-6 relative">
               <button
                 onClick={handleCloseForm}
@@ -673,7 +673,7 @@ export default function AdminExpenses() {
                             !formData.date && "text-slate-500",
                           )}
                         >
-                          <CalendarIcon className="mr-2 h-4 w-4 text-emerald-500 shrink-0" />
+                          <CalendarIcon className="mr-2 h-4 w-4 text-brand-secondary-500 shrink-0" />
                           <span className="truncate">
                             {formData.date
                               ? format(parseDate(formData.date), "PPP")
@@ -739,7 +739,7 @@ export default function AdminExpenses() {
                   <Button
                     type="submit"
                     disabled={isSaving}
-                    className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold"
+                    className="flex-1 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold"
                   >
                     {isSaving ? (
                       <Loader2 className="w-4 h-4 animate-spin mr-2" />

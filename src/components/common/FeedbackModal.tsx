@@ -103,7 +103,7 @@ export default function FeedbackModal({
  animate={{ opacity: 1 }}
  exit={{ opacity: 0 }}
  onClick={handleBackdropClick}
- className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+ className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 "
  >
  <motion.div
  initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -133,8 +133,8 @@ export default function FeedbackModal({
  animate={{ opacity: 1, y: 0 }}
  className="p-6 text-center"
  >
- <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
- <CheckCircle2 className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+ <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-brand-secondary-100 dark:bg-brand-secondary-900/30 flex items-center justify-center">
+ <CheckCircle2 className="w-8 h-8 text-brand-secondary-600 dark:text-brand-secondary-400" />
  </div>
  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
  Thank You!
@@ -145,7 +145,7 @@ export default function FeedbackModal({
  </p>
  <button
  onClick={handleClose}
- className="px-6 py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-500 transition-colors"
+ className="px-6 py-2 bg-brand-secondary-600 text-white rounded font-medium hover:bg-brand-secondary-500 transition-colors"
  >
  Close
  </button>
@@ -202,7 +202,7 @@ export default function FeedbackModal({
  onChange={(e) =>
  setFormData({ ...formData, name: e.target.value })
  }
- className="w-full px-3 py-2 text-sm rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500"
+ className="w-full px-3 py-2 text-sm rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 focus:border-brand-secondary-500"
  placeholder="Your name"
  />
  </div>
@@ -221,7 +221,7 @@ export default function FeedbackModal({
  onChange={(e) =>
  setFormData({ ...formData, email: e.target.value })
  }
- className="w-full px-3 py-2 text-sm rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500"
+ className="w-full px-3 py-2 text-sm rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 focus:border-brand-secondary-500"
  placeholder="you@example.com"
  />
  </div>
@@ -243,7 +243,7 @@ export default function FeedbackModal({
  onChange={(e) =>
  setFormData({ ...formData, message: e.target.value })
  }
- className="w-full px-3 py-2 text-sm rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 resize-none"
+ className="w-full px-3 py-2 text-sm rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 focus:border-brand-secondary-500 resize-none"
  placeholder="Tell us what you think..."
  />
  </div>
@@ -259,7 +259,7 @@ export default function FeedbackModal({
  <button
  type="submit"
  disabled={status === "submitting" || rating === 0}
- className="w-full py-2 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+ className="w-full py-2 bg-brand-secondary-600 text-white rounded font-medium hover:bg-brand-secondary-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
  >
  {status === "submitting" ? (
  <>

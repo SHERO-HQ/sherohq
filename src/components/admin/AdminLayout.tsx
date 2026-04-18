@@ -101,9 +101,9 @@ const AdminLayout = memo(({ children }: Readonly<AdminLayoutProps>) => {
 
    {/* Background Decor */}
    <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none print:hidden">
-    <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-emerald-500/10 blur-[140px] rounded-full" />
+    <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] bg-brand-secondary-500/10 blur-[140px] rounded-full" />
     <div className="absolute bottom-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-500/10 blur-[140px] rounded-full" />
-    <div className="absolute top-[30%] left-[20%] w-[30%] h-[30%] bg-emerald-500/5 blur-[120px] rounded-full" />
+    <div className="absolute top-[30%] left-[20%] w-[30%] h-[30%] bg-brand-secondary-500/5 blur-[120px] rounded-full" />
    </div>
 
    {/* Forced Password Reset Modal */}

@@ -285,7 +285,7 @@ const Nav = () => {
   return (
     <>
       <nav
-        className={`w-full transition duration-300 ${isOpen || scrolled ? "bg-background/80 backdrop-blur-sm shadow-sm border-b border-slate-200 dark:border-slate-800" : "bg-transparent"}`}
+        className={`w-full transition duration-300 ${isOpen || scrolled ? "bg-background shadow-sm border-b border-slate-200 dark:border-slate-800" : "bg-transparent"}`}
         aria-label="main navigation"
         id="nav-menu"
       >
@@ -359,7 +359,7 @@ const Nav = () => {
                 {/* Active Link Indicator - Glides on the bottom border */}
                 {activeNavIndex !== null && activeNavIndex >= 0 && (
                   <motion.div
-                    className="absolute bottom-0 h-1 bg-emerald-500 rounded-t-full shadow-[0_-1px_4px_rgba(16,185,129,0.2)]"
+                    className="absolute bottom-0 h-1 bg-brand-secondary-500 rounded-t-full shadow-[0_-1px_4px_rgba(16,185,129,0.2)]"
                     initial={false}
                     animate={{
                       width: indicatorDims.width,
@@ -402,13 +402,13 @@ const Nav = () => {
                 {/* Cart Button */}
                 <button
                   onClick={() => setIsCartOpen(true)}
-                  className="cursor-pointer relative p-2 h-9 w-9 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/70 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors rounded border-none"
+                  className="cursor-pointer relative p-2 h-9 w-9 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/70 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors rounded border-none"
                   aria-label="Open Cart"
                 >
                   <ShoppingCart className="w-5 h-5" />
                   {mounted && totalQuantity > 0 && (
                     <Badge
-                      variant="emerald"
+                      variant="brandSecondary"
                       className={`absolute -top-1.5 -right-1.5 h-4.5 min-w-4.5 px-1 flex items-center justify-center rounded-full text-[9px] ring-2 ring-background ${!prefersReducedMotion ? "animate-in zoom-in" : ""}`}
                     >
                       {totalQuantity}
@@ -437,14 +437,14 @@ const Nav = () => {
                       aria-controls="desktop-user-menu"
                     >
                       <span className="sr-only">User Menu</span>
-                      <div className="w-7 h-7 rounded font-bold bg-linear-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-xs text-white shrink-0 shadow-sm">
+                      <div className="w-7 h-7 rounded font-bold bg-linear-to-br from-brand-secondary-500 to-brand-secondary-600 flex items-center justify-center text-xs text-white shrink-0 shadow-sm">
                         {user?.name?.charAt(0)}
                       </div>
                     </button>
                   ) : (
                     <NavLink
                       href={getAbsoluteUrl("/login")}
-                      className="cursor-pointer flex items-center justify-center h-9 w-9 text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/70 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors rounded"
+                      className="cursor-pointer flex items-center justify-center h-9 w-9 text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/70 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors rounded"
                       aria-label="Login"
                     >
                       <User className="w-5 h-5" />
@@ -546,7 +546,7 @@ const Nav = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+              className="absolute inset-0 bg-slate-900/95 backdrop-blur-sm"
             />
 
             {/* Menu Panel (Drawer) */}
@@ -604,7 +604,7 @@ const Nav = () => {
                               {isActive && (
                                 <motion.div
                                   layoutId="mobile-nav-indicator"
-                                  className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-emerald-500 rounded-r-full"
+                                  className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-brand-secondary-500 rounded-r-full"
                                 />
                               )}
                             </>
@@ -620,7 +620,7 @@ const Nav = () => {
                   {mounted && isAuthenticated ? (
                     <div className="space-y-6">
                       <div className="flex items-center gap-4 p-4 rounded bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800/50">
-                        <div className="w-12 h-12 rounded font-bold bg-linear-to-br from-emerald-500 to-emerald-600 flex items-center justify-center text-xl text-white shadow shadow-emerald-500/20">
+                        <div className="w-12 h-12 rounded font-bold bg-linear-to-br from-brand-secondary-500 to-brand-secondary-600 flex items-center justify-center text-xl text-white shadow shadow-brand-secondary-500/20">
                           {user?.name?.charAt(0)}
                         </div>
                         <div className="flex-1 min-w-0">
@@ -638,7 +638,7 @@ const Nav = () => {
                           onClick={() => setIsOpen(false)}
                           className="flex flex-col items-center justify-center gap-2 p-4 text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-900/50 hover:bg-white dark:hover:bg-slate-900 border border-transparent hover:border-slate-200 dark:hover:border-slate-800 rounded transition-all group/item shadow-sm"
                         >
-                          <User className="w-5 h-5 text-slate-400 group-hover/item:text-emerald-500" />
+                          <User className="w-5 h-5 text-slate-400 group-hover/item:text-brand-secondary-500" />
                           <span className="font-bold text-[11px]">Profile</span>
                         </NavLink>
                         <button
@@ -657,16 +657,16 @@ const Nav = () => {
                     <NavLink
                       href={getAbsoluteUrl("/login")}
                       onClick={() => setIsOpen(false)}
-                      className="flex items-center gap-4 p-2 text-emerald-600 dark:text-emerald-400 bg-emerald-50/50 dark:bg-emerald-950/30 rounded transition-all duration-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 border border-emerald-100 dark:border-emerald-800/50 group shadow-sm shadow-emerald-500/5"
+                      className="flex items-center gap-4 p-2 text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-50/50 dark:bg-brand-secondary-200/20 rounded transition-all duration-300 hover:bg-brand-secondary-100 dark:hover:bg-brand-secondary-900/40 border border-brand-secondary-100 dark:border-brand-secondary-800/50 group shadow-sm shadow-brand-secondary-500/5"
                     >
-                      <div className="w-8 h-8 rounded bg-emerald-600 text-white flex items-center justify-center shadow shadow-emerald-600/20 group-hover:scale-105 transition-transform">
+                      <div className="w-8 h-8 rounded bg-brand-secondary-600 text-white flex items-center justify-center shadow shadow-brand-secondary-600/20 group-hover:scale-105 transition-transform">
                         <User className="w-4 h-4" />
                       </div>
                       <div className="flex-1">
                         <span className="block font-extrabold text-[15px] tracking-tight">
                           Login
                         </span>
-                        <span className="block text-[11px] text-emerald-600/70 dark:text-emerald-400/70 mt-0.5">
+                        <span className="block text-[11px] text-brand-secondary-600/70 dark:text-brand-secondary-400/70 mt-0.5">
                           Sign in to manage orders
                         </span>
                       </div>
@@ -683,7 +683,7 @@ const Nav = () => {
                     href="https://wa.me/233598925501"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-slate-400 hover:text-emerald-500 transition-all hover:scale-110 active:scale-95"
+                    className="text-slate-400 hover:text-brand-secondary-500 transition-all hover:scale-110 active:scale-95"
                   >
                     <WhatsAppIcon className="w-5 h-5" />
                   </a>
@@ -692,7 +692,7 @@ const Nav = () => {
                     href="https://tiktok.com/@sherohq"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-slate-400 hover:text-emerald-500 transition-all hover:scale-110 active:scale-95"
+                    className="text-slate-400 hover:text-brand-secondary-500 transition-all hover:scale-110 active:scale-95"
                   >
                     <TikTokIcon className="w-5 h-5" />
                   </a>
@@ -701,7 +701,7 @@ const Nav = () => {
                     href="https://instagram.com/sherohq"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-slate-400 hover:text-emerald-500 transition-all hover:scale-110 active:scale-95"
+                    className="text-slate-400 hover:text-brand-secondary-500 transition-all hover:scale-110 active:scale-95"
                   >
                     <InstagramIcon className="w-5 h-5" />
                   </a>
@@ -710,7 +710,7 @@ const Nav = () => {
                     href="https://facebook.com/sherohq"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-slate-400 hover:text-emerald-500 transition-all hover:scale-110 active:scale-95"
+                    className="text-slate-400 hover:text-brand-secondary-500 transition-all hover:scale-110 active:scale-95"
                   >
                     <FacebookIcon className="w-5 h-5" />
                   </a>

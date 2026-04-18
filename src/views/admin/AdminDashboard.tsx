@@ -130,9 +130,9 @@ const MagneticStatCard = ({
       }}
       className="perspective-distant"
     >
-      <Card className="bg-slate-900/40 backdrop-blur-sm border-white/10 hover:border-emerald-500/40 transition-colors duration-500 group relative overflow-hidden h-full">
+      <Card className="bg-slate-900/40  border-white/10 hover:border-brand-secondary-500/40 transition-colors duration-500 group relative overflow-hidden h-full">
         {/* Subtle Glow Overlay */}
-        <div className="absolute inset-0 bg-radial-gradient from-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+        <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
         <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
           <CardTitle className="text-sm font-medium text-slate-400">
@@ -151,7 +151,7 @@ const MagneticStatCard = ({
               className={cn(
                 "text-[10px] font-bold px-1.5 py-0.5 rounded",
                 stat.trend.startsWith("+")
-                  ? "bg-emerald-500/10 text-emerald-400"
+                  ? "bg-brand-secondary-500/10 text-brand-secondary-400"
                   : "bg-rose-500/10 text-rose-400",
               )}
             >
@@ -169,7 +169,7 @@ const MagneticStatCard = ({
 const getStatusStyles = (status: string) => {
   switch (status?.toLowerCase()) {
     case "delivered":
-      return "bg-emerald-500/10 text-emerald-400";
+      return "bg-brand-secondary-500/10 text-brand-secondary-400";
     case "pending":
       return "bg-amber-500/10 text-amber-400";
     case "processing":
@@ -180,7 +180,7 @@ const getStatusStyles = (status: string) => {
 };
 
 const getTrendStyles = (trend: number) => {
-  if (trend >= 0) return "bg-emerald-500/10 text-emerald-400";
+  if (trend >= 0) return "bg-brand-secondary-500/10 text-brand-secondary-400";
   return "bg-rose-500/10 text-rose-400";
 };
 
@@ -250,8 +250,8 @@ export default function AdminDashboard() {
         title: "Total Revenue",
         value: `GH₵${kpi.revenue.toLocaleString()}`,
         icon: DollarSign,
-        color: "text-emerald-400",
-        bgColor: "bg-emerald-400/10",
+        color: "text-brand-secondary-400",
+        bgColor: "bg-brand-secondary-400/10",
         trend: `${kpi.revenueGrowth >= 0 ? "+" : ""}${kpi.revenueGrowth}%`,
         trendColor: getTrendStyles(kpi.revenueGrowth),
         subtext: subtextMap[period],
@@ -335,7 +335,7 @@ export default function AdminDashboard() {
           </h1>
           <p className="text-slate-400 text-sm">
             Welcome back,{" "}
-            <span className="text-emerald-400 font-semibold">
+            <span className="text-brand-secondary-400 font-semibold">
               {admin?.username}
             </span>
             . Here's your store's performance at a glance.
@@ -357,7 +357,7 @@ export default function AdminDashboard() {
                 className={cn(
                   "px-3 py-1 text-xs font-semibold rounded transition",
                   period === opt.value
-                    ? "bg-emerald-600 text-white shadow"
+                    ? "bg-brand-secondary-600 text-white shadow"
                     : "text-slate-400 hover:text-white hover:bg-white/5",
                 )}
               >
@@ -387,7 +387,7 @@ export default function AdminDashboard() {
             </Link>
           </Button>
           <Button
-            className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold"
             asChild
           >
             <Link href="/admin/products/new">
@@ -403,7 +403,7 @@ export default function AdminDashboard() {
           ? new Array(4).fill(0).map((_, i) => (
               <div
                 key={`skeleton-stat-summary-${i}`}
-                className="h-36 rounded bg-slate-900/40 backdrop-blur-sm border border-white/10 animate-pulse relative overflow-hidden"
+                className="h-36 rounded bg-slate-900/40  border border-white/10 animate-pulse relative overflow-hidden"
               >
                 <div className="p-6 space-y-4">
                   <div className="flex justify-between items-center">
@@ -425,7 +425,7 @@ export default function AdminDashboard() {
       {/* Row 1: Revenue Trends and Sales Widgets */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Revenue Chart */}
-        <Card className="lg:col-span-2 bg-slate-900/40 backdrop-blur-sm border-white/10 p-2">
+        <Card className="lg:col-span-2 bg-slate-900/40  border-white/10 p-2">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
               <CardTitle className="text-lg text-white">
@@ -437,7 +437,7 @@ export default function AdminDashboard() {
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded bg-emerald-500" />
+                <div className="w-3 h-3 rounded bg-brand-secondary-500" />
                 <span className="text-xs text-slate-400">Revenue</span>
               </div>
               <div className="flex items-center gap-2">
@@ -554,8 +554,8 @@ export default function AdminDashboard() {
 
         {/* Side Widgets */}
         <div className="space-y-6">
-          <Card className="bg-slate-900/40 backdrop-blur-sm border-white/10 overflow-hidden">
-            <div className="p-6 bg-linear-to-br from-emerald-600/20 to-transparent border-b border-white/5">
+          <Card className="bg-slate-900/40  border-white/10 overflow-hidden">
+            <div className="p-6 bg-linear-to-br from-brand-secondary-600/20 to-transparent border-b border-white/5">
               <h3 className="text-lg font-bold text-white">Quick Launch</h3>
               <p className="text-slate-400 text-sm mt-1">
                 Common administrative tasks
@@ -567,7 +567,7 @@ export default function AdminDashboard() {
                   title: "New Product",
                   icon: Plus,
                   link: "/admin/products/new",
-                  color: "bg-emerald-500/10 text-emerald-400",
+                  color: "bg-brand-secondary-500/10 text-brand-secondary-400",
                 },
                 {
                   title: "View All Orders",
@@ -607,13 +607,13 @@ export default function AdminDashboard() {
                       {action.title}
                     </span>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-emerald-500 transition opacity-0 group-hover:opacity-100 group-hover:translate-x-1" />
+                  <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-brand-secondary-500 transition opacity-0 group-hover:opacity-100 group-hover:translate-x-1" />
                 </Link>
               ))}
             </div>
           </Card>
 
-          <Card className="bg-slate-900/40 backdrop-blur-sm border-white/10">
+          <Card className="bg-slate-900/40  border-white/10">
             <CardHeader className="pb-4 border-b border-white/5">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm text-white">
@@ -670,7 +670,7 @@ export default function AdminDashboard() {
       {/* Row 2: Tables & Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Recent Orders Table */}
-        <Card className="lg:col-span-2 bg-slate-900/40 backdrop-blur-sm border-white/10 overflow-hidden">
+        <Card className="lg:col-span-2 bg-slate-900/40  border-white/10 overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between border-b border-white/5">
             <div>
               <CardTitle className="text-lg text-white">
@@ -682,7 +682,7 @@ export default function AdminDashboard() {
             </div>
             <Button
               variant="ghost"
-              className="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10"
+              className="text-brand-secondary-400 hover:text-brand-secondary-300 hover:bg-brand-secondary-500/10"
               asChild
             >
               <Link href="/admin/orders">
@@ -773,7 +773,7 @@ export default function AdminDashboard() {
                       <td className="px-6 py-4">
                         <Link
                           href={`/admin/orders/${order.id}`}
-                          className="text-sm font-mono text-slate-400 group-hover:text-emerald-400 transition-colors"
+                          className="text-sm font-mono text-slate-400 group-hover:text-brand-secondary-400 transition-colors"
                         >
                           {toReadableOrderId(order.id)}
                         </Link>
@@ -783,7 +783,7 @@ export default function AdminDashboard() {
                           href={`/admin/orders/${order.id}`}
                           className="flex flex-col"
                         >
-                          <span className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">
+                          <span className="text-sm font-semibold text-white group-hover:text-brand-secondary-400 transition-colors">
                             {order.customer.firstName} {order.customer.lastName}
                           </span>
                           <span className="text-xs text-slate-500">
@@ -794,7 +794,7 @@ export default function AdminDashboard() {
                       <td className="px-6 py-4 text-sm text-slate-400">
                         {new Date(order.createdAt).toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 text-sm font-bold text-emerald-400">
+                      <td className="px-6 py-4 text-sm font-bold text-brand-secondary-400">
                         GH₵{order.total.toLocaleString()}
                       </td>
                       <td className="px-6 py-4">
@@ -828,7 +828,7 @@ export default function AdminDashboard() {
         </Card>
 
         {/* Recent Activity Card */}
-        <Card className="bg-slate-900/40 backdrop-blur-sm border-white/10">
+        <Card className="bg-slate-900/40  border-white/10">
           <CardHeader className="pb-4 border-b border-white/5">
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm text-white">

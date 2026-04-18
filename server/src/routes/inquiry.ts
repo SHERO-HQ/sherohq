@@ -67,6 +67,7 @@ router.post("/schedule", validateBody(CreateConsultationSchema), async (req, res
       service,
       new Date(date),
       time,
+      req.body.phone,
     );
 
     res.json({ success: true, message: "Consultation scheduled successfully" });

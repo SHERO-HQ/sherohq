@@ -22,12 +22,12 @@ export const ErrorState = ({
       className="flex flex-col items-center justify-center py-16 px-4 text-center max-w-md mx-auto"
     >
       <div className="relative mb-6">
-        <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full" />
-        <div className="relative p-4 bg-white dark:bg-slate-900 rounded border border-white/10 shadow shadow-emerald-500/20">
+        <div className="absolute inset-0 bg-brand-secondary-500/20 blur-3xl rounded-full" />
+        <div className="relative p-4 bg-white dark:bg-slate-900 rounded border border-white/10 shadow shadow-brand-secondary-500/20">
           {isOffline ? (
-            <WifiOff className="w-12 h-12 text-emerald-500" />
+            <WifiOff className="w-12 h-12 text-brand-secondary-500" />
           ) : (
-            <AlertCircle className="w-12 h-12 text-emerald-500" />
+            <AlertCircle className="w-12 h-12 text-brand-secondary-500" />
           )}
         </div>
       </div>
@@ -43,7 +43,7 @@ export const ErrorState = ({
       {onRetry && (
         <button
           onClick={onRetry}
-          className="flex items-center gap-2 px-8 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded font-bold transition-all hover:shadow hover:shadow-emerald-500/30 active:scale-95 group"
+          className="flex items-center gap-2 px-8 py-2.5 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white rounded font-bold transition-all hover:shadow hover:shadow-brand-secondary-500/30 active:scale-95 group"
         >
           <RefreshCcw className="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
           Try Again

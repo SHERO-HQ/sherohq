@@ -30,7 +30,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({
  className={`relative flex items-center gap-2 group ${className}`}
  >
  <div className="relative flex-1">
- <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 dark:text-slate-400 text-slate-500 group-focus-within:text-emerald-600 transition-colors z-10" />
+ <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 dark:text-slate-400 text-slate-500 group-focus-within:text-brand-secondary-600 transition-colors z-10" />
  <input
  type="text"
  value={query}
@@ -41,15 +41,15 @@ const ProductSearch: React.FC<ProductSearchProps> = ({
  dark:bg-slate-900/60 bg-white
  border dark:border-white/10 border-slate-200
  dark:text-white text-slate-700 placeholder:text-slate-500
- focus:outline-none focus:ring-2 focus:ring-emerald-600/50 focus:border-emerald-600/50
+ focus:outline-none focus:ring-2 focus:ring-brand-secondary-600/50 focus:border-brand-secondary-600/50
  transition shadow-sm"
  />
  </div>
 
  <button
  type="submit"
- className="hidden sm:block px-8 py-2 rounded bg-emerald-600 text-white font-semibold
- hover:bg-emerald-500 hover:shadow hover:shadow-emerald-500/25
+ className="hidden sm:block px-8 py-2 rounded bg-brand-secondary-600 text-white font-semibold
+ hover:bg-brand-secondary-500 hover:shadow hover:shadow-brand-secondary-500/25
  transition cursor-pointer whitespace-nowrap"
  >
  Search
