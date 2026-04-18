@@ -20,7 +20,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import SiteHeader from "@/components/layout/NavigationBar";
 import { toReadableOrderId } from "@/utils/orderId";
 
 type Props = {
@@ -101,7 +100,6 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
-        <SiteHeader />
         <div className="flex flex-col items-center justify-center h-[70vh] space-y-4">
           <div className="relative">
             <div className="w-16 h-16 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin"></div>
@@ -118,7 +116,6 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
   if (error || !order) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
-        <SiteHeader />
         <div className="max-w-md mx-auto px-6 py-20 text-center space-y-6">
           <div className="w-20 h-20 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto">
             <AlertCircle className="w-10 h-10 text-rose-500" />
@@ -141,8 +138,6 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-20">
-      <SiteHeader />
-
       <div className="max-w-4xl mx-auto px-6 pt-26 space-y-8">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
