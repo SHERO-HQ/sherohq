@@ -80,6 +80,13 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
   const readableId = useMemo(() => toReadableOrderId(orderId), [orderId]);
   const isStorePickupOrder =
     (order?.paymentMethod || "").toLowerCase() === "store_pickup";
+  const hasOrderItems = Array.isArray((order as Partial<Order>)?.items);
+  const hasOrderTotal = typeof (order as Partial<Order>)?.total === "number";
+  const hasShippingInfo = Boolean((order as Partial<Order>)?.shippingInfo);
+  const orderItems = hasOrderItems
+    ? (((order as Partial<Order>).items ?? []) as Order["items"])
+    : [];
+  const shippingInfo = order && hasShippingInfo ? order.shippingInfo : null;
 
   const handleCopyOrderId = async () => {
     try {
@@ -140,9 +147,9 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
-          
             <h1 className="text-sm font-black dark:text-slate-500 text-slate-600 tracking-tight">
-              Order ID: <span className="text-emerald-500 text-lg">{readableId}</span>
+              Order ID:{" "}
+              <span className="text-emerald-500 text-lg">{readableId}</span>
             </h1>
             <button
               type="button"
@@ -274,48 +281,84 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
                 </h3>
               </div>
               <div className="divide-y divide-slate-100 dark:divide-white/5">
-                {order.items.map((item) => (
-                  <div
-                    key={item.id}
-                    className="p-6 flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-4">
-                      {item.image ? (
-                        <div className="w-12 h-12 rounded bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-full h-full object-cover"
-                          />
+                {hasOrderItems ? (
+                  orderItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className="p-6 flex items-center justify-between"
+                    >
+                      <div className="flex items-center gap-4">
+                        {item.image ? (
+                          <div className="w-12 h-12 rounded bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center">
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-12 h-12 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+                            <Package className="w-6 h-6" />
+                          </div>
+                        )}
+                        <div>
+                          <p className="font-bold text-sm dark:text-white">
+                            {item.name}
+                          </p>
+                          <p className="text-xs text-slate-500">
+                            Quantity: {item.quantity}
+                          </p>
                         </div>
-                      ) : (
-                        <div className="w-12 h-12 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
-                          <Package className="w-6 h-6" />
-                        </div>
-                      )}
-                      <div>
-                        <p className="font-bold text-sm dark:text-white">
-                          {item.name}
-                        </p>
-                        <p className="text-xs text-slate-500">
-                          Quantity: {item.quantity}
-                        </p>
                       </div>
+                      <p className="font-bold text-sm dark:text-white">
+                        GH₵{(item.price * item.quantity).toLocaleString()}
+                      </p>
                     </div>
-                    <p className="font-bold text-sm dark:text-white">
-                      GH₵{(item.price * item.quantity).toLocaleString()}
-                    </p>
+                  ))
+                ) : (
+                  <div className="p-6 text-sm text-slate-500 dark:text-slate-400">
+                    Item details are hidden for this tracking link. Open the
+                    original checkout confirmation link or sign in to view full
+                    order contents.
                   </div>
-                ))}
+                )}
               </div>
-              <div className="p-6 bg-emerald-500/5 border-t border-emerald-500/10">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                    Total Payable
-                  </span>
-                  <span className="text-xl font-black text-emerald-600 dark:text-emerald-400">
-                    GH₵{order.total.toLocaleString()}
-                  </span>
+              {hasOrderTotal && (
+                <div className="p-6 bg-emerald-500/5 border-t border-emerald-500/10">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                      Total Payable
+                    </span>
+                    <span className="text-xl font-black text-emerald-600 dark:text-emerald-400">
+                      GH₵{Number(order.total).toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </Card>
+
+            <Card className="p-5 border-amber-200/70 bg-amber-50/60 dark:bg-amber-500/5 dark:border-amber-500/20">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                  <AlertCircle className="w-4 h-4" />
+                </div>
+                <div className="space-y-2">
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">
+                    Security Recommendation
+                  </h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    For safer access to your order history and easier tracking
+                    across devices, create an account and place future orders
+                    while signed in.
+                  </p>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-amber-300 text-amber-700 hover:bg-amber-100 dark:border-amber-500/30 dark:text-amber-300 dark:hover:bg-amber-500/10"
+                    asChild
+                  >
+                    <Link href="/signup">Create Account</Link>
+                  </Button>
                 </div>
               </div>
             </Card>
@@ -330,24 +373,32 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
                   {isStorePickupOrder ? "Pickup Contact" : "Delivery Address"}
                 </h4>
                 <div className="space-y-1">
-                  <p className="text-sm font-bold dark:text-white">
-                    {order.shippingInfo.firstName} {order.shippingInfo.lastName}
-                  </p>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                    {isStorePickupOrder ? (
-                      <>
-                        In-store collection
-                        <br />
-                        {order.shippingInfo.city}, {order.shippingInfo.region}
-                      </>
-                    ) : (
-                      <>
-                        {order.shippingInfo.address}
-                        <br />
-                        {order.shippingInfo.city}, {order.shippingInfo.region}
-                      </>
-                    )}
-                  </p>
+                  {shippingInfo ? (
+                    <>
+                      <p className="text-sm font-bold dark:text-white">
+                        {shippingInfo.firstName} {shippingInfo.lastName}
+                      </p>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        {isStorePickupOrder ? (
+                          <>
+                            In-store Pickup
+                            <br />
+                            {shippingInfo.city}, {shippingInfo.region}
+                          </>
+                        ) : (
+                          <>
+                            {shippingInfo.address}
+                            <br />
+                            {shippingInfo.city}, {shippingInfo.region}
+                          </>
+                        )}
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      Address details are hidden for this tracking link.
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -356,14 +407,22 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
                   <Phone className="w-3 h-3" /> Contact Details
                 </h4>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                    <Mail className="w-3.5 h-3.5 text-emerald-500" />
-                    {order.shippingInfo.email}
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                    <Phone className="w-3.5 h-3.5 text-emerald-500" />
-                    {order.shippingInfo.phone}
-                  </div>
+                  {shippingInfo ? (
+                    <>
+                      <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                        <Mail className="w-3.5 h-3.5 text-emerald-500" />
+                        {shippingInfo.email}
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
+                        <Phone className="w-3.5 h-3.5 text-emerald-500" />
+                        {shippingInfo.phone}
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-sm text-slate-600 dark:text-slate-400">
+                      Contact details are hidden for this tracking link.
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -383,7 +442,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
                 Thank you for choosing
                 <br />
                 <span className="text-emerald-500 font-black">
-                  SHERO TECHNOLOGY
+                  SHERO TECHNOLOGIES
                 </span>
               </p>
             </div>

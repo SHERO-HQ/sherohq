@@ -610,7 +610,10 @@ router.get("/track/:orderId", async (req: Request, res: Response) => {
       order.orderAccessTokenHash || null,
     );
 
+    const isGuestOrder = !order.userId;
+
     const isAuthorized =
+      isGuestOrder ||
       Boolean(accessContext.adminId) ||
       (Boolean(accessContext.userId) &&
         Boolean(order.userId) &&

@@ -240,12 +240,26 @@ export default function OrderDetails() {
 
   const getTrackingUrl = (orderId: string) => {
     const readableOrderId = toReadableOrderId(orderId);
+    const fallbackPath = `/track/${encodeURIComponent(readableOrderId)}`;
 
-    if (typeof window === "undefined") {
-      return `/track/${encodeURIComponent(readableOrderId)}`;
+    const configuredPublicSiteUrl =
+      process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "");
+
+    if (configuredPublicSiteUrl) {
+      return `${configuredPublicSiteUrl}${fallbackPath}`;
     }
 
-    return `${window.location.origin}/track/${encodeURIComponent(readableOrderId)}`;
+    if (typeof window === "undefined") {
+      return fallbackPath;
+    }
+
+    const currentUrl = new URL(window.location.origin);
+    if (currentUrl.hostname.startsWith("admin.")) {
+      const publicHostname = currentUrl.hostname.replace(/^admin\./, "");
+      return `${currentUrl.protocol}//${publicHostname}${fallbackPath}`;
+    }
+
+    return `${window.location.origin}${fallbackPath}`;
   };
 
   const handleCopyTrackingLink = async () => {

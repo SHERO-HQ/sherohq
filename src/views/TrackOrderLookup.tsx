@@ -13,7 +13,7 @@ export default function TrackOrderLookup() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const normalizedOrderId = orderId.trim();
+    const normalizedOrderId = orderId.trim().replace(/^ord-/i, "");
     const normalizedToken = token.trim();
 
     if (!normalizedOrderId) {
@@ -60,7 +60,7 @@ export default function TrackOrderLookup() {
                 id="orderId"
                 value={orderId}
                 onChange={(event) => setOrderId(event.target.value)}
-                placeholder="e.g. 1B83F872"
+                placeholder="e.g. ORD-1B83F872 or 1B83F872"
                 className="w-full rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/40"
               />
             </div>
