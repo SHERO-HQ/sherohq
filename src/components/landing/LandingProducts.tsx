@@ -91,11 +91,11 @@ const LandingProducts = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-brand-secondary-700 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 border border-brand-secondary-600/50 dark:border-brand-secondary-800/50 rounded uppercase">
-            <ShoppingCart className="mr-2 w-4 h-4" />
+          <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase">
+            <ShoppingCart className="size-4" />
             Featured Deals
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-slate-200 mb-4">
+          <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4">
             Shop Premium Tech
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">

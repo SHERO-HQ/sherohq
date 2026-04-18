@@ -55,17 +55,13 @@ const FAQ = () => {
       <div className="pt-8 pb-12 bg-slate-50 dark:bg-slate-950 min-h-screen">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded border border-brand-secondary-500/20 uppercase tracking-wider">
-              <HelpCircle className="w-4 h-4" />
-              <span className="text-brand-secondary-600 dark:text-brand-secondary-400">
-                Help Center
-              </span>
+            <div className="inline-flex items-center gap-2 px-4 py-1 mb-6 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-500/20 uppercase tracking-wider transition-colors duration-300">
+              <HelpCircle className="size-4" />
+              Help Center
             </div>
-            <h1 className="text-3xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight">
+            <h1 className="text-3xl md:text-6xl font-bold text-slate-900 dark:text-slate-100 mb-6 tracking-tight transition-colors duration-300">
               Answers to common{" "}
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
-                Questions
-              </span>
+              <span className="text-brand-secondary-600">Questions</span>
             </h1>
             <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto text-base leading-relaxed">
               Fast answers on orders, warranty, services, and support so you can

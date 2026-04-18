@@ -72,16 +72,14 @@ const Support = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded border border-brand-secondary-200 dark:border-brand-secondary-500/20 uppercase tracking-wider"
+              className="inline-flex items-center gap-2 px-4 py-1 mb-6 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-200 dark:border-brand-secondary-500/20 uppercase tracking-wider transition-colors duration-300"
             >
-              <LifeBuoy className="w-4 h-4" />
+              <LifeBuoy className="size-4" />
               <span>Customer Support</span>
             </motion.div>
-            <h1 className="md:text-6xl text-4xl font-bold text-foreground mb-6 tracking-tight">
+            <h1 className="text-3xl md:text-6xl font-bold text-foreground mb-6 tracking-tight transition-colors duration-300">
               Get Help in{" "}
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
-                Minutes
-              </span>
+              <span className="text-brand-secondary-600">Minutes</span>
             </h1>
             <p className="text-muted-foreground text-base max-w-2xl mx-auto mb-8 leading-relaxed">
               Search guides, download updates, or connect directly with our team
@@ -193,7 +191,7 @@ const Support = () => {
               </div>
 
               <div className="flex-1">
-                <h2 className="md:text-4xl text-3xl font-bold text-foreground mb-4 tracking-tight">
+                <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-4 tracking-tight transition-colors duration-300">
                   Still need help?
                 </h2>
                 <p className="text-muted-foreground text-sm mb-10 max-w-xl">

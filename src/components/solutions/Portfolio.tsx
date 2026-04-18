@@ -78,13 +78,13 @@ const Portfolio = () => {
  transition={{ duration: 0.6 }}
  className="text-center mb-12"
  >
- <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-950/50 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase">
- <Wrench className="size-4" />
- Our Work
- </span>
- <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
- Featured Projects
- </h2>
+  <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
+    <Wrench className="size-4" />
+    Our Work
+  </span>
+  <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
+    Featured Projects
+  </h2>
  <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
  Explore our portfolio of successful projects and see how we've
  helped businesses transform digitally

@@ -207,3 +207,16 @@ export async function uploadImages(
   });
   return handleResponse(response);
 }
+
+export async function publicUploadImage(
+  file: File,
+): Promise<{ success: boolean; imageUrl: string }> {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const response = await fetch(`${API_BASE}/upload/public`, {
+    method: "POST",
+    body: formData,
+  });
+  return handleResponse(response);
+}

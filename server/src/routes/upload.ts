@@ -233,7 +233,7 @@ router.post(
   },
 );
 
-// DELETE /api/upload/:filename - Delete an image (Note: filename here is likely the full path or ID in bucket)
+// DELETE /api/upload/:filename - Delete an image
 router.delete(
   "/:filename",
   adminAuth,
@@ -241,12 +241,6 @@ router.delete(
     try {
       const filename = req.params.filename as string;
 
-      // Attempt to delete from text/path.
-      // Since we return full URLs, the frontend might send the filename associated with it.
-      // However, if we migrated, existing local files can't be deleted this way.
-      // For Supabase, we need the path inside the bucket.
-
-      // If the frontend sends just the UUID filename:
       const { error } = await supabase.storage
         .from("products")
         .remove([filename]);
@@ -261,6 +255,42 @@ router.delete(
     } catch (error) {
       console.error("Delete error:", error);
       res.status(500).json({ error: "Failed to delete image" });
+    }
+  },
+);
+
+// POST /api/upload/public - Public upload for testimonials/feedback
+router.post(
+  "/public",
+  upload.single("image"),
+  async (req: Request, res: Response) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No image file provided" });
+      }
+
+      // Stricter size limit for public uploads (2MB)
+      if (req.file.size > 2 * 1024 * 1024) {
+        return res.status(400).json({ 
+          error: "Image too large. Public uploads are limited to 2MB to ensure optimal site performance." 
+        });
+      }
+
+      const validationError = validateImageFile(req.file);
+      if (validationError) {
+        return res.status(400).json({ error: validationError });
+      }
+
+      console.log(`📤 Public Upload: ${req.file.originalname} to Supabase...`);
+      const imageUrl = await uploadToSupabase(req.file);
+      
+      res.json({
+        success: true,
+        imageUrl,
+      });
+    } catch (error) {
+      console.error("Public upload error:", error);
+      res.status(500).json({ error: "Failed to upload image" });
     }
   },
 );

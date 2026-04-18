@@ -132,6 +132,17 @@ export async function createTestimonial(
   return handleResponse<Testimonial>(response);
 }
 
+export async function submitPublicTestimonial(
+  data: Partial<Testimonial>,
+): Promise<{ success: boolean; message: string; testimonial: Testimonial }> {
+  const response = await fetch(`${API_BASE}/testimonials/public`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return handleResponse(response);
+}
+
 export async function updateTestimonial(
   id: string,
   data: Partial<Testimonial>,

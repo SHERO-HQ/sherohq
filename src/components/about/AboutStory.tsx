@@ -71,11 +71,11 @@ const AboutStory = () => {
           {/* Text Side */}
           <Reveal direction="left" distance={40} delay={0.2}>
             <div className="text-start">
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-brand-secondary-700 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 border border-brand-secondary-600/50 dark:border-brand-secondary-800/50 rounded uppercase">
+              <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
                 <Clover className="size-4" />
                 Our Story
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-6">
+              <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
                 Driven by
                 <span className="text-brand-secondary-600 dark:text-brand-secondary-400">
                   {" "}
@@ -112,7 +112,7 @@ const AboutStory = () => {
               <div className="w-12 h-12 bg-brand-primary-500 rounded flex items-center justify-center mb-4 shadow shadow-brand-secondary-500/20 group-hover:scale-110 transition-transform">
                 <Target className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl lg:text-3xl font-black text-slate-900 dark:text-white mb-4 tracking-tighter">
+              <h3 className="text-xl lg:text-2xl font-black text-slate-900 dark:text-white mb-4 tracking-tighter">
                 Our Mission
               </h3>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">
@@ -129,7 +129,7 @@ const AboutStory = () => {
               <div className="w-12 h-12 bg-brand-secondary-500 rounded flex items-center justify-center mb-4 shadow shadow-blue-600/20 group-hover:scale-110 transition-transform">
                 <Globe className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl lg:text-3xl font-black text-slate-900 dark:text-white mb-4 tracking-tighter">
+              <h3 className="text-xl lg:text-2xl font-black text-slate-900 dark:text-white mb-4 tracking-tighter">
                 Our Vision
               </h3>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">
@@ -146,8 +146,8 @@ const AboutStory = () => {
         <Reveal direction="up" distance={40}>
           <div className="bg-slate-50 dark:bg-slate-900/50 rounded p-8 md:p-12 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-3 mb-6 justify-center">
-              <Lightbulb className="w-8 h-8 text-brand-secondary-700 dark:text-brand-secondary-400" />
-              <h3 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white">
+              <Lightbulb className="size-6 text-brand-secondary-600" />
+              <h3 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100">
                 What Sets Us Apart
               </h3>
             </div>
@@ -189,11 +189,9 @@ const AboutStory = () => {
         {/* Commitment Statement */}
         <Reveal direction="up" distance={30} delay={0.4} blur>
           <div className="mt-16 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-brand-secondary-700 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 border border-brand-secondary-600/50 dark:border-brand-secondary-800/50 rounded uppercase">
-              <Heart className="w-5 h-5 text-brand-secondary-700 dark:text-brand-secondary-400" />
-              <span className="text-xs font-semibold text-brand-secondary-700 dark:text-brand-secondary-300">
-                Our Commitment
-              </span>
+            <div className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
+              <Heart className="size-4" />
+              Our Commitment
             </div>
             <h3 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-4">
               Building the Digital Future, Together

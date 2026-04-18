@@ -79,6 +79,22 @@ SheroTech design documentation is organized into four primary guides:
 
 ---
 
+---
+
+## 🔑 Environment Setup
+
+The system requires specific environment variables for critical services:
+
+| Variable | Service | Purpose |
+|----------|---------|---------|
+| `WHATSAPP_ACCESS_TOKEN` | WhatsApp | Facebook Graph API Bearer Token |
+| `WHATSAPP_PHONE_NUMBER_ID` | WhatsApp | Sender Phone ID from Meta Dashboard |
+| `ADMIN_NOTIFICATION_PHONE` | WhatsApp | Designated phone for admin alerts |
+| `DATABASE_URL` | Prisma | PostgreSQL connection string |
+| `NEXT_PUBLIC_API_URL` | Frontend | Backend API endpoint |
+
+---
+
 ## 🎨 Quick Start Guide
 
 ### For Designers
@@ -143,6 +159,7 @@ SheroTech design documentation is organized into four primary guides:
 - **Neutrals**: Deep slate backgrounds with white text; light backgrounds with slate text
 - **Semantics**: Red (destructive), Amber (warning), Blue (info)
 - **Implementation**: oklch color space for superior perceptual uniformity
+- **Notifications**: Automated WhatsApp alerts via Facebook Graph API for mission-critical events
 
 ### Typography
 
@@ -184,14 +201,14 @@ SheroTech design documentation is organized into four primary guides:
 
 ---
 
-## 🛠️ Technology Stack
-
-- **Styling**: Tailwind CSS v4
-- **Framework**: React 18 + Next.js (App Router)
-- **Animation**: Framer Motion
-- **Icons**: Lucide React
-- **Color Space**: oklch (CSS custom properties)
-- **Components**: Compound component pattern
+- **Technology Stack**:
+  - **Notifications**: Facebook Graph API (WhatsApp), SMS Gateway integration
+  - **Styling**: Tailwind CSS v4
+  - **Framework**: React 18 + Next.js (App Router)
+  - **Animation**: Framer Motion
+  - **Icons**: Lucide React
+  - **Color Space**: oklch (CSS custom properties)
+  - **Components**: Compound component pattern
 
 ---
 

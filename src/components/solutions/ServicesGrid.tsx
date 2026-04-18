@@ -112,11 +112,11 @@ const ServicesGrid = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-950/50 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase">
-            <Briefcase className="size-5" />
+          <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase">
+            <Briefcase className="size-4" />
             Our Services
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-slate-100 mb-4">
+          <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4">
             What We Do
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">

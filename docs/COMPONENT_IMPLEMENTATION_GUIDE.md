@@ -300,10 +300,11 @@ interface BadgeProps {
 
 const badgeVariants = {
   default: "bg-muted text-muted-foreground",
-  success: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-200",
-  error: "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200",
-  warning: "bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-200",
-  info: "bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200",
+  success: "bg-emerald-100/80 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-500/20",
+  error: "bg-red-100/80 text-red-700 dark:bg-red-900/30 dark:text-red-400 border border-red-500/20",
+  warning: "bg-amber-100/80 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-500/20",
+  info: "bg-blue-100/80 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-500/20",
+  premium: "bg-brand-secondary-100/80 text-brand-secondary-700 dark:bg-brand-secondary-900/30 dark:text-brand-secondary-400 border border-brand-secondary-500/20",
 };
 
 export function Badge({ children, variant = "default", className = "" }: BadgeProps) {
@@ -311,8 +312,8 @@ export function Badge({ children, variant = "default", className = "" }: BadgePr
     <span
       className={`
         inline-block px-2.5 py-1
-        rounded-full
-        text-xs font-semibold
+        rounded
+        text-[10px] font-bold uppercase tracking-wider
         ${badgeVariants[variant]}
         ${className}
       `}
@@ -543,6 +544,45 @@ export function HeroSection() {
         <Button className="mt-8">Call to Action</Button>
       </AnimatedContent>
     </section>
+  );
+}
+```
+
+---
+
+### Process Step Component
+
+Used for "The Path to Partnership" and "Consultation Framework" sections.
+
+```jsx
+// components/ui/ProcessStep.tsx
+import { ReactNode } from "react";
+
+interface ProcessStepProps {
+  number: string;
+  title: string;
+  description: string;
+  isLast?: boolean;
+}
+
+export function ProcessStep({ number, title, description, isLast }: ProcessStepProps) {
+  return (
+    <div className="flex flex-col items-center text-center">
+      <div className="flex items-center w-full mb-6">
+        <div className="size-12 shrink-0 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-center font-mono font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
+          {number}
+        </div>
+        {!isLast && (
+          <div className="hidden md:block h-px flex-1 bg-linear-to-r from-slate-200 to-transparent dark:from-slate-800 ml-4" />
+        )}
+      </div>
+      <div className="space-y-2">
+        <h4 className="text-xl font-bold dark:text-white text-slate-900">{title}</h4>
+        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-xs mx-auto">
+          {description}
+        </p>
+      </div>
+    </div>
   );
 }
 ```

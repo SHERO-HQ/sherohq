@@ -33,6 +33,7 @@ SheroTech represents **premium, modern tech retail** designed for the Ghanaian m
 - **Performance**: Smooth, responsive interactions; motion enhances, never distracts
 - **Proof-Oriented**: Show value through features, pricing, ratings, and social proof
 - **Local Relevance**: Tailored for Ghanaian context (local payment methods, currency, language nuances)
+- **Signal vs. Noise**: Every UI element must either facilitate a user goal or build brand authority. If a component doesn't provide "Signal," it is considered "Noise" and removed.
 
 ### Visual Identity
 
@@ -155,8 +156,8 @@ SheroTech uses **oklch color space** for superior perceptual uniformity across l
 | ------- | -------------------------------- | ---------------- |
 | **400** | Body copy, regular text          | `font-normal`    |
 | **500** | Emphasis, labels                 | `font-medium`    |
-| **600** | Buttons, strong labels, headings | `font-semibold`  |
-| **700** | Headings, strong emphasis        | `font-bold`      |
+| **600** | Secondary headings, UI buttons   | `font-semibold`  |
+| **700** | Primary headings, impact text    | `font-bold`      |
 | **800** | Major headings                   | `font-extrabold` |
 | **900** | Hero titles, display text        | `font-black`     |
 
@@ -255,6 +256,26 @@ Container (max-w-7xl, mx-auto)
 - **Dynamic offset**: Measured height via ResizeObserver, consumed via CSS variable
 - **Mobile drawer**: Slide-in from left, overlay backdrop
 - **Desktop horizontal**: Left-aligned logo, centered nav items, right-aligned cart/profile
+
+---
+
+## The Signal Block Pattern
+
+"Signal Blocks" are high-authority components designed to provide preemptive clarity and reduce user friction.
+
+### 1. The Process Framework
+**Goal**: Visualize complex workflows (Partnerships, Consultations) to set expectations.
+- **Visuals**: Numbered steps (01, 02, 03) with dashed connectors.
+- **Typography**: Light font weights for descriptions, bold for headers.
+
+### 2. Preemptive Clarity (Quick FAQs)
+**Goal**: Address technical bottlenecks before they reach the support desk.
+- **Visuals**: Clean grid with subtle borders and icon-driven headers.
+- **Placement**: Directly below primary contact forms or CTAs.
+
+### 3. Verification & Proof
+**Goal**: Build trust through verified status and influence.
+- **Visuals**: Badge-style industry tags and looping brand carousels.
 
 ---
 

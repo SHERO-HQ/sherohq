@@ -37,15 +37,13 @@ const Contact = () => {
               className="space-y-12"
             >
               <div>
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded border border-brand-secondary-500/40 uppercase tracking-wider transition-colors duration-300">
-                  <MessageSquareLock className="w-4 h-4" />
+                <div className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-500/40 uppercase tracking-wider transition-colors duration-300">
+                  <MessageSquareLock className="size-4" />
                   Contact SHERO
                 </div>
-                <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
+                <h1 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-100 mb-6 leading-tight transition-colors duration-300">
                   Start{" "}
-                  <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
-                    Conversation
-                  </span>
+                  <span className="text-brand-secondary-600">Conversation</span>
                 </h1>
                 <p className="text-base text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed">
                   Tell us your goals and constraints. We will recommend the
@@ -146,7 +144,7 @@ const Contact = () => {
             className="mt-32 pt-16 border-t border-slate-200 dark:border-slate-800"
           >
             <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold dark:text-white text-slate-900 mb-4">Quick Answers</h2>
+              <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">Quick Answers</h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
                 Common questions before starting a conversation with our team.
               </p>

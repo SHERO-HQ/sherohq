@@ -22,7 +22,7 @@ const ConsultationHero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-5 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/40 dark:border-brand-secondary-800/50 rounded uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-4 py-1 mb-5 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/40 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
             <MessageSquare className="size-4" />
             <span>Consultation</span>
           </div>

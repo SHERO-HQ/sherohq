@@ -134,10 +134,10 @@ const AboutTeam = () => {
 
               <div className="space-y-2">
                 <div>
-                  <h3 className="text-2xl font-bold text-slate-900 dark:text-white group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors duration-300">
+                  <h3 className=" font-semibold text-slate-900 dark:text-white group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors duration-300">
                     {member.name}
                   </h3>
-                  <p className="text-brand-secondary-600 dark:text-brand-secondary-500 text-xs font-bold mt-1 uppercase tracking-widest">
+                  <p className="text-brand-secondary-600 dark:text-brand-secondary-500 text-[11px] font-medium mt-1 uppercase tracking-widest">
                     {member.role}
                   </p>
                 </div>
@@ -178,11 +178,11 @@ const AboutTeam = () => {
       <div className="container px-4 md:px-6 mx-auto w-full md:max-w-10/12">
         <div className="mb-16 space-y-4 flex flex-col md:flex-row md:justify-between justify-start md:items-center items-start">
           <div>
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-brand-secondary-700 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 border border-brand-secondary-600/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
-              <Users className="w-4 h-4" />
+            <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
+              <Users className="size-4" />
               Our Team
             </span>
-            <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white uppercase tracking-tighter transition-colors duration-300">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
               Meet the Minds
             </h2>
             <p className="text-slate-600 dark:text-slate-400 max-w-2xl mt-2 transition-colors duration-300">

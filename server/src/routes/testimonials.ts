@@ -137,6 +137,31 @@ router.post("/", adminAuth, validateBody(CreateTestimonialSchema), async (req, r
   }
 });
 
+// POST submit testimonial (Public)
+router.post("/public", validateBody(CreateTestimonialSchema), async (req, res) => {
+  const { quote, author, role, company, image, rating } = req.body;
+
+  try {
+    const id = uuidv4();
+    // Public submissions are ALWAYS inactive and have order 0 by default
+    const result = await query(
+      `INSERT INTO testimonials (id, quote, author, role, company, image, "order", active, rating, "externalSource")
+       VALUES ($1, $2, $3, $4, $5, $6, 0, false, $7, 'direct')
+       RETURNING *`,
+      [id, quote, author, role || "Verified Customer", company || "Client", image, rating || 5],
+    );
+
+    res.status(201).json({
+      success: true,
+      message: "Feedback submitted for review",
+      testimonial: result.rows[0]
+    });
+  } catch (err) {
+    console.error("Public testimonial submission error:", err);
+    res.status(500).json({ error: "Failed to submit feedback" });
+  }
+});
+
 // PUT update testimonial (Admin only)
 router.put("/:id", adminAuth, validateBody(UpdateTestimonialSchema), async (req, res) => {
   const { id } = req.params;

@@ -35,16 +35,14 @@ const LandingAbout = () => {
             className="w-full lg:w-1/2 space-y-10"
           >
             <div className="space-y-6">
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-brand-secondary-700 dark:text-brand-secondary-300 bg-brand-secondary-50 dark:bg-brand-secondary-900/30 border border-brand-secondary-600/45 dark:border-brand-secondary-700/50 rounded uppercase">
-                <Info className="w-5 h-5" />
+              <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase">
+                <Globe className="size-4" />
                 Who We Are
               </span>
 
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-slate-100 leading-tight transition-colors duration-300">
-                Redefining{" "}
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-secondary-600 to-brand-primary-700 dark:from-brand-primary-500 dark:to-brand-secondary-500 transition duration-500">
-                  Possibilities
-                </span>
+              <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-6 leading-tight">
+                Empowering Ghana's <br />
+                <span className="text-brand-secondary-600">Digital Economy</span>
               </h2>
 
               <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl transition-colors duration-300">

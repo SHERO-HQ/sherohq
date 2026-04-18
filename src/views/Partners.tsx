@@ -54,17 +54,13 @@ const Partners = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto mb-20"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded border border-brand-secondary-500/20 uppercase tracking-wider">
-              <Handshake className="w-4 h-4" />
-              <span className="text-brand-secondary-600 dark:text-brand-secondary-400">
-                Strategic Partnerships
-              </span>
+            <div className="inline-flex items-center gap-2 px-4 py-1 mb-6 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-500/20 uppercase tracking-wider transition-colors duration-300">
+              <Handshake className="size-4" />
+              Strategic Partnerships
             </div>
-            <h1 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight">
+            <h1 className="text-3xl md:text-6xl font-bold text-slate-900 dark:text-slate-100 mb-6 tracking-tight transition-colors duration-300">
               Grow with{" "}
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
-                SHERO
-              </span>
+              <span className="text-brand-secondary-600">SHERO</span>
             </h1>
             <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
               Collaborate on enterprise projects, unlock distribution
@@ -87,8 +83,8 @@ const Partners = () => {
           {/* Partnership Process */}
           <section className="mb-32 py-16 border-y border-slate-200 dark:border-slate-800/50">
             <div className="text-center mb-16">
-              <h2 className="text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest mb-3">The Path to Partnership</h2>
-              <p className="text-2xl font-bold dark:text-white text-slate-900">How we grow together</p>
+              <h2 className="text-[10px] font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest mb-3">The Path to Partnership</h2>
+              <p className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 transition-colors duration-300">We Grow Together</p>
             </div>
             <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto px-4">
               {steps.map((step, idx) => (
@@ -111,7 +107,7 @@ const Partners = () => {
           {/* Ecosystem Grid */}
           <section className="mb-32">
             <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Strategic Ecosystem</h2>
+              <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">Strategic Ecosystem</h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
                 We empower industries that require high-availability enterprise infrastructure and specialized technical support.
               </p>
@@ -143,7 +139,7 @@ const Partners = () => {
               <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-[10px] font-bold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded border border-brand-secondary-500/20 uppercase tracking-widest">
                 Tiered Benefits
               </div>
-              <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">
+              <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-6 transition-colors duration-300">
                 Become a Solution Partner
               </h2>
               <ul className="space-y-4 mb-8 text-sm">

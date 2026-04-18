@@ -15,10 +15,10 @@
 
 | Context        | Light                             | Dark                              |
 | -------------- | --------------------------------- | --------------------------------- |
-| **Background** | `oklch(1 0 0)` white              | `oklch(0.12 0.02 240)` deep slate |
+| **Background** | `oklch(1 0 0)` white              | `oklch(0.08 0.02 240)` blue-black |
 | **Foreground** | `oklch(0.12 0.02 240)` deep slate | `oklch(0.98 0 0)` off-white       |
-| **Border**     | `oklch(0.92 0 0)` light gray      | `oklch(0.32 0.02 240)` dark slate |
-| **Card**       | `oklch(1 0 0)` white              | `oklch(0.18 0.02 240)` dark slate |
+| **Border**     | `oklch(0.92 0 0)` light gray      | `oklch(0.25 0.02 240)` dark slate |
+| **Card**       | `oklch(1 0 0)` white              | `oklch(0.12 0.02 240)` elevated   |
 
 ### Semantics
 
@@ -35,6 +35,7 @@
 | ------------- | ----------------------- | ---- | ------ | ------------------- |
 | Hero Title    | `text-7xl font-black`   | 48px | 900    | Product names       |
 | Section Title | `text-4xl font-bold`    | 30px | 700    | Major headings      |
+| Sub-Heading   | `text-2xl font-semibold`| 20px | 600    | Component titles    |
 | Body          | `text-base font-normal` | 15px | 400    | Main content        |
 | Label         | `text-xs font-semibold` | 11px | 600    | Badges, form labels |
 
@@ -64,7 +65,7 @@
 ### Primary Button
 
 ```jsx
-<button className="px-8 py-3 bg-emerald-500 hover:bg-emerald-400 text-white rounded font-black uppercase tracking-widest text-xs transition-all shadow shadow-emerald-500/20 hover:-translate-y-0.5 active:scale-90">
+<button className="px-8 py-3 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded font-semibold transition duration-300 shadow shadow-brand-secondary-500/25 hover:scale-[1.02] active:scale-95">
   Details
 </button>
 ```
@@ -72,7 +73,7 @@
 ### Secondary Button
 
 ```jsx
-<button className="px-8 py-3 bg-slate-100 dark:bg-slate-900 hover:bg-emerald-500 hover:text-white text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 rounded transition-all active:scale-90">
+<button className="px-8 py-3 bg-slate-100 dark:bg-slate-900/50 hover:bg-brand-secondary-600 hover:text-white text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 rounded transition duration-300 active:scale-95">
   Learn More
 </button>
 ```

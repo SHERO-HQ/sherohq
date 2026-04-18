@@ -422,7 +422,8 @@ export const CreateTestimonialSchema = z.object({
   author: z.string().min(1, "Author name is required").max(100),
   role: z.string().max(100).optional(),
   company: z.string().max(100).optional(),
-  image: z.string().url().optional(),
+  image: z.string().url().optional().or(z.literal("")),
+  rating: z.number().min(1).max(5).optional(),
   order: z.number().int().nonnegative().default(0),
   active: z.boolean().default(true),
 });

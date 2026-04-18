@@ -25,11 +25,11 @@ const LandingPartners = () => {
 
       {/* Header */}
       <div className="container mx-auto px-4 relative z-10 mb-8 text-center">
-        <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-xs font-semibold text-brand-secondary-700 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 border border-brand-secondary-600/50 dark:border-brand-secondary-800/50 rounded uppercase tracking-wider transition-colors duration-300">
-          <Briefcase className="w-4 h-4" />
+        <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
+          <Briefcase className="size-4" />
           Trusted Brands
         </span>
-        <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white transition-colors duration-300">
+        <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 transition-colors duration-300">
           We Supply & Support the Best
         </h2>
       </div>
