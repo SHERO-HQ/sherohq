@@ -37,7 +37,7 @@ const Contact = () => {
  </div>
  <h1 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6 leading-tight">
  Start{" "}
- <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-cyan-600 dark:from-emerald-400 dark:to-cyan-400">
+ <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
  Conversation
  </span>
  </h1>

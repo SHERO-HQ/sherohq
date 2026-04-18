@@ -82,9 +82,9 @@ const LandingHero: React.FC = () => {
     <header
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative min-h-[90vh] lg:min-h-screen w-full overflow-hidden
+      className="relative min-h-[80vh] lg:min-h-screen w-full overflow-hidden
  bg-slate-50 dark:bg-slate-950
- flex items-center md:pt-20"
+ flex items-center "
       role="banner"
       aria-label="Hero section - Company mission statement"
     >
@@ -101,17 +101,17 @@ const LandingHero: React.FC = () => {
 
       <div className="absolute top-0 left-0 right-0 h-36 bg-linear-to-b from-primary/8 to-transparent pointer-events-none" />
 
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20 lg:py-16">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-14">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-10">
           <div className="w-full lg:w-[56%] flex flex-col items-center lg:items-start gap-5 sm:gap-6 text-center lg:text-left">
             <motion.div
               initial={{ x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-emerald-500/25 bg-white/70 dark:bg-slate-900/70"
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-brand-secondary-600/25 bg-white/70 dark:bg-slate-900/70"
             >
-              <RocketIcon className="w-4 h-4 text-emerald-500" />
-              <span className="text-xs sm:text-sm font-mono font-semibold tracking-widest uppercase text-emerald-700 dark:text-emerald-300">
+              <RocketIcon className="w-4 h-4 text-brand-secondary-600 dark:text-brand-secondary-400" />
+              <span className="text-xs sm:text-sm font-mono font-semibold tracking-widest uppercase text-brand-secondary-700 dark:text-brand-secondary-300">
                 Trusted Technology Partner
               </span>
             </motion.div>
@@ -132,7 +132,7 @@ const LandingHero: React.FC = () => {
                       key={`${word}-${i}-${word}`}
                       className={
                         word === "Possible"
-                          ? "text-transparent bg-clip-text bg-linear-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-400"
+                          ? "text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400"
                           : ""
                       }
                     >
@@ -161,9 +161,9 @@ const LandingHero: React.FC = () => {
             >
               <Button
                 asChild
-                variant="brand"
+                variant="brandSecondary"
                 size="lg"
-                className="text-base w-full sm:w-auto h-11 px-8 group transition-all hover:-translate-y-0.5"
+                className="text-base w-full sm:w-auto h-10 px-8 group transition-all hover:-translate-y-0.5"
               >
                 <NavLink href={getAbsoluteUrl("/shop")}>
                   <span className="text-base">Shop Products</span>
@@ -173,7 +173,7 @@ const LandingHero: React.FC = () => {
 
               <NavLink
                 href={getAbsoluteUrl("/solutions")}
-                className="group flex items-center justify-center gap-2 text-base font-semibold text-slate-700 dark:text-slate-200 hover:text-primary! rounded px-4 py-2 h-11 w-full sm:w-auto transition-all border-2 border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-900 hover:border-primary!"
+                className="group flex items-center justify-center gap-2 text-base font-semibold text-slate-700 dark:text-slate-200 hover:text-primary! rounded px-4 py-2 h-10 w-full sm:w-auto transition-all border-2 border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-900 hover:border-primary!"
                 role="button"
                 aria-label="Explore solutions"
               >
@@ -274,7 +274,7 @@ const LandingHero: React.FC = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="inline-flex items-center gap-2 rounded-full px-2.5 py-1 bg-primary/10 text-primary text-xs font-mono font-semibold uppercase tracking-wide">
+                    <div className="inline-flex items-center gap-2 rounded-full px-2.5 py-1 bg-brand-secondary-600/10 text-brand-secondary-700 dark:text-brand-secondary-300 text-xs font-mono font-semibold uppercase tracking-wide">
                       <ShieldCheck className="w-3.5 h-3.5" />
                       Verified
                     </div>
@@ -302,7 +302,7 @@ const LandingHero: React.FC = () => {
                         key={item.title}
                         className="flex items-start gap-3 rounded border border-slate-200/70 dark:border-slate-800 p-3.5 bg-white/70 dark:bg-slate-900/60"
                       >
-                        <div className="rounded bg-primary/10 text-primary p-2 mt-0.5">
+                        <div className="rounded bg-brand-secondary-600/10 text-brand-secondary-700 dark:text-brand-secondary-300 p-2 mt-0.5">
                           <item.icon className="w-4 h-4" />
                         </div>
                         <div>
@@ -340,7 +340,7 @@ const LandingHero: React.FC = () => {
  </div>
  </motion.div> */}
 
-                {/* Removed decorative blur for performance */}
+              {/* Removed decorative blur for performance */}
             </motion.div>
           </div>
         </div>

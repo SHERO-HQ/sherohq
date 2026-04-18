@@ -54,7 +54,7 @@ const SolutionsHero = () => {
           >
             <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-3 rounded border border-emerald-500/20 bg-emerald-500/5 backdrop-blur-sm">
               <Code className="size-4 text-emerald-500" />
-              <span className="text-xs font-mono tracking-widest uppercase text-emerald-600 dark:text-emerald-400">
+              <span className="text-xs font-semibold tracking-widest uppercase text-brand-secondary-600 dark:text-brand-secondary-500">
                 Software & IT Solutions
               </span>
             </div>

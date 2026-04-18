@@ -141,7 +141,7 @@ const AboutHero = () => {
  text-slate-900 dark:text-white mb-2"
  >
  Engineering clarity.{" "}
- <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-600 to-blue-600 dark:from-emerald-400 dark:to-blue-400">
+ <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
  Delivering impact.
  </span>
  </motion.h1>

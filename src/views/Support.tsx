@@ -79,7 +79,7 @@ const Support = () => {
             </motion.div>
             <h1 className="md:text-6xl text-4xl font-bold text-foreground mb-6 tracking-tight">
               Get Help in{" "}
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-emerald-500 to-blue-600 dark:to-blue-400">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
                 Minutes
               </span>
             </h1>

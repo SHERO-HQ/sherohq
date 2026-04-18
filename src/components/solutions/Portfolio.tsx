@@ -162,7 +162,7 @@ const Portfolio = () => {
  )}
 
  {/* Overlay on Hover */}
- <div className="absolute inset-0 bg-emerald-600/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+ <div className="absolute inset-0 bg-emerald-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
  <div className="flex flex-col items-center gap-2 text-white font-semibold">
  <span className="flex items-center gap-2">
  View Details
@@ -248,7 +248,7 @@ const Portfolio = () => {
  <h4 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
  Client / Partner
  </h4>
- <p className="text-lg font-medium text-slate-900 dark:text-white">
+ <p className="text-base font-medium text-slate-900 dark:text-white">
  {selectedProject.client}
  </p>
  </div>
@@ -256,7 +256,7 @@ const Portfolio = () => {
  <h4 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">
  Industry / Category
  </h4>
- <div className="flex items-center gap-2 text-lg font-medium text-slate-900 dark:text-white">
+ <div className="flex items-center gap-2 text-base font-medium text-slate-900 dark:text-white">
  {getCategoryIcon(selectedProject.category)}
  {selectedProject.category}
  </div>

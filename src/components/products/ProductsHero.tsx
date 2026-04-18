@@ -127,7 +127,7 @@ const ProductHero = () => {
  text-slate-900 dark:text-white mb-6"
  >
  Technology you can{" "}
- <span className="text-transparent bg-clip-text bg-linear-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-400">
+ <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
  deploy with confidence
  </span>
  </motion.h1>
