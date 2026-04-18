@@ -447,7 +447,7 @@ export default function AdminDashboard() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="h-[500px] w-full mt-4">
+            <div className="h-125 w-full mt-4">
               {analyticsLoading ? (
                 <div className="w-full h-full bg-slate-800/50 rounded animate-pulse" />
               ) : (
@@ -623,7 +623,7 @@ export default function AdminDashboard() {
               </div>
             </CardHeader>
             <CardContent className="pt-6">
-              <div className="h-[200px] w-full">
+              <div className="h-50 w-full">
                 {statsLoading ? (
                   <div className="w-full h-full bg-slate-800/50 rounded animate-pulse" />
                 ) : (
@@ -837,7 +837,7 @@ export default function AdminDashboard() {
               <Clock className="w-4 h-4 text-slate-500" />
             </div>
           </CardHeader>
-          <CardContent className="pt-6 max-h-[500px] overflow-y-auto">
+          <CardContent className="pt-6 max-h-125 overflow-y-auto">
             <ActivityFeed
               logs={activityLogs || []}
               isLoading={activityLoading}

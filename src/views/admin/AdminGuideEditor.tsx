@@ -11,13 +11,15 @@ import dynamic from "next/dynamic";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
   ssr: false,
-  loading: () => <div className="h-[400px] w-full bg-slate-900/50 rounded animate-pulse" />,
+  loading: () => (
+    <div className="h-100 w-full bg-slate-900/50 rounded animate-pulse" />
+  ),
 });
 import {
- createGuide,
- updateGuide,
- getAdminGuides,
- type SupportGuide,
+  createGuide,
+  updateGuide,
+  getAdminGuides,
+  type SupportGuide,
 } from "@/services/guides";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useAdmin } from "@/context/AdminContext";
@@ -25,111 +27,112 @@ import { uploadImage } from "@/services/api";
 import AppImage from "@/components/common/AppImage";
 
 const AdminGuideEditor = () => {
- const router = useRouter();
- const { id } = useParams<{ id: string }>();
- const isEditing = !!id;
- const { addNotification } = useNotifications();
+  const router = useRouter();
+  const { id } = useParams<{ id: string }>();
+  const isEditing = !!id;
+  const { addNotification } = useNotifications();
 
- const [isLoading, setIsLoading] = useState(false);
- const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
- const [title, setTitle] = useState("");
- const [summary, setSummary] = useState("");
- const [content, setContent] = useState("");
- const [category, setCategory] = useState<"hardware" | "software">("hardware");
- const [coverImage, setCoverImage] = useState("");
- const [isUploadingImage, setIsUploadingImage] = useState(false);
- const [published, setPublished] = useState(false);
+  const [title, setTitle] = useState("");
+  const [summary, setSummary] = useState("");
+  const [content, setContent] = useState("");
+  const [category, setCategory] = useState<"hardware" | "software">("hardware");
+  const [coverImage, setCoverImage] = useState("");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [published, setPublished] = useState(false);
 
- const loadGuide = useCallback(
- async (guideId: string) => {
- setIsLoading(true);
- try {
- const guides = await getAdminGuides();
- const guide = guides.find((g: SupportGuide) => g.id === guideId);
- if (guide) {
- setTitle(guide.title);
- setSummary(guide.summary || "");
- setContent(guide.content);
- setCategory(guide.category);
- setCoverImage(guide.coverImage || "");
- setPublished(guide.published);
- } else {
- addNotification("Error", "Guide not found", "error");
- router.push("/admin/guides");
- }
- } catch (error) {
- console.error("Failed to load guide:", error);
- addNotification("Error", "Failed to load guide", "error");
- } finally {
- setIsLoading(false);
- }
- },
- [router, addNotification],
- );
+  const loadGuide = useCallback(
+    async (guideId: string) => {
+      setIsLoading(true);
+      try {
+        const guides = await getAdminGuides();
+        const guide = guides.find((g: SupportGuide) => g.id === guideId);
+        if (guide) {
+          setTitle(guide.title);
+          setSummary(guide.summary || "");
+          setContent(guide.content);
+          setCategory(guide.category);
+          setCoverImage(guide.coverImage || "");
+          setPublished(guide.published);
+        } else {
+          addNotification("Error", "Guide not found", "error");
+          router.push("/admin/guides");
+        }
+      } catch (error) {
+        console.error("Failed to load guide:", error);
+        addNotification("Error", "Failed to load guide", "error");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [router, addNotification],
+  );
 
- useEffect(() => {
- if (isEditing && id) {
- loadGuide(id);
- }
- }, [id, isEditing, loadGuide]);
+  useEffect(() => {
+    if (isEditing && id) {
+      loadGuide(id);
+    }
+  }, [id, isEditing, loadGuide]);
 
- const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
- const file = e.target.files?.[0];
- if (!file) return;
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
- setIsUploadingImage(true);
- try {
- const result = await uploadImage(file);
- if (result.success) {
- setCoverImage(result.imageUrl);
- addNotification("Success", "Image uploaded successfully", "success");
- }
- } catch (error) {
- console.error("Image upload failed:", error);
- addNotification("Error", "Failed to upload image", "error");
- } finally {
- setIsUploadingImage(false);
- }
- };
+    setIsUploadingImage(true);
+    try {
+      const result = await uploadImage(file);
+      if (result.success) {
+        setCoverImage(result.imageUrl);
+        addNotification("Success", "Image uploaded successfully", "success");
+      }
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      addNotification("Error", "Failed to upload image", "error");
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
 
- const handleSubmit = async (e: React.BaseSyntheticEvent) => {
- e.preventDefault();
+  const handleSubmit = async (e: React.BaseSyntheticEvent) => {
+    e.preventDefault();
 
- if (!title.trim() || !content.trim()) {
- addNotification("Error", "Title and content are required", "error");
- return;
- }
+    if (!title.trim() || !content.trim()) {
+      addNotification("Error", "Title and content are required", "error");
+      return;
+    }
 
- setIsSaving(true);
- try {
- const data = {
- title: title.trim(),
- summary: summary.trim(),
- content: content.trim(),
- category,
- coverImage: coverImage.trim() || undefined,
- published,
- };
+    setIsSaving(true);
+    try {
+      const data = {
+        title: title.trim(),
+        summary: summary.trim(),
+        content: content.trim(),
+        category,
+        coverImage: coverImage.trim() || undefined,
+        published,
+      };
 
- if (isEditing && id) {
- await updateGuide(id, data);
- addNotification("Success", "Guide updated successfully", "success");
- } else {
- await createGuide(data);
- addNotification("Success", "Guide created successfully", "success");
- }
- router.push("/admin/guides");
- } catch (error) {
- console.error("Failed to save guide:", error);
- addNotification("Error", "Failed to save guide", "error");
- } finally {
- setIsSaving(false);
- }
- };
+      if (isEditing && id) {
+        await updateGuide(id, data);
+        addNotification("Success", "Guide updated successfully", "success");
+      } else {
+        await createGuide(data);
+        addNotification("Success", "Guide created successfully", "success");
+      }
+      router.push("/admin/guides");
+    } catch (error) {
+      console.error("Failed to save guide:", error);
+      addNotification("Error", "Failed to save guide", "error");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
- if (isLoading)    return (
-      <div className="flex items-center justify-center min-h-[400px]">
+  if (isLoading)
+    return (
+      <div className="flex items-center justify-center min-h-100">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
           <p className="text-slate-400 font-medium">Loading guide editor...</p>
@@ -237,9 +240,7 @@ const AdminGuideEditor = () => {
                   ) : (
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                       <Plus className="w-8 h-8 text-slate-400 mb-2" />
-                      <p className="text-sm text-slate-400">
-                        Click to upload
-                      </p>
+                      <p className="text-sm text-slate-400">Click to upload</p>
                     </div>
                   )}
                   <input
@@ -252,9 +253,7 @@ const AdminGuideEditor = () => {
                 </label>
               </div>
               <div className="space-y-2">
-                <p className="text-xs text-slate-500 mb-1">
-                  Or provide a URL
-                </p>
+                <p className="text-xs text-slate-500 mb-1">Or provide a URL</p>
                 <Input
                   id="coverImage"
                   value={coverImage}

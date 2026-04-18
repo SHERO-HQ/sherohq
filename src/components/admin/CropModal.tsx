@@ -38,7 +38,7 @@ export function CropModal({
     (_croppedArea: Area, croppedAreaPixels: Area) => {
       setCroppedAreaPixels(croppedAreaPixels);
     },
-    []
+    [],
   );
 
   const handleDone = async () => {
@@ -56,7 +56,7 @@ export function CropModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Crop Image">
       <div className="space-y-6">
-        <div className="relative h-[400px] w-full bg-slate-800 rounded overflow-hidden border border-white/5">
+        <div className="relative h-100 w-full bg-slate-800 rounded overflow-hidden border border-white/5">
           <Cropper
             image={image}
             crop={crop}
@@ -87,7 +87,7 @@ export function CropModal({
           </div>
 
           <div className="flex items-center gap-3">
-             <Button
+            <Button
               type="button"
               variant="ghost"
               onClick={() => {
@@ -129,7 +129,7 @@ export function CropModal({
  */
 async function getCroppedImg(
   imageSrc: string,
-  pixelCrop: { x: number; y: number; width: number; height: number }
+  pixelCrop: { x: number; y: number; width: number; height: number },
 ): Promise<Blob | null> {
   const image = await new Promise<HTMLImageElement>((resolve, reject) => {
     const img = new Image();
@@ -156,7 +156,7 @@ async function getCroppedImg(
     0,
     0,
     pixelCrop.width,
-    pixelCrop.height
+    pixelCrop.height,
   );
 
   return new Promise((resolve) => {

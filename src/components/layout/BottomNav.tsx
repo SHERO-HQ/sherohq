@@ -1,13 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
-import {
-  Home,
-  ShoppingBag,
-  ShoppingCart,
-  Heart,
-  Share2,
-  X,
-} from "lucide-react";
+import { Home, ShoppingBag, ShoppingCart, Heart } from "lucide-react";
 import NavLink from "@/components/common/NavLink";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/hooks/useWishlist";
@@ -18,22 +10,7 @@ const BottomNav = () => {
   const { setIsCartOpen, totalQuantity } = useCart();
   const { setIsWishlistOpen, wishlist } = useWishlist();
   const mounted = useIsMounted();
-  const [isIOS] = useState(() => {
-    const userAgent = globalThis.navigator?.userAgent ?? "";
-    const platform = globalThis.navigator?.platform ?? "";
-    const isIPhoneOrIPad = /iPhone|iPad|iPod/i.test(userAgent);
-    const isIPadOSDesktopMode =
-      /Macintosh/i.test(userAgent) &&
-      (globalThis.navigator?.maxTouchPoints ?? 0) > 1;
 
-    return (
-      isIPhoneOrIPad ||
-      (platform === "MacIntel" &&
-        (globalThis.navigator?.maxTouchPoints ?? 0) > 1) ||
-      isIPadOSDesktopMode
-    );
-  });
-  const [showIOSBanner, setShowIOSBanner] = useState(false);
   const homeHref = getAbsoluteUrl("/");
   const navItems = [
     {
@@ -64,58 +41,8 @@ const BottomNav = () => {
     },
   ];
 
-  useEffect(() => {
-    if (!isIOS) return;
-
-    const installed =
-      globalThis.matchMedia?.("(display-mode: standalone)").matches ||
-      (globalThis.navigator as Navigator & { standalone?: boolean })
-        ?.standalone === true;
-
-    if (installed) return;
-
-    const dismissed = localStorage.getItem("ios-pwa-banner-dismissed");
-    if (dismissed && Date.now() - Number(dismissed) < 7 * 24 * 60 * 60 * 1000) {
-      return;
-    }
-
-    const timeoutId = window.setTimeout(() => setShowIOSBanner(true), 4000);
-    return () => window.clearTimeout(timeoutId);
-  }, [isIOS]);
-
-  const handleDismissIOSBanner = () => {
-    setShowIOSBanner(false);
-    localStorage.setItem("ios-pwa-banner-dismissed", Date.now().toString());
-  };
-
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden pb-safe">
-      {showIOSBanner && isIOS && (
-        <div className="mx-3 mb-2 rounded-2xl border border-emerald-500/20 bg-slate-950/95 px-3 py-2.5 text-white shadow-lg shadow-slate-950/20 backdrop-blur-sm">
-          <div className="flex items-start gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-400 ring-1 ring-emerald-500/20">
-              <Share2 className="h-4 w-4" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-400/90">
-                SHERO on iPhone
-              </p>
-              <p className="mt-1 text-xs leading-5 text-slate-200">
-                In Safari, tap Share and choose Add to Home Screen.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={handleDismissIOSBanner}
-              className="-mt-0.5 shrink-0 rounded-full p-1 text-slate-400 transition-colors hover:bg-white/5 hover:text-white"
-              aria-label="Dismiss iPhone install banner"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-      )}
-
       <div className="bg-white/95 dark:bg-slate-950/95 backdrop-blur-sm border-t border-slate-200 dark:border-slate-800">
         <nav className="flex justify-around items-center h-14 py-2">
           {navItems.map((item) => {
@@ -125,7 +52,7 @@ const BottomNav = () => {
                   key={item.label}
                   onClick={() => setIsCartOpen(true)}
                   aria-label={`Open Cart (${totalQuantity} items)`}
-                  className="cursor-pointer flex flex-col items-center justify-center w-full h-full gap-1 text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors relative"
+                  className="cursor-pointer flex flex-col items-center justify-center w-full h-full gap-1 text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors relative bg-transparent"
                 >
                   <item.icon
                     className={item.iconClassName ?? "w-6 h-6"}
@@ -169,7 +96,7 @@ const BottomNav = () => {
                 className={({ isActive }) =>
                   `relative flex flex-col items-center justify-center w-full h-full gap-1 transition-all duration-300 ${
                     isActive
-                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold shadow-xs"
+                      ? "text-emerald-600 dark:text-emerald-400 font-bold shadow-xs"
                       : "bg-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
                   }`
                 }

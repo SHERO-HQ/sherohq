@@ -7,7 +7,6 @@ import { ServiceWorkerRegistration } from "@/components/common/ServiceWorkerRegi
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
-import dynamic from "next/dynamic";
 import "../index.css";
 
 const SITE_URL = (

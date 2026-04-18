@@ -1,18 +1,33 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ToggleTheme } from "./toggle-theme";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useIsMounted } from "@/hooks/useIsMounted";
-import { useReducedMotion} from "@/hooks/useReducedMotion";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { usePathname } from "next/navigation";
-import { LogOut, ShoppingCart, User, Heart, ShoppingBag, Cpu, MessageSquare, Info, Facebook, Instagram, X } from "lucide-react";
+import {
+  LogOut,
+  ShoppingCart,
+  User,
+  Heart,
+  ShoppingBag,
+  Cpu,
+  MessageSquare,
+  Info,
+  X,
+} from "lucide-react";
 import NavLink from "@/components/common/NavLink";
 
 import { AnimatePresence, easeOut, motion } from "motion/react";
 import { navLinkClass, navLinkClassVariant } from "@/lib/utils";
-import { WhatsAppIcon, TikTokIcon, InstagramIcon, FacebookIcon } from "@/assets/icons/icons";
+import {
+  WhatsAppIcon,
+  TikTokIcon,
+  InstagramIcon,
+  FacebookIcon,
+} from "@/assets/icons/icons";
 import BottomNav from "./BottomNav";
 import SearchBar from "./SearchBar";
 import { Badge } from "@/components/ui/badge";
@@ -59,12 +74,35 @@ const Nav = () => {
     },
   };
 
-  const navLinks = [
-    { name: "Shop", icon: ShoppingBag, desc: "Explore catalog", href: "/shop" },
-    { name: "Solutions", icon: Cpu, desc: "Business innovations", href: "/solutions" },
-    { name: "Consultation", icon: MessageSquare, desc: "Expert tech advice", href: "/consultation" },
-    { name: "About Us", icon: Info, desc: "Our mission", href: "/about-us" },
-  ];
+  const navLinks = useMemo(
+    () => [
+      {
+        name: "Shop",
+        icon: ShoppingBag,
+        desc: "Explore catalog",
+        href: "/shop",
+      },
+      {
+        name: "Solutions",
+        icon: Cpu,
+        desc: "Business innovations",
+        href: "/solutions",
+      },
+      {
+        name: "Consultation",
+        icon: MessageSquare,
+        desc: "Expert tech advice",
+        href: "/consultation",
+      },
+      {
+        name: "About Us",
+        icon: Info,
+        desc: "Our mission",
+        href: "/about-us",
+      },
+    ],
+    [],
+  );
 
   const linkVars = {
     initial: { x: -20, opacity: 0 },
@@ -100,9 +138,10 @@ const Nav = () => {
       const focusables = mobileMenuRef.current?.querySelectorAll<HTMLElement>(
         'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
       );
-      
+
       // Try to find the first navigation link to avoid auto-focusing the search bar input on mobile
-      const firstLink = mobileMenuRef.current?.querySelector<HTMLElement>('a[href]');
+      const firstLink =
+        mobileMenuRef.current?.querySelector<HTMLElement>("a[href]");
       if (firstLink) {
         firstLink.focus();
       } else {
@@ -197,21 +236,22 @@ const Nav = () => {
         try {
           const url = new URL(absoluteUrl);
           const targetPath = url.pathname;
-          
+
           // Use robust "starts with" logic to keep parent menu items active on sub-pages
           // Avoid partial matches like "/shop" matching "/shopping"
-          const isActive = 
-            targetPath === "/" 
-              ? pathname === "/" 
-              : pathname === targetPath || pathname.startsWith(targetPath + "/");
+          const isActive =
+            targetPath === "/"
+              ? pathname === "/"
+              : pathname === targetPath ||
+                pathname.startsWith(targetPath + "/");
 
           if (isActive) {
             found = index;
           }
         } catch {
-          const isActive = 
-            linkPath === "/" 
-              ? pathname === "/" 
+          const isActive =
+            linkPath === "/"
+              ? pathname === "/"
               : pathname === linkPath || pathname.startsWith(linkPath + "/");
 
           if (isActive) {
@@ -224,7 +264,7 @@ const Nav = () => {
         queueMicrotask(() => setActiveNavIndex(found));
       }
     }
-  }, [pathname, mounted, activeNavIndex]);
+  }, [pathname, mounted, activeNavIndex, navLinks]);
 
   // Measure indicator dimensions for active link
   useEffect(() => {
@@ -245,12 +285,12 @@ const Nav = () => {
   return (
     <>
       <nav
-        className={`fixed top-0 w-full z-50 transition duration-300 ${isOpen || scrolled ? "bg-background/80 backdrop-blur-sm shadow-sm border-b border-slate-200 dark:border-slate-800" : "bg-transparent"}`}
+        className={`w-full transition duration-300 ${isOpen || scrolled ? "bg-background/80 backdrop-blur-sm shadow-sm border-b border-slate-200 dark:border-slate-800" : "bg-transparent"}`}
         aria-label="main navigation"
         id="nav-menu"
       >
-        <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-12 lg:h-20">
+        <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 md:py-0">
+          <div className="flex justify-between items-center h-12 lg:h-16">
             {/* Logo */}
             <NavLink
               href={homeHref}
@@ -302,7 +342,11 @@ const Nav = () => {
                 suppressHydrationWarning
               >
                 {navLinks.map((item) => (
-                  <li key={item.name} className="h-full flex items-center" suppressHydrationWarning>
+                  <li
+                    key={item.name}
+                    className="h-full flex items-center"
+                    suppressHydrationWarning
+                  >
                     <NavLink
                       className={({ isActive }) => navLinkClass(isActive)}
                       href={getAbsoluteUrl(item.href)}
@@ -342,11 +386,13 @@ const Nav = () => {
                   className="cursor-pointer relative p-2 h-9 w-9 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/70 hover:text-red-500 dark:hover:text-red-400 transition-colors rounded border-none"
                   aria-label="Open Wishlist"
                 >
-                  <Heart className={`w-5 h-5 ${mounted && wishlist.length > 0 ? "fill-red-500 text-red-500" : ""}`} />
+                  <Heart
+                    className={`w-5 h-5 ${mounted && wishlist.length > 0 ? "fill-red-500 text-red-500" : ""}`}
+                  />
                   {mounted && wishlist.length > 0 && (
                     <Badge
                       variant="destructive"
-                      className={`absolute -top-1.5 -right-1.5 h-[18px] min-w-[18px] px-1 flex items-center justify-center rounded-full text-[9px] ring-2 ring-background ${!prefersReducedMotion ? "animate-in zoom-in" : ""}`}
+                      className={`absolute -top-1.5 -right-1.5 h-4.5 min-w-4.5 px-1 flex items-center justify-center rounded-full text-[9px] ring-2 ring-background ${!prefersReducedMotion ? "animate-in zoom-in" : ""}`}
                     >
                       {wishlist.length}
                     </Badge>
@@ -363,7 +409,7 @@ const Nav = () => {
                   {mounted && totalQuantity > 0 && (
                     <Badge
                       variant="emerald"
-                      className={`absolute -top-1.5 -right-1.5 h-[18px] min-w-[18px] px-1 flex items-center justify-center rounded-full text-[9px] ring-2 ring-background ${!prefersReducedMotion ? "animate-in zoom-in" : ""}`}
+                      className={`absolute -top-1.5 -right-1.5 h-4.5 min-w-4.5 px-1 flex items-center justify-center rounded-full text-[9px] ring-2 ring-background ${!prefersReducedMotion ? "animate-in zoom-in" : ""}`}
                     >
                       {totalQuantity}
                     </Badge>
@@ -475,7 +521,11 @@ const Nav = () => {
                     className={`transition-transform duration-500 ${isOpen ? "rotate-90" : "rotate-0"}`}
                   >
                     <path
-                      d={isOpen ? "M18 6L6 18M6 6L18 18" : "M5 17H13M5 12H19M11 7H19"}
+                      d={
+                        isOpen
+                          ? "M18 6L6 18M6 6L18 18"
+                          : "M5 17H13M5 12H19M11 7H19"
+                      }
                       className="transition duration-300"
                     />
                   </svg>
@@ -506,13 +556,17 @@ const Nav = () => {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="absolute top-0 left-0 w-[65%] sm:w-[400px] h-full bg-white dark:bg-slate-950 shadow flex flex-col overflow-hidden"
+              className="absolute top-0 left-0 w-[65%] sm:w-100 h-full bg-white dark:bg-slate-950 shadow flex flex-col overflow-hidden"
               id="mobile-nav-menu"
             >
               {/* Top Header */}
               <div className="flex items-center justify-between px-6 py-3 border-b border-slate-100 dark:border-slate-800/50">
                 <div className="flex items-center gap-2">
-                  <img src="/assets/logo/shero.svg" alt="" className="h-8 w-auto" />
+                  <img
+                    src="/assets/logo/shero.svg"
+                    alt=""
+                    className="h-8 w-auto"
+                  />
                 </div>
                 <button
                   onClick={() => setIsOpen(false)}
@@ -609,7 +663,9 @@ const Nav = () => {
                         <User className="w-4 h-4" />
                       </div>
                       <div className="flex-1">
-                        <span className="block font-extrabold text-[15px] tracking-tight">Login</span>
+                        <span className="block font-extrabold text-[15px] tracking-tight">
+                          Login
+                        </span>
                         <span className="block text-[11px] text-emerald-600/70 dark:text-emerald-400/70 mt-0.5">
                           Sign in to manage orders
                         </span>
@@ -623,19 +679,39 @@ const Nav = () => {
               <div className="p-6 bg-slate-50 dark:bg-slate-900/40 border-t border-slate-100 dark:border-slate-800/50">
                 <div className="flex items-center justify-center gap-6 mb-3">
                   {/* WhatsApp */}
-                  <a href="https://wa.me/233598925501" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-500 transition-all hover:scale-110 active:scale-95">
+                  <a
+                    href="https://wa.me/233598925501"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-slate-400 hover:text-emerald-500 transition-all hover:scale-110 active:scale-95"
+                  >
                     <WhatsAppIcon className="w-5 h-5" />
                   </a>
                   {/* TikTok */}
-                  <a href="https://tiktok.com/@sherohq" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-500 transition-all hover:scale-110 active:scale-95">
+                  <a
+                    href="https://tiktok.com/@sherohq"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-slate-400 hover:text-emerald-500 transition-all hover:scale-110 active:scale-95"
+                  >
                     <TikTokIcon className="w-5 h-5" />
                   </a>
                   {/* Instagram */}
-                  <a href="https://instagram.com/sherohq" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-500 transition-all hover:scale-110 active:scale-95">
+                  <a
+                    href="https://instagram.com/sherohq"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-slate-400 hover:text-emerald-500 transition-all hover:scale-110 active:scale-95"
+                  >
                     <InstagramIcon className="w-5 h-5" />
                   </a>
                   {/* Facebook */}
-                  <a href="https://facebook.com/sherohq" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-emerald-500 transition-all hover:scale-110 active:scale-95">
+                  <a
+                    href="https://facebook.com/sherohq"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-slate-400 hover:text-emerald-500 transition-all hover:scale-110 active:scale-95"
+                  >
                     <FacebookIcon className="w-5 h-5" />
                   </a>
                 </div>

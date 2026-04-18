@@ -68,7 +68,7 @@ const ProductFiltersSidebar: React.FC<ProductFiltersSidebarProps> = ({
  <aside className={`w-full ${className}`}>
  {/* Glass Container */}
  <div className="dark:bg-slate-900 bg-slate-100 border border-slate-200 dark:border-white/5 rounded p-6 shadow">
- <div className="flex items-center gap-2 mb-8 border-b dark:border-white/5 border-slate-300 pb-4">
+ <div className="flex items-center gap-2 mb-8 border-b dark:border-white/5 border-slate-300">
  <SlidersHorizontal className="w-5 h-5 text-slate-500" />
  <h3 className="font-bold text-lg dark:text-white text-slate-800">
  Filters

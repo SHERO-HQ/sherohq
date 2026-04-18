@@ -27,7 +27,7 @@ export default function GlobalError({
             </div>
 
             <div className="space-y-3">
-              <h1 className="text-4xl font-bold uppercase tracking-tighter">
+              <h1 className="text-2xl font-bold uppercase tracking-tighter">
                 Critical Failure
               </h1>
               <p className="text-slate-400">
@@ -49,7 +49,7 @@ export default function GlobalError({
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/5 text-slate-300 rounded font-bold border border-white/10 transition hover:bg-white/10"
               >
                 <Home className="size-5" />
-                Reload Root
+                Reload
               </a>
             </div>
 

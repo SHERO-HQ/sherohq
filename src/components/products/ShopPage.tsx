@@ -5,7 +5,6 @@ import { defaultCategories } from "@/utils/defaultCategories";
 import type { Category } from "./ProductsCategories";
 import ProductFilters from "./ProductFilters";
 import type { FilterState } from "./ProductFilters";
-import CategorySidebar from "./CategorySidebar";
 import ProductGrid from "./ProductsGrid";
 import type { Product } from "@/types/product";
 import { SlidersHorizontal, Package, ChevronDown } from "lucide-react";
@@ -215,7 +214,7 @@ const ShopView = () => {
       <ProductSpotlight products={products} isLoading={productsLoading} />
 
       {/* Main Content */}
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 lg:py-12">
         <div className="grid lg:grid-cols-[280px_1fr] gap-10">
           {/* Desktop Sidebar - Hidden on Mobile */}
           <aside className="hidden lg:block">
@@ -230,9 +229,9 @@ const ShopView = () => {
             </div>
           </aside>
 
-          <div className="flex flex-col gap-8 min-w-0">
+          <div className="flex flex-col gap-8 min-w-0 mt-5">
           {/* Horizontal Filter Bar - Sticky */}
-          <div className="sticky top-20 sm:top-24 z-30 px-1 sm:px-0">
+          <div className="sticky top-16 sm:top-24 z-30 px-1 sm:px-0">
             <div className="flex flex-col gap-4 sm:gap-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-3 sm:p-5 rounded shadow shadow-black/20">
               <div className="flex flex-col md:flex-row items-center gap-3 sm:gap-4">
                 <div className="flex-1 w-full">
@@ -245,7 +244,7 @@ const ShopView = () => {
                 <div className="flex items-center gap-2 w-full md:w-auto">
                   <button
                     onClick={() => setShowMobileFilters(true)}
-                    className="flex-1 flex items-center justify-center gap-2 cursor-pointer px-3 py-2 sm:px-4 sm:py-2 dark:bg-white/5 bg-slate-100 hover:bg-emerald-500/10 border border-slate-200 dark:border-white/10 rounded font-bold dark:text-slate-200 text-slate-800 transition hover:border-emerald-500/50 group text-xs sm:text-base h-[42px] sm:h-auto"
+                    className="flex-1 flex items-center justify-center gap-2 cursor-pointer px-3 py-2 sm:px-4 sm:py-2 dark:bg-white/5 bg-slate-100 hover:bg-emerald-500/10 border border-slate-200 dark:border-white/10 rounded font-bold dark:text-slate-200 text-slate-800 transition hover:border-emerald-500/50 group text-xs sm:text-base h-9 sm:h-auto"
                   >
                     <SlidersHorizontal
                       size={16}
@@ -262,7 +261,7 @@ const ShopView = () => {
                     <select
                       value={activeCategory}
                       onChange={(e) => handleCategoryChange(e.target.value)}
-                      className="w-full text-xs sm:text-sm font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded h-[42px] pl-10 pr-10 appearance-none text-slate-800 dark:text-white cursor-pointer focus:ring-2 focus:ring-emerald-500/50 transition-all shadow-sm"
+                      className="w-full text-xs sm:text-sm font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded h-9 px-10 appearance-none text-slate-800 dark:text-white cursor-pointer focus:ring-2 focus:ring-emerald-500/50 transition-all shadow-sm"
                     >
                       {categoriesWithCount.map((cat) => (
                         <option key={cat.id} value={cat.id}>

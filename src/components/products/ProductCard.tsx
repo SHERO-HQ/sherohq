@@ -79,7 +79,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
     );
   };
 
-  const shareLink = getAbsoluteUrl(`/shop/${product.slug || product.sku || product.id}`);
+  const shareLink = getAbsoluteUrl(
+    `/shop/${product.slug || product.sku || product.id}`,
+  );
   const whatsappMessage = encodeURIComponent(
     `Hello Shero, I'm interested in the ${product.name} (${formatCurrency(product.price)}). Here is the link:\n${shareLink}\n\nCould you please provide more details or assist me with the purchase? Thank you!`,
   );
@@ -220,7 +222,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
                 size={14}
                 className="group-hover/cart:scale-110 transition-transform"
               />
-              <span className="text-[10px] font-black uppercase tracking-wider hidden min-[400px]:inline">
+              <span className="text-[10px] font-black uppercase tracking-wider hidden min-100:inline">
                 Add
               </span>
             </button>

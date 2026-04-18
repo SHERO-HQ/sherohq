@@ -111,7 +111,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
   const currentProduct = spotlightItems[safeCurrentIndex];
 
   return (
-    <section className="relative w-full h-full lg:min-h-[calc(90vh-5rem)] overflow-hidden group/spotlight flex items-start lg:items-center pt-16 lg:pt-20">
+    <section className="relative w-full h-full lg:min-h-[calc(90vh-5rem)] overflow-hidden group/spotlight flex items-start lg:items-center pt-5 lg:pt-0">
       {/* Background kinetic pattern */}
       <div className="absolute inset-0 pattern-dots opacity-80 pointer-events-none" />
       <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-white dark:to-slate-950 pointer-events-none" />
@@ -208,6 +208,51 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           </Link>
                         </div>
                       </div>
+
+                      {/* Carousel Controls - Below Price on Large Screens */}
+                      <div className="hidden lg:flex items-center gap-8 mt-8 pt-8 border-t border-slate-200 dark:border-slate-800">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            prevSlide();
+                            setIsAutoPlaying(false);
+                          }}
+                          className="p-2 rounded bg-slate-100 dark:bg-slate-900 hover:bg-emerald-500 hover:text-white text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 transition-all active:scale-90 pointer-events-auto group/nav"
+                        >
+                          <ChevronLeft className="size-6 group-hover/nav:-translate-x-0.5 transition-transform" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            nextSlide();
+                            setIsAutoPlaying(false);
+                          }}
+                          className="p-2 rounded bg-slate-100 dark:bg-slate-900 hover:bg-emerald-500 hover:text-white text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 transition-all active:scale-90 pointer-events-auto group/nav"
+                        >
+                          <ChevronRight className="size-6 group-hover/nav:translate-x-0.5 transition-transform" />
+                        </button>
+
+                        <div className="flex items-center gap-2 pointer-events-auto">
+                          {spotlightItems.map((_, i) => (
+                            <button
+                              key={i}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                setCurrentIndex(i);
+                                setIsAutoPlaying(false);
+                              }}
+                              className={`h-1.5 transition-all duration-500 rounded-full ${
+                                i === safeCurrentIndex
+                                  ? "w-8 bg-emerald-500"
+                                  : "w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      </div>
                     </motion.div>
                   </div>
 
@@ -223,8 +268,8 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                     />
                     <div className="absolute inset-0 group-hover/image:bg-transparent transition-colors duration-700" />
 
-                    {/* Carousel Navigation - Arrows (Only on Image for Desktop) */}
-                    <div className="absolute inset-0 z-30 pointer-events-none flex items-center justify-between px-4 sm:px-6">
+                    {/* Carousel Navigation - Arrows (Only on Mobile/Tablet) */}
+                    <div className="lg:hidden absolute inset-0 z-30 pointer-events-none flex items-center justify-between px-4 sm:px-6">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -232,7 +277,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           prevSlide();
                           setIsAutoPlaying(false);
                         }}
-                        className="p-2 rounded bg-black/40 hover:bg-emerald-500 text-white backdrop-blur-md border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
+                        className="p-2 rounded bg-black/10 hover:bg-emerald-500 text-white backdrop-blur-md border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
                       >
                         <ChevronLeft className="size-5 sm:size-6 lg:size-7 group-hover/nav:-translate-x-0.5 transition-transform" />
                       </button>
@@ -243,14 +288,14 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           nextSlide();
                           setIsAutoPlaying(false);
                         }}
-                        className="p-2 rounded bg-black/40 hover:bg-emerald-500 text-white backdrop-blur-md border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
+                        className="p-2 rounded bg-black/10 hover:bg-emerald-500 text-white backdrop-blur-md border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
                       >
                         <ChevronRight className="size-5 sm:size-6 lg:size-7 group-hover/nav:translate-x-0.5 transition-transform" />
                       </button>
                     </div>
 
-                    {/* Dots - Integrated in Image Bottom for Desktop */}
-                    <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 pointer-events-auto">
+                    {/* Dots - Integrated in Image Bottom (Mobile/Tablet Only) */}
+                    <div className="lg:hidden absolute bottom-3 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 pointer-events-auto">
                       {spotlightItems.map((_, i) => (
                         <button
                           key={i}
