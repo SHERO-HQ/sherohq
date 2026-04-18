@@ -33,6 +33,7 @@ import expensesRoutes from "./routes/expenses";
 import analyticsRoutes from "./routes/analytics";
 import newsletterRoutes from "./routes/newsletter";
 import { processDueScheduledCampaigns } from "./routes/newsletter";
+import searchRoutes from "./routes/search";
 
 // Load environment variables
 dotenv.config();
@@ -355,6 +356,7 @@ app.use("/api/stats", statRoutes);
 app.use("/api/expenses", expensesRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/newsletter", newsletterRoutes);
+app.use("/api/admin/search", searchRoutes);
 
 // Root route - information about the API
 app.get("/", (req: Request, res: Response) => {

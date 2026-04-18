@@ -94,6 +94,7 @@ export {
   type CustomerDetailsResponse,
   type AIAnalyticsSummary,
   type AIAnalyticsTotals,
+  type GlobalSearchResult,
   adminLogin,
   adminChangePassword,
   adminLogout,
@@ -121,6 +122,7 @@ export {
   adminResetUserPassword,
   adminToggleUserActive,
   fetchAIAnalyticsSummary,
+  globalAdminSearch,
 } from "./admin";
 
 // Support tickets, consultations, inquiries

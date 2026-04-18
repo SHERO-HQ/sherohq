@@ -131,6 +131,13 @@ export interface AIAnalyticsSummary {
   totals: AIAnalyticsTotals;
 }
 
+export interface GlobalSearchResult {
+  products: any[];
+  orders: any[];
+  users: any[];
+  inquiries: any[];
+}
+
 // ---------------------------------------------------------------------------
 // Admin Auth
 // ---------------------------------------------------------------------------
@@ -474,4 +481,13 @@ export async function fetchAIAnalyticsSummary(): Promise<{
 }> {
   const response = await authFetch(`${API_BASE}/analytics/summary`);
   return handleResponse(response);
+}
+
+export async function globalAdminSearch(
+  query: string,
+): Promise<GlobalSearchResult> {
+  const response = await authFetch(
+    `${API_BASE}/admin/search?q=${encodeURIComponent(query)}`,
+  );
+  return handleResponse<GlobalSearchResult>(response);
 }

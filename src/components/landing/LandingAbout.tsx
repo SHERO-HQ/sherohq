@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   Code2,
   Cpu,
+  Globe,
   Globe2,
   Info,
 } from "lucide-react";

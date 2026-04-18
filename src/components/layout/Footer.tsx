@@ -10,6 +10,11 @@ import {
   Wallet,
   Banknote,
   Send,
+  MapPin,
+  Clock,
+  Briefcase,
+  Layers,
+  Share2,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -19,6 +24,7 @@ import {
   TwitterXIcon,
 } from "@/assets/icons/icons";
 import { COMPANY_EMAILS } from "@/constants/emails";
+import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { getAbsoluteUrl } from "@/utils/subdomain";
 import { subscribeToNewsletter } from "@/services/api";
 
@@ -92,11 +98,11 @@ const Footer = () => {
       <div className="absolute -bottom-1/2 left-1/2 -translate-x-1/2 w-200 h-125 bg-brand-secondary-500/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 lg:mb-32 mb-4">
-          {/* LEFT: Branding & Contact */}
-          <div className="lg:col-span-5 space-y-6">
+        <div className="grid lg:grid-cols-12 lg:grid-flow-row-dense gap-12 lg:gap-20 lg:mb-32 mb-4">
+          {/* Item 1: Branding (Desktop Top-Left, Mobile First) */}
+          <div className="lg:col-span-5 order-1 space-y-4">
             <div>
-              <NavLink href={getAbsoluteUrl("/")} className="inline-block mb-3">
+              <NavLink href={getAbsoluteUrl("/")} className="inline-block mb-6">
                 <img
                   src="/assets/logo/shero-light.svg"
                   alt="Shero Logo"
@@ -111,136 +117,19 @@ const Footer = () => {
                 />
               </NavLink>
               <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed max-w-md transition-colors duration-300">
-                Engineering the future of technology with focus on clarity,
-                performance, and scalability with long term value to Redefine
+                Engineering the future of technology with focus on clarity, 
+                performance, and scalability with long term value to Redefine 
                 what is Possible.
               </p>
             </div>
-
-            {/* Contact Card */}
-            <div className="rounded border border-slate-200/80 dark:border-slate-700/70 overflow-hidden  transition duration-300">
-              <div className="grid grid-cols-[auto_1fr_auto] items-center h-10 px-4 border-b border-slate-200/80 dark:border-slate-800/80 bg-linear-to-b from-slate-100/95 to-slate-200/80 dark:from-slate-900/95 dark:to-slate-950/95">
-                <div className="flex items-center gap-2" aria-hidden="true">
-                  <span className="h-3 w-3 rounded-full bg-[#ff5f57] ring-1 ring-black/15 dark:ring-black/40" />
-                  <span className="h-3 w-3 rounded-full bg-[#febc2e] ring-1 ring-black/15 dark:ring-black/40" />
-                  <span className="h-3 w-3 rounded-full bg-[#28c840] ring-1 ring-black/15 dark:ring-black/40" />
-                </div>
-
-                <div
-                  className="justify-self-end flex items-center gap-1.5"
-                  aria-hidden="true"
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-slate-400/80 dark:bg-slate-500/80" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-slate-400/60 dark:bg-slate-500/60" />
-                  <span className="h-1.5 w-1.5 rounded-full bg-slate-400/40 dark:bg-slate-500/40" />
-                </div>
-              </div>
-
-              <div className="bg-background/95 p-4 space-y-6 transition-colors duration-300">
-                <div>
-                  <h4 className="text-slate-900 dark:text-white font-semibold mb-4 flex items-center gap-2 transition-colors duration-300">
-                    Contact Details
-                    <span className="flex h-2 w-2 rounded-full bg-brand-secondary-500 animate-pulse" />
-                  </h4>
-
-                  <div className="space-y-4">
-                    <a
-                      href={`mailto:${COMPANY_EMAILS.INFO}`}
-                      className="flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors group"
-                    >
-                      <div className="p-2 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 group-hover:border-brand-secondary-500/50 transition-colors">
-                        <Mail className="w-4 h-4" />
-                      </div>
-                      <span className="text-sm font-medium">
-                        {COMPANY_EMAILS.INFO}
-                      </span>
-                    </a>
-
-                    <a
-                      href="tel:+233548711582"
-                      className="flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors group"
-                    >
-                      <div className="p-2 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 group-hover:border-brand-secondary-500/50 transition-colors">
-                        <Phone className="w-4 h-4" />
-                      </div>
-                      <span className="text-sm font-medium">
-                        +233 (54) 871-1582
-                      </span>
-                    </a>
-                  </div>
-                </div>
-
-                <div className="rounded border border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 p-4 space-y-3">
-                  <div>
-                    <h5 className="text-sm font-semibold text-slate-900 dark:text-white">
-                      Stay Updated
-                    </h5>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                      Get the latest deals, product drops, and tech news.
-                    </p>
-                  </div>
-
-                  <form onSubmit={handleNewsletterSubmit} className="space-y-2">
-                    <div className="relative">
-                      <input
-                        type="email"
-                        required
-                        value={newsletterEmail}
-                        onChange={(e) => {
-                          setNewsletterEmail(e.target.value);
-                          if (newsletterStatus !== "idle") {
-                            setNewsletterStatus("idle");
-                          }
-                        }}
-                        autoComplete="email"
-                        placeholder="Enter your email"
-                        className="w-full pr-24 sm:pr-28 pl-3 py-2.5 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-brand-secondary-500/50 outline-none transition"
-                      />
-                      <button
-                        type="submit"
-                        disabled={newsletterStatus === "submitting"}
-                        className="absolute right-1 top-1/2 -translate-y-1/2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 disabled:hover:bg-brand-secondary-600 text-white text-xs font-semibold rounded transition-colors"
-                      >
-                        <Send className="w-3 h-3" />
-                        {newsletterStatus === "submitting"
-                          ? "Sending..."
-                          : "Subscribe"}
-                      </button>
-                    </div>
-                  </form>
-
-                  {newsletterStatus === "success" && (
-                    <p className="text-xs text-brand-secondary-600 dark:text-brand-secondary-400">
-                      You are subscribed. Check your inbox for confirmation.
-                    </p>
-                  )}
-                  {newsletterStatus === "error" && (
-                    <p className="text-xs text-red-600 dark:text-red-400">
-                      Subscription failed. Please try again in a moment.
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* System Status */}
-            {/* <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-brand-secondary-100 dark:bg-brand-secondary-950/30 border border-brand-secondary-500/20 transition-colors duration-300">
- <span className="relative flex h-2.5 w-2.5">
- <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-secondary-400 opacity-75"></span>
- <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-secondary-500"></span>
- </span>
- <span className="text-brand-secondary-600 dark:text-brand-secondary-400 text-xs font-mono font-semibold tracking-wider uppercase transition-colors duration-300">
- All Systems Operational
- </span>
- </div> */}
           </div>
 
-          {/* RIGHT: Navigation & Social */}
-          <div className="lg:col-span-7 flex flex-col justify-between">
+          {/* Item 2: Navigation & Social (Desktop Top-Right, Mobile Middle) */}
+          <div className="lg:col-span-7 lg:row-span-2 order-2 flex flex-col justify-between">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
               {/* Company Link Column */}
               <div>
-                <h3 className="text-foreground font-bold text-lg mb-6 flex items-center gap-2">
+                <h3 className="text-foreground font-bold text-lg mb-4 flex items-center gap-2">
                   Company <Separator className="w-8 bg-border" />
                 </h3>
                 <ul className="space-y-4">
@@ -262,7 +151,7 @@ const Footer = () => {
 
               {/* Resources Link Column */}
               <div>
-                <h3 className="text-foreground font-bold text-lg mb-6 flex items-center gap-2">
+                <h3 className="text-foreground font-bold text-lg mb-4 flex items-center gap-2">
                   Resources <Separator className="w-8 bg-border" />
                 </h3>
                 <ul className="space-y-4">
@@ -282,7 +171,7 @@ const Footer = () => {
 
               {/* Socials Column */}
               <div>
-                <h3 className="text-foreground font-bold text-lg mb-6 flex items-center gap-2">
+                <h3 className="text-foreground font-bold text-lg mb-4 flex items-center gap-2">
                   Connect <Separator className="w-12 bg-brand-secondary-500/50" />
                 </h3>
                 <div className="flex flex-col gap-4">
@@ -294,7 +183,7 @@ const Footer = () => {
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white group transition-colors duration-300"
                     >
-                      <div className="w-10 h-10 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center group-hover:border-brand-secondary-500/50 group-hover:bg-brand-secondary-500/10 transition duration-300">
+                      <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center group-hover:border-brand-secondary-500/50 group-hover:bg-brand-secondary-500/10 transition duration-300">
                         <social.icon className="w-5 h-5 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors" />
                       </div>
                       <span className="text-sm font-medium">{social.name}</span>
@@ -305,6 +194,90 @@ const Footer = () => {
             </div>
 
             <Separator className="hidden lg:block w-full bg-linear-to-r from-transparent via-border to-transparent mt-12" />
+          </div>
+
+          {/* Item 3: Contact Card (Desktop Bottom-Left, Mobile Third) */}
+          <div className="lg:col-span-5 order-3 space-y-36">
+            <div className="rounded overflow-hidden mb-4">
+              <div className="p-6 space-y-8">
+                {/* Contact Details Section */}
+                <div>
+                  <h4 className="text-foreground font-bold mb-6 flex items-center gap-2">
+                    Contact Details <Separator className="w-10 bg-brand-secondary-500/50" />
+                  </h4>
+
+                  <div className="space-y-4">
+                    <a
+                      href={`mailto:${COMPANY_EMAILS.INFO}`}
+                      className="flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-emerald-600 transition-colors group"
+                    >
+                      <div className="p-1 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 group-hover:border-emerald-500/50 transition-colors">
+                        <Mail className="w-4 h-4" />
+                      </div>
+                      <span className="text-sm font-medium">{COMPANY_EMAILS.INFO}</span>
+                    </a>
+
+                    <a
+                      href={`tel:${COMPANY_CONTACTS.WHATSAPP}`}
+                      className="flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-emerald-600 transition-colors group"
+                    >
+                      <div className="p-1 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 group-hover:border-emerald-500/50 transition-colors">
+                        <Phone className="w-4 h-4" />
+                      </div>
+                      <span className="text-sm font-medium">{COMPANY_CONTACTS.PHONE_DISPLAY}</span>
+                    </a>
+
+                    <div className="flex items-center gap-3 text-slate-600 dark:text-slate-400 group">
+                      <div className="p-1 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 group-hover:border-brand-secondary-500/50 transition-colors">
+                        <MapPin className="w-4 h-4" />
+                      </div>
+                      <span className="text-sm font-medium">{COMPANY_CONTACTS.HQ_LOCATION}</span>
+                    </div>
+
+                    <div className="flex items-center gap-3 text-slate-600 dark:text-slate-400 group">
+                      <div className="p-1 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 group-hover:border-brand-secondary-500/50 transition-colors">
+                        <Clock className="w-4 h-4" />
+                      </div>
+                      <span className="text-sm font-medium">{COMPANY_CONTACTS.WORKING_HOURS}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Newsletter Section (Nested back inside the card) */}
+                <div className="pt-6 border-t border-slate-200/60 dark:border-slate-800/60">
+                  <div className="mb-4">
+                    <h4 className="text-sm font-bold text-slate-900 dark:text-white">Stay Updated</h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Get the latest deals, product drops, and tech news.</p>
+                  </div>
+                  <form onSubmit={handleNewsletterSubmit} className="relative">
+                    <input
+                      type="email"
+                      required
+                      value={newsletterEmail}
+                      onChange={(e) => {
+                        setNewsletterEmail(e.target.value);
+                        if (newsletterStatus !== "idle") setNewsletterStatus("idle");
+                      }}
+                      placeholder="Enter your email"
+                      className="w-full pr-32 pl-4 py-3 text-sm bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded outline-none focus:ring-2 focus:ring-emerald-500/20 transition-all"
+                    />
+                    <button
+                      type="submit"
+                      disabled={newsletterStatus === "submitting"}
+                      className="absolute right-1.5 top-1.5 bottom-1.5 inline-flex items-center gap-2 px-4 bg-emerald-600/90 hover:bg-emerald-600 text-white text-xs font-bold rounded transition-colors"
+                    >
+                      <Send className="w-3 h-3" />
+                      {newsletterStatus === "submitting" ? "..." : "Subscribe"}
+                    </button>
+                  </form>
+                  {newsletterStatus === "success" && (
+                    <p className="text-[10px] text-emerald-600 dark:text-emerald-400 mt-2 font-bold flex items-center gap-1">
+                      <BadgeCheck className="w-3 h-3" /> Successfully subscribed!
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

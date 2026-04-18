@@ -91,8 +91,8 @@ const AdminLayout = memo(({ children }: Readonly<AdminLayoutProps>) => {
      <p suppressHydrationWarning>
       {" "}
       &copy; {new Date().getFullYear()}{" "}
-      <span className="text-primary font-bold uppercase font-logo">
-       SHERO Technologies
+      <span className="text-brand-primary-400 font-bold uppercase font-logo">
+       SHERO <span className="text-brand-secondary-500">Technologies</span>
       </span>{" "}
       Admin Panel. Built with precision.
      </p>
