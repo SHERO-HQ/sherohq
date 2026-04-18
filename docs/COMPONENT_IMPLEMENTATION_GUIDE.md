@@ -20,6 +20,7 @@ This guide provides practical code examples for implementing components followin
 ### Button Component
 
 #### Primary CTA Button
+
 ```jsx
 // components/ui/Button.tsx
 import { ReactNode } from "react";
@@ -90,6 +91,7 @@ export function Button({
 ```
 
 #### Usage
+
 ```jsx
 import { Button } from "@/components/ui/Button";
 
@@ -153,6 +155,7 @@ Card.Footer = function CardFooter({ children, className = "" }: { children: Reac
 ```
 
 #### Usage
+
 ```jsx
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -164,8 +167,14 @@ export function ProductCard({ product }) {
         <h3 className="text-lg font-bold text-foreground">{product.name}</h3>
       </Card.Header>
       <Card.Body>
-        <img src={product.image} alt={product.name} className="w-full rounded mb-4" />
-        <p className="text-sm text-muted-foreground mb-3">{product.description}</p>
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-full rounded mb-4"
+        />
+        <p className="text-sm text-muted-foreground mb-3">
+          {product.description}
+        </p>
         <p className="text-2xl font-black text-emerald-500">{product.price}</p>
       </Card.Body>
       <Card.Footer>
@@ -207,14 +216,14 @@ export function FormField({
         {label}
         {props.required && <span className="text-red-500 ml-1">*</span>}
       </label>
-      
+
       <div className="relative">
         {icon && (
           <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
             {icon}
           </div>
         )}
-        
+
         <input
           type={type}
           {...props}
@@ -240,6 +249,7 @@ export function FormField({
 ```
 
 #### Usage
+
 ```jsx
 import { FormField } from "@/components/ui/FormField";
 import { Mail, Phone } from "lucide-react";
@@ -314,6 +324,7 @@ export function Badge({ children, variant = "default", className = "" }: BadgePr
 ```
 
 #### Usage
+
 ```jsx
 import { Badge } from "@/components/ui/Badge";
 
@@ -416,6 +427,7 @@ export function Modal({
 ```
 
 #### Usage
+
 ```jsx
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
@@ -510,6 +522,7 @@ export function AnimatedContent({
 ```
 
 #### Usage
+
 ```jsx
 import { AnimatedContent } from "@/components/common/AnimatedContent";
 
@@ -596,6 +609,7 @@ export function Select({
 ```
 
 #### Usage
+
 ```jsx
 import { Select } from "@/components/ui/Select";
 
@@ -739,4 +753,3 @@ import { cn } from "@/lib/utils";
 ---
 
 **Version**: 1.0 | **Updated**: April 18, 2026
-
