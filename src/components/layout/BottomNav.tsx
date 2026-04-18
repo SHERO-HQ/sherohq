@@ -1,6 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Home, ShoppingBag, ShoppingCart, Heart, Share2, X } from "lucide-react";
+import {
+  Home,
+  ShoppingBag,
+  ShoppingCart,
+  Heart,
+  Share2,
+  X,
+} from "lucide-react";
 import NavLink from "@/components/common/NavLink";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/hooks/useWishlist";
@@ -21,7 +28,8 @@ const BottomNav = () => {
 
     return (
       isIPhoneOrIPad ||
-      (platform === "MacIntel" && (globalThis.navigator?.maxTouchPoints ?? 0) > 1) ||
+      (platform === "MacIntel" &&
+        (globalThis.navigator?.maxTouchPoints ?? 0) > 1) ||
       isIPadOSDesktopMode
     );
   });

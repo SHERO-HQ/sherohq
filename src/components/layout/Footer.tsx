@@ -180,10 +180,7 @@ const Footer = () => {
                     </p>
                   </div>
 
-                  <form
-                    onSubmit={handleNewsletterSubmit}
-                    className="space-y-2"
-                  >
+                  <form onSubmit={handleNewsletterSubmit} className="space-y-2">
                     <div className="relative">
                       <input
                         type="email"
