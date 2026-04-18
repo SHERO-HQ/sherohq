@@ -42,6 +42,7 @@ import { Button } from "@/components/ui/button";
 import OrderSummary from "./OrderSummary";
 import PaymentFailureSupport from "./PaymentFailureSupport";
 import AppImage from "@/components/common/AppImage";
+import { toReadableOrderId } from "@/utils/orderId";
 
 const CheckoutFlow = () => {
   const router = useRouter();
@@ -191,7 +192,7 @@ const CheckoutFlow = () => {
       const paymentResponse = await initializePayment(
         orderId,
         total,
-        `Order #${orderId}`,
+        `Order ${toReadableOrderId(orderId)}`,
         method === "paystack" ? "paystack" : "hubtel",
       );
 

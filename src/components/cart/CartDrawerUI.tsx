@@ -128,7 +128,7 @@ const CartDrawer = () => {
                             {item.name}
                           </h4>
                           <span className="text-sm text-slate-500 dark:text-slate-400">
-                            Price: GH₵{item.price.toFixed(2)}
+                            Price: S{item.price.toFixed(2)}
                           </span>
                         </div>
                         <div className="flex justify-between items-center">
@@ -137,7 +137,7 @@ const CartDrawer = () => {
                               Total(x{item.quantity}):
                             </p>
                             <span className="font-bold text-slate-900 dark:text-white shrink-0">
-                              GH₵{(item.price * item.quantity).toFixed(2)}
+                              S{(item.price * item.quantity).toFixed(2)}
                             </span>
                           </div>
                         </div>
@@ -183,7 +183,7 @@ const CartDrawer = () => {
                     Subtotal
                   </span>
                   <span className="text-slate-900 dark:text-white">
-                    GH₵{totalPrice.toFixed(2)}
+                    S{totalPrice.toFixed(2)}
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 dark:text-slate-400">

@@ -29,7 +29,13 @@ const Footer = () => {
   >("idle");
 
   const companyLinks = ["Shop", "Solutions", "About Us", "Contact Us"];
-  const resourceLinks = ["Consultation", "Partners", "Support", "FAQ"];
+  const resourceLinks = [
+    { label: "Consultation", href: "/consultation" },
+    { label: "Partners", href: "/partners" },
+    { label: "Support", href: "/support" },
+    { label: "FAQ", href: "/faq" },
+    { label: "Track Order", href: "/track" },
+  ];
 
   const socialLinks = [
     {
@@ -119,7 +125,7 @@ const Footer = () => {
                   <span className="h-3 w-3 rounded-full bg-[#febc2e] ring-1 ring-black/15 dark:ring-black/40" />
                   <span className="h-3 w-3 rounded-full bg-[#28c840] ring-1 ring-black/15 dark:ring-black/40" />
                 </div>
-               
+
                 <div
                   className="justify-self-end flex items-center gap-1.5"
                   aria-hidden="true"
@@ -262,15 +268,13 @@ const Footer = () => {
                 </h3>
                 <ul className="space-y-4">
                   {resourceLinks.map((link) => (
-                    <li key={link}>
+                    <li key={link.label}>
                       <NavLink
-                        href={getAbsoluteUrl(
-                          `/${link.toLowerCase().replace(" ", "-")}`,
-                        )}
+                        href={getAbsoluteUrl(link.href)}
                         className="group flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors text-sm"
                       >
                         <ArrowRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition" />
-                        {link}
+                        {link.label}
                       </NavLink>
                     </li>
                   ))}

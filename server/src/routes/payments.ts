@@ -17,6 +17,14 @@ const router = Router();
 const hashOrderAccessToken = (token: string): string =>
   createHash("sha256").update(token).digest("hex");
 
+const toReadableOrderId = (orderId: string): string => {
+  const compact = String(orderId ?? "")
+    .replace(/-/g, "")
+    .trim();
+  if (!compact) return "ORD-UNKNOWN";
+  return `ORD-${compact.slice(0, 8).toUpperCase()}`;
+};
+
 const readOrderAccessToken = (req: Request): string | null => {
   const tokenHeader = req.headers["x-order-access-token"];
   if (typeof tokenHeader !== "string") return null;
@@ -126,7 +134,7 @@ router.post(
 
       const checkoutUrl = await paymentService.initiatePayment({
         totalAmount,
-        description: description || `Order #${orderId}`,
+        description: description || `Order ${toReadableOrderId(orderId)}`,
         callbackUrl,
         returnUrl,
         cancellationUrl,
@@ -175,7 +183,9 @@ router.post(
         return res.sendStatus(400);
       }
 
-      console.log(`💰 Webhook [${provider}]: Order ${orderId}, Status: ${status}`);
+      console.log(
+        `💰 Webhook [${provider}]: Order ${orderId}, Status: ${status}`,
+      );
 
       if (status !== "Success") {
         console.warn(`🔴 Payment failed for order ${orderId} via ${provider}`);
@@ -185,7 +195,7 @@ router.post(
       // 2. Fetch Order and Verify Amount
       const orderRes = await db.query(
         'SELECT total, status, items, "shippingInfo", "paymentMethod" FROM orders WHERE id = $1 FOR UPDATE',
-        [orderId]
+        [orderId],
       );
 
       if (orderRes.rowCount === 0) {
@@ -197,7 +207,9 @@ router.post(
 
       // Idempotency check: Ignore if already processed
       if (order.status !== "pending") {
-        console.log(`ℹ️ Webhook: Order ${orderId} already in ${order.status} status. Skipping.`);
+        console.log(
+          `ℹ️ Webhook: Order ${orderId} already in ${order.status} status. Skipping.`,
+        );
         return res.sendStatus(200);
       }
 
@@ -206,7 +218,9 @@ router.post(
 
       // Amount verification (allow for tiny floating point differences if any, but should be exact decimals)
       if (Math.abs(receivedAmount - expectedAmount) > 0.01) {
-        console.error(`🚨 FRAUD ALERT: Amount mismatch for order ${orderId}. Expected ${expectedAmount}, Received ${receivedAmount}`);
+        console.error(
+          `🚨 FRAUD ALERT: Amount mismatch for order ${orderId}. Expected ${expectedAmount}, Received ${receivedAmount}`,
+        );
         return res.status(400).json({ error: "Amount mismatch detected" });
       }
 
@@ -214,35 +228,47 @@ router.post(
       client = await db.getClient();
       await client.query("BEGIN");
 
-      await client.query("UPDATE orders SET status = $1 WHERE id = $2", ["processing", orderId]);
+      await client.query("UPDATE orders SET status = $1 WHERE id = $2", [
+        "processing",
+        orderId,
+      ]);
 
       const transactionId = paymentService.getTransactionId(provider, data);
-      
+
       // Log success activity
       await client.query(
         `INSERT INTO activity_logs (id, "adminId", action, status, details, "createdAt")
          VALUES ($1, $2, $3, $4, $5, NOW())`,
-        [uuidv4(), null, "order_payment", "success", `Payment received via ${provider}. Transaction: ${transactionId}`]
+        [
+          uuidv4(),
+          null,
+          "order_payment",
+          "success",
+          `Payment received via ${provider}. Transaction: ${transactionId}`,
+        ],
       );
 
       await client.query("COMMIT");
       console.log(`✅ Order ${orderId} marked as PAID and verified`);
 
       // 4. Trigger Notifications (Non-blocking)
-      const items = typeof order.items === "string" ? JSON.parse(order.items) : order.items;
-      const shippingInfo = typeof order.shippingInfo === "string" ? JSON.parse(order.shippingInfo) : order.shippingInfo;
+      const items =
+        typeof order.items === "string" ? JSON.parse(order.items) : order.items;
+      const shippingInfo =
+        typeof order.shippingInfo === "string"
+          ? JSON.parse(order.shippingInfo)
+          : order.shippingInfo;
 
-      const { notificationService } = await import("../services/NotificationService");
-      notificationService.sendPaymentReceipt(
-        orderId,
-        shippingInfo,
-        items,
-        expectedAmount,
-        {
+      const { notificationService } =
+        await import("../services/NotificationService");
+      notificationService
+        .sendPaymentReceipt(orderId, shippingInfo, items, expectedAmount, {
           method: order.paymentMethod || provider,
-          transactionId
-        }
-      ).catch(err => console.error("Receipt notification trigger failed:", err));
+          transactionId,
+        })
+        .catch((err) =>
+          console.error("Receipt notification trigger failed:", err),
+        );
 
       res.sendStatus(200);
     } catch (error) {
@@ -252,7 +278,7 @@ router.post(
     } finally {
       if (client) client.release();
     }
-  }
+  },
 );
 
 export default router;

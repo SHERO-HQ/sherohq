@@ -4,10 +4,7 @@ import db from "../db/database";
 import { adminAuth, AdminRequest, requireRole } from "../middleware/adminAuth";
 import { logActivity } from "./activity";
 import { validateBody, validateQuery } from "../middleware/validate";
-import {
-  CreateProductSchema,
-  ProductQuerySchema,
-} from "../schemas";
+import { CreateProductSchema, ProductQuerySchema } from "../schemas";
 import { generateSku } from "../utils/sku";
 import { generateUniqueSlug } from "../utils/slug";
 
@@ -88,59 +85,66 @@ function parseProduct(row: ProductRow) {
 }
 
 // GET /api/products - List all products
-router.get("/", validateQuery(ProductQuerySchema), async (req: Request, res: Response) => {
-  try {
-    const { category, search, limit = 50, offset = 0 } = req.query;
+router.get(
+  "/",
+  validateQuery(ProductQuerySchema),
+  async (req: Request, res: Response) => {
+    try {
+      const { category, search, limit = 50, offset = 0 } = req.query;
 
-    const safeLimit = Number(limit);
-    const safeOffset = Number(offset);
+      const safeLimit = Number(limit);
+      const safeOffset = Number(offset);
 
-    let queryText = `
+      let queryText = `
       SELECT
         p.*,
         COALESCE(c_by_id.name, c_by_name.name) as category_name,
         COALESCE(c_by_id.id, c_by_name.id) as resolved_category_id
       FROM products p
-      LEFT JOIN categories c_by_id ON p.category = c_by_id.id
+      LEFT JOIN categories c_by_id ON p.category = c_by_id.id::text
       LEFT JOIN categories c_by_name ON p.category = c_by_name.name
     `;
-    const params: (string | number)[] = [];
-    const conditions: string[] = [];
-    let paramIndex = 1;
+      const params: (string | number)[] = [];
+      const conditions: string[] = [];
+      let paramIndex = 1;
 
-    if (category && category !== "all") {
-      // Robust filter: match by ID or Name
-      conditions.push(
-        `(p.category = $${paramIndex} OR c_by_id.id = $${paramIndex} OR c_by_name.name = $${paramIndex})`,
+      if (category && category !== "all") {
+        // Robust filter: match by ID or Name
+        conditions.push(
+          `(p.category = $${paramIndex} OR c_by_id.id::text = $${paramIndex} OR c_by_name.name = $${paramIndex})`,
+        );
+        params.push(category as string);
+        paramIndex++;
+      }
+
+      if (search) {
+        conditions.push(
+          `(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR c_by_id.name ILIKE $${paramIndex} OR c_by_name.name ILIKE $${paramIndex})`,
+        );
+        params.push(`%${search as string}%`);
+        paramIndex++;
+      }
+
+      if (conditions.length > 0) {
+        queryText += " WHERE " + conditions.join(" AND ");
+      }
+
+      queryText += ` ORDER BY p."createdAt" DESC LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
+      params.push(safeLimit, safeOffset);
+
+      const result = await db.query(queryText, params);
+      const products = result.rows as ProductRow[];
+      res.set(
+        "Cache-Control",
+        "public, max-age=60, stale-while-revalidate=300",
       );
-      params.push(category as string);
-      paramIndex++;
+      res.json(products.map(parseProduct));
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      res.status(500).json({ error: "Failed to fetch products" });
     }
-
-    if (search) {
-      conditions.push(
-        `(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR c_by_id.name ILIKE $${paramIndex} OR c_by_name.name ILIKE $${paramIndex})`,
-      );
-      params.push(`%${search as string}%`);
-      paramIndex++;
-    }
-
-    if (conditions.length > 0) {
-      queryText += " WHERE " + conditions.join(" AND ");
-    }
-
-    queryText += ` ORDER BY p."createdAt" DESC LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
-    params.push(safeLimit, safeOffset);
-
-    const result = await db.query(queryText, params);
-    const products = result.rows as ProductRow[];
-    res.set("Cache-Control", "public, max-age=60, stale-while-revalidate=300");
-    res.json(products.map(parseProduct));
-  } catch (error) {
-    console.error("Error fetching products:", error);
-    res.status(500).json({ error: "Failed to fetch products" });
-  }
-});
+  },
+);
 
 // GET /api/products/:id - Get single product
 router.get("/:id", async (req: Request, res: Response) => {
@@ -153,7 +157,7 @@ router.get("/:id", async (req: Request, res: Response) => {
         COALESCE(c_by_id.name, c_by_name.name) as category_name,
         COALESCE(c_by_id.id, c_by_name.id) as resolved_category_id
       FROM products p
-      LEFT JOIN categories c_by_id ON p.category = c_by_id.id
+      LEFT JOIN categories c_by_id ON p.category = c_by_id.id::text
       LEFT JOIN categories c_by_name ON p.category = c_by_name.name
       WHERE p.id::text = $1 OR p.sku = $1 OR p.slug = $1
     `;
@@ -308,125 +312,126 @@ router.post(
   validateBody(CreateProductSchema),
   async (req: AdminRequest, res: Response) => {
     try {
-    const {
-      name,
-      sku,
-      category,
-      price,
-      originalPrice,
-      image,
-      images,
-      rating = 0,
-      reviews = 0,
-      badge,
-      inStock = true,
-      description,
-      features,
-      specifications,
-      condition,
-      slug,
-      isSpotlight = false,
-      isFeatured = false,
-      quantity, // Alias support for create
-    } = req.body;
+      const {
+        name,
+        sku,
+        category,
+        price,
+        originalPrice,
+        image,
+        images,
+        rating = 0,
+        reviews = 0,
+        badge,
+        inStock = true,
+        description,
+        features,
+        specifications,
+        condition,
+        slug,
+        isSpotlight = false,
+        isFeatured = false,
+        quantity, // Alias support for create
+      } = req.body;
 
-    if (!name || !category || !price) {
-      return res
-        .status(400)
-        .json({ error: "Name, category, and price are required" });
-    }
+      if (!name || !category || !price) {
+        return res
+          .status(400)
+          .json({ error: "Name, category, and price are required" });
+      }
 
-    const productId = uuidv4();
+      const productId = uuidv4();
 
-    // Auto-generate SKU if not provided
-    const finalSku = generateSku(productId, sku);
+      // Auto-generate SKU if not provided
+      const finalSku = generateSku(productId, sku);
 
-    // Auto-generate Slug if not provided
-    const baseSlug = slug || name;
-    const finalSlug = await generateUniqueSlug(baseSlug);
+      // Auto-generate Slug if not provided
+      const baseSlug = slug || name;
+      const finalSlug = await generateUniqueSlug(baseSlug);
 
-    // Handle quantity alias if stockQuantity is not explicitly provided
-    const finalStockQuantity =
-      req.body.stockQuantity !== undefined
-        ? req.body.stockQuantity
-        : quantity !== undefined
-          ? quantity
-          : 0; // Default to 0 instead of 100 for better control
+      // Handle quantity alias if stockQuantity is not explicitly provided
+      const finalStockQuantity =
+        req.body.stockQuantity !== undefined
+          ? req.body.stockQuantity
+          : quantity !== undefined
+            ? quantity
+            : 0; // Default to 0 instead of 100 for better control
 
-    await db.query(
-      `
+      await db.query(
+        `
       INSERT INTO products (id, name, sku, category, price, "originalPrice", image, images, rating, reviews, badge, "inStock", "stockQuantity", description, features, specifications, condition, slug, "isSpotlight", "isFeatured")
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
     `,
-      [
-        productId,
-        name,
-        finalSku,
-        category,
-        price,
-        originalPrice || null,
-        image || null,
-        images ? JSON.stringify(images) : null,
-        rating,
-        reviews,
-        badge || null,
-        inStock,
-        finalStockQuantity,
-        description || null,
-        features ? JSON.stringify(features) : null,
-        specifications ? JSON.stringify(specifications) : null,
-        condition || "New",
-        finalSlug,
-        isSpotlight,
-        isFeatured,
-      ],
-    );
-
-    console.log(`📦 Product created: ${name} by ${req.admin?.username}`);
-    if (req.admin?.id) {
-      await logActivity(
-        req.admin.id,
-        "product_create",
-        "success",
-        `Created product: ${name} (SKU: ${finalSku})`,
+        [
+          productId,
+          name,
+          finalSku,
+          category,
+          price,
+          originalPrice || null,
+          image || null,
+          images ? JSON.stringify(images) : null,
+          rating,
+          reviews,
+          badge || null,
+          inStock,
+          finalStockQuantity,
+          description || null,
+          features ? JSON.stringify(features) : null,
+          specifications ? JSON.stringify(specifications) : null,
+          condition || "New",
+          finalSlug,
+          isSpotlight,
+          isFeatured,
+        ],
       );
-    }
 
-    const result = await db.query("SELECT * FROM products WHERE id = $1", [
-      productId,
-    ]);
-    const product = result.rows[0] as ProductRow;
-
-    res.status(201).json({
-      success: true,
-      product: parseProduct(product),
-    });
-  } catch (error: unknown) {
-    console.error("Error creating product:", error);
-
-    // Handle unique constraint violations (Postgres error 23505)
-    if (
-      error &&
-      typeof error === "object" &&
-      "code" in error &&
-      error.code === "23505"
-    ) {
-      const detail = String((error as { detail?: string }).detail || "");
-      if (detail.includes("sku")) {
-        return res
-          .status(400)
-          .json({ error: "A product with this SKU already exists." });
+      console.log(`📦 Product created: ${name} by ${req.admin?.username}`);
+      if (req.admin?.id) {
+        await logActivity(
+          req.admin.id,
+          "product_create",
+          "success",
+          `Created product: ${name} (SKU: ${finalSku})`,
+        );
       }
-      if (detail.includes("slug")) {
-        return res
-          .status(400)
-          .json({ error: "A product with this URL slug already exists." });
-      }
-    }
 
-    res.status(500).json({ error: "Failed to create product" });
-  }
-});
+      const result = await db.query("SELECT * FROM products WHERE id = $1", [
+        productId,
+      ]);
+      const product = result.rows[0] as ProductRow;
+
+      res.status(201).json({
+        success: true,
+        product: parseProduct(product),
+      });
+    } catch (error: unknown) {
+      console.error("Error creating product:", error);
+
+      // Handle unique constraint violations (Postgres error 23505)
+      if (
+        error &&
+        typeof error === "object" &&
+        "code" in error &&
+        error.code === "23505"
+      ) {
+        const detail = String((error as { detail?: string }).detail || "");
+        if (detail.includes("sku")) {
+          return res
+            .status(400)
+            .json({ error: "A product with this SKU already exists." });
+        }
+        if (detail.includes("slug")) {
+          return res
+            .status(400)
+            .json({ error: "A product with this URL slug already exists." });
+        }
+      }
+
+      res.status(500).json({ error: "Failed to create product" });
+    }
+  },
+);
 
 // Helper to format numeric fields for Postgres
 function formatNumericValue(_field: string, value: unknown): number | null {
@@ -506,118 +511,121 @@ router.put(
   adminAuth,
   requireRole("manager"),
   async (req: AdminRequest, res: Response) => {
-  try {
-    const identifier = String(req.params.id);
+    try {
+      const identifier = String(req.params.id);
 
-    // Resilient lookup: check ID, SKU, or Slug - Cast ID to text for safety
-    const lookupQuery =
-      "SELECT id FROM products WHERE id::text = $1 OR sku = $1 OR slug = $1";
+      // Resilient lookup: check ID, SKU, or Slug - Cast ID to text for safety
+      const lookupQuery =
+        "SELECT id FROM products WHERE id::text = $1 OR sku = $1 OR slug = $1";
 
-    const check = await db.query(lookupQuery, [identifier]);
-    if (check.rowCount === 0) {
-      return res.status(404).json({ error: "Product not found" });
-    }
+      const check = await db.query(lookupQuery, [identifier]);
+      if (check.rowCount === 0) {
+        return res.status(404).json({ error: "Product not found" });
+      }
 
-    const productId = check.rows[0].id;
+      const productId = check.rows[0].id;
 
-    // Handle slug uniqueness if name or slug is provided
-    if (req.body.name || req.body.slug) {
-      const baseSlug = req.body.slug || req.body.name;
-      req.body.slug = await generateUniqueSlug(baseSlug, productId);
-    }
+      // Handle slug uniqueness if name or slug is provided
+      if (req.body.name || req.body.slug) {
+        const baseSlug = req.body.slug || req.body.name;
+        req.body.slug = await generateUniqueSlug(baseSlug, productId);
+      }
 
-    const { updates, values, paramIndex } = processUpdateFields(req.body);
+      const { updates, values, paramIndex } = processUpdateFields(req.body);
 
-    if (updates.length === 0) {
-      return res.status(400).json({ error: "No fields to update" });
-    }
+      if (updates.length === 0) {
+        return res.status(400).json({ error: "No fields to update" });
+      }
 
-    values.push(productId);
-    const queryText = `UPDATE products SET ${updates.join(", ")} WHERE id = $${paramIndex}`;
-    console.log("🔍 Executing Update:", {
-      query: queryText,
-      paramCount: values.length,
-      values: values.map((v) =>
-        typeof v === "string" && v.length > 50 ? v.substring(0, 50) + "..." : v,
-      ),
-    });
+      values.push(productId);
+      const queryText = `UPDATE products SET ${updates.join(", ")} WHERE id = $${paramIndex}`;
+      console.log("🔍 Executing Update:", {
+        query: queryText,
+        paramCount: values.length,
+        values: values.map((v) =>
+          typeof v === "string" && v.length > 50
+            ? v.substring(0, 50) + "..."
+            : v,
+        ),
+      });
 
-    const updateResult = await db.query(queryText, values);
+      const updateResult = await db.query(queryText, values);
 
-    console.log(`📦 Product update result for ${productId}:`, {
-      rowCount: updateResult.rowCount,
-      updates: updates.length,
-    });
+      console.log(`📦 Product update result for ${productId}:`, {
+        rowCount: updateResult.rowCount,
+        updates: updates.length,
+      });
 
-    if (updateResult.rowCount === 0) {
-      console.warn(
-        `⚠️ No product found with ID ${productId} during update attempt.`,
+      if (updateResult.rowCount === 0) {
+        console.warn(
+          `⚠️ No product found with ID ${productId} during update attempt.`,
+        );
+        return res.status(404).json({ error: "Product not found" });
+      }
+
+      console.log(
+        `📦 Product updated successfully: ${productId} by ${req.admin?.username}`,
       );
-      return res.status(404).json({ error: "Product not found" });
-    }
+      if (req.admin?.id) {
+        await logActivity(
+          req.admin.id,
+          "product_update",
+          "info",
+          `Updated product: ${productId}`,
+        );
+      }
 
-    console.log(
-      `📦 Product updated successfully: ${productId} by ${req.admin?.username}`,
-    );
-    if (req.admin?.id) {
-      await logActivity(
-        req.admin.id,
-        "product_update",
-        "info",
-        `Updated product: ${productId}`,
-      );
-    }
-
-    const result = await db.query(
-      `
+      const result = await db.query(
+        `
       SELECT p.*, c.name as category_name
       FROM products p
       LEFT JOIN categories c ON p.category = c.id
       WHERE p.id = $1
     `,
-      [productId],
-    );
-    const product = result.rows[0] as ProductRow;
+        [productId],
+      );
+      const product = result.rows[0] as ProductRow;
 
-    res.json({
-      success: true,
-      product: parseProduct(product),
-    });
-  } catch (error: unknown) {
-    console.error("Error updating product:", error, {
-      productId: req.params.id,
-      body: req.body,
-    });
+      res.json({
+        success: true,
+        product: parseProduct(product),
+      });
+    } catch (error: unknown) {
+      console.error("Error updating product:", error, {
+        productId: req.params.id,
+        body: req.body,
+      });
 
-    // Handle unique constraint violations (Postgres error 23505)
-    if (
-      error &&
-      typeof error === "object" &&
-      "code" in error &&
-      error.code === "23505"
-    ) {
-      const detail = String((error as { detail?: string }).detail || "");
-      if (detail.includes("sku")) {
-        return res
-          .status(400)
-          .json({ error: "A product with this SKU already exists." });
+      // Handle unique constraint violations (Postgres error 23505)
+      if (
+        error &&
+        typeof error === "object" &&
+        "code" in error &&
+        error.code === "23505"
+      ) {
+        const detail = String((error as { detail?: string }).detail || "");
+        if (detail.includes("sku")) {
+          return res
+            .status(400)
+            .json({ error: "A product with this SKU already exists." });
+        }
+        if (detail.includes("slug")) {
+          return res
+            .status(400)
+            .json({ error: "A product with this URL slug already exists." });
+        }
       }
-      if (detail.includes("slug")) {
-        return res
-          .status(400)
-          .json({ error: "A product with this URL slug already exists." });
-      }
+
+      res.status(500).json({
+        error:
+          error instanceof Error
+            ? `Failed: ${error.message}`
+            : "Failed to update product",
+        details: error instanceof Error ? error.message : "Unknown error",
+      });
     }
-
-    res.status(500).json({
-      error:
-        error instanceof Error
-          ? `Failed: ${error.message}`
-          : "Failed to update product",
-      details: error instanceof Error ? error.message : "Unknown error",
-    });
-  }
-});
+  },
+);
 
 // PATCH /api/products/:id/stock - Update stock only (Admin)
 router.patch(

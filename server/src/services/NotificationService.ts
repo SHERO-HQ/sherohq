@@ -23,6 +23,14 @@ interface ShippingInfo {
   postalCode?: string;
 }
 
+const toReadableOrderId = (orderId: string): string => {
+  const compact = String(orderId ?? "")
+    .replace(/-/g, "")
+    .trim();
+  if (!compact) return "ORD-UNKNOWN";
+  return `ORD-${compact.slice(0, 8).toUpperCase()}`;
+};
+
 class NotificationService {
   private transporter: nodemailer.Transporter | null = null;
   private resend: Resend | null = null;
@@ -114,6 +122,7 @@ class NotificationService {
     items: OrderItem[],
     total: number,
   ) {
+    const readableOrderId = toReadableOrderId(orderId);
     const itemsHtml = items
       .map(
         (item) => `
@@ -140,7 +149,7 @@ class NotificationService {
         
         <div style="background: #f9fafb; padding: 15px; border-radius: 3px; margin: 20px 0;">
           <h3 style="margin-top: 0;">Order Details</h3>
-          <p><strong>Order ID:</strong> ${orderId}</p>
+          <p><strong>Order ID:</strong> ${readableOrderId}</p>
           <table style="width: 100%; border-collapse: collapse;">
             ${itemsHtml}
             <tr>
@@ -165,7 +174,7 @@ class NotificationService {
 
     await this.sendEmail(
       shippingInfo.email,
-      `Order Confirmation - #${orderId.substring(0, 8)}`,
+      `Order Confirmation - ${readableOrderId}`,
       htmlContent,
       "info",
     );
@@ -181,7 +190,7 @@ class NotificationService {
 
     await this.ensureInitialized();
 
-    const shortOrderId = orderId.slice(0, 8).toUpperCase();
+    const shortOrderId = toReadableOrderId(orderId);
     const invoiceDate = new Date().toLocaleDateString("en-GB", {
       day: "numeric",
       month: "short",
@@ -203,7 +212,7 @@ class NotificationService {
       ? `${process.env.FRONTEND_URL}/shero.png`
       : "https://sherohq.com/shero.png";
 
-    const subject = `Invoice #${shortOrderId} from SHERO Technologies`;
+    const subject = `Invoice ${shortOrderId} from SHERO Technologies`;
 
     const htmlContent = `
       <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
@@ -215,7 +224,7 @@ class NotificationService {
 
         <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
           <h2 style="font-size: 16px; margin: 0 0 15px 0; color: #333;">Invoice Details</h2>
-          <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Invoice ID:</strong> #${shortOrderId}</p>
+          <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Invoice ID:</strong> ${shortOrderId}</p>
           <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Date:</strong> ${invoiceDate}</p>
           <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Status:</strong> Pending Payment</p>
         </div>
@@ -271,7 +280,7 @@ class NotificationService {
 
     await this.ensureInitialized();
 
-    const shortOrderId = orderId.slice(0, 8).toUpperCase();
+    const shortOrderId = toReadableOrderId(orderId);
     const quoteDate = new Date().toLocaleDateString("en-GB", {
       day: "numeric",
       month: "short",
@@ -293,7 +302,7 @@ class NotificationService {
       ? `${process.env.FRONTEND_URL}/shero.png`
       : "https://sherohq.com/shero.png";
 
-    const subject = `Quote #${shortOrderId} from SHERO Technologies`;
+    const subject = `Quote ${shortOrderId} from SHERO Technologies`;
 
     const htmlContent = `
       <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
@@ -305,7 +314,7 @@ class NotificationService {
 
         <div style="background: #f9fafb; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
           <h2 style="font-size: 16px; margin: 0 0 15px 0; color: #333;">Quote Details</h2>
-          <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Quote ID:</strong> #${shortOrderId}</p>
+          <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Quote ID:</strong> ${shortOrderId}</p>
           <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Date:</strong> ${quoteDate}</p>
           <p style="margin: 5px 0; color: #666; font-size: 14px;"><strong>Valid Until:</strong> 30 Days from date</p>
         </div>
@@ -376,6 +385,7 @@ class NotificationService {
     total: number,
     paymentDetails?: { method: string; transactionId?: string },
   ) {
+    const readableOrderId = toReadableOrderId(orderId);
     const itemsHtml = items
       .map(
         (item) => `
@@ -414,7 +424,7 @@ class NotificationService {
           <div style="font-size: 14px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; opacity: 0.9;">Payment Successful</div>
           <h1 style="margin: 0; font-size: 32px; font-weight: 800;">GH₵${total.toFixed(2)}</h1>
           <div style="margin-top: 12px; display: inline-block; background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 20px; font-size: 12px;">
-            Order #${orderId.substring(0, 8)}
+            Order ${readableOrderId}
           </div>
         </div>
 
@@ -475,13 +485,16 @@ class NotificationService {
 
     await this.sendEmail(
       shippingInfo.email,
-      `Payment Receipt - Order #${orderId.substring(0, 8)}`,
+      `Payment Receipt - Order ${readableOrderId}`,
       htmlContent,
       "info",
     );
   }
 
-  private async sendHubtelSMS(phone: string, content: string): Promise<boolean> {
+  private async sendHubtelSMS(
+    phone: string,
+    content: string,
+  ): Promise<boolean> {
     const clientId = process.env.HUBTEL_CLIENT_ID;
     const clientSecret = process.env.HUBTEL_CLIENT_SECRET;
     const senderId = process.env.HUBTEL_SENDER_ID || "SHERO";
@@ -490,24 +503,32 @@ class NotificationService {
 
     if (clientId && clientSecret) {
       try {
-        const auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
-        const response = await fetch("https://smsc.hubtel.com/v1/messages/send", {
-          method: "POST",
-          headers: {
-            Authorization: `Basic ${auth}`,
-            "Content-Type": "application/json",
+        const auth = Buffer.from(`${clientId}:${clientSecret}`).toString(
+          "base64",
+        );
+        const response = await fetch(
+          "https://smsc.hubtel.com/v1/messages/send",
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Basic ${auth}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              from: senderId,
+              to: normalizedPhone,
+              content: content,
+              registeredDelivery: true,
+            }),
           },
-          body: JSON.stringify({
-            from: senderId,
-            to: normalizedPhone,
-            content: content,
-            registeredDelivery: true,
-          }),
-        });
+        );
 
         if (!response.ok) {
           const errorText = await response.text();
-          console.error(`❌ Hubtel SMS API failed for ${normalizedPhone}:`, errorText);
+          console.error(
+            `❌ Hubtel SMS API failed for ${normalizedPhone}:`,
+            errorText,
+          );
           return false;
         }
 
@@ -524,7 +545,7 @@ class NotificationService {
   }
 
   private async sendSMS(orderId: string, shippingInfo: ShippingInfo) {
-    const message = `SHERO TECHNOLOGIES: Order #${orderId.substring(0, 8)} confirmed! Total items will be delivered to ${shippingInfo.city}. Thanks for shopping with us!`;
+    const message = `SHERO TECHNOLOGIES: Order ${toReadableOrderId(orderId)} confirmed! Total items will be delivered to ${shippingInfo.city}. Thanks for shopping with us!`;
 
     await this.sendHubtelSMS(shippingInfo.phone, message);
   }

@@ -549,15 +549,54 @@ router.get(
 router.get("/track/:orderId", async (req: Request, res: Response) => {
   try {
     const { orderId } = req.params;
+    const rawOrderId = String(orderId || "").trim();
 
-    const result = await db.query(
-      `
-      SELECT *, "orderAccessTokenHash"
-      FROM orders
-      WHERE id = $1
-      `,
-      [orderId],
-    );
+    let orderQuery = "";
+    let orderParams: string[] = [];
+
+    if (UUID_RE.test(rawOrderId)) {
+      orderQuery = `
+        SELECT *, "orderAccessTokenHash"
+        FROM orders
+        WHERE id = $1
+      `;
+      orderParams = [rawOrderId];
+    } else {
+      const compactCandidate = rawOrderId
+        .toLowerCase()
+        .replace(/^ord-/, "")
+        .replace(/[^0-9a-f]/g, "");
+
+      if (compactCandidate.length === 32) {
+        orderQuery = `
+          SELECT *, "orderAccessTokenHash"
+          FROM orders
+          WHERE replace(lower(id), '-', '') = $1
+        `;
+        orderParams = [compactCandidate];
+      } else if (compactCandidate.length >= 8) {
+        orderQuery = `
+          SELECT *, "orderAccessTokenHash"
+          FROM orders
+          WHERE replace(lower(id), '-', '') LIKE $1 || '%'
+          ORDER BY "createdAt" DESC
+          LIMIT 2
+        `;
+        orderParams = [compactCandidate.slice(0, 8)];
+      } else {
+        return res.status(400).json({ error: "Invalid order identifier" });
+      }
+    }
+
+    const result = await db.query(orderQuery, orderParams);
+
+    if (result.rowCount && result.rowCount > 1) {
+      return res.status(409).json({
+        error:
+          "Multiple orders match this short tracking identifier. Use the full tracking link.",
+      });
+    }
+
     const order = result.rows[0] as
       | (OrderRow & { userId?: string; orderAccessTokenHash?: string })
       | undefined;
@@ -583,6 +622,7 @@ router.get("/track/:orderId", async (req: Request, res: Response) => {
         id: order.id,
         status: order.status,
         createdAt: order.createdAt,
+        paymentMethod: order.paymentMethod,
       });
     }
 
@@ -674,62 +714,63 @@ router.get(
   adminAuth,
   requireRole("manager"),
   async (req: AdminRequest, res: Response) => {
-  try {
-    const { status, limit = 100, startDate, endDate } = req.query;
-    const safeLimit = Math.min(
-      200,
-      Math.max(1, Number.parseInt(String(limit), 10) || 100),
-    );
+    try {
+      const { status, limit = 100, startDate, endDate } = req.query;
+      const safeLimit = Math.min(
+        200,
+        Math.max(1, Number.parseInt(String(limit), 10) || 100),
+      );
 
-    let queryText = "SELECT * FROM orders";
-    const params: (string | number)[] = [];
-    const conditions: string[] = [];
-    let paramIndex = 1;
+      let queryText = "SELECT * FROM orders";
+      const params: (string | number)[] = [];
+      const conditions: string[] = [];
+      let paramIndex = 1;
 
-    if (status && typeof status === "string" && ORDER_STATUSES.has(status)) {
-      conditions.push(`status = $${paramIndex}`);
-      params.push(status);
-      paramIndex++;
+      if (status && typeof status === "string" && ORDER_STATUSES.has(status)) {
+        conditions.push(`status = $${paramIndex}`);
+        params.push(status);
+        paramIndex++;
+      }
+
+      if (startDate && typeof startDate === "string") {
+        conditions.push(`"createdAt" >= $${paramIndex}`);
+        params.push(startDate);
+        paramIndex++;
+      }
+
+      if (endDate && typeof endDate === "string") {
+        conditions.push(`"createdAt" <= $${paramIndex}`);
+        params.push(endDate);
+        paramIndex++;
+      }
+
+      if (conditions.length > 0) {
+        queryText += " WHERE " + conditions.join(" AND ");
+      }
+
+      queryText += ` ORDER BY "createdAt" DESC LIMIT $${paramIndex}`;
+      params.push(safeLimit);
+
+      const result = await db.query(queryText, params);
+      const orders = result.rows as OrderRow[];
+
+      const parsedOrders = orders.map((order) => ({
+        ...order,
+        items: safeParse(order.items),
+        shippingInfo: safeParse(order.shippingInfo),
+        total: Number(order.total),
+      }));
+
+      res.json(parsedOrders);
+    } catch (error) {
+      console.error("Error fetching all orders (Admin):", error);
+      res.status(500).json({
+        error: "Failed to fetch orders",
+        details: error instanceof Error ? error.message : "Unknown error",
+      });
     }
-
-    if (startDate && typeof startDate === "string") {
-      conditions.push(`"createdAt" >= $${paramIndex}`);
-      params.push(startDate);
-      paramIndex++;
-    }
-
-    if (endDate && typeof endDate === "string") {
-      conditions.push(`"createdAt" <= $${paramIndex}`);
-      params.push(endDate);
-      paramIndex++;
-    }
-
-    if (conditions.length > 0) {
-      queryText += " WHERE " + conditions.join(" AND ");
-    }
-
-    queryText += ` ORDER BY "createdAt" DESC LIMIT $${paramIndex}`;
-    params.push(safeLimit);
-
-    const result = await db.query(queryText, params);
-    const orders = result.rows as OrderRow[];
-
-    const parsedOrders = orders.map((order) => ({
-      ...order,
-      items: safeParse(order.items),
-      shippingInfo: safeParse(order.shippingInfo),
-      total: Number(order.total),
-    }));
-
-    res.json(parsedOrders);
-  } catch (error) {
-    console.error("Error fetching all orders (Admin):", error);
-    res.status(500).json({
-      error: "Failed to fetch orders",
-      details: error instanceof Error ? error.message : "Unknown error",
-    });
-  }
-});
+  },
+);
 
 // GET /api/orders/:id - Admin: Get single order details
 router.get(
@@ -737,30 +778,31 @@ router.get(
   adminAuth,
   requireRole("manager"),
   async (req: AdminRequest, res: Response) => {
-  try {
-    const { id } = req.params;
+    try {
+      const { id } = req.params;
 
-    const result = await db.query("SELECT * FROM orders WHERE id = $1", [id]);
-    const order = result.rows[0] as OrderRow | undefined;
+      const result = await db.query("SELECT * FROM orders WHERE id = $1", [id]);
+      const order = result.rows[0] as OrderRow | undefined;
 
-    if (!order) {
-      return res.status(404).json({ error: "Order not found" });
+      if (!order) {
+        return res.status(404).json({ error: "Order not found" });
+      }
+
+      res.json({
+        ...order,
+        items: safeParse(order.items),
+        shippingInfo: safeParse(order.shippingInfo),
+        total: Number(order.total),
+      });
+    } catch (error) {
+      console.error("Error fetching order detail (Admin):", error);
+      res.status(500).json({
+        error: "Failed to fetch order",
+        details: error instanceof Error ? error.message : "Unknown error",
+      });
     }
-
-    res.json({
-      ...order,
-      items: safeParse(order.items),
-      shippingInfo: safeParse(order.shippingInfo),
-      total: Number(order.total),
-    });
-  } catch (error) {
-    console.error("Error fetching order detail (Admin):", error);
-    res.status(500).json({
-      error: "Failed to fetch order",
-      details: error instanceof Error ? error.message : "Unknown error",
-    });
-  }
-});
+  },
+);
 
 // PATCH /api/orders/:id/status - Admin: Update order status
 // PATCH /api/orders/:id/status - Update order status (Admin only)

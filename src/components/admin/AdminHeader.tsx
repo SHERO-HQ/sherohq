@@ -10,6 +10,7 @@ import {
  PanelLeftClose,
  LayoutDashboard,
 } from "lucide-react";
+import React, { useEffect, memo } from "react";
 import { useAdmin } from "@/context/AdminContext";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -37,10 +38,10 @@ interface HeaderProps {
 const isUUID = (str: string) =>
  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(str);
 
-export default function AdminHeader({
+const AdminHeader = memo(({
  onMenuClick,
  isSidebarOpen,
-}: Readonly<HeaderProps>) {
+}: Readonly<HeaderProps>) => {
  const { admin, logout } = useAdmin();
  const pathname = usePathname() ?? "";
  const { customLabels } = useBreadcrumb();
@@ -64,8 +65,8 @@ export default function AdminHeader({
  return (
   <header
    className={cn(
-    "fixed top-0 right-0 z-30 flex h-20 items-center justify-between border-b border-white/5 bg-slate-900/80 backdrop-blur-sm px-4 md:px-6 lg:px-8 transition duration-300",
-    isSidebarOpen ? "lg:left-65" : "lg:left-20",
+    "fixed top-0 right-0 z-30 flex h-20 items-center justify-between border-b border-white/5 bg-slate-900/80 backdrop-blur-sm px-4 md:px-6 lg:px-8 transition-all duration-200 ease-in-out",
+    isSidebarOpen ? "lg:left-64" : "lg:left-20",
     "left-0",
    )}
   >
@@ -210,5 +211,7 @@ export default function AdminHeader({
     </DropdownMenu>
    </div>
   </header>
- );
-}
+  );
+});
+
+export default AdminHeader;

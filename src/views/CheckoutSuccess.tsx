@@ -7,6 +7,7 @@ import { trackOrder, type Order } from "@/services/api";
 import { useCart } from "@/context/CartContext";
 import OrderRatingModal from "@/components/checkout/OrderRatingModal";
 import { getOrderAccessToken } from "@/utils/orderAccess";
+import { toReadableOrderId } from "@/utils/orderId";
 
 const CheckoutSuccess = () => {
   const searchParams = useSearchParams();
@@ -126,7 +127,7 @@ const CheckoutSuccess = () => {
         <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-md mx-auto">
           Thank you for your purchase. Your order{" "}
           <span className="font-mono font-bold text-emerald-600">
-            #{order?.id.slice(0, 8)}
+            {order ? toReadableOrderId(order.id) : "ORD-UNKNOWN"}
           </span>{" "}
           has been confirmed.
         </p>

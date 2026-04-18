@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { usePathname } from "next/navigation";
 
@@ -14,8 +15,8 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}
         transition={{
-          duration: 0.4,
-          ease: [0.22, 1, 0.36, 1], // Custom cubic-bezier for a premium feel
+          duration: 0.2,
+          ease: "easeOut",
         }}
       >
         {children}

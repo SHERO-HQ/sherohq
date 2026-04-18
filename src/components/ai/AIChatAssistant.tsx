@@ -203,14 +203,16 @@ export default function AIChatAssistant() {
 
   useEffect(() => {
     const handleKeyboardShortcuts = (event: KeyboardEvent) => {
-      const key = event.key.toLowerCase();
+      const key = event?.key?.toLowerCase();
+      if (!key) return;
+      
       if ((event.metaKey || event.ctrlKey) && key === "k") {
         event.preventDefault();
         setIsOpen(true);
         setIsMinimized(false);
       }
 
-      if (event.key === "Escape" && isOpen) {
+      if (key === "escape" && isOpen) {
         setIsOpen(false);
       }
     };

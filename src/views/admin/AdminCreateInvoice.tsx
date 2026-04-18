@@ -43,19 +43,7 @@ export default function AdminCreateInvoice() {
  const [mode, setMode] = useState<"invoice" | "quote">("invoice");
 
  // Customer Info
- const [customer, setCustomer] = useState(() => {
- if (searchParams.get("walkin") === "true") {
- return {
- firstName: "Walk-in",
- lastName: "Guest",
- email: "walkin@sherotech.com",
- phone: "+233 00 000 0000",
- address: "In-Store",
- city: "Accra",
- region: "Greater Accra",
- };
- }
- return {
+ const [customer, setCustomer] = useState({
  firstName: "",
  lastName: "",
  email: "",
@@ -63,7 +51,6 @@ export default function AdminCreateInvoice() {
  address: "",
  city: "",
  region: "",
- };
  });
 
  // Items
@@ -126,25 +113,6 @@ export default function AdminCreateInvoice() {
  0,
  );
 
- const handleQuickWalkIn = useCallback(() => {
- setCustomer({
- firstName: "Walk-in",
- lastName: "Guest",
- email: "walkin@sherotech.com",
- phone: "+233 00 000 0000",
- address: "In-Store",
- city: "Accra",
- region: "Greater Accra",
- });
- addNotification("Success", "Walk-in details pre-filled!", "success");
- }, [addNotification]);
-
- useEffect(() => {
- if (searchParams.get("walkin") === "true") {
- addNotification("Success", "Walk-in details pre-filled!", "success");
- }
- }, [addNotification, searchParams]);
-
  const handleSubmit = async () => {
  if (
  !customer.firstName ||
@@ -175,7 +143,7 @@ export default function AdminCreateInvoice() {
  };
 
  // eslint-disable-next-line @typescript-eslint/no-explicit-any
- const result = await createOrderMutation.mutateAsync(payload as any); // payload type needs update in api.ts but bypassing for now with comment
+ const result = await createOrderMutation.mutateAsync(payload as any);
 
  addNotification(
  "Success",
@@ -243,27 +211,20 @@ export default function AdminCreateInvoice() {
 
  <div className="grid lg:grid-cols-3 gap-8">
  {/* Main Form */}
- <div className="lg:col-span-2 space-y-8">
+ <form autoComplete="off" onSubmit={(e) => e.preventDefault()} className="lg:col-span-2 space-y-8">
  {/* Customer Details */}
  <Card className="bg-slate-900 border-white/5 p-6 space-y-6">
  <div className="flex items-center justify-between pb-4 border-b border-white/5">
  <h2 className="text-lg font-bold text-white flex items-center gap-2">
  Customer Information
  </h2>
- <Button
- variant="outline"
- size="sm"
- onClick={handleQuickWalkIn}
- className="border-white/10 text-emerald-400 hover:bg-emerald-500/10"
- >
- <User className="w-4 h-4 mr-2" /> Quick Walk-in
- </Button>
  </div>
  <div className="grid sm:grid-cols-2 gap-4">
- <Input
+  <Input
  label="First Name"
  placeholder="John"
  value={customer.firstName}
+ autoComplete="off"
  onChange={(e) =>
  setCustomer({ ...customer, firstName: e.target.value })
  }
@@ -272,6 +233,7 @@ export default function AdminCreateInvoice() {
  label="Last Name"
  placeholder="Doe"
  value={customer.lastName}
+ autoComplete="off"
  onChange={(e) =>
  setCustomer({ ...customer, lastName: e.target.value })
  }
@@ -281,6 +243,7 @@ export default function AdminCreateInvoice() {
  type="email"
  placeholder="john@example.com"
  value={customer.email}
+ autoComplete="off"
  onChange={(e) =>
  setCustomer({ ...customer, email: e.target.value })
  }
@@ -289,6 +252,7 @@ export default function AdminCreateInvoice() {
  label="Phone Number"
  placeholder="+233 54 123 4567"
  value={customer.phone}
+ autoComplete="off"
  onChange={(e) =>
  setCustomer({ ...customer, phone: e.target.value })
  }
@@ -299,6 +263,7 @@ export default function AdminCreateInvoice() {
  label="Street Address"
  placeholder="123 Main St"
  value={customer.address}
+ autoComplete="off"
  onChange={(e) =>
  setCustomer({ ...customer, address: e.target.value })
  }
@@ -463,7 +428,7 @@ export default function AdminCreateInvoice() {
  )}
  </div>
  </Card>
- </div>
+ </form>
 
  {/* Sidebar Summary */}
  <div className="space-y-6">

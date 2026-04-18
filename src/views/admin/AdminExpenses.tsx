@@ -301,7 +301,7 @@ export default function AdminExpenses() {
       Description: e.description || "",
     }));
 
-    const fileName = `expenses_report_${new Date().toISOString().split("T")[0]}`;
+    const fileName = `SHERO-Expenses-${new Date().toISOString().split("T")[0]}`;
     const columns = ["Title", "Amount", "Category", "Date", "Description"];
 
     if (format === "csv")

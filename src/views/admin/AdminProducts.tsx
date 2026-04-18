@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import React, { useState, useMemo, memo } from "react";
 import Link from "next/link";
 import { getImageUrl } from "@/services/api";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -40,6 +40,166 @@ import {
 } from "@/hooks/queries/useProducts";
 import { useCategories } from "@/hooks/queries/useCategories";
 import { Card } from "@/components/ui/card";
+
+// Memoized row component for maximum performance during polling
+const ProductRow = memo(({ 
+  product, 
+  canDelete, 
+  handleDelete, 
+  handleToggleStock 
+}: { 
+  product: Product; 
+  canDelete: boolean;
+  handleDelete: (id: string) => void;
+  handleToggleStock: (product: Product) => void;
+}) => (
+  <tr className="hover:bg-white/5 transition-colors group">
+    <td className="px-6 py-4">
+      <div className="flex items-center gap-3">
+        <div className="relative w-10 h-10 rounded bg-slate-800 overflow-hidden shrink-0 border border-white/5">
+          <AppImage
+            src={getImageUrl(product.image)}
+            alt={product.name}
+            fill
+            sizes="40px"
+            className="object-cover"
+          />
+        </div>
+        <div>
+          <Link
+            href={`/admin/products/${product.slug || product.sku || product.id}/edit`}
+            className="text-sm font-semibold text-white hover:text-emerald-400 transition-colors"
+          >
+            {product.name}
+          </Link>
+          <p className="text-xs text-slate-500 font-mono">
+            ID: {product.id.slice(0, 8)}
+          </p>
+        </div>
+      </div>
+    </td>
+    <td className="px-6 py-4">
+      <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">
+        {product.sku || "-"}
+      </span>
+    </td>
+    <td className="px-6 py-4 bg-transparent">
+      <Badge
+        variant="outline"
+        className="bg-emerald-500/10 text-emerald-400 border-none capitalize"
+      >
+        {product.category}
+      </Badge>
+    </td>
+    <td className="px-6 py-4 text-sm font-bold text-white">
+      GH₵{product.price.toLocaleString()}
+    </td>
+    <td className="px-6 py-4">
+      <div className="flex flex-col gap-1">
+        <span
+          className={cn(
+            "text-sm font-medium",
+            (product.quantity ?? 0) === 0
+              ? "text-rose-400"
+              : (product.quantity ?? 0) <= 5
+                ? "text-amber-400"
+                : "text-emerald-400",
+          )}
+        >
+          {(product.quantity || 0) === 0
+            ? "Out of stock"
+            : `${product.quantity || 0} in stock`}
+        </span>
+        <div className="w-12 h-1 bg-slate-800 rounded-full overflow-hidden">
+          <div
+            className={cn(
+              "h-full rounded-full transition duration-500",
+              (product.quantity ?? 0) === 0
+                ? "bg-rose-500"
+                : (product.quantity ?? 0) <= 5
+                  ? "bg-amber-500"
+                  : "bg-emerald-500",
+            )}
+            style={{
+              width: `${Math.min(100, ((product.quantity || 0) / 20) * 100)}%`,
+            }}
+          />
+        </div>
+      </div>
+    </td>
+    <td className="px-6 py-4 text-right">
+      <div className="flex items-center justify-end gap-2">
+        <Button
+          size="icon"
+          variant="ghost"
+          className="h-8 w-8 text-slate-400 hover:text-white"
+          asChild
+        >
+          <Link
+            href={`/admin/products/${product.slug || product.sku || product.id}/edit`}
+          >
+            <Edit2 className="w-4 h-4" />
+          </Link>
+        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              size="icon"
+              variant="ghost"
+              className="h-8 w-8 text-slate-400 hover:text-white"
+            >
+              <MoreVertical className="w-4 h-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="bg-slate-900 border-white/10 text-white"
+            align="end"
+          >
+            <DropdownMenuItem
+              className="hover:bg-white/5 cursor-pointer"
+              asChild
+            >
+              <a
+                href={`/shop/${product.slug || product.sku || product.id}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <ExternalLink className="w-4 h-4 mr-2" /> View
+                on Site
+              </a>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className="hover:bg-white/5 cursor-pointer"
+              onClick={() => handleToggleStock(product)}
+            >
+              {product.inStock ? (
+                <>
+                  <X className="w-4 h-4 mr-2" /> Mark Out of
+                  Stock
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="w-4 h-4 mr-2" />{" "}
+                  Mark In Stock
+                </>
+              )}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator className="bg-white/5" />
+            {canDelete && (
+              <DropdownMenuItem
+                className="text-rose-400 hover:bg-rose-500/10 cursor-pointer"
+                onClick={() => handleDelete(product.id)}
+              >
+                <Trash2 className="w-4 h-4 mr-2" /> Delete
+                Product
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </td>
+  </tr>
+));
 
 export default function AdminProducts() {
   const { addNotification } = useNotifications();
@@ -122,22 +282,22 @@ export default function AdminProducts() {
     }
   };
 
-  const handleExport = (format: "csv" | "excel" | "pdf") => {
+  const handleExport = async (format: "csv" | "excel" | "pdf") => {
     const dataToExport = filteredProducts.map((p) => ({
       ID: p.id,
       Name: p.name,
       Category: p.category,
-      Price: `GH₵ ${p.price}`,
-      Stock: p.stockQuantity,
-      Status: p.inStock ? "In Stock" : "Out of Stock",
+      Price: `GH₵ ${p.price.toLocaleString()}`,
+      Stock: p.quantity ?? 0,
+      Status: (p.quantity ?? 0) > 0 ? "In Stock" : "Out of Stock",
     }));
 
-    const filename = `products-export-${new Date().toISOString().split("T")[0]}`;
+    const fileName = `SHERO-Products-${new Date().toISOString().split("T")[0]}`;
     const columns = ["ID", "Name", "Category", "Price", "Stock", "Status"];
 
-    if (format === "csv") exportToCSV(dataToExport, filename);
-    else if (format === "excel") exportToExcel(dataToExport, filename);
-    else exportToPDF(dataToExport, columns, filename, "Products List");
+    if (format === "csv") await exportToCSV(dataToExport, fileName);
+    else if (format === "excel") await exportToExcel(dataToExport, fileName);
+    else await exportToPDF(dataToExport, columns, fileName, "Products Report");
 
     addNotification(
       "Export",
@@ -290,9 +450,36 @@ export default function AdminProducts() {
               <tbody className="divide-y divide-white/5">
                 {isLoading ? (
                   new Array(5).fill(0).map((_, i) => (
-                    <tr key={i} className="animate-pulse">
-                      <td colSpan={6} className="px-6 py-8">
-                        <div className="h-4 bg-slate-800 rounded w-full" />
+                    <tr key={`skel-${i}`} className="animate-pulse border-b border-white/5">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded bg-slate-800 shrink-0" />
+                          <div className="space-y-2">
+                            <div className="h-4 bg-slate-800 rounded w-24" />
+                            <div className="h-3 bg-slate-800 rounded w-16 opacity-50" />
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="h-4 bg-slate-800 rounded w-12" />
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="h-6 bg-slate-800 rounded w-20" />
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="h-4 bg-slate-800 rounded w-16" />
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="space-y-2">
+                          <div className="h-4 bg-slate-800 rounded w-20" />
+                          <div className="h-1 bg-slate-800 rounded w-12" />
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex justify-end gap-2">
+                          <div className="w-8 h-8 rounded bg-slate-800" />
+                          <div className="w-8 h-8 rounded bg-slate-800" />
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -307,155 +494,13 @@ export default function AdminProducts() {
                   </tr>
                 ) : (
                   paginatedProducts.map((product) => (
-                    <tr
+                    <ProductRow
                       key={product.id}
-                      className="hover:bg-white/5 transition-colors group"
-                    >
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="relative w-10 h-10 rounded bg-slate-800 overflow-hidden shrink-0 border border-white/5">
-                            <AppImage
-                              src={getImageUrl(product.image)}
-                              alt={product.name}
-                              fill
-                              sizes="40px"
-                              className="object-cover"
-                            />
-                          </div>
-                          <div>
-                            <Link
-                              href={`/admin/products/${product.slug || product.sku || product.id}/edit`}
-                              className="text-sm font-semibold text-white hover:text-emerald-400 transition-colors"
-                            >
-                              {product.name}
-                            </Link>
-                            <p className="text-xs text-slate-500 font-mono">
-                              ID: {product.id.slice(0, 8)}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">
-                          {product.sku || "-"}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 bg-transparent">
-                        <Badge
-                          variant="outline"
-                          className="bg-emerald-500/10 text-emerald-400 border-none capitalize"
-                        >
-                          {product.category}
-                        </Badge>
-                      </td>
-                      <td className="px-6 py-4 text-sm font-bold text-white">
-                        GH₵{product.price.toLocaleString()}
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex flex-col gap-1">
-                          <span
-                            className={cn(
-                              "text-sm font-medium",
-                              (product.quantity ?? 0) === 0
-                                ? "text-rose-400"
-                                : (product.quantity ?? 0) <= 5
-                                  ? "text-amber-400"
-                                  : "text-emerald-400",
-                            )}
-                          >
-                            {(product.quantity || 0) === 0
-                              ? "Out of stock"
-                              : `${product.quantity || 0} in stock`}
-                          </span>
-                          <div className="w-12 h-1 bg-slate-800 rounded-full overflow-hidden">
-                            <div
-                              className={cn(
-                                "h-full rounded-full transition duration-500",
-                                (product.quantity ?? 0) === 0
-                                  ? "bg-rose-500"
-                                  : (product.quantity ?? 0) <= 5
-                                    ? "bg-amber-500"
-                                    : "bg-emerald-500",
-                              )}
-                              style={{
-                                width: `${Math.min(100, ((product.quantity || 0) / 20) * 100)}%`,
-                              }}
-                            />
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-8 w-8 text-slate-400 hover:text-white"
-                            asChild
-                          >
-                            <Link
-                              href={`/admin/products/${product.slug || product.sku || product.id}/edit`}
-                            >
-                              <Edit2 className="w-4 h-4" />
-                            </Link>
-                          </Button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-8 w-8 text-slate-400 hover:text-white"
-                              >
-                                <MoreVertical className="w-4 h-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                              className="bg-slate-900 border-white/10 text-white"
-                              align="end"
-                            >
-                              <DropdownMenuItem
-                                className="hover:bg-white/5 cursor-pointer"
-                                asChild
-                              >
-                                <a
-                                  href={`/shop/${product.slug || product.sku || product.id}`}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  <ExternalLink className="w-4 h-4 mr-2" /> View
-                                  on Site
-                                </a>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="hover:bg-white/5 cursor-pointer"
-                                onClick={() => handleToggleStock(product)}
-                              >
-                                {product.inStock ? (
-                                  <>
-                                    <X className="w-4 h-4 mr-2" /> Mark Out of
-                                    Stock
-                                  </>
-                                ) : (
-                                  <>
-                                    <CheckCircle2 className="w-4 h-4 mr-2" />{" "}
-                                    Mark In Stock
-                                  </>
-                                )}
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator className="bg-white/5" />
-                              {canDelete && (
-                                <DropdownMenuItem
-                                  className="text-rose-400 hover:bg-rose-500/10 cursor-pointer"
-                                  onClick={() => handleDelete(product.id)}
-                                >
-                                  <Trash2 className="w-4 h-4 mr-2" /> Delete
-                                  Product
-                                </DropdownMenuItem>
-                              )}
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </td>
-                    </tr>
+                      product={product}
+                      canDelete={canDelete}
+                      handleDelete={handleDelete}
+                      handleToggleStock={handleToggleStock}
+                    />
                   ))
                 )}
               </tbody>

@@ -1,5 +1,4 @@
-"use client";
-import { useEffect } from "react";
+import React, { useEffect, memo } from "react";
 import AdminSidebar from "./AdminSidebar";
 import AdminHeader from "./AdminHeader";
 import { ChangePasswordModal } from "./ChangePasswordModal";
@@ -12,7 +11,7 @@ interface AdminLayoutProps {
  children: React.ReactNode;
 }
 
-export default function AdminLayout({ children }: Readonly<AdminLayoutProps>) {
+const AdminLayout = memo(({ children }: Readonly<AdminLayoutProps>) => {
  const { isSidebarOpen, setIsSidebarOpen } = useAdmin();
 
  // Global Keyboard Shortcuts
@@ -67,8 +66,8 @@ export default function AdminLayout({ children }: Readonly<AdminLayoutProps>) {
    {/* Main Content Area */}
    <div
     className={cn(
-     "transition duration-300 min-h-screen flex flex-col pt-20 relative z-10",
-     isSidebarOpen ? "lg:pl-65" : "lg:pl-20",
+     "transition-all duration-200 ease-in-out min-h-screen flex flex-col pt-20 relative z-10",
+     isSidebarOpen ? "lg:pl-64" : "lg:pl-20",
      "pl-0 print:pl-0",
     )}
    >
@@ -111,4 +110,6 @@ export default function AdminLayout({ children }: Readonly<AdminLayoutProps>) {
    <ChangePasswordModal />
   </div>
  );
-}
+});
+
+export default AdminLayout;
