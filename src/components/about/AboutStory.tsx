@@ -155,7 +155,7 @@ const AboutStory = () => {
             <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800">
               <div className="pb-8 md:pb-0 md:pr-10">
                 <h4 className="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                  <Target className="size-5 text-brand-secondary-600" />{" "}
+                  <Target className="size-5 text-brand-secondary-400" />{" "}
                   End-to-End Solutions
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -165,8 +165,7 @@ const AboutStory = () => {
               </div>
               <div className="py-8 md:py-0 md:px-10">
                 <h4 className="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                  <Globe2 className="size-5 text-brand-secondary-600" /> Local
-                  Expert, Global Standard
+                  <Globe2 className="size-5 text-brand-secondary-400" /> Local Global Standard
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                   Deep understanding of the African market combined with
@@ -175,7 +174,7 @@ const AboutStory = () => {
               </div>
               <div className="pt-8 md:pt-0 md:pl-10">
                 <h4 className="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                  <Users className="size-5 text-brand-secondary-600" />{" "}
+                  <Users className="size-5 text-brand-secondary-400" />{" "}
                   Customer-Centric Approach
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
