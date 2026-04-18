@@ -83,7 +83,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="w-full bg-background relative overflow-hidden border-t border-slate-200 dark:border-slate-800 pt-24 md:pb-12 pb-24 transition-colors duration-300">
+    <footer className="w-full bg-background relative overflow-hidden border-t border-slate-200 dark:border-slate-800 md:pb-12 py-14 transition-colors duration-300">
       {/* Background Ambience */}
       <div className="absolute inset-0 hero-grid-pattern opacity-5 dark:opacity-20 transition-opacity duration-300" />
       <div className="absolute inset-0 bg-linear-to-t from-background via-background/90 to-background/50 pointer-events-none transition duration-300" />

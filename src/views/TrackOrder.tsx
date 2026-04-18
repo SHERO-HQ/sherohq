@@ -91,7 +91,7 @@ export default function TrackOrder({
   }, [load]);
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-24 pb-16 px-4">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-8 pb-16 px-4">
       <div className="max-w-3xl mx-auto space-y-6">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -215,7 +215,8 @@ export default function TrackOrder({
               ) : (
                 <div className="rounded border border-slate-200 dark:border-slate-700 p-4 text-sm text-slate-600 dark:text-slate-300">
                   Detailed information is hidden for security. Sign in with the
-                  purchasing account or use this link from the original checkout to view full details.
+                  purchasing account or use this link from the original checkout
+                  to view full details.
                 </div>
               )}
             </div>

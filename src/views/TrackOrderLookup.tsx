@@ -32,7 +32,7 @@ export default function TrackOrderLookup() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-24 pb-16 px-4">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-8 pb-16 px-4">
       <div className="max-w-xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
