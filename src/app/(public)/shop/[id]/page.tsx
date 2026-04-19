@@ -48,18 +48,30 @@ function getShopSiteUrl(siteUrl: string): string {
   }
 }
 
-function getApiBaseUrl(): string {
-  // Use the same robust logic as services/client.ts
+function getApiBaseUrl(siteUrl: string): string {
+  // Use robust logic to ensure absolute URLs on server-side
   const envUrl = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL;
+  let base = "";
 
   if (envUrl) {
-    if (envUrl.startsWith("http")) return envUrl.replace(/\/$/, "");
-    if (envUrl.startsWith("/")) return envUrl; // Relative is tricky on SSR
-    return `https://${envUrl.replace(/\/$/, "")}`;
+    if (envUrl.startsWith("http")) {
+      base = envUrl.replace(/\/$/, "");
+    } else if (envUrl.startsWith("/")) {
+      // If it's a relative path (e.g. /api), we MUST prepend the siteUrl for server-side fetch
+      base = `${siteUrl.replace(/\/$/, "")}${envUrl}`.replace(/\/$/, "");
+    } else {
+      base = `https://${envUrl.replace(/\/$/, "")}`;
+    }
+  } else {
+    // Current primary production API fallback
+    base = "https://api.sherohq.com/api";
   }
 
-  // Production fallback parity with client.ts
-  return "https://sherotech.onrender.com/api";
+  // Robustly ensure the /api suffix is present for the fetch call
+  if (!base.endsWith("/api") && !base.includes("/api/")) {
+    return `${base}/api`;
+  }
+  return base;
 }
 
 /** Resolve a product image path to a fully-qualified URL for social crawlers. */
@@ -74,10 +86,15 @@ function resolveOgImage(
   if (image.startsWith("http")) return image;
   if (image.startsWith("//")) return `https:${image}`;
 
-  // If it's an upload path, it lives on the API server, not the shop site
+  // If it's an upload path, it lives on the API server
   if (image.startsWith("/uploads")) {
     const base = apiBaseUrl.replace(/\/api$/, "");
-    return `${base}${image}`;
+    // Construct absolute URL
+    if (base.startsWith("http")) {
+      return `${base}${image}`;
+    }
+    // Fallback to shop site if API base is relative (unlikely with new getApiBaseUrl)
+    return `${shopSiteUrl}${image}`;
   }
 
   const normalizedPath = image.startsWith("/") ? image : `/${image}`;
@@ -91,7 +108,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     "https://sherohq.com",
   );
   const shopSiteUrl = getShopSiteUrl(siteUrl);
-  const apiBaseUrl = getApiBaseUrl();
+  const apiBaseUrl = getApiBaseUrl(siteUrl);
   const pageUrl = `${shopSiteUrl}/shop/${id}`;
   const fallbackImageUrl = `${shopSiteUrl}/shero.png`;
 
@@ -153,7 +170,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     };
   } catch (error) {
-    console.error(`[Metadata] Failed to fetch product ${id}:`, error);
+    console.error(`[Metadata] Failed to fetch product ${id}:`, {
+      error,
+      endpoint: `${getApiBaseUrl(
+        toAbsoluteBaseUrl(
+          process.env.NEXT_PUBLIC_SITE_URL,
+          "https://sherohq.com",
+        ),
+      )}/products/${id}`,
+    });
     // Fallback metadata if product fetch fails (still include a valid OG image for link previews)
     return {
       title: "Product | SHERO",
