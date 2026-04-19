@@ -274,7 +274,7 @@ const LandingHero: React.FC = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="inline-flex items-center gap-2 rounded-full px-2.5 py-1 bg-brand-secondary-600/10 text-brand-secondary-700 dark:text-brand-secondary-300 text-xs font-mono font-semibold uppercase tracking-wide">
+                    <div className="inline-flex items-center gap-2 text-brand-secondary-700 dark:text-brand-secondary-300 text-xs font-mono font-semibold uppercase tracking-wide">
                       <ShieldCheck className="w-3.5 h-3.5" />
                       Verified
                     </div>

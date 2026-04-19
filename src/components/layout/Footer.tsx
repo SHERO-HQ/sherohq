@@ -6,15 +6,9 @@ import {
   BadgeCheck,
   Mail,
   Phone,
-  CreditCard,
-  Wallet,
-  Banknote,
   Send,
   MapPin,
   Clock,
-  Briefcase,
-  Layers,
-  Share2,
 } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -27,6 +21,7 @@ import { COMPANY_EMAILS } from "@/constants/emails";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { getAbsoluteUrl } from "@/utils/subdomain";
 import { subscribeToNewsletter } from "@/services/api";
+import PaymentIcons from "./PaymentIcons";
 
 const Footer = () => {
   const [newsletterEmail, setNewsletterEmail] = useState("");
@@ -46,7 +41,7 @@ const Footer = () => {
   const socialLinks = [
     {
       name: "X (Twitter)",
-      url: "https://twitter.com/@sherohq",
+      url: "https://x.com/sherohq",
       icon: TwitterXIcon,
     },
     {
@@ -98,7 +93,7 @@ const Footer = () => {
       <div className="absolute -bottom-1/2 left-1/2 -translate-x-1/2 w-200 h-125 bg-brand-secondary-500/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-12 lg:grid-flow-row-dense items-start gap-10 lg:gap-x-20 lg:mb-16 mb-4">
+        <div className="grid lg:grid-cols-12 lg:grid-flow-row-dense items-start gap-10 lg:gap-x-20 lg:mb-8 mb-4">
           {/* Item 1: Branding (Desktop Top-Left, Mobile First) */}
           <div className="lg:col-span-5 order-1 space-y-4">
             <div>
@@ -183,7 +178,7 @@ const Footer = () => {
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white group transition-colors duration-300"
                     >
-                      <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center group-hover:border-brand-secondary-500/50 group-hover:bg-brand-secondary-500/10 transition duration-300">
+                      <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center group-hover:border-brand-secondary-500/50 group-hover:bg-brand-secondary-500/10 transition duration-500 saturate-[0.1] opacity-30 group-hover:saturate-100 group-hover:opacity-100">
                         <social.icon className="w-5 h-5 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors" />
                       </div>
                       <span className="text-sm font-medium">{social.name}</span>
@@ -192,8 +187,6 @@ const Footer = () => {
                 </div>
               </div>
             </div>
-
-            <Separator className="hidden lg:block w-full bg-linear-to-r from-transparent via-border to-transparent mt-8" />
           </div>
 
           {/* Item 3: Contact Card (Desktop Bottom-Left, Mobile Third) */}
@@ -244,7 +237,7 @@ const Footer = () => {
                 </div>
 
                 {/* Newsletter Section (Nested back inside the card) */}
-                <div className="pt-6 border-t border-slate-200/60 dark:border-slate-800/60">
+                <div className="pt-4 border-t border-slate-200/60 dark:border-slate-800/60">
                   <div className="mb-4">
                     <h4 className="text-sm font-bold text-slate-900 dark:text-white">Stay Updated</h4>
                     <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Get the latest deals, product drops, and tech news.</p>
@@ -282,22 +275,22 @@ const Footer = () => {
         </div>
 
         {/* BOTTOM: Massive Text & Copyright */}
-        <div className="relative pt-8 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6 transition-colors duration-300">
+        <div className="relative pt-4 pb-8 sm:pb-0 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6 transition-colors duration-300">
           {/* Copyright & Legal */}
-          <div className="flex flex-col md:flex-row items-center gap-6 text-sm text-slate-500">
+          <div className="flex flex-row items-center gap-6 md:text-sm text-xs text-slate-500">
             <p className="" suppressHydrationWarning>
               &copy;{new Date().getFullYear()} Shero Group.
             </p>
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3 divide-x-2 divide-slate-200 dark:divide-slate-800">
               <NavLink
                 href={getAbsoluteUrl("/terms")}
-                className="hover:text-slate-900 dark:hover:text-white transition-colors"
+                className="hover:text-slate-900 dark:hover:text-white transition-colors pr-2"
               >
                 Terms
               </NavLink>
               <NavLink
                 href={getAbsoluteUrl("/privacy")}
-                className="hover:text-slate-900 dark:hover:text-white transition-colors"
+                className="hover:text-slate-900 dark:hover:text-white transition-colors pr-2"
               >
                 Privacy
               </NavLink>
@@ -309,45 +302,11 @@ const Footer = () => {
               </NavLink>
             </div>
           </div>
-
-          {/* Certificate/Badge (Decorative) */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 px-4 py-2 rounded bg-brand-secondary-100/30 dark:bg-brand-secondary-900/30 border border-brand-secondary-200 dark:border-brand-secondary-800 opacity-40 hover:opacity-100 transition">
-              <BadgeCheck className="w-4 h-4 text-brand-secondary-600 dark:text-brand-secondary-400" />
-              <span className="text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 transition-colors">
-                Certified
-              </span>
-            </div>
-          </div>
-
-          {/* Payment Methods */}
-          <div className="flex flex-col sm:flex-row items-center gap-3 pt-6 border-t border-slate-100 dark:border-slate-800">
-            <span className="text-xs text-slate-500 font-medium">
-              We Accept
-            </span>
-            <div className="flex items-center gap-2">
-              {[
-                { name: "Visa", icon: CreditCard },
-                { name: "Mastercard", icon: CreditCard },
-                { name: "MoMo", icon: Wallet },
-                { name: "Cash", icon: Banknote },
-              ].map((method) => (
-                <div
-                  key={method.name}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400"
-                >
-                  <method.icon className="w-3.5 h-3.5" />
-                  <span className="text-[10px] font-semibold">
-                    {method.name}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
+          <PaymentIcons />
         </div>
 
         {/* MASSIVE TYPOGRAPHY (Background Layer) */}
-        <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none overflow-hidden z-0 opacity-[0.03] dark:opacity-5 transition-opacity duration-300">
+        <div className="absolute sm:-bottom-10 bottom-10 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none overflow-hidden z-0 opacity-[0.03] dark:opacity-5 transition-opacity duration-300">
           <h1 className="text-[15vw] leading-none font-bold text-slate-900/80 dark:text-white/80 font-logo tracking-wider transition-colors duration-300">
             SHERO
           </h1>

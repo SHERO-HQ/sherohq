@@ -238,3 +238,46 @@ export function TikTokIcon(props: SVGAttributes<SVGElement>) {
  </svg>
  );
 }
+export function VisaIcon(props: SVGAttributes<SVGElement>) {
+  return (
+    <svg {...props} viewBox="0 0 24 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12.915 14.482l1.682-10.435h2.693L15.607 14.482H12.915zm10.597-10.158c-.52-.224-1.334-.467-2.352-.467-2.593 0-4.417 1.38-4.435 3.351-.018 1.458 1.306 2.269 2.298 2.753 1.018.497 1.36.815 1.356 1.259-.008.682-.818.995-1.574.995-1.053 0-1.618-.163-2.484-.544l-.348 1.628c.451.208 1.285.388 2.155.395 2.744 0 4.535-1.353 4.564-3.444.027-1.147-.682-2.022-2.181-2.738-.908-.456-1.465-.762-1.465-1.228.004-.424.466-.875 1.48-.875.836 0 1.442.179 1.916.38l.335-1.565zm-14.803-.277H6.556c-.66 0-1.156.191-1.442.875L.178 14.482h2.82s.46-1.272.564-1.554h3.44c.08.366.327 1.554.327 1.554h2.489L7.75 4.047h.959zm-4.14 7.25l1.64-4.494.943 4.494h-2.583zm12.333-7.25h2.46L19.344 14.482h-2.16L16.903 4.047h-.001z" fill="#1A1F71"/>
+      <path d="M4.945 4.31l-1.636 1.403C3.51 5.31 4.254 4.8 4.945 4.31z" fill="#F7B600"/>
+    </svg>
+  );
+}
+
+export function MastercardIcon(props: SVGAttributes<SVGElement>) {
+  return (
+    <svg {...props} viewBox="0 0 24 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="7" cy="7.5" r="7" fill="#EB001B"/>
+      <circle cx="17" cy="7.5" r="7" fill="#F79E1B"/>
+      <path d="M12 11.83A6.983 6.983 0 0112 3.17 6.983 6.983 0 0112 11.83z" fill="#FF5F00"/>
+    </svg>
+  );
+}
+
+export function MtnMomoIcon(props: SVGAttributes<SVGElement>) {
+  return (
+    <svg {...props} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="40" height="40" rx="4" fill="#FFCC00"/>
+      <rect x="8" y="6" width="24" height="20" rx="3" fill="#003366"/>
+      <path d="M15.5 10.5c.5.5 1 2 1.5 2s1.5-1.5 2-1.5 1 0 1.5 1c.5 1 0 2-1 3.5s-2 1.5-3 1-1.5-1.5-1.5-3 0-2.5.5-3zM24.5 10.5c-.5.5-1 2-1.5 2s-1.5-1.5-2-1.5-1 0-1.5 1c-.5 1 0 2 1 3.5s2 1.5 3 1 1.5-1.5 1.5-3 0-2.5-.5-3z" fill="white"/>
+      <text x="20" y="34" fontFamily="Arial" fontSize="9" fontWeight="bold" textAnchor="middle" fill="#003366">MoMo</text>
+      <text x="20" y="38" fontFamily="Arial" fontSize="4" fontWeight="bold" textAnchor="middle" fill="#003366">from MTN</text>
+    </svg>
+  );
+}
+
+export function TelecelCashIcon(props: SVGAttributes<SVGElement>) {
+  return (
+    <svg {...props} viewBox="0 0 48 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14.5 11.5c.5-5.5-4.5-8-6.5-6C6 7.5 8 15.5 11 18.5c1.5 1.5 3 0 3.5-7z" fill="#E60000"/>
+      <path d="M22 12.5c1-6-5-7-7-4-2.5 3.5 0 12 4 15.5 2 1.5 3.5-.5 3-11.5z" fill="#E60000"/>
+      <path d="M29.5 14c1.5-6.5-4.5-6.5-6-3.5C21 14 25 21 29 24.5c2 1.5 3.5-.5.5-10.5z" fill="#E60000"/>
+      <path d="M9 23s7 4.5 25-1.5" stroke="#00A651" strokeWidth="2.5" strokeLinecap="round"/>
+      <path d="M34 21.5l2.5 2.5-3 1.5" stroke="#00A651" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <text x="24" y="36" fontFamily="Arial" fontSize="9" fontWeight="bold" textAnchor="middle" fill="#E60000">cash</text>
+    </svg>
+  );
+}

@@ -1,17 +1,17 @@
 import Image from "next/image";
-import { motion } from "motion/react";
+import { motion, scale } from "motion/react";
 import { Briefcase } from "lucide-react";
 
 // Partner/brand logos - real brands SHERO works with
 const PARTNERS = [
-  { name: "HP", logo: "/assets/images/partners/hp.png" },
-  { name: "Dell", logo: "/assets/images/partners/dell.png" },
-  { name: "Lenovo", logo: "/assets/images/partners/lenovo.png" },
-  { name: "JBL", logo: "/assets/images/partners/jbl.png" },
-  { name: "Apple", logo: "/assets/images/partners/apple.png" },
-  { name: "Samsung", logo: "/assets/images/partners/samsung.png" },
-  { name: "Nvidia", logo: "/assets/images/partners/nvidia.png" },
-  { name: "Intel", logo: "/assets/images/partners/intel.png" },
+  { name: "HP", logo: "/assets/images/partners/hp.svg" },
+  { name: "Dell", logo: "/assets/images/partners/dell.svg" },
+  { name: "Lenovo", logo: "/assets/images/partners/lenovo.svg" },
+  { name: "JBL", logo: "/assets/images/partners/jbl.svg" },
+  { name: "Apple", logo: "/assets/images/partners/apple.svg", logoDark: "/assets/images/partners/apple-dark.svg" },
+  { name: "Samsung", logo: "/assets/images/partners/samsung.svg", logoDark: "/assets/images/partners/samsung-dark.svg", scale: "scale-125" },
+  { name: "Nvidia", logo: "/assets/images/partners/nvidia.svg" },
+  { name: "Intel", logo: "/assets/images/partners/intel.svg" },
 ];
 
 const LandingPartners = () => {
@@ -61,14 +61,32 @@ const LandingPartners = () => {
  transition duration-500
  cursor-pointer group/card grayscale hover:grayscale-0"
               >
-                <div className="relative sm:w-32 sm:h-32 w-20 h-20 flex items-center justify-center">
+                <div className="relative sm:w-24 sm:h-24 w-14 h-14 flex items-center justify-center p-3 sm:p-5">
                   <Image
                     src={partner.logo}
                     alt={`${partner.name} logo`}
                     fill
-                    className="object-contain transition-transform duration-500 group-hover/card:scale-110 pointer-events-none md:pointer-events-auto select-none"
-                    sizes="(max-width: 640px) 80px, 128px"
+                    className={`object-contain transition-all duration-500 group-hover/card:scale-110 group-hover/card:saturate-100 group-hover/card:opacity-100 saturate-[0.1] opacity-30 pointer-events-none md:pointer-events-auto select-none ${partner.scale || ""} ${partner.logoDark ? "dark:hidden" : ""} ${partner.logoDark ? "group-hover/card:hidden" : ""}`}
+                    sizes="(max-width: 640px) 64px, 112px"
                   />
+                  {partner.logoDark && (
+                    <Image
+                      src={partner.logoDark}
+                      alt={`${partner.name} logo dark`}
+                      fill
+                      className={`object-contain transition-all duration-500 group-hover/card:scale-110 group-hover/card:saturate-100 group-hover/card:opacity-100 saturate-[0.1] opacity-30 pointer-events-none md:pointer-events-auto select-none hidden dark:block group-hover/card:hidden! ${partner.scale || ""}`}
+                      sizes="(max-width: 640px) 64px, 112px"
+                    />
+                  )}
+                  {partner.logoDark && (
+                    <Image
+                      src={partner.logo}
+                      alt={`${partner.name} logo hover`}
+                      fill
+                      className={`object-contain transition-all duration-500 group-hover/card:scale-110 group-hover/card:saturate-100 group-hover/card:opacity-100 saturate-[0.1] opacity-30 pointer-events-none md:pointer-events-auto select-none hidden group-hover/card:dark:block ${partner.scale || ""}`}
+                      sizes="(max-width: 640px) 64px, 112px"
+                    />
+                  )}
                 </div>
               </div>
             ))}
