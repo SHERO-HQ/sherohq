@@ -37,10 +37,13 @@ function isSocialCrawler(userAgent: string | undefined): boolean {
 
 // Fetch product data from the backend API
 async function fetchProduct(productId: string): Promise<{
+  id?: string;
+  slug?: string;
   name: string;
   description: string;
   price: number;
-  image: string;
+  image?: string;
+  images?: string[];
   category: string;
 } | null> {
   try {
@@ -57,15 +60,37 @@ async function fetchProduct(productId: string): Promise<{
 
 // Get the full image URL
 function getImageUrl(image: string | undefined): string {
-  if (!image) return `${SHOP_SITE_URL}/shero.png`;
+  const fallback = `${SHOP_SITE_URL}/shero.png`;
+  if (!image) return fallback;
   if (image.startsWith("http")) return image;
+  if (image.startsWith("//")) return `https:${image}`;
   if (image.startsWith("/uploads")) {
-    return `${SHOP_SITE_URL}${image}`;
+    return `${PUBLIC_API_BASE.replace(/\/api$/, "")}${image}`;
   }
   if (image.startsWith("uploads/")) {
-    return `${SHOP_SITE_URL}/${image}`;
+    return `${PUBLIC_API_BASE.replace(/\/api$/, "")}/${image}`;
   }
-  return `${SHOP_SITE_URL}/shero.png`;
+  if (image.startsWith("/")) return `${SHOP_SITE_URL}${image}`;
+  return `${SHOP_SITE_URL}/${image}`;
+}
+
+function getPrimaryImage(product: {
+  image?: string;
+  images?: string[];
+}): string | undefined {
+  if (Array.isArray(product.images) && product.images.length > 0) {
+    return product.images[0];
+  }
+  return product.image;
+}
+
+function formatGhsPrice(price: number): string {
+  const numericPrice = Number(price);
+  if (!Number.isFinite(numericPrice)) return "Price";
+  return `GH₵${numericPrice.toLocaleString("en-GH", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  })}`;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -75,23 +100,25 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // If not a social crawler or no product ID, redirect to the SPA
   if (!productId || !isSocialCrawler(userAgent)) {
-    return res.redirect(302, `${SHOP_SITE_URL}/${productId || ""}`);
+    return res.redirect(302, `${SHOP_SITE_URL}/shop/${productId || ""}`);
   }
 
   // Fetch product data
   const product = await fetchProduct(productId);
 
   if (!product) {
-    return res.redirect(302, `${SHOP_SITE_URL}/${productId}`);
+    return res.redirect(302, `${SHOP_SITE_URL}/shop/${productId}`);
   }
 
   // Prepare OG data
-  const imageUrl = getImageUrl(product.image);
+  const imageUrl = getImageUrl(getPrimaryImage(product));
   const description =
-    product.description || `${product.name} - GH₵${product.price}`;
+    product.description || `${product.name} - ${formatGhsPrice(product.price)}`;
   const truncatedDesc =
     description.length > 160 ? description.slice(0, 157) + "..." : description;
-  const pageUrl = `${SHOP_SITE_URL}/${productId}`;
+  const pageSlug = product.slug || productId;
+  const pageUrl = `${SHOP_SITE_URL}/shop/${pageSlug}`;
+  const shareTitle = `${product.name} - ${formatGhsPrice(product.price)} | SHERO`;
 
   // Return HTML with OG tags
   res.setHeader("Content-Type", "text/html; charset=utf-8");
@@ -102,15 +129,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${product.name} | SHERO</title>
+  <title>${shareTitle}</title>
   <meta name="description" content="${truncatedDesc}">
   
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="product">
   <meta property="og:url" content="${pageUrl}">
-  <meta property="og:title" content="${product.name}">
+  <meta property="og:title" content="${shareTitle}">
   <meta property="og:description" content="${truncatedDesc}">
   <meta property="og:image" content="${imageUrl}">
+  <meta property="og:image:secure_url" content="${imageUrl}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:site_name" content="SHERO">
@@ -120,7 +148,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="${pageUrl}">
-  <meta name="twitter:title" content="${product.name}">
+  <meta name="twitter:title" content="${shareTitle}">
   <meta name="twitter:description" content="${truncatedDesc}">
   <meta name="twitter:image" content="${imageUrl}">
   
