@@ -285,7 +285,7 @@ const Nav = () => {
   return (
     <>
       <nav
-        className={`w-full transition duration-300 ${isOpen || scrolled ? "bg-background shadow-sm border-b border-slate-200 dark:border-slate-800" : "bg-transparent"}`}
+        className={`w-full transition duration-300 ${isOpen || scrolled ? "bg-background shadow-sm" : "bg-transparent"}`}
         aria-label="main navigation"
         id="nav-menu"
       >
@@ -377,7 +377,7 @@ const Nav = () => {
 
             {/* Right Groups Wrapper */}
             <div className="flex items-center gap-2 lg:gap-4 ml-auto z-20">
-              <div className="flex items-center gap-0.5 sm:gap-1 bg-slate-50 border border-slate-200 dark:bg-slate-800/80 dark:border-slate-700/80 rounded transition-colors">
+              <div className="flex items-center gap-0.5 sm:gap-1 bg-slate-50 dark:bg-slate-800/80 rounded transition-colors">
                 <SearchBar className="hidden lg:flex h-9 items-center justify-center text-slate-600 dark:text-slate-400" />
 
                 {/* Wishlist Button */}
@@ -491,7 +491,7 @@ const Nav = () => {
                 </div>
               </div>
 
-              <div className="flex items-center gap-0.5 sm:gap-1 bg-slate-50 border border-slate-200 dark:bg-slate-800/80 dark:border-slate-700/80 rounded transition-colors">
+              <div className="flex items-center gap-0.5 sm:gap-1 bg-slate-50 dark:bg-slate-800/80 rounded transition-colors">
                 <ToggleTheme />
               </div>
 
@@ -594,6 +594,7 @@ const Nav = () => {
                         <NavLink
                           href={getAbsoluteUrl(item.href)}
                           onClick={() => setIsOpen(false)}
+                          isActive={activeNavIndex === i}
                           className={({ isActive }) =>
                             navLinkClassVariant(isActive, "mobile")
                           }
