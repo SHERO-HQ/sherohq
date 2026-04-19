@@ -57,7 +57,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
 
  <button
  onClick={() => (onReset ? onReset() : router.refresh())}
- className="group flex items-center gap-3 px-10 h-12 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-black uppercase tracking-widest text-xs rounded shadow shadow-brand-secondary-500/20 active:scale-95 transition"
+ className="group flex items-center gap-3 px-10 h-10 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-black uppercase tracking-widest text-xs rounded shadow shadow-brand-secondary-500/20 active:scale-95 transition"
  >
  <RefreshCcw size={18} className="group-hover:rotate-180 transition-transform duration-700" />
  Reset Search

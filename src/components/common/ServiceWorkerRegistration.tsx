@@ -7,7 +7,10 @@ export function ServiceWorkerRegistration() {
  if (
  typeof window !== "undefined" &&
  "serviceWorker" in navigator &&
- window.location.protocol === "https:"
+ (window.location.protocol === "https:" ||
+   window.location.hostname === "localhost" ||
+   window.location.hostname === "127.0.0.1" ||
+   window.location.hostname.startsWith("192.168."))
  ) {
  navigator.serviceWorker
  .register("/sw.js", { scope: "/" })

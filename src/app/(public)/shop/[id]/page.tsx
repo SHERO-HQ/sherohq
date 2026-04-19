@@ -48,17 +48,24 @@ function getShopSiteUrl(siteUrl: string): string {
   }
 }
 
-function getApiBaseUrl(siteUrl: string): string {
-  const apiUrl = toAbsoluteBaseUrl(
-    process.env.API_URL || process.env.NEXT_PUBLIC_API_URL,
-    siteUrl,
-  );
-  return apiUrl.endsWith("/api") ? apiUrl : `${apiUrl}/api`;
+function getApiBaseUrl(): string {
+  // Use the same robust logic as services/client.ts
+  const envUrl = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL;
+
+  if (envUrl) {
+    if (envUrl.startsWith("http")) return envUrl.replace(/\/$/, "");
+    if (envUrl.startsWith("/")) return envUrl; // Relative is tricky on SSR
+    return `https://${envUrl.replace(/\/$/, "")}`;
+  }
+
+  // Production fallback parity with client.ts
+  return "https://sherotech.onrender.com/api";
 }
 
 /** Resolve a product image path to a fully-qualified URL for social crawlers. */
 function resolveOgImage(
   image: string | undefined,
+  apiBaseUrl: string,
   shopSiteUrl: string,
 ): string {
   const fallback = `${shopSiteUrl}/shero.png`;
@@ -66,6 +73,12 @@ function resolveOgImage(
   if (image.startsWith("data:") || image.startsWith("blob:")) return fallback;
   if (image.startsWith("http")) return image;
   if (image.startsWith("//")) return `https:${image}`;
+
+  // If it's an upload path, it lives on the API server, not the shop site
+  if (image.startsWith("/uploads")) {
+    const base = apiBaseUrl.replace(/\/api$/, "");
+    return `${base}${image}`;
+  }
 
   const normalizedPath = image.startsWith("/") ? image : `/${image}`;
   return `${shopSiteUrl}${normalizedPath}`;
@@ -78,11 +91,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     "https://sherohq.com",
   );
   const shopSiteUrl = getShopSiteUrl(siteUrl);
+  const apiBaseUrl = getApiBaseUrl();
   const pageUrl = `${shopSiteUrl}/shop/${id}`;
   const fallbackImageUrl = `${shopSiteUrl}/shero.png`;
 
   try {
-    const endpoint = `${getApiBaseUrl(siteUrl)}/products/${id}`;
+    const endpoint = `${apiBaseUrl}${apiBaseUrl.endsWith("/") ? "" : "/"}products/${id}`;
 
     const res = await fetch(endpoint, { next: { revalidate: 3600 } });
     if (!res.ok) throw new Error("product not found");
@@ -90,10 +104,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const product = await res.json();
     const primaryImage =
       (Array.isArray(product.images) && product.images[0]) || product.image;
-    const imageUrl = resolveOgImage(primaryImage, shopSiteUrl);
+    const imageUrl = resolveOgImage(primaryImage, apiBaseUrl, shopSiteUrl);
     const description: string = product.description
       ? String(product.description).slice(0, 160)
-      : `${product.name} — GH₵${product.price}`;
+      : `${product.name} - GH₵${product.price}`;
 
     const imageType = imageUrl.toLowerCase().endsWith(".png")
       ? "image/png"
@@ -101,8 +115,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         ? "image/webp"
         : "image/jpeg";
 
+    const title = `${product.name} - GH₵${product.price} | SHERO`;
+
     return {
-      title: `${product.name} — GH₵${product.price} | SHERO`,
+      title,
       description,
       metadataBase: new URL(shopSiteUrl),
       alternates: {
@@ -110,7 +126,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
       openGraph: {
         type: "website",
-        title: `${product.name} — GH₵${product.price} | SHERO`,
+        title,
         description,
         url: pageUrl,
         siteName: "SHERO",
@@ -123,19 +139,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
             alt: product.name,
             type: imageType,
           },
-          {
-            // Fallback smaller image for picky crawlers like WhatsApp
-            url: fallbackImageUrl,
-            width: 400,
-            height: 400,
-            alt: "SHERO Logo",
-            type: "image/png",
-          },
         ],
       },
       twitter: {
         card: "summary_large_image",
-        title: `${product.name} | SHERO`,
+        title,
         description,
         images: [imageUrl],
       },
@@ -144,7 +152,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         thumbnail: imageUrl,
       },
     };
-  } catch {
+  } catch (error) {
+    console.error(`[Metadata] Failed to fetch product ${id}:`, error);
     // Fallback metadata if product fetch fails (still include a valid OG image for link previews)
     return {
       title: "Product | SHERO",

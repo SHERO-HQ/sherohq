@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Download, X } from "lucide-react";
 import Image from "next/image";
+import { motion, AnimatePresence } from "motion/react";
 import sheroIcon from "@/assets/logo/shero.svg";
 
 interface BeforeInstallPromptEvent extends Event {
@@ -11,13 +12,9 @@ interface BeforeInstallPromptEvent extends Event {
 
 const PWAInstallBanner = () => {
   const [isIPhone] = useState(() => {
+    if (typeof window === "undefined") return false;
     const userAgent = globalThis.navigator?.userAgent ?? "";
     return /iPhone/i.test(userAgent);
-  });
-
-  const [isAndroid] = useState(() => {
-    const userAgent = globalThis.navigator?.userAgent ?? "";
-    return /Android/i.test(userAgent);
   });
 
   const [showIOSBanner, setShowIOSBanner] = useState(false);
@@ -35,7 +32,7 @@ const PWAInstallBanner = () => {
 
     if (installed) return;
 
-    const dismissed = localStorage.getItem("ios-pwa-banner-dismissed");
+    const dismissed = localStorage.getItem("ios-install-v2-dismissed");
     if (dismissed && Date.now() - Number(dismissed) < 7 * 24 * 60 * 60 * 1000) {
       return;
     }
@@ -46,11 +43,10 @@ const PWAInstallBanner = () => {
 
   const handleDismissIOSBanner = () => {
     setShowIOSBanner(false);
-    localStorage.setItem("ios-pwa-banner-dismissed", Date.now().toString());
+    localStorage.setItem("ios-install-v2-dismissed", Date.now().toString());
   };
 
   const handleIPhoneInstall = async () => {
-    // iOS does not support beforeinstallprompt, so we open share sheet when available.
     if (!isIPhone) return;
 
     try {
@@ -62,13 +58,11 @@ const PWAInstallBanner = () => {
         });
       }
     } catch {
-      // User may cancel the share sheet; no further action needed.
+      // User may cancel
     }
   };
 
   useEffect(() => {
-    if (!isAndroid) return;
-
     const installed =
       globalThis.matchMedia?.("(display-mode: standalone)").matches ||
       (globalThis.navigator as Navigator & { standalone?: boolean })
@@ -76,7 +70,7 @@ const PWAInstallBanner = () => {
 
     if (installed) return;
 
-    const dismissed = localStorage.getItem("pwa-banner-dismissed");
+    const dismissed = localStorage.getItem("pwa-install-v2-dismissed");
     if (dismissed && Date.now() - Number(dismissed) < 7 * 24 * 60 * 60 * 1000) {
       return;
     }
@@ -84,7 +78,7 @@ const PWAInstallBanner = () => {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setTimeout(() => setShowPWABanner(true), 30000);
+      setTimeout(() => setShowPWABanner(true), 3000);
     };
 
     type PWAGlobal = { __pwaPromptEvent?: BeforeInstallPromptEvent | null };
@@ -112,7 +106,7 @@ const PWAInstallBanner = () => {
       );
       globalThis.removeEventListener("appinstalled", handleAppInstalled);
     };
-  }, [isAndroid]);
+  }, []);
 
   const handleInstallPWA = async () => {
     if (!deferredPrompt) return;
@@ -132,85 +126,113 @@ const PWAInstallBanner = () => {
 
   const handleDismissPWABanner = () => {
     setShowPWABanner(false);
-    localStorage.setItem("pwa-banner-dismissed", Date.now().toString());
+    localStorage.setItem("pwa-install-v2-dismissed", Date.now().toString());
   };
 
-  if (!isIPhone && !isAndroid) return null;
-  if (!showIOSBanner && !showPWABanner) return null;
-
   return (
-    <div className="w-full md:hidden bg-slate-900/95 border-b border-slate-800 ">
-      {showIOSBanner && isIPhone && (
-        <div className="px-3 py-2 sm:px-4 sm:py-2.5">
-          <div className="flex items-start gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden">
-              <Image
-                src={sheroIcon}
-                alt="SHERO"
-                className="w-full h-full object-contain"
-              />
+    <>
+      <AnimatePresence>
+        {/* iPhone Banner - Top Docked */}
+        {showIOSBanner && isIPhone && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="w-full bg-white/95 dark:bg-slate-950/95 border-b border-slate-100 dark:border-slate-800/50 overflow-hidden"
+          >
+            <div className="container max-w-7xl mx-auto px-4 py-2.5">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
+                  <Image
+                    src={sheroIcon}
+                    alt="SHERO"
+                    className="w-7 h-7 object-contain"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-brand-secondary-600 dark:text-brand-secondary-400">
+                    Install SHERO
+                  </p>
+                  <p className="mt-0.5 text-[11px] leading-tight text-slate-600 dark:text-slate-400 font-medium">
+                    Tap Share → Add to Home Screen for the best experience
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleIPhoneInstall}
+                  className="inline-flex items-center justify-center h-8 px-3 rounded font-bold bg-brand-secondary-600 hover:bg-brand-secondary-700 dark:bg-brand-secondary-500 dark:hover:bg-brand-secondary-400 text-white text-[11px] transition-all active:scale-95 whitespace-nowrap shadow-sm shadow-brand-secondary-500/20"
+                >
+                  <Download className="h-3.5 w-3.5 mr-1.5" />
+                  Install
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDismissIOSBanner}
+                  className="p-1.5 rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                  aria-label="Dismiss iPhone install banner"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-brand-secondary-300">
-                Install SHERO
-              </p>
-              <p className="mt-0.5 text-xs leading-4 text-slate-300">
-                Tap Share → Add to Home Screen
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={handleIPhoneInstall}
-              className="mt-0.5 inline-flex shrink-0 px-2 py-1 rounded bg-brand-secondary-300/50 hover:bg-brand-secondary-700 text-white text-[10px] transition-colors whitespace-nowrap"
-            >
-              <Download className="h-3.5 w-3.5 mr-1" />
-              Install
-            </button>
-            <button
-              type="button"
-              onClick={handleDismissIOSBanner}
-              className="mt-0.5 shrink-0 rounded-full p-0.5 text-slate-400 transition-colors hover:bg-white/10 hover:text-white"
-              aria-label="Dismiss iPhone install banner"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {showPWABanner && isAndroid && deferredPrompt && (
-        <div className="px-3 py-2 sm:px-4 sm:py-2.5">
-          <div className="flex items-start gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-secondary-500/20 text-brand-secondary-400">
-              <Download className="h-3.5 w-3.5" />
+      <AnimatePresence>
+        {/* PWA Popup - Bottom Right Fixed */}
+        {showPWABanner && deferredPrompt && (
+          <motion.div
+            initial={{ x: 300, opacity: 0, scale: 0.9 }}
+            animate={{ x: 0, opacity: 1, scale: 1 }}
+            exit={{ x: 300, opacity: 0, scale: 0.9 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            className="fixed bottom-6 right-6 z-100 w-[calc(100vw-3rem)] sm:w-[380px]"
+          >
+            <div className="bg-white/95 dark:bg-slate-950/95 backdrop-blur-md p-4 rounded shadow border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-secondary-50 dark:bg-brand-secondary-900/20 text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-100/50 dark:border-brand-secondary-800/30">
+                  <Download className="h-6 w-6" />
+                </div>
+                <div className="min-w-0 flex-1 pt-0.5">
+                  <p className="text-[11px] font-bold uppercase tracking-widest text-brand-secondary-600 dark:text-brand-secondary-400">
+                    Install SHERO
+                  </p>
+                  <p className="mt-1 text-[12px] text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+                    Install now for premium features and offline access on this
+                    device.
+                  </p>
+                  <div className="mt-4 flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={handleInstallPWA}
+                      className="flex-1 inline-flex items-center justify-center h-8 px-4 rounded font-bold bg-brand-secondary-600 hover:bg-brand-secondary-700 dark:bg-brand-secondary-500 dark:hover:bg-brand-secondary-400 text-white text-[12px] transition-all active:scale-95 shadow-lg shadow-brand-secondary-500/20"
+                    >
+                      Install App
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleDismissPWABanner}
+                      className="inline-flex items-center justify-center h-8 px-4 rounded font-bold bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 text-[12px] transition-all active:scale-95"
+                    >
+                      Maybe Later
+                    </button>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleDismissPWABanner}
+                  className="absolute top-3 right-3 p-1 rounded text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                  aria-label="Dismiss install popup"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
             </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-semibold uppercase tracking-wider text-brand-secondary-300">
-                Install SHERO App
-              </p>
-              <p className="mt-0.5 text-xs leading-4 text-slate-300">
-                Get quick access and a better experience
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={handleInstallPWA}
-              className="mt-0.5 shrink-0 px-2 py-1 rounded bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white text-[10px] font-semibold transition-colors whitespace-nowrap"
-            >
-              Install
-            </button>
-            <button
-              type="button"
-              onClick={handleDismissPWABanner}
-              className="mt-0.5 shrink-0 rounded-full p-0.5 text-slate-400 transition-colors hover:bg-white/10 hover:text-white"
-              aria-label="Dismiss app install banner"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 
