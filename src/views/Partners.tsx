@@ -89,15 +89,15 @@ const Partners = () => {
             <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto px-4">
               {steps.map((step, idx) => (
                 <div key={idx} className="relative">
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="size-12 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-center font-mono font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="size-10 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-center font-mono font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
                       0{idx + 1}
                     </div>
                     {idx < 3 && (
                       <div className="hidden md:block h-px flex-1 bg-linear-to-r from-slate-200 to-transparent dark:from-slate-800" />
                     )}
                   </div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">{step.title}</h3>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{step.title}</h3>
                   <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{step.desc}</p>
                 </div>
               ))}

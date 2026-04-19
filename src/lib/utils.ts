@@ -119,7 +119,7 @@ export function navLinkClassVariant(
       active: [
         "bg-brand-secondary-500/10",
         "text-brand-secondary-600 dark:text-brand-secondary-400",
-        "font-bold",
+        "font-semibold",
         "shadow-xs",
       ],
       inactive: [

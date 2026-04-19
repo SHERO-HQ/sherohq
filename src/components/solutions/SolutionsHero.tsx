@@ -39,7 +39,7 @@ const SolutionsHero = () => {
     <header
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative w-full min-h-screen lg:h-[80vh] flex items-center lg:py-0 overflow-hidden bg-slate-50 dark:bg-slate-950"
+      className="relative w-full min-h-[70vh] sm:min-h-screen lg:h-[80vh] flex items-start lg:items-center pt-14 sm:pt-24 lg:pt-0 overflow-hidden bg-slate-50 dark:bg-slate-950"
     >
       <HeroBackground />
 

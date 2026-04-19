@@ -153,7 +153,7 @@ const ServicesGrid = () => {
 
               {/* Icon */}
               <div
-                className={`inline-flex items-center justify-center w-16 h-16 rounded mb-6
+                className={`inline-flex items-center justify-center w-12 h-12 rounded mb-6
                 bg-linear-to-br ${service.gradient} text-white
                 group-hover:scale-110 transition-transform duration-300`}
               >

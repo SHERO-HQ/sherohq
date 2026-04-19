@@ -39,7 +39,7 @@ const Consultation = () => {
    <section className="py-16 px-4 bg-slate-50 dark:bg-slate-950 relative z-20">
     <div className="container max-w-7xl mx-auto">
      <div className="text-center mb-16">
-      <h2 className="text-2xl sm:text-3xl font-bold dark:text-white text-slate-900">Reserve Your Session</h2>
+      <h2 className="text-2xl sm:text-3xl font-bold dark:text-white text-slate-900">Schedule A Session</h2>
       <p className="text-slate-500 dark:text-slate-400 mt-2">Select a time that works for your stakeholders.</p>
      </div>
      <Scheduler />
