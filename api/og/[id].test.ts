@@ -53,16 +53,16 @@ describe("OG handler social previews", () => {
 
     const html = String(res.send.mock.calls[0][0]);
     expect(html).toContain(
-      "<meta property=\"og:title\" content=\"MacBook Pro 14 - GH₵4,500 | SHERO\">",
+      '<meta property="og:title" content="MacBook Pro 14 - GH₵4,500 | SHERO">',
     );
     expect(html).toContain(
-      "<meta name=\"twitter:title\" content=\"MacBook Pro 14 - GH₵4,500 | SHERO\">",
+      '<meta name="twitter:title" content="MacBook Pro 14 - GH₵4,500 | SHERO">',
     );
     expect(html).toContain(
-      "<meta property=\"og:image\" content=\"https://shop.sherohq.com/uploads/primary.jpg\">",
+      '<meta property="og:image" content="https://shop.sherohq.com/uploads/primary.jpg">',
     );
     expect(html).toContain(
-      "<meta property=\"og:url\" content=\"https://shop.sherohq.com/shop/macbook-pro-14\">",
+      '<meta property="og:url" content="https://shop.sherohq.com/shop/macbook-pro-14">',
     );
   });
 
@@ -94,8 +94,8 @@ describe("OG handler social previews", () => {
       expect(res.redirect).not.toHaveBeenCalled();
       expect(res.send).toHaveBeenCalledTimes(1);
       const html = String(res.send.mock.calls[0][0]);
-      expect(html).toContain("<meta property=\"og:image\"");
-      expect(html).toContain("<meta name=\"twitter:image\"");
+      expect(html).toContain('<meta property="og:image"');
+      expect(html).toContain('<meta name="twitter:image"');
     }
   });
 

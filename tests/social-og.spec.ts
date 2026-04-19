@@ -17,10 +17,9 @@ const SOCIAL_UAS = [
 ];
 
 function getDeploymentBaseUrl(): string {
-  return (process.env.SOCIAL_SHARE_BASE_URL || "https://www.sherohq.com").replace(
-    /\/$/,
-    "",
-  );
+  return (
+    process.env.SOCIAL_SHARE_BASE_URL || "https://www.sherohq.com"
+  ).replace(/\/$/, "");
 }
 
 function hasRealImage(product: Product): boolean {
@@ -30,7 +29,9 @@ function hasRealImage(product: Product): boolean {
 }
 
 test.describe("Social OG metadata (deployed)", () => {
-  test("crawler UAs receive product OG image + formatted title", async ({ request }) => {
+  test("crawler UAs receive product OG image + formatted title", async ({
+    request,
+  }) => {
     const baseUrl = getDeploymentBaseUrl();
 
     let productsRes;
@@ -53,7 +54,10 @@ test.describe("Social OG metadata (deployed)", () => {
     const candidate = products.find(hasRealImage);
 
     if (!candidate) {
-      test.skip(true, "No product with a shareable image found in API response");
+      test.skip(
+        true,
+        "No product with a shareable image found in API response",
+      );
       return;
     }
 
@@ -74,21 +78,28 @@ test.describe("Social OG metadata (deployed)", () => {
       ).toBeTruthy();
 
       const html = await res.text();
-      const expectedTitle = `${candidate.name} - GH₵${Number(candidate.price).toLocaleString("en-GH", {
+      const expectedTitle = `${candidate.name} - GH₵${Number(
+        candidate.price,
+      ).toLocaleString("en-GH", {
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,
       })} | SHERO`;
 
       expect(html).toContain(`content=\"${expectedTitle}\"`);
 
-      const ogImageMatch = html.match(/<meta\s+property=\"og:image\"\s+content=\"([^\"]+)\"/i);
+      const ogImageMatch = html.match(
+        /<meta\s+property=\"og:image\"\s+content=\"([^\"]+)\"/i,
+      );
       expect(ogImageMatch, `Missing og:image for ${ua}`).not.toBeNull();
       expect(ogImageMatch?.[1] || "").not.toContain("shero.png");
 
       const twitterImageMatch = html.match(
         /<meta\s+name=\"twitter:image\"\s+content=\"([^\"]+)\"/i,
       );
-      expect(twitterImageMatch, `Missing twitter:image for ${ua}`).not.toBeNull();
+      expect(
+        twitterImageMatch,
+        `Missing twitter:image for ${ua}`,
+      ).not.toBeNull();
     }
   });
 });
