@@ -214,7 +214,7 @@ const ShopView = () => {
       <ProductSpotlight products={products} isLoading={productsLoading} />
 
       {/* Main Content */}
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 lg:py-12">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 lg:py-8">
         <div className="grid lg:grid-cols-[280px_1fr] gap-10">
           {/* Desktop Sidebar - Hidden on Mobile */}
           <aside className="hidden lg:block">
@@ -229,10 +229,10 @@ const ShopView = () => {
             </div>
           </aside>
 
-          <div className="flex flex-col gap-8 min-w-0 mt-5">
+          <div className="flex flex-col gap-4 min-w-0 mt-4">
           {/* Horizontal Filter Bar - Sticky */}
           <div className="sticky top-16 sm:top-24 z-30 px-1 sm:px-0">
-            <div className="flex flex-col gap-4 sm:gap-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-3 sm:p-5 rounded shadow shadow-black/20">
+            <div className="flex flex-col gap-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-2 sm:p-4 rounded shadow shadow-black/20">
               <div className="flex flex-col md:flex-row items-center gap-3 sm:gap-4">
                 <div className="flex-1 w-full">
                   <ProductSearch
@@ -350,7 +350,7 @@ const ShopView = () => {
             />
 
             {/* Results Header (Desktop) - Optional now, keeping it subtle */}
-            <div className="flex items-center justify-between mb-8 px-2">
+            <div className="flex items-center justify-between mb-6 px-2">
               <div>
                 <h2 className="text-xl font-black dark:text-white text-slate-800 tracking-tight uppercase">
                   {activeCategory === "all"

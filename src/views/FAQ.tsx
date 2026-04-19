@@ -54,12 +54,12 @@ const FAQ = () => {
     <>
       <div className="pt-8 pb-12 bg-slate-50 dark:bg-slate-950 min-h-screen">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-1 mb-6 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-500/20 uppercase tracking-wider transition-colors duration-300">
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-500/20 uppercase tracking-wider transition-colors duration-300">
               <HelpCircle className="size-4" />
               Help Center
             </div>
-            <h1 className="text-3xl md:text-6xl font-bold text-slate-900 dark:text-slate-100 mb-6 tracking-tight transition-colors duration-300">
+            <h1 className="text-3xl md:text-6xl font-bold text-slate-900 dark:text-slate-100 mb-4 tracking-tight transition-colors duration-300">
               Answers to common{" "}
               <span className="text-brand-secondary-600">Questions</span>
             </h1>
@@ -69,10 +69,10 @@ const FAQ = () => {
             </p>
           </div>
 
-          <div className="space-y-12">
+          <div className="space-y-8">
             {faqs.map((section, idx) => (
               <div key={idx}>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6 border-b border-slate-200 dark:border-slate-800 pb-2 uppercase">
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4 border-b border-slate-200 dark:border-slate-800 pb-2 uppercase">
                   {section.category}
                 </h2>
                 <div className="space-y-4">
@@ -102,7 +102,7 @@ const FAQItem = ({
     <div className="border border-slate-200 dark:border-slate-800 rounded bg-white dark:bg-slate-900 overflow-hidden">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="cursor-pointer w-full flex items-center justify-between p-6 text-left hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+        className="cursor-pointer w-full flex items-center justify-between p-4 px-6 text-left hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
       >
         <span
           className={`font-semibold pr-8 ${isOpen ? "text-brand-secondary-600 dark:text-brand-secondary-400" : ""}`}
@@ -126,7 +126,7 @@ const FAQItem = ({
             className="overflow-hidden"
           >
             <div
-              className={`p-6 pt-2 leading-relaxed border-t border-slate-100 dark:border-slate-800/50 ${isOpen ? "text-slate-600 dark:text-slate-400" : ""}`}
+              className={`p-6 px-6 pt-2 leading-relaxed border-t border-slate-100 dark:border-slate-800/50 ${isOpen ? "text-slate-600 dark:text-slate-400" : ""}`}
             >
               {answer}
             </div>

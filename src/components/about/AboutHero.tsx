@@ -62,7 +62,7 @@ const AboutHero = () => {
     <header
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center py-20 lg:py-24 overflow-hidden
+      className="relative w-full min-h-[80vh] lg:min-h-screen flex items-center py-12 lg:py-16 overflow-hidden
  bg-slate-50 dark:bg-slate-950"
       role="banner"
     >
@@ -110,9 +110,9 @@ const AboutHero = () => {
  </div> */}
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+        <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-14">
           {/* LEFT: Vision Content (60%) */}
-          <div className="w-full lg:w-[60%] flex flex-col items-start space-y-4">
+          <div className="w-full lg:w-[60%] flex flex-col items-start space-y-3">
             {/* Badge */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
@@ -152,7 +152,7 @@ const AboutHero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-base md:text-lg text-slate-600 dark:text-slate-300 mb-10 leading-relaxed max-w-xl"
+              className="text-base md:text-lg text-slate-600 dark:text-slate-300 mb-6 leading-relaxed max-w-xl"
             >
               We partner with organizations to design, ship, and support
               technology that creates measurable business outcomes.
@@ -163,7 +163,7 @@ const AboutHero = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8 border-t border-slate-200 dark:border-slate-800 w-full"
+              className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-slate-200 dark:border-slate-800 w-full"
             >
               {[
                 {

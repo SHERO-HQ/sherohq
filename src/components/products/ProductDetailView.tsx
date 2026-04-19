@@ -139,10 +139,10 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="min-h-screen dark:bg-slate-950 bg-slate-50 pt-8 pb-24">
+      <div className="min-h-screen dark:bg-slate-950 bg-slate-50 pt-8 pb-12">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Navigation & Actions Header */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-4">
             <button
               onClick={() => (window.location.href = getAbsoluteUrl("/shop"))}
               className="group flex items-center gap-2 text-sm tracking-widest text-slate-500 hover:text-brand-secondary-500 transition-colors"
@@ -160,7 +160,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
             </div>
           </div>
 
-          <div className="grid lg:grid-cols-12 gap-12 lg:items-start">
+          <div className="grid lg:grid-cols-12 gap-8 lg:items-start">
             {/* STICKY Gallery Section (7 columns) */}
             <div className="lg:col-span-7 space-y-6 lg:sticky lg:top-28">
               <div className="group relative aspect-4/5 max-h-110 sm:max-h-135 lg:max-h-170 bg-white dark:bg-white/5 sm:rounded overflow-hidden sm:border border-y sm:border-x border-slate-200 dark:border-white/10 flex items-center justify-center -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full">
@@ -439,8 +439,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
           {/* Specifications Section - Premium Table */}
           {product.specifications &&
             Object.keys(product.specifications).length > 0 && (
-              <div className="mt-12">
-                <div className="flex flex-col items-center mb-12">
+              <div className="mt-8">
+                <div className="flex flex-col items-center mb-8">
                   <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">
                     Technical{" "}
                     <span className="text-brand-secondary-500">Specifications</span>
@@ -486,8 +486,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
 
           {/* Related Products */}
           {(relatedLoading || relatedProducts.length > 0) && (
-            <div className="mt-12 border-t border-slate-200 dark:border-white/10 pt-6">
-              <div className="flex items-center justify-between mb-6">
+            <div className="mt-8 border-t border-slate-200 dark:border-white/10 pt-6">
+              <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">
                   You Might <span className="text-brand-secondary-500">Also Like</span>
                 </h2>
@@ -513,7 +513,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
           )}
 
           {/* Product Reviews */}
-          <div className="mt-12 border-t border-slate-200 dark:border-white/10 pt-12">
+          <div className="mt-8 border-t border-slate-200 dark:border-white/10 pt-8">
             <ProductReviews productId={product.id} />
           </div>
         </div>

@@ -103,14 +103,14 @@ const ServicesGrid = () => {
   };
 
   return (
-    <section id="services" className="w-full pb-16 bg-white dark:bg-slate-950">
+    <section id="services" className="w-full pb-10 bg-white dark:bg-slate-950">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-10"
         >
           <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase">
             <Briefcase className="size-4" />
@@ -138,7 +138,7 @@ const ServicesGrid = () => {
               key={service.title}
               variants={cardVariants}
               whileHover={{ y: -8 }}
-              className="group relative bg-white dark:bg-slate-900 rounded p-8
+              className="group relative bg-white dark:bg-slate-900 rounded p-6
               border-2 border-slate-200 dark:border-slate-800
               hover:border-transparent
               shadow hover:shadow

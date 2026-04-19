@@ -50,7 +50,7 @@ const AboutTestimonials = () => {
   }, [nextSlide, testimonials.length]);
 
   return (
-    <section className="py-24 bg-white dark:bg-slate-950 overflow-hidden relative border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
+    <section className="py-12 bg-white dark:bg-slate-950 overflow-hidden relative border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
       {/* Background decoration */}
       <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-brand-secondary-500/20 to-transparent" />
 
@@ -58,7 +58,7 @@ const AboutTestimonials = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-125 bg-brand-secondary-500/5 rounded-full blur-[100px] pointer-events-none transition-colors duration-300" />
 
       <div className="container px-4 md:px-6 relative z-10 w-full mx-auto md:w-10/12">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
             <UserCheck className="size-4" />
             Client Voices
@@ -69,7 +69,7 @@ const AboutTestimonials = () => {
         </div>
 
         {/* Carousel Container */}
-        <div className="relative max-w-4xl mx-auto mb-20">
+        <div className="relative max-w-4xl mx-auto mb-10">
           {/* Desktop/Side Controls */}
           <button
             onClick={prevSlide}
@@ -119,7 +119,7 @@ const AboutTestimonials = () => {
                         key={item.id || item.author}
                         className="w-full shrink-0 sm:px-4"
                       >
-                        <div className="h-full bg-slate-50/50 dark:bg-slate-900/40  sm:p-8 p-6 md:p-12 rounded border border-slate-200 dark:border-white/5 hover:border-brand-secondary-500/30 transition duration-300 flex flex-col relative group">
+                        <div className="h-full bg-slate-50/50 dark:bg-slate-900/40 p-6 md:p-8 rounded border border-slate-200 dark:border-white/5 hover:border-brand-secondary-500/30 transition duration-300 flex flex-col relative group">
                           <div className="absolute lg:top-8 top-3 right-3 p-3 transition-colors duration-300">
                             <Quote className="size-10 text-brand-secondary-500/40 -z-10" />
                           </div>
@@ -241,7 +241,7 @@ const AboutTestimonials = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex flex-col items-center gap-4 p-8 rounded bg-linear-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-white/10 shadow dark:shadow relative overflow-hidden max-w-lg mx-auto w-full transition duration-300"
+            className="inline-flex flex-col items-center gap-4 p-6 rounded bg-linear-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-white/10 shadow dark:shadow relative overflow-hidden max-w-lg mx-auto w-full transition duration-300"
           >
             <div className="p-3 bg-brand-secondary-500/10 rounded text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-500/20 transition-colors duration-300">
               <MessageSquarePlus className="w-6 h-6" />

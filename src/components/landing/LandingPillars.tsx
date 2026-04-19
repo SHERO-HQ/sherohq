@@ -64,13 +64,13 @@ const PILLARS: PillarsProps[] = [
 
 const LandingPillars = () => {
   return (
-    <section className="relative w-full py-12 bg-white dark:bg-slate-950 overflow-hidden transition-colors duration-300">
+    <section className="relative w-full py-10 bg-white dark:bg-slate-950 overflow-hidden transition-colors duration-300">
       {/* Background Ambience */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-100 via-white to-slate-50 dark:from-slate-900 dark:via-slate-950 dark:to-black transition duration-500 opacity-50 dark:opacity-100" />
       <div className="absolute inset-0 hero-grid-pattern transition-opacity duration-300" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <Reveal direction="up" distance={20}>
             <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
               <Zap className="size-4" />
@@ -106,7 +106,7 @@ const LandingPillars = () => {
 
               {/* Content */}
               <div className="relative z-10 h-full flex flex-col">
-                <div className="flex items-start justify-between mb-8">
+                <div className="flex items-start justify-between mb-6">
                   <div className="p-3 rounded bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white group-hover:scale-110 transition duration-300">
                     {pillar.icon}
                   </div>
@@ -114,10 +114,10 @@ const LandingPillars = () => {
                 </div>
 
                 <div className="mt-auto">
-                  <h4 className="text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 mb-1 uppercase tracking-wider transition-colors duration-300">
+                  <h4 className="text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 mb-0.5 uppercase tracking-wider transition-colors duration-300">
                     {pillar.subheader}
                   </h4>
-                  <h3 className="md:text-2xl text-lg font-bold text-slate-900 dark:text-white mb-3 transition-colors duration-300">
+                  <h3 className="md:text-2xl text-lg font-bold text-slate-900 dark:text-white mb-2 transition-colors duration-300">
                     {pillar.header}
                   </h3>
                   <p className="text-slate-600 dark:text-slate-400 leading-relaxed group-hover:text-slate-900 dark:group-hover:text-slate-200 transition-colors">

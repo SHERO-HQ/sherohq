@@ -63,7 +63,7 @@ const ProductHero = () => {
     <header
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative w-full min-h-[90vh] lg:min-h-screen flex items-center pt-20 pb-20 lg:pt-26 overflow-hidden
+      className="relative w-full min-h-[80vh] lg:min-h-screen flex items-center pt-12 pb-12 lg:pt-16 overflow-hidden
  bg-slate-50 dark:bg-slate-950"
       role="banner"
     >
@@ -124,7 +124,7 @@ const ProductHero = () => {
                     : { duration: 0.8, ease: "easeOut" }
                 }
                 className=" font-extrabold leading-[1.1] text-4xl sm:text-5xl md:text-6xl lg:text-7xl 
- text-slate-900 dark:text-white mb-6"
+ text-slate-900 dark:text-white mb-4"
               >
                 Technology you can{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">

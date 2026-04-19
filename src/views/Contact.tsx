@@ -13,7 +13,7 @@ import { COMPANY_EMAILS } from "@/constants/emails";
 const Contact = () => {
   return (
     <>
-      <div className="relative pt-10 pb-20 lg:pt-16 lg:pb-28 overflow-hidden dark:bg-slate-950 bg-slate-50 min-h-screen">
+      <div className="relative pt-8 pb-12 lg:pt-12 lg:pb-16 overflow-hidden dark:bg-slate-950 bg-slate-50 min-h-screen">
         {/* Dot Pattern Background */}
         <div className="absolute inset-0 pattern-dots opacity-70 dark:opacity-50 pointer-events-none" />
 
@@ -34,7 +34,7 @@ const Contact = () => {
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="space-y-12"
+              className="space-y-8"
             >
               <div>
                 <div className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-500/40 uppercase tracking-wider transition-colors duration-300">
@@ -114,7 +114,7 @@ const Contact = () => {
               className="relative"
             >
               {/* Form Container */}
-              <div className="relative bg-white/90 dark:bg-slate-900/90  border border-slate-200 dark:border-white/10 rounded p-8 shadow">
+              <div className="relative bg-white/90 dark:bg-slate-900/90  border border-slate-200 dark:border-white/10 rounded p-6 shadow">
                 <div className="absolute top-0 right-0 p-6 opacity-20">
                   <MessagesSquare className="w-12 h-12" />
                 </div>
@@ -141,9 +141,9 @@ const Contact = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-32 pt-16 border-t border-slate-200 dark:border-slate-800"
+            className="mt-16 pt-10 border-t border-slate-200 dark:border-slate-800"
           >
-            <div className="text-center mb-16">
+            <div className="text-center mb-10">
               <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">Quick Answers</h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
                 Common questions before starting a conversation with our team.

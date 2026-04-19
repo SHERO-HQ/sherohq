@@ -59,7 +59,7 @@ const SolutionsHero = () => {
               </span>
             </div>
 
-            <h1 className="text-7xl sm:text-7xl md:text-8xl font-black font-sora text-slate-900 dark:text-white leading-[1.01] tracking-tighter mb-6 lg:mb-8">
+            <h1 className="text-7xl sm:text-7xl md:text-8xl font-black font-sora text-slate-900 dark:text-white leading-[1.01] tracking-tighter mb-4 lg:mb-6">
               {["Software", "and", "IT", "Built", "to", "Scale"].map(
                 (word, i) => (
                   <span
@@ -72,12 +72,12 @@ const SolutionsHero = () => {
               )}
             </h1>
 
-            <p className="text-base text-slate-600 dark:text-slate-400 mb-8 lg:mb-10 max-w-2xl leading-relaxed">
+            <p className="text-base text-slate-600 dark:text-slate-400 mb-6 lg:mb-8 max-w-2xl leading-relaxed">
               From high-performance custom platforms to managed enterprise
               infrastructure, we engineer systems that grow with your ambitions.
             </p>
 
-            <div className="grid grid-cols-2 items-center justify-center lg:justify-start gap-3 mb-10 lg:mb-12">
+            <div className="grid grid-cols-2 items-center justify-center lg:justify-start gap-3 mb-8 lg:mb-10">
               {features.map((feature, i) => (
                 <div
                   key={i}

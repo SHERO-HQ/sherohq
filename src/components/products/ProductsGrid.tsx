@@ -39,9 +39,9 @@ const ProductGrid: React.FC<ProductGridProps> = ({
  <motion.div
  initial={{ opacity: 0, scale: 0.95 }}
  animate={{ opacity: 1, scale: 1 }}
- className="w-full py-24 flex flex-col items-center justify-center text-center"
+ className="w-full py-12 flex flex-col items-center justify-center text-center"
  >
- <div className="relative mb-8 group">
+ <div className="relative mb-4 group">
  <div className="absolute inset-0 blur-[50px] group-hover:bg-brand-secondary-500/30 transition-colors duration-500" />
  <div className="relative w-32 h-32  flex items-center justify-center">
  <PackageX className="w-16 h-16 text-slate-300 dark:text-slate-700" />
@@ -51,7 +51,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
  <h3 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter mb-3">
  No <span className="text-brand-secondary-500">Products</span> Found
  </h3>
- <p className="text-sm font-medium text-slate-500 tracking-widest mb-10 max-w-md">
+ <p className="text-sm font-medium text-slate-500 tracking-widest mb-6 max-w-md">
     Try adjusting your filters or explore our full collection of innovative tech solutions.
  </p>
 

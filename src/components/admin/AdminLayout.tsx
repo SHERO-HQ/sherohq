@@ -80,7 +80,7 @@ const AdminLayout = memo(({ children }: Readonly<AdminLayoutProps>) => {
     </div>
 
     {/* Page Content */}
-    <main className="flex-1 p-4 md:p-8 print:p-0">
+    <main className="flex-1 p-3 md:p-6 print:p-0">
      <PageTransition>
       {children}
      </PageTransition>

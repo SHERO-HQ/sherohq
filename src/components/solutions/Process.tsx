@@ -55,12 +55,12 @@ const Process = () => {
  <div className="absolute inset-0 hero-grid-pattern opacity-95 dark:opacity-90" />
 
  <div className="container max-w-5xl mx-auto px-4 relative z-10">
- <div className="text-center mb-15">
+ <div className="text-center mb-10">
  <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-950/50 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase">
  <Workflow className="size-4" />
  How We Work
  </span>
- <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">
+ <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">
  Our Process
  </h2>
  <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
@@ -73,7 +73,7 @@ const Process = () => {
  {/* Central Timeline Line */}
  <div className="absolute left-8 md:left-1/2 transform -translate-x-1/2 h-full w-px bg-linear-to-b from-transparent via-brand-secondary-500/50 to-transparent" />
 
- <div className="space-y-16 md:space-y-24">
+ <div className="space-y-12 md:space-y-16">
  {steps.map((step, index) => {
  const isEven = index % 2 === 0;
  const Icon = step.icon;

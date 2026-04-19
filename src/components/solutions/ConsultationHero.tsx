@@ -4,7 +4,7 @@ import { MessageSquare } from "lucide-react";
 
 const ConsultationHero = () => {
   return (
-    <section className="relative w-full py-20 lg:py-24 overflow-hidden bg-slate-50 dark:bg-slate-950">
+    <section className="relative w-full py-20 lg:py-26 overflow-hidden bg-slate-50 dark:bg-slate-950">
       {/* Dot Pattern Background */}
       <div className="absolute inset-0 pattern-dots opacity-45 dark:opacity-30 pointer-events-none" />
 
@@ -22,19 +22,19 @@ const ConsultationHero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1 mb-5 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/40 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
+          <div className="inline-flex items-center gap-2 px-4 py-1 mb-3 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/40 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
             <MessageSquare className="size-4" />
             <span>Consultation</span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 dark:text-slate-100 mb-6 leading-tight tracking-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 dark:text-slate-100 mb-4 leading-tight tracking-tight">
             Let's Have A <br />
             <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
               Conversation
             </span>
           </h1>
 
-          <p className="text-base md:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
+          <p className="text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto mb-6 leading-relaxed">
             Book a focused session to align technology decisions, delivery
             timelines, and growth priorities with your team.
           </p>

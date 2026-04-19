@@ -81,7 +81,7 @@ const LandingProducts = () => {
   const filteredProducts = getFilteredProducts();
 
   return (
-    <section className="relative w-full py-20 bg-white dark:bg-slate-950">
+    <section className="relative w-full py-12 bg-white dark:bg-slate-950">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -89,7 +89,7 @@ const LandingProducts = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
           <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase">
             <ShoppingCart className="size-4" />
@@ -105,7 +105,7 @@ const LandingProducts = () => {
         </motion.div>
 
         {/* Category Filter */}
-        <div className="flex justify-center mb-12">
+        <div className="flex justify-center mb-8">
           <Tabs
             value={activeCategory}
             onValueChange={setActiveCategory}
@@ -126,7 +126,7 @@ const LandingProducts = () => {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mb-4">
           {isLoading && (
             <>
               {[0, 1, 2, 3].map((i) => (

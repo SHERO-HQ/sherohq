@@ -101,9 +101,9 @@ const LandingHero: React.FC = () => {
 
       <div className="absolute top-0 left-0 right-0 h-36 bg-linear-to-b from-primary/8 to-transparent pointer-events-none" />
 
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-14">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-10">
-          <div className="w-full lg:w-[56%] flex flex-col items-center lg:items-start gap-5 sm:gap-6 text-center lg:text-left">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-10">
+        <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-8">
+          <div className="w-full lg:w-[56%] flex flex-col items-center lg:items-start gap-4 sm:gap-5 text-center lg:text-left">
             <motion.div
               initial={{ x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -157,7 +157,7 @@ const LandingHero: React.FC = () => {
               animate="visible"
               variants={fadeUpAccessible(prefersReducedMotion)}
               transition={{ delay: 0.25 }}
-              className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 pt-1.5 w-full sm:w-auto mb-10 sm:mb-0"
+              className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 pt-1 w-full sm:w-auto mb-6 sm:mb-0"
             >
               <Button
                 asChild

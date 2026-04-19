@@ -38,9 +38,9 @@ const ContactForm = () => {
 
  return (
  <div className="w-full">
- <form onSubmit={handleSubmit} className="space-y-6">
- <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
- <div className="space-y-2">
+ <form onSubmit={handleSubmit} className="space-y-4">
+ <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+ <div className="space-y-1.5">
  <label
  htmlFor="name"
  className="text-sm font-semibold text-slate-900 dark:text-slate-300"
@@ -120,7 +120,7 @@ const ContactForm = () => {
  <textarea
  id="message"
  required
- rows={5}
+ rows={4}
  value={formData.message}
  onChange={(e) =>
  setFormData({ ...formData, message: e.target.value })

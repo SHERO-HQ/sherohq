@@ -52,9 +52,9 @@ const Partners = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center max-w-3xl mx-auto mb-20"
+            className="text-center max-w-3xl mx-auto mb-10"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1 mb-6 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-500/20 uppercase tracking-wider transition-colors duration-300">
+            <div className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-500/20 uppercase tracking-wider transition-colors duration-300">
               <Handshake className="size-4" />
               Strategic Partnerships
             </div>
@@ -81,8 +81,8 @@ const Partners = () => {
           </motion.div>
 
           {/* Partnership Process */}
-          <section className="mb-32 py-16 border-y border-slate-200 dark:border-slate-800/50">
-            <div className="text-center mb-16">
+          <section className="mb-16 py-10 border-y border-slate-200 dark:border-slate-800/50">
+            <div className="text-center mb-10">
               <h2 className="text-[10px] font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest mb-3">The Path to Partnership</h2>
               <p className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 transition-colors duration-300">We Grow Together</p>
             </div>
@@ -105,8 +105,8 @@ const Partners = () => {
           </section>
 
           {/* Ecosystem Grid */}
-          <section className="mb-32">
-            <div className="text-center mb-16">
+          <section className="mb-16">
+            <div className="text-center mb-10">
               <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">Strategic Ecosystem</h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
                 We empower industries that require high-availability enterprise infrastructure and specialized technical support.
@@ -120,7 +120,7 @@ const Partners = () => {
                   whileInView={{ opacity: 1 }}
                   transition={{ delay: idx * 0.05 }}
                   viewport={{ once: true }}
-                  className="bg-slate-50 dark:bg-slate-950 p-8 flex flex-col items-center justify-center gap-4 hover:bg-white dark:hover:bg-slate-900 transition-colors group cursor-default"
+                  className="bg-slate-50 dark:bg-slate-950 p-6 flex flex-col items-center justify-center gap-4 hover:bg-white dark:hover:bg-slate-900 transition-colors group cursor-default"
                 >
                   <div className="flex items-center justify-center group-hover:scale-110 group-hover:text-brand-secondary-500 transition-all duration-300">
                     <partner.icon className="w-8 h-8 text-slate-400 dark:text-slate-600 group-hover:text-brand-secondary-500" />
@@ -134,7 +134,7 @@ const Partners = () => {
           </section>
 
           {/* Become a Partner CTA */}
-          <div className="grid md:grid-cols-2 gap-12 items-center bg-white dark:bg-slate-900 rounded p-8 md:p-12 border border-slate-200 dark:border-slate-800 shadow overflow-hidden relative">
+          <div className="grid md:grid-cols-2 gap-12 items-center bg-white dark:bg-slate-900 rounded p-6 md:p-8 border border-slate-200 dark:border-slate-800 shadow overflow-hidden relative">
             <div className="relative z-10">
               <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-[10px] font-bold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded border border-brand-secondary-500/20 uppercase tracking-widest">
                 Tiered Benefits

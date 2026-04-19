@@ -67,17 +67,17 @@ const LandingPathways = () => {
  ];
 
  return (
- <section className="relative w-full py-32 bg-slate-50 dark:bg-slate-950 overflow-hidden border-t border-slate-200 dark:border-slate-900">
+ <section className="relative w-full py-16 bg-slate-50 dark:bg-slate-950 overflow-hidden border-t border-slate-200 dark:border-slate-900">
  {/* Background decoration */}
  <div className="absolute top-0 right-0 w-1/3 h-full pattern-dots opacity-5 dark:opacity-10 pointer-events-none" />
 
  <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
- <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+ <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
  <div className="max-w-2xl">
- <span className="text-xs font-mono font-bold tracking-[0.3em] uppercase text-brand-secondary-600 dark:text-brand-secondary-400 mb-4 block">
+ <span className="text-xs font-mono font-bold tracking-[0.3em] uppercase text-brand-secondary-600 dark:text-brand-secondary-400 mb-3 block">
  Direct Access
  </span>
- <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">
+ <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">
  Navigate Shero
  </h2>
  <p className="text-sm text-slate-600 dark:text-slate-400">
@@ -150,7 +150,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
  initial={{ opacity: 0, scale: 0.95 }}
  whileInView={{ opacity: 1, scale: 1 }}
  viewport={{ once: true }}
- className={`group relative ${path.span} col-span-1 min-h-60 p-8 rounded border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between overflow-hidden transition-colors hover:border-brand-secondary-500/50 hover:shadow shadow-brand-secondary-500/5`}
+ className={`group relative ${path.span} col-span-1 min-h-60 p-6 rounded border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between overflow-hidden transition-colors hover:border-brand-secondary-500/50 hover:shadow shadow-brand-secondary-500/5`}
  >
  {/* Dynamic Glow Layer */}
  <motion.div
@@ -172,14 +172,14 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
 
  <div className="relative z-10" style={{ transform: "translateZ(40px)" }}>
  <div
- className={`w-14 h-14 rounded bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-6 text-slate-900 dark:text-white border border-slate-100 dark:border-slate-700 group-hover:scale-110 group-hover:text-brand-secondary-500 transition shadow-sm`}
+ className={`w-14 h-14 rounded bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-4 text-slate-900 dark:text-white border border-slate-100 dark:border-slate-700 group-hover:scale-110 group-hover:text-brand-secondary-500 transition shadow-sm`}
  >
  {path.icon}
  </div>
- <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-slate-500 dark:text-slate-500 mb-2 block">
+ <span className="text-[10px] font-mono font-bold tracking-widest uppercase text-slate-500 dark:text-slate-500 mb-1.5 block">
  {path.label}
  </span>
- <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+ <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1.5">
  {path.title}
  </h3>
  <p className="text-slate-600 dark:text-slate-400 text-sm max-w-60 leading-relaxed">

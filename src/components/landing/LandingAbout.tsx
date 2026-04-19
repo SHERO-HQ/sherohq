@@ -20,28 +20,28 @@ const LandingAbout = () => {
   ];
 
   return (
-    <section className="relative w-full py-12 lg:py-16 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-300">
+    <section className="relative w-full py-10 lg:py-12 overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-300">
       {/* Background Ambience */}
       <div className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-brand-secondary-600/8 to-transparent pointer-events-none" />
       <div className="absolute inset-0 pattern-grid-brand opacity-[0.03] dark:opacity-[0.05] pointer-events-none" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-center">
           {/* LEFT COLUMN: Narrative */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="w-full lg:w-1/2 space-y-10"
+            className="w-full lg:w-1/2 space-y-6"
           >
-            <div className="space-y-6">
+            <div className="space-y-4">
               <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase">
                 <Globe className="size-4" />
                 Who We Are
               </span>
 
-              <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-6 leading-tight">
+              <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 leading-tight">
                 Empowering Ghana's <br />
                 <span className="text-brand-secondary-600">Digital Economy</span>
               </h2>

@@ -19,12 +19,12 @@ import {
 
 const AboutStory = () => {
   return (
-    <section className="py-24 bg-white dark:bg-slate-950 relative overflow-hidden pattern-dots">
+    <section className="py-12 bg-white dark:bg-slate-950 relative overflow-hidden pattern-dots">
       {/* Background Elements */}
       <div className="absolute inset-0 hero-grid-pattern" />
 
       <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center border-b border-slate-200 dark:border-slate-400/50 pb-5 mb-16">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center border-b border-slate-200 dark:border-slate-400/50 pb-4 mb-10">
           {/* Image Side */}
           {/* Image Side */}
           <Reveal direction="right" distance={40}>

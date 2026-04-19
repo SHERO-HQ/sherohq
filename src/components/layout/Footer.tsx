@@ -89,7 +89,7 @@ const Footer = () => {
   };
 
   return (
-    <footer className="w-full bg-background relative overflow-hidden border-t border-slate-200 dark:border-slate-800 md:pb-12 py-14 transition-colors duration-300">
+    <footer className="w-full bg-background relative overflow-hidden border-t border-slate-200 dark:border-slate-800 md:pb-8 py-10 transition-colors duration-300">
       {/* Background Ambience */}
       <div className="absolute inset-0 hero-grid-pattern opacity-5 dark:opacity-20 transition-opacity duration-300" />
       <div className="absolute inset-0 bg-linear-to-t from-background via-background/90 to-background/50 pointer-events-none transition duration-300" />
@@ -98,7 +98,7 @@ const Footer = () => {
       <div className="absolute -bottom-1/2 left-1/2 -translate-x-1/2 w-200 h-125 bg-brand-secondary-500/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-12 lg:grid-flow-row-dense gap-12 lg:gap-20 lg:mb-32 mb-4">
+        <div className="grid lg:grid-cols-12 lg:grid-flow-row-dense items-start gap-10 lg:gap-x-20 lg:mb-16 mb-4">
           {/* Item 1: Branding (Desktop Top-Left, Mobile First) */}
           <div className="lg:col-span-5 order-1 space-y-4">
             <div>
@@ -125,14 +125,14 @@ const Footer = () => {
           </div>
 
           {/* Item 2: Navigation & Social (Desktop Top-Right, Mobile Middle) */}
-          <div className="lg:col-span-7 lg:row-span-2 order-2 flex flex-col justify-between">
+          <div className="lg:col-span-7 lg:row-span-2 order-2 flex flex-col justify-start">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
               {/* Company Link Column */}
               <div>
                 <h3 className="text-foreground font-bold text-lg mb-4 flex items-center gap-2">
                   Company <Separator className="w-8 bg-border" />
                 </h3>
-                <ul className="space-y-4">
+                <ul className="space-y-2.5">
                   {companyLinks.map((link) => (
                     <li key={link}>
                       <NavLink
@@ -154,7 +154,7 @@ const Footer = () => {
                 <h3 className="text-foreground font-bold text-lg mb-4 flex items-center gap-2">
                   Resources <Separator className="w-8 bg-border" />
                 </h3>
-                <ul className="space-y-4">
+                <ul className="space-y-2.5">
                   {resourceLinks.map((link) => (
                     <li key={link.label}>
                       <NavLink
@@ -174,7 +174,7 @@ const Footer = () => {
                 <h3 className="text-foreground font-bold text-lg mb-4 flex items-center gap-2">
                   Connect <Separator className="w-12 bg-brand-secondary-500/50" />
                 </h3>
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-2.5">
                   {socialLinks.map((social) => (
                     <a
                       key={social.name}
@@ -193,16 +193,16 @@ const Footer = () => {
               </div>
             </div>
 
-            <Separator className="hidden lg:block w-full bg-linear-to-r from-transparent via-border to-transparent mt-12" />
+            <Separator className="hidden lg:block w-full bg-linear-to-r from-transparent via-border to-transparent mt-8" />
           </div>
 
           {/* Item 3: Contact Card (Desktop Bottom-Left, Mobile Third) */}
-          <div className="lg:col-span-5 order-3 space-y-36">
+          <div className="lg:col-span-5 order-3 space-y-4">
             <div className="rounded overflow-hidden mb-4">
-              <div className="p-6 space-y-8">
+              <div className="p-0 space-y-6">
                 {/* Contact Details Section */}
                 <div>
-                  <h4 className="text-foreground font-bold mb-6 flex items-center gap-2">
+                  <h4 className="text-foreground font-bold mb-4 flex items-center gap-2">
                     Contact Details <Separator className="w-10 bg-brand-secondary-500/50" />
                   </h4>
 

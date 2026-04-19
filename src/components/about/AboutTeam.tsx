@@ -174,9 +174,9 @@ const AboutTeam = () => {
   };
 
   return (
-    <section className="py-24 bg-white pattern-dots dark:bg-slate-900 overflow-hidden border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
+    <section className="py-12 bg-white pattern-dots dark:bg-slate-900 overflow-hidden border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
       <div className="container px-4 md:px-6 mx-auto w-full md:max-w-10/12">
-        <div className="mb-16 space-y-4 flex flex-col md:flex-row md:justify-between justify-start md:items-center items-start">
+        <div className="mb-10 space-y-4 flex flex-col md:flex-row md:justify-between justify-start md:items-center items-start">
           <div>
             <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
               <Users className="size-4" />

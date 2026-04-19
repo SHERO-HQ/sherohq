@@ -36,12 +36,12 @@ const values = [
 
 const AboutValues = () => {
   return (
-    <section className="py-24 bg-white dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
+    <section className="py-12 bg-white dark:bg-slate-950 relative overflow-hidden transition-colors duration-300">
       {/* Background Ambience */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-100/50 via-white to-slate-50 dark:from-slate-900/50 dark:via-slate-950 dark:to-black pointer-events-none transition duration-500" />
 
       <div className="container px-4 md:px-6 mx-auto w-full md:max-w-10/12 relative z-10">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] uppercase font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded transition-colors duration-300">
             <Lightbulb className="size-4" />
             Core Values

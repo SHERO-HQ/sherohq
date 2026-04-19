@@ -68,7 +68,7 @@ const Portfolio = () => {
  }
 
  return (
- <section className="relative w-full py-20 bg-slate-50 dark:bg-slate-950">
+ <section className="relative w-full py-10 bg-slate-50 dark:bg-slate-950">
  <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
  {/* Header */}
  <motion.div
@@ -76,7 +76,7 @@ const Portfolio = () => {
  whileInView={{ opacity: 1, y: 0 }}
  viewport={{ once: true }}
  transition={{ duration: 0.6 }}
- className="text-center mb-12"
+ className="text-center mb-8"
  >
   <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
     <Wrench className="size-4" />
@@ -92,7 +92,7 @@ const Portfolio = () => {
  </motion.div>
 
  {/* Category Filters */}
- <div className="flex justify-center mb-12">
+ <div className="flex justify-center mb-8">
  <Tabs
  value={activeCategory}
  onValueChange={setActiveCategory}
@@ -113,7 +113,7 @@ const Portfolio = () => {
  </div>
 
  {/* Projects Grid */}
- <div className="cursor-pointer grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+ <div className="cursor-pointer grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
  {isLoading &&
  [1, 2, 3, 4, 5, 6].map((i) => (
  <div
