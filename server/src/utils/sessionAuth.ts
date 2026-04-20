@@ -18,7 +18,7 @@ function parseCookies(
   }, {});
 }
 
-function getSessionCookieDomain(): string | undefined {
+function getSessionCookieDomain(req?: Request): string | undefined {
   const configuredDomain = process.env.SESSION_COOKIE_DOMAIN?.trim();
   if (configuredDomain) {
     if (configuredDomain === "none" || configuredDomain === "false") {
@@ -28,9 +28,16 @@ function getSessionCookieDomain(): string | undefined {
   }
 
   if (process.env.NODE_ENV === "production") {
-    // Default to the main domain, but allow the app to work without it if explicitly configured
-    // Note: If the backend is on Render and the frontend is on Vercel,
-    // they MUST share a top-level domain for cookie-based auth to work.
+    // If we have a request, check if the host matches our primary domain
+    if (req) {
+      const host = req.headers.host || "";
+      if (host.includes("sherohq.com")) {
+        return ".sherohq.com";
+      }
+      // If we're in production but NOT on sherohq.com (e.g. onrender.com preview), 
+      // don't set a cross-subdomain cookie as it might fail on different domains.
+      return undefined;
+    }
     return ".sherohq.com";
   }
 
@@ -61,8 +68,11 @@ export function getTokenFromRequest(
   return cookieToken || null;
 }
 
-export function getSessionCookieOptions(maxAgeMs: number): CookieOptions {
-  const domain = getSessionCookieDomain();
+export function getSessionCookieOptions(
+  maxAgeMs: number,
+  req?: Request,
+): CookieOptions {
+  const domain = getSessionCookieDomain(req);
 
   return {
     httpOnly: true,
@@ -74,8 +84,8 @@ export function getSessionCookieOptions(maxAgeMs: number): CookieOptions {
   };
 }
 
-export function getClearSessionCookieOptions(): CookieOptions {
-  const domain = getSessionCookieDomain();
+export function getClearSessionCookieOptions(req?: Request): CookieOptions {
+  const domain = getSessionCookieDomain(req);
 
   return {
     httpOnly: true,

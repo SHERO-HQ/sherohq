@@ -202,7 +202,7 @@ const Support = () => {
                 <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
                   <button
                     onClick={() => setIsTicketModalOpen(true)}
-                    className="flex items-center gap-3 px-8 py-2 rounded bg-brand-secondary-600 text-white font-bold hover:bg-brand-secondary-500 transition shadow shadow-brand-secondary-500/20 hover:scale-[1.02] active:scale-95 w-full md:w-auto justify-center"
+                    className="flex items-center gap-3 px-6 py-2 rounded bg-brand-secondary-600 text-white font-medium text-sm hover:bg-brand-secondary-500 transition shadow shadow-brand-secondary-500/20 hover:scale-[1.02] active:scale-95 w-fit md:w-auto justify-center"
                     aria-label="Submit a Ticket"
                   >
                     <Ticket className="w-5 h-5" />
@@ -210,14 +210,14 @@ const Support = () => {
                   </button>
                   <a
                     href={`mailto:${COMPANY_EMAILS.SUPPORT}`}
-                    className="flex items-center gap-3 px-8 py-2 rounded bg-secondary text-foreground font-bold hover:bg-accent transition  border border-border w-full md:w-auto justify-center"
+                    className="flex items-center gap-3 px-6 py-2 rounded bg-secondary text-foreground font-medium text-sm hover:bg-accent transition  border border-border w-fit md:w-auto justify-center"
                   >
                     <Mail className="w-5 h-5" />
                     <span>Email Us</span>
                   </a>
                   <a
                     href="tel:+233548711582"
-                    className="flex items-center gap-3 px-8 py-2 rounded border-2 border-brand-secondary-500/30 text-brand-secondary-600 dark:text-brand-secondary-400 font-bold hover:bg-brand-secondary-500/10 transition w-full md:w-auto justify-center"
+                    className="flex items-center gap-3 px-6 py-2 rounded border-2 border-brand-secondary-500/30 text-brand-secondary-600 dark:text-brand-secondary-400 font-medium text-sm hover:bg-brand-secondary-500/10 transition w-fit md:w-auto justify-center"
                   >
                     <Phone className="w-5 h-5" />
                     <span>Call Support</span>

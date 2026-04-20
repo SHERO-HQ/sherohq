@@ -269,6 +269,23 @@
         mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
     }
 
+    /* Deep & Vibrant Glassmorphic Surfaces */
+    .glass-surface {
+        @apply backdrop-blur-2xl backdrop-saturate-150 bg-white/85 dark:bg-slate-900/85 border border-black/10 dark:border-white/10 shadow-xl;
+    }
+
+    .glass-surface-md {
+        @apply backdrop-blur-2xl backdrop-saturate-200 bg-white/90 dark:bg-slate-900/90 border border-black/15 dark:border-white/15 shadow-2xl;
+    }
+
+    .glass-surface-lg {
+        @apply backdrop-blur-[40px] backdrop-saturate-200 bg-white/95 dark:bg-slate-900/95 border border-black/20 dark:border-white/20 shadow-2xl;
+    }
+
+    .glass-stroke {
+        @apply border border-black/10 dark:border-white/20;
+    }
+
     /* Enhanced dark mode patterns */
     .dark .pattern-dots {
         background-image: radial-gradient(#94a3b844 1px, transparent 1px);

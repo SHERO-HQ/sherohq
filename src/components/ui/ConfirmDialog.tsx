@@ -63,7 +63,7 @@ export function ConfirmDialog({
  animate={{ opacity: 1 }}
  exit={{ opacity: 0 }}
  transition={{ duration: 0.2 }}
- className="fixed inset-0 z-9999 flex items-center justify-center p-4 bg-black/60 "
+ className="fixed inset-0 z-9999 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
  onClick={handleBackdropClick}
  >
  <motion.div
@@ -71,7 +71,7 @@ export function ConfirmDialog({
  animate={{ scale: 1, opacity: 1, y: 0 }}
  exit={{ scale: 0.95, opacity: 0, y: 20 }}
  transition={{ type: "spring", duration: 0.3 }}
- className="bg-slate-900 border border-white/10 rounded shadow w-full max-w-md overflow-hidden"
+ className="glass-surface-lg w-full max-w-md overflow-hidden shadow-2xl"
  >
  {/* Header */}
  <div className="flex items-start justify-between p-6 pb-0">

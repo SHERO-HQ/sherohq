@@ -89,7 +89,7 @@ export default function TrackOrderLookup() {
 
             <button
               type="submit"
-              className="w-full inline-flex items-center justify-center gap-2 rounded bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white font-semibold px-4 py-2 transition-colors"
+              className="w-full inline-flex items-center justify-center gap-2 rounded bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white font-medium text-sm px-4 py-2 transition-colors"
             >
               <Search className="w-4 h-4" />
               Track Order

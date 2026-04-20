@@ -51,17 +51,17 @@ const LandingFinalCTA = () => {
                 growth systems built for measurable business outcomes.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+              <div className="flex flex-wrap gap-4 justify-center md:justify-start pt-10">
                 <Link
                   href="/contact-us"
-                  className="group inline-flex items-center justify-center gap-2 px-8 py-2 rounded bg-brand-secondary-600 text-white font-medium hover:bg-brand-secondary-500 transition duration-300"
+                  className="group inline-flex items-center justify-center gap-2 px-6 py-2 rounded w-fit bg-brand-secondary-600 text-white text-sm font-medium hover:bg-brand-secondary-500 transition duration-300"
                 >
                   Lets Talk
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
                   href="/solutions"
-                  className="group inline-flex items-center justify-center gap-2 px-8 py-2 rounded bg-white/5 border border-white/10 text-white font-medium hover:bg-white/10 hover:border-white/20 transition duration-300"
+                  className="group inline-flex items-center justify-center gap-2 px-8 py-2 rounded bg-white/5 border border-white/10 text-white text-sm w-fit font-medium hover:bg-white/10 hover:border-white/20 transition duration-300"
                 >
                   <LucideSquareStack className="w-5 h-5 group-hover:rotate-5 transition-transform" />
                 Solutions

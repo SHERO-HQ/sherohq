@@ -110,8 +110,8 @@ const Process = () => {
 
                   {/* Timeline Icon */}
                   <div className="absolute left-8 md:left-1/2 md:-translate-x-1/2 -translate-x-1/2 flex items-center justify-center">
-                    <div className="w-12 h-12 md:w-20 md:h-20 rounded-full bg-brand-secondary-600 dark:bg-brand-secondary-500 shadow shadow-brand-secondary-500/30 flex items-center justify-center border-4 border-white dark:border-slate-900 z-10 transition-transform hover:scale-110">
-                      <Icon className="w-6 h-6 md:w-10 md:h-10 text-white" />
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-brand-secondary-600 dark:bg-brand-secondary-500 shadow shadow-brand-secondary-500/30 flex items-center justify-center border-4 border-white dark:border-slate-900 z-10 transition-transform hover:scale-110">
+                      <Icon className="w-5 h-5 md:w-5 md:h-5 text-white" />
                     </div>
                   </div>
 

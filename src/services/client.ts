@@ -131,12 +131,10 @@ export async function handleResponse<T>(response: Response): Promise<T> {
       }
     }
 
-    if (errorMessage.startsWith("Error ")) {
-      errorMessage = getStatusErrorMessage(response.status) || errorMessage;
-    }
-
     // Append status to aid debugging in production
-    throw new Error(`${errorMessage} (Status: ${response.status})`);
+    const error = new Error(`${errorMessage} (Status: ${response.status})`);
+    (error as any).status = response.status;
+    throw error;
   }
 
   if (!text) {

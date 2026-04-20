@@ -100,8 +100,8 @@ router.post(
       const token = randomBytes(32).toString("hex");
       const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
-      // Delete any existing sessions for this admin
-      await db.query('DELETE FROM sessions WHERE "adminId" = $1', [admin.id]);
+      // Allow multiple concurrent sessions instead of deleting existing ones
+      // await db.query('DELETE FROM sessions WHERE "adminId" = $1', [admin.id]);
 
       // Create new session
       await db.query(
@@ -115,7 +115,7 @@ router.post(
       res.cookie(
         ADMIN_SESSION_COOKIE,
         token,
-        getSessionCookieOptions(7 * 24 * 60 * 60 * 1000),
+        getSessionCookieOptions(7 * 24 * 60 * 60 * 1000, req),
       );
 
       console.log(`✅ Admin logged in: ${admin.username}`);
@@ -159,7 +159,7 @@ router.post("/logout", adminAuth, async (req: AdminRequest, res: Response) => {
       await db.query("DELETE FROM sessions WHERE token = $1", [token]);
     }
 
-    res.cookie(ADMIN_SESSION_COOKIE, "", getClearSessionCookieOptions());
+    res.cookie(ADMIN_SESSION_COOKIE, "", getClearSessionCookieOptions(req));
 
     console.log(`🔓 Admin logout: ${req.admin?.username}`);
     if (req.admin?.id) {

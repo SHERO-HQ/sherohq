@@ -93,7 +93,7 @@ const SolutionsHero = () => {
 
             <Link
               href="/consultation"
-              className="group w-full sm:w-auto flex items-center justify-center gap-6 px-12 h-10 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded font-medium uppercase tracking-widest text-xs hover:bg-brand-secondary-600 dark:hover:bg-brand-secondary-500 dark:hover:text-white transition shadow shadow-black/20"
+              className="group w-fit flex items-center justify-center gap-6 px-12 h-10 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded font-medium uppercase tracking-widest text-xs hover:bg-brand-secondary-600 dark:hover:bg-brand-secondary-500 dark:hover:text-white transition shadow shadow-black/20"
             >
               Let's Talk
               <ArrowRight

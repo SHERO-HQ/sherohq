@@ -285,7 +285,7 @@ const Nav = () => {
   return (
     <>
       <nav
-        className={`w-full transition duration-300 ${isOpen || scrolled ? "bg-background shadow-sm" : "bg-transparent"}`}
+        className={`w-full transition duration-300 z-50 ${isOpen || scrolled ? "glass-surface-md border-t-0 shadow-sm" : "bg-transparent"}`}
         aria-label="main navigation"
         id="nav-menu"
       >
@@ -546,7 +546,7 @@ const Nav = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="absolute inset-0 bg-slate-900/95 backdrop-blur-sm"
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
             />
 
             {/* Menu Panel (Drawer) */}

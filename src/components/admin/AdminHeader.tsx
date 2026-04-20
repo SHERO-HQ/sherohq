@@ -91,7 +91,7 @@ const AdminHeader = memo(({
   <>
    <header
     className={cn(
-     "fixed top-0 right-0 z-30 flex h-20 items-center justify-between border-b border-white/5 bg-slate-900/80  px-4 md:px-6 lg:px-8 transition-all duration-200 ease-in-out",
+     "fixed top-0 right-0 z-30 flex h-20 items-center justify-between glass-surface px-4 md:px-6 lg:px-8 transition-all duration-200 ease-in-out border-x-0 border-t-0",
      isSidebarOpen ? "lg:left-64" : "lg:left-20",
      "left-0",
     )}
@@ -154,7 +154,7 @@ const AdminHeader = memo(({
      {/* Search Bar - Trigger */}
      <button
       onClick={() => setIsSearchOpen(true)}
-      className="hidden lg:flex items-center gap-3 w-64 px-4 py-2 bg-slate-800/50 border border-white/5 rounded text-sm text-slate-500 hover:bg-slate-800/80 hover:border-white/10 transition group text-left"
+      className="hidden lg:flex items-center gap-3 w-64 px-4 py-2 glass-surface-md text-sm text-slate-500 hover:bg-slate-800/80 hover:border-white/20 transition group text-left"
      >
       <Search className="w-4 h-4 group-hover:text-brand-secondary-400 transition-colors" />
       <span className="flex-1">Search everything...</span>

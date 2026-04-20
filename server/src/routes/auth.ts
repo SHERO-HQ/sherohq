@@ -113,7 +113,7 @@ router.post(
       res.cookie(
         USER_SESSION_COOKIE,
         token,
-        getSessionCookieOptions(30 * 24 * 60 * 60 * 1000),
+        getSessionCookieOptions(30 * 24 * 60 * 60 * 1000, req),
       );
 
       // Send verification email (async, don't block response)
@@ -312,7 +312,7 @@ router.post(
       res.cookie(
         USER_SESSION_COOKIE,
         token,
-        getSessionCookieOptions(30 * 24 * 60 * 60 * 1000),
+        getSessionCookieOptions(30 * 24 * 60 * 60 * 1000, req),
       );
       console.timeEnd(`  📝 Create Session [${email}]`);
 
@@ -471,7 +471,7 @@ router.post("/logout", async (req, res) => {
       await db.query("DELETE FROM user_sessions WHERE token = $1", [token]);
     }
 
-    res.cookie(USER_SESSION_COOKIE, "", getClearSessionCookieOptions());
+    res.cookie(USER_SESSION_COOKIE, "", getClearSessionCookieOptions(req));
     res.json({ success: true });
   } catch (error) {
     console.error("Logout error:", error);

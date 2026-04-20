@@ -147,7 +147,7 @@ const LandingHero: React.FC = () => {
               animate="visible"
               variants={prefersReducedMotion ? {} : fadeUp}
               transition={{ delay: 0.15 }}
-              className="sm:text-base text-sm text-slate-600 dark:text-slate-300/95 max-w-2xl leading-relaxed"
+              className="sm:text-base text-sm text-slate-600 dark:text-slate-300/95 max-w-xl leading-relaxed"
             >
               {HERO_CONTENT.subHeader}
             </motion.p>
@@ -157,23 +157,23 @@ const LandingHero: React.FC = () => {
               animate="visible"
               variants={fadeUpAccessible(prefersReducedMotion)}
               transition={{ delay: 0.25 }}
-              className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 pt-1 w-full sm:w-auto mb-6 sm:mb-0"
+              className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 pt-1 w-fit sm:w-auto mb-6 sm:mb-0"
             >
               <Button
                 asChild
                 variant="brandSecondary"
                 size="lg"
-                className="text-base font-medium w-full sm:w-auto h-10 px-8 group transition-all hover:-translate-y-0.5"
+                className="text-sm font-medium w-fit sm:w-auto h-10 px-6 group transition-all hover:-translate-y-0.5"
               >
                 <NavLink href={getAbsoluteUrl("/shop")}>
-                  <span className="text-base">Shop Products</span>
+                  <span className="text-sm">Shop Products</span>
                   <ShoppingCart className="w-5 h-5" />
                 </NavLink>
               </Button>
 
               <NavLink
                 href={getAbsoluteUrl("/solutions")}
-                className="group flex items-center justify-center gap-2 text-base font-medium text-slate-700 dark:text-slate-200 hover:text-primary rounded px-4 py-2 h-10 w-full sm:w-auto transition-all border-2 border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-900 hover:border-primary"
+                className="group flex items-center justify-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary rounded px-4 py-2 h-10 w-fit transition-all glass-surface-md hover:bg-white dark:hover:bg-slate-900 hover:border-primary"
                 role="button"
                 aria-label="Explore solutions"
               >
@@ -231,7 +231,7 @@ const LandingHero: React.FC = () => {
                 <div className="absolute inset-0 bg-linear-to-br from-white/55 via-transparent to-slate-100/35 dark:from-slate-800/30 dark:to-slate-950/35 pointer-events-none" />
                 <div className="absolute inset-x-0 top-0 h-px bg-white/90 dark:bg-white/10 pointer-events-none" />
 
-                <div className="relative z-10 grid grid-cols-[auto_1fr_auto] items-center h-11 sm:h-12 px-4 sm:px-5 border-b border-slate-200/80 dark:border-slate-800/80 bg-linear-to-b from-slate-100/95 to-slate-200/80 dark:from-slate-900/95 dark:to-slate-950/95">
+                <div className="relative z-10 grid grid-cols-[auto_1fr_auto] items-center h-11 sm:h-12 px-4 sm:px-5 border-b border-black/5 dark:border-white/5 glass-surface-md rounded-t">
                   <div className="flex items-center gap-2" aria-hidden="true">
                     <span className="h-3 w-3 rounded-full bg-[#ff5f57] ring-1 ring-black/15 dark:ring-black/40" />
                     <span className="h-3 w-3 rounded-full bg-[#febc2e] ring-1 ring-black/15 dark:ring-black/40" />
@@ -300,7 +300,7 @@ const LandingHero: React.FC = () => {
                     ].map((item) => (
                       <div
                         key={item.title}
-                        className="flex items-start gap-3 rounded border border-slate-200/70 dark:border-slate-800 p-3.5 bg-white/70 dark:bg-slate-900/60"
+                        className="flex items-start gap-3 rounded glass-surface p-3.5 shadow-sm"
                       >
                         <div className="rounded bg-brand-secondary-600/10 text-brand-secondary-700 dark:text-brand-secondary-300 p-2 mt-0.5">
                           <item.icon className="w-4 h-4" />

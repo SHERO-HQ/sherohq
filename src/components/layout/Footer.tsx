@@ -178,8 +178,8 @@ const Footer = () => {
                       rel="noopener noreferrer"
                       className="flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white group transition-colors duration-300"
                     >
-                      <div className="w-8 h-8 rounded bg-slate-200 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 flex items-center justify-center group-hover:border-brand-secondary-500/50 group-hover:bg-brand-secondary-500/10 transition duration-500 saturate-[0.1] opacity-30 group-hover:saturate-100 group-hover:opacity-100">
-                        <social.icon className="w-5 h-5 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors" />
+                      <div className="w-8 h-8 rounded bg-slate-200 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 flex items-center justify-center group-hover:border-brand-secondary-500/50 group-hover:bg-brand-secondary-500/10 transition duration-500 opacity-80 group-hover:opacity-100">
+                        <social.icon className="w-5 h-5 text-slate-600 dark:text-slate-400 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors" />
                       </div>
                       <span className="text-sm font-medium">{social.name}</span>
                     </a>

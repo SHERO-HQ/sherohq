@@ -172,7 +172,7 @@ const LandingProducts = () => {
         >
           <Link
             href="/shop"
-            className="inline-flex items-center gap-3 px-8 py-2 rounded
+            className="inline-flex items-center gap-3 text-sm px-6 py-2 rounded
  border-2 border-slate-300 dark:border-slate-700
   text-slate-700 dark:text-slate-300 font-medium
   hover:border-brand-secondary-500 dark:hover:border-brand-secondary-500
@@ -180,7 +180,7 @@ const LandingProducts = () => {
   hover:shadow
   transition duration-300 group"
           >
-            <span>Visit the Shop</span>
+            <span>Shop Now</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>

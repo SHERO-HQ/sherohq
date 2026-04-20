@@ -168,7 +168,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
 
       <aside
         className={cn(
-          "fixed top-0 left-0 h-full bg-slate-900/40  border-r border-white/10 z-50 transition-all duration-200 ease-in-out",
+          "fixed top-0 left-0 h-full glass-surface backdrop-blur-md z-50 transition-all duration-200 ease-in-out shadow-2xl",
           isOpen
             ? "w-64 translate-x-0"
             : "w-20 -translate-x-full lg:translate-x-0",
