@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "motion/react";
-import { Truck, ShieldCheck, Headset, CreditCard } from "lucide-react";
+import { Truck, ShieldCheck, Headset, CreditCard, Verified } from "lucide-react";
 
 const values = [
   {
@@ -9,7 +9,7 @@ const values = [
     description: "On orders over GH₵500",
   },
   {
-    icon: ShieldCheck,
+    icon: Verified,
     title: "Verified Products",
     description: "Authentic hardware guaranteed",
   },

@@ -130,7 +130,7 @@ export function Card({ children, className = "", interactive = false }: CardProp
   return (
     <div
       className={`
-        bg-card border border-border rounded-lg p-6 shadow-sm
+        bg-card border border-border rounded p-6 shadow-sm
         ${interactive ? "hover:shadow-md hover:scale-102 transition-all cursor-pointer" : ""}
         ${className}
       `}
@@ -398,7 +398,7 @@ export function Modal({
             <div
               onClick={(e) => e.stopPropagation()}
               className={`
-                bg-card border border-border rounded-lg shadow-2xl
+                bg-card border border-border rounded shadow-2xl
                 w-full ${sizeClasses[size]}
                 max-h-[90vh] overflow-y-auto
               `}

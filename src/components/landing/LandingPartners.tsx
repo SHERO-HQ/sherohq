@@ -19,17 +19,17 @@ const LandingPartners = () => {
   const duplicatedPartners = [...PARTNERS, ...PARTNERS, ...PARTNERS];
 
   return (
-    <section className="w-full py-12 bg-white dark:bg-slate-950 relative overflow-hidden border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
+    <section className="w-full py-12 bg-white dark:bg-slate-950 relative overflow-hidden border-y border-slate-200 dark:border-white/10 transition-colors duration-300">
       {/* Background Ambience */}
       <div className="absolute inset-0 pattern-dots opacity-80 dark:opacity-25 transition-opacity duration-300" />
 
       {/* Header */}
       <div className="container mx-auto px-4 relative z-10 mb-8 text-center">
-        <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
+        <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] uppercase font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded transition-colors duration-300">
           <Briefcase className="size-4" />
           Trusted Brands
         </span>
-        <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 transition-colors duration-300">
+        <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 transition-colors duration-300">
           We Supply & Support the Best
         </h2>
       </div>

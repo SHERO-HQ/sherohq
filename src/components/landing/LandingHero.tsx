@@ -16,10 +16,10 @@ import { RocketIcon } from "@/assets/icons/icons";
 import {
   ArrowRight,
   BriefcaseBusiness,
-  // Headset,
   ShieldCheck,
   ShoppingCart,
   Users,
+  Verified,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -108,10 +108,10 @@ const LandingHero: React.FC = () => {
               initial={{ x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded border border-brand-secondary-600/25 bg-white/70 dark:bg-slate-900/70"
+              className="inline-flex items-center gap-2 px-4 py-1 rounded border border-brand-secondary-500/20 bg-brand-secondary-500/5 transition-colors duration-300 "
             >
-              <RocketIcon className="w-4 h-4 text-brand-secondary-600 dark:text-brand-secondary-400" />
-              <span className="text-xs sm:text-sm font-mono font-semibold tracking-widest uppercase text-brand-secondary-700 dark:text-brand-secondary-300">
+              <RocketIcon className="size-4 text-brand-secondary-500" />
+              <span className="text-[10px] font-semibold uppercase text-brand-secondary-600 dark:text-brand-secondary-400">
                 Trusted Technology Partner
               </span>
             </motion.div>
@@ -122,7 +122,7 @@ const LandingHero: React.FC = () => {
                 initial={false}
                 animate="visible"
                 variants={prefersReducedMotion ? {} : fadeUp}
-                className="font-extrabold leading-[1.01] text-7xl sm:text-8xl md:text-8xl lg:text-9xl tracking-tight text-slate-900 dark:text-white relative z-10"
+                className="font-extrabold leading-[1.01]  text-6xl lg:text-7xl tracking-tighter text-slate-900 dark:text-white relative z-10"
               >
                 {HERO_CONTENT.mainHeader.split(" ").map((word, i) =>
                   word === "\n" ? (
@@ -147,7 +147,7 @@ const LandingHero: React.FC = () => {
               animate="visible"
               variants={prefersReducedMotion ? {} : fadeUp}
               transition={{ delay: 0.15 }}
-              className="text-base sm:text-2xl text-slate-600 dark:text-slate-300/95 max-w-2xl leading-relaxed"
+              className="sm:text-base text-sm text-slate-600 dark:text-slate-300/95 max-w-2xl leading-relaxed"
             >
               {HERO_CONTENT.subHeader}
             </motion.p>
@@ -163,7 +163,7 @@ const LandingHero: React.FC = () => {
                 asChild
                 variant="brandSecondary"
                 size="lg"
-                className="text-base font-medium! w-full sm:w-auto h-10 px-8 group transition-all hover:-translate-y-0.5"
+                className="text-base font-medium w-full sm:w-auto h-10 px-8 group transition-all hover:-translate-y-0.5"
               >
                 <NavLink href={getAbsoluteUrl("/shop")}>
                   <span className="text-base">Shop Products</span>
@@ -173,7 +173,7 @@ const LandingHero: React.FC = () => {
 
               <NavLink
                 href={getAbsoluteUrl("/solutions")}
-                className="group flex items-center justify-center gap-2 text-base font-medium text-slate-700 dark:text-slate-200 hover:text-primary! rounded px-4 py-2 h-10 w-full sm:w-auto transition-all border-2 border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-900 hover:border-primary!"
+                className="group flex items-center justify-center gap-2 text-base font-medium text-slate-700 dark:text-slate-200 hover:text-primary rounded px-4 py-2 h-10 w-full sm:w-auto transition-all border-2 border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/70 hover:bg-white dark:hover:bg-slate-900 hover:border-primary"
                 role="button"
                 aria-label="Explore solutions"
               >
@@ -275,7 +275,7 @@ const LandingHero: React.FC = () => {
                       </div>
                     </div>
                     <div className="inline-flex items-center gap-2 text-brand-secondary-700 dark:text-brand-secondary-300 text-xs font-mono font-semibold uppercase tracking-wide">
-                      <ShieldCheck className="w-3.5 h-3.5" />
+                      <Verified className="w-4 h-4" />
                       Verified
                     </div>
                   </div>

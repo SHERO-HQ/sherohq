@@ -182,7 +182,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
  type="submit"
  variant="brand"
  disabled={saving}
- className="ml-auto font-bold px-8 h-10"
+ className="ml-auto font-medium px-8 h-10"
  >
  {saving ? (
  <span className="flex items-center gap-2">Saving...</span>

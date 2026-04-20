@@ -87,7 +87,7 @@ const CartDrawer = () => {
                   <Button
                     onClick={() => setIsCartOpen(false)}
                     variant="brand"
-                    className="font-bold"
+                    className="font-medium"
                   >
                     Start Shopping
                   </Button>
@@ -195,7 +195,7 @@ const CartDrawer = () => {
                     router.push("/shop/checkout");
                   }}
                   variant="brand"
-                  className="w-full h-12 font-bold group"
+                  className="w-full h-12 font-medium group"
                 >
                   Proceed to Checkout
                   <ArrowRight className="w-5 h-2.5 group-hover:translate-x-1 transition-transform" />

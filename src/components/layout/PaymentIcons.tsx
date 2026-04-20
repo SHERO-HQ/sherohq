@@ -1,10 +1,8 @@
-import Image from "next/image";
-
 const PaymentIcons = () => {
   const icons = [
     { name: "Visa", src: "/assets/icons/payment/visa.svg", h: 12 },
     { name: "Mastercard", src: "/assets/icons/payment/mastercard.svg", h: 12 },
-    { name: "MTN MoMo", src: "/assets/icons/payment/mtn.svg", h: 26 },
+    { name: "MTN MoMo", src: "/assets/icons/payment/mtn.png", h: 26 },
     { name: "Telecel Cash", src: "/assets/icons/payment/telecelcash.png", h: 24 },
   ];
 

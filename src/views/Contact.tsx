@@ -144,7 +144,11 @@ const Contact = () => {
             className="mt-16 pt-10 border-t border-slate-200 dark:border-slate-800"
           >
             <div className="text-center mb-10">
-              <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">Quick Answers</h2>
+              <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
+                <MessagesSquare className="size-4" />
+                Quick Answers
+              </span>
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">Frequently Asked</h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
                 Common questions before starting a conversation with our team.
               </p>

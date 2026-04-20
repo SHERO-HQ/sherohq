@@ -46,7 +46,7 @@ const AboutValues = () => {
             <Lightbulb className="size-4" />
             Core Values
           </span>
-          <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
             Our Core Principles
           </h2>
           <p className="max-w-2xl mx-auto text-sm text-slate-600 dark:text-slate-400 transition-colors duration-300">
@@ -81,7 +81,7 @@ const AboutValues = () => {
               >
                 <item.icon className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-black text-slate-900 dark:text-white mb-3 tracking-tighter group-hover:text-brand-secondary-500 transition-colors">
+              <h3 className="text-lg font-black text-slate-900 dark:text-white mb-3 tracking-tighter group-hover:text-brand-secondary-500 transition-colors">
                 {item.title}
               </h3>
               <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light group-hover:text-slate-800 dark:group-hover:text-slate-300 transition-colors line-clamp-3">

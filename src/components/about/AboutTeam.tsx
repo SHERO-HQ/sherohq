@@ -137,7 +137,7 @@ const AboutTeam = () => {
                   <h3 className=" font-semibold text-slate-900 dark:text-white group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors duration-300">
                     {member.name}
                   </h3>
-                  <p className="text-brand-secondary-600 dark:text-brand-secondary-500 text-[11px] font-medium mt-1 uppercase tracking-widest">
+                  <p className="text-brand-secondary-600 dark:text-brand-secondary-500 text-[10px] font-bold mt-1 uppercase tracking-[0.2em]">
                     {member.role}
                   </p>
                 </div>
@@ -178,11 +178,11 @@ const AboutTeam = () => {
       <div className="container px-4 md:px-6 mx-auto w-full md:max-w-10/12">
         <div className="mb-10 space-y-4 flex flex-col md:flex-row md:justify-between justify-start md:items-center items-start">
           <div>
-            <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
+            <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] uppercase font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded transition-colors duration-300">
               <Users className="size-4" />
               Our Team
             </span>
-            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
               Meet the Minds
             </h2>
             <p className="text-slate-600 dark:text-slate-400 max-w-2xl mt-2 transition-colors duration-300">
@@ -191,7 +191,7 @@ const AboutTeam = () => {
             </p>
           </div>
           <div className="pt-2">
-            <button className="cursor-pointer text-brand-secondary-600 dark:text-brand-secondary-400 font-semibold hover:text-brand-secondary-700 dark:hover:text-brand-secondary-300 transition-colors flex items-center gap-2 mx-auto uppercase tracking-wider text-sm">
+            <button className="cursor-pointer text-brand-secondary-600 dark:text-brand-secondary-400 font-medium hover:text-brand-secondary-700 dark:hover:text-brand-secondary-300 transition-colors flex items-center gap-2 mx-auto uppercase tracking-wider text-sm">
               Join the team <ArrowRight className="w-4 h-4" />
             </button>
           </div>

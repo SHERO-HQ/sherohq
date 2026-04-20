@@ -62,7 +62,6 @@ const Support = () => {
   return (
     <>
       <div className="pt-8 pb-12 bg-background min-h-screen text-foreground relative overflow-hidden transition-colors duration-300">
-        {/* Ambient Background Glows - Visible in both but subtle */}
         <div className="absolute top-0 left-1/4 w-125 h-125 bg-brand-secondary-500/5 dark:bg-brand-secondary-500/10 rounded-full blur-[120px] -z-10 animate-pulse" />
         <div className="absolute bottom-0 right-1/4 w-125 h-125 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[120px] -z-10" />
 
@@ -72,14 +71,13 @@ const Support = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="inline-flex items-center gap-2 px-4 py-1 mb-6 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-200 dark:border-brand-secondary-500/20 uppercase tracking-wider transition-colors duration-300"
+              className="inline-flex items-center gap-2 px-4 py-1 mb-6 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-200 dark:border-brand-secondary-500/20 uppercase transition-colors duration-300"
             >
               <LifeBuoy className="size-4" />
               <span>Customer Support</span>
             </motion.div>
             <h1 className="text-3xl md:text-6xl font-bold text-foreground mb-6 tracking-tight transition-colors duration-300">
-              Get Help in{" "}
-              <span className="text-brand-secondary-600">Minutes</span>
+              Get Help in <span className="text-brand-secondary-600">Minutes</span>
             </h1>
             <p className="text-muted-foreground text-base max-w-2xl mx-auto mb-8 leading-relaxed">
               Search guides, download updates, or connect directly with our team
@@ -133,15 +131,13 @@ const Support = () => {
                   viewport={{ once: true }}
                   className="bg-card/40 dark:bg-slate-900/40  p-8 rounded border border-border hover:border-brand-secondary-500/30 hover:bg-card/60 dark:hover:bg-slate-900/60 transition group relative overflow-hidden shadow-sm hover:shadow"
                 >
-                  {/* Pattern dots on hover */}
                   <div className="absolute pattern-dots pattern-brand-secondary-500/10 pattern-opacity-100 pattern-size-4 top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 -z-10" />
-
                   <div className="absolute -top-15 -right-15 w-44 h-44 bg-linear-to-br from-brand-secondary-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-full" />
 
                   <div className="w-14 h-14 bg-brand-secondary-100 dark:bg-brand-secondary-900/40 rounded flex items-center justify-center mb-6 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:scale-110 group-hover:bg-brand-secondary-500 dark:group-hover:bg-brand-secondary-700/80 group-hover:text-white transition duration-300 shadow shadow-brand-secondary-500/10">
                     <item.icon className="w-7 h-7" />
                   </div>
-                  <h3 className="text-2xl font-bold text-foreground mb-3 tracking-snug">
+                  <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 tracking-tight transition-colors">
                     {item.title}
                   </h3>
                   <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
@@ -180,18 +176,22 @@ const Support = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex flex-col lg:flex-row items-center justify-between bg-linear-to-br from-card via-card to-brand-secondary-50 dark:from-slate-900 dark:via-slate-900 dark:to-brand-secondary-900/20  rounded p-8 md:p-16 border border-border text-center lg:text-left relative overflow-hidden shadow pattern-dots pattern-brand-secondary-500/90 pattern-opacity-100 pattern-size-4pattern-dots pattern-brand-secondary-500/10 pattern-opacity-100 pattern-size-4"
+            className="flex flex-col lg:flex-row items-center justify-between bg-linear-to-br from-card via-card to-brand-secondary-50 dark:from-slate-900 dark:via-slate-900 dark:to-brand-secondary-900/20  rounded p-8 md:p-16 border border-border text-center lg:text-left relative overflow-hidden shadow pattern-dots pattern-brand-secondary-500/10 pattern-opacity-100 pattern-size-4"
           >
             <div className="absolute top-0 right-0 w-96 h-96 bg-brand-secondary-500/5 dark:bg-brand-secondary-500/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
 
             <div className="z-10 flex flex-col lg:flex-row items-center gap-10 lg:gap-16 w-full">
               <div className="p-6 group shrink-0 flex">
-                <HeadsetIcon className="w-28 h-28 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:rotate-12 transition-transform duration-500" />
+                <HeadsetIcon className="w-24 h-24 md:w-28 md:h-28 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:rotate-12 transition-transform duration-500" />
               </div>
 
               <div className="flex-1">
-                <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-4 tracking-tight transition-colors duration-300">
+                <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-200 dark:border-brand-secondary-500/20 uppercase transition-colors duration-300">
+                  <LifeBuoy className="size-4" />
+                  Connect With Support
+                </span>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4 tracking-tight transition-colors duration-300">
                   Still need help?
                 </h2>
                 <p className="text-muted-foreground text-sm mb-10 max-w-xl">
@@ -202,7 +202,7 @@ const Support = () => {
                 <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
                   <button
                     onClick={() => setIsTicketModalOpen(true)}
-                    className="flex items-center gap-3 px-8 py-2 rounded bg-brand-secondary-600 text-white dark:text-slate-950 font-bold hover:bg-brand-secondary-500 transition shadow shadow-brand-secondary-500/20 hover:scale-[1.02] active:scale-95 w-full md:w-auto justify-center"
+                    className="flex items-center gap-3 px-8 py-2 rounded bg-brand-secondary-600 text-white font-bold hover:bg-brand-secondary-500 transition shadow shadow-brand-secondary-500/20 hover:scale-[1.02] active:scale-95 w-full md:w-auto justify-center"
                     aria-label="Submit a Ticket"
                   >
                     <Ticket className="w-5 h-5" />

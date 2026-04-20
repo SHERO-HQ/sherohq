@@ -10,6 +10,7 @@ import {
   Landmark,
   HeartPulse,
   Sprout,
+  Workflow,
   type LucideIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -32,9 +33,18 @@ const Partners = () => {
   ];
 
   const steps = [
-    { title: "Application", desc: "Submit your partnership interest form with core business details." },
-    { title: "Validation", desc: "Our executive team reviews local alignment and technical capacity." },
-    { title: "Onboarding", desc: "Gain full access to the SHERO portal and tiered wholesale pricing." }
+    {
+      title: "Application",
+      desc: "Submit your partnership interest form with core business details.",
+    },
+    {
+      title: "Validation",
+      desc: "Our executive team reviews local alignment and technical capacity.",
+    },
+    {
+      title: "Onboarding",
+      desc: "Gain full access to the SHERO portal and tiered wholesale pricing.",
+    },
   ];
 
   const benefits = [
@@ -54,13 +64,12 @@ const Partners = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto mb-10"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-500/20 uppercase tracking-wider transition-colors duration-300">
+            <div className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-500/20 uppercase transition-colors duration-300">
               <Handshake className="size-4" />
               Strategic Partnerships
             </div>
             <h1 className="text-3xl md:text-6xl font-bold text-slate-900 dark:text-slate-100 mb-6 tracking-tight transition-colors duration-300">
-              Grow with{" "}
-              <span className="text-brand-secondary-600">SHERO</span>
+              Grow with <span className="text-brand-secondary-600">SHERO</span>
             </h1>
             <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
               Collaborate on enterprise projects, unlock distribution
@@ -83,8 +92,13 @@ const Partners = () => {
           {/* Partnership Process */}
           <section className="mb-16 py-10 border-y border-slate-200 dark:border-slate-800/50">
             <div className="text-center mb-10">
-              <h2 className="text-[10px] font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest mb-3">The Path to Partnership</h2>
-              <p className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 transition-colors duration-300">We Grow Together</p>
+              <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
+                <Workflow className="size-4" />
+                The Path to Partnership
+              </span>
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 transition-colors duration-300">
+                We Grow Together
+              </h2>
             </div>
             <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto px-4">
               {steps.map((step, idx) => (
@@ -97,8 +111,12 @@ const Partners = () => {
                       <div className="hidden md:block h-px flex-1 bg-linear-to-r from-slate-200 to-transparent dark:from-slate-800" />
                     )}
                   </div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{step.title}</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{step.desc}</p>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                    {step.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {step.desc}
+                  </p>
                 </div>
               ))}
             </div>
@@ -107,9 +125,16 @@ const Partners = () => {
           {/* Ecosystem Grid */}
           <section className="mb-16">
             <div className="text-center mb-10">
-              <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">Strategic Ecosystem</h2>
+              <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
+                <Globe2 className="size-4" />
+                Strategic Ecosystem
+              </span>
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
+                Expanding Reach
+              </h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
-                We empower industries that require high-availability enterprise infrastructure and specialized technical support.
+                We empower industries that require high-availability enterprise
+                infrastructure and specialized technical support.
               </p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-slate-200 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 overflow-hidden rounded">
@@ -136,10 +161,11 @@ const Partners = () => {
           {/* Become a Partner CTA */}
           <div className="grid md:grid-cols-2 gap-12 items-center bg-white dark:bg-slate-900 rounded p-6 md:p-8 border border-slate-200 dark:border-slate-800 shadow overflow-hidden relative">
             <div className="relative z-10">
-              <div className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-[10px] font-bold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded border border-brand-secondary-500/20 uppercase tracking-widest">
+              <div className="inline-flex items-center gap-2 px-4 py-1 mb-6 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/20 rounded uppercase transition-colors duration-300">
+                <Handshake className="size-4" />
                 Tiered Benefits
               </div>
-              <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-6 transition-colors duration-300">
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-6 transition-colors duration-300">
                 Become a Solution Partner
               </h2>
               <ul className="space-y-4 mb-8 text-sm">

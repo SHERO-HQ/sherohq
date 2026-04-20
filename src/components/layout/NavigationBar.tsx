@@ -621,11 +621,11 @@ const Nav = () => {
                   {mounted && isAuthenticated ? (
                     <div className="space-y-6">
                       <div className="flex items-center gap-4 p-4 rounded bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800/50">
-                        <div className="w-12 h-12 rounded font-semibold bg-linear-to-br from-brand-secondary-500 to-brand-secondary-600 flex items-center justify-center text-xl text-white shadow shadow-brand-secondary-500/20">
+                        <div className="w-12 h-12 rounded font-medium bg-linear-to-br from-brand-secondary-500 to-brand-secondary-600 flex items-center justify-center text-xl text-white shadow shadow-brand-secondary-500/20">
                           {user?.name?.charAt(0)}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-[15px] font-semibold text-slate-900 dark:text-white truncate">
+                          <p className="text-[15px] font-medium text-slate-900 dark:text-white truncate">
                             {user?.name}
                           </p>
                           <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
@@ -640,7 +640,7 @@ const Nav = () => {
                           className="flex flex-col items-center justify-center gap-2 p-4 text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-900/50 hover:bg-white dark:hover:bg-slate-900 border border-transparent hover:border-slate-200 dark:hover:border-slate-800 rounded transition-all group/item shadow-sm"
                         >
                           <User className="w-5 h-5 text-slate-400 group-hover/item:text-brand-secondary-500" />
-                          <span className="font-semibold text-[11px]">Profile</span>
+                          <span className="font-medium text-[11px]">Profile</span>
                         </NavLink>
                         <button
                           onClick={() => {
@@ -650,7 +650,7 @@ const Nav = () => {
                           className="flex flex-col items-center justify-center gap-2 p-3 text-red-600 dark:text-red-400 bg-red-50/30 dark:bg-red-950/10 hover:bg-red-50 dark:hover:bg-red-950/20 border border-transparent hover:border-red-100 dark:hover:border-red-900/30 rounded transition-all group/logout shadow-sm"
                         >
                           <LogOut className="w-5 h-5 opacity-70 group-hover/logout:opacity-100" />
-                          <span className="font-semibold text-[11px]">Logout</span>
+                          <span className="font-medium text-[11px]">Logout</span>
                         </button>
                       </div>
                     </div>
@@ -664,7 +664,7 @@ const Nav = () => {
                         <User className="w-4 h-4" />
                       </div>
                       <div className="flex-1">
-                        <span className="block font-extrabold text-[15px] tracking-tight">
+                        <span className="block font-medium text-[15px] tracking-tight">
                           Login
                         </span>
                         <span className="block text-[11px] text-brand-secondary-600/70 dark:text-brand-secondary-400/70 mt-0.5">

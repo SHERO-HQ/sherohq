@@ -54,7 +54,7 @@
 | `gap-8` `p-8`   | 32px   | Section separation      |
 | `gap-12` `p-12` | 48px   | Major layout gaps       |
 
-**Border Radius**: `rounded` = 6px (default), `rounded-lg` = 8px, `rounded-2xl` = 16px
+**Border Radius**: `rounded` = 6px (default), `rounded` = 8px, `rounded-2xl` = 16px
 
 **Breakpoints**: `sm` 640px | `md` 768px | `lg` 1024px | `xl` 1280px
 
@@ -81,7 +81,7 @@
 ### Card
 
 ```jsx
-<div className="bg-card border border-border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+<div className="bg-card border border-border rounded p-6 shadow-sm hover:shadow-md transition-shadow">
   {/* content */}
 </div>
 ```
@@ -122,7 +122,7 @@
 
 ```jsx
 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-  <div className="bg-card rounded-lg shadow-2xl p-6 max-w-md mx-4">
+  <div className="bg-card rounded shadow-2xl p-6 max-w-md mx-4">
     {/* content */}
   </div>
 </div>
@@ -184,7 +184,7 @@ import { motion } from "motion/react";
 Always test components in both light and dark modes:
 
 ```jsx
-<div className="bg-background text-foreground border border-border rounded-lg p-6">
+<div className="bg-background text-foreground border border-border rounded p-6">
   {/* Automatically adapts to light/dark */}
 </div>
 ```

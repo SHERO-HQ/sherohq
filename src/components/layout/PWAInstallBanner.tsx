@@ -142,7 +142,7 @@ const PWAInstallBanner = () => {
           >
             <div className="container max-w-7xl mx-auto px-4 py-2.5">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
                   <Image
                     src={sheroIcon}
                     alt="SHERO"
@@ -191,7 +191,7 @@ const PWAInstallBanner = () => {
           >
             <div className="bg-white/95 dark:bg-slate-950/95 backdrop-blur-md p-4 rounded shadow border border-slate-100 dark:border-slate-800 transition-colors duration-300">
               <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-secondary-50 dark:bg-brand-secondary-900/20 text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-100/50 dark:border-brand-secondary-800/30">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded bg-brand-secondary-50 dark:bg-brand-secondary-900/20 text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-100/50 dark:border-brand-secondary-800/30">
                   <Download className="h-6 w-6" />
                 </div>
                 <div className="min-w-0 flex-1 pt-0.5">

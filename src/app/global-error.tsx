@@ -39,14 +39,14 @@ export default function GlobalError({
             <div className="flex flex-col gap-4">
               <button
                 onClick={() => reset()}
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-brand-secondary-600 text-white rounded font-bold transition hover:bg-brand-secondary-500 active:scale-[0.98]"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-brand-secondary-600 text-white rounded font-medium transition hover:bg-brand-secondary-500 active:scale-[0.98]"
               >
                 <RefreshCw className="size-5" />
                 Reset Application
               </button>
               <a
                 href="/"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/5 text-slate-300 rounded font-bold border border-white/10 transition hover:bg-white/10"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white/5 text-slate-300 rounded font-medium border border-white/10 transition hover:bg-white/10"
               >
                 <Home className="size-5" />
                 Reload

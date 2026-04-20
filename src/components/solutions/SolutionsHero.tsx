@@ -39,7 +39,7 @@ const SolutionsHero = () => {
     <header
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative w-full min-h-[80vh] sm:min-h-screen lg:h-[80vh] flex items-start lg:items-center pt-14 sm:pt-24 lg:pt-0 overflow-hidden bg-slate-50 dark:bg-slate-950"
+      className="relative w-full min-h-[75vh] sm:min-h-screen lg:h-[80vh] flex items-start lg:items-center pt-14 sm:pt-24 lg:pt-0 overflow-hidden bg-slate-50 dark:bg-slate-950"
     >
       <HeroBackground />
 
@@ -52,14 +52,14 @@ const SolutionsHero = () => {
             transition={{ duration: 1, type: "spring", damping: 20 }}
             className="relative z-10 flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1 w-full lg:w-1/2"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-3 rounded border border-brand-secondary-500/20 bg-brand-secondary-500/5 ">
+            <div className="inline-flex items-center gap-2 px-4 py-1 mb-4 rounded border border-brand-secondary-500/20 bg-brand-secondary-500/5 transition-colors duration-300">
               <Code className="size-4 text-brand-secondary-500" />
-              <span className="text-xs font-semibold tracking-widest uppercase text-brand-secondary-600 dark:text-brand-secondary-500">
+              <span className="text-[10px] font-semibold uppercase text-brand-secondary-600 dark:text-brand-secondary-500">
                 Software & IT Solutions
               </span>
             </div>
 
-            <h1 className="text-7xl sm:text-7xl md:text-8xl font-black font-sora text-slate-900 dark:text-white leading-[1.01] tracking-tighter mb-4 lg:mb-6">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black font-sora text-slate-900 dark:text-white leading-[1.01] tracking-tighter mb-4 lg:mb-6">
               {["Software", "and", "IT", "Built", "to", "Scale"].map(
                 (word, i) => (
                   <span
@@ -84,7 +84,7 @@ const SolutionsHero = () => {
                   className="flex items-center gap-2.5 px-4 py-2 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 shadow-sm transition-colors hover:border-brand-secondary-500/30"
                 >
                   <feature.icon className="size-3.5 text-brand-secondary-500" />
-                  <span className="text-xs font-semibold uppercase tracking-tight text-slate-600 dark:text-slate-300">
+                  <span className="text-xs font-medium uppercase tracking-tight text-slate-600 dark:text-slate-300">
                     {feature.label}
                   </span>
                 </div>
@@ -93,7 +93,7 @@ const SolutionsHero = () => {
 
             <Link
               href="/consultation"
-              className="group w-full sm:w-auto flex items-center justify-center gap-6 px-12 h-10 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded font-bold uppercase tracking-widest text-sm hover:bg-brand-secondary-600 dark:hover:bg-brand-secondary-500 dark:hover:text-white transition shadow shadow-black/20"
+              className="group w-full sm:w-auto flex items-center justify-center gap-6 px-12 h-10 bg-slate-900 dark:bg-white text-white dark:text-slate-950 rounded font-medium uppercase tracking-widest text-xs hover:bg-brand-secondary-600 dark:hover:bg-brand-secondary-500 dark:hover:text-white transition shadow shadow-black/20"
             >
               Let's Talk
               <ArrowRight

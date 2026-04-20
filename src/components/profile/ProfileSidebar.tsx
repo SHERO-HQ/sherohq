@@ -43,7 +43,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
  <div className="bg-white dark:bg-slate-900 p-1 rounded border border-slate-200 dark:border-slate-800 flex shadow-sm">
  <button
  onClick={() => setActiveTab("orders")}
- className={`flex-1 flex items-center justify-center gap-2 py-2 rounded font-bold text-sm transition ${
+ className={`flex-1 flex items-center justify-center gap-2 py-2 rounded font-medium text-sm transition ${
  activeTab === "orders"
  ? "bg-brand-secondary-600 text-white shadow shadow-brand-secondary-500/20"
  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
@@ -54,7 +54,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
  </button>
  <button
  onClick={() => setActiveTab("settings")}
- className={`flex-1 flex items-center justify-center gap-2 py-2 rounded font-bold text-sm transition ${
+ className={`flex-1 flex items-center justify-center gap-2 py-2 rounded font-medium text-sm transition ${
  activeTab === "settings"
  ? "bg-brand-secondary-600 text-white shadow shadow-brand-secondary-500/20"
  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
@@ -68,7 +68,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
  <div className="flex justify-end">
  <button
  onClick={onLogout}
- className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-bold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors"
+ className="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 hover:bg-red-100 dark:hover:bg-red-900/20 transition-colors"
  >
  <LogOut className="w-3.5 h-3.5" />
  Sign Out

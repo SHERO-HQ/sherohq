@@ -32,14 +32,14 @@ const LandingFinalCTA = () => {
           <div className="relative z-20 md:p-16 p-8 flex flex-col lg:flex-row items-center justify-between w-full">
             {/* Content Left */}
             <div className="max-w-xl space-y-4 text-center md:text-left">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded bg-brand-secondary-600/12 border border-brand-secondary-500/50">
-                <WandSparkles className="w-4 h-4 text-brand-secondary-300" />
-                <span className="text-[10px] font-medium text-brand-secondary-300 uppercase">
+              <div className="inline-flex items-center gap-2 px-4 py-1 rounded bg-brand-secondary-600/12 border border-brand-secondary-500/50 transition-colors duration-300 mb-2">
+                <WandSparkles className="size-4 text-brand-secondary-300" />
+                <span className="text-[10px] font-semibold text-brand-secondary-300 uppercase">
                   Let's Make Magic Happen
                 </span>
               </div>
 
-              <h2 className="text-3xl md:text-5xl lg:text-6xl font-sora font-bold text-white leading-tight">
+              <h2 className="text-2xl md:text-3xl lg:text-5xl font-sora font-bold tracking-tight text-white leading-tight">
                 Ready to{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-500 to-brand-secondary-400">
                   Launch?

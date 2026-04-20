@@ -468,7 +468,7 @@ export default function AIChatAssistant() {
             aria-label="AI Assistant"
           >
             <Sparkles className="w-6 h-6 animate-pulse text-brand-secondary-400 dark:text-brand-secondary-600" />
-            <span className="max-w-0 overflow-hidden ml-0 whitespace-nowrap opacity-0 group-hover:max-w-xs group-hover:ml-2 group-hover:opacity-100 transition-all duration-300 font-bold tracking-tight text-sm">
+            <span className="max-w-0 overflow-hidden ml-0 whitespace-nowrap opacity-0 group-hover:max-w-xs group-hover:ml-2 group-hover:opacity-100 transition-all duration-300 font-medium tracking-tight text-sm">
               Ask <span className="text-brand-secondary-500">SHERO</span>
             </span>
           </motion.button>
@@ -549,7 +549,7 @@ export default function AIChatAssistant() {
                       void processMessage(action.label);
                     }}
                     disabled={isTyping}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-[10px] font-bold text-slate-600 dark:text-slate-400 hover:border-brand-secondary-500 hover:text-brand-secondary-600 transition-all"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-[10px] font-medium text-slate-600 dark:text-slate-400 hover:border-brand-secondary-500 hover:text-brand-secondary-600 transition-all"
                   >
                     <action.icon size={12} className="text-brand-secondary-500" />
                     {action.label}
@@ -601,7 +601,7 @@ export default function AIChatAssistant() {
                           {msg.supportAction === "ticket" && (
                             <Link
                               href="/support"
-                              className="w-full py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded text-center text-xs font-bold transition-colors flex items-center justify-center gap-2"
+                              className="w-full py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded text-center text-xs font-medium transition-colors flex items-center justify-center gap-2"
                             >
                               Go to Support Page to Open Ticket
                               <ArrowRight size={14} />
@@ -610,7 +610,7 @@ export default function AIChatAssistant() {
                           {msg.supportAction === "contact" && (
                             <Link
                               href="/contact"
-                              className="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded text-center text-xs font-bold transition-colors flex items-center justify-center gap-2"
+                              className="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white rounded text-center text-xs font-medium transition-colors flex items-center justify-center gap-2"
                             >
                               Contact Support Team
                               <ArrowRight size={14} />
@@ -661,7 +661,7 @@ export default function AIChatAssistant() {
                                   },
                                 ]);
                               }}
-                              className="flex-1 py-1.5 px-3 bg-white border border-slate-200 rounded text-[10px] font-bold text-slate-600 hover:bg-brand-secondary-50 hover:border-brand-secondary-200 hover:text-brand-secondary-700 transition-all font-mono tracking-tighter"
+                              className="flex-1 py-1.5 px-3 bg-white border border-slate-200 rounded text-[10px] font-medium text-slate-600 hover:bg-brand-secondary-50 hover:border-brand-secondary-200 hover:text-brand-secondary-700 transition-all font-mono tracking-tighter"
                             >
                               YES, SOLVED
                             </button>
@@ -671,7 +671,7 @@ export default function AIChatAssistant() {
                                   "It didn't work. I need more help.",
                                 )
                               }
-                              className="flex-1 py-1.5 px-3 bg-white border border-slate-200 rounded text-[10px] font-bold text-slate-600 hover:bg-red-50 hover:border-red-200 hover:text-red-700 transition-all font-mono tracking-tighter"
+                              className="flex-1 py-1.5 px-3 bg-white border border-slate-200 rounded text-[10px] font-medium text-slate-600 hover:bg-red-50 hover:border-red-200 hover:text-red-700 transition-all font-mono tracking-tighter"
                             >
                               NO, NEED HELP
                             </button>

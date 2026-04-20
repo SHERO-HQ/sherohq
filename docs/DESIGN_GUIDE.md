@@ -194,8 +194,8 @@ SheroTech uses **8px base unit** with derived scale:
 | -------- | ------ | -------------- | ------------------------------- |
 | **sm**   | 4px    | `rounded-sm`   | Micro-interactions (buttons)    |
 | **md**   | 6px    | `rounded`      | Default (cards, inputs, modals) |
-| **lg**   | 8px    | `rounded-lg`   | Prominent containers            |
-| **xl**   | 12px   | `rounded-xl`   | Large feature blocks            |
+| **lg**   | 8px    | `rounded`   | Prominent containers            |
+| **xl**   | 12px   | `rounded`   | Large feature blocks            |
 | **2xl**  | 16px   | `rounded-2xl`  | Extra prominent, CTAs           |
 | **3xl**  | 20px   | `rounded-3xl`  | Hero sections, badges           |
 | **full** | 9999px | `rounded-full` | Circles, pills                  |
@@ -247,7 +247,7 @@ SheroTech uses **8px base unit** with derived scale:
 ```
 Container (max-w-7xl, mx-auto)
 └─ Grid (gap-6, responsive cols: sm:2, md:3, lg:4)
-   └─ Card (rounded-lg, border, shadow)
+   └─ Card (rounded, border, shadow)
 ```
 
 #### Navigation & Topbar
@@ -264,17 +264,23 @@ Container (max-w-7xl, mx-auto)
 "Signal Blocks" are high-authority components designed to provide preemptive clarity and reduce user friction.
 
 ### 1. The Process Framework
+
 **Goal**: Visualize complex workflows (Partnerships, Consultations) to set expectations.
+
 - **Visuals**: Numbered steps (01, 02, 03) with dashed connectors.
 - **Typography**: Light font weights for descriptions, bold for headers.
 
 ### 2. Preemptive Clarity (Quick FAQs)
+
 **Goal**: Address technical bottlenecks before they reach the support desk.
+
 - **Visuals**: Clean grid with subtle borders and icon-driven headers.
 - **Placement**: Directly below primary contact forms or CTAs.
 
 ### 3. Verification & Proof
+
 **Goal**: Build trust through verified status and influence.
+
 - **Visuals**: Badge-style industry tags and looping brand carousels.
 
 ---
@@ -332,7 +338,7 @@ Container (max-w-7xl, mx-auto)
 - **Background**: Elevated surface (`bg-card`)
 - **Border**: Optional, subtle (`border border-border`)
 - **Padding**: `p-6` (default)
-- **Border Radius**: `rounded-lg` (8px)
+- **Border Radius**: `rounded` (8px)
 - **Shadow**: `shadow-sm` (subtle) to `shadow-lg` (prominent)
 - **Hover**: Optional `hover:shadow-md` + subtle scale on interactive cards
 
@@ -351,7 +357,7 @@ Container (max-w-7xl, mx-auto)
 - **Backdrop**: `bg-black/50` (semi-transparent)
 - **Backdrop Blur**: `backdrop-blur-sm`
 - **Modal Background**: `bg-card`
-- **Border Radius**: `rounded-lg` (8px)
+- **Border Radius**: `rounded` (8px)
 - **Padding**: `p-6` (content)
 - **Shadow**: `shadow-2xl`
 - **Animation**: Fade + scale-up on open

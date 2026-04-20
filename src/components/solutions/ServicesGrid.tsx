@@ -112,11 +112,11 @@ const ServicesGrid = () => {
           viewport={{ once: true }}
           className="text-center mb-10"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase">
+          <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] uppercase font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded transition-colors duration-300">
             <Briefcase className="size-4" />
             Our Services
           </span>
-          <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
             What We Do
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
@@ -161,7 +161,7 @@ const ServicesGrid = () => {
               </div>
 
               {/* Title */}
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-3">
+              <h3 className="text-lg md:text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-3">
                 {service.title}
               </h3>
 
@@ -187,7 +187,7 @@ const ServicesGrid = () => {
               {/* Learn More Link */}
               <a
                 href="/consultation"
-                className={`inline-flex items-center gap-2 mt-6 ${service.textClass} font-semibold
+                className={`inline-flex items-center gap-2 mt-6 ${service.textClass} font-medium
                 hover:gap-3 transition group/link`}
               >
                 <span>Get Started</span>

@@ -117,10 +117,10 @@ const AboutHero = () => {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded border border-brand-secondary-500/20 bg-brand-secondary-500/5  mb-4"
+              className="inline-flex items-center gap-2 px-4 py-1 rounded border border-brand-secondary-500/20 bg-brand-secondary-500/5 transition-colors duration-300 mb-4"
             >
               <SmartphoneCharging className="size-4 text-brand-secondary-500" />
-              <span className="text-[9px] md:text-xs font-mono font-bold tracking-widest uppercase text-brand-secondary-600 dark:text-brand-secondary-300">
+              <span className="text-[10px] font-semibold uppercase text-brand-secondary-600 dark:text-brand-secondary-400">
                 About SHERO
               </span>
             </motion.div>
@@ -137,8 +137,8 @@ const AboutHero = () => {
                     ? { duration: 0 }
                     : { duration: 0.8, ease: "easeOut" }
                 }
-                className=" font-extrabold leading-[1.1] text-4xl sm:text-5xl md:text-6xl lg:text-7xl 
- text-slate-900 dark:text-white mb-2"
+                className=" font-extrabold leading-[1.1] text-3xl sm:text-4xl md:text-5xl lg:text-6xl 
+  text-slate-900 dark:text-white mb-2"
               >
                 Engineering clarity.{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
@@ -195,7 +195,7 @@ const AboutHero = () => {
                       {item.label}
                     </span>
                   </div>
-                  <span className="text-[10px] mt-1.5 block font-mono uppercase tracking-widest text-slate-500">
+                  <span className="text-[10px] mt-1.5 block font-medium uppercase tracking-widest text-slate-500">
                     {item.sub}
                   </span>
                 </div>

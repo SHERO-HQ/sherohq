@@ -91,11 +91,11 @@ const LandingProducts = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-8"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase">
+          <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] uppercase font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded transition-colors duration-300">
             <ShoppingCart className="size-4" />
             Featured Deals
           </span>
-          <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4">
             Shop Premium Tech
           </h2>
           <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
@@ -174,11 +174,11 @@ const LandingProducts = () => {
             href="/shop"
             className="inline-flex items-center gap-3 px-8 py-2 rounded
  border-2 border-slate-300 dark:border-slate-700
- text-slate-700 dark:text-slate-300 font-semibold
- hover:border-brand-secondary-500 dark:hover:border-brand-secondary-500
- hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400
- hover:shadow
- transition duration-300 group"
+  text-slate-700 dark:text-slate-300 font-medium
+  hover:border-brand-secondary-500 dark:hover:border-brand-secondary-500
+  hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400
+  hover:shadow
+  transition duration-300 group"
           >
             <span>Visit the Shop</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

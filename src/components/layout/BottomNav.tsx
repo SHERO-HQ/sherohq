@@ -96,7 +96,7 @@ const BottomNav = () => {
                 className={({ isActive }) =>
                   `relative flex flex-col items-center justify-center w-full h-full gap-1 transition-all duration-300 ${
                     isActive
-                      ? "text-brand-secondary-600 dark:text-brand-secondary-400 font-bold shadow-xs"
+                      ? "text-brand-secondary-600 dark:text-brand-secondary-400 font-medium shadow-xs"
                       : "bg-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
                   }`
                 }
