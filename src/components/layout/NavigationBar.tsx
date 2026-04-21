@@ -681,7 +681,7 @@ const Nav = () => {
                 <div className="flex items-center justify-center gap-6 mb-3">
                   {/* WhatsApp */}
                   <a
-                    href="https://wa.me/233598925501"
+                    href="https://wa.me/233548711582"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-slate-400 hover:text-brand-secondary-500 transition-all hover:scale-110 active:scale-95"
@@ -708,7 +708,7 @@ const Nav = () => {
                   </a>
                   {/* Facebook */}
                   <a
-                    href="https://facebook.com/sherohq"
+                    href="https://facebook.com/profile.php?id=61583887925479"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-slate-400 hover:text-brand-secondary-500 transition-all hover:scale-110 active:scale-95"
@@ -717,7 +717,7 @@ const Nav = () => {
                   </a>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-center text-[10px] text-slate-400 dark:text-slate-500 font-semibold uppercase tracking-widest">
+                  <p className="text-center text-[10px] text-slate-400 dark:text-slate-500 font-semibold font-logo uppercase tracking-widest">
                     SHERO
                   </p>
                   <p className="text-center text-[9px] text-slate-400 dark:text-slate-600 font-medium">
