@@ -76,7 +76,6 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
   }, [checkAuth]);
 
   async function login(username: string, password: string) {
-    setIsLoading(true);
     try {
       const response = await apiLogin(username, password);
       if (response.token) {
@@ -84,9 +83,7 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
       }
       setAdmin(response.admin);
       setMustReset(!!response.mustReset);
-      setIsLoading(false);
     } catch (error) {
-      setIsLoading(false);
       throw new Error(formatAuthError(error));
     }
   }

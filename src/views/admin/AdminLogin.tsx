@@ -22,12 +22,10 @@ export default function AdminLogin() {
  const [showPassword, setShowPassword] = useState(false);
  const [error, setError] = useState("");
  const [isLoading, setIsLoading] = useState(false);
- const [isRedirecting, setIsRedirecting] = useState(false);
 
  // Already authenticated on arrival (e.g. back button) — redirect silently
  useEffect(() => {
   if (!isChecking && isAuthenticated) {
-   setIsRedirecting(true);
    const subdomain = getSubdomain();
    const dashboardPath = subdomain === "admin" ? "/dashboard" : "/admin/dashboard";
    router.replace(dashboardPath);
@@ -41,9 +39,6 @@ export default function AdminLogin() {
 
   try {
    await login(username, password);
-   // Auth is done — show redirecting state on THIS page so dashboard
-   // can render instantly without its own loading screen.
-   setIsRedirecting(true);
    const subdomain = getSubdomain();
    const dashboardPath = subdomain === "admin" ? "/dashboard" : "/admin/dashboard";
    router.replace(dashboardPath);
@@ -51,18 +46,6 @@ export default function AdminLogin() {
    setError(err instanceof Error ? err.message : "Login failed");
    setIsLoading(false);
   }
- }
-
- // Show a single loading screen on the login page while verifying or redirecting
- if (isChecking || isRedirecting) {
-  return (
-   <div className="dark min-h-screen bg-slate-950 flex flex-col items-center justify-center gap-4">
-    <div className="w-10 h-10 border-4 border-purple-500 border-t-transparent rounded-full animate-spin" />
-    <p className="text-slate-400 text-sm font-medium">
-     {isRedirecting ? "Redirecting to dashboard..." : "Checking session..."}
-    </p>
-   </div>
-  );
  }
 
  return (
