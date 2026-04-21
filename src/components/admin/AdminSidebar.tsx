@@ -161,7 +161,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
-            className="fixed inset-0 bg-black/50 z-40 lg:hidden "
+            className="fixed inset-0 bg-black/80 z-40 lg:hidden "
           />
         )}
       </AnimatePresence>
@@ -189,18 +189,27 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                 isOpen ? "gap-3" : "gap-0",
               )}
             >
-              <div className="w-8 h-8 rounded bg-brand-secondary-600 flex items-center justify-center shrink-0 shadow shadow-brand-secondary-500/20 group-hover:scale-110 transition-transform">
-                <span className="text-white font-bold text-xl">S</span>
+              <div className="flex items-center justify-center shrink-0 shadow shadow-brand-secondary-500/10 group-hover:scale-110 transition-transform">
+                  <img
+                            src="/assets/logo/shero.svg"
+                            alt="SHERO Logo"
+                            width={30}
+                            height={30}
+                            fetchPriority="high"
+                            decoding="async"
+                            className="h-8 w-auto"
+                            suppressHydrationWarning
+                        />
               </div>
               <span
                 className={cn(
-                  "text-white font-bold text-lg whitespace-nowrap transition-all duration-200",
+                  "text-white font-bold text-sm whitespace-nowrap transition-all duration-200",
                   isOpen
                     ? "opacity-100 translate-x-0 w-auto"
                     : "opacity-0 -translate-x-4 pointer-events-none w-0 overflow-hidden",
                 )}
               >
-                SHERO Admin
+                SHERO TECHNOLOGIES
               </span>
             </div>
           </Link>

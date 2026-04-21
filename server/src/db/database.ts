@@ -53,37 +53,68 @@ const pool = new Pool({
   connectionString,
   ssl,
   max: 20, // Increased pool size
-  idleTimeoutMillis: 60000, // 60 seconds
-  connectionTimeoutMillis: 60000, // 60 seconds - allow time for initialization
+  idleTimeoutMillis: 30000, // Reduced to 30s to rotate connections more frequently
+  connectionTimeoutMillis: 10000, // 10s is enough for pooler connection
+});
+
+// CRITICAL: Handle errors on idle clients in the pool to prevent uncaughtException crashes
+pool.on("error", (err) => {
+  console.error("💥 Unexpected error on idle database client:", err);
+  // We don't exit here, the pool will handle creating new clients
 });
 
 // Helper to query the database with logging
-export const query = async (text: string, params?: unknown[]) => {
+// Helper to query the database with logging and auto-retry for transient errors
+export const query = async (text: string, params?: unknown[], retries = 2) => {
   const start = Date.now();
-  try {
-    const res = await pool.query(text, params);
-    const duration = Date.now() - start;
-    if (duration > 100) {
-      // Log slow queries (> 100ms)
-      console.log(
-        `🐢 Slow Query (${duration}ms): ${text.substring(0, 200)}...`,
+  let attempt = 0;
+
+  while (attempt <= retries) {
+    try {
+      const res = await pool.query(text, params);
+      const duration = Date.now() - start;
+      if (duration > 100) {
+        console.log(
+          `🐢 Slow Query (${duration}ms, Attempt ${attempt + 1}): ${text.substring(0, 200)}...`,
+        );
+      } else if (process.env.DEBUG === "true") {
+        console.log(
+          `⏱️ DB Query (${duration}ms, Attempt ${attempt + 1}): ${text.substring(0, 100)}...`,
+        );
+      }
+      return res;
+    } catch (err: any) {
+      attempt++;
+      const duration = Date.now() - start;
+
+      // Retry on transient connection errors (ETIMEDOUT, ECONNRESET, etc.)
+      const isTransient =
+        err.code === "ETIMEDOUT" ||
+        err.code === "ECONNRESET" ||
+        err.message?.includes("terminated") ||
+        err.message?.includes("timeout");
+
+      if (isTransient && attempt <= retries) {
+        const delay = attempt * 500; // 500ms, 1000ms
+        console.warn(
+          `⚠️ [DB Retry] Attempt ${attempt} failed with ${err.code || err.message}. Retrying in ${delay}ms...`,
+        );
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        continue;
+      }
+
+      console.error(
+        `❌ [DB Error] (${duration}ms, Final Attempt) Query: ${text.substring(0, 500)}`,
       );
-    } else if (process.env.DEBUG === "true") {
-      console.log(`⏱️ DB Query (${duration}ms): ${text.substring(0, 100)}...`);
+      console.error(`[DB Error] Params:`, params);
+      console.error(
+        `[DB Error] Message:`,
+        err instanceof Error ? err.message : err,
+      );
+      throw err;
     }
-    return res;
-  } catch (err) {
-    const duration = Date.now() - start;
-    console.error(
-      `❌ [DB Error] (${duration}ms) Query: ${text.substring(0, 500)}`,
-    );
-    console.error(`[DB Error] Params:`, params);
-    console.error(
-      `[DB Error] Message:`,
-      err instanceof Error ? err.message : err,
-    );
-    throw err;
   }
+  throw new Error("Maximum retries reached for database query");
 };
 
 export const getClient = async () => pool.connect();

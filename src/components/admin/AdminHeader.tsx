@@ -1,15 +1,12 @@
 "use client";
 import {
  Search,
- Menu,
  User,
  LogOut,
  ChevronDown,
  Globe,
- PanelLeftOpen,
- PanelLeftClose,
  LayoutDashboard,
- Command,
+ Menu,
 } from "lucide-react";
 import React, { useEffect, memo, useState } from "react";
 import { useAdmin } from "@/context/AdminContext";
@@ -105,9 +102,9 @@ const AdminHeader = memo(({
       aria-label={isSidebarOpen ? "Collapse Sidebar" : "Expand Sidebar"}
      >
       {isSidebarOpen ? (
-       <PanelLeftClose className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
+       <Menu className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
       ) : (
-       <PanelLeftOpen className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
+       <Menu className="w-5 h-5 md:w-6 md:h-6 group-hover:scale-110 transition-transform" />
       )}
      </button>
 

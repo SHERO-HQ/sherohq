@@ -45,7 +45,7 @@ export default function AdminLogin() {
             router.replace(dashboardPath);
         } catch (err: any) {
             if (err.message?.includes("Failed to fetch") || !err.status) {
-                setError("Server unreachable. Please check your internet connection or ensure the API server is running.");
+                setError("Server unreachable. Please check your internet connection.");
             } else {
                 setError(err instanceof Error ? err.message : "Login failed");
             }
@@ -68,18 +68,18 @@ export default function AdminLogin() {
                         <img
                             src="/assets/logo/shero.svg"
                             alt="SHERO Logo"
-                            width={40}
-                            height={40}
+                            width={60}
+                            height={60}
                             fetchPriority="high"
                             decoding="async"
-                            className="h-10 w-auto"
+                            className="h-16 w-auto"
                             suppressHydrationWarning
                         />
                     </div>
-                    <h1 className="text-2xl font-bold text-white">
+                    <h1 className="text-xl font-bold text-white">
                         SHERO TECHNOLOGIES
                     </h1>
-                    <p className="text-slate-400 mt-1">Sign in to access the dashboard</p>
+                    <p className="text-slate-400 mt-1 text-sm">Sign in to access the dashboard</p>
                 </div>
 
                 {/* Login Card */}

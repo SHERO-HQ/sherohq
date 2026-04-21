@@ -17,14 +17,23 @@ function AdminLoading() {
         <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-brand-secondary-500 rounded-full animate-spin" />
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-8 h-8 bg-brand-secondary-500/10 rounded flex items-center justify-center animate-pulse">
-            <span className="text-brand-secondary-500 font-bold text-xl">S</span>
+            <img
+              src="/assets/logo/shero.svg"
+              alt="SHERO Logo"
+              width={60}
+              height={60}
+              fetchPriority="high"
+              decoding="async"
+              className="h-8 w-auto"
+              suppressHydrationWarning
+            />
           </div>
         </div>
       </div>
 
       <div className="mt-8 flex flex-col items-center gap-2">
         <h2 className="text-white font-bold tracking-widest text-xs uppercase opacity-50 animate-pulse">
-          SHERO Secure Admin
+          SHERO TECHNOLOGIES
         </h2>
         <div className="h-px w-24 bg-linear-to-r from-transparent via-brand-secondary-500/50 to-transparent" />
       </div>
