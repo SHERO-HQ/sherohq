@@ -8,7 +8,28 @@ import { supabase } from "../lib/supabase";
 const router = Router();
 
 // Configure multer to store files in memory
-const storage = multer.memoryStorage();
+import * as fs from "node:fs";
+import * as fsPromises from "node:fs/promises";
+
+// Ensure uploads directory exists
+const uploadsDir = path.resolve(process.cwd(), "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+// Configure multer to store files on disk temporarily
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    cb(
+      null,
+      `${file.fieldname}-${uniqueSuffix}${path.extname(file.originalname)}`,
+    );
+  },
+});
 
 // File filter for images only
 const fileFilter = (
@@ -82,16 +103,16 @@ function detectImageMime(buffer: Buffer): string | null {
     return "image/webp";
 
   // AVIF / HEIC / HEIF: ISO Base Media file (ftyp box)
-  // Bytes 4-7 are "ftyp", brand at bytes 8-11 identifies the subtype
   if (
     buffer.length >= 12 &&
-    buffer[4] === 0x66 && // f
-    buffer[5] === 0x74 && // t
-    buffer[6] === 0x79 && // y
-    buffer[7] === 0x70    // p
+    buffer[4] === 0x66 &&
+    buffer[5] === 0x74 &&
+    buffer[6] === 0x79 &&
+    buffer[7] === 0x70
   ) {
     const brand = buffer.toString("ascii", 8, 12).toLowerCase();
-    if (brand.startsWith("avif") || brand.startsWith("avis")) return "image/avif";
+    if (brand.startsWith("avif") || brand.startsWith("avis"))
+      return "image/avif";
     if (
       brand.startsWith("heic") ||
       brand.startsWith("heis") ||
@@ -105,8 +126,26 @@ function detectImageMime(buffer: Buffer): string | null {
   return null;
 }
 
-function validateImageFile(file: Express.Multer.File): string | null {
-  const detectedMime = detectImageMime(file.buffer);
+async function validateImageFile(file: Express.Multer.File): Promise<string | null> {
+  let buffer: Buffer;
+  try {
+    if (file.buffer) {
+      buffer = file.buffer;
+    } else if (file.path) {
+      // Use a small chunk for detection to avoid loading huge files into memory
+      const fd = await fsPromises.open(file.path, "r");
+      const { buffer: chunk } = await fd.read(Buffer.alloc(12), 0, 12, 0);
+      await fd.close();
+      buffer = chunk;
+    } else {
+      return "File data missing";
+    }
+  } catch (err) {
+    console.error("Failed to read file for validation:", err);
+    return "Failed to validate image content";
+  }
+
+  const detectedMime = detectImageMime(buffer);
 
   // AVIF/HEIC are valid but our magic-byte detector may not cover all variants.
   // If the fileFilter passed them, trust the declared mimetype.
@@ -133,10 +172,11 @@ async function uploadToSupabase(file: Express.Multer.File): Promise<string> {
   const fileExt = path.extname(file.originalname);
   const fileName = `${uuidv4()}${fileExt}`;
   const filePath = `${fileName}`;
+  const buffer = file.buffer || (await fsPromises.readFile(file.path));
 
   const { error } = await supabase.storage
     .from("products")
-    .upload(filePath, file.buffer, {
+    .upload(filePath, buffer, {
       contentType: file.mimetype,
       upsert: false,
     });
@@ -163,7 +203,7 @@ router.post(
         return res.status(400).json({ error: "No image file provided" });
       }
 
-      const validationError = validateImageFile(req.file);
+      const validationError = await validateImageFile(req.file);
       if (validationError) {
         return res.status(400).json({ error: validationError });
       }
@@ -183,6 +223,12 @@ router.post(
         error: "Failed to upload image",
         details: error instanceof Error ? error.message : "Unknown error",
       });
+    } finally {
+      if (req.file?.path) {
+        fsPromises.unlink(req.file.path).catch((e) =>
+          console.error(`💥 Failed to delete temp file ${req.file?.path}:`, e)
+        );
+      }
     }
   },
 );
@@ -201,7 +247,7 @@ router.post(
       }
 
       for (const file of files) {
-        const validationError = validateImageFile(file);
+        const validationError = await validateImageFile(file);
         if (validationError) {
           return res
             .status(400)
@@ -229,6 +275,17 @@ router.post(
         error: "Failed to upload images",
         details: error instanceof Error ? error.message : "Unknown error",
       });
+    } finally {
+      const files = req.files as Express.Multer.File[];
+      if (files?.length > 0) {
+        for (const file of files) {
+          if (file.path) {
+            fsPromises.unlink(file.path).catch((e) =>
+              console.error(`💥 Failed to delete temp file ${file.path}:`, e)
+            );
+          }
+        }
+      }
     }
   },
 );
@@ -271,19 +328,20 @@ router.post(
 
       // Stricter size limit for public uploads (2MB)
       if (req.file.size > 2 * 1024 * 1024) {
-        return res.status(400).json({ 
-          error: "Image too large. Public uploads are limited to 2MB to ensure optimal site performance." 
+        return res.status(400).json({
+          error:
+            "Image too large. Public uploads are limited to 2MB to ensure optimal site performance.",
         });
       }
 
-      const validationError = validateImageFile(req.file);
+      const validationError = await validateImageFile(req.file);
       if (validationError) {
         return res.status(400).json({ error: validationError });
       }
 
       console.log(`📤 Public Upload: ${req.file.originalname} to Supabase...`);
       const imageUrl = await uploadToSupabase(req.file);
-      
+
       res.json({
         success: true,
         imageUrl,
@@ -291,6 +349,12 @@ router.post(
     } catch (error) {
       console.error("Public upload error:", error);
       res.status(500).json({ error: "Failed to upload image" });
+    } finally {
+      if (req.file?.path) {
+        fsPromises.unlink(req.file.path).catch((e) =>
+          console.error(`💥 Failed to delete temp file ${req.file?.path}:`, e)
+        );
+      }
     }
   },
 );

@@ -57,14 +57,16 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
       const { admin } = await getAdminMe();
       setAdmin(admin);
     } catch (err: any) {
-      // ONLY logout if it's explicitly an authentication error (401/403)
-      // Otherwise, we keep the token and retry on next refresh/action
-      if (err.status === 401 || err.status === 403) {
-        console.warn("🔐 Admin session expired or invalid, logging out.");
+      // ONLY logout if it's explicitly an authentication error (401)
+      // We treat 403 as a potential CSRF or permission error that might be transient
+      // Other errors (500, network fail) are ignored to allow the session to persist
+      if (err.status === 401) {
+        console.warn("🔐 Admin session expired, logging out.");
         localStorage.removeItem("adminToken");
         setAdmin(null);
       } else {
-        console.error("📡 Admin auth check failed (network or server error), keeping session for retry.", err);
+        const status = err.status || "Network/Server Error";
+        console.error(`📡 Admin auth check failed (${status}), keeping session for retry.`, err);
       }
     } finally {
       setIsLoading(false);

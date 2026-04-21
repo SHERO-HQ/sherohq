@@ -232,9 +232,13 @@ export default function ProductForm() {
       }));
 
       addNotification("Success", "Images uploaded successfully", "success");
-    } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : "Failed to upload images";
+    } catch (err: any) {
+      let message = "Failed to upload images";
+      if (err.message?.includes("Failed to fetch") || !err.status) {
+        message = "Server unreachable or connection dropped. Please try again or check the server status.";
+      } else if (err.message) {
+        message = err.message;
+      }
       addNotification("Error", message, "error");
       console.error(err);
     } finally {

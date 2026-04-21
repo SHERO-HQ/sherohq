@@ -4,6 +4,8 @@ import { v4 as uuidv4 } from "uuid";
 import helmet from "helmet";
 import { rateLimit } from "express-rate-limit";
 import * as dotenv from "dotenv";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 // Database
 import { initializeDatabase } from "./db/database";
@@ -248,8 +250,8 @@ app.use(
     crossOriginResourcePolicy: { policy: "cross-origin" },
   }),
 ); // Set security headers
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // CSRF Protection
 import { csrfProtection } from "./middleware/csrfProtection";
@@ -398,13 +400,39 @@ app.use(
 );
 
 // ─── Process-level crash guards ───────────────────────────────────────────────
-process.on("uncaughtException", (err) => {
-  console.error("💥 uncaughtException — shutting down:", err);
+const crashLogPath = path.resolve(process.cwd(), "crash.log");
+
+function logCrash(type: string, error: any) {
+  const message = `
+[${new Date().toISOString()}] 💥 ${type}:
+${error instanceof Error ? error.stack : JSON.stringify(error, null, 2)}
+--------------------------------------------------------------------------------
+`;
+  try {
+    fs.appendFileSync(crashLogPath, message);
+  } catch (e) {
+    console.error("Failed to write to crash log:", e);
+  }
+}
+
+process.on("uncaughtException", (err: any) => {
+  // Ignore EPIPE errors which happen if stdout/stderr is closed (common in dev environments)
+  if (err.code === "EPIPE") {
+    return;
+  }
+  
+  try {
+    console.error("💥 uncaughtException — shutting down:", err);
+    logCrash("uncaughtException", err);
+  } catch (e) {
+    // If logging fails (e.g. EPIPE on console.error), we just exit
+  }
   process.exit(1);
 });
 
 process.on("unhandledRejection", (reason) => {
   console.error("💥 unhandledRejection:", reason);
+  logCrash("unhandledRejection", reason);
   process.exit(1);
 });
 
