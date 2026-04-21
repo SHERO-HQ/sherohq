@@ -56,7 +56,7 @@ const LandingFinalCTA = () => {
                   href="/contact-us"
                   className="group inline-flex items-center justify-center gap-2 px-6 py-2 rounded w-fit bg-brand-secondary-600 text-white text-sm font-medium hover:bg-brand-secondary-500 transition duration-300"
                 >
-                  Lets Talk
+                  Get Started
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
                 <Link
