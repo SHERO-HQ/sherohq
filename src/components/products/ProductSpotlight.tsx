@@ -150,7 +150,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                       transition={{ delay: 0.4 }}
                       className="max-w-xl"
                     >
-                      <h2 className="text-3xl lg:text-7xl font-black text-white lg:text-slate-900 lg:dark:text-white leading-[1.05] tracking-tighter mb-4 uppercase">
+                      <h2 className="text-3xl lg:text-7xl font-black text-white lg:text-slate-900 lg:dark:text-white leading-[1.05] tracking-tighter mb-3 uppercase">
                         {currentProduct.name.split(" ").map((word, i) => (
                           <span
                             key={i}
@@ -166,7 +166,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           "Unlocking the next level of performance with precision engineering and state-of-the-art technology."}
                       </p>
 
-                      <div className="flex flex-wrap items-center gap-6 sm:gap-8 lg:gap-10">
+                      <div className="flex flex-wrap items-center gap-4 sm:gap-6 lg:gap-8">
                         <div className="flex flex-col">
                           <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 lg:text-slate-500 mb-1">
                             Price
@@ -198,7 +198,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                             href={getAbsoluteUrl(
                               `/shop/${currentProduct.slug || currentProduct.sku || currentProduct.id}`,
                             )}
-                            className="group flex items-center justify-center gap-3 px-8 py-3 bg-brand-secondary-500 hover:bg-brand-secondary-400 text-white rounded font-black uppercase tracking-widest text-[10px] transition-all shadow shadow-brand-secondary-500/20 hover:-translate-y-0.5"
+                            className="group flex items-center justify-center gap-3 px-4 py-2 bg-brand-secondary-500 hover:bg-brand-secondary-400 text-white rounded font-black uppercase tracking-widest text-[10px] transition-all shadow shadow-brand-secondary-500/20 hover:-translate-y-0.5"
                           >
                             Details
                             <ArrowRight
