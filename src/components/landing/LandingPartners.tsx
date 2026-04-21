@@ -59,14 +59,14 @@ const LandingPartners = () => {
                 title={partner.name}
                 className="shrink-0 flex items-center justify-center mx-4
  transition duration-500
- cursor-pointer group/card grayscale hover:grayscale-0"
+ cursor-pointer group/card grayscale hover:grayscale-0 active:grayscale-0"
               >
                 <div className="relative sm:w-24 sm:h-24 w-14 h-14 flex items-center justify-center p-3 sm:p-5">
                   <Image
                     src={partner.logo}
                     alt={`${partner.name} logo`}
                     fill
-                    className={`object-contain transition-all duration-500 group-hover/card:scale-110 group-hover/card:saturate-100 group-hover/card:opacity-100 saturate-[0.1] opacity-30 pointer-events-none md:pointer-events-auto select-none ${partner.scale || ""} ${partner.logoDark ? "dark:hidden" : ""} ${partner.logoDark ? "group-hover/card:hidden" : ""}`}
+                    className={`object-contain transition-all duration-500 group-hover/card:scale-110 group-active/card:scale-110 group-hover/card:saturate-100 group-active/card:saturate-100 group-hover/card:opacity-100 group-active/card:opacity-100 saturate-[0.1] opacity-30 select-none ${partner.scale || ""} ${partner.logoDark ? "dark:hidden" : ""} ${partner.logoDark ? "group-hover/card:hidden" : ""}`}
                     sizes="(max-width: 640px) 64px, 112px"
                   />
                   {partner.logoDark && (
@@ -74,7 +74,7 @@ const LandingPartners = () => {
                       src={partner.logoDark}
                       alt={`${partner.name} logo dark`}
                       fill
-                      className={`object-contain transition-all duration-500 group-hover/card:scale-110 group-hover/card:saturate-100 group-hover/card:opacity-100 saturate-[0.1] opacity-30 pointer-events-none md:pointer-events-auto select-none hidden dark:block group-hover/card:hidden! ${partner.scale || ""}`}
+                       className={`object-contain transition-all duration-500 group-hover/card:scale-110 group-active/card:scale-110 group-hover/card:saturate-100 group-active/card:saturate-100 group-hover/card:opacity-100 group-active/card:opacity-100 saturate-[0.1] opacity-30 select-none hidden dark:block group-hover/card:hidden! ${partner.scale || ""}`}
                       sizes="(max-width: 640px) 64px, 112px"
                     />
                   )}
@@ -83,7 +83,7 @@ const LandingPartners = () => {
                       src={partner.logo}
                       alt={`${partner.name} logo hover`}
                       fill
-                      className={`object-contain transition-all duration-500 group-hover/card:scale-110 group-hover/card:saturate-100 group-hover/card:opacity-100 saturate-[0.1] opacity-30 pointer-events-none md:pointer-events-auto select-none hidden group-hover/card:dark:block ${partner.scale || ""}`}
+                       className={`object-contain transition-all duration-500 group-hover/card:scale-110 group-active/card:scale-110 group-hover/card:saturate-100 group-active/card:saturate-100 group-hover/card:opacity-100 group-active/card:opacity-100 saturate-[0.1] opacity-30 select-none hidden group-hover/card:dark:block ${partner.scale || ""}`}
                       sizes="(max-width: 640px) 64px, 112px"
                     />
                   )}

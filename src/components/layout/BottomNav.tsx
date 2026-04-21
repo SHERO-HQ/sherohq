@@ -52,7 +52,7 @@ const BottomNav = () => {
                   key={item.label}
                   onClick={() => setIsCartOpen(true)}
                   aria-label={`Open Cart (${totalQuantity} items)`}
-                  className="cursor-pointer flex flex-col items-center justify-center w-full h-full gap-1 text-slate-500 dark:text-slate-400 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors relative bg-transparent"
+                  className="cursor-pointer flex flex-col items-center justify-center w-full h-full gap-1 text-slate-500 dark:text-slate-400 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors relative bg-transparent focus:outline-none"
                 >
                   <item.icon
                     className={item.iconClassName ?? "w-6 h-6"}
@@ -73,7 +73,7 @@ const BottomNav = () => {
                   key={item.label}
                   onClick={() => setIsWishlistOpen(true)}
                   aria-label={`Open Wishlist (${wishlist.length} items)`}
-                  className="cursor-pointer flex flex-col items-center justify-center w-full h-full gap-1 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors relative"
+                  className="cursor-pointer flex flex-col items-center justify-center w-full h-full gap-1 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors relative focus:outline-none"
                 >
                   <item.icon
                     className={`w-6 h-6 ${mounted && wishlist.length > 0 ? "fill-red-500 text-red-500" : ""}`}
@@ -94,9 +94,9 @@ const BottomNav = () => {
                 href={item.path}
                 end={item.end}
                 className={({ isActive }) =>
-                  `relative flex flex-col items-center justify-center w-full h-full gap-1 transition-all duration-300 ${
+                  `relative flex flex-col items-center justify-center w-full h-full gap-1 transition-all duration-300 focus:outline-none ${
                     isActive
-                      ? "text-brand-secondary-600 dark:text-brand-secondary-400 font-medium shadow-xs"
+                      ? "text-brand-secondary-600 dark:text-brand-secondary-400 font-medium"
                       : "bg-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200"
                   }`
                 }

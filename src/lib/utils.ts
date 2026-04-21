@@ -90,7 +90,8 @@ export function navLinkClassVariant(
         "rounded",
         "w-full",
         "transition-colors duration-200",
-        "focus:outline-none focus:border-b-2 focus:border-brand-secondary-500",
+        "focus:outline-none",
+        "focus:border-b-2 focus:border-brand-secondary-500",
       ],
       active: ["bg-primary", "text-white", "font-semibold"],
       inactive: [
@@ -104,7 +105,7 @@ export function navLinkClassVariant(
         "px-2 py-1",
         "text-sm",
         "transition-colors duration-200",
-        "focus:outline-none focus:ring-2 focus:ring-brand-secondary-400",
+        "focus:outline-none",
       ],
       active: ["text-brand-secondary-400", "font-medium", "underline"],
       inactive: ["text-slate-200", "hover:text-brand-secondary-400", "hover:underline"],
@@ -115,12 +116,12 @@ export function navLinkClassVariant(
         "rounded",
         "text-base font-medium",
         "transition-all duration-300",
+        "focus:outline-none",
       ],
       active: [
         "bg-brand-secondary-500/10",
         "text-brand-secondary-600 dark:text-brand-secondary-400",
-        "font-semibold",
-        "shadow-xs",
+        "font-medium",
       ],
       inactive: [
         "bg-transparent",

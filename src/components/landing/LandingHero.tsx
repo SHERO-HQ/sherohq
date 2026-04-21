@@ -226,7 +226,7 @@ const LandingHero: React.FC = () => {
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.7 }}
-                className="w-full bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700/70 rounded relative overflow-hidden"
+                className="w-full bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700/70 rounded relative overflow-hidden select-none pointer-events-none"
               >
                 <div className="absolute inset-0 bg-linear-to-br from-white/55 via-transparent to-slate-100/35 dark:from-slate-800/30 dark:to-slate-950/35 pointer-events-none" />
                 <div className="absolute inset-x-0 top-0 h-px bg-white/90 dark:bg-white/10 pointer-events-none" />
