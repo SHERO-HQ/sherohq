@@ -1,7 +1,19 @@
 {
   "name": "sherotech",
   "compatibility_date": "2026-02-15",
-  "assets": {
-    "directory": "./.next"
-  }
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "pages_build_output_dir": ".vercel/output/static",
+  "vars": {
+    "NODE_ENV": "production"
+  },
+  "rules": [
+    {
+      "type": "ESModule",
+      "globs": [
+        "**/*.mjs"
+      ]
+    }
+  ]
 }
