@@ -151,7 +151,7 @@ const AdminHeader = memo(({
      {/* Search Bar - Trigger */}
      <button
       onClick={() => setIsSearchOpen(true)}
-      className="hidden lg:flex items-center gap-3 w-64 px-4 py-2 glass-surface-md text-sm text-slate-500 hover:bg-slate-800/80 hover:border-white/20 transition group text-left"
+      className="hidden lg:flex items-center gap-3 w-64 px-4 py-2 glass-surface-md text-sm text-slate-500 hover:bg-slate-800/80 hover:border-white/20 transition group text-left rounded"
      >
       <Search className="w-4 h-4 group-hover:text-brand-secondary-400 transition-colors" />
       <span className="flex-1">Search everything...</span>

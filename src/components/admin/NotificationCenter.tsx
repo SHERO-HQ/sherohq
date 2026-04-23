@@ -66,8 +66,8 @@ export default function NotificationCenter() {
                     "relative p-2 rounded transition duration-300",
                     isOpen
                         ? "bg-brand-secondary-500/80 text-brand-secondary-400 border-brand-secondary-500/20"
-                        : "text-slate-400 hover:text-white hover:bg-white/80 border-white/80",
-                    "border ",
+                        : "text-slate-400 hover:text-white hover:bg-white/80",
+                    "border border-white/80 dark:border-slate-800/60",
                 )}
                 title="Notifications"
             >
