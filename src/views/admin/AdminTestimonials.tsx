@@ -260,18 +260,21 @@ const AdminTestimonials = () => {
                     <p className="text-sm text-slate-400 truncate italic">
                       "{t.quote}"
                     </p>
-                    {t.rating && (
+                    {typeof t.rating === "number" && (
                       <div className="flex gap-0.5 mt-1">
-                        {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`w-3 h-3 ${
-                              i < t.rating
-                                ? "text-amber-400 fill-amber-400"
-                                : "text-slate-600"
-                            }`}
-                          />
-                        ))}
+                        {(() => {
+                          const rating = t.rating;
+                          return [...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-3 h-3 ${
+                                i < rating
+                                  ? "text-amber-400 fill-amber-400"
+                                  : "text-slate-600"
+                              }`}
+                            />
+                          ));
+                        })()}
                       </div>
                     )}
                   </div>

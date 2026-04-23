@@ -257,7 +257,7 @@ const AboutTestimonials = () => {
                 onClick={() => setIsFeedbackModalOpen(true)}
                 className="cursor-pointer px-6 py-2 bg-brand-secondary-600 text-sm text-white rounded font-medium hover:bg-brand-secondary-700 transition-colors shadow shadow-brand-secondary-900/20 w-fit"
               >
-                Share Your Testimony
+                Share With Us
               </button>
             </div>
           </motion.div>

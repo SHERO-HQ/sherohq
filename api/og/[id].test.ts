@@ -6,11 +6,7 @@ type Req = {
   headers: { [key: string]: string | undefined };
 };
 
-type Res = {
-  send: ReturnType<typeof vi.fn>;
-  redirect: ReturnType<typeof vi.fn>;
-  setHeader: ReturnType<typeof vi.fn>;
-};
+type Res = any;
 
 function createRes(): Res {
   return {
