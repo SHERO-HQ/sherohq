@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 
 
 
-export function proxy(request: NextRequest) {
+export default function proxy(request: NextRequest) {
   const url = request.nextUrl.clone();
   const hostname = request.headers.get("host") || "";
 
@@ -31,7 +31,6 @@ export function proxy(request: NextRequest) {
   // 1. Admin Subdomain
   if (subdomain === "admin") {
     // Avoid infinite loops: if the path already starts with /admin, we don't need to rewrite
-    // but typically the goal is admin.sherohq.com/dashboard -> internally /admin/dashboard
     if (!path.startsWith("/admin")) {
       url.pathname = `/admin${path}`;
       return NextResponse.rewrite(url);
@@ -56,5 +55,19 @@ export function proxy(request: NextRequest) {
 
   return NextResponse.next();
 }
+
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - assets (internal assets)
+     * - favicon.ico, sitemap.xml, robots.txt, etc.
+     */
+    "/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|site.webmanifest|sitemap.xml|robots.txt).*)",
+  ],
+};
 
 

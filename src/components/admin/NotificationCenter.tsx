@@ -65,8 +65,8 @@ export default function NotificationCenter() {
                 className={cn(
                     "relative p-2 rounded transition duration-300",
                     isOpen
-                        ? "bg-brand-secondary-500/10 text-brand-secondary-400 border-brand-secondary-500/20"
-                        : "text-slate-400 hover:text-white hover:bg-white/5 border-white/5",
+                        ? "bg-brand-secondary-500/80 text-brand-secondary-400 border-brand-secondary-500/20"
+                        : "text-slate-400 hover:text-white hover:bg-white/80 border-white/80",
                     "border ",
                 )}
                 title="Notifications"

@@ -271,7 +271,7 @@
 
     /* Deep & Vibrant Glassmorphic Surfaces */
     .glass-surface {
-        @apply backdrop-blur-2xl backdrop-saturate-150 bg-white/85 dark:bg-slate-900/85 border border-black/10 dark:border-white/10 shadow;
+        @apply backdrop-blur-2xl backdrop-saturate-150 bg-white/85 dark:bg-slate-900/90 border border-black/10 dark:border-white/10 shadow;
     }
 
     .glass-surface-md {
