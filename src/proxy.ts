@@ -28,6 +28,17 @@ export default function proxy(request: NextRequest) {
   // Handle specific subdomains
   const path = url.pathname;
 
+  // Explicitly bypass static files, Next.js internal paths, and API routes.
+  // This acts as a fail-safe in case the config matcher regex is ignored (e.g. by Turbopack or Vercel Edge).
+  if (
+    path.startsWith("/_next") ||
+    path.startsWith("/api") ||
+    path.startsWith("/assets") ||
+    path.match(/\.(png|jpe?g|gif|svg|ico|webp|avif|woff2?|js|css|json|webmanifest|xml|txt)$/i)
+  ) {
+    return NextResponse.next();
+  }
+
   // 1. Admin Subdomain
   if (subdomain === "admin") {
     // Avoid infinite loops: if the path already starts with /admin, we don't need to rewrite
