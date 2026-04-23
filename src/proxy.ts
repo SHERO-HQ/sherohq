@@ -6,10 +6,18 @@ import { NextRequest } from "next/server";
 export default function proxy(request: NextRequest) {
   const url = request.nextUrl.clone();
   const hostname = request.headers.get("host") || "";
+  const host = hostname.toLowerCase();
+
+  // 1. Strip 'www.' prefix and redirect permanently
+  // This prevents issues where users type www.api.sherohq.com or www.admin.sherohq.com
+  if (host.startsWith("www.")) {
+    url.hostname = host.replace(/^www\./, "");
+    return NextResponse.redirect(url, 301);
+  }
 
   // Extract subdomain dynamically
   // Handles locales like admin.localhost:3000 or prod like admin.sherohq.com
-  const parts = hostname.split(".");
+  const parts = host.split(".");
   let subdomain = "";
 
   if (parts.length > 2) {
@@ -36,7 +44,7 @@ export default function proxy(request: NextRequest) {
     path.startsWith("/assets") ||
     path.match(/\.(png|jpe?g|gif|svg|ico|webp|avif|woff2?|js|css|json|webmanifest|xml|txt)$/i)
   ) {
-    return NextResponse.next();
+    return NextResponse.rewrite(url);
   }
 
   // 1. Admin Subdomain

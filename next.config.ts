@@ -24,10 +24,10 @@ function resolveApiOrigin(): string {
 
   if (process.env.NODE_ENV === "production" && !directApi && !publicApi) {
     console.warn(
-      "⚠️ [NextConfig] Falling back to hardcoded production API origin: https://api.sherohq.com. " +
+      "⚠️ [NextConfig] Falling back to hardcoded production API origin: https://sherotech.onrender.com. " +
         "Ensure API_URL or NEXT_PUBLIC_API_URL is set.",
     );
-    return "https://api.sherohq.com";
+    return "https://sherotech.onrender.com";
   }
 
   return "http://127.0.0.1:5000";
