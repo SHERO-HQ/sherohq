@@ -189,7 +189,7 @@ const PWAInstallBanner = () => {
             transition={{ type: "spring", stiffness: 260, damping: 20 }}
             className="fixed bottom-6 right-6 z-100 w-[calc(100vw-3rem)] sm:w-[380px]"
           >
-            <div className="glass-surface-md p-4 rounded shadow-2xl transition-colors duration-300">
+            <div className="glass-surface-md p-4 rounded shadow transition-colors duration-300">
               <div className="flex items-start gap-4">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded bg-brand-secondary-50 dark:bg-brand-secondary-900/20 text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-100/50 dark:border-brand-secondary-800/30">
                   <Download className="h-6 w-6" />
@@ -206,7 +206,7 @@ const PWAInstallBanner = () => {
                     <button
                       type="button"
                       onClick={handleInstallPWA}
-                      className="inline-flex items-center justify-center h-8 px-6 rounded font-bold bg-brand-secondary-600 hover:bg-brand-secondary-700 dark:bg-brand-secondary-500 dark:hover:bg-brand-secondary-400 text-white text-[12px] transition-all active:scale-95 shadow-lg shadow-brand-secondary-500/20"
+                      className="inline-flex items-center justify-center h-8 px-6 rounded font-bold bg-brand-secondary-600 hover:bg-brand-secondary-700 dark:bg-brand-secondary-500 dark:hover:bg-brand-secondary-400 text-white text-[12px] transition-all active:scale-95 shadow shadow-brand-secondary-500/20"
                     >
                       Install App
                     </button>

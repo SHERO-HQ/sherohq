@@ -11,6 +11,7 @@ import {
   GripVertical,
   CheckCircle2,
   XCircle,
+  Star,
 } from "lucide-react";
 import {
   useAdminTestimonials,
@@ -51,6 +52,7 @@ const AdminTestimonials = () => {
     image: "",
     order: 0,
     active: true,
+    rating: 5,
   });
 
   const filteredTestimonials = testimonials
@@ -71,6 +73,7 @@ const AdminTestimonials = () => {
       image: "",
       order: testimonials.length,
       active: true,
+      rating: 5,
     });
     setIsModalOpen(true);
   };
@@ -85,6 +88,7 @@ const AdminTestimonials = () => {
       image: t.image || "",
       order: t.order || 0,
       active: t.active ?? true,
+      rating: t.rating || 5,
     });
     setIsModalOpen(true);
   };
@@ -256,6 +260,20 @@ const AdminTestimonials = () => {
                     <p className="text-sm text-slate-400 truncate italic">
                       "{t.quote}"
                     </p>
+                    {t.rating && (
+                      <div className="flex gap-0.5 mt-1">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-3 h-3 ${
+                              i < t.rating
+                                ? "text-amber-400 fill-amber-400"
+                                : "text-slate-600"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex gap-2">
@@ -386,6 +404,28 @@ const AdminTestimonials = () => {
                   }
                   className="bg-slate-800 border-white/10"
                 />
+              </div>
+            </div>
+
+            <div className="space-y-3 py-2 border-t border-white/5">
+              <Label>Rating</Label>
+              <div className="flex gap-2">
+                {[1, 2, 3, 4, 5].map((val) => (
+                  <button
+                    key={val}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, rating: val })}
+                    className="p-1 transition-transform hover:scale-110"
+                  >
+                    <Star
+                      className={`w-8 h-8 transition-colors ${
+                        val <= formData.rating
+                          ? "fill-amber-400 text-amber-400"
+                          : "text-slate-600"
+                      }`}
+                    />
+                  </button>
+                ))}
               </div>
             </div>
 

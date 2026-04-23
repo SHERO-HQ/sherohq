@@ -398,7 +398,7 @@ export function Modal({
             <div
               onClick={(e) => e.stopPropagation()}
               className={`
-                bg-card border border-border rounded shadow-2xl
+                bg-card border border-border rounded shadow
                 w-full ${sizeClasses[size]}
                 max-h-[90vh] overflow-y-auto
               `}

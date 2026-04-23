@@ -168,7 +168,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
 
       <aside
         className={cn(
-          "fixed top-0 left-0 h-full glass-surface backdrop-blur-md z-50 transition-all duration-200 ease-in-out shadow-2xl",
+          "fixed top-0 left-0 h-full glass-surface backdrop-blur-md z-50 transition-all duration-200 ease-in-out shadow",
           isOpen
             ? "w-64 translate-x-0"
             : "w-20 -translate-x-full lg:translate-x-0",
@@ -190,16 +190,16 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
               )}
             >
               <div className="flex items-center justify-center shrink-0 shadow shadow-brand-secondary-500/10 group-hover:scale-110 transition-transform">
-                  <img
-                            src="/assets/logo/shero.svg"
-                            alt="SHERO Logo"
-                            width={30}
-                            height={30}
-                            fetchPriority="high"
-                            decoding="async"
-                            className="h-8 w-auto"
-                            suppressHydrationWarning
-                        />
+                <img
+                  src="/assets/logo/shero.svg"
+                  alt="SHERO Logo"
+                  width={30}
+                  height={30}
+                  fetchPriority="high"
+                  decoding="async"
+                  className="h-8 w-auto"
+                  suppressHydrationWarning
+                />
               </div>
               <span
                 className={cn(

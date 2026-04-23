@@ -339,7 +339,7 @@ Container (max-w-7xl, mx-auto)
 - **Border**: Optional, subtle (`border border-border`)
 - **Padding**: `p-6` (default)
 - **Border Radius**: `rounded` (8px)
-- **Shadow**: `shadow-sm` (subtle) to `shadow-lg` (prominent)
+- **Shadow**: `shadow-sm` (subtle) to `shadow` (prominent)
 - **Hover**: Optional `hover:shadow-md` + subtle scale on interactive cards
 
 ### Badges & Tags
@@ -359,7 +359,7 @@ Container (max-w-7xl, mx-auto)
 - **Modal Background**: `bg-card`
 - **Border Radius**: `rounded` (8px)
 - **Padding**: `p-6` (content)
-- **Shadow**: `shadow-2xl`
+- **Shadow**: `shadow`
 - **Animation**: Fade + scale-up on open
 
 ### Accordion

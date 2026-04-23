@@ -35,6 +35,8 @@ export default function FeedbackModal({
  name: "",
  email: "",
  message: "",
+ role: "",
+ company: "",
  });
  const [imageFile, setImageFile] = useState<File | null>(null);
  const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -44,7 +46,7 @@ export default function FeedbackModal({
  const resetForm = useCallback(() => {
  setStatus("idle");
  setRating(0);
- setFormData({ name: "", email: "", message: "" });
+ setFormData({ name: "", email: "", message: "", role: "", company: "" });
  setImageFile(null);
  setImagePreview(null);
  }, []);
@@ -122,8 +124,8 @@ export default function FeedbackModal({
       author: formData.name,
       rating: rating,
       image: imageUrl,
-      role: "Verified Customer",
-      company: "Direct Feedback"
+      role: formData.role || "Verified Customer",
+      company: formData.company || "Direct Feedback"
     });
 
     // 3. Send backup contact message (as per user request)
@@ -277,6 +279,46 @@ export default function FeedbackModal({
  placeholder="you@example.com"
  />
  </div>
+ </div>
+
+ {/* Role & Company */}
+ <div className="grid grid-cols-2 gap-3">
+  <div>
+  <label
+  htmlFor="feedback-role"
+  className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+  >
+  Role (Optional)
+  </label>
+  <input
+  id="feedback-role"
+  type="text"
+  value={formData.role}
+  onChange={(e) =>
+  setFormData({ ...formData, role: e.target.value })
+  }
+  className="w-full px-3 py-2 text-sm rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 focus:border-brand-secondary-500"
+  placeholder="e.g. CEO"
+  />
+  </div>
+  <div>
+  <label
+  htmlFor="feedback-company"
+  className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+  >
+  Company (Optional)
+  </label>
+  <input
+  id="feedback-company"
+  type="text"
+  value={formData.company}
+  onChange={(e) =>
+  setFormData({ ...formData, company: e.target.value })
+  }
+  className="w-full px-3 py-2 text-sm rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 focus:border-brand-secondary-500"
+  placeholder="e.g. Acme Inc"
+  />
+  </div>
  </div>
 
   {/* Image Upload */}

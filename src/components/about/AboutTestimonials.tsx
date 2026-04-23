@@ -248,7 +248,7 @@ const AboutTestimonials = () => {
             </div>
             <div className="relative z-10">
               <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 transition-colors duration-300">
-                Have Feedback?
+                Have A Testimony?
               </h3>
               <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 transition-colors duration-300">
                 We value your input! Help us improve our products and services.
@@ -257,7 +257,7 @@ const AboutTestimonials = () => {
                 onClick={() => setIsFeedbackModalOpen(true)}
                 className="cursor-pointer px-6 py-2 bg-brand-secondary-600 text-sm text-white rounded font-medium hover:bg-brand-secondary-700 transition-colors shadow shadow-brand-secondary-900/20 w-fit"
               >
-                Share Your Thoughts
+                Share Your Testimony
               </button>
             </div>
           </motion.div>

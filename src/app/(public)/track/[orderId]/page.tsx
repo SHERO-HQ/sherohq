@@ -212,7 +212,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
                         isCompleted
                           ? "bg-brand-secondary-500 text-white"
                           : isActive
-                            ? "bg-brand-secondary-500 text-white scale-110 shadow-lg shadow-brand-secondary-500/20"
+                            ? "bg-brand-secondary-500 text-white scale-110 shadow shadow-brand-secondary-500/20"
                             : "bg-white dark:bg-slate-800 text-slate-400 border-2 border-slate-100 dark:border-slate-800",
                       )}
                     >

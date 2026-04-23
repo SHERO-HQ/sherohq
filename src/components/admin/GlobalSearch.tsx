@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { 
-  Search, 
-  Package, 
-  ShoppingCart, 
-  Users, 
-  MessageSquare, 
-  ChevronRight, 
+import {
+  Search,
+  Package,
+  ShoppingCart,
+  Users,
+  MessageSquare,
+  ChevronRight,
   Loader2,
   X,
   Command
@@ -117,12 +117,12 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
             className="absolute inset-0 bg-slate-950/60 backdrop-blur-md"
             onClick={onClose}
           />
-          
+
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: -20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
-            className="relative w-full max-w-2xl glass-surface-lg rounded overflow-hidden shadow-2xl flex flex-col"
+            className="relative w-full max-w-2xl glass-surface-lg rounded overflow-hidden shadow flex flex-col"
           >
             {/* Search Input Area */}
             <div className="flex items-center gap-3 px-4 py-4 border-b border-white/5">
@@ -275,8 +275,8 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
             {/* Footer */}
             <div className="px-4 py-3 bg-white/5 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-500">
               <div className="flex items-center gap-4">
-                 <span className="flex items-center gap-1"><kbd className="px-1 rounded bg-slate-800 border border-white/10 text-white">↵</kbd> Select</span>
-                 <span className="flex items-center gap-1"><kbd className="px-1 rounded bg-slate-800 border border-white/10 text-white">↑↓</kbd> Navigate</span>
+                <span className="flex items-center gap-1"><kbd className="px-1 rounded bg-slate-800 border border-white/10 text-white">↵</kbd> Select</span>
+                <span className="flex items-center gap-1"><kbd className="px-1 rounded bg-slate-800 border border-white/10 text-white">↑↓</kbd> Navigate</span>
               </div>
               <div className="flex items-center gap-1">
                 <span className="hidden sm:inline">Press</span>
@@ -306,8 +306,8 @@ const ResultItem = ({ icon, title, subtitle, image, isSelected, onClick }: Resul
       onClick={onClick}
       className={cn(
         "w-full flex items-center gap-3 px-3 py-2 rounded transition-all text-left group",
-        isSelected 
-          ? "bg-brand-secondary-500/10 border-l-2 border-brand-secondary-500 pl-2.5" 
+        isSelected
+          ? "bg-brand-secondary-500/10 border-l-2 border-brand-secondary-500 pl-2.5"
           : "hover:bg-white/5 border-l-2 border-transparent"
       )}
     >
