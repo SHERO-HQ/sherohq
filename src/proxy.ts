@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 
-export const runtime = "edge"; // ← required for Cloudflare
+
 
 export function proxy(request: NextRequest) {
   const url = request.nextUrl.clone();
@@ -57,7 +57,4 @@ export function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Config to match all paths except static assets, etc.
-export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|.*\\..*).*)"],
-};
+

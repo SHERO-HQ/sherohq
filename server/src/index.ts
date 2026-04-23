@@ -159,12 +159,13 @@ const allowedOrigins = [
   "https://sherohq.com",
   "https://www.sherohq.com",
   "https://sherohq.vercel.app",
+  "https://pharmasyst.sherohq.com", // Added for new project domain
   "https://admin.sherohq.com",
   "https://support.sherohq.com",
   "https://products.sherohq.com",
   "https://shop.sherohq.com",
   "https://api.sherohq.com",
-  "https://sherotech.onrender.com", // Ensure own domain is allowed
+  "https://sherotech.onrender.com",
   "http://localhost:5175",
   "http://localhost:3000",
 ];
@@ -193,17 +194,24 @@ app.use(
         o.replace(/\/$/, ""),
       );
 
-      const isAllowed = normalizedAllowedOrigins.includes(normalizedOrigin);
+      let isAllowed = normalizedAllowedOrigins.includes(normalizedOrigin);
+
+      // Also allow any subdomain of sherohq.com or onrender.com for flexibility
+      if (!isAllowed) {
+        if (
+          normalizedOrigin.endsWith(".sherohq.com") ||
+          normalizedOrigin.endsWith(".onrender.com")
+        ) {
+          isAllowed = true;
+        }
+      }
 
       if (isAllowed) {
         callback(null, true);
       } else {
-        console.error(`🚫 CORS blocked for origin: ${origin}`);
-        console.warn(`📋 Normalized origin: ${normalizedOrigin}`);
-        console.warn(
-          `📋 Allowed origins (normalized): ${normalizedAllowedOrigins.join(", ")}`,
-        );
-        callback(new Error(`CORS policy violation: ${origin}`));
+        console.warn(`[CORS] Origin rejected: ${origin}`);
+        // Deny origin gracefully without throwing error to main app
+        callback(null, false);
       }
     },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
