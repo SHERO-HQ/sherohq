@@ -154,12 +154,12 @@ if (process.env.DATABASE_URL) {
   }
 }
 
-// CORS configuration - Support multiple origins
+// CORS configuration - Support multiple origins with fallback whitelist and subdomain matching
 const allowedOrigins = [
   "https://sherohq.com",
   "https://www.sherohq.com",
   "https://sherohq.vercel.app",
-  "https://pharmasyst.sherohq.com", // Added for new project domain
+  "https://pharmasyst.sherohq.com",
   "https://admin.sherohq.com",
   "https://support.sherohq.com",
   "https://products.sherohq.com",
@@ -168,6 +168,7 @@ const allowedOrigins = [
   "https://sherotech.onrender.com",
   "http://localhost:5175",
   "http://localhost:3000",
+  "http://localhost:5173",
 ];
 
 // Add FRONTEND_URL or CORS_ORIGIN from environment if it exists
@@ -185,23 +186,24 @@ if (envOrigin) {
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps or curl requests)
+      // 1. Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
 
-      // Normalize origin and allowedOrigins by removing trailing slashes for resilient matching
+      // 2. Normalize origin and allowedOrigins list for resilient matching
       const normalizedOrigin = origin.replace(/\/$/, "");
       const normalizedAllowedOrigins = allowedOrigins.map((o) =>
         o.replace(/\/$/, ""),
       );
 
+      // 3. Check explicit whitelist
       let isAllowed = normalizedAllowedOrigins.includes(normalizedOrigin);
 
-      // Also allow any subdomain of sherohq.com or onrender.com for flexibility
+      // 4. Dynamic subdomain matching for sherohq.com and onrender.com
       if (!isAllowed) {
-        if (
-          normalizedOrigin.endsWith(".sherohq.com") ||
-          normalizedOrigin.endsWith(".onrender.com")
-        ) {
+        // Match: https://*.sherohq.com or https://*.onrender.com
+        const subdomainRegex =
+          /^https?:\/\/([a-z0-9-]+\.)+(sherohq\.com|onrender\.com)$|^https:\/\/(sherohq\.com|onrender\.com)$/;
+        if (subdomainRegex.test(normalizedOrigin)) {
           isAllowed = true;
         }
       }
@@ -209,8 +211,8 @@ app.use(
       if (isAllowed) {
         callback(null, true);
       } else {
-        console.warn(`[CORS] Origin rejected: ${origin}`);
-        // Deny origin gracefully without throwing error to main app
+        console.warn(`[CORS] Request blocked from unauthorized origin: ${origin}`);
+        // Deny origin gracefully
         callback(null, false);
       }
     },
@@ -221,6 +223,7 @@ app.use(
       "X-CSRF-Protection",
       "X-Order-Access-Token",
       "X-Requested-With",
+      "Accept",
     ],
     credentials: true,
     optionsSuccessStatus: 200, // Some legacy browsers choke on 204
