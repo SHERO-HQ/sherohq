@@ -8,12 +8,12 @@ export const badgeVariants = cva(
         default:
           "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
         secondary:
-          "border-brand-secondary-200 bg-brand-secondary-50 text-brand-secondary-700 hover:bg-brand-secondary-100 dark:border-brand-secondary-500/30 dark:bg-brand-secondary-500/15 dark:text-brand-secondary-300 dark:hover:bg-brand-secondary-500/20",
+          "border-brand-secondary-200 bg-brand-secondary-50 text-brand-secondary-700 hover:bg-brand-secondary-100 dark:border-brand-secondary-500/30 dark:bg-brand-secondary-500/15 dark:text-brand-secondary-300 dark:hover:bg-brand-secondary-500/20 dark:backdrop-blur-md",
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",
         brandSecondary:
-          "border-transparent bg-brand-secondary-600 text-white hover:bg-brand-secondary-700 dark:bg-brand-secondary-500 dark:hover:bg-brand-secondary-600",
+          "border-transparent bg-brand-secondary-600 text-white hover:bg-brand-secondary-700 dark:bg-brand-secondary-500 dark:hover:bg-brand-secondary-600 dark:backdrop-blur-md",
       },
     },
     defaultVariants: {
