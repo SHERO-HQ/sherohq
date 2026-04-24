@@ -275,7 +275,7 @@
     }
 
     .glass-surface-md {
-        @apply backdrop-blur-[64px] backdrop-saturate-200 bg-white/80 dark:bg-slate-900/85 border border-black/15 dark:border-white/15 shadow;
+        @apply backdrop-blur-3xl backdrop-saturate-200 bg-white/80 dark:bg-slate-900/85 border border-black/15 dark:border-white/15 shadow;
     }
 
     .glass-surface-lg {

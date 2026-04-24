@@ -20,14 +20,17 @@ export interface User {
   name: string;
   phone?: string;
   emailVerified?: boolean;
+  mfaEnabled?: boolean;
   shippingAddress?: ShippingAddress | null;
 }
 
 export interface UserLoginResponse {
   success: boolean;
-  token: string;
+  token?: string;
   user: User;
   mustReset?: boolean;
+  requiresMFA?: boolean;
+  mfaToken?: string;
 }
 
 // ---------------------------------------------------------------------------

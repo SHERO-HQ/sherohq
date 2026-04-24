@@ -12,9 +12,10 @@ export async function getAdminFromSession() {
 
   try {
     // Find valid session and join with admin user in one go
+    // Note: We use * to avoid crashing if new MFA columns aren't added yet
     const sessionRes = await query(
       `SELECT 
-        au.id, au.username, au.email, au.phone, au.role, au.avatar, au."mfaEnabled"
+        au.*
        FROM sessions s
        JOIN admin_users au ON s."adminId" = au.id
        WHERE s.token = $1 AND s."expiresAt" > NOW()`,

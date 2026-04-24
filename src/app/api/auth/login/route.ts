@@ -33,6 +33,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Your account has been deactivated." }, { status: 403 });
     }
 
+    // 2. Handle Multi-Factor Authentication (MFA)
+    if (user.mfaEnabled) {
+      return NextResponse.json({
+        requiresMFA: true,
+        mfaToken: Buffer.from(user.id).toString("base64"), // Temporary token for the second step
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+        }
+      });
+    }
+
     const token = randomBytes(32).toString("hex");
     const sessionId = uuidv4();
     const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);

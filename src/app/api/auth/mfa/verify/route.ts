@@ -1,23 +1,24 @@
 import { NextRequest } from "next/server";
 import { query } from "@/lib/db";
-import { getAdminFromSession } from "@/lib/auth";
+import { getUserFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 import speakeasy from "speakeasy";
 import { generateRecoveryCodes, hashRecoveryCode } from "@/lib/mfa-utils";
 
 export async function POST(request: NextRequest) {
   try {
-    const admin = await getAdminFromSession();
-    if (!admin) return apiResponse.unauthorized();
+    const user = await getUserFromSession();
+    if (!user) return apiResponse.unauthorized();
 
     const { code } = await request.json();
-    
-    // Fetch the secret from DB
-    const res = await query('SELECT "mfaSecret" FROM admin_users WHERE id = $1', [admin.id]);
+    if (!code) return apiResponse.error("Verification code is required", 400);
+
+    // Fetch the secret we just stored
+    const res = await query('SELECT "mfaSecret" FROM users WHERE id = $1', [user.id]);
     const secret = res.rows[0]?.mfaSecret;
 
     if (!secret) {
-      return apiResponse.error("MFA not initialized", 400);
+      return apiResponse.error("MFA setup not initialized", 400);
     }
 
     // Verify the TOTP code
@@ -29,16 +30,16 @@ export async function POST(request: NextRequest) {
     });
 
     if (!verified) {
-      return apiResponse.error("Invalid verification code. Please try again.", 400);
+      return apiResponse.error("Invalid verification code", 400);
     }
 
-    // Enable MFA and generate recovery codes
+    // Enable MFA permanently and store recovery codes
     const recoveryCodes = generateRecoveryCodes();
     const hashedCodes = recoveryCodes.map(hashRecoveryCode);
 
     await query(
-      `UPDATE admin_users SET "mfaEnabled" = true, "mfaRecoveryCodes" = $1 WHERE id = $2`,
-      [JSON.stringify(hashedCodes), admin.id]
+      'UPDATE users SET "mfaEnabled" = true, "mfaRecoveryCodes" = $1 WHERE id = $2',
+      [JSON.stringify(hashedCodes), user.id]
     );
 
     return apiResponse.success({ 
@@ -46,7 +47,7 @@ export async function POST(request: NextRequest) {
       recoveryCodes 
     });
   } catch (error) {
-    console.error("MFA verify error:", error);
+    console.error("User MFA verification error:", error);
     return apiResponse.error("Failed to verify MFA code");
   }
 }

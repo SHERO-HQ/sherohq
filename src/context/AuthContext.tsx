@@ -25,7 +25,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   mustReset: boolean;
-  login: (data: { email: string; password: string }) => Promise<void>;
+  login: (data: { email: string; password: string }) => Promise<any>;
   register: (data: {
     email: string;
     password: string;
@@ -78,12 +78,20 @@ export function AuthProvider({ children }: Readonly<{ children: ReactNode }>) {
     setIsLoading(true);
     try {
       const response = await userLogin(data);
+      
+      // If MFA is required, don't set user yet, just return the challenge
+      if (response.requiresMFA) {
+        setIsLoading(false);
+        return response;
+      }
+
       if (response.token) {
         localStorage.setItem("userToken", response.token);
       }
       setUser(response.user);
       setMustReset(!!response.mustReset);
       setIsLoading(false);
+      return response;
     } catch (error) {
       setIsLoading(false);
       throw new Error(formatAuthError(error));

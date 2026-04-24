@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { profileSchema, type ProfileInput } from "@/lib/validations/profile";
-import { User as UserIcon, MapPin, Mail } from "lucide-react";
+import { User as UserIcon, MapPin, Mail, Shield, CheckCircle2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
@@ -14,6 +14,7 @@ interface ProfileSettingsProps {
  saving: boolean;
  saveMessage: string;
  onSubmit: (data: ProfileInput) => void;
+ onEnableMFA?: () => void;
 }
 
 const ProfileSettings: React.FC<ProfileSettingsProps> = ({
@@ -164,6 +165,47 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({
  />
  </div>
  </div>
+
+  {/* Security */}
+  <div className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6">
+    <div className="flex items-center justify-between mb-6">
+      <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+        <Shield className="w-5 h-5 text-brand-secondary-500" />
+        Security Settings
+      </h3>
+      {user.mfaEnabled && (
+        <span className="flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded-full">
+          <CheckCircle2 size={14} />
+          MFA ENABLED
+        </span>
+      )}
+    </div>
+
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
+      <div className="space-y-1">
+        <p className="font-bold text-slate-900 dark:text-white">
+          Two-Factor Authentication (MFA)
+        </p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">
+          Secure your account with an extra layer of protection using an authenticator app.
+        </p>
+      </div>
+      {!user.mfaEnabled ? (
+        <Button
+          type="button"
+          onClick={onEnableMFA}
+          variant="outline"
+          className="border-brand-secondary-200 hover:bg-brand-secondary-50 text-brand-secondary-700"
+        >
+          Enable MFA
+        </Button>
+      ) : (
+        <span className="text-sm font-medium text-slate-500 italic">
+          Configured
+        </span>
+      )}
+    </div>
+  </div>
 
  {/* Save Button */}
  <div className="flex items-center justify-between">

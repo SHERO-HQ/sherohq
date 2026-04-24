@@ -7,6 +7,7 @@ import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
 import { ADMIN_SESSION_COOKIE } from "@/lib/auth";
 import speakeasy from "speakeasy";
+import { verifyRecoveryCode } from "@/lib/mfa-utils";
 
 export async function POST(request: NextRequest) {
   try {
@@ -27,13 +28,30 @@ export async function POST(request: NextRequest) {
       return apiResponse.error("Invalid session", 401);
     }
 
-    // Verify TOTP
-    const verified = speakeasy.totp.verify({
-      secret: admin.mfaSecret,
-      encoding: "base32",
-      token: code,
-      window: 1,
-    });
+    // Verify the code (TOTP or Recovery Code)
+    let verified = false;
+
+    if (code.length === 10) {
+      // Check recovery codes
+      const hashedRecoveryCodes: string[] = admin.mfaRecoveryCodes || [];
+      const codeIndex = hashedRecoveryCodes.findIndex(hashed => verifyRecoveryCode(code.toUpperCase(), hashed));
+      
+      if (codeIndex !== -1) {
+        verified = true;
+        // Remove the used recovery code
+        hashedRecoveryCodes.splice(codeIndex, 1);
+        await query('UPDATE admin_users SET "mfaRecoveryCodes" = $1 WHERE id = $2', [JSON.stringify(hashedRecoveryCodes), admin.id]);
+        await logActivity(admin.id, "admin_mfa_recovery_used", "info", `Admin used a recovery code to log in: ${admin.username}`);
+      }
+    } else {
+      // Standard TOTP verification
+      verified = speakeasy.totp.verify({
+        secret: admin.mfaSecret,
+        encoding: "base32",
+        token: code,
+        window: 1,
+      });
+    }
 
     if (!verified) {
       return apiResponse.error("Invalid verification code", 400);

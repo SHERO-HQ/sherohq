@@ -15,6 +15,7 @@ import VerificationBanner from "@/components/profile/VerificationBanner";
 import ProfileSidebar from "@/components/profile/ProfileSidebar";
 import OrderHistory from "@/components/profile/OrderHistory";
 import ProfileSettings from "@/components/profile/ProfileSettings";
+import UserMFASetup from "@/components/auth/UserMFASetup";
 
 type Tab = "orders" | "settings";
 
@@ -39,6 +40,9 @@ const Profile = () => {
  const toggleOrderExpansion = (orderId: string) => {
  setExpandedOrder((prev) => (prev === orderId ? null : orderId));
  };
+
+ const [isMFAModalOpen, setIsMFAModalOpen] = useState(false);
+
  const { resendingEmail, resendMessage, handleResendVerification } =
  useVerification();
  const { saving, saveMessage, handleSaveProfile } = useProfileForm(
@@ -134,12 +138,22 @@ const Profile = () => {
  saving={saving}
  saveMessage={saveMessage}
  onSubmit={handleSaveProfile}
+ onEnableMFA={() => setIsMFAModalOpen(true)}
  />
  </>
  )}
  </div>
  </div>
  </div>
+
+ <UserMFASetup
+ isOpen={isMFAModalOpen}
+ onClose={() => setIsMFAModalOpen(false)}
+ onSuccess={() => {
+ setIsMFAModalOpen(false);
+ refreshUser();
+ }}
+ />
  </div>
  );
 };
