@@ -1,58 +1,17 @@
 import type { NextConfig } from "next";
 
-function toAbsoluteUrl(value: string | undefined): string | null {
-  const raw = value?.trim();
-  if (!raw) return null;
-
-  if (raw.startsWith("http://") || raw.startsWith("https://")) {
-    return raw.replace(/\/$/, "");
-  }
-
-  if (raw.startsWith("/")) {
-    return null;
-  }
-
-  return `https://${raw}`.replace(/\/$/, "");
-}
-
-function resolveApiOrigin(): string {
-  const directApi = toAbsoluteUrl(process.env.API_URL);
-  if (directApi) return directApi;
-
-  const publicApi = toAbsoluteUrl(process.env.NEXT_PUBLIC_API_URL);
-  if (publicApi) return publicApi;
-
-  if (process.env.NODE_ENV === "production" && !directApi && !publicApi) {
-    console.warn(
-      "⚠️ [NextConfig] Falling back to hardcoded production API origin: https://sherotech.onrender.com. " +
-        "Ensure API_URL or NEXT_PUBLIC_API_URL is set.",
-    );
-    return "https://sherotech.onrender.com";
-  }
-
-  return "http://127.0.0.1:5000";
-}
-
 const nextConfig: NextConfig = {
   compress: true,
 
-  // Proxy API requests to the Express backend
-  async rewrites() {
-    const apiOrigin = resolveApiOrigin().replace(/\/api$/, "");
-    return [
-      {
-        source: "/api/:path*",
-        destination: `${apiOrigin}/api/:path*`,
-      },
-      {
-        source: "/uploads/:path*",
-        destination: `${apiOrigin}/uploads/:path*`,
-      },
-    ];
-  },
+  // Note: All /api routes are now handled natively by Next.js API Routes.
+  // The Express proxy has been decommissioned for performance and stability.
 
   // Image optimization
   images: {
+    minimumCacheTTL: 31536000,
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       {
         protocol: "https",
@@ -76,13 +35,42 @@ const nextConfig: NextConfig = {
   // Optimise production builds
   productionBrowserSourceMaps: false,
 
-  // Cache headers for static assets
+  // Cache headers for static assets and security headers
   async headers() {
     return [
       {
-        // Cache static assets aggressively (fonts, images, JS/CSS chunks)
-        source:
-          "/:path*.(woff2|woff|ttf|otf|ico|svg|png|jpg|jpeg|webp|avif|gif)",
+        source: "/api/:path*",
+        headers: [
+          { key: "Access-Control-Allow-Credentials", value: "true" },
+          { key: "Access-Control-Allow-Origin", value: "*" }, // Replace with specific domains in production
+          { key: "Access-Control-Allow-Methods", value: "GET,DELETE,PATCH,POST,PUT" },
+          { key: "Access-Control-Allow-Headers", value: "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, x-order-access-token" },
+        ],
+      },
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+      {
+        // Cache static assets aggressively
+        source: "/:path*.(woff2|woff|ttf|otf|ico|svg|png|jpg|jpeg|webp|avif|gif)",
         headers: [
           {
             key: "Cache-Control",

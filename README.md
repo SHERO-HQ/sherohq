@@ -1,160 +1,101 @@
 # SheroTech E-Commerce Platform
 
-A modern, responsive e-commerce web application built for the Ghanaian market, specifically tailored for selling tech products like phones and accessories. This project features a robust frontend, a Node.js backend integration, and a seamless checkout experience with local payment options.
+A modern, responsive e-commerce web application built for the Ghanaian market. This platform has been fully migrated to a **Next.js Native Architecture**, utilizing App Router API routes for the backend, resulting in a unified, high-performance codebase.
 
-## 🚀 Features
+## 🚀 Key Features
 
-- **Modern User Interface**: Built with React, Tailwind CSS, and Framer Motion for smooth animations and a premium feel.
-- **Responsive Design**: Fully optimized for Mobile, Tablet, and Desktop devices.
-- **Dark Mode Support**: System-aware dark mode integration.
-- **PWA Ready**: Installable as a Progressive Web App on supported devices.
+- **Next.js 16+ Native Architecture**: Unified full-stack codebase with App Router API routes.
+- **Multi-Factor Authentication (MFA)**: Production-grade TOTP-based security for administrative accounts.
+- **Modern User Interface**: Built with React 19, Tailwind CSS v4, and Framer Motion for premium animations.
 - **Advanced Checkout Flow**:
   - Multi-step checkout (Cart -> Shipping -> Payment -> Confirmation).
   - **Ghana Phone Validation**: Strict regex validation for local phone numbers (`02x` / `05x`).
-  - **Guest Checkout**: No mandatory login required for browsing.
-- **Flexible Payment & Delivery Options**:
-  - 📱 **Mobile Money**: Integration for MTN and Telecel Cash.
-  - 💳 **Card Payment**: Visa and Mastercard support.
-  - 🏬 **Paystack**: Online payment gateway integration.
-  - 💵 **Cash on Delivery**: Pay upon receipt.
-  - 🏪 **Store Pickup**: Free shipping option for self-collection.
-- **Social Sharing**: Share products via WhatsApp, Twitter, Facebook, or copy link.
-- **Wishlist**: Save products with real-time badge count in navigation.
-- **Admin Dashboard**: Comprehensive panel with dynamic real-time statistics and growth metrics.
-- **Product Management**:
-  - SKU management with auto-generation based on product ID.
-  - Advanced filtering, sorting, and categorization.
-  - Multi-format data exports (CSV, Excel, PDF).
-- **Accessibility & UI**:
-  - **WCAG AA Compliant**: Optimized contrast and semantic HTML for screen readers.
-  - **Dynamic Design**: Interactive stats, magnetic cards, and micro-animations.
-  - **Add-to-Cart Feedback**: Animated success states with visual confirmation.
+- **Flexible Payments**:
+  - 📱 **Mobile Money**: MTN and Telecel Cash.
+  - 💳 **Card Payment**: Visa/Mastercard via Paystack.
+  - 💵 **Cash on Delivery** & **Store Pickup**.
+- **Admin Dashboard**: Comprehensive panel with real-time analytics, order management, and activity logs.
 
 ## 🛠️ Tech Stack
 
-### Frontend
-
-- **Framework**: [Next.js](https://nextjs.org/) (App Router) with [React](https://react.dev/) and [TypeScript](https://www.typescriptlang.org/)
-- **Build/Runtime**: Next.js (`next dev`, `next build`, `next start`)
+### Full Stack
+- **Framework**: [Next.js](https://nextjs.org/) (App Router, Turbopack)
+- **UI Library**: [React 19](https://react.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Database**: [PostgreSQL](https://www.postgresql.org/) (via [Supabase](https://supabase.com/))
+- **Animations**: [Framer Motion / Motion](https://www.framer.com/motion/)
 - **Icons**: [Lucide React](https://lucide.dev/)
-- **State Management**: React Context API
-
-### Backend
-
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Database**: PostgreSQL (via Supabase)
-- **Payment Integration**: Hubtel (Planned/mocked integration logic)
 
 ## 🏁 Getting Started
 
-Follow these instructions to set up the project locally.
-
 ### Prerequisites
-
-- Node.js (v18 or higher recommended)
-- Yarn package manager
+- Node.js (v20+ recommended)
+- Yarn 4.x package manager
 
 ### Installation
-
 1. **Clone the repository**
-
    ```bash
    git clone <repository-url>
    cd sherotech
    ```
-
-2. **Install Frontend Dependencies**
-
+2. **Install Dependencies**
    ```bash
    yarn install
    ```
 
-3. **Install Backend Dependencies**
+### Environment Setup
+Create a `.env.local` file in the root directory:
+```env
+# Database
+DATABASE_URL=your_postgresql_connection_string
 
-   ```bash
-   cd server
-   yarn install
-   cd ..
-   ```
+# Supabase (Storage/Auth)
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_anon_key
 
-4. **Environment Setup**
-   Create a `.env` file in the `server/` directory. You can copy the structure from `.env.example` if available.
-
-   ```env
-   PORT=5000
-   DATABASE_URL=your_database_connection_string
-   SKIP_SEEDING=true  # Set to true to prevent automatic re-seeding of test data
-   # Add other necessary API keys here
-   ```
+# Email (Resend)
+RESEND_API_KEY=your_resend_key
+```
 
 ## 🏃‍♂️ Running the Project
 
-To run both the frontend and backend servers concurrently:
-
+### Development
 ```bash
-yarn dev:all
+yarn dev
+```
+- Frontend & API: [http://localhost:3000](http://localhost:3000)
+
+### Production Build
+```bash
+yarn build
+yarn start
 ```
 
-- **Frontend**: [http://localhost:3000](http://localhost:3000)
-- **Backend Server**: [http://localhost:5000](http://localhost:5000)
-
-### Other Commands
-
-- `yarn dev`: Run only the frontend.
-- `yarn server`: Run only the backend.
-- `yarn build`: Build the frontend for production.
-- `yarn lint`: Run ESLint checks.
-- `yarn test`: Run frontend unit tests (Vitest).
-- `yarn flush`: Purge all test data from the database while preserving admin users.
-
 ## 🧪 Testing
-
-The project uses a two-tier testing strategy:
-
-### Unit Testing
-
-Designed for logic validation in both frontend and backend.
-
-- **Run All Tests**: `yarn test` (from root)
-- **Run Backend Tests**: `cd server && yarn test`
-- **Run Frontend Tests**: `yarn test` (from root)
-
-### E2E Testing
-
-Built with Playwright for user journey validation.
-
-- **Run E2E Tests**: `yarn test:e2e`
-- **UI Mode**: `yarn test:e2e:ui`
+- **Unit/Integration**: `yarn test` (Vitest)
+- **End-to-End**: `yarn test:e2e` (Playwright)
 
 ## 📂 Project Structure
-
 ```text
 sherotech/
-├── public/              # Static assets
-├── server/              # Node.js/Express Backend
-│   ├── routes/          # API Routes
-│   └── ...
 ├── src/
-│   ├── components/      # Reusable UI Components
-│   │   ├── checkout/    # Checkout specific components
-│   │   ├── products/    # Product grids and cards
-│   │   └── ...
-│   ├── context/         # React Context (Auth, Cart, Theme)
-│   ├── pages/           # Application Route Pages
-│   ├── services/        # API functions
-│   └── utils/           # Helper functions
-├── .gitignore
-├── package.json
-└── README.md
+│   ├── app/             # App Router (Pages & API Routes)
+│   ├── components/      # UI Components (Atomic Design)
+│   ├── context/         # Auth, Admin, and Global Contexts
+│   ├── hooks/           # Custom React Hooks
+│   ├── lib/             # Server-side utilities (DB, Auth, Utils)
+│   ├── services/        # Client-side API service layers
+│   ├── utils/           # Shared utility functions
+│   └── views/           # Page-level view compositions
+├── public/              # Static assets
+├── tests/               # E2E and Integration tests
+├── next.config.ts       # Framework configuration
+└── package.json         # Dependencies and scripts
 ```
 
 ## 🤝 Contributing
-
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
-
 This project is licensed under the MIT License.

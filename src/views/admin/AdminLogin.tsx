@@ -20,9 +20,11 @@ export default function AdminLogin() {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [mfaCode, setMfaCode] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const { requiresMFA, verifyMFA } = useAdmin();
 
     // Already authenticated on arrival (e.g. back button) — redirect silently
     useEffect(() => {
@@ -39,16 +41,23 @@ export default function AdminLogin() {
         setIsLoading(true);
 
         try {
-            await login(username, password);
-            const subdomain = getSubdomain();
-            const dashboardPath = subdomain === "admin" ? "/dashboard" : "/admin/dashboard";
-            router.replace(dashboardPath);
+            if (requiresMFA) {
+                await verifyMFA(mfaCode);
+            } else {
+                await login(username, password);
+                // If login response has requiresMFA, AdminContext will set requiresMFA to true
+                // and we will just stop here (isLoading false) to let user enter code
+            }
+            
+            // Only redirect if authenticated
+            // If requiresMFA became true, isAuthenticated is still false
         } catch (err: any) {
             if (err.message?.includes("Failed to fetch") || !err.status) {
                 setError("Server unreachable. Please check your internet connection.");
             } else {
                 setError(err instanceof Error ? err.message : "Login failed");
             }
+        } finally {
             setIsLoading(false);
         }
     }
@@ -93,63 +102,93 @@ export default function AdminLogin() {
                             </div>
                         )}
 
-                        {/* Username Field */}
-                        <div>
-                            <label
-                                htmlFor="username"
-                                className="block text-sm font-medium text-slate-300 mb-2"
-                            >
-                                Username
-                            </label>
-                            <div className="relative">
-                                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                                <input
-                                    id="username"
-                                    type="text"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
-                                    placeholder="Enter your username"
-                                    className="w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-slate-700 rounded text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
-                                    required
-                                    autoComplete="username"
-                                />
-                            </div>
-                        </div>
+                        {/* Step 1: Credentials */}
+                        {!requiresMFA ? (
+                            <>
+                                <div>
+                                    <label
+                                        htmlFor="username"
+                                        className="block text-sm font-medium text-slate-300 mb-2"
+                                    >
+                                        Username
+                                    </label>
+                                    <div className="relative">
+                                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                                        <input
+                                            id="username"
+                                            type="text"
+                                            value={username}
+                                            onChange={(e) => setUsername(e.target.value)}
+                                            placeholder="Enter your username"
+                                            className="w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-slate-700 rounded text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                            required
+                                            autoComplete="username"
+                                        />
+                                    </div>
+                                </div>
 
-                        {/* Password Field */}
-                        <div>
-                            <label
-                                htmlFor="password"
-                                className="block text-sm font-medium text-slate-300 mb-2"
-                            >
-                                Password
-                            </label>
-                            <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                                <input
-                                    id="password"
-                                    type={showPassword ? "text" : "password"}
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="Enter your password"
-                                    className="w-full pl-10 pr-12 py-2 bg-slate-800/50 border border-slate-700 rounded text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
-                                    required
-                                    autoComplete="current-password"
-                                />
+                                <div>
+                                    <label
+                                        htmlFor="password"
+                                        className="block text-sm font-medium text-slate-300 mb-2"
+                                    >
+                                        Password
+                                    </label>
+                                    <div className="relative">
+                                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                                        <input
+                                            id="password"
+                                            type={showPassword ? "text" : "password"}
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            placeholder="Enter your password"
+                                            className="w-full pl-10 pr-12 py-2 bg-slate-800/50 border border-slate-700 rounded text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                            required
+                                            autoComplete="current-password"
+                                        />
 
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 focus:outline-none transition-colors"
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 focus:outline-none transition-colors"
+                                        >
+                                            {showPassword ? (
+                                                <EyeOff className="w-5 h-5" />
+                                            ) : (
+                                                <Eye className="w-5 h-5" />
+                                            )}
+                                        </button>
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            /* Step 2: MFA Code */
+                            <div>
+                                <label
+                                    htmlFor="mfaCode"
+                                    className="block text-sm font-medium text-slate-300 mb-2"
                                 >
-                                    {showPassword ? (
-                                        <EyeOff className="w-5 h-5" />
-                                    ) : (
-                                        <Eye className="w-5 h-5" />
-                                    )}
-                                </button>
+                                    Authentication Code
+                                </label>
+                                <div className="relative">
+                                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                                    <input
+                                        id="mfaCode"
+                                        type="text"
+                                        value={mfaCode}
+                                        onChange={(e) => setMfaCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))}
+                                        placeholder="Enter 6-digit code"
+                                        className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-slate-700 rounded text-white text-center text-2xl tracking-[0.5em] font-mono placeholder:text-sm placeholder:tracking-normal placeholder:font-sans focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                        required
+                                        autoFocus
+                                        autoComplete="one-time-code"
+                                    />
+                                </div>
+                                <p className="text-xs text-slate-500 mt-4 text-center">
+                                    Enter the code from your authenticator app to continue.
+                                </p>
                             </div>
-                        </div>
+                        )}
 
                         {/* Submit Button */}
                         <button
@@ -160,10 +199,10 @@ export default function AdminLogin() {
                             {isLoading ? (
                                 <>
                                     <Loader2 className="w-5 h-5 animate-spin" />
-                                    Signing in...
+                                    {requiresMFA ? "Verifying..." : "Signing in..."}
                                 </>
                             ) : (
-                                "Sign In"
+                                requiresMFA ? "Verify Code" : "Sign In"
                             )}
                         </button>
                     </form>

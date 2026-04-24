@@ -81,7 +81,7 @@ export default function ActivityFeed({ logs, isLoading }: ActivityFeedProps) {
  );
  }
 
- if (logs.length === 0) {
+ if (!Array.isArray(logs) || logs.length === 0) {
  return (
  <div className="text-center py-8 text-slate-500">
  <Clock className="w-8 h-8 mx-auto mb-2 opacity-20" />

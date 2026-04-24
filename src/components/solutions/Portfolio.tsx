@@ -338,7 +338,7 @@ const Portfolio = () => {
  )}
 
  {selectedProject.link && (
- <div className="pt-4 sticky bottom-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm pb-2">
+ <div className="pt-4 sticky bottom-0 pb-2">
  <a
  href={selectedProject.link}
  target="_blank"

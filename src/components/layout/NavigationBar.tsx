@@ -285,7 +285,7 @@ const Nav = () => {
   return (
     <>
       <nav
-        className={`w-full transition duration-300 z-50 ${isOpen || scrolled ? "glass-surface-md border-t-0 shadow-sm" : "bg-transparent"}`}
+        className={`w-full transition-all duration-500 z-50 border-t-0 ${isOpen || scrolled ? "glass-surface-md shadow-sm" : "bg-transparent border-b border-transparent"}`}
         aria-label="main navigation"
         id="nav-menu"
       >

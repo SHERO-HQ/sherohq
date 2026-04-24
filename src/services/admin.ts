@@ -13,13 +13,16 @@ export interface AdminUser {
   phone?: string;
   avatar?: string;
   isActive?: boolean;
+  mfaEnabled?: boolean;
   createdAt?: string;
 }
 
 export interface LoginResponse {
   success: boolean;
-  token: string;
-  admin: AdminUser;
+  token?: string;
+  admin?: AdminUser;
+  requiresMFA?: boolean;
+  mfaToken?: string;
   mustReset?: boolean;
 }
 
@@ -146,7 +149,7 @@ export async function adminLogin(
   username: string,
   password: string,
 ): Promise<LoginResponse> {
-  const response = await fetch(`${API_BASE}/admin/login`, {
+  const response = await fetch(`${API_BASE}/admin-auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -172,7 +175,7 @@ export async function adminChangePassword(
 
 export async function adminLogout(): Promise<void> {
   try {
-    await authFetch(`${API_BASE}/admin/logout`, { method: "POST" });
+    await authFetch(`${API_BASE}/admin-auth/logout`, { method: "POST" });
   } finally {
     localStorage.removeItem("adminToken");
   }
@@ -182,7 +185,7 @@ export async function getAdminMe(): Promise<{
   success: boolean;
   admin: AdminUser;
 }> {
-  const response = await authFetch(`${API_BASE}/admin/me`);
+  const response = await authFetch(`${API_BASE}/admin-auth/me`);
   return handleResponse(response);
 }
 
@@ -199,6 +202,47 @@ export async function updateAdminProfile(data: {
     body: JSON.stringify(data),
   });
   return handleResponse(response);
+}
+
+// ---------------------------------------------------------------------------
+// MFA Operations
+// ---------------------------------------------------------------------------
+
+export async function setupAdminMFA(): Promise<{
+  success: boolean;
+  secret: string;
+  qrCode: string;
+  otpAuthUrl: string;
+}> {
+  const response = await authFetch(`${API_BASE}/admin-auth/mfa/setup`, {
+    method: "POST",
+  });
+  return handleResponse(response);
+}
+
+export async function verifyAdminMFASetup(code: string): Promise<{
+  success: boolean;
+  message: string;
+}> {
+  const response = await authFetch(`${API_BASE}/admin-auth/mfa/verify`, {
+    method: "POST",
+    body: JSON.stringify({ code }),
+  });
+  return handleResponse(response);
+}
+
+export async function loginWithMFA(
+  mfaToken: string,
+  code: string,
+): Promise<LoginResponse> {
+  const response = await fetch(`${API_BASE}/admin-auth/login/mfa`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ mfaToken, code }),
+  });
+  return handleResponse<LoginResponse>(response);
 }
 
 // ---------------------------------------------------------------------------

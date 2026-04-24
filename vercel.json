@@ -8,5 +8,11 @@
       "source": "/og/:id",
       "destination": "/api/og/:id"
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/newsletter",
+      "schedule": "* * * * *"
+    }
   ]
 }

@@ -28,6 +28,8 @@ export default function AppImage({
 
   const fallbackSrc = `https://placehold.co/${width ?? 400}x${height ?? 400}?text=${encodeURIComponent(placeholderText)}`;
 
+  const isRemote = src?.startsWith("http") || fallbackSrc.startsWith("http");
+
   if (!src || failedSrc === src) {
     return (
       <Image
@@ -36,6 +38,8 @@ export default function AppImage({
         width={!fill ? (width ?? 400) : undefined}
         height={!fill ? (height ?? 400) : undefined}
         fill={fill}
+        sizes={fill ? "100vw" : undefined}
+        unoptimized={true}
         className={className}
       />
     );
@@ -49,6 +53,7 @@ export default function AppImage({
       height={!fill ? height : undefined}
       fill={fill}
       priority={priority}
+      unoptimized={isRemote}
       sizes={
         sizes ||
         (fill

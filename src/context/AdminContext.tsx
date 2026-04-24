@@ -21,7 +21,10 @@ interface AdminContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   mustReset: boolean;
+  requiresMFA: boolean;
+  mfaToken: string | null;
   login: (username: string, password: string) => Promise<void>;
+  verifyMFA: (code: string) => Promise<void>;
   logout: () => Promise<void>;
   setAdmin: (admin: AdminUser | null) => void;
   setMustReset: (mustReset: boolean) => void;
@@ -34,6 +37,8 @@ const AdminContext = createContext<AdminContextType | undefined>(undefined);
 export function AdminProvider({ children }: { readonly children: ReactNode }) {
   const [admin, setAdmin] = useState<AdminUser | null>(null);
   const [mustReset, setMustReset] = useState(false);
+  const [requiresMFA, setRequiresMFA] = useState(false);
+  const [mfaToken, setMfaToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Initialize from localStorage if available
@@ -78,13 +83,43 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
   }, [checkAuth]);
 
   async function login(username: string, password: string) {
+    setRequiresMFA(false);
+    setMfaToken(null);
     try {
       const response = await apiLogin(username, password);
+      
+      if (response.requiresMFA) {
+        setRequiresMFA(true);
+        setMfaToken(response.mfaToken || null);
+        return;
+      }
+
       if (response.token) {
         localStorage.setItem("adminToken", response.token);
       }
-      setAdmin(response.admin);
+      setAdmin(response.admin || null);
       setMustReset(!!response.mustReset);
+      setRequiresMFA(false);
+      setMfaToken(null);
+    } catch (error) {
+      throw new Error(formatAuthError(error));
+    }
+  }
+
+  async function verifyMFA(code: string) {
+    if (!mfaToken) throw new Error("MFA session expired. Please login again.");
+    
+    try {
+      const { loginWithMFA } = await import("@/services/admin");
+      const response = await loginWithMFA(mfaToken, code);
+      
+      if (response.token) {
+        localStorage.setItem("adminToken", response.token);
+      }
+      setAdmin(response.admin || null);
+      setMustReset(!!response.mustReset);
+      setRequiresMFA(false);
+      setMfaToken(null);
     } catch (error) {
       throw new Error(formatAuthError(error));
     }
@@ -102,14 +137,17 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
       isAuthenticated: !!admin,
       isLoading,
       mustReset,
+      requiresMFA,
+      mfaToken,
       login,
+      verifyMFA,
       logout,
       setAdmin, // Expose setAdmin to allow direct state updates
       setMustReset,
       isSidebarOpen,
       setIsSidebarOpen,
     }),
-    [admin, isLoading, mustReset, isSidebarOpen],
+    [admin, isLoading, mustReset, requiresMFA, mfaToken, isSidebarOpen],
   );
 
   return (

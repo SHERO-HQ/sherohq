@@ -86,7 +86,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
                     role="dialog"
                     aria-modal="true"
                     aria-labelledby="modal-title"
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/60 backdrop-blur-sm cursor-pointer"
                     onClick={onClose}
                 >
                     <motion.div
@@ -97,13 +97,13 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
                         onClick={(e) => e.stopPropagation()}
                         className="glass-surface-lg w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden shadow"
                     >
-                        <div className="flex items-center justify-between p-4 border-b border-white/10 shrink-0">
-                            <h2 id="modal-title" className="text-lg font-bold text-white">
+                        <div className="flex items-center justify-between p-4 border-b border-black/10 dark:border-white/10 shrink-0">
+                            <h2 id="modal-title" className="text-lg font-bold text-black dark:text-white">
                                 {title}
                             </h2>
                             <button
                                 onClick={onClose}
-                                className="p-1 text-slate-400 hover:text-white transition-colors"
+                                className="p-1 text-slate-700 dark:text-slate-400 hover:text-black dark:hover:text-white transition-colors cursor-pointer hover:bg-red-500/50 rounded"
                                 type="button"
                                 aria-label="Close modal"
                             >
