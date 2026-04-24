@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ProductDetail from "@/views/ProductDetail";
+import { formatCurrency } from "@/utils/format";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -122,17 +123,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const primaryImage =
       (Array.isArray(product.images) && product.images[0]) || product.image;
     const imageUrl = resolveOgImage(primaryImage, apiBaseUrl, shopSiteUrl);
-    const description: string = product.description
-      ? String(product.description).slice(0, 160)
-      : `${product.name} - GH₵${product.price}`;
+    
+    const isDiscounted =
+      product.originalPrice && product.originalPrice > product.price;
+    const priceText = formatCurrency(product.price);
+
+    const title = `${product.name} - ${priceText} | SHERO`;
+    const description = `Check out ${
+      isDiscounted ? "Discounted " : ""
+    }${product.name} - ${priceText} on SHERO`;
 
     const imageType = imageUrl.toLowerCase().endsWith(".png")
       ? "image/png"
       : imageUrl.toLowerCase().endsWith(".webp")
         ? "image/webp"
         : "image/jpeg";
-
-    const title = `${product.name} - GH₵${product.price} | SHERO`;
 
     return {
       title,
