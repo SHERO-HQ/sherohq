@@ -674,6 +674,21 @@ export async function initializeDatabase() {
     await client.query(
       'CREATE INDEX IF NOT EXISTS idx_products_stock ON products("stockQuantity")',
     );
+    await client.query(
+      "CREATE UNIQUE INDEX IF NOT EXISTS idx_products_sku ON products(sku) WHERE sku IS NOT NULL",
+    );
+    await client.query(
+      "CREATE UNIQUE INDEX IF NOT EXISTS idx_products_slug ON products(slug) WHERE slug IS NOT NULL",
+    );
+    await client.query(
+      "CREATE INDEX IF NOT EXISTS idx_products_name_trgm ON products USING gin (name gin_trgm_ops)",
+    ).catch(() => {
+      // gin_trgm_ops requires pg_trgm extension, fall back to btree
+      console.log("ℹ️  pg_trgm not available, falling back to btree index for product name search");
+      return client.query(
+        "CREATE INDEX IF NOT EXISTS idx_products_name ON products(name)",
+      );
+    });
 
     // Orders
     await client.query(

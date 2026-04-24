@@ -29,6 +29,7 @@ export const useProducts = (
     queryKey: PRODUCT_KEYS.list({ category, search }),
     queryFn: () => fetchProducts(category, search),
     refetchInterval,
+    staleTime: 30_000, // 30s — avoid redundant refetches on mount/tab switch
     placeholderData: (previousData) => previousData,
   });
 };
@@ -38,6 +39,7 @@ export const useProduct = (id: string) => {
     queryKey: PRODUCT_KEYS.detail(id),
     queryFn: () => fetchProduct(id),
     enabled: !!id,
+    staleTime: 60_000, // 60s — single product data changes less frequently
   });
 };
 

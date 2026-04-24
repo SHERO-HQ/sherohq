@@ -51,13 +51,6 @@ function parseProduct(row: ProductRow) {
     }
   };
 
-  // Debug log for category mismatch investigation
-  if (!row.category_name && row.category) {
-    console.warn(
-      `⚠️ Product ${row.id} has category ID '${row.category}' but no matching category name found.`,
-    );
-  }
-
   return {
     ...row,
     id: row.id,
@@ -98,20 +91,18 @@ router.get(
       let queryText = `
       SELECT
         p.*,
-        COALESCE(c_by_id.name, c_by_name.name) as category_name,
-        COALESCE(c_by_id.id, c_by_name.id) as resolved_category_id
+        c.name as category_name,
+        c.id as resolved_category_id
       FROM products p
-      LEFT JOIN categories c_by_id ON p.category = c_by_id.id::text
-      LEFT JOIN categories c_by_name ON p.category = c_by_name.name
+      LEFT JOIN categories c ON p.category = c.id OR p.category = c.name
     `;
       const params: (string | number)[] = [];
       const conditions: string[] = [];
       let paramIndex = 1;
 
       if (category && category !== "all") {
-        // Robust filter: match by ID or Name
         conditions.push(
-          `(p.category = $${paramIndex} OR c_by_id.id::text = $${paramIndex} OR c_by_name.name = $${paramIndex})`,
+          `(p.category = $${paramIndex} OR c.id = $${paramIndex} OR c.name = $${paramIndex})`,
         );
         params.push(category as string);
         paramIndex++;
@@ -119,7 +110,7 @@ router.get(
 
       if (search) {
         conditions.push(
-          `(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR c_by_id.name ILIKE $${paramIndex} OR c_by_name.name ILIKE $${paramIndex})`,
+          `(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR c.name ILIKE $${paramIndex})`,
         );
         params.push(`%${search as string}%`);
         paramIndex++;
@@ -150,16 +141,15 @@ router.get(
 router.get("/:id", async (req: Request, res: Response) => {
   try {
     const id = String(req.params.id);
-    // Query by ID, SKU, or Slug - Cast ID to text to avoid UUID type mismatch
+    // Query by ID, SKU, or Slug
     const query = `
       SELECT
         p.*,
-        COALESCE(c_by_id.name, c_by_name.name) as category_name,
-        COALESCE(c_by_id.id, c_by_name.id) as resolved_category_id
+        c.name as category_name,
+        c.id as resolved_category_id
       FROM products p
-      LEFT JOIN categories c_by_id ON p.category = c_by_id.id::text
-      LEFT JOIN categories c_by_name ON p.category = c_by_name.name
-      WHERE p.id::text = $1 OR p.sku = $1 OR p.slug = $1
+      LEFT JOIN categories c ON p.category = c.id OR p.category = c.name
+      WHERE p.id = $1 OR p.sku = $1 OR p.slug = $1
     `;
 
     const result = await db.query(query, [id]);
@@ -516,7 +506,7 @@ router.put(
 
       // Resilient lookup: check ID, SKU, or Slug - Cast ID to text for safety
       const lookupQuery =
-        "SELECT id FROM products WHERE id::text = $1 OR sku = $1 OR slug = $1";
+        "SELECT id FROM products WHERE id = $1 OR sku = $1 OR slug = $1";
 
       const check = await db.query(lookupQuery, [identifier]);
       if (check.rowCount === 0) {
@@ -639,7 +629,7 @@ router.patch(
 
       // Check if product exists - Cast id to text for safety
       const check = await db.query(
-        "SELECT id FROM products WHERE id::text = $1 OR sku = $1 OR slug = $1",
+        "SELECT id FROM products WHERE id = $1 OR sku = $1 OR slug = $1",
         [identifier],
       );
       if (check.rowCount === 0) {
@@ -706,7 +696,7 @@ router.delete(
 
       // Resilient lookup: check ID, SKU, or Slug - Cast ID to text for safety
       const lookupQuery =
-        "SELECT id, name FROM products WHERE id::text = $1 OR sku = $1 OR slug = $1";
+        "SELECT id, name FROM products WHERE id = $1 OR sku = $1 OR slug = $1";
 
       const result = await db.query(lookupQuery, [identifier]);
       const existing = result.rows[0];
