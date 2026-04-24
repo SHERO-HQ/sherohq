@@ -18,10 +18,11 @@ interface ProfileSettingsProps {
 }
 
 const ProfileSettings: React.FC<ProfileSettingsProps> = ({
- user,
- saving,
- saveMessage,
- onSubmit,
+  user,
+  saving,
+  saveMessage,
+  onSubmit,
+  onEnableMFA,
 }) => {
  const {
  register,
