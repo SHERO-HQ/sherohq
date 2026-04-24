@@ -120,27 +120,32 @@ function startNewsletterScheduler() {
     `⏲️ Newsletter scheduler enabled: interval=${intervalMs}ms, maxPerTick=${maxPerTick}`,
   );
 
-  setInterval(async () => {
-    if (newsletterSchedulerRunning) {
-      return;
-    }
-
-    newsletterSchedulerRunning = true;
-    try {
-      const processed = await processDueScheduledCampaigns({
-        maxToProcess: maxPerTick,
-      });
-      if (processed > 0) {
-        console.log(
-          `📨 Scheduler processed ${processed} scheduled campaign(s)`,
-        );
+  // Start scheduler with a 30s delay to allow the server to fully warm up
+  // and prioritize handling incoming web requests during startup.
+  setTimeout(() => {
+    console.log("⏲️ Starting Newsletter scheduler loop...");
+    setInterval(async () => {
+      if (newsletterSchedulerRunning) {
+        return;
       }
-    } catch (error) {
-      console.error("❌ Newsletter scheduler tick failed:", error);
-    } finally {
-      newsletterSchedulerRunning = false;
-    }
-  }, intervalMs);
+
+      newsletterSchedulerRunning = true;
+      try {
+        const processed = await processDueScheduledCampaigns({
+          maxToProcess: maxPerTick,
+        });
+        if (processed > 0) {
+          console.log(
+            `📨 Scheduler processed ${processed} scheduled campaign(s)`,
+          );
+        }
+      } catch (error) {
+        console.error("❌ Newsletter scheduler tick failed:", error);
+      } finally {
+        newsletterSchedulerRunning = false;
+      }
+    }, intervalMs);
+  }, 30000);
 }
 
 // Validate DATABASE_URL for common issues (unencoded special characters)
@@ -182,6 +187,11 @@ if (envOrigin) {
   });
 }
 
+// 2. Normalize allowedOrigins list once at startup for resilient matching
+const normalizedAllowedOrigins = allowedOrigins.map((o) =>
+  o.replace(/\/$/, "").toLowerCase(),
+);
+
 // CORS MUST be before helmet and other middleware to handle OPTIONS requests correctly
 app.use(
   cors({
@@ -189,20 +199,17 @@ app.use(
       // 1. Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
 
-      // 2. Normalize origin and allowedOrigins list for resilient matching
-      const normalizedOrigin = origin.replace(/\/$/, "");
-      const normalizedAllowedOrigins = allowedOrigins.map((o) =>
-        o.replace(/\/$/, ""),
-      );
+      // 2. Normalize incoming origin
+      const normalizedOrigin = origin.replace(/\/$/, "").toLowerCase();
 
       // 3. Check explicit whitelist
       let isAllowed = normalizedAllowedOrigins.includes(normalizedOrigin);
 
-      // 4. Dynamic subdomain matching for sherohq.com and onrender.com
+      // 4. Dynamic subdomain matching for sherohq.com, onrender.com, vercel.app, netlify.app
       if (!isAllowed) {
-        // Match: https://*.sherohq.com or https://*.onrender.com
+        // Match: https://*.sherohq.com, https://*.onrender.com, https://*.vercel.app, https://*.netlify.app
         const subdomainRegex =
-          /^https?:\/\/([a-z0-9-]+\.)+(sherohq\.com|onrender\.com)$|^https:\/\/(sherohq\.com|onrender\.com)$/;
+          /^https?:\/\/([a-z0-9-]+\.)+(sherohq\.com|onrender\.com|vercel\.app|netlify\.app)$|^https:\/\/(sherohq\.com|onrender\.com|vercel\.app|netlify\.app)$/;
         if (subdomainRegex.test(normalizedOrigin)) {
           isAllowed = true;
         }
@@ -211,7 +218,9 @@ app.use(
       if (isAllowed) {
         callback(null, true);
       } else {
-        console.warn(`[CORS] Request blocked from unauthorized origin: ${origin}`);
+        console.warn(
+          `🛑 [CORS Blocked] Origin: ${origin} | Normalized: ${normalizedOrigin}`,
+        );
         // Deny origin gracefully
         callback(null, false);
       }

@@ -55,7 +55,15 @@ const pool = new Pool({
   max: 20, // Increased pool size
   idleTimeoutMillis: 30000, // Reduced to 30s to rotate connections more frequently
   connectionTimeoutMillis: 10000, // 10s is enough for pooler connection
+  statement_timeout: 30000, // 30s statement timeout to prevent hung queries
 });
+
+/**
+ * Helper to log pool statistics for diagnostic purposes
+ */
+function logPoolStatus() {
+  console.log(`📡 [DB Pool] Total: ${pool.totalCount} | Idle: ${pool.idleCount} | Waiting: ${pool.waitingCount}`);
+}
 
 // CRITICAL: Handle errors on idle clients in the pool to prevent uncaughtException crashes
 pool.on("error", (err) => {
@@ -111,6 +119,7 @@ export const query = async (text: string, params?: unknown[], retries = 2) => {
         `[DB Error] Message:`,
         err instanceof Error ? err.message : err,
       );
+      logPoolStatus();
       throw err;
     }
   }
