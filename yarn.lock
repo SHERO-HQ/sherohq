@@ -2647,6 +2647,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@upstash/redis@npm:^1.34.3":
+  version: 1.37.0
+  resolution: "@upstash/redis@npm:1.37.0"
+  dependencies:
+    uncrypto: "npm:^0.1.3"
+  checksum: 10c0/ddc03c2cec1f8b740e55624ec98eed06ba5e70e1c66f9af21882ecc094471569a78cea2d2736793087d00622fd8094175282dbc136d7c124fa6e154f63b8f80b
+  languageName: node
+  linkType: hard
+
 "@vercel/analytics@npm:^1.6.1":
   version: 1.6.1
   resolution: "@vercel/analytics@npm:1.6.1"
@@ -7224,6 +7233,7 @@ __metadata:
     "@types/react-dom": "npm:^19.2.3"
     "@types/speakeasy": "npm:^2"
     "@uiw/react-md-editor": "npm:^4.0.11"
+    "@upstash/redis": "npm:^1.34.3"
     "@vercel/analytics": "npm:^1.6.1"
     "@vercel/speed-insights": "npm:^1.3.1"
     "@vitejs/plugin-react-swc": "npm:^4.2.2"
@@ -7694,6 +7704,13 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10c0/ad09fdf7a756814dce65bc60c1657b40d44451346858eea230e10f2e95a289d9183b6e32e5c11e95acc0ccc214b4f36289dcad4bf1886b0adb84d711d336a430
+  languageName: node
+  linkType: hard
+
+"uncrypto@npm:^0.1.3":
+  version: 0.1.3
+  resolution: "uncrypto@npm:0.1.3"
+  checksum: 10c0/74a29afefd76d5b77bedc983559ceb33f5bbc8dada84ff33755d1e3355da55a4e03a10e7ce717918c436b4dfafde1782e799ebaf2aadd775612b49f7b5b2998e
   languageName: node
   linkType: hard
 
