@@ -62,7 +62,7 @@ const formatDate = (date: string | Date) => {
 };
 
 const formatCurrency = (amount: number) => {
-  return `S ${amount.toLocaleString("en-GH", { minimumFractionDigits: 2 })}`;
+  return `GHS ${amount.toLocaleString("en-GH", { minimumFractionDigits: 2 })}`;
 };
 
 const getStatusColor = (status: string) => {
@@ -632,7 +632,7 @@ const UserDetailsModal = ({
                   </div>
                   <div className="flex flex-col gap-2 items-end">
                     <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      className={`px-3 py-1 rounded text-sm font-medium ${
                         user.emailVerified
                           ? "bg-brand-secondary-500/20 text-brand-secondary-400"
                           : "bg-yellow-500/20 text-yellow-400"
@@ -641,7 +641,7 @@ const UserDetailsModal = ({
                       {user.emailVerified ? "Verified" : "Unverified"}
                     </span>
                     <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      className={`px-3 py-1 rounded text-sm font-medium ${
                         user.isActive !== false
                           ? "bg-blue-500/20 text-blue-400"
                           : "bg-red-500/20 text-red-400"

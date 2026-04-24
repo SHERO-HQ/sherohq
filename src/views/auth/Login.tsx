@@ -168,29 +168,39 @@ const Login = () => {
                   size="xl"
                 />
 
-                <Input
-                  id="login-password"
-                  type={showPassword ? "text" : "password"}
-                  label="Password"
-                  placeholder="••••••••"
-                  leftIcon={<Lock className="w-5 h-5" />}
-                  error={errors.password?.message}
-                  {...register("password")}
-                  size="xl"
-                  rightIcon={
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="focus:outline-none transition-colors"
+                <div className="space-y-1">
+                  <Input
+                    id="login-password"
+                    type={showPassword ? "text" : "password"}
+                    label="Password"
+                    placeholder="••••••••"
+                    leftIcon={<Lock className="w-5 h-5" />}
+                    error={errors.password?.message}
+                    {...register("password")}
+                    size="xl"
+                    rightIcon={
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="focus:outline-none transition-colors"
+                      >
+                        {showPassword ? (
+                          <EyeOff className="w-5 h-5" />
+                        ) : (
+                          <Eye className="w-5 h-5" />
+                        )}
+                      </button>
+                    }
+                  />
+                  <div className="flex justify-end">
+                    <Link
+                      href="/forgot-password"
+                      className="text-xs text-brand-secondary-600 hover:text-brand-secondary-700 dark:text-brand-secondary-400 font-medium hover:underline"
                     >
-                      {showPassword ? (
-                        <EyeOff className="w-5 h-5" />
-                      ) : (
-                        <Eye className="w-5 h-5" />
-                      )}
-                    </button>
-                  }
-                />
+                      Forgot password?
+                    </Link>
+                  </div>
+                </div>
 
                 <Button
                   type="submit"

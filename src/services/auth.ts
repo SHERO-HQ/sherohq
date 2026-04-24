@@ -209,3 +209,36 @@ export async function userChangePassword(
   });
   return handleResponse(response);
 }
+
+// ---------------------------------------------------------------------------
+// Password Recovery
+// ---------------------------------------------------------------------------
+
+export async function requestPasswordReset(
+  email: string,
+): Promise<{ success: boolean; message: string }> {
+  const response = await fetch(`${API_BASE}/auth/forgot-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Protection": "1",
+    },
+    body: JSON.stringify({ email }),
+  });
+  return handleResponse(response);
+}
+
+export async function resetPassword(
+  token: string,
+  password: string,
+): Promise<{ success: boolean; message: string }> {
+  const response = await fetch(`${API_BASE}/auth/reset-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Protection": "1",
+    },
+    body: JSON.stringify({ token, password }),
+  });
+  return handleResponse(response);
+}
