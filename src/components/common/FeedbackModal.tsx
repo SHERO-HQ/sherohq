@@ -164,7 +164,7 @@ export default function FeedbackModal({
  animate={{ opacity: 1, scale: 1, y: 0 }}
  exit={{ opacity: 0, scale: 0.95, y: 20 }}
  transition={{ type: "spring", damping: 25, stiffness: 300 }}
- className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 overflow-hidden"
+ className="relative w-full max-w-md max-h-[90dvh] bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col"
  >
  {/* Header */}
  <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
@@ -185,7 +185,7 @@ export default function FeedbackModal({
  <motion.div
  initial={{ opacity: 0, y: 10 }}
  animate={{ opacity: 1, y: 0 }}
- className="p-6 text-center"
+ className="p-6 text-center overflow-y-auto flex-1 min-h-0"
  >
  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-brand-secondary-100 dark:bg-brand-secondary-900/30 flex items-center justify-center">
  <CheckCircle2 className="w-8 h-8 text-brand-secondary-600 dark:text-brand-secondary-400" />
@@ -205,7 +205,7 @@ export default function FeedbackModal({
  </button>
  </motion.div>
  ) : (
- <form onSubmit={handleSubmit} className="p-4 space-y-4">
+ <form onSubmit={handleSubmit} className="p-4 space-y-4 overflow-y-auto flex-1 min-h-0">
  {/* Star Rating */}
  <div className="text-center">
  <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
