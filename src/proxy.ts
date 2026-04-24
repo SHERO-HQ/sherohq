@@ -1,23 +1,19 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 
-
-
 export default function proxy(request: NextRequest) {
   const url = request.nextUrl.clone();
   const hostname = request.headers.get("host") || "";
   const host = hostname.toLowerCase();
 
-  // 1. Strip 'www.' prefix and redirect permanently
-  // This prevents issues where users type www.api.sherohq.com or www.admin.sherohq.com
-  if (host.startsWith("www.")) {
-    url.hostname = host.replace(/^www\./, "");
-    return NextResponse.redirect(url, 301);
-  }
+  // NOTE: Do NOT redirect www ↔ non-www here.
+  // Vercel handles domain canonicalization (apex → www or vice-versa).
+  // Adding a conflicting redirect here causes an infinite redirect loop.
 
   // Extract subdomain dynamically
   // Handles locales like admin.localhost:3000 or prod like admin.sherohq.com
-  const parts = host.split(".");
+  // Also handles www.sherohq.com (www is not a functional subdomain)
+  const parts = host.replace(/^www\./, "").split(".");
   let subdomain = "";
 
   if (parts.length > 2) {
@@ -28,7 +24,7 @@ export default function proxy(request: NextRequest) {
     subdomain = parts[0].toLowerCase();
   }
 
-  // Skip if it's a known service or not a subdomain
+  // Skip if not a functional subdomain
   if (!subdomain || subdomain === "www" || subdomain === "localhost") {
     return NextResponse.next();
   }
