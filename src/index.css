@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "tw-animate-css";
+@import "../node_modules/tw-animate-css/dist/tw-animate.css";
 
 /* Fonts loaded via next/font in layout.tsx for automatic subsetting,
    preloading, zero-CLS loading, and self-hosting optimization. */
