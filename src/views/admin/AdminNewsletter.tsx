@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
+import { getErrorMessage } from "@/utils/error";
 import {
   ArrowLeft,
   History,
@@ -117,7 +118,7 @@ export default function AdminNewsletter() {
       setCampaigns(result.campaigns);
     } catch (error) {
       console.error("Failed to load campaign history:", error);
-      addNotification("Error", "Failed to load campaign history", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to load campaign history"), "error");
     } finally {
       setIsCampaignHistoryLoading(false);
     }
@@ -180,7 +181,7 @@ export default function AdminNewsletter() {
       addNotification("Success", "Subscriber status updated", "success");
     } catch (error) {
       console.error("Failed to update subscriber status:", error);
-      addNotification("Error", "Failed to update subscriber status", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to update subscriber status"), "error");
     }
   };
 
@@ -220,7 +221,7 @@ export default function AdminNewsletter() {
       addNotification("Success", "Subscriber contact updated", "success");
     } catch (error) {
       console.error("Failed to update subscriber contact:", error);
-      addNotification("Error", "Failed to update subscriber contact", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to update subscriber contact"), "error");
     } finally {
       setIsSavingContact(false);
     }
@@ -352,7 +353,7 @@ export default function AdminNewsletter() {
       void loadCampaigns();
     } catch (error) {
       console.error("Newsletter campaign failed:", error);
-      addNotification("Error", "Failed to send campaign", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to send campaign"), "error");
     } finally {
       setIsSending(false);
     }
@@ -392,7 +393,7 @@ export default function AdminNewsletter() {
       void loadCampaigns();
     } catch (error) {
       console.error("Failed to cancel campaign:", error);
-      addNotification("Error", "Failed to cancel campaign", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to cancel campaign"), "error");
     } finally {
       setIsCancellingCampaign(null);
     }
@@ -413,7 +414,7 @@ export default function AdminNewsletter() {
       void loadCampaigns();
     } catch (error) {
       console.error("Failed to delete campaign:", error);
-      addNotification("Error", "Failed to delete campaign", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to delete campaign"), "error");
     } finally {
       setIsDeletingCampaign(null);
     }

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useAdmin } from "@/context/AdminContext";
 import { Tag, Plus, Search, Loader2, Trash2, Edit2 } from "lucide-react";
+import { getErrorMessage } from "@/utils/error";
 import {
  useCategories,
  useCreateCategory,
@@ -120,7 +121,7 @@ const AdminCategories = () => {
  setIsModalOpen(false);
  } catch (error) {
  console.error("Failed to save category:", error);
- addNotification("Error", "Failed to save category", "error");
+ addNotification("Error", getErrorMessage(error, "Failed to save category"), "error");
  }
  };
 
@@ -132,7 +133,7 @@ const AdminCategories = () => {
  setDeleteId(null);
  } catch (error) {
  console.error("Failed to delete category:", error);
- addNotification("Error", "Failed to delete category", "error");
+ addNotification("Error", getErrorMessage(error, "Failed to delete category"), "error");
  }
  };
 

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { getErrorMessage } from "@/utils/error";
 import {
   Plus,
   Search,
@@ -161,7 +162,7 @@ export default function AdminExpenses() {
       setExpenses(data);
     } catch (error) {
       console.error("Failed to fetch expenses:", error);
-      addNotification("Error", "Failed to load expenses", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to load expenses"), "error");
     } finally {
       setIsLoading(false);
     }
@@ -266,7 +267,7 @@ export default function AdminExpenses() {
       fetchExpenses();
     } catch (error) {
       console.error("Save failed:", error);
-      addNotification("Error", "Failed to save expense", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to save expense"), "error");
     } finally {
       setIsSaving(false);
     }
@@ -286,7 +287,7 @@ export default function AdminExpenses() {
       setExpenses(expenses.filter((e) => e.id !== id));
     } catch (error) {
       console.error("Delete failed:", error);
-      addNotification("Error", "Failed to delete expense", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to delete expense"), "error");
     } finally {
       setIsDeleting(null);
     }

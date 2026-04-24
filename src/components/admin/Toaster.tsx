@@ -47,15 +47,15 @@ export default function Toaster() {
  animate={{ opacity: 1, scale: 1, x: 0 }}
  exit={{ opacity: 0, scale: 0.9, x: 20 }}
  className={cn(
- "pointer-events-auto flex items-start gap-3 p-4 rounded border shadow ",
+ "pointer-events-auto flex items-start gap-3 p-4 rounded border shadow backdrop-blur-xl",
  notification.type === "success" &&
- "bg-brand-secondary-950/90 border-brand-secondary-500/20 text-brand-secondary-50",
+ "bg-brand-secondary-900/95 border-brand-secondary-500/20 text-brand-secondary-50",
  notification.type === "error" &&
- "bg-rose-950/90 border-rose-500/20 text-rose-50",
+ "bg-rose-950/95 border-rose-500/20 text-rose-50",
  notification.type === "warning" &&
- "bg-amber-950/90 border-amber-500/20 text-amber-50",
+ "bg-amber-950/95 border-amber-500/20 text-amber-50",
  notification.type === "info" &&
- "bg-slate-900/90 border-slate-700/50 text-slate-50",
+ "bg-slate-900/95 border-slate-700/50 text-slate-50",
  )}
  >
  <div className="shrink-0 mt-0.5">

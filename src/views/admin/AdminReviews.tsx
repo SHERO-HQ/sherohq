@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { getErrorMessage } from "@/utils/error";
 
 const AdminReviews = () => {
  const { data: reviews = [], isLoading } = useAdminReviews(ADMIN_POLLING_INTERVAL);
@@ -33,7 +34,7 @@ const AdminReviews = () => {
  setDeleteId(null);
  } catch (error) {
  console.error("Failed to delete review:", error);
- addNotification("Error", "Failed to delete review", "error");
+ addNotification("Error", getErrorMessage(error, "Failed to delete review"), "error");
  }
  };
 

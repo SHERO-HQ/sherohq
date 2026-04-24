@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { type SupportGuide } from "@/types/guide";
 import { useNotifications } from "@/hooks/useNotifications";
+import { getErrorMessage } from "@/utils/error";
 import {
  useAdminGuides,
  useUpdateGuide,
@@ -40,7 +41,7 @@ const AdminGuides = () => {
  setDeleteTarget(null);
  } catch (error) {
  console.error("Failed to delete guide:", error);
- addNotification("Error", "Failed to delete guide", "error");
+ addNotification("Error", getErrorMessage(error, "Failed to delete guide"), "error");
  } finally {
  setIsDeleting(false);
  }
@@ -56,7 +57,7 @@ const AdminGuides = () => {
  addNotification("Success", message, "success");
  } catch (error) {
  console.error("Failed to update guide:", error);
- addNotification("Error", "Failed to update guide", "error");
+ addNotification("Error", getErrorMessage(error, "Failed to update guide"), "error");
  }
  }
 

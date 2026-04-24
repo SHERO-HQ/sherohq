@@ -223,11 +223,11 @@ const Portfolio = () => {
  {selectedProject && (
  <div className="space-y-8">
  {/* Project Image in Modal */}
+ {selectedProject.image && (
  <div className="relative aspect-auto overflow-hidden bg-slate-100! dark:bg-slate-800">
- {selectedProject.image &&
- (selectedProject.image.startsWith("http") ||
+ {selectedProject.image.startsWith("http") ||
  selectedProject.image.startsWith("/") ||
- selectedProject.image.includes(".")) ? (
+ selectedProject.image.includes(".") ? (
  <AppImage
  src={selectedProject.image}
  alt={selectedProject.title}
@@ -242,8 +242,11 @@ const Portfolio = () => {
  </div>
  )}
  </div>
+ )}
 
+ {(selectedProject.client || selectedProject.category) && (
  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+ {selectedProject.client && (
  <div className="space-y-1">
  <h4 className="text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest">
  Client / Partner
@@ -252,6 +255,8 @@ const Portfolio = () => {
  {selectedProject.client}
  </p>
  </div>
+ )}
+ {selectedProject.category && (
  <div className="space-y-1">
  <h4 className="text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest">
  Industry / Category
@@ -261,8 +266,11 @@ const Portfolio = () => {
  {selectedProject.category}
  </div>
  </div>
+ )}
  </div>
+ )}
 
+ {selectedProject.description && (
  <div className="space-y-3">
  <h4 className="text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest">
  Project Overview
@@ -271,18 +279,22 @@ const Portfolio = () => {
  {selectedProject.description}
  </p>
  </div>
+ )}
 
+ {selectedProject.useCase && (
  <div className="space-y-3">
  <h4 className="text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest">
  Strategic Use Case
  </h4>
- <div className="p-5 bg-brand-secondary-50 dark:bg-brand-secondary-950/20 rounded border border-brand-secondary-100 dark:border-brand-secondary-500/20">
+ <div className="p-5 bg-brand-secondary-50 dark:bg-brand-secondary-900/20 rounded border border-brand-secondary-100 dark:border-brand-secondary-500/20">
  <p className="text-slate-700 dark:text-slate-300 italic leading-relaxed">
- "{selectedProject.useCase}"
+ &quot;{selectedProject.useCase}&quot;
  </p>
  </div>
  </div>
+ )}
 
+ {selectedProject.technologies?.length > 0 && (
  <div className="space-y-3">
  <h4 className="text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest">
  Technology Stack
@@ -298,7 +310,9 @@ const Portfolio = () => {
  ))}
  </div>
  </div>
+ )}
 
+ {selectedProject.link && (
  <div className="space-y-3">
  <h4 className="text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest">
  Project Link
@@ -306,16 +320,10 @@ const Portfolio = () => {
  <div className="flex items-center gap-2 p-3 bg-slate-100 dark:bg-slate-800 rounded border border-slate-200 dark:border-slate-700 overflow-hidden">
  <Link className="size-4 text-brand-secondary-600 dark:text-brand-secondary-400 shrink-0" />
  <code className="text-xs text-slate-600 dark:text-slate-400 truncate flex-1 block">
- {selectedProject.link ||
- `https://sherotech.io/projects/${selectedProject.id}`}
+ {selectedProject.link}
  </code>
  <button
- onClick={() =>
- copyToClipboard(
- selectedProject.link ||
- `https://sherotech.io/projects/${selectedProject.id}`,
- )
- }
+ onClick={() => copyToClipboard(selectedProject.link!)}
  className="p-1.5 hover:bg-slate-200 dark:hover:bg-slate-700 rounded transition-colors text-slate-500 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400"
  title="Copy to clipboard"
  >
@@ -327,14 +335,15 @@ const Portfolio = () => {
  </button>
  </div>
  </div>
+ )}
 
  {selectedProject.link && (
- <div className="pt-6 sticky bottom-0 bg-slate-900 pb-2">
+ <div className="pt-4 sticky bottom-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm pb-2">
  <a
  href={selectedProject.link}
  target="_blank"
  rel="noopener noreferrer"
- className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white font-bold rounded transition duration-300 hover:shadow hover:shadow-brand-secondary-500/25 w-full active:scale-[0.98]"
+ className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white font-medium rounded transition duration-300 hover:shadow hover:shadow-brand-secondary-500/25 w-full active:scale-[0.98]"
  >
  Launch Live Project
  <ExternalLink className="size-5" />

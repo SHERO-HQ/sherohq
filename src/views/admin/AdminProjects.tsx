@@ -2,6 +2,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useNotifications } from "@/hooks/useNotifications";
+import { getErrorMessage } from "@/utils/error";
 import {
  Search,
  Plus,
@@ -78,8 +79,8 @@ export default function AdminProjects() {
  try {
  await deleteMutation.mutateAsync(id);
  addNotification("Success", "Project deleted successfully", "success");
- } catch {
- addNotification("Error", "Failed to delete project", "error");
+ } catch (err) {
+ addNotification("Error", getErrorMessage(err, "Failed to delete project"), "error");
  }
  };
 

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useAdmin } from "@/context/AdminContext";
+import { getErrorMessage } from "@/utils/error";
 import {
  BarChart,
  Plus,
@@ -109,7 +110,7 @@ const AdminStats = () => {
  setIsModalOpen(false);
  } catch (error) {
  console.error("Failed to save stat:", error);
- addNotification("Error", "Failed to save stat", "error");
+ addNotification("Error", getErrorMessage(error, "Failed to save stat"), "error");
  }
  };
 
@@ -121,7 +122,7 @@ const AdminStats = () => {
  setDeleteId(null);
  } catch (error) {
  console.error("Failed to delete stat:", error);
- addNotification("Error", "Failed to delete stat", "error");
+ addNotification("Error", getErrorMessage(error, "Failed to delete stat"), "error");
  }
  };
 

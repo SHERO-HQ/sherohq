@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { getErrorMessage } from "@/utils/error";
 import {
   MessageSquare,
   Calendar,
@@ -91,7 +92,7 @@ const AdminSupport = () => {
       addNotification("Success", "Ticket marked as resolved", "success");
     } catch (err) {
       console.error("Failed to resolve ticket:", err);
-      addNotification("Error", "Failed to resolve ticket", "error");
+      addNotification("Error", getErrorMessage(err, "Failed to resolve ticket"), "error");
     }
   };
 
@@ -109,7 +110,7 @@ const AdminSupport = () => {
       addNotification("Success", `Status updated to ${status}`, "success");
     } catch (err) {
       console.error("Failed to update status:", err);
-      addNotification("Error", "Failed to update status", "error");
+      addNotification("Error", getErrorMessage(err, "Failed to update status"), "error");
     }
   };
 

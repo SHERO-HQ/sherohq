@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { getErrorMessage } from "@/utils/error";
 import {
   fetchProduct,
   fetchCategories,
@@ -113,7 +114,7 @@ export default function ProductForm() {
           }
         }
       } catch (err) {
-        addNotification("Error", "Failed to load product data", "error");
+        addNotification("Error", getErrorMessage(err, "Failed to load product data"), "error");
         console.error(err);
       } finally {
         setIsLoading(false);

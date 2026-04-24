@@ -3,6 +3,7 @@ import React, { useState, useMemo, memo } from "react";
 import Link from "next/link";
 import { getImageUrl } from "@/services/api";
 import { useNotifications } from "@/hooks/useNotifications";
+import { getErrorMessage } from "@/utils/error";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import type { Product, Category } from "@/types/product";
 import AppImage from "@/components/common/AppImage";
@@ -260,8 +261,8 @@ export default function AdminProducts() {
     try {
       await deleteMutation.mutateAsync(id);
       addNotification("Success", "Product deleted successfully", "success");
-    } catch {
-      addNotification("Error", "Failed to delete product", "error");
+    } catch (err) {
+      addNotification("Error", getErrorMessage(err, "Failed to delete product"), "error");
     }
   };
 
@@ -277,8 +278,8 @@ export default function AdminProducts() {
         `Product marked as ${newQuantity > 0 ? "in stock" : "out of stock"}`,
         "success",
       );
-    } catch {
-      addNotification("Error", "Failed to update stock", "error");
+    } catch (err) {
+      addNotification("Error", getErrorMessage(err, "Failed to update stock"), "error");
     }
   };
 

@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fetchProjectById, uploadImages, type Project } from "@/services/api";
+import { getErrorMessage } from "@/utils/error";
 import {
   Save,
   X,
@@ -72,7 +73,7 @@ export default function ProjectForm() {
           }
         }
       } catch (err) {
-        addNotification("Error", "Failed to load project data", "error");
+        addNotification("Error", getErrorMessage(err, "Failed to load project data"), "error");
         console.error(err);
       } finally {
         setIsLoading(false);
@@ -100,7 +101,7 @@ export default function ProjectForm() {
       }
       router.push("/admin/projects");
     } catch (err) {
-      addNotification("Error", "Failed to save project", "error");
+      addNotification("Error", getErrorMessage(err, "Failed to save project"), "error");
       console.error(err);
     } finally {
       setIsSaving(false);
@@ -120,7 +121,7 @@ export default function ProjectForm() {
       }));
       addNotification("Success", "Project image uploaded", "success");
     } catch (err) {
-      addNotification("Error", "Failed to upload image", "error");
+      addNotification("Error", getErrorMessage(err, "Failed to upload image"), "error");
       console.error(err);
     } finally {
       setIsUploading(false);

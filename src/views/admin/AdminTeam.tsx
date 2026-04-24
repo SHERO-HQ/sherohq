@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useAdmin } from "@/context/AdminContext";
+import { getErrorMessage } from "@/utils/error";
 import {
   Users,
   Plus,
@@ -133,7 +134,7 @@ const AdminTeam = () => {
       setIsModalOpen(false);
     } catch (error) {
       console.error("Failed to save team member:", error);
-      addNotification("Error", "Failed to save team member", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to save team member"), "error");
     }
   };
 
@@ -145,7 +146,7 @@ const AdminTeam = () => {
       setDeleteId(null);
     } catch (error) {
       console.error("Failed to delete team member:", error);
-      addNotification("Error", "Failed to delete team member", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to delete team member"), "error");
     }
   };
 

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useAdmin } from "@/context/AdminContext";
+import { getErrorMessage } from "@/utils/error";
 import {
   MessageSquareQuote,
   Plus,
@@ -113,7 +114,7 @@ const AdminTestimonials = () => {
       setIsModalOpen(false);
     } catch (error) {
       console.error("Failed to save testimonial:", error);
-      addNotification("Error", "Failed to save testimonial", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to save testimonial"), "error");
     }
   };
 
@@ -125,7 +126,7 @@ const AdminTestimonials = () => {
       setDeleteId(null);
     } catch (error) {
       console.error("Failed to delete testimonial:", error);
-      addNotification("Error", "Failed to delete testimonial", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to delete testimonial"), "error");
     }
   };
 
@@ -140,7 +141,7 @@ const AdminTestimonials = () => {
       addNotification("Success", `Testimonial ${statusLabel}`, "success");
     } catch (error) {
       console.error("Failed to toggle testimonial status:", error);
-      addNotification("Error", "Failed to update status", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to update status"), "error");
     }
   };
 

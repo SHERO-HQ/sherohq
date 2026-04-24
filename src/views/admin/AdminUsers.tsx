@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useAdmin } from "@/context/AdminContext";
+import { getErrorMessage } from "@/utils/error";
 import {
   Users,
   Search,
@@ -927,7 +928,7 @@ export default function AdminUsers() {
       setDeleteConfirmId(null);
     } catch (error) {
       console.error("Error deleting user:", error);
-      addNotification("Error", "Failed to delete user", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to delete user"), "error");
     }
   };
 
@@ -942,7 +943,7 @@ export default function AdminUsers() {
       setResetPasswordId(null);
     } catch (error) {
       console.error("Error resetting password:", error);
-      addNotification("Error", "Failed to reset password", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to reset password"), "error");
     }
   };
 
@@ -958,7 +959,7 @@ export default function AdminUsers() {
       );
     } catch (error) {
       console.error("Error toggling account status:", error);
-      addNotification("Error", "Failed to update account status", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to update account status"), "error");
     }
   };
 

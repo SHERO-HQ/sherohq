@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import dynamic from "next/dynamic";
+import { getErrorMessage } from "@/utils/error";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
   ssr: false,
@@ -62,7 +63,7 @@ const AdminGuideEditor = () => {
         }
       } catch (error) {
         console.error("Failed to load guide:", error);
-        addNotification("Error", "Failed to load guide", "error");
+        addNotification("Error", getErrorMessage(error, "Failed to load guide"), "error");
       } finally {
         setIsLoading(false);
       }
@@ -89,7 +90,7 @@ const AdminGuideEditor = () => {
       }
     } catch (error) {
       console.error("Image upload failed:", error);
-      addNotification("Error", "Failed to upload image", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to upload image"), "error");
     } finally {
       setIsUploadingImage(false);
     }
@@ -124,7 +125,7 @@ const AdminGuideEditor = () => {
       router.push("/admin/guides");
     } catch (error) {
       console.error("Failed to save guide:", error);
-      addNotification("Error", "Failed to save guide", "error");
+      addNotification("Error", getErrorMessage(error, "Failed to save guide"), "error");
     } finally {
       setIsSaving(false);
     }
