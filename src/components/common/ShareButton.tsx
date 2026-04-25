@@ -162,7 +162,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
   {
   name: "WhatsApp",
   icon: WhatsAppIcon,
-  href: `https://wa.me/?text=${encodeURIComponent(`🛍️ *${description || `Check out ${title} on SHERO`}*\n\n🔗 ${resolvedShareUrl}`)}`,
+  href: `https://wa.me/?text=${encodeURIComponent(`${description || `Check out ${title} on SHERO`}\n\n${resolvedShareUrl}`)}`,
   color: "text-[#25D366]",
   },
   {

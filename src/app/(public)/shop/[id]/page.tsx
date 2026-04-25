@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import ProductDetail from "@/views/ProductDetail";
 import { formatCurrency } from "@/utils/format";
+import { fetchProduct, API_BASE } from "@/services/api";
+import { headers } from "next/headers";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -104,118 +106,83 @@ function resolveOgImage(
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const siteUrl = toAbsoluteBaseUrl(
-    process.env.NEXT_PUBLIC_SITE_URL,
-    "https://sherohq.com",
-  );
-  const shopSiteUrl = getShopSiteUrl(siteUrl);
-  const apiBaseUrl = getApiBaseUrl(siteUrl);
-  const pageUrl = `${shopSiteUrl}/shop/${id}`;
-  const fallbackImageUrl = `${shopSiteUrl}/shero.png`;
+  const headerList = await headers();
+  const host = headerList.get("host") || "shop.sherohq.com";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  
+  // Use the same base domain for API calls on the server
+  // e.g., if host is shop.sherohq.com, use api.sherohq.com
+  const baseDomain = host.replace(/^(shop|support|admin)\./, "");
+  const dynamicApiBase = `${protocol}://api.${baseDomain}/api`;
 
   try {
-    const endpoint = `${apiBaseUrl}${apiBaseUrl.endsWith("/") ? "" : "/"}products/${id}`;
-
+    // Attempt fetch with dynamic base, fallback to standard API_BASE
+    const endpoint = `${dynamicApiBase}/products/${id}`;
     const res = await fetch(endpoint, { next: { revalidate: 3600 } });
-    if (!res.ok) throw new Error("product not found");
+    
+    if (!res.ok) {
+      // If dynamic fails, try the shared API_BASE (which might be hardcoded to onrender.com)
+      const fallbackEndpoint = API_BASE.startsWith("http") ? `${API_BASE}/products/${id}` : null;
+      if (fallbackEndpoint) {
+        const fallbackRes = await fetch(fallbackEndpoint, { next: { revalidate: 3600 } });
+        if (fallbackRes.ok) {
+          const product = await fallbackRes.json();
+          return generateProductMetadata(product, host, id);
+        }
+      }
+      throw new Error("Product not found");
+    }
 
     const product = await res.json();
-    const primaryImage =
-      (Array.isArray(product.images) && product.images[0]) || product.image;
-    const imageUrl = resolveOgImage(primaryImage, apiBaseUrl, shopSiteUrl);
-    
-    const isDiscounted =
-      product.originalPrice && product.originalPrice > product.price;
-    const priceText = formatCurrency(product.price);
-
-    const title = `${product.name} - ${priceText} | SHERO`;
-    const description = `Check out ${
-      isDiscounted ? "Discounted " : ""
-    }${product.name} - ${priceText} on SHERO`;
-
-    const imageType = imageUrl.toLowerCase().endsWith(".png")
-      ? "image/png"
-      : imageUrl.toLowerCase().endsWith(".webp")
-        ? "image/webp"
-        : "image/jpeg";
-
-    return {
-      title: { absolute: title },
-      description,
-      metadataBase: new URL(shopSiteUrl),
-      alternates: {
-        canonical: pageUrl,
-      },
-      openGraph: {
-        type: "website",
-        title,
-        description,
-        url: pageUrl,
-        siteName: "SHERO",
-        images: [
-          {
-            url: imageUrl,
-            secureUrl: imageUrl,
-            width: 1200,
-            height: 630,
-            alt: product.name,
-            type: imageType,
-          },
-        ],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title,
-        description,
-        images: [imageUrl],
-      },
-      other: {
-        image_src: imageUrl, // Legacy tag
-        thumbnail: imageUrl,
-      },
-    };
+    return generateProductMetadata(product, host, id);
   } catch (error) {
-    console.error(`[Metadata] Failed to fetch product ${id}:`, {
-      error,
-      endpoint: `${getApiBaseUrl(
-        toAbsoluteBaseUrl(
-          process.env.NEXT_PUBLIC_SITE_URL,
-          "https://sherohq.com",
-        ),
-      )}/products/${id}`,
-    });
-    // Fallback metadata if product fetch fails (still include a valid OG image for link previews)
+    console.error(`[Metadata] Failed to fetch product ${id}:`, error);
     return {
-      title: "Product | SHERO",
+      title: { absolute: "Product | SHERO" },
       description: "Explore our range of tech solutions at SHERO.",
-      metadataBase: new URL(shopSiteUrl),
-      alternates: {
-        canonical: pageUrl,
-      },
-      openGraph: {
-        type: "website",
-        title: "Product | SHERO",
-        description: "Explore our range of tech solutions at SHERO.",
-        url: pageUrl,
-        siteName: "SHERO",
-        images: [
-          {
-            url: fallbackImageUrl,
-            secureUrl: fallbackImageUrl,
-            width: 1200,
-            height: 630,
-            alt: "SHERO",
-          },
-        ],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: "Product | SHERO",
-        description: "Explore our range of tech solutions at SHERO.",
-        images: [fallbackImageUrl],
-      },
     };
   }
+}
+
+function generateProductMetadata(product: any, host: string, id: string): Metadata {
+  const protocol = host.includes("localhost") ? "http" : "https";
+  const siteUrl = `${protocol}://${host}`;
+  const pageUrl = `${siteUrl}/shop/${id}`;
+  
+  const baseDomain = host.replace(/^(shop|support|admin)\./, "");
+  const apiHost = `${protocol}://api.${baseDomain}`;
+  
+  const primaryImage = (Array.isArray(product.images) && product.images[0]) || product.image;
+  const imageUrl = primaryImage?.startsWith("http") 
+    ? primaryImage 
+    : `${apiHost}${primaryImage?.startsWith("/") ? "" : "/"}${primaryImage}`;
+
+  const isDiscounted = product.originalPrice && product.originalPrice > product.price;
+  const priceText = formatCurrency(product.price);
+
+  const title = `${product.name} - ${priceText} | SHERO`;
+  const description = `Check out ${isDiscounted ? "Discounted " : ""}${product.name} - ${priceText} on SHERO`;
+
+  return {
+    title: { absolute: title },
+    description,
+    metadataBase: new URL(siteUrl),
+    alternates: { canonical: pageUrl },
+    openGraph: {
+      type: "website",
+      title,
+      description,
+      url: pageUrl,
+      siteName: "SHERO",
+      images: [{ url: imageUrl, width: 1200, height: 630, alt: product.name }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [imageUrl],
+    },
+  };
 }
 
 export default function ProductDetailPage() {
