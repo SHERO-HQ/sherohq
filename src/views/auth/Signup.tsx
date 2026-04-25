@@ -117,7 +117,7 @@ const Signup = () => {
  <button
  type="button"
  onClick={() => setShowPassword(!showPassword)}
- className="focus:outline-none transition-colors"
+ className="focus:outline-none transition-colors flex items-center"
  >
  {showPassword ? (
  <EyeOff className="w-5 h-5" />

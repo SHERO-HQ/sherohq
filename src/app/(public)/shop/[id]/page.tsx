@@ -140,7 +140,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         : "image/jpeg";
 
     return {
-      title,
+      title: { absolute: title },
       description,
       metadataBase: new URL(shopSiteUrl),
       alternates: {

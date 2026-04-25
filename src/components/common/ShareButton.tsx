@@ -152,32 +152,32 @@ const ShareButton: React.FC<ShareButtonProps> = ({
  }
  };
 
- const shareOptions = [
- {
- name: "Copy Link",
- icon: copied ? Check : Link,
- onClick: handleCopyLink,
- color: copied ? "text-brand-secondary-500" : "text-slate-600 dark:text-slate-400",
- },
- {
- name: "WhatsApp",
- icon: WhatsAppIcon,
- href: `https://wa.me/?text=${encodeURIComponent(`🛍️ *Check out ${title} on SHERO*\n\n🔗 ${resolvedShareUrl}`)}`,
- color: "text-[#25D366]",
- },
- {
- name: "Twitter",
- icon: XIcon,
- href: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
- color: "text-slate-900 dark:text-white",
- },
- {
- name: "Facebook",
- icon: FacebookIcon,
- href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
- color: "text-[#1877F2]",
- },
- ];
+  const shareOptions = [
+  {
+  name: "Copy Link",
+  icon: copied ? Check : Link,
+  onClick: handleCopyLink,
+  color: copied ? "text-brand-secondary-500" : "text-slate-600 dark:text-slate-400",
+  },
+  {
+  name: "WhatsApp",
+  icon: WhatsAppIcon,
+  href: `https://wa.me/?text=${encodeURIComponent(`🛍️ *${description || `Check out ${title} on SHERO`}*\n\n🔗 ${resolvedShareUrl}`)}`,
+  color: "text-[#25D366]",
+  },
+  {
+  name: "Twitter",
+  icon: XIcon,
+  href: `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`,
+  color: "text-slate-900 dark:text-white",
+  },
+  {
+  name: "Facebook",
+  icon: FacebookIcon,
+  href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+  color: "text-[#1877F2]",
+  },
+  ];
 
  const canNativeShare = typeof navigator !== "undefined" && !!navigator.share;
 
