@@ -116,30 +116,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const dynamicApiBase = `${protocol}://api.${baseDomain}/api`;
 
   try {
-    // Attempt fetch with dynamic base, fallback to standard API_BASE
-    const endpoint = `${dynamicApiBase}/products/${id}`;
+    // Force absolute production API URL for server-side metadata fetching
+    const apiBase = "https://api.sherohq.com/api";
+    const endpoint = `${apiBase}/products/${id}`;
+    
     const res = await fetch(endpoint, { next: { revalidate: 3600 } });
     
     if (!res.ok) {
-      // If dynamic fails, try the shared API_BASE (which might be hardcoded to onrender.com)
-      const fallbackEndpoint = API_BASE.startsWith("http") ? `${API_BASE}/products/${id}` : null;
-      if (fallbackEndpoint) {
-        const fallbackRes = await fetch(fallbackEndpoint, { next: { revalidate: 3600 } });
-        if (fallbackRes.ok) {
-          const product = await fallbackRes.json();
-          return generateProductMetadata(product, host, id);
-        }
-      }
-      throw new Error("Product not found");
+      throw new Error(`Product not found: ${res.status}`);
     }
 
     const product = await res.json();
     return generateProductMetadata(product, host, id);
   } catch (error) {
     console.error(`[Metadata] Failed to fetch product ${id}:`, error);
+    // If it fails, still try to return something better than "Product" if possible
     return {
-      title: { absolute: "Product | SHERO" },
-      description: "Explore our range of tech solutions at SHERO.",
+      title: { absolute: "SHERO | Technology Solutions" },
+      description: "Premium technology solutions, hardware, and software services.",
     };
   }
 }
@@ -150,7 +144,7 @@ function generateProductMetadata(product: any, host: string, id: string): Metada
   const pageUrl = `${siteUrl}/shop/${id}`;
   
   const baseDomain = host.replace(/^(shop|support|admin)\./, "");
-  const apiHost = `${protocol}://api.${baseDomain}`;
+  const apiHost = "https://api.sherohq.com";
   
   const primaryImage = (Array.isArray(product.images) && product.images[0]) || product.image;
   const imageUrl = primaryImage?.startsWith("http") 
