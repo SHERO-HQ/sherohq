@@ -116,29 +116,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const dynamicApiBase = `${protocol}://api.${baseDomain}/api`;
 
   try {
-    // Determine API Base URL robustly
-    const envUrl = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || "https://api.sherohq.com/api";
-    const base = envUrl.endsWith('/api') ? envUrl : `${envUrl.replace(/\/$/, '')}/api`;
-    const endpoint = `${base}/products/${id}`;
-    
-    const res = await fetch(endpoint, { 
-      next: { revalidate: 300 }, // 5 mins
-      headers: {
-        "Accept": "application/json",
-        "User-Agent": "Mozilla/5.0 (compatible; SHEROBot/1.0; +https://sherohq.com)"
-      }
-    });
-    
-    if (!res.ok) {
-      throw new Error(`Product fetch failed: ${res.status}`);
+    const { query } = await import("@/lib/db");
+    const res = await query(
+      `SELECT id, name, price, "originalPrice", image, images FROM products WHERE id = $1`,
+      [id]
+    );
+
+    if (!res.rows || res.rows.length === 0) {
+      throw new Error(`Product not found in DB`);
     }
 
-    const product = await res.json();
-    if (!product || !product.name) throw new Error("Invalid product data");
+    const product = res.rows[0];
     
+    // Parse price to number if it comes back as a string from numeric column
+    if (typeof product.price === 'string') product.price = parseFloat(product.price);
+    if (typeof product.originalPrice === 'string') product.originalPrice = parseFloat(product.originalPrice);
+
     return generateProductMetadata(product, host, id);
   } catch (error) {
-    console.error(`[Metadata] Failed to fetch product ${id}:`, error);
+    console.error(`[Metadata] Failed to fetch product ${id} from DB:`, error);
     const siteUrl = `${protocol}://${host}`;
     const pageUrl = `${siteUrl}/shop/${id}`;
     
