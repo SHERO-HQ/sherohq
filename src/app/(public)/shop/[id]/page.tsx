@@ -116,24 +116,52 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const dynamicApiBase = `${protocol}://api.${baseDomain}/api`;
 
   try {
-    // Force absolute production API URL for server-side metadata fetching
-    const apiBase = "https://api.sherohq.com/api";
-    const endpoint = `${apiBase}/products/${id}`;
+    // Determine API Base URL robustly
+    const envUrl = process.env.NEXT_PUBLIC_API_URL || process.env.API_URL || "https://api.sherohq.com/api";
+    const base = envUrl.endsWith('/api') ? envUrl : `${envUrl.replace(/\/$/, '')}/api`;
+    const endpoint = `${base}/products/${id}`;
     
-    const res = await fetch(endpoint, { next: { revalidate: 3600 } });
+    const res = await fetch(endpoint, { 
+      next: { revalidate: 300 }, // 5 mins
+      headers: {
+        "Accept": "application/json",
+        "User-Agent": "Mozilla/5.0 (compatible; SHEROBot/1.0; +https://sherohq.com)"
+      }
+    });
     
     if (!res.ok) {
-      throw new Error(`Product not found: ${res.status}`);
+      throw new Error(`Product fetch failed: ${res.status}`);
     }
 
     const product = await res.json();
+    if (!product || !product.name) throw new Error("Invalid product data");
+    
     return generateProductMetadata(product, host, id);
   } catch (error) {
     console.error(`[Metadata] Failed to fetch product ${id}:`, error);
-    // If it fails, still try to return something better than "Product" if possible
+    const siteUrl = `${protocol}://${host}`;
+    const pageUrl = `${siteUrl}/shop/${id}`;
+    
+    // Provide a rich fallback to ensure social sharing works even if API fails
     return {
       title: { absolute: "SHERO | Technology Solutions" },
       description: "Premium technology solutions, hardware, and software services.",
+      metadataBase: new URL(siteUrl),
+      alternates: { canonical: pageUrl },
+      openGraph: {
+        type: "website",
+        title: "SHERO | Technology Solutions",
+        description: "Premium technology solutions, hardware, and software services.",
+        url: pageUrl,
+        siteName: "SHERO",
+        images: [{ url: `${siteUrl}/shero.png`, width: 1200, height: 630, alt: "SHERO" }],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: "SHERO | Technology Solutions",
+        description: "Premium technology solutions, hardware, and software services.",
+        images: [`${siteUrl}/shero.png`],
+      },
     };
   }
 }
@@ -147,9 +175,12 @@ function generateProductMetadata(product: any, host: string, id: string): Metada
   const apiHost = "https://api.sherohq.com";
   
   const primaryImage = (Array.isArray(product.images) && product.images[0]) || product.image;
-  const imageUrl = primaryImage?.startsWith("http") 
-    ? primaryImage 
-    : `${apiHost}${primaryImage?.startsWith("/") ? "" : "/"}${primaryImage}`;
+  let imageUrl = `${siteUrl}/shero.png`; // Fallback image
+  if (primaryImage) {
+    imageUrl = primaryImage.startsWith("http") 
+      ? primaryImage 
+      : `${apiHost}${primaryImage.startsWith("/") ? "" : "/"}${primaryImage}`;
+  }
 
   const isDiscounted = product.originalPrice && product.originalPrice > product.price;
   const priceText = formatCurrency(product.price);
