@@ -118,7 +118,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     const { query } = await import("@/lib/db");
     const res = await query(
-      `SELECT id, name, price, "originalPrice", image, images FROM products WHERE id = $1`,
+      `SELECT id, name, price, "originalPrice", image, images, description FROM products WHERE id = $1 OR slug = $1 OR sku = $1`,
       [id]
     );
 
@@ -182,7 +182,9 @@ function generateProductMetadata(product: any, host: string, id: string): Metada
   const priceText = formatCurrency(product.price);
 
   const title = `${product.name} - ${priceText} | SHERO`;
-  const description = `Check out ${isDiscounted ? "Discounted " : ""}${product.name} - ${priceText} on SHERO`;
+  const description = product.description
+    ? product.description.substring(0, 160)
+    : `Check out ${isDiscounted ? "Discounted " : ""}${product.name} - ${priceText} on SHERO`;
 
   return {
     title: { absolute: title },

@@ -534,9 +534,9 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
             <button
               onClick={handleAddToCart}
               disabled={!product.inStock || isAddedToCart}
-              className="flex-1 h-12 bg-brand-secondary-600 text-white rounded font-black text-xs uppercase tracking-widest active:scale-95 transition-transform"
+              className="flex-1 h-10 bg-brand-secondary-600 text-white rounded font-black text-xs uppercase tracking-widest active:scale-95 transition-transform"
             >
-              {isAddedToCart ? "Added!" : "Quick Buy"}
+              {isAddedToCart ? "Added!" : "Buy Now"}
             </button>
             <button
               onClick={() =>
@@ -548,7 +548,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   category: product.category,
                 })
               }
-              className={`w-12 h-12 rounded border flex items-center justify-center ${
+              className={`w-10 h-10 rounded border flex items-center justify-center ${
                 isWishlisted
                   ? "bg-red-500 border-red-500 text-white"
                   : "border-slate-200 dark:border-white/10 text-slate-500"
