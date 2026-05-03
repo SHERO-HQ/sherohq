@@ -40,7 +40,7 @@ const AboutStory = () => {
 
               <div className="absolute sm:bottom-46 md:bottom-30 sm:left-4 md:left-0 bottom-25 -left-2 bg-white/90 dark:bg-slate-900/90  py-2 px-3 rounded-full border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
                 <div className="size-7 sm:size-8 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center">
-                  <SearchCheck className="w-4 h-4 text-brand-secondary-700 dark:text-brand-secondary-400" />
+                  <Lightbulb className="w-4 h-4 text-brand-secondary-700 dark:text-brand-secondary-400" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-slate-900 dark:text-white leading-tight">
@@ -52,7 +52,7 @@ const AboutStory = () => {
 
               <div className="absolute sm:top-30 sm:right-8 top-20 right-5 bg-white/90 dark:bg-slate-900/90  py-2 px-3 rounded-full border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
                 <div className="size-7 sm:size-8 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center">
-                  <Lightbulb className="w-4 h-4 text-brand-secondary-700 dark:text-brand-secondary-400" />
+                  <SearchCheck className="w-4 h-4 text-brand-secondary-700 dark:text-brand-secondary-400" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-slate-900 dark:text-white leading-tight">
