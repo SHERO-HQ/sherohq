@@ -6,7 +6,7 @@ const ConsultationHero = () => {
   return (
     <section className="relative w-full py-20 lg:py-26 overflow-hidden bg-slate-50 dark:bg-slate-950">
       {/* Dot Pattern Background */}
-      <div className="absolute inset-0 pattern-dots opacity-45 dark:opacity-30 pointer-events-none" />
+      <div className="absolute inset-0 pattern-dots opacity-90 dark:opacity-60 pointer-events-none" />
 
       {/* Gradient Orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
