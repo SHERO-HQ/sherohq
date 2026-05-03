@@ -96,8 +96,8 @@ const Process = () => {
                         isEven ? "md:text-right" : "md:text-left"
                       }`}
                     >
-                      <span className="inline-block py-1 px-3 rounded mb-3 text-sm font-mono font-semibold bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-500/20 uppercase">
-                        Step {index + 1}
+                      <span className="inline-block py-1 px-2 rounded mb-3 text-sm font- font-semibold bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-500/20 uppercase italic">
+                         Step {index + 1}
                       </span>
                       <h3 className="text-lg md:text-xl font-bold tracking-tight text-slate-900 dark:text-white mb-2 group-hover:text-brand-secondary-500 dark:group-hover:text-brand-secondary-400 transition-colors">
                         {step.title}
