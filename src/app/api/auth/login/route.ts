@@ -33,15 +33,25 @@ export async function POST(request: NextRequest) {
     const result = await query("SELECT * FROM users WHERE email = $1", [email]);
     const user = result.rows[0];
 
-    const fakeHash = "$2a$10$fakeHashForTimingConsistencyPreventionXXXXXXXXXXXXXXXXXXXXXXXX";
-    const isMatch = await bcrypt.compare(password, user?.passwordHash || fakeHash);
+    const fakeHash =
+      "$2a$10$fakeHashForTimingConsistencyPreventionXXXXXXXXXXXXXXXXXXXXXXXX";
+    const isMatch = await bcrypt.compare(
+      password,
+      user?.passwordHash || fakeHash,
+    );
 
     if (!user || !isMatch) {
-      return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
+      return NextResponse.json(
+        { error: "Invalid credentials" },
+        { status: 401 },
+      );
     }
 
     if (user.isActive === false) {
-      return NextResponse.json({ error: "Your account has been deactivated." }, { status: 403 });
+      return NextResponse.json(
+        { error: "Your account has been deactivated." },
+        { status: 403 },
+      );
     }
 
     // 2. Handle Multi-Factor Authentication (MFA)
@@ -53,7 +63,7 @@ export async function POST(request: NextRequest) {
           id: user.id,
           email: user.email,
           name: user.name,
-        }
+        },
       });
     }
 
@@ -63,7 +73,7 @@ export async function POST(request: NextRequest) {
 
     await query(
       'INSERT INTO user_sessions (id, "userId", token, "expiresAt") VALUES ($1, $2, $3, $4)',
-      [sessionId, user.id, token, expiresAt.toISOString()]
+      [sessionId, user.id, token, expiresAt.toISOString()],
     );
 
     const cookieStore = await cookies();
@@ -88,6 +98,9 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Login error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }
