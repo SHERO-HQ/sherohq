@@ -26,14 +26,6 @@ const getApiBase = () => {
 
   // Server-side (SSR) requires absolute URLs
   if (typeof window === "undefined") {
-    if (process.env.NODE_ENV === "production" && !resolvedEnvUrl) {
-      console.warn(
-        "⚠️ [API] Falling back to hardcoded production URL: https://sherotech.onrender.com/api. " +
-          "Ensure NEXT_PUBLIC_API_URL or API_URL is set in your deployment environment.",
-      );
-      return "https://sherotech.onrender.com/api";
-    }
-
     const siteUrl =
       process.env.NEXT_PUBLIC_SITE_URL ||
       process.env.SITE_URL ||
@@ -74,16 +66,6 @@ export function getImageUrl(path: string | undefined): string {
   }
 
   return path;
-}
-
-function getAuthToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem("adminToken");
-}
-
-function getUserAuthToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem("userToken");
 }
 
 function getStatusErrorMessage(status: number): string | null {
@@ -153,17 +135,12 @@ export async function handleResponse<T>(response: Response): Promise<T> {
 }
 
 export async function authFetch(url: string, options: RequestInit = {}) {
-  const token = getAuthToken();
   const headers: HeadersInit = {
     ...options.headers,
   };
 
   if (!(options.body instanceof FormData)) {
     (headers as Record<string, string>)["Content-Type"] = "application/json";
-  }
-
-  if (token) {
-    (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
   }
 
   (headers as Record<string, string>)["X-CSRF-Protection"] = "1";
@@ -178,8 +155,6 @@ export async function authFetch(url: string, options: RequestInit = {}) {
 
 // User-authenticated fetch (uses userToken instead of adminToken)
 export async function userAuthFetch(url: string, options: RequestInit = {}) {
-  const token = getUserAuthToken();
-
   const headers: HeadersInit = {
     ...(options.body instanceof FormData
       ? {}
@@ -187,10 +162,6 @@ export async function userAuthFetch(url: string, options: RequestInit = {}) {
     "X-CSRF-Protection": "1",
     ...options.headers,
   };
-
-  if (token) {
-    (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
-  }
 
   return fetch(url, { ...options, headers, credentials: "include" });
 }

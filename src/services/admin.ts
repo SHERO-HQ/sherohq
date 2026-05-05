@@ -177,7 +177,6 @@ export async function adminLogout(): Promise<void> {
   try {
     await authFetch(`${API_BASE}/admin-auth/logout`, { method: "POST" });
   } finally {
-    localStorage.removeItem("adminToken");
   }
 }
 

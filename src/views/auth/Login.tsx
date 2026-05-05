@@ -6,30 +6,34 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { useAuth } from "@/context/AuthContext";
+import type { User } from "@/services/auth";
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const Login = () => {
- const [showPassword, setShowPassword] = useState(false);
- const [error, setError] = useState("");
- const { login } = useAuth();
- const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
+  const { login } = useAuth();
+  const router = useRouter();
 
- const {
- register,
- handleSubmit,
- formState: { errors, isSubmitting },
- } = useForm<LoginInput>({
- resolver: zodResolver(loginSchema),
- defaultValues: {
- email: "",
- password: "",
- },
- });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
-  const [mfaChallenge, setMfaChallenge] = useState<{ token: string; user: any } | null>(null);
+  const [mfaChallenge, setMfaChallenge] = useState<{
+    token: string;
+    user: User;
+  } | null>(null);
   const [mfaCode, setMfaCode] = useState("");
   const [verifyingMFA, setVerifyingMFA] = useState(false);
 
@@ -39,6 +43,10 @@ const Login = () => {
     try {
       const res = await login(data);
       if (res.requiresMFA) {
+        if (!res.mfaToken) {
+          throw new Error("MFA token missing from response");
+        }
+
         setMfaChallenge({ token: res.mfaToken, user: res.user });
       } else {
         router.push("/profile");
@@ -51,37 +59,33 @@ const Login = () => {
   const onVerifyMFA = async (e: React.FormEvent) => {
     e.preventDefault();
     if (mfaCode.length !== 6) return;
-    
+
     setVerifyingMFA(true);
     setError("");
-    
+
     try {
       const res = await fetch("/api/auth/login/mfa", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mfaToken: mfaChallenge?.token, code: mfaCode }),
       });
-      
+
       const data = await res.json();
       if (data.success) {
-        // Log in the user in the context
-        if (data.token) {
-          localStorage.setItem("userToken", data.token);
-        }
         window.location.href = "/profile"; // Hard refresh to update auth state
       } else {
         setError(data.error || "Invalid verification code");
       }
-    } catch (err) {
+    } catch {
       setError("Failed to verify code");
     } finally {
       setVerifyingMFA(false);
     }
   };
 
- return (
- <div className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 dark:bg-slate-950">
- <div className="w-full max-w-md">
+  return (
+    <div className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 dark:bg-slate-950">
+      <div className="w-full max-w-md">
         <div className="bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 p-8">
           <div className="text-center mb-8">
             <img
@@ -117,7 +121,9 @@ const Login = () => {
                   placeholder="000000"
                   maxLength={6}
                   value={mfaCode}
-                  onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, ""))}
+                  onChange={(e) =>
+                    setMfaCode(e.target.value.replace(/\D/g, ""))
+                  }
                   autoFocus
                   className="text-center text-2xl tracking-[0.5em] font-mono"
                   size="xl"
@@ -131,7 +137,9 @@ const Login = () => {
                   size="xl"
                 >
                   {verifyingMFA ? (
-                    <span className="flex items-center gap-2">Verifying...</span>
+                    <span className="flex items-center gap-2">
+                      Verifying...
+                    </span>
                   ) : (
                     <>
                       Verify & Sign In <ArrowRight className="w-5 h-5" />
@@ -210,7 +218,9 @@ const Login = () => {
                   size="xl"
                 >
                   {isSubmitting ? (
-                    <span className="flex items-center gap-2">Signing In...</span>
+                    <span className="flex items-center gap-2">
+                      Signing In...
+                    </span>
                   ) : (
                     <>
                       Sign In <ArrowRight className="w-5 h-5" />
@@ -231,9 +241,9 @@ const Login = () => {
             </>
           )}
         </div>
- </div>
- </div>
- );
+      </div>
+    </div>
+  );
 };
 
 export default Login;

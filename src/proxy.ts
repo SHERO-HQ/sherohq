@@ -1,10 +1,57 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 
+const UNSAFE_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
+
+const CSRF_EXEMPT_PATHS = [/^\/api\/cron\//, /^\/api\/payments\/webhook$/];
+
+function isUnsafeMethod(method: string) {
+  return UNSAFE_METHODS.has(method.toUpperCase());
+}
+
+function isCsrfExemptPath(pathname: string) {
+  return CSRF_EXEMPT_PATHS.some((pattern) => pattern.test(pathname));
+}
+
+function getRequestOrigin(request: NextRequest) {
+  const origin = request.headers.get("origin");
+  if (origin) return origin;
+
+  const referer = request.headers.get("referer");
+  if (!referer) return null;
+
+  try {
+    return new URL(referer).origin;
+  } catch {
+    return null;
+  }
+}
+
+function isAllowedOrigin(request: NextRequest) {
+  const requestOrigin = getRequestOrigin(request);
+  if (!requestOrigin) return false;
+
+  return requestOrigin === request.nextUrl.origin;
+}
+
 export default function proxy(request: NextRequest) {
   const url = request.nextUrl.clone();
   const hostname = request.headers.get("host") || "";
   const host = hostname.toLowerCase();
+  const path = url.pathname;
+
+  if (
+    path.startsWith("/api") &&
+    isUnsafeMethod(request.method) &&
+    !isCsrfExemptPath(path)
+  ) {
+    if (!isAllowedOrigin(request)) {
+      return NextResponse.json(
+        { success: false, error: "CSRF validation failed" },
+        { status: 403 },
+      );
+    }
+  }
 
   // NOTE: Do NOT redirect www ↔ non-www here.
   // Vercel handles domain canonicalization (apex → www or vice-versa).
@@ -30,17 +77,17 @@ export default function proxy(request: NextRequest) {
   }
 
   // Handle specific subdomains
-  const path = url.pathname;
-
   // Explicitly bypass static files, Next.js internal paths, and API routes.
   // This acts as a fail-safe in case the config matcher regex is ignored (e.g. by Turbopack or Vercel Edge).
   if (
     path.startsWith("/_next") ||
     path.startsWith("/api") ||
     path.startsWith("/assets") ||
-    path.match(/\.(png|jpe?g|gif|svg|ico|webp|avif|woff2?|js|css|json|webmanifest|xml|txt)$/i)
+    path.match(
+      /\.(png|jpe?g|gif|svg|ico|webp|avif|woff2?|js|css|json|webmanifest|xml|txt)$/i,
+    )
   ) {
-    return NextResponse.rewrite(url);
+    return NextResponse.next();
   }
 
   // 1. Admin Subdomain
@@ -75,14 +122,11 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
-     * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - assets (internal assets)
      * - favicon.ico, sitemap.xml, robots.txt, etc.
      */
-    "/((?!api|_next/static|_next/image|assets|favicon.ico|sw.js|site.webmanifest|sitemap.xml|robots.txt).*)",
+    "/((?!_next/static|_next/image|assets|favicon.ico|sw.js|site.webmanifest|sitemap.xml|robots.txt).*)",
   ],
 };
-
-

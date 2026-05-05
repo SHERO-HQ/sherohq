@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import { z } from "zod";
+import { rateLimit } from "@/lib/rate-limit";
 
 const LoginSchema = z.object({
   email: z.string().email(),
@@ -15,6 +16,16 @@ const USER_SESSION_COOKIE = "user_session_token";
 
 export async function POST(request: NextRequest) {
   try {
+    const ip = request.headers.get("x-forwarded-for") || "anonymous";
+    const limiter = await rateLimit(`user_login_${ip}`, 5, 60 * 1000);
+
+    if (!limiter.success) {
+      return NextResponse.json(
+        { error: "Too many login attempts. Please try again in a minute." },
+        { status: 429 },
+      );
+    }
+
     const body = await request.json();
     const validated = LoginSchema.parse(body);
     const { email, password } = validated;

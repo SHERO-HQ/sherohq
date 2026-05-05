@@ -56,22 +56,28 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
   }, [isSidebarOpen]);
 
   // Check for existing session on mount
-
   const checkAuth = useCallback(async () => {
     try {
       const { admin } = await getAdminMe();
       setAdmin(admin);
-    } catch (err: any) {
+    } catch (err: unknown) {
       // ONLY logout if it's explicitly an authentication error (401)
       // We treat 403 as a potential CSRF or permission error that might be transient
       // Other errors (500, network fail) are ignored to allow the session to persist
-      if (err.status === 401) {
+      const status =
+        typeof err === "object" && err !== null && "status" in err
+          ? (err as { status?: number }).status
+          : undefined;
+
+      if (status === 401) {
         console.warn("🔐 Admin session expired, logging out.");
-        localStorage.removeItem("adminToken");
         setAdmin(null);
       } else {
-        const status = err.status || "Network/Server Error";
-        console.error(`📡 Admin auth check failed (${status}), keeping session for retry.`, err);
+        const statusLabel = status || "Network/Server Error";
+        console.error(
+          `📡 Admin auth check failed (${statusLabel}), keeping session for retry.`,
+          err,
+        );
       }
     } finally {
       setIsLoading(false);
@@ -87,16 +93,13 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
     setMfaToken(null);
     try {
       const response = await apiLogin(username, password);
-      
+
       if (response.requiresMFA) {
         setRequiresMFA(true);
         setMfaToken(response.mfaToken || null);
         return;
       }
 
-      if (response.token) {
-        localStorage.setItem("adminToken", response.token);
-      }
       setAdmin(response.admin || null);
       setMustReset(!!response.mustReset);
       setRequiresMFA(false);
@@ -108,14 +111,11 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
 
   async function verifyMFA(code: string) {
     if (!mfaToken) throw new Error("MFA session expired. Please login again.");
-    
+
     try {
       const { loginWithMFA } = await import("@/services/admin");
       const response = await loginWithMFA(mfaToken, code);
-      
-      if (response.token) {
-        localStorage.setItem("adminToken", response.token);
-      }
+
       setAdmin(response.admin || null);
       setMustReset(!!response.mustReset);
       setRequiresMFA(false);
@@ -142,12 +142,20 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
       login,
       verifyMFA,
       logout,
-      setAdmin, // Expose setAdmin to allow direct state updates
+      setAdmin,
       setMustReset,
       isSidebarOpen,
       setIsSidebarOpen,
     }),
-    [admin, isLoading, mustReset, requiresMFA, mfaToken, isSidebarOpen],
+    [
+      admin,
+      isLoading,
+      mustReset,
+      requiresMFA,
+      mfaToken,
+      isSidebarOpen,
+      verifyMFA,
+    ],
   );
 
   return (

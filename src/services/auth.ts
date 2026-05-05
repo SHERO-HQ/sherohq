@@ -74,52 +74,33 @@ export async function userLogin(data: {
 }
 
 export async function userLogout(): Promise<void> {
-  const token = localStorage.getItem("userToken");
-  const headers: HeadersInit = {
-    "X-CSRF-Protection": "1",
-  };
-
-  if (token) {
-    (headers as Record<string, string>).Authorization = `Bearer ${token}`;
-  }
-
   await fetch(`${API_BASE}/auth/logout`, {
     method: "POST",
-    headers,
+    headers: {
+      "X-CSRF-Protection": "1",
+    },
     credentials: "include",
   });
-
-  localStorage.removeItem("userToken");
 }
 
 export async function getUserMe(): Promise<{
   user: User;
   mustReset?: boolean;
 }> {
-  const token = localStorage.getItem("userToken");
-  const headers: HeadersInit = {};
-
-  if (token) {
-    (headers as Record<string, string>).Authorization = `Bearer ${token}`;
-  }
-
   const response = await fetch(`${API_BASE}/auth/me`, {
-    headers,
+    headers: {
+      "X-CSRF-Protection": "1",
+    },
     credentials: "include",
   });
   return handleResponse<{ user: User; mustReset?: boolean }>(response);
 }
 
 export async function getUserOrders(userId: string): Promise<Order[]> {
-  const token = localStorage.getItem("userToken");
-  const headers: HeadersInit = {};
-
-  if (token) {
-    (headers as Record<string, string>).Authorization = `Bearer ${token}`;
-  }
-
   const response = await fetch(`${API_BASE}/orders/user/${userId}`, {
-    headers,
+    headers: {
+      "X-CSRF-Protection": "1",
+    },
     credentials: "include",
   });
   return handleResponse<Order[]>(response);
@@ -168,15 +149,10 @@ export async function updateUserProfile(data: {
   phone?: string;
   shippingAddress?: ShippingAddress | null;
 }): Promise<{ success: boolean; user: User }> {
-  const token = localStorage.getItem("userToken");
   const headers: HeadersInit = {
     "Content-Type": "application/json",
     "X-CSRF-Protection": "1",
   };
-
-  if (token) {
-    (headers as Record<string, string>).Authorization = `Bearer ${token}`;
-  }
 
   const response = await fetch(`${API_BASE}/auth/profile`, {
     method: "PUT",
@@ -191,15 +167,10 @@ export async function userChangePassword(
   currentPassword: string,
   password: string,
 ): Promise<{ success: boolean }> {
-  const token = localStorage.getItem("userToken");
   const headers: HeadersInit = {
     "Content-Type": "application/json",
     "X-CSRF-Protection": "1",
   };
-
-  if (token) {
-    (headers as Record<string, string>).Authorization = `Bearer ${token}`;
-  }
 
   const response = await fetch(`${API_BASE}/auth/change-password`, {
     method: "POST",
