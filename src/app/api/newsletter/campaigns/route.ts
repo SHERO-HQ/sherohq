@@ -11,7 +11,7 @@ export async function GET() {
     if (!admin) return apiResponse.unauthorized();
 
     const result = await query(`SELECT * FROM newsletter_campaigns ORDER BY "createdAt" DESC`);
-    return apiResponse.success(result.rows);
+    return apiResponse.success({ campaigns: result.rows });
   } catch (error) {
     console.error("Fetch campaigns error:", error);
     return apiResponse.error("Failed to fetch campaigns");
