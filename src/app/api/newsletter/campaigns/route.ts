@@ -10,7 +10,9 @@ export async function GET() {
     const admin = await getAdminFromSession();
     if (!admin) return apiResponse.unauthorized();
 
-    const result = await query(`SELECT * FROM newsletter_campaigns ORDER BY "createdAt" DESC`);
+    const result = await query(
+      `SELECT * FROM newsletter_campaigns ORDER BY "createdAt" DESC`,
+    );
     return apiResponse.success({ campaigns: result.rows });
   } catch (error) {
     console.error("Fetch campaigns error:", error);
@@ -24,18 +26,34 @@ export async function POST(request: NextRequest) {
     if (!admin) return apiResponse.unauthorized();
 
     const { subject, content, type, scheduledAt } = await request.json();
-    if (!subject || !content) return apiResponse.error("Subject and content required", 400);
+    if (!subject || !content)
+      return apiResponse.error("Subject and content required", 400);
 
     const id = uuidv4();
     await query(
       `INSERT INTO newsletter_campaigns (id, subject, content, type, status, "scheduledAt", "createdAt")
        VALUES ($1, $2, $3, $4, $5, $6, NOW())`,
-      [id, subject, content, type || "manual", scheduledAt ? "scheduled" : "draft", scheduledAt || null]
+      [
+        id,
+        subject,
+        content,
+        type || "manual",
+        scheduledAt ? "scheduled" : "draft",
+        scheduledAt || null,
+      ],
     );
 
-    await logActivity(admin.id, "newsletter_campaign_create", "success", `Created campaign: ${subject}`);
+    await logActivity(
+      admin.id,
+      "newsletter_campaign_create",
+      "success",
+      `Created campaign: ${subject}`,
+    );
 
-    return apiResponse.success({ id, subject, status: scheduledAt ? "scheduled" : "draft" }, 201);
+    return apiResponse.success(
+      { id, subject, status: scheduledAt ? "scheduled" : "draft" },
+      201,
+    );
   } catch (error) {
     console.error("Create campaign error:", error);
     return apiResponse.error("Failed to create campaign");
