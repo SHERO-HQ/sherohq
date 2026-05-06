@@ -31,7 +31,12 @@ export async function PATCH(
       return apiResponse.error("Expense not found", 404);
     }
 
-    await logActivity(admin.id, "expense_update", "warning", `Updated expense: ${title}`);
+    await logActivity(
+      admin.id,
+      "expense_update",
+      "warning",
+      `Updated expense: ${title}`,
+    );
 
     return apiResponse.success(result.rows[0]);
   } catch (error) {
@@ -62,7 +67,12 @@ export async function DELETE(
     }
 
     const expense = result.rows[0];
-    await logActivity(admin.id, "expense_delete", "warning", `Deleted expense: ${expense.title} (${expense.amount})`);
+    await logActivity(
+      admin.id,
+      "expense_delete",
+      "warning",
+      `Deleted expense: ${expense.title} (${expense.amount})`,
+    );
 
     return apiResponse.success({ message: "Expense deleted successfully" });
   } catch (error) {

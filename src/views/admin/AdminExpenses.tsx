@@ -163,7 +163,11 @@ export default function AdminExpenses() {
       setExpenses(data);
     } catch (error) {
       console.error("Failed to fetch expenses:", error);
-      addNotification("Error", getErrorMessage(error, "Failed to load expenses"), "error");
+      addNotification(
+        "Error",
+        getErrorMessage(error, "Failed to load expenses"),
+        "error",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -268,7 +272,11 @@ export default function AdminExpenses() {
       fetchExpenses();
     } catch (error) {
       console.error("Save failed:", error);
-      addNotification("Error", getErrorMessage(error, "Failed to save expense"), "error");
+      addNotification(
+        "Error",
+        getErrorMessage(error, "Failed to save expense"),
+        "error",
+      );
     } finally {
       setIsSaving(false);
     }
@@ -288,7 +296,11 @@ export default function AdminExpenses() {
       setExpenses(expenses.filter((e) => e.id !== id));
     } catch (error) {
       console.error("Delete failed:", error);
-      addNotification("Error", getErrorMessage(error, "Failed to delete expense"), "error");
+      addNotification(
+        "Error",
+        getErrorMessage(error, "Failed to delete expense"),
+        "error",
+      );
     } finally {
       setIsDeleting(null);
     }
@@ -321,440 +333,436 @@ export default function AdminExpenses() {
 
   return (
     <div className="space-y-6">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-white">Expenses</h1>
-            <p className="text-slate-400 text-sm">
-              Track your business spending and overheads
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button
-              onClick={() => handleOpenForm()}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add Expense
-            </Button>
-          </div>
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Expenses</h1>
+          <p className="text-slate-400 text-sm">
+            Track your business spending and overheads
+          </p>
         </div>
-
-        {/* Stats Summary */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="bg-slate-900/40  border-white/5 p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded bg-brand-secondary-500/10 flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-brand-secondary-500" />
-              </div>
-              <div>
-                <p className="text-slate-400 text-sm font-medium">
-                  Total Expenses
-                </p>
-                <p className="text-2xl font-bold text-white mt-1">
-                  GH₵{totalAmount.toLocaleString()}
-                </p>
-              </div>
-            </div>
-          </Card>
-          <Card className="bg-slate-900/40  border-white/5 p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded bg-blue-500/10 flex items-center justify-center">
-                <Tag className="w-6 h-6 text-blue-500" />
-              </div>
-              <div>
-                <p className="text-slate-400 text-sm font-medium">
-                  Items Count
-                </p>
-                <p className="text-2xl font-bold text-white mt-1">
-                  {filteredExpenses.length} Records
-                </p>
-              </div>
-            </div>
-          </Card>
-          <Card className="bg-slate-900/40  border-white/5 p-6">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded bg-purple-500/10 flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-purple-500" />
-              </div>
-              <div>
-                <p className="text-slate-400 text-sm font-medium">
-                  Top Category
-                </p>
-                <p className="text-2xl font-bold text-white mt-1">
-                  {filteredExpenses.length > 0
-                    ? filteredExpenses[0].category
-                    : "N/A"}
-                </p>
-              </div>
-            </div>
-          </Card>
+        <div className="flex items-center gap-3">
+          <Button
+            onClick={() => handleOpenForm()}
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Expense
+          </Button>
         </div>
+      </div>
 
-        {/* Filters */}
-        <Card className="bg-slate-900/40  border-white/5 p-4">
-          <div className="flex flex-wrap gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-              <Input
-                placeholder="Search description..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 bg-slate-800/50 border-white/5 text-white"
-              />
+      {/* Stats Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="bg-slate-900/40  border-white/5 p-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded bg-brand-secondary-500/10 flex items-center justify-center">
+              <DollarSign className="w-6 h-6 text-brand-secondary-500" />
             </div>
-            <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="bg-slate-800/50 border border-white/5 rounded text-sm text-white p-2"
-            >
-              <option value="all">All Categories</option>
-              {CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-            <div className="flex bg-slate-800/50 border border-white/5 rounded p-1 w-fit">
-              {[
-                { value: "all", label: "All" },
-                { value: "7d", label: "7d" },
-                { value: "30d", label: "30d" },
-              ].map((opt) => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onClick={() => setDateFilter(opt.value)}
-                  className={cn(
-                    "px-3 py-1 rounded text-xs font-medium transition",
-                    dateFilter === opt.value
-                      ? "bg-slate-700 text-white shadow"
-                      : "text-slate-400 hover:text-white",
-                  )}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className={cn(
-                    "bg-slate-800/50 border-white/10 text-slate-300 hover:text-white h-9 py-0",
-                    dateFilter === "range" &&
-                      "bg-slate-700 text-white border-brand-secondary-500/50",
-                  )}
-                  onClick={() => setDateFilter("range")}
-                >
-                  Range
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent
-                className="w-auto p-0 dark border-slate-800 bg-slate-900"
-                align="end"
-              >
-                <Calendar
-                  mode="range"
-                  defaultMonth={customRange?.from}
-                  selected={customRange}
-                  onSelect={setCustomRange}
-                  numberOfMonths={1}
-                />
-              </PopoverContent>
-            </Popover>
-
-            <div className="flex items-center gap-2 md:justify-end">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="border-white/5 text-slate-400 hover:text-white py-0"
-                  >
-                    <Download className="w-4 h-4 mr-2" /> Export
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="end"
-                  className="bg-slate-900 border-white/10"
-                >
-                  <DropdownMenuItem
-                    onClick={() => handleExport("csv")}
-                    className="text-white hover:bg-white/5 gap-2"
-                  >
-                    <FileText className="w-4 h-4" /> CSV
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => handleExport("excel")}
-                    className="text-white hover:bg-white/5 gap-2"
-                  >
-                    <FileText className="w-4 h-4" /> Excel
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => handleExport("pdf")}
-                    className="text-white hover:bg-white/5 gap-2"
-                  >
-                    <FileText className="w-4 h-4" /> PDF
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+            <div>
+              <p className="text-slate-400 text-sm font-medium">
+                Total Expenses
+              </p>
+              <p className="text-2xl font-bold text-white mt-1">
+                GH₵{totalAmount.toLocaleString()}
+              </p>
             </div>
           </div>
         </Card>
+        <Card className="bg-slate-900/40  border-white/5 p-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded bg-blue-500/10 flex items-center justify-center">
+              <Tag className="w-6 h-6 text-blue-500" />
+            </div>
+            <div>
+              <p className="text-slate-400 text-sm font-medium">Items Count</p>
+              <p className="text-2xl font-bold text-white mt-1">
+                {filteredExpenses.length} Records
+              </p>
+            </div>
+          </div>
+        </Card>
+        <Card className="bg-slate-900/40  border-white/5 p-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded bg-purple-500/10 flex items-center justify-center">
+              <TrendingUp className="w-6 h-6 text-purple-500" />
+            </div>
+            <div>
+              <p className="text-slate-400 text-sm font-medium">Top Category</p>
+              <p className="text-2xl font-bold text-white mt-1">
+                {filteredExpenses.length > 0
+                  ? filteredExpenses[0].category
+                  : "N/A"}
+              </p>
+            </div>
+          </div>
+        </Card>
+      </div>
 
-        {/* Expenses List */}
-        <Card className="bg-slate-900/40  border-white/5 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="bg-slate-800/50 border-b border-white/5">
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase">
-                    Expense
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase">
-                    Category
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase">
-                    Date
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase text-right">
-                    Amount
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase text-right">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {isLoading &&
-                  ["sk1", "sk2", "sk3", "sk4", "sk5"].map((id) => (
-                    <tr key={id} className="animate-pulse">
-                      <td colSpan={5} className="px-6 py-8">
-                        <div className="h-4 bg-slate-800 rounded w-full" />
-                      </td>
-                    </tr>
-                  ))}
+      {/* Filters */}
+      <Card className="bg-slate-900/40  border-white/5 p-4">
+        <div className="flex flex-wrap gap-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+            <Input
+              placeholder="Search description..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 bg-slate-800/50 border-white/5 text-white"
+            />
+          </div>
+          <select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="bg-slate-800/50 border border-white/5 rounded text-sm text-white p-2"
+          >
+            <option value="all">All Categories</option>
+            {CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+          <div className="flex bg-slate-800/50 border border-white/5 rounded p-1 w-fit">
+            {[
+              { value: "all", label: "All" },
+              { value: "7d", label: "7d" },
+              { value: "30d", label: "30d" },
+            ].map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => setDateFilter(opt.value)}
+                className={cn(
+                  "px-3 py-1 rounded text-xs font-medium transition",
+                  dateFilter === opt.value
+                    ? "bg-slate-700 text-white shadow"
+                    : "text-slate-400 hover:text-white",
+                )}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
 
-                {!isLoading && filteredExpenses.length === 0 && (
-                  <tr>
-                    <td
-                      colSpan={5}
-                      className="px-6 py-12 text-center text-slate-500"
-                    >
-                      No expense records found.
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className={cn(
+                  "bg-slate-800/50 border-white/10 text-slate-300 hover:text-white h-9 py-0",
+                  dateFilter === "range" &&
+                    "bg-slate-700 text-white border-brand-secondary-500/50",
+                )}
+                onClick={() => setDateFilter("range")}
+              >
+                Range
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent
+              className="w-auto p-0 dark border-slate-800 bg-slate-900"
+              align="end"
+            >
+              <Calendar
+                mode="range"
+                defaultMonth={customRange?.from}
+                selected={customRange}
+                onSelect={setCustomRange}
+                numberOfMonths={1}
+              />
+            </PopoverContent>
+          </Popover>
+
+          <div className="flex items-center gap-2 md:justify-end">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="border-white/5 text-slate-400 hover:text-white py-0"
+                >
+                  <Download className="w-4 h-4 mr-2" /> Export
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="bg-slate-900 border-white/10"
+              >
+                <DropdownMenuItem
+                  onClick={() => handleExport("csv")}
+                  className="text-white hover:bg-white/5 gap-2"
+                >
+                  <FileText className="w-4 h-4" /> CSV
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleExport("excel")}
+                  className="text-white hover:bg-white/5 gap-2"
+                >
+                  <FileText className="w-4 h-4" /> Excel
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleExport("pdf")}
+                  className="text-white hover:bg-white/5 gap-2"
+                >
+                  <FileText className="w-4 h-4" /> PDF
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
+      </Card>
+
+      {/* Expenses List */}
+      <Card className="bg-slate-900/40  border-white/5 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="bg-slate-800/50 border-b border-white/5">
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase">
+                  Expense
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase">
+                  Category
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase">
+                  Date
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase text-right">
+                  Amount
+                </th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase text-right">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {isLoading &&
+                ["sk1", "sk2", "sk3", "sk4", "sk5"].map((id) => (
+                  <tr key={id} className="animate-pulse">
+                    <td colSpan={5} className="px-6 py-8">
+                      <div className="h-4 bg-slate-800 rounded w-full" />
                     </td>
                   </tr>
-                )}
+                ))}
 
-                {!isLoading &&
-                  filteredExpenses.length > 0 &&
-                  filteredExpenses.map((expense) => (
-                    <tr
-                      key={expense.id}
-                      className="hover:bg-white/5 transition-colors"
-                    >
-                      <td className="px-6 py-4">
-                        <div className="flex items-start gap-3">
-                          <div className="w-8 h-8 rounded bg-slate-800 flex items-center justify-center shrink-0">
-                            <FileText className="w-4 h-4 text-slate-400" />
-                          </div>
-                          <div>
-                            <p className="text-white font-medium">
-                              {expense.title}
+              {!isLoading && filteredExpenses.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="px-6 py-12 text-center text-slate-500"
+                  >
+                    No expense records found.
+                  </td>
+                </tr>
+              )}
+
+              {!isLoading &&
+                filteredExpenses.length > 0 &&
+                filteredExpenses.map((expense) => (
+                  <tr
+                    key={expense.id}
+                    className="hover:bg-white/5 transition-colors"
+                  >
+                    <td className="px-6 py-4">
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 rounded bg-slate-800 flex items-center justify-center shrink-0">
+                          <FileText className="w-4 h-4 text-slate-400" />
+                        </div>
+                        <div>
+                          <p className="text-white font-medium">
+                            {expense.title}
+                          </p>
+                          {expense.description && (
+                            <p className="text-xs text-slate-500 line-clamp-1">
+                              {expense.description}
                             </p>
-                            {expense.description && (
-                              <p className="text-xs text-slate-500 line-clamp-1">
-                                {expense.description}
-                              </p>
-                            )}
-                          </div>
+                          )}
                         </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <Badge
-                          variant="outline"
-                          className="bg-blue-500/10 text-blue-400 border-none px-2 py-0"
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <Badge
+                        variant="outline"
+                        className="bg-blue-500/10 text-blue-400 border-none px-2 py-0"
+                      >
+                        {expense.category}
+                      </Badge>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-slate-300">
+                      {format(new Date(expense.date), "MMM dd, yyyy")}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <p className="text-white font-bold">
+                        GH₵{Number(expense.amount).toLocaleString()}
+                      </p>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-slate-400 hover:text-white"
+                          onClick={() => handleOpenForm(expense)}
                         >
-                          {expense.category}
-                        </Badge>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-slate-300">
-                        {format(new Date(expense.date), "MMM dd, yyyy")}
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <p className="text-white font-bold">
-                          GH₵{Number(expense.amount).toLocaleString()}
-                        </p>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-slate-400 hover:text-white"
-                            onClick={() => handleOpenForm(expense)}
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-slate-400 hover:text-rose-400"
-                            onClick={() => handleDelete(expense.id)}
-                            disabled={isDeleting === expense.id}
-                          >
-                            {isDeleting === expense.id ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                              <Trash2 className="w-4 h-4" />
-                            )}
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
+                          <Edit2 className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-slate-400 hover:text-rose-400"
+                          onClick={() => handleDelete(expense.id)}
+                          disabled={isDeleting === expense.id}
+                        >
+                          {isDeleting === expense.id ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Trash2 className="w-4 h-4" />
+                          )}
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
 
-        {/* Form Modal (Simple Overlay) */}
-        {isFormOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 ">
-            <Card className="w-full max-w-md bg-slate-900 border-white/10 shadow p-6 relative">
-              <button
-                onClick={handleCloseForm}
-                className="absolute right-4 top-4 p-1 text-slate-400 hover:text-white"
-              >
-                <X className="w-5 h-5" />
-              </button>
+      {/* Form Modal (Simple Overlay) */}
+      {isFormOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 ">
+          <Card className="w-full max-w-md bg-slate-900 border-white/10 shadow p-6 relative">
+            <button
+              onClick={handleCloseForm}
+              className="absolute right-4 top-4 p-1 text-slate-400 hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
 
-              <h2 className="text-xl font-bold text-white mb-6">
-                {editingId ? "Edit Expense" : "Add New Expense"}
-              </h2>
+            <h2 className="text-xl font-bold text-white mb-6">
+              {editingId ? "Edit Expense" : "Add New Expense"}
+            </h2>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-white">Title *</Label>
+                <Input
+                  value={formData.title}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
+                  placeholder="e.g., Office Rent - Feb"
+                  className="bg-slate-800 border-white/5 text-white"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label className="text-white">Title *</Label>
+                  <Label className="text-white">Amount (GH₵) *</Label>
                   <Input
-                    value={formData.title}
+                    type="number"
+                    value={formData.amount}
                     onChange={(e) =>
-                      setFormData({ ...formData, title: e.target.value })
+                      setFormData({ ...formData, amount: e.target.value })
                     }
-                    placeholder="e.g., Office Rent - Feb"
+                    placeholder="0.00"
                     className="bg-slate-800 border-white/5 text-white"
                     required
                   />
                 </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-white">Amount (GH₵) *</Label>
-                    <Input
-                      type="number"
-                      value={formData.amount}
-                      onChange={(e) =>
-                        setFormData({ ...formData, amount: e.target.value })
-                      }
-                      placeholder="0.00"
-                      className="bg-slate-800 border-white/5 text-white"
-                      required
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-white">Date *</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full bg-slate-800 border-white/5 text-slate-300 justify-start font-normal h-10 overflow-hidden",
-                            !formData.date && "text-slate-500",
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4 text-brand-secondary-500 shrink-0" />
-                          <span className="truncate">
-                            {formData.date
-                              ? format(parseDate(formData.date), "PPP")
-                              : "Pick a date"}
-                          </span>
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={parseDate(formData.date)}
-                          onSelect={(date) =>
-                            setFormData({
-                              ...formData,
-                              date: date ? format(date, "yyyy-MM-dd") : "",
-                            })
-                          }
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                </div>
-
                 <div className="space-y-2">
-                  <Label className="text-white">Category *</Label>
-                  <select
-                    value={formData.category}
-                    onChange={(e) =>
-                      setFormData({ ...formData, category: e.target.value })
-                    }
-                    className="w-full bg-slate-800 border-white/5 border rounded text-white p-2 h-10"
-                  >
-                    {CATEGORIES.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
+                  <Label className="text-white">Date *</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full bg-slate-800 border-white/5 text-slate-300 justify-start font-normal h-10 overflow-hidden",
+                          !formData.date && "text-slate-500",
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4 text-brand-secondary-500 shrink-0" />
+                        <span className="truncate">
+                          {formData.date
+                            ? format(parseDate(formData.date), "PPP")
+                            : "Pick a date"}
+                        </span>
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={parseDate(formData.date)}
+                        onSelect={(date) =>
+                          setFormData({
+                            ...formData,
+                            date: date ? format(date, "yyyy-MM-dd") : "",
+                          })
+                        }
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
+              </div>
 
-                <div className="space-y-2">
-                  <Label className="text-white">Description</Label>
-                  <Textarea
-                    value={formData.description}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                      setFormData({ ...formData, description: e.target.value })
-                    }
-                    placeholder="Additional notes..."
-                    className="bg-slate-800 border-white/5 text-white"
-                    rows={3}
-                  />
-                </div>
+              <div className="space-y-2">
+                <Label className="text-white">Category *</Label>
+                <select
+                  value={formData.category}
+                  onChange={(e) =>
+                    setFormData({ ...formData, category: e.target.value })
+                  }
+                  className="w-full bg-slate-800 border-white/5 border rounded text-white p-2 h-10"
+                >
+                  {CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-                <div className="flex gap-3 pt-4">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    className="flex-1 text-slate-400 hover:text-white"
-                    onClick={handleCloseForm}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    disabled={isSaving}
-                    className="flex-1 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold"
-                  >
-                    {isSaving ? (
-                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                    ) : (
-                      <Save className="w-4 h-4 mr-2" />
-                    )}
-                    {editingId ? "Update" : "Save"} Record
-                  </Button>
-                </div>
-              </form>
-            </Card>
-          </div>
-        )}
-      </div>
+              <div className="space-y-2">
+                <Label className="text-white">Description</Label>
+                <Textarea
+                  value={formData.description}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  placeholder="Additional notes..."
+                  className="bg-slate-800 border-white/5 text-white"
+                  rows={3}
+                />
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="flex-1 text-slate-400 hover:text-white"
+                  onClick={handleCloseForm}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isSaving}
+                  className="flex-1 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold"
+                >
+                  {isSaving ? (
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  ) : (
+                    <Save className="w-4 h-4 mr-2" />
+                  )}
+                  {editingId ? "Update" : "Save"} Record
+                </Button>
+              </div>
+            </form>
+          </Card>
+        </div>
+      )}
+    </div>
   );
 }

@@ -10,7 +10,7 @@ import {
   ChevronRight,
   Loader2,
   X,
-  Command
+  Command,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useRouter } from "next/navigation";
@@ -78,17 +78,38 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
   }, [query]);
 
   // Flatten results for keyboard navigation
-  const flatResults = normalizedResults ? [
-    ...normalizedResults.products.map((p: any) => ({ ...p, type: 'product', url: `/admin/products?edit=${p.id}` })),
-    ...normalizedResults.orders.map((o: any) => ({ ...o, type: 'order', url: `/admin/orders/${o.id}` })),
-    ...normalizedResults.users.map((u: any) => ({ ...u, type: 'user', url: `/admin/customers/${u.id}` })),
-    ...normalizedResults.inquiries.map((i: any) => ({ ...i, type: 'inquiry', url: `/admin/inquiries?id=${i.id}` }))
-  ] : [];
+  const flatResults = normalizedResults
+    ? [
+        ...normalizedResults.products.map((p: any) => ({
+          ...p,
+          type: "product",
+          url: `/admin/products?edit=${p.id}`,
+        })),
+        ...normalizedResults.orders.map((o: any) => ({
+          ...o,
+          type: "order",
+          url: `/admin/orders/${o.id}`,
+        })),
+        ...normalizedResults.users.map((u: any) => ({
+          ...u,
+          type: "user",
+          url: `/admin/customers/${u.id}`,
+        })),
+        ...normalizedResults.inquiries.map((i: any) => ({
+          ...i,
+          type: "inquiry",
+          url: `/admin/inquiries?id=${i.id}`,
+        })),
+      ]
+    : [];
 
-  const handleSelect = useCallback((item: any) => {
-    router.push(item.url);
-    onClose();
-  }, [router, onClose]);
+  const handleSelect = useCallback(
+    (item: any) => {
+      router.push(item.url);
+      onClose();
+    },
+    [router, onClose],
+  );
 
   // Keyboard navigation
   useEffect(() => {
@@ -97,10 +118,13 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
 
       if (e.key === "ArrowDown") {
         e.preventDefault();
-        setSelectedIndex(prev => (prev + 1) % (flatResults.length || 1));
+        setSelectedIndex((prev) => (prev + 1) % (flatResults.length || 1));
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setSelectedIndex(prev => (prev - 1 + (flatResults.length || 1)) % (flatResults.length || 1));
+        setSelectedIndex(
+          (prev) =>
+            (prev - 1 + (flatResults.length || 1)) % (flatResults.length || 1),
+        );
       } else if (e.key === "Enter") {
         e.preventDefault();
         if (flatResults[selectedIndex]) {
@@ -164,9 +188,24 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
                   <Command className="w-12 h-12 mb-4 opacity-10" />
                   <p>Type at least 2 characters to search...</p>
                   <div className="mt-6 flex items-center gap-4 text-[10px] text-slate-400 uppercase tracking-widest">
-                    <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-white">↑↓</kbd> Navigate</span>
-                    <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-white">↵</kbd> Select</span>
-                    <span className="flex items-center gap-1"><kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-white">ESC</kbd> Close</span>
+                    <span className="flex items-center gap-1">
+                      <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-white">
+                        ↑↓
+                      </kbd>{" "}
+                      Navigate
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-white">
+                        ↵
+                      </kbd>{" "}
+                      Select
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-white">
+                        ESC
+                      </kbd>{" "}
+                      Close
+                    </span>
                   </div>
                 </div>
               )}
@@ -193,20 +232,29 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
                         Products
                       </h3>
                       <div className="mt-1 space-y-1">
-                        {normalizedResults.products.map((item: any, id: number) => {
-                          const index = id; // This needs proper global index
-                          return (
-                            <ResultItem
-                              key={item.id}
-                              icon={<Package className="w-4 h-4" />}
-                              title={item.name}
-                              subtitle={`SKU: ${item.sku} • $${item.price}`}
-                              image={item.image}
-                              isSelected={flatResults[selectedIndex]?.id === item.id}
-                              onClick={() => handleSelect({ ...item, url: `/admin/products?edit=${item.id}` })}
-                            />
-                          );
-                        })}
+                        {normalizedResults.products.map(
+                          (item: any, id: number) => {
+                            const index = id; // This needs proper global index
+                            return (
+                              <ResultItem
+                                key={item.id}
+                                icon={<Package className="w-4 h-4" />}
+                                title={item.name}
+                                subtitle={`SKU: ${item.sku} • $${item.price}`}
+                                image={item.image}
+                                isSelected={
+                                  flatResults[selectedIndex]?.id === item.id
+                                }
+                                onClick={() =>
+                                  handleSelect({
+                                    ...item,
+                                    url: `/admin/products?edit=${item.id}`,
+                                  })
+                                }
+                              />
+                            );
+                          },
+                        )}
                       </div>
                     </div>
                   )}
@@ -225,8 +273,15 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
                             icon={<ShoppingCart className="w-4 h-4" />}
                             title={`Order #${item.id.slice(0, 8)}`}
                             subtitle={`${item.shippingInfo?.firstName} ${item.shippingInfo?.lastName} • $${item.total} • ${item.status}`}
-                            isSelected={flatResults[selectedIndex]?.id === item.id}
-                            onClick={() => handleSelect({ ...item, url: `/admin/orders/${item.id}` })}
+                            isSelected={
+                              flatResults[selectedIndex]?.id === item.id
+                            }
+                            onClick={() =>
+                              handleSelect({
+                                ...item,
+                                url: `/admin/orders/${item.id}`,
+                              })
+                            }
                           />
                         ))}
                       </div>
@@ -248,8 +303,15 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
                             title={item.name}
                             subtitle={item.email}
                             image={item.avatar}
-                            isSelected={flatResults[selectedIndex]?.id === item.id}
-                            onClick={() => handleSelect({ ...item, url: `/admin/customers/${item.id}` })}
+                            isSelected={
+                              flatResults[selectedIndex]?.id === item.id
+                            }
+                            onClick={() =>
+                              handleSelect({
+                                ...item,
+                                url: `/admin/customers/${item.id}`,
+                              })
+                            }
                           />
                         ))}
                       </div>
@@ -270,8 +332,15 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
                             icon={<MessageSquare className="w-4 h-4" />}
                             title={item.subject}
                             subtitle={`${item.name} • ${item.status}`}
-                            isSelected={flatResults[selectedIndex]?.id === item.id}
-                            onClick={() => handleSelect({ ...item, url: `/admin/inquiries?id=${item.id}` })}
+                            isSelected={
+                              flatResults[selectedIndex]?.id === item.id
+                            }
+                            onClick={() =>
+                              handleSelect({
+                                ...item,
+                                url: `/admin/inquiries?id=${item.id}`,
+                              })
+                            }
                           />
                         ))}
                       </div>
@@ -284,12 +353,24 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
             {/* Footer */}
             <div className="px-4 py-3 bg-white/5 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-500">
               <div className="flex items-center gap-4">
-                <span className="flex items-center gap-1"><kbd className="px-1 rounded bg-slate-800 border border-white/10 text-white">↵</kbd> Select</span>
-                <span className="flex items-center gap-1"><kbd className="px-1 rounded bg-slate-800 border border-white/10 text-white">↑↓</kbd> Navigate</span>
+                <span className="flex items-center gap-1">
+                  <kbd className="px-1 rounded bg-slate-800 border border-white/10 text-white">
+                    ↵
+                  </kbd>{" "}
+                  Select
+                </span>
+                <span className="flex items-center gap-1">
+                  <kbd className="px-1 rounded bg-slate-800 border border-white/10 text-white">
+                    ↑↓
+                  </kbd>{" "}
+                  Navigate
+                </span>
               </div>
               <div className="flex items-center gap-1">
                 <span className="hidden sm:inline">Press</span>
-                <kbd className="px-1 rounded bg-slate-800 border border-white/10 text-white">ESC</kbd>
+                <kbd className="px-1 rounded bg-slate-800 border border-white/10 text-white">
+                  ESC
+                </kbd>
                 <span className="hidden sm:inline">to close</span>
               </div>
             </div>
@@ -309,7 +390,14 @@ interface ResultItemProps {
   onClick: () => void;
 }
 
-const ResultItem = ({ icon, title, subtitle, image, isSelected, onClick }: ResultItemProps) => {
+const ResultItem = ({
+  icon,
+  title,
+  subtitle,
+  image,
+  isSelected,
+  onClick,
+}: ResultItemProps) => {
   return (
     <button
       onClick={onClick}
@@ -317,32 +405,48 @@ const ResultItem = ({ icon, title, subtitle, image, isSelected, onClick }: Resul
         "w-full flex items-center gap-3 px-3 py-2 rounded transition-all text-left group",
         isSelected
           ? "bg-brand-secondary-500/10 border-l-2 border-brand-secondary-500 pl-2.5"
-          : "hover:bg-white/5 border-l-2 border-transparent"
+          : "hover:bg-white/5 border-l-2 border-transparent",
       )}
     >
-      <div className={cn(
-        "relative shrink-0 w-8 h-8 rounded flex items-center justify-center overflow-hidden border",
-        isSelected ? "bg-brand-secondary-500/20 border-brand-secondary-500/30 text-brand-secondary-400" : "bg-slate-800 border-white/5 text-slate-500"
-      )}>
+      <div
+        className={cn(
+          "relative shrink-0 w-8 h-8 rounded flex items-center justify-center overflow-hidden border",
+          isSelected
+            ? "bg-brand-secondary-500/20 border-brand-secondary-500/30 text-brand-secondary-400"
+            : "bg-slate-800 border-white/5 text-slate-500",
+        )}
+      >
         {image ? (
-          <AppImage src={image} alt="" fill sizes="32px" className="object-cover" />
+          <AppImage
+            src={image}
+            alt=""
+            fill
+            sizes="32px"
+            className="object-cover"
+          />
         ) : (
           icon
         )}
       </div>
       <div className="flex-1 min-w-0">
-        <div className={cn(
-          "text-sm font-medium truncate",
-          isSelected ? "text-white" : "text-slate-300"
-        )}>
+        <div
+          className={cn(
+            "text-sm font-medium truncate",
+            isSelected ? "text-white" : "text-slate-300",
+          )}
+        >
           {title}
         </div>
         <div className="text-xs text-slate-500 truncate">{subtitle}</div>
       </div>
-      <ChevronRight className={cn(
-        "w-4 h-4 transition-transform",
-        isSelected ? "text-brand-secondary-500 translate-x-0" : "text-slate-700 -translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0"
-      )} />
+      <ChevronRight
+        className={cn(
+          "w-4 h-4 transition-transform",
+          isSelected
+            ? "text-brand-secondary-500 translate-x-0"
+            : "text-slate-700 -translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0",
+        )}
+      />
     </button>
   );
 };
