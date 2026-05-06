@@ -32,6 +32,15 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const searchTimeout = useRef<NodeJS.Timeout>(null);
 
+  const normalizedResults = results
+    ? {
+        products: Array.isArray(results.products) ? results.products : [],
+        orders: Array.isArray(results.orders) ? results.orders : [],
+        users: Array.isArray(results.users) ? results.users : [],
+        inquiries: Array.isArray(results.inquiries) ? results.inquiries : [],
+      }
+    : null;
+
   // Reset state when opening/closing
   useEffect(() => {
     if (isOpen) {
@@ -69,11 +78,11 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
   }, [query]);
 
   // Flatten results for keyboard navigation
-  const flatResults = results ? [
-    ...results.products.map((p: any) => ({ ...p, type: 'product', url: `/admin/products?edit=${p.id}` })),
-    ...results.orders.map((o: any) => ({ ...o, type: 'order', url: `/admin/orders/${o.id}` })),
-    ...results.users.map((u: any) => ({ ...u, type: 'user', url: `/admin/customers/${u.id}` })),
-    ...results.inquiries.map((i: any) => ({ ...i, type: 'inquiry', url: `/admin/inquiries?id=${i.id}` }))
+  const flatResults = normalizedResults ? [
+    ...normalizedResults.products.map((p: any) => ({ ...p, type: 'product', url: `/admin/products?edit=${p.id}` })),
+    ...normalizedResults.orders.map((o: any) => ({ ...o, type: 'order', url: `/admin/orders/${o.id}` })),
+    ...normalizedResults.users.map((u: any) => ({ ...u, type: 'user', url: `/admin/customers/${u.id}` })),
+    ...normalizedResults.inquiries.map((i: any) => ({ ...i, type: 'inquiry', url: `/admin/inquiries?id=${i.id}` }))
   ] : [];
 
   const handleSelect = useCallback((item: any) => {
@@ -168,23 +177,23 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
                 </div>
               )}
 
-              {results && flatResults.length === 0 && (
+              {normalizedResults && flatResults.length === 0 && (
                 <div className="py-12 flex flex-col items-center justify-center text-slate-500">
                   <p>No results found for "{query}"</p>
                 </div>
               )}
 
-              {results && (
+              {normalizedResults && (
                 <div className="space-y-4 py-2">
                   {/* Products Section */}
-                  {results.products.length > 0 && (
+                  {normalizedResults.products.length > 0 && (
                     <div>
                       <h3 className="px-3 py-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
                         <Package className="w-3 h-3" />
                         Products
                       </h3>
                       <div className="mt-1 space-y-1">
-                        {results.products.map((item: any, id: number) => {
+                        {normalizedResults.products.map((item: any, id: number) => {
                           const index = id; // This needs proper global index
                           return (
                             <ResultItem
@@ -203,14 +212,14 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
                   )}
 
                   {/* Orders Section */}
-                  {results.orders.length > 0 && (
+                  {normalizedResults.orders.length > 0 && (
                     <div>
                       <h3 className="px-3 py-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
                         <ShoppingCart className="w-3 h-3" />
                         Orders
                       </h3>
                       <div className="mt-1 space-y-1">
-                        {results.orders.map((item: any) => (
+                        {normalizedResults.orders.map((item: any) => (
                           <ResultItem
                             key={item.id}
                             icon={<ShoppingCart className="w-4 h-4" />}
@@ -225,14 +234,14 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
                   )}
 
                   {/* Customers Section */}
-                  {results.users.length > 0 && (
+                  {normalizedResults.users.length > 0 && (
                     <div>
                       <h3 className="px-3 py-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
                         <Users className="w-3 h-3" />
                         Customers
                       </h3>
                       <div className="mt-1 space-y-1">
-                        {results.users.map((item: any) => (
+                        {normalizedResults.users.map((item: any) => (
                           <ResultItem
                             key={item.id}
                             icon={<Users className="w-4 h-4" />}
@@ -248,14 +257,14 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
                   )}
 
                   {/* Inquiries Section */}
-                  {results.inquiries.length > 0 && (
+                  {normalizedResults.inquiries.length > 0 && (
                     <div>
                       <h3 className="px-3 py-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
                         <MessageSquare className="w-3 h-3" />
                         Inquiries
                       </h3>
                       <div className="mt-1 space-y-1">
-                        {results.inquiries.map((item: any) => (
+                        {normalizedResults.inquiries.map((item: any) => (
                           <ResultItem
                             key={item.id}
                             icon={<MessageSquare className="w-4 h-4" />}

@@ -154,9 +154,10 @@ export default function AdminExpenses() {
     try {
       const query = new URLSearchParams();
       if (categoryFilter !== "all") query.append("category", categoryFilter);
+      const queryString = query.toString();
 
       const response = await authFetch(
-        `${API_BASE}/expenses?${query.toString()}`,
+        `${API_BASE}/admin/expenses${queryString ? `?${queryString}` : ""}`,
       );
       const data = await handleResponse<Expense[]>(response);
       setExpenses(data);
@@ -247,8 +248,8 @@ export default function AdminExpenses() {
     setIsSaving(true);
     try {
       const url = editingId
-        ? `${API_BASE}/expenses/${editingId}`
-        : `${API_BASE}/expenses`;
+        ? `${API_BASE}/admin/expenses/${editingId}`
+        : `${API_BASE}/admin/expenses`;
       const method = editingId ? "PATCH" : "POST";
 
       const response = await authFetch(url, {
@@ -279,7 +280,7 @@ export default function AdminExpenses() {
 
     setIsDeleting(id);
     try {
-      const response = await authFetch(`${API_BASE}/expenses/${id}`, {
+      const response = await authFetch(`${API_BASE}/admin/expenses/${id}`, {
         method: "DELETE",
       });
       await handleResponse(response);
