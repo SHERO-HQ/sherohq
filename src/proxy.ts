@@ -29,7 +29,11 @@ function getRequestOrigin(request: NextRequest) {
 
 function isAllowedOrigin(request: NextRequest) {
   const requestOrigin = getRequestOrigin(request);
-  if (!requestOrigin) return false;
+  // If the request has no Origin (e.g., internal server-side fetches),
+  // treat it as allowed. Browsers will include Origin for cross-site requests.
+  // This avoids rejecting valid internal requests while still validating
+  // browser-originated requests.
+  if (!requestOrigin) return true;
 
   return requestOrigin === request.nextUrl.origin;
 }

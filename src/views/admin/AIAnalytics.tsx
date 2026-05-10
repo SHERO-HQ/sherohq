@@ -217,7 +217,7 @@ export default function AIAnalytics() {
             <CardTitle className="text-white">Interaction Trends</CardTitle>
             <CardDescription>30-day AI usage volume</CardDescription>
           </CardHeader>
-          <CardContent className="h-75">
+          <CardContent className="h-75 min-h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={dailyVolumeData}>
                 <CartesianGrid
@@ -248,7 +248,7 @@ export default function AIAnalytics() {
               {trendDelta.toFixed(1)}% change from first to latest day
             </CardDescription>
           </CardHeader>
-          <CardContent className="h-75">
+          <CardContent className="h-75 min-h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={dailyVolumeData}>
                 <CartesianGrid
@@ -283,7 +283,7 @@ export default function AIAnalytics() {
             <CardTitle className="text-white">User Intent Map</CardTitle>
             <CardDescription>Why users are talking to SHERO</CardDescription>
           </CardHeader>
-          <CardContent className="h-75">
+          <CardContent className="h-75 min-h-[200px]">
             {intentData.length > 0 ? (
               <>
                 <ResponsiveContainer width="100%" height="100%">
@@ -348,7 +348,7 @@ export default function AIAnalytics() {
               Open gap requests: {totals.openGapRequests}
             </CardDescription>
           </CardHeader>
-          <CardContent className="h-75">
+          <CardContent className="h-75 min-h-[200px]">
             {gapPressureData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
