@@ -24,7 +24,10 @@ export async function POST(request: NextRequest) {
 
     for (const file of files) {
       if (!allowedTypes.includes(file.type)) {
-        return apiResponse.error("Invalid file type in one of the uploads", 400);
+        return apiResponse.error(
+          "Invalid file type in one of the uploads",
+          400,
+        );
       }
       if (file.size > MAX_SIZE) {
         return apiResponse.error("One of the files is too large", 400);
@@ -41,7 +44,9 @@ export async function POST(request: NextRequest) {
 
       if (error) throw error;
 
-      const { data: { publicUrl } } = supabase.storage.from("products").getPublicUrl(filePath);
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("products").getPublicUrl(filePath);
       imageUrls.push(publicUrl);
       filenames.push(fileName);
     }

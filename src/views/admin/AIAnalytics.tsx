@@ -2,7 +2,6 @@
 import { useMemo } from "react";
 import { useAIAnalyticsSummary } from "@/hooks/queries/useAdmin";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
-import { useAdmin } from "@/context/AdminContext";
 import {
   Card,
   CardContent,
@@ -26,8 +25,6 @@ import {
 } from "recharts";
 import {
   Brain,
-  TrendingUp,
-  Search,
   AlertCircle,
   MessageSquare,
   Camera,
@@ -35,10 +32,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-import {
-  type AIAnalyticsSummary,
-  type AIAnalyticsTotals,
-} from "@/services/api";
+import { type AIAnalyticsTotals } from "@/services/api";
 
 const EMPTY_TOTALS: AIAnalyticsTotals = {
   totalInteractions: 0,
@@ -195,8 +189,8 @@ export default function AIAnalytics() {
         <Card className="bg-slate-900 border-white/10">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-slate-400 flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-brand-secondary-400" /> Resolution
-              Rate
+              <ShieldCheck className="w-4 h-4 text-brand-secondary-400" />{" "}
+              Resolution Rate
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -217,7 +211,7 @@ export default function AIAnalytics() {
             <CardTitle className="text-white">Interaction Trends</CardTitle>
             <CardDescription>30-day AI usage volume</CardDescription>
           </CardHeader>
-          <CardContent className="h-75 min-h-[200px]">
+          <CardContent className="h-75 min-h-50">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={dailyVolumeData}>
                 <CartesianGrid
@@ -248,7 +242,7 @@ export default function AIAnalytics() {
               {trendDelta.toFixed(1)}% change from first to latest day
             </CardDescription>
           </CardHeader>
-          <CardContent className="h-75 min-h-[200px]">
+          <CardContent className="h-75 min-h-50">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={dailyVolumeData}>
                 <CartesianGrid
@@ -283,7 +277,7 @@ export default function AIAnalytics() {
             <CardTitle className="text-white">User Intent Map</CardTitle>
             <CardDescription>Why users are talking to SHERO</CardDescription>
           </CardHeader>
-          <CardContent className="h-75 min-h-[200px]">
+          <CardContent className="h-75 min-h-50">
             {intentData.length > 0 ? (
               <>
                 <ResponsiveContainer width="100%" height="100%">
@@ -348,7 +342,7 @@ export default function AIAnalytics() {
               Open gap requests: {totals.openGapRequests}
             </CardDescription>
           </CardHeader>
-          <CardContent className="h-75 min-h-[200px]">
+          <CardContent className="h-75 min-h-50">
             {gapPressureData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart

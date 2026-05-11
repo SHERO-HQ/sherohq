@@ -1,42 +1,165 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { format } from "date-fns";
-import { getErrorMessage } from "@/utils/error";
 import {
   ArrowLeft,
+  CalendarClock,
+  CheckCircle2,
+  Clock3,
   History,
   Mail,
   MessageCircle,
   Play,
   RefreshCw,
+  Search,
   Send,
+  SlidersHorizontal,
+  Trash2,
   Users,
+  XCircle,
 } from "lucide-react";
 import Link from "next/link";
-import { useAdmin } from "@/context/AdminContext";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import { useNotifications } from "@/hooks/useNotifications";
+import { cn } from "@/lib/utils";
 import {
-  fetchNewsletterSubscribers,
+  cancelNewsletterCampaign,
+  deleteNewsletterCampaign,
   fetchNewsletterCampaigns,
+  fetchNewsletterSubscribers,
   processScheduledNewsletterCampaigns,
   sendNewsletterCampaign,
   updateNewsletterSubscriberContact,
   updateNewsletterSubscriberStatus,
   type NewsletterCampaign,
   type NewsletterSubscriber,
-  deleteNewsletterCampaign,
-  cancelNewsletterCampaign,
 } from "@/services/api";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getErrorMessage } from "@/utils/error";
 
 type SubscriberFilter = "all" | "active" | "unsubscribed";
 type AudienceStatusFilter = "active" | "unsubscribed" | "all";
 type CampaignChannel = "email" | "sms" | "whatsapp";
+
+const inputClass =
+  "border-white/10 bg-slate-950/40 text-white placeholder:text-slate-500 focus-visible:border-brand-secondary-500/70 focus-visible:ring-brand-secondary-500/20";
+
+const selectClass =
+  "h-9 w-full rounded border border-white/10 bg-slate-950/40 px-3 text-sm text-white outline-none transition focus:border-brand-secondary-500/70 focus:ring-2 focus:ring-brand-secondary-500/20";
+
+const panelClass =
+  "rounded border border-white/10 bg-slate-950/30 shadow-sm shadow-black/10";
+
+const channels: Array<{
+  value: CampaignChannel;
+  label: string;
+  icon: typeof Mail;
+  disabled?: boolean;
+}> = [
+  { value: "email", label: "Email", icon: Mail },
+  { value: "whatsapp", label: "WhatsApp", icon: MessageCircle },
+  { value: "sms", label: "SMS setup needed", icon: MessageCircle, disabled: true },
+];
+
+function Field({
+  label,
+  htmlFor,
+  children,
+  className,
+}: {
+  label: string;
+  htmlFor?: string;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("space-y-2", className)}>
+      <Label
+        htmlFor={htmlFor}
+        className="text-[11px] font-semibold uppercase tracking-wide text-slate-400"
+      >
+        {label}
+      </Label>
+      {children}
+    </div>
+  );
+}
+
+function MetricTile({
+  label,
+  value,
+  detail,
+  icon: Icon,
+  tone = "slate",
+}: {
+  label: string;
+  value: string | number;
+  detail: string;
+  icon: typeof Users;
+  tone?: "slate" | "green" | "amber" | "blue";
+}) {
+  const toneClass = {
+    slate: "text-slate-300 bg-slate-500/10 border-slate-500/15",
+    green: "text-brand-secondary-300 bg-brand-secondary-500/10 border-brand-secondary-500/20",
+    amber: "text-amber-300 bg-amber-500/10 border-amber-500/20",
+    blue: "text-sky-300 bg-sky-500/10 border-sky-500/20",
+  }[tone];
+
+  return (
+    <div className="rounded border border-white/10 bg-slate-950/30 p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-xs font-medium text-slate-400">{label}</p>
+          <p className="mt-2 text-2xl font-semibold text-white">{value}</p>
+          <p className="mt-1 text-xs text-slate-500">{detail}</p>
+        </div>
+        <div className={cn("rounded border p-2", toneClass)}>
+          <Icon className="h-4 w-4" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EmptyState({ title }: { title: string }) {
+  return (
+    <div className="rounded border border-dashed border-white/10 bg-slate-950/20 px-4 py-10 text-center text-sm text-slate-400">
+      {title}
+    </div>
+  );
+}
+
+function safeDate(value?: string | null, pattern = "PPP") {
+  if (!value) return "-";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "-";
+  return format(date, pattern);
+}
+
+function campaignStatusClass(status: NewsletterCampaign["status"]) {
+  if (status === "sent") {
+    return "border-brand-secondary-500/20 bg-brand-secondary-500/10 text-brand-secondary-300";
+  }
+  if (status === "scheduled") {
+    return "border-sky-500/20 bg-sky-500/10 text-sky-300";
+  }
+  if (status === "failed") {
+    return "border-rose-500/20 bg-rose-500/10 text-rose-300";
+  }
+  return "border-amber-500/20 bg-amber-500/10 text-amber-300";
+}
+
+function statusIcon(status: NewsletterCampaign["status"]) {
+  if (status === "sent") return CheckCircle2;
+  if (status === "failed") return XCircle;
+  if (status === "scheduled") return CalendarClock;
+  return Clock3;
+}
 
 export default function AdminNewsletter() {
   const [subscribers, setSubscribers] = useState<NewsletterSubscriber[]>([]);
@@ -118,7 +241,11 @@ export default function AdminNewsletter() {
       setCampaigns(result.campaigns);
     } catch (error) {
       console.error("Failed to load campaign history:", error);
-      addNotification("Error", getErrorMessage(error, "Failed to load campaign history"), "error");
+      addNotification(
+        "Error",
+        getErrorMessage(error, "Failed to load campaign history"),
+        "error",
+      );
     } finally {
       setIsCampaignHistoryLoading(false);
     }
@@ -135,20 +262,63 @@ export default function AdminNewsletter() {
     );
   }, [subscribers]);
 
+  const scheduledCampaigns = useMemo(
+    () => campaigns.filter((campaign) => campaign.status === "scheduled"),
+    [campaigns],
+  );
+
+  const deliveryStats = useMemo(() => {
+    return campaigns.reduce(
+      (stats, campaign) => {
+        stats.sent += campaign.sentCount || 0;
+        stats.failed += campaign.failedCount || 0;
+        stats.targets += campaign.totalTargets || 0;
+        return stats;
+      },
+      { sent: 0, failed: 0, targets: 0 },
+    );
+  }, [campaigns]);
+
+  const parsedRecipientLimit = recipientLimit.trim()
+    ? Number.parseInt(recipientLimit, 10)
+    : undefined;
+  const baseAudience =
+    audienceStatus === "active"
+      ? counts.active
+      : audienceStatus === "unsubscribed"
+        ? counts.unsubscribed
+        : counts.total;
+  const estimatedAudience =
+    typeof parsedRecipientLimit === "number" &&
+    Number.isInteger(parsedRecipientLimit) &&
+    parsedRecipientLimit > 0
+      ? Math.min(baseAudience, parsedRecipientLimit)
+      : baseAudience;
+  const activeRate =
+    counts.total > 0 ? Math.round((counts.active / counts.total) * 100) : 0;
+  const deliveryRate =
+    deliveryStats.targets > 0
+      ? Math.round((deliveryStats.sent / deliveryStats.targets) * 100)
+      : 0;
+
   const channelLabel =
     channel === "whatsapp" ? "WhatsApp" : channel === "sms" ? "SMS" : "Email";
   const testTargetLabel =
     channel === "whatsapp" || channel === "sms"
-      ? "Test Recipient Phone"
-      : "Test Recipient Email";
+      ? "Test recipient phone"
+      : "Test recipient email";
   const testTargetPlaceholder =
     channel === "whatsapp" || channel === "sms"
       ? "+233XXXXXXXXX"
       : "name@example.com";
   const contentPlaceholder =
     channel === "whatsapp" || channel === "sms"
-      ? "Write your plain text message (standard SMS/WhatsApp)..."
-      : "Write HTML content for your email campaign...";
+      ? "Write the plain text message"
+      : "Write the email HTML or plain text";
+
+  const refreshWorkspace = async () => {
+    await Promise.all([loadSubscribers(), loadCampaigns()]);
+  };
 
   const handleStatusChange = async (
     subscriber: NewsletterSubscriber,
@@ -181,7 +351,11 @@ export default function AdminNewsletter() {
       addNotification("Success", "Subscriber status updated", "success");
     } catch (error) {
       console.error("Failed to update subscriber status:", error);
-      addNotification("Error", getErrorMessage(error, "Failed to update subscriber status"), "error");
+      addNotification(
+        "Error",
+        getErrorMessage(error, "Failed to update subscriber status"),
+        "error",
+      );
     }
   };
 
@@ -221,7 +395,11 @@ export default function AdminNewsletter() {
       addNotification("Success", "Subscriber contact updated", "success");
     } catch (error) {
       console.error("Failed to update subscriber contact:", error);
-      addNotification("Error", getErrorMessage(error, "Failed to update subscriber contact"), "error");
+      addNotification(
+        "Error",
+        getErrorMessage(error, "Failed to update subscriber contact"),
+        "error",
+      );
     } finally {
       setIsSavingContact(false);
     }
@@ -234,11 +412,12 @@ export default function AdminNewsletter() {
     }
 
     if (mode === "test" && !testTarget.trim()) {
-      addNotification(
-        "Warning",
-        `Provide a test ${channel === "whatsapp" ? "phone" : "email"} before sending test`,
-        "warning",
-      );
+      addNotification("Warning", `Provide a ${testTargetLabel}`, "warning");
+      return;
+    }
+
+    if (mode === "live" && channel === "sms") {
+      addNotification("Warning", "SMS delivery is not connected yet", "warning");
       return;
     }
 
@@ -305,7 +484,7 @@ export default function AdminNewsletter() {
             ? normalizedTestTarget.toLowerCase()
             : undefined,
         testPhone:
-          mode === "test" && channel === "whatsapp"
+          mode === "test" && channel !== "email"
             ? normalizedTestTarget
             : undefined,
         whatsappTemplateName:
@@ -349,11 +528,14 @@ export default function AdminNewsletter() {
         setContent("");
       }
 
-      void loadSubscribers();
-      void loadCampaigns();
+      void refreshWorkspace();
     } catch (error) {
       console.error("Newsletter campaign failed:", error);
-      addNotification("Error", getErrorMessage(error, "Failed to send campaign"), "error");
+      addNotification(
+        "Error",
+        getErrorMessage(error, "Failed to send campaign"),
+        "error",
+      );
     } finally {
       setIsSending(false);
     }
@@ -369,7 +551,7 @@ export default function AdminNewsletter() {
           `Processed ${result.processed} scheduled campaign(s).`,
         "success",
       );
-      await Promise.all([loadCampaigns(), loadSubscribers()]);
+      await refreshWorkspace();
     } catch (error) {
       console.error("Failed to process scheduled campaigns:", error);
       addNotification(
@@ -393,7 +575,11 @@ export default function AdminNewsletter() {
       void loadCampaigns();
     } catch (error) {
       console.error("Failed to cancel campaign:", error);
-      addNotification("Error", getErrorMessage(error, "Failed to cancel campaign"), "error");
+      addNotification(
+        "Error",
+        getErrorMessage(error, "Failed to cancel campaign"),
+        "error",
+      );
     } finally {
       setIsCancellingCampaign(null);
     }
@@ -414,484 +600,545 @@ export default function AdminNewsletter() {
       void loadCampaigns();
     } catch (error) {
       console.error("Failed to delete campaign:", error);
-      addNotification("Error", getErrorMessage(error, "Failed to delete campaign"), "error");
+      addNotification(
+        "Error",
+        getErrorMessage(error, "Failed to delete campaign"),
+        "error",
+      );
     } finally {
       setIsDeletingCampaign(null);
     }
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-        <div className="space-y-3">
-          <Link
-            href="/admin/dashboard"
-            className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-brand-secondary-400 transition-colors group"
-          >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            <span>Back to Dashboard</span>
-          </Link>
+    <div className="space-y-6 animate-in fade-in duration-500">
+      <div className="space-y-4">
+        <Link
+          href="/admin/dashboard"
+          className="inline-flex items-center gap-2 text-sm text-slate-400 transition-colors hover:text-brand-secondary-300"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          <span>Back to Dashboard</span>
+        </Link>
 
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-white">Newsletter</h1>
-              <p className="text-slate-400 mt-1 text-sm">
-                Manage subscribers and run outreach campaigns from admin.
-              </p>
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <h1 className="text-3xl font-semibold tracking-tight text-white">
+                Newsletter
+              </h1>
+              {scheduledCampaigns.length > 0 ? (
+                <Badge className="border-sky-500/20 bg-sky-500/10 text-sky-300">
+                  {scheduledCampaigns.length} scheduled
+                </Badge>
+              ) : null}
             </div>
-            <Button
-              onClick={() => void loadSubscribers()}
-              variant="outline"
-              className="border-white/10 text-slate-300 hover:text-white"
-              disabled={isLoading}
-            >
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Refresh
-            </Button>
           </div>
+
+          <Button
+            onClick={() => void refreshWorkspace()}
+            variant="outline"
+            className="w-full border-white/10 text-slate-300 hover:text-white sm:w-auto"
+            disabled={isLoading || isCampaignHistoryLoading}
+          >
+            <RefreshCw className="h-4 w-4" />
+            Refresh
+          </Button>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="bg-slate-900/40 border-white/10">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-slate-300">Total</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-white">{counts.total}</p>
-            </CardContent>
-          </Card>
-          <Card className="bg-slate-900/40 border-white/10">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-slate-300">Active</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-brand-secondary-400">
-                {counts.active}
-              </p>
-            </CardContent>
-          </Card>
-          <Card className="bg-slate-900/40 border-white/10">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-slate-300">
-                Unsubscribed
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold text-amber-400">
-                {counts.unsubscribed}
-              </p>
-            </CardContent>
-          </Card>
-        </div>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <MetricTile
+          label="Total Subscribers"
+          value={counts.total}
+          detail={`${activeRate}% active`}
+          icon={Users}
+          tone="slate"
+        />
+        <MetricTile
+          label="Active Audience"
+          value={counts.active}
+          detail={`${counts.unsubscribed} unsubscribed`}
+          icon={CheckCircle2}
+          tone="green"
+        />
+        <MetricTile
+          label="Delivery Rate"
+          value={`${deliveryRate}%`}
+          detail={`${deliveryStats.sent}/${deliveryStats.targets} delivered`}
+          icon={Send}
+          tone="blue"
+        />
+        <MetricTile
+          label="Current Target"
+          value={estimatedAudience}
+          detail={`${audienceStatus} audience`}
+          icon={SlidersHorizontal}
+          tone="amber"
+        />
+      </div>
 
-        <Tabs defaultValue="compose" className="w-full">
-          <TabsList className="mb-4 w-full justify-start bg-slate-900/50 text-slate-300">
-            <TabsTrigger
-              value="compose"
-              className="data-[state=active]:bg-brand-secondary-500/20 data-[state=active]:text-brand-secondary-300"
-            >
-              <Send className="mr-2 h-4 w-4" />
-              Compose
-            </TabsTrigger>
-            <TabsTrigger
-              value="history"
-              className="data-[state=active]:bg-brand-secondary-500/20 data-[state=active]:text-brand-secondary-300"
-            >
-              <History className="mr-2 h-4 w-4" />
-              History
-            </TabsTrigger>
-            <TabsTrigger
-              value="subscribers"
-              className="data-[state=active]:bg-brand-secondary-500/20 data-[state=active]:text-brand-secondary-300"
-            >
-              <Users className="mr-2 h-4 w-4" />
-              Subscribers
-            </TabsTrigger>
-          </TabsList>
+      <Tabs defaultValue="compose" className="w-full">
+        <TabsList className="grid h-auto w-full grid-cols-3 justify-start rounded border border-white/10 bg-slate-950/40 p-1 text-slate-400 lg:inline-grid lg:w-auto">
+          <TabsTrigger
+            value="compose"
+            className="gap-2 rounded data-[state=active]:bg-brand-secondary-500/15 data-[state=active]:text-brand-secondary-200"
+          >
+            <Send className="h-4 w-4" />
+            Compose
+          </TabsTrigger>
+          <TabsTrigger
+            value="history"
+            className="gap-2 rounded data-[state=active]:bg-brand-secondary-500/15 data-[state=active]:text-brand-secondary-200"
+          >
+            <History className="h-4 w-4" />
+            History
+          </TabsTrigger>
+          <TabsTrigger
+            value="subscribers"
+            className="gap-2 rounded data-[state=active]:bg-brand-secondary-500/15 data-[state=active]:text-brand-secondary-200"
+          >
+            <Users className="h-4 w-4" />
+            Subscribers
+          </TabsTrigger>
+        </TabsList>
 
-          <TabsContent value="compose">
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-              <Card className="xl:col-span-2 bg-slate-900/40 border-white/10">
-                <CardHeader>
-                  <CardTitle className="text-white flex items-center gap-2">
-                    {channel === "whatsapp" ? (
-                      <MessageCircle className="w-5 h-5 text-brand-secondary-400" />
-                    ) : (
-                      <Mail className="w-5 h-5 text-brand-secondary-400" />
-                    )}
-                    Campaign Composer
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div className="space-y-1">
-                      <label
-                        htmlFor="campaign-channel"
-                        className="text-[11px] font-medium uppercase tracking-wide text-slate-400"
-                      >
-                        Channel
-                      </label>
-                      <select
-                        id="campaign-channel"
-                        value={channel}
-                        onChange={(e) => {
-                          setChannel(e.target.value as CampaignChannel);
+        <TabsContent value="compose" className="mt-5">
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_390px]">
+            <section className={cn(panelClass, "p-4 lg:p-5")}>
+              <div className="flex flex-col gap-4 border-b border-white/10 pb-4 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <h2 className="text-base font-semibold text-white">
+                    Campaign content
+                  </h2>
+                  <p className="mt-1 text-xs text-slate-500">
+                    {content.length} characters
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 sm:flex">
+                  {channels.map((item) => {
+                    const Icon = item.icon;
+                    const isSelected = channel === item.value;
+                    return (
+                      <button
+                        key={item.value}
+                        type="button"
+                        disabled={item.disabled}
+                        onClick={() => {
+                          setChannel(item.value);
                           setTestTarget("");
-                          if (e.target.value !== "whatsapp") {
+                          if (item.value !== "whatsapp") {
                             setWhatsAppTemplateName("");
                             setWhatsAppTemplateLanguage("en");
                             setWhatsAppTemplateParamsText("");
                           }
                         }}
-                        className="w-full h-10 rounded border border-white/10 bg-slate-900/50 px-3 text-sm text-white outline-none focus:ring-2 focus:ring-brand-secondary-500/30"
+                        className={cn(
+                          "inline-flex h-9 items-center justify-center gap-2 rounded border px-3 text-sm font-medium transition",
+                          isSelected
+                            ? "border-brand-secondary-500/40 bg-brand-secondary-500/15 text-brand-secondary-200"
+                            : "border-white/10 bg-slate-950/30 text-slate-400 hover:bg-white/5 hover:text-white",
+                          item.disabled &&
+                            "cursor-not-allowed opacity-45 hover:bg-slate-950/30 hover:text-slate-400",
+                        )}
                       >
-                        <option value="email">Email</option>
-                        <option value="sms">SMS</option>
-                        <option value="whatsapp">WhatsApp</option>
-                      </select>
-                    </div>
-                    <div className="space-y-1">
-                      <label
-                        htmlFor="campaign-subject"
-                        className="text-[11px] font-medium uppercase tracking-wide text-slate-400"
-                      >
-                        {channel === "whatsapp" ? "Campaign Name" : "Subject"}
-                      </label>
-                      <Input
-                        id="campaign-subject"
-                        value={subject}
-                        onChange={(e) => setSubject(e.target.value)}
-                        placeholder={
-                          channel === "whatsapp"
-                            ? "Internal campaign title"
-                            : "Email subject"
-                        }
-                        className="bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-1">
-                    <label
-                      htmlFor="campaign-content"
-                      className="text-[11px] font-medium uppercase tracking-wide text-slate-400"
-                    >
-                      Message
-                    </label>
-                    <textarea
-                      id="campaign-content"
-                      value={content}
-                      onChange={(e) => setContent(e.target.value)}
-                      placeholder={contentPlaceholder}
-                      rows={12}
-                      className="w-full rounded border border-white/10 bg-slate-900/50 p-3 text-sm text-white placeholder:text-slate-600 outline-none focus:ring-2 focus:ring-brand-secondary-500/30"
-                    />
-                  </div>
-                </CardContent>
-              </Card>
+                        <Icon className="h-4 w-4" />
+                        {item.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
-              <div className="space-y-4">
-                <Card className="bg-slate-900/40 border-white/10">
-                  <CardHeader>
-                    <CardTitle className="text-sm text-white">
-                      Send Test
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="space-y-1">
-                      <label
-                        htmlFor="newsletter-test-target"
-                        className="text-[11px] font-medium uppercase tracking-wide text-slate-400"
-                      >
-                        {testTargetLabel}
-                        {channel === "whatsapp" ? (
-                          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 rounded border border-white/10 bg-slate-900/20 p-3">
-                            <div className="space-y-1 md:col-span-1">
-                              <label className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                                Template Name
-                              </label>
-                              <Input
-                                value={whatsAppTemplateName}
-                                onChange={(e) =>
-                                  setWhatsAppTemplateName(e.target.value)
-                                }
-                                placeholder="promo_launch_v1"
-                                className="bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600"
-                              />
-                            </div>
-                            <div className="space-y-1 md:col-span-1">
-                              <label className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                                Template Language
-                              </label>
-                              <Input
-                                value={whatsAppTemplateLanguage}
-                                onChange={(e) =>
-                                  setWhatsAppTemplateLanguage(e.target.value)
-                                }
-                                placeholder="en"
-                                className="bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600"
-                              />
-                            </div>
-                            <div className="space-y-1 md:col-span-1">
-                              <label className="text-[11px] font-medium uppercase tracking-wide text-slate-400">
-                                Template Params (comma-separated)
-                              </label>
-                              <Input
-                                value={whatsAppTemplateParamsText}
-                                onChange={(e) =>
-                                  setWhatsAppTemplateParamsText(e.target.value)
-                                }
-                                placeholder="Kwame, 15%"
-                                className="bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600"
-                              />
-                            </div>
-                          </div>
-                        ) : null}
-                      </label>
-                      <Input
-                        id="newsletter-test-target"
-                        value={testTarget}
-                        onChange={(e) => setTestTarget(e.target.value)}
-                        placeholder={testTargetPlaceholder}
-                        className="bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600"
-                      />
-                    </div>
-                    <Button
-                      disabled={isSending}
-                      variant="outline"
-                      className="w-full border-white/10 text-slate-300 hover:text-white"
-                      onClick={() => void handleSendCampaign("test")}
-                    >
-                      <Mail className="w-4 h-4 mr-2" />
-                      Send {channelLabel} Test
-                    </Button>
-                    <p className="text-xs text-slate-400">
-                      Test target is used only for test mode and does not affect
-                      live audience sends.
-                    </p>
-                  </CardContent>
-                </Card>
+              <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-2">
+                <Field
+                  label={channel === "whatsapp" ? "Campaign name" : "Subject"}
+                  htmlFor="campaign-subject"
+                >
+                  <Input
+                    id="campaign-subject"
+                    value={subject}
+                    onChange={(event) => setSubject(event.target.value)}
+                    placeholder={
+                      channel === "whatsapp"
+                        ? "Internal campaign title"
+                        : "Email subject"
+                    }
+                    className={inputClass}
+                  />
+                </Field>
 
-                <Card className="bg-slate-900/40 border-white/10">
-                  <CardHeader>
-                    <CardTitle className="text-sm text-white">
-                      Audience
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="space-y-1">
-                      <label
-                        htmlFor="newsletter-audience-status"
-                        className="text-[11px] font-medium uppercase tracking-wide text-slate-400"
-                      >
-                        Audience Status
-                      </label>
-                      <select
-                        id="newsletter-audience-status"
-                        value={audienceStatus}
-                        onChange={(e) =>
-                          setAudienceStatus(
-                            e.target.value as AudienceStatusFilter,
-                          )
-                        }
-                        className="w-full h-10 rounded border border-white/10 bg-slate-900/50 px-3 text-sm text-white outline-none focus:ring-2 focus:ring-brand-secondary-500/30"
-                      >
-                        <option value="active">Active</option>
-                        <option value="all">All</option>
-                        <option value="unsubscribed">Unsubscribed</option>
-                      </select>
-                    </div>
+                <Field label="Schedule" htmlFor="newsletter-schedule">
+                  <Input
+                    id="newsletter-schedule"
+                    type="datetime-local"
+                    value={scheduleAt}
+                    onChange={(event) => setScheduleAt(event.target.value)}
+                    className={inputClass}
+                  />
+                </Field>
+              </div>
+
+              {channel === "whatsapp" ? (
+                <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
+                  <Field label="Template name" htmlFor="whatsapp-template-name">
                     <Input
+                      id="whatsapp-template-name"
+                      value={whatsAppTemplateName}
+                      onChange={(event) =>
+                        setWhatsAppTemplateName(event.target.value)
+                      }
+                      placeholder="promo_launch_v1"
+                      className={inputClass}
+                    />
+                  </Field>
+                  <Field
+                    label="Template language"
+                    htmlFor="whatsapp-template-language"
+                  >
+                    <Input
+                      id="whatsapp-template-language"
+                      value={whatsAppTemplateLanguage}
+                      onChange={(event) =>
+                        setWhatsAppTemplateLanguage(event.target.value)
+                      }
+                      placeholder="en"
+                      className={inputClass}
+                    />
+                  </Field>
+                  <Field label="Template params" htmlFor="whatsapp-template-params">
+                    <Input
+                      id="whatsapp-template-params"
+                      value={whatsAppTemplateParamsText}
+                      onChange={(event) =>
+                        setWhatsAppTemplateParamsText(event.target.value)
+                      }
+                      placeholder="Kwame, 15%"
+                      className={inputClass}
+                    />
+                  </Field>
+                </div>
+              ) : null}
+
+              <Field label="Message" htmlFor="campaign-content" className="mt-4">
+                <Textarea
+                  id="campaign-content"
+                  value={content}
+                  onChange={(event) => setContent(event.target.value)}
+                  placeholder={contentPlaceholder}
+                  rows={16}
+                  className={cn(
+                    inputClass,
+                    "min-h-[360px] resize-y leading-6 shadow-none",
+                  )}
+                />
+              </Field>
+            </section>
+
+            <aside className="space-y-4">
+              <section className={cn(panelClass, "p-4")}>
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <h2 className="text-sm font-semibold text-white">
+                    Send test
+                  </h2>
+                  <Badge className="border-white/10 bg-white/5 text-slate-300">
+                    {channelLabel}
+                  </Badge>
+                </div>
+                <Field label={testTargetLabel} htmlFor="newsletter-test-target">
+                  <Input
+                    id="newsletter-test-target"
+                    value={testTarget}
+                    onChange={(event) => setTestTarget(event.target.value)}
+                    placeholder={testTargetPlaceholder}
+                    className={inputClass}
+                  />
+                </Field>
+                <Button
+                  disabled={isSending}
+                  variant="outline"
+                  className="mt-4 w-full border-white/10 text-slate-300 hover:text-white"
+                  onClick={() => void handleSendCampaign("test")}
+                >
+                  <Mail className="h-4 w-4" />
+                  Send Test
+                </Button>
+              </section>
+
+              <section className={cn(panelClass, "p-4")}>
+                <div className="mb-4 flex items-center gap-2">
+                  <Users className="h-4 w-4 text-brand-secondary-300" />
+                  <h2 className="text-sm font-semibold text-white">
+                    Audience
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 gap-4">
+                  <Field label="Status" htmlFor="newsletter-audience-status">
+                    <select
+                      id="newsletter-audience-status"
+                      value={audienceStatus}
+                      onChange={(event) =>
+                        setAudienceStatus(
+                          event.target.value as AudienceStatusFilter,
+                        )
+                      }
+                      className={selectClass}
+                    >
+                      <option value="active">Active</option>
+                      <option value="all">All</option>
+                      <option value="unsubscribed">Unsubscribed</option>
+                    </select>
+                  </Field>
+                  <Field label="Source" htmlFor="newsletter-audience-source">
+                    <Input
+                      id="newsletter-audience-source"
                       value={audienceSource}
-                      onChange={(e) => setAudienceSource(e.target.value)}
-                      placeholder="Source filter (e.g. footer)"
-                      className="bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600"
+                      onChange={(event) => setAudienceSource(event.target.value)}
+                      placeholder="footer"
+                      className={inputClass}
                     />
-                    <Input
-                      type="datetime-local"
-                      value={audienceSubscribedAfter}
-                      onChange={(e) =>
-                        setAudienceSubscribedAfter(e.target.value)
-                      }
-                      className="bg-slate-900/50 border-white/10 text-white"
-                    />
-                    <Input
-                      type="datetime-local"
-                      value={audienceSubscribedBefore}
-                      onChange={(e) =>
-                        setAudienceSubscribedBefore(e.target.value)
-                      }
-                      className="bg-slate-900/50 border-white/10 text-white"
-                    />
-                  </CardContent>
-                </Card>
+                  </Field>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-1">
+                    <Field label="Subscribed after" htmlFor="audience-after">
+                      <Input
+                        id="audience-after"
+                        type="datetime-local"
+                        value={audienceSubscribedAfter}
+                        onChange={(event) =>
+                          setAudienceSubscribedAfter(event.target.value)
+                        }
+                        className={inputClass}
+                      />
+                    </Field>
+                    <Field label="Subscribed before" htmlFor="audience-before">
+                      <Input
+                        id="audience-before"
+                        type="datetime-local"
+                        value={audienceSubscribedBefore}
+                        onChange={(event) =>
+                          setAudienceSubscribedBefore(event.target.value)
+                        }
+                        className={inputClass}
+                      />
+                    </Field>
+                  </div>
+                </div>
+              </section>
 
-                <Card className="bg-slate-900/40 border-white/10">
-                  <CardHeader>
-                    <CardTitle className="text-sm text-white">
-                      Delivery Controls
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
+              <section className={cn(panelClass, "p-4")}>
+                <div className="mb-4 flex items-center gap-2">
+                  <SlidersHorizontal className="h-4 w-4 text-brand-secondary-300" />
+                  <h2 className="text-sm font-semibold text-white">
+                    Delivery
+                  </h2>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <Field label="Batch size" htmlFor="newsletter-batch-size">
                     <Input
+                      id="newsletter-batch-size"
                       type="number"
                       min={1}
                       max={500}
                       value={batchSize}
-                      onChange={(e) => setBatchSize(e.target.value)}
-                      placeholder="Batch size (e.g. 100)"
-                      className="bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600"
+                      onChange={(event) => setBatchSize(event.target.value)}
+                      className={inputClass}
                     />
+                  </Field>
+                  <Field label="Delay ms" htmlFor="newsletter-delay">
                     <Input
+                      id="newsletter-delay"
                       type="number"
                       min={0}
                       max={10000}
                       value={sendDelayMs}
-                      onChange={(e) => setSendDelayMs(e.target.value)}
-                      placeholder="Delay between batches (ms)"
-                      className="bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600"
+                      onChange={(event) => setSendDelayMs(event.target.value)}
+                      className={inputClass}
                     />
-                    <Input
-                      type="number"
-                      min={1}
-                      value={recipientLimit}
-                      onChange={(e) => setRecipientLimit(e.target.value)}
-                      placeholder="Optional recipient limit"
-                      className="bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600"
-                    />
-                    <Input
-                      id="newsletter-schedule"
-                      type="datetime-local"
-                      value={scheduleAt}
-                      onChange={(e) => setScheduleAt(e.target.value)}
-                      className="bg-slate-900/50 border-white/10 text-white"
-                    />
-                    <Button
-                      disabled={isSending}
-                      className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
-                      onClick={() => void handleSendCampaign("live")}
-                    >
-                      <Send className="w-4 h-4 mr-2" />
-                      {scheduleAt
-                        ? `Schedule ${channelLabel}`
-                        : `Send ${channelLabel} Campaign`}
-                    </Button>
-                    <p className="text-xs text-slate-400">
-                      {channel === "whatsapp"
-                        ? "Live WhatsApp sends use approved templates and subscriber phone numbers."
-                        : "Bulk email sends run in batches to reduce provider throttling."}
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="history">
-            <Card className="bg-slate-900/40 border-white/10">
-              <CardHeader>
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <CardTitle className="text-white">Campaign History</CardTitle>
-                  <Button
-                    onClick={() => void handleProcessScheduled()}
-                    disabled={isProcessingScheduled}
-                    variant="outline"
-                    className="border-white/10 text-slate-300 hover:text-white"
-                  >
-                    <Play className="w-4 h-4 mr-2" />
-                    Process Scheduled
-                  </Button>
+                  </Field>
                 </div>
-              </CardHeader>
-              <CardContent>
-                {isCampaignHistoryLoading ? (
-                  <p className="text-slate-400 text-sm">
-                    Loading campaign history...
-                  </p>
-                ) : campaigns.length === 0 ? (
-                  <p className="text-slate-400 text-sm">
-                    No campaigns yet. Sent and scheduled campaigns will appear
-                    here.
-                  </p>
-                ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full min-w-190 text-sm">
-                      <thead>
-                        <tr className="border-b border-white/10 text-left text-slate-400">
-                          <th className="py-3 pr-4">Subject</th>
-                          <th className="py-3 pr-4">Channel</th>
-                          <th className="py-3 pr-4">Status</th>
-                          <th className="py-3 pr-4">Audience</th>
-                          <th className="py-3 pr-4">Results</th>
-                          <th className="py-3 pr-4">Scheduled</th>
-                          <th className="py-3 pr-4">Sent</th>
-                          <th className="py-3 pr-0">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {campaigns.map((campaign) => (
+                <Field label="Recipient limit" htmlFor="newsletter-limit" className="mt-3">
+                  <Input
+                    id="newsletter-limit"
+                    type="number"
+                    min={1}
+                    value={recipientLimit}
+                    onChange={(event) => setRecipientLimit(event.target.value)}
+                    placeholder="No limit"
+                    className={inputClass}
+                  />
+                </Field>
+
+                <div className="mt-4 rounded border border-white/10 bg-slate-950/40">
+                  <div className="grid grid-cols-2 gap-0 divide-x divide-white/10 border-b border-white/10">
+                    <div className="p-3">
+                      <p className="text-[11px] uppercase tracking-wide text-slate-500">
+                        Targets
+                      </p>
+                      <p className="mt-1 text-lg font-semibold text-white">
+                        {estimatedAudience}
+                      </p>
+                    </div>
+                    <div className="p-3">
+                      <p className="text-[11px] uppercase tracking-wide text-slate-500">
+                        Send time
+                      </p>
+                      <p className="mt-1 truncate text-sm font-medium text-white">
+                        {scheduleAt ? safeDate(scheduleAt, "MMM d, p") : "Now"}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="p-3 text-xs text-slate-400">
+                    {channelLabel} / {audienceStatus}
+                    {audienceSource ? ` / ${audienceSource}` : ""}
+                  </div>
+                </div>
+
+                <Button
+                  disabled={isSending}
+                  className="mt-4 w-full bg-brand-secondary-600 text-white hover:bg-brand-secondary-500"
+                  onClick={() => void handleSendCampaign("live")}
+                >
+                  <Send className="h-4 w-4" />
+                  {scheduleAt ? "Schedule Campaign" : "Send Campaign"}
+                </Button>
+              </section>
+            </aside>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="history" className="mt-5">
+          <section className={panelClass}>
+            <div className="flex flex-col gap-3 border-b border-white/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-base font-semibold text-white">
+                  Campaign history
+                </h2>
+                <p className="mt-1 text-xs text-slate-500">
+                  {campaigns.length} recent campaigns
+                </p>
+              </div>
+              <Button
+                onClick={() => void handleProcessScheduled()}
+                disabled={isProcessingScheduled}
+                variant="outline"
+                className="border-white/10 text-slate-300 hover:text-white"
+              >
+                <Play className="h-4 w-4" />
+                Process Scheduled
+              </Button>
+            </div>
+
+            <div className="p-4">
+              {isCampaignHistoryLoading ? (
+                <EmptyState title="Loading campaign history..." />
+              ) : campaigns.length === 0 ? (
+                <EmptyState title="No campaigns yet." />
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[900px] text-sm">
+                    <thead>
+                      <tr className="border-b border-white/10 text-left text-[11px] uppercase tracking-wide text-slate-500">
+                        <th className="px-3 py-3 font-semibold">Campaign</th>
+                        <th className="px-3 py-3 font-semibold">Channel</th>
+                        <th className="px-3 py-3 font-semibold">Status</th>
+                        <th className="px-3 py-3 font-semibold">Audience</th>
+                        <th className="px-3 py-3 font-semibold">Delivery</th>
+                        <th className="px-3 py-3 font-semibold">Scheduled</th>
+                        <th className="px-3 py-3 font-semibold">Sent</th>
+                        <th className="px-3 py-3 text-right font-semibold">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {campaigns.map((campaign) => {
+                        const StatusIcon = statusIcon(campaign.status);
+                        const progress =
+                          campaign.totalTargets > 0
+                            ? Math.min(
+                                100,
+                                Math.round(
+                                  (campaign.sentCount /
+                                    campaign.totalTargets) *
+                                    100,
+                                ),
+                              )
+                            : 0;
+
+                        return (
                           <tr
                             key={campaign.id}
-                            className="border-b border-white/5"
+                            className="border-b border-white/5 text-slate-300 transition hover:bg-white/[0.03]"
                           >
-                            <td className="py-3 pr-4 text-white">
+                            <td className="px-3 py-4">
                               <div
-                                className="max-w-80 truncate"
+                                className="max-w-[280px] truncate font-medium text-white"
                                 title={campaign.subject}
                               >
                                 {campaign.subject}
                               </div>
                             </td>
-                            <td className="py-3 pr-4">
-                              <Badge className="bg-slate-800 text-slate-200 border-white/10 uppercase">
+                            <td className="px-3 py-4">
+                              <Badge className="border-white/10 bg-white/5 text-slate-300 uppercase">
                                 {campaign.channel}
                               </Badge>
                             </td>
-                            <td className="py-3 pr-4">
+                            <td className="px-3 py-4">
                               <Badge
-                                className={
-                                  campaign.status === "sent"
-                                    ? "bg-brand-secondary-500/10 text-brand-secondary-400 border-brand-secondary-500/20"
-                                    : campaign.status === "scheduled"
-                                      ? "bg-blue-500/10 text-blue-400 border-blue-500/20"
-                                      : campaign.status === "failed"
-                                        ? "bg-red-500/10 text-red-400 border-red-500/20"
-                                        : "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                                }
+                                className={cn(
+                                  "gap-1.5 capitalize",
+                                  campaignStatusClass(campaign.status),
+                                )}
                               >
+                                <StatusIcon className="h-3 w-3" />
                                 {campaign.status}
                               </Badge>
                             </td>
-                            <td className="py-3 pr-4 text-slate-300">
-                              {campaign.audienceStatus}
-                              {campaign.audienceSource
-                                ? ` / ${campaign.audienceSource}`
-                                : ""}
+                            <td className="px-3 py-4">
+                              <span className="capitalize">
+                                {campaign.audienceStatus}
+                              </span>
+                              {campaign.audienceSource ? (
+                                <span className="text-slate-500">
+                                  {" "}
+                                  / {campaign.audienceSource}
+                                </span>
+                              ) : null}
                             </td>
-                            <td className="py-3 pr-4 text-slate-300">
-                              {campaign.sentCount}/{campaign.totalTargets} sent
-                              {campaign.failedCount > 0
-                                ? `, ${campaign.failedCount} failed`
-                                : ""}
+                            <td className="px-3 py-4">
+                              <div className="min-w-[150px]">
+                                <div className="flex items-center justify-between text-xs">
+                                  <span>
+                                    {campaign.sentCount}/{campaign.totalTargets}
+                                  </span>
+                                  {campaign.failedCount > 0 ? (
+                                    <span className="text-rose-300">
+                                      {campaign.failedCount} failed
+                                    </span>
+                                  ) : null}
+                                </div>
+                                <div className="mt-2 h-1.5 overflow-hidden rounded bg-slate-800">
+                                  <div
+                                    className="h-full rounded bg-brand-secondary-500"
+                                    style={{ width: `${progress}%` }}
+                                  />
+                                </div>
+                              </div>
                             </td>
-                            <td className="py-3 pr-4 text-slate-300">
-                              {campaign.scheduledAt
-                                ? format(
-                                    new Date(campaign.scheduledAt),
-                                    "PPP p",
-                                  )
-                                : "-"}
+                            <td className="px-3 py-4 text-slate-400">
+                              {safeDate(campaign.scheduledAt, "MMM d, p")}
                             </td>
-                            <td className="py-3 pr-0 text-slate-300">
-                              {campaign.sentAt
-                                ? format(new Date(campaign.sentAt), "PPP p")
-                                : "-"}
+                            <td className="px-3 py-4 text-slate-400">
+                              {safeDate(campaign.sentAt, "MMM d, p")}
                             </td>
-                            <td className="py-3 pr-0 text-right">
+                            <td className="px-3 py-4">
                               <div className="flex items-center justify-end gap-2">
-                                {campaign.status === "scheduled" && (
+                                {campaign.status === "scheduled" ? (
                                   <Button
                                     size="sm"
                                     variant="outline"
-                                    className="h-8 border-blue-500/20 text-blue-400 hover:bg-blue-500/10"
+                                    className="h-8 border-sky-500/20 text-sky-300 hover:bg-sky-500/10"
                                     onClick={() =>
                                       void handleCancelCampaign(campaign.id)
                                     }
@@ -901,194 +1148,210 @@ export default function AdminNewsletter() {
                                   >
                                     Cancel
                                   </Button>
-                                )}
+                                ) : null}
                                 <Button
-                                  size="sm"
+                                  size="icon"
                                   variant="outline"
-                                  className="h-8 border-rose-500/20 text-rose-400 hover:bg-rose-500/10"
+                                  aria-label={`Delete campaign ${campaign.subject}`}
+                                  className="h-8 w-8 border-rose-500/20 text-rose-300 hover:bg-rose-500/10"
                                   onClick={() =>
                                     void handleDeleteCampaign(campaign.id)
                                   }
                                   disabled={isDeletingCampaign === campaign.id}
                                 >
-                                  Delete
+                                  <Trash2 className="h-4 w-4" />
                                 </Button>
                               </div>
                             </td>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="subscribers">
-            <Card className="bg-slate-900/40 border-white/10">
-              <CardHeader>
-                <CardTitle className="text-white">Subscribers</CardTitle>
-                <div className="flex flex-col md:flex-row gap-3 mt-3">
-                  <Input
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by email, name, or phone"
-                    className="bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600"
-                  />
-                  <select
-                    value={statusFilter}
-                    onChange={(e) =>
-                      setStatusFilter(e.target.value as SubscriberFilter)
-                    }
-                    className="rounded border border-white/10 bg-slate-900/50 px-3 py-2 text-sm text-white outline-none focus:ring-2 focus:ring-brand-secondary-500/30"
-                  >
-                    <option value="all">All</option>
-                    <option value="active">Active</option>
-                    <option value="unsubscribed">Unsubscribed</option>
-                  </select>
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
-              </CardHeader>
-              <CardContent>
-                {isLoading ? (
-                  <p className="text-slate-400 text-sm">
-                    Loading subscribers...
-                  </p>
-                ) : sortedSubscribers.length === 0 ? (
-                  <p className="text-slate-400 text-sm">
-                    No subscribers found for this filter.
-                  </p>
-                ) : (
-                  <div className="overflow-x-auto">
-                    <table className="w-full min-w-190 text-sm">
-                      <thead>
-                        <tr className="border-b border-white/10 text-left text-slate-400">
-                          <th className="py-3 pr-4">Email</th>
-                          <th className="py-3 pr-4">Phone</th>
-                          <th className="py-3 pr-4">Source</th>
-                          <th className="py-3 pr-4">Subscribed</th>
-                          <th className="py-3 pr-4">Last Campaign</th>
-                          <th className="py-3 pr-4">Status</th>
-                          <th className="py-3 pr-0">Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {sortedSubscribers.map((subscriber) => (
-                          <tr
-                            key={subscriber.id}
-                            className="border-b border-white/5"
-                          >
-                            <td className="py-3 pr-4 text-white">
+              )}
+            </div>
+          </section>
+        </TabsContent>
+
+        <TabsContent value="subscribers" className="mt-5">
+          <section className={panelClass}>
+            <div className="flex flex-col gap-4 border-b border-white/10 p-4 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <h2 className="text-base font-semibold text-white">
+                  Subscribers
+                </h2>
+                <p className="mt-1 text-xs text-slate-500">
+                  {sortedSubscribers.length} visible records
+                </p>
+              </div>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,280px)_170px]">
+                <Input
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                  placeholder="Search subscribers"
+                  leftIcon={<Search className="h-4 w-4" />}
+                  className={inputClass}
+                />
+                <select
+                  value={statusFilter}
+                  onChange={(event) =>
+                    setStatusFilter(event.target.value as SubscriberFilter)
+                  }
+                  className={selectClass}
+                  aria-label="Subscriber status filter"
+                >
+                  <option value="all">All statuses</option>
+                  <option value="active">Active</option>
+                  <option value="unsubscribed">Unsubscribed</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="p-4">
+              {isLoading ? (
+                <EmptyState title="Loading subscribers..." />
+              ) : sortedSubscribers.length === 0 ? (
+                <EmptyState title="No subscribers found for this filter." />
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[880px] text-sm">
+                    <thead>
+                      <tr className="border-b border-white/10 text-left text-[11px] uppercase tracking-wide text-slate-500">
+                        <th className="px-3 py-3 font-semibold">Subscriber</th>
+                        <th className="px-3 py-3 font-semibold">Phone</th>
+                        <th className="px-3 py-3 font-semibold">Source</th>
+                        <th className="px-3 py-3 font-semibold">Subscribed</th>
+                        <th className="px-3 py-3 font-semibold">
+                          Last campaign
+                        </th>
+                        <th className="px-3 py-3 font-semibold">Status</th>
+                        <th className="px-3 py-3 text-right font-semibold">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {sortedSubscribers.map((subscriber) => (
+                        <tr
+                          key={subscriber.id}
+                          className="border-b border-white/5 text-slate-300 transition hover:bg-white/[0.03]"
+                        >
+                          <td className="px-3 py-4">
+                            <div className="font-medium text-white">
                               {subscriber.email}
-                            </td>
-                            <td className="py-3 pr-4 text-slate-300">
-                              {editingSubscriberId === subscriber.id ? (
-                                <Input
-                                  value={editPhoneValue}
-                                  onChange={(e) =>
-                                    setEditPhoneValue(e.target.value)
-                                  }
-                                  placeholder="+233XXXXXXXXX"
-                                  className="h-8 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600"
-                                />
-                              ) : (
-                                subscriber.phone || "-"
-                              )}
-                            </td>
-                            <td className="py-3 pr-4 text-slate-300">
-                              {subscriber.source || "-"}
-                            </td>
-                            <td className="py-3 pr-4 text-slate-300">
-                              {format(new Date(subscriber.subscribedAt), "PPP")}
-                            </td>
-                            <td className="py-3 pr-4 text-slate-300">
-                              {subscriber.lastCampaignAt
-                                ? format(
-                                    new Date(subscriber.lastCampaignAt),
-                                    "PPP",
-                                  )
-                                : "-"}
-                            </td>
-                            <td className="py-3 pr-4">
-                              {subscriber.status === "active" ? (
-                                <Badge className="bg-brand-secondary-500/10 text-brand-secondary-400 border-brand-secondary-500/20">
-                                  Active
-                                </Badge>
-                              ) : (
-                                <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/20">
-                                  Unsubscribed
-                                </Badge>
-                              )}
-                            </td>
-                            <td className="py-3 pr-0">
-                              <div className="flex flex-wrap gap-2">
-                                {editingSubscriberId === subscriber.id ? (
-                                  <>
-                                    <Button
-                                      size="sm"
-                                      className="h-8 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
-                                      disabled={isSavingContact}
-                                      onClick={() =>
-                                        void handleSaveSubscriberContact(
-                                          subscriber.id,
-                                        )
-                                      }
-                                    >
-                                      Save
-                                    </Button>
-                                    <Button
-                                      size="sm"
-                                      variant="outline"
-                                      className="h-8 border-white/10 text-slate-300 hover:text-white"
-                                      disabled={isSavingContact}
-                                      onClick={handleCancelEditSubscriber}
-                                    >
-                                      Cancel
-                                    </Button>
-                                  </>
-                                ) : (
-                                  <>
-                                    <Button
-                                      size="sm"
-                                      variant="outline"
-                                      className="h-8 border-white/10 text-slate-300 hover:text-white"
-                                      onClick={() =>
-                                        handleStartEditSubscriber(subscriber)
-                                      }
-                                    >
-                                      Edit Phone
-                                    </Button>
-                                    <Button
-                                      size="sm"
-                                      variant="outline"
-                                      className="h-8 border-white/10 text-slate-300 hover:text-white"
-                                      onClick={() =>
-                                        void handleStatusChange(
-                                          subscriber,
-                                          subscriber.status === "active"
-                                            ? "unsubscribed"
-                                            : "active",
-                                        )
-                                      }
-                                    >
-                                      {subscriber.status === "active"
-                                        ? "Unsubscribe"
-                                        : "Reactivate"}
-                                    </Button>
-                                  </>
-                                )}
+                            </div>
+                            {subscriber.name ? (
+                              <div className="mt-1 text-xs text-slate-500">
+                                {subscriber.name}
                               </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
+                            ) : null}
+                          </td>
+                          <td className="px-3 py-4">
+                            {editingSubscriberId === subscriber.id ? (
+                              <Input
+                                value={editPhoneValue}
+                                onChange={(event) =>
+                                  setEditPhoneValue(event.target.value)
+                                }
+                                placeholder="+233XXXXXXXXX"
+                                className={cn(inputClass, "h-8")}
+                              />
+                            ) : (
+                              subscriber.phone || "-"
+                            )}
+                          </td>
+                          <td className="px-3 py-4 text-slate-400">
+                            {subscriber.source || "-"}
+                          </td>
+                          <td className="px-3 py-4 text-slate-400">
+                            {safeDate(subscriber.subscribedAt)}
+                          </td>
+                          <td className="px-3 py-4 text-slate-400">
+                            {safeDate(subscriber.lastCampaignAt)}
+                          </td>
+                          <td className="px-3 py-4">
+                            <Badge
+                              className={
+                                subscriber.status === "active"
+                                  ? "border-brand-secondary-500/20 bg-brand-secondary-500/10 text-brand-secondary-300"
+                                  : "border-amber-500/20 bg-amber-500/10 text-amber-300"
+                              }
+                            >
+                              {subscriber.status === "active"
+                                ? "Active"
+                                : "Unsubscribed"}
+                            </Badge>
+                          </td>
+                          <td className="px-3 py-4">
+                            <div className="flex items-center justify-end gap-2">
+                              {editingSubscriberId === subscriber.id ? (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    className="h-8 bg-brand-secondary-600 text-white hover:bg-brand-secondary-500"
+                                    disabled={isSavingContact}
+                                    onClick={() =>
+                                      void handleSaveSubscriberContact(
+                                        subscriber.id,
+                                      )
+                                    }
+                                  >
+                                    Save
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="h-8 border-white/10 text-slate-300 hover:text-white"
+                                    disabled={isSavingContact}
+                                    onClick={handleCancelEditSubscriber}
+                                  >
+                                    Cancel
+                                  </Button>
+                                </>
+                              ) : (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="h-8 border-white/10 text-slate-300 hover:text-white"
+                                    onClick={() =>
+                                      handleStartEditSubscriber(subscriber)
+                                    }
+                                  >
+                                    Edit Phone
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="h-8 border-white/10 text-slate-300 hover:text-white"
+                                    onClick={() =>
+                                      void handleStatusChange(
+                                        subscriber,
+                                        subscriber.status === "active"
+                                          ? "unsubscribed"
+                                          : "active",
+                                      )
+                                    }
+                                  >
+                                    {subscriber.status === "active"
+                                      ? "Unsubscribe"
+                                      : "Reactivate"}
+                                  </Button>
+                                </>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </section>
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 }

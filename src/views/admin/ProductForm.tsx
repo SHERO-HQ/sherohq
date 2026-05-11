@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { getErrorMessage } from "@/utils/error";
 import {
@@ -24,7 +24,6 @@ import {
   Tag,
   Info,
 } from "lucide-react";
-import { useAdmin } from "@/context/AdminContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -49,40 +48,124 @@ interface SpecRow {
   value: string;
 }
 
+interface ProductFormDraft {
+  productData: Partial<Product>;
+  specsList: SpecRow[];
+  newFeature: string;
+}
+
+const PRODUCT_DRAFT_STORAGE_PREFIX = "sherotech:admin:product-form:v1";
+
+const defaultProductData = (): Partial<Product> => ({
+  name: "",
+  category: "",
+  price: 0,
+  originalPrice: undefined,
+  image: "",
+  inStock: true,
+  description: "",
+  features: [],
+  specifications: {},
+  badge: "",
+  images: [],
+  stockQuantity: undefined,
+  isSpotlight: false,
+  isFeatured: false,
+});
+
+const getProductDraftKey = (productId: string | undefined) =>
+  `${PRODUCT_DRAFT_STORAGE_PREFIX}:${productId || "new"}`;
+
+const isDraftMeaningful = (draft: ProductFormDraft) => {
+  const { productData, specsList, newFeature } = draft;
+
+  return Boolean(
+    productData.name?.trim() ||
+      productData.category?.trim() ||
+      (productData.price ?? 0) > 0 ||
+      (productData.originalPrice ?? 0) > 0 ||
+      productData.image?.trim() ||
+      (productData.images?.length ?? 0) > 0 ||
+      (productData.features?.length ?? 0) > 0 ||
+      Object.keys(productData.specifications || {}).length > 0 ||
+      productData.description?.trim() ||
+      productData.badge?.trim() ||
+      productData.stockQuantity !== undefined ||
+      productData.isSpotlight ||
+      productData.isFeatured ||
+      specsList.some((row) => row.key.trim() || row.value.trim()) ||
+      newFeature.trim(),
+  );
+};
+
+const serializeDraft = (draft: ProductFormDraft) => JSON.stringify(draft);
+
 export default function ProductForm() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const { addNotification } = useNotifications();
   const { setLabel, clearLabel } = useBreadcrumb();
   const isEdit = Boolean(id);
+  const draftKey = getProductDraftKey(id);
 
   const [isLoading, setIsLoading] = useState(isEdit);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [draftLoaded, setDraftLoaded] = useState(false);
+  const [hasDraft, setHasDraft] = useState(false);
+  const [draftSavedAt, setDraftSavedAt] = useState<string | null>(null);
+  const initialDraftSnapshotRef = useRef<string>("");
 
   const createProductMutation = useCreateProduct();
   const updateProductMutation = useUpdateProduct();
 
-  const [productData, setProductData] = useState<Partial<Product>>({
-    name: "",
-    category: "",
-    price: 0,
-    originalPrice: undefined,
-    image: "",
-    inStock: true,
-    description: "",
-    features: [],
-    specifications: {},
-    badge: "",
-    images: [],
-    stockQuantity: undefined,
-    isSpotlight: false,
-    isFeatured: false,
-  });
+  const [productData, setProductData] = useState<Partial<Product>>(() =>
+    defaultProductData(),
+  );
 
   const [specsList, setSpecsList] = useState<SpecRow[]>([]);
   const [newFeature, setNewFeature] = useState("");
+
+  const currentDraft = useMemo<ProductFormDraft>(
+    () => ({
+      productData,
+      specsList,
+      newFeature,
+    }),
+    [productData, specsList, newFeature],
+  );
+
+  const persistDraft = useCallback(
+    (draft: ProductFormDraft) => {
+      if (typeof window === "undefined") return;
+
+      if (!isDraftMeaningful(draft)) {
+        window.localStorage.removeItem(draftKey);
+        window.localStorage.removeItem(`${draftKey}:savedAt`);
+        setHasDraft(false);
+        setDraftSavedAt(null);
+        return;
+      }
+
+      window.localStorage.setItem(draftKey, serializeDraft(draft));
+      const savedAt = new Date().toISOString();
+      window.localStorage.setItem(`${draftKey}:savedAt`, savedAt);
+      setHasDraft(true);
+      setDraftSavedAt(savedAt);
+    },
+    [draftKey],
+  );
+
+  const clearDraft = useCallback(() => {
+    if (typeof window === "undefined") return;
+
+    window.localStorage.removeItem(draftKey);
+    window.localStorage.removeItem(`${draftKey}:savedAt`);
+    setHasDraft(false);
+    setDraftSavedAt(null);
+    initialDraftSnapshotRef.current = serializeDraft(currentDraft);
+  }, [currentDraft, draftKey]);
 
   useEffect(() => {
     async function loadData() {
@@ -130,6 +213,59 @@ export default function ProductForm() {
     };
   }, [id, isEdit, addNotification, setLabel, clearLabel]);
 
+  useEffect(() => {
+    if (typeof window === "undefined" || isLoading || draftLoaded) return;
+
+    try {
+      const savedDraftText = window.localStorage.getItem(draftKey);
+      if (savedDraftText) {
+        const savedAt = window.localStorage.getItem(`${draftKey}:savedAt`);
+        const parsed = JSON.parse(savedDraftText) as Partial<ProductFormDraft>;
+
+        if (parsed.productData) {
+          setProductData({
+            ...defaultProductData(),
+            ...parsed.productData,
+          });
+        }
+        setSpecsList(Array.isArray(parsed.specsList) ? parsed.specsList : []);
+        setNewFeature(parsed.newFeature || "");
+        setHasDraft(true);
+        setDraftSavedAt(savedAt);
+
+        addNotification(
+          "Draft restored",
+          "We restored your saved product draft in this browser.",
+          "info",
+        );
+      }
+    } catch (error) {
+      console.error("Failed to restore draft:", error);
+      clearDraft();
+    } finally {
+      setDraftLoaded(true);
+    }
+  }, [addNotification, clearDraft, currentDraft, draftKey, draftLoaded, isLoading]);
+
+  useEffect(() => {
+    if (!draftLoaded || initialDraftSnapshotRef.current) return;
+
+    initialDraftSnapshotRef.current = serializeDraft(currentDraft);
+  }, [currentDraft, draftLoaded]);
+
+  useEffect(() => {
+    if (!draftLoaded || isLoading) return;
+
+    const draftSnapshot = serializeDraft(currentDraft);
+    if (draftSnapshot === initialDraftSnapshotRef.current) return;
+
+    const timeout = window.setTimeout(() => {
+      persistDraft(currentDraft);
+    }, 400);
+
+    return () => window.clearTimeout(timeout);
+  }, [currentDraft, draftLoaded, isLoading, persistDraft]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -174,6 +310,7 @@ export default function ProductForm() {
         await createProductMutation.mutateAsync(finalData as ProductInput);
         addNotification("Success", "Product created successfully", "success");
       }
+      clearDraft();
       router.push("/admin/products");
     } catch (err: unknown) {
       // Show explicit error message from API if available
@@ -184,6 +321,11 @@ export default function ProductForm() {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleSaveDraft = () => {
+    persistDraft(currentDraft);
+    addNotification("Draft saved", "Your changes were saved locally.", "success");
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -233,15 +375,16 @@ export default function ProductForm() {
       }));
 
       addNotification("Success", "Images uploaded successfully", "success");
-    } catch (err: any) {
+    } catch (err: unknown) {
       let message = "Failed to upload images";
-      if (err.message?.includes("Failed to fetch") || !err.status) {
+      const error = err as { message?: string; status?: number };
+      if (error.message?.includes("Failed to fetch") || !error.status) {
         message = "Server unreachable or connection dropped. Please try again or check the server status.";
-      } else if (err.message) {
-        message = err.message;
+      } else if (error.message) {
+        message = error.message;
       }
       addNotification("Error", message, "error");
-      console.error(err);
+      console.error(error);
     } finally {
       setIsUploading(false);
       // Reset input
@@ -362,6 +505,44 @@ export default function ProductForm() {
           </Button>
         </div>
       </div>
+
+      {(hasDraft || draftSavedAt) && (
+        <div className="flex flex-col gap-3 rounded border border-emerald-500/20 bg-emerald-500/5 px-4 py-3 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <Badge className="bg-emerald-500/10 text-emerald-300 border-emerald-500/20">
+                Local draft
+              </Badge>
+              <span className="text-sm text-slate-200">
+                Draft autosave is enabled for this form.
+              </span>
+            </div>
+            <p className="text-xs text-slate-400">
+              {draftSavedAt
+                ? `Last saved ${new Date(draftSavedAt).toLocaleString()}.`
+                : "Your changes will be saved locally as you type."}
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleSaveDraft}
+              className="border-emerald-500/30 text-emerald-200 hover:bg-emerald-500/10 hover:text-emerald-100"
+            >
+              Save draft now
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={clearDraft}
+              className="text-slate-300 hover:text-white hover:bg-white/5"
+            >
+              Clear draft
+            </Button>
+          </div>
+        </div>
+      )}
 
       <form
         onSubmit={handleSubmit}

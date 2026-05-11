@@ -45,7 +45,12 @@ class NotificationService {
     }
   }
 
-  private async sendEmail(to: string, subject: string, html: string) {
+  private async sendEmail(
+    to: string,
+    subject: string,
+    html: string,
+    options: { throwOnError?: boolean } = {},
+  ) {
     try {
       if (this.resend) {
         await this.resend.emails.send({
@@ -66,6 +71,9 @@ class NotificationService {
       }
     } catch (error) {
       console.error("❌ [Email Error]:", error);
+      if (options.throwOnError) {
+        throw error;
+      }
     }
   }
 
@@ -86,7 +94,7 @@ class NotificationService {
         </p>
       </div>
     `;
-    await this.sendEmail(to, subject, htmlContent);
+    await this.sendEmail(to, subject, htmlContent, { throwOnError: true });
   }
 
   public async sendOrderConfirmation(
