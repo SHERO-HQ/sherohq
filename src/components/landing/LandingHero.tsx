@@ -84,7 +84,7 @@ const LandingHero: React.FC = () => {
       onMouseMove={handleMouseMove}
       className="relative min-h-[80vh] lg:min-h-screen w-full overflow-hidden
  bg-slate-50 dark:bg-slate-950
- flex items-center "
+ flex items-center"
       role="banner"
       aria-label="Hero section - Company mission statement"
     >
@@ -111,7 +111,7 @@ const LandingHero: React.FC = () => {
               className="inline-flex items-center gap-2 px-4 py-1 rounded border border-brand-secondary-500/20 bg-brand-secondary-500/5 transition-colors duration-300 "
             >
               <RocketIcon className="size-4 text-brand-secondary-500" />
-              <span className="text-[10px] font-semibold uppercase text-brand-secondary-600 dark:text-brand-secondary-400">
+              <span className="text-[9px] font-semibold uppercase text-brand-secondary-600 dark:text-brand-secondary-400">
                 Trusted Technology Partner
               </span>
             </motion.div>
@@ -157,27 +157,27 @@ const LandingHero: React.FC = () => {
               animate="visible"
               variants={fadeUpAccessible(prefersReducedMotion)}
               transition={{ delay: 0.25 }}
-              className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 pt-1 w-fit sm:w-auto mb-6 sm:mb-0"
+              className="flex flex-row items-center gap-2 sm:gap-4 pt-1 w-fit sm:w-auto mb-14 sm:mb-0"
             >
               <Button
                 asChild
                 variant="brandSecondary"
                 size="lg"
-                className="text-sm font-medium w-fit sm:w-auto h-10 px-6 group transition-all hover:-translate-y-0.5"
+                className="sm:text-sm font-medium w-fit sm:w-auto h-10 px-6 group transition-all hover:-translate-y-0.5"
               >
                 <NavLink href={getAbsoluteUrl("/shop")}>
-                  <span className="text-sm">Shop Products</span>
+                  <span className="text-sm">Products</span>
                   <ShoppingCart className="w-5 h-5" />
                 </NavLink>
               </Button>
 
               <NavLink
                 href={getAbsoluteUrl("/solutions")}
-                className="group flex items-center justify-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary rounded px-4 py-2 h-10 w-fit transition-all glass-surface-md hover:bg-white dark:hover:bg-slate-900 hover:border-primary"
+                className="group flex items-center justify-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary rounded px-8 py-2 h-10 w-fit transition-all glass-surface-md hover:bg-white dark:hover:bg-slate-900 hover:border-primary"
                 role="button"
                 aria-label="Explore solutions"
               >
-                <span>Explore Solutions</span>
+                <span>Explore</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </NavLink>
             </motion.div>
@@ -214,7 +214,7 @@ const LandingHero: React.FC = () => {
  </motion.div> */}
           </div>
 
-          <div className="w-full lg:w-[44%] relative aspect-square flex items-center justify-center lg:py-0">
+          <div className="w-full lg:w-[44%] relative aspect-square flex items-center justify-center lg:py-0 mb-16 sm:mb-0">
             <motion.div
               style={{
                 x: translateX,
