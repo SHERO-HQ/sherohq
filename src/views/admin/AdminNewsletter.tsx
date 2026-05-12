@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 import { format } from "date-fns";
 import {
   ArrowLeft,
@@ -27,6 +33,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useNotifications } from "@/hooks/useNotifications";
+import { useDialog } from "@/hooks/useDialog";
 import { cn } from "@/lib/utils";
 import {
   cancelNewsletterCampaign,
@@ -63,7 +70,7 @@ const channels: Array<{
 }> = [
   { value: "email", label: "Email", icon: Mail },
   { value: "whatsapp", label: "WhatsApp", icon: MessageCircle },
-  { value: "sms", label: "SMS setup needed", icon: MessageCircle, disabled: true },
+  { value: "sms", label: "SMS", icon: MessageCircle },
 ];
 
 function Field({
@@ -105,7 +112,8 @@ function MetricTile({
 }) {
   const toneClass = {
     slate: "text-slate-300 bg-slate-500/10 border-slate-500/15",
-    green: "text-brand-secondary-300 bg-brand-secondary-500/10 border-brand-secondary-500/20",
+    green:
+      "text-brand-secondary-300 bg-brand-secondary-500/10 border-brand-secondary-500/20",
     amber: "text-amber-300 bg-amber-500/10 border-amber-500/20",
     blue: "text-sky-300 bg-sky-500/10 border-sky-500/20",
   }[tone];
@@ -208,6 +216,7 @@ export default function AdminNewsletter() {
   >(null);
 
   const { addNotification } = useNotifications();
+  const dialog = useDialog();
 
   const loadSubscribers = useCallback(async () => {
     try {
@@ -416,11 +425,6 @@ export default function AdminNewsletter() {
       return;
     }
 
-    if (mode === "live" && channel === "sms") {
-      addNotification("Warning", "SMS delivery is not connected yet", "warning");
-      return;
-    }
-
     try {
       const parsedBatchSize = Number.parseInt(batchSize, 10);
       const parsedDelay = Number.parseInt(sendDelayMs, 10);
@@ -462,14 +466,10 @@ export default function AdminNewsletter() {
         .map((part) => part.trim())
         .filter((part) => part.length > 0);
 
-      if (
-        mode === "live" &&
-        channel === "whatsapp" &&
-        !whatsAppTemplateName.trim()
-      ) {
+      if (channel === "whatsapp" && !whatsAppTemplateName.trim()) {
         addNotification(
           "Warning",
-          "Live WhatsApp campaigns require an approved template name",
+          "WhatsApp campaigns require an approved template name",
           "warning",
         );
         return;
@@ -565,8 +565,15 @@ export default function AdminNewsletter() {
   };
 
   const handleCancelCampaign = async (id: string) => {
-    if (!confirm("Are you sure you want to cancel this scheduled campaign?"))
-      return;
+    const shouldCancel = await dialog.confirm({
+      title: "Cancel scheduled campaign?",
+      message: "Are you sure you want to cancel this scheduled campaign?",
+      confirmText: "Cancel campaign",
+      cancelText: "Keep scheduled",
+      type: "warning",
+    });
+
+    if (!shouldCancel) return;
 
     try {
       setIsCancellingCampaign(id);
@@ -586,12 +593,16 @@ export default function AdminNewsletter() {
   };
 
   const handleDeleteCampaign = async (id: string) => {
-    if (
-      !confirm(
+    const shouldDelete = await dialog.confirm({
+      title: "Delete campaign?",
+      message:
         "Are you sure you want to delete this campaign? This cannot be undone.",
-      )
-    )
-      return;
+      confirmText: "Delete campaign",
+      cancelText: "Keep campaign",
+      type: "warning",
+    });
+
+    if (!shouldDelete) return;
 
     try {
       setIsDeletingCampaign(id);
@@ -679,7 +690,7 @@ export default function AdminNewsletter() {
       </div>
 
       <Tabs defaultValue="compose" className="w-full">
-        <TabsList className="grid h-auto w-full grid-cols-3 justify-start rounded border border-white/10 bg-slate-950/40 p-1 text-slate-400 lg:inline-grid lg:w-auto">
+        <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded border border-white/10 bg-slate-950/40 p-1 text-slate-400 sm:grid-cols-3 lg:inline-grid lg:w-auto">
           <TabsTrigger
             value="compose"
             className="gap-2 rounded data-[state=active]:bg-brand-secondary-500/15 data-[state=active]:text-brand-secondary-200"
@@ -716,7 +727,7 @@ export default function AdminNewsletter() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 sm:flex">
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:flex">
                   {channels.map((item) => {
                     const Icon = item.icon;
                     const isSelected = channel === item.value;
@@ -781,7 +792,7 @@ export default function AdminNewsletter() {
               </div>
 
               {channel === "whatsapp" ? (
-                <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-3">
+                <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
                   <Field label="Template name" htmlFor="whatsapp-template-name">
                     <Input
                       id="whatsapp-template-name"
@@ -807,7 +818,10 @@ export default function AdminNewsletter() {
                       className={inputClass}
                     />
                   </Field>
-                  <Field label="Template params" htmlFor="whatsapp-template-params">
+                  <Field
+                    label="Template params"
+                    htmlFor="whatsapp-template-params"
+                  >
                     <Input
                       id="whatsapp-template-params"
                       value={whatsAppTemplateParamsText}
@@ -821,7 +835,11 @@ export default function AdminNewsletter() {
                 </div>
               ) : null}
 
-              <Field label="Message" htmlFor="campaign-content" className="mt-4">
+              <Field
+                label="Message"
+                htmlFor="campaign-content"
+                className="mt-4"
+              >
                 <Textarea
                   id="campaign-content"
                   value={content}
@@ -830,7 +848,7 @@ export default function AdminNewsletter() {
                   rows={16}
                   className={cn(
                     inputClass,
-                    "min-h-[360px] resize-y leading-6 shadow-none",
+                    "min-h-90 resize-y leading-6 shadow-none",
                   )}
                 />
               </Field>
@@ -869,9 +887,7 @@ export default function AdminNewsletter() {
               <section className={cn(panelClass, "p-4")}>
                 <div className="mb-4 flex items-center gap-2">
                   <Users className="h-4 w-4 text-brand-secondary-300" />
-                  <h2 className="text-sm font-semibold text-white">
-                    Audience
-                  </h2>
+                  <h2 className="text-sm font-semibold text-white">Audience</h2>
                 </div>
                 <div className="grid grid-cols-1 gap-4">
                   <Field label="Status" htmlFor="newsletter-audience-status">
@@ -894,7 +910,9 @@ export default function AdminNewsletter() {
                     <Input
                       id="newsletter-audience-source"
                       value={audienceSource}
-                      onChange={(event) => setAudienceSource(event.target.value)}
+                      onChange={(event) =>
+                        setAudienceSource(event.target.value)
+                      }
                       placeholder="footer"
                       className={inputClass}
                     />
@@ -929,11 +947,9 @@ export default function AdminNewsletter() {
               <section className={cn(panelClass, "p-4")}>
                 <div className="mb-4 flex items-center gap-2">
                   <SlidersHorizontal className="h-4 w-4 text-brand-secondary-300" />
-                  <h2 className="text-sm font-semibold text-white">
-                    Delivery
-                  </h2>
+                  <h2 className="text-sm font-semibold text-white">Delivery</h2>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <Field label="Batch size" htmlFor="newsletter-batch-size">
                     <Input
                       id="newsletter-batch-size"
@@ -957,7 +973,11 @@ export default function AdminNewsletter() {
                     />
                   </Field>
                 </div>
-                <Field label="Recipient limit" htmlFor="newsletter-limit" className="mt-3">
+                <Field
+                  label="Recipient limit"
+                  htmlFor="newsletter-limit"
+                  className="mt-3"
+                >
                   <Input
                     id="newsletter-limit"
                     type="number"
@@ -970,7 +990,7 @@ export default function AdminNewsletter() {
                 </Field>
 
                 <div className="mt-4 rounded border border-white/10 bg-slate-950/40">
-                  <div className="grid grid-cols-2 gap-0 divide-x divide-white/10 border-b border-white/10">
+                  <div className="grid grid-cols-1 gap-0 border-b border-white/10 sm:grid-cols-2 sm:divide-x sm:divide-white/10">
                     <div className="p-3">
                       <p className="text-[11px] uppercase tracking-wide text-slate-500">
                         Targets
@@ -1036,7 +1056,7 @@ export default function AdminNewsletter() {
                 <EmptyState title="No campaigns yet." />
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[900px] text-sm">
+                  <table className="w-full min-w-225 text-sm">
                     <thead>
                       <tr className="border-b border-white/10 text-left text-[11px] uppercase tracking-wide text-slate-500">
                         <th className="px-3 py-3 font-semibold">Campaign</th>
@@ -1059,8 +1079,7 @@ export default function AdminNewsletter() {
                             ? Math.min(
                                 100,
                                 Math.round(
-                                  (campaign.sentCount /
-                                    campaign.totalTargets) *
+                                  (campaign.sentCount / campaign.totalTargets) *
                                     100,
                                 ),
                               )
@@ -1069,11 +1088,11 @@ export default function AdminNewsletter() {
                         return (
                           <tr
                             key={campaign.id}
-                            className="border-b border-white/5 text-slate-300 transition hover:bg-white/[0.03]"
+                            className="border-b border-white/5 text-slate-300 transition hover:bg-white/3"
                           >
                             <td className="px-3 py-4">
                               <div
-                                className="max-w-[280px] truncate font-medium text-white"
+                                className="max-w-70 truncate font-medium text-white"
                                 title={campaign.subject}
                               >
                                 {campaign.subject}
@@ -1107,7 +1126,7 @@ export default function AdminNewsletter() {
                               ) : null}
                             </td>
                             <td className="px-3 py-4">
-                              <div className="min-w-[150px]">
+                              <div className="min-w-37.5">
                                 <div className="flex items-center justify-between text-xs">
                                   <span>
                                     {campaign.sentCount}/{campaign.totalTargets}
@@ -1133,7 +1152,7 @@ export default function AdminNewsletter() {
                               {safeDate(campaign.sentAt, "MMM d, p")}
                             </td>
                             <td className="px-3 py-4">
-                              <div className="flex items-center justify-end gap-2">
+                              <div className="flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-end">
                                 {campaign.status === "scheduled" ? (
                                   <Button
                                     size="sm"
@@ -1215,7 +1234,7 @@ export default function AdminNewsletter() {
                 <EmptyState title="No subscribers found for this filter." />
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[880px] text-sm">
+                  <table className="w-full min-w-220 text-sm">
                     <thead>
                       <tr className="border-b border-white/10 text-left text-[11px] uppercase tracking-wide text-slate-500">
                         <th className="px-3 py-3 font-semibold">Subscriber</th>
@@ -1235,7 +1254,7 @@ export default function AdminNewsletter() {
                       {sortedSubscribers.map((subscriber) => (
                         <tr
                           key={subscriber.id}
-                          className="border-b border-white/5 text-slate-300 transition hover:bg-white/[0.03]"
+                          className="border-b border-white/5 text-slate-300 transition hover:bg-white/3"
                         >
                           <td className="px-3 py-4">
                             <div className="font-medium text-white">
@@ -1284,7 +1303,7 @@ export default function AdminNewsletter() {
                             </Badge>
                           </td>
                           <td className="px-3 py-4">
-                            <div className="flex items-center justify-end gap-2">
+                            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-end">
                               {editingSubscriberId === subscriber.id ? (
                                 <>
                                   <Button

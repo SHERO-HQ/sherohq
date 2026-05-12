@@ -10,10 +10,12 @@ import { cn } from "@/lib/utils";
 import AppImage from "@/components/common/AppImage";
 import { MFASetupDialog } from "@/components/admin/MFASetupDialog";
 import { verifyAdminMFASetup } from "@/services/admin";
+import { useDialog } from "@/hooks/useDialog";
 
 export default function AdminProfile() {
   const { admin, setAdmin } = useAdmin();
   const { addNotification } = useNotifications();
+  const dialog = useDialog();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [username] = useState(admin?.username || "");
@@ -81,14 +83,27 @@ export default function AdminProfile() {
   }
 
   async function handleDisableMFA() {
-    if (!confirm("Are you sure you want to disable Multi-Factor Authentication? Your account will be less secure.")) {
+    const shouldDisable = await dialog.confirm({
+      title: "Disable Multi-Factor Authentication?",
+      message:
+        "Are you sure you want to disable Multi-Factor Authentication? Your account will be less secure.",
+      confirmText: "Disable MFA",
+      cancelText: "Keep MFA",
+      type: "warning",
+    });
+
+    if (!shouldDisable) {
       return;
     }
 
     try {
       setIsUpdating(true);
       // For now, I'll just show a notification.
-      addNotification("Info", "MFA disabling requires a separate verification step for security. Please contact a superadmin.", "info");
+      addNotification(
+        "Info",
+        "MFA disabling requires a separate verification step for security. Please contact a superadmin.",
+        "info",
+      );
     } finally {
       setIsUpdating(false);
     }
@@ -174,11 +189,17 @@ export default function AdminProfile() {
 
         <div className="lg:col-span-2 space-y-6">
           <Card className="bg-card border-border">
-            <form onSubmit={handleUpdateProfile} className="p-6 md:p-8 space-y-8">
+            <form
+              onSubmit={handleUpdateProfile}
+              className="p-6 md:p-8 space-y-8"
+            >
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label htmlFor="username" className="text-sm font-medium text-slate-400">
+                    <label
+                      htmlFor="username"
+                      className="text-sm font-medium text-slate-400"
+                    >
                       Username
                     </label>
                     <Input
@@ -189,7 +210,10 @@ export default function AdminProfile() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium text-slate-400">
+                    <label
+                      htmlFor="email"
+                      className="text-sm font-medium text-slate-400"
+                    >
                       Email Address
                     </label>
                     <Input
@@ -202,7 +226,10 @@ export default function AdminProfile() {
                 </div>
 
                 <div className="space-y-2">
-                  <label htmlFor="phone" className="text-sm font-medium text-slate-400">
+                  <label
+                    htmlFor="phone"
+                    className="text-sm font-medium text-slate-400"
+                  >
                     Phone Number
                   </label>
                   <Input
@@ -217,11 +244,15 @@ export default function AdminProfile() {
 
                 <div className="p-4 rounded bg-muted/30 border border-border space-y-6">
                   <p className="text-sm text-slate-500 flex items-center gap-2">
-                    <AlertCircle className="w-4 h-4" /> Keep blank to maintain current password
+                    <AlertCircle className="w-4 h-4" /> Keep blank to maintain
+                    current password
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label htmlFor="new-password" className="text-sm font-medium text-slate-400">
+                      <label
+                        htmlFor="new-password"
+                        className="text-sm font-medium text-slate-400"
+                      >
                         New Password
                       </label>
                       <Input
@@ -234,7 +265,10 @@ export default function AdminProfile() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label htmlFor="confirm-password" className="text-sm font-medium text-slate-400">
+                      <label
+                        htmlFor="confirm-password"
+                        className="text-sm font-medium text-slate-400"
+                      >
                         Confirm New Password
                       </label>
                       <Input
@@ -254,7 +288,7 @@ export default function AdminProfile() {
                 <Button
                   type="submit"
                   disabled={isUpdating}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground min-w-[140px]"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground min-w-35"
                 >
                   {isUpdating ? (
                     <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -280,12 +314,14 @@ export default function AdminProfile() {
                     Add an extra layer of security to your account.
                   </p>
                 </div>
-                <div className={cn(
-                  "px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider",
-                  admin?.mfaEnabled 
-                    ? "bg-brand-secondary-500/10 text-brand-secondary-400" 
-                    : "bg-slate-800 text-slate-500"
-                )}>
+                <div
+                  className={cn(
+                    "px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider",
+                    admin?.mfaEnabled
+                      ? "bg-brand-secondary-500/10 text-brand-secondary-400"
+                      : "bg-slate-800 text-slate-500",
+                  )}
+                >
                   {admin?.mfaEnabled ? "Enabled" : "Disabled"}
                 </div>
               </div>
@@ -297,14 +333,17 @@ export default function AdminProfile() {
                       <Shield className="w-5 h-5 text-brand-secondary-400" />
                     </div>
                     <div className="space-y-1">
-                      <p className="text-sm font-semibold text-white">Protect your account</p>
+                      <p className="text-sm font-semibold text-white">
+                        Protect your account
+                      </p>
                       <p className="text-xs text-slate-500">
-                        MFA adds a second step to your login process by requiring a code from an authenticator app.
+                        MFA adds a second step to your login process by
+                        requiring a code from an authenticator app.
                       </p>
                     </div>
                   </div>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     className="w-full border-brand-secondary-500/20 hover:bg-brand-secondary-500/10 text-brand-secondary-400"
                     onClick={() => setShowMFASetup(true)}
                   >
@@ -318,12 +357,17 @@ export default function AdminProfile() {
                       <Shield className="w-5 h-5 text-brand-secondary-400" />
                     </div>
                     <div className="space-y-1">
-                      <p className="text-sm font-semibold text-white">MFA is active</p>
-                      <p className="text-xs text-slate-500">Your account is protected with two-factor authentication.</p>
+                      <p className="text-sm font-semibold text-white">
+                        MFA is active
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        Your account is protected with two-factor
+                        authentication.
+                      </p>
                     </div>
                   </div>
-                  <Button 
-                    variant="ghost" 
+                  <Button
+                    variant="ghost"
                     className="text-rose-400 hover:text-rose-300 hover:bg-rose-400/10"
                     onClick={handleDisableMFA}
                   >
@@ -337,7 +381,7 @@ export default function AdminProfile() {
       </div>
 
       {showMFASetup && (
-        <MFASetupDialog 
+        <MFASetupDialog
           onSuccess={() => {
             setShowMFASetup(false);
             setAdmin({ ...admin!, mfaEnabled: true });

@@ -13,22 +13,32 @@ This guide provides step-by-step instructions for deploying the Sherotech e-comm
 The following variables must be configured in your production environment settings.
 
 ### Database
-| Variable | Description |
-| :--- | :--- |
+
+| Variable       | Description                                                                   |
+| :------------- | :---------------------------------------------------------------------------- |
 | `DATABASE_URL` | Full PostgreSQL connection string (e.g., `postgres://user:pass@host:port/db`) |
 
 ### Storage & External Services
-| Variable | Description |
-| :--- | :--- |
-| `SUPABASE_URL` | Your Supabase project URL |
-| `SUPABASE_KEY` | Your Supabase anon/public key for image optimization |
-| `RESEND_API_KEY` | API key for automated notifications and newsletters |
+
+| Variable                       | Description                                                                                                    |
+| :----------------------------- | :------------------------------------------------------------------------------------------------------------- |
+| `SUPABASE_URL`                 | Your Supabase project URL                                                                                      |
+| `SUPABASE_KEY`                 | Your Supabase anon/public key for image optimization                                                           |
+| `RESEND_API_KEY`               | API key for automated notifications and newsletters                                                            |
+| `RESEND_FROM`                  | Verified sender address for newsletter emails (for example, `SHERO TECHNOLOGIES <newsletter@your-domain.com>`) |
+| `TWILIO_ACCOUNT_SID`           | Twilio account SID for SMS campaigns                                                                           |
+| `TWILIO_AUTH_TOKEN`            | Twilio auth token for SMS campaigns                                                                            |
+| `TWILIO_FROM_NUMBER`           | Twilio phone number used as the SMS sender                                                                     |
+| `TWILIO_MESSAGING_SERVICE_SID` | Optional Twilio messaging service SID for SMS campaigns                                                        |
+| `WHATSAPP_ACCESS_TOKEN`        | WhatsApp Cloud API access token, required for WhatsApp campaigns                                               |
+| `WHATSAPP_PHONE_NUMBER_ID`     | WhatsApp Cloud API phone number ID, required for WhatsApp campaigns                                            |
 
 ### Application Config
-| Variable | Description |
-| :--- | :--- |
+
+| Variable               | Description                                                 |
+| :--------------------- | :---------------------------------------------------------- |
 | `NEXT_PUBLIC_SITE_URL` | The primary production domain (e.g., `https://sherohq.com`) |
-| `NODE_ENV` | Set to `production` |
+| `NODE_ENV`             | Set to `production`                                         |
 
 ---
 
@@ -51,6 +61,7 @@ Vercel is the recommended hosting platform for Sherotech as it provides native s
 If deploying to a VPS (e.g., DigitalOcean, AWS) or a service like Render:
 
 ### 1. Build the Application
+
 ```bash
 corepack enable
 yarn install
@@ -58,9 +69,11 @@ yarn build
 ```
 
 ### 2. Start the Server
+
 ```bash
 yarn start
 ```
+
 By default, Next.js will listen on port `3000`. Ensure your reverse proxy (Nginx/Caddy) is configured to forward traffic to this port.
 
 ---
@@ -70,12 +83,16 @@ By default, Next.js will listen on port `3000`. Ensure your reverse proxy (Nginx
 The platform includes background tasks for newsletter processing and status updates.
 
 ### Vercel Cron
+
 If using Vercel, the cron jobs are automatically configured via `vercel.json`:
+
 - **Path**: `/api/cron/newsletter`
 - **Schedule**: Every minute (standard for campaign processing)
 
 ### Manual Cron
+
 If not using Vercel, set up a cron job to ping the endpoint periodically:
+
 ```bash
 * * * * * curl -X GET https://your-domain.com/api/cron/newsletter -H "Authorization: Bearer YOUR_SECRET"
 ```
@@ -104,7 +121,9 @@ Ensure the database schema is up-to-date before deployment.
 ## 🆘 Troubleshooting
 
 ### 404 on API Routes
+
 Ensure that no legacy `server/` directory exists and that you are not using a legacy proxy in your hosting configuration. The application now uses native Next.js routing exclusively.
 
 ### Database Timeouts
+
 If using Supabase, ensure you are using the **Connection Pooling** string (port 6543) for serverless environments to prevent connection exhaustion.

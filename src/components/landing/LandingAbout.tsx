@@ -8,7 +8,6 @@ import {
   Cpu,
   Globe,
   Globe2,
-  Info,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 

@@ -21,7 +21,9 @@ interface ShippingInfo {
 }
 
 const toReadableOrderId = (orderId: string): string => {
-  const compact = String(orderId ?? "").replace(/-/g, "").trim();
+  const compact = String(orderId ?? "")
+    .replace(/-/g, "")
+    .trim();
   if (!compact) return "ORD-UNKNOWN";
   return `ORD-${compact.slice(0, 8).toUpperCase()}`;
 };
@@ -31,7 +33,8 @@ class NotificationService {
   private resend: Resend | null = null;
 
   constructor() {
-    const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, RESEND_API_KEY } = process.env;
+    const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, RESEND_API_KEY } =
+      process.env;
 
     if (RESEND_API_KEY && !RESEND_API_KEY.includes("your_api_key")) {
       this.resend = new Resend(RESEND_API_KEY);
@@ -45,20 +48,38 @@ class NotificationService {
     }
   }
 
+  private getEmailProviderName() {
+    if (this.resend) return "Resend";
+    if (this.transporter) return "SMTP";
+    return null;
+  }
+
+  private getErrorMessage(error: unknown) {
+    return error instanceof Error ? error.message : String(error);
+  }
+
   private async sendEmail(
     to: string,
     subject: string,
     html: string,
-    options: { throwOnError?: boolean } = {},
+    options: { throwOnError?: boolean; requestId?: string } = {},
   ) {
+    const logPrefix = options.requestId
+      ? `[Newsletter ${options.requestId}]`
+      : "[Newsletter]";
+
     try {
       if (this.resend) {
-        await this.resend.emails.send({
+        const result = await this.resend.emails.send({
           from: process.env.RESEND_FROM || "onboarding@resend.dev",
           to,
           subject,
           html,
         });
+
+        if (result.error) {
+          throw new Error(`Resend rejected the email: ${result.error.message}`);
+        }
       } else if (this.transporter) {
         await this.transporter.sendMail({
           from: process.env.SMTP_USER,
@@ -67,12 +88,24 @@ class NotificationService {
           html,
         });
       } else {
-        console.log(`[Email Simulation] To: ${to}, Subject: ${subject}`);
+        if (process.env.NODE_ENV === "production" && options.throwOnError) {
+          throw new Error(
+            "Email delivery is not configured. Set RESEND_API_KEY and RESEND_FROM, or SMTP_HOST, SMTP_PORT, SMTP_USER, and SMTP_PASS.",
+          );
+        }
+
+        console.log(
+          `${logPrefix} [Email Simulation] To: ${to}, Subject: ${subject}`,
+        );
       }
     } catch (error) {
-      console.error("❌ [Email Error]:", error);
+      console.error(`${logPrefix} ❌ [Email Error]:`, error);
       if (options.throwOnError) {
-        throw error;
+        const provider = this.getEmailProviderName();
+        const providerPrefix = provider
+          ? `${provider} email delivery failed`
+          : "Email delivery failed";
+        throw new Error(`${providerPrefix}: ${this.getErrorMessage(error)}`);
       }
     }
   }
@@ -81,7 +114,8 @@ class NotificationService {
     to: string,
     subject: string,
     content: string,
-    unsubscribeUrl: string
+    unsubscribeUrl: string,
+    requestId?: string,
   ) {
     const htmlContent = `
       <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
@@ -94,24 +128,31 @@ class NotificationService {
         </p>
       </div>
     `;
-    await this.sendEmail(to, subject, htmlContent, { throwOnError: true });
+    await this.sendEmail(to, subject, htmlContent, {
+      throwOnError: true,
+      requestId,
+    });
   }
 
   public async sendOrderConfirmation(
     orderId: string,
     shippingInfo: ShippingInfo,
     items: OrderItem[],
-    total: number
+    total: number,
   ) {
     const readableOrderId = toReadableOrderId(orderId);
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
-    
-    const itemsHtml = items.map(item => `
+
+    const itemsHtml = items
+      .map(
+        (item) => `
       <tr>
         <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.name} x ${item.quantity}</td>
         <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">GH₵${(item.price * item.quantity).toFixed(2)}</td>
       </tr>
-    `).join("");
+    `,
+      )
+      .join("");
 
     const htmlContent = `
       <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
@@ -132,16 +173,25 @@ class NotificationService {
       </div>
     `;
 
-    await this.sendEmail(shippingInfo.email, `Order Confirmation - ${readableOrderId}`, htmlContent);
-    
+    await this.sendEmail(
+      shippingInfo.email,
+      `Order Confirmation - ${readableOrderId}`,
+      htmlContent,
+    );
+
     // Admin alert
-    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || "info.sherohq@gmail.com";
-    await this.sendEmail(adminEmail, `🚨 NEW ORDER: ${readableOrderId}`, `
+    const adminEmail =
+      process.env.ADMIN_NOTIFICATION_EMAIL || "info.sherohq@gmail.com";
+    await this.sendEmail(
+      adminEmail,
+      `🚨 NEW ORDER: ${readableOrderId}`,
+      `
       <h2>New Order Received!</h2>
       <p>Customer: ${shippingInfo.firstName} ${shippingInfo.lastName}</p>
       <p>Total: GH₵${total.toFixed(2)}</p>
       <p><a href="${baseUrl}/admin/orders/${orderId}">View in Admin Panel</a></p>
-    `);
+    `,
+    );
   }
 }
 

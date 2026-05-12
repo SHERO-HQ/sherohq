@@ -25,6 +25,10 @@ interface NewsletterCampaignInput {
   audienceSubscribedBefore?: Date | null;
 }
 
+interface NewsletterCampaignSendOptions {
+  requestId?: string;
+}
+
 interface NewsletterRecipient {
   id: string;
   email: string | null;
@@ -55,6 +59,10 @@ interface NewsletterCampaignRow {
 
 export class NewsletterCampaignValidationError extends Error {
   status = 400;
+}
+
+export class NewsletterCampaignDeliveryError extends Error {
+  status = 502;
 }
 
 const VALID_CHANNELS = new Set<CampaignChannel>(["email", "sms", "whatsapp"]);
@@ -145,6 +153,30 @@ function normalizePhone(value: string): string {
   return value.replace(/[^\d+]/g, "").replace(/^\+/, "");
 }
 
+function normalizeSmsPhone(value: string): string {
+  const compact = value.replace(/[^\d+]/g, "");
+  if (!compact) return compact;
+  return compact.startsWith("+") ? compact : `+${compact}`;
+}
+
+function getTwilioSmsConfig() {
+  const accountSid = process.env.TWILIO_ACCOUNT_SID?.trim();
+  const authToken = process.env.TWILIO_AUTH_TOKEN?.trim();
+  const fromNumber = process.env.TWILIO_FROM_NUMBER?.trim();
+  const messagingServiceSid = process.env.TWILIO_MESSAGING_SERVICE_SID?.trim();
+
+  if (!accountSid || !authToken) {
+    return null;
+  }
+
+  return {
+    accountSid,
+    authToken,
+    fromNumber: fromNumber || null,
+    messagingServiceSid: messagingServiceSid || null,
+  };
+}
+
 function getSiteUrl(): string {
   return (
     process.env.NEXT_PUBLIC_SITE_URL ||
@@ -152,6 +184,30 @@ function getSiteUrl(): string {
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "") ||
     "http://localhost:3000"
   ).replace(/\/$/, "");
+}
+
+function getLogPrefix(requestId?: string): string {
+  return requestId ? `[Newsletter ${requestId}]` : "[Newsletter]";
+}
+
+function getErrorMessage(error: unknown): string {
+  return error instanceof Error && error.message ? error.message : String(error);
+}
+
+function deliveryErrorForChannel(
+  channel: CampaignChannel,
+  error: unknown,
+): NewsletterCampaignDeliveryError {
+  if (error instanceof NewsletterCampaignDeliveryError) return error;
+
+  const label =
+    channel === "whatsapp" ? "WhatsApp" : channel === "sms" ? "SMS" : "Email";
+  const message = getErrorMessage(error);
+  const prefix = `${label} delivery failed`;
+
+  return new NewsletterCampaignDeliveryError(
+    message.startsWith(prefix) ? message : `${prefix}: ${message}`,
+  );
 }
 
 export function normalizeNewsletterCampaignInput(
@@ -193,9 +249,9 @@ export function normalizeNewsletterCampaignInput(
   const whatsappTemplateName =
     asTrimmedString(body.whatsappTemplateName) || null;
 
-  if (channel === "whatsapp" && !isTest && !whatsappTemplateName) {
+  if (channel === "whatsapp" && !whatsappTemplateName) {
     throw new NewsletterCampaignValidationError(
-      "Live WhatsApp campaigns require an approved template name",
+      "WhatsApp campaigns require an approved template name",
     );
   }
 
@@ -305,13 +361,21 @@ async function fetchAudience(
 async function sendWhatsAppMessage(
   phone: string,
   input: NewsletterCampaignInput,
+  requestId?: string,
 ): Promise<void> {
   const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
   const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
   const recipient = normalizePhone(phone);
+  const logPrefix = getLogPrefix(requestId);
 
   if (!accessToken || !phoneNumberId) {
-    console.log(`[WhatsApp Simulation] To: ${recipient}, Subject: ${input.subject}`);
+    if (process.env.NODE_ENV === "production") {
+      throw new NewsletterCampaignDeliveryError(
+        "WhatsApp delivery is not configured. Set WHATSAPP_ACCESS_TOKEN and WHATSAPP_PHONE_NUMBER_ID.",
+      );
+    }
+
+    console.log(`${logPrefix} [WhatsApp Simulation] To: ${recipient}, Subject: ${input.subject}`);
     return;
   }
 
@@ -359,19 +423,98 @@ async function sendWhatsAppMessage(
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(
-      `WhatsApp API error ${response.status}: ${errorText.slice(0, 300)}`,
+    let providerMessage = errorText;
+
+    try {
+      const parsed = JSON.parse(errorText) as {
+        error?: { message?: string };
+        message?: string;
+      };
+      providerMessage = parsed.error?.message || parsed.message || errorText;
+    } catch {
+      providerMessage = errorText;
+    }
+
+    throw new NewsletterCampaignDeliveryError(
+      `WhatsApp API error ${response.status}: ${providerMessage.slice(0, 300)}`,
     );
   }
 }
 
-async function sendSmsMessage(phone: string, input: NewsletterCampaignInput): Promise<void> {
-  console.log(`[SMS Simulation] To: ${normalizePhone(phone)}, Subject: ${input.subject}`);
+async function sendSmsMessage(
+  phone: string,
+  input: NewsletterCampaignInput,
+  requestId?: string,
+): Promise<void> {
+  const config = getTwilioSmsConfig();
+  const recipient = normalizeSmsPhone(phone);
+
+  if (!config) {
+    if (process.env.NODE_ENV === "production") {
+      throw new NewsletterCampaignDeliveryError(
+        "SMS delivery is not configured. Set TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN, plus TWILIO_FROM_NUMBER or TWILIO_MESSAGING_SERVICE_SID.",
+      );
+    }
+
+    console.log(
+      `${getLogPrefix(requestId)} [SMS Simulation] To: ${recipient}, Subject: ${input.subject}`,
+    );
+    return;
+  }
+
+  const payload = new URLSearchParams({
+    To: recipient,
+    Body: input.content,
+  });
+
+  if (config.messagingServiceSid) {
+    payload.set("MessagingServiceSid", config.messagingServiceSid);
+  } else if (config.fromNumber) {
+    payload.set("From", normalizeSmsPhone(config.fromNumber));
+  } else {
+    throw new NewsletterCampaignDeliveryError(
+      "SMS delivery is not configured. Set TWILIO_FROM_NUMBER or TWILIO_MESSAGING_SERVICE_SID.",
+    );
+  }
+
+  const response = await fetch(
+    `https://api.twilio.com/2010-04-01/Accounts/${config.accountSid}/Messages.json`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${Buffer.from(
+          `${config.accountSid}:${config.authToken}`,
+        ).toString("base64")}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: payload.toString(),
+    },
+  );
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    let providerMessage = errorText;
+
+    try {
+      const parsed = JSON.parse(errorText) as {
+        message?: string;
+        error_message?: string;
+      };
+      providerMessage = parsed.error_message || parsed.message || errorText;
+    } catch {
+      providerMessage = errorText;
+    }
+
+    throw new NewsletterCampaignDeliveryError(
+      `Twilio SMS API error ${response.status}: ${providerMessage.slice(0, 300)}`,
+    );
+  }
 }
 
 async function sendToRecipient(
   input: NewsletterCampaignInput,
   recipient: NewsletterRecipient,
+  requestId?: string,
 ): Promise<void> {
   if (input.channel === "email") {
     if (!recipient.email) throw new Error("Recipient email is missing");
@@ -381,6 +524,7 @@ async function sendToRecipient(
       input.subject,
       input.content,
       unsubscribeUrl,
+      requestId,
     );
     return;
   }
@@ -388,11 +532,11 @@ async function sendToRecipient(
   if (!recipient.phone) throw new Error("Recipient phone is missing");
 
   if (input.channel === "whatsapp") {
-    await sendWhatsAppMessage(recipient.phone, input);
+    await sendWhatsAppMessage(recipient.phone, input, requestId);
     return;
   }
 
-  await sendSmsMessage(recipient.phone, input);
+  await sendSmsMessage(recipient.phone, input, requestId);
 }
 
 async function markSubscribersContacted(recipientIds: string[]): Promise<void> {
@@ -425,22 +569,31 @@ async function deliverRecipients(
   campaignId: string,
   input: NewsletterCampaignInput,
   recipients: NewsletterRecipient[],
+  requestId?: string,
 ): Promise<{ sent: number; failed: number }> {
   let sent = 0;
   let failed = 0;
   const successfulRecipientIds: string[] = [];
+  const logPrefix = getLogPrefix(requestId);
 
   for (let start = 0; start < recipients.length; start += input.batchSize) {
     const batch = recipients.slice(start, start + input.batchSize);
 
     for (const recipient of batch) {
+      console.log(`${logPrefix} Newsletter sending:`, {
+        campaignId,
+        channel: input.channel,
+        recipientId: recipient.id,
+        email: recipient.email,
+        phone: recipient.phone,
+      });
       try {
-        await sendToRecipient(input, recipient);
+        await sendToRecipient(input, recipient, requestId);
         sent += 1;
         successfulRecipientIds.push(recipient.id);
       } catch (error) {
         failed += 1;
-        console.error("Newsletter recipient send failed:", {
+        console.error(`${logPrefix} Newsletter recipient send failed:`, {
           campaignId,
           recipientId: recipient.id,
           error,
@@ -554,6 +707,10 @@ async function finalizeCampaign(campaignId: string): Promise<void> {
 }
 
 async function sendTestCampaign(input: NewsletterCampaignInput) {
+async function sendTestCampaign(
+  input: NewsletterCampaignInput,
+  requestId?: string,
+) {
   const recipient: NewsletterRecipient = {
     id: "test",
     email: input.testEmail || null,
@@ -562,7 +719,17 @@ async function sendTestCampaign(input: NewsletterCampaignInput) {
     unsubscribeToken: "test",
   };
 
-  await sendToRecipient(input, recipient);
+  console.log(`${getLogPrefix(requestId)} Newsletter test send:`, {
+    channel: input.channel,
+    testEmail: input.testEmail || null,
+    testPhone: input.testPhone || null,
+  });
+
+  try {
+    await sendToRecipient(input, recipient, requestId);
+  } catch (error) {
+    throw deliveryErrorForChannel(input.channel, error);
+  }
 
   return {
     success: true,
@@ -573,9 +740,12 @@ async function sendTestCampaign(input: NewsletterCampaignInput) {
   };
 }
 
-export async function sendNewsletterCampaign(input: NewsletterCampaignInput) {
+export async function sendNewsletterCampaign(
+  input: NewsletterCampaignInput,
+  options: NewsletterCampaignSendOptions = {},
+) {
   if (input.testEmail || input.testPhone) {
-    return sendTestCampaign(input);
+    return sendTestCampaign(input, options.requestId);
   }
 
   const totalTargets = await countAudience(input);
@@ -604,7 +774,12 @@ export async function sendNewsletterCampaign(input: NewsletterCampaignInput) {
   }
 
   const recipients = await fetchAudience(input, { limit: totalTargets });
-  const result = await deliverRecipients(campaignId, input, recipients);
+  const result = await deliverRecipients(
+    campaignId,
+    input,
+    recipients,
+    options.requestId,
+  );
   await finalizeCampaign(campaignId);
 
   return {
