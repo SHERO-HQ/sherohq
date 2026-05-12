@@ -461,9 +461,14 @@ async function sendWhatsAppMessage(
       providerMessage = errorText;
     }
 
-    throw new NewsletterCampaignDeliveryError(
-      `WhatsApp API error ${response.status}: ${providerMessage.slice(0, 300)}`,
-    );
+    const fullError = `WhatsApp API error ${response.status}: ${providerMessage.slice(0, 300)}`;
+    console.error(`${getLogPrefix(requestId)} ${fullError}`, {
+      status: response.status,
+      phone: recipient,
+      errorText,
+    });
+
+    throw new NewsletterCampaignDeliveryError(fullError);
   }
 }
 
