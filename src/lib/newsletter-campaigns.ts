@@ -82,7 +82,9 @@ function parseOptionalDate(value: unknown, fieldName: string): Date | null {
 
   const parsed = new Date(trimmed);
   if (Number.isNaN(parsed.getTime())) {
-    throw new NewsletterCampaignValidationError(`${fieldName} must be a valid date`);
+    throw new NewsletterCampaignValidationError(
+      `${fieldName} must be a valid date`,
+    );
   }
 
   return parsed;
@@ -96,9 +98,12 @@ function parseInteger(
 ): number {
   if (value === undefined || value === null || value === "") return fallback;
 
-  const parsed = typeof value === "number" ? value : Number.parseInt(String(value), 10);
+  const parsed =
+    typeof value === "number" ? value : Number.parseInt(String(value), 10);
   if (!Number.isInteger(parsed) || parsed < min) {
-    throw new NewsletterCampaignValidationError(`${fieldName} must be ${min} or more`);
+    throw new NewsletterCampaignValidationError(
+      `${fieldName} must be ${min} or more`,
+    );
   }
 
   return parsed;
@@ -111,9 +116,12 @@ function parseOptionalInteger(
 ): number | null {
   if (value === undefined || value === null || value === "") return null;
 
-  const parsed = typeof value === "number" ? value : Number.parseInt(String(value), 10);
+  const parsed =
+    typeof value === "number" ? value : Number.parseInt(String(value), 10);
   if (!Number.isInteger(parsed) || parsed < min) {
-    throw new NewsletterCampaignValidationError(`${fieldName} must be ${min} or more`);
+    throw new NewsletterCampaignValidationError(
+      `${fieldName} must be ${min} or more`,
+    );
   }
 
   return parsed;
@@ -150,7 +158,10 @@ function isLikelyEmail(value: string): boolean {
 }
 
 function normalizePhone(value: string): string {
-  return value.replace(/[^\d+]/g, "").replace(/^\+/, "");
+  const compact = value.replace(/[^\d+]/g, "");
+  if (!compact) return compact;
+  // WhatsApp API requires E.164 format with + prefix
+  return compact.startsWith("+") ? compact : `+${compact}`;
 }
 
 function normalizeSmsPhone(value: string): string {
@@ -191,7 +202,9 @@ function getLogPrefix(requestId?: string): string {
 }
 
 function getErrorMessage(error: unknown): string {
-  return error instanceof Error && error.message ? error.message : String(error);
+  return error instanceof Error && error.message
+    ? error.message
+    : String(error);
 }
 
 function deliveryErrorForChannel(
@@ -215,7 +228,9 @@ export function normalizeNewsletterCampaignInput(
 ): NewsletterCampaignInput {
   const channelValue = asTrimmedString(body.channel) || "email";
   if (!VALID_CHANNELS.has(channelValue as CampaignChannel)) {
-    throw new NewsletterCampaignValidationError("Channel must be email, sms, or whatsapp");
+    throw new NewsletterCampaignValidationError(
+      "Channel must be email, sms, or whatsapp",
+    );
   }
 
   const audienceStatusValue = asTrimmedString(body.audienceStatus) || "active";
@@ -228,7 +243,9 @@ export function normalizeNewsletterCampaignInput(
   const subject = asTrimmedString(body.subject);
   const content = asTrimmedString(body.content);
   if (!subject || !content) {
-    throw new NewsletterCampaignValidationError("Subject and content are required");
+    throw new NewsletterCampaignValidationError(
+      "Subject and content are required",
+    );
   }
 
   const channel = channelValue as CampaignChannel;
@@ -238,11 +255,15 @@ export function normalizeNewsletterCampaignInput(
 
   if (isTest) {
     if (channel === "email" && (!testEmail || !isLikelyEmail(testEmail))) {
-      throw new NewsletterCampaignValidationError("A valid test email is required");
+      throw new NewsletterCampaignValidationError(
+        "A valid test email is required",
+      );
     }
 
     if (channel !== "email" && !testPhone) {
-      throw new NewsletterCampaignValidationError("A test phone number is required");
+      throw new NewsletterCampaignValidationError(
+        "A test phone number is required",
+      );
     }
   }
 
@@ -274,7 +295,10 @@ export function normalizeNewsletterCampaignInput(
     batchSize: parseInteger(body.batchSize, "Batch size", 100, 1),
     sendDelayMs: parseInteger(body.sendDelayMs, "Send delay", 0, 0),
     recipientLimit,
-    scheduleAt: parseOptionalDate(body.scheduleAt ?? body.scheduledAt, "Schedule date"),
+    scheduleAt: parseOptionalDate(
+      body.scheduleAt ?? body.scheduledAt,
+      "Schedule date",
+    ),
     audienceStatus: audienceStatusValue as AudienceStatus,
     audienceSource: asTrimmedString(body.audienceSource) || null,
     audienceSubscribedAfter: parseOptionalDate(
@@ -375,7 +399,9 @@ async function sendWhatsAppMessage(
       );
     }
 
-    console.log(`${logPrefix} [WhatsApp Simulation] To: ${recipient}, Subject: ${input.subject}`);
+    console.log(
+      `${logPrefix} [WhatsApp Simulation] To: ${recipient}, Subject: ${input.subject}`,
+    );
     return;
   }
 
@@ -801,7 +827,9 @@ function dateFromRow(value: Date | string | null | undefined): Date | null {
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
 
-function inputFromCampaign(row: NewsletterCampaignRow): NewsletterCampaignInput {
+function inputFromCampaign(
+  row: NewsletterCampaignRow,
+): NewsletterCampaignInput {
   return {
     channel: row.channel || "email",
     subject: row.subject,

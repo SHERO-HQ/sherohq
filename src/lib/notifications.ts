@@ -70,8 +70,15 @@ class NotificationService {
 
     try {
       if (this.resend) {
+        const from = process.env.RESEND_FROM?.trim();
+        if (!from) {
+          throw new Error(
+            "RESEND_FROM is required for Resend email delivery. Set a verified sender such as SHERO TECHNOLOGIES <newsletter@your-domain.com>.",
+          );
+        }
+
         const result = await this.resend.emails.send({
-          from: process.env.RESEND_FROM || "onboarding@resend.dev",
+          from,
           to,
           subject,
           html,
