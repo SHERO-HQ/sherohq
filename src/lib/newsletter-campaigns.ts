@@ -706,7 +706,6 @@ async function finalizeCampaign(campaignId: string): Promise<void> {
   );
 }
 
-async function sendTestCampaign(input: NewsletterCampaignInput) {
 async function sendTestCampaign(
   input: NewsletterCampaignInput,
   requestId?: string,
