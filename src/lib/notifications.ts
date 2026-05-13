@@ -101,12 +101,16 @@ class NotificationService {
           );
         }
 
-        console.log(
-          `${logPrefix} [Email Simulation] To: ${to}, Subject: ${subject}`,
-        );
+        if (process.env.NODE_ENV !== "production") {
+          console.log(
+            `${logPrefix} [Email Simulation] To: ${to}, Subject: ${subject}`,
+          );
+        }
       }
     } catch (error) {
-      console.error(`${logPrefix} ❌ [Email Error]:`, error);
+      if (process.env.NODE_ENV !== "production") {
+        console.error(`${logPrefix} ❌ [Email Error]:`, error);
+      }
       if (options.throwOnError) {
         const provider = this.getEmailProviderName();
         const providerPrefix = provider

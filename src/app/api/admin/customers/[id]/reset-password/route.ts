@@ -18,13 +18,17 @@ export async function POST(
     // or just return success to simulate the behavior.
     
     // We can also just log it
-    console.log(`Admin ${admin.username} initiated password reset for user ${id}`);
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`Admin ${admin.username} initiated password reset for user ${id}`);
+    }
 
     return apiResponse.success({ 
       message: "Password reset instructions have been sent to the customer." 
     });
   } catch (error) {
-    console.error("Customer password reset error:", error);
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Customer password reset error:", error);
+    }
     return apiResponse.error("Failed to initiate password reset");
   }
 }

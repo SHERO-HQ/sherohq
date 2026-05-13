@@ -25,7 +25,9 @@ async function fetchDynamicCatalogSummary(): Promise<string> {
 
     return summary || CATALOG_SUMMARY;
   } catch (error) {
-    console.error("Failed to fetch dynamic catalog:", error);
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Failed to fetch dynamic catalog:", error);
+    }
     return CATALOG_SUMMARY;
   }
 }
@@ -298,9 +300,11 @@ function buildInlineTroubleshootingSteps(userMessage: string): string {
 async function fetchRecommendedProducts(query: string, budgetCap?: number) {
   try {
     const normalizedQuery = query.trim().toLowerCase();
-    console.log(
-      `🔍 AI Fetching products for: "${normalizedQuery || query}" using ${BACKEND_URL}`,
-    );
+    if (process.env.NODE_ENV !== "production") {
+      console.log(
+        `🔍 AI Fetching products for: "${normalizedQuery || query}" using ${BACKEND_URL}`,
+      );
+    }
 
     const genericQueries = new Set([
       "",
@@ -433,7 +437,9 @@ async function fetchRecommendedProducts(query: string, budgetCap?: number) {
 
     return fetchFeatured();
   } catch (error) {
-    console.error("Error fetching recommended products:", error);
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Error fetching recommended products:", error);
+    }
     return [];
   }
 }
@@ -688,10 +694,12 @@ export async function POST(request: Request) {
           data?.candidates?.[0]?.content?.parts?.[0]?.text ||
           "I'm sorry, I couldn't generate a response.";
       } else {
-        console.error(
-          "Chat API provider error: no successful model",
-          lastError,
-        );
+        if (process.env.NODE_ENV !== "production") {
+          console.error(
+            "Chat API provider error: no successful model",
+            lastError,
+          );
+        }
         replyContent = buildFallbackReply(message, safeHistory);
       }
     }

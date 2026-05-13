@@ -59,7 +59,9 @@ const CheckoutSuccess = () => {
           setStatus("success");
         }
       } catch (error) {
-        console.error("Verification error:", error);
+        if (process.env.NODE_ENV !== "production") {
+          console.error("Verification error:", error);
+        }
       }
     }, 2000);
 

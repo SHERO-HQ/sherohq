@@ -126,8 +126,6 @@ export async function handleResponse<T>(response: Response): Promise<T> {
   try {
     return JSON.parse(text) as T;
   } catch {
-    const snippet = text.substring(0, 100).replace(/\n/g, " ");
-    console.error("JSON Parse Error Snippet:", snippet);
     throw new Error(
       `Failed to parse server response. The server might be returning an error page instead of JSON. (Status: ${response.status})`,
     );

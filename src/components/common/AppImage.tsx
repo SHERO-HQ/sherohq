@@ -62,7 +62,9 @@ export default function AppImage({
       }
       className={className}
       onError={() => {
-        console.warn(`Image failed to load: ${src}`);
+        if (process.env.NODE_ENV !== "production") {
+          console.warn(`Image failed to load: ${src}`);
+        }
         setFailedSrc(src);
       }}
     />

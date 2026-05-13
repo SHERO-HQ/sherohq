@@ -45,7 +45,9 @@ export async function sendChatMessage(
     if (!response.ok) throw new Error(`Error: ${response.statusText}`);
     return await response.json() as ChatMessage;
   } catch (error) {
-    console.error("AI Service Error:", error);
+    if (process.env.NODE_ENV !== "production") {
+      console.error("AI Service Error:", error);
+    }
     return {
       id: crypto.randomUUID(),
       role: "assistant",

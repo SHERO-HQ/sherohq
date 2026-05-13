@@ -19,7 +19,9 @@ export async function POST(request: NextRequest) {
 
     // Note: To prevent account enumeration, always return success even if user doesn't exist
     if (!user) {
-      console.log(`Password reset requested for non-existent email: ${email}`);
+      if (process.env.NODE_ENV !== "production") {
+        console.log(`Password reset requested for non-existent email: ${email}`);
+      }
       return NextResponse.json({
         success: true,
         message: "If an account with that email exists, we have sent a reset link.",
@@ -40,14 +42,16 @@ export async function POST(request: NextRequest) {
     const origin = request.nextUrl.origin;
     const resetLink = `${origin}/reset-password?token=${token}`;
     
-    console.log(`
-      --------------------------------------------------
-      PASSWORD RESET REQUEST
-      To: ${email}
-      User: ${user.name}
-      Link: ${resetLink}
-      --------------------------------------------------
-    `);
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`
+        --------------------------------------------------
+        PASSWORD RESET REQUEST
+        To: ${email}
+        User: ${user.name}
+        Link: ${resetLink}
+        --------------------------------------------------
+      `);
+    }
 
     // In a real app, use Resend or Nodemailer here
     // try {
@@ -65,7 +69,9 @@ export async function POST(request: NextRequest) {
       message: "Password reset link sent successfully.",
     });
   } catch (error) {
-    console.error("Forgot password error:", error);
+    if (process.env.NODE_ENV !== "production") {
+      console.error("Forgot password error:", error);
+    }
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
     }

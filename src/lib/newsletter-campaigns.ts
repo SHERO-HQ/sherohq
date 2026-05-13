@@ -611,24 +611,20 @@ async function deliverRecipients(
     const batch = recipients.slice(start, start + input.batchSize);
 
     for (const recipient of batch) {
-      console.log(`${logPrefix} Newsletter sending:`, {
-        campaignId,
-        channel: input.channel,
-        recipientId: recipient.id,
-        email: recipient.email,
-        phone: recipient.phone,
-      });
+      /* Newsletter sending log removed for production */
       try {
         await sendToRecipient(input, recipient, requestId);
         sent += 1;
         successfulRecipientIds.push(recipient.id);
       } catch (error) {
         failed += 1;
-        console.error(`${logPrefix} Newsletter recipient send failed:`, {
-          campaignId,
-          recipientId: recipient.id,
-          error,
-        });
+        if (process.env.NODE_ENV !== "production") {
+          console.error(`${logPrefix} Newsletter recipient send failed:`, {
+            campaignId,
+            recipientId: recipient.id,
+            error,
+          });
+        }
       }
     }
 
@@ -749,11 +745,13 @@ async function sendTestCampaign(
     unsubscribeToken: "test",
   };
 
-  console.log(`${getLogPrefix(requestId)} Newsletter test send:`, {
-    channel: input.channel,
-    testEmail: input.testEmail || null,
-    testPhone: input.testPhone || null,
-  });
+  if (process.env.NODE_ENV !== "production") {
+    console.log(`${getLogPrefix(requestId)} Newsletter test send:`, {
+      channel: input.channel,
+      testEmail: input.testEmail || null,
+      testPhone: input.testPhone || null,
+    });
+  }
 
   try {
     await sendToRecipient(input, recipient, requestId);

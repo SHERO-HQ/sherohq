@@ -39,8 +39,6 @@ import {
   publicUploadImage
 } from "@/services/api";
 
-
-
 const feedbackSchema = z.object({
   name: z.string(),
   email: z.string(),
@@ -196,9 +194,11 @@ export default function FeedbackForm({
     },
   });
 
-  const ratingValue = watch("rating");
-  const anonymousValue = watch("anonymous");
-  const messageValue = watch("message");
+  const {
+    rating: ratingValue,
+    anonymous: anonymousValue,
+    message: messageValue
+  } = watch();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -214,11 +214,11 @@ export default function FeedbackForm({
     }
   };
 
-  const removeImage = () => {
+  const removeImage = useCallback(() => {
     setImageFile(null);
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
-  };
+  }, []);
 
   const onSubmit = async (data: FeedbackValues) => {
     setServerError(null);
@@ -248,22 +248,22 @@ export default function FeedbackForm({
       setIsSuccess(true);
       reset();
       removeImage();
-    } catch (err) {
+    } catch {
       setServerError("Unable to send feedback. Please check your connection.");
     }
   };
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setIsSuccess(false);
     setServerError(null);
     reset();
     removeImage();
-  };
+  }, [reset, removeImage]);
 
   const handleModalClose = useCallback(() => {
     if (onClose) onClose();
     setTimeout(handleReset, 300);
-  }, [onClose]);
+  }, [onClose, handleReset]);
 
   useEffect(() => {
     if (mode === "modal" && isOpen) {
@@ -312,7 +312,6 @@ export default function FeedbackForm({
             </CardHeader>
             <CardContent className="space-y-6 sm:space-y-8 px-4 sm:px-6 pt-4 pb-10">
               <form id="feedback-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6 sm:space-y-8">
-
                 {/* Visual Separator & Rating */}
                 <div className="space-y-4">
                   <div className="relative flex items-center">

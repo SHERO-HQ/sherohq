@@ -377,16 +377,13 @@ export default function AIChatAssistant() {
           type: "audio/webm",
         });
 
-        console.log(
-          `Recording stopped. Duration: ${duration}ms, Chunks: ${audioChunksRef.current.length}, Size: ${audioBlob.size} bytes`,
-        );
+        /* Recording stopped */
 
         if (
           audioChunksRef.current.length === 0 ||
           duration < 500 ||
           audioBlob.size < 1000
         ) {
-          console.log("Recording too short, empty, or invalid, ignoring.");
           stream.getTracks().forEach((track) => track.stop());
           return;
         }
@@ -402,7 +399,7 @@ export default function AIChatAssistant() {
       };
 
       recorder.onstart = () => {
-        console.log("MediaRecorder started");
+        /* MediaRecorder started */
       };
 
       recorder.onerror = (event: Event) => {

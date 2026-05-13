@@ -17,10 +17,12 @@ export interface RecommendationRequest {
 export async function getAIRecommendations(
   request: RecommendationRequest,
 ): Promise<Product[]> {
-  console.log(
-    "Future functionality: Fetch AI recommendations based on",
-    request,
-  );
+  if (process.env.NODE_ENV !== "production") {
+    console.log(
+      "Future functionality: Fetch AI recommendations based on",
+      request,
+    );
+  }
 
   // Return empty array or fallback mock data for now
   return [];

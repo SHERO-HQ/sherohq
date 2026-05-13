@@ -15,7 +15,7 @@ export function generateSku(productId: string, customSku?: string | null): strin
  * Generates a unique URL slug for a product.
  */
 export async function generateUniqueSlug(baseSlug: string, productId?: string): Promise<string> {
-  let slug = baseSlug
+  const slug = baseSlug
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");

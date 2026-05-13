@@ -70,14 +70,18 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
           : undefined;
 
       if (status === 401) {
-        console.warn("🔐 Admin session expired, logging out.");
+        if (process.env.NODE_ENV !== "production") {
+          console.warn("🔐 Admin session expired, logging out.");
+        }
         setAdmin(null);
       } else {
         const statusLabel = status || "Network/Server Error";
-        console.error(
-          `📡 Admin auth check failed (${statusLabel}), keeping session for retry.`,
-          err,
-        );
+        if (process.env.NODE_ENV !== "production") {
+          console.error(
+            `📡 Admin auth check failed (${statusLabel}), keeping session for retry.`,
+            err,
+          );
+        }
       }
     } finally {
       setIsLoading(false);

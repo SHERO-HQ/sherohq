@@ -15,7 +15,7 @@ export function ServiceWorkerRegistration() {
  navigator.serviceWorker
  .register("/sw.js", { scope: "/" })
  .then((reg) => {
- console.log("[SW] Registered, scope:", reg.scope);
+ // [SW] Registered
  // Check for updates on each navigation
  reg.addEventListener("updatefound", () => {
  const newWorker = reg.installing;
@@ -26,7 +26,7 @@ export function ServiceWorkerRegistration() {
  navigator.serviceWorker.controller
  ) {
  // New content available — you could prompt user to refresh here
- console.log("[SW] New content available, reload to update.");
+ // [SW] New content available
  }
  });
  }

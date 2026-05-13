@@ -28,7 +28,9 @@ const SupportGuideDetail = () => {
         const data = await getGuideBySlug(slug);
         setGuide(data);
       } catch (err) {
-        console.error("Failed to load guide:", err);
+        if (process.env.NODE_ENV !== "production") {
+          console.error("Failed to load guide:", err);
+        }
         setError("Guide not found or failed to load");
       } finally {
         setIsLoading(false);

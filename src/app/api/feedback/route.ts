@@ -68,17 +68,21 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ ok: true, id: insertedId }, { status: 201 });
       } catch (err: any) {
-        console.error("[Feedback API] DB insert failed:", err?.message || err);
+        if (process.env.NODE_ENV !== "production") {
+          console.error("[Feedback API] DB insert failed:", err?.message || err);
+        }
         // fallthrough to fallback handling
       }
     }
 
     // Fallback: log + email admin
-    console.log("[Feedback API] Feedback received (no DB):", {
-      submitter: anonymous ? "anonymous" : name || "-",
-      rating,
-      message,
-    });
+    if (process.env.NODE_ENV !== "production") {
+      console.log("[Feedback API] Feedback received (no DB):", {
+        submitter: anonymous ? "anonymous" : name || "-",
+        rating,
+        message,
+      });
+    }
 
     const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL;
     if (adminEmail) {
@@ -99,13 +103,17 @@ export async function POST(req: Request) {
           base,
         );
       } catch (err) {
-        console.error("[Feedback API] Admin email failed:", err);
+        if (process.env.NODE_ENV !== "production") {
+          console.error("[Feedback API] Admin email failed:", err);
+        }
       }
     }
 
     return NextResponse.json({ ok: true }, { status: 201 });
   } catch (err) {
-    console.error("[Feedback API] Unexpected error:", err);
+    if (process.env.NODE_ENV !== "production") {
+      console.error("[Feedback API] Unexpected error:", err);
+    }
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

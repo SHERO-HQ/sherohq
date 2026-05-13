@@ -106,17 +106,15 @@ const ShareButton: React.FC<ShareButtonProps> = ({
  setIsOpen(false);
  return;
  }
- } catch (err) {
- console.error("Failed to fetch image for sharing:", err);
+ } catch {
  // Fallback to text-only share below
  }
  }
 
  await navigator.share(shareData);
  setIsOpen(false);
- } catch (err) {
+ } catch {
  // User cancelled or share was blocked
- console.log("Share cancelled or failed:", err);
  }
  };
 
@@ -148,7 +146,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
  setIsOpen(false);
  }, 1500);
  } catch {
- console.error("Failed to copy link");
+ // Failed to copy link
  }
  };
 
