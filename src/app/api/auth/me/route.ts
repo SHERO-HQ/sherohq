@@ -6,7 +6,7 @@ export async function GET() {
     const user = await getUserFromSession();
 
     if (!user) {
-      return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+      return NextResponse.json({ success: false, user: null }, { status: 200 });
     }
 
     return NextResponse.json({
@@ -15,6 +15,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Auth me error:", error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return NextResponse.json({ success: false, user: null }, { status: 200 });
   }
 }
