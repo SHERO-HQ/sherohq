@@ -10,12 +10,6 @@ import { Select } from "@/components/ui/select";
 import dynamic from "next/dynamic";
 import { getErrorMessage } from "@/utils/error";
 
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
-  ssr: false,
-  loading: () => (
-    <div className="h-100 w-full bg-slate-900/50 rounded animate-pulse" />
-  ),
-});
 import {
   createGuide,
   updateGuide,
@@ -23,9 +17,15 @@ import {
   type SupportGuide,
 } from "@/services/guides";
 import { useNotifications } from "@/hooks/useNotifications";
-import { useAdmin } from "@/context/AdminContext";
 import { uploadImage } from "@/services/api";
 import AppImage from "@/components/common/AppImage";
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[400px] w-full bg-slate-900/50 rounded animate-pulse" />
+  ),
+});
 
 const AdminGuideEditor = () => {
   const router = useRouter();
@@ -133,7 +133,7 @@ const AdminGuideEditor = () => {
 
   if (isLoading)
     return (
-      <div className="flex items-center justify-center min-h-100">
+      <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-brand-secondary-500 border-t-transparent rounded-full animate-spin" />
           <p className="text-slate-400 font-medium">Loading guide editor...</p>
@@ -158,9 +158,7 @@ const AdminGuideEditor = () => {
             </h1>
           </div>
           <Button
-            onClick={(e) =>
-              handleSubmit(e as unknown as React.BaseSyntheticEvent)
-            }
+            type="submit"
             disabled={isSaving}
             className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
           >

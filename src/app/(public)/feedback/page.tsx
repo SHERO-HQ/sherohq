@@ -14,7 +14,7 @@ export default function FeedbackPage() {
       <div className="mx-auto max-w-2xl">
         {/* Header */}
         <div className="mb-16 text-center">
-          <h1 className="mb-4 text-5xl font-medium tracking-tight text-slate-900 dark:text-white sm:text-6xl">
+          <h1 className="mb-4 text-3xl font-medium tracking-tight text-slate-900 dark:text-white sm:text-6xl">
             We'd Love to Hear From You
           </h1>
           <p className="text-base text-slate-600 dark:text-slate-400 leading-relaxed">
