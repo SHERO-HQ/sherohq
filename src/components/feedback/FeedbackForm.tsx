@@ -120,7 +120,7 @@ const StarRating = ({
           >
             <Star
               className={cn(
-                "h-8 w-8 sm:h-10 sm:w-10 transition-all duration-500",
+                "h-7 w-7 sm:h-10 sm:w-10 transition-all duration-500",
                 (hovered !== null ? star <= hovered : star <= value)
                   ? (hovered || value) <= 2 
                     ? "fill-rose-500 text-rose-500 drop-shadow-[0_0_15px_rgba(244,63,94,0.5)]"
@@ -281,9 +281,9 @@ export default function FeedbackForm({
 
   const formContent = (
     <Card className={cn(
-      "border-none shadow-md dark:bg-slate-950/80 backdrop-blur-2xl ring-1 ring-white/10",
+      "border-none shadow-md dark:bg-slate-950/80 backdrop-blur-2xl ring-1 ring-white/10 overflow-hidden",
       mode === "modal" 
-        ? "w-full sm:max-w-lg h-full sm:h-auto sm:max-h-[95vh] flex flex-col rounded-none sm:rounded" 
+        ? "w-full sm:max-w-lg h-dvh sm:h-auto sm:max-h-[95vh] flex flex-col rounded-none sm:rounded" 
         : "w-full rounded",
       className
     )}>
@@ -294,7 +294,7 @@ export default function FeedbackForm({
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
-            className={cn(mode === "modal" && "overflow-y-auto no-scrollbar")}
+            className={cn(mode === "modal" && "flex-1 flex flex-col min-h-0 overflow-y-auto no-scrollbar")}
           >
             <CardHeader className="text-center pb-2 relative px-4 sm:px-6">
               {mode === "modal" && (
@@ -310,8 +310,8 @@ export default function FeedbackForm({
                 {description}
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6 sm:space-y-8 px-4 sm:px-6 pt-4 pb-10">
-              <form id="feedback-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6 sm:space-y-8">
+            <CardContent className="space-y-4 sm:space-y-8 px-4 sm:px-6 pt-2 sm:pt-4 pb-6 sm:pb-10">
+              <form id="feedback-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-8">
                 {/* Visual Separator & Rating */}
                 <div className="space-y-4">
                   <div className="relative flex items-center">
@@ -331,7 +331,7 @@ export default function FeedbackForm({
                 </div>
 
                 {/* Identity Section */}
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   <div className="flex items-center justify-between">
                     <h4 className="text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
                       {anonymousValue ? <ShieldCheck className="h-4 w-4 text-emerald-500" /> : <ShieldOff className="h-4 w-4 text-slate-400" />}
@@ -380,7 +380,7 @@ export default function FeedbackForm({
                           />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <Input
                             label="Role"
                             placeholder="e.g. Designer"
@@ -496,7 +496,7 @@ export default function FeedbackForm({
             key="success-step"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center justify-center p-6 sm:p-12 py-12 sm:py-20 text-center space-y-6 sm:space-y-8"
+            className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12 py-8 sm:py-20 text-center space-y-6 sm:space-y-8"
           >
             <div className="relative">
               <motion.div

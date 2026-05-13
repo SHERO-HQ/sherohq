@@ -9,7 +9,7 @@ import {
   Star
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
-import FeedbackModal from "@/components/common/FeedbackModal";
+import FeedbackForm from "@/components/feedback/FeedbackForm";
 import { useTestimonials } from "@/hooks/queries/useTestimonials";
 import AppImage from "@/components/common/AppImage";
 
@@ -270,10 +270,12 @@ const AboutTestimonials = () => {
           </motion.div>
         </div>
 
-        {/* Feedback Modal */}
-        <FeedbackModal
+        <FeedbackForm
+          mode="modal"
           isOpen={isFeedbackModalOpen}
           onClose={() => setIsFeedbackModalOpen(false)}
+          title="Share Your Feedback"
+          description="Tell us about your experience. Your input helps us provide the best service possible."
         />
       </div>
     </section>
