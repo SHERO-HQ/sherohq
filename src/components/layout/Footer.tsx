@@ -35,6 +35,7 @@ const Footer = () => {
     { label: "Partners", href: "/partners" },
     { label: "Support", href: "/support" },
     { label: "FAQ", href: "/faq" },
+    { label: "Feedback", href: "/feedback" },
     { label: "Track Order", href: "/track" },
   ];
 
