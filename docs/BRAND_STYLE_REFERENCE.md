@@ -54,7 +54,7 @@
 | `gap-8` `p-8`   | 32px   | Section separation      |
 | `gap-12` `p-12` | 48px   | Major layout gaps       |
 
-**Border Radius**: `rounded` = 6px (default), `rounded` = 8px, `rounded-2xl` = 16px
+**Border Radius**: `rounded` = 6px (default), `rounded` = 8px, `rounded` = 16px
 
 **Breakpoints**: `sm` 640px | `md` 768px | `lg` 1024px | `xl` 1280px
 

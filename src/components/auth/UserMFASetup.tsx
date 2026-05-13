@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Shield, CheckCircle2, AlertCircle, Copy, Loader2 } from "lucide-react";
-import {Modal} from "@/components/ui/Modal";
+import { Modal } from "@/components/ui/Modal";
 
 interface UserMFASetupProps {
   isOpen: boolean;
@@ -85,7 +85,7 @@ export default function UserMFASetup({ isOpen, onClose, onSuccess }: UserMFASetu
             <button
               onClick={startSetup}
               disabled={loading}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium transition-colors flex items-center justify-center gap-2"
             >
               {loading ? <Loader2 className="animate-spin" /> : "Get Started"}
             </button>
@@ -102,11 +102,11 @@ export default function UserMFASetup({ isOpen, onClose, onSuccess }: UserMFASetu
               </p>
             </div>
 
-            <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm mx-auto w-fit">
+            <div className="bg-white p-4 rounded border border-gray-100 shadow-sm mx-auto w-fit">
               <img src={setupData.qrCode} alt="MFA QR Code" className="w-48 h-48" />
             </div>
 
-            <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl space-y-2">
+            <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded space-y-2">
               <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">Manual Entry Code</p>
               <div className="flex items-center justify-between gap-4">
                 <code className="text-lg font-mono text-blue-600 dark:text-blue-400 break-all">
@@ -114,7 +114,7 @@ export default function UserMFASetup({ isOpen, onClose, onSuccess }: UserMFASetu
                 </code>
                 <button
                   onClick={copySecret}
-                  className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
                   title="Copy to clipboard"
                 >
                   <Copy size={18} />
@@ -124,7 +124,7 @@ export default function UserMFASetup({ isOpen, onClose, onSuccess }: UserMFASetu
 
             <button
               onClick={() => setStep("verify")}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors"
+              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium transition-colors"
             >
               I've scanned it, continue
             </button>
@@ -150,11 +150,11 @@ export default function UserMFASetup({ isOpen, onClose, onSuccess }: UserMFASetu
                     maxLength={6}
                     value={code}
                     onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-                    className="w-full text-center text-3xl tracking-[0.5em] font-mono py-4 bg-gray-50 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded-2xl focus:border-blue-500 outline-none transition-colors"
+                    className="w-full text-center text-3xl tracking-[0.5em] font-mono py-4 bg-gray-50 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded focus:border-blue-500 outline-none transition-colors"
                   />
 
                   {error && (
-                    <div className="flex items-center gap-2 text-red-500 bg-red-50 dark:bg-red-900/20 p-3 rounded-lg text-sm">
+                    <div className="flex items-center gap-2 text-red-500 bg-red-50 dark:bg-red-900/20 p-3 rounded text-sm">
                       <AlertCircle size={16} />
                       <span>{error}</span>
                     </div>
@@ -163,7 +163,7 @@ export default function UserMFASetup({ isOpen, onClose, onSuccess }: UserMFASetu
                   <button
                     onClick={verifySetup}
                     disabled={loading || code.length !== 6}
-                    className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
+                    className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded font-medium transition-colors flex items-center justify-center gap-2"
                   >
                     {loading ? <Loader2 className="animate-spin" /> : <CheckCircle2 size={20} />}
                     {loading ? "Verifying..." : "Enable MFA"}
@@ -189,7 +189,7 @@ export default function UserMFASetup({ isOpen, onClose, onSuccess }: UserMFASetu
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-800">
+                <div className="grid grid-cols-2 gap-2 bg-gray-50 dark:bg-gray-800/50 p-4 rounded border border-gray-100 dark:border-gray-800">
                   {recoveryCodes.map((code, index) => (
                     <div key={index} className="flex items-center gap-3 font-mono text-sm">
                       <span className="text-gray-400 w-4">{index + 1}.</span>
@@ -208,14 +208,14 @@ export default function UserMFASetup({ isOpen, onClose, onSuccess }: UserMFASetu
                       a.download = "sherotech-recovery-codes.txt";
                       a.click();
                     }}
-                    className="flex-1 py-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 py-3 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded font-medium transition-colors flex items-center justify-center gap-2"
                   >
                     <Copy size={18} />
                     Download
                   </button>
                   <button
                     onClick={onSuccess}
-                    className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-colors"
+                    className="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium transition-colors"
                   >
                     Finish Setup
                   </button>

@@ -35,7 +35,21 @@ function isAllowedOrigin(request: NextRequest) {
   // browser-originated requests.
   if (!requestOrigin) return true;
 
-  return requestOrigin === request.nextUrl.origin;
+  // Allow exact origin match first
+  if (requestOrigin === request.nextUrl.origin) return true;
+
+  // Allow same-root subdomains (helpful in local dev where admin.localhost:3000
+  // may call the API hosted at localhost:3000). This accepts origins whose
+  // host ends with the server host (including port), e.g. "admin.localhost:3000" endsWith "localhost:3000".
+  try {
+    const originHost = new URL(requestOrigin).host; // host includes port
+    const serverHost = request.nextUrl.host; // includes port
+    if (originHost.endsWith(serverHost.replace(/^www\./, ""))) return true;
+  } catch (e) {
+    // if URL parsing fails, fall through to rejection
+  }
+
+  return false;
 }
 
 export default function proxy(request: NextRequest) {
@@ -50,6 +64,16 @@ export default function proxy(request: NextRequest) {
     !isCsrfExemptPath(path)
   ) {
     if (!isAllowedOrigin(request)) {
+      // Log useful headers to help debug CSRF failures in development
+      console.error("[CSRF] validation failed", {
+        path: request.nextUrl.pathname,
+        method: request.method,
+        origin: request.headers.get("origin"),
+        referer: request.headers.get("referer"),
+        host: request.headers.get("host"),
+        nextOrigin: request.nextUrl.origin,
+      });
+
       return NextResponse.json(
         { success: false, error: "CSRF validation failed" },
         { status: 403 },

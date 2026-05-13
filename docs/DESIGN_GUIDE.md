@@ -196,8 +196,8 @@ SheroTech uses **8px base unit** with derived scale:
 | **md**   | 6px    | `rounded`      | Default (cards, inputs, modals) |
 | **lg**   | 8px    | `rounded`   | Prominent containers            |
 | **xl**   | 12px   | `rounded`   | Large feature blocks            |
-| **2xl**  | 16px   | `rounded-2xl`  | Extra prominent, CTAs           |
-| **3xl**  | 20px   | `rounded-3xl`  | Hero sections, badges           |
+| **2xl**  | 16px   | `rounded`  | Extra prominent, CTAs           |
+| **3xl**  | 20px   | `rounded`  | Hero sections, badges           |
 | **full** | 9999px | `rounded-full` | Circles, pills                  |
 
 **Base Radius**: `--radius: 0.5rem` (8px)  

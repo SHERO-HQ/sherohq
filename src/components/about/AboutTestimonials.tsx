@@ -7,6 +7,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Star,
+  User,
+  ShieldCheck
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import FeedbackModal from "@/components/common/FeedbackModal";
@@ -139,6 +141,14 @@ const AboutTestimonials = () => {
                                   sizes="56px"
                                   className="object-cover"
                                 />
+                              ) : item.author === "Anonymous" ? (
+                                <AppImage
+                                  src={`https://api.dicebear.com/7.x/shapes/svg?seed=${encodeURIComponent(item.id || item.quote)}&backgroundColor=0066ff,0055ff,0044ff`}
+                                  alt="Anonymous"
+                                  fill
+                                  sizes="56px"
+                                  className="object-cover"
+                                />
                               ) : (
                                 <div className="w-full h-full bg-linear-to-br from-blue-600 to-brand-secondary-600 flex items-center justify-center text-white font-bold text-sm tracking-wider">
                                   {getInitials(item.author)}
@@ -151,8 +161,12 @@ const AboutTestimonials = () => {
                                 {item.author}
                               </h4>
                               <p className="text-sm text-brand-secondary-600 dark:text-brand-secondary-400">
-                                {item.role}
-                                {item.company ? `, ${item.company}` : ""}
+                                {item.author === "Anonymous" ? "Verified Feedback" : (
+                                  <>
+                                    {item.role}
+                                    {item.company ? `, ${item.company}` : ""}
+                                  </>
+                                )}
                               </p>
                               {(item.externalSource === "trustpilot" ||
                                 typeof item.rating === "number") && (
