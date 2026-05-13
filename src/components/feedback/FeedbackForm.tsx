@@ -548,7 +548,7 @@ export default function FeedbackForm({
   return createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center sm:p-4">
+        <div className="fixed inset-0 z-9999 flex items-center justify-center sm:p-4">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -561,7 +561,7 @@ export default function FeedbackForm({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 40 }}
             transition={{ type: "spring", damping: 30, stiffness: 400 }}
-            className="relative z-[10000] w-full max-w-lg"
+            className="relative z-10000 w-full max-w-lg"
           >
             {formContent}
           </motion.div>
