@@ -476,14 +476,14 @@ export default function FeedbackForm({
                 form="feedback-form"
                 disabled={isSubmitting}
                 variant="brandPrimary"
-                className="w-full h-12 text-sm font-semibold tracking-[0.2em] uppercase rounded shadow-[0_10px_20px_rgba(var(--brand-secondary-rgb),0.3)] hover:shadow-[0_15px_25px_rgba(var(--brand-secondary-rgb),0.4)] transition-all active:scale-95 disabled:shadow-none"
+                className="w-full h-10 text-sm font-semibold rounded shadow-[0_10px_20px_rgba(var(--brand-secondary-rgb),0.3)] hover:shadow-[0_15px_25px_rgba(var(--brand-secondary-rgb),0.4)] transition-all active:scale-95 disabled:shadow-none"
               >
                 {isSubmitting ? (
                   <Loader2 className="h-5 w-5 animate-spin" />
                 ) : (
                   <span className="flex items-center gap-3">
                     Submit Feedback
-                    <Send className="h-4 w-4" />
+                    {/* <Send className="h-4 w-4" /> */}
                   </span>
                 )}
               </Button>
