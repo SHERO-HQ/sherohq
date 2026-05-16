@@ -1,6 +1,6 @@
 # SheroTech E-Commerce Platform
 
-A modern, responsive e-commerce web application built for the Ghanaian market. This platform has been fully migrated to a **Next.js Native Architecture**, utilizing App Router API routes for the backend, resulting in a unified, high-performance codebase.
+A modern, responsive website built for SHERO HQ. This platform has been fully migrated to a **Next.js Native Architecture**, utilizing App Router API routes for the backend, resulting in a unified, high-performance codebase.
 
 ## 🚀 Key Features
 
