@@ -1,24 +1,22 @@
-# SheroTech E-Commerce Platform
+# SheroTech Solutions & Showcase Platform
 
-A modern, responsive website built for SHERO HQ. This platform has been fully migrated to a **Next.js Native Architecture**, utilizing App Router API routes for the backend, resulting in a unified, high-performance codebase.
+A modern, responsive platform built for **SHERO HQ Technologies**. This website showcases premium hardware, custom systems configuration, managed software solutions, and expert consultation services, all backed by a high-performance Next.js Native Architecture.
 
 ## 🚀 Key Features
 
-- **Next.js 16+ Native Architecture**: Unified full-stack codebase with App Router API routes.
+- **Next.js 16+ Native Architecture**: Unified full-stack codebase utilizing modern App Router API routes.
+- **Premium Solutions Showcase**: Immersive displays for managed IT support, server infrastructure, custom software engineering, and procurement services.
+- **Hardware & Products Showcase**: Elegant catalog featuring business-grade laptops, networking systems, accessories, and configured hardware solutions.
+- **Direct Lead Generation**: Seamless client engagement with dynamic WhatsApp inquiry workflows and custom quote triggers on all products.
+- **High-Fidelity Consultation Scheduler**: Integrated scheduler enabling clients to discover strategies and book discovery sessions directly.
 - **Multi-Factor Authentication (MFA)**: Production-grade TOTP-based security for administrative accounts.
-- **Modern User Interface**: Built with React 19, Tailwind CSS v4, and Framer Motion for premium animations.
-- **Advanced Checkout Flow**:
-  - Multi-step checkout (Cart -> Shipping -> Payment -> Confirmation).
-  - **Ghana Phone Validation**: Strict regex validation for local phone numbers (`02x` / `05x`).
-- **Flexible Payments**:
-  - 📱 **Mobile Money**: MTN and Telecel Cash.
-  - 💳 **Card Payment**: Visa/Mastercard via Paystack.
-  - 💵 **Cash on Delivery** & **Store Pickup**.
-- **Admin Dashboard**: Comprehensive panel with real-time analytics, order management, and activity logs.
+- **Modern User Interface**: Built with React 19, Tailwind CSS v4, and Framer Motion for premium visual depth.
+- **Admin Command Center**: Comprehensive dashboard with real-time analytics, user audits, and activity logging.
 
 ## 🛠️ Tech Stack
 
 ### Full Stack
+
 - **Framework**: [Next.js](https://nextjs.org/) (App Router, Turbopack)
 - **UI Library**: [React 19](https://react.dev/)
 - **Language**: [TypeScript](https://www.typescriptlang.org/)
@@ -30,22 +28,29 @@ A modern, responsive website built for SHERO HQ. This platform has been fully mi
 ## 🏁 Getting Started
 
 ### Prerequisites
+
 - Node.js (v20+ recommended)
 - Yarn 4.x package manager
 
 ### Installation
+
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd sherotech
    ```
+
 2. **Install Dependencies**
+
    ```bash
    yarn install
    ```
 
 ### Environment Setup
+
 Create a `.env.local` file in the root directory:
+
 ```env
 # Database
 DATABASE_URL=your_postgresql_connection_string
@@ -61,22 +66,27 @@ RESEND_API_KEY=your_resend_key
 ## 🏃‍♂️ Running the Project
 
 ### Development
+
 ```bash
 yarn dev
 ```
+
 - Frontend & API: [http://localhost:3000](http://localhost:3000)
 
 ### Production Build
+
 ```bash
 yarn build
 yarn start
 ```
 
 ## 🧪 Testing
+
 - **Unit/Integration**: `yarn test` (Vitest)
 - **End-to-End**: `yarn test:e2e` (Playwright)
 
 ## 📂 Project Structure
+
 ```text
 sherotech/
 ├── src/
@@ -95,7 +105,9 @@ sherotech/
 ```
 
 ## 🤝 Contributing
+
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📄 License
+
 This project is licensed under the MIT License.
