@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { createPortal } from "react-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -13,7 +12,6 @@ import {
   Loader2,
   Send,
   RefreshCcw,
-  X,
   Camera,
   User,
   ShieldCheck,
@@ -78,9 +76,6 @@ const ratingOptions = [
 
 interface FeedbackFormProps {
   className?: string;
-  isOpen?: boolean;
-  onClose?: () => void;
-  mode?: "inline" | "modal";
   title?: string;
   description?: string;
 }
@@ -157,9 +152,6 @@ const StarRating = ({
 
 export default function FeedbackForm({
   className,
-  isOpen = true,
-  onClose,
-  mode = "inline",
   title = "Share Your Experience",
   description = "Your voice helps us shape the future of SHERO."
 }: FeedbackFormProps) {
@@ -167,12 +159,7 @@ export default function FeedbackForm({
   const [serverError, setServerError] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const {
     register,
@@ -260,31 +247,9 @@ export default function FeedbackForm({
     removeImage();
   }, [reset, removeImage]);
 
-  const handleModalClose = useCallback(() => {
-    if (onClose) onClose();
-    setTimeout(handleReset, 300);
-  }, [onClose, handleReset]);
-
-  useEffect(() => {
-    if (mode === "modal" && isOpen) {
-      const handleEsc = (e: KeyboardEvent) => {
-        if (e.key === "Escape") handleModalClose();
-      };
-      window.addEventListener("keydown", handleEsc);
-      document.body.style.overflow = "hidden";
-      return () => {
-        window.removeEventListener("keydown", handleEsc);
-        document.body.style.overflow = "unset";
-      };
-    }
-  }, [mode, isOpen, handleModalClose]);
-
-  const formContent = (
+  return (
     <Card className={cn(
-      "border-none shadow-md dark:bg-slate-950/80 backdrop-blur-2xl ring-1 ring-white/10 overflow-hidden",
-      mode === "modal" 
-        ? "w-full sm:max-w-lg h-dvh sm:h-auto sm:max-h-[95vh] flex flex-col rounded-none sm:rounded" 
-        : "w-full rounded",
+      "border-none shadow-md dark:bg-slate-950/80 backdrop-blur-2xl ring-1 ring-white/10 overflow-hidden w-full rounded",
       className
     )}>
       <AnimatePresence mode="wait">
@@ -294,17 +259,9 @@ export default function FeedbackForm({
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
-            className={cn(mode === "modal" && "flex-1 flex flex-col min-h-0 overflow-y-auto no-scrollbar")}
+            className="w-full"
           >
             <CardHeader className="text-center pb-2 relative px-4 sm:px-6">
-              {mode === "modal" && (
-                <button 
-                  onClick={handleModalClose}
-                  className="absolute top-4 right-4 p-2 rounded bg-slate-100 dark:bg-white/5 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-all active:scale-90"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              )}
               <CardTitle className="text-2xl sm:text-3xl font-black tracking-tighter uppercase">{title}</CardTitle>
               <CardDescription className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
                 {description}
@@ -530,45 +487,10 @@ export default function FeedbackForm({
                 <RefreshCcw className="h-4 w-4 mr-2" />
                 Write Another
               </Button>
-              {mode === "modal" && (
-                <Button onClick={handleModalClose} variant="ghost" className="w-full h-12 rounded font-bold uppercase tracking-widest text-xs opacity-50 hover:opacity-100">
-                  Dismiss
-                </Button>
-              )}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
     </Card>
-  );
-
-  if (mode === "inline") return formContent;
-
-  if (!mounted) return null;
-
-  return createPortal(
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-9999 flex items-center justify-center sm:p-4">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={handleModalClose}
-            className="absolute inset-0 bg-slate-950/60 backdrop-blur-md"
-          />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 40 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 40 }}
-            transition={{ type: "spring", damping: 30, stiffness: 400 }}
-            className="relative z-10000 w-full max-w-lg"
-          >
-            {formContent}
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>,
-    document.body
   );
 }

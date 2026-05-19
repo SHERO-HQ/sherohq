@@ -9,7 +9,7 @@ import {
   Star
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
-import FeedbackForm from "@/components/feedback/FeedbackForm";
+import Link from "next/link";
 import { useTestimonials } from "@/hooks/queries/useTestimonials";
 import AppImage from "@/components/common/AppImage";
 
@@ -26,7 +26,6 @@ const getInitials = (name: string) => {
 const AboutTestimonials = () => {
   const { data: testimonials = [], isLoading } = useTestimonials();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
 
   const nextSlide = useCallback(() => {
     if (testimonials.length === 0) return;
@@ -260,23 +259,15 @@ const AboutTestimonials = () => {
               <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 transition-colors duration-300">
                 We value your input! Help us improve our products and services.
               </p>
-              <button
-                onClick={() => setIsFeedbackModalOpen(true)}
-                className="cursor-pointer px-6 py-2 bg-brand-secondary-600 text-sm text-white rounded font-medium hover:bg-brand-secondary-700 transition-colors shadow shadow-brand-secondary-900/20 w-fit"
+              <Link
+                href="/feedback"
+                className="cursor-pointer px-6 py-2 bg-brand-secondary-600 text-sm text-white rounded font-medium hover:bg-brand-secondary-700 transition-colors shadow shadow-brand-secondary-900/20 w-fit inline-block"
               >
                 Share With Us
-              </button>
+              </Link>
             </div>
           </motion.div>
         </div>
-
-        <FeedbackForm
-          mode="modal"
-          isOpen={isFeedbackModalOpen}
-          onClose={() => setIsFeedbackModalOpen(false)}
-          title="Share Your Feedback"
-          description="Tell us about your experience. Your input helps us provide the best service possible."
-        />
       </div>
     </section>
   );
