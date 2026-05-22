@@ -79,26 +79,118 @@ const getProductDraftKey = (productId: string | undefined) =>
 const isDraftMeaningful = (draft: ProductFormDraft) => {
   const { productData, specsList, newFeature } = draft;
 
+  // Check if draft has any meaningful data, including nested arrays/objects
   return Boolean(
     productData.name?.trim() ||
-      productData.category?.trim() ||
-      (productData.price ?? 0) > 0 ||
-      (productData.originalPrice ?? 0) > 0 ||
-      productData.image?.trim() ||
-      (productData.images?.length ?? 0) > 0 ||
-      (productData.features?.length ?? 0) > 0 ||
-      Object.keys(productData.specifications || {}).length > 0 ||
-      productData.description?.trim() ||
-      productData.badge?.trim() ||
-      productData.stockQuantity !== undefined ||
-      productData.isSpotlight ||
-      productData.isFeatured ||
-      specsList.some((row) => row.key.trim() || row.value.trim()) ||
-      newFeature.trim(),
+    productData.category?.trim() ||
+    (productData.price ?? 0) > 0 ||
+    (productData.originalPrice ?? 0) > 0 ||
+    productData.image?.trim() ||
+    (productData.images?.length ?? 0) > 0 || // Ensure images array is checked
+    (productData.features?.length ?? 0) > 0 || // Ensure features array is checked
+    Object.keys(productData.specifications || {}).length > 0 || // Ensure specs object is checked
+    productData.description?.trim() ||
+    productData.badge?.trim() ||
+    productData.stockQuantity !== undefined ||
+    productData.isSpotlight ||
+    productData.isFeatured ||
+    specsList.some((row) => row.key.trim() || row.value.trim()) ||
+    newFeature.trim(),
   );
 };
 
-const serializeDraft = (draft: ProductFormDraft) => JSON.stringify(draft);
+const serializeDraft = (draft: ProductFormDraft) => {
+  // Ensure nested arrays/objects are properly serialized
+  return JSON.stringify({
+    productData: {
+      ...draft.productData,
+      images: Array.isArray(draft.productData.images)
+        ? draft.productData.images
+        : [],
+      features: Array.isArray(draft.productData.features)
+        ? draft.productData.features
+        : [],
+      specifications:
+        typeof draft.productData.specifications === "object"
+          ? draft.productData.specifications
+          : {},
+    },
+    specsList: Array.isArray(draft.specsList) ? draft.specsList : [],
+    newFeature: draft.newFeature || "",
+  });
+};
+
+// Check if localStorage has available space
+const checkStorageQuota = (): boolean => {
+  if (typeof window === "undefined") return true;
+
+  const test = "__sherotech_quota_test__";
+  try {
+    const testData = new Array(1024 * 1024).join("x"); // 1MB test
+    localStorage.setItem(test, testData);
+    localStorage.removeItem(test);
+    return true;
+  } catch (error) {
+    // Out of space or quota exceeded
+    console.error("LocalStorage quota exceeded:", error);
+    return false;
+  }
+};
+
+// Clean up oldest drafts when storage is full
+const cleanupOldDrafts = (): void => {
+  if (typeof window === "undefined") return;
+
+  try {
+    const drafts: Array<{
+      key: string;
+      timestamp: number;
+    }> = [];
+
+    // Find all draft keys and their timestamps
+    for (let i = 0; i < window.localStorage.length; i++) {
+      const key = window.localStorage.key(i);
+      if (key?.startsWith(PRODUCT_DRAFT_STORAGE_PREFIX)) {
+        const timestampKey = `${key}:savedAt`;
+        const timestampStr = window.localStorage.getItem(timestampKey);
+        const timestamp = timestampStr ? new Date(timestampStr).getTime() : 0;
+        drafts.push({ key, timestamp });
+      }
+    }
+
+    // Sort by timestamp (oldest first) and remove oldest half
+    drafts.sort((a, b) => a.timestamp - b.timestamp);
+    const toRemove = Math.ceil(drafts.length / 2);
+
+    for (let i = 0; i < toRemove; i++) {
+      window.localStorage.removeItem(drafts[i].key);
+      window.localStorage.removeItem(`${drafts[i].key}:savedAt`);
+    }
+  } catch (error) {
+    console.error("Failed to cleanup drafts:", error);
+  }
+};
+
+// Reconcile specsList with productData.specifications
+const reconcileSpecs = (
+  productData: Partial<Product>,
+  specsList: SpecRow[],
+): SpecRow[] => {
+  // If specsList is empty but specs exist in productData, rebuild from specs
+  if (
+    specsList.length === 0 &&
+    Object.keys(productData.specifications || {}).length > 0
+  ) {
+    return Object.entries(productData.specifications || {}).map(
+      ([key, value]) => ({
+        id: uuidv4(),
+        key,
+        value,
+      }),
+    );
+  }
+  return specsList;
+};
 
 export default function ProductForm() {
   const { id } = useParams<{ id: string }>();
@@ -153,6 +245,11 @@ export default function ProductForm() {
       window.localStorage.setItem(`${draftKey}:savedAt`, savedAt);
       setHasDraft(true);
       setDraftSavedAt(savedAt);
+
+      // Check storage quota and cleanup if needed
+      if (!checkStorageQuota()) {
+        cleanupOldDrafts();
+      }
     },
     [draftKey],
   );
@@ -197,7 +294,11 @@ export default function ProductForm() {
           }
         }
       } catch (err) {
-        addNotification("Error", getErrorMessage(err, "Failed to load product data"), "error");
+        addNotification(
+          "Error",
+          getErrorMessage(err, "Failed to load product data"),
+          "error",
+        );
         console.error(err);
       } finally {
         setIsLoading(false);
@@ -222,13 +323,45 @@ export default function ProductForm() {
         const savedAt = window.localStorage.getItem(`${draftKey}:savedAt`);
         const parsed = JSON.parse(savedDraftText) as Partial<ProductFormDraft>;
 
+        let restoredProductData: Partial<Product> = defaultProductData();
+
         if (parsed.productData) {
-          setProductData({
+          // Explicitly preserve images, features, and specifications
+          restoredProductData = {
             ...defaultProductData(),
             ...parsed.productData,
-          });
+          };
+
+          // Ensure critical nested arrays/objects are never lost
+          restoredProductData.images = Array.isArray(parsed.productData.images)
+            ? parsed.productData.images
+            : restoredProductData.images || [];
+
+          restoredProductData.features = Array.isArray(
+            parsed.productData.features,
+          )
+            ? parsed.productData.features
+            : restoredProductData.features || [];
+
+          restoredProductData.specifications =
+            typeof parsed.productData.specifications === "object"
+              ? parsed.productData.specifications
+              : restoredProductData.specifications || {};
+
+          setProductData(restoredProductData);
         }
-        setSpecsList(Array.isArray(parsed.specsList) ? parsed.specsList : []);
+
+        // Restore specs list from draft (primary source of truth for editing)
+        // Reconcile with productData.specifications if needed
+        const restoredSpecsList = Array.isArray(parsed.specsList)
+          ? parsed.specsList
+          : [];
+        const reconciled = reconcileSpecs(
+          restoredProductData,
+          restoredSpecsList,
+        );
+        setSpecsList(reconciled);
+
         setNewFeature(parsed.newFeature || "");
         setHasDraft(true);
         setDraftSavedAt(savedAt);
@@ -245,7 +378,7 @@ export default function ProductForm() {
     } finally {
       setDraftLoaded(true);
     }
-  }, [addNotification, clearDraft, currentDraft, draftKey, draftLoaded, isLoading]);
+  }, [addNotification, clearDraft, draftKey, draftLoaded, isLoading]);
 
   useEffect(() => {
     if (!draftLoaded || initialDraftSnapshotRef.current) return;
@@ -325,7 +458,11 @@ export default function ProductForm() {
 
   const handleSaveDraft = () => {
     persistDraft(currentDraft);
-    addNotification("Draft saved", "Your changes were saved locally.", "success");
+    addNotification(
+      "Draft saved",
+      "Your changes were saved locally.",
+      "success",
+    );
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -379,7 +516,8 @@ export default function ProductForm() {
       let message = "Failed to upload images";
       const error = err as { message?: string; status?: number };
       if (error.message?.includes("Failed to fetch") || !error.status) {
-        message = "Server unreachable or connection dropped. Please try again or check the server status.";
+        message =
+          "Server unreachable or connection dropped. Please try again or check the server status.";
       } else if (error.message) {
         message = error.message;
       }
@@ -1059,7 +1197,9 @@ export default function ProductForm() {
                 }
                 className={cn(
                   "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
-                  productData.inStock ? "bg-brand-secondary-600" : "bg-slate-700",
+                  productData.inStock
+                    ? "bg-brand-secondary-600"
+                    : "bg-slate-700",
                 )}
               >
                 <span
