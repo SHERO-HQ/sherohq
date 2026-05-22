@@ -91,8 +91,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      whileHover={{ y: -5 }}
+      viewport={{ once: true, margin: "100px" }}
+      whileHover={{ y: -3 }}
+      transition={{ type: "tween", duration: 0.2 }}
       onClick={handleCardClick}
       className="group relative rounded overflow-hidden
  dark:bg-white/5 bg-white
@@ -114,7 +115,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             alt={product.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-contain object-center group-hover:scale-110 transition-transform duration-700 ease-out"
+            className="object-contain object-center sm:group-hover:scale-110 sm:transition-transform sm:duration-500 will-change-auto"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-6xl select-none opacity-30 group-hover:scale-110 transition-transform duration-700">
@@ -178,7 +179,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
 
           <h3 className="text-sm sm:text-base font-black dark:text-white text-slate-800 leading-tight group-hover:text-brand-secondary-500 transition-colors line-clamp-1 mb-1">
             {product.name.split(" ").map((word, i) => (
-              <span key={i} className={i === 0 ? "text-brand-secondary-500" : ""}>
+              <span
+                key={i}
+                className={i === 0 ? "text-brand-secondary-500" : ""}
+              >
                 {word}{" "}
               </span>
             ))}
