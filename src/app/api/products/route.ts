@@ -18,10 +18,21 @@ const CreateProductSchema = z.object({
   price: z.number().positive(),
   category: z.string().uuid(),
   description: z.string().optional(),
-  stockQuantity: z.number().int().nonnegative(),
+  stockQuantity: z.number().int().nonnegative().default(0),
   inStock: z.boolean().default(true),
   sku: z.string().optional().nullable(),
   slug: z.string().optional().nullable(),
+  image: z.string().optional().nullable(),
+  images: z.array(z.string()).optional(),
+  features: z.array(z.string()).optional(),
+  specifications: z.record(z.string(), z.string()).optional(),
+  originalPrice: z.number().optional().nullable(),
+  badge: z.string().optional().nullable(),
+  rating: z.number().optional(),
+  reviews: z.number().int().optional(),
+  condition: z.enum(["New", "Used", "Refurbished"]).optional(),
+  isSpotlight: z.boolean().optional().default(false),
+  isFeatured: z.boolean().optional().default(false),
 });
 
 interface ProductRow {
@@ -147,16 +158,62 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const validated = CreateProductSchema.parse(body);
-    const { name, price, category, description, stockQuantity, inStock, sku, slug } = validated;
+    const {
+      name,
+      price,
+      category,
+      description,
+      stockQuantity,
+      inStock,
+      sku,
+      slug,
+      image,
+      images,
+      features,
+      specifications,
+      originalPrice,
+      badge,
+      rating,
+      reviews,
+      condition,
+      isSpotlight,
+      isFeatured,
+    } = validated;
 
     const productId = uuidv4();
     const finalSku = generateSku(productId, sku);
     const finalSlug = await generateUniqueSlug(slug || name);
 
+    // Prepare JSON fields
+    const imagesJson = images && images.length > 0 ? JSON.stringify(images) : null;
+    const featuresJson = features && features.length > 0 ? JSON.stringify(features) : null;
+    const specificationsJson = specifications && Object.keys(specifications).length > 0 ? JSON.stringify(specifications) : null;
+
     await query(
-      `INSERT INTO products (id, name, sku, category, price, "stockQuantity", "inStock", description, slug)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-      [productId, name, finalSku, category, price, stockQuantity, inStock, description || null, finalSlug]
+      `INSERT INTO products (id, name, sku, category, price, "originalPrice", "stockQuantity", "inStock", description, slug, image, images, features, specifications, badge, rating, reviews, condition, "isSpotlight", "isFeatured")
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)`,
+      [
+        productId,
+        name,
+        finalSku,
+        category,
+        price,
+        originalPrice || null,
+        stockQuantity || 0,
+        inStock,
+        description || null,
+        finalSlug,
+        image || null,
+        imagesJson,
+        featuresJson,
+        specificationsJson,
+        badge || null,
+        rating || 0,
+        reviews || 0,
+        condition || "New",
+        isSpotlight || false,
+        isFeatured || false,
+      ]
     );
 
     await logActivity(admin.id, "product_create", "success", `Created product: ${name} (SKU: ${finalSku})`);

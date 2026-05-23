@@ -434,7 +434,23 @@ export default function ProductForm() {
         {} as Record<string, string>,
       );
 
-      const finalData = { ...productData, specifications };
+      const finalData = { 
+        ...productData, 
+        specifications,
+        // Ensure images and features are included from current state
+        images: productData.images || [],
+        features: productData.features || [],
+      };
+
+      // Debug: Log what's being sent to ensure images/features are included
+      console.log("Submitting product data:", {
+        hasImages: finalData.images?.length ?? 0,
+        images: finalData.images,
+        hasFeatures: finalData.features?.length ?? 0,
+        features: finalData.features,
+        hasSpecs: Object.keys(finalData.specifications || {}).length ?? 0,
+        specifications: finalData.specifications,
+      });
 
       if (isEdit && id) {
         await updateProductMutation.mutateAsync({ id, data: finalData });
