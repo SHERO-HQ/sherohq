@@ -434,8 +434,8 @@ export default function ProductForm() {
         {} as Record<string, string>,
       );
 
-      const finalData = { 
-        ...productData, 
+      const finalData = {
+        ...productData,
         specifications,
         // Ensure images and features are included from current state
         images: productData.images || [],

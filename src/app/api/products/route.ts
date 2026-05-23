@@ -121,13 +121,17 @@ export async function GET(request: NextRequest) {
     let paramIndex = 1;
 
     if (category && category !== "all") {
-      conditions.push(`(p.category = $${paramIndex} OR c_by_id.id = $${paramIndex} OR c_by_name.name = $${paramIndex})`);
+      conditions.push(
+        `(p.category = $${paramIndex} OR c_by_id.id = $${paramIndex} OR c_by_name.name = $${paramIndex})`,
+      );
       sqlParams.push(category);
       paramIndex++;
     }
 
     if (search) {
-      conditions.push(`(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR c_by_id.name ILIKE $${paramIndex} OR c_by_name.name ILIKE $${paramIndex})`);
+      conditions.push(
+        `(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR c_by_id.name ILIKE $${paramIndex} OR c_by_name.name ILIKE $${paramIndex})`,
+      );
       sqlParams.push(`%${search}%`);
       paramIndex++;
     }
@@ -141,11 +145,16 @@ export async function GET(request: NextRequest) {
 
     const result = await query(queryText, sqlParams);
     return NextResponse.json(result.rows.map(parseProduct), {
-      headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" },
+      headers: {
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+      },
     });
   } catch (error) {
     console.error("Error fetching products:", error);
-    return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch products" },
+      { status: 500 },
+    );
   }
 }
 
@@ -185,9 +194,14 @@ export async function POST(request: NextRequest) {
     const finalSlug = await generateUniqueSlug(slug || name);
 
     // Prepare JSON fields
-    const imagesJson = images && images.length > 0 ? JSON.stringify(images) : null;
-    const featuresJson = features && features.length > 0 ? JSON.stringify(features) : null;
-    const specificationsJson = specifications && Object.keys(specifications).length > 0 ? JSON.stringify(specifications) : null;
+    const imagesJson =
+      images && images.length > 0 ? JSON.stringify(images) : null;
+    const featuresJson =
+      features && features.length > 0 ? JSON.stringify(features) : null;
+    const specificationsJson =
+      specifications && Object.keys(specifications).length > 0
+        ? JSON.stringify(specifications)
+        : null;
 
     await query(
       `INSERT INTO products (id, name, sku, category, price, "originalPrice", "stockQuantity", "inStock", description, slug, image, images, features, specifications, badge, rating, reviews, condition, "isSpotlight", "isFeatured")
@@ -213,15 +227,31 @@ export async function POST(request: NextRequest) {
         condition || "New",
         isSpotlight || false,
         isFeatured || false,
-      ]
+      ],
     );
 
-    await logActivity(admin.id, "product_create", "success", `Created product: ${name} (SKU: ${finalSku})`);
+    await logActivity(
+      admin.id,
+      "product_create",
+      "success",
+      `Created product: ${name} (SKU: ${finalSku})`,
+    );
 
-    const result = await query("SELECT * FROM products WHERE id = $1", [productId]);
-    return NextResponse.json({ success: true, product: parseProduct(result.rows[0]) }, { status: 201 });
+    const result = await query("SELECT * FROM products WHERE id = $1", [
+      productId,
+    ]);
+    return NextResponse.json(
+      { success: true, product: parseProduct(result.rows[0]) },
+      { status: 201 },
+    );
   } catch (error) {
     console.error("Error creating product:", error);
-    return NextResponse.json({ error: error instanceof Error ? error.message : "Failed to create product" }, { status: 500 });
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error ? error.message : "Failed to create product",
+      },
+      { status: 500 },
+    );
   }
 }
