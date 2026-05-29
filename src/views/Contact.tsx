@@ -15,17 +15,10 @@ const Contact = () => {
     <>
       <div className="relative pt-8 pb-12 lg:pt-12 lg:pb-16 overflow-hidden dark:bg-slate-950 bg-slate-50 min-h-screen">
         {/* Dot Pattern Background */}
-        <div className="absolute inset-0 pattern-dots opacity-70 dark:opacity-50 pointer-events-none" />
+        <div className="absolute inset-0 pattern-dots opacity-40 dark:opacity-20 pointer-events-none" />
 
-        {/* Deep Space Background - Dark Mode Only */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black opacity-0 dark:opacity-100 transition-opacity duration-500" />
-
-        {/* Soft Light Mode Gradient */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-blue-100/50 via-slate-50 to-white dark:opacity-0 transition-opacity duration-500" />
-
-        {/* Animated Orbs */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-secondary-500/10 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
+        {/* Single Subtle Background Glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-brand-secondary-500/5 dark:bg-brand-secondary-500/10 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -42,8 +35,8 @@ const Contact = () => {
                   Contact SHERO
                 </div>
                 <h1 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-100 mb-6 leading-tight transition-colors duration-300">
-                  Start{" "}
-                  <span className="text-brand-secondary-600">Conversation</span>
+                  Connect with{" "}
+                  <span className="text-brand-secondary-600">Our Experts</span>
                 </h1>
                 <p className="text-base text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed">
                   Tell us your goals and constraints. We will recommend the
@@ -52,10 +45,10 @@ const Contact = () => {
                 </p>
 
                 <div className="flex flex-wrap gap-3 mt-7">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
-                    24h Response
+                  <span className="text-xs font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
+                    2hr Response SLA
                   </span>
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
+                  <span className="text-xs font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60">
                     Consultative Guidance
                   </span>
                 </div>

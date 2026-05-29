@@ -1,7 +1,8 @@
 "use client";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
-import { useRef, useEffect } from "react";
+import { useEffect } from "react";
 import { useIsMounted } from "@/hooks/useIsMounted";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import dynamic from "next/dynamic";
 
 const ParticleField = dynamic(
@@ -10,18 +11,21 @@ const ParticleField = dynamic(
 );
 
 interface HeroBackgroundProps {
+ enableMotion?: boolean;
  particleCount?: number;
  patternOpacity?: number;
  showOrbs?: boolean;
 }
 
 const HeroBackground: React.FC<HeroBackgroundProps> = ({
- particleCount = 8,
- patternOpacity = 0.5,
+ enableMotion = false,
+ particleCount = 0,
+ patternOpacity = 0.35,
  showOrbs = true,
 }) => {
- const containerRef = useRef<HTMLDivElement>(null);
  const mounted = useIsMounted();
+ const prefersReducedMotion = useReducedMotion();
+ const motionEnabled = enableMotion && mounted && !prefersReducedMotion;
 
  // Mouse Tracking for Kinetic Effects
  const mouseX = useMotionValue(0);
@@ -37,6 +41,10 @@ const HeroBackground: React.FC<HeroBackgroundProps> = ({
  const translateY = useTransform(smoothY, [-0.5, 0.5], [-10, 10]);
 
  useEffect(() => {
+ if (!motionEnabled) {
+ return;
+ }
+
  const handleGlobalMouseMove = (e: MouseEvent) => {
  const x = e.clientX / window.innerWidth - 0.5;
  const y = e.clientY / window.innerHeight - 0.5;
@@ -46,19 +54,19 @@ const HeroBackground: React.FC<HeroBackgroundProps> = ({
 
  window.addEventListener("mousemove", handleGlobalMouseMove);
  return () => window.removeEventListener("mousemove", handleGlobalMouseMove);
- }, [mouseX, mouseY]);
+ }, [motionEnabled, mouseX, mouseY]);
 
  return (
  <div className="absolute inset-0 overflow-hidden pointer-events-none">
  {/* Background kinetic pattern */}
  <motion.div
- style={{ x: translateX, y: translateY, opacity: patternOpacity }}
+ style={motionEnabled ? { x: translateX, y: translateY, opacity: patternOpacity } : { opacity: patternOpacity }}
  className="absolute inset-0 pattern-dots"
  />
 
  {/* Particle Field */}
- {mounted && (
- <ParticleField count={particleCount} colorVariant="dual" opacity={0.15} />
+ {motionEnabled && particleCount > 0 && (
+ <ParticleField count={particleCount} colorVariant="dual" opacity={0.15} animate />
  )}
 
  {/* Gradient Orbs */}

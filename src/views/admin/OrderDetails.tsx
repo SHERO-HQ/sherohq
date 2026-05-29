@@ -235,6 +235,111 @@ export default function OrderDetails() {
     }
   };
 
+  const getStatusStyles = (status: string) => {
+    switch (status?.toLowerCase()) {
+      case "delivered":
+        return "bg-brand-secondary-500/10 border border-brand-secondary-500/20 text-brand-secondary-400";
+      case "pending":
+        return "bg-amber-500/10 border border-amber-500/20 text-amber-400";
+      case "processing":
+        return "bg-blue-500/10 border border-blue-500/20 text-blue-400";
+      case "shipped":
+        return "bg-purple-500/10 border border-purple-500/20 text-purple-400";
+      default:
+        return "bg-rose-500/10 border border-rose-500/20 text-rose-400";
+    }
+  };
+
+  const OrderDetailsSkeleton = () => (
+    <div className="max-w-6xl mx-auto space-y-6 pb-20 animate-pulse select-none">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <div className="w-9 h-9 rounded bg-white/5 animate-pulse" />
+          <div className="space-y-2">
+            <div className="h-3 w-20 bg-white/5 rounded" />
+            <div className="h-6 w-36 bg-white/10 rounded" />
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <div className="h-10 w-24 bg-white/5 rounded" />
+          <div className="h-10 w-24 bg-white/5 rounded" />
+          <div className="h-10 w-32 bg-white/10 rounded" />
+        </div>
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-8">
+        {/* Main Content */}
+        <div className="lg:col-span-2 space-y-6">
+          <Card className="bg-slate-900 border-white/5 p-6 space-y-6">
+            <div className="flex justify-between items-center pb-4 border-b border-white/5">
+              <div className="h-5 w-32 bg-white/5 rounded" />
+              <div className="h-5 w-20 bg-white/5 rounded-full" />
+            </div>
+            <div className="space-y-4">
+              {[1, 2].map((i) => (
+                <div key={i} className="flex items-center gap-6 py-2">
+                  <div className="w-20 h-20 bg-white/5 rounded shrink-0" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 w-40 bg-white/10 rounded" />
+                    <div className="h-3 w-24 bg-white/5 rounded" />
+                  </div>
+                  <div className="text-right space-y-2">
+                    <div className="h-4 w-16 bg-white/10 rounded ml-auto" />
+                    <div className="h-3 w-10 bg-white/5 rounded ml-auto" />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="h-14 bg-white/5 rounded-lg w-full" />
+          </Card>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card className="bg-slate-900 border-white/5 p-6 space-y-4">
+              <div className="h-4 w-32 bg-white/5 rounded" />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-white/5" />
+                <div className="space-y-2 flex-1">
+                  <div className="h-4 w-28 bg-white/10 rounded" />
+                  <div className="h-3 w-36 bg-white/5 rounded" />
+                </div>
+              </div>
+            </Card>
+            <Card className="bg-slate-900 border-white/5 p-6 space-y-4">
+              <div className="h-4 w-32 bg-white/5 rounded" />
+              <div className="space-y-2">
+                <div className="h-4 w-48 bg-white/10 rounded" />
+                <div className="h-3 w-32 bg-white/5 rounded" />
+              </div>
+            </Card>
+          </div>
+        </div>
+
+        {/* Sidebar */}
+        <div className="space-y-6">
+          <Card className="bg-slate-900 border-white/5 p-6 space-y-6">
+            <div className="space-y-2">
+              <div className="h-3 w-20 bg-white/5 rounded" />
+              <div className="h-10 bg-white/5 rounded" />
+            </div>
+            <div className="space-y-3 pt-4 border-t border-white/5">
+              <div className="h-3 w-24 bg-white/5 rounded" />
+              <div className="flex justify-between">
+                <div className="h-4 w-12 bg-white/5 rounded" />
+                <div className="h-4 w-20 bg-white/10 rounded" />
+              </div>
+              <div className="flex justify-between">
+                <div className="h-4 w-12 bg-white/5 rounded" />
+                <div className="h-4 w-20 bg-white/10 rounded" />
+              </div>
+            </div>
+          </Card>
+          <div className="h-24 bg-slate-900/50 rounded border border-white/5 animate-pulse" />
+        </div>
+      </div>
+    </div>
+  );
+
   const isStorePickupOrder =
     (order?.paymentMethod || "").toLowerCase() === "store_pickup";
 
@@ -329,13 +434,7 @@ export default function OrderDetails() {
     }
   };
 
-  if (isLoading)
-    return (
-      <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
-        <Loader2 className="w-10 h-10 animate-spin text-brand-secondary-500" />
-        <p className="text-slate-500 font-medium">Fetching order details...</p>
-      </div>
-    );
+  if (isLoading) return <OrderDetailsSkeleton />;
 
   if (error || !order)
     return (
@@ -497,31 +596,30 @@ export default function OrderDetails() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </div>
-
-      <div className="grid lg:grid-cols-3 gap-8">
+      </di      <div className="grid lg:grid-cols-3 gap-8">
         {/* Main Content: Items & Summary */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="bg-slate-900 border-white/5 overflow-hidden">
-            <div className="p-6 border-b border-white/5 flex items-center justify-between">
+          <Card className="bg-slate-900/40 border-white/10 overflow-hidden relative group duration-300 hover:border-brand-secondary-500/20">
+            <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            <div className="p-6 border-b border-white/5 flex items-center justify-between relative z-10">
               <h2 className="text-lg font-bold text-white flex items-center gap-2">
                 <ShoppingBag className="w-5 h-5 text-brand-secondary-400" />
                 Order Items
               </h2>
-              <Badge
+              <span
                 className={cn(
-                  "text-[11px] font-bold uppercase",
-                  statusConfig.color,
+                  "px-2.5 py-1 rounded-full text-[10px] font-bold uppercase",
+                  getStatusStyles(order.status),
                 )}
               >
                 {order.status}
-              </Badge>
+              </span>
             </div>
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-white/5 relative z-10">
               {order.items.map((item) => (
                 <div
                   key={item.id || item.name}
-                  className="p-6 flex items-center gap-6 group"
+                  className="p-6 flex items-center gap-6 group/item hover:bg-slate-950/20 transition-colors duration-200"
                 >
                   <div className="relative w-20 h-20 rounded bg-slate-800 border border-white/5 overflow-hidden flex items-center justify-center shrink-0">
                     {item.image &&
@@ -532,7 +630,7 @@ export default function OrderDetails() {
                         alt={item.name}
                         fill
                         sizes="80px"
-                        className="object-cover group-hover:scale-110 transition-transform duration-500"
+                        className="object-cover group-hover/item:scale-110 transition-transform duration-500"
                       />
                     ) : (
                       <div className="text-3xl select-none">
@@ -541,15 +639,15 @@ export default function OrderDetails() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-white font-bold truncate group-hover:text-brand-secondary-400 transition-colors">
+                    <p className="text-white font-bold truncate group-hover/item:text-brand-secondary-400 transition-colors">
                       {item.name}
                     </p>
-                    <p className="text-sm text-slate-500 mt-1">
+                    <p className="text-sm text-slate-500 mt-1 font-mono">
                       {item.sku ? `SKU: ${item.sku}` : "No SKU"}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-white font-bold">
+                    <p className="text-white font-bold font-mono">
                       GH₵{item.price.toLocaleString()}
                     </p>
                     <p className="text-sm text-slate-500 mt-1">
@@ -559,46 +657,47 @@ export default function OrderDetails() {
                 </div>
               ))}
             </div>
-            <div className="p-6 bg-white/5 border-t border-white/5">
+            <div className="p-6 bg-white/5 border-t border-white/5 relative z-10">
               <div className="flex justify-between items-center">
                 <span className="text-slate-400">Total Amount</span>
-                <span className="text-2xl font-bold text-brand-secondary-400">
+                <span className="text-2xl font-bold text-brand-secondary-400 font-mono">
                   GH₵{order.total.toLocaleString()}
                 </span>
               </div>
             </div>
           </Card>
-
+ 
           {/* Customer & Shipping Info */}
           <div className="grid md:grid-cols-2 gap-6">
-            <Card className="bg-slate-900 border-white/5 p-6">
-              <h3 className="text-white font-bold mb-4 flex items-center gap-2">
-                <Mail className="w-4 h-4 text-brand-secondary-400" />
+            <Card className="bg-slate-900/40 border-white/10 p-6 hover:border-blue-500/20 duration-300 relative group overflow-hidden">
+              <div className="absolute inset-0 bg-radial-gradient from-blue-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              <h3 className="text-white font-bold mb-4 flex items-center gap-2 relative z-10">
+                <Mail className="w-4 h-4 text-blue-400" />
                 Customer Contact
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-4 relative z-10">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 font-bold">
+                  <div className="w-10 h-10 rounded-full bg-slate-800 border border-white/5 flex items-center justify-center text-slate-400 font-bold font-mono uppercase">
                     {order.shippingInfo.firstName[0]}
                     {order.shippingInfo.lastName[0]}
                   </div>
                   <div>
-                    <p className="text-white font-medium">
+                    <p className="text-white font-semibold">
                       {order.shippingInfo.firstName}{" "}
                       {order.shippingInfo.lastName}
                     </p>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-xs text-slate-500">
                       {order.shippingInfo.email}
                     </p>
                   </div>
                 </div>
-                <div className="pt-2 space-y-2">
+                <div className="pt-2 space-y-2 border-t border-white/5">
                   <div className="flex items-center gap-2 text-sm text-slate-400">
-                    <Mail className="w-3.5 h-3.5" />
+                    <Mail className="w-3.5 h-3.5 text-slate-500" />
                     <span>{order.shippingInfo.email}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-slate-400">
-                    <Phone className="w-3.5 h-3.5" />
+                    <Phone className="w-3.5 h-3.5 text-slate-500" />
                     <span>
                       {order.shippingInfo.phone || "No phone provided"}
                     </span>
@@ -606,20 +705,21 @@ export default function OrderDetails() {
                 </div>
               </div>
             </Card>
-
-            <Card className="bg-slate-900 border-white/5 p-6">
-              <h3 className="text-white font-bold mb-4 flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-brand-secondary-400" />
+ 
+            <Card className="bg-slate-900/40 border-white/10 p-6 hover:border-amber-500/20 duration-300 relative group overflow-hidden">
+              <div className="absolute inset-0 bg-radial-gradient from-amber-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              <h3 className="text-white font-bold mb-4 flex items-center gap-2 relative z-10">
+                <MapPin className="w-4 h-4 text-amber-400" />
                 Shipping Address
               </h3>
-              <div className="text-sm text-slate-400 space-y-2">
-                <p className="text-white">{order.shippingInfo.address}</p>
-                <p>
+              <div className="text-sm text-slate-400 space-y-2 relative z-10">
+                <p className="text-white font-medium">{order.shippingInfo.address}</p>
+                <p className="text-xs">
                   {order.shippingInfo.city}, {order.shippingInfo.region}
                 </p>
-                <div className="pt-2 flex items-center gap-2">
-                  <Truck className="w-4 h-4 text-slate-500" />
-                  <span className="text-[10px] uppercase font-bold tracking-wider">
+                <div className="pt-2.5 flex items-center gap-2 border-t border-white/5 mt-2">
+                  <Truck className="w-4 h-4 text-brand-secondary-400" />
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-brand-secondary-400">
                     Standard Delivery
                   </span>
                 </div>
@@ -627,57 +727,54 @@ export default function OrderDetails() {
             </Card>
           </div>
         </div>
-
+ 
         {/* Sidebar Info */}
         <div className="space-y-6">
-          <Card className="bg-slate-900 border-white/5 p-6 space-y-6">
-            <div>
-              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">
+          <Card className="bg-slate-900/40 border-white/10 p-6 space-y-6 hover:border-brand-secondary-500/20 duration-300 relative group overflow-hidden">
+            <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            <div className="relative z-10">
+              <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">
                 Order Status
               </h3>
-              <div className="flex items-center justify-between p-3 rounded bg-slate-800 border border-white/5">
+              <div className={cn(
+                "flex items-center justify-between p-3.5 rounded-lg border",
+                getStatusStyles(order.status)
+              )}>
                 <div className="flex items-center gap-3">
-                  <statusConfig.icon
-                    className={cn("w-5 h-5", statusConfig.color.split(" ")[0])}
-                  />
-                  <span
-                    className={cn(
-                      "font-bold capitalize",
-                      statusConfig.color.split(" ")[0],
-                    )}
-                  >
+                  <statusConfig.icon className="w-4.5 h-4.5" />
+                  <span className="font-bold capitalize text-sm">
                     {order.status}
                   </span>
                 </div>
               </div>
             </div>
-
-            <div>
-              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">
+ 
+            <div className="relative z-10">
+              <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">
                 Payment Information
               </h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-sm">
+              <div className="space-y-3 bg-slate-950/20 border border-white/5 rounded-lg p-3 text-xs">
+                <div className="flex items-center justify-between">
                   <span className="text-slate-500">Method</span>
-                  <span className="text-white font-medium flex items-center gap-1">
+                  <span className="text-white font-semibold flex items-center gap-1">
                     <CreditCard className="w-3.5 h-3.5 text-slate-400" />
                     {formatPaymentMethod(order.paymentMethod)}
                   </span>
                 </div>
-                <div className="flex items-center justify-between text-sm">
+                <div className="flex items-center justify-between">
                   <span className="text-slate-500">Date</span>
-                  <span className="text-white font-medium">
+                  <span className="text-white font-mono">
                     {new Date(order.createdAt).toLocaleDateString()}
                   </span>
                 </div>
               </div>
             </div>
-
-            <div className="pt-4 border-t border-white/5">
-              <div className="bg-brand-secondary-500/5 p-4 rounded border border-brand-secondary-500/10">
-                <div className="flex items-center gap-2 text-brand-secondary-400 mb-1">
+ 
+            <div className="pt-4 border-t border-white/5 relative z-10">
+              <div className="bg-brand-secondary-500/5 p-4 rounded-lg border border-brand-secondary-500/10">
+                <div className="flex items-center gap-2 text-brand-secondary-400 mb-1.5">
                   <Package className="w-4 h-4" />
-                  <span className="text-xs font-bold uppercase">
+                  <span className="text-[10px] font-bold uppercase tracking-wider">
                     Inventory Note
                   </span>
                 </div>
@@ -688,28 +785,29 @@ export default function OrderDetails() {
               </div>
             </div>
           </Card>
-
+ 
           {/* Quick Actions */}
-          <div className="bg-slate-950/50 rounded p-4 border border-white/5">
-            <h4 className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mb-3">
+          <div className="bg-slate-950/30 rounded-lg p-5 border border-white/5 relative group overflow-hidden">
+            <div className="absolute inset-0 bg-radial-gradient from-white/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 relative z-10">
               Internal Actions
             </h4>
-            <div className="space-y-2">
+            <div className="space-y-2 relative z-10">
               <Button
                 variant="ghost"
                 onClick={handleResendConfirmation}
-                className="w-full justify-start text-xs text-slate-400 hover:text-white hover:bg-white/5 h-9"
+                className="w-full justify-start text-xs text-slate-400 hover:text-white hover:bg-white/5 h-9 rounded-md transition-all duration-200"
               >
-                <Mail className="w-3.5 h-3.5 mr-2" />
+                <Mail className="w-3.5 h-3.5 mr-2 text-slate-500" />
                 Resend Confirmation
               </Button>
               <Button
                 variant="ghost"
                 onClick={handleCopyTrackingLink}
                 disabled={isStorePickupOrder}
-                className="w-full justify-start text-xs text-slate-400 hover:text-white hover:bg-white/5 h-9"
+                className="w-full justify-start text-xs text-slate-400 hover:text-white hover:bg-white/5 h-9 rounded-md transition-all duration-200"
               >
-                <Hash className="w-3.5 h-3.5 mr-2" />
+                <Hash className="w-3.5 h-3.5 mr-2 text-slate-500" />
                 {isStorePickupOrder
                   ? "Tracking not available"
                   : "Copy Tracking link"}
@@ -717,7 +815,7 @@ export default function OrderDetails() {
             </div>
           </div>
         </div>
-      </div>
+      </div>     </div>
 
       {/* Printable Document (hidden in UI) */}
       {printMode &&

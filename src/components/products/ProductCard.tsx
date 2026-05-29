@@ -145,17 +145,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
         {/* Badges (Bottom Left) */}
         <div className="absolute bottom-3 left-3 z-20 flex flex-wrap gap-1">
           {product.badge && (
-            <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-brand-secondary-600 text-white">
+            <span className="px-2.5 py-1 rounded text-[11px] font-extrabold uppercase tracking-tight bg-brand-secondary-600 text-white">
               {product.badge}
             </span>
           )}
           {discount > 0 && (
-            <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-red-600 text-white">
+            <span className="px-2.5 py-1 rounded text-[11px] font-extrabold uppercase tracking-tight bg-red-600 text-white">
               -{discount}%
             </span>
           )}
           {!product.inStock && (
-            <span className="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter bg-slate-900/80 text-white ">
+            <span className="px-2.5 py-1 rounded text-[11px] font-extrabold uppercase tracking-tight bg-slate-900/80 text-white ">
               Sold Out
             </span>
           )}
@@ -166,26 +166,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       <div className="p-4 flex flex-col flex-1">
         <div className="flex-1">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-bold font-mono text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest bg-brand-secondary-500/10 px-2 py-0.5 rounded">
+            <span className="text-xs font-bold font-mono text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest bg-brand-secondary-500/10 px-2 py-0.5 rounded">
               {product.category}
             </span>
             <div className="flex items-center gap-1">
-              <Star size={10} className="fill-amber-400 text-amber-400" />
-              <span className="text-[10px] font-bold dark:text-slate-400">
+              <Star size={11} className="fill-amber-400 text-amber-400" />
+              <span className="text-xs font-bold dark:text-slate-400">
                 {product.rating}
               </span>
             </div>
           </div>
 
-          <h3 className="text-sm sm:text-base font-black dark:text-white text-slate-800 leading-tight group-hover:text-brand-secondary-500 transition-colors line-clamp-1 mb-1">
-            {product.name.split(" ").map((word, i) => (
-              <span
-                key={i}
-                className={i === 0 ? "text-brand-secondary-500" : ""}
-              >
-                {word}{" "}
-              </span>
-            ))}
+          <h3 className="text-sm sm:text-base font-extrabold dark:text-white text-slate-800 leading-tight group-hover:text-brand-secondary-500 transition-colors line-clamp-1 mb-1">
+            <span>{product.name}</span>
           </h3>
 
           <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed h-10">
@@ -200,16 +193,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
         <div className="mt-4 pt-4 border-t border-slate-100 dark:border-white/5 flex flex-col gap-4">
           <div className="flex flex-col">
             {product.originalPrice && (
-              <span className="text-[10px] font-black uppercase tracking-widest text-red-400 line-through mb-1">
+              <span className="text-xs font-bold uppercase tracking-wider text-red-400 line-through mb-1">
                 {formatCurrency(product.originalPrice)}
               </span>
             )}
             <div className="flex items-center justify-between gap-4">
-              <span className="text-xl sm:text-2xl font-black dark:text-white text-slate-900 leading-none">
+              <span className="text-xl sm:text-2xl font-extrabold dark:text-white text-slate-900 leading-none">
                 {formatCurrency(product.price)}
               </span>
               {!product.inStock && (
-                <span className="shrink-0 text-[8px] font-black uppercase text-red-500 bg-red-500/10 px-2 py-1 rounded border border-red-500/20">
+                <span className="shrink-0 text-[10px] font-bold uppercase text-red-500 bg-red-500/10 px-2 py-1 rounded border border-red-500/20">
                   Out of Stock
                 </span>
               )}
@@ -226,7 +219,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
                 size={14}
                 className="group-hover/cart:scale-110 transition-transform"
               />
-              <span className="text-[10px] font-black uppercase tracking-wider hidden min-100:inline">
+              <span className="text-xs font-bold uppercase tracking-wider hidden min-100:inline">
                 Add
               </span>
             </button>
@@ -244,7 +237,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
                 router.push("/shop/checkout");
               }}
               disabled={!product.inStock}
-              className="flex-1 h-10 rounded bg-brand-secondary-600 text-white font-black text-[10px] uppercase tracking-widest hover:bg-brand-secondary-500 disabled:opacity-50 transition"
+              className="flex-1 h-10 rounded bg-brand-secondary-600 text-white font-bold text-xs uppercase tracking-widest hover:bg-brand-secondary-500 disabled:opacity-50 transition"
             >
               Buy
             </button>

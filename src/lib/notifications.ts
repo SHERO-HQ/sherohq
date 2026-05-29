@@ -58,6 +58,55 @@ class NotificationService {
     return error instanceof Error ? error.message : String(error);
   }
 
+  private formatToInternationalPhone(phone: string): string {
+    const digits = phone.replace(/\D/g, "");
+    if (digits.startsWith("0") && digits.length === 10) {
+      return `233${digits.slice(1)}`;
+    }
+    if (digits.startsWith("233") && digits.length === 12) {
+      return digits;
+    }
+    return digits;
+  }
+
+  private async sendWhatsAppNotification(to: string, message: string) {
+    const { WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_NUMBER_ID } = process.env;
+    if (!WHATSAPP_ACCESS_TOKEN || !WHATSAPP_PHONE_NUMBER_ID) {
+      if (process.env.NODE_ENV !== "production") {
+        console.log(`[WhatsApp Simulation] To: ${to}, Message: ${message}`);
+      }
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://graph.facebook.com/v21.0/${WHATSAPP_PHONE_NUMBER_ID}/messages`,
+        {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            messaging_product: "whatsapp",
+            recipient_type: "individual",
+            to,
+            type: "text",
+            text: { preview_url: false, body: message },
+          }),
+        }
+      );
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error?.message || "Meta API response error");
+      }
+      console.log(`✅ WhatsApp alert sent successfully to ${to}`);
+    } catch (error) {
+      console.error(`❌ WhatsApp Cloud API error for ${to}:`, error);
+    }
+  }
+
   private async sendEmail(
     to: string,
     subject: string,
@@ -203,6 +252,40 @@ class NotificationService {
       <p><a href="${baseUrl}/admin/orders/${orderId}">View in Admin Panel</a></p>
     `,
     );
+
+    // -------------------------------------------------------------------------
+    // WhatsApp Notifications (Meta Business Cloud API)
+    // -------------------------------------------------------------------------
+    
+    // 1. Alert Admin
+    const adminWhatsapp = process.env.ADMIN_WHATSAPP_NUMBER || "233548711582";
+    const adminAlertText = 
+      `🚨 *NEW ORDER RECEIVED!*\n\n` +
+      `📦 *Order ID:* ${readableOrderId}\n` +
+      `👤 *Customer:* ${shippingInfo.firstName} ${shippingInfo.lastName}\n` +
+      `💰 *Total:* GHS ${total.toFixed(2)}\n` +
+      `📞 *Phone:* ${shippingInfo.phone}\n` +
+      `📍 *Region:* ${shippingInfo.region} - ${shippingInfo.city}\n\n` +
+      `🔗 _View in Admin:_ ${baseUrl}/admin/orders/${orderId}`;
+    
+    this.sendWhatsAppNotification(adminWhatsapp, adminAlertText)
+      .catch((err) => console.error("Admin WhatsApp notification failed:", err));
+
+    // 2. Alert Customer
+    const customerPhone = this.formatToInternationalPhone(shippingInfo.phone);
+    if (customerPhone) {
+      const customerMsg =
+        `Hi ${shippingInfo.firstName},\n\n` +
+        `Thank you for shopping at *SHERO TECHNOLOGIES*!\n\n` +
+        `We have successfully received your order *${readableOrderId}*.\n\n` +
+        `💰 *Total:* GHS ${total.toFixed(2)}\n` +
+        `📍 *Delivery Details:* ${shippingInfo.address}, ${shippingInfo.city}\n\n` +
+        `🔗 *Live Track:* ${baseUrl}/track/${orderId}\n\n` +
+        `If you need immediate support, reply directly to this chat. Thank you for choosing SHERO!`;
+      
+      this.sendWhatsAppNotification(customerPhone, customerMsg)
+        .catch((err) => console.error("Customer WhatsApp notification failed:", err));
+    }
   }
 }
 

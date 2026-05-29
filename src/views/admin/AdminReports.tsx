@@ -78,20 +78,119 @@ import type { DateRange } from "react-day-picker";
 
 type KpiPeriod = "today" | "week" | "month" | "year" | "custom";
 
-const getOrderStatusColor = (status: string) => {
-  switch (status) {
+const getOrderStatusStyles = (status: string) => {
+  switch (status?.toLowerCase()) {
     case "delivered":
-      return "bg-brand-secondary-900/30 text-brand-secondary-400";
+      return "bg-brand-secondary-500/10 border border-brand-secondary-500/20 text-brand-secondary-400";
     case "pending":
-      return "bg-amber-900/30 text-amber-400";
+      return "bg-amber-500/10 border border-amber-500/20 text-amber-400";
     case "processing":
-      return "bg-blue-900/30 text-blue-400";
+      return "bg-blue-500/10 border border-blue-500/20 text-blue-400";
     case "shipped":
-      return "bg-purple-900/30 text-purple-400";
+      return "bg-purple-500/10 border border-purple-500/20 text-purple-400";
     default:
-      return "bg-red-900/30 text-red-400";
+      return "bg-rose-500/10 border border-rose-500/20 text-rose-400";
   }
 };
+
+
+const parseLabel = (label: any) => {
+  if (!label) return "";
+  const parsed = Date.parse(label);
+  if (!isNaN(parsed) && String(label).includes("-")) {
+    return new Date(parsed).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  }
+  return String(label);
+};
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-slate-950/90 backdrop-blur-md border border-white/10 p-3 rounded-lg shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
+        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">
+          {parseLabel(label)}
+        </p>
+        <div className="space-y-1">
+          {payload.map((item: any, index: number) => (
+            <div key={index} className="flex items-center gap-2">
+              <div
+                className="w-2 h-2 rounded-full shadow-xs"
+                style={{ backgroundColor: item.stroke || item.color }}
+              />
+              <span className="text-xs text-slate-400 font-medium capitalize">
+                {item.name === "revenue" ? "Revenue" : item.name === "expenses" ? "Expenses" : item.name === "profit" ? "Net Profit" : item.name}:
+              </span>
+              <span className="text-xs text-white font-bold font-mono">
+                {String(item.name).toLowerCase().includes("revenue") || String(item.name).toLowerCase().includes("expenses") || String(item.name).toLowerCase().includes("profit")
+                  ? `GH₵${(item.value || 0).toLocaleString()}`
+                  : item.value}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
+
+const ReportsSkeleton = () => (
+  <div className="space-y-8 animate-pulse select-none">
+    {/* Stats Grid */}
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {new Array(3).fill(0).map((_, i) => (
+        <div key={i} className="bg-slate-900/50 border border-slate-800 rounded p-6 flex flex-col gap-3">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded bg-white/5 h-12 w-12" />
+            <div className="space-y-2">
+              <div className="h-4 w-24 bg-white/5 rounded" />
+              <div className="h-6 w-32 bg-white/10 rounded" />
+            </div>
+          </div>
+          <div className="h-4 w-28 bg-white/5 rounded mt-2" />
+        </div>
+      ))}
+    </div>
+
+    {/* Main Area Chart Card */}
+    <div className="bg-slate-900/50 border border-slate-800 rounded p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <div className="h-5 w-48 bg-white/5 rounded" />
+        <div className="h-8 w-24 bg-white/5 rounded" />
+      </div>
+      <div className="h-80 bg-white/5 rounded w-full flex items-end p-4 gap-3">
+        {[30, 45, 60, 40, 75, 50, 90, 65, 80, 55].map((h, index) => (
+          <div key={index} className="flex-1 bg-white/5 rounded-t" style={{ height: `${h}%` }} />
+        ))}
+      </div>
+    </div>
+
+    {/* Three Pie/Bar columns */}
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {new Array(3).fill(0).map((_, i) => (
+        <div key={i} className="bg-slate-900/50 border border-slate-800 rounded p-6 space-y-6">
+          <div className="h-5 w-36 bg-white/5 rounded" />
+          <div className="h-48 bg-white/5 rounded flex items-center justify-center">
+            {i < 2 ? (
+              <div className="w-24 h-24 rounded-full border-4 border-white/5" />
+            ) : (
+              <div className="w-full h-full flex items-end p-4 gap-2">
+                {[40, 70, 50, 90].map((h, idx) => (
+                  <div key={idx} className="flex-1 bg-white/5 rounded-t" style={{ height: `${h}%` }} />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 export default function AdminReports() {
   const [stats, setStats] = useState<AdminStats | null>(null);
@@ -344,9 +443,7 @@ export default function AdminReports() {
 
           {/* Main Content Area */}
           {isLoading ? (
-            <div className="flex items-center justify-center h-64">
-              <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
-            </div>
+            <ReportsSkeleton />
           ) : (
             <>
               {/* Stats Grid */}
@@ -410,20 +507,21 @@ function StatCard({
   };
 
   return (
-    <div className="bg-slate-900/50 border border-slate-800 rounded p-6 flex flex-col gap-3">
-      <div className="flex items-center gap-4">
-        <div className={`p-3 rounded ${bg} ${color}`}>
-          <Icon className="w-6 h-6" />
+    <div className="bg-slate-900/40 border border-white/10 hover:border-brand-secondary-500/30 transition-all duration-300 rounded-lg p-5 flex flex-col gap-3 relative group overflow-hidden">
+      <div className="absolute inset-0 bg-radial-gradient from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+      <div className="flex items-center gap-4 relative z-10">
+        <div className={`p-2.5 rounded-lg ${bg} ${color}`}>
+          <Icon className="w-5 h-5" />
         </div>
         <div>
-          <p className="text-sm font-medium text-slate-400">{title}</p>
-          <p className="text-2xl font-bold text-white">{value}</p>
+          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{title}</p>
+          <p className="text-xl font-bold text-white mt-0.5 tracking-tight">{value}</p>
         </div>
       </div>
       {trend !== undefined && (
-        <div className="flex items-center gap-2 mt-1">
+        <div className="flex items-center gap-2 mt-1 relative z-10">
           <span
-            className={`text-xs font-bold px-2 py-0.5 rounded ${trendColor}`}
+            className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${trendColor}`}
           >
             {renderTrendValue()}
           </span>
@@ -444,15 +542,16 @@ function RevenueChartSection({
   readonly analytics: AnalyticsData[];
 }) {
   return (
-    <div className="bg-slate-900/50 border border-slate-800 rounded p-6 relative">
+    <div className="bg-slate-900/40 border border-white/10 rounded-lg p-6 relative group overflow-hidden">
+      <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
         <DollarSign className="w-5 h-5 text-brand-secondary-400" />
         Revenue Over Time
       </h3>
-      <div className="absolute top-6 right-6 bg-slate-800 rounded p-1 flex">
+      <div className="absolute top-6 right-6 bg-slate-800/80 backdrop-blur-md rounded border border-white/5 p-0.5 flex">
         <button
           onClick={() => setChartType("line")}
-          className={`p-2 rounded transition-colors ${
+          className={`p-1.5 rounded transition-colors ${
             chartType === "line"
               ? "bg-slate-700 text-white"
               : "text-slate-400 hover:text-white"
@@ -463,7 +562,7 @@ function RevenueChartSection({
         </button>
         <button
           onClick={() => setChartType("bar")}
-          className={`p-2 rounded transition-colors ${
+          className={`p-1.5 rounded transition-colors ${
             chartType === "bar"
               ? "bg-slate-700 text-white"
               : "text-slate-400 hover:text-white"
@@ -476,12 +575,14 @@ function RevenueChartSection({
       <div className="h-82">
         <ResponsiveContainer width="100%" height="100%">
           {chartType === "line" ? (
-            <LineChart data={analytics}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+            <LineChart data={analytics} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
               <XAxis
                 dataKey="date"
                 stroke="#94a3b8"
-                fontSize={12}
+                fontSize={10}
+                tickLine={false}
+                axisLine={false}
                 tickFormatter={(value: string) => {
                   try {
                     return format(new Date(value + "T00:00:00"), "MMM d");
@@ -492,66 +593,59 @@ function RevenueChartSection({
               />
               <YAxis
                 stroke="#94a3b8"
-                fontSize={12}
+                fontSize={10}
+                tickLine={false}
+                axisLine={false}
                 tickFormatter={(value: number) => `GH₵${value}`}
               />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#0f172a",
-                  borderColor: "#1e293b",
-                  color: "#f8fafc",
-                }}
-                itemStyle={{ color: "#f8fafc" }}
-                formatter={(value: any, name: any) => [
-                  `GH₵${(Number(value) || 0).toLocaleString()}`,
-                  String(name || "")
-                    .charAt(0)
-                    .toUpperCase() + String(name || "").slice(1),
-                ]}
-                labelFormatter={(label: unknown) => {
-                  try {
-                    return format(
-                      new Date(String(label) + "T00:00:00"),
-                      "MMMM d, yyyy",
-                    );
-                  } catch {
-                    return String(label);
-                  }
-                }}
-              />
+              <Tooltip content={<CustomTooltip />} cursor={{ stroke: "rgba(255,255,255,0.05)", strokeWidth: 2 }} />
               <Legend verticalAlign="top" height={36} />
               <Line
                 type="monotone"
                 dataKey="revenue"
-                name="Revenue"
+                name="revenue"
                 stroke="#10b981"
-                strokeWidth={2}
+                strokeWidth={2.5}
                 dot={false}
+                activeDot={{ r: 4, stroke: "#10b981", strokeWidth: 2, fill: "#fff" }}
+                animationDuration={1500}
               />
               <Line
                 type="monotone"
                 dataKey="expenses"
-                name="Expenses"
+                name="expenses"
                 stroke="#ef4444"
                 strokeWidth={2}
                 dot={false}
+                activeDot={{ r: 4, stroke: "#ef4444", strokeWidth: 2, fill: "#fff" }}
+                animationDuration={1500}
               />
               <Line
                 type="monotone"
                 dataKey="profit"
-                name="Net Profit"
+                name="profit"
                 stroke="#3b82f6"
                 strokeWidth={3}
                 dot={false}
+                activeDot={{ r: 5, stroke: "#3b82f6", strokeWidth: 2, fill: "#fff" }}
+                animationDuration={2000}
               />
             </LineChart>
           ) : (
-            <BarChart data={analytics}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+            <BarChart data={analytics} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+              <defs>
+                <linearGradient id="colorReportRev" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4} />
+                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
               <XAxis
                 dataKey="date"
                 stroke="#94a3b8"
-                fontSize={12}
+                fontSize={10}
+                tickLine={false}
+                axisLine={false}
                 tickFormatter={(value: string) => {
                   try {
                     return format(new Date(value + "T00:00:00"), "MMM d");
@@ -562,32 +656,13 @@ function RevenueChartSection({
               />
               <YAxis
                 stroke="#94a3b8"
-                fontSize={12}
+                fontSize={10}
+                tickLine={false}
+                axisLine={false}
                 tickFormatter={(value: number) => `GH₵${value}`}
               />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#0f172a",
-                  borderColor: "#1e293b",
-                  color: "#f8fafc",
-                }}
-                itemStyle={{ color: "#f8fafc" }}
-                formatter={(value: any) => [
-                  `GH₵${(Number(value) || 0).toLocaleString()}`,
-                  "Revenue",
-                ]}
-                labelFormatter={(label: unknown) => {
-                  try {
-                    return format(
-                      new Date(String(label) + "T00:00:00"),
-                      "MMMM d, yyyy",
-                    );
-                  } catch {
-                    return String(label);
-                  }
-                }}
-              />
-              <Bar dataKey="revenue" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
+              <Bar dataKey="revenue" fill="url(#colorReportRev)" stroke="#3b82f6" strokeWidth={1} radius={[4, 4, 0, 0]} animationDuration={1500} />
             </BarChart>
           )}
         </ResponsiveContainer>
@@ -602,7 +677,7 @@ function StockDistributionChart({
   readonly data: StockDistribution[];
 }) {
   return (
-    <div className="bg-slate-900/50 border border-slate-800 rounded p-6">
+    <div className="bg-slate-900/40 border border-white/10 rounded-lg p-6 hover:border-blue-500/20 transition-colors duration-300">
       <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
         <PieChartIcon className="w-5 h-5 text-blue-400" />
         Stock Distribution
@@ -627,17 +702,10 @@ function StockDistributionChart({
                 ? data
                 : [{ name: "No Data", value: 1, color: "#334155" }]
               ).map((entry, index) => (
-                <Cell key={`stock-${entry.name || index}`} fill={entry.color} />
+                <Cell key={`stock-${entry.name || index}`} fill={entry.color} stroke="rgba(15, 23, 42, 0.5)" strokeWidth={2} />
               ))}
             </Pie>
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#0f172a",
-                borderColor: "#1e293b",
-                color: "#f8fafc",
-              }}
-              itemStyle={{ color: "#f8fafc" }}
-            />
+            <Tooltip content={<CustomTooltip />} />
             <Legend verticalAlign="bottom" height={36} />
           </PieChart>
         </ResponsiveContainer>
@@ -652,10 +720,10 @@ function OrderStatusChart({
   readonly data: OrderStatusDistribution[];
 }) {
   return (
-    <div className="bg-slate-900/50 border border-slate-800 rounded p-6">
+    <div className="bg-slate-900/40 border border-white/10 rounded-lg p-6 hover:border-amber-500/20 transition-colors duration-300">
       <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
         <ShoppingCart className="w-5 h-5 text-amber-400" />
-        Order Status
+        OrderStatus Chart
       </h3>
       <div className="h-62">
         <ResponsiveContainer width="100%" height="100%">
@@ -680,17 +748,12 @@ function OrderStatusChart({
                 <Cell
                   key={`status-${entry.name || index}`}
                   fill={entry.color}
+                  stroke="rgba(15, 23, 42, 0.5)"
+                  strokeWidth={2}
                 />
               ))}
             </Pie>
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#0f172a",
-                borderColor: "#1e293b",
-                color: "#f8fafc",
-              }}
-              itemStyle={{ color: "#f8fafc" }}
-            />
+            <Tooltip content={<CustomTooltip />} />
             <Legend verticalAlign="bottom" height={36} />
           </PieChart>
         </ResponsiveContainer>
@@ -701,14 +764,20 @@ function OrderStatusChart({
 
 function RegionalSalesChart({ data }: { readonly data: RegionalData[] }) {
   return (
-    <div className="bg-slate-900/50 border border-slate-800 rounded p-6">
+    <div className="bg-slate-900/40 border border-white/10 rounded-lg p-6 hover:border-brand-secondary-500/20 transition-colors duration-300">
       <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
         <TrendingUp className="w-5 h-5 text-brand-secondary-400" />
         Sales by Region
       </h3>
       <div className="h-62">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} layout="vertical">
+          <BarChart data={data} layout="vertical" margin={{ top: 0, right: 10, left: -20, bottom: 0 }}>
+            <defs>
+              <linearGradient id="colorRegionRev" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#10b981" stopOpacity={0.2} />
+              </linearGradient>
+            </defs>
             <CartesianGrid
               strokeDasharray="3 3"
               stroke="#1e293b"
@@ -720,25 +789,20 @@ function RegionalSalesChart({ data }: { readonly data: RegionalData[] }) {
               dataKey="name"
               type="category"
               stroke="#94a3b8"
-              fontSize={11}
+              fontSize={10}
               width={100}
+              tickLine={false}
+              axisLine={false}
             />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#0f172a",
-                borderColor: "#1e293b",
-                color: "#f8fafc",
-              }}
-              formatter={(value: any) => [
-                `GH₵${(Number(value) || 0).toLocaleString()}`,
-                "Revenue",
-              ]}
-            />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
             <Bar
               dataKey="revenue"
-              fill="#10b981"
+              fill="url(#colorRegionRev)"
+              stroke="#10b981"
+              strokeWidth={1}
               radius={[0, 4, 4, 0]}
-              barSize={20}
+              barSize={16}
+              animationDuration={1500}
             />
           </BarChart>
         </ResponsiveContainer>
@@ -749,7 +813,8 @@ function RegionalSalesChart({ data }: { readonly data: RegionalData[] }) {
 
 function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
   return (
-    <div className="lg:col-span-2 bg-slate-900/50 border border-slate-800 rounded p-6">
+    <div className="lg:col-span-2 bg-slate-900/40 border border-white/10 rounded-lg p-6 relative group overflow-hidden">
+      <div className="absolute inset-0 bg-radial-gradient from-blue-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
         <ShoppingCart className="w-5 h-5 text-blue-400" />
         Recent Orders
@@ -759,37 +824,37 @@ function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
           orders.map((order) => (
             <div
               key={order.id}
-              className="flex items-center justify-between p-3 rounded bg-slate-800/50 border border-slate-700/50"
+              className="flex items-center justify-between p-3.5 rounded-lg bg-slate-950/20 border border-white/5 hover:border-blue-500/20 hover:bg-slate-900/50 transition-all duration-300"
             >
               <div className="flex items-center gap-3">
                 <div className="flex flex-col">
-                  <span className="font-mono text-sm text-white">
+                  <span className="font-mono text-sm text-slate-300 font-bold">
                     {toReadableOrderId(order.id)}
                   </span>
-                  <span className="text-xs text-slate-300">
+                  <span className="text-xs text-white font-semibold mt-0.5">
                     {order.customer.firstName} {order.customer.lastName}
                   </span>
-                  <span className="text-[10px] text-slate-500 truncate max-w-30">
+                  <span className="text-[10px] text-slate-500 truncate max-w-30 font-mono mt-0.5">
                     {order.customer.email}
                   </span>
                 </div>
               </div>
               <div className="flex items-center gap-4">
                 <span
-                  className={`px-2 py-1 rounded text-xs font-bold capitalize ${getOrderStatusColor(
+                  className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${getOrderStatusStyles(
                     order.status,
                   )}`}
                 >
                   {order.status}
                 </span>
-                <span className="font-bold text-brand-secondary-400 text-sm">
+                <span className="font-bold text-brand-secondary-400 text-sm font-mono">
                   GH₵{order.total.toLocaleString()}
                 </span>
               </div>
             </div>
           ))
         ) : (
-          <p className="text-slate-500 text-center py-4">No orders yet</p>
+          <p className="text-slate-500 text-center py-4 italic">No orders yet</p>
         )}
       </div>
     </div>
@@ -798,7 +863,8 @@ function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
 
 function TopProducts({ products }: { readonly products: TopProduct[] }) {
   return (
-    <div className="lg:col-span-1 bg-slate-900/50 border border-slate-800 rounded p-6">
+    <div className="lg:col-span-1 bg-slate-900/40 border border-white/10 rounded-lg p-6 relative group overflow-hidden">
+      <div className="absolute inset-0 bg-radial-gradient from-purple-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
         <Package className="w-5 h-5 text-purple-400" />
         Top Selling Products
@@ -807,28 +873,28 @@ function TopProducts({ products }: { readonly products: TopProduct[] }) {
         {(products || []).map((product, idx) => (
           <div
             key={`${product.name}-${idx}`}
-            className="flex items-center justify-between p-3 rounded bg-slate-800/50 border border-slate-700/50"
+            className="flex items-center justify-between p-3.5 rounded-lg bg-slate-950/20 border border-white/5 hover:border-purple-500/20 hover:bg-slate-900/50 transition-all duration-300"
           >
             <div className="flex items-center gap-3">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-700 text-xs font-bold text-white">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-800/80 border border-white/10 text-[10px] font-bold text-white font-mono">
                 {idx + 1}
               </span>
               <div>
-                <p className="font-medium text-white text-sm line-clamp-1">
+                <p className="font-semibold text-white text-sm line-clamp-1">
                   {product.name}
                 </p>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-slate-400 mt-0.5">
                   {product.quantity} sold
                 </p>
               </div>
             </div>
-            <span className="font-bold text-brand-secondary-400 text-sm">
+            <span className="font-bold text-brand-secondary-400 text-sm font-mono">
               GH₵{product.revenue.toLocaleString()}
             </span>
           </div>
         ))}
         {products.length === 0 && (
-          <p className="text-slate-500 text-center py-4">No sales data yet</p>
+          <p className="text-slate-500 text-center py-4 italic">No sales data yet</p>
         )}
       </div>
     </div>

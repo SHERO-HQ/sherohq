@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "motion/react";
+import { FadeInView } from "@/components/motion/AnimateSection";
 import {
   Quote,
   UserCheck,
@@ -243,12 +244,8 @@ const AboutTestimonials = () => {
 
         {/* Feedback CTA */}
         <div className="cursor-pointer text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex flex-col items-center gap-4 p-6 rounded bg-linear-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-white/10 shadow dark:shadow relative overflow-hidden max-w-lg mx-auto w-full transition duration-300"
-          >
+          <FadeInView direction="up" delay={0}>
+            <div className="inline-flex flex-col items-center gap-4 p-6 rounded bg-linear-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-white/10 shadow dark:shadow relative overflow-hidden max-w-lg mx-auto w-full transition duration-300">
             <div className="p-3 bg-brand-secondary-500/10 rounded text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-500/20 transition-colors duration-300">
               <MessageSquarePlus className="w-6 h-6" />
             </div>
@@ -266,7 +263,8 @@ const AboutTestimonials = () => {
                 Share With Us
               </Link>
             </div>
-          </motion.div>
+            </div>
+          </FadeInView>
         </div>
       </div>
     </section>

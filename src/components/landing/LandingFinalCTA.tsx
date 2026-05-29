@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ChevronRight, LucideSquareStack, WandSparkles } from "lucide-react";
+import { ArrowRight, ChevronRight, LucideSquareStack, WandSparkles, Server } from "lucide-react";
 import { RocketIcon } from "@/assets/icons/icons";
 
 const LandingFinalCTA = () => {
@@ -35,20 +35,19 @@ const LandingFinalCTA = () => {
               <div className="inline-flex items-center gap-2 px-4 py-1 rounded bg-brand-secondary-600/12 border border-brand-secondary-500/50 transition-colors duration-300 mb-2">
                 <WandSparkles className="size-4 text-brand-secondary-300" />
                 <span className="text-[10px] font-semibold text-brand-secondary-300 uppercase">
-                  Let's Make Magic Happen
+                  IT Supply & Support Partner
                 </span>
               </div>
 
               <h2 className="text-2xl md:text-3xl lg:text-5xl font-sora font-bold tracking-tight text-white leading-tight">
-                Ready to{" "}
+                Secure Your{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-500 to-brand-secondary-400">
-                  Launch?
+                  Infrastructure
                 </span>
               </h2>
 
               <p className="text-sm text-slate-300 leading-relaxed">
-                Go from idea to launch with product engineering, cloud, and
-                growth systems built for measurable business outcomes.
+                From high-performance hardware supply to managed network architecture and expert support, we scale your technology framework with zero downtime.
               </p>
 
               <div className="flex flex-wrap gap-4 justify-center md:justify-start pt-10">

@@ -20,6 +20,7 @@ const aubette = localFont({
   variable: "--font-logo-next",
   weight: "700",
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -104,6 +105,23 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${aubette.variable}`}>
       <head>
+        {/* Prevent hydration theme flash by synchronously reading/applying active theme before first paint */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('shero-ui-theme');
+                  if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (_) {}
+              })();
+            `,
+          }}
+        />
         {/* Critical CSS for LCP: Ensure H1 is visible immediately and has correct font-family */}
         <style
           dangerouslySetInnerHTML={{

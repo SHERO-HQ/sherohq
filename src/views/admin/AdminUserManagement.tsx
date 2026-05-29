@@ -83,6 +83,36 @@ const roleConfig: Record<
  },
 };
 
+const AdminUserManagementSkeleton = () => (
+  <>
+    {["sk1", "sk2", "sk3", "sk4", "sk5", "sk6"].map((id) => (
+      <div
+        key={id}
+        className="relative bg-slate-900/40 border border-white/5 rounded p-6 animate-pulse select-none"
+      >
+        <div className="flex items-start gap-4">
+          <div className="relative">
+            <div className="w-14 h-14 rounded bg-white/5 border border-white/5 shrink-0" />
+            <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded bg-white/10 border border-slate-950" />
+          </div>
+
+          <div className="flex-1 min-w-0 space-y-2">
+            <div className="h-4 w-28 bg-white/10 rounded" />
+            <div className="h-3 w-40 bg-white/5 rounded" />
+            <div className="h-3 w-32 bg-white/5 rounded" />
+            <div className="h-5 w-24 bg-white/5 rounded-full mt-2" />
+          </div>
+        </div>
+
+        <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
+          <div className="h-3 w-20 bg-white/5 rounded" />
+          <div className="h-3.5 w-8 bg-white/5 rounded" />
+        </div>
+      </div>
+    ))}
+  </>
+);
+
 export default function AdminUserManagement() {
  const { admin: currentAdmin } = useAdmin();
  const { data, isLoading } = useAdminUsers();
@@ -254,13 +284,7 @@ export default function AdminUserManagement() {
 
  {/* Users List */}
  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
- {isLoading &&
- ["sk1", "sk2", "sk3", "sk4", "sk5", "sk6"].map((id) => (
- <div
- key={id}
- className="h-48 rounded bg-slate-900/40 border border-white/5 animate-pulse"
- />
- ))}
+  {isLoading && <AdminUserManagementSkeleton />}
 
  {!isLoading && filteredAdmins.length === 0 && (
  <div className="col-span-full py-20 text-center bg-slate-900/20 rounded border border-white/5 border-dashed">

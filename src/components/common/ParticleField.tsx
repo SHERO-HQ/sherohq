@@ -1,12 +1,14 @@
 "use client";
 import { useState } from "react";
 import { motion } from "motion/react";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface Props {
  count?: number;
  /** "single" = all use bg-primary; "dual" = alternates blue/brand-secondary */
  colorVariant?: "single" | "dual";
  opacity?: number;
+	animate?: boolean;
 }
 
 /**
@@ -18,7 +20,11 @@ export default function ParticleField({
  count = 8,
  colorVariant = "single",
  opacity = 0.2,
+	animate = false,
 }: Props) {
+	const prefersReducedMotion = useReducedMotion();
+	const shouldAnimate = animate && !prefersReducedMotion;
+
  const [particles] = useState(() =>
  Array.from({ length: count }, (_, idx) => ({
  id: idx,
@@ -35,6 +41,20 @@ export default function ParticleField({
  ? "bg-blue-500"
  : "bg-brand-secondary-500"
  : "bg-primary";
+
+	if (!shouldAnimate) {
+		return (
+			<div className="absolute inset-0 pointer-events-none" style={{ opacity }}>
+				{particles.map((p) => (
+					<div
+						key={p.id}
+						style={{ left: p.x, top: p.y, opacity: p.opacity }}
+						className={`absolute w-1 h-1 rounded-full ${colorClass(p.id)}`}
+					/>
+				))}
+			</div>
+		);
+	}
 
  return (
  <motion.div

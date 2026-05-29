@@ -74,6 +74,68 @@ import { cn } from "@/lib/utils";
 import ActivityFeed from "@/components/admin/ActivityFeed";
 import { toReadableOrderId } from "@/utils/orderId";
 
+// --- Premium Glassmorphic Recharts Tooltip ---
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-slate-950/90 backdrop-blur-md border border-white/10 p-3 rounded-lg shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
+        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">
+          {label ? new Date(label).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          }) : ""}
+        </p>
+        <div className="space-y-1">
+          {payload.map((item: any, index: number) => (
+            <div key={index} className="flex items-center gap-2">
+              <div
+                className="w-2 h-2 rounded-full shadow-xs"
+                style={{ backgroundColor: item.stroke || item.color }}
+              />
+              <span className="text-xs text-slate-400 font-medium capitalize">
+                {item.name === "revenue" ? "Revenue" : item.name === "orders" ? "Orders" : item.name}:
+              </span>
+              <span className="text-xs text-white font-bold font-mono">
+                {item.name === "revenue" ? `GH₵${(item.value || 0).toLocaleString()}` : item.value}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
+// --- Shape-Preserving AreaChart Shimmer Loader ---
+const ChartSkeleton = () => (
+  <div className="w-full h-full animate-pulse flex flex-col justify-between p-4 space-y-4 select-none">
+    <div className="flex-1 w-full flex items-end gap-3 pt-6 border-b border-white/5 pb-2">
+      {[40, 65, 80, 50, 95, 70, 110].map((height, i) => (
+        <div key={i} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+          <div
+            className="w-full bg-white/5 rounded-t transition-all duration-500"
+            style={{ height: `${(height / 110) * 100}%` }}
+          />
+          <div className="h-1.5 w-8 bg-white/5 rounded" />
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// --- Shape-Preserving PieChart Shimmer Loader ---
+const PieSkeleton = () => (
+  <div className="w-full h-full animate-pulse flex items-center justify-center relative py-6 select-none">
+    <div className="w-28 h-28 rounded-full border-[6px] border-white/5 flex items-center justify-center">
+      <div className="w-16 h-16 rounded-full bg-slate-900 border-2 border-slate-950/20 flex items-center justify-center">
+        <div className="h-3 w-8 bg-white/5 rounded" />
+      </div>
+    </div>
+  </div>
+);
+
 // --- Internal Magnetic Card Component ---
 interface StatCardItem {
   readonly title: string;
@@ -169,13 +231,13 @@ const MagneticStatCard = ({
 const getStatusStyles = (status: string) => {
   switch (status?.toLowerCase()) {
     case "delivered":
-      return "bg-brand-secondary-500/10 text-brand-secondary-400";
+      return "bg-brand-secondary-500/10 border border-brand-secondary-500/20 text-brand-secondary-400";
     case "pending":
-      return "bg-amber-500/10 text-amber-400";
+      return "bg-amber-500/10 border border-amber-500/20 text-amber-400";
     case "processing":
-      return "bg-blue-500/10 text-blue-400";
+      return "bg-blue-500/10 border border-blue-500/20 text-blue-400";
     default:
-      return "bg-rose-500/10 text-rose-400";
+      return "bg-rose-500/10 border border-rose-500/20 text-rose-400";
   }
 };
 
@@ -449,7 +511,7 @@ export default function AdminDashboard() {
           <CardContent>
             <div className="h-125 w-full mt-4">
               {analyticsLoading ? (
-                <div className="w-full h-full bg-slate-800/50 rounded animate-pulse" />
+                <ChartSkeleton />
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart
@@ -461,7 +523,7 @@ export default function AdminDashboard() {
                         <stop
                           offset="5%"
                           stopColor="#10b981"
-                          stopOpacity={0.1}
+                          stopOpacity={0.15}
                         />
                         <stop
                           offset="95%"
@@ -473,7 +535,7 @@ export default function AdminDashboard() {
                         <stop
                           offset="5%"
                           stopColor="#3b82f6"
-                          stopOpacity={0.1}
+                          stopOpacity={0.15}
                         />
                         <stop
                           offset="95%"
@@ -516,15 +578,7 @@ export default function AdminDashboard() {
                       tickLine={false}
                       axisLine={false}
                     />
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#0f172a",
-                        border: "1px solid rgba(255,255,255,0.1)",
-                        borderRadius: "12px",
-                        boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-                      }}
-                      cursor={{ stroke: "#1e293b", strokeWidth: 2 }}
-                    />
+                    <Tooltip content={<CustomTooltip />} cursor={{ stroke: "rgba(255,255,255,0.05)", strokeWidth: 2 }} />
                     <Area
                       yAxisId="left"
                       type="monotone"
@@ -597,7 +651,7 @@ export default function AdminDashboard() {
                 <Link
                   key={action.title}
                   href={action.link}
-                  className="flex items-center justify-between p-3 rounded hover:bg-white/5 transition group"
+                  className="flex items-center justify-between p-3 rounded-lg bg-slate-950/20 border border-white/5 hover:border-brand-secondary-500/20 hover:bg-slate-900/50 transition-all duration-300 group"
                 >
                   <div className="flex items-center gap-3">
                     <div className={cn("p-2 rounded", action.color)}>
@@ -613,7 +667,8 @@ export default function AdminDashboard() {
             </div>
           </Card>
 
-          <Card className="bg-slate-900/40  border-white/10">
+          <Card className="bg-slate-900/40 border-white/10 overflow-hidden relative group">
+            <div className="absolute inset-0 bg-radial-gradient from-blue-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             <CardHeader className="pb-4 border-b border-white/5">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-sm text-white">
@@ -625,7 +680,7 @@ export default function AdminDashboard() {
             <CardContent className="pt-6">
               <div className="h-50 w-full">
                 {statsLoading ? (
-                  <div className="w-full h-full bg-slate-800/50 rounded animate-pulse" />
+                  <PieSkeleton />
                 ) : (
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -648,15 +703,10 @@ export default function AdminDashboard() {
                         outerRadius={80}
                         paddingAngle={5}
                         dataKey="value"
+                        stroke="rgba(15, 23, 42, 0.5)"
+                        strokeWidth={2}
                       />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "#0f172a",
-                          color: "#fff",
-                          border: "1px solid rgba(255,255,255,0.1)",
-                          borderRadius: "2px",
-                        }}
-                      />
+                      <Tooltip content={<CustomTooltip />} />
                       <Legend verticalAlign="bottom" height={36} />
                     </PieChart>
                   </ResponsiveContainer>

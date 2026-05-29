@@ -27,6 +27,28 @@ import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Textarea } from "@/components/ui/textarea";
 import AppImage from "@/components/common/AppImage";
 
+const TeamGridSkeleton = () => (
+  <div className="space-y-4 animate-pulse select-none">
+    {[1, 2, 3, 4].map((i) => (
+      <div
+        key={i}
+        className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center gap-4"
+      >
+        <div className="w-5 h-5 bg-white/5 rounded shrink-0" />
+        <div className="w-12 h-12 rounded bg-white/10 shrink-0" />
+        <div className="flex-1 space-y-2">
+          <div className="h-4 w-32 bg-white/10 rounded" />
+          <div className="h-3 w-24 bg-white/5 rounded" />
+        </div>
+        <div className="flex gap-2">
+          <div className="h-8 w-8 bg-white/5 rounded" />
+          <div className="h-8 w-8 bg-white/5 rounded" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
 const AdminTeam = () => {
   const { data: team = [], isLoading } = useTeam(ADMIN_POLLING_INTERVAL);
   const createMutation = useCreateTeamMember();
@@ -186,9 +208,7 @@ const AdminTeam = () => {
 
         {/* List */}
         {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 text-brand-secondary-500 animate-spin" />
-          </div>
+          <TeamGridSkeleton />
         ) : filteredTeam.length === 0 ? (
           <div className="text-center py-20 bg-slate-800/30 rounded border border-white/5">
             <Users className="w-12 h-12 text-slate-600 mx-auto mb-4" />

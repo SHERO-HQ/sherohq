@@ -71,23 +71,37 @@ const IconSelector = ({
  );
 };
 
+const CategoriesTableSkeleton = () => (
+  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 animate-pulse select-none">
+    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+      <div key={i} className="bg-slate-800/20 border border-white/5 rounded-lg p-4 flex items-center gap-3">
+        <div className="w-10 h-10 rounded bg-white/5" />
+        <div className="h-4 w-20 bg-white/10 rounded" />
+      </div>
+    ))}
+  </div>
+);
+
 const AdminCategories = () => {
- const { data: categories = [], isLoading } = useCategories(ADMIN_POLLING_INTERVAL);
- const createMutation = useCreateCategory();
- const updateMutation = useUpdateCategory();
- const deleteMutation = useDeleteCategory();
- const { addNotification } = useNotifications();
+  const { data: categories = [], isLoading } = useCategories(ADMIN_POLLING_INTERVAL);
+  const createMutation = useCreateCategory();
+  const updateMutation = useUpdateCategory();
+  const deleteMutation = useDeleteCategory();
+  const { addNotification } = useNotifications();
 
- const [searchQuery, setSearchQuery] = useState("");
- const [isModalOpen, setIsModalOpen] = useState(false);
- const [deleteId, setDeleteId] = useState<string | null>(null);
- const [editingCategory, setEditingCategory] = useState<{
- id: string;
- name: string;
- icon: string;
- } | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [secondsLeft, setSecondsLeft] = useState(3);
+  const [activeTimer, setActiveTimer] = useState<NodeJS.Timeout | null>(null);
 
- const [formData, setFormData] = useState({ name: "", icon: "Package" });
+  const [editingCategory, setEditingCategory] = useState<{
+    id: string;
+    name: string;
+    icon: string;
+  } | null>(null);
+
+  const [formData, setFormData] = useState({ name: "", icon: "Package" });
 
  const filteredCategories = categories.filter((cat) =>
  cat.name.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -125,17 +139,52 @@ const AdminCategories = () => {
  }
  };
 
- const handleDelete = async () => {
- if (!deleteId) return;
- try {
- await deleteMutation.mutateAsync(deleteId);
- addNotification("Success", "Category deleted successfully", "success");
- setDeleteId(null);
- } catch (error) {
- console.error("Failed to delete category:", error);
- addNotification("Error", getErrorMessage(error, "Failed to delete category"), "error");
- }
- };
+  const startSoftDelete = (id: string) => {
+    if (activeTimer) {
+      clearTimeout(activeTimer);
+    }
+    setPendingDeleteId(id);
+    setSecondsLeft(3);
+
+    const countdown = (secs: number) => {
+      if (secs <= 0) {
+        setPendingDeleteId(null);
+        deleteMutation.mutate(id, {
+          onSuccess: () => {
+            addNotification("Success", "Category deleted successfully", "success");
+          },
+          onError: (error) => {
+            console.error("Failed to delete category:", error);
+            addNotification("Error", getErrorMessage(error, "Failed to delete category"), "error");
+          }
+        });
+      } else {
+        setSecondsLeft(secs);
+        const timer = setTimeout(() => countdown(secs - 1), 1000);
+        setActiveTimer(timer);
+      }
+    };
+
+    const timer = setTimeout(() => countdown(2), 1000);
+    setActiveTimer(timer);
+  };
+
+  const handleCancelDelete = (id: string) => {
+    if (activeTimer) {
+      clearTimeout(activeTimer);
+      setActiveTimer(null);
+    }
+    setPendingDeleteId(id);
+    setSecondsLeft(3);
+    setPendingDeleteId(null);
+    addNotification("Info", "Deletion cancelled", "info");
+  };
+
+  useEffect(() => {
+    return () => {
+      if (activeTimer) clearTimeout(activeTimer);
+    };
+  }, [activeTimer]);
 
  const renderIcon = (iconName: string) => {
  // @ts-expect-error - Dynamic icon access
@@ -175,51 +224,67 @@ const AdminCategories = () => {
  />
  </div>
 
- {/* List */}
- {isLoading ? (
- <div className="flex items-center justify-center py-20">
- <Loader2 className="w-8 h-8 text-brand-secondary-500 animate-spin" />
- </div>
- ) : filteredCategories.length === 0 ? (
- <div className="text-center py-20 bg-slate-800/30 rounded border border-white/5">
- <Tag className="w-12 h-12 text-slate-600 mx-auto mb-4" />
- <p className="text-slate-400">No categories found</p>
- </div>
- ) : (
- <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
- {filteredCategories.map((cat) => (
- <div
- key={cat.id}
- className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center justify-between group hover:border-brand-secondary-500/30 transition"
- >
- <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded bg-brand-secondary-500/10 flex items-center justify-center text-brand-secondary-400">
- {renderIcon(cat.icon)}
- </div>
- <span className="font-medium text-white">{cat.name}</span>
- </div>
- <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
- <Button
- variant="ghost"
- size="icon"
- onClick={() => handleOpenEdit(cat)}
- className="h-8 w-8 text-slate-400 hover:text-white"
- >
- <Edit2 className="w-4 h-4" />
- </Button>
- <Button
- variant="ghost"
- size="icon"
- onClick={() => setDeleteId(cat.id)}
- className="h-8 w-8 text-slate-400 hover:text-red-400"
- >
- <Trash2 className="w-4 h-4" />
- </Button>
- </div>
- </div>
- ))}
- </div>
- )}
+  {/* List */}
+  {isLoading ? (
+    <CategoriesTableSkeleton />
+  ) : filteredCategories.length === 0 ? (
+    <div className="text-center py-20 bg-slate-800/30 rounded border border-white/5">
+      <Tag className="w-12 h-12 text-slate-600 mx-auto mb-4" />
+      <p className="text-slate-400">No categories found</p>
+    </div>
+  ) : (
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      {filteredCategories.map((cat) => {
+        const isDeleting = pendingDeleteId === cat.id;
+        return (
+          <div
+            key={cat.id}
+            className="bg-slate-800/30 border border-white/5 rounded-lg p-4 flex items-center justify-between group hover:border-brand-secondary-500/30 transition relative overflow-hidden"
+          >
+            {isDeleting && (
+              <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs z-10 flex items-center justify-between px-3 py-2 animate-in fade-in duration-200 select-none">
+                <span className="text-[10px] font-bold text-rose-400 animate-pulse truncate mr-1">
+                  Removing in {secondsLeft}s
+                </span>
+                <button
+                  type="button"
+                  onClick={() => handleCancelDelete(cat.id)}
+                  className="px-2 py-1 bg-white/10 hover:bg-white/20 text-white rounded text-[9px] font-bold transition-all shrink-0"
+                >
+                  Undo
+                </button>
+              </div>
+            )}
+
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded bg-brand-secondary-500/10 flex items-center justify-center text-brand-secondary-400">
+                {renderIcon(cat.icon)}
+              </div>
+              <span className="font-medium text-white">{cat.name}</span>
+            </div>
+            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity relative z-5">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => handleOpenEdit(cat)}
+                className="h-8 w-8 text-slate-400 hover:text-white"
+              >
+                <Edit2 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => startSoftDelete(cat.id)}
+                className="h-8 w-8 text-slate-400 hover:text-rose-400"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  )}
 
  {/* Create/Edit Modal */}
  <Modal
@@ -269,16 +334,6 @@ const AdminCategories = () => {
  </form>
  </Modal>
 
- {/* Delete Confirm */}
- <ConfirmDialog
- isOpen={!!deleteId}
- title="Delete Category"
- message="Are you sure you want to delete this category? Products using this category might be affected."
- onClose={() => setDeleteId(null)}
- onConfirm={handleDelete}
- confirmText="Delete"
- variant="danger"
- />
  </div>
  );
 };

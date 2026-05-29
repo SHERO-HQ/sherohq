@@ -1,6 +1,6 @@
 "use client";
 import { useState, type ElementType } from "react";
-import { motion } from "motion/react";
+import { StaggerContainer, StaggerItem } from "@/components/motion/AnimateSection";
 import { ArrowRight, Github, Linkedin, Users } from "lucide-react";
 import { useTeam } from "@/hooks/queries/useTeam";
 import { Skeleton } from "@/components/ui/Skeleton";
@@ -56,32 +56,37 @@ const AboutTeam = () => {
 
     return (
       <div className="relative border border-slate-200 dark:border-white/10 overflow-hidden shadow shadow-slate-200/50 dark:shadow-none">
-        <div className="grid grid-cols-1 sm:grid-cols-2 min-[470px]:grid-cols-2 lg:grid-cols-4 relative">
+        <StaggerContainer
+          className="grid grid-cols-1 sm:grid-cols-2 min-[470px]:grid-cols-2 lg:grid-cols-4 relative"
+          staggerDelay={0.1}
+          threshold={0.06}
+        >
           {/* Decorative background blur */}
           <div className="absolute -top-24 -left-24 w-64 h-64 bg-brand-secondary-500/5 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl pointer-events-none" />
 
           {team.map((member: TeamMemberWithPlaceholder, index) => (
-            <motion.div
+            <StaggerItem
               key={member.id}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              onClick={() =>
-                setActiveBioId(activeBioId === member.id ? null : member.id)
-              }
-              className={cn(
-                "group relative p-4 transition-colors duration-500 hover:bg-slate-50/50 dark:hover:bg-white/2 cursor-pointer",
-                // Horizontal borders
-                "border-b border-slate-200 dark:border-white/10",
-                // Vertical borders logic
-                "min-[470px]:border-r", // Default right border on 470px+
-                (index + 1) % 2 === 0 && "min-[470px]:border-r-0", // Remove every 2nd on 470px+
-                "lg:border-r", // Restore/set right border on lg
-                (index + 1) % 4 === 0 && "lg:border-r-0", // Remove every 4th on lg
-              )}
+              yOffset={15}
+              scale={1}
+              duration={0.5}
             >
+              <div
+                onClick={() =>
+                  setActiveBioId(activeBioId === member.id ? null : member.id)
+                }
+                className={cn(
+                  "group relative p-4 transition-colors duration-500 hover:bg-slate-50/50 dark:hover:bg-white/2 cursor-pointer",
+                  // Horizontal borders
+                  "border-b border-slate-200 dark:border-white/10",
+                  // Vertical borders logic
+                  "min-[470px]:border-r", // Default right border on 470px+
+                  (index + 1) % 2 === 0 && "min-[470px]:border-r-0", // Remove every 2nd on 470px+
+                  "lg:border-r", // Restore/set right border on lg
+                  (index + 1) % 4 === 0 && "lg:border-r-0", // Remove every 4th on lg
+                )}
+              >
               {/* Coming Soon Badge for placeholders (no image)
  {!member.image && (
  <div className="absolute top-4 left-4 z-10">
@@ -166,9 +171,10 @@ const AboutTeam = () => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+              </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     );
   };

@@ -40,6 +40,28 @@ const iconOptions = [
  { value: "Box", icon: Box, label: "Box" },
 ];
 
+const StatsPageSkeleton = () => (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-pulse select-none">
+    {[1, 2, 3, 4].map((i) => (
+      <div
+        key={i}
+        className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center gap-4"
+      >
+        <div className="w-5 h-5 bg-white/5 rounded shrink-0" />
+        <div className="w-12 h-12 rounded bg-white/10 shrink-0 flex items-center justify-center" />
+        <div className="flex-1 min-w-0 space-y-2">
+          <div className="h-4 w-32 bg-white/10 rounded" />
+          <div className="h-4 w-16 bg-white/5 rounded" />
+        </div>
+        <div className="flex gap-2">
+          <div className="h-8 w-8 bg-white/5 rounded" />
+          <div className="h-8 w-8 bg-white/5 rounded" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
 const AdminStats = () => {
  const { data: stats = [], isLoading } = useStats(ADMIN_POLLING_INTERVAL);
  const createMutation = useCreateStat();
@@ -160,9 +182,7 @@ const AdminStats = () => {
 
  {/* List */}
  {isLoading ? (
- <div className="flex items-center justify-center py-20">
- <Loader2 className="w-8 h-8 text-brand-secondary-500 animate-spin" />
- </div>
+    <StatsPageSkeleton />
  ) : (
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  {filteredStats.length === 0 ? (

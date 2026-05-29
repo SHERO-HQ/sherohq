@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { ToggleTheme } from "./toggle-theme";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
@@ -266,8 +266,7 @@ const Nav = () => {
     }
   }, [pathname, mounted, activeNavIndex, navLinks]);
 
-  // Measure indicator dimensions for active link
-  useEffect(() => {
+  const measureIndicator = useCallback(() => {
     if (activeNavIndex !== null && activeNavIndex >= 0 && navMenuRef.current) {
       const children = Array.from(navMenuRef.current.children) as HTMLElement[];
       const activeElement = children[activeNavIndex];
@@ -282,10 +281,27 @@ const Nav = () => {
     }
   }, [activeNavIndex]);
 
+  // Measure indicator dimensions for active link
+  useEffect(() => {
+    measureIndicator();
+
+    // Handle window resize events
+    window.addEventListener("resize", measureIndicator);
+
+    // Handle custom font loading (ensures perfect dimension rendering)
+    if (typeof window !== "undefined" && "fonts" in document) {
+      document.fonts.ready.then(measureIndicator);
+    }
+
+    return () => {
+      window.removeEventListener("resize", measureIndicator);
+    };
+  }, [activeNavIndex, scrolled, measureIndicator]);
+
   return (
     <>
       <nav
-        className={`w-full transition-all duration-500 z-50 border-t-0 ${isOpen || scrolled ? "glass-surface-md shadow-sm" : "bg-transparent border-b border-transparent"}`}
+        className={`w-full transition-[background-color,backdrop-filter,border-color,box-shadow] duration-300 ease-in-out z-50 border-t-0 ${isOpen || scrolled ? "glass-surface-md shadow-sm" : "bg-transparent border-b border-transparent"}`}
         aria-label="main navigation"
         id="nav-menu"
       >

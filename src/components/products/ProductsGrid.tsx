@@ -75,7 +75,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
     <div
       className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 ${gridCols[columns]} gap-x-3 gap-y-6`}
     >
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {products.map((product, idx) => (
           <motion.div
             key={product.id}

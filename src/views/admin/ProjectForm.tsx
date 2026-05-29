@@ -1,32 +1,24 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { fetchProjectById, uploadImages, type Project } from "@/services/api";
+import { fetchProjectById, type Project } from "@/services/api";
 import { getErrorMessage } from "@/utils/error";
-import {
-  Save,
-  X,
-  Plus,
-  Trash2,
-  Loader2,
-  ArrowLeft,
-  Image as ImageIcon,
-  Briefcase,
-  List,
-  Link as LinkIcon,
-} from "lucide-react";
-import { useAdmin } from "@/context/AdminContext";
+import { useImageUpload } from "@/hooks/useImageUpload";
+import { Save, Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { useNotifications } from "@/hooks/useNotifications";
+import { useBreadcrumb } from "@/context/BreadcrumbContext";
 import {
   useUpdateProject,
   useCreateProject,
 } from "@/hooks/queries/useProjects";
-import { Badge } from "@/components/ui/badge";
-import { useNotifications } from "@/hooks/useNotifications";
-import { useBreadcrumb } from "@/context/BreadcrumbContext";
-import { cn } from "@/lib/utils";
-import AppImage from "@/components/common/AppImage";
+import { useFormDraft } from "@/hooks/useFormDraft";
+
+// Import modular components
+import ProjectIdentityCard from "@/components/admin/project/ProjectIdentityCard";
+import ProjectMediaCard from "@/components/admin/project/ProjectMediaCard";
+import ProjectSidebarMeta from "@/components/admin/project/ProjectSidebarMeta";
 
 export default function ProjectForm() {
   const { id } = useParams<{ id: string }>();
@@ -37,7 +29,8 @@ export default function ProjectForm() {
 
   const [isLoading, setIsLoading] = useState(isEdit);
   const [isSaving, setIsSaving] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [newTech, setNewTech] = useState("");
 
   const createProjectMutation = useCreateProject();
   const updateProjectMutation = useUpdateProject();
@@ -53,14 +46,41 @@ export default function ProjectForm() {
     link: "",
   });
 
-  const [newTech, setNewTech] = useState("");
+  const draftKey = `sherotech:admin:project-form:v1:${id || "new"}`;
+  const { hasDraft, draftSavedAt, persistDraft, clearDraft } = useFormDraft<Partial<Project>>({
+    storageKey: draftKey,
+    currentData: projectData,
+    isMeaningful: (data) => Boolean(
+      data.title?.trim() ||
+      data.category?.trim() ||
+      data.client?.trim() ||
+      data.description?.trim() ||
+      data.useCase?.trim() ||
+      data.image?.trim() ||
+      data.link?.trim() ||
+      (data.technologies?.length ?? 0) > 0
+    ),
+    serialize: (data) => JSON.stringify(data),
+    deserialize: (text) => JSON.parse(text),
+    isLoading,
+    onRestore: (restored) => setProjectData(restored),
+  });
 
-  const categories = [
-    "Web Development",
-    "Mobile Apps",
-    "Infrastructure",
-    "Custom Software",
-  ];
+  const { isUploading, uploadFiles, handleFileChangeEvent: handleImageUpload } = useImageUpload({
+    maxImages: 1,
+    currentImagesCount: projectData.image ? 1 : 0,
+    onSuccess: (imageUrls) => {
+      setProjectData((prev: Partial<Project>) => ({
+        ...prev,
+        image: imageUrls[0],
+      }));
+    },
+  });
+
+  const handleSaveDraft = () => {
+    persistDraft(projectData);
+    addNotification("Draft saved", "Your changes were saved locally.", "success");
+  };
 
   useEffect(() => {
     async function loadData() {
@@ -90,8 +110,40 @@ export default function ProjectForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
+
+    const newErrors: Record<string, string> = {};
+    if (!projectData.title?.trim()) {
+      newErrors.title = "Project title is required";
+    }
+    if (!projectData.category) {
+      newErrors.category = "Please select a category";
+    }
+    if (!projectData.description?.trim()) {
+      newErrors.description = "Challenge overview is required";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      addNotification(
+        "Validation Error",
+        "Please check the highlighted fields on the form",
+        "error"
+      );
+
+      // Smoothly scroll to the first element with an error
+      const firstErrorField = Object.keys(newErrors)[0];
+      const element = document.getElementById(firstErrorField);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+        // Delay focusing to allow the scroll to center smoothly
+        setTimeout(() => element.focus(), 400);
+      }
+      return;
+    }
+
+    setIsSaving(true);
     try {
-      setIsSaving(true);
       if (isEdit && id) {
         await updateProjectMutation.mutateAsync({ id, data: projectData });
         addNotification("Success", "Project updated successfully", "success");
@@ -99,33 +151,13 @@ export default function ProjectForm() {
         await createProjectMutation.mutateAsync(projectData);
         addNotification("Success", "Project created successfully", "success");
       }
+      clearDraft();
       router.push("/admin/projects");
     } catch (err) {
       addNotification("Error", getErrorMessage(err, "Failed to save project"), "error");
       console.error(err);
     } finally {
       setIsSaving(false);
-    }
-  };
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length === 0) return;
-
-    try {
-      setIsUploading(true);
-      const { imageUrls } = await uploadImages(files);
-      setProjectData((prev: Partial<Project>) => ({
-        ...prev,
-        image: imageUrls[0],
-      }));
-      addNotification("Success", "Project image uploaded", "success");
-    } catch (err) {
-      addNotification("Error", getErrorMessage(err, "Failed to upload image"), "error");
-      console.error(err);
-    } finally {
-      setIsUploading(false);
-      e.target.value = "";
     }
   };
 
@@ -145,6 +177,14 @@ export default function ProjectForm() {
     }));
   };
 
+  const updateProjectData = (updates: Partial<Project>) => {
+    setProjectData((prev) => ({ ...prev, ...updates }));
+  };
+
+  const removeImage = () => {
+    setProjectData((prev) => ({ ...prev, image: "" }));
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-100">
@@ -159,9 +199,9 @@ export default function ProjectForm() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-20">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div className="max-w-5xl mx-auto space-y-6 pb-20">
+      {/* Sticky Header Action Bar */}
+      <div className="sticky top-20 bg-slate-950/80 backdrop-blur-md z-20 py-4 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
@@ -180,8 +220,9 @@ export default function ProjectForm() {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-3">
           <Button
+            type="button"
             variant="ghost"
             className="text-slate-400 hover:text-white"
             onClick={() => router.push("/admin/projects")}
@@ -189,6 +230,7 @@ export default function ProjectForm() {
             Cancel
           </Button>
           <Button
+            type="button"
             onClick={handleSubmit}
             disabled={isSaving}
             className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-30"
@@ -208,288 +250,136 @@ export default function ProjectForm() {
         </div>
       </div>
 
+      {(hasDraft || draftSavedAt) && (
+        <div className="flex flex-col gap-3 rounded border border-emerald-500/20 bg-emerald-500/5 px-4 py-3 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-1">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
+              <Badge className="bg-emerald-500/10 text-emerald-300 border-emerald-500/20">
+                Local draft
+              </Badge>
+              <span className="text-sm text-slate-200">
+                Draft autosave is enabled for this form.
+              </span>
+            </div>
+            <p className="text-xs text-slate-400">
+              {draftSavedAt
+                ? `Last saved ${new Date(draftSavedAt).toLocaleString()}.`
+                : "Your changes will be saved locally as you type."}
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleSaveDraft}
+              className="border-emerald-500/30 text-emerald-200 hover:bg-emerald-500/10 hover:text-emerald-100"
+            >
+              Save draft now
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={clearDraft}
+              className="text-slate-300 hover:text-white hover:bg-white/5"
+            >
+              Clear draft
+            </Button>
+          </div>
+        </div>
+      )}
+
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 lg:grid-cols-3 gap-8"
       >
         {/* Main Content Area */}
         <div className="lg:col-span-2 space-y-8">
-          {/* Project Info */}
-          <Card className="bg-slate-900 border-white/5 p-6 md:p-8 space-y-6">
-            <div className="flex items-center gap-2 pb-2 border-b border-white/5">
-              <Briefcase className="w-5 h-5 text-brand-secondary-400" />
-              <h3 className="text-lg font-bold text-white">Project Details</h3>
-            </div>
+          <ProjectIdentityCard
+            projectData={projectData}
+            onUpdateProjectData={updateProjectData}
+            errors={errors}
+          />
 
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label
-                  htmlFor="title"
-                  className="text-sm font-medium text-slate-400"
-                >
-                  Project Title
-                </label>
-                <Input
-                  id="title"
-                  placeholder="e.g. Enterprise E-commerce Platform"
-                  value={projectData.title || ""}
-                  onChange={(e) =>
-                    setProjectData((prev: Partial<Project>) => ({
-                      ...prev,
-                      title: e.target.value,
-                    }))
-                  }
-                  className="bg-slate-800/50 border-white/5 text-white"
-                  required
-                />
-              </div>
+          <ProjectMediaCard
+            image={projectData.image || ""}
+            isUploading={isUploading}
+            onUpload={handleImageUpload}
+            onUploadFiles={uploadFiles}
+            onRemove={removeImage}
+          />
 
-              <div className="space-y-2">
-                <label
-                  htmlFor="description"
-                  className="text-sm font-medium text-slate-400"
-                >
-                  Challenge / Overview
-                </label>
-                <textarea
-                  id="description"
-                  placeholder="What problem were you solving?"
-                  value={projectData.description || ""}
-                  onChange={(e) =>
-                    setProjectData((prev: Partial<Project>) => ({
-                      ...prev,
-                      description: e.target.value,
-                    }))
-                  }
-                  className="w-full min-h-30 bg-slate-800/50 border border-white/5 rounded p-3 text-white focus:outline-none focus:ring-1 focus:ring-brand-secondary-500/50 resize-y"
-                  required
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label
-                  htmlFor="useCase"
-                  className="text-sm font-medium text-slate-400"
-                >
-                  Solution / Use Case
-                </label>
-                <textarea
-                  id="useCase"
-                  placeholder="How did you solve it?"
-                  value={projectData.useCase || ""}
-                  onChange={(e) =>
-                    setProjectData((prev: Partial<Project>) => ({
-                      ...prev,
-                      useCase: e.target.value,
-                    }))
-                  }
-                  className="w-full min-h-30 bg-slate-800/50 border border-white/5 rounded p-3 text-white focus:outline-none focus:ring-1 focus:ring-brand-secondary-500/50 resize-y"
-                />
-              </div>
-            </div>
-          </Card>
-
-          {/* Technologies */}
-          <Card className="bg-slate-900 border-white/5 p-6 md:p-8 space-y-6">
-            <div className="flex items-center gap-2 pb-2 border-b border-white/5">
-              <List className="w-5 h-5 text-brand-secondary-400" />
-              <h3 className="text-lg font-bold text-white">Technologies</h3>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Add technology (e.g. React, Docker)..."
-                  value={newTech}
-                  onChange={(e) => setNewTech(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      addTech();
-                    }
-                  }}
-                  className="bg-slate-800/50 border-white/5 text-white"
-                />
-                <Button
-                  type="button"
-                  onClick={addTech}
-                  className="bg-slate-800 text-white hover:bg-slate-700"
-                >
-                  <Plus className="w-4 h-4" />
-                </Button>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                {projectData.technologies?.map((tech, index) => (
-                  <Badge
-                    key={tech}
-                    className="bg-slate-800 text-slate-200 border-white/5 py-1.5 px-3"
-                  >
-                    {tech}
-                    <button
-                      type="button"
-                      onClick={() => removeTech(index)}
-                      className="ml-2 text-slate-500 hover:text-rose-400 transition-colors"
-                    >
-                      <X className="w-3 h-3" />
-                    </button>
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </Card>
+          {/* Desktop Secondary Action Bar */}
+          <div className="hidden md:flex items-center gap-3 pt-6 border-t border-white/5">
+            <Button
+              type="button"
+              variant="ghost"
+              className="text-slate-400 hover:text-white"
+              onClick={() => router.push("/admin/projects")}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              onClick={handleSubmit}
+              disabled={isSaving}
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-30"
+            >
+              {isSaving ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="w-4 h-4 mr-2" />
+                  Save Project
+                </>
+              )}
+            </Button>
+          </div>
         </div>
 
         {/* Sidebar Area */}
-        <div className="space-y-8">
-          {/* Project Image */}
-          <Card className="bg-slate-900 border-white/5 p-6 space-y-4">
-            <div className="flex items-center gap-2 pb-2 border-b border-white/5">
-              <ImageIcon className="w-5 h-5 text-brand-secondary-400" />
-              <h3 className="font-bold text-white">Cover Image</h3>
-            </div>
-
-            <div className="space-y-4">
-              {projectData.image ? (
-                <div className="relative aspect-video rounded overflow-hidden border border-white/10">
-                  <AppImage
-                    src={projectData.image}
-                    alt="Project"
-                    fill
-                    sizes="(max-width: 768px) 100vw, 800px"
-                    className="object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setProjectData((prev: Partial<Project>) => ({
-                        ...prev,
-                        image: "",
-                      }))
-                    }
-                    className="absolute top-2 right-2 p-1.5 bg-rose-500 text-white rounded shadow hover:bg-rose-600 transition-colors"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              ) : (
-                <label
-                  className={cn(
-                    "aspect-video rounded border-2 border-dashed flex flex-col items-center justify-center gap-2 cursor-pointer transition",
-                    isUploading
-                      ? "bg-slate-800/50 pointer-events-none"
-                      : "border-white/10 hover:border-brand-secondary-500/50 hover:bg-brand-secondary-500/5",
-                  )}
-                >
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleImageUpload}
-                  />
-                  {isUploading ? (
-                    <Loader2 className="w-6 h-6 text-brand-secondary-500 animate-spin" />
-                  ) : (
-                    <>
-                      <Plus className="w-6 h-6 text-slate-500" />
-                      <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">
-                        Upload Cover
-                      </span>
-                    </>
-                  )}
-                </label>
-              )}
-            </div>
-          </Card>
-
-          {/* Meta Info */}
-          <Card className="bg-slate-900 border-white/5 p-6 space-y-6">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <label
-                  htmlFor="category"
-                  className="text-sm font-medium text-slate-400"
-                >
-                  Category
-                </label>
-                <select
-                  id="category"
-                  className="w-full bg-slate-800 border-white/5 text-white rounded px-3 py-2 outline-none focus:ring-1 focus:ring-brand-secondary-500/50"
-                  value={projectData.category}
-                  onChange={(e) =>
-                    setProjectData((prev: Partial<Project>) => ({
-                      ...prev,
-                      category: e.target.value,
-                    }))
-                  }
-                  required
-                >
-                  <option value="">Select Category</option>
-                  {categories.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="space-y-2">
-                <label
-                  htmlFor="client"
-                  className="text-sm font-medium text-slate-400"
-                >
-                  Client Name
-                </label>
-                <Input
-                  id="client"
-                  placeholder="e.g. Acme Innovations"
-                  value={projectData.client || ""}
-                  onChange={(e) =>
-                    setProjectData((prev: Partial<Project>) => ({
-                      ...prev,
-                      client: e.target.value,
-                    }))
-                  }
-                  className="bg-slate-800/50 border-white/5 text-white"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label
-                  htmlFor="link"
-                  className="text-sm font-medium text-slate-400 flex items-center gap-2"
-                >
-                  Project Link <LinkIcon className="w-3 h-3" />
-                </label>
-                <Input
-                  id="link"
-                  placeholder="https://example.com"
-                  value={projectData.link || ""}
-                  onChange={(e) =>
-                    setProjectData((prev: Partial<Project>) => ({
-                      ...prev,
-                      link: e.target.value,
-                    }))
-                  }
-                  className="bg-slate-800/50 border-white/5 text-white"
-                />
-              </div>
-            </div>
-          </Card>
-        </div>
+        <ProjectSidebarMeta
+          projectData={projectData}
+          onUpdateProjectData={updateProjectData}
+          errors={errors}
+          newTech={newTech}
+          onNewTechChange={setNewTech}
+          onAddTech={addTech}
+          onRemoveTech={removeTech}
+        />
       </form>
-    </div>
-  );
-}
 
-function Card({
-  children,
-  className,
-  ...props
-}: { children: React.ReactNode } & React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={cn("rounded border", className)} {...props}>
-      {children}
+      {/* Mobile Sticky Bottom Action Dock */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/90 backdrop-blur-md border-t border-white/10 p-4 flex items-center justify-between gap-4 md:hidden shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
+        <Button
+          type="button"
+          variant="ghost"
+          className="text-slate-400 hover:text-white w-1/3"
+          onClick={() => router.push("/admin/projects")}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="button"
+          onClick={handleSubmit}
+          disabled={isSaving}
+          className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white w-2/3"
+        >
+          {isSaving ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin mr-2 animate-pulse" />
+              Saving...
+            </>
+          ) : (
+            <>
+              <Save className="w-4 h-4 mr-2" />
+              Save Project
+            </>
+          )}
+        </Button>
+      </div>
     </div>
   );
 }

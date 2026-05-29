@@ -6,8 +6,8 @@ import type { Variants } from "motion/react";
  */
 export const ANIMATION_CONFIG = {
   FADE_UP: {
-    Y_OFFSET: 12,
-    DURATION: 0.5,
+    Y_OFFSET: 8,
+    DURATION: 0.35,
   },
   // Add more animation configs here as needed
 } as const;
@@ -109,8 +109,8 @@ export const staggerContainer: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
+      staggerChildren: 0.06,
+      delayChildren: 0.05,
     },
   },
 };
@@ -124,7 +124,7 @@ export const fadeIn: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      duration: 0.6,
+      duration: 0.4,
       ease: CUSTOM_EASINGS.easeInOut,
     },
   },
@@ -143,7 +143,7 @@ export const scaleUp: Variants = {
     opacity: 1,
     scale: 1,
     transition: {
-      duration: 0.5,
+      duration: 0.35,
       ease: CUSTOM_EASINGS.easeInOut,
     },
   },

@@ -7,6 +7,7 @@ export const addressSchema = z.object({
   city: z.string().min(2, "City is required"),
   region: z.string().min(2, "Region is required"),
   postalCode: z.string().optional(),
+  gpsAddress: z.string().optional(),
 });
 
 export const profileSchema = z.object({

@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "motion/react";
+import { StaggerContainer, StaggerItem } from "@/components/motion/AnimateSection";
 import Reveal from "@/components/motion/Reveal";
 import type React from "react";
 
@@ -88,64 +88,71 @@ const LandingPillars = () => {
           </Reveal>
         </div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {PILLARS.map((pillar, index) => (
-            <motion.div
+        {/* Bento Grid — Staggered Scroll Reveal */}
+        <StaggerContainer
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto"
+          staggerDelay={0.1}
+          threshold={0.08}
+        >
+          {PILLARS.map((pillar) => (
+            <StaggerItem
               key={pillar.header}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              whileHover={{ y: -5 }}
-              className={`group relative overflow-hidden rounded bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 p-8 hover:border-brand-secondary-500/50 dark:hover:border-white/20 transition duration-300 ${pillar.className}`}
+              yOffset={20}
+              scale={0.98}
+              className={pillar.className}
             >
-              {/* Hover Gradient Overlay */}
               <div
-                className={`absolute inset-0 bg-linear-to-br ${pillar.gradient} opacity-0 group-hover:opacity-40 dark:group-hover:opacity-100 transition-opacity duration-500`}
-              />
+                className={`group relative overflow-hidden rounded bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 p-8 hover:border-brand-secondary-500/50 dark:hover:border-white/20 transition duration-300 hover:-translate-y-1 h-full`}
+              >
+                {/* Hover Gradient Overlay */}
+                <div
+                  className={`absolute inset-0 bg-linear-to-br ${pillar.gradient} opacity-0 group-hover:opacity-40 dark:group-hover:opacity-100 transition-opacity duration-500`}
+                />
 
-              {/* Content */}
-              <div className="relative z-10 h-full flex flex-col">
-                <div className="flex items-start justify-between mb-6">
-                  <div className="p-3 rounded bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white group-hover:scale-110 transition duration-300">
-                    {pillar.icon}
+                {/* Content */}
+                <div className="relative z-10 h-full flex flex-col">
+                  <div className="flex items-start justify-between mb-6">
+                    <div className="p-3 rounded bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white group-hover:scale-110 transition duration-300">
+                      {pillar.icon}
+                    </div>
+                    <ArrowUpRight className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-brand-secondary-600 dark:group-hover:text-white transition-colors" />
                   </div>
-                  <ArrowUpRight className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-brand-secondary-600 dark:group-hover:text-white transition-colors" />
+
+                  <div className="mt-auto">
+                    <h4 className="text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 mb-0.5 uppercase tracking-wider transition-colors duration-300">
+                      {pillar.subheader}
+                    </h4>
+                    <h3 className="md:text-2xl text-lg font-bold text-slate-900 dark:text-white mb-2 transition-colors duration-300">
+                      {pillar.header}
+                    </h3>
+                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed group-hover:text-slate-900 dark:group-hover:text-slate-200 transition-colors">
+                      {pillar.content}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="mt-auto">
-                  <h4 className="text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 mb-0.5 uppercase tracking-wider transition-colors duration-300">
-                    {pillar.subheader}
-                  </h4>
-                  <h3 className="md:text-2xl text-lg font-bold text-slate-900 dark:text-white mb-2 transition-colors duration-300">
-                    {pillar.header}
-                  </h3>
-                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed group-hover:text-slate-900 dark:group-hover:text-slate-200 transition-colors">
-                    {pillar.content}
-                  </p>
+                {/* Decorative noise/texture (only in dark mode for more punch) */}
+                <div className="absolute inset-0 opacity-10 dark:opacity-20 pointer-events-none mix-blend-overlay">
+                  <svg className="w-full h-full">
+                    <filter id="noise">
+                      <feTurbulence
+                        type="fractalNoise"
+                        baseFrequency="0.60"
+                        numOctaves="3"
+                        stitchTiles="stitch"
+                      />
+                    </filter>
+                    <rect width="100%" height="100%" filter="url(#noise)" />
+                  </svg>
                 </div>
               </div>
-
-              {/* Decorative noise/texture (only in dark mode for more punch) */}
-              <div className="absolute inset-0 opacity-10 dark:opacity-20 pointer-events-none mix-blend-overlay">
-                <svg className="w-full h-full">
-                  <filter id="noise">
-                    <feTurbulence
-                      type="fractalNoise"
-                      baseFrequency="0.60"
-                      numOctaves="3"
-                      stitchTiles="stitch"
-                    />
-                  </filter>
-                  <rect width="100%" height="100%" filter="url(#noise)" />
-                </svg>
-              </div>
-            </motion.div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );
 };
 
 export default LandingPillars;
+

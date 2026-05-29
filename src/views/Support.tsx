@@ -62,8 +62,8 @@ const Support = () => {
   return (
     <>
       <div className="pt-8 pb-12 bg-background min-h-screen text-foreground relative overflow-hidden transition-colors duration-300">
-        <div className="absolute top-0 left-1/4 w-125 h-125 bg-brand-secondary-500/5 dark:bg-brand-secondary-500/10 rounded-full blur-[120px] -z-10 animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-125 h-125 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[120px] -z-10" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-secondary-500/5 dark:bg-brand-secondary-500/10 rounded-full blur-[100px] -z-10" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-[100px] -z-10" />
 
         <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
@@ -71,7 +71,7 @@ const Support = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="inline-flex items-center gap-2 px-4 py-1 mb-6 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-200 dark:border-brand-secondary-500/20 uppercase transition-colors duration-300"
+              className="inline-flex items-center gap-2 px-4 py-1 mb-6 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-200 dark:border-brand-secondary-500/20 uppercase transition-colors duration-300"
             >
               <LifeBuoy className="size-4" />
               <span>Customer Support</span>
@@ -85,13 +85,13 @@ const Support = () => {
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
-              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-border bg-card/60">
-                24h Response
+              <span className="text-xs font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-border bg-card/60">
+                2hr Response SLA
               </span>
-              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-border bg-card/60">
+              <span className="text-xs font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-border bg-card/60">
                 Dedicated Support Team
               </span>
-              <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-border bg-card/60">
+              <span className="text-xs font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-border bg-card/60">
                 Human + Self-Service
               </span>
             </div>
@@ -187,7 +187,7 @@ const Support = () => {
               </div>
 
               <div className="flex-1">
-                <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-200 dark:border-brand-secondary-500/20 uppercase transition-colors duration-300">
+                <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-200 dark:border-brand-secondary-500/20 uppercase transition-colors duration-300">
                   <LifeBuoy className="size-4" />
                   Connect With Support
                 </span>

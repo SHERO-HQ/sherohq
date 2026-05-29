@@ -148,6 +148,8 @@ export default function AdminExpenses() {
     date: format(new Date(), "yyyy-MM-dd"),
     description: "",
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
   const fetchExpenses = useCallback(async () => {
     setIsLoading(true);
@@ -215,6 +217,7 @@ export default function AdminExpenses() {
   };
 
   const handleOpenForm = (expense?: Expense) => {
+    setErrors({});
     if (expense) {
       setEditingId(expense.id);
       setFormData({
@@ -238,14 +241,32 @@ export default function AdminExpenses() {
   };
 
   const handleCloseForm = () => {
+    setErrors({});
     setIsFormOpen(false);
     setEditingId(null);
   };
 
   const handleSubmit = async (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
-    if (!formData.title || !formData.amount || !formData.date) {
-      addNotification("Warning", "Please fill required fields", "warning");
+    setErrors({});
+    const newErrors: Record<string, string> = {};
+    if (!formData.title?.trim()) {
+      newErrors.title = "Expense title is required";
+    }
+    if (!formData.amount || Number(formData.amount) <= 0) {
+      newErrors.amount = "Amount must be greater than 0";
+    }
+    if (!formData.date) {
+      newErrors.date = "Please select a date";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      addNotification(
+        "Validation Error",
+        "Please check the highlighted fields on the form",
+        "error",
+      );
       return;
     }
 
@@ -282,10 +303,7 @@ export default function AdminExpenses() {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!globalThis.confirm?.("Are you sure you want to delete this record?"))
-      return;
-
+  const performDelete = async (id: string) => {
     setIsDeleting(id);
     try {
       const response = await authFetch(`${API_BASE}/admin/expenses/${id}`, {
@@ -611,7 +629,7 @@ export default function AdminExpenses() {
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8 text-slate-400 hover:text-rose-400"
-                          onClick={() => handleDelete(expense.id)}
+                          onClick={() => setDeleteConfirmId(expense.id)}
                           disabled={isDeleting === expense.id}
                         >
                           {isDeleting === expense.id ? (
@@ -631,11 +649,14 @@ export default function AdminExpenses() {
 
       {/* Form Modal (Simple Overlay) */}
       {isFormOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 ">
-          <Card className="w-full max-w-md bg-slate-900 border-white/10 shadow p-6 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <Card className={cn(
+            "w-full max-w-lg bg-slate-900 border shadow-2xl p-6 md:p-8 relative transition-all duration-300",
+            Object.keys(errors).length > 0 ? "border-rose-500/30" : "border-white/10"
+          )}>
             <button
               onClick={handleCloseForm}
-              className="absolute right-4 top-4 p-1 text-slate-400 hover:text-white"
+              className="absolute right-4 top-4 p-1.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-md transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -644,23 +665,33 @@ export default function AdminExpenses() {
               {editingId ? "Edit Expense" : "Add New Expense"}
             </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label className="text-white">Title *</Label>
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Title */}
+              <div className="space-y-1.5">
+                <Label className="text-slate-400 text-sm font-medium">Title *</Label>
                 <Input
                   value={formData.title}
                   onChange={(e) =>
                     setFormData({ ...formData, title: e.target.value })
                   }
                   placeholder="e.g., Office Rent - Feb"
-                  className="bg-slate-800 border-white/5 text-white"
+                  className={cn(
+                    "bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500",
+                    errors.title && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
+                  )}
                   required
                 />
+                {errors.title && (
+                  <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
+                    {errors.title}
+                  </p>
+                )}
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-white">Amount (GH₵) *</Label>
+              {/* Amount & Date */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label className="text-slate-400 text-sm font-medium">Amount (GH₵) *</Label>
                   <Input
                     type="number"
                     value={formData.amount}
@@ -668,19 +699,29 @@ export default function AdminExpenses() {
                       setFormData({ ...formData, amount: e.target.value })
                     }
                     placeholder="0.00"
-                    className="bg-slate-800 border-white/5 text-white"
+                    className={cn(
+                      "bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500 font-mono",
+                      errors.amount && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
+                    )}
                     required
                   />
+                  {errors.amount && (
+                    <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
+                      {errors.amount}
+                    </p>
+                  )}
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-white">Date *</Label>
+
+                <div className="space-y-1.5">
+                  <Label className="text-slate-400 text-sm font-medium">Date *</Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full bg-slate-800 border-white/5 text-slate-300 justify-start font-normal h-10 overflow-hidden",
+                          "w-full bg-slate-800/50 border-white/5 text-slate-300 justify-start font-normal h-10 overflow-hidden focus-visible:ring-brand-secondary-500",
                           !formData.date && "text-slate-500",
+                          errors.date && "border-rose-500 bg-rose-500/5"
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4 text-brand-secondary-500 shrink-0" />
@@ -704,40 +745,49 @@ export default function AdminExpenses() {
                       />
                     </PopoverContent>
                   </Popover>
+                  {errors.date && (
+                    <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
+                      {errors.date}
+                    </p>
+                  )}
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-white">Category *</Label>
+              {/* Category Dropdown */}
+              <div className="space-y-1.5">
+                <Label className="text-slate-400 text-sm font-medium">Category *</Label>
                 <select
                   value={formData.category}
                   onChange={(e) =>
                     setFormData({ ...formData, category: e.target.value })
                   }
-                  className="w-full bg-slate-800 border-white/5 border rounded text-white p-2 h-10"
+                  className="w-full bg-slate-800/50 border border-white/5 rounded-md text-sm text-white h-10 px-3 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 transition-all duration-200 cursor-pointer"
+                  required
                 >
                   {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>
+                    <option key={cat} value={cat} className="bg-slate-900 text-white">
                       {cat}
                     </option>
                   ))}
                 </select>
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-white">Description</Label>
+              {/* Description */}
+              <div className="space-y-1.5">
+                <Label className="text-slate-400 text-sm font-medium">Description</Label>
                 <Textarea
                   value={formData.description}
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                     setFormData({ ...formData, description: e.target.value })
                   }
-                  placeholder="Additional notes..."
-                  className="bg-slate-800 border-white/5 text-white"
+                  placeholder="Additional expense notes..."
+                  className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500"
                   rows={3}
                 />
               </div>
 
-              <div className="flex gap-3 pt-4">
+              {/* Buttons */}
+              <div className="flex gap-3 pt-4 border-t border-white/5">
                 <Button
                   type="button"
                   variant="ghost"
@@ -752,14 +802,57 @@ export default function AdminExpenses() {
                   className="flex-1 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold"
                 >
                   {isSaving ? (
-                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                      Saving...
+                    </>
                   ) : (
-                    <Save className="w-4 h-4 mr-2" />
+                    <>
+                      <Save className="w-4 h-4 mr-2" />
+                      {editingId ? "Update" : "Save"} Record
+                    </>
                   )}
-                  {editingId ? "Update" : "Save"} Record
                 </Button>
               </div>
             </form>
+          </Card>
+        </div>
+      )}
+
+      {/* Modern Custom Delete Confirmation Overlay Modal */}
+      {deleteConfirmId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200 select-none">
+          <Card className="w-full max-w-sm bg-slate-900 border border-rose-500/20 shadow-2xl p-6 text-center space-y-4 animate-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-full bg-rose-500/10 flex items-center justify-center mx-auto text-rose-500">
+              <Trash2 className="w-5 h-5 stroke-[2px]" />
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-lg font-bold text-white">Delete Expense Record?</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Are you sure you want to permanently delete this expense record? This action is irreversible.
+              </p>
+            </div>
+            <div className="flex gap-3 pt-2">
+              <Button
+                type="button"
+                variant="ghost"
+                className="flex-1 text-slate-400 hover:text-white"
+                onClick={() => setDeleteConfirmId(null)}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                className="flex-1 bg-rose-600 hover:bg-rose-500 text-white font-bold"
+                onClick={async () => {
+                  const id = deleteConfirmId;
+                  setDeleteConfirmId(null);
+                  await performDelete(id);
+                }}
+              >
+                Delete Record
+              </Button>
+            </div>
           </Card>
         </div>
       )}

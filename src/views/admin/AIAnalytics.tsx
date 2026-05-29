@@ -41,6 +41,91 @@ const EMPTY_TOTALS: AIAnalyticsTotals = {
   openGapRequests: 0,
 };
 
+// --- Premium Glassmorphic Recharts Tooltip ---
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-slate-950/90 backdrop-blur-md border border-white/10 p-3 rounded-lg shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
+        {label && (
+          <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">
+            {label}
+          </p>
+        )}
+        <div className="space-y-1">
+          {payload.map((item: any, index: number) => (
+            <div key={index} className="flex items-center gap-2">
+              <div
+                className="w-2 h-2 rounded-full shadow-xs"
+                style={{ backgroundColor: item.fill || item.stroke || item.color }}
+              />
+              <span className="text-xs text-slate-400 font-medium capitalize">
+                {item.name === "count" ? "Interactions" : item.name === "queryCount" ? "Queries" : item.name}:
+              </span>
+              <span className="text-xs text-white font-bold font-mono">
+                {item.value.toLocaleString()}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
+
+const AIAnalyticsSkeleton = () => (
+  <div className="space-y-8 animate-pulse select-none">
+    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="space-y-2">
+        <div className="h-8 w-64 bg-white/5 rounded" />
+        <div className="h-4 w-96 bg-white/5 rounded" />
+      </div>
+    </div>
+
+    {/* Stats Grid */}
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+      {new Array(4).fill(0).map((_, i) => (
+        <Card key={i} className="bg-slate-900 border border-white/5 p-6 space-y-4">
+          <div className="flex justify-between items-center">
+            <div className="h-4 w-28 bg-white/5 rounded" />
+            <div className="h-6 w-6 bg-white/5 rounded" />
+          </div>
+          <div className="space-y-2">
+            <div className="h-8 w-24 bg-white/10 rounded" />
+            <div className="h-3 w-32 bg-white/5 rounded" />
+          </div>
+        </Card>
+      ))}
+    </div>
+
+    {/* Charts Grid */}
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {new Array(4).fill(0).map((_, i) => (
+        <Card key={i} className="bg-slate-900 border border-white/5 p-6 space-y-6">
+          <div className="space-y-2">
+            <div className="h-5 w-40 bg-white/5 rounded" />
+            <div className="h-3 w-28 bg-white/5 rounded" />
+          </div>
+          <div className="h-60 bg-white/5 rounded w-full flex items-end p-4">
+            {i % 2 === 0 ? (
+              <div className="w-full flex items-end gap-3 h-full">
+                {[30, 60, 45, 80, 55, 90, 40].map((h, index) => (
+                  <div key={index} className="flex-1 bg-white/5 rounded-t" style={{ height: `${h}%` }} />
+                ))}
+              </div>
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <div className="w-24 h-24 rounded-full border-4 border-white/5 flex items-center justify-center" />
+              </div>
+            )}
+          </div>
+        </Card>
+      ))}
+    </div>
+  </div>
+);
+
 export default function AIAnalytics() {
   const { data: result, isLoading: loading } = useAIAnalyticsSummary(
     ADMIN_POLLING_INTERVAL,
@@ -113,16 +198,7 @@ export default function AIAnalytics() {
   const COLORS = ["#10b981", "#3b82f6", "#f59e0b", "#8b5cf6", "#ef4444"];
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-100">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 border-4 border-brand-secondary-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-slate-400 font-medium">
-            Loading intelligence data...
-          </p>
-        </div>
-      </div>
-    );
+    return <AIAnalyticsSkeleton />;
   }
 
   return (
@@ -206,65 +282,64 @@ export default function AIAnalytics() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Interaction Volume */}
-        <Card className="bg-slate-900 border-white/10">
+        <Card className="bg-slate-900/40 border-white/10 hover:border-brand-secondary-500/30 transition-colors duration-300 relative group overflow-hidden">
+          <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
           <CardHeader>
             <CardTitle className="text-white">Interaction Trends</CardTitle>
-            <CardDescription>30-day AI usage volume</CardDescription>
+            <CardDescription className="text-slate-500">30-day AI usage volume</CardDescription>
           </CardHeader>
           <CardContent className="h-75 min-h-50">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={dailyVolumeData}>
+              <BarChart data={dailyVolumeData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0.0} />
+                  </linearGradient>
+                </defs>
                 <CartesianGrid
                   strokeDasharray="3 3"
                   stroke="#1e293b"
                   vertical={false}
                 />
-                <XAxis dataKey="label" stroke="#475569" fontSize={10} />
-                <YAxis stroke="#475569" fontSize={10} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#0f172a",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                  }}
-                />
-                <Bar dataKey="count" fill="#10b981" radius={[4, 4, 0, 0]} />
+                <XAxis dataKey="label" stroke="#475569" fontSize={10} tickLine={false} axisLine={false} />
+                <YAxis stroke="#475569" fontSize={10} tickLine={false} axisLine={false} />
+                <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
+                <Bar dataKey="count" fill="url(#colorCount)" stroke="#10b981" strokeWidth={1.5} radius={[4, 4, 0, 0]} animationDuration={1500} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
         {/* Volume Velocity */}
-        <Card className="bg-slate-900 border-white/10">
+        <Card className="bg-slate-900/40 border-white/10 hover:border-blue-500/30 transition-colors duration-300 relative group overflow-hidden">
+          <div className="absolute inset-0 bg-radial-gradient from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
           <CardHeader>
             <CardTitle className="text-white">Engagement Velocity</CardTitle>
-            <CardDescription>
+            <CardDescription className="text-slate-500">
               {trendDelta >= 0 ? "+" : ""}
               {trendDelta.toFixed(1)}% change from first to latest day
             </CardDescription>
           </CardHeader>
           <CardContent className="h-75 min-h-50">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={dailyVolumeData}>
+              <LineChart data={dailyVolumeData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid
                   strokeDasharray="3 3"
                   stroke="#1e293b"
                   vertical={false}
                 />
-                <XAxis dataKey="label" stroke="#475569" fontSize={10} />
-                <YAxis stroke="#475569" fontSize={10} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#0f172a",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                  }}
-                />
+                <XAxis dataKey="label" stroke="#475569" fontSize={10} tickLine={false} axisLine={false} />
+                <YAxis stroke="#475569" fontSize={10} tickLine={false} axisLine={false} />
+                <Tooltip content={<CustomTooltip />} cursor={{ stroke: "rgba(255,255,255,0.05)", strokeWidth: 2 }} />
                 <Line
                   type="monotone"
                   dataKey="count"
                   stroke="#3b82f6"
-                  strokeWidth={2.5}
-                  dot={{ r: 2 }}
-                  activeDot={{ r: 4 }}
+                  strokeWidth={3}
+                  dot={{ r: 3, stroke: "#3b82f6", strokeWidth: 2, fill: "#0f172a" }}
+                  activeDot={{ r: 5, stroke: "#fff", strokeWidth: 2, fill: "#3b82f6" }}
+                  animationDuration={2000}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -272,10 +347,11 @@ export default function AIAnalytics() {
         </Card>
 
         {/* User Intent Distribution */}
-        <Card className="bg-slate-900 border-white/10">
+        <Card className="bg-slate-900/40 border-white/10 hover:border-purple-500/30 transition-colors duration-300 relative group overflow-hidden">
+          <div className="absolute inset-0 bg-radial-gradient from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
           <CardHeader>
             <CardTitle className="text-white">User Intent Map</CardTitle>
-            <CardDescription>Why users are talking to SHERO</CardDescription>
+            <CardDescription className="text-slate-500">Why users are talking to SHERO</CardDescription>
           </CardHeader>
           <CardContent className="h-75 min-h-50">
             {intentData.length > 0 ? (
@@ -296,15 +372,12 @@ export default function AIAnalytics() {
                         <Cell
                           key={`cell-${entry.intent}`}
                           fill={COLORS[index % COLORS.length]}
+                          stroke="rgba(15, 23, 42, 0.5)"
+                          strokeWidth={2}
                         />
                       ))}
                     </Pie>
-                    <Tooltip
-                      contentStyle={{
-                        backgroundColor: "#0f172a",
-                        border: "1px solid rgba(255,255,255,0.1)",
-                      }}
-                    />
+                    <Tooltip content={<CustomTooltip />} />
                   </PieChart>
                 </ResponsiveContainer>
                 <div className="flex flex-wrap justify-center gap-4 mt-4 text-[10px]">
@@ -335,10 +408,11 @@ export default function AIAnalytics() {
         </Card>
 
         {/* Catalog Gap Pressure */}
-        <Card className="bg-slate-900 border-white/10">
+        <Card className="bg-slate-900/40 border-white/10 hover:border-amber-500/30 transition-colors duration-300 relative group overflow-hidden">
+          <div className="absolute inset-0 bg-radial-gradient from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
           <CardHeader>
             <CardTitle className="text-white">Gap Pressure</CardTitle>
-            <CardDescription>
+            <CardDescription className="text-slate-500">
               Open gap requests: {totals.openGapRequests}
             </CardDescription>
           </CardHeader>
@@ -348,8 +422,14 @@ export default function AIAnalytics() {
                 <BarChart
                   data={gapPressureData}
                   layout="vertical"
-                  margin={{ top: 8, right: 10, left: 8, bottom: 8 }}
+                  margin={{ top: 8, right: 10, left: -10, bottom: 8 }}
                 >
+                  <defs>
+                    <linearGradient id="colorGap" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.8} />
+                      <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.2} />
+                    </linearGradient>
+                  </defs>
                   <CartesianGrid
                     strokeDasharray="3 3"
                     stroke="#1e293b"
@@ -360,6 +440,8 @@ export default function AIAnalytics() {
                     stroke="#475569"
                     fontSize={10}
                     allowDecimals={false}
+                    tickLine={false}
+                    axisLine={false}
                   />
                   <YAxis
                     type="category"
@@ -367,22 +449,22 @@ export default function AIAnalytics() {
                     width={110}
                     stroke="#475569"
                     fontSize={10}
+                    tickLine={false}
+                    axisLine={false}
                     tickFormatter={(value) =>
                       String(value).length > 16
                         ? `${String(value).slice(0, 16)}...`
                         : String(value)
                     }
                   />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "#0f172a",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                    }}
-                  />
+                  <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
                   <Bar
                     dataKey="queryCount"
-                    fill="#f59e0b"
+                    fill="url(#colorGap)"
+                    stroke="#f59e0b"
+                    strokeWidth={1}
                     radius={[0, 4, 4, 0]}
+                    animationDuration={1500}
                   />
                 </BarChart>
               </ResponsiveContainer>
@@ -396,8 +478,9 @@ export default function AIAnalytics() {
       </div>
 
       {/* Catalog Gaps Table */}
-      <Card className="bg-slate-900 border-white/10 overflow-hidden">
-        <CardHeader className="border-b border-white/5 bg-slate-900/50">
+      <Card className="bg-slate-900/40 border-white/10 overflow-hidden relative group">
+        <div className="absolute inset-0 bg-radial-gradient from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+        <CardHeader className="border-b border-white/5 bg-slate-900/30">
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-lg text-white">
@@ -407,15 +490,15 @@ export default function AIAnalytics() {
                 Products or services users asked for that we don&apos;t have
               </CardDescription>
             </div>
-            <div className="p-2 rounded bg-amber-500/10 text-amber-500">
+            <div className="p-2 rounded bg-amber-500/10 border border-amber-500/20 text-amber-500">
               <AlertCircle className="w-5 h-5" />
             </div>
           </div>
         </CardHeader>
         <div className="overflow-x-auto">
-          <table className="w-full text-left">
+          <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-800/50">
+              <tr className="bg-slate-800/40">
                 <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
                   Unmet Need (Keyword)
                 </th>
@@ -434,7 +517,7 @@ export default function AIAnalytics() {
               {data?.topGaps.map((gap) => (
                 <tr
                   key={gap.keyword}
-                  className="hover:bg-white/5 transition-colors"
+                  className="border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors duration-200"
                 >
                   <td className="px-6 py-4">
                     <span className="text-sm font-bold text-white capitalize">
@@ -442,15 +525,15 @@ export default function AIAnalytics() {
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-sm text-brand-secondary-400 font-bold">
+                    <span className="text-sm text-brand-secondary-400 font-bold font-mono">
                       {gap.queryCount}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-500">
+                  <td className="px-6 py-4 text-sm text-slate-400">
                     {new Date(gap.lastRequested).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-500 uppercase">
+                    <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-amber-500/10 border border-amber-500/20 text-amber-400">
                       Investigating
                     </span>
                   </td>

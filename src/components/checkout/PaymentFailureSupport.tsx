@@ -33,7 +33,7 @@ const PaymentFailureSupport = ({
   const WHATSAPP_NUMBER = "233548711582";
   const readableOrderId = toReadableOrderId(orderId);
   const supportMessage = encodeURIComponent(
-    `Hello SHERO Support, I'm having trouble completing my payment for Order ${readableOrderId} (GH₵${amount.toFixed(2)}). Can you help me?`,
+    `Hello SHERO Support, I'm having trouble completing my payment for Order ${readableOrderId} (GHS ${amount.toFixed(2)}). Can you help me?`,
   );
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${supportMessage}`;
 

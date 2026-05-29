@@ -1,6 +1,7 @@
 "use client";
 import type { ReactNode } from "react";
 import { motion } from "motion/react";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface RevealProps {
  children: ReactNode;
@@ -29,6 +30,9 @@ export const Reveal = ({
  className = "",
  blur = false,
 }: RevealProps) => {
+ const prefersReducedMotion = useReducedMotion();
+ const motionEnabled = !prefersReducedMotion;
+
  const directions = {
  up: { y: distance, x: 0 },
  down: { y: -distance, x: 0 },
@@ -43,11 +47,11 @@ export const Reveal = ({
  className={className}
  >
  <motion.div
- initial={{
- opacity: 0,
- ...directions[direction],
- filter: blur ? "blur(10px)" : "none",
- }}
+		initial={{
+			opacity: 0,
+			...directions[direction],
+			filter: blur ? "blur(10px)" : "none",
+		}}
  whileInView={{
  opacity: 1,
  x: 0,
@@ -56,9 +60,9 @@ export const Reveal = ({
  }}
  viewport={{ once, amount: 0.2, margin: "0px 0px -50px 0px" }}
  transition={{
- duration,
- delay,
- ease: [0.16, 1, 0.3, 1], // Custom smooth ease-out
+			duration: motionEnabled ? duration : 0.01,
+  delay: motionEnabled ? delay : 0,
+  ease: [0.16, 1, 0.3, 1], // Custom smooth ease-out
  }}
  >
  {children}

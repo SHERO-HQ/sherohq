@@ -353,6 +353,102 @@ const StatsCards = ({ total, users }: StatsCardsProps) => {
   );
 };
 
+const UsersListSkeleton = () => (
+  <div className="overflow-x-auto select-none animate-pulse">
+    <table className="w-full">
+      <thead className="bg-slate-900/50">
+        <tr>
+          <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-4">Customer</th>
+          <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-4">Contact</th>
+          <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-4">Status</th>
+          <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-4">Joined</th>
+          <th className="text-right text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-4">Actions</th>
+        </tr>
+      </thead>
+      <tbody className="divide-y divide-white/5">
+        {[1, 2, 3, 4, 5].map((i) => (
+          <tr key={i} className="bg-slate-800/10">
+            <td className="px-6 py-4 whitespace-nowrap">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded bg-white/5 shrink-0" />
+                <div className="space-y-2">
+                  <div className="h-4 w-28 bg-white/10 rounded" />
+                  <div className="h-3 w-36 bg-white/5 rounded" />
+                </div>
+              </div>
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap">
+              <div className="space-y-2">
+                <div className="h-3 w-32 bg-white/5 rounded" />
+                <div className="h-3.5 w-24 bg-white/5 rounded" />
+              </div>
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap">
+              <div className="flex gap-2">
+                <div className="h-5 w-16 bg-white/5 rounded-full" />
+                <div className="h-5 w-16 bg-white/5 rounded-full" />
+              </div>
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap">
+              <div className="h-3.5 w-20 bg-white/5 rounded" />
+            </td>
+            <td className="px-6 py-4 whitespace-nowrap text-right">
+              <div className="inline-block h-8 w-8 bg-white/5 rounded" />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+);
+
+const UserDetailsSkeleton = () => (
+  <div className="p-6 space-y-6 overflow-y-auto max-h-[calc(80vh-80px)] animate-pulse select-none">
+    <div className="flex items-start gap-4">
+      <div className="w-16 h-16 rounded bg-white/10 shrink-0" />
+      <div className="flex-1 space-y-2">
+        <div className="h-5 w-40 bg-white/10 rounded" />
+        <div className="h-4 w-52 bg-white/5 rounded" />
+        <div className="h-3.5 w-32 bg-white/5 rounded" />
+      </div>
+      <div className="flex flex-col gap-2 items-end">
+        <div className="h-6 w-20 bg-white/10 rounded" />
+        <div className="h-6 w-24 bg-white/10 rounded" />
+      </div>
+    </div>
+    
+    <hr className="border-white/5" />
+    
+    <div className="grid grid-cols-2 gap-4">
+      <div className="bg-slate-800/20 border border-white/5 rounded p-4 space-y-2">
+        <div className="h-4 w-24 bg-white/5 rounded" />
+        <div className="h-6 w-16 bg-white/10 rounded" />
+      </div>
+      <div className="bg-slate-800/20 border border-white/5 rounded p-4 space-y-2">
+        <div className="h-4 w-24 bg-white/5 rounded" />
+        <div className="h-6 w-16 bg-white/10 rounded" />
+      </div>
+    </div>
+    
+    <hr className="border-white/5" />
+    
+    <div className="space-y-3">
+      <div className="h-5 w-32 bg-white/10 rounded" />
+      <div className="space-y-2">
+        {[1, 2].map((i) => (
+          <div key={i} className="bg-slate-800/20 border border-white/5 rounded p-4 flex items-center justify-between">
+            <div className="space-y-2">
+              <div className="h-4 w-24 bg-white/10 rounded" />
+              <div className="h-3 w-32 bg-white/5 rounded" />
+            </div>
+            <div className="h-5 w-16 bg-white/5 rounded" />
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
 const UserTable = ({
   loading,
   users,
@@ -363,11 +459,7 @@ const UserTable = ({
   isTogglingActive,
 }: UserTableProps) => {
   if (loading && !users.length) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 text-brand-secondary-400 animate-spin" />
-      </div>
-    );
+    return <UsersListSkeleton />;
   }
 
   if (users.length === 0) {
@@ -589,11 +681,7 @@ const UserDetailsModal = ({
           {/* Modal Content */}
           {(() => {
             if (loading) {
-              return (
-                <div className="flex items-center justify-center py-20">
-                  <Loader2 className="w-8 h-8 text-brand-secondary-400 animate-spin" />
-                </div>
-              );
+              return <UserDetailsSkeleton />;
             }
 
             if (!user) {

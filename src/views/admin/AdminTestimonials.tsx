@@ -31,6 +31,25 @@ import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Textarea } from "@/components/ui/textarea";
 import AppImage from "@/components/common/AppImage";
 
+const TestimonialsGridSkeleton = () => (
+  <div className="grid grid-cols-1 gap-4 animate-pulse select-none">
+    {[1, 2, 3].map((i) => (
+      <div
+        key={i}
+        className="bg-slate-800/20 border border-white/5 rounded-lg p-4 flex items-center gap-4"
+      >
+        <div className="w-5 h-5 bg-white/5 rounded shrink-0" />
+        <div className="w-12 h-12 rounded bg-white/5 shrink-0" />
+        <div className="flex-1 space-y-2">
+          <div className="h-4 w-28 bg-white/10 rounded" />
+          <div className="h-3 w-3/4 bg-white/5 rounded" />
+        </div>
+        <div className="h-8 w-24 bg-white/5 rounded" />
+      </div>
+    ))}
+  </div>
+);
+
 const AdminTestimonials = () => {
   const { data: testimonials = [], isLoading } = useAdminTestimonials();
   const createMutation = useCreateTestimonial();
@@ -41,7 +60,9 @@ const AdminTestimonials = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [secondsLeft, setSecondsLeft] = useState(3);
+  const [activeTimer, setActiveTimer] = useState<NodeJS.Timeout | null>(null);
   const [editingTestimonial, setEditingTestimonial] =
     useState<Testimonial | null>(null);
 
@@ -118,17 +139,50 @@ const AdminTestimonials = () => {
     }
   };
 
-  const handleDelete = async () => {
-    if (!deleteId) return;
-    try {
-      await deleteMutation.mutateAsync(deleteId);
-      addNotification("Success", "Testimonial deleted successfully", "success");
-      setDeleteId(null);
-    } catch (error) {
-      console.error("Failed to delete testimonial:", error);
-      addNotification("Error", getErrorMessage(error, "Failed to delete testimonial"), "error");
-    }
+  const startSoftDelete = (id: string) => {
+    if (activeTimer) clearTimeout(activeTimer);
+    setPendingDeleteId(id);
+    setSecondsLeft(3);
+
+    const countdown = (secs: number) => {
+      if (secs <= 0) {
+        setPendingDeleteId(null);
+        deleteMutation.mutate(id, {
+          onSuccess: () => {
+            addNotification("Success", "Testimonial deleted successfully", "success");
+          },
+          onError: (error) => {
+            console.error("Failed to delete testimonial:", error);
+            addNotification("Error", getErrorMessage(error, "Failed to delete testimonial"), "error");
+          }
+        });
+      } else {
+        setSecondsLeft(secs);
+        const timer = setTimeout(() => countdown(secs - 1), 1000);
+        setActiveTimer(timer);
+      }
+    };
+
+    const timer = setTimeout(() => countdown(2), 1000);
+    setActiveTimer(timer);
   };
+
+  const handleCancelDelete = (id: string) => {
+    if (activeTimer) {
+      clearTimeout(activeTimer);
+      setActiveTimer(null);
+    }
+    setPendingDeleteId(id);
+    setSecondsLeft(3);
+    setPendingDeleteId(null);
+    addNotification("Info", "Deletion cancelled", "info");
+  };
+
+  useEffect(() => {
+    return () => {
+      if (activeTimer) clearTimeout(activeTimer);
+    };
+  }, [activeTimer]);
 
   const toggleActive = async (t: Testimonial) => {
     try {
@@ -211,9 +265,7 @@ const AdminTestimonials = () => {
 
         {/* List */}
         {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 text-brand-secondary-500 animate-spin" />
-          </div>
+          <TestimonialsGridSkeleton />
         ) : (
           <div className="grid grid-cols-1 gap-4">
             {filteredTestimonials.length === 0 ? (
@@ -222,101 +274,120 @@ const AdminTestimonials = () => {
                 <p className="text-slate-400">No testimonials found</p>
               </div>
             ) : (
-              filteredTestimonials.map((t) => (
-                <div
-                  key={t.id}
-                  className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center gap-4 group hover:border-brand-secondary-500/30 transition"
-                >
-                  <div className="text-slate-600 cursor-move opacity-0 group-hover:opacity-100 transition-opacity">
-                    <GripVertical className="w-5 h-5" />
-                  </div>
-
-                  <div className="relative w-12 h-12 rounded bg-slate-700/50 overflow-hidden shrink-0 flex items-center justify-center">
-                    {t.image ? (
-                      <AppImage
-                        src={t.image}
-                        alt={t.author}
-                        fill
-                        sizes="48px"
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-slate-400 font-bold bg-brand-secondary-500/10">
-                        {t.author.charAt(0)}
+              filteredTestimonials.map((t) => {
+                const isDeleting = pendingDeleteId === t.id;
+                return (
+                  <div
+                    key={t.id}
+                    className="bg-slate-800/30 border border-white/5 rounded-lg p-4 flex items-center gap-4 group hover:border-brand-secondary-500/30 transition relative overflow-hidden"
+                  >
+                    {isDeleting && (
+                      <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs z-10 flex items-center justify-between px-4 py-2 animate-in fade-in duration-200 select-none">
+                        <span className="text-xs font-bold text-rose-400 animate-pulse">
+                          Removing testimonial in {secondsLeft}s
+                        </span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          onClick={() => handleCancelDelete(t.id)}
+                          className="h-8 px-4 bg-white/10 hover:bg-white/20 text-white rounded text-[11px] font-bold transition-all shrink-0"
+                        >
+                          Undo Deletion
+                        </Button>
                       </div>
                     )}
-                  </div>
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-medium text-white truncate">
-                        {t.author}
-                      </h3>
-                      {!t.active && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-500 border border-white/5 uppercase">
-                          Inactive
-                        </span>
+                    <div className="text-slate-600 cursor-move opacity-0 group-hover:opacity-100 transition-opacity">
+                      <GripVertical className="w-5 h-5" />
+                    </div>
+
+                    <div className="relative w-12 h-12 rounded bg-slate-700/50 overflow-hidden shrink-0 flex items-center justify-center">
+                      {t.image ? (
+                        <AppImage
+                          src={t.image}
+                          alt={t.author}
+                          fill
+                          sizes="48px"
+                          className="object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-slate-400 font-bold bg-brand-secondary-500/10">
+                          {t.author.charAt(0)}
+                        </div>
                       )}
                     </div>
-                    <p className="text-sm text-slate-400 truncate italic">
-                      "{t.quote}"
-                    </p>
-                    {typeof t.rating === "number" && (
-                      <div className="flex gap-0.5 mt-1">
-                        {(() => {
-                          const rating = t.rating;
-                          return [...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-3 h-3 ${
-                                i < rating
-                                  ? "text-amber-400 fill-amber-400"
-                                  : "text-slate-600"
-                              }`}
-                            />
-                          ));
-                        })()}
-                      </div>
-                    )}
-                  </div>
 
-                  <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => toggleActive(t)}
-                      title={t.active ? "Deactivate" : "Activate"}
-                      className={
-                        t.active
-                          ? "text-brand-secondary-500 hover:text-brand-secondary-400"
-                          : "text-slate-500 hover:text-slate-400"
-                      }
-                    >
-                      {t.active ? (
-                        <CheckCircle2 className="w-4 h-4" />
-                      ) : (
-                        <XCircle className="w-4 h-4" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-medium text-white truncate">
+                          {t.author}
+                        </h3>
+                        {!t.active && (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-500 border border-white/5 uppercase">
+                            Inactive
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-slate-400 truncate italic">
+                        "{t.quote}"
+                      </p>
+                      {typeof t.rating === "number" && (
+                        <div className="flex gap-0.5 mt-1">
+                          {(() => {
+                            const rating = t.rating;
+                            return [...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`w-3 h-3 ${
+                                  i < rating
+                                    ? "text-amber-400 fill-amber-400"
+                                    : "text-slate-600"
+                                }`}
+                              />
+                            ));
+                          })()}
+                        </div>
                       )}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleOpenEdit(t)}
-                      className="text-slate-400 hover:text-white"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setDeleteId(t.id)}
-                      className="text-slate-400 hover:text-red-400"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+                    </div>
+
+                    <div className="flex gap-2 relative z-5">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => toggleActive(t)}
+                        title={t.active ? "Deactivate" : "Activate"}
+                        className={
+                          t.active
+                            ? "text-brand-secondary-500 hover:text-brand-secondary-400"
+                            : "text-slate-500 hover:text-slate-400"
+                        }
+                      >
+                        {t.active ? (
+                          <CheckCircle2 className="w-4 h-4" />
+                        ) : (
+                          <XCircle className="w-4 h-4" />
+                        )}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleOpenEdit(t)}
+                        className="text-slate-400 hover:text-white"
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => startSoftDelete(t.id)}
+                        className="text-slate-400 hover:text-rose-400"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         )}
@@ -471,16 +542,7 @@ const AdminTestimonials = () => {
           </form>
         </Modal>
 
-        {/* Delete Confirm */}
-        <ConfirmDialog
-          isOpen={!!deleteId}
-          title="Delete Testimonial"
-          message="Are you sure you want to delete this testimonial? This action cannot be undone."
-          onConfirm={handleDelete}
-          onClose={() => setDeleteId(null)}
-          confirmText="Delete"
-          variant="danger"
-        />
+
       </div>
   );
 };

@@ -36,21 +36,21 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
             Subtotal ({itemCount} {itemCount === 1 ? "item" : "items"})
           </span>
           <span className="font-semibold text-slate-900 dark:text-white whitespace-nowrap">
-            S{subtotal.toFixed(2)}
+            GHS {subtotal.toFixed(2)}
           </span>
         </div>
 
         <div className="flex items-center justify-between text-sm flex-wrap gap-2">
           <span className="text-slate-600 dark:text-slate-400">Shipping</span>
           <span className="font-semibold text-slate-900 dark:text-white whitespace-nowrap">
-            {shipping === 0 ? "FREE" : `S${shipping.toFixed(2)}`}
+            {shipping === 0 ? "FREE" : `GHS ${shipping.toFixed(2)}`}
           </span>
         </div>
 
         <div className="flex items-center justify-between text-sm flex-wrap gap-2">
           <span className="text-slate-600 dark:text-slate-400">Tax (VAT)</span>
           <span className="font-semibold text-slate-900 dark:text-white whitespace-nowrap">
-            S{tax.toFixed(2)}
+            GHS {tax.toFixed(2)}
           </span>
         </div>
 
@@ -60,7 +60,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
               Total
             </span>
             <span className="text-2xl font-bold text-brand-secondary-600 dark:text-brand-secondary-400 whitespace-nowrap">
-              S{total.toFixed(2)}
+              GHS {total.toFixed(2)}
             </span>
           </div>
         </div>

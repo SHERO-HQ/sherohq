@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "motion/react";
+import { FadeInView } from "@/components/motion/AnimateSection";
 import Link from "next/link";
 import { ShoppingCart, ArrowRight } from "lucide-react";
 import { useState, useMemo, useEffect } from "react";
@@ -84,25 +84,21 @@ const LandingProducts = () => {
     <section className="relative w-full py-12 bg-white dark:bg-slate-950">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-8"
-        >
-          <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] uppercase font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded transition-colors duration-300">
-            <ShoppingCart className="size-4" />
-            Featured Deals
-          </span>
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4">
-            Shop Premium Tech
-          </h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            Shop laptops, phones, accessories and more — with free delivery on
-            orders over GH₵500
-          </p>
-        </motion.div>
+        <FadeInView direction="up" delay={0}>
+          <div className="text-center mb-8">
+            <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] uppercase font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded transition-colors duration-300">
+              <ShoppingCart className="size-4" />
+              Featured Deals
+            </span>
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4">
+              Shop Premium Tech
+            </h2>
+            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              Shop laptops, phones, accessories and more — with free delivery on
+              orders over GH₵500
+            </p>
+          </div>
+        </FadeInView>
 
         {/* Category Filter */}
         <div className="flex justify-center mb-8">
@@ -163,27 +159,23 @@ const LandingProducts = () => {
         </div>
 
         {/* View All CTA */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-          className="text-center"
-        >
-          <Link
-            href="/shop"
-            className="inline-flex items-center gap-3 text-sm px-6 py-2 rounded
+        <FadeInView direction="none" delay={0.3}>
+          <div className="text-center">
+            <Link
+              href="/shop"
+              className="inline-flex items-center gap-3 text-sm px-6 py-2 rounded
  border-2 border-slate-300 dark:border-slate-700
   text-slate-700 dark:text-slate-300 font-medium
   hover:border-brand-secondary-500 dark:hover:border-brand-secondary-500
   hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400
   hover:shadow
   transition duration-300 group"
-          >
-            <span>Shop Now</span>
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </motion.div>
+            >
+              <span>Shop Now</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+        </FadeInView>
       </div>
     </section>
   );

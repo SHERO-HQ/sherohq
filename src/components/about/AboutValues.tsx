@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "motion/react";
+import { StaggerContainer, StaggerItem } from "@/components/motion/AnimateSection";
 import { Lightbulb, ShieldCheck, Handshake, Rocket } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -55,41 +55,41 @@ const AboutValues = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
-          {values.map((item, index) => (
-            <motion.div
-              key={item.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              whileHover={{ y: -8 }}
-              className="group p-8 rounded bg-white dark:bg-slate-900/40  border border-slate-200 dark:border-white/5 hover:border-brand-secondary-500/30 shadow-sm hover:shadow hover:shadow-brand-secondary-500/5 transition duration-500"
-            >
+        <StaggerContainer
+          className="grid md:grid-cols-2 lg:grid-cols-4 gap-3"
+          staggerDelay={0.1}
+          threshold={0.08}
+        >
+          {values.map((item) => (
+            <StaggerItem key={item.title} yOffset={20} scale={0.98}>
               <div
-                className={cn(
-                  "w-12 h-12 rounded flex items-center justify-center mb-4 transition duration-500 border border-slate-200/50 dark:border-white/5 shadow-sm",
-                  item.color === "brand-secondary" &&
-                    "bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:bg-brand-secondary-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-brand-secondary-500/30",
-                  item.color === "blue" &&
-                    "bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-blue-500/30",
-                  item.color === "violet" &&
-                    "bg-violet-500/10 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-violet-500/30",
-                  item.color === "amber" &&
-                    "bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:bg-amber-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-amber-500/30",
-                )}
+                className="group p-8 rounded bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/5 hover:border-brand-secondary-500/30 shadow-sm hover:shadow hover:shadow-brand-secondary-500/5 transition duration-500 hover:-translate-y-2 h-full"
               >
-                <item.icon className="w-6 h-6" />
+                <div
+                  className={cn(
+                    "w-12 h-12 rounded flex items-center justify-center mb-4 transition duration-500 border border-slate-200/50 dark:border-white/5 shadow-sm",
+                    item.color === "brand-secondary" &&
+                      "bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:bg-brand-secondary-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-brand-secondary-500/30",
+                    item.color === "blue" &&
+                      "bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-blue-500/30",
+                    item.color === "violet" &&
+                      "bg-violet-500/10 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-violet-500/30",
+                    item.color === "amber" &&
+                      "bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:bg-amber-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-amber-500/30",
+                  )}
+                >
+                  <item.icon className="w-6 h-6" />
+                </div>
+                <h3 className="text-lg font-black text-slate-900 dark:text-white mb-3 tracking-tighter group-hover:text-brand-secondary-500 transition-colors">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light group-hover:text-slate-800 dark:group-hover:text-slate-300 transition-colors line-clamp-3">
+                  {item.description}
+                </p>
               </div>
-              <h3 className="text-lg font-black text-slate-900 dark:text-white mb-3 tracking-tighter group-hover:text-brand-secondary-500 transition-colors">
-                {item.title}
-              </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light group-hover:text-slate-800 dark:group-hover:text-slate-300 transition-colors line-clamp-3">
-                {item.description}
-              </p>
-            </motion.div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );

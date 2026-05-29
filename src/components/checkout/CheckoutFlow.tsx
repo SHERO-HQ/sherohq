@@ -43,6 +43,7 @@ import OrderSummary from "./OrderSummary";
 import PaymentFailureSupport from "./PaymentFailureSupport";
 import AppImage from "@/components/common/AppImage";
 import { toReadableOrderId } from "@/utils/orderId";
+import { WhatsAppIcon } from "@/assets/icons/icons";
 
 const CheckoutFlow = () => {
   const router = useRouter();
@@ -75,7 +76,7 @@ const CheckoutFlow = () => {
           },
         }),
       );
-    }, 45000);
+    }, 120000);
     return () => clearTimeout(timer);
   }, [currentStep]);
 
@@ -97,6 +98,7 @@ const CheckoutFlow = () => {
         city: "",
         region: "",
         postalCode: "",
+        gpsAddress: "",
       },
       paymentMethod: "momo",
       referralCode: "",
@@ -126,6 +128,10 @@ const CheckoutFlow = () => {
         "shippingAddress.postalCode",
         user.shippingAddress?.postalCode || "",
       );
+      setValue(
+        "shippingAddress.gpsAddress",
+        user.shippingAddress?.gpsAddress || "",
+      );
     }
   }, [isAuthenticated, user, setValue]);
 
@@ -150,7 +156,7 @@ const CheckoutFlow = () => {
 
   const steps = [
     { num: 1, title: "Cart Review", icon: ShoppingBag },
-    { num: 2, title: "Shipping", icon: Truck },
+    { num: 2, title: "Delivery Address", icon: Truck },
     { num: 3, title: "Payment", icon: CreditCard },
     { num: 4, title: "Confirmation", icon: CheckCircle },
   ];
@@ -417,7 +423,7 @@ const CheckoutFlow = () => {
               )}
             </div>
             <span className="font-bold text-slate-900 dark:text-white text-lg">
-              GH₵{total.toFixed(2)}
+              GHS {total.toFixed(2)}
             </span>
           </button>
 
@@ -511,7 +517,7 @@ const CheckoutFlow = () => {
                                   {item.category}
                                 </p>
                                 <p className="text-lg font-bold text-brand-secondary-600 dark:text-brand-secondary-400 mt-2">
-                                  GH₵{item.price}
+                                  GHS {item.price}
                                 </p>
                               </div>
                             </div>
@@ -551,14 +557,14 @@ const CheckoutFlow = () => {
                           variant="brand"
                           className="font-bold gap-2 px-8"
                         >
-                          Continue to Shipping
+                          Continue to Delivery
                           <ChevronRight className="w-5 h-5" />
                         </Button>
                       </div>
                     </motion.div>
                   )}
 
-                  {/* STEP 2: Shipping Information */}
+                  {/* STEP 2: Delivery Details */}
                   {currentStep === 2 && (
                     <motion.div
                       key="step2"
@@ -568,7 +574,7 @@ const CheckoutFlow = () => {
                       className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6"
                     >
                       <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
-                        Shipping Information
+                        Delivery Details
                       </h2>
 
                       <form className="space-y-4">
@@ -619,14 +625,24 @@ const CheckoutFlow = () => {
                           {...register("referralCode")}
                         />
 
-                        <Input
-                          id="address"
-                          label="Street Address"
-                          placeholder="123 Main Street"
-                          leftIcon={<MapPin className="w-4 h-4" />}
-                          error={errors.shippingAddress?.address?.message}
-                          {...register("shippingAddress.address")}
-                        />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <Input
+                            id="address"
+                            label="Street Address"
+                            placeholder="123 Main Street"
+                            leftIcon={<MapPin className="w-4 h-4" />}
+                            error={errors.shippingAddress?.address?.message}
+                            {...register("shippingAddress.address")}
+                          />
+                          <Input
+                            id="gpsAddress"
+                            label="GhanaPost GPS Address (Optional)"
+                            placeholder="e.g. GA-183-1892"
+                            leftIcon={<MapPin className="w-4 h-4" />}
+                            error={errors.shippingAddress?.gpsAddress?.message}
+                            {...register("shippingAddress.gpsAddress")}
+                          />
+                        </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <Input
@@ -928,8 +944,27 @@ const CheckoutFlow = () => {
                           Order Total
                         </p>
                         <p className="text-2xl sm:text-4xl font-bold text-brand-secondary-600 dark:text-brand-secondary-400 wrap-break-word">
-                          GH₵{confirmedTotal.toFixed(2)}
+                          GHS {confirmedTotal.toFixed(2)}
                         </p>
+                      </div>
+
+                      <div className="flex flex-col gap-4 max-w-md mx-auto mb-8">
+                        <a
+                          href={`https://wa.me/233548711582?text=${encodeURIComponent(
+                            `Hello SHERO, I just placed an order! Here are my details:\n\n` +
+                            `📦 *Order ID:* ${toReadableOrderId(orderId || "")}\n` +
+                            `💰 *Total:* GHS ${confirmedTotal.toFixed(2)}\n` +
+                            `👤 *Name:* ${watch("shippingAddress.firstName")} ${watch("shippingAddress.lastName")}\n` +
+                            `📞 *Phone:* ${watch("phone")}\n\n` +
+                            `Please confirm my delivery options. Thank you!`
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-bold px-8 py-3 rounded bg-[#25D366] text-white hover:bg-[#20bd5a] transition flex items-center justify-center gap-2 shadow-sm"
+                        >
+                          <WhatsAppIcon className="w-5 h-5 fill-current" />
+                          <span>Confirm on WhatsApp</span>
+                        </a>
                       </div>
 
                       <div className="flex flex-col sm:flex-row gap-4 justify-center">

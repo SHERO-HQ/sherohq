@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { StaggerContainer, StaggerItem } from "@/components/motion/AnimateSection";
 import {
  ShoppingBag,
  MessageSquare,
@@ -93,12 +94,18 @@ const LandingPathways = () => {
  </Link>
  </header>
 
- {/* Bento Grid */}
- <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 grid-rows-2 gap-4">
+ {/* Bento Grid — Staggered Scroll Reveal */}
+ <StaggerContainer
+   className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 grid-rows-2 gap-4"
+   staggerDelay={0.12}
+   threshold={0.06}
+ >
  {paths.map((path) => (
- <PathwayCard key={path.label} path={path} />
+ <StaggerItem key={path.label} yOffset={30} scale={0.97} className={`${path.span} col-span-1`}>
+   <PathwayCard path={path} />
+ </StaggerItem>
  ))}
- </div>
+ </StaggerContainer>
  </div>
  </section>
  );
@@ -107,7 +114,7 @@ const LandingPathways = () => {
 const PathwayCard = ({ path }: { path: Pathway }) => {
  const cardRef = useRef<HTMLDivElement>(null);
 
- // Mouse tilt logic
+ // Mouse tilt logic — interactive only, not scroll-triggered
  const x = useMotionValue(0);
  const y = useMotionValue(0);
 
@@ -147,10 +154,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
  rotateY,
  transformStyle: "preserve-3d",
  }}
- initial={{ opacity: 0, scale: 0.95 }}
- whileInView={{ opacity: 1, scale: 1 }}
- viewport={{ once: true }}
- className={`group relative ${path.span} col-span-1 min-h-60 p-6 rounded border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between overflow-hidden transition-colors hover:border-brand-secondary-500/50 hover:shadow shadow-brand-secondary-500/5`}
+ className={`group relative min-h-60 p-6 rounded border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between overflow-hidden transition-colors hover:border-brand-secondary-500/50 hover:shadow shadow-brand-secondary-500/5 h-full`}
  >
  {/* Dynamic Glow Layer */}
  <motion.div

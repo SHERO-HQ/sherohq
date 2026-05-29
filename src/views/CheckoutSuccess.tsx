@@ -137,7 +137,7 @@ const CheckoutSuccess = () => {
         <div className="bg-slate-50 dark:bg-slate-950 rounded p-6 mb-8 max-w-sm mx-auto border border-slate-100 dark:border-slate-800">
           <p className="text-sm text-slate-500 mb-1">Amount Paid</p>
           <p className="text-3xl font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
-            GH₵{order?.total.toFixed(2)}
+            GHS {order?.total.toFixed(2)}
           </p>
         </div>
 

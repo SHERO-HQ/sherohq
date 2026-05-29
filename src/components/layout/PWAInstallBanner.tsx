@@ -187,7 +187,7 @@ const PWAInstallBanner = () => {
             animate={{ x: 0, opacity: 1, scale: 1 }}
             exit={{ x: 300, opacity: 0, scale: 0.9 }}
             transition={{ type: "spring", stiffness: 260, damping: 20 }}
-            className="fixed bottom-6 right-6 z-100 w-[calc(100vw-3rem)] sm:w-[380px]"
+            className="fixed bottom-20 md:bottom-6 right-6 z-100 w-[calc(100vw-3rem)] sm:w-[380px]"
           >
             <div className="glass-surface-md p-4 rounded shadow transition-colors duration-300">
               <div className="flex items-start gap-4">

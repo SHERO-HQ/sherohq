@@ -150,7 +150,7 @@ export interface Review {
 }
 
 export async function getProductReviews(productId: string): Promise<Review[]> {
-  const response = await fetch(`${API_BASE}/reviews/${productId}`);
+  const response = await fetch(`${API_BASE}/products/${productId}/reviews`);
   return handleResponse<Review[]>(response);
 }
 
@@ -158,7 +158,7 @@ export async function submitProductReview(
   productId: string,
   data: { userName: string; rating: number; comment: string },
 ): Promise<{ success: boolean; review: Review }> {
-  const response = await fetch(`${API_BASE}/reviews/${productId}`, {
+  const response = await fetch(`${API_BASE}/products/${productId}/reviews`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),

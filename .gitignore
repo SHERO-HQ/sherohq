@@ -54,3 +54,6 @@ server/.yarn/*
 !server/.yarn/plugins
 !server/.yarn/releases
 server/.pnp.*
+
+# Local Copilot skill installs
+.agents/skills/ui-ux-pro-max-skill/

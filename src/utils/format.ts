@@ -8,10 +8,10 @@ export function formatCurrency(amount: number | string): string {
     typeof amount === "string" ? Number.parseFloat(amount) : amount;
 
   if (Number.isNaN(numericAmount)) {
-    return "GH₵0.00";
+    return "GHS 0.00";
   }
 
-  return `GH₵${numericAmount.toLocaleString("en-GH", {
+  return `GHS ${numericAmount.toLocaleString("en-GH", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
