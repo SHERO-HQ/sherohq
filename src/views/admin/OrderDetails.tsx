@@ -668,7 +668,7 @@ export default function OrderDetails() {
               </div>
             </div>
           </Card>
- 
+
           {/* Customer & Shipping Info */}
           <div className="grid md:grid-cols-2 gap-6">
             <Card className="bg-slate-900/40 border-white/10 p-6 hover:border-blue-500/20 duration-300 relative group overflow-hidden">
@@ -707,7 +707,7 @@ export default function OrderDetails() {
                 </div>
               </div>
             </Card>
- 
+
             <Card className="bg-slate-900/40 border-white/10 p-6 hover:border-amber-500/20 duration-300 relative group overflow-hidden">
               <div className="absolute inset-0 bg-radial-gradient from-amber-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
               <h3 className="text-white font-bold mb-4 flex items-center gap-2 relative z-10">
@@ -715,7 +715,9 @@ export default function OrderDetails() {
                 Shipping Address
               </h3>
               <div className="text-sm text-slate-400 space-y-2 relative z-10">
-                <p className="text-white font-medium">{order.shippingInfo.address}</p>
+                <p className="text-white font-medium">
+                  {order.shippingInfo.address}
+                </p>
                 <p className="text-xs">
                   {order.shippingInfo.city}, {order.shippingInfo.region}
                 </p>
@@ -729,7 +731,7 @@ export default function OrderDetails() {
             </Card>
           </div>
         </div>
- 
+
         {/* Sidebar Info */}
         <div className="space-y-6">
           <Card className="bg-slate-900/40 border-white/10 p-6 space-y-6 hover:border-brand-secondary-500/20 duration-300 relative group overflow-hidden">
@@ -738,10 +740,12 @@ export default function OrderDetails() {
               <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">
                 Order Status
               </h3>
-              <div className={cn(
-                "flex items-center justify-between p-3.5 rounded-lg border",
-                getStatusStyles(order.status)
-              )}>
+              <div
+                className={cn(
+                  "flex items-center justify-between p-3.5 rounded-lg border",
+                  getStatusStyles(order.status),
+                )}
+              >
                 <div className="flex items-center gap-3">
                   <statusConfig.icon className="w-4.5 h-4.5" />
                   <span className="font-bold capitalize text-sm">
@@ -750,7 +754,7 @@ export default function OrderDetails() {
                 </div>
               </div>
             </div>
- 
+
             <div className="relative z-10">
               <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">
                 Payment Information
@@ -771,7 +775,7 @@ export default function OrderDetails() {
                 </div>
               </div>
             </div>
- 
+
             <div className="pt-4 border-t border-white/5 relative z-10">
               <div className="bg-brand-secondary-500/5 p-4 rounded-lg border border-brand-secondary-500/10">
                 <div className="flex items-center gap-2 text-brand-secondary-400 mb-1.5">
@@ -787,7 +791,7 @@ export default function OrderDetails() {
               </div>
             </div>
           </Card>
- 
+
           {/* Quick Actions */}
           <div className="bg-slate-950/30 rounded-lg p-5 border border-white/5 relative group overflow-hidden">
             <div className="absolute inset-0 bg-radial-gradient from-white/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
