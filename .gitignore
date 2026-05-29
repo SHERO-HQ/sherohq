@@ -54,3 +54,5 @@ server/.yarn/*
 !server/.yarn/plugins
 !server/.yarn/releases
 server/.pnp.*
+
+./clean-bad-route.sh
