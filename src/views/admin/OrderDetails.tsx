@@ -817,7 +817,7 @@ export default function OrderDetails() {
             </div>
           </div>
         </div>
-      </div>     </div>
+      </div>
 
       {/* Printable Document (hidden in UI) */}
       {printMode &&
