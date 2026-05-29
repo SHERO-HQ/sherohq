@@ -131,14 +131,43 @@ Ensure the database schema is up-to-date before deployment.
 
 ## 💳 Paystack Setup Steps
 
+### Configuration
+
 1. Add `PAYSTACK_SECRET` (or `PAYSTACK_SECRET_KEY`) in your hosting environment.
 2. Deploy with `NEXT_PUBLIC_SITE_URL` set to your public domain.
-3. In Paystack Dashboard, configure webhook endpoint:
+3. In Paystack Dashboard, configure **webhook endpoint**:
    - `https://<your-domain>/api/payments/webhook`
-4. Send a test payment event and verify:
-   - Response is `200 OK`
-   - `orders.status` updates to `processing`
-   - `activity_logs` has `order_payment` success entry
+   - This is the **server-to-server** notification URL (Paystack → backend).
+   - Signature verification enforced; processes `charge.success` events.
+
+### Dual-Callback Strategy
+
+The system uses **two** callback URLs for reliability:
+
+- **Webhook** (`/api/payments/webhook`): Server-side order finalization
+  - Receives Paystack events securely
+  - Verifies HMAC SHA512 signature
+  - Updates `orders.status` → `processing`
+  - Logs activity
+  - Source of truth for order state
+
+- **User Callback** (`/checkout/complete`): Customer-facing confirmation
+  - Redirect URL after payment on Paystack's hosted page
+  - Shows success/pending/error status
+  - Fetches live order status from server
+  - Safe even if user closes browser (webhook still processes)
+
+### Testing
+
+1. Place a test order (card payment via Paystack).
+2. User is redirected to `/checkout/complete?reference=...`.
+3. Verify page shows correct status:
+   - **Success**: Order moved to `processing` via webhook.
+   - **Pending**: Webhook still running; refresh to check.
+   - **Error**: No webhook event received; contact Paystack support.
+4. Check backend:
+   - `orders.status` updated to `processing`
+   - `activity_logs` contains `order_payment` success entry with provider.
 
 ---
 
