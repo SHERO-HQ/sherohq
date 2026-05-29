@@ -596,7 +596,8 @@ export default function OrderDetails() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </di      <div className="grid lg:grid-cols-3 gap-8">
+      </div>
+      <div className="grid lg:grid-cols-3 gap-8">
         {/* Main Content: Items & Summary */}
         <div className="lg:col-span-2 space-y-6">
           <Card className="bg-slate-900/40 border-white/10 overflow-hidden relative group duration-300 hover:border-brand-secondary-500/20">
