@@ -8,7 +8,9 @@ import { CheckCircle, AlertCircle, Loader } from "lucide-react";
 export default function CheckoutCompletePage() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [orderStatus, setOrderStatus] = useState<"loading" | "success" | "pending" | "error">("loading");
+  const [orderStatus, setOrderStatus] = useState<
+    "loading" | "success" | "pending" | "error"
+  >("loading");
 
   const reference = searchParams.get("reference");
   const readableOrderId = searchParams.get("readableOrderId");
@@ -68,9 +70,13 @@ export default function CheckoutCompletePage() {
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
           <div className="text-center">
             <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-slate-900 mb-2">Payment Successful</h1>
+            <h1 className="text-2xl font-bold text-slate-900 mb-2">
+              Payment Successful
+            </h1>
             <p className="text-slate-600 mb-6">
-              Thank you for your purchase! Your order <span className="font-mono font-semibold">{readableOrderId}</span> is being processed.
+              Thank you for your purchase! Your order{" "}
+              <span className="font-mono font-semibold">{readableOrderId}</span>{" "}
+              is being processed.
             </p>
             <p className="text-sm text-slate-500 mb-8">
               A confirmation email will be sent shortly with tracking details.
@@ -102,9 +108,12 @@ export default function CheckoutCompletePage() {
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
           <div className="text-center">
             <AlertCircle className="w-16 h-16 text-yellow-600 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-slate-900 mb-2">Payment Pending</h1>
+            <h1 className="text-2xl font-bold text-slate-900 mb-2">
+              Payment Pending
+            </h1>
             <p className="text-slate-600 mb-6">
-              Your payment is still being processed. Please check your email for updates.
+              Your payment is still being processed. Please check your email for
+              updates.
             </p>
           </div>
 
@@ -133,9 +142,12 @@ export default function CheckoutCompletePage() {
       <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
         <div className="text-center">
           <AlertCircle className="w-16 h-16 text-red-600 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-slate-900 mb-2">Payment Failed</h1>
+          <h1 className="text-2xl font-bold text-slate-900 mb-2">
+            Payment Failed
+          </h1>
           <p className="text-slate-600 mb-8">
-            We couldn't confirm your payment. Please try again or contact support.
+            We couldn't confirm your payment. Please try again or contact
+            support.
           </p>
         </div>
 
