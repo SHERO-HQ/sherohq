@@ -68,22 +68,6 @@ export function getImageUrl(path: string | undefined): string {
   return path;
 }
 
-function getStatusErrorMessage(status: number): string | null {
-  const statusMap: Record<number, string> = {
-    400: "Bad Request: Please check your input.",
-    401: "Unauthorized: Invalid credentials or session expired.",
-    403: "Forbidden: You do not have permission to perform this action.",
-    404: "Not Found: The requested resource does not exist.",
-    422: "Unprocessable Entity: Please check your data format.",
-    429: "Too Many Requests: Please try again later.",
-    500: "Server Error: Something went wrong on our end.",
-    502: "Service Unavailable: The server is temporarily down.",
-    503: "Service Unavailable: The server is temporarily down.",
-    504: "Service Unavailable: The server is temporarily down.",
-  };
-  return statusMap[status] || null;
-}
-
 export async function handleResponse<T>(response: Response): Promise<T> {
   const text = await response.text();
 

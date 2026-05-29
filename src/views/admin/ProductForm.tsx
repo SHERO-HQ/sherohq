@@ -574,7 +574,7 @@ export default function ProductForm() {
         >
           {isSaving ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin mr-2 animate-pulse" />
+              <Loader2 className="w-4 h-4 animate-spin mr-2" />
               Saving...
             </>
           ) : (

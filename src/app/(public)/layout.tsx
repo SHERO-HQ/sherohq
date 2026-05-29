@@ -21,11 +21,24 @@ const UserChangePasswordModal = dynamic(
   { ssr: false },
 );
 
+import { usePathname } from "next/navigation";
+
 export default function PublicLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const isMinimalLayout = pathname?.startsWith("/checkout/pay");
+
+  if (isMinimalLayout) {
+    return (
+      <main id="main-content" className="min-h-screen bg-slate-50 dark:bg-slate-950">
+        <PageTransition>{children}</PageTransition>
+      </main>
+    );
+  }
+
   return (
     <>
       <TopBarStack />
