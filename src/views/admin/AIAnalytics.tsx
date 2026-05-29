@@ -45,7 +45,7 @@ const EMPTY_TOTALS: AIAnalyticsTotals = {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-slate-950/90 backdrop-blur-md border border-white/10 p-3 rounded-lg shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
+      <div className="bg-slate-950/90 backdrop-blur-md border border-white/10 p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
         {label && (
           <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">
             {label}

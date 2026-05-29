@@ -24,7 +24,7 @@ export default function InvoiceSidebarMeta({
     <div className="space-y-6">
       <Card className="bg-slate-900 border border-white/5 p-6 sticky top-24">
         <h3 className="text-lg font-bold text-white mb-6 border-b border-white/5 pb-2">Summary</h3>
-        
+
         <div className="space-y-4 mb-6">
           <div className="flex justify-between text-sm">
             <span className="text-slate-400">Subtotal</span>
@@ -65,7 +65,7 @@ export default function InvoiceSidebarMeta({
           )}
         </Button>
 
-        <div className="mt-4 p-3 bg-slate-800/30 border border-white/5 rounded-md flex gap-2">
+        <div className="mt-4 p-3 bg-slate-800/30 border border-white/5 rounded flex gap-2">
           <Calendar className="w-4 h-4 shrink-0 text-slate-500 mt-0.5" />
           <p className="text-[10px] text-slate-500 leading-relaxed">
             Ensure customer information is exact. MANUALLY issued {mode}s will generate notifications automatically.

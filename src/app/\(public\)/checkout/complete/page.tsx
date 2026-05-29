@@ -67,7 +67,7 @@ export default function CheckoutCompletePage() {
   if (orderStatus === "success") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-100">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+        <div className="max-w-md w-full bg-white rounded shadow-lg p-8">
           <div className="text-center">
             <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-slate-900 mb-2">
@@ -86,13 +86,13 @@ export default function CheckoutCompletePage() {
           <div className="flex gap-4">
             <Link
               href="/profile/orders"
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition"
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition"
             >
               View Orders
             </Link>
             <Link
               href="/"
-              className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-900 font-medium py-2 px-4 rounded-md transition"
+              className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-900 font-medium py-2 px-4 rounded transition"
             >
               Continue Shopping
             </Link>
@@ -105,7 +105,7 @@ export default function CheckoutCompletePage() {
   if (orderStatus === "pending") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-100">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+        <div className="max-w-md w-full bg-white rounded shadow-lg p-8">
           <div className="text-center">
             <AlertCircle className="w-16 h-16 text-yellow-600 mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-slate-900 mb-2">
@@ -120,13 +120,13 @@ export default function CheckoutCompletePage() {
           <div className="flex gap-4">
             <button
               onClick={() => router.refresh()}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition"
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition"
             >
               Refresh Status
             </button>
             <Link
               href="/"
-              className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-900 font-medium py-2 px-4 rounded-md transition"
+              className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-900 font-medium py-2 px-4 rounded transition"
             >
               Go Home
             </Link>
@@ -139,7 +139,7 @@ export default function CheckoutCompletePage() {
   // Error state
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-slate-50 to-slate-100">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+      <div className="max-w-md w-full bg-white rounded shadow-lg p-8">
         <div className="text-center">
           <AlertCircle className="w-16 h-16 text-red-600 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-slate-900 mb-2">
@@ -154,13 +154,13 @@ export default function CheckoutCompletePage() {
         <div className="flex gap-4">
           <Link
             href="/checkout"
-            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition"
+            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded transition"
           >
             Try Again
           </Link>
           <Link
             href="/support"
-            className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-900 font-medium py-2 px-4 rounded-md transition"
+            className="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-900 font-medium py-2 px-4 rounded transition"
           >
             Get Help
           </Link>

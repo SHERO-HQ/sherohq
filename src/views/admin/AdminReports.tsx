@@ -110,7 +110,7 @@ const parseLabel = (label: any) => {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-slate-950/90 backdrop-blur-md border border-white/10 p-3 rounded-lg shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
+      <div className="bg-slate-950/90 backdrop-blur-md border border-white/10 p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">
           {parseLabel(label)}
         </p>
@@ -296,11 +296,10 @@ export default function AdminReports() {
 
   const getSubtext = (period: typeof kpiPeriod) => {
     if (period === "custom" && customRange?.from) {
-      return `${format(customRange.from, "MMM d")} - ${
-        customRange.to
+      return `${format(customRange.from, "MMM d")} - ${customRange.to
           ? format(customRange.to, "MMM d")
           : format(customRange.from, "MMM d")
-      }`;
+        }`;
     }
     return `vs prev ${period === "today" ? "day" : period}`;
   };
@@ -355,7 +354,7 @@ export default function AdminReports() {
                     className={cn(
                       "bg-slate-800/50 border-white/10 text-slate-300 hover:text-white h-9",
                       range === "custom" &&
-                        "bg-slate-700 text-white border-brand-secondary-500/50",
+                      "bg-slate-700 text-white border-brand-secondary-500/50",
                     )}
                     onClick={() => setRange("custom")}
                   >
@@ -429,11 +428,10 @@ export default function AdminReports() {
                   key={opt.value}
                   type="button"
                   onClick={() => setKpiPeriod(opt.value as KpiPeriod)}
-                  className={`px-3 py-1 text-[10px] font-bold rounded transition ${
-                    kpiPeriod === opt.value
+                  className={`px-3 py-1 text-[10px] font-bold rounded transition ${kpiPeriod === opt.value
                       ? "bg-purple-600 text-white shadow"
                       : "text-slate-400 hover:text-white"
-                  }`}
+                    }`}
                 >
                   {opt.label}
                 </button>
@@ -507,10 +505,10 @@ function StatCard({
   };
 
   return (
-    <div className="bg-slate-900/40 border border-white/10 hover:border-brand-secondary-500/30 transition-all duration-300 rounded-lg p-5 flex flex-col gap-3 relative group overflow-hidden">
+    <div className="bg-slate-900/40 border border-white/10 hover:border-brand-secondary-500/30 transition-all duration-300 rounded p-5 flex flex-col gap-3 relative group overflow-hidden">
       <div className="absolute inset-0 bg-radial-gradient from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       <div className="flex items-center gap-4 relative z-10">
-        <div className={`p-2.5 rounded-lg ${bg} ${color}`}>
+        <div className={`p-2.5 rounded ${bg} ${color}`}>
           <Icon className="w-5 h-5" />
         </div>
         <div>
@@ -542,7 +540,7 @@ function RevenueChartSection({
   readonly analytics: AnalyticsData[];
 }) {
   return (
-    <div className="bg-slate-900/40 border border-white/10 rounded-lg p-6 relative group overflow-hidden">
+    <div className="bg-slate-900/40 border border-white/10 rounded p-6 relative group overflow-hidden">
       <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
         <DollarSign className="w-5 h-5 text-brand-secondary-400" />
@@ -551,22 +549,20 @@ function RevenueChartSection({
       <div className="absolute top-6 right-6 bg-slate-800/80 backdrop-blur-md rounded border border-white/5 p-0.5 flex">
         <button
           onClick={() => setChartType("line")}
-          className={`p-1.5 rounded transition-colors ${
-            chartType === "line"
+          className={`p-1.5 rounded transition-colors ${chartType === "line"
               ? "bg-slate-700 text-white"
               : "text-slate-400 hover:text-white"
-          }`}
+            }`}
           title="Line Chart"
         >
           <LineChartIcon className="w-4 h-4" />
         </button>
         <button
           onClick={() => setChartType("bar")}
-          className={`p-1.5 rounded transition-colors ${
-            chartType === "bar"
+          className={`p-1.5 rounded transition-colors ${chartType === "bar"
               ? "bg-slate-700 text-white"
               : "text-slate-400 hover:text-white"
-          }`}
+            }`}
           title="Bar Chart"
         >
           <BarChart3 className="w-4 h-4" />
@@ -677,7 +673,7 @@ function StockDistributionChart({
   readonly data: StockDistribution[];
 }) {
   return (
-    <div className="bg-slate-900/40 border border-white/10 rounded-lg p-6 hover:border-blue-500/20 transition-colors duration-300">
+    <div className="bg-slate-900/40 border border-white/10 rounded p-6 hover:border-blue-500/20 transition-colors duration-300">
       <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
         <PieChartIcon className="w-5 h-5 text-blue-400" />
         Stock Distribution
@@ -720,7 +716,7 @@ function OrderStatusChart({
   readonly data: OrderStatusDistribution[];
 }) {
   return (
-    <div className="bg-slate-900/40 border border-white/10 rounded-lg p-6 hover:border-amber-500/20 transition-colors duration-300">
+    <div className="bg-slate-900/40 border border-white/10 rounded p-6 hover:border-amber-500/20 transition-colors duration-300">
       <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
         <ShoppingCart className="w-5 h-5 text-amber-400" />
         OrderStatus Chart
@@ -764,7 +760,7 @@ function OrderStatusChart({
 
 function RegionalSalesChart({ data }: { readonly data: RegionalData[] }) {
   return (
-    <div className="bg-slate-900/40 border border-white/10 rounded-lg p-6 hover:border-brand-secondary-500/20 transition-colors duration-300">
+    <div className="bg-slate-900/40 border border-white/10 rounded p-6 hover:border-brand-secondary-500/20 transition-colors duration-300">
       <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
         <TrendingUp className="w-5 h-5 text-brand-secondary-400" />
         Sales by Region
@@ -813,7 +809,7 @@ function RegionalSalesChart({ data }: { readonly data: RegionalData[] }) {
 
 function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
   return (
-    <div className="lg:col-span-2 bg-slate-900/40 border border-white/10 rounded-lg p-6 relative group overflow-hidden">
+    <div className="lg:col-span-2 bg-slate-900/40 border border-white/10 rounded p-6 relative group overflow-hidden">
       <div className="absolute inset-0 bg-radial-gradient from-blue-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
         <ShoppingCart className="w-5 h-5 text-blue-400" />
@@ -824,7 +820,7 @@ function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
           orders.map((order) => (
             <div
               key={order.id}
-              className="flex items-center justify-between p-3.5 rounded-lg bg-slate-950/20 border border-white/5 hover:border-blue-500/20 hover:bg-slate-900/50 transition-all duration-300"
+              className="flex items-center justify-between p-3.5 rounded bg-slate-950/20 border border-white/5 hover:border-blue-500/20 hover:bg-slate-900/50 transition-all duration-300"
             >
               <div className="flex items-center gap-3">
                 <div className="flex flex-col">
@@ -863,7 +859,7 @@ function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
 
 function TopProducts({ products }: { readonly products: TopProduct[] }) {
   return (
-    <div className="lg:col-span-1 bg-slate-900/40 border border-white/10 rounded-lg p-6 relative group overflow-hidden">
+    <div className="lg:col-span-1 bg-slate-900/40 border border-white/10 rounded p-6 relative group overflow-hidden">
       <div className="absolute inset-0 bg-radial-gradient from-purple-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
         <Package className="w-5 h-5 text-purple-400" />
@@ -873,7 +869,7 @@ function TopProducts({ products }: { readonly products: TopProduct[] }) {
         {(products || []).map((product, idx) => (
           <div
             key={`${product.name}-${idx}`}
-            className="flex items-center justify-between p-3.5 rounded-lg bg-slate-950/20 border border-white/5 hover:border-purple-500/20 hover:bg-slate-900/50 transition-all duration-300"
+            className="flex items-center justify-between p-3.5 rounded bg-slate-950/20 border border-white/5 hover:border-purple-500/20 hover:bg-slate-900/50 transition-all duration-300"
           >
             <div className="flex items-center gap-3">
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-800/80 border border-white/10 text-[10px] font-bold text-white font-mono">

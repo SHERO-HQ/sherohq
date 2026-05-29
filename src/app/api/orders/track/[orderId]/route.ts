@@ -48,7 +48,7 @@ export async function GET(
     const providedToken = request.headers.get("x-order-access-token")?.trim() || null;
     const hasValidToken = providedToken && order.orderAccessTokenHash && hashOrderAccessToken(providedToken) === order.orderAccessTokenHash;
 
-    const isAuthorized = !order.userId || Boolean(admin) || (user && order.userId === user.id) || hasValidToken;
+    const isAuthorized = Boolean(admin) || (user && order.userId === user.id) || hasValidToken;
 
     if (!isAuthorized) {
       return NextResponse.json({

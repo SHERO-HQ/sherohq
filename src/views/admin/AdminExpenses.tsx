@@ -472,7 +472,7 @@ export default function AdminExpenses() {
                 className={cn(
                   "bg-slate-800/50 border-white/10 text-slate-300 hover:text-white h-9 py-0",
                   dateFilter === "range" &&
-                    "bg-slate-700 text-white border-brand-secondary-500/50",
+                  "bg-slate-700 text-white border-brand-secondary-500/50",
                 )}
                 onClick={() => setDateFilter("range")}
               >
@@ -656,7 +656,7 @@ export default function AdminExpenses() {
           )}>
             <button
               onClick={handleCloseForm}
-              className="absolute right-4 top-4 p-1.5 text-slate-400 hover:text-white hover:bg-white/5 rounded-md transition-colors"
+              className="absolute right-4 top-4 p-1.5 text-slate-400 hover:text-white hover:bg-white/5 rounded transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -761,7 +761,7 @@ export default function AdminExpenses() {
                   onChange={(e) =>
                     setFormData({ ...formData, category: e.target.value })
                   }
-                  className="w-full bg-slate-800/50 border border-white/5 rounded-md text-sm text-white h-10 px-3 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 transition-all duration-200 cursor-pointer"
+                  className="w-full bg-slate-800/50 border border-white/5 rounded text-sm text-white h-10 px-3 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 transition-all duration-200 cursor-pointer"
                   required
                 >
                   {CATEGORIES.map((cat) => (

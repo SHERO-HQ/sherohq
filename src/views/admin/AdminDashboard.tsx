@@ -78,7 +78,7 @@ import { toReadableOrderId } from "@/utils/orderId";
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-slate-950/90 backdrop-blur-md border border-white/10 p-3 rounded-lg shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
+      <div className="bg-slate-950/90 backdrop-blur-md border border-white/10 p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
         <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">
           {label ? new Date(label).toLocaleDateString("en-US", {
             month: "short",
@@ -463,25 +463,25 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {isLoading
           ? new Array(4).fill(0).map((_, i) => (
-              <div
-                key={`skeleton-stat-summary-${i}`}
-                className="h-36 rounded bg-slate-900/40  border border-white/10 animate-pulse relative overflow-hidden"
-              >
-                <div className="p-6 space-y-4">
-                  <div className="flex justify-between items-center">
-                    <div className="h-4 w-24 bg-white/5 rounded" />
-                    <div className="h-8 w-8 bg-white/5 rounded" />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="h-8 w-32 bg-white/10 rounded" />
-                    <div className="h-4 w-20 bg-white/5 rounded" />
-                  </div>
+            <div
+              key={`skeleton-stat-summary-${i}`}
+              className="h-36 rounded bg-slate-900/40  border border-white/10 animate-pulse relative overflow-hidden"
+            >
+              <div className="p-6 space-y-4">
+                <div className="flex justify-between items-center">
+                  <div className="h-4 w-24 bg-white/5 rounded" />
+                  <div className="h-8 w-8 bg-white/5 rounded" />
+                </div>
+                <div className="space-y-2">
+                  <div className="h-8 w-32 bg-white/10 rounded" />
+                  <div className="h-4 w-20 bg-white/5 rounded" />
                 </div>
               </div>
-            ))
+            </div>
+          ))
           : statCards.map((stat, index) => (
-              <MagneticStatCard key={stat.title} stat={stat} index={index} />
-            ))}
+            <MagneticStatCard key={stat.title} stat={stat} index={index} />
+          ))}
       </div>
 
       {/* Row 1: Revenue Trends and Sales Widgets */}
@@ -651,7 +651,7 @@ export default function AdminDashboard() {
                 <Link
                   key={action.title}
                   href={action.link}
-                  className="flex items-center justify-between p-3 rounded-lg bg-slate-950/20 border border-white/5 hover:border-brand-secondary-500/20 hover:bg-slate-900/50 transition-all duration-300 group"
+                  className="flex items-center justify-between p-3 rounded bg-slate-950/20 border border-white/5 hover:border-brand-secondary-500/20 hover:bg-slate-900/50 transition-all duration-300 group"
                 >
                   <div className="flex items-center gap-3">
                     <div className={cn("p-2 rounded", action.color)}>

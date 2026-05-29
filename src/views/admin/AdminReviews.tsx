@@ -113,7 +113,7 @@ const AdminReviews = () => {
           return (
             <div
               key={review.id}
-              className="bg-slate-800/30 border border-white/5 rounded-lg p-6 flex flex-col md:flex-row gap-6 hover:bg-slate-800/50 transition-colors relative overflow-hidden"
+              className="bg-slate-800/30 border border-white/5 rounded p-6 flex flex-col md:flex-row gap-6 hover:bg-slate-800/50 transition-colors relative overflow-hidden"
             >
               {isDeleting && (
                 <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs z-10 flex items-center justify-between px-6 py-4 animate-in fade-in duration-200 select-none">
@@ -155,7 +155,7 @@ const AdminReviews = () => {
                   variant="ghost"
                   size="sm"
                   onClick={() => startSoftDelete(review.id)}
-                  className="text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 h-9 px-3 rounded-md"
+                  className="text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 h-9 px-3 rounded"
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
                   Delete

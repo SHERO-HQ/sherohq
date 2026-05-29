@@ -4,10 +4,10 @@ import { useAdmin } from "@/context/AdminContext";
 import { Tag, Plus, Search, Loader2, Trash2, Edit2 } from "lucide-react";
 import { getErrorMessage } from "@/utils/error";
 import {
- useCategories,
- useCreateCategory,
- useUpdateCategory,
- useDeleteCategory,
+  useCategories,
+  useCreateCategory,
+  useUpdateCategory,
+  useDeleteCategory,
 } from "@/hooks/queries/useCategories";
 import { useNotifications } from "@/hooks/useNotifications";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
@@ -20,61 +20,61 @@ import * as Icons from "lucide-react";
 
 // Icon Selector Component (Simplified)
 const IconSelector = ({
- value,
- onChange,
+  value,
+  onChange,
 }: {
- value: string;
- onChange: (val: string) => void;
+  value: string;
+  onChange: (val: string) => void;
 }) => {
- const [search, setSearch] = useState("");
- const iconNames = Object.keys(Icons)
- .filter((name) => name !== "createLucideIcon" && name !== "default")
- .slice(0, 100);
+  const [search, setSearch] = useState("");
+  const iconNames = Object.keys(Icons)
+    .filter((name) => name !== "createLucideIcon" && name !== "default")
+    .slice(0, 100);
 
- const filteredIcons = search
- ? Object.keys(Icons).filter((name) =>
- name.toLowerCase().includes(search.toLowerCase()),
- )
- : iconNames;
+  const filteredIcons = search
+    ? Object.keys(Icons).filter((name) =>
+      name.toLowerCase().includes(search.toLowerCase()),
+    )
+    : iconNames;
 
- const displayIcons = filteredIcons.slice(0, 50);
+  const displayIcons = filteredIcons.slice(0, 50);
 
- return (
- <div className="space-y-2">
- <Label>Select Icon</Label>
- <Input
- placeholder="Search icons (e.g. 'Smartphone')..."
- value={search}
- onChange={(e) => setSearch(e.target.value)}
- className="bg-slate-800 border-white/10"
- />
- <div className="grid grid-cols-6 gap-2 max-h-40 overflow-y-auto p-2 bg-slate-800/50 rounded border border-white/5">
- {displayIcons.map((name) => {
- // @ts-expect-error - Dynamic icon access
- const Icon = Icons[name];
- if (!Icon) return null;
- return (
- <button
- key={name}
- type="button"
- onClick={() => onChange(name)}
- className={`p-2 rounded flex items-center justify-center transition-colors ${value === name ? "bg-brand-secondary-500 text-white" : "hover:bg-white/10 text-slate-400"}`}
- title={name}
- >
- <Icon className="w-5 h-5" />
- </button>
- );
- })}
- </div>
- {value && <p className="text-xs text-slate-400">Selected: {value}</p>}
- </div>
- );
+  return (
+    <div className="space-y-2">
+      <Label>Select Icon</Label>
+      <Input
+        placeholder="Search icons (e.g. 'Smartphone')..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="bg-slate-800 border-white/10"
+      />
+      <div className="grid grid-cols-6 gap-2 max-h-40 overflow-y-auto p-2 bg-slate-800/50 rounded border border-white/5">
+        {displayIcons.map((name) => {
+          // @ts-expect-error - Dynamic icon access
+          const Icon = Icons[name];
+          if (!Icon) return null;
+          return (
+            <button
+              key={name}
+              type="button"
+              onClick={() => onChange(name)}
+              className={`p-2 rounded flex items-center justify-center transition-colors ${value === name ? "bg-brand-secondary-500 text-white" : "hover:bg-white/10 text-slate-400"}`}
+              title={name}
+            >
+              <Icon className="w-5 h-5" />
+            </button>
+          );
+        })}
+      </div>
+      {value && <p className="text-xs text-slate-400">Selected: {value}</p>}
+    </div>
+  );
 };
 
 const CategoriesTableSkeleton = () => (
   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 animate-pulse select-none">
     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
-      <div key={i} className="bg-slate-800/20 border border-white/5 rounded-lg p-4 flex items-center gap-3">
+      <div key={i} className="bg-slate-800/20 border border-white/5 rounded p-4 flex items-center gap-3">
         <div className="w-10 h-10 rounded bg-white/5" />
         <div className="h-4 w-20 bg-white/10 rounded" />
       </div>
@@ -103,41 +103,41 @@ const AdminCategories = () => {
 
   const [formData, setFormData] = useState({ name: "", icon: "Package" });
 
- const filteredCategories = categories.filter((cat) =>
- cat.name.toLowerCase().includes(searchQuery.toLowerCase()),
- );
+  const filteredCategories = categories.filter((cat) =>
+    cat.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
- const handleOpenCreate = () => {
- setEditingCategory(null);
- setFormData({ name: "", icon: "Package" });
- setIsModalOpen(true);
- };
+  const handleOpenCreate = () => {
+    setEditingCategory(null);
+    setFormData({ name: "", icon: "Package" });
+    setIsModalOpen(true);
+  };
 
- const handleOpenEdit = (cat: { id: string; name: string; icon: string }) => {
- setEditingCategory(cat);
- setFormData({ name: cat.name, icon: cat.icon });
- setIsModalOpen(true);
- };
+  const handleOpenEdit = (cat: { id: string; name: string; icon: string }) => {
+    setEditingCategory(cat);
+    setFormData({ name: cat.name, icon: cat.icon });
+    setIsModalOpen(true);
+  };
 
- const handleSubmit = async (e: React.FormEvent) => {
- e.preventDefault();
- try {
- if (editingCategory) {
- await updateMutation.mutateAsync({
- id: editingCategory.id,
- data: formData,
- });
- addNotification("Success", "Category updated successfully", "success");
- } else {
- await createMutation.mutateAsync(formData);
- addNotification("Success", "Category created successfully", "success");
- }
- setIsModalOpen(false);
- } catch (error) {
- console.error("Failed to save category:", error);
- addNotification("Error", getErrorMessage(error, "Failed to save category"), "error");
- }
- };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (editingCategory) {
+        await updateMutation.mutateAsync({
+          id: editingCategory.id,
+          data: formData,
+        });
+        addNotification("Success", "Category updated successfully", "success");
+      } else {
+        await createMutation.mutateAsync(formData);
+        addNotification("Success", "Category created successfully", "success");
+      }
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Failed to save category:", error);
+      addNotification("Error", getErrorMessage(error, "Failed to save category"), "error");
+    }
+  };
 
   const startSoftDelete = (id: string) => {
     if (activeTimer) {
@@ -186,156 +186,156 @@ const AdminCategories = () => {
     };
   }, [activeTimer]);
 
- const renderIcon = (iconName: string) => {
- // @ts-expect-error - Dynamic icon access
- const Icon = Icons[iconName] || Icons.Package;
- return <Icon className="w-5 h-5" />;
- };
+  const renderIcon = (iconName: string) => {
+    // @ts-expect-error - Dynamic icon access
+    const Icon = Icons[iconName] || Icons.Package;
+    return <Icon className="w-5 h-5" />;
+  };
 
- return (
- <div className="space-y-6">
- <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
- <div>
- <h1 className="text-2xl font-bold text-white flex items-center gap-3">
- <Tag className="w-7 h-7 text-brand-secondary-400" />
- Categories
- </h1>
- <p className="text-slate-400 text-sm mt-1">
- Manage product categories and icons
- </p>
- </div>
- <Button
- onClick={handleOpenCreate}
- className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
- >
- <Plus className="w-4 h-4 mr-2" />
- Add Category
- </Button>
- </div>
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+            <Tag className="w-7 h-7 text-brand-secondary-400" />
+            Categories
+          </h1>
+          <p className="text-slate-400 text-sm mt-1">
+            Manage product categories and icons
+          </p>
+        </div>
+        <Button
+          onClick={handleOpenCreate}
+          className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Add Category
+        </Button>
+      </div>
 
- {/* Search */}
- <div className="relative max-w-md">
- <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
- <Input
- placeholder="Search categories..."
- value={searchQuery}
- onChange={(e) => setSearchQuery(e.target.value)}
- className="pl-10 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
- />
- </div>
+      {/* Search */}
+      <div className="relative max-w-md">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+        <Input
+          placeholder="Search categories..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
+        />
+      </div>
 
-  {/* List */}
-  {isLoading ? (
-    <CategoriesTableSkeleton />
-  ) : filteredCategories.length === 0 ? (
-    <div className="text-center py-20 bg-slate-800/30 rounded border border-white/5">
-      <Tag className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-      <p className="text-slate-400">No categories found</p>
-    </div>
-  ) : (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-      {filteredCategories.map((cat) => {
-        const isDeleting = pendingDeleteId === cat.id;
-        return (
-          <div
-            key={cat.id}
-            className="bg-slate-800/30 border border-white/5 rounded-lg p-4 flex items-center justify-between group hover:border-brand-secondary-500/30 transition relative overflow-hidden"
-          >
-            {isDeleting && (
-              <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs z-10 flex items-center justify-between px-3 py-2 animate-in fade-in duration-200 select-none">
-                <span className="text-[10px] font-bold text-rose-400 animate-pulse truncate mr-1">
-                  Removing in {secondsLeft}s
-                </span>
-                <button
-                  type="button"
-                  onClick={() => handleCancelDelete(cat.id)}
-                  className="px-2 py-1 bg-white/10 hover:bg-white/20 text-white rounded text-[9px] font-bold transition-all shrink-0"
-                >
-                  Undo
-                </button>
-              </div>
-            )}
-
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded bg-brand-secondary-500/10 flex items-center justify-center text-brand-secondary-400">
-                {renderIcon(cat.icon)}
-              </div>
-              <span className="font-medium text-white">{cat.name}</span>
-            </div>
-            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity relative z-5">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => handleOpenEdit(cat)}
-                className="h-8 w-8 text-slate-400 hover:text-white"
+      {/* List */}
+      {isLoading ? (
+        <CategoriesTableSkeleton />
+      ) : filteredCategories.length === 0 ? (
+        <div className="text-center py-20 bg-slate-800/30 rounded border border-white/5">
+          <Tag className="w-12 h-12 text-slate-600 mx-auto mb-4" />
+          <p className="text-slate-400">No categories found</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {filteredCategories.map((cat) => {
+            const isDeleting = pendingDeleteId === cat.id;
+            return (
+              <div
+                key={cat.id}
+                className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center justify-between group hover:border-brand-secondary-500/30 transition relative overflow-hidden"
               >
-                <Edit2 className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => startSoftDelete(cat.id)}
-                className="h-8 w-8 text-slate-400 hover:text-rose-400"
-              >
-                <Trash2 className="w-4 h-4" />
-              </Button>
-            </div>
+                {isDeleting && (
+                  <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs z-10 flex items-center justify-between px-3 py-2 animate-in fade-in duration-200 select-none">
+                    <span className="text-[10px] font-bold text-rose-400 animate-pulse truncate mr-1">
+                      Removing in {secondsLeft}s
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleCancelDelete(cat.id)}
+                      className="px-2 py-1 bg-white/10 hover:bg-white/20 text-white rounded text-[9px] font-bold transition-all shrink-0"
+                    >
+                      Undo
+                    </button>
+                  </div>
+                )}
+
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded bg-brand-secondary-500/10 flex items-center justify-center text-brand-secondary-400">
+                    {renderIcon(cat.icon)}
+                  </div>
+                  <span className="font-medium text-white">{cat.name}</span>
+                </div>
+                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity relative z-5">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleOpenEdit(cat)}
+                    className="h-8 w-8 text-slate-400 hover:text-white"
+                  >
+                    <Edit2 className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => startSoftDelete(cat.id)}
+                    className="h-8 w-8 text-slate-400 hover:text-rose-400"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Create/Edit Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={editingCategory ? "Edit Category" : "Add New Category"}
+      >
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+              required
+              className="bg-slate-800 border-white/10"
+            />
           </div>
-        );
-      })}
+
+          <IconSelector
+            value={formData.icon}
+            onChange={(icon) => setFormData({ ...formData, icon })}
+          />
+
+          <div className="flex justify-end gap-3 pt-4">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setIsModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              disabled={createMutation.isPending || updateMutation.isPending}
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+            >
+              {createMutation.isPending || updateMutation.isPending ? (
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+              ) : (
+                "Save"
+              )}
+            </Button>
+          </div>
+        </form>
+      </Modal>
+
     </div>
-  )}
-
- {/* Create/Edit Modal */}
- <Modal
- isOpen={isModalOpen}
- onClose={() => setIsModalOpen(false)}
- title={editingCategory ? "Edit Category" : "Add New Category"}
- >
- <form onSubmit={handleSubmit} className="space-y-4">
- <div className="space-y-2">
- <Label htmlFor="name">Name</Label>
- <Input
- id="name"
- value={formData.name}
- onChange={(e) =>
- setFormData({ ...formData, name: e.target.value })
- }
- required
- className="bg-slate-800 border-white/10"
- />
- </div>
-
- <IconSelector
- value={formData.icon}
- onChange={(icon) => setFormData({ ...formData, icon })}
- />
-
- <div className="flex justify-end gap-3 pt-4">
- <Button
- type="button"
- variant="ghost"
- onClick={() => setIsModalOpen(false)}
- >
- Cancel
- </Button>
- <Button
- type="submit"
- disabled={createMutation.isPending || updateMutation.isPending}
- className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
- >
- {createMutation.isPending || updateMutation.isPending ? (
- <Loader2 className="w-4 h-4 animate-spin mr-2" />
- ) : (
- "Save"
- )}
- </Button>
- </div>
- </form>
- </Modal>
-
- </div>
- );
+  );
 };
 
 export default AdminCategories;

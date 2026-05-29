@@ -126,7 +126,7 @@ export default function OrderDetails() {
       addNotification(
         "Error",
         "Failed to update status: " +
-          (err instanceof Error ? err.message : "Unknown error"),
+        (err instanceof Error ? err.message : "Unknown error"),
         "error",
       );
     } finally {
@@ -292,7 +292,7 @@ export default function OrderDetails() {
                 </div>
               ))}
             </div>
-            <div className="h-14 bg-white/5 rounded-lg w-full" />
+            <div className="h-14 bg-white/5 rounded w-full" />
           </Card>
 
           <div className="grid md:grid-cols-2 gap-6">
@@ -625,8 +625,8 @@ export default function OrderDetails() {
                 >
                   <div className="relative w-20 h-20 rounded bg-slate-800 border border-white/5 overflow-hidden flex items-center justify-center shrink-0">
                     {item.image &&
-                    (item.image.startsWith("/uploads") ||
-                      item.image.startsWith("http")) ? (
+                      (item.image.startsWith("/uploads") ||
+                        item.image.startsWith("http")) ? (
                       <AppImage
                         src={getImageUrl(item.image)}
                         alt={item.name}
@@ -742,7 +742,7 @@ export default function OrderDetails() {
               </h3>
               <div
                 className={cn(
-                  "flex items-center justify-between p-3.5 rounded-lg border",
+                  "flex items-center justify-between p-3.5 rounded border",
                   getStatusStyles(order.status),
                 )}
               >
@@ -759,7 +759,7 @@ export default function OrderDetails() {
               <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">
                 Payment Information
               </h3>
-              <div className="space-y-3 bg-slate-950/20 border border-white/5 rounded-lg p-3 text-xs">
+              <div className="space-y-3 bg-slate-950/20 border border-white/5 rounded p-3 text-xs">
                 <div className="flex items-center justify-between">
                   <span className="text-slate-500">Method</span>
                   <span className="text-white font-semibold flex items-center gap-1">
@@ -777,7 +777,7 @@ export default function OrderDetails() {
             </div>
 
             <div className="pt-4 border-t border-white/5 relative z-10">
-              <div className="bg-brand-secondary-500/5 p-4 rounded-lg border border-brand-secondary-500/10">
+              <div className="bg-brand-secondary-500/5 p-4 rounded border border-brand-secondary-500/10">
                 <div className="flex items-center gap-2 text-brand-secondary-400 mb-1.5">
                   <Package className="w-4 h-4" />
                   <span className="text-[10px] font-bold uppercase tracking-wider">
@@ -793,7 +793,7 @@ export default function OrderDetails() {
           </Card>
 
           {/* Quick Actions */}
-          <div className="bg-slate-950/30 rounded-lg p-5 border border-white/5 relative group overflow-hidden">
+          <div className="bg-slate-950/30 rounded p-5 border border-white/5 relative group overflow-hidden">
             <div className="absolute inset-0 bg-radial-gradient from-white/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 relative z-10">
               Internal Actions
@@ -802,7 +802,7 @@ export default function OrderDetails() {
               <Button
                 variant="ghost"
                 onClick={handleResendConfirmation}
-                className="w-full justify-start text-xs text-slate-400 hover:text-white hover:bg-white/5 h-9 rounded-md transition-all duration-200"
+                className="w-full justify-start text-xs text-slate-400 hover:text-white hover:bg-white/5 h-9 rounded transition-all duration-200"
               >
                 <Mail className="w-3.5 h-3.5 mr-2 text-slate-500" />
                 Resend Confirmation
@@ -811,7 +811,7 @@ export default function OrderDetails() {
                 variant="ghost"
                 onClick={handleCopyTrackingLink}
                 disabled={isStorePickupOrder}
-                className="w-full justify-start text-xs text-slate-400 hover:text-white hover:bg-white/5 h-9 rounded-md transition-all duration-200"
+                className="w-full justify-start text-xs text-slate-400 hover:text-white hover:bg-white/5 h-9 rounded transition-all duration-200"
               >
                 <Hash className="w-3.5 h-3.5 mr-2 text-slate-500" />
                 {isStorePickupOrder

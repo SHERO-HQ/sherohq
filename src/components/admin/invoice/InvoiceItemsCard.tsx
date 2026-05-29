@@ -122,7 +122,7 @@ export default function InvoiceItemsCard({
         </div>
 
         {searchQuery && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-slate-950 border border-white/10 rounded-md shadow-2xl z-50 max-h-60 overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="absolute top-full left-0 right-0 mt-2 bg-slate-950 border border-white/10 rounded shadow-2xl z-50 max-h-60 overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
             {isLoadingProducts ? (
               <div className="p-4 text-center text-slate-400">
                 <Loader2 className="w-5 h-5 animate-spin mx-auto text-brand-secondary-400" />
@@ -173,7 +173,7 @@ export default function InvoiceItemsCard({
         )}
 
         {items.length === 0 ? (
-          <div className="text-center py-10 text-slate-500 border border-dashed border-white/10 rounded-md flex flex-col items-center justify-center gap-2">
+          <div className="text-center py-10 text-slate-500 border border-dashed border-white/10 rounded flex flex-col items-center justify-center gap-2">
             <Info className="w-6 h-6 text-slate-600" />
             <p className="text-sm">No items added to this invoice yet.</p>
             <p className="text-xs text-slate-600">Search products or add custom items to get started.</p>
@@ -188,7 +188,7 @@ export default function InvoiceItemsCard({
                 <div
                   key={item.id}
                   className={cn(
-                    "bg-slate-950/40 p-4 rounded-md border transition-all duration-300 relative overflow-hidden",
+                    "bg-slate-950/40 p-4 rounded border transition-all duration-300 relative overflow-hidden",
                     isDeleting ? "border-rose-500/25 bg-rose-500/2 opacity-90 scale-[0.99]" : "border-white/5"
                   )}
                 >
@@ -273,7 +273,7 @@ export default function InvoiceItemsCard({
                         variant="ghost"
                         size="icon"
                         onClick={() => initiateDelete(item.id)}
-                        className="h-8 w-8 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-md transition-all mt-1"
+                        className="h-8 w-8 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 rounded transition-all mt-1"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>

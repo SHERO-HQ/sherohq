@@ -167,6 +167,7 @@ const CheckoutFlow = () => {
     if (isAuthenticated && user) {
       const nameParts = user.name?.split(" ") || [];
       setValue("email", user.email || "");
+      setValue("phone", user.phone || "");
       setValue(
         "shippingAddress.firstName",
         user.shippingAddress?.firstName || nameParts[0] || "",
@@ -181,6 +182,10 @@ const CheckoutFlow = () => {
       setValue(
         "shippingAddress.postalCode",
         user.shippingAddress?.postalCode || "",
+      );
+      setValue(
+        "shippingAddress.gpsAddress",
+        user.shippingAddress?.gpsAddress || "",
       );
     }
   }, [isAuthenticated, user, setValue]);
