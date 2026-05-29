@@ -238,11 +238,19 @@ const CheckoutFlow = () => {
 
   const processPayment = async (orderId: string) => {
     try {
+      // Choose provider based on selected payment method (frontend invisible)
+      const provider =
+        paymentMethod === "card"
+          ? "paystack"
+          : paymentMethod === "momo"
+            ? "hubtel"
+            : undefined;
+
       const paymentResponse = await initializePayment(
         orderId,
         total,
         `Order ${toReadableOrderId(orderId)}`,
-        "hubtel",
+        provider,
       );
 
       if (paymentResponse.success && paymentResponse.checkoutUrl) {
@@ -389,7 +397,9 @@ const CheckoutFlow = () => {
           <div className="mt-4 h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
             <div
               className="h-full bg-brand-secondary-600 rounded-full transition duration-300"
-              style={{ width: `${(currentStep / CHECKOUT_STEPS.length) * 100}%` }}
+              style={{
+                width: `${(currentStep / CHECKOUT_STEPS.length) * 100}%`,
+              }}
             />
           </div>
         </div>
@@ -764,7 +774,8 @@ const CheckoutFlow = () => {
                             Choose Payment
                           </h2>
                           <p className="mt-1 text-sm text-slate-600 dark:text-slate-400 max-w-xl">
-                            Pick one method. Momo and Credit / Bank will redirect to the right available secure gateway.
+                            Pick one method. Momo and Credit / Bank will
+                            redirect to the right available secure gateway.
                           </p>
                         </div>
                         <div className="hidden sm:inline-flex items-center gap-2 rounded border border-emerald-200 dark:border-emerald-900/40 bg-emerald-50 dark:bg-emerald-900/10 px-3 py-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300 w-fit">
@@ -796,7 +807,9 @@ const CheckoutFlow = () => {
                                 <button
                                   key={option.value}
                                   type="button"
-                                  onClick={() => setValue("paymentMethod", option.value)}
+                                  onClick={() =>
+                                    setValue("paymentMethod", option.value)
+                                  }
                                   className={`w-full rounded border p-3 text-left transition-all ${
                                     isSelected
                                       ? "border-brand-secondary-500 bg-brand-secondary-50 dark:bg-brand-secondary-900/20"
@@ -854,7 +867,9 @@ const CheckoutFlow = () => {
                                 <button
                                   key={option.value}
                                   type="button"
-                                  onClick={() => setValue("paymentMethod", option.value)}
+                                  onClick={() =>
+                                    setValue("paymentMethod", option.value)
+                                  }
                                   className={`w-full rounded border p-3 text-left transition-all ${
                                     isSelected
                                       ? "border-brand-secondary-500 bg-brand-secondary-50 dark:bg-brand-secondary-900/20"
@@ -973,11 +988,11 @@ const CheckoutFlow = () => {
                         <a
                           href={`https://wa.me/233548711582?text=${encodeURIComponent(
                             `Hello SHERO, I just placed an order! Here are my details:\n\n` +
-                            `📦 *Order ID:* ${toReadableOrderId(orderId || "")}\n` +
-                            `💰 *Total:* GHS ${confirmedTotal.toFixed(2)}\n` +
-                            `👤 *Name:* ${watch("shippingAddress.firstName")} ${watch("shippingAddress.lastName")}\n` +
-                            `📞 *Phone:* ${watch("phone")}\n\n` +
-                            `Please confirm my delivery options. Thank you!`
+                              `📦 *Order ID:* ${toReadableOrderId(orderId || "")}\n` +
+                              `💰 *Total:* GHS ${confirmedTotal.toFixed(2)}\n` +
+                              `👤 *Name:* ${watch("shippingAddress.firstName")} ${watch("shippingAddress.lastName")}\n` +
+                              `📞 *Phone:* ${watch("phone")}\n\n` +
+                              `Please confirm my delivery options. Thank you!`,
                           )}`}
                           target="_blank"
                           rel="noopener noreferrer"

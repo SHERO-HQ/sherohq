@@ -40,6 +40,14 @@ The following variables must be configured in your production environment settin
 | `NEXT_PUBLIC_SITE_URL` | The primary production domain (e.g., `https://sherohq.com`) |
 | `NODE_ENV`             | Set to `production`                                         |
 
+### Payments (Paystack + Hubtel)
+
+| Variable                | Description                                                                 |
+| :---------------------- | :-------------------------------------------------------------------------- |
+| `PAYSTACK_SECRET`       | Preferred Paystack secret key used for transaction initialization + webhook |
+| `PAYSTACK_SECRET_KEY`   | Alternate compatible variable name (optional if `PAYSTACK_SECRET` is set)   |
+| `HUBTEL_INITIALIZE_URL` | Optional Hubtel initializer endpoint if Hubtel runs as a separate service   |
+
 ---
 
 ## 🚀 Recommended Hosting: Vercel
@@ -115,6 +123,22 @@ Ensure the database schema is up-to-date before deployment.
 - [ ] Send a test email via the contact form to verify Resend integration.
 - [ ] Check `sitemap.xml` and `robots.txt` accessibility.
 - [ ] Verify image optimization is working (check if images load from `_next/image`).
+- [ ] In Paystack Dashboard, set webhook URL to `https://<your-domain>/api/payments/webhook`.
+- [ ] Confirm the same secret key in environment is used for both initialize and webhook signature verification.
+- [ ] Place a live test order (card payment) and confirm order moves from `pending` to `processing`.
+
+---
+
+## 💳 Paystack Setup Steps
+
+1. Add `PAYSTACK_SECRET` (or `PAYSTACK_SECRET_KEY`) in your hosting environment.
+2. Deploy with `NEXT_PUBLIC_SITE_URL` set to your public domain.
+3. In Paystack Dashboard, configure webhook endpoint:
+   - `https://<your-domain>/api/payments/webhook`
+4. Send a test payment event and verify:
+   - Response is `200 OK`
+   - `orders.status` updates to `processing`
+   - `activity_logs` has `order_payment` success entry
 
 ---
 
