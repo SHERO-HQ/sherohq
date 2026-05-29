@@ -33,6 +33,7 @@ import {
   ShoppingCart,
   Store,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -41,9 +42,61 @@ import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import OrderSummary from "./OrderSummary";
 import PaymentFailureSupport from "./PaymentFailureSupport";
+import PaymentIcons from "@/components/layout/PaymentIcons";
 import AppImage from "@/components/common/AppImage";
 import { toReadableOrderId } from "@/utils/orderId";
 import { WhatsAppIcon } from "@/assets/icons/icons";
+
+type PaymentMethodValue = "momo" | "card" | "cod" | "store_pickup";
+
+type PaymentMethodOption = {
+  value: PaymentMethodValue;
+  title: string;
+  description: string;
+  helper: string;
+  icon: LucideIcon;
+};
+
+const ONLINE_PAYMENT_OPTIONS: PaymentMethodOption[] = [
+  {
+    value: "momo",
+    title: "Momo",
+    description: "Mobile money checkout for MTN and Telecel Cash.",
+    helper: "Best for fast local payments.",
+    icon: Smartphone,
+  },
+  {
+    value: "card",
+    title: "Credit / Bank",
+    description: "Visa, Mastercard, and bank card payment.",
+    helper: "You will be redirected to the available secure gateway.",
+    icon: CreditCard,
+  },
+];
+
+const OFFLINE_PAYMENT_OPTIONS: PaymentMethodOption[] = [
+  {
+    value: "cod",
+    title: "Cash on Delivery",
+    description: "Pay when your order arrives.",
+    helper: "Good for local delivery orders.",
+    icon: Wallet,
+  },
+  {
+    value: "store_pickup",
+    title: "Store Pickup",
+    description: "Pay when you collect in store.",
+    helper: "No payment redirect at checkout.",
+    icon: Store,
+  },
+];
+
+const CHECKOUT_STEPS = [
+  { num: 1, title: "Cart Review", icon: ShoppingBag },
+  { num: 2, title: "Delivery Address", icon: Truck },
+  { num: 3, title: "Payment", icon: CreditCard },
+  { num: 4, title: "Confirmation", icon: CheckCircle },
+] as const;
 
 const CheckoutFlow = () => {
   const router = useRouter();
@@ -66,13 +119,14 @@ const CheckoutFlow = () => {
 
   const [paymentError, setPaymentError] = useState(false);
   const [isUpdatingOffline, setIsUpdatingOffline] = useState(false);
+
   useEffect(() => {
     if (currentStep >= 4) return;
     const timer = setTimeout(() => {
       window.dispatchEvent(
         new CustomEvent("shoro-ai-trigger", {
           detail: {
-            message: `I've been on the ${steps[currentStep - 1].title} step for a while. I might need some help or clarification.`,
+            message: `I've been on the ${CHECKOUT_STEPS[currentStep - 1].title} step for a while. I might need some help or clarification.`,
           },
         }),
       );
@@ -128,10 +182,6 @@ const CheckoutFlow = () => {
         "shippingAddress.postalCode",
         user.shippingAddress?.postalCode || "",
       );
-      setValue(
-        "shippingAddress.gpsAddress",
-        user.shippingAddress?.gpsAddress || "",
-      );
     }
   }, [isAuthenticated, user, setValue]);
 
@@ -153,13 +203,6 @@ const CheckoutFlow = () => {
   const shipping = isFreeShipping ? 0 : 50;
   const tax = 0;
   const total = subtotal + shipping + tax;
-
-  const steps = [
-    { num: 1, title: "Cart Review", icon: ShoppingBag },
-    { num: 2, title: "Delivery Address", icon: Truck },
-    { num: 3, title: "Payment", icon: CreditCard },
-    { num: 4, title: "Confirmation", icon: CheckCircle },
-  ];
 
   const validateStep = async (step: number) => {
     if (step === 2) {
@@ -193,13 +236,13 @@ const CheckoutFlow = () => {
     }
   };
 
-  const processPayment = async (orderId: string, method: string) => {
+  const processPayment = async (orderId: string) => {
     try {
       const paymentResponse = await initializePayment(
         orderId,
         total,
         `Order ${toReadableOrderId(orderId)}`,
-        method === "paystack" ? "paystack" : "hubtel",
+        "hubtel",
       );
 
       if (paymentResponse.success && paymentResponse.checkoutUrl) {
@@ -239,7 +282,7 @@ const CheckoutFlow = () => {
     if (!orderId) return;
     setIsSubmitting(true);
     setPaymentError(false);
-    await processPayment(orderId, paymentMethod);
+    await processPayment(orderId);
     setIsSubmitting(false);
   };
 
@@ -276,7 +319,6 @@ const CheckoutFlow = () => {
         card: "card",
         cod: "cash_on_delivery",
         store_pickup: "store_pickup",
-        paystack: "paystack",
       };
 
       const response = await createOrder({
@@ -302,8 +344,8 @@ const CheckoutFlow = () => {
 
         setConfirmedTotal(response.total ?? total);
 
-        if (["momo", "card", "paystack"].includes(data.paymentMethod)) {
-          await processPayment(response.orderId, data.paymentMethod);
+        if (["momo", "card"].includes(data.paymentMethod)) {
+          await processPayment(response.orderId);
           return;
         }
 
@@ -330,15 +372,15 @@ const CheckoutFlow = () => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-brand-secondary-600 dark:text-brand-secondary-400">
-                Step {currentStep} of {steps.length}
+                Step {currentStep} of {CHECKOUT_STEPS.length}
               </p>
               <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
-                {steps[currentStep - 1].title}
+                {CHECKOUT_STEPS[currentStep - 1].title}
               </h2>
             </div>
             <div className="w-12 h-12 rounded-full bg-brand-secondary-100 dark:bg-brand-secondary-900/30 flex items-center justify-center text-brand-secondary-600 dark:text-brand-secondary-400">
               {(() => {
-                const Icon = steps[currentStep - 1].icon;
+                const Icon = CHECKOUT_STEPS[currentStep - 1].icon;
                 return <Icon className="w-6 h-6" />;
               })()}
             </div>
@@ -347,7 +389,7 @@ const CheckoutFlow = () => {
           <div className="mt-4 h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
             <div
               className="h-full bg-brand-secondary-600 rounded-full transition duration-300"
-              style={{ width: `${(currentStep / steps.length) * 100}%` }}
+              style={{ width: `${(currentStep / CHECKOUT_STEPS.length) * 100}%` }}
             />
           </div>
         </div>
@@ -360,13 +402,13 @@ const CheckoutFlow = () => {
               <div
                 className="h-full bg-brand-secondary-600 transition duration-300 rounded-full"
                 style={{
-                  width: `${((currentStep - 1) / (steps.length - 1)) * 100}%`,
+                  width: `${((currentStep - 1) / (CHECKOUT_STEPS.length - 1)) * 100}%`,
                 }}
               />
             </div>
 
             <div className="flex justify-between relative z-10">
-              {steps.map((step) => {
+              {CHECKOUT_STEPS.map((step) => {
                 const Icon = step.icon;
                 const isActive = currentStep === step.num;
                 const isCompleted = currentStep > step.num;
@@ -716,162 +758,141 @@ const CheckoutFlow = () => {
                       exit={{ opacity: 0, x: -20 }}
                       className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6"
                     >
-                      <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
-                        Payment Method
-                      </h2>
+                      <div className="flex items-start justify-between gap-4 mb-4 sm:mb-6">
+                        <div>
+                          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                            Choose Payment
+                          </h2>
+                          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400 max-w-xl">
+                            Pick one method. Momo and Credit / Bank will redirect to the right available secure gateway.
+                          </p>
+                        </div>
+                        <div className="hidden sm:inline-flex items-center gap-2 rounded border border-emerald-200 dark:border-emerald-900/40 bg-emerald-50 dark:bg-emerald-900/10 px-3 py-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300 w-fit">
+                          <CheckCircle className="w-4 h-4" />
+                          Secured Payment
+                        </div>
+                      </div>
 
-                      <div className="space-y-4">
-                        {/* Store Pickup */}
-                        <button
-                          onClick={() =>
-                            setValue("paymentMethod", "store_pickup")
-                          }
-                          className={`w-full p-3 sm:p-6 rounded border-2 transition-colors text-left ${
-                            paymentMethod === "store_pickup"
-                              ? "border-brand-secondary-500 bg-brand-secondary-50 dark:bg-brand-secondary-900/20"
-                              : "border-slate-200 dark:border-slate-800 hover:border-brand-secondary-500"
-                          }`}
-                        >
-                          <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
-                            <div
-                              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
-                                paymentMethod === "store_pickup"
-                                  ? "bg-brand-secondary-600 text-white"
-                                  : "bg-slate-100 dark:bg-slate-800 text-slate-600"
-                              }`}
-                            >
-                              <Store className="w-5 h-5 sm:w-6 sm:h-6" />
-                            </div>
+                      <div className="space-y-5">
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between gap-3">
                             <div>
-                              <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
-                                Store Pickup
-                              </h3>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-                                Pay upon pickup at our store
+                              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+                                Online payment
+                              </p>
+                              <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                                Fast, secure, and redirected automatically.
                               </p>
                             </div>
+                            <PaymentIcons />
                           </div>
-                        </button>
 
-                        {/* Mobile Money */}
-                        <button
-                          onClick={() => setValue("paymentMethod", "momo")}
-                          className={`w-full p-3 sm:p-6 rounded border-2 transition-colors text-left ${
-                            paymentMethod === "momo"
-                              ? "border-brand-secondary-500 bg-brand-secondary-50 dark:bg-brand-secondary-900/20"
-                              : "border-slate-200 dark:border-slate-800 hover:border-brand-secondary-500"
-                          }`}
-                        >
-                          <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
-                            <div
-                              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
-                                paymentMethod === "momo"
-                                  ? "bg-brand-secondary-600 text-white"
-                                  : "bg-slate-100 dark:bg-slate-800 text-slate-600"
-                              }`}
-                            >
-                              <Smartphone className="w-5 h-5 sm:w-6 sm:h-6" />
-                            </div>
-                            <div>
-                              <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
-                                Mobile Money
-                              </h3>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-                                Pay with MTN or Telecel Cash
-                              </p>
-                            </div>
-                          </div>
-                        </button>
+                          <div className="grid gap-2">
+                            {ONLINE_PAYMENT_OPTIONS.map((option) => {
+                              const isSelected = paymentMethod === option.value;
+                              const OptionIcon = option.icon;
 
-                        {/* Card Payment */}
-                        <button
-                          onClick={() => setValue("paymentMethod", "card")}
-                          className={`w-full p-3 sm:p-6 rounded border-2 transition-colors text-left ${
-                            paymentMethod === "card"
-                              ? "border-brand-secondary-500 bg-brand-secondary-50 dark:bg-brand-secondary-900/20"
-                              : "border-slate-200 dark:border-slate-800 hover:border-brand-secondary-500"
-                          }`}
-                        >
-                          <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
-                            <div
-                              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
-                                paymentMethod === "card"
-                                  ? "bg-brand-secondary-600 text-white"
-                                  : "bg-slate-100 dark:bg-slate-800 text-slate-600"
-                              }`}
-                            >
-                              <CreditCard className="w-5 h-5 sm:w-6 sm:h-6" />
-                            </div>
-                            <div>
-                              <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
-                                Credit / Debit Card
-                              </h3>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-                                Visa, Mastercard
-                              </p>
-                            </div>
+                              return (
+                                <button
+                                  key={option.value}
+                                  type="button"
+                                  onClick={() => setValue("paymentMethod", option.value)}
+                                  className={`w-full rounded border p-3 text-left transition-all ${
+                                    isSelected
+                                      ? "border-brand-secondary-500 bg-brand-secondary-50 dark:bg-brand-secondary-900/20"
+                                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-brand-secondary-400"
+                                  }`}
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <div
+                                      className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${
+                                        isSelected
+                                          ? "bg-brand-secondary-600 text-white"
+                                          : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                                      }`}
+                                    >
+                                      <OptionIcon className="w-4 h-4" />
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                      <div className="flex items-center justify-between gap-3">
+                                        <h3 className="text-sm sm:text-[15px] font-semibold text-slate-900 dark:text-white">
+                                          {option.title}
+                                        </h3>
+                                        {isSelected && (
+                                          <span className="inline-flex items-center rounded-full bg-brand-secondary-600 px-2 py-0.5 text-[10px] font-semibold text-white">
+                                            Selected
+                                          </span>
+                                        )}
+                                      </div>
+                                      <p className="mt-0.5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-snug">
+                                        {option.description}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </button>
+                              );
+                            })}
                           </div>
-                        </button>
+                        </div>
 
-                        {/* Paystack */}
-                        <button
-                          onClick={() => setValue("paymentMethod", "paystack")}
-                          className={`w-full p-3 sm:p-6 rounded border-2 transition-colors text-left ${
-                            paymentMethod === "paystack"
-                              ? "border-brand-secondary-500 bg-brand-secondary-50 dark:bg-brand-secondary-900/20"
-                              : "border-slate-200 dark:border-slate-800 hover:border-brand-secondary-500"
-                          }`}
-                        >
-                          <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
-                            <div
-                              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
-                                paymentMethod === "paystack"
-                                  ? "bg-brand-secondary-600 text-white"
-                                  : "bg-slate-100 dark:bg-slate-800 text-slate-600"
-                              }`}
-                            >
-                              <CreditCard className="w-5 h-5 sm:w-6 sm:h-6" />
-                            </div>
-                            <div>
-                              <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
-                                Pay with Paystack
-                              </h3>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-                                Generic Mobile Money & Card
-                              </p>
-                            </div>
+                        <div className="space-y-3">
+                          <div>
+                            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+                              Offline payment
+                            </p>
+                            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                              For orders that do not need an online redirect.
+                            </p>
                           </div>
-                        </button>
 
-                        {/* Cash on Delivery */}
-                        <button
-                          onClick={() => setValue("paymentMethod", "cod")}
-                          className={`w-full p-3 sm:p-6 rounded border-2 transition-colors text-left ${
-                            paymentMethod === "cod"
-                              ? "border-brand-secondary-500 bg-brand-secondary-50 dark:bg-brand-secondary-900/20"
-                              : "border-slate-200 dark:border-slate-800 hover:border-brand-secondary-500"
-                          }`}
-                        >
-                          <div className="cursor-pointer flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
-                            <div
-                              className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shrink-0 ${
-                                paymentMethod === "cod"
-                                  ? "bg-brand-secondary-600 text-white"
-                                  : "bg-slate-100 dark:bg-slate-800 text-slate-600"
-                              }`}
-                            >
-                              <Wallet className="w-5 h-5 sm:w-6 sm:h-6" />
-                            </div>
-                            <div>
-                              <h3 className="font-semibold text-sm sm:text-base text-slate-900 dark:text-white">
-                                Cash on Delivery
-                              </h3>
-                              <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
-                                Pay when you receive your order
-                              </p>
-                            </div>
+                          <div className="grid gap-2 md:grid-cols-2">
+                            {OFFLINE_PAYMENT_OPTIONS.map((option) => {
+                              const isSelected = paymentMethod === option.value;
+                              const OptionIcon = option.icon;
+
+                              return (
+                                <button
+                                  key={option.value}
+                                  type="button"
+                                  onClick={() => setValue("paymentMethod", option.value)}
+                                  className={`w-full rounded border p-3 text-left transition-all ${
+                                    isSelected
+                                      ? "border-brand-secondary-500 bg-brand-secondary-50 dark:bg-brand-secondary-900/20"
+                                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-brand-secondary-400"
+                                  }`}
+                                >
+                                  <div className="flex items-center gap-3">
+                                    <div
+                                      className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${
+                                        isSelected
+                                          ? "bg-brand-secondary-600 text-white"
+                                          : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+                                      }`}
+                                    >
+                                      <OptionIcon className="w-4 h-4" />
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                      <div className="flex items-center justify-between gap-3">
+                                        <h3 className="text-sm sm:text-[15px] font-semibold text-slate-900 dark:text-white">
+                                          {option.title}
+                                        </h3>
+                                        {isSelected && (
+                                          <span className="inline-flex items-center rounded-full bg-brand-secondary-600 px-2 py-0.5 text-[10px] font-semibold text-white">
+                                            Selected
+                                          </span>
+                                        )}
+                                      </div>
+                                      <p className="mt-0.5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-snug">
+                                        {option.description}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </button>
+                              );
+                            })}
                           </div>
-                        </button>
+                        </div>
+
                         {errors.paymentMethod && (
                           <p className="text-red-500 text-sm mt-2">
                             {errors.paymentMethod.message}

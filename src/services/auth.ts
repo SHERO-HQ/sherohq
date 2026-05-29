@@ -12,6 +12,7 @@ export interface ShippingAddress {
   city: string;
   region: string;
   postalCode?: string;
+  gpsAddress?: string;
 }
 
 export interface User {

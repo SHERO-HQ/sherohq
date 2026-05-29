@@ -9,7 +9,7 @@ export const checkoutSchema = z.object({
     .regex(/^0[25]\d{8}$/, "Invalid Ghana phone number (e.g. 0244123456)"),
   shippingAddress: addressSchema,
   referralCode: z.string().optional(),
-  paymentMethod: z.enum(["momo", "card", "cod", "store_pickup", "paystack"], {
+  paymentMethod: z.enum(["momo", "card", "cod", "store_pickup"], {
     message: "Please select a payment method",
   }),
 });
