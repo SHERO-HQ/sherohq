@@ -63,7 +63,7 @@ function ShopLoadingSkeleton() {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 animate-pulse">
         <div className="h-64 bg-slate-200 dark:bg-slate-900 rounded" />
         <div className="grid lg:grid-cols-[280px_1fr] gap-10">
-          <div className="hidden lg:block h-[500px] bg-slate-200 dark:bg-slate-900 rounded" />
+          <div className="hidden lg:block h-125 bg-slate-200 dark:bg-slate-900 rounded" />
           <div className="space-y-6">
             <div className="h-16 bg-slate-200 dark:bg-slate-900 rounded" />
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
