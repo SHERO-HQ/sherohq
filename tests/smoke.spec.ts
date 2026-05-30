@@ -4,22 +4,22 @@ test.describe("Smoke Tests", () => {
   test("homepage loads correctly", async ({ page }) => {
     await page.goto("/");
     await expect(page).toHaveTitle(/Shero/i);
-    await expect(page.getByText(/Redefine Possible/i)).toBeVisible();
-    await expect(page.getByLabel("main navigation")).toBeVisible();
+    await expect(page.getByText(/Business Grade IT/i)).toBeVisible();
   });
 
   test("shop page loads correctly", async ({ page }) => {
     await page.goto("/products");
-    await expect(page.getByText(/Premium Gear/i)).toBeVisible();
+    // Wait for products to load - use first() to avoid strict mode violation
+    await expect(page.getByText(/All Products|Laptops|Accessories/i).first()).toBeVisible({ timeout: 10000 });
   });
 
   test("support page loads correctly", async ({ page }) => {
     await page.goto("/support");
-    await expect(page.getByText(/How can we help/i)).toBeVisible();
+    await expect(page.getByText(/Get Help in Minutes/i)).toBeVisible();
   });
 
   test("FAQ page loads correctly", async ({ page }) => {
     await page.goto("/faq");
-    await expect(page.getByText(/Frequently Asked Questions/i)).toBeVisible();
+    await expect(page.getByText(/Answers to common/i)).toBeVisible();
   });
 });

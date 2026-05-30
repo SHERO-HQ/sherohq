@@ -58,17 +58,26 @@ export function ThemeProvider({
  applyTheme(theme);
  }, [theme, isLoaded]);
 
- const value = {
- theme,
- setTheme: (theme: Theme) => {
- localStorage.setItem(storageKey, theme);
- setTheme(theme);
- },
- };
+  const value = {
+    theme,
+    setTheme: (newTheme: Theme) => {
+      // Add transition class to root during theme toggling
+      const root = window.document.documentElement;
+      root.classList.add("theme-transitioning");
 
- return (
- <ThemeProviderContext.Provider {...props} value={value}>
- {children}
- </ThemeProviderContext.Provider>
- );
+      localStorage.setItem(storageKey, newTheme);
+      setTheme(newTheme);
+
+      // Cleanup class after transition is complete (300ms)
+      setTimeout(() => {
+        root.classList.remove("theme-transitioning");
+      }, 300);
+    },
+  };
+
+  return (
+    <ThemeProviderContext.Provider {...props} value={value}>
+      {children}
+    </ThemeProviderContext.Provider>
+  );
 }

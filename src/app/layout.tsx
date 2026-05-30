@@ -7,6 +7,7 @@ import { ServiceWorkerRegistration } from "@/components/common/ServiceWorkerRegi
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
+import JsonLd from "@/components/common/JsonLd";
 import "../index.css";
 
 const SITE_URL = (
@@ -105,6 +106,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${aubette.variable}`}>
       <head>
+        <JsonLd />
         {/* Prevent hydration theme flash by synchronously reading/applying active theme before first paint */}
         <script
           dangerouslySetInnerHTML={{

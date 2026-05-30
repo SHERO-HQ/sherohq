@@ -163,7 +163,7 @@ export default function DynamicPaymentPortal() {
 
       {/* Main Payment Card */}
       <div className="w-full max-w-md my-8">
-        <Card className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden transition-all duration-300">
+        <Card className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/5 rounded p-6 sm:p-8 shadow-2xl relative overflow-hidden transition-all duration-300">
           {/* Subtle Ambient Background */}
           <div className="absolute top-0 right-0 w-48 h-48 bg-brand-secondary-500/2 rounded-full blur-3xl pointer-events-none" />
 
@@ -223,7 +223,7 @@ export default function DynamicPaymentPortal() {
                 </button>
 
                 {showItems && (
-                  <div className="mt-3 p-3 bg-slate-50 dark:bg-slate-950 rounded-lg space-y-2.5 max-h-44 overflow-y-auto">
+                  <div className="mt-3 p-3 bg-slate-50 dark:bg-slate-950 rounded space-y-2.5 max-h-44 overflow-y-auto">
                     {order.items.map((item, idx) => (
                       <div
                         key={idx}
@@ -255,7 +255,7 @@ export default function DynamicPaymentPortal() {
                 type="button"
                 onClick={() => setSelectedMethod("momo")}
                 className={cn(
-                  "flex flex-col items-center gap-2 p-4 rounded-xl border transition-all text-center",
+                  "flex flex-col items-center gap-2 p-4 rounded border transition-all text-center",
                   selectedMethod === "momo"
                     ? "border-brand-secondary-500 bg-brand-secondary-500/5 dark:bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400"
                     : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700"
@@ -282,7 +282,7 @@ export default function DynamicPaymentPortal() {
                 type="button"
                 onClick={() => setSelectedMethod("card")}
                 className={cn(
-                  "flex flex-col items-center gap-2 p-4 rounded-xl border transition-all text-center",
+                  "flex flex-col items-center gap-2 p-4 rounded border transition-all text-center",
                   selectedMethod === "card"
                     ? "border-brand-secondary-500 bg-brand-secondary-500/5 dark:bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400"
                     : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700"
@@ -311,7 +311,7 @@ export default function DynamicPaymentPortal() {
             onClick={handleProcessPayment}
             disabled={isPending}
             variant="brand"
-            className="w-full h-12 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-brand-secondary-500/20"
+            className="w-full h-12 rounded font-bold flex items-center justify-center gap-2 shadow-lg shadow-brand-secondary-500/20"
           >
             {isPending ? (
               <>
