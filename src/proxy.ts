@@ -129,6 +129,19 @@ export default function proxy(request: NextRequest) {
 
   // 2. Shop Subdomain
   if (subdomain === "shop") {
+    // If the path starts with /products, map it to the actual shop route structure in Next.js:
+    // - /products -> /shop
+    // - /products/[id] -> /shop/[id]
+    if (path.startsWith("/products")) {
+      const cleanPath = path.replace(/^\/products\/?/, "");
+      if (cleanPath) {
+        url.pathname = `/shop/${cleanPath}`;
+      } else {
+        url.pathname = "/shop";
+      }
+      return NextResponse.rewrite(url);
+    }
+
     if (!path.startsWith("/shop")) {
       url.pathname = `/shop${path}`;
       return NextResponse.rewrite(url);

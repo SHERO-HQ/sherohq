@@ -93,7 +93,7 @@ function MockPaymentContent() {
           <Sparkles className="w-3.5 h-3.5" />
           Developer Sandbox Mode
         </div>
-        <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white mb-2">
+        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
           Secure Payment Simulator
         </h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
@@ -117,7 +117,7 @@ function MockPaymentContent() {
         </div>
         <div className="flex justify-between items-center">
           <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Simulated Total</span>
-          <span className="text-lg font-black text-brand-secondary-600 dark:text-brand-secondary-400">
+          <span className="text-lg font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
             GHS {orderTotal > 0 ? orderTotal.toFixed(2) : "Fetching..."}
           </span>
         </div>

@@ -113,7 +113,7 @@ const Portfolio = () => {
  </div>
 
  {/* Projects Grid */}
- <div className="cursor-pointer grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+ <div className="cursor-pointer grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 md:gap-6 sm:gap-4 gap-2">
  {isLoading &&
  [1, 2, 3, 4, 5, 6].map((i) => (
  <div
@@ -131,89 +131,92 @@ const Portfolio = () => {
  )}
 
  {!isLoading &&
- filteredProjects.length > 0 &&
- filteredProjects.map((project, idx) => (
- <motion.div
- key={project.id}
- initial={{ opacity: 0, y: 20 }}
- whileInView={{ opacity: 1, y: 0 }}
- viewport={{ once: true }}
- transition={{ duration: 0.5, delay: idx * 0.1 }}
- className="group bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 overflow-hidden hover:border-brand-secondary-500 dark:hover:border-brand-secondary-500 hover:shadow hover:shadow-brand-secondary-500/10 transition duration-300"
- onClick={() => setSelectedProject(project)}
- >
- {/* Project Image */}
- <div className="relative h-48 bg-linear-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 flex items-center justify-center overflow-hidden">
- {project.image &&
- (project.image.startsWith("http") ||
- project.image.startsWith("/") ||
- project.image.includes(".")) ? (
- <AppImage
- src={project.image}
- alt={project.title}
- fill
- sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
- className="object-cover group-hover:scale-110 transition-transform duration-300"
- />
- ) : (
- <div className="text-7xl group-hover:scale-110 transition-transform duration-300">
- {project.image}
- </div>
- )}
+        filteredProjects.map((project, idx) => (
+          <motion.div
+            key={project.id}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: idx * 0.1 }}
+            className="group bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 overflow-hidden hover:border-brand-secondary-500 dark:hover:border-brand-secondary-500 hover:shadow hover:shadow-brand-secondary-500/10 transition duration-300 flex flex-col h-full"
+            onClick={() => setSelectedProject(project)}
+          >
+            {/* Project Image */}
+            <div className="relative h-28 sm:h-40 md:h-48 bg-linear-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 flex items-center justify-center overflow-hidden shrink-0">
+              {project.image &&
+              (project.image.startsWith("http") ||
+                project.image.startsWith("/") ||
+                project.image.includes(".")) ? (
+                <AppImage
+                  src={project.image}
+                  alt={project.title}
+                  fill
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
+                  className="object-cover group-hover:scale-110 transition-transform duration-300"
+                />
+              ) : (
+                <div className="text-4xl sm:text-7xl group-hover:scale-110 transition-transform duration-300">
+                  {project.image}
+                </div>
+              )}
 
- {/* Overlay on Hover */}
- <div className="absolute inset-0 bg-brand-secondary-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
- <div className="flex flex-col items-center gap-2 text-white font-semibold">
- <span className="flex items-center gap-2">
- View Details
- <Info className="w-5 h-5" />
- </span>
- </div>
- </div>
- </div>
+              {/* Overlay on Hover */}
+              <div className="absolute inset-0 bg-brand-secondary-600/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-2 text-white font-semibold text-xs sm:text-sm">
+                  <span className="flex items-center gap-1.5">
+                    View Details
+                    <Info className="w-4 h-4" />
+                  </span>
+                </div>
+              </div>
+            </div>
 
- {/* Project Info */}
- <div className="p-6">
- {/* Category Badge */}
- <div className="flex items-center gap-2 mb-3">
- <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 text-brand-secondary-700 dark:text-brand-secondary-400 text-xs font-semibold rounded">
- {getCategoryIcon(project.category)}
- {project.category}
- </span>
- </div>
+            {/* Project Info */}
+            <div className="p-3 sm:p-4 md:p-6 flex flex-col flex-1">
+              {/* Category Badge */}
+              <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 sm:px-2.5 sm:py-1 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 text-brand-secondary-700 dark:text-brand-secondary-400 text-[10px] sm:text-xs font-semibold rounded truncate max-w-full">
+                  {getCategoryIcon(project.category)}
+                  <span className="truncate">{project.category}</span>
+                </span>
+              </div>
 
- {/* Title */}
- <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors">
- {project.title}
- </h3>
+              {/* Title */}
+              <h3 className="text-xs sm:text-sm md:text-base lg:text-lg font-bold text-slate-900 dark:text-white mb-3 sm:mb-4 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors line-clamp-2 flex-1">
+                {project.title}
+              </h3>
 
- {/* View Details Button and Project Link */}
- <div className="flex items-center justify-between mt-auto">
- <button
- className="inline-flex items-center gap-2 text-sm font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 hover:text-brand-secondary-700 dark:hover:text-brand-secondary-300 transition-colors"
- onClick={(e) => {
- e.stopPropagation();
- setSelectedProject(project);
- }}
- >
- View Details
- <Info className="size-4" />
- </button>
- <a
- href={project.link || "#"}
- target="_blank"
- rel="noopener noreferrer"
- className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors"
- onClick={(e) => e.stopPropagation()}
- >
- {project.link ? "Project Link" : "Link coming soon"}
- <ExternalLink className="size-3.5" />
- </a>
- </div>
- </div>
- </motion.div>
- ))}
- </div>
+              {/* View Details Button and Project Link */}
+              <div className="flex items-center justify-between mt-auto pt-3 border-t border-slate-100 dark:border-slate-800/50 gap-2">
+                <button
+                  aria-label={`View details for ${project.title}`}
+                  title="View details"
+                  className="inline-flex items-center gap-1 text-[10px] sm:text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 hover:text-brand-secondary-700 dark:hover:text-brand-secondary-300 transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedProject(project);
+                  }}
+                >
+                  <span>Details</span>
+                  <Info className="size-3.5 sm:size-4 shrink-0" />
+                </button>
+                <a
+                  href={project.link || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={project.link ? `Visit website for ${project.title}` : "Project link coming soon"}
+                  title={project.link ? "Visit website" : "Link coming soon"}
+                  className="inline-flex items-center gap-1 text-[9px] sm:text-xs font-medium text-slate-400 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <span>{project.link ? "Link" : "Soon"}</span>
+                  <ExternalLink className="size-3 sm:size-3.5 shrink-0" />
+                </a>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
 
  <Modal
  isOpen={!!selectedProject}

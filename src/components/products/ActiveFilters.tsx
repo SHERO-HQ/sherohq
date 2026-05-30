@@ -23,74 +23,74 @@ export const ActiveFilters = ({
 }: ActiveFiltersProps) => {
   const activeCategoryName = categories.find((c) => c.id === activeCategory)?.name;
 
-  const hasActiveFilters = 
-    activeCategory !== "all" || 
-    filters.brands.length > 0 || 
-    filters.minRating > 0 || 
-    filters.inStock || 
-    filters.priceRange[0] > 0 || 
+  const hasActiveFilters =
+    activeCategory !== "all" ||
+    filters.brands.length > 0 ||
+    filters.minRating > 0 ||
+    filters.inStock ||
+    filters.priceRange[0] > 0 ||
     filters.priceRange[1] < 1000000;
 
   if (!hasActiveFilters) return null;
 
   return (
     <div className="flex flex-wrap items-center gap-2 mb-6 animate-in fade-in slide-in-from-top-2 duration-500">
-      <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 mr-2 flex items-center gap-1">
+      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mr-2 flex items-center gap-1">
         Active Filters:
       </span>
 
       <AnimatePresence>
         {/* Category Chip */}
         {activeCategory !== "all" && (
-          <FilterChip 
-            label={`Category: ${activeCategoryName}`} 
-            onRemove={onRemoveCategory} 
+          <FilterChip
+            label={`Category: ${activeCategoryName}`}
+            onRemove={onRemoveCategory}
           />
         )}
 
         {/* Brand Chips */}
         {filters.brands.map((brand) => (
-          <FilterChip 
+          <FilterChip
             key={`brand-${brand}`}
-            label={`Brand: ${brand}`} 
-            onRemove={() => onRemoveFilter("brands", brand)} 
+            label={`Brand: ${brand}`}
+            onRemove={() => onRemoveFilter("brands", brand)}
           />
         ))}
 
         {/* Price Chip */}
         {(filters.priceRange[0] > 0 || filters.priceRange[1] < 1000000) && (
-          <FilterChip 
+          <FilterChip
             label={
-              filters.priceRange[1] >= 1000000 
-                ? `Above GH₵${filters.priceRange[0]}` 
-                : filters.priceRange[0] <= 0 
-                  ? `Under GH₵${filters.priceRange[1]}` 
+              filters.priceRange[1] >= 1000000
+                ? `Above GH₵${filters.priceRange[0]}`
+                : filters.priceRange[0] <= 0
+                  ? `Under GH₵${filters.priceRange[1]}`
                   : `GH₵${filters.priceRange[0]} - GH₵${filters.priceRange[1]}`
-            } 
-            onRemove={() => onRemoveFilter("priceRange", [0, 1000000])} 
+            }
+            onRemove={() => onRemoveFilter("priceRange", [0, 1000000])}
           />
         )}
 
         {/* Rating Chip */}
         {filters.minRating > 0 && (
-          <FilterChip 
-            label={`${filters.minRating}+ Stars`} 
-            onRemove={() => onRemoveFilter("minRating", 0)} 
+          <FilterChip
+            label={`${filters.minRating}+ Stars`}
+            onRemove={() => onRemoveFilter("minRating", 0)}
           />
         )}
 
         {/* Stock Chip */}
         {filters.inStock && (
-          <FilterChip 
-            label="In Stock Only" 
-            onRemove={() => onRemoveFilter("inStock", false)} 
+          <FilterChip
+            label="In Stock Only"
+            onRemove={() => onRemoveFilter("inStock", false)}
           />
         )}
       </AnimatePresence>
 
       <button
         onClick={onClearAll}
-        className="text-[10px] font-black uppercase tracking-widest text-brand-secondary-600 dark:text-brand-secondary-400 hover:text-brand-secondary-500 flex items-center gap-1 ml-2 transition-colors cursor-pointer"
+        className="text-[10px] font-bold uppercase tracking-widest text-brand-secondary-600 dark:text-brand-secondary-400 hover:text-brand-secondary-500 flex items-center gap-1 ml-2 transition-colors cursor-pointer"
       >
         <RotateCcw size={10} />
         Clear All

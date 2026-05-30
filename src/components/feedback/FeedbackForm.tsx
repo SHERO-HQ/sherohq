@@ -117,11 +117,11 @@ const StarRating = ({
               className={cn(
                 "h-7 w-7 sm:h-10 sm:w-10 transition-all duration-500",
                 (hovered !== null ? star <= hovered : star <= value)
-                  ? (hovered || value) <= 2 
+                  ? (hovered || value) <= 2
                     ? "fill-rose-500 text-rose-500 drop-shadow-[0_0_15px_rgba(244,63,94,0.5)]"
                     : (hovered || value) === 3
-                    ? "fill-amber-500 text-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]"
-                    : "fill-emerald-500 text-emerald-500 drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]"
+                      ? "fill-amber-500 text-amber-500 drop-shadow-[0_0_15px_rgba(245,158,11,0.5)]"
+                      : "fill-emerald-500 text-emerald-500 drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]"
                   : "text-slate-200 dark:text-slate-800"
               )}
             />
@@ -137,7 +137,7 @@ const StarRating = ({
             exit={{ opacity: 0, y: -5 }}
             className="flex flex-col"
           >
-            <span className="text-lg font-black uppercase tracking-tighter text-slate-900 dark:text-white">
+            <span className="text-lg font-bold uppercase tracking-tighter text-slate-900 dark:text-white">
               {ratingOptions.find((opt) => opt.value === (hovered || value))?.label}
             </span>
             <span className="text-xs font-medium text-slate-400 uppercase tracking-widest">
@@ -262,7 +262,7 @@ export default function FeedbackForm({
             className="w-full"
           >
             <CardHeader className="text-center pb-2 relative px-4 sm:px-6">
-              <CardTitle className="text-2xl sm:text-3xl font-black tracking-tighter uppercase">{title}</CardTitle>
+              <CardTitle className="text-2xl sm:text-3xl font-bold tracking-tighter uppercase">{title}</CardTitle>
               <CardDescription className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
                 {description}
               </CardDescription>
@@ -290,7 +290,7 @@ export default function FeedbackForm({
                 {/* Identity Section */}
                 <div className="space-y-4 sm:space-y-6">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
+                    <h4 className="text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
                       {anonymousValue ? <ShieldCheck className="h-4 w-4 text-emerald-500" /> : <ShieldOff className="h-4 w-4 text-slate-400" />}
                       Identity
                     </h4>
@@ -298,7 +298,7 @@ export default function FeedbackForm({
                       type="button"
                       onClick={() => setValue("anonymous", !anonymousValue)}
                       className={cn(
-                        "flex items-center gap-2 text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded transition-all duration-300 border shadow-sm active:scale-95",
+                        "flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest px-4 py-2 rounded transition-all duration-300 border shadow-sm active:scale-95",
                         anonymousValue
                           ? "bg-emerald-500 text-white border-emerald-600 shadow-emerald-500/20"
                           : "bg-white dark:bg-white/5 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/10"
@@ -371,10 +371,10 @@ export default function FeedbackForm({
                             </button>
                           </div>
                           <div className="flex-1">
-                            <Label className="text-xs font-black uppercase tracking-widest opacity-50">Profile Picture</Label>
+                            <Label className="text-xs font-bold uppercase tracking-widest opacity-50">Profile Picture</Label>
                             <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium leading-tight mt-0.5">Add a photo to make your feedback feel more personal. (Optional)</p>
                             {imagePreview && (
-                              <button type="button" onClick={removeImage} className="text-[10px] font-black text-red-500 uppercase tracking-widest mt-1.5 hover:underline">Remove Photo</button>
+                              <button type="button" onClick={removeImage} className="text-[10px] font-bold text-red-500 uppercase tracking-widest mt-1.5 hover:underline">Remove Photo</button>
                             )}
                           </div>
                           <input type="file" ref={fileInputRef} onChange={handleImageChange} accept="image/*" className="hidden" />
@@ -390,8 +390,8 @@ export default function FeedbackForm({
                       >
                         <ShieldCheck className="h-8 w-8 text-emerald-500" />
                         <div className="flex flex-col gap-2">
-                        <h5 className="text-xs font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Anonymous Mode</h5>
-                        <p className="text-[10px] text-slate-500 dark:text-slate-400 max-w-[200px] mx-auto leading-relaxed">Your identity will be protected and no personal information will be stored or displayed.</p>
+                          <h5 className="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Anonymous Mode</h5>
+                          <p className="text-[10px] text-slate-500 dark:text-slate-400 max-w-[200px] mx-auto leading-relaxed">Your identity will be protected and no personal information will be stored or displayed.</p>
                         </div>
                       </motion.div>
                     )}
@@ -401,7 +401,7 @@ export default function FeedbackForm({
                 {/* Message Section */}
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-black uppercase tracking-widest text-slate-900 dark:text-white">Your Message</h4>
+                    <h4 className="text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white">Your Message</h4>
                     <span className={cn(
                       "text-[10px] font-mono tracking-widest",
                       messageValue.length > 950 ? "text-red-500 font-bold" : "text-slate-400"
@@ -472,7 +472,7 @@ export default function FeedbackForm({
             </div>
 
             <div className="space-y-3">
-              <h3 className="text-3xl font-black uppercase tracking-tighter text-slate-900 dark:text-white">Gratitude!</h3>
+              <h3 className="text-3xl font-bold uppercase tracking-tighter text-slate-900 dark:text-white">Gratitude!</h3>
               <p className="text-slate-500 dark:text-slate-400 max-w-[260px] font-medium leading-relaxed">
                 Your input has been secured. We truly appreciate the time you took to help us improve.
               </p>

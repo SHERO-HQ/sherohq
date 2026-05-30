@@ -48,7 +48,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
           </div>
         </div>
 
-        <h3 className="text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter mb-3">
+        <h3 className="text-3xl font-bold text-slate-900 dark:text-white uppercase tracking-tighter mb-3">
           No <span className="text-brand-secondary-500">Products</span> Found
         </h3>
         <p className="text-sm font-medium text-slate-500 tracking-widest mb-6 max-w-md">
@@ -58,7 +58,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
 
         <button
           onClick={() => (onReset ? onReset() : router.refresh())}
-          className="group flex items-center gap-3 px-10 h-10 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-black uppercase tracking-widest text-xs rounded shadow shadow-brand-secondary-500/20 active:scale-95 transition"
+          className="group flex items-center gap-3 px-10 h-10 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold uppercase tracking-widest text-xs rounded shadow shadow-brand-secondary-500/20 active:scale-95 transition"
         >
           <RefreshCcw
             size={18}

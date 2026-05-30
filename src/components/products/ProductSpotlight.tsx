@@ -150,7 +150,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                       transition={{ delay: 0.4 }}
                       className="max-w-xl"
                     >
-                      <h2 className="text-3xl lg:text-7xl font-black text-white lg:text-slate-900 lg:dark:text-white leading-[1.05] tracking-tighter mb-3 uppercase">
+                      <h2 className="text-3xl lg:text-7xl font-bold text-white lg:text-slate-900 lg:dark:text-white leading-[1.05] tracking-tighter mb-3 uppercase">
                         {currentProduct.name.split(" ").map((word, i) => (
                           <span
                             key={i}
@@ -168,17 +168,17 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
 
                       <div className="flex flex-wrap items-center gap-4 sm:gap-6 lg:gap-8">
                         <div className="flex flex-col">
-                          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 lg:text-slate-500 mb-1">
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 lg:text-slate-500 mb-1">
                             Price
                           </span>
-                          <span className="text-2xl lg:text-4xl font-black text-white lg:text-slate-900 lg:dark:text-white">
+                          <span className="text-2xl lg:text-4xl font-bold text-white lg:text-slate-900 lg:dark:text-white">
                             {formatCurrency(currentProduct.price)}
                           </span>
                         </div>
 
                         {currentProduct.rating > 0 && (
                           <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 lg:text-slate-500 mb-1">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 lg:text-slate-500 mb-1">
                               Satisfaction
                             </span>
                             <div className="flex items-center gap-1.5">
@@ -186,7 +186,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                                 size={14}
                                 className="fill-amber-400 text-amber-400"
                               />
-                              <span className="text-sm lg:text-lg font-black text-white lg:text-slate-900 lg:dark:text-white">
+                              <span className="text-sm lg:text-lg font-bold text-white lg:text-slate-900 lg:dark:text-white">
                                 {currentProduct.rating}
                               </span>
                             </div>
@@ -198,7 +198,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                             href={getAbsoluteUrl(
                               `/shop/${currentProduct.slug || currentProduct.sku || currentProduct.id}`,
                             )}
-                            className="group flex items-center justify-center gap-3 px-4 py-2 bg-brand-secondary-500 hover:bg-brand-secondary-400 text-white rounded font-black uppercase tracking-widest text-[10px] transition-all shadow shadow-brand-secondary-500/20 hover:-translate-y-0.5"
+                            className="group flex items-center justify-center gap-3 px-4 py-2 bg-brand-secondary-500 hover:bg-brand-secondary-400 text-white rounded font-bold uppercase tracking-widest text-[10px] transition-all shadow shadow-brand-secondary-500/20 hover:-translate-y-0.5"
                           >
                             Details
                             <ArrowRight
@@ -244,11 +244,10 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                                 setCurrentIndex(i);
                                 setIsAutoPlaying(false);
                               }}
-                              className={`h-1.5 transition-all duration-500 rounded-full ${
-                                i === safeCurrentIndex
+                              className={`h-1.5 transition-all duration-500 rounded-full ${i === safeCurrentIndex
                                   ? "w-8 bg-brand-secondary-500"
                                   : "w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600"
-                              }`}
+                                }`}
                             />
                           ))}
                         </div>
@@ -305,11 +304,10 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                             setCurrentIndex(i);
                             setIsAutoPlaying(false);
                           }}
-                          className={`h-1 transition-all duration-500 rounded-full ${
-                            i === safeCurrentIndex
+                          className={`h-1 transition-all duration-500 rounded-full ${i === safeCurrentIndex
                               ? "w-8 bg-brand-secondary-500"
                               : "w-2 dark:bg-white/40 bg-slate-600/40 hover:bg-white/60"
-                          }`}
+                            }`}
                         />
                       ))}
                     </div>

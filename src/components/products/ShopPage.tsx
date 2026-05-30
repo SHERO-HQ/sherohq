@@ -27,16 +27,16 @@ const ShopView = () => {
   const pathname = usePathname();
 
   // TanStack Query
-  const { 
-    data: products = [], 
+  const {
+    data: products = [],
     isLoading: productsLoading,
     isError: productsError,
     error: productError,
     refetch: refetchProducts
   } = useProducts();
-  
-  const { 
-    data: apiCategories = [], 
+
+  const {
+    data: apiCategories = [],
     isLoading: categoriesLoading,
     isError: categoriesError,
     refetch: refetchCategories
@@ -230,160 +230,158 @@ const ShopView = () => {
           </aside>
 
           <div className="flex flex-col gap-4 min-w-0 mt-4">
-          {/* Horizontal Filter Bar - Sticky */}
-          <div className="sticky top-16 sm:top-24 z-30 px-1 sm:px-0">
-            <div className="flex flex-col gap-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-2 sm:p-4 rounded shadow shadow-black/20">
-              <div className="flex flex-col md:flex-row items-center gap-3 sm:gap-4">
-                <div className="flex-1 w-full">
-                  <ProductSearch
-                    onSearch={handleSearch}
-                    initialQuery={searchQuery}
-                    className="mb-0"
-                  />
-                </div>
-                <div className="flex items-center gap-2 w-full md:w-auto">
-                  <button
-                    onClick={() => setShowMobileFilters(true)}
-                    className="flex-1 flex items-center justify-center gap-2 cursor-pointer px-3 py-2 sm:px-4 sm:py-2 dark:bg-white/5 bg-slate-100 hover:bg-brand-secondary-500/10 border border-slate-200 dark:border-white/10 rounded font-bold dark:text-slate-200 text-slate-800 transition hover:border-brand-secondary-500/50 group text-xs sm:text-base h-9 sm:h-auto"
-                  >
-                    <SlidersHorizontal
-                      size={16}
-                      className="group-hover:rotate-180 transition-transform duration-500 sm:w-4.5 sm:h-4.5"
+            {/* Horizontal Filter Bar - Sticky */}
+            <div className="sticky top-16 sm:top-24 z-30 px-1 sm:px-0">
+              <div className="flex flex-col gap-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-2 sm:p-4 rounded shadow shadow-black/20">
+                <div className="flex flex-col md:flex-row items-center gap-3 sm:gap-4">
+                  <div className="flex-1 w-full">
+                    <ProductSearch
+                      onSearch={handleSearch}
+                      initialQuery={searchQuery}
+                      className="mb-0"
                     />
-                    <span>Filters</span>
-                  </button>
-
-                  {/* Category Dropdown - Mobile/Tablet Only */}
-                  <div className="relative flex-1 lg:hidden">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none flex items-center text-slate-400">
-                      <span className="text-base">{categoriesWithCount.find(c => c.id === activeCategory)?.icon}</span>
-                    </div>
-                    <select
-                      value={activeCategory}
-                      onChange={(e) => handleCategoryChange(e.target.value)}
-                      className="w-full text-xs sm:text-sm font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded h-9 px-10 appearance-none text-slate-800 dark:text-white cursor-pointer focus:ring-2 focus:ring-brand-secondary-500/50 transition-all shadow-sm"
-                    >
-                      {categoriesWithCount.map((cat) => (
-                        <option key={cat.id} value={cat.id}>
-                          {cat.name} ({cat.count})
-                        </option>
-                      ))}
-                    </select>
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
-                      <ChevronDown size={16} />
-                    </div>
                   </div>
-
-                  {/* Sort - Desktop Only in this bar */}
-                  <div className="relative group hidden lg:block lg:w-48">
-                    <select
-                      value={filters.sortBy}
-                      onChange={(e) =>
-                        handleFilterChange({
-                          ...filters,
-                          sortBy: e.target.value,
-                        })
-                      }
-                      className="w-full text-sm border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 rounded font-bold dark:text-white text-slate-800 focus:ring-brand-secondary-500 cursor-pointer py-2 px-4 appearance-none pr-10"
+                  <div className="flex items-center gap-2 w-full md:w-auto">
+                    <button
+                      onClick={() => setShowMobileFilters(true)}
+                      className="flex-1 flex items-center justify-center gap-2 cursor-pointer px-3 py-2 sm:px-4 sm:py-2 dark:bg-white/5 bg-slate-100 hover:bg-brand-secondary-500/10 border border-slate-200 dark:border-white/10 rounded font-bold dark:text-slate-200 text-slate-800 transition hover:border-brand-secondary-500/50 group text-xs sm:text-base h-9 sm:h-auto"
                     >
-                      <option value="newest">Sort: Newest</option>
-                      <option value="price-low">Price: Low to High</option>
-                      <option value="price-high">Price: High to Low</option>
-                      <option value="rating">Top Rated</option>
-                    </select>
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                      <ChevronDown size={16} />
+                      <SlidersHorizontal
+                        size={16}
+                        className="group-hover:rotate-180 transition-transform duration-500 sm:w-4.5 sm:h-4.5"
+                      />
+                      <span>Filters</span>
+                    </button>
+
+                    {/* Category Dropdown - Mobile/Tablet Only */}
+                    <div className="relative flex-1 lg:hidden">
+                      <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none flex items-center text-slate-400">
+                        <span className="text-base">{categoriesWithCount.find(c => c.id === activeCategory)?.icon}</span>
+                      </div>
+                      <select
+                        value={activeCategory}
+                        onChange={(e) => handleCategoryChange(e.target.value)}
+                        className="w-full text-xs sm:text-sm font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded h-9 px-10 appearance-none text-slate-800 dark:text-white cursor-pointer focus:ring-2 focus:ring-brand-secondary-500/50 transition-all shadow-sm"
+                      >
+                        {categoriesWithCount.map((cat) => (
+                          <option key={cat.id} value={cat.id}>
+                            {cat.name} ({cat.count})
+                          </option>
+                        ))}
+                      </select>
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none flex items-center">
+                        <ChevronDown size={16} />
+                      </div>
+                    </div>
+
+                    {/* Sort - Desktop Only in this bar */}
+                    <div className="relative group hidden lg:block lg:w-48">
+                      <select
+                        value={filters.sortBy}
+                        onChange={(e) =>
+                          handleFilterChange({
+                            ...filters,
+                            sortBy: e.target.value,
+                          })
+                        }
+                        className="w-full text-sm border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 rounded font-bold dark:text-white text-slate-800 focus:ring-brand-secondary-500 cursor-pointer py-2 px-4 appearance-none pr-10"
+                      >
+                        <option value="newest">Sort: Newest</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="rating">Top Rated</option>
+                      </select>
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                        <ChevronDown size={16} />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Desktop Category Pills - Hidden on Mobile */}
-              <div className="hidden lg:flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-                {categoriesWithCount.map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => handleCategoryChange(cat.id)}
-                    className={`flex items-center gap-2 px-4 py-2 rounded whitespace-nowrap transition border duration-300 ${
-                      activeCategory === cat.id
-                        ? "bg-brand-secondary-600 border-brand-secondary-500 text-white shadow shadow-brand-secondary-500/40"
-                        : "bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 hover:border-brand-secondary-500/30"
-                    }`}
-                  >
-                    <span className="text-lg">{cat.icon}</span>
-                    <span className="text-sm font-bold tracking-tight">
-                      {cat.name}
-                    </span>
-                    <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
-                        activeCategory === cat.id
-                          ? "bg-white/20 text-white"
-                          : "bg-slate-200 dark:bg-white/10 text-slate-500 dark:text-slate-400"
-                      }`}
+                {/* Desktop Category Pills - Hidden on Mobile */}
+                <div className="hidden lg:flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+                  {categoriesWithCount.map((cat) => (
+                    <button
+                      key={cat.id}
+                      onClick={() => handleCategoryChange(cat.id)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded whitespace-nowrap transition border duration-300 ${activeCategory === cat.id
+                          ? "bg-brand-secondary-600 border-brand-secondary-500 text-white shadow shadow-brand-secondary-500/40"
+                          : "bg-white dark:bg-slate-900 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 hover:border-brand-secondary-500/30"
+                        }`}
                     >
-                      {cat.count}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Products Results */}
-          <main className="flex-1 min-w-0 pt-6 lg:pt-0">
-            {/* Active Filters Summary */}
-            <ActiveFilters 
-              filters={filters}
-              activeCategory={activeCategory}
-              categories={categoriesWithCount}
-              onRemoveCategory={() => handleCategoryChange("all")}
-              onRemoveFilter={(key, value) => {
-                if (key === "brands") {
-                  setFilters({ ...filters, brands: filters.brands.filter(b => b !== value) });
-                } else if (key === "priceRange") {
-                  setFilters({ ...filters, priceRange: [0, 1000000] });
-                } else {
-                  setFilters({ ...filters, [key]: value });
-                }
-              }}
-              onClearAll={handleReset}
-            />
-
-            {/* Results Header (Desktop) - Optional now, keeping it subtle */}
-            <div className="flex items-center justify-between mb-6 px-2">
-              <div>
-                <h2 className="text-xl font-black dark:text-white text-slate-800 tracking-tight uppercase">
-                  {activeCategory === "all"
-                    ? "Browsing All"
-                    : `Exploring ${categoriesWithCount.find((c) => c.id === activeCategory)?.name}`}
-                </h2>
-                <div className="flex items-center gap-2 mt-1">
-                  <div className="h-1 w-8 bg-brand-secondary-500 rounded" />
-                  <p className="text-xs font-mono dark:text-slate-500 text-slate-500 uppercase tracking-widest">
-                    {filteredProducts.length}{" "}
-                    {filteredProducts.length === 1 ? "result" : "results"} found
-                  </p>
+                      <span className="text-lg">{cat.icon}</span>
+                      <span className="text-sm font-bold tracking-tight">
+                        {cat.name}
+                      </span>
+                      <span
+                        className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${activeCategory === cat.id
+                            ? "bg-white/20 text-white"
+                            : "bg-slate-200 dark:bg-white/10 text-slate-500 dark:text-slate-400"
+                          }`}
+                      >
+                        {cat.count}
+                      </span>
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
 
-            {isError ? (
-              <ErrorState 
-                message={productError instanceof Error ? productError.message : "We're having trouble loading products. Please try again."}
-                onRetry={() => {
-                  refetchProducts();
-                  refetchCategories();
+            {/* Products Results */}
+            <main className="flex-1 min-w-0 pt-6 lg:pt-0">
+              {/* Active Filters Summary */}
+              <ActiveFilters
+                filters={filters}
+                activeCategory={activeCategory}
+                categories={categoriesWithCount}
+                onRemoveCategory={() => handleCategoryChange("all")}
+                onRemoveFilter={(key, value) => {
+                  if (key === "brands") {
+                    setFilters({ ...filters, brands: filters.brands.filter(b => b !== value) });
+                  } else if (key === "priceRange") {
+                    setFilters({ ...filters, priceRange: [0, 1000000] });
+                  } else {
+                    setFilters({ ...filters, [key]: value });
+                  }
                 }}
+                onClearAll={handleReset}
               />
-            ) : (
-              <ProductGrid
-                products={filteredProducts}
-                loading={loading}
-                columns={3}
-                onReset={handleReset}
-              />
-            )}
-          </main>
+
+              {/* Results Header (Desktop) - Optional now, keeping it subtle */}
+              <div className="flex items-center justify-between mb-6 px-2">
+                <div>
+                  <h2 className="text-xl font-bold dark:text-white text-slate-800 tracking-tight uppercase">
+                    {activeCategory === "all"
+                      ? "Browsing All"
+                      : `Exploring ${categoriesWithCount.find((c) => c.id === activeCategory)?.name}`}
+                  </h2>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className="h-1 w-8 bg-brand-secondary-500 rounded" />
+                    <p className="text-xs font-mono dark:text-slate-500 text-slate-500 uppercase tracking-widest">
+                      {filteredProducts.length}{" "}
+                      {filteredProducts.length === 1 ? "result" : "results"} found
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {isError ? (
+                <ErrorState
+                  message={productError instanceof Error ? productError.message : "We're having trouble loading products. Please try again."}
+                  onRetry={() => {
+                    refetchProducts();
+                    refetchCategories();
+                  }}
+                />
+              ) : (
+                <ProductGrid
+                  products={filteredProducts}
+                  loading={loading}
+                  columns={3}
+                  onReset={handleReset}
+                />
+              )}
+            </main>
           </div>
         </div>
       </div>

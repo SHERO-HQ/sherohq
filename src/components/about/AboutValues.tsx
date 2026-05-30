@@ -69,18 +69,18 @@ const AboutValues = () => {
                   className={cn(
                     "w-12 h-12 rounded flex items-center justify-center mb-4 transition duration-500 border border-slate-200/50 dark:border-white/5 shadow-sm",
                     item.color === "brand-secondary" &&
-                      "bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:bg-brand-secondary-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-brand-secondary-500/30",
+                    "bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:bg-brand-secondary-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-brand-secondary-500/30",
                     item.color === "blue" &&
-                      "bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-blue-500/30",
+                    "bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-blue-500/30",
                     item.color === "violet" &&
-                      "bg-violet-500/10 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-violet-500/30",
+                    "bg-violet-500/10 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-violet-500/30",
                     item.color === "amber" &&
-                      "bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:bg-amber-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-amber-500/30",
+                    "bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:bg-amber-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-amber-500/30",
                   )}
                 >
                   <item.icon className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-black text-slate-900 dark:text-white mb-3 tracking-tighter group-hover:text-brand-secondary-500 transition-colors">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3 tracking-tighter group-hover:text-brand-secondary-500 transition-colors">
                   {item.title}
                 </h3>
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light group-hover:text-slate-800 dark:group-hover:text-slate-300 transition-colors line-clamp-3">

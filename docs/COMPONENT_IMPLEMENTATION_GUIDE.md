@@ -35,7 +35,7 @@ interface ButtonProps extends VariantProps<typeof buttonVariants> {
 }
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center font-black uppercase tracking-widest text-xs rounded transition-all active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed",
+  "inline-flex items-center justify-center font-bold uppercase tracking-widest text-xs rounded transition-all active:scale-90 disabled:opacity-50 disabled:cursor-not-allowed",
   {
     variants: {
       variant: {
@@ -175,7 +175,7 @@ export function ProductCard({ product }) {
         <p className="text-sm text-muted-foreground mb-3">
           {product.description}
         </p>
-        <p className="text-2xl font-black text-emerald-500">{product.price}</p>
+        <p className="text-2xl font-bold text-emerald-500">{product.price}</p>
       </Card.Body>
       <Card.Footer>
         <Button variant="primary" className="flex-1">
@@ -531,7 +531,7 @@ export function HeroSection() {
   return (
     <section>
       <AnimatedContent type="fade">
-        <h1 className="text-7xl font-black">Hero Title</h1>
+        <h1 className="text-7xl font-bold">Hero Title</h1>
       </AnimatedContent>
 
       <AnimatedContent type="slide-up" delay={0.2}>

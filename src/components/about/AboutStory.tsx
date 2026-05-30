@@ -58,7 +58,7 @@ const AboutStory = () => {
                   <p className="text-sm font-medium text-slate-900 dark:text-white leading-tight">
                     Redefine
                   </p>
-                 
+
                 </div>
               </div>
             </div>
@@ -108,7 +108,7 @@ const AboutStory = () => {
               <div className="w-12 h-12 bg-brand-primary-500 rounded flex items-center justify-center mb-4 shadow shadow-brand-secondary-500/20 group-hover:scale-110 transition-transform">
                 <Target className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-lg lg:text-xl font-black text-slate-900 dark:text-white mb-4 tracking-tighter">
+              <h3 className="text-lg lg:text-xl font-bold text-slate-900 dark:text-white mb-4 tracking-tighter">
                 Our Mission
               </h3>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">
@@ -125,7 +125,7 @@ const AboutStory = () => {
               <div className="w-12 h-12 bg-brand-secondary-500 rounded flex items-center justify-center mb-4 shadow shadow-blue-600/20 group-hover:scale-110 transition-transform">
                 <Globe className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-lg lg:text-xl font-black text-slate-900 dark:text-white mb-4 tracking-tighter">
+              <h3 className="text-lg lg:text-xl font-bold text-slate-900 dark:text-white mb-4 tracking-tighter">
                 Our Vision
               </h3>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">

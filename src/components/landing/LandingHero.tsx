@@ -30,7 +30,7 @@ interface HeroContent {
 
 // Constants
 const HERO_CONTENT: HeroContent = {
-  mainHeader: "Business-Grade IT. \n Delivered & Supported.",
+  mainHeader: "Business Grade IT. \n Delivered & Supported.",
   subHeader:
     "Curated business-grade hardware, custom software integration, and rapid 2hr SLA support tailored for growth.",
 } as const;

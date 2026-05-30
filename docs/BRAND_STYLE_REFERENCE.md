@@ -33,7 +33,7 @@
 
 | Level         | Class                   | Size | Weight | When                |
 | ------------- | ----------------------- | ---- | ------ | ------------------- |
-| Hero Title    | `text-7xl font-black`   | 48px | 900    | Product names       |
+| Hero Title    | `text-7xl font-bold`   | 48px | 900    | Product names       |
 | Section Title | `text-4xl font-bold`    | 30px | 700    | Major headings      |
 | Sub-Heading   | `text-2xl font-semibold`| 20px | 600    | Component titles    |
 | Body          | `text-base font-normal` | 15px | 400    | Main content        |
@@ -252,7 +252,7 @@ import Image from "next/image";
 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
 // Text size
-<h1 className="text-3xl md:text-4xl lg:text-7xl font-black">
+<h1 className="text-3xl md:text-4xl lg:text-7xl font-bold">
 
 // Padding
 <div className="p-4 md:p-6 lg:p-8">

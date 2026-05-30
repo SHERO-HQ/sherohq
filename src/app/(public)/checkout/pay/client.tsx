@@ -149,7 +149,7 @@ export default function DynamicPaymentPortal() {
       {/* Top Brand Header */}
       <div className="flex flex-col items-center gap-1 text-center">
         <div className="flex items-center gap-2">
-          <span className="font-logo-next text-2xl font-black text-slate-900 dark:text-white uppercase tracking-wider">
+          <span className="font-logo-next text-2xl font-bold text-slate-900 dark:text-white uppercase tracking-wider">
             Shero
           </span>
           <span className="text-[10px] font-semibold uppercase tracking-[0.2em] px-2 py-0.5 rounded bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-500/20">
@@ -172,7 +172,7 @@ export default function DynamicPaymentPortal() {
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
               Amount to Pay
             </p>
-            <h2 className="text-3xl sm:text-4xl font-black text-brand-secondary-600 dark:text-brand-secondary-400 font-mono">
+            <h2 className="text-3xl sm:text-4xl font-bold text-brand-secondary-600 dark:text-brand-secondary-400 font-mono">
               GHS {total.toFixed(2)}
             </h2>
             <div className="inline-flex items-center gap-1.5 mt-3 text-xs bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full text-slate-600 dark:text-slate-300 font-mono">

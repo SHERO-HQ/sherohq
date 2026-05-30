@@ -62,7 +62,7 @@ export default function AIRecommendations({
   return (
     <div className="mt-24 border-t border-slate-200 dark:border-white/10 pt-20">
       <div className="flex flex-col items-center mb-12">
-        <h2 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white uppercase tracking-tighter text-center flex items-center gap-2">
+        <h2 className="text-xl sm:text-3xl font-bold text-slate-900 dark:text-white uppercase tracking-tighter text-center flex items-center gap-2">
           <Sparkles className="size-5 sm:size-8 text-brand-secondary-500" />
           {title}
         </h2>
@@ -72,8 +72,8 @@ export default function AIRecommendations({
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
         {isLoading
           ? [1, 2, 3, 4].map((i) => (
-              <ProductCardSkeleton key={`ai-skeleton-${i}`} />
-            ))
+            <ProductCardSkeleton key={`ai-skeleton-${i}`} />
+          ))
           : recommendations.map((p) => <ProductCard key={p.id} product={p} />)}
       </div>
     </div>

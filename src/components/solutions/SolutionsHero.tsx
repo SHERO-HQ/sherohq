@@ -59,7 +59,7 @@ const SolutionsHero = () => {
               </span>
             </div>
 
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black font-sora text-slate-900 dark:text-white leading-[1.01] tracking-tighter mb-4 lg:mb-6">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold font-sora text-slate-900 dark:text-white leading-[1.01] tracking-tighter mb-4 lg:mb-6">
               {["Software", "and", "IT", "Built", "to", "Scale"].map(
                 (word, i) => (
                   <span
@@ -120,7 +120,7 @@ const SolutionsHero = () => {
               {/* Background Ambient Glows */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-brand-secondary-500/5 dark:bg-brand-secondary-500/5 blur-[100px] rounded-full pointer-events-none" />
               <div className="absolute top-1/2 left-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-blue-500/5 dark:bg-blue-500/5 blur-[80px] rounded-full pointer-events-none translate-x-10" />
-              
+
               {/* Main Visual Card */}
               <div className="relative w-full h-full drop-shadow group-hover/visual:-translate-y-6 transition-transform duration-1000 ease-out flex items-center justify-center">
                 <div className="w-full h-full relative overflow-hidden flex items-center justify-center">

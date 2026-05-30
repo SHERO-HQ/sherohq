@@ -151,7 +151,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                   <SlidersHorizontal className="w-6 h-6 text-brand-secondary-500" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-black text-slate-900 dark:text-white uppercase tracking-tighter">
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white uppercase tracking-tighter">
                     Filter <span className="text-brand-secondary-500">Products</span>
                   </h2>
                   <p className="text-xs text-slate-500">
@@ -174,13 +174,12 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`relative px-6 py-3 md:px-8 text-left transition-all duration-300 flex-1 md:flex-none whitespace-nowrap md:whitespace-normal ${
-                      activeTab === tab.id
+                    className={`relative px-6 py-3 md:px-8 text-left transition-all duration-300 flex-1 md:flex-none whitespace-nowrap md:whitespace-normal ${activeTab === tab.id
                         ? "text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-500/10 font-bold shadow-xs"
                         : "text-slate-400 hover:text-slate-600 dark:hover:text-white"
-                    }`}
+                      }`}
                   >
-                    {/* <span className="hidden md:block text-[10px] font-black uppercase tracking-widest mb-1">Filter</span> */}
+                    {/* <span className="hidden md:block text-[10px] font-bold uppercase tracking-widest mb-1">Filter</span> */}
                     <span className="md:text-base text-sm font-semibold tracking-tight">
                       {tab.label}
                     </span>
@@ -207,18 +206,16 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                             sortBy: option.value,
                           })
                         }
-                        className={`group flex items-center justify-between p-2 rounded transition border-2 ${
-                          tempFilters.sortBy === option.value
+                        className={`group flex items-center justify-between p-2 rounded transition border-2 ${tempFilters.sortBy === option.value
                             ? "bg-brand-secondary-500/10 border-brand-secondary-500/50"
                             : "bg-slate-50 dark:bg-white/5 border-transparent hover:border-white/10"
-                        }`}
+                          }`}
                       >
                         <span
-                          className={`font-medium tracking-tight text-xs sm:text-sm ${
-                            tempFilters.sortBy === option.value
+                          className={`font-medium tracking-tight text-xs sm:text-sm ${tempFilters.sortBy === option.value
                               ? "text-brand-secondary-500"
                               : "text-slate-500"
-                          }`}
+                            }`}
                         >
                           {option.label}
                         </span>
@@ -243,18 +240,16 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                             priceRange: range.range,
                           })
                         }
-                        className={`flex items-center justify-between p-2 rounded transition border-2 ${
-                          isPriceRangeActive(range.range)
+                        className={`flex items-center justify-between p-2 rounded transition border-2 ${isPriceRangeActive(range.range)
                             ? "bg-brand-secondary-500/10 border-brand-secondary-500/50"
                             : "bg-slate-50 dark:bg-white/5 border-transparent"
-                        }`}
+                          }`}
                       >
                         <span
-                          className={`font-medium tracking-tight text-xs md:text-sm ${
-                            isPriceRangeActive(range.range)
+                          className={`font-medium tracking-tight text-xs md:text-sm ${isPriceRangeActive(range.range)
                               ? "text-brand-secondary-500"
                               : "text-slate-500"
-                          }`}
+                            }`}
                         >
                           {range.label}
                         </span>
@@ -277,11 +272,10 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                             : [...tempFilters.brands, brand];
                           setTempFilters({ ...tempFilters, brands: newBrands });
                         }}
-                        className={`px-4 py-2 rounded font-medium tracking-tight text-xs md:text-sm border-2 transition ${
-                          tempFilters.brands.includes(brand)
+                        className={`px-4 py-2 rounded font-medium tracking-tight text-xs md:text-sm border-2 transition ${tempFilters.brands.includes(brand)
                             ? "bg-brand-secondary-500 border-brand-secondary-500 text-white shadow shadow-brand-secondary-500/20"
                             : "bg-slate-50 dark:bg-white/5 border-transparent text-slate-500"
-                        }`}
+                          }`}
                       >
                         {brand}
                       </button>
@@ -297,11 +291,10 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                         onClick={() =>
                           setTempFilters({ ...tempFilters, minRating: r })
                         }
-                        className={`flex items-center justify-between py-3 px-6 rounded transition border-2 ${
-                          tempFilters.minRating === r
+                        className={`flex items-center justify-between py-3 px-6 rounded transition border-2 ${tempFilters.minRating === r
                             ? "bg-brand-secondary-500/10 border-brand-secondary-500/50"
                             : "bg-slate-50 dark:bg-white/5 border-transparent"
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center gap-2">
                           <div className="flex items-center">

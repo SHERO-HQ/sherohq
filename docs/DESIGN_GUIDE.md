@@ -159,7 +159,7 @@ SheroTech uses **oklch color space** for superior perceptual uniformity across l
 | **600** | Secondary headings, UI buttons   | `font-semibold`  |
 | **700** | Primary headings, impact text    | `font-bold`      |
 | **800** | Major headings                   | `font-extrabold` |
-| **900** | Hero titles, display text        | `font-black`     |
+| **900** | Hero titles, display text        | `font-bold`     |
 
 ### Line Length & Readability
 

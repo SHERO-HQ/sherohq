@@ -324,7 +324,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
                     <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
                       Total Payable
                     </span>
-                    <span className="text-xl font-black text-brand-secondary-600 dark:text-brand-secondary-400">
+                    <span className="text-xl font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
                       GH₵{Number(order.total).toLocaleString()}
                     </span>
                   </div>
@@ -436,7 +436,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
               <p className="text-[10px] text-slate-400 uppercase tracking-widest leading-loose">
                 Thank you for choosing
                 <br />
-                <span className="text-brand-secondary-500 font-black">
+                <span className="text-brand-secondary-500 font-bold">
                   SHERO TECHNOLOGIES
                 </span>
               </p>

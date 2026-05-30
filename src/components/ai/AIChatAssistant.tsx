@@ -205,7 +205,7 @@ export default function AIChatAssistant() {
     const handleKeyboardShortcuts = (event: KeyboardEvent) => {
       const key = event?.key?.toLowerCase();
       if (!key) return;
-      
+
       if ((event.metaKey || event.ctrlKey) && key === "k") {
         event.preventDefault();
         setIsOpen(true);
@@ -484,9 +484,8 @@ export default function AIChatAssistant() {
               scale: 1,
             }}
             exit={{ y: 20, opacity: 0, scale: 0.95 }}
-            className={`fixed inset-x-0 bottom-0 sm:inset-auto sm:bottom-6 sm:right-6 z-60 w-full sm:w-100 border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950 flex flex-col overflow-hidden transition-all duration-300 ${
-              isMinimized ? "h-16" : "h-150 sm:h-137.5 sm:rounded"
-            }`}
+            className={`fixed inset-x-0 bottom-0 sm:inset-auto sm:bottom-6 sm:right-6 z-60 w-full sm:w-100 border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950 flex flex-col overflow-hidden transition-all duration-300 ${isMinimized ? "h-16" : "h-150 sm:h-137.5 sm:rounded"
+              }`}
           >
             {/* Header */}
             <div className="p-4 bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-white/10 flex items-center justify-between shrink-0">
@@ -495,7 +494,7 @@ export default function AIChatAssistant() {
                   <Sparkles className="w-4 h-4 text-brand-secondary-600 dark:text-brand-secondary-400" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-black text-brand-secondary-500 uppercase tracking-wider flex items-center">
+                  <h3 className="text-sm font-bold text-brand-secondary-500 uppercase tracking-wider flex items-center">
                     SHERO
                   </h3>
                   <p className="text-[10px] text-slate-500 font-medium tracking-tight">
@@ -562,16 +561,14 @@ export default function AIChatAssistant() {
                   {messages.map((msg) => (
                     <div
                       key={msg.id}
-                      className={`flex flex-col max-w-[85%] ${
-                        msg.role === "user" ? "ml-auto" : "mr-auto"
-                      }`}
+                      className={`flex flex-col max-w-[85%] ${msg.role === "user" ? "ml-auto" : "mr-auto"
+                        }`}
                     >
                       <div
-                        className={`p-3 rounded text-sm ${
-                          msg.role === "user"
+                        className={`p-3 rounded text-sm ${msg.role === "user"
                             ? "bg-primary text-white rounded-br-sm"
                             : "bg-white dark:bg-white/10 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 rounded-bl-sm"
-                        }`}
+                          }`}
                       >
                         {msg.content}
                       </div>
