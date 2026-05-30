@@ -127,7 +127,7 @@ const LandingHero: React.FC = () => {
 
             {/* Headline: Sora Font + Scan line Reveal */}
             <div className="relative overflow-hidden group max-w-3xl">
-              <h1 className="font-extrabold leading-[1.01] text-6xl lg:text-7xl tracking-tighter text-slate-900 dark:text-white relative z-10 animate-hero-fade-up delay-75">
+              <h1 className="font-bold leading-[1.01] text-6xl lg:text-7xl tracking-tighter text-slate-900 dark:text-white relative z-10 animate-hero-fade-up delay-75">
                 {HERO_CONTENT.mainHeader.split(" ").map((word, i) =>
                   word === "\n" ? (
                     <br key={`line-br-${i}-${word}`} />

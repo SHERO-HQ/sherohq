@@ -46,7 +46,6 @@ const AboutStory = () => {
                   <p className="text-sm font-medium text-slate-900 dark:text-white leading-tight">
                     Possible
                   </p>
-
                 </div>
               </div>
 
@@ -58,7 +57,6 @@ const AboutStory = () => {
                   <p className="text-sm font-medium text-slate-900 dark:text-white leading-tight">
                     Redefine
                   </p>
-
                 </div>
               </div>
             </div>
@@ -161,7 +159,8 @@ const AboutStory = () => {
               </div>
               <div className="py-8 md:py-0 md:px-10">
                 <h4 className="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                  <Globe2 className="size-5 text-brand-secondary-400" /> Local Global Standard
+                  <Globe2 className="size-5 text-brand-secondary-400" /> Local
+                  Global Standard
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                   Deep understanding of the African market combined with

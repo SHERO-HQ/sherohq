@@ -152,14 +152,14 @@ SheroTech uses **oklch color space** for superior perceptual uniformity across l
 
 ### Font Weight Usage
 
-| Weight  | Usage                            | Tailwind Class   |
-| ------- | -------------------------------- | ---------------- |
-| **400** | Body copy, regular text          | `font-normal`    |
-| **500** | Emphasis, labels                 | `font-medium`    |
-| **600** | Secondary headings, UI buttons   | `font-semibold`  |
-| **700** | Primary headings, impact text    | `font-bold`      |
-| **800** | Major headings                   | `font-extrabold` |
-| **900** | Hero titles, display text        | `font-bold`     |
+| Weight  | Usage                          | Tailwind Class  |
+| ------- | ------------------------------ | --------------- |
+| **400** | Body copy, regular text        | `font-normal`   |
+| **500** | Emphasis, labels               | `font-medium`   |
+| **600** | Secondary headings, UI buttons | `font-semibold` |
+| **700** | Primary headings, impact text  | `font-bold`     |
+| **800** | Major headings                 | `font-semibold` |
+| **900** | Hero titles, display text      | `font-bold`     |
 
 ### Line Length & Readability
 
@@ -194,10 +194,10 @@ SheroTech uses **8px base unit** with derived scale:
 | -------- | ------ | -------------- | ------------------------------- |
 | **sm**   | 4px    | `rounded-sm`   | Micro-interactions (buttons)    |
 | **md**   | 6px    | `rounded`      | Default (cards, inputs, modals) |
-| **lg**   | 8px    | `rounded`   | Prominent containers            |
-| **xl**   | 12px   | `rounded`   | Large feature blocks            |
-| **2xl**  | 16px   | `rounded`  | Extra prominent, CTAs           |
-| **3xl**  | 20px   | `rounded`  | Hero sections, badges           |
+| **lg**   | 8px    | `rounded`      | Prominent containers            |
+| **xl**   | 12px   | `rounded`      | Large feature blocks            |
+| **2xl**  | 16px   | `rounded`      | Extra prominent, CTAs           |
+| **3xl**  | 20px   | `rounded`      | Hero sections, badges           |
 | **full** | 9999px | `rounded-full` | Circles, pills                  |
 
 **Base Radius**: `--radius: 0.5rem` (8px)  

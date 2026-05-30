@@ -123,7 +123,7 @@ const ProductHero = () => {
                     ? { duration: 0 }
                     : { duration: 0.8, ease: "easeOut" }
                 }
-                className=" font-extrabold leading-[1.1] text-4xl sm:text-5xl md:text-6xl lg:text-7xl 
+                className=" font-semibold leading-[1.1] text-4xl sm:text-5xl md:text-6xl lg:text-7xl 
  text-slate-900 dark:text-white mb-4"
               >
                 Technology you can{" "}

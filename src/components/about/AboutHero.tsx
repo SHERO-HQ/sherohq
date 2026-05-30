@@ -137,7 +137,7 @@ const AboutHero = () => {
                     ? { duration: 0 }
                     : { duration: 0.8, ease: "easeOut" }
                 }
-                className=" font-extrabold leading-[1.1] text-3xl sm:text-4xl md:text-5xl lg:text-6xl 
+                className=" font-semibold leading-[1.1] text-3xl sm:text-4xl md:text-5xl lg:text-6xl 
   text-slate-900 dark:text-white mb-2"
               >
                 Engineering clarity.{" "}
