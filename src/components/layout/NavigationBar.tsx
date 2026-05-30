@@ -113,22 +113,29 @@ const Nav = () => {
     }),
   };
 
-  // Lock body scroll when mobile menu is open (with scrollbar compensation)
+  // Lock body scroll when mobile menu is open (with scrollbar compensation, desktop viewports only)
   useEffect(() => {
-    if (isOpen) {
+    const isMobile = window.innerWidth < 1024;
+    if (isOpen && !isMobile) {
       const scrollBarWidth =
         window.innerWidth - document.documentElement.clientWidth;
       document.body.style.overflow = "hidden";
       document.body.style.paddingRight =
         scrollBarWidth > 0 ? `${scrollBarWidth}px` : "";
+    } else if (isOpen && isMobile) {
+      // On mobile viewports, we use overscroll-behavior: contain to prevent background scroll chaining
+      // without setting overflow: hidden on the body which triggers Safari visual viewport jumps.
+      document.body.style.overscrollBehavior = "contain";
     } else {
       document.body.style.overflow = "unset";
       document.body.style.paddingRight = "";
+      document.body.style.overscrollBehavior = "";
     }
 
     return () => {
       document.body.style.overflow = "unset";
       document.body.style.paddingRight = "";
+      document.body.style.overscrollBehavior = "";
     };
   }, [isOpen]);
 
@@ -562,7 +569,7 @@ const Nav = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="absolute inset-0 bg-slate-900/60 backdrop-blur-md will-change-opacity"
+              className="absolute inset-0 bg-slate-950/75 will-change-opacity"
               style={{
                 WebkitBackfaceVisibility: "hidden",
                 backfaceVisibility: "hidden",
