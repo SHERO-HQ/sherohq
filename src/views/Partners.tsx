@@ -160,9 +160,10 @@ const Partners = () => {
 
           {/* Become a Partner CTA */}
           <div className="grid md:grid-cols-2 gap-12 items-center bg-white dark:bg-slate-900 rounded p-6 md:p-8 border border-slate-200 dark:border-slate-800 shadow overflow-hidden relative">
-            <div className="relative z-10">
+            <div className="relative z-10 col-span-1">
               <div className="inline-flex items-center gap-2 px-4 py-1 mb-6 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/20 rounded uppercase transition-colors duration-300">
                 <Handshake className="size-4" />
+                <span className="w-px h-3 bg-brand-secondary-600/20 dark:bg-brand-secondary-300/20" />
                 Tiered Benefits
               </div>
               <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-6 transition-colors duration-300">
@@ -187,7 +188,11 @@ const Partners = () => {
               </button>
             </div>
 
-            <div className="relative z-10 flex justify-center">
+            {/* Layout Divider */}
+            <div className="absolute left-1/2 top-12 bottom-12 w-px bg-slate-200 dark:bg-slate-800/80 -translate-x-1/2 z-10 hidden md:block" />
+            <div className="w-full h-px bg-slate-200 dark:bg-slate-800/80 md:hidden my-2 z-10 col-span-2" />
+
+            <div className="relative z-10 flex justify-center col-span-1">
               <div className="w-64 h-64 bg-brand-secondary-100/50 dark:bg-brand-secondary-900/50 rounded-full flex items-center justify-center relative border border-brand-secondary-200/50 dark:border-brand-secondary-800/50 shadow-inner">
                 <div className="absolute inset-8 border border-dashed border-brand-secondary-500/20 rounded-full animate-spin-slow" />
                 <Handshake className="w-24 h-24 text-brand-secondary-600/90 dark:text-brand-secondary-400/90" />

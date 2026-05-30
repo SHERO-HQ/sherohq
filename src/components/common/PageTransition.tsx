@@ -10,11 +10,11 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <AnimatePresence initial={false} mode="wait">
+    <AnimatePresence mode="wait">
       <motion.div
         key={pathname}
-        initial={false}
-        animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+        initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
         exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -6 }}
         transition={{
           duration: prefersReducedMotion ? 0.01 : 0.16,

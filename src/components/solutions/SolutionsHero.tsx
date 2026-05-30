@@ -47,7 +47,7 @@ const SolutionsHero = () => {
         <div className="flex flex-col lg:flex-row gap-16 lg:gap-8 items-center">
           {/* Solution Info */}
           <motion.div
-            initial={false}
+            initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 1, type: "spring", damping: 20 }}
             className="relative z-10 flex flex-col items-center lg:items-start text-center lg:text-left order-2 lg:order-1 w-full lg:w-1/2"
