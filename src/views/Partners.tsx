@@ -159,61 +159,60 @@ const Partners = () => {
           </section>
 
           {/* Become a Partner CTA */}
-          <div className="grid md:grid-cols-2 gap-12 items-center bg-white dark:bg-slate-900 rounded p-6 md:p-8 border border-slate-200 dark:border-slate-800 shadow overflow-hidden relative">
-            <div className="relative z-10 col-span-1">
-              <div className="inline-flex items-center gap-2 px-4 py-1 mb-6 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/20 rounded uppercase transition-colors duration-300">
-                <Handshake className="size-4" />
-                Tiered Benefits
-              </div>
-              <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-6 transition-colors duration-300">
-                Become a Solution Partner
-              </h2>
-              <ul className="space-y-4 mb-8 text-sm">
-                {benefits.map((benefit, idx) => (
-                  <li key={idx} className="flex items-start gap-3">
-                    <CheckCircle2 className="w-4 h-4 text-brand-secondary-500 mt-0.5 shrink-0" />
-                    <span className="text-slate-600 dark:text-slate-400">
-                      {benefit}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              <button
-                onClick={handleApplyClick}
-                className="group cursor-pointer inline-flex items-center gap-2 px-8 py-2.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white text-sm rounded font-semibold transition duration-300 shadow shadow-brand-secondary-500/25 hover:shadow hover:shadow-brand-secondary-500/30 hover:scale-[1.02] active:scale-95"
-              >
-                <span>Start Partnership</span>
-                <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-              </button>
-            </div>
+          <div className="relative overflow-hidden bg-white dark:bg-slate-900 rounded p-6 md:p-8 border border-slate-200 dark:border-slate-800 shadow">
+            <div className="absolute inset-0 bg-linear-to-bl from-brand-secondary-500/5 to-transparent pointer-events-none" />
 
-            {/* Layout Divider */}
-            <div className="absolute hidden md:block left-1/2 top-12 bottom-12 w-px bg-slate-200 dark:bg-slate-800/80 -translate-x-1/2 z-10 " />
-            <div className="w-full h-px hidden md:block bg-slate-200 dark:bg-slate-800/80  my-2 z-10 col-span-2" />
-
-            <div className="relative z-10 hidden md:flex justify-center col-span-1">
-              <div className="w-64 h-64 bg-brand-secondary-100/50 dark:bg-brand-secondary-900/50 rounded-full flex items-center justify-center relative border border-brand-secondary-200/50 dark:border-brand-secondary-800/50 shadow-inner">
-                <svg
-                  className="absolute inset-8 w-[calc(100%-4rem)] h-[calc(100%-4rem)] text-brand-secondary-500/15"
-                  viewBox="0 0 100 100"
-                  aria-hidden="true"
+            <div className="relative z-10 flex flex-col md:flex-row md:items-center md:gap-12">
+              <div className="md:flex-1">
+                <div className="inline-flex items-center gap-2 px-4 py-1 mb-6 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/20 rounded uppercase transition-colors duration-300">
+                  <Handshake className="size-4" />
+                  Tiered Benefits
+                </div>
+                <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-6 transition-colors duration-300">
+                  Become a Solution Partner
+                </h2>
+                <ul className="space-y-4 mb-8 text-sm">
+                  {benefits.map((benefit, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <CheckCircle2 className="w-4 h-4 text-brand-secondary-500 mt-0.5 shrink-0" />
+                      <span className="text-slate-600 dark:text-slate-400">
+                        {benefit}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  onClick={handleApplyClick}
+                  className="group cursor-pointer inline-flex items-center gap-2 px-8 py-2.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white text-sm rounded font-semibold transition duration-300 shadow shadow-brand-secondary-500/25 hover:shadow hover:shadow-brand-secondary-500/30 hover:scale-[1.02] active:scale-95"
                 >
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="47"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    strokeDasharray="6 4"
-                    fill="transparent"
-                  />
-                </svg>
-                <Handshake className="w-24 h-24 text-brand-secondary-600/90 dark:text-brand-secondary-400/90" />
+                  <span>Start Partnership</span>
+                  <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+                </button>
+              </div>
+
+              <div className="hidden md:block w-px self-stretch bg-slate-200 dark:bg-slate-800/80" />
+
+              <div className="relative z-10 hidden md:flex md:flex-1 justify-center">
+                <div className="w-64 h-64 bg-brand-secondary-100/50 dark:bg-brand-secondary-900/50 rounded-full flex items-center justify-center relative border border-brand-secondary-200/50 dark:border-brand-secondary-800/50 shadow-inner">
+                  <svg
+                    className="absolute inset-8 w-[calc(100%-4rem)] h-[calc(100%-4rem)] text-brand-secondary-500/15"
+                    viewBox="0 0 100 100"
+                    aria-hidden="true"
+                  >
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="47"
+                      stroke="currentColor"
+                      strokeWidth="1"
+                      strokeDasharray="6 4"
+                      fill="transparent"
+                    />
+                  </svg>
+                  <Handshake className="w-24 h-24 text-brand-secondary-600/90 dark:text-brand-secondary-400/90" />
+                </div>
               </div>
             </div>
-
-            {/* Background Decoration */}
-            <div className="absolute top-0 right-0 w-full h-full bg-linear-to-bl from-brand-secondary-500/5 to-transparent pointer-events-none" />
           </div>
         </div>
       </div>
