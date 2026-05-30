@@ -2,9 +2,8 @@
 import NavLink from "@/components/common/NavLink";
 import { getAbsoluteUrl } from "@/utils/subdomain";
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { useIsMounted } from "@/hooks/useIsMounted";
 import dynamic from "next/dynamic";
 
 const ParticleField = dynamic(
@@ -30,9 +29,48 @@ interface HeroContent {
 
 // Constants
 const HERO_CONTENT: HeroContent = {
-  mainHeader: "Business Grade IT. \n Delivered & Supported.",
+  mainHeader: "Your Technology. \n Built, Delivered, Maintained.",
   subHeader:
-    "Curated business-grade hardware, custom software integration, and rapid 2hr SLA support tailored for growth.",
+    "Premium hardware, custom software, and dedicated support. \n Everything your business needs to run without interruption.",
+} as const;
+
+const heroBlock = {
+  hidden: { opacity: 0, y: 18 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.75,
+      ease: [0.23, 1, 0.32, 1],
+      staggerChildren: 0.08,
+      delayChildren: 0.08,
+    },
+  },
+} as const;
+
+const heroItem = {
+  hidden: { opacity: 0, y: 10 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.65,
+      ease: [0.23, 1, 0.32, 1],
+    },
+  },
+} as const;
+
+const heroPanel = {
+  hidden: { opacity: 0, scale: 0.985, y: 18 },
+  show: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      duration: 0.85,
+      ease: [0.23, 1, 0.32, 1],
+    },
+  },
 } as const;
 
 const LandingHero: React.FC = () => {
@@ -54,8 +92,18 @@ const LandingHero: React.FC = () => {
   const translateY = useTransform(smoothY, [-0.5, 0.5], [-6, 6]);
 
   const prefersReducedMotion = useReducedMotion();
-  const mounted = useIsMounted();
-  const motionEnabled = mounted && !prefersReducedMotion;
+  const [heroReady, setHeroReady] = useState(false);
+  const motionEnabled = heroReady && !prefersReducedMotion;
+
+  const [headlineLead = "", headlineAccent = ""] = HERO_CONTENT.mainHeader
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => setHeroReady(true));
+    return () => cancelAnimationFrame(frame);
+  }, [prefersReducedMotion]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -85,8 +133,10 @@ const LandingHero: React.FC = () => {
 
     rafRef.current = requestAnimationFrame(() => {
       if (rectRef.current) {
-        const x = (clientX - rectRef.current.left) / rectRef.current.width - 0.5;
-        const y = (clientY - rectRef.current.top) / rectRef.current.height - 0.5;
+        const x =
+          (clientX - rectRef.current.left) / rectRef.current.width - 0.5;
+        const y =
+          (clientY - rectRef.current.top) / rectRef.current.height - 0.5;
         mouseX.set(x);
         mouseY.set(y);
       }
@@ -106,52 +156,71 @@ const LandingHero: React.FC = () => {
     >
       {/* Subtle patterned depth */}
       <motion.div
-        style={motionEnabled ? { x: translateX, y: translateY, opacity: 0.9 } : { opacity: 0.9 }}
+        style={
+          motionEnabled
+            ? { x: translateX, y: translateY, opacity: 0.9 }
+            : { opacity: 0.9 }
+        }
+        animate={motionEnabled ? { opacity: [0.85, 0.95, 0.85] } : undefined}
+        transition={
+          motionEnabled
+            ? { duration: 12, repeat: Infinity, ease: "easeInOut" }
+            : undefined
+        }
         className="absolute inset-0 pattern-dots pointer-events-none will-change-transform"
       />
 
       {/* Particle Field — only after mount so server HTML is always null */}
-      {motionEnabled && (
+      {heroReady && (
         <ParticleField count={5} colorVariant="single" opacity={0.12} animate />
       )}
 
-      <div className="absolute top-0 left-0 right-0 h-36 bg-linear-to-b from-primary/8 to-transparent pointer-events-none" />      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-10">
+      <div className="absolute top-0 left-0 right-0 h-36 bg-linear-to-b from-primary/8 to-transparent pointer-events-none" />
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-10">
         <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-8">
-          <div className="w-full lg:w-[56%] flex flex-col items-center lg:items-start gap-4 sm:gap-5 text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-4 py-1 rounded border border-brand-secondary-500/20 bg-brand-secondary-500/5 transition-colors duration-300 animate-hero-fade-in">
+          <motion.div
+            variants={heroBlock}
+            initial={prefersReducedMotion ? false : "hidden"}
+            animate={
+              prefersReducedMotion ? undefined : heroReady ? "show" : "hidden"
+            }
+            className="w-full lg:w-[56%] flex flex-col items-center lg:items-start gap-4 sm:gap-5 text-center lg:text-left"
+          >
+            <motion.div
+              variants={heroItem}
+              className="inline-flex items-center gap-2 px-4 py-1 rounded border border-brand-secondary-500/20 bg-brand-secondary-500/5 transition-colors duration-300"
+            >
               <RocketIcon className="size-4 text-brand-secondary-500" />
               <span className="text-xs font-semibold uppercase text-brand-secondary-600 dark:text-brand-secondary-400">
                 Trusted Technology Partner
               </span>
-            </div>
+            </motion.div>
 
             {/* Headline: Sora Font + Scan line Reveal */}
             <div className="relative overflow-hidden group max-w-3xl">
-              <h1 className="font-bold leading-[1.01] text-6xl lg:text-7xl tracking-tighter text-slate-900 dark:text-white relative z-10 animate-hero-fade-up delay-75">
-                {HERO_CONTENT.mainHeader.split(" ").map((word, i) =>
-                  word === "\n" ? (
-                    <br key={`line-br-${i}-${word}`} />
-                  ) : (
-                    <span
-                      key={`${word}-${i}-${word}`}
-                      className={
-                        word.trim() === "Supported."
-                          ? "text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400"
-                          : ""
-                      }
-                    >
-                      {word}{" "}
-                    </span>
-                  )
-                )}
-              </h1>
+              <motion.h1
+                variants={heroItem}
+                className="font-bold leading-[1.01] text-5xl lg:text-7xl px-4 sm:px-auto tracking-tighter text-slate-900 dark:text-white relative z-10"
+              >
+                <span>{headlineLead}</span>
+                <br />
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
+                  {headlineAccent}
+                </span>
+              </motion.h1>
             </div>
 
-            <p className="sm:text-base text-sm text-slate-600 dark:text-slate-300/95 max-w-xl leading-relaxed animate-hero-fade-up delay-150">
+            <motion.p
+              variants={heroItem}
+              className="sm:text-base text-sm text-slate-600 dark:text-slate-300/95 max-w-xl leading-relaxed"
+            >
               {HERO_CONTENT.subHeader}
-            </p>
+            </motion.p>
 
-            <div className="flex flex-row items-center gap-2 sm:gap-4 pt-1 w-fit sm:w-auto mb-14 sm:mb-0 animate-hero-fade-up delay-225">
+            <motion.div
+              variants={heroItem}
+              className="flex flex-row items-center gap-2 sm:gap-4 pt-1 w-fit sm:w-auto mb-14 sm:mb-0"
+            >
               <Button
                 asChild
                 variant="brandSecondary"
@@ -173,7 +242,7 @@ const LandingHero: React.FC = () => {
                 <span>Explore</span>
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </NavLink>
-            </div>
+            </motion.div>
 
             {/* <motion.div
  initial={{ opacity: 0 }}
@@ -183,14 +252,24 @@ const LandingHero: React.FC = () => {
  >
   ...
  </motion.div> */}
-          </div>
+          </motion.div>
 
           <div className="w-full lg:w-[44%] relative aspect-square flex items-center justify-center lg:py-0 mb-16 sm:mb-0">
             <motion.div
-              style={motionEnabled ? { x: translateX, y: translateY } : undefined}
+              variants={heroPanel}
+              initial={prefersReducedMotion ? false : "hidden"}
+              animate={
+                prefersReducedMotion ? undefined : heroReady ? "show" : "hidden"
+              }
+              style={
+                motionEnabled ? { x: translateX, y: translateY } : undefined
+              }
               className="relative w-full max-w-lg h-full flex items-center justify-center"
             >
-              <div className="w-full bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700/70 rounded relative overflow-hidden select-none pointer-events-none animate-hero-scale-up delay-150">
+              <motion.div
+                variants={heroPanel}
+                className="w-full bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700/70 rounded relative overflow-hidden select-none pointer-events-none"
+              >
                 <div className="absolute inset-0 bg-linear-to-br from-white/55 via-transparent to-slate-100/35 dark:from-slate-800/30 dark:to-slate-950/35 pointer-events-none" />
                 <div className="absolute inset-x-0 top-0 h-px bg-white/90 dark:bg-white/10 pointer-events-none" />
 
@@ -280,7 +359,7 @@ const LandingHero: React.FC = () => {
                     ))}
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
               {/* <motion.div
  style={{

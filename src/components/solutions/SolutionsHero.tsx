@@ -74,7 +74,7 @@ const SolutionsHero = () => {
 
             <p className="text-base text-slate-600 dark:text-slate-400 mb-6 lg:mb-8 max-w-2xl leading-relaxed">
               From high-performance custom platforms to managed enterprise
-              infrastructure, we engineer systems that grow with your ambitions.
+              infrastructure, we engineer systems that grow with your business.
             </p>
 
             <div className="grid grid-cols-2 items-center justify-center lg:justify-start gap-3 mb-8 lg:mb-10">
