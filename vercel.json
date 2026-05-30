@@ -9,9 +9,11 @@
       "destination": "/api/og/:id"
     }
   ],
- "crons": [
-    { "path": "/api/cron/newsletter", "schedule": "0 0 * * *" },
-    { "path": "/api/cron/cleanup", "schedule": "0 3 * * *" },
+  "crons": [
+    {
+      "path": "/api/cron/newsletter",
+      "schedule": "0 0 * * *"
+    },
     {
       "path": "/api/cron/cleanup",
       "schedule": "0 3 * * *"

@@ -1,0 +1,15 @@
+name = "whatsapp-retry-trigger"
+main = "scripts/cloudflare/whatsapp-retry-worker.js"
+compatibility_date = "2026-05-30"
+account_id = "YOUR_CLOUDFLARE_ACCOUNT_ID"
+# workers_dev=false means you will deploy to your domain (recommended)
+workers_dev = false
+
+[env.production]
+# Do NOT store secrets here in VCS; set these in the Cloudflare dashboard or via Wrangler secrets
+vars = { RETRY_URL = "https://sherohq.com/api/cron/whatsapp-retry", CRON_SECRET = "set_in_dashboard" }
+
+# Cron triggers can be configured in the Cloudflare dashboard UI or with Wrangler depending on your setup.
+# Example (preferred to set via dashboard for production):
+# [[triggers.crons]]
+# schedule = "*/10 * * * *"

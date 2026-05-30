@@ -10,6 +10,14 @@ import { processPendingRetries } from "@/lib/whatsapp-retry";
  */
 export async function POST(request: NextRequest) {
   try {
+    // Log Cloudflare proxy headers for auditing
+    const cfConnectingIp =
+      request.headers.get("cf-connecting-ip") ||
+      request.headers.get("x-forwarded-for");
+    const cfRay = request.headers.get("cf-ray");
+    const cfCountry = request.headers.get("cf-ipcountry");
+    console.log("Cron POST invoked", { cfConnectingIp, cfRay, cfCountry });
+
     // Verify cron secret if provided
     const cronSecret = request.headers
       .get("authorization")
@@ -49,6 +57,14 @@ export async function POST(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   try {
+    // Log Cloudflare proxy headers for auditing
+    const cfConnectingIp =
+      request.headers.get("cf-connecting-ip") ||
+      request.headers.get("x-forwarded-for");
+    const cfRay = request.headers.get("cf-ray");
+    const cfCountry = request.headers.get("cf-ipcountry");
+    console.log("Cron GET invoked", { cfConnectingIp, cfRay, cfCountry });
+
     const result = await processPendingRetries();
 
     return NextResponse.json({
