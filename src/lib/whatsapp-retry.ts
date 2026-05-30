@@ -4,8 +4,6 @@
  */
 
 import { query } from "./db";
-import { getCampaignFailedMessages } from "./whatsapp-messages";
-import { notificationService } from "./notifications";
 
 export interface RetryConfig {
   maxRetries: number; // Maximum number of retry attempts
@@ -20,17 +18,6 @@ const DEFAULT_RETRY_CONFIG: RetryConfig = {
   backoffMultiplier: 2,
   maxDelayMs: 60 * 60 * 1000, // 1 hour
 };
-
-interface FailedMessageRecord {
-  id: string;
-  campaign_id?: string;
-  sender_wa_id: string;
-  content?: string;
-  error_code?: string;
-  error_message?: string;
-  retry_count?: number;
-  last_retry_at?: Date;
-}
 
 /**
  * Schedule a failed message for retry
