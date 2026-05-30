@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAdmin } from "@/context/AdminContext";
 import { Tag, Plus, Search, Loader2, Trash2, Edit2 } from "lucide-react";
 import { getErrorMessage } from "@/utils/error";
