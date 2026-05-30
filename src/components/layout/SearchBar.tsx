@@ -187,7 +187,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
  value={query}
  onChange={(e) => setQuery(e.target.value)}
  placeholder="Search our shop..."
- className="w-full h-14 bg-transparent border-none focus:ring-0 text-base outline-none text-slate-900 dark:text-white pl-3"
+ className="w-full h-10 bg-transparent border-none focus:ring-0 text-base outline-none text-slate-900 dark:text-white pl-3"
  autoComplete="off"
  />
  {searchLoading && (
