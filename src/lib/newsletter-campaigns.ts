@@ -961,3 +961,28 @@ export async function processDueNewsletterCampaign() {
     message: `Processed ${recipients.length} newsletter recipient(s)`,
   };
 }
+
+/**
+ * Update campaign delivery stats from WhatsApp message delivery status
+ * Called by webhook when message statuses are updated
+ */
+export async function updateCampaignDeliveryStats(
+  campaignId: string,
+  stats: {
+    sent: number;
+    delivered: number;
+    read: number;
+    failed: number;
+  }
+): Promise<void> {
+  const totalSuccessful = stats.sent + stats.delivered + stats.read;
+
+  await query(
+    `UPDATE newsletter_campaigns
+     SET "sentCount" = $1,
+         "failedCount" = $2,
+         "updatedAt" = NOW()
+     WHERE id = $3`,
+    [totalSuccessful, stats.failed, campaignId],
+  );
+}
