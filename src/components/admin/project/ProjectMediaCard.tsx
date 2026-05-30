@@ -115,7 +115,7 @@ export default function ProjectMediaCard({
           <div
             className={cn(
               "relative aspect-video w-full rounded bg-slate-800 border-2 overflow-hidden shadow transition-all duration-300",
-              isDeleting ? "opacity-90 grayscale-[30%] scale-95 border-rose-500/40" : "border-white/5"
+              isDeleting ? "opacity-90 grayscale-30 scale-95 border-rose-500/40" : "border-white/5"
             )}
           >
             <AppImage

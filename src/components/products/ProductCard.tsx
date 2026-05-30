@@ -99,7 +99,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
  dark:bg-white/5 bg-white
  border border-slate-200 dark:border-white/10
  hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30
- transition duration-500 cursor-pointer
+ transition-colors duration-300 cursor-pointer
  flex flex-col h-full"
     >
       {/* Immersive Hover Background */}

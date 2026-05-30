@@ -62,7 +62,7 @@ const formatDate = (date: string | Date) => {
 };
 
 const formatCurrency = (amount: number) => {
-  return `GHS ${amount.toLocaleString("en-GH", { minimumFractionDigits: 2 })}`;
+  return `GH₵${amount.toLocaleString("en-GH", { minimumFractionDigits: 2 })}`;
 };
 
 const getStatusColor = (status: string) => {

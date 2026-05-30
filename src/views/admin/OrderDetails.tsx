@@ -43,7 +43,6 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { div } from "motion/react-client";
 
 export default function OrderDetails() {
   const { id } = useParams<{ id: string }>();
@@ -387,6 +386,42 @@ export default function OrderDetails() {
       addNotification("Success", "Tracking link copied", "success");
     } catch {
       addNotification("Error", "Unable to copy tracking link", "error");
+    }
+  };
+
+  const getPaymentUrl = (orderId: string) => {
+    const fallbackPath = `/checkout/pay?id=${encodeURIComponent(orderId)}`;
+
+    const configuredPublicSiteUrl =
+      process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "");
+
+    if (configuredPublicSiteUrl) {
+      return `${configuredPublicSiteUrl}${fallbackPath}`;
+    }
+
+    if (typeof window === "undefined") {
+      return fallbackPath;
+    }
+
+    const currentUrl = new URL(window.location.origin);
+    if (currentUrl.hostname.startsWith("admin.")) {
+      const publicHostname = currentUrl.hostname.replace(/^admin\./, "");
+      return `${currentUrl.protocol}//${publicHostname}${fallbackPath}`;
+    }
+
+    return `${window.location.origin}${fallbackPath}`;
+  };
+
+  const handleCopyPaymentLink = async () => {
+    if (!order) return;
+
+    const paymentUrl = getPaymentUrl(order.id);
+
+    try {
+      await navigator.clipboard.writeText(paymentUrl);
+      addNotification("Success", "Payment link copied", "success");
+    } catch {
+      addNotification("Error", "Unable to copy payment link", "error");
     }
   };
 
@@ -817,6 +852,14 @@ export default function OrderDetails() {
                 {isStorePickupOrder
                   ? "Tracking not available"
                   : "Copy Tracking link"}
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={handleCopyPaymentLink}
+                className="w-full justify-start text-xs text-slate-400 hover:text-white hover:bg-white/5 h-9 rounded transition-all duration-200"
+              >
+                <CreditCard className="w-3.5 h-3.5 mr-2 text-slate-500" />
+                Copy Payment link
               </Button>
             </div>
           </div>

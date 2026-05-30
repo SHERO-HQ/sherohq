@@ -135,7 +135,7 @@ export default function ProductMediaCard({
                   primaryImage === url
                     ? "border-brand-secondary-500 shadow-brand-secondary-500/10"
                     : "border-white/5",
-                  isDeleting && "opacity-90 grayscale-[30%] scale-95 border-rose-500/40"
+                  isDeleting && "opacity-90 grayscale-30 scale-95 border-rose-500/40"
                 )}
               >
                 <AppImage
