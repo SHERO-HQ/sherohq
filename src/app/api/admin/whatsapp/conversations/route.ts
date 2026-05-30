@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getConversationHistory } from '@/lib/whatsapp-messages';
+import { NextRequest, NextResponse } from "next/server";
+import { getConversationHistory } from "@/lib/whatsapp-messages";
 
 /**
  * GET /api/admin/whatsapp/conversations?phone=PHONE_NUMBER_ID
@@ -8,13 +8,13 @@ import { getConversationHistory } from '@/lib/whatsapp-messages';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const phone = searchParams.get('phone');
-    const limit = parseInt(searchParams.get('limit') || '100', 10);
+    const phone = searchParams.get("phone");
+    const limit = parseInt(searchParams.get("limit") || "100", 10);
 
     if (!phone) {
       return NextResponse.json(
-        { error: 'Missing phone parameter' },
-        { status: 400 }
+        { error: "Missing phone parameter" },
+        { status: 400 },
       );
     }
 
@@ -27,10 +27,10 @@ export async function GET(request: NextRequest) {
       messages,
     });
   } catch (error) {
-    console.error('Error fetching conversation history:', error);
+    console.error("Error fetching conversation history:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch conversation history' },
-      { status: 500 }
+      { error: "Failed to fetch conversation history" },
+      { status: 500 },
     );
   }
 }

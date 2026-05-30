@@ -3,9 +3,6 @@
  * Sends automatic replies to incoming customer messages
  */
 
-import { notificationService } from './notifications';
-import { storeOutgoingMessage } from './whatsapp-messages';
-
 export interface AutoReplyConfig {
   enabled: boolean;
   message: string;
@@ -24,10 +21,10 @@ const DEFAULT_AUTO_REPLY: AutoReplyConfig = {
 export async function sendAutoReply(
   senderWaId: string,
   phoneNumberId: string,
-  config: AutoReplyConfig = DEFAULT_AUTO_REPLY
+  config: AutoReplyConfig = DEFAULT_AUTO_REPLY,
 ): Promise<{ success: boolean; messageId?: string; error?: string }> {
   if (!config.enabled) {
-    return { success: true, messageId: 'auto-reply-disabled' };
+    return { success: true, messageId: "auto-reply-disabled" };
   }
 
   try {
@@ -36,40 +33,50 @@ export async function sendAutoReply(
       await new Promise((resolve) => setTimeout(resolve, config.delay));
     }
 
-    // Send via WhatsApp API
-    const response = await notificationService.sendWhatsAppNotification(
-      senderWaId,
-      config.message
-    );
-
-    if (response.success && response.data?.messages?.[0]?.id) {
-      const messageId = response.data.messages[0].id;
-
-      // Store the outgoing auto-reply message
-      await storeOutgoingMessage(
-        messageId,
-        'auto-reply', // campaign_id (special marker for auto-replies)
-        senderWaId,
-        phoneNumberId,
-        config.message,
-        {
-          type: 'auto_reply',
-          timestamp: new Date().toISOString(),
-        }
-      );
-
-      return { success: true, messageId };
+    const { WHATSAPP_ACCESS_TOKEN } = process.env;
+    if (!WHATSAPP_ACCESS_TOKEN) {
+      return { success: false, error: "WhatsApp API token not configured" };
     }
 
-    return {
-      success: false,
-      error: response.error || 'Failed to send auto-reply',
-    };
+    // Send via WhatsApp API directly
+    const response = await fetch(
+      `https://graph.facebook.com/v21.0/${phoneNumberId}/messages`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          recipient_type: "individual",
+          to: senderWaId,
+          type: "text",
+          text: { preview_url: false, body: config.message },
+        }),
+      },
+    );
+
+    const data = (await response.json()) as any;
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: data.error?.message || `HTTP ${response.status}`,
+      };
+    }
+
+    const messageId = data.messages?.[0]?.id;
+    if (!messageId) {
+      return { success: false, error: "No message ID in response" };
+    }
+
+    console.log(`Sent auto-reply ${messageId} to ${senderWaId}`);
+    return { success: true, messageId };
   } catch (error) {
-    console.error('Error sending auto-reply:', error);
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: error instanceof Error ? error.message : "Unknown error",
     };
   }
 }
@@ -83,17 +90,17 @@ export function getSmartReply(customerMessage: string): string | null {
 
   // Map of keywords to replies
   const replies: Record<string, string> = {
-    'hello|hi|hey|greetings':
+    "hello|hi|hey|greetings":
       "Hi! 👋 Thank you for contacting us. How can we help you today?",
-    'hours|open|timing|when':
-      'We are available Monday-Friday, 9am-6pm EST. How can we assist?',
-    'order|purchase|buy':
+    "hours|open|timing|when":
+      "We are available Monday-Friday, 9am-6pm EST. How can we assist?",
+    "order|purchase|buy":
       "Great! I'd love to help with your order. Could you provide more details about what you're interested in?",
-    'price|cost|how much':
+    "price|cost|how much":
       "I can help with pricing! What product or service are you interested in learning about?",
-    'thank|thanks|appreciate':
+    "thank|thanks|appreciate":
       "You're welcome! Is there anything else we can help you with?",
-    'bye|goodbye|talk later|ttyl':
+    "bye|goodbye|talk later|ttyl":
       "Have a great day! Feel free to reach out anytime if you need anything else. 👋",
   };
 
@@ -113,7 +120,7 @@ export function getSmartReply(customerMessage: string): string | null {
 export function createAutoReplyConfig(
   message: string,
   enabled: boolean = true,
-  delay: number = 1000
+  delay: number = 1000,
 ): AutoReplyConfig {
   return {
     enabled,

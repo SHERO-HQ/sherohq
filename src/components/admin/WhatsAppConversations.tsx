@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { formatDistanceToNow } from 'date-fns';
+import React, { useState, useEffect } from "react";
+import { formatDistanceToNow } from "date-fns";
 
 interface ConversationMessage {
   id: string;
@@ -9,7 +9,7 @@ interface ConversationMessage {
   message_type: string;
   content: string | null;
   status: string;
-  direction: 'inbound' | 'outbound';
+  direction: "inbound" | "outbound";
   created_at: string;
 }
 
@@ -26,7 +26,7 @@ export default function WhatsAppConversations() {
   const [selectedPhone, setSelectedPhone] = useState<string | null>(null);
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
   const [loading, setLoading] = useState(false);
-  const [searchPhone, setSearchPhone] = useState('');
+  const [searchPhone, setSearchPhone] = useState("");
 
   // Fetch all conversations
   useEffect(() => {
@@ -36,14 +36,14 @@ export default function WhatsAppConversations() {
   const fetchConversations = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/admin/whatsapp/conversations-list');
+      const response = await fetch("/api/admin/whatsapp/conversations-list");
       const data = await response.json();
 
       if (data.success) {
         setConversations(data.conversations || []);
       }
     } catch (error) {
-      console.error('Failed to fetch conversations:', error);
+      console.error("Failed to fetch conversations:", error);
     } finally {
       setLoading(false);
     }
@@ -54,7 +54,7 @@ export default function WhatsAppConversations() {
     setLoading(true);
     try {
       const response = await fetch(
-        `/api/admin/whatsapp/conversations?phone=${encodeURIComponent(phone)}`
+        `/api/admin/whatsapp/conversations?phone=${encodeURIComponent(phone)}`,
       );
       const data = await response.json();
 
@@ -62,14 +62,14 @@ export default function WhatsAppConversations() {
         setMessages(data.messages || []);
       }
     } catch (error) {
-      console.error('Failed to fetch messages:', error);
+      console.error("Failed to fetch messages:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const filteredConversations = conversations.filter((conv) =>
-    conv.sender_wa_id.includes(searchPhone)
+    conv.sender_wa_id.includes(searchPhone),
   );
 
   return (
@@ -89,10 +89,10 @@ export default function WhatsAppConversations() {
           />
         </div>
 
-        <div className="overflow-y-auto" style={{ maxHeight: '600px' }}>
+        <div className="overflow-y-auto" style={{ maxHeight: "600px" }}>
           {filteredConversations.length === 0 ? (
             <div className="p-6 text-center text-gray-500 text-sm">
-              {loading ? 'Loading conversations...' : 'No conversations found'}
+              {loading ? "Loading conversations..." : "No conversations found"}
             </div>
           ) : (
             <ul className="divide-y divide-gray-200">
@@ -101,7 +101,7 @@ export default function WhatsAppConversations() {
                   <button
                     onClick={() => fetchMessages(conv.sender_wa_id)}
                     className={`w-full text-left px-6 py-4 hover:bg-gray-50 transition-colors ${
-                      selectedPhone === conv.sender_wa_id ? 'bg-blue-50' : ''
+                      selectedPhone === conv.sender_wa_id ? "bg-blue-50" : ""
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
@@ -110,19 +110,16 @@ export default function WhatsAppConversations() {
                           {conv.sender_wa_id}
                         </p>
                         <p className="text-xs text-gray-500 truncate mt-1">
-                          {conv.last_message || '(no text)'}
+                          {conv.last_message || "(no text)"}
                         </p>
                         <p className="text-xs text-gray-400 mt-2">
                           {conv.message_count} messages
                         </p>
                       </div>
                       <span className="text-xs text-gray-500 whitespace-nowrap">
-                        {formatDistanceToNow(
-                          new Date(conv.last_message_at),
-                          {
-                            addSuffix: true,
-                          }
-                        )}
+                        {formatDistanceToNow(new Date(conv.last_message_at), {
+                          addSuffix: true,
+                        })}
                       </span>
                     </div>
                   </button>
@@ -138,7 +135,7 @@ export default function WhatsAppConversations() {
             disabled={loading}
             className="w-full px-4 py-2 text-sm text-blue-600 hover:text-blue-700 font-medium disabled:opacity-50"
           >
-            {loading ? 'Refreshing...' : 'Refresh'}
+            {loading ? "Refreshing..." : "Refresh"}
           </button>
         </div>
       </div>
@@ -158,7 +155,7 @@ export default function WhatsAppConversations() {
 
             <div
               className="overflow-y-auto p-6 space-y-4 bg-gray-50"
-              style={{ maxHeight: '600px' }}
+              style={{ maxHeight: "600px" }}
             >
               {messages.length === 0 ? (
                 <div className="text-center text-gray-500 text-sm py-8">
@@ -169,16 +166,16 @@ export default function WhatsAppConversations() {
                   <div
                     key={msg.id}
                     className={`flex ${
-                      msg.direction === 'inbound'
-                        ? 'justify-start'
-                        : 'justify-end'
+                      msg.direction === "inbound"
+                        ? "justify-start"
+                        : "justify-end"
                     }`}
                   >
                     <div
                       className={`max-w-xs px-4 py-2 rounded-lg ${
-                        msg.direction === 'inbound'
-                          ? 'bg-white border border-gray-200 text-gray-900'
-                          : 'bg-blue-600 text-white'
+                        msg.direction === "inbound"
+                          ? "bg-white border border-gray-200 text-gray-900"
+                          : "bg-blue-600 text-white"
                       }`}
                     >
                       <p className="text-sm whitespace-pre-wrap">
@@ -186,15 +183,15 @@ export default function WhatsAppConversations() {
                       </p>
                       <p
                         className={`text-xs mt-1 ${
-                          msg.direction === 'inbound'
-                            ? 'text-gray-500'
-                            : 'text-blue-100'
+                          msg.direction === "inbound"
+                            ? "text-gray-500"
+                            : "text-blue-100"
                         }`}
                       >
                         {formatDistanceToNow(new Date(msg.created_at), {
                           addSuffix: true,
                         })}
-                        {msg.direction === 'outbound' && msg.status && (
+                        {msg.direction === "outbound" && msg.status && (
                           <> • {msg.status}</>
                         )}
                       </p>

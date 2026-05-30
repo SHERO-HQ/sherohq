@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import WhatsAppConversations from '@/components/admin/WhatsAppConversations';
+import React, { useState, useEffect } from "react";
+import WhatsAppConversations from "@/components/admin/WhatsAppConversations";
 
 interface DashboardTab {
   id: string;
@@ -10,13 +10,13 @@ interface DashboardTab {
 }
 
 export default function WhatsAppDashboard() {
-  const [activeTab, setActiveTab] = useState('conversations');
+  const [activeTab, setActiveTab] = useState("conversations");
 
   const tabs: DashboardTab[] = [
-    { id: 'conversations', label: 'Conversations', icon: '💬' },
-    { id: 'support', label: 'Support Tickets', icon: '🎫' },
-    { id: 'analytics', label: 'Analytics', icon: '📊' },
-    { id: 'settings', label: 'Settings', icon: '⚙️' },
+    { id: "conversations", label: "Conversations", icon: "💬" },
+    { id: "support", label: "Support Tickets", icon: "🎫" },
+    { id: "analytics", label: "Analytics", icon: "📊" },
+    { id: "settings", label: "Settings", icon: "⚙️" },
   ];
 
   return (
@@ -46,8 +46,8 @@ export default function WhatsAppDashboard() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
                   activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                    ? "border-blue-500 text-blue-600"
+                    : "border-transparent text-gray-600 hover:text-gray-900"
                 }`}
               >
                 {tab.icon && <span className="mr-2">{tab.icon}</span>}
@@ -60,25 +60,29 @@ export default function WhatsAppDashboard() {
 
       {/* Content */}
       <main className="max-w-7xl mx-auto">
-        {activeTab === 'conversations' && <WhatsAppConversations />}
+        {activeTab === "conversations" && <WhatsAppConversations />}
 
-        {activeTab === 'support' && (
+        {activeTab === "support" && (
           <div className="p-6">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-              <p className="text-gray-500">Support tickets feature coming soon...</p>
+              <p className="text-gray-500">
+                Support tickets feature coming soon...
+              </p>
             </div>
           </div>
         )}
 
-        {activeTab === 'analytics' && (
+        {activeTab === "analytics" && (
           <div className="p-6">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
-              <p className="text-gray-500">Analytics dashboard coming soon...</p>
+              <p className="text-gray-500">
+                Analytics dashboard coming soon...
+              </p>
             </div>
           </div>
         )}
 
-        {activeTab === 'settings' && (
+        {activeTab === "settings" && (
           <div className="p-6">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
@@ -87,17 +91,17 @@ export default function WhatsAppDashboard() {
               <div className="space-y-4">
                 <div className="border-b border-gray-200 pb-4">
                   <p className="text-sm text-gray-600">
-                    <strong>Webhook URL:</strong>{' '}
+                    <strong>Webhook URL:</strong>{" "}
                     <code className="bg-gray-100 px-2 py-1 rounded text-xs">
-                      {typeof window !== 'undefined'
+                      {typeof window !== "undefined"
                         ? `${window.location.origin}/api/webhooks/whatsapp`
-                        : '/api/webhooks/whatsapp'}
+                        : "/api/webhooks/whatsapp"}
                     </code>
                   </p>
                 </div>
                 <div className="border-b border-gray-200 pb-4">
                   <p className="text-sm text-gray-600">
-                    <strong>Webhook Status:</strong>{' '}
+                    <strong>Webhook Status:</strong>{" "}
                     <span className="text-green-600 font-medium">
                       ✓ Configured
                     </span>

@@ -1,37 +1,28 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { processPendingRetries } from '@/lib/whatsapp-retry';
+import { NextRequest, NextResponse } from "next/server";
+import { processPendingRetries } from "@/lib/whatsapp-retry";
 
 /**
  * POST /api/cron/whatsapp-retry
  * Process pending message retries for failed WhatsApp deliveries
- * 
- * This endpoint should be called periodically (e.g., every 5-10 minutes)
- * via a cron service like Vercel Crons, AWS EventBridge, or a separate cron service.
- * 
- * Example Vercel cron config in vercel.json:
- * {
- *   "crons": [{
- *     "path": "/api/cron/whatsapp-retry",
- *     "schedule": "*/10 * * * *"  // Every 10 minutes
- *   }]
- * }
+ *
+ * Call this endpoint periodically via cron service (recommended: every 10 minutes).
+ * Configure in vercel.json crons array.
  */
 export async function POST(request: NextRequest) {
   try {
     // Verify cron secret if provided
-    const cronSecret = request.headers.get('authorization')?.replace('Bearer ', '');
+    const cronSecret = request.headers
+      .get("authorization")
+      ?.replace("Bearer ", "");
     if (cronSecret && cronSecret !== process.env.CRON_SECRET) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    console.log('Processing WhatsApp message retries...');
+    console.log("Processing WhatsApp message retries...");
 
     const result = await processPendingRetries();
 
-    console.log('WhatsApp retry processing complete:', result);
+    console.log("WhatsApp retry processing complete:", result);
 
     return NextResponse.json({
       success: true,
@@ -41,13 +32,13 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('Error processing retries:', error);
+    console.error("Error processing retries:", error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -62,20 +53,20 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Manual retry trigger executed',
+      message: "Manual retry trigger executed",
       processed: result.processed,
       successful: result.successful,
       failed: result.failed,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('Error in retry health check:', error);
+    console.error("Error in retry health check:", error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

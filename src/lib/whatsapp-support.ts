@@ -3,18 +3,18 @@
  * Routes WhatsApp messages to the support system
  */
 
-import { query } from './db';
-import { v4 as uuidv4 } from 'uuid';
+import { query } from "./db";
+import { v4 as uuidv4 } from "uuid";
 
 export interface SupportTicket {
   id: string;
-  source: 'whatsapp' | 'email' | 'form';
+  source: "whatsapp" | "email" | "form";
   whatsapp_id?: string; // WhatsApp message ID for tracking
   customer_phone?: string; // WhatsApp phone number
   customer_name?: string;
   message: string;
-  status: 'open' | 'in_progress' | 'closed';
-  priority: 'low' | 'medium' | 'high' | 'urgent';
+  status: "open" | "in_progress" | "closed";
+  priority: "low" | "medium" | "high" | "urgent";
   category?: string;
   created_at: Date;
   updated_at: Date;
@@ -29,7 +29,7 @@ export async function createSupportTicketFromWhatsApp(
   senderWaId: string,
   customerName: string | null,
   messageContent: string,
-  priority: 'low' | 'medium' | 'high' | 'urgent' = 'medium'
+  priority: "low" | "medium" | "high" | "urgent" = "medium",
 ): Promise<SupportTicket> {
   const ticketId = uuidv4();
 
@@ -52,30 +52,32 @@ export async function createSupportTicketFromWhatsApp(
     `,
     [
       ticketId,
-      customerName || 'WhatsApp Customer',
+      customerName || "WhatsApp Customer",
       `whatsapp_${senderWaId}@sherotech.local`, // Virtual email from WhatsApp ID
       senderWaId,
-      'whatsapp_support',
+      "whatsapp_support",
       messageContent,
       priority,
       whatsappMessageId,
-    ]
+    ],
   );
 
   const ticket = result.rows[0];
 
-  console.log(`Created support ticket ${ticketId} from WhatsApp message ${whatsappMessageId}`);
+  console.log(
+    `Created support ticket ${ticketId} from WhatsApp message ${whatsappMessageId}`,
+  );
 
   return {
     id: ticket.id,
-    source: 'whatsapp',
+    source: "whatsapp",
     whatsapp_id: whatsappMessageId,
     customer_phone: senderWaId,
     customer_name: customerName || undefined,
     message: messageContent,
     status: ticket.status,
     priority: ticket.priority,
-    category: 'whatsapp_support',
+    category: "whatsapp_support",
     created_at: new Date(ticket.created_at),
     updated_at: new Date(ticket.updated_at),
   };
@@ -85,7 +87,7 @@ export async function createSupportTicketFromWhatsApp(
  * Get support tickets from WhatsApp
  */
 export async function getWhatsAppSupportTickets(
-  status?: 'open' | 'in_progress' | 'closed'
+  status?: "open" | "in_progress" | "closed",
 ): Promise<SupportTicket[]> {
   let sql = `
     SELECT *
@@ -104,14 +106,14 @@ export async function getWhatsAppSupportTickets(
 
   return result.rows.map((row) => ({
     id: row.id,
-    source: 'whatsapp',
+    source: "whatsapp",
     whatsapp_id: row.whatsapp_message_id,
     customer_phone: row.phone,
     customer_name: row.name,
     message: row.message,
     status: row.status,
     priority: row.priority,
-    category: 'whatsapp_support',
+    category: "whatsapp_support",
     created_at: new Date(row.created_at),
     updated_at: new Date(row.updated_at),
   }));
@@ -122,7 +124,7 @@ export async function getWhatsAppSupportTickets(
  */
 export async function updateSupportTicketStatus(
   ticketId: string,
-  status: 'open' | 'in_progress' | 'closed'
+  status: "open" | "in_progress" | "closed",
 ): Promise<void> {
   await query(
     `
@@ -130,7 +132,7 @@ export async function updateSupportTicketStatus(
     SET status = $1, updated_at = NOW()
     WHERE id = $2;
     `,
-    [status, ticketId]
+    [status, ticketId],
   );
 
   console.log(`Updated support ticket ${ticketId} status to ${status}`);
@@ -139,7 +141,9 @@ export async function updateSupportTicketStatus(
 /**
  * Get customer's support history
  */
-export async function getCustomerSupportHistory(senderWaId: string): Promise<SupportTicket[]> {
+export async function getCustomerSupportHistory(
+  senderWaId: string,
+): Promise<SupportTicket[]> {
   const result = await query(
     `
     SELECT *
@@ -147,19 +151,19 @@ export async function getCustomerSupportHistory(senderWaId: string): Promise<Sup
     WHERE phone = $1 OR email LIKE $2
     ORDER BY created_at DESC;
     `,
-    [senderWaId, `whatsapp_${senderWaId}%`]
+    [senderWaId, `whatsapp_${senderWaId}%`],
   );
 
   return result.rows.map((row) => ({
     id: row.id,
-    source: 'whatsapp',
+    source: "whatsapp",
     whatsapp_id: row.whatsapp_message_id,
     customer_phone: row.phone,
     customer_name: row.name,
     message: row.message,
     status: row.status,
     priority: row.priority,
-    category: 'whatsapp_support',
+    category: "whatsapp_support",
     created_at: new Date(row.created_at),
     updated_at: new Date(row.updated_at),
   }));

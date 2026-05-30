@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { query } from '@/lib/db';
+import { NextRequest, NextResponse } from "next/server";
+import { query } from "@/lib/db";
 
 interface ConversationSummary {
   sender_wa_id: string;
@@ -35,10 +35,10 @@ export async function GET(request: NextRequest) {
       conversations,
     });
   } catch (error) {
-    console.error('Error fetching conversations list:', error);
+    console.error("Error fetching conversations list:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch conversations' },
-      { status: 500 }
+      { error: "Failed to fetch conversations" },
+      { status: 500 },
     );
   }
 }

@@ -4,9 +4,10 @@ import {
   updateMessageStatus,
   getCampaignDeliveryStatus,
 } from "@/lib/whatsapp-messages";
-import { updateCampaignDeliveryStats } from "@/lib/newsletter-campaigns";import { sendAutoReply, getSmartReply } from '@/lib/whatsapp-auto-reply';
-import { createSupportTicketFromWhatsApp } from '@/lib/whatsapp-support';
-import { scheduleMessageForRetry } from '@/lib/whatsapp-retry';
+import { updateCampaignDeliveryStats } from "@/lib/newsletter-campaigns";
+import { sendAutoReply, getSmartReply } from "@/lib/whatsapp-auto-reply";
+import { createSupportTicketFromWhatsApp } from "@/lib/whatsapp-support";
+import { scheduleMessageForRetry } from "@/lib/whatsapp-retry";
 const WEBHOOK_VERIFY_TOKEN = process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN!;
 const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID!;
 
@@ -97,7 +98,7 @@ async function handleIncomingMessage(msg: any, contact: any) {
     console.log(`Stored incoming message: ${storedMsg.id}`);
 
     // Send auto-reply if text message
-    if (messageType === 'text' && content) {
+    if (messageType === "text" && content) {
       // Try smart reply first
       const smartReplyText = getSmartReply(content);
       const autoReplyText = smartReplyText || undefined;
@@ -124,15 +125,11 @@ async function handleIncomingMessage(msg: any, contact: any) {
         senderWaId,
         contactName,
         content,
-        'medium'
+        "medium",
       );
 
       console.log(`Created support ticket: ${ticketResult.id}`);
     }
-
-    // TODO: Send notification to admin dashboard
-    // TODO: Implement auto-reply logic based on message content
-    // TODO: Route to customer support system
   } catch (error) {
     console.error("Error handling incoming message:", error);
   }
@@ -182,13 +179,13 @@ async function handleStatusUpdate(status: any) {
       );
 
       // If message failed, schedule for retry
-      if (statusValue === 'failed') {
+      if (statusValue === "failed") {
         console.log(`Scheduling message ${messageId} for retry`);
         await scheduleMessageForRetry(
           messageId,
           updatedMsg.campaign_id,
           updatedMsg.sender_wa_id,
-          updatedMsg.content || 'Message retry',
+          updatedMsg.content || "Message retry",
         );
       }
     }
