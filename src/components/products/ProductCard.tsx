@@ -1,5 +1,4 @@
 "use client";
-import { motion } from "motion/react";
 import { ShoppingCart, Heart, Eye, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
@@ -88,19 +87,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
   const whatsappUrl = `https://wa.me/${COMPANY_CONTACTS.WHATSAPP}?text=${whatsappMessage}`;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "100px" }}
-      whileHover={{ y: -3 }}
-      transition={{ type: "tween", duration: 0.2 }}
+    <div
       onClick={handleCardClick}
       className="group relative rounded overflow-hidden
  dark:bg-white/5 bg-white
  border border-slate-200 dark:border-white/10
  hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30
- transition-colors duration-300 cursor-pointer
- flex flex-col h-full"
+ hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-black/30
+ transition-all duration-300 ease-out cursor-pointer
+ flex flex-col h-full will-change-transform"
+      style={{
+        isolation: "isolate",
+        contain: "layout style paint",
+      }}
     >
       {/* Immersive Hover Background */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-linear-to-b from-brand-secondary-500/5 via-transparent to-transparent transition-opacity duration-500 pointer-events-none" />
@@ -253,7 +252,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

@@ -1,8 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
-import type { Variants } from "motion/react";
-import type { ReactNode } from "react";
+import { useState, useEffect, useRef, createContext, useContext, type ReactNode } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface Props {
@@ -34,8 +32,10 @@ interface ItemProps {
   duration?: number;
 }
 
+const StaggerContext = createContext({ isInView: false, staggerDelay: 0.12, delayChildren: 0.05 });
+
 /**
- * FadeInView: Standard "Scroll into View" for single blocks
+ * FadeInView: Standard "Scroll into View" for single blocks powered by native CSS transitions.
  */
 export const FadeInView = ({
   children,
@@ -46,36 +46,70 @@ export const FadeInView = ({
   once = true,
 }: Props) => {
   const prefersReducedMotion = useReducedMotion();
-  const motionEnabled = !prefersReducedMotion;
+  const [isInView, setIsInView] = useState(false);
+  const elementRef = useRef<HTMLDivElement>(null);
 
-  const directions = {
-    up: { y: 40, x: 0 },
-    down: { y: -40, x: 0 },
-    left: { x: 40, y: 0 },
-    right: { x: -40, y: 0 },
-    none: { x: 0, y: 0 },
-  };
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      setIsInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          if (once && elementRef.current) {
+            observer.unobserve(elementRef.current);
+          }
+        } else if (!once) {
+          setIsInView(false);
+        }
+      },
+      {
+        threshold,
+        rootMargin: "0px 0px -50px 0px",
+      }
+    );
+
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [threshold, once, prefersReducedMotion]);
+
+  const xOffset = direction === "left" ? 40 : direction === "right" ? -40 : 0;
+  const yOffset = direction === "up" ? 40 : direction === "down" ? -40 : 0;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, ...directions[direction] }}
-      whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={{ once, amount: threshold, margin: "0px 0px -50px 0px" }}
-      transition={{
-        duration: motionEnabled ? 0.75 : 0.01,
-        delay: motionEnabled ? delay : 0,
-        ease: [0.16, 1, 0.3, 1] as const,
-      }}
+    <div
+      ref={elementRef}
       className={fullWidth ? "w-full" : ""}
     >
-      {children}
-    </motion.div>
+      <div
+        className="transition-all ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,opacity]"
+        style={{
+          transitionDuration: prefersReducedMotion ? "10ms" : "0.75s",
+          transitionDelay: prefersReducedMotion ? "0s" : `${delay}s`,
+          opacity: prefersReducedMotion ? 1 : isInView ? 1 : 0,
+          transform: prefersReducedMotion
+            ? "none"
+            : isInView
+              ? "translate3d(0,0,0)"
+              : `translate3d(${xOffset}px, ${yOffset}px, 0)`,
+        }}
+      >
+        {children}
+      </div>
+    </div>
   );
 };
 
 /**
- * StaggerContainer: Orchestrates child transitions sequentially as this parent scrolls into view.
- * Polymorphic element supporting customizable layout tags and custom CSS classes.
+ * StaggerContainer: Orchestrates child transitions sequentially driven by a single native Intersection Observer.
  */
 export const StaggerContainer = ({
   children,
@@ -88,41 +122,65 @@ export const StaggerContainer = ({
   threshold = 0.08,
 }: ContainerProps) => {
   const prefersReducedMotion = useReducedMotion();
-  const motionEnabled = !prefersReducedMotion;
+  const [isInView, setIsInView] = useState(false);
+  const elementRef = useRef<HTMLElement>(null);
 
-  // GPU compositing and sequence variants
-  const containerVariants: Variants = {
-    hidden: {}, // Purely orchestrational variant
-    show: {
-      transition: {
-        staggerChildren: motionEnabled ? staggerDelay : 0,
-        delayChildren: motionEnabled ? delayChildren : 0,
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      setIsInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          if (once && elementRef.current) {
+            observer.unobserve(elementRef.current);
+          }
+        } else if (!once) {
+          setIsInView(false);
+        }
       },
-    },
-  };
+      {
+        threshold,
+        rootMargin: "0px 0px -60px 0px",
+      }
+    );
 
-  // Polymorphic element dynamic assignment
-  const MotionComponent = motion.create(as);
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
 
-  // Maintain backward compatibility for existing grid declarations if no custom className is specified
+    return () => {
+      observer.disconnect();
+    };
+  }, [threshold, once, prefersReducedMotion]);
+
+  const Tag = as as any;
   const finalClassNames = className || `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${gap}`;
 
+  // Automatically inject child indices so markup remains perfectly clean
+  const childrenWithIndex = typeof children === "object" 
+    ? (Array.isArray(children) ? children : [children]).map((child, index) => {
+        if (child && typeof child === "object" && "type" in child) {
+          return {...child, props: { ...child.props, index }};
+        }
+        return child;
+      })
+    : children;
+
   return (
-    <MotionComponent
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once, amount: threshold, margin: "0px 0px -60px 0px" }}
-      className={finalClassNames}
-    >
-      {children}
-    </MotionComponent>
+    <StaggerContext.Provider value={{ isInView, staggerDelay, delayChildren }}>
+      <Tag ref={elementRef} className={finalClassNames}>
+        {childrenWithIndex}
+      </Tag>
+    </StaggerContext.Provider>
   );
 };
 
 /**
- * StaggerItem: Nested inside StaggerContainer. Inherits initial and whileInView state triggers
- * organically from the parent. Spawns ZERO redundant scroll viewport observers!
+ * StaggerItem: Decoupled nested item that animates sequentially using CSS transform matrices.
  */
 export const StaggerItem = ({
   children,
@@ -131,37 +189,30 @@ export const StaggerItem = ({
   xOffset = 0,
   scale = 0.97,
   duration = 0.65,
-}: ItemProps) => {
+  ...props
+}: ItemProps & { index?: number }) => {
   const prefersReducedMotion = useReducedMotion();
-  const motionEnabled = !prefersReducedMotion;
-
-  const itemVariants: Variants = {
-    hidden: { 
-      opacity: 0, 
-      y: motionEnabled ? yOffset : 0, 
-      x: motionEnabled ? xOffset : 0, 
-      scale: motionEnabled ? scale : 1,
-    },
-    show: {
-      opacity: 1,
-      y: 0,
-      x: 0,
-      scale: 1,
-      transition: {
-        duration: motionEnabled ? duration : 0.01,
-        ease: [0.16, 1, 0.3, 1] as const, // Highly premium deceleration ease
-      },
-    },
-  };
+  const { isInView, staggerDelay, delayChildren } = useContext(StaggerContext);
+  
+  const index = (props as any).index || 0;
+  const delay = delayChildren + (index * staggerDelay);
 
   return (
-    <motion.div
-      variants={itemVariants}
-      className={`${className} will-change-transform backface-hidden`}
-      style={{ transform: "translateZ(0)" }}
+    <div
+      className={`${className} transition-all ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,opacity]`}
+      style={{
+        transitionDuration: prefersReducedMotion ? "10ms" : `${duration}s`,
+        transitionDelay: prefersReducedMotion ? "0s" : `${delay}s`,
+        opacity: prefersReducedMotion ? 1 : isInView ? 1 : 0,
+        transform: prefersReducedMotion
+          ? "none"
+          : isInView
+            ? "translate3d(0,0,0) scale(1)"
+            : `translate3d(${xOffset}px, ${yOffset}px, 0) scale(${scale})`,
+      }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 };
 
