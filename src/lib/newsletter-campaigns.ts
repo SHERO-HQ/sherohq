@@ -62,7 +62,7 @@ export class NewsletterCampaignValidationError extends Error {
 }
 
 export class NewsletterCampaignDeliveryError extends Error {
-  status = 502;
+  status = 400;
 }
 
 const VALID_CHANNELS = new Set<CampaignChannel>(["email", "sms", "whatsapp"]);
