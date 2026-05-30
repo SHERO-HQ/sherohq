@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
@@ -10,22 +9,28 @@ export async function GET() {
       return apiResponse.unauthorized();
     }
 
-    const productCountRes = await query("SELECT COUNT(*) as count FROM products");
+    const productCountRes = await query(
+      "SELECT COUNT(*) as count FROM products",
+    );
     const orderCountRes = await query("SELECT COUNT(*) as count FROM orders");
-    const totalRevenueRes = await query("SELECT COALESCE(SUM(total), 0) as total FROM orders WHERE status != 'cancelled'");
+    const totalRevenueRes = await query(
+      "SELECT COALESCE(SUM(total), 0) as total FROM orders WHERE status != 'cancelled'",
+    );
 
     // Low stock: <= 10 and in stock
     const lowStockCountRes = await query(
-      'SELECT COUNT(*) as count FROM products WHERE "stockQuantity" <= 10 AND "stockQuantity" > 0'
+      'SELECT COUNT(*) as count FROM products WHERE "stockQuantity" <= 10 AND "stockQuantity" > 0',
     );
 
     // Out of stock: 0 stock or explicitly out of stock
     const outOfStockCountRes = await query(
       'SELECT COUNT(*) as count FROM products WHERE "inStock" = $1 OR "stockQuantity" = 0',
-      [false]
+      [false],
     );
 
-    const pendingOrdersRes = await query("SELECT COUNT(*) as count FROM orders WHERE status = 'pending'");
+    const pendingOrdersRes = await query(
+      "SELECT COUNT(*) as count FROM orders WHERE status = 'pending'",
+    );
 
     return apiResponse.success({
       products: Number(productCountRes.rows[0].count),

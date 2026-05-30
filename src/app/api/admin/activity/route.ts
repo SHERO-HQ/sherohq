@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";

@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { cookies } from "next/headers";
 import { getAdminFromSession, ADMIN_SESSION_COOKIE } from "@/lib/auth";
@@ -18,7 +17,12 @@ export async function POST() {
     cookieStore.set(ADMIN_SESSION_COOKIE, "", { maxAge: 0, path: "/" });
 
     if (admin) {
-      await logActivity(admin.id, "admin_logout", "info", `Admin logged out: ${admin.username}`);
+      await logActivity(
+        admin.id,
+        "admin_logout",
+        "info",
+        `Admin logged out: ${admin.username}`,
+      );
     }
 
     return apiResponse.success({ message: "Logged out successfully" });

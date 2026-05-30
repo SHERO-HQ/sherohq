@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { query } from "@/lib/db";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const admin = await getAdminFromSession();
@@ -16,7 +16,7 @@ export async function GET(
     // Fetch user details
     const userRes = await query(
       'SELECT id, name, email, phone, avatar, "emailVerified", "isActive", "createdAt", "shippingAddress" FROM users WHERE id = $1',
-      [id]
+      [id],
     );
 
     if (userRes.rows.length === 0) {
@@ -33,14 +33,14 @@ export async function GET(
         MAX("createdAt") as "lastOrderDate"
        FROM orders 
        WHERE "userId" = $1 AND status != 'cancelled'`,
-      [id]
+      [id],
     );
     const stats = statsRes.rows[0];
 
     // Fetch recent orders
     const ordersRes = await query(
       'SELECT id, total, status, "createdAt" FROM orders WHERE "userId" = $1 ORDER BY "createdAt" DESC LIMIT 10',
-      [id]
+      [id],
     );
 
     return apiResponse.success({
@@ -56,7 +56,7 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const admin = await getAdminFromSession();
@@ -65,10 +65,10 @@ export async function PATCH(
     const { id } = await params;
     const { isActive } = await request.json();
 
-    await query(
-      'UPDATE users SET "isActive" = $1 WHERE id = $2',
-      [isActive, id]
-    );
+    await query('UPDATE users SET "isActive" = $1 WHERE id = $2', [
+      isActive,
+      id,
+    ]);
 
     return apiResponse.success({ message: "Customer updated successfully" });
   } catch (error) {
@@ -79,7 +79,7 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const admin = await getAdminFromSession();

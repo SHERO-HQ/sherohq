@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { query } from "@/lib/db";
 import { getAdminFromSession } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
-import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
+import { logActivity } from "@/lib/activity";
 
 export async function GET(request: NextRequest) {
   try {
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       LEFT JOIN admin_users au ON e."adminId" = au.id
       ORDER BY e.date DESC
     `);
-    
+
     return apiResponse.success(result.rows);
   } catch (error) {
     console.error("Fetch expenses error:", error);
@@ -38,10 +38,15 @@ export async function POST(request: NextRequest) {
     await query(
       `INSERT INTO expenses (id, title, amount, category, date, description, "adminId")
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [id, title, amount, category, date, description || null, admin.id]
+      [id, title, amount, category, date, description || null, admin.id],
     );
 
-    await logActivity(admin.id, "expense_create", "warning", `Added expense: ${title} (${amount})`);
+    await logActivity(
+      admin.id,
+      "expense_create",
+      "warning",
+      `Added expense: ${title} (${amount})`,
+    );
 
     return apiResponse.success({ id, title, amount }, 201);
   } catch (error) {

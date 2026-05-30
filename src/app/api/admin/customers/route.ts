@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { query } from "@/lib/db";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
@@ -11,7 +11,9 @@ export async function GET(request: NextRequest) {
     // Only allow admin, superadmin, or manager roles
     const allowedRoles = ["admin", "superadmin", "manager"];
     if (!allowedRoles.includes(admin.role)) {
-      return apiResponse.forbidden("You do not have permission to view customers");
+      return apiResponse.forbidden(
+        "You do not have permission to view customers",
+      );
     }
 
     const searchParams = request.nextUrl.searchParams;
@@ -30,7 +32,7 @@ export async function GET(request: NextRequest) {
 
     const countRes = await query(
       `SELECT COUNT(*) FROM users ${whereClause}`,
-      params
+      params,
     );
     const total = parseInt(countRes.rows[0].count, 10);
 
@@ -40,7 +42,7 @@ export async function GET(request: NextRequest) {
        ${whereClause} 
        ORDER BY "createdAt" DESC 
        LIMIT $${params.length + 1} OFFSET $${params.length + 2}`,
-      [...params, limit, offset]
+      [...params, limit, offset],
     );
 
     return apiResponse.success({

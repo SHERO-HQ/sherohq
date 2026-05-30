@@ -1,5 +1,4 @@
-import { NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { NextRequest } from "next/server";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 
@@ -25,8 +24,16 @@ export async function GET() {
     ];
 
     const topGaps = [
-      { keyword: "RTX 5090", queryCount: 45, lastRequested: new Date().toISOString() },
-      { keyword: "DDR6 RAM", queryCount: 32, lastRequested: new Date().toISOString() },
+      {
+        keyword: "RTX 5090",
+        queryCount: 45,
+        lastRequested: new Date().toISOString(),
+      },
+      {
+        keyword: "DDR6 RAM",
+        queryCount: 32,
+        lastRequested: new Date().toISOString(),
+      },
     ];
 
     const dailyVolume = Array.from({ length: 7 }).map((_, i) => {

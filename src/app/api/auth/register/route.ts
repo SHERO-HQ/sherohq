@@ -5,7 +5,6 @@ import { v4 as uuidv4 } from "uuid";
 import { randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import { z } from "zod";
-import { notificationService } from "@/lib/notifications";
 
 const RegisterSchema = z.object({
   email: z.string().email(),
@@ -24,7 +23,10 @@ export async function POST(request: NextRequest) {
 
     const check = await query("SELECT id FROM users WHERE email = $1", [email]);
     if (check.rowCount && check.rowCount > 0) {
-      return NextResponse.json({ error: "Email already registered" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Email already registered" },
+        { status: 400 },
+      );
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -36,7 +38,16 @@ export async function POST(request: NextRequest) {
     await query(
       `INSERT INTO users (id, email, "passwordHash", name, phone, "emailVerified", "verificationToken", "verificationExpiry")
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-      [userId, email, hashedPassword, name, phone || null, false, verificationToken, verificationExpiry.toISOString()]
+      [
+        userId,
+        email,
+        hashedPassword,
+        name,
+        phone || null,
+        false,
+        verificationToken,
+        verificationExpiry.toISOString(),
+      ],
     );
 
     // Auto login
@@ -46,7 +57,7 @@ export async function POST(request: NextRequest) {
 
     await query(
       'INSERT INTO user_sessions (id, "userId", token, "expiresAt") VALUES ($1, $2, $3, $4)',
-      [sessionId, userId, token, expiresAt.toISOString()]
+      [sessionId, userId, token, expiresAt.toISOString()],
     );
 
     const cookieStore = await cookies();
@@ -61,13 +72,18 @@ export async function POST(request: NextRequest) {
     // Send verification email (async)
     // notificationService.sendVerificationEmail(...) - logic needed in notifications.ts
 
-    return NextResponse.json({
-      success: true,
-      user: { id: userId, email, name, phone, emailVerified: false },
-    }, { status: 201 });
-
+    return NextResponse.json(
+      {
+        success: true,
+        user: { id: userId, email, name, phone, emailVerified: false },
+      },
+      { status: 201 },
+    );
   } catch (error) {
     console.error("Register error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }

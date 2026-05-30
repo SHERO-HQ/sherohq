@@ -20,7 +20,9 @@ test.describe("Authentication", () => {
     await page.getByRole("button", { name: /Sign In/i }).click();
 
     // Verify form is still present after failed login
-    await expect(page.getByLabel(/Email Address/i)).toBeVisible({ timeout: 10000 });
+    await expect(page.getByLabel(/Email Address/i)).toBeVisible({
+      timeout: 10000,
+    });
   });
 
   test("should navigate to signup from login", async ({ page }) => {
@@ -30,7 +32,10 @@ test.describe("Authentication", () => {
     await expect(page.getByLabel(/Email Address/i)).toBeVisible();
     await expect(page.getByLabel(/Password/i)).toBeVisible();
     // Verify sign up link exists
-    const signupLink = page.getByRole("link").filter({ hasText: /Sign up|Create Account/i }).first();
+    const signupLink = page
+      .getByRole("link")
+      .filter({ hasText: /Sign up|Create Account/i })
+      .first();
     await expect(signupLink).toBeVisible();
   });
 });

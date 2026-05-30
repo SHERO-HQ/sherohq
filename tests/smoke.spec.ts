@@ -10,7 +10,9 @@ test.describe("Smoke Tests", () => {
   test("shop page loads correctly", async ({ page }) => {
     await page.goto("/products");
     // Wait for products to load - use first() to avoid strict mode violation
-    await expect(page.getByText(/All Products|Laptops|Accessories/i).first()).toBeVisible({ timeout: 10000 });
+    await expect(
+      page.getByText(/All Products|Laptops|Accessories/i).first(),
+    ).toBeVisible({ timeout: 10000 });
   });
 
   test("support page loads correctly", async ({ page }) => {

@@ -9,7 +9,7 @@ test.describe("Admin UX Flow", () => {
     // 2. Verify login form is visible
     await expect(page.getByLabel(/Email|Username/i)).toBeVisible();
     await expect(page.getByLabel(/Password/i)).toBeVisible();
-    
+
     // 3. Verify login page structure
     const loginButton = page.getByRole("button", { name: /Sign In/i });
     await expect(loginButton).toBeVisible();

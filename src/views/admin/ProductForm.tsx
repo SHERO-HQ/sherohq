@@ -162,7 +162,7 @@ export default function ProductForm() {
     deserialize: (text) => JSON.parse(text),
     isLoading,
     onRestore: (parsed) => {
-      let restoredProductData = {
+      const restoredProductData = {
         ...defaultProductData(),
         ...parsed.productData,
       };

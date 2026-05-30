@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { getErrorMessage } from "@/utils/error";
 import {
   MessageSquare,
@@ -55,12 +55,14 @@ import { useAdmin } from "@/context/AdminContext";
 import Link from "next/link";
 
 const AdminSupport = () => {
-  const { data: tickets = [], isLoading: ticketsLoading } =
-    useSupportTickets(ADMIN_POLLING_INTERVAL);
+  const { data: tickets = [], isLoading: ticketsLoading } = useSupportTickets(
+    ADMIN_POLLING_INTERVAL,
+  );
   const { data: consultations = [], isLoading: consultationsLoading } =
     useConsultations(ADMIN_POLLING_INTERVAL);
-  const { data: inquiries = [], isLoading: inquiriesLoading } =
-    useInquiries(ADMIN_POLLING_INTERVAL);
+  const { data: inquiries = [], isLoading: inquiriesLoading } = useInquiries(
+    ADMIN_POLLING_INTERVAL,
+  );
 
   const resolveTicketMutation = useUpdateTicketStatus();
   const updateConsultationStatusMutation = useUpdateConsultationStatus();
@@ -68,8 +70,7 @@ const AdminSupport = () => {
   const deleteConsultationMutation = useDeleteConsultation();
   const deleteInquiryMutation = useDeleteInquiry();
 
-  const isLoading =
-    ticketsLoading || consultationsLoading || inquiriesLoading;
+  const isLoading = ticketsLoading || consultationsLoading || inquiriesLoading;
 
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -92,7 +93,11 @@ const AdminSupport = () => {
       addNotification("Success", "Ticket marked as resolved", "success");
     } catch (err) {
       console.error("Failed to resolve ticket:", err);
-      addNotification("Error", getErrorMessage(err, "Failed to resolve ticket"), "error");
+      addNotification(
+        "Error",
+        getErrorMessage(err, "Failed to resolve ticket"),
+        "error",
+      );
     }
   };
 
@@ -110,7 +115,11 @@ const AdminSupport = () => {
       addNotification("Success", `Status updated to ${status}`, "success");
     } catch (err) {
       console.error("Failed to update status:", err);
-      addNotification("Error", getErrorMessage(err, "Failed to update status"), "error");
+      addNotification(
+        "Error",
+        getErrorMessage(err, "Failed to update status"),
+        "error",
+      );
     }
   };
 
@@ -184,7 +193,8 @@ const AdminSupport = () => {
 
   const handleReplyEmail = (email: string, subject: string, name: string) => {
     const mailtoLink = `mailto:${email}?subject=RE: ${subject}&body=Hi ${name},%0D%0A%0D%0AThank you for contacting SHERO Technologies support.%0D%0A%0D%0A`;
-    globalThis.location.href = mailtoLink;
+    // eslint-disable react-hooks/rules-of-hooks
+    window.location.href = mailtoLink;
   };
 
   const filteredTickets = useMemo(() => {

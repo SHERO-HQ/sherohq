@@ -1,7 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { query } from "@/lib/db";
 import { getAdminFromSession } from "@/lib/auth";
-import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
 
 export async function GET(request: NextRequest) {
@@ -11,15 +10,15 @@ export async function GET(request: NextRequest) {
 
     const searchParams = request.nextUrl.searchParams;
     const status = searchParams.get("status");
-    
-    let queryText = 'SELECT * FROM tickets';
+
+    let queryText = "SELECT * FROM tickets";
     const params: any[] = [];
-    
-    if (status && status !== 'all') {
-      queryText += ' WHERE status = $1';
+
+    if (status && status !== "all") {
+      queryText += " WHERE status = $1";
       params.push(status);
     }
-    
+
     queryText += ' ORDER BY "createdAt" DESC';
 
     const result = await query(queryText, params);

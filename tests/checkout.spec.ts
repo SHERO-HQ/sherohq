@@ -32,10 +32,10 @@ test.describe("Checkout Flow", () => {
 
     // 1. Verify checkout page loads
     await expect(page).toHaveURL(/\/checkout/);
-    
+
     // Wait for page to be interactive
     await page.waitForLoadState("networkidle", { timeout: 10000 });
-    
+
     // 2. Check that we can see checkout content
     const checkoutContent = page.locator("main");
     await expect(checkoutContent).toBeVisible();
