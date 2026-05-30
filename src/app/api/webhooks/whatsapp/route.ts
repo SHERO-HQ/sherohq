@@ -22,7 +22,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  return NextResponse.json(challenge);
+  // Facebook expects the raw challenge string (plain text), not JSON
+  return new Response(challenge ?? "", {
+    status: 200,
+    headers: { "Content-Type": "text/plain" },
+  });
 }
 
 // POST: Incoming messages & status updates
