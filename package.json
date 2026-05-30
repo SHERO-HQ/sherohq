@@ -12,7 +12,8 @@
     "sitemap": "node scripts/generate-sitemap.js",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test": "vitest run"
+    "test": "vitest run",
+    "db:migrate": "node scripts/apply-migrations.js"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.2.8",

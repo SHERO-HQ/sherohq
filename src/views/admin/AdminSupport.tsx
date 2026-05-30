@@ -16,11 +16,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { format } from "date-fns";
-import {
-  type SupportTicket,
-  type Consultation,
-  type Inquiry,
-} from "@/services/api";
+
 import {
   useSupportTickets,
   useConsultations,
@@ -51,7 +47,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Modal } from "@/components/ui/Modal";
-import { useAdmin } from "@/context/AdminContext";
 import Link from "next/link";
 
 const AdminSupport = () => {
