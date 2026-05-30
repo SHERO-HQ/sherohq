@@ -562,7 +562,12 @@ const Nav = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsOpen(false)}
-              className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-md will-change-opacity"
+              style={{
+                WebkitBackfaceVisibility: "hidden",
+                backfaceVisibility: "hidden",
+                transform: "translate3d(0,0,0)",
+              }}
             />
 
             {/* Menu Panel (Drawer) */}
@@ -572,7 +577,12 @@ const Nav = () => {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="absolute top-0 left-0 w-[65%] sm:w-100 h-full bg-white dark:bg-slate-950 shadow flex flex-col overflow-hidden"
+              className="absolute top-0 left-0 w-[65%] sm:w-100 h-full bg-white dark:bg-slate-950 shadow flex flex-col overflow-hidden will-change-transform"
+              style={{
+                WebkitBackfaceVisibility: "hidden",
+                backfaceVisibility: "hidden",
+                transform: "translate3d(0,0,0)",
+              }}
               id="mobile-nav-menu"
             >
               {/* Top Header */}
@@ -606,6 +616,7 @@ const Nav = () => {
                         variants={linkVars}
                         initial="initial"
                         animate="animate"
+                        className="will-change-transform will-change-opacity"
                       >
                         <NavLink
                           href={getAbsoluteUrl(item.href)}

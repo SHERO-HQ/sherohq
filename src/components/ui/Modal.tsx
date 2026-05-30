@@ -79,23 +79,38 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
     return (
         <AnimatePresence>
             {isOpen && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4"
                     role="dialog"
                     aria-modal="true"
                     aria-labelledby="modal-title"
-                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/60 backdrop-blur-sm cursor-pointer"
-                    onClick={onClose}
                 >
+                    {/* Backdrop */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute inset-0 bg-black/60 dark:bg-black/60 backdrop-blur-sm cursor-pointer will-change-opacity"
+                        style={{
+                            WebkitBackfaceVisibility: "hidden",
+                            backfaceVisibility: "hidden",
+                            transform: "translate3d(0,0,0)",
+                        }}
+                        onClick={onClose}
+                    />
+
+                    {/* Content Panel */}
                     <motion.div
                         ref={modalRef}
                         initial={{ scale: 0.95, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.95, opacity: 0 }}
-                        onClick={(e) => e.stopPropagation()}
-                        className="glass-surface-lg w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden shadow"
+                        className="relative glass-surface-lg w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden shadow will-change-transform"
+                        style={{
+                            WebkitBackfaceVisibility: "hidden",
+                            backfaceVisibility: "hidden",
+                            transform: "translate3d(0,0,0)",
+                        }}
                     >
                         <div className="flex items-center justify-between p-4 border-b border-black/10 dark:border-white/10 shrink-0">
                             <h2 id="modal-title" className="text-lg font-bold text-black dark:text-white">
@@ -114,7 +129,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
                             {children}
                         </div>
                     </motion.div>
-                </motion.div>
+                </div>
             )}
         </AnimatePresence>
     );

@@ -147,7 +147,7 @@ const Partners = () => {
                   viewport={{ once: true }}
                   className="bg-slate-50 dark:bg-slate-950 p-6 flex flex-col items-center justify-center gap-4 hover:bg-white dark:hover:bg-slate-900 transition-colors group cursor-default"
                 >
-                  <div className="flex items-center justify-center group-hover:scale-110 group-hover:text-brand-secondary-500 transition-all duration-300">
+                  <div className="flex items-center justify-center group-hover:scale-110 group-hover:text-brand-secondary-500">
                     <partner.icon className="w-8 h-8 text-slate-400 dark:text-slate-600 group-hover:text-brand-secondary-500" />
                   </div>
                   <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-500 text-center">
@@ -166,7 +166,7 @@ const Partners = () => {
                 <span className="w-px h-3 bg-brand-secondary-600/20 dark:bg-brand-secondary-300/20" />
                 Tiered Benefits
               </div>
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-6 transition-colors duration-300">
+              <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-6 transition-colors duration-300">
                 Become a Solution Partner
               </h2>
               <ul className="space-y-4 mb-8 text-sm">
@@ -181,7 +181,7 @@ const Partners = () => {
               </ul>
               <button
                 onClick={handleApplyClick}
-                className="group cursor-pointer inline-flex items-center gap-2 px-8 py-2.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded font-semibold transition duration-300 shadow shadow-brand-secondary-500/25 hover:shadow hover:shadow-brand-secondary-500/30 hover:scale-[1.02] active:scale-95"
+                className="group cursor-pointer inline-flex items-center gap-2 px-8 py-2.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white text-sm rounded font-semibold transition duration-300 shadow shadow-brand-secondary-500/25 hover:shadow hover:shadow-brand-secondary-500/30 hover:scale-[1.02] active:scale-95"
               >
                 <span>Start Partnership</span>
                 <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
@@ -194,7 +194,21 @@ const Partners = () => {
 
             <div className="relative z-10 flex justify-center col-span-1">
               <div className="w-64 h-64 bg-brand-secondary-100/50 dark:bg-brand-secondary-900/50 rounded-full flex items-center justify-center relative border border-brand-secondary-200/50 dark:border-brand-secondary-800/50 shadow-inner">
-                <div className="absolute inset-8 border border-dashed border-brand-secondary-500/20 rounded-full animate-spin-slow" />
+                <svg
+                  className="absolute inset-8 w-[calc(100%-4rem)] h-[calc(100%-4rem)] text-brand-secondary-500/15"
+                  viewBox="0 0 100 100"
+                  aria-hidden="true"
+                >
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="47"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    strokeDasharray="6 4"
+                    fill="transparent"
+                  />
+                </svg>
                 <Handshake className="w-24 h-24 text-brand-secondary-600/90 dark:text-brand-secondary-400/90" />
               </div>
             </div>

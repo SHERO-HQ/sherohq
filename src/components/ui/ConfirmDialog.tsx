@@ -58,20 +58,34 @@ export function ConfirmDialog({
     return (
         <AnimatePresence>
             {isOpen && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="fixed inset-0 z-9999 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-                    onClick={handleBackdropClick}
-                >
+                <div className="fixed inset-0 z-9999 flex items-center justify-center p-4">
+                    {/* Backdrop */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute inset-0 bg-black/60 backdrop-blur-sm will-change-opacity"
+                        style={{
+                            WebkitBackfaceVisibility: "hidden",
+                            backfaceVisibility: "hidden",
+                            transform: "translate3d(0,0,0)",
+                        }}
+                        onClick={handleBackdropClick}
+                    />
+
+                    {/* Alert Card */}
                     <motion.div
                         initial={{ scale: 0.95, opacity: 0, y: 20 }}
                         animate={{ scale: 1, opacity: 1, y: 0 }}
                         exit={{ scale: 0.95, opacity: 0, y: 20 }}
                         transition={{ type: "spring", duration: 0.3 }}
-                        className="glass-surface-lg w-full max-w-md overflow-hidden shadow"
+                        className="relative glass-surface-lg w-full max-w-md overflow-hidden shadow will-change-transform"
+                        style={{
+                            WebkitBackfaceVisibility: "hidden",
+                            backfaceVisibility: "hidden",
+                            transform: "translate3d(0,0,0)",
+                        }}
                     >
                         {/* Header */}
                         <div className="flex items-start justify-between p-6 pb-0">
@@ -126,7 +140,7 @@ export function ConfirmDialog({
                             </Button>
                         </div>
                     </motion.div>
-                </motion.div>
+                </div>
             )}
         </AnimatePresence>
     );
