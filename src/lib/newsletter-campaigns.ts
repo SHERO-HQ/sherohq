@@ -806,7 +806,9 @@ export async function sendNewsletterCampaign(
     try {
       const logPrefix = getLogPrefix(options.requestId);
       if (process.env.NODE_ENV !== "production") {
-        console.log(`${logPrefix} Starting background delivery for campaign ${campaignId}`);
+        console.log(
+          `${logPrefix} Starting background delivery for campaign ${campaignId}`,
+        );
       }
 
       let attempted = 0;
@@ -821,21 +823,33 @@ export async function sendNewsletterCampaign(
 
         if (batchRecipients.length === 0) break;
 
-        await deliverRecipients(campaignId, input, batchRecipients, options.requestId);
+        await deliverRecipients(
+          campaignId,
+          input,
+          batchRecipients,
+          options.requestId,
+        );
         attempted += batchRecipients.length;
 
         // Apply delay between batches if configured
         if (attempted < totalTargets && input.sendDelayMs > 0) {
-          await new Promise((resolve) => setTimeout(resolve, input.sendDelayMs));
+          await new Promise((resolve) =>
+            setTimeout(resolve, input.sendDelayMs),
+          );
         }
       }
 
       await finalizeCampaign(campaignId);
       if (process.env.NODE_ENV !== "production") {
-        console.log(`${logPrefix} Background delivery completed for campaign ${campaignId}`);
+        console.log(
+          `${logPrefix} Background delivery completed for campaign ${campaignId}`,
+        );
       }
     } catch (error) {
-      console.error(`❌ Background delivery failed for campaign ${campaignId}:`, error);
+      console.error(
+        `❌ Background delivery failed for campaign ${campaignId}:`,
+        error,
+      );
     }
   })();
 
@@ -973,7 +987,7 @@ export async function updateCampaignDeliveryStats(
     delivered: number;
     read: number;
     failed: number;
-  }
+  },
 ): Promise<void> {
   const totalSuccessful = stats.sent + stats.delivered + stats.read;
 

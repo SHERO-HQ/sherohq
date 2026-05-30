@@ -1,23 +1,24 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 import {
   storeIncomingMessage,
   updateMessageStatus,
   getCampaignDeliveryStatus,
-} from '@/lib/whatsapp-messages';
-import { updateCampaignDeliveryStats } from '@/lib/newsletter-campaigns';
-
+} from "@/lib/whatsapp-messages";
+import { updateCampaignDeliveryStats } from "@/lib/newsletter-campaigns";import { sendAutoReply, getSmartReply } from '@/lib/whatsapp-auto-reply';
+import { createSupportTicketFromWhatsApp } from '@/lib/whatsapp-support';
+import { scheduleMessageForRetry } from '@/lib/whatsapp-retry';
 const WEBHOOK_VERIFY_TOKEN = process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN!;
 const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID!;
 
 // GET: Meta calls this to verify your endpoint
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const mode = searchParams.get('hub.mode');
-  const token = searchParams.get('hub.verify_token');
-  const challenge = searchParams.get('hub.challenge');
+  const mode = searchParams.get("hub.mode");
+  const token = searchParams.get("hub.verify_token");
+  const challenge = searchParams.get("hub.challenge");
 
-  if (mode !== 'subscribe' || token !== WEBHOOK_VERIFY_TOKEN) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (mode !== "subscribe" || token !== WEBHOOK_VERIFY_TOKEN) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   return NextResponse.json(challenge);
@@ -29,7 +30,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     // Log webhook event (keep for debugging)
-    console.log('WhatsApp webhook received:', JSON.stringify(body, null, 2));
+    console.log("WhatsApp webhook received:", JSON.stringify(body, null, 2));
 
     // Process messages and status updates
     const { entry } = body;
@@ -54,11 +55,11 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('WhatsApp webhook error:', error);
+    console.error("WhatsApp webhook error:", error);
     // Return 200 to prevent Meta from retrying, but log the error
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }
@@ -77,8 +78,8 @@ async function handleIncomingMessage(msg: any, contact: any) {
 
     console.log(
       `Incoming message from ${senderWaId}: [${messageType}] ${
-        content || '(no text)'
-      }`
+        content || "(no text)"
+      }`,
     );
 
     // Store message in database
@@ -90,16 +91,50 @@ async function handleIncomingMessage(msg: any, contact: any) {
       content,
       {
         rawMessage: msg, // Store full message for debugging
-      }
+      },
     );
 
     console.log(`Stored incoming message: ${storedMsg.id}`);
+
+    // Send auto-reply if text message
+    if (messageType === 'text' && content) {
+      // Try smart reply first
+      const smartReplyText = getSmartReply(content);
+      const autoReplyText = smartReplyText || undefined;
+
+      // Send auto-reply with delay
+      const replyResult = await sendAutoReply(senderWaId, PHONE_NUMBER_ID, {
+        enabled: true,
+        message:
+          autoReplyText ||
+          `Thank you for reaching out! We've received your message and will get back to you as soon as possible. Our support team typically responds within 24 hours.`,
+        delay: 2000, // 2 second delay before auto-reply
+      });
+
+      if (replyResult.success) {
+        console.log(`Sent auto-reply: ${replyResult.messageId}`);
+      } else {
+        console.warn(`Failed to send auto-reply: ${replyResult.error}`);
+      }
+
+      // Create support ticket for human follow-up
+      const contactName = contact?.name || null;
+      const ticketResult = await createSupportTicketFromWhatsApp(
+        messageId,
+        senderWaId,
+        contactName,
+        content,
+        'medium'
+      );
+
+      console.log(`Created support ticket: ${ticketResult.id}`);
+    }
 
     // TODO: Send notification to admin dashboard
     // TODO: Implement auto-reply logic based on message content
     // TODO: Route to customer support system
   } catch (error) {
-    console.error('Error handling incoming message:', error);
+    console.error("Error handling incoming message:", error);
   }
 }
 
@@ -112,8 +147,8 @@ async function handleStatusUpdate(status: any) {
 
     console.log(
       `Message ${messageId} status: ${statusValue}${
-        errorCode ? ` (error: ${errorCode})` : ''
-      }`
+        errorCode ? ` (error: ${errorCode})` : ""
+      }`,
     );
 
     // Update message status in database
@@ -121,7 +156,7 @@ async function handleStatusUpdate(status: any) {
       messageId,
       statusValue,
       errorCode,
-      errorMessage
+      errorMessage,
     );
 
     if (!updatedMsg) {
@@ -132,10 +167,7 @@ async function handleStatusUpdate(status: any) {
     // If this is a campaign message, update campaign stats
     if (updatedMsg.campaign_id) {
       const stats = await getCampaignDeliveryStatus(updatedMsg.campaign_id);
-      console.log(
-        `Campaign ${updatedMsg.campaign_id} stats:`,
-        stats
-      );
+      console.log(`Campaign ${updatedMsg.campaign_id} stats:`, stats);
 
       // Update campaign with delivery stats
       await updateCampaignDeliveryStats(updatedMsg.campaign_id, {
@@ -146,10 +178,21 @@ async function handleStatusUpdate(status: any) {
       });
 
       console.log(
-        `Updated campaign ${updatedMsg.campaign_id} with delivery stats`
+        `Updated campaign ${updatedMsg.campaign_id} with delivery stats`,
       );
+
+      // If message failed, schedule for retry
+      if (statusValue === 'failed') {
+        console.log(`Scheduling message ${messageId} for retry`);
+        await scheduleMessageForRetry(
+          messageId,
+          updatedMsg.campaign_id,
+          updatedMsg.sender_wa_id,
+          updatedMsg.content || 'Message retry',
+        );
+      }
     }
   } catch (error) {
-    console.error('Error handling status update:', error);
+    console.error("Error handling status update:", error);
   }
 }

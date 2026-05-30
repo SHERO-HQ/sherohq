@@ -26,7 +26,7 @@ export async function storeIncomingMessage(
   phoneNumberId: string,
   messageType: string,
   content: string | null,
-  metadata: Record<string, any> | null = null
+  metadata: Record<string, any> | null = null,
 ): Promise<WhatsAppMessage> {
   const result = await query(
     `
@@ -54,7 +54,7 @@ export async function storeIncomingMessage(
       messageType,
       content,
       metadata ? JSON.stringify(metadata) : null,
-    ]
+    ],
   );
 
   return result.rows[0] as WhatsAppMessage;
@@ -67,7 +67,7 @@ export async function updateMessageStatus(
   messageId: string,
   status: "sent" | "delivered" | "read" | "failed",
   errorCode?: string | null,
-  errorMessage?: string | null
+  errorMessage?: string | null,
 ): Promise<WhatsAppMessage | null> {
   const result = await query(
     `
@@ -80,7 +80,7 @@ export async function updateMessageStatus(
     WHERE id = $1
     RETURNING *;
     `,
-    [messageId, status, errorCode || null, errorMessage || null]
+    [messageId, status, errorCode || null, errorMessage || null],
   );
 
   return result.rows[0] || null;
@@ -95,7 +95,7 @@ export async function storeOutgoingMessage(
   senderWaId: string,
   phoneNumberId: string,
   content: string,
-  metadata: Record<string, any> | null = null
+  metadata: Record<string, any> | null = null,
 ): Promise<WhatsAppMessage> {
   const result = await query(
     `
@@ -115,7 +115,14 @@ export async function storeOutgoingMessage(
     ) VALUES ($1, $2, $3, $4, 'text', $5, 'sent', 'outbound', $6, NOW(), NOW(), NOW())
     RETURNING *;
     `,
-    [messageId, campaignId, phoneNumberId, senderWaId, content, metadata ? JSON.stringify(metadata) : null]
+    [
+      messageId,
+      campaignId,
+      phoneNumberId,
+      senderWaId,
+      content,
+      metadata ? JSON.stringify(metadata) : null,
+    ],
   );
 
   return result.rows[0] as WhatsAppMessage;
@@ -126,7 +133,7 @@ export async function storeOutgoingMessage(
  */
 export async function getConversationHistory(
   senderWaId: string,
-  limit: number = 50
+  limit: number = 50,
 ): Promise<WhatsAppMessage[]> {
   const result = await query(
     `
@@ -135,7 +142,7 @@ export async function getConversationHistory(
     ORDER BY created_at DESC
     LIMIT $2;
     `,
-    [senderWaId, limit]
+    [senderWaId, limit],
   );
 
   return result.rows as WhatsAppMessage[];
@@ -162,7 +169,7 @@ export async function getCampaignDeliveryStatus(campaignId: string): Promise<{
     FROM whatsapp_messages
     WHERE campaign_id = $1 AND direction = 'outbound';
     `,
-    [campaignId]
+    [campaignId],
   );
 
   const row = result.rows[0];
@@ -179,7 +186,7 @@ export async function getCampaignDeliveryStatus(campaignId: string): Promise<{
  * Get failed messages for a campaign
  */
 export async function getCampaignFailedMessages(
-  campaignId: string
+  campaignId: string,
 ): Promise<WhatsAppMessage[]> {
   const result = await query(
     `
@@ -187,7 +194,7 @@ export async function getCampaignFailedMessages(
     WHERE campaign_id = $1 AND status = 'failed'
     ORDER BY created_at DESC;
     `,
-    [campaignId]
+    [campaignId],
   );
 
   return result.rows as WhatsAppMessage[];
