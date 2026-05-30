@@ -801,26 +801,54 @@ export async function sendNewsletterCampaign(
     };
   }
 
-  const recipients = await fetchAudience(input, { limit: totalTargets });
-  const result = await deliverRecipients(
-    campaignId,
-    input,
-    recipients,
-    options.requestId,
-  );
-  await finalizeCampaign(campaignId);
+  // Start background processing in a non-blocking way
+  (async () => {
+    try {
+      const logPrefix = getLogPrefix(options.requestId);
+      if (process.env.NODE_ENV !== "production") {
+        console.log(`${logPrefix} Starting background delivery for campaign ${campaignId}`);
+      }
+
+      let attempted = 0;
+      while (attempted < totalTargets) {
+        const remaining = totalTargets - attempted;
+        if (remaining <= 0) break;
+
+        const batchRecipients = await fetchAudience(input, {
+          limit: Math.min(input.batchSize, remaining),
+          offset: attempted,
+        });
+
+        if (batchRecipients.length === 0) break;
+
+        await deliverRecipients(campaignId, input, batchRecipients, options.requestId);
+        attempted += batchRecipients.length;
+
+        // Apply delay between batches if configured
+        if (attempted < totalTargets && input.sendDelayMs > 0) {
+          await new Promise((resolve) => setTimeout(resolve, input.sendDelayMs));
+        }
+      }
+
+      await finalizeCampaign(campaignId);
+      if (process.env.NODE_ENV !== "production") {
+        console.log(`${logPrefix} Background delivery completed for campaign ${campaignId}`);
+      }
+    } catch (error) {
+      console.error(`❌ Background delivery failed for campaign ${campaignId}:`, error);
+    }
+  })();
 
   return {
     success: true,
     campaignId,
-    sent: result.sent,
-    failed: result.failed,
+    status: "sending" as const,
+    sent: 0,
+    failed: 0,
     totalTargets,
     batchSize: input.batchSize,
     sendDelayMs: input.sendDelayMs,
-    message: `Campaign sent to ${result.sent} recipient(s)${
-      result.failed ? ` with ${result.failed} failure(s)` : ""
-    }`,
+    message: `Campaign started in the background. Check history for progress.`,
   };
 }
 

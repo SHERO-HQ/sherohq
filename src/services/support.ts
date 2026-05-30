@@ -319,7 +319,7 @@ export async function sendNewsletterCampaign(data: {
 }): Promise<{
   success: boolean;
   campaignId?: string;
-  status?: "scheduled";
+  status?: "scheduled" | "sending";
   sent?: number;
   failed?: number;
   totalTargets?: number;
