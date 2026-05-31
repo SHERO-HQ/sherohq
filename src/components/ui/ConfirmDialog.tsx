@@ -65,12 +65,7 @@ export function ConfirmDialog({
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute inset-0 bg-black/60 backdrop-blur-sm will-change-opacity"
-                        style={{
-                            WebkitBackfaceVisibility: "hidden",
-                            backfaceVisibility: "hidden",
-                            transform: "translate3d(0,0,0)",
-                        }}
+                        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
                         onClick={handleBackdropClick}
                     />
 
@@ -80,12 +75,7 @@ export function ConfirmDialog({
                         animate={{ scale: 1, opacity: 1, y: 0 }}
                         exit={{ scale: 0.95, opacity: 0, y: 20 }}
                         transition={{ type: "spring", duration: 0.3 }}
-                        className="relative glass-surface-lg w-full max-w-md overflow-hidden shadow will-change-transform"
-                        style={{
-                            WebkitBackfaceVisibility: "hidden",
-                            backfaceVisibility: "hidden",
-                            transform: "translate3d(0,0,0)",
-                        }}
+                        className="relative glass-surface-lg w-full max-w-md overflow-hidden shadow"
                     >
                         {/* Header */}
                         <div className="flex items-start justify-between p-6 pb-0">

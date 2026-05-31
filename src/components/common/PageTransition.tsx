@@ -20,12 +20,6 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
           duration: prefersReducedMotion ? 0.01 : 0.16,
           ease: "easeOut",
         }}
-        className="will-change-[transform,opacity]"
-        style={prefersReducedMotion ? undefined : {
-          WebkitBackfaceVisibility: "hidden",
-          backfaceVisibility: "hidden",
-          transform: "translate3d(0,0,0)",
-        }}
       >
         {children}
       </motion.div>

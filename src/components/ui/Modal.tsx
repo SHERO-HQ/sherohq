@@ -90,12 +90,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="absolute inset-0 bg-black/60 dark:bg-black/60 backdrop-blur-sm cursor-pointer will-change-opacity"
-                        style={{
-                            WebkitBackfaceVisibility: "hidden",
-                            backfaceVisibility: "hidden",
-                            transform: "translate3d(0,0,0)",
-                        }}
+                        className="absolute inset-0 bg-black/60 dark:bg-black/60 backdrop-blur-sm cursor-pointer"
                         onClick={onClose}
                     />
 
@@ -105,12 +100,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
                         initial={{ scale: 0.95, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.95, opacity: 0 }}
-                        className="relative glass-surface-lg w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden shadow will-change-transform"
-                        style={{
-                            WebkitBackfaceVisibility: "hidden",
-                            backfaceVisibility: "hidden",
-                            transform: "translate3d(0,0,0)",
-                        }}
+                        className="relative glass-surface-lg w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden shadow"
                     >
                         <div className="flex items-center justify-between p-4 border-b border-black/10 dark:border-white/10 shrink-0">
                             <h2 id="modal-title" className="text-lg font-bold text-black dark:text-white">

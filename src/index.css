@@ -377,15 +377,27 @@
     animation-delay: 300ms;
 }
 
-/* Smooth theme-switching micro-animations */
-.theme-transitioning,
-.theme-transitioning * {
+/* Smooth theme-switching — scoped to avoid fighting Framer Motion overlays */
+html.theme-transitioning,
+html.theme-transitioning body {
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html.theme-transitioning :where(
+    header,
+    nav,
+    main,
+    section,
+    footer,
+    aside,
+    [class*="bg-"],
+    [class*="border-"]
+) {
     transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                 border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
                 color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    transition-delay: 0s !important;
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Accessibility: Reduced Motion Support */

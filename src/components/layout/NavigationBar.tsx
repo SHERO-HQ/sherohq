@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import NavLink from "@/components/common/NavLink";
 
-import { AnimatePresence, easeOut, motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { navLinkClass, navLinkClassVariant } from "@/lib/utils";
 import {
   WhatsAppIcon,
@@ -53,26 +53,27 @@ const Nav = () => {
   const navMenuRef = useRef<HTMLUListElement>(null);
   const homeHref = getAbsoluteUrl("/");
 
-  // Animation variants
-  const menuVars = {
-    initial: { x: "-100%", opacity: 0 },
-    animate: {
-      x: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-        ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+  // Animation variants — slide only, no opacity (avoids iOS compositor flicker)
+  const menuVars = useMemo(
+    () => ({
+      initial: { x: prefersReducedMotion ? 0 : "-100%" },
+      animate: {
+        x: 0,
+        transition: {
+          duration: prefersReducedMotion ? 0.01 : 0.28,
+          ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+        },
       },
-    },
-    exit: {
-      x: "-100%",
-      opacity: 0,
-      transition: {
-        duration: 0.4,
-        ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+      exit: {
+        x: prefersReducedMotion ? 0 : "-100%",
+        transition: {
+          duration: prefersReducedMotion ? 0.01 : 0.22,
+          ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
+        },
       },
-    },
-  };
+    }),
+    [prefersReducedMotion],
+  );
 
   const navLinks = useMemo(
     () => [
@@ -104,15 +105,6 @@ const Nav = () => {
     [],
   );
 
-  const linkVars = {
-    initial: { x: -20, opacity: 0 },
-    animate: (i: number) => ({
-      x: 0,
-      opacity: 1,
-      transition: { delay: 0.15 + i * 0.05, duration: 0.4, ease: easeOut },
-    }),
-  };
-
   // Lock body scroll when mobile menu is open (with scrollbar compensation, desktop viewports only)
   useEffect(() => {
     const isMobile = window.innerWidth < 1024;
@@ -142,24 +134,30 @@ const Nav = () => {
   // Keep keyboard focus within navigation flow on mobile menu open/close.
   useEffect(() => {
     if (isOpen) {
-      const focusables = mobileMenuRef.current?.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
-      );
+      const focusDelay = prefersReducedMotion ? 0 : 300;
+      const timer = setTimeout(() => {
+        const focusables = mobileMenuRef.current?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        );
 
-      // Try to find the first navigation link to avoid auto-focusing the search bar input on mobile
-      const firstLink =
-        mobileMenuRef.current?.querySelector<HTMLElement>("a[href]");
-      if (firstLink) {
-        firstLink.focus();
-      } else {
-        focusables?.[0]?.focus();
-      }
-    } else if (previousIsOpenRef.current) {
+        const firstLink =
+          mobileMenuRef.current?.querySelector<HTMLElement>("a[href]");
+        if (firstLink) {
+          firstLink.focus();
+        } else {
+          focusables?.[0]?.focus();
+        }
+      }, focusDelay);
+
+      return () => clearTimeout(timer);
+    }
+
+    if (previousIsOpenRef.current) {
       mobileMenuButtonRef.current?.focus();
     }
 
     previousIsOpenRef.current = isOpen;
-  }, [isOpen]);
+  }, [isOpen, prefersReducedMotion]);
 
   // Global keyboard support for dismissing open nav layers
   useEffect(() => {
@@ -568,13 +566,9 @@ const Nav = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: prefersReducedMotion ? 0.01 : 0.2 }}
               onClick={() => setIsOpen(false)}
-              className="absolute inset-0 bg-slate-950/75 will-change-opacity"
-              style={{
-                WebkitBackfaceVisibility: "hidden",
-                backfaceVisibility: "hidden",
-                transform: "translate3d(0,0,0)",
-              }}
+              className="absolute inset-0 bg-slate-950/75"
             />
 
             {/* Menu Panel (Drawer) */}
@@ -584,12 +578,7 @@ const Nav = () => {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="absolute top-0 left-0 w-[65%] sm:w-100 h-full bg-white dark:bg-slate-950 shadow flex flex-col overflow-hidden will-change-transform"
-              style={{
-                WebkitBackfaceVisibility: "hidden",
-                backfaceVisibility: "hidden",
-                transform: "translate3d(0,0,0)",
-              }}
+              className="absolute top-0 left-0 w-[65%] sm:w-100 h-full bg-white dark:bg-slate-950 shadow flex flex-col overflow-hidden"
               id="mobile-nav-menu"
             >
               {/* Top Header */}
@@ -616,19 +605,12 @@ const Nav = () => {
 
                 <div className="space-y-3 mt-4">
                   <ul className="space-y-5">
-                    {navLinks.map((item, i) => (
-                      <motion.li
-                        key={item.name}
-                        custom={i}
-                        variants={linkVars}
-                        initial="initial"
-                        animate="animate"
-                        className="will-change-transform will-change-opacity"
-                      >
+                    {navLinks.map((item, index) => (
+                      <li key={item.name}>
                         <NavLink
                           href={getAbsoluteUrl(item.href)}
                           onClick={() => setIsOpen(false)}
-                          isActive={activeNavIndex === i}
+                          isActive={activeNavIndex === index}
                           className={({ isActive }) =>
                             navLinkClassVariant(isActive, "mobile")
                           }
@@ -645,7 +627,7 @@ const Nav = () => {
                             </>
                           )}
                         </NavLink>
-                      </motion.li>
+                      </li>
                     ))}
                   </ul>
                 </div>

@@ -147,12 +147,7 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-slate-950/60 backdrop-blur-md will-change-opacity"
-            style={{
-              WebkitBackfaceVisibility: "hidden",
-              backfaceVisibility: "hidden",
-              transform: "translate3d(0,0,0)",
-            }}
+            className="absolute inset-0 bg-slate-950/60 backdrop-blur-md"
             onClick={onClose}
           />
 
@@ -160,12 +155,7 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
             initial={{ opacity: 0, scale: 0.95, y: -20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
-            className="relative w-full max-w-2xl glass-surface-lg rounded overflow-hidden shadow flex flex-col will-change-transform"
-            style={{
-              WebkitBackfaceVisibility: "hidden",
-              backfaceVisibility: "hidden",
-              transform: "translate3d(0,0,0)",
-            }}
+            className="relative w-full max-w-2xl glass-surface-lg rounded overflow-hidden shadow flex flex-col"
           >
             {/* Search Input Area */}
             <div className="flex items-center gap-3 px-4 py-4 border-b border-white/5">

@@ -1,6 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
 
+const getReducedMotionPreference = (): boolean => {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+};
+
 /**
  * Custom Hook: useReducedMotion
  * Detects user's motion preferences from OS system settings
@@ -13,15 +18,12 @@ import { useState, useEffect } from "react";
  * ```
  */
 export const useReducedMotion = (): boolean => {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(
+    getReducedMotionPreference,
+  );
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    
-    // Set initial value on client mount
-    setPrefersReducedMotion(mediaQuery.matches);
-
-    // Listen for OS setting changes
     const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
 
     mediaQuery.addEventListener("change", handler);
