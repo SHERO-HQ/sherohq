@@ -200,7 +200,7 @@ const LandingHero: React.FC = () => {
             <div className="relative overflow-hidden group max-w-3xl">
               <motion.h1
                 variants={heroItem}
-                className="font-bold leading-[1.01] text-5xl lg:text-7xl px-4 sm:px-auto tracking-tighter text-slate-900 dark:text-white relative z-10"
+                className="font-bold leading-[1.01] text-5xl lg:text-7xl px-2 sm:px-auto tracking-tighter text-slate-900 dark:text-white relative z-10"
               >
                 <span>{headlineLead}</span>
                 <br />

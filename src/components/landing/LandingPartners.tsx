@@ -86,7 +86,7 @@ const LandingPartners = () => {
             {PARTNERS.map((partner, idx) => (
               <div
                 key={`orig-${partner.name}-${idx}`}
-                className="group flex h-12 w-24 sm:h-16 sm:w-32 items-center justify-center opacity-40 hover:opacity-100 hover:scale-105 transition-all duration-300 select-none cursor-pointer"
+                className="group flex h-12 w-32 sm:h-16 sm:w-32 items-center justify-center opacity-40 hover:opacity-100 hover:scale-105 transition-all duration-300 select-none cursor-pointer"
                 title={partner.name}
               >
                 <img
@@ -100,7 +100,7 @@ const LandingPartners = () => {
                   <img
                     src={partner.logoDark}
                     alt={`${partner.name} logo dark`}
-                    className={`h-8 sm:h-10 w-auto object-contain transition-transform duration-300 hidden dark:block ${partner.scale || ""}`}
+                    className={`h-8 sm:h-24 w-auto object-contain transition-transform duration-300 hidden dark:block ${partner.scale || ""}`}
                     loading="eager"
                     decoding="async"
                   />
@@ -114,12 +114,12 @@ const LandingPartners = () => {
             {PARTNERS.map((partner, idx) => (
               <div
                 key={`dup-${partner.name}-${idx}`}
-                className="group flex h-12 w-24 sm:h-16 sm:w-32 items-center justify-center opacity-40 hover:opacity-100 hover:scale-105 transition-all duration-300 select-none"
+                className="group flex h-12 w-32 sm:h-16 sm:w-32 items-center justify-center opacity-40 hover:opacity-100 hover:scale-105 transition-all duration-300 select-none"
               >
                 <img
                   src={partner.logo}
                   alt={`${partner.name} logo`}
-                  className={`h-8 sm:h-10 w-auto object-contain transition-transform duration-300 ${partner.scale || ""} ${partner.logoDark ? "dark:hidden" : ""}`}
+                  className={`h-8 sm:h-24 w-auto object-contain transition-transform duration-300 ${partner.scale || ""} ${partner.logoDark ? "dark:hidden" : ""}`}
                   loading="eager"
                   decoding="async"
                 />
@@ -127,7 +127,7 @@ const LandingPartners = () => {
                   <img
                     src={partner.logoDark}
                     alt={`${partner.name} logo dark`}
-                    className={`h-8 sm:h-10 w-auto object-contain transition-transform duration-300 hidden dark:block ${partner.scale || ""}`}
+                    className={`h-8 sm:h-24 w-auto object-contain transition-transform duration-300 hidden dark:block ${partner.scale || ""}`}
                     loading="eager"
                     decoding="async"
                   />
