@@ -59,7 +59,7 @@ const SolutionsHero = () => {
               </span>
             </div>
 
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold font-sora text-slate-900 dark:text-white leading-[1.01] tracking-tighter mb-4 lg:mb-6">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-sora text-slate-900 dark:text-white leading-[1.01] tracking-tighter mb-4 lg:mb-6">
               {["Software", "and", "IT", "Built", "to", "Scale"].map(
                 (word, i) => (
                   <span
