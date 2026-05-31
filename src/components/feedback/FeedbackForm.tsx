@@ -399,9 +399,9 @@ export default function FeedbackForm({
                 </div>
 
                 {/* Message Section */}
-                <div className="space-y-4">
+                <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white">Your Message</h4>
+                    <p className="text-sm font-semibold tracking-widest text-slate-900 dark:text-white">Your Message</p>
                     <span className={cn(
                       "text-[10px] font-mono tracking-widest",
                       messageValue.length > 950 ? "text-red-500 font-bold" : "text-slate-400"

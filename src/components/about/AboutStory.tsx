@@ -141,7 +141,7 @@ const AboutStory = () => {
           <div className="bg-slate-50 dark:bg-slate-900/50 rounded p-8 md:p-12 border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-3 mb-6 justify-center">
               <Lightbulb className="size-5 text-brand-secondary-600" />
-              <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+              <h3 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
                 What Sets Us Apart
               </h3>
             </div>
@@ -188,7 +188,7 @@ const AboutStory = () => {
               <Heart className="size-4" />
               Our Commitment
             </div>
-            <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
+            <h3 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
               Building the Digital Future, Together
             </h3>
             <p className="text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">

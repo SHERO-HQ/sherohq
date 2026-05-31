@@ -93,7 +93,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
  dark:bg-white/5 bg-white
  border border-slate-200 dark:border-white/10
  hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30
- hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-black/30
+ hover:-translate-y-[3px] hover:shadow-sm dark:hover:shadow-black/20
  transition-all duration-300 ease-out cursor-pointer
  flex flex-col h-full will-change-transform"
       style={{
@@ -102,7 +102,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       }}
     >
       {/* Immersive Hover Background */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-linear-to-b from-brand-secondary-500/5 via-transparent to-transparent transition-opacity duration-500 pointer-events-none" />
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-40 bg-linear-to-b from-brand-secondary-500/5 via-transparent to-transparent transition-opacity duration-500 pointer-events-none" />
 
       {/* Image Container */}
       <div className="relative aspect-3/4 sm:aspect-4/5 lg:aspect-3/4 bg-slate-100 dark:bg-slate-900 overflow-hidden shrink-0">
@@ -114,10 +114,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             alt={product.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="object-contain object-center sm:group-hover:scale-110 sm:transition-transform sm:duration-500 will-change-auto"
+            className="object-contain object-center sm:group-hover:scale-105 sm:transition-transform sm:duration-500 will-change-auto"
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center text-6xl select-none opacity-30 group-hover:scale-110 transition-transform duration-700">
+          <div className="absolute inset-0 flex items-center justify-center text-6xl select-none opacity-30 group-hover:scale-105 transition-transform duration-700">
             {product.image}
           </div>
         )}
@@ -168,12 +168,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             <span className="text-xs font-bold font-mono text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest bg-brand-secondary-500/10 px-2 py-0.5 rounded">
               {product.category}
             </span>
-            <div className="flex items-center gap-1">
-              <Star size={11} className="fill-amber-400 text-amber-400" />
-              <span className="text-xs font-bold dark:text-slate-400">
-                {product.rating}
-              </span>
-            </div>
+            {product.rating > 0 && (
+              <div className="flex items-center gap-1">
+                <Star size={11} className="fill-amber-400 text-amber-400" />
+                <span className="text-xs font-bold dark:text-slate-400">
+                  {product.rating}
+                </span>
+              </div>
+            )}
           </div>
 
           <h3 className="text-sm sm:text-base font-semibold dark:text-white text-slate-800 leading-tight group-hover:text-brand-secondary-500 transition-colors line-clamp-1 mb-1">
@@ -197,7 +199,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
               </span>
             )}
             <div className="flex items-center justify-between gap-4">
-              <span className="text-xl sm:text-2xl font-semibold dark:text-white text-slate-900 leading-none">
+              <span className="text-lg sm:text-xl font-semibold dark:text-white text-slate-900 leading-none">
                 {formatCurrency(product.price)}
               </span>
               {!product.inStock && (

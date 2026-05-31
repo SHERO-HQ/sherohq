@@ -352,7 +352,7 @@ const ShopView = () => {
                 <div>
                   <h2 className="text-xl font-bold dark:text-white text-slate-800 tracking-tight uppercase">
                     {activeCategory === "all"
-                      ? "Browsing All"
+                      ? "All Products"
                       : `Exploring ${categoriesWithCount.find((c) => c.id === activeCategory)?.name}`}
                   </h2>
                   <div className="flex items-center gap-2 mt-1">

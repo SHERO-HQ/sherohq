@@ -48,8 +48,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
   const images = product.images || [product.image];
   const discount = product.originalPrice
     ? Math.round(
-      ((product.originalPrice - product.price) / product.originalPrice) * 100,
-    )
+        ((product.originalPrice - product.price) / product.originalPrice) * 100,
+      )
     : 0;
 
   const { data: allCategoryProducts = [], isLoading: relatedLoading } =
@@ -126,10 +126,10 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
     aggregateRating:
       product.reviews > 0
         ? {
-          "@type": "AggregateRating",
-          ratingValue: product.rating,
-          reviewCount: product.reviews,
-        }
+            "@type": "AggregateRating",
+            ratingValue: product.rating,
+            reviewCount: product.reviews,
+          }
         : undefined,
   };
 
@@ -150,15 +150,17 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               Shop
             </button>
-            <div className="flex items-center gap-2">
-              <ShareButton
-                url={shareUrl}
-                title={`${product.name} - ${formatCurrency(product.price)} | SHERO`}
-                description={`Check out ${discount > 0 ? "Discounted " : ""
-                  }${product.name} - ${formatCurrency(product.price)} on SHERO`}
-                image={getImageUrl(product.image)}
-              />
-            </div>
+            {product.rating > 0 && (
+              <div className="flex items-center gap-1.5">
+                <Star size={14} className="fill-amber-400 text-amber-400" />
+                <span className="text-sm font-bold dark:text-slate-300">
+                  {product.rating}
+                  <span className="text-slate-500 font-medium ml-1 text-xs">
+                    ({product.reviews} Reviews)
+                  </span>
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="grid lg:grid-cols-12 gap-8 lg:items-start">
@@ -183,8 +185,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     onClick={() => setIsPreviewOpen(true)}
                   >
                     {images[selectedImage] &&
-                      (images[selectedImage].startsWith("/uploads") ||
-                        images[selectedImage].startsWith("http")) ? (
+                    (images[selectedImage].startsWith("/uploads") ||
+                      images[selectedImage].startsWith("http")) ? (
                       <AppImage
                         src={getImageUrl(images[selectedImage])}
                         alt={product.name}
@@ -244,15 +246,16 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     <button
                       key={`detail-thumb-${idx}`}
                       onClick={() => setSelectedImage(idx)}
-                      className={`shrink-0 w-14 h-14 rounded overflow-hidden border-2 transition duration-200 ${idx === selectedImage
+                      className={`shrink-0 w-14 h-14 rounded overflow-hidden border-2 transition duration-200 ${
+                        idx === selectedImage
                           ? "border-brand-secondary-500 scale-105"
                           : "border-transparent bg-white dark:bg-white/5 opacity-50 hover:opacity-100"
-                        }`}
+                      }`}
                     >
                       <div className="relative w-full h-full p-2 flex items-center justify-center">
                         {img &&
-                          (img.startsWith("/uploads") ||
-                            img.startsWith("http")) ? (
+                        (img.startsWith("/uploads") ||
+                          img.startsWith("http")) ? (
                           <AppImage
                             src={getImageUrl(img)}
                             alt="Thumbnail"
@@ -278,18 +281,23 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   <span className="px-3 py-1 rounded text-[10px] font-bold uppercase tracking-widest bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400">
                     {product.category}
                   </span>
-                  <div className="flex items-center gap-1.5">
-                    <Star size={14} className="fill-amber-400 text-amber-400" />
-                    <span className="text-sm font-bold dark:text-slate-300">
-                      {product.rating}{" "}
-                      <span className="text-slate-500 font-medium ml-1 text-xs">
-                        ({product.reviews} Reviews)
+                  {product.rating > 0 && (
+                    <div className="flex items-center gap-1.5">
+                      <Star
+                        size={14}
+                        className="fill-amber-400 text-amber-400"
+                      />
+                      <span className="text-sm font-bold dark:text-slate-300">
+                        {product.rating}{" "}
+                        <span className="text-slate-500 font-medium ml-1 text-xs">
+                          ({product.reviews} Reviews)
+                        </span>
                       </span>
-                    </span>
-                  </div>
+                    </div>
+                  )}
                 </div>
 
-                <h1 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-white leading-tight mb-4">
+                <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white leading-tight mb-4">
                   {product.name}
                 </h1>
 
@@ -328,15 +336,16 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                         Was {formatCurrency(product.originalPrice)}
                       </span>
                     )}
-                    <span className="text-[2rem] font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
+                    <span className="text-xl font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
                       {formatCurrency(product.price)}
                     </span>
                   </div>
                   <div
-                    className={`text-[10px] font-semibold tracking-tighter w-fit border border-brand-secondary-500/30 p-1 rounded${product.inStock
+                    className={`text-[10px] font-semibold tracking-tighter w-fit border border-brand-secondary-500/30 p-1 rounded${
+                      product.inStock
                         ? " text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-500/10 dark:bg-brand-secondary-500/10"
                         : " text-red-600 dark:text-red-400 bg-red-500/10 dark:bg-red-500/10"
-                      }`}
+                    }`}
                   >
                     {product.inStock ? "In Stock" : "Out of Stock"}
                   </div>
@@ -348,10 +357,11 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     <button
                       onClick={handleAddToCart}
                       disabled={!product.inStock || isAddedToCart}
-                      className={`flex-1 flex items-center justify-center gap-2 h-10 px-4 rounded font-semibold text-sm uppercase tracking-widest transition-colors border-2 ${isAddedToCart
+                      className={`flex-1 flex items-center justify-center gap-2 h-10 px-4 rounded font-semibold text-sm  tracking-widest transition-colors border-2 ${
+                        isAddedToCart
                           ? "bg-brand-secondary-500 border-brand-secondary-500 text-white"
                           : "bg-white dark:bg-white/5 border-brand-secondary-600 text-brand-secondary-600 dark:text-brand-secondary-400 hover:bg-brand-secondary-500 hover:text-white"
-                        }`}
+                      }`}
                     >
                       {isAddedToCart ? (
                         <Check className="w-5 h-5" />
@@ -367,7 +377,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                         router.push("/shop/checkout");
                       }}
                       disabled={!product.inStock}
-                      className="flex-1 px-2 h-10 bg-brand-secondary-600 text-white rounded font-semibold text-sm uppercase tracking-widest hover:bg-brand-secondary-500 transition-colors disabled:opacity-50"
+                      className="flex-1 px-2 h-10 bg-brand-secondary-600 text-white rounded font-semibold text-sm tracking-widest hover:bg-brand-secondary-500 transition-colors disabled:opacity-50"
                     >
                       Buy
                     </button>
@@ -382,10 +392,11 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                           category: product.category,
                         })
                       }
-                      className={`w-10 h-10 rounded flex items-center justify-center border-2 transition-colors shrink-0 ${isWishlisted
+                      className={`w-10 h-10 rounded flex items-center justify-center border-2 transition-colors shrink-0 ${
+                        isWishlisted
                           ? "bg-red-500 border-red-500 text-white"
                           : "border-slate-200 dark:border-white/10 text-slate-500 hover:border-red-500 hover:text-red-500"
-                        }`}
+                      }`}
                     >
                       <Heart
                         size={20}
@@ -399,7 +410,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-3 h-10 bg-[#25D366] text-black/90 rounded font-semibold text-sm uppercase tracking-widest hover:bg-[#20bd5a] transition-colors"
+                    className="flex items-center justify-center gap-3 h-10 bg-[#25D366] text-black/90 rounded font-semibold text-sm tracking-widest hover:bg-[#20bd5a] transition-colors"
                   >
                     <WhatsAppIcon className="w-5 h-5" />
                     Chat on WhatsApp
@@ -411,7 +422,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
               {product.features && product.features.length > 0 && (
                 <div className="p-8 rounded border border-slate-200 dark:border-white/10">
                   <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
-                    <BadgeCheck className="text-brand-secondary-500" /> Key Features
+                    <BadgeCheck className="text-brand-secondary-500" /> Key
+                    Features
                   </h3>
                   <div className="grid grid-cols-1 gap-4">
                     {product.features.map((feature: string, i: number) => (
@@ -420,7 +432,10 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                         className="flex items-center gap-4"
                       >
                         <div className="mt-1 w-5 h-5 rounded-full bg-brand-secondary-500/10 flex items-center justify-center shrink-0">
-                          <Check size={10} className="text-brand-secondary-600" />
+                          <Check
+                            size={10}
+                            className="text-brand-secondary-600"
+                          />
                         </div>
                         <span className="text-sm text-slate-600 dark:text-slate-400">
                           {feature}
@@ -438,9 +453,11 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
             Object.keys(product.specifications).length > 0 && (
               <div className="mt-8">
                 <div className="flex flex-col items-center mb-8">
-                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white uppercase tracking-tighter">
+                  <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tighter">
                     Technical{" "}
-                    <span className="text-brand-secondary-500">Specifications</span>
+                    <span className="text-brand-secondary-500">
+                      Specifications
+                    </span>
                   </h2>
                   <div className="h-1.5 w-12 bg-brand-secondary-500 rounded-full mt-2" />
                 </div>
@@ -485,26 +502,28 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
           {(relatedLoading || relatedProducts.length > 0) && (
             <div className="mt-8 border-t border-slate-200 dark:border-white/10 pt-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl sm:text-3xl font-bold text-slate-900 dark:text-white uppercase tracking-tighter">
-                  You Might <span className="text-brand-secondary-500">Also Like</span>
+                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tighter">
+                  You Might{" "}
+                  <span className="text-brand-secondary-500">Also Like</span>
                 </h2>
                 <button
                   onClick={() =>
                     (window.location.href = getAbsoluteUrl("/shop"))
                   }
-                  className="text-sm tracking-widest text-brand-secondary-600 hover:underline"
+                  className="text-sm font-medium tracking-widest text-brand-secondary-600 hover:underline"
                 >
                   View Shop
+                  <ChevronRight className="w-4 h-4 inline-block ml-1" />
                 </button>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                 {relatedLoading
                   ? [1, 2, 3, 4].map((i) => (
-                    <ProductCardSkeleton key={`related-skeleton-${i}`} />
-                  ))
+                      <ProductCardSkeleton key={`related-skeleton-${i}`} />
+                    ))
                   : relatedProducts.map((p: Product) => (
-                    <ProductCard key={p.id} product={p} />
-                  ))}
+                      <ProductCard key={p.id} product={p} />
+                    ))}
               </div>
             </div>
           )}
@@ -543,10 +562,11 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   category: product.category,
                 })
               }
-              className={`w-10 h-10 rounded border flex items-center justify-center ${isWishlisted
+              className={`w-10 h-10 rounded border flex items-center justify-center ${
+                isWishlisted
                   ? "bg-red-500 border-red-500 text-white"
                   : "border-slate-200 dark:border-white/10 text-slate-500"
-                }`}
+              }`}
             >
               <Heart size={20} className={isWishlisted ? "fill-current" : ""} />
             </button>
@@ -572,8 +592,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
 
               <div className="relative w-full h-full max-w-6xl mx-auto p-4 sm:p-12 flex items-center justify-center">
                 {images[selectedImage] &&
-                  (images[selectedImage].startsWith("/uploads") ||
-                    images[selectedImage].startsWith("http")) ? (
+                (images[selectedImage].startsWith("/uploads") ||
+                  images[selectedImage].startsWith("http")) ? (
                   <AppImage
                     src={getImageUrl(images[selectedImage])}
                     alt={product.name}

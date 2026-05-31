@@ -1,7 +1,7 @@
 "use client";
 import ConsultationHero from "@/components/solutions/ConsultationHero";
 import Scheduler from "@/components/solutions/Scheduler";
-import { CalendarCheckIcon, Cpu, Target, Zap, Layout } from "lucide-react";
+import { CalendarCheckIcon, Cpu, Target, Zap } from "lucide-react";
 
 const Consultation = () => {
   return (
@@ -9,7 +9,7 @@ const Consultation = () => {
       <ConsultationHero />
 
       {/* Trust/Process Section */}
-      <section className="py-24 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 -mt-20 relative z-30 overflow-hidden">
+      <section className="py-24 bg-white dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 relative z-30 overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-brand-secondary-500/5 rounded-full blur-3xl" />
         <div className="container max-w-7xl mx-auto px-4">
           <div className="max-w-3xl mb-16 px-1">
@@ -17,8 +17,8 @@ const Consultation = () => {
               <Target className="size-4" />
               The Framework
             </span>
-            <h3 className="text-2xl md:text-3xl font-bold tracking-tight dark:text-white text-slate-900 mb-6">
-              Aligning Infrastructure with Ambition
+            <h3 className="text-xl md:text-2xl font-bold tracking-tight dark:text-white text-slate-900 mb-3">
+              Focused Expertise, Actionable Outcomes
             </h3>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed ">
               Our 30-minute discovery sessions are designed to isolate technical
@@ -54,7 +54,7 @@ const Consultation = () => {
               <CalendarCheckIcon className="size-4" />
               Book Time
             </span>
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight dark:text-white text-slate-900">
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight dark:text-white text-slate-900">
               Schedule A Session
             </h2>
             <p className="text-slate-500 dark:text-slate-400 mt-2">

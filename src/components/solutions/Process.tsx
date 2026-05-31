@@ -69,7 +69,7 @@ const Process = () => {
             </span>
           </StaggerItem>
           <StaggerItem yOffset={25}>
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
               Our Process
             </h2>
           </StaggerItem>
@@ -111,10 +111,10 @@ const Process = () => {
                           isEven ? "md:text-right" : "md:text-left"
                         }`}
                       >
-                        <span className="inline-block py-1 px-2 rounded mb-3 text-sm font-semibold bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-500/20 uppercase italic">
+                        <span className="inline-block py-1 px-2 rounded mb-3 text-xs font-semibold bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-500/20 uppercase italic">
                            Step {index + 1}
                         </span>
-                        <h3 className="text-lg md:text-xl font-bold tracking-tight text-slate-900 dark:text-white mb-2 group-hover:text-brand-secondary-500 dark:group-hover:text-brand-secondary-400 transition-colors">
+                        <h3 className="text-md md:text-lg font-bold tracking-tight text-slate-900 dark:text-white mb-2 group-hover:text-brand-secondary-500 dark:group-hover:text-brand-secondary-400 transition-colors">
                           {step.title}
                         </h3>
                         <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">

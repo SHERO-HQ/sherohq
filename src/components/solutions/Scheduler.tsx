@@ -142,7 +142,14 @@ const Scheduler = () => {
   );
 
   // Auto-scroll to top on step change for mobile
+  const isInitialMount = useRef(true);
   useEffect(() => {
+    // Skip scrolling on initial mount to avoid jumping when navigating to the page
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
     if (window.innerWidth < 768 && scrollRef.current) {
       scrollRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -350,7 +357,7 @@ const Scheduler = () => {
             {/* STEP 1: SERVICE */}
             {step === 1 && (
               <div className="flex flex-col h-full">
-                <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6">
+                <h2 className="text-lg md:text-xl font-bold text-slate-900 dark:text-slate-100 mb-6">
                   Select a Service
                 </h2>
                 <div className="grid grid-cols-1 gap-4">

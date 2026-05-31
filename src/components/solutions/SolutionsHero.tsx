@@ -59,12 +59,14 @@ const SolutionsHero = () => {
               </span>
             </div>
 
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-sora text-slate-900 dark:text-white leading-[1.01] tracking-tighter mb-4 lg:mb-6">
-              {["Software", "and", "IT", "Built", "to", "Scale"].map(
+            <h1 className="text-3xl md:text-5xl font-semibold font-sora text-slate-900 dark:text-white leading-[1.06] tracking-tighter mb-4 lg:mb-6">
+              {["Software", "and", "IT", <br />, "Built", "to", "Scale"].map(
                 (word, i) => (
                   <span
                     key={i}
-                    className={i === 0 || i === 2 ? "text-brand-secondary-500" : ""}
+                    className={
+                      i === 0 || i === 2 ? "text-brand-secondary-500" : ""
+                    }
                   >
                     {word}{" "}
                   </span>
@@ -98,7 +100,7 @@ const SolutionsHero = () => {
               Let's Talk
               <ArrowRight
                 size={20}
-                className="group-hover:translate-x-3 transition-transform"
+                className="group-hover:translate-x-2 transition-transform"
               />
             </Link>
           </motion.div>
@@ -118,13 +120,13 @@ const SolutionsHero = () => {
           >
             <div className="relative w-full aspect-square max-w-70 sm:max-w-112.5 lg:max-w-137.5 group/visual">
               {/* Background Ambient Glows */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-brand-secondary-500/5 dark:bg-brand-secondary-500/5 blur-[100px] rounded-full pointer-events-none" />
-              <div className="absolute top-1/2 left-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-blue-500/5 dark:bg-blue-500/5 blur-[80px] rounded-full pointer-events-none translate-x-10" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-brand-secondary-500/4 dark:bg-brand-secondary-500/4 blur-[60px] rounded-full pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-blue-500/4 dark:bg-blue-500/4 blur-[40px] rounded-full pointer-events-none translate-x-10" />
 
               {/* Main Visual Card */}
-              <div className="relative w-full h-full drop-shadow group-hover/visual:-translate-y-6 transition-transform duration-1000 ease-out flex items-center justify-center">
+              <div className="relative w-full h-full drop-shadow group-hover/visual:-translate-y-3 transition-transform duration-700 ease-out flex items-center justify-center">
                 <div className="w-full h-full relative overflow-hidden flex items-center justify-center">
-                  <div className="absolute inset-0 pattern-dots opacity-40" />
+                  <div className="absolute inset-0 pattern-dots opacity-20" />
 
                   {/* Central Iconography */}
                   <div className="relative z-10 w-32 h-32 sm:w-48 sm:h-48 flex items-center justify-center">

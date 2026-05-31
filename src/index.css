@@ -172,6 +172,34 @@
     --ring: var(--brand-primary-500);
 }
 
+/* Gentle preset: soften brand tones and improve readability */
+:root {
+    --brand-primary-500: #4f82f7;
+    /* lighter, less saturated */
+    --brand-secondary-500: #34d399;
+    /* softer emerald */
+}
+
+/* Increase base line-height for calmer reading */
+body {
+    line-height: 1.6;
+}
+
+/* Reduce repeating grid pattern intensity */
+.hero-grid-pattern {
+    background-image: linear-gradient(to right, #80808008 1px, transparent 1px), linear-gradient(to bottom, #80808008 1px, transparent 1px);
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+    }
+}
+
 .dark {
     /* Premium Dark Mode: Deep Blue-Black Slate - IMPROVED CONTRAST */
     --background: oklch(0.14 0.03 240);
@@ -228,6 +256,16 @@
     [role="button"] {
         cursor: pointer;
     }
+}
+
+/* Make section headings semibold by default to reduce visual heaviness */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 600 !important;
 }
 
 /* Utility classes for complex backgrounds */
@@ -381,23 +419,21 @@
 html.theme-transitioning,
 html.theme-transitioning body {
     transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        color 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-html.theme-transitioning :where(
-    header,
+html.theme-transitioning :where(header,
     nav,
     main,
     section,
     footer,
     aside,
     [class*="bg-"],
-    [class*="border-"]
-) {
+    [class*="border-"]) {
     transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        color 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Accessibility: Reduced Motion Support */

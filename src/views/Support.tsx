@@ -76,7 +76,7 @@ const Support = () => {
               <LifeBuoy className="size-4" />
               <span>Customer Support</span>
             </motion.div>
-            <h1 className="text-3xl md:text-6xl font-bold text-foreground mb-6 tracking-tight transition-colors duration-300">
+            <h1 className="text-2xl md:text-5xl font-bold text-foreground mb-6 tracking-tight transition-colors duration-300">
               Get Help in <span className="text-brand-secondary-600">Minutes</span>
             </h1>
             <p className="text-muted-foreground text-base max-w-2xl mx-auto mb-8 leading-relaxed">
@@ -187,7 +187,7 @@ const Support = () => {
               </div>
 
               <div className="flex-1">
-                <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-200 dark:border-brand-secondary-500/20 uppercase transition-colors duration-300">
+                <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-200 dark:border-brand-secondary-500/20 uppercase rounded transition-colors duration-300">
                   <LifeBuoy className="size-4" />
                   Connect With Support
                 </span>

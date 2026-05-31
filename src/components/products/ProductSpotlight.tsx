@@ -150,7 +150,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                       transition={{ delay: 0.4 }}
                       className="max-w-xl"
                     >
-                      <h2 className="text-3xl lg:text-7xl font-bold text-white lg:text-slate-900 lg:dark:text-white leading-[1.05] tracking-tighter mb-3 uppercase">
+                      <h2 className="text-2xl lg:text-6xl font-bold text-white lg:text-slate-900 lg:dark:text-white leading-[1.05] tracking-tighter mb-3 uppercase">
                         {currentProduct.name.split(" ").map((word, i) => (
                           <span
                             key={i}
@@ -171,7 +171,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 lg:text-slate-500 mb-1">
                             Price
                           </span>
-                          <span className="text-2xl lg:text-4xl font-bold text-white lg:text-slate-900 lg:dark:text-white">
+                          <span className="text-lg lg:text-2xl font-bold text-white lg:text-slate-900 lg:dark:text-white">
                             {formatCurrency(currentProduct.price)}
                           </span>
                         </div>

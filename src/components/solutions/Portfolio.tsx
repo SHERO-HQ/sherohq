@@ -82,8 +82,8 @@ const Portfolio = () => {
     <Wrench className="size-4" />
     Our Work
   </span>
-  <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
-    Featured Projects
+  <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
+    What We've Built
   </h2>
  <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
  Explore our portfolio of successful projects and see how we've

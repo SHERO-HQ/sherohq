@@ -10,11 +10,11 @@ export const metadata = {
 
 export default function FeedbackPage() {
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 py-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen inset-0 pattern-dots bg-linear-to-br from-slate-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 py-20 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-2xl">
         {/* Header */}
         <div className="mb-16 text-center">
-          <h1 className="mb-4 text-4xl font-medium tracking-tight text-slate-900 dark:text-white sm:text-5xl">
+          <h1 className="mb-4 text-3xl font-medium tracking-tight text-slate-900 dark:text-white sm:text-4xl">
             We'd Love to Hear From You
           </h1>
           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">

@@ -29,9 +29,9 @@ interface HeroContent {
 
 // Constants
 const HERO_CONTENT: HeroContent = {
-  mainHeader: "Your Technology. \n Built, Delivered, Maintained.",
+  mainHeader: "Hardware, Software, and The Support for \n your Business.",
   subHeader:
-    "Premium hardware, custom software, and dedicated support. \n Everything your business needs to run without interruption.",
+    "We source it, set it up, and stay available when something goes wrong.",
 } as const;
 
 const heroBlock = {

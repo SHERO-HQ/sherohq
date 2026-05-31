@@ -77,11 +77,11 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
         <div className="space-y-12">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white uppercase tracking-tighter mb-2">
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tighter mb-2">
                         Customer <span className="text-brand-secondary-500">Feedback</span>
                     </h2>
                     <p className="text-sm font-medium text-slate-500 tracking-widest">
-                        {reviews.length} Verified Reviews
+                        {reviews.length} Reviews
                     </p>
                 </div>
             </div>

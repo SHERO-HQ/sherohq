@@ -56,10 +56,17 @@ const CustomTooltip = ({ active, payload, label }: any) => {
             <div key={index} className="flex items-center gap-2">
               <div
                 className="w-2 h-2 rounded-full shadow-xs"
-                style={{ backgroundColor: item.fill || item.stroke || item.color }}
+                style={{
+                  backgroundColor: item.fill || item.stroke || item.color,
+                }}
               />
               <span className="text-xs text-slate-400 font-medium capitalize">
-                {item.name === "count" ? "Interactions" : item.name === "queryCount" ? "Queries" : item.name}:
+                {item.name === "count"
+                  ? "Interactions"
+                  : item.name === "queryCount"
+                    ? "Queries"
+                    : item.name}
+                :
               </span>
               <span className="text-xs text-white font-bold font-mono">
                 {item.value.toLocaleString()}
@@ -73,7 +80,6 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
-
 const AIAnalyticsSkeleton = () => (
   <div className="space-y-8 animate-pulse select-none">
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -86,7 +92,10 @@ const AIAnalyticsSkeleton = () => (
     {/* Stats Grid */}
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
       {new Array(4).fill(0).map((_, i) => (
-        <Card key={i} className="bg-slate-900 border border-white/5 p-6 space-y-4">
+        <Card
+          key={i}
+          className="bg-slate-900 border border-white/5 p-6 space-y-4"
+        >
           <div className="flex justify-between items-center">
             <div className="h-4 w-28 bg-white/5 rounded" />
             <div className="h-6 w-6 bg-white/5 rounded" />
@@ -102,7 +111,10 @@ const AIAnalyticsSkeleton = () => (
     {/* Charts Grid */}
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       {new Array(4).fill(0).map((_, i) => (
-        <Card key={i} className="bg-slate-900 border border-white/5 p-6 space-y-6">
+        <Card
+          key={i}
+          className="bg-slate-900 border border-white/5 p-6 space-y-6"
+        >
           <div className="space-y-2">
             <div className="h-5 w-40 bg-white/5 rounded" />
             <div className="h-3 w-28 bg-white/5 rounded" />
@@ -111,7 +123,11 @@ const AIAnalyticsSkeleton = () => (
             {i % 2 === 0 ? (
               <div className="w-full flex items-end gap-3 h-full">
                 {[30, 60, 45, 80, 55, 90, 40].map((h, index) => (
-                  <div key={index} className="flex-1 bg-white/5 rounded-t" style={{ height: `${h}%` }} />
+                  <div
+                    key={index}
+                    className="flex-1 bg-white/5 rounded-t"
+                    style={{ height: `${h}%` }}
+                  />
                 ))}
               </div>
             ) : (
@@ -286,11 +302,16 @@ export default function AIAnalytics() {
           <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
           <CardHeader>
             <CardTitle className="text-white">Interaction Trends</CardTitle>
-            <CardDescription className="text-slate-500">30-day AI usage volume</CardDescription>
+            <CardDescription className="text-slate-500">
+              30-day AI usage volume
+            </CardDescription>
           </CardHeader>
           <CardContent className="h-75 min-h-50">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={dailyVolumeData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <BarChart
+                data={dailyVolumeData}
+                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+              >
                 <defs>
                   <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#10b981" stopOpacity={0.4} />
@@ -302,10 +323,31 @@ export default function AIAnalytics() {
                   stroke="#1e293b"
                   vertical={false}
                 />
-                <XAxis dataKey="label" stroke="#475569" fontSize={10} tickLine={false} axisLine={false} />
-                <YAxis stroke="#475569" fontSize={10} tickLine={false} axisLine={false} />
-                <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
-                <Bar dataKey="count" fill="url(#colorCount)" stroke="#10b981" strokeWidth={1.5} radius={[4, 4, 0, 0]} animationDuration={1500} />
+                <XAxis
+                  dataKey="label"
+                  stroke="#475569"
+                  fontSize={10}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  stroke="#475569"
+                  fontSize={10}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <Tooltip
+                  content={<CustomTooltip />}
+                  cursor={{ fill: "rgba(255,255,255,0.02)" }}
+                />
+                <Bar
+                  dataKey="count"
+                  fill="url(#colorCount)"
+                  stroke="#10b981"
+                  strokeWidth={1.5}
+                  radius={[4, 4, 0, 0]}
+                  animationDuration={1500}
+                />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -323,22 +365,49 @@ export default function AIAnalytics() {
           </CardHeader>
           <CardContent className="h-75 min-h-50">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={dailyVolumeData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <LineChart
+                data={dailyVolumeData}
+                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+              >
                 <CartesianGrid
                   strokeDasharray="3 3"
                   stroke="#1e293b"
                   vertical={false}
                 />
-                <XAxis dataKey="label" stroke="#475569" fontSize={10} tickLine={false} axisLine={false} />
-                <YAxis stroke="#475569" fontSize={10} tickLine={false} axisLine={false} />
-                <Tooltip content={<CustomTooltip />} cursor={{ stroke: "rgba(255,255,255,0.05)", strokeWidth: 2 }} />
+                <XAxis
+                  dataKey="label"
+                  stroke="#475569"
+                  fontSize={10}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  stroke="#475569"
+                  fontSize={10}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <Tooltip
+                  content={<CustomTooltip />}
+                  cursor={{ stroke: "rgba(255,255,255,0.05)", strokeWidth: 2 }}
+                />
                 <Line
                   type="monotone"
                   dataKey="count"
                   stroke="#3b82f6"
                   strokeWidth={3}
-                  dot={{ r: 3, stroke: "#3b82f6", strokeWidth: 2, fill: "#0f172a" }}
-                  activeDot={{ r: 5, stroke: "#fff", strokeWidth: 2, fill: "#3b82f6" }}
+                  dot={{
+                    r: 3,
+                    stroke: "#3b82f6",
+                    strokeWidth: 2,
+                    fill: "#0f172a",
+                  }}
+                  activeDot={{
+                    r: 5,
+                    stroke: "#fff",
+                    strokeWidth: 2,
+                    fill: "#3b82f6",
+                  }}
                   animationDuration={2000}
                 />
               </LineChart>
@@ -351,7 +420,9 @@ export default function AIAnalytics() {
           <div className="absolute inset-0 bg-radial-gradient from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
           <CardHeader>
             <CardTitle className="text-white">User Intent Map</CardTitle>
-            <CardDescription className="text-slate-500">Why users are talking to SHERO</CardDescription>
+            <CardDescription className="text-slate-500">
+              Why users are talking to SHERO
+            </CardDescription>
           </CardHeader>
           <CardContent className="h-75 min-h-50">
             {intentData.length > 0 ? (
@@ -427,7 +498,11 @@ export default function AIAnalytics() {
                   <defs>
                     <linearGradient id="colorGap" x1="0" y1="0" x2="1" y2="0">
                       <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.8} />
-                      <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.2} />
+                      <stop
+                        offset="95%"
+                        stopColor="#f59e0b"
+                        stopOpacity={0.2}
+                      />
                     </linearGradient>
                   </defs>
                   <CartesianGrid
@@ -457,7 +532,10 @@ export default function AIAnalytics() {
                         : String(value)
                     }
                   />
-                  <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
+                  <Tooltip
+                    content={<CustomTooltip />}
+                    cursor={{ fill: "rgba(255,255,255,0.02)" }}
+                  />
                   <Bar
                     dataKey="queryCount"
                     fill="url(#colorGap)"
@@ -487,7 +565,7 @@ export default function AIAnalytics() {
                 Catalog Deficiency Analysis
               </CardTitle>
               <CardDescription className="text-slate-500">
-                Products or services users asked for that we don&apos;t have
+                Products or services users asked for that we don't have
               </CardDescription>
             </div>
             <div className="p-2 rounded bg-amber-500/10 border border-amber-500/20 text-amber-500">

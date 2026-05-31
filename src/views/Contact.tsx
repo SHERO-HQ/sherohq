@@ -34,7 +34,7 @@ const Contact = () => {
                   <MessageSquareLock className="size-4" />
                   Contact SHERO
                 </div>
-                <h1 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-100 mb-6 leading-tight transition-colors duration-300">
+                <h1 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-6 leading-tight transition-colors duration-300">
                   Connect with{" "}
                   <span className="text-brand-secondary-600">Our Experts</span>
                 </h1>

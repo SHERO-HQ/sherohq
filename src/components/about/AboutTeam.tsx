@@ -187,7 +187,7 @@ const AboutTeam = () => {
             <Users className="size-4" />
             Our Team
           </span>
-          <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 transition-colors duration-300">
+          <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 transition-colors duration-300">
             Meet the <span className="text-brand-secondary-600">Minds</span>
           </h2>
           <p className="text-slate-600 dark:text-slate-400 transition-colors duration-300 ">

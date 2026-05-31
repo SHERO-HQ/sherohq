@@ -1,10 +1,12 @@
 "use client";
-import { StaggerContainer, StaggerItem } from "@/components/motion/AnimateSection";
+import {
+  StaggerContainer,
+  StaggerItem,
+} from "@/components/motion/AnimateSection";
 import Reveal from "@/components/motion/Reveal";
 import type React from "react";
 
 import {
-  Crosshair,
   ShoppingBag,
   MessageSquare,
   Code,
@@ -74,16 +76,16 @@ const LandingPillars = () => {
           <Reveal direction="up" distance={20}>
             <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
               <Zap className="size-4" />
-              Our Core Pillars
+              What We've Built
             </span>
-            <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
-              Engineered for Excellence
+            <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
+              Built Products & Systems
             </h2>
           </Reveal>
           <Reveal direction="up" distance={40} delay={0.2}>
             <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed transition-colors duration-300">
-              A comprehensive ecosystem of services designed to accelerate your
-              technological evolution.
+              A quick glance at the products, systems, and support we build to
+              help businesses run and grow.
             </p>
           </Reveal>
         </div>
@@ -102,17 +104,17 @@ const LandingPillars = () => {
               className={pillar.className}
             >
               <div
-                className={`group relative overflow-hidden rounded bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 p-8 hover:border-brand-secondary-500/50 dark:hover:border-white/20 transition duration-300 hover:-translate-y-1 h-full`}
+                className={`group relative overflow-hidden rounded bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 p-8 hover:border-brand-secondary-500/50 dark:hover:border-white/20 transition duration-300 hover:-translate-y-0.5 h-full`}
               >
                 {/* Hover Gradient Overlay */}
                 <div
-                  className={`absolute inset-0 bg-linear-to-br ${pillar.gradient} opacity-0 group-hover:opacity-40 dark:group-hover:opacity-100 transition-opacity duration-500`}
+                  className={`absolute inset-0 bg-linear-to-br ${pillar.gradient} opacity-0 group-hover:opacity-25 dark:group-hover:opacity-70 transition-opacity duration-500`}
                 />
 
                 {/* Content */}
                 <div className="relative z-10 h-full flex flex-col">
                   <div className="flex items-start justify-between mb-6">
-                    <div className="p-3 rounded bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white group-hover:scale-110 transition duration-300">
+                    <div className="p-3 rounded bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-900 dark:text-white group-hover:scale-105 transition duration-300">
                       {pillar.icon}
                     </div>
                     <ArrowUpRight className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-brand-secondary-600 dark:group-hover:text-white transition-colors" />
@@ -122,7 +124,7 @@ const LandingPillars = () => {
                     <h4 className="text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 mb-0.5 uppercase tracking-wider transition-colors duration-300">
                       {pillar.subheader}
                     </h4>
-                    <h3 className="md:text-2xl text-lg font-bold text-slate-900 dark:text-white mb-2 transition-colors duration-300">
+                    <h3 className="md:text-xl text-lg font-bold text-slate-900 dark:text-white mb-2 transition-colors duration-300">
                       {pillar.header}
                     </h3>
                     <p className="text-slate-600 dark:text-slate-400 leading-relaxed group-hover:text-slate-900 dark:group-hover:text-slate-200 transition-colors">
@@ -155,4 +157,3 @@ const LandingPillars = () => {
 };
 
 export default LandingPillars;
-
