@@ -200,7 +200,7 @@ const LandingHero: React.FC = () => {
             <div className="relative overflow-hidden group max-w-3xl">
               <motion.h1
                 variants={heroItem}
-                className="font-bold leading-[1.01] text-5xl lg:text-7xl px-2 sm:px-auto tracking-tighter text-slate-900 dark:text-white relative z-10"
+                className="font-bold leading-[1.01] text-4xl sm:text-5xl md:text-6xl px-2 sm:px-auto tracking-tighter text-slate-900 dark:text-white relative z-10"
               >
                 <span>{headlineLead}</span>
                 <br />
@@ -224,8 +224,8 @@ const LandingHero: React.FC = () => {
               <Button
                 asChild
                 variant="brandSecondary"
-                size="lg"
-                className="sm:text-sm font-medium w-fit sm:w-auto h-10 px-6 group transition-all hover:-translate-y-0.5"
+                size="default"
+                className="sm:text-sm font-medium w-fit sm:w-auto h-9 px-6 group transition-all hover:-translate-y-0.5"
               >
                 <NavLink href={getAbsoluteUrl("/shop")}>
                   <span className="text-sm">Products</span>
@@ -235,7 +235,7 @@ const LandingHero: React.FC = () => {
 
               <NavLink
                 href={getAbsoluteUrl("/solutions")}
-                className="group flex items-center justify-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary rounded px-8 py-2 h-10 w-fit transition-all glass-surface-md hover:bg-white dark:hover:bg-slate-900 hover:border-primary"
+                className="group flex items-center justify-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-primary rounded px-8 py-2 h-9 w-fit transition-all glass-surface-md hover:bg-white dark:hover:bg-slate-900 hover:border-primary"
                 role="button"
                 aria-label="Explore solutions"
               >
