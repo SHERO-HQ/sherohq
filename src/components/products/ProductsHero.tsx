@@ -47,17 +47,21 @@ const ProductHero = () => {
   const rotateY = useTransform(smoothX, [-0.5, 0.5], [-4, 4]);
   const translateX = useTransform(smoothX, [-0.5, 0.5], [-7, 7]);
   const translateY = useTransform(smoothY, [-0.5, 0.5], [-7, 7]);
+  const translateXFloatingCard = useTransform(mouseX, [-0.5, 0.5], [15, -15]);
+  const translateYFloatingCard = useTransform(mouseY, [-0.5, 0.5], [15, 15]);
+  const translateXSeal = useTransform(mouseX, [-0.5, 0.5], [-8, 8]);
+  const translateYSeal = useTransform(mouseY, [-0.5, 0.5], [-8, 8]);
+
+  const prefersReducedMotion = useReducedMotion();
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || prefersReducedMotion) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
     mouseX.set(x);
     mouseY.set(y);
   };
-
-  const prefersReducedMotion = useReducedMotion();
 
   return (
     <header
@@ -69,27 +73,35 @@ const ProductHero = () => {
     >
       {/* KINETIC BACKGROUND LAYERS */}
       <motion.div
-        style={{ x: translateX, y: translateY, opacity: 0.9 }}
+        style={prefersReducedMotion ? { opacity: 0.9 } : { x: translateX, y: translateY, opacity: 0.9 }}
         className="absolute inset-0 pattern-dots pointer-events-none"
       />
 
       {/* Particle Field */}
       <div className="absolute inset-0 pointer-events-none">
         {particles.map((p) => (
-          <motion.div
-            key={p.id}
-            initial={{ x: p.x, y: p.y, opacity: p.opacity }}
-            animate={{
-              y: [null, "-20%"],
-              opacity: [0, p.opacity, 0],
-            }}
-            transition={{
-              duration: p.duration,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            className={`absolute w-1 h-1 rounded-full ${p.id % 2 === 0 ? "bg-brand-secondary-500" : "bg-blue-500"}`}
-          />
+          prefersReducedMotion ? (
+            <div
+              key={p.id}
+              style={{ left: p.x, top: p.y, opacity: p.opacity }}
+              className={`absolute w-1 h-1 rounded-full ${p.id % 2 === 0 ? "bg-brand-secondary-500" : "bg-blue-500"}`}
+            />
+          ) : (
+            <motion.div
+              key={p.id}
+              initial={{ x: p.x, y: p.y, opacity: p.opacity }}
+              animate={{
+                y: [null, "-20%"],
+                opacity: [0, p.opacity, 0],
+              }}
+              transition={{
+                duration: p.duration,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+              className={`absolute w-1 h-1 rounded-full ${p.id % 2 === 0 ? "bg-brand-secondary-500" : "bg-blue-500"}`}
+            />
+          )
         ))}
       </div>
 
@@ -135,9 +147,9 @@ const ProductHero = () => {
 
             {/* Description */}
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
+              transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.1 }}
               className="text-base text-slate-600 dark:text-slate-300 mb-10 leading-relaxed max-w-xl"
             >
               Curated products, reliable warranty coverage, and fast fulfillment
@@ -146,9 +158,9 @@ const ProductHero = () => {
 
             {/* Trust Indicators */}
             <motion.div
-              initial={{ opacity: 0 }}
+              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
+              transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.3 }}
               className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8 border-t border-slate-200 dark:border-slate-800 w-full"
             >
               {[
@@ -194,7 +206,7 @@ const ProductHero = () => {
           {/* RIGHT: Kinetic Visual Hub (40%) */}
           <div className="w-full lg:w-[40%] relative aspect-square md:flex items-center justify-center perspective-distant py-12 lg:py-0 hidden">
             <motion.div
-              style={{
+              style={prefersReducedMotion ? {} : {
                 rotateX,
                 rotateY,
                 transformStyle: "preserve-3d",
@@ -262,10 +274,10 @@ const ProductHero = () => {
 
               {/* Layer 2: Floating Payment Success Card */}
               <motion.div
-                style={{
+                style={prefersReducedMotion ? { z: 150, rotate: 12 } : {
                   z: 150,
-                  x: useTransform(mouseX, [-0.5, 0.5], [15, -15]),
-                  y: useTransform(mouseY, [-0.5, 0.5], [15, 15]),
+                  x: translateXFloatingCard,
+                  y: translateYFloatingCard,
                   rotate: 12,
                 }}
                 className="absolute bottom-8 left-0 w-fit p-3 rounded bg-white/95 dark:bg-slate-800/95  border border-brand-secondary-500/20 shadow z-20 pointer-events-none scale-75 sm:scale-100"
@@ -287,10 +299,11 @@ const ProductHero = () => {
 
               {/* Layer 3: Quality Seal */}
               <motion.div
-                style={{
+                style={prefersReducedMotion ? { z: 200, rotate: -6 } : {
                   z: 200,
-                  x: useTransform(mouseX, [-0.5, 0.5], [-8, 8]),
-                  y: useTransform(mouseY, [-0.5, 0.5], [-8, 8]),
+                  x: translateXSeal,
+                  y: translateYSeal,
+                  rotate: -6,
                 }}
                 className="absolute top-4 right-4 bg-brand-secondary-600 w-16 h-16 rounded-full shadow shadow-brand-secondary-500/50 flex-col items-center justify-center -rotate-6 z-30 pointer-events-none aspect-square scale-75 sm:scale-100 flex"
               >

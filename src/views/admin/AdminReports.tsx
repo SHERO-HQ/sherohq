@@ -47,6 +47,7 @@ import {
 import { useAdmin } from "@/context/AdminContext";
 import { cn } from "@/lib/utils";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -539,6 +540,7 @@ function RevenueChartSection({
   readonly setChartType: (type: "line" | "bar") => void;
   readonly analytics: AnalyticsData[];
 }) {
+  const prefersReducedMotion = useReducedMotion();
   return (
     <div className="bg-slate-900/40 border border-white/10 rounded p-6 relative group overflow-hidden">
       <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
@@ -604,6 +606,7 @@ function RevenueChartSection({
                 strokeWidth={2.5}
                 dot={false}
                 activeDot={{ r: 4, stroke: "#10b981", strokeWidth: 2, fill: "#fff" }}
+                isAnimationActive={!prefersReducedMotion}
                 animationDuration={1500}
               />
               <Line
@@ -614,6 +617,7 @@ function RevenueChartSection({
                 strokeWidth={2}
                 dot={false}
                 activeDot={{ r: 4, stroke: "#ef4444", strokeWidth: 2, fill: "#fff" }}
+                isAnimationActive={!prefersReducedMotion}
                 animationDuration={1500}
               />
               <Line
@@ -624,6 +628,7 @@ function RevenueChartSection({
                 strokeWidth={3}
                 dot={false}
                 activeDot={{ r: 5, stroke: "#3b82f6", strokeWidth: 2, fill: "#fff" }}
+                isAnimationActive={!prefersReducedMotion}
                 animationDuration={2000}
               />
             </LineChart>
@@ -658,7 +663,7 @@ function RevenueChartSection({
                 tickFormatter={(value: number) => `GH₵${value}`}
               />
               <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
-              <Bar dataKey="revenue" fill="url(#colorReportRev)" stroke="#3b82f6" strokeWidth={1} radius={[4, 4, 0, 0]} animationDuration={1500} />
+              <Bar dataKey="revenue" fill="url(#colorReportRev)" stroke="#3b82f6" strokeWidth={1} radius={[4, 4, 0, 0]} isAnimationActive={!prefersReducedMotion} animationDuration={1500} />
             </BarChart>
           )}
         </ResponsiveContainer>
@@ -672,6 +677,7 @@ function StockDistributionChart({
 }: {
   readonly data: StockDistribution[];
 }) {
+  const prefersReducedMotion = useReducedMotion();
   return (
     <div className="bg-slate-900/40 border border-white/10 rounded p-6 hover:border-blue-500/20 transition-colors duration-300">
       <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
@@ -693,6 +699,7 @@ function StockDistributionChart({
               outerRadius={80}
               paddingAngle={5}
               dataKey="value"
+              isAnimationActive={!prefersReducedMotion}
             >
               {(data.length > 0
                 ? data
@@ -715,6 +722,7 @@ function OrderStatusChart({
 }: {
   readonly data: OrderStatusDistribution[];
 }) {
+  const prefersReducedMotion = useReducedMotion();
   return (
     <div className="bg-slate-900/40 border border-white/10 rounded p-6 hover:border-amber-500/20 transition-colors duration-300">
       <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
@@ -736,6 +744,7 @@ function OrderStatusChart({
               outerRadius={80}
               paddingAngle={5}
               dataKey="value"
+              isAnimationActive={!prefersReducedMotion}
             >
               {(data.length > 0
                 ? data
@@ -759,6 +768,7 @@ function OrderStatusChart({
 }
 
 function RegionalSalesChart({ data }: { readonly data: RegionalData[] }) {
+  const prefersReducedMotion = useReducedMotion();
   return (
     <div className="bg-slate-900/40 border border-white/10 rounded p-6 hover:border-brand-secondary-500/20 transition-colors duration-300">
       <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
@@ -798,6 +808,7 @@ function RegionalSalesChart({ data }: { readonly data: RegionalData[] }) {
               strokeWidth={1}
               radius={[0, 4, 4, 0]}
               barSize={16}
+              isAnimationActive={!prefersReducedMotion}
               animationDuration={1500}
             />
           </BarChart>

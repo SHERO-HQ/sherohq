@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
 import { Resend } from "resend";
+import { COMPANY_CONTACTS } from "@/constants/contacts";
+import { COMPANY_EMAILS } from "@/constants/emails";
 
 interface OrderItem {
   id: string;
@@ -241,7 +243,7 @@ class NotificationService {
 
     // Admin alert
     const adminEmail =
-      process.env.ADMIN_NOTIFICATION_EMAIL || "info.sherohq@gmail.com";
+      process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.INFO;
     await this.sendEmail(
       adminEmail,
       `🚨 NEW ORDER: ${readableOrderId}`,
@@ -258,7 +260,7 @@ class NotificationService {
     // -------------------------------------------------------------------------
     
     // 1. Alert Admin
-    const adminWhatsapp = process.env.ADMIN_WHATSAPP_NUMBER || "233548711582";
+    const adminWhatsapp = process.env.ADMIN_WHATSAPP_NUMBER || COMPANY_CONTACTS.WHATSAPP;
     const adminAlertText = 
       `🚨 *NEW ORDER RECEIVED!*\n\n` +
       `📦 *Order ID:* ${readableOrderId}\n` +

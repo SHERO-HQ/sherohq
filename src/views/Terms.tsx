@@ -1,3 +1,5 @@
+import { COMPANY_EMAILS } from "@/constants/emails";
+
 const Terms = () => {
   return (
     <>
@@ -95,10 +97,10 @@ const Terms = () => {
                   If you have any questions about these Terms, please contact us
                   at{" "}
                   <a
-                    href="mailto:legal@sherohq.com"
+                    href={`mailto:${COMPANY_EMAILS.LEGAL}`}
                     className="text-brand-secondary-600 hover:underline"
                   >
-                    support@sherohq.com
+                    {COMPANY_EMAILS.SUPPORT}
                   </a>
                 </p>
               </section>

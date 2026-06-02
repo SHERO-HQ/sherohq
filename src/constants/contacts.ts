@@ -3,4 +3,6 @@ export const COMPANY_CONTACTS = {
   PHONE_DISPLAY: "+233 54 871 1582",
   HQ_LOCATION: "Tamale, Ghana",
   WORKING_HOURS: "Mon - Fri, 9:00 AM - 6:00 PM",
+  WEBSITE: "sherohq.com",
+  WEBSITE_DISPLAY: "www.sherohq.com",
 } as const;

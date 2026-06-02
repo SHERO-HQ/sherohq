@@ -70,6 +70,7 @@ const Legend = dynamic(() => import("recharts").then((mod) => mod.Legend), {
 });
 
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/utils";
 import ActivityFeed from "@/components/admin/ActivityFeed";
 import { toReadableOrderId } from "@/utils/orderId";
@@ -150,9 +151,11 @@ interface StatCardItem {
 const MagneticStatCard = ({
   stat,
   index,
+  prefersReducedMotion,
 }: {
   readonly stat: StatCardItem;
   readonly index: number;
+  readonly prefersReducedMotion: boolean;
 }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -164,6 +167,7 @@ const MagneticStatCard = ({
   const rotateY = useTransform(mouseX, [-0.5, 0.5], [-10, 10]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (prefersReducedMotion) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
@@ -174,18 +178,19 @@ const MagneticStatCard = ({
   };
 
   const handleMouseLeave = () => {
+    if (prefersReducedMotion) return;
     x.set(0);
     y.set(0);
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1 }}
+      transition={prefersReducedMotion ? { duration: 0 } : { delay: index * 0.1 }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{
+      style={prefersReducedMotion ? {} : {
         rotateX,
         rotateY,
         transformStyle: "preserve-3d",
@@ -248,6 +253,7 @@ const getTrendStyles = (trend: number) => {
 
 export default function AdminDashboard() {
   const { admin } = useAdmin();
+  const prefersReducedMotion = useReducedMotion();
   const [period, setPeriod] = useState<"today" | "week" | "month" | "year">(
     "today",
   );
@@ -480,7 +486,7 @@ export default function AdminDashboard() {
             </div>
           ))
           : statCards.map((stat, index) => (
-            <MagneticStatCard key={stat.title} stat={stat} index={index} />
+            <MagneticStatCard key={stat.title} stat={stat} index={index} prefersReducedMotion={prefersReducedMotion} />
           ))}
       </div>
 
@@ -588,6 +594,7 @@ export default function AdminDashboard() {
                       fillOpacity={1}
                       fill="url(#colorRev)"
                       animationDuration={1500}
+                      isAnimationActive={!prefersReducedMotion}
                     />
                     <Area
                       yAxisId="right"
@@ -598,6 +605,7 @@ export default function AdminDashboard() {
                       fillOpacity={1}
                       fill="url(#colorOrd)"
                       animationDuration={2000}
+                      isAnimationActive={!prefersReducedMotion}
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -705,6 +713,7 @@ export default function AdminDashboard() {
                         dataKey="value"
                         stroke="rgba(15, 23, 42, 0.5)"
                         strokeWidth={2}
+                        isAnimationActive={!prefersReducedMotion}
                       />
                       <Tooltip content={<CustomTooltip />} />
                       <Legend verticalAlign="bottom" height={36} />

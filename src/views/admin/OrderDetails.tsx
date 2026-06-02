@@ -43,6 +43,8 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { COMPANY_CONTACTS } from "@/constants/contacts";
+import { COMPANY_EMAILS } from "@/constants/emails";
 
 export default function OrderDetails() {
   const { id } = useParams<{ id: string }>();
@@ -1065,9 +1067,9 @@ export default function OrderDetails() {
 
                 <div className="text-center text-[8px] leading-4">
                   <p>THANK YOU FOR SHOPPING WITH SHERO</p>
-                  <p>support@sherohq.com</p>
-                  <p>+233 54 871 1582</p>
-                  <p>www.sherohq.com</p>
+                  <p>{COMPANY_EMAILS.SUPPORT}</p>
+                  <p>{COMPANY_CONTACTS.PHONE_DISPLAY}</p>
+                  <p>{COMPANY_CONTACTS.WEBSITE_DISPLAY}</p>
                 </div>
 
                 <div className="thermal-cut">--- CUSTOMER COPY ---</div>
@@ -1196,7 +1198,7 @@ export default function OrderDetails() {
                     Thank you for your business!
                   </p>
                   <p className="text-slate-500 text-[9px] mt-1">
-                    SHERO Tech & Gadgets • Tamale, Ghana • www.sherohq.com
+                    SHERO Tech & Gadgets • {COMPANY_CONTACTS.HQ_LOCATION} • {COMPANY_CONTACTS.WEBSITE_DISPLAY}
                   </p>
                 </div>
               </div>

@@ -46,17 +46,19 @@ const AboutHero = () => {
   const rotateY = useTransform(smoothX, [-0.5, 0.5], [-4, 4]);
   const translateX = useTransform(smoothX, [-0.5, 0.5], [-7, 7]);
   const translateY = useTransform(smoothY, [-0.5, 0.5], [-7, 7]);
+  const translateXSeal = useTransform(mouseX, [-0.5, 0.5], [-12, 12]);
+  const translateYSeal = useTransform(mouseY, [-0.5, 0.5], [-12, 12]);
+
+  const prefersReducedMotion = useReducedMotion();
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || prefersReducedMotion) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
     mouseX.set(x);
     mouseY.set(y);
   };
-
-  const prefersReducedMotion = useReducedMotion();
 
   return (
     <header
@@ -68,27 +70,35 @@ const AboutHero = () => {
     >
       {/* KINETIC BACKGROUND LAYERS */}
       <motion.div
-        style={{ x: translateX, y: translateY, opacity: 0.9 }}
+        style={prefersReducedMotion ? { opacity: 0.9 } : { x: translateX, y: translateY, opacity: 0.9 }}
         className="absolute inset-0 pattern-dots pointer-events-none"
       />
 
       {/* Particle Field - intentionally subtle */}
       <div className="absolute inset-0 opacity-30 pointer-events-none">
         {particles.map((p) => (
-          <motion.div
-            key={p.id}
-            initial={{ x: p.x, y: p.y, opacity: p.opacity }}
-            animate={{
-              y: [null, "-18%"],
-              opacity: [0, p.opacity, 0],
-            }}
-            transition={{
-              duration: p.duration,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            className="absolute w-1 h-1 bg-brand-secondary-500 rounded-full"
-          />
+          prefersReducedMotion ? (
+            <div
+              key={p.id}
+              style={{ left: p.x, top: p.y, opacity: p.opacity }}
+              className="absolute w-1 h-1 bg-brand-secondary-500 rounded-full"
+            />
+          ) : (
+            <motion.div
+              key={p.id}
+              initial={{ x: p.x, y: p.y, opacity: p.opacity }}
+              animate={{
+                y: [null, "-18%"],
+                opacity: [0, p.opacity, 0],
+              }}
+              transition={{
+                duration: p.duration,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+              className="absolute w-1 h-1 bg-brand-secondary-500 rounded-full"
+            />
+          )
         ))}
       </div>
 
@@ -149,9 +159,9 @@ const AboutHero = () => {
 
             {/* Description */}
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
+              transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.1 }}
               className="text-base md:text-lg text-slate-600 dark:text-slate-300 mb-6 leading-relaxed max-w-xl"
             >
               We partner with organizations to design, ship, and support
@@ -160,9 +170,9 @@ const AboutHero = () => {
 
             {/* Values Preview */}
             <motion.div
-              initial={{ opacity: 0 }}
+              initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
+              transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.3 }}
               className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-slate-200 dark:border-slate-800 w-full"
             >
               {[
@@ -206,7 +216,7 @@ const AboutHero = () => {
           {/* RIGHT: Vision Hub (40%) */}
           <div className="w-full lg:w-[40%] relative aspect-square md:flex items-center justify-center perspective-distant py-12 lg:py-0 hidden">
             <motion.div
-              style={{
+              style={prefersReducedMotion ? {} : {
                 rotateX,
                 rotateY,
                 transformStyle: "preserve-3d",
@@ -264,9 +274,9 @@ const AboutHero = () => {
                       </div>
                       <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                         <motion.div
-                          initial={{ width: 0 }}
+                          initial={prefersReducedMotion ? { width: `${item.progress}%` } : { width: 0 }}
                           animate={{ width: `${item.progress}%` }}
-                          transition={{ duration: 1.5 }}
+                          transition={prefersReducedMotion ? { duration: 0 } : { duration: 1.5 }}
                           className={`h-full ${item.color}`}
                         />
                       </div>
@@ -277,10 +287,10 @@ const AboutHero = () => {
 
               {/* Layer 2: Impact Seal */}
               <motion.div
-                style={{
+                style={prefersReducedMotion ? { z: 220 } : {
                   z: 220,
-                  x: useTransform(mouseX, [-0.5, 0.5], [-12, 12]),
-                  y: useTransform(mouseY, [-0.5, 0.5], [-12, 12]),
+                  x: translateXSeal,
+                  y: translateYSeal,
                 }}
                 className="absolute -bottom-6 -right-5 w-fit p-4 bg-linear-to-r from-blue-600 to-blue-500 rounded shadow shadow-blue-500/40 flex flex-col items-center justify-center rotate-6 z-30 pointer-events-none"
               >

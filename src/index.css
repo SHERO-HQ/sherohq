@@ -190,9 +190,11 @@ body {
     background-image: linear-gradient(to right, #80808008 1px, transparent 1px), linear-gradient(to bottom, #80808008 1px, transparent 1px);
 }
 
-/* Respect reduced motion preference */
+/* Accessibility: Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
-    * {
+    *,
+    *::before,
+    *::after {
         animation-duration: 0.001ms !important;
         transition-duration: 0.001ms !important;
         animation-iteration-count: 1 !important;
@@ -467,17 +469,4 @@ html.theme-transitioning :where(header,
 
 .chrome-sweep:hover::after {
     left: 150%;
-}
-
-/* Accessibility: Reduced Motion Support */
-@media (prefers-reduced-motion: reduce) {
-
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
 }

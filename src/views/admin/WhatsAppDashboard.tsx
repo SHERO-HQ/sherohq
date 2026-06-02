@@ -19,6 +19,7 @@ import {
   Send
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
   ResponsiveContainer,
   BarChart,
@@ -69,6 +70,7 @@ interface AnalyticsData {
 }
 
 export default function WhatsAppDashboard() {
+  const prefersReducedMotion = useReducedMotion();
   const [activeTab, setActiveTab] = useState("conversations");
   const [selectedPhone, setSelectedPhone] = useState<string | null>(null);
 
@@ -311,7 +313,6 @@ export default function WhatsAppDashboard() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
             WhatsApp Automation
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_#10b981]" />
           </h1>
           <p className="text-slate-400 text-sm mt-1">
             Manage live conversations, track automated delivery retries, resolve customer tickets, and review statistics.
@@ -661,8 +662,8 @@ export default function WhatsAppDashboard() {
                             itemStyle={{ color: "#3b82f6" }}
                           />
                           <Legend verticalAlign="top" height={36} iconType="circle" />
-                          <Bar dataKey="inbound" name="Inbound" fill="#10b981" radius={[4, 4, 0, 0]} />
-                          <Bar dataKey="outbound" name="Outbound" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                          <Bar dataKey="inbound" name="Inbound" fill="#10b981" radius={[4, 4, 0, 0]} isAnimationActive={!prefersReducedMotion} />
+                          <Bar dataKey="outbound" name="Outbound" fill="#3b82f6" radius={[4, 4, 0, 0]} isAnimationActive={!prefersReducedMotion} />
                         </BarChart>
                       </ResponsiveContainer>
                     </div>
@@ -694,6 +695,7 @@ export default function WhatsAppDashboard() {
                               dataKey="value"
                               stroke="#0f172a"
                               strokeWidth={2}
+                              isAnimationActive={!prefersReducedMotion}
                             >
                               {analytics.status.map((entry, index) => (
                                 <Cell key={`cell-${index}`} />

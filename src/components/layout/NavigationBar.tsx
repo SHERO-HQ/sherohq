@@ -32,6 +32,7 @@ import BottomNav from "./BottomNav";
 import SearchBar from "./SearchBar";
 import { Badge } from "@/components/ui/badge";
 import { getAbsoluteUrl } from "@/utils/subdomain";
+import { COMPANY_CONTACTS } from "@/constants/contacts";
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -697,7 +698,7 @@ const Nav = () => {
                 <div className="flex items-center justify-center gap-6 mb-3">
                   {/* WhatsApp */}
                   <a
-                    href="https://wa.me/233548711582"
+                    href={`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-slate-400 hover:text-brand-secondary-500 transition-all hover:scale-110 active:scale-95"

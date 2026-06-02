@@ -10,6 +10,7 @@ import {
  ArrowRight,
 } from "lucide-react";
 import { useRef } from "react";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface Pathway {
  icon: React.ReactNode;
@@ -113,6 +114,7 @@ const LandingPathways = () => {
 
 const PathwayCard = ({ path }: { path: Pathway }) => {
  const cardRef = useRef<HTMLDivElement>(null);
+ const prefersReducedMotion = useReducedMotion();
 
  // Mouse tilt logic — interactive only, not scroll-triggered
  const x = useMotionValue(0);
@@ -123,9 +125,14 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
 
  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
+ const glowBg = useTransform(
+   [mouseXSpring, mouseYSpring],
+   ([sx, sy]) =>
+     `radial-gradient(400px circle at ${((sx as number) + 0.5) * 100}% ${((sy as number) + 0.5) * 100}%, rgba(16, 185, 129, 0.1), transparent)`,
+ );
 
  const handleMouseMove = (e: React.MouseEvent) => {
- if (!cardRef.current) return;
+ if (!cardRef.current || prefersReducedMotion) return;
  const rect = cardRef.current.getBoundingClientRect();
  const width = rect.width;
  const height = rect.height;
@@ -140,6 +147,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
  };
 
  const handleMouseLeave = () => {
+ if (prefersReducedMotion) return;
  x.set(0);
  y.set(0);
  };
@@ -149,7 +157,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
  ref={cardRef}
  onMouseMove={handleMouseMove}
  onMouseLeave={handleMouseLeave}
- style={{
+ style={prefersReducedMotion ? {} : {
  rotateX,
  rotateY,
  transformStyle: "preserve-3d",
@@ -158,12 +166,8 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
  >
  {/* Dynamic Glow Layer */}
  <motion.div
- style={{
- background: useTransform(
- [mouseXSpring, mouseYSpring],
- ([sx, sy]) =>
- `radial-gradient(400px circle at ${((sx as number) + 0.5) * 100}% ${((sy as number) + 0.5) * 100}%, rgba(16, 185, 129, 0.1), transparent)`,
- ),
+ style={prefersReducedMotion ? {} : {
+ background: glowBg,
  }}
  className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"
  />

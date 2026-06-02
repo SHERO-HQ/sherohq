@@ -1,4 +1,6 @@
 import React from "react";
+import { COMPANY_CONTACTS } from "@/constants/contacts";
+import { COMPANY_EMAILS } from "@/constants/emails";
 
 export default function JsonLd() {
   const schema = {
@@ -6,12 +8,12 @@ export default function JsonLd() {
     "@graph": [
       {
         "@type": "Organization",
-        "@id": "https://sherohq.com/#organization",
+        "@id": `https://${COMPANY_CONTACTS.WEBSITE}/#organization`,
         "name": "SHERO HQ",
-        "url": "https://sherohq.com",
+        "url": `https://${COMPANY_CONTACTS.WEBSITE}`,
         "logo": {
           "@type": "ImageObject",
-          "url": "https://sherohq.com/shero.png",
+          "url": `https://${COMPANY_CONTACTS.WEBSITE}/shero.png`,
           "width": "1200",
           "height": "630"
         },
@@ -23,14 +25,14 @@ export default function JsonLd() {
       },
       {
         "@type": "LocalBusiness",
-        "@id": "https://sherohq.com/#localbusiness",
+        "@id": `https://${COMPANY_CONTACTS.WEBSITE}/#localbusiness`,
         "name": "SHERO Tech",
         "parentOrganization": {
-          "@id": "https://sherohq.com/#organization"
+          "@id": `https://${COMPANY_CONTACTS.WEBSITE}/#organization`
         },
-        "url": "https://sherohq.com",
-        "telephone": "+233240000000",
-        "email": "support@sherohq.com",
+        "url": `https://${COMPANY_CONTACTS.WEBSITE}`,
+        "telephone": `+${COMPANY_CONTACTS.WHATSAPP}`,
+        "email": COMPANY_EMAILS.SUPPORT,
         "priceRange": "$$",
         "address": {
           "@type": "PostalAddress",
@@ -53,16 +55,16 @@ export default function JsonLd() {
             "closes": "18:00"
           }
         ],
-        "image": "https://sherohq.com/shero.png"
+        "image": `https://${COMPANY_CONTACTS.WEBSITE}/shero.png`
       },
       {
         "@type": "ProfessionalService",
-        "@id": "https://sherohq.com/#software-solutions",
+        "@id": `https://${COMPANY_CONTACTS.WEBSITE}/#software-solutions`,
         "name": "SHERO Solutions",
         "parentOrganization": {
-          "@id": "https://sherohq.com/#organization"
+          "@id": `https://${COMPANY_CONTACTS.WEBSITE}/#organization`
         },
-        "url": "https://sherohq.com/solutions",
+        "url": `https://${COMPANY_CONTACTS.WEBSITE}/solutions`,
         "description": "High-performance custom platforms, software engineering, managed enterprise IT infrastructure, and cloud systems designed to grow with your ambitions.",
         "areaServed": [
           {

@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { type WishlistItem } from "@/context/WishlistContextType";
 import AppImage from "@/components/common/AppImage";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 const WishlistDrawer = () => {
   const {
@@ -18,6 +19,8 @@ const WishlistDrawer = () => {
     clearWishlist,
   } = useWishlist();
   const { addItem } = useCart();
+
+  const containerRef = useFocusTrap(isWishlistOpen, () => setIsWishlistOpen(false));
 
   // Lock scroll
   useEffect(() => {
@@ -68,6 +71,10 @@ const WishlistDrawer = () => {
 
           {/* Drawer */}
           <motion.div
+            ref={containerRef as any}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Wishlist"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}

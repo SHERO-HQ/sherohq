@@ -23,6 +23,7 @@ import {
 import SupportTicketForm from "@/components/support/SupportTicketForm";
 import Link from "next/link";
 import { COMPANY_EMAILS } from "@/constants/emails";
+import { COMPANY_CONTACTS } from "@/constants/contacts";
 
 const Support = () => {
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
@@ -47,7 +48,7 @@ const Support = () => {
         "Connect with other users, share tips, and find solutions. Join our community on our social media pages to get started.",
       icon: MessageCircle,
       socials: [
-        { icon: WhatsAppIcon, url: "https://wa.me/233548711582" },
+        { icon: WhatsAppIcon, url: `https://wa.me/${COMPANY_CONTACTS.WHATSAPP}` },
         { icon: TelegramIcon, url: "https://t.me/sherohq" },
         {
           icon: FacebookIcon,
@@ -216,7 +217,7 @@ const Support = () => {
                     <span>Email Us</span>
                   </a>
                   <a
-                    href="tel:+233548711582"
+                    href={`tel:${COMPANY_CONTACTS.WHATSAPP}`}
                     className="flex items-center gap-3 px-6 py-2 rounded border-2 border-brand-secondary-500/30 text-brand-secondary-600 dark:text-brand-secondary-400 font-medium text-sm hover:bg-brand-secondary-500/10 transition w-fit md:w-auto justify-center"
                   >
                     <Phone className="w-5 h-5" />

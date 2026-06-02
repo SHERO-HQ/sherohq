@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/assets/icons/icons";
 import { toReadableOrderId } from "@/utils/orderId";
+import { COMPANY_CONTACTS } from "@/constants/contacts";
 
 interface PaymentFailureSupportProps {
   orderId: string;
@@ -30,7 +31,7 @@ const PaymentFailureSupport = ({
   isUpdatingOffline,
   onBack,
 }: PaymentFailureSupportProps) => {
-  const WHATSAPP_NUMBER = "233548711582";
+  const WHATSAPP_NUMBER = COMPANY_CONTACTS.WHATSAPP;
   const readableOrderId = toReadableOrderId(orderId);
   const supportMessage = encodeURIComponent(
     `Hello SHERO Support, I'm having trouble completing my payment for Order ${readableOrderId} (GHS ${amount.toFixed(2)}). Can you help me?`,

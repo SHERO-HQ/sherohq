@@ -282,9 +282,9 @@ const LandingHero: React.FC = () => {
                 {openWindows[0] && (
                   <motion.div
                     key="window-hardware"
-                    initial={{ opacity: 0, scale: 0.7, y: 50, rotate: -2 }}
-                    animate={heroReady ? { opacity: 1, scale: 1, y: 0, rotate: -1 } : {}}
-                    exit={{ opacity: 0, scale: 0.5, y: 30, rotate: -5, transition: { duration: 0.2 } }}
+                    initial={prefersReducedMotion ? { opacity: 1, scale: 1, y: 0, rotate: -1 } : { opacity: 0, scale: 0.7, y: 50, rotate: -2 }}
+                    animate={prefersReducedMotion ? { opacity: 1, scale: 1, y: 0, rotate: -1 } : heroReady ? { opacity: 1, scale: 1, y: 0, rotate: -1 } : {}}
+                    exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, scale: 0.5, y: 30, rotate: -5, transition: { duration: 0.2 } }}
                     whileHover={motionEnabled ? {
                       scale: 1.04,
                       y: -8,
@@ -405,9 +405,9 @@ const LandingHero: React.FC = () => {
                 {openWindows[1] && (
                   <motion.div
                     key="window-software"
-                    initial={{ opacity: 0, scale: 0.7, y: 50, rotate: 2 }}
-                    animate={heroReady ? { opacity: 1, scale: 1, y: 0, rotate: 1 } : {}}
-                    exit={{ opacity: 0, scale: 0.5, y: 30, rotate: 5, transition: { duration: 0.2 } }}
+                    initial={prefersReducedMotion ? { opacity: 1, scale: 1, y: 0, rotate: 1 } : { opacity: 0, scale: 0.7, y: 50, rotate: 2 }}
+                    animate={prefersReducedMotion ? { opacity: 1, scale: 1, y: 0, rotate: 1 } : heroReady ? { opacity: 1, scale: 1, y: 0, rotate: 1 } : {}}
+                    exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, scale: 0.5, y: 30, rotate: 5, transition: { duration: 0.2 } }}
                     whileHover={motionEnabled ? {
                       scale: 1.04,
                       y: -8,
@@ -527,9 +527,9 @@ const LandingHero: React.FC = () => {
                 {openWindows[2] && (
                   <motion.div
                     key="window-support"
-                    initial={{ opacity: 0, scale: 0.7, y: 50, rotate: -1.5 }}
-                    animate={heroReady ? { opacity: 1, scale: 1, y: 0, rotate: -0.5 } : {}}
-                    exit={{ opacity: 0, scale: 0.5, y: 30, rotate: -3, transition: { duration: 0.2 } }}
+                    initial={prefersReducedMotion ? { opacity: 1, scale: 1, y: 0, rotate: -0.5 } : { opacity: 0, scale: 0.7, y: 50, rotate: -1.5 }}
+                    animate={prefersReducedMotion ? { opacity: 1, scale: 1, y: 0, rotate: -0.5 } : heroReady ? { opacity: 1, scale: 1, y: 0, rotate: -0.5 } : {}}
+                    exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, scale: 0.5, y: 30, rotate: -3, transition: { duration: 0.2 } }}
                     whileHover={motionEnabled ? {
                       scale: 1.04,
                       y: -8,

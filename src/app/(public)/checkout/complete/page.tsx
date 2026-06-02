@@ -6,6 +6,7 @@ import { CheckCircle, AlertCircle, Loader, ShoppingBag, ArrowRight } from "lucid
 import { Button } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/assets/icons/icons";
 import { toReadableOrderId } from "@/utils/orderId";
+import { COMPANY_CONTACTS } from "@/constants/contacts";
 
 function CheckoutCompleteContent() {
   const searchParams = useSearchParams();
@@ -78,7 +79,7 @@ function CheckoutCompleteContent() {
         `💰 *Total:* GHS ${totalAmount > 0 ? totalAmount.toFixed(2) : "Pending"}\n\n` +
         `Please confirm my delivery options. Thank you!`
     );
-    window.open(`https://wa.me/233548711582?text=${message}`, "_blank");
+    window.open(`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}?text=${message}`, "_blank");
   };
 
   if (orderStatus === "loading") {

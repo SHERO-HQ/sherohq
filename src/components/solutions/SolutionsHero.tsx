@@ -32,7 +32,7 @@ const SolutionsHero = () => {
   }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || prefersReducedMotion) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
@@ -140,15 +140,15 @@ const SolutionsHero = () => {
 
           {/* Solution Visual Hub (3D perspectives, floating macOS windows, and macOS Dock) */}
           <motion.div
-            initial={{ scale: 0.9, opacity: 0, rotate: 5 }}
-            animate={heroReady ? { scale: 1, opacity: 1, rotate: 0 } : {}}
+            initial={prefersReducedMotion ? { scale: 1, opacity: 1, rotate: 0 } : { scale: 0.9, opacity: 0, rotate: 5 }}
+            animate={prefersReducedMotion ? { scale: 1, opacity: 1, rotate: 0 } : heroReady ? { scale: 1, opacity: 1, rotate: 0 } : {}}
             transition={{
               delay: 0.2,
               duration: 1.2,
               type: "spring",
               damping: 15,
             }}
-            style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+            style={prefersReducedMotion ? {} : { rotateX, rotateY, transformStyle: "preserve-3d" }}
             className="relative hidden md:flex items-center justify-center order-1 lg:order-2 w-full lg:w-1/2 h-[480px] sm:h-[540px]"
           >
             {/* Background Ambient Glows */}
@@ -162,9 +162,9 @@ const SolutionsHero = () => {
                 {openWindows[0] && (
                   <motion.div
                     key="solutions-window-software"
-                    initial={{ opacity: 0, scale: 0.7, y: 50, rotate: -2 }}
-                    animate={heroReady ? { opacity: 1, scale: 1, y: 0, rotate: -1 } : {}}
-                    exit={{ opacity: 0, scale: 0.5, y: 30, rotate: -5, transition: { duration: 0.2 } }}
+                    initial={prefersReducedMotion ? { opacity: 1, scale: 1, y: 0, rotate: -1 } : { opacity: 0, scale: 0.7, y: 50, rotate: -2 }}
+                    animate={prefersReducedMotion ? { opacity: 1, scale: 1, y: 0, rotate: -1 } : heroReady ? { opacity: 1, scale: 1, y: 0, rotate: -1 } : {}}
+                    exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, scale: 0.5, y: 30, rotate: -5, transition: { duration: 0.2 } }}
                     whileHover={motionEnabled ? { 
                       scale: 1.04, 
                       y: -8, 
@@ -277,9 +277,9 @@ const SolutionsHero = () => {
                 {openWindows[1] && (
                   <motion.div
                     key="solutions-window-cloud"
-                    initial={{ opacity: 0, scale: 0.7, y: 50, rotate: 2 }}
-                    animate={heroReady ? { opacity: 1, scale: 1, y: 0, rotate: 1 } : {}}
-                    exit={{ opacity: 0, scale: 0.5, y: 30, rotate: 5, transition: { duration: 0.2 } }}
+                    initial={prefersReducedMotion ? { opacity: 1, scale: 1, y: 0, rotate: 1 } : { opacity: 0, scale: 0.7, y: 50, rotate: 2 }}
+                    animate={prefersReducedMotion ? { opacity: 1, scale: 1, y: 0, rotate: 1 } : heroReady ? { opacity: 1, scale: 1, y: 0, rotate: 1 } : {}}
+                    exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, scale: 0.5, y: 30, rotate: 5, transition: { duration: 0.2 } }}
                     whileHover={motionEnabled ? { 
                       scale: 1.04, 
                       y: -8, 
@@ -382,9 +382,9 @@ const SolutionsHero = () => {
                 {openWindows[2] && (
                   <motion.div
                     key="solutions-window-mit"
-                    initial={{ opacity: 0, scale: 0.7, y: 50, rotate: -1.5 }}
-                    animate={heroReady ? { opacity: 1, scale: 1, y: 0, rotate: -0.5 } : {}}
-                    exit={{ opacity: 0, scale: 0.5, y: 30, rotate: -3, transition: { duration: 0.2 } }}
+                    initial={prefersReducedMotion ? { opacity: 1, scale: 1, y: 0, rotate: -0.5 } : { opacity: 0, scale: 0.7, y: 50, rotate: -1.5 }}
+                    animate={prefersReducedMotion ? { opacity: 1, scale: 1, y: 0, rotate: -0.5 } : heroReady ? { opacity: 1, scale: 1, y: 0, rotate: -0.5 } : {}}
+                    exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, scale: 0.5, y: 30, rotate: -3, transition: { duration: 0.2 } }}
                     whileHover={motionEnabled ? { 
                       scale: 1.04, 
                       y: -8, 
@@ -494,9 +494,9 @@ const SolutionsHero = () => {
                 {openWindows[3] && (
                   <motion.div
                     key="solutions-window-api"
-                    initial={{ opacity: 0, scale: 0.7, y: 50, rotate: 1.5 }}
-                    animate={heroReady ? { opacity: 1, scale: 1, y: 0, rotate: 0.5 } : {}}
-                    exit={{ opacity: 0, scale: 0.5, y: 30, rotate: 3, transition: { duration: 0.2 } }}
+                    initial={prefersReducedMotion ? { opacity: 1, scale: 1, y: 0, rotate: 0.5 } : { opacity: 0, scale: 0.7, y: 50, rotate: 1.5 }}
+                    animate={prefersReducedMotion ? { opacity: 1, scale: 1, y: 0, rotate: 0.5 } : heroReady ? { opacity: 1, scale: 1, y: 0, rotate: 0.5 } : {}}
+                    exit={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, scale: 0.5, y: 30, rotate: 3, transition: { duration: 0.2 } }}
                     whileHover={motionEnabled ? { 
                       scale: 1.04, 
                       y: -8, 
@@ -589,12 +589,12 @@ const SolutionsHero = () => {
                         
                         {/* Live CSS animated bar chart */}
                         <div className="flex items-end justify-between gap-1 h-10 pt-2 border-t border-slate-200/40 dark:border-slate-800/40">
-                          <div className="w-full bg-emerald-500/40 dark:bg-emerald-500/20 rounded-t-sm animate-[pulse_1.2s_infinite]" style={{ height: '40%' }} />
-                          <div className="w-full bg-emerald-500/60 dark:bg-emerald-500/40 rounded-t-sm animate-[pulse_1.5s_infinite_0.2s]" style={{ height: '70%' }} />
-                          <div className="w-full bg-emerald-500/80 dark:bg-emerald-500/60 rounded-t-sm animate-[pulse_1.1s_infinite_0.4s]" style={{ height: '95%' }} />
-                          <div className="w-full bg-emerald-500/70 dark:bg-emerald-500/30 rounded-t-sm animate-[pulse_1.6s_infinite_0.1s]" style={{ height: '50%' }} />
-                          <div className="w-full bg-emerald-500/90 dark:bg-emerald-500/50 rounded-t-sm animate-[pulse_1.3s_infinite_0.3s]" style={{ height: '80%' }} />
-                          <div className="w-full bg-emerald-500 dark:bg-emerald-400 rounded-t-sm animate-[pulse_1.7s_infinite_0.5s]" style={{ height: '60%' }} />
+                          <div className={`w-full bg-emerald-500/40 dark:bg-emerald-500/20 rounded-t-sm ${prefersReducedMotion ? "" : "animate-[pulse_1.2s_infinite]"}`} style={{ height: '40%' }} />
+                          <div className={`w-full bg-emerald-500/60 dark:bg-emerald-500/40 rounded-t-sm ${prefersReducedMotion ? "" : "animate-[pulse_1.5s_infinite_0.2s]"}`} style={{ height: '70%' }} />
+                          <div className={`w-full bg-emerald-500/80 dark:bg-emerald-500/60 rounded-t-sm ${prefersReducedMotion ? "" : "animate-[pulse_1.1s_infinite_0.4s]"}`} style={{ height: '95%' }} />
+                          <div className={`w-full bg-emerald-500/70 dark:bg-emerald-500/30 rounded-t-sm ${prefersReducedMotion ? "" : "animate-[pulse_1.6s_infinite_0.1s]"}`} style={{ height: '50%' }} />
+                          <div className={`w-full bg-emerald-500/90 dark:bg-emerald-500/50 rounded-t-sm ${prefersReducedMotion ? "" : "animate-[pulse_1.3s_infinite_0.3s]"}`} style={{ height: '80%' }} />
+                          <div className={`w-full bg-emerald-500 dark:bg-emerald-400 rounded-t-sm ${prefersReducedMotion ? "" : "animate-[pulse_1.7s_infinite_0.5s]"}`} style={{ height: '60%' }} />
                         </div>
                       </div>
                     </motion.div>

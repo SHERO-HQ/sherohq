@@ -46,6 +46,7 @@ import PaymentIcons from "@/components/layout/PaymentIcons";
 import AppImage from "@/components/common/AppImage";
 import { toReadableOrderId } from "@/utils/orderId";
 import { WhatsAppIcon } from "@/assets/icons/icons";
+import { COMPANY_CONTACTS } from "@/constants/contacts";
 
 type PaymentMethodValue = "momo" | "card" | "cod" | "store_pickup";
 
@@ -991,7 +992,7 @@ const CheckoutFlow = () => {
 
                       <div className="flex flex-col gap-4 max-w-md mx-auto mb-8">
                         <a
-                          href={`https://wa.me/233548711582?text=${encodeURIComponent(
+                          href={`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}?text=${encodeURIComponent(
                             `Hello SHERO, I just placed an order! Here are my details:\n\n` +
                               `📦 *Order ID:* ${toReadableOrderId(orderId || "")}\n` +
                               `💰 *Total:* GHS ${confirmedTotal.toFixed(2)}\n` +
