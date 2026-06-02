@@ -214,7 +214,7 @@ const Portfolio = () => {
 
                   {/* Hover details overlay */}
                   <div className="absolute inset-0 bg-brand-secondary-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <span className="px-3.5 py-2 bg-slate-950/80 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded-lg border border-white/10 flex items-center gap-1.5 translate-y-2 group-hover:translate-y-0 transition-all duration-300 shadow-md">
+                    <span className="px-3.5 py-2 bg-slate-950/80 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded border border-white/10 flex items-center gap-1.5 translate-y-2 group-hover:translate-y-0 transition-all duration-300 shadow-md">
                       View Details <Info className="w-3.5 h-3.5" />
                     </span>
                   </div>
@@ -422,7 +422,7 @@ const Portfolio = () => {
                           <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest block">
                             Live Link
                           </span>
-                          <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900/60 rounded-lg border border-slate-200/50 dark:border-slate-800/80 overflow-hidden">
+                          <div className="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900/60 rounded border border-slate-200/50 dark:border-slate-800/80 overflow-hidden">
                             <Link className="size-3.5 text-brand-secondary-600 dark:text-brand-secondary-400 shrink-0" />
                             <code className="text-[11px] text-slate-600 dark:text-slate-400 truncate flex-1 font-mono">
                               {selectedProject.link}
@@ -482,7 +482,7 @@ const Portfolio = () => {
                       href={selectedProject.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 dark:bg-brand-secondary-600 dark:hover:bg-brand-secondary-700 text-white text-sm font-semibold rounded-lg shadow-md shadow-brand-secondary-600/10 hover:shadow-lg hover:shadow-brand-secondary-600/20 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer group/btn"
+                      className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 dark:bg-brand-secondary-600 dark:hover:bg-brand-secondary-700 text-white text-sm font-semibold rounded shadow-md shadow-brand-secondary-600/10 hover:shadow-lg hover:shadow-brand-secondary-600/20 transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer group/btn"
                     >
                       <span>Launch Live Project</span>
                       <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />

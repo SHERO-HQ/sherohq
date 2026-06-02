@@ -58,6 +58,19 @@ export default function proxy(request: NextRequest) {
   const host = hostname.toLowerCase();
   const path = url.pathname;
 
+  // Bypass subdomain routing entirely on default cloud deployments (Vercel, Netlify)
+  // as they do not support wildcard subdomains on their base domains (*.vercel.app, *.netlify.app)
+  if (
+    host.endsWith(".vercel.app") ||
+    host.endsWith(".netlify.app") ||
+    host.includes(".vercel.app:") ||
+    host.includes(".netlify.app:")
+  ) {
+    console.log(`[Proxy] Bypassing cloud domain: ${host}${path}`);
+    return NextResponse.next();
+  }
+
+
   if (
     path.startsWith("/api") &&
     isUnsafeMethod(request.method) &&
@@ -99,6 +112,8 @@ export default function proxy(request: NextRequest) {
     subdomain = parts[0].toLowerCase();
   }
 
+  console.log(`[Proxy] Detected subdomain: "${subdomain}" for host: "${host}" (path: "${path}")`);
+
   // Skip if not a functional subdomain
   if (!subdomain || subdomain === "www" || subdomain === "localhost") {
     return NextResponse.next();
@@ -115,6 +130,7 @@ export default function proxy(request: NextRequest) {
       /\.(png|jpe?g|gif|svg|ico|webp|avif|woff2?|js|css|json|webmanifest|xml|txt)$/i,
     )
   ) {
+    console.log(`[Proxy] Bypassing static/internal/API route: ${path}`);
     return NextResponse.next();
   }
 
@@ -123,6 +139,7 @@ export default function proxy(request: NextRequest) {
     // Avoid infinite loops: if the path already starts with /admin, we don't need to rewrite
     if (!path.startsWith("/admin")) {
       url.pathname = `/admin${path}`;
+      console.log(`[Proxy] Rewriting admin subdomain path to: ${url.pathname}`);
       return NextResponse.rewrite(url);
     }
   }
@@ -139,11 +156,13 @@ export default function proxy(request: NextRequest) {
       } else {
         url.pathname = "/shop";
       }
+      console.log(`[Proxy] Rewriting products path to shop path: ${url.pathname}`);
       return NextResponse.rewrite(url);
     }
 
     if (!path.startsWith("/shop")) {
       url.pathname = `/shop${path}`;
+      console.log(`[Proxy] Rewriting shop subdomain path to: ${url.pathname}`);
       return NextResponse.rewrite(url);
     }
   }
@@ -152,6 +171,16 @@ export default function proxy(request: NextRequest) {
   if (subdomain === "support") {
     if (!path.startsWith("/support")) {
       url.pathname = `/support${path}`;
+      console.log(`[Proxy] Rewriting support subdomain path to: ${url.pathname}`);
+      return NextResponse.rewrite(url);
+    }
+  }
+
+  // 4. API Subdomain
+  if (subdomain === "api") {
+    if (!path.startsWith("/api")) {
+      url.pathname = `/api${path}`;
+      console.log(`[Proxy] Rewriting API subdomain path to: ${url.pathname}`);
       return NextResponse.rewrite(url);
     }
   }

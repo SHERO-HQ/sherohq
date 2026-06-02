@@ -52,7 +52,7 @@ const SolutionsHero = () => {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onClick={() => setFocusedWindow(null)}
-      className="relative w-full min-h-[75vh] sm:min-h-screen lg:h-[80vh] flex items-start lg:items-center pt-14 sm:pt-24 lg:pt-0 overflow-hidden bg-slate-50 dark:bg-slate-950"
+      className="relative w-full min-h-[75dvh] sm:min-h-dvh lg:h-[80dvh] flex items-start lg:items-center pt-14 sm:pt-24 lg:pt-0 overflow-hidden bg-slate-50 dark:bg-slate-950"
     >
       <HeroBackground />
 

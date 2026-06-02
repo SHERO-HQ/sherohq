@@ -18,11 +18,13 @@ export const getSubdomain = (): string | null => {
 
   const hostname = globalThis.location.hostname;
 
-  // Handle localhost and IP addresses
+  // Handle localhost, IP addresses, and default cloud deployments (Vercel/Netlify)
   if (
     hostname === "localhost" ||
     hostname === "127.0.0.1" ||
-    hostname.startsWith("192.168.")
+    hostname.startsWith("192.168.") ||
+    hostname.endsWith(".vercel.app") ||
+    hostname.endsWith(".netlify.app")
   ) {
     return null;
   }
@@ -55,7 +57,7 @@ export const getSubdomain = (): string | null => {
  * @returns {string} - The absolute URL (prod) or relative path (local)
  */
 
-const KNOWN_SUBDOMAINS = ["admin", "shop", "support", "www"];
+const KNOWN_SUBDOMAINS = ["admin", "shop", "support", "api", "www"];
 
 const getBaseDomain = (hostname: string): string => {
   const parts = hostname.split(".");
@@ -140,7 +142,9 @@ export const getAbsoluteUrl = (path: string): string => {
   if (
     hostname === "localhost" ||
     hostname === "127.0.0.1" ||
-    hostname.startsWith("192.168.")
+    hostname.startsWith("192.168.") ||
+    hostname.endsWith(".vercel.app") ||
+    hostname.endsWith(".netlify.app")
   ) {
     return path;
   }

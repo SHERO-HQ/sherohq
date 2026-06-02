@@ -241,7 +241,7 @@ const AdminSupport = () => {
   }, [inquiries, searchQuery, statusFilter]);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-11rem)] space-y-4">
+    <div className="flex flex-col h-[calc(100dvh-11rem)] space-y-4">
       <div className="space-y-8 animate-in fade-in duration-500">
         <div className="flex flex-col gap-4">
           {/* Back Button */}

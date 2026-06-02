@@ -310,7 +310,7 @@ export default function WhatsAppDashboard() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
-            WhatsApp Automation Command Center
+            WhatsApp Automation
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_#10b981]" />
           </h1>
           <p className="text-slate-400 text-sm mt-1">
@@ -320,16 +320,15 @@ export default function WhatsAppDashboard() {
       </div>
 
       {/* Tabs Menu */}
-      <div className="flex bg-slate-900/50 p-1 rounded-lg border border-white/5 w-fit">
+      <div className="flex bg-slate-900/50 p-1 rounded border border-white/5 w-fit">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 text-xs font-semibold rounded-md transition-all flex items-center gap-2 ${
-              activeTab === tab.id
-                ? "bg-brand-secondary-600 text-white shadow-md shadow-brand-secondary-600/10"
-                : "text-slate-400 hover:text-white hover:bg-white/5"
-            }`}
+            className={`px-4 py-2 text-xs font-semibold rounded transition-all flex items-center gap-2 ${activeTab === tab.id
+              ? "bg-brand-secondary-600 text-white shadow-md shadow-brand-secondary-600/10"
+              : "text-slate-400 hover:text-white hover:bg-white/5"
+              }`}
           >
             <tab.icon className="w-4 h-4" />
             {tab.label}
@@ -347,7 +346,7 @@ export default function WhatsAppDashboard() {
         )}
 
         {activeTab === "support" && (
-          <div className="bg-slate-900/40 border border-white/10 rounded-xl overflow-hidden backdrop-blur-md">
+          <div className="bg-slate-900/40 border border-white/10 rounded overflow-hidden backdrop-blur-md">
             <div className="p-6 border-b border-white/10 flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-bold text-white">Consultations & Support Tickets</h3>
@@ -438,13 +437,13 @@ export default function WhatsAppDashboard() {
           <div className="space-y-6">
             {/* Quick Actions & Bulk Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <div className="bg-slate-900/40 border border-white/10 rounded-xl p-6 backdrop-blur-md">
+              <div className="bg-slate-900/40 border border-white/10 rounded p-6 backdrop-blur-md">
                 <h4 className="text-xs font-bold uppercase text-slate-500 tracking-wider">Bulk Recovery</h4>
                 <p className="text-xs text-slate-400 mt-1 mb-4">Run the background worker scheduler manually.</p>
                 <button
                   onClick={handleRunBulkRetry}
                   disabled={triggeringBulk}
-                  className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white py-2 rounded-lg font-semibold text-xs transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white py-2 rounded font-semibold text-xs transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {triggeringBulk ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5" />}
                   Run Retry Worker
@@ -455,8 +454,8 @@ export default function WhatsAppDashboard() {
               {["pending", "completed", "cancelled", "failed"].map((status) => {
                 const count = retries.filter((r) => r.status === status).length;
                 return (
-                  <div key={status} className="bg-slate-900/40 border border-white/10 rounded-xl p-6 backdrop-blur-md flex flex-col justify-between">
-                    <h4 className="text-xs font-bold uppercase text-slate-500 tracking-wider capitalize">{status} Retries</h4>
+                  <div key={status} className="bg-slate-900/40 border border-white/10 rounded p-6 backdrop-blur-md flex flex-col justify-between">
+                    <h4 className="text-xs font-bold text-slate-500 tracking-wider capitalize">{status} Retries</h4>
                     <span className="text-3xl font-extrabold text-white mt-4">{count}</span>
                     <span className="text-[10px] text-slate-500 mt-1">records in queue</span>
                   </div>
@@ -465,7 +464,7 @@ export default function WhatsAppDashboard() {
             </div>
 
             {/* List Table */}
-            <div className="bg-slate-900/40 border border-white/10 rounded-xl overflow-hidden backdrop-blur-md">
+            <div className="bg-slate-900/40 border border-white/10 rounded overflow-hidden backdrop-blur-md">
               <div className="p-6 border-b border-white/10 flex items-center justify-between">
                 <div>
                   <h3 className="text-lg font-bold text-white">Message Retry Queue</h3>
@@ -527,15 +526,14 @@ export default function WhatsAppDashboard() {
                             {r.last_error || "none"}
                           </td>
                           <td className="px-6 py-4">
-                            <span className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${
-                              r.status === "completed"
-                                ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                                : r.status === "pending"
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${r.status === "completed"
+                              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                              : r.status === "pending"
                                 ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
                                 : r.status === "cancelled"
-                                ? "bg-slate-800 text-slate-400 border-white/5"
-                                : "bg-rose-500/10 text-rose-400 border-rose-500/20"
-                            }`}>
+                                  ? "bg-slate-800 text-slate-400 border-white/5"
+                                  : "bg-rose-500/10 text-rose-400 border-rose-500/20"
+                              }`}>
                               {r.status}
                             </span>
                           </td>
@@ -582,19 +580,19 @@ export default function WhatsAppDashboard() {
                 {/* Visual Cards Row */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                   {/* Card 1: Total Messages */}
-                  <div className="bg-slate-900/40 border border-white/10 rounded-xl p-6 backdrop-blur-md">
+                  <div className="bg-slate-900/40 border border-white/10 rounded p-6 backdrop-blur-md">
                     <h4 className="text-xs font-bold uppercase text-slate-500 tracking-wider">Total Traffic</h4>
                     <div className="flex items-baseline justify-between mt-4">
                       <span className="text-4xl font-extrabold text-white">
                         {(analytics.direction.find((d) => d.direction === "inbound")?.count || 0) +
-                         (analytics.direction.find((d) => d.direction === "outbound")?.count || 0)}
+                          (analytics.direction.find((d) => d.direction === "outbound")?.count || 0)}
                       </span>
                       <span className="text-xs text-slate-500">messages</span>
                     </div>
                   </div>
 
                   {/* Card 2: Sent vs Received */}
-                  <div className="bg-slate-900/40 border border-white/10 rounded-xl p-6 backdrop-blur-md">
+                  <div className="bg-slate-900/40 border border-white/10 rounded p-6 backdrop-blur-md">
                     <h4 className="text-xs font-bold uppercase text-slate-500 tracking-wider">Inbound Received</h4>
                     <div className="flex items-baseline justify-between mt-4">
                       <span className="text-4xl font-extrabold text-brand-secondary-400">
@@ -604,14 +602,14 @@ export default function WhatsAppDashboard() {
                         {Math.round(
                           ((analytics.direction.find((d) => d.direction === "inbound")?.count || 0) /
                             (Math.max(1, (analytics.direction.find((d) => d.direction === "inbound")?.count || 0) +
-                             (analytics.direction.find((d) => d.direction === "outbound")?.count || 0)))) * 100
+                              (analytics.direction.find((d) => d.direction === "outbound")?.count || 0)))) * 100
                         )}% of total
                       </span>
                     </div>
                   </div>
 
                   {/* Card 3: Outbound Sent */}
-                  <div className="bg-slate-900/40 border border-white/10 rounded-xl p-6 backdrop-blur-md">
+                  <div className="bg-slate-900/40 border border-white/10 rounded p-6 backdrop-blur-md">
                     <h4 className="text-xs font-bold uppercase text-slate-500 tracking-wider">Outbound Dispatched</h4>
                     <div className="flex items-baseline justify-between mt-4">
                       <span className="text-4xl font-extrabold text-blue-400">
@@ -621,7 +619,7 @@ export default function WhatsAppDashboard() {
                         {Math.round(
                           ((analytics.direction.find((d) => d.direction === "outbound")?.count || 0) /
                             (Math.max(1, (analytics.direction.find((d) => d.direction === "inbound")?.count || 0) +
-                             (analytics.direction.find((d) => d.direction === "outbound")?.count || 0)))) * 100
+                              (analytics.direction.find((d) => d.direction === "outbound")?.count || 0)))) * 100
                         )}% of total
                       </span>
                     </div>
@@ -636,7 +634,7 @@ export default function WhatsAppDashboard() {
                     const successful = delivered + read + sent;
                     const successRate = totalOutbound > 0 ? Math.round((successful / totalOutbound) * 100) : 100;
                     return (
-                      <div className="bg-slate-900/40 border border-white/10 rounded-xl p-6 backdrop-blur-md">
+                      <div className="bg-slate-900/40 border border-white/10 rounded p-6 backdrop-blur-md">
                         <h4 className="text-xs font-bold uppercase text-slate-500 tracking-wider">Delivery Rate</h4>
                         <div className="flex items-baseline justify-between mt-4">
                           <span className="text-4xl font-extrabold text-emerald-400">{successRate}%</span>
@@ -650,7 +648,7 @@ export default function WhatsAppDashboard() {
                 {/* Charts Row */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                   {/* Daily Volume Bar Chart */}
-                  <div className="lg:col-span-2 bg-slate-900/40 border border-white/10 rounded-xl p-6 backdrop-blur-md">
+                  <div className="lg:col-span-2 bg-slate-900/40 border border-white/10 rounded p-6 backdrop-blur-md">
                     <h3 className="text-base font-semibold text-white mb-6">Daily Messaging Volume</h3>
                     <div className="h-80 w-full">
                       <ResponsiveContainer width="100%" height="100%">
@@ -671,7 +669,7 @@ export default function WhatsAppDashboard() {
                   </div>
 
                   {/* Status Breakdown Pie Chart */}
-                  <div className="bg-slate-900/40 border border-white/10 rounded-xl p-6 backdrop-blur-md flex flex-col justify-between">
+                  <div className="bg-slate-900/40 border border-white/10 rounded p-6 backdrop-blur-md flex flex-col justify-between">
                     <h3 className="text-base font-semibold text-white mb-6">Outbound Status Distribution</h3>
                     <div className="h-60 w-full">
                       {analytics.status.length === 0 ? (
@@ -684,9 +682,9 @@ export default function WhatsAppDashboard() {
                                 name: s.status,
                                 value: s.count,
                                 fill: s.status === "read" ? "#22d3ee"
-                                    : s.status === "delivered" ? "#10b981"
+                                  : s.status === "delivered" ? "#10b981"
                                     : s.status === "sent" ? "#3b82f6"
-                                    : "#ef4444"
+                                      : "#ef4444"
                               }))}
                               cx="50%"
                               cy="50%"
@@ -717,14 +715,14 @@ export default function WhatsAppDashboard() {
         {activeTab === "settings" && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* System Status Credentials */}
-            <div className="bg-slate-900/40 border border-white/10 rounded-xl p-6 backdrop-blur-md space-y-6">
+            <div className="bg-slate-900/40 border border-white/10 rounded p-6 backdrop-blur-md space-y-6">
               <div>
                 <h3 className="text-lg font-bold text-white">System Configuration Status</h3>
                 <p className="text-xs text-slate-400 mt-0.5">Verification of Meta credentials defined in the environment parameters.</p>
               </div>
 
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-3.5 bg-slate-950/40 rounded-lg border border-white/5">
+                <div className="flex items-center justify-between p-3.5 bg-slate-950/40 rounded border border-white/5">
                   <div>
                     <h5 className="text-xs font-bold text-white">Meta API Token</h5>
                     <p className="text-[10px] text-slate-500 font-mono mt-0.5">WHATSAPP_ACCESS_TOKEN</p>
@@ -740,7 +738,7 @@ export default function WhatsAppDashboard() {
                   )}
                 </div>
 
-                <div className="flex items-center justify-between p-3.5 bg-slate-950/40 rounded-lg border border-white/5">
+                <div className="flex items-center justify-between p-3.5 bg-slate-950/40 rounded border border-white/5">
                   <div>
                     <h5 className="text-xs font-bold text-white">Meta Phone Number ID</h5>
                     <p className="text-[10px] text-slate-500 font-mono mt-0.5">WHATSAPP_PHONE_NUMBER_ID</p>
@@ -756,7 +754,7 @@ export default function WhatsAppDashboard() {
                   )}
                 </div>
 
-                <div className="flex items-center justify-between p-3.5 bg-slate-950/40 rounded-lg border border-white/5">
+                <div className="flex items-center justify-between p-3.5 bg-slate-950/40 rounded border border-white/5">
                   <div>
                     <h5 className="text-xs font-bold text-white">Incoming Messages Webhook</h5>
                     <p className="text-[10px] text-slate-500 font-mono mt-0.5">GET/POST /api/webhooks/whatsapp</p>
@@ -778,7 +776,7 @@ export default function WhatsAppDashboard() {
             </div>
 
             {/* Manual Template Test Form */}
-            <div className="bg-slate-900/40 border border-white/10 rounded-xl p-6 backdrop-blur-md flex flex-col justify-between">
+            <div className="bg-slate-900/40 border border-white/10 rounded p-6 backdrop-blur-md flex flex-col justify-between">
               <div>
                 <h3 className="text-lg font-bold text-white">Dispatch Test Template</h3>
                 <p className="text-xs text-slate-400 mt-0.5">Send an approved transactional message template to verify API connectivity.</p>
@@ -796,7 +794,7 @@ export default function WhatsAppDashboard() {
                     onChange={(e) => setTestPhone(e.target.value)}
                     placeholder="+233541234567"
                     required
-                    className="w-full px-4 py-2.5 bg-slate-950 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-2.5 bg-slate-950 border border-white/10 rounded text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 focus:border-transparent transition-all"
                   />
                 </div>
 
@@ -812,7 +810,7 @@ export default function WhatsAppDashboard() {
                       onChange={(e) => setTestTemplate(e.target.value)}
                       placeholder="verification_code"
                       required
-                      className="w-full px-4 py-2.5 bg-slate-950 border border-white/10 rounded-lg text-sm text-white focus:outline-none"
+                      className="w-full px-4 py-2.5 bg-slate-950 border border-white/10 rounded text-sm text-white focus:outline-none"
                     />
                   </div>
                   <div>
@@ -825,7 +823,7 @@ export default function WhatsAppDashboard() {
                       value={testParams}
                       onChange={(e) => setTestParams(e.target.value)}
                       placeholder="e.g. 123456"
-                      className="w-full px-4 py-2.5 bg-slate-950 border border-white/10 rounded-lg text-sm text-white focus:outline-none"
+                      className="w-full px-4 py-2.5 bg-slate-950 border border-white/10 rounded text-sm text-white focus:outline-none"
                     />
                   </div>
                 </div>
@@ -833,7 +831,7 @@ export default function WhatsAppDashboard() {
                 <button
                   type="submit"
                   disabled={sendingTest}
-                  className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white py-2.5 rounded-lg font-semibold text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white py-2.5 rounded font-semibold text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {sendingTest ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                   Send Test Template
@@ -842,13 +840,13 @@ export default function WhatsAppDashboard() {
 
               {/* Status Banner */}
               {testSuccess === true && (
-                <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded-lg flex items-center gap-2">
+                <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs rounded flex items-center gap-2">
                   <Check className="w-4 h-4 shrink-0" />
                   Test template message dispatched successfully! Check logs.
                 </div>
               )}
               {testSuccess === false && (
-                <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs rounded-lg flex items-start gap-2">
+                <div className="p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs rounded flex items-start gap-2">
                   <X className="w-4 h-4 shrink-0 mt-0.5" />
                   <div>
                     <p className="font-semibold">Dispatch failed</p>

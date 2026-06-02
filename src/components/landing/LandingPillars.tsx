@@ -199,7 +199,7 @@ const SupportSlaConsole: React.FC = () => {
   ];
 
   return (
-    <div className="w-full rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 p-3 font-mono text-[9px] select-none z-10 aspect-square flex flex-col">
+    <div className="w-full h-36 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 p-3 font-mono text-[9px] select-none z-10 flex flex-col justify-between">
       <div className="flex items-center justify-between pb-1 border-b border-slate-200 dark:border-slate-800">
         <span className="text-purple-600 dark:text-purple-400 font-bold flex items-center gap-1">
           Shero-SLA Active
@@ -209,7 +209,7 @@ const SupportSlaConsole: React.FC = () => {
         </span>
       </div>
 
-      <div className="flex-1 flex flex-col justify-center">
+      <div className="flex-1 flex flex-col justify-center py-1">
         <div
           className={`p-2 rounded border transition-all duration-300 ${
             alertState === 0

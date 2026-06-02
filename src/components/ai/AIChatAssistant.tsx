@@ -45,7 +45,7 @@ const ChatProductCard = ({ product }: { product: Product }) => {
       onClick={() => {
         window.location.href = `/shop/${product.slug || product.sku || product.id}`;
       }}
-      className="group relative rounded-xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 hover:border-brand-secondary-500/80 dark:hover:border-brand-secondary-500/80 hover:shadow-lg transition-all duration-300 flex flex-col h-full cursor-pointer w-full"
+      className="group relative rounded overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 hover:border-brand-secondary-500/80 dark:hover:border-brand-secondary-500/80 hover:shadow-lg transition-all duration-300 flex flex-col h-full cursor-pointer w-full"
     >
       {/* Compact Image */}
       <div className="relative aspect-video w-full bg-slate-50 dark:bg-slate-950 overflow-hidden shrink-0 border-b border-slate-150 dark:border-slate-800/60">
@@ -104,7 +104,7 @@ const ChatProductCard = ({ product }: { product: Product }) => {
               setIsCartOpen(true);
             }}
             disabled={!product.inStock}
-            className="px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded-md transition-colors disabled:opacity-50 cursor-pointer active:scale-95 shrink-0"
+            className="px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded transition-colors disabled:opacity-50 cursor-pointer active:scale-95 shrink-0"
           >
             + Add
           </button>
@@ -663,8 +663,8 @@ export default function AIChatAssistant() {
                     >
                       <div
                         className={`p-3 rounded text-sm ${msg.role === "user"
-                            ? "bg-primary text-white rounded-br-sm"
-                            : "bg-white dark:bg-white/10 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 rounded-bl-sm"
+                          ? "bg-primary text-white rounded-br-sm"
+                          : "bg-white dark:bg-white/10 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 rounded-bl-sm"
                           }`}
                       >
                         {msg.content}
@@ -814,7 +814,7 @@ export default function AIChatAssistant() {
 
                       {/* ELITE: Direct Booking Confirmation Card */}
                       {msg.role === "assistant" && msg.bookDirect && (
-                        <div className="mt-3 w-full p-3.5 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/30 rounded-xl flex flex-col gap-2.5 shadow-xs">
+                        <div className="mt-3 w-full p-3.5 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/30 rounded flex flex-col gap-2.5 shadow-xs">
                           <div className="flex items-center gap-2">
                             <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white text-[10px] shrink-0 shadow-sm animate-pulse">
                               ✓
@@ -823,7 +823,7 @@ export default function AIChatAssistant() {
                               Appointment Confirmed
                             </span>
                           </div>
-                          <div className="bg-white dark:bg-slate-900/60 p-2.5 rounded-lg border border-emerald-100/50 dark:border-emerald-900/20 text-left flex flex-col gap-1.5 shadow-2xs">
+                          <div className="bg-white dark:bg-slate-900/60 p-2.5 rounded border border-emerald-100/50 dark:border-emerald-900/20 text-left flex flex-col gap-1.5 shadow-2xs">
                             <div className="flex justify-between items-start gap-2 border-b border-slate-100 dark:border-slate-800 pb-1.5 mb-0.5">
                               <div>
                                 <p className="text-[8px] font-mono text-slate-400 uppercase">Consultation ID</p>
@@ -867,7 +867,7 @@ export default function AIChatAssistant() {
 
                       {/* ELITE: Direct Ticket Confirmation Card */}
                       {msg.role === "assistant" && msg.ticketDirect && (
-                        <div className="mt-3 w-full p-3.5 bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/30 rounded-xl flex flex-col gap-2.5 shadow-xs">
+                        <div className="mt-3 w-full p-3.5 bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/30 rounded flex flex-col gap-2.5 shadow-xs">
                           <div className="flex items-center gap-2">
                             <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-[10px] shrink-0 shadow-sm animate-pulse">
                               ✓
@@ -876,7 +876,7 @@ export default function AIChatAssistant() {
                               Support Ticket Opened
                             </span>
                           </div>
-                          <div className="bg-white dark:bg-slate-900/60 p-2.5 rounded-lg border border-blue-100/50 dark:border-blue-900/20 text-left flex flex-col gap-1.5 shadow-2xs">
+                          <div className="bg-white dark:bg-slate-900/60 p-2.5 rounded border border-blue-100/50 dark:border-blue-900/20 text-left flex flex-col gap-1.5 shadow-2xs">
                             <div className="flex justify-between items-start gap-2 border-b border-slate-100 dark:border-slate-800 pb-1.5 mb-0.5">
                               <div>
                                 <p className="text-[8px] font-mono text-slate-400 uppercase">Ticket Number</p>
@@ -978,7 +978,7 @@ export default function AIChatAssistant() {
                     </button>
                     <div className="flex-1 relative">
                       {isRecording ? (
-                        <div className="w-full flex items-center justify-between px-4 py-2.5 bg-red-500/10 dark:bg-red-500/5 border border-red-500/35 rounded-lg text-xs text-red-650 dark:text-red-400 font-semibold select-none h-11 shrink-0">
+                        <div className="w-full flex items-center justify-between px-4 py-2.5 bg-red-500/10 dark:bg-red-500/5 border border-red-500/35 rounded text-xs text-red-650 dark:text-red-400 font-semibold select-none h-11 shrink-0">
                           <span className="flex items-center gap-2">
                             <span className="w-2 h-2 bg-red-500 rounded-full animate-ping" />
                             Listening... Speak now

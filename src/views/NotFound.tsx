@@ -4,10 +4,13 @@ import { ArrowLeft, Home } from "lucide-react";
 
 const NotFound = () => {
  return (
- <main className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+ <main className="relative min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+ {/* Particles dots background */}
+ <div className="absolute inset-0 pattern-dots mask-radial-faded" />
+
  <div className="container max-w-xl mx-auto px-4 text-center">
  {/* 404 Number */}
- <div className="text-9xl font-bold bg-gradient-to-r from-brand-secondary-500 to-blue-500 bg-clip-text text-transparent mb-4">
+ <div className="text-9xl tracking-tighter font-bold bg-linear-to-r from-brand-secondary-500 to-blue-500 bg-clip-text text-transparent mb-4">
  404
  </div>
 

@@ -10,6 +10,3 @@ yarn install
 # Build the Next.js application.
 yarn build
 
-# Build the Express API so Render can start server/dist/index.js.
-cd server
-yarn build

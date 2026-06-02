@@ -24,20 +24,6 @@ interface ProductSpotlightProps {
   isLoading?: boolean;
 }
 
-const stableHash = (value: string) => {
-  let hash = 0;
-  for (let i = 0; i < value.length; i++) {
-    hash = (hash << 5) - hash + value.charCodeAt(i);
-    hash |= 0;
-  }
-  return Math.abs(hash);
-};
-
-const FALLBACK_RANDOM_SEED =
-  typeof crypto !== "undefined"
-    ? crypto.getRandomValues(new Uint32Array(1))[0]
-    : 0;
-
 const getCreatedAtTime = (product: SpotlightProduct): number | null => {
   if (!product.createdAt) return null;
 
@@ -49,7 +35,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  // Show newest uploads first; fallback to random products when timestamps are unavailable.
+  // Show newest uploads first; fallback to stable sorting when timestamps are unavailable.
   const spotlightItems = useMemo(() => {
     if (!products.length) return [];
 
@@ -71,13 +57,8 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
       return newest;
     }
 
-    const seed = source.map((product) => product.id).join("|");
     return [...source]
-      .sort(
-        (a, b) =>
-          stableHash(`${FALLBACK_RANDOM_SEED}:${seed}:${a.id}`) -
-          stableHash(`${FALLBACK_RANDOM_SEED}:${seed}:${b.id}`),
-      )
+      .sort((a, b) => String(a.id).localeCompare(String(b.id)))
       .slice(0, 5);
   }, [products]);
 
@@ -143,7 +124,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
               >
                 <div className="flex flex-col-reverse lg:flex-row lg:items-stretch gap-6 lg:gap-8 relative w-full">
                   {/* Left Side: Info Card */}
-                  <div className="w-full lg:w-1/2 flex flex-col justify-between p-6 sm:p-8 lg:p-10 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl">
+                  <div className="w-full lg:w-1/2 flex flex-col justify-between p-6 sm:p-8 lg:p-10 bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-white/10 rounded sm:bg-transparent sm:dark:bg-transparent sm:border-none sm:dark:border-none">
                     <motion.div
                       initial={{ y: 20, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
@@ -151,7 +132,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                       className="max-w-xl flex flex-col justify-between h-full"
                     >
                       <div>
-                        <h2 className="text-2xl lg:text-5xl font-bold text-slate-900 dark:text-white leading-[1.1] tracking-tighter mb-4 uppercase">
+                        <h2 className="text-xl sm:text-4xl font-bold text-slate-900 dark:text-white leading-[1.1] tracking-tighter mb-4 uppercase">
                           {currentProduct.name.split(" ").map((word, i) => (
                             <span
                               key={i}
@@ -261,7 +242,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                   </div>
 
                   {/* Right Side: Image Card */}
-                  <div className="relative w-full lg:w-1/2 h-[30vh] sm:h-[35vh] lg:h-auto min-h-[280px] lg:min-h-[460px] bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl overflow-hidden group/image flex items-center justify-center p-6">
+                  <div className="relative w-full lg:w-1/2 h-[30vh] sm:h-[35vh] lg:h-auto min-h-[280px] lg:min-h-[460px] overflow-hidden group/image flex items-center justify-center p-6">
                     {/* Image */}
                     <AppImage
                       src={getImageUrl(currentProduct.image)}

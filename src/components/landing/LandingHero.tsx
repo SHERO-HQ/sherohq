@@ -159,7 +159,7 @@ const LandingHero: React.FC = () => {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onClick={() => setFocusedWindow(null)}
-      className="relative min-h-[80vh] lg:min-h-screen w-full overflow-hidden
+      className="relative min-h-[80dvh] lg:min-h-dvh w-full overflow-hidden
  bg-slate-50 dark:bg-slate-950
  flex items-center"
       role="banner"
@@ -265,7 +265,7 @@ const LandingHero: React.FC = () => {
  </motion.div> */}
           </motion.div>
 
-          <div className="w-full lg:w-[46%] relative h-[480px] sm:h-[540px] flex items-center justify-center lg:py-0 mb-16 sm:mb-0">
+          <div className="hidden w-full lg:w-[46%] relative h-[480px] sm:h-[540px] sm:flex items-center justify-center lg:py-0 mb-16 sm:mb-0">
             <motion.div
               variants={heroPanel}
               initial={prefersReducedMotion ? false : "hidden"}

@@ -35,7 +35,7 @@ export default function WhatsAppConversations({
 }: WhatsAppConversationsProps) {
   const [conversations, setConversations] = useState<ConversationSummary[]>([]);
   const [localSelectedPhone, localSetSelectedPhone] = useState<string | null>(null);
-  
+
   const selectedPhone = propPhone !== undefined ? propPhone : localSelectedPhone;
   const setSelectedPhone = propSetPhone !== undefined ? propSetPhone : localSetSelectedPhone;
 
@@ -126,9 +126,9 @@ export default function WhatsAppConversations({
       templateParams:
         sendType === "template"
           ? templateParamsText
-              .split(",")
-              .map((p) => p.trim())
-              .filter((p) => p.length > 0)
+            .split(",")
+            .map((p) => p.trim())
+            .filter((p) => p.length > 0)
           : undefined,
     };
 
@@ -196,7 +196,7 @@ export default function WhatsAppConversations({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
       {/* Conversations List */}
-      <div className="lg:col-span-1 bg-slate-900/40 backdrop-blur-md rounded-lg border border-white/10 flex flex-col h-[700px]">
+      <div className="lg:col-span-1 bg-slate-900/40 backdrop-blur-md rounded border border-white/10 flex flex-col h-[700px]">
         <div className="p-6 border-b border-white/10">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-white flex items-center gap-2">
@@ -217,7 +217,7 @@ export default function WhatsAppConversations({
             placeholder="Search phone number..."
             value={searchPhone}
             onChange={(e) => setSearchPhone(e.target.value)}
-            className="w-full px-3 py-2 bg-slate-950/50 border border-white/10 rounded-md text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 focus:border-transparent transition-all"
+            className="w-full px-3 py-2 bg-slate-950/50 border border-white/10 rounded text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 focus:border-transparent transition-all"
           />
         </div>
 
@@ -232,11 +232,10 @@ export default function WhatsAppConversations({
                 <li key={conv.sender_wa_id}>
                   <button
                     onClick={() => void fetchMessages(conv.sender_wa_id)}
-                    className={`w-full text-left px-6 py-4 hover:bg-white/5 transition-all flex flex-col gap-1 relative ${
-                      selectedPhone === conv.sender_wa_id
-                        ? "bg-brand-secondary-500/10 border-r-2 border-brand-secondary-500"
-                        : ""
-                    }`}
+                    className={`w-full text-left px-6 py-4 hover:bg-white/5 transition-all flex flex-col gap-1 relative ${selectedPhone === conv.sender_wa_id
+                      ? "bg-brand-secondary-500/10 border-r-2 border-brand-secondary-500"
+                      : ""
+                      }`}
                   >
                     <div className="flex items-center justify-between w-full">
                       <p className="text-sm font-semibold text-white">
@@ -266,7 +265,7 @@ export default function WhatsAppConversations({
       </div>
 
       {/* Message Thread */}
-      <div className="lg:col-span-2 bg-slate-900/40 backdrop-blur-md rounded-lg border border-white/10 flex flex-col h-[700px]">
+      <div className="lg:col-span-2 bg-slate-900/40 backdrop-blur-md rounded border border-white/10 flex flex-col h-[700px]">
         {selectedPhone ? (
           <>
             {/* Conversation Header */}
@@ -303,21 +302,19 @@ export default function WhatsAppConversations({
                 messages.map((msg) => (
                   <div
                     key={msg.id}
-                    className={`flex ${
-                      msg.direction === "inbound" ? "justify-start" : "justify-end"
-                    }`}
+                    className={`flex ${msg.direction === "inbound" ? "justify-start" : "justify-end"
+                      }`}
                   >
                     <div
-                      className={`max-w-md px-4 py-2.5 rounded-2xl ${
-                        msg.direction === "inbound"
-                          ? "bg-slate-800 border border-white/5 text-slate-100 rounded-tl-none"
-                          : "bg-brand-secondary-600 text-white rounded-tr-none shadow-[0_4px_12px_rgba(16,185,129,0.15)]"
-                      }`}
+                      className={`max-w-md px-4 py-2.5 rounded ${msg.direction === "inbound"
+                        ? "bg-slate-800 border border-white/5 text-slate-100 rounded-tl-none"
+                        : "bg-brand-secondary-600 text-white rounded-tr-none shadow-[0_4px_12px_rgba(16,185,129,0.15)]"
+                        }`}
                     >
                       <p className="text-sm whitespace-pre-wrap leading-relaxed">
                         {msg.content || `[${msg.message_type}]`}
                       </p>
-                      
+
                       {msg.error_message && (
                         <p className="text-xs text-rose-300 mt-1.5 flex items-center gap-1 border-t border-rose-500/20 pt-1">
                           <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
@@ -326,9 +323,8 @@ export default function WhatsAppConversations({
                       )}
 
                       <div
-                        className={`flex items-center justify-end gap-1 text-[10px] mt-1.5 ${
-                          msg.direction === "inbound" ? "text-slate-500" : "text-emerald-100"
-                        }`}
+                        className={`flex items-center justify-end gap-1 text-[10px] mt-1.5 ${msg.direction === "inbound" ? "text-slate-500" : "text-emerald-100"
+                          }`}
                       >
                         <span>
                           {new Date(msg.created_at).toLocaleTimeString([], {
@@ -351,11 +347,10 @@ export default function WhatsAppConversations({
                 <button
                   type="button"
                   onClick={() => setSendType("text")}
-                  className={`px-3 py-1 text-xs font-semibold rounded transition-colors flex items-center gap-1 ${
-                    sendType === "text"
-                      ? "bg-brand-secondary-600 text-white"
-                      : "text-slate-400 hover:text-white hover:bg-white/5"
-                  }`}
+                  className={`px-3 py-1 text-xs font-semibold rounded transition-colors flex items-center gap-1 ${sendType === "text"
+                    ? "bg-brand-secondary-600 text-white"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                    }`}
                 >
                   <MessageSquare className="w-3.5 h-3.5" />
                   Custom Text
@@ -363,11 +358,10 @@ export default function WhatsAppConversations({
                 <button
                   type="button"
                   onClick={() => setSendType("template")}
-                  className={`px-3 py-1 text-xs font-semibold rounded transition-colors flex items-center gap-1 ${
-                    sendType === "template"
-                      ? "bg-brand-secondary-600 text-white"
-                      : "text-slate-400 hover:text-white hover:bg-white/5"
-                  }`}
+                  className={`px-3 py-1 text-xs font-semibold rounded transition-colors flex items-center gap-1 ${sendType === "template"
+                    ? "bg-brand-secondary-600 text-white"
+                    : "text-slate-400 hover:text-white hover:bg-white/5"
+                    }`}
                 >
                   <Code className="w-3.5 h-3.5" />
                   Meta Template
@@ -383,19 +377,19 @@ export default function WhatsAppConversations({
                       onChange={(e) => setMessageText(e.target.value)}
                       placeholder="Type a message..."
                       disabled={sending}
-                      className="flex-1 px-4 py-2 bg-slate-950 border border-white/10 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 focus:border-transparent disabled:opacity-50 transition-all"
+                      className="flex-1 px-4 py-2 bg-slate-950 border border-white/10 rounded text-sm text-white focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 focus:border-transparent disabled:opacity-50 transition-all"
                     />
                     <button
                       type="submit"
                       disabled={sending || !messageText.trim()}
-                      className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors flex items-center gap-1.5 disabled:opacity-50 shrink-0"
+                      className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white px-4 py-2 rounded font-semibold text-sm transition-colors flex items-center gap-1.5 disabled:opacity-50 shrink-0"
                     >
                       {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                       Send
                     </button>
                   </div>
                 ) : (
-                  <div className="space-y-3 bg-slate-950 p-4 rounded-lg border border-white/5">
+                  <div className="space-y-3 bg-slate-950 p-4 rounded border border-white/5">
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <label className="block text-[10px] uppercase font-bold text-slate-500 mb-1" htmlFor="composer-template-name">
@@ -408,7 +402,7 @@ export default function WhatsAppConversations({
                           onChange={(e) => setTemplateName(e.target.value)}
                           placeholder="verification_code"
                           disabled={sending}
-                          className="w-full px-3 py-1.5 bg-slate-900 border border-white/10 rounded-md text-xs text-white focus:outline-none focus:ring-1 focus:ring-brand-secondary-500"
+                          className="w-full px-3 py-1.5 bg-slate-900 border border-white/10 rounded text-xs text-white focus:outline-none focus:ring-1 focus:ring-brand-secondary-500"
                         />
                       </div>
                       <div>
@@ -422,7 +416,7 @@ export default function WhatsAppConversations({
                           onChange={(e) => setTemplateLang(e.target.value)}
                           placeholder="en"
                           disabled={sending}
-                          className="w-full px-3 py-1.5 bg-slate-900 border border-white/10 rounded-md text-xs text-white focus:outline-none focus:ring-1 focus:ring-brand-secondary-500"
+                          className="w-full px-3 py-1.5 bg-slate-900 border border-white/10 rounded text-xs text-white focus:outline-none focus:ring-1 focus:ring-brand-secondary-500"
                         />
                       </div>
                     </div>
@@ -437,14 +431,14 @@ export default function WhatsAppConversations({
                         onChange={(e) => setTemplateParamsText(e.target.value)}
                         placeholder="e.g. 123456, GHS 50.00"
                         disabled={sending}
-                        className="w-full px-3 py-1.5 bg-slate-900 border border-white/10 rounded-md text-xs text-white focus:outline-none focus:ring-1 focus:ring-brand-secondary-500"
+                        className="w-full px-3 py-1.5 bg-slate-900 border border-white/10 rounded text-xs text-white focus:outline-none focus:ring-1 focus:ring-brand-secondary-500"
                       />
                     </div>
                     <div className="flex justify-end pt-1">
                       <button
                         type="submit"
                         disabled={sending || !templateName.trim()}
-                        className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white px-4 py-1.5 rounded-md font-semibold text-xs transition-colors flex items-center gap-1.5 disabled:opacity-50"
+                        className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white px-4 py-1.5 rounded font-semibold text-xs transition-colors flex items-center gap-1.5 disabled:opacity-50"
                       >
                         {sending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
                         Send Template

@@ -62,7 +62,7 @@ const AboutHero = () => {
     <header
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative w-full min-h-[80vh] lg:min-h-screen flex items-center py-12 lg:py-16 overflow-hidden
+      className="relative w-full min-h-[80dvh] lg:min-h-dvh flex items-center py-12 lg:py-16 overflow-hidden
  bg-slate-50 dark:bg-slate-950"
       role="banner"
     >
