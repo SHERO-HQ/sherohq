@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, createContext, useContext, type ReactNode } from "react";
+import React, { useState, useEffect, createContext, useContext, type ReactNode } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface Props {
@@ -35,19 +35,16 @@ interface ItemProps {
 const StaggerContext = createContext({ isInView: false, staggerDelay: 0.12, delayChildren: 0.05 });
 
 /**
- * FadeInView: Standard "Scroll into View" for single blocks powered by native CSS transitions.
+ * FadeInView: Standard entrance animation for single blocks triggered on client mount.
  */
 export const FadeInView = ({
   children,
   delay = 0,
   direction = "up",
   fullWidth = true,
-  threshold = 0.05,
-  once = true,
 }: Props) => {
   const prefersReducedMotion = useReducedMotion();
   const [isInView, setIsInView] = useState(false);
-  const elementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -55,45 +52,23 @@ export const FadeInView = ({
       return;
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          if (once && elementRef.current) {
-            observer.unobserve(elementRef.current);
-          }
-        } else if (!once) {
-          setIsInView(false);
-        }
-      },
-      {
-        threshold,
-        rootMargin: "0px 0px -20px 0px",
-      }
-    );
+    const timer = setTimeout(() => {
+      setIsInView(true);
+    }, delay * 1000);
 
-    if (elementRef.current) {
-      observer.observe(elementRef.current);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [threshold, once, prefersReducedMotion]);
+    return () => clearTimeout(timer);
+  }, [delay, prefersReducedMotion]);
 
   const xOffset = direction === "left" ? 40 : direction === "right" ? -40 : 0;
   const yOffset = direction === "up" ? 40 : direction === "down" ? -40 : 0;
 
   return (
-    <div
-      ref={elementRef}
-      className={fullWidth ? "w-full" : ""}
-    >
+    <div className={fullWidth ? "w-full" : ""}>
       <div
         className="transition ease-[cubic-bezier(0.16,1,0.3,1)]"
         style={{
           transitionDuration: prefersReducedMotion ? "10ms" : "0.75s",
-          transitionDelay: prefersReducedMotion ? "0s" : `${delay}s`,
+          transitionDelay: "0s", // Delay is handled by setTimeout above
           transitionProperty: "opacity, transform",
           opacity: prefersReducedMotion ? 1 : isInView ? 1 : 0,
           transform: prefersReducedMotion
@@ -110,7 +85,7 @@ export const FadeInView = ({
 };
 
 /**
- * StaggerContainer: Orchestrates child transitions sequentially driven by a single native Intersection Observer.
+ * StaggerContainer: Orchestrates child transitions sequentially triggered immediately on client mount.
  */
 export const StaggerContainer = ({
   children,
@@ -119,12 +94,9 @@ export const StaggerContainer = ({
   className = "",
   staggerDelay = 0.12,
   delayChildren = 0.05,
-  once = true,
-  threshold = 0.05,
 }: ContainerProps) => {
   const prefersReducedMotion = useReducedMotion();
   const [isInView, setIsInView] = useState(false);
-  const elementRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -132,31 +104,9 @@ export const StaggerContainer = ({
       return;
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          if (once && elementRef.current) {
-            observer.unobserve(elementRef.current);
-          }
-        } else if (!once) {
-          setIsInView(false);
-        }
-      },
-      {
-        threshold,
-        rootMargin: "0px 0px -20px 0px",
-      }
-    );
-
-    if (elementRef.current) {
-      observer.observe(elementRef.current);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [threshold, once, prefersReducedMotion]);
+    // Trigger sequential animations on mount
+    setIsInView(true);
+  }, [prefersReducedMotion]);
 
   const Tag = as as any;
   const finalClassNames = className || `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${gap}`;
@@ -173,7 +123,7 @@ export const StaggerContainer = ({
 
   return (
     <StaggerContext.Provider value={{ isInView, staggerDelay, delayChildren }}>
-      <Tag ref={elementRef} className={finalClassNames}>
+      <Tag className={finalClassNames}>
         {childrenWithIndex}
       </Tag>
     </StaggerContext.Provider>
@@ -181,7 +131,7 @@ export const StaggerContainer = ({
 };
 
 /**
- * StaggerItem: Decoupled nested item that animates sequentially using CSS transform matrices.
+ * StaggerItem: Decoupled nested item that animates sequentially using CSS transition timings.
  */
 export const StaggerItem = ({
   children,

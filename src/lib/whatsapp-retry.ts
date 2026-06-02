@@ -262,3 +262,110 @@ export async function cancelCampaignRetries(
   );
   return result.rowCount || 0;
 }
+
+/**
+ * Retry a specific failed message immediately
+ */
+export async function retryMessageImmediately(
+  messageId: string,
+  config: RetryConfig = DEFAULT_RETRY_CONFIG
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const result = await query(
+      `
+      SELECT
+        message_id,
+        campaign_id,
+        recipient_phone,
+        content,
+        retry_count,
+        max_retries
+      FROM whatsapp_message_retries
+      WHERE message_id = $1;
+      `,
+      [messageId]
+    );
+
+    const retry = result.rows[0];
+    if (!retry) {
+      return { success: false, error: "Retry record not found" };
+    }
+
+    const { WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_NUMBER_ID } = process.env;
+    if (!WHATSAPP_ACCESS_TOKEN) {
+      return { success: false, error: "WhatsApp token not configured" };
+    }
+
+    const apiResponse = await fetch(
+      `https://graph.facebook.com/v21.0/${WHATSAPP_PHONE_NUMBER_ID}/messages`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messaging_product: "whatsapp",
+          recipient_type: "individual",
+          to: retry.recipient_phone,
+          type: "text",
+          text: {
+            preview_url: false,
+            body: retry.content || "Message retry",
+          },
+        }),
+      }
+    );
+
+    const data = (await apiResponse.json()) as any;
+
+    if (apiResponse.ok && data.messages?.[0]?.id) {
+      // Mark retry as completed
+      await query(
+        `
+        UPDATE whatsapp_message_retries
+        SET status = 'completed', updated_at = NOW()
+        WHERE message_id = $1;
+        `,
+        [messageId]
+      );
+      
+      // Update original message status
+      await query(
+        `
+        UPDATE whatsapp_messages
+        SET status = 'sent', error_code = null, error_message = null, updated_at = NOW()
+        WHERE id = $1;
+        `,
+        [messageId]
+      );
+
+      return { success: true };
+    } else {
+      const errorMsg = data.error?.message || "Meta API error";
+      const nextRetryDelay = Math.min(
+        config.initialDelayMs * Math.pow(config.backoffMultiplier, retry.retry_count),
+        config.maxDelayMs
+      );
+      const nextRetryAt = new Date(Date.now() + nextRetryDelay);
+
+      await query(
+        `
+        UPDATE whatsapp_message_retries
+        SET
+          retry_count = retry_count + 1,
+          next_retry_at = $2,
+          last_error = $3,
+          updated_at = NOW()
+        WHERE message_id = $1;
+        `,
+        [messageId, nextRetryAt, errorMsg]
+      );
+
+      return { success: false, error: errorMsg };
+    }
+  } catch (error: any) {
+    console.error(`Error retrying message ${messageId} immediately:`, error);
+    return { success: false, error: error.message || String(error) };
+  }
+}

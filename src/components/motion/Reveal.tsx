@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface RevealProps {
@@ -16,7 +16,7 @@ interface RevealProps {
 }
 
 /**
- * Reveal: A highly performant scroll-triggered entrance animation component powered by native CSS transitions.
+ * Reveal: A highly performant client-mount entrance animation component powered by native CSS transitions.
  */
 export const Reveal = ({
   children,
@@ -31,7 +31,6 @@ export const Reveal = ({
 }: RevealProps) => {
   const prefersReducedMotion = useReducedMotion();
   const [isInView, setIsInView] = useState(false);
-  const elementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -39,38 +38,18 @@ export const Reveal = ({
       return;
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          if (once && elementRef.current) {
-            observer.unobserve(elementRef.current);
-          }
-        } else if (!once) {
-          setIsInView(false);
-        }
-      },
-      {
-        threshold: 0.05,
-        rootMargin: "0px 0px -20px 0px",
-      }
-    );
+    const timer = setTimeout(() => {
+      setIsInView(true);
+    }, delay * 1000);
 
-    if (elementRef.current) {
-      observer.observe(elementRef.current);
-    }
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [once, prefersReducedMotion]);
+    return () => clearTimeout(timer);
+  }, [delay, prefersReducedMotion]);
 
   const xOffset = direction === "left" ? distance : direction === "right" ? -distance : 0;
   const yOffset = direction === "up" ? distance : direction === "down" ? -distance : 0;
 
   return (
     <div
-      ref={elementRef}
       style={{
         position: "relative",
         width,
@@ -82,7 +61,7 @@ export const Reveal = ({
         className="transition ease-[cubic-bezier(0.16,1,0.3,1)]"
         style={{
           transitionDuration: prefersReducedMotion ? "10ms" : `${duration}s`,
-          transitionDelay: prefersReducedMotion ? "0s" : `${delay}s`,
+          transitionDelay: "0s",
           transitionProperty: "opacity, transform, filter",
           opacity: prefersReducedMotion ? 1 : isInView ? 1 : 0,
           transform: prefersReducedMotion

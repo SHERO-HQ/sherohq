@@ -24,6 +24,8 @@ import {
   Brain,
   Mail,
   Download,
+  Megaphone,
+  MessageSquare,
 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { cn } from "@/lib/utils";
@@ -66,7 +68,8 @@ const navItems = [
   { icon: Headset, label: "Support", href: "/admin/support" },
   { icon: BookOpen, label: "Guides", href: "/admin/guides" },
   { icon: Tag, label: "Categories", href: "/admin/categories" },
-  { icon: Mail, label: "Newsletter", href: "/admin/newsletter" },
+  { icon: Megaphone, label: "Campaigns", href: "/admin/newsletter" },
+  { icon: MessageSquare, label: "WhatsApp", href: "/admin/whatsapp" },
   { icon: Star, label: "Reviews", href: "/admin/reviews" },
   { icon: Users, label: "Team", href: "/admin/team" },
   { icon: ShieldCheck, label: "Staff", href: "/admin/staff" },

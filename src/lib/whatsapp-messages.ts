@@ -87,11 +87,11 @@ export async function updateMessageStatus(
 }
 
 /**
- * Store an outgoing message sent via campaign
+ * Store an outgoing message sent via campaign or manual admin chat
  */
 export async function storeOutgoingMessage(
   messageId: string,
-  campaignId: string,
+  campaignId: string | null,
   senderWaId: string,
   phoneNumberId: string,
   content: string,
@@ -126,6 +126,92 @@ export async function storeOutgoingMessage(
   );
 
   return result.rows[0] as WhatsAppMessage;
+}
+
+/**
+ * Send a WhatsApp message or template directly via Meta Graph API
+ */
+export async function sendWhatsAppMessageDirect(
+  phone: string,
+  content: string,
+  templateName?: string | null,
+  templateLanguage?: string | null,
+  templateParams?: string[]
+): Promise<{ success: boolean; messageId?: string; error?: string }> {
+  const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
+  const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+
+  // Normalize phone number
+  const compact = phone.replace(/[^\d+]/g, "");
+  const recipient = compact.startsWith("+") ? compact : `+${compact}`;
+
+  if (!accessToken || !phoneNumberId) {
+    if (process.env.NODE_ENV === "production") {
+      return { success: false, error: "WhatsApp delivery is not configured. Set WHATSAPP_ACCESS_TOKEN and WHATSAPP_PHONE_NUMBER_ID." };
+    }
+    // Simulation in development
+    const mockMsgId = `sim_${Math.random().toString(36).substring(2, 11)}`;
+    console.log(`[WhatsApp Simulation] To: ${recipient}, Content: ${content || "(template send)"}`);
+    return { success: true, messageId: mockMsgId };
+  }
+
+  const body = templateName
+    ? {
+        messaging_product: "whatsapp",
+        to: recipient,
+        type: "template",
+        template: {
+          name: templateName,
+          language: { code: templateLanguage || "en" },
+          ...(templateParams && templateParams.length > 0
+            ? {
+                components: [
+                  {
+                    type: "body",
+                    parameters: templateParams.map((text) => ({
+                      type: "text",
+                      text,
+                    })),
+                  },
+                ],
+              }
+            : {}),
+        },
+      }
+    : {
+        messaging_product: "whatsapp",
+        to: recipient,
+        type: "text",
+        text: { body: content },
+      };
+
+  try {
+    const response = await fetch(
+      `https://graph.facebook.com/v21.0/${phoneNumberId}/messages`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      }
+    );
+
+    const data = await response.json() as any;
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: data.error?.message || `HTTP ${response.status}`,
+      };
+    }
+
+    const messageId = data.messages?.[0]?.id;
+    return { success: true, messageId };
+  } catch (error: any) {
+    return { success: false, error: error.message || String(error) };
+  }
 }
 
 /**
