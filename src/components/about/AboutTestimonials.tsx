@@ -163,28 +163,28 @@ const AboutTestimonials = () => {
                               </p>
                               {(item.externalSource === "trustpilot" ||
                                 typeof item.rating === "number") && (
-                                <div className="mt-2 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
-                                  {typeof item.rating === "number" && (
-                                    <span className="inline-flex items-center gap-1 rounded border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-amber-700 dark:text-amber-300">
-                                      <Star className="h-3 w-3 fill-current" />
-                                      {item.rating.toFixed(1)}/5
-                                    </span>
-                                  )}
-                                  {item.externalSource === "trustpilot" && (
-                                    <a
-                                      href={
-                                        item.reviewUrl ||
-                                        "https://www.trustpilot.com"
-                                      }
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="inline-flex items-center gap-1 rounded border border-blue-500/30 bg-blue-500/10 px-2 py-0.5 text-blue-700 hover:text-blue-600 dark:text-blue-300 dark:hover:text-blue-200"
-                                    >
-                                      Via Trustpilot
-                                    </a>
-                                  )}
-                                </div>
-                              )}
+                                  <div className="mt-2 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+                                    {typeof item.rating === "number" && (
+                                      <span className="inline-flex items-center gap-1 rounded border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-amber-700 dark:text-amber-300">
+                                        <Star className="h-3 w-3 fill-current" />
+                                        {item.rating.toFixed(1)}/5
+                                      </span>
+                                    )}
+                                    {item.externalSource === "trustpilot" && (
+                                      <a
+                                        href={
+                                          item.reviewUrl ||
+                                          "https://www.trustpilot.com"
+                                        }
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-1 rounded border border-blue-500/30 bg-blue-500/10 px-2 py-0.5 text-blue-700 hover:text-blue-600 dark:text-blue-300 dark:hover:text-blue-200"
+                                      >
+                                        Via Trustpilot
+                                      </a>
+                                    )}
+                                  </div>
+                                )}
                             </div>
                           </div>
                         </div>
@@ -208,11 +208,10 @@ const AboutTestimonials = () => {
                       <button
                         key={`dot-${item.author}`}
                         onClick={() => setCurrentIndex(testimonials.indexOf(item))}
-                        className={`h-2 rounded transition duration-300 ${
-                          testimonials.indexOf(item) === currentIndex
-                            ? "w-8 bg-brand-secondary-500"
-                            : "w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-500"
-                        }`}
+                        className={`h-2 rounded transition duration-300 ${testimonials.indexOf(item) === currentIndex
+                          ? "w-8 bg-brand-secondary-500"
+                          : "w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-500"
+                          }`}
                       />
                     ))}
                   </div>
@@ -229,11 +228,10 @@ const AboutTestimonials = () => {
                     <button
                       key={`desktop-dot-${item.author}`}
                       onClick={() => setCurrentIndex(testimonials.indexOf(item))}
-                      className={`h-2 rounded transition duration-300 ${
-                        testimonials.indexOf(item) === currentIndex
-                          ? "w-8 bg-brand-secondary-500"
-                          : "w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-500"
-                      }`}
+                      className={`h-2 rounded transition duration-300 ${testimonials.indexOf(item) === currentIndex
+                        ? "w-8 bg-brand-secondary-500"
+                        : "w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-500"
+                        }`}
                     />
                   ))}
                 </div>
@@ -243,26 +241,31 @@ const AboutTestimonials = () => {
         )}
 
         {/* Feedback CTA */}
-        <div className="cursor-pointer text-center">
+        <div className="cursor-pointer text-center relative group">
+          {/* Particles background - we can add particles background to the testimonial section */}
+
           <FadeInView direction="up" delay={0}>
-            <div className="inline-flex flex-col items-center gap-4 p-6 rounded bg-linear-to-b from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950 border border-slate-200 dark:border-white/10 shadow dark:shadow relative overflow-hidden max-w-lg mx-auto w-full transition duration-300">
-            <div className="p-3 bg-brand-secondary-500/10 rounded text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-500/20 transition-colors duration-300">
-              <MessageSquarePlus className="w-6 h-6" />
-            </div>
-            <div className="relative z-10">
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 transition-colors duration-300">
-                Have A Testimony?
-              </h3>
-              <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 transition-colors duration-300">
-                We value your input! Help us improve our products and services.
-              </p>
-              <Link
-                href="/feedback"
-                className="cursor-pointer px-6 py-2 bg-brand-secondary-600 text-sm text-white rounded font-medium hover:bg-brand-secondary-700 transition-colors shadow shadow-brand-secondary-900/20 w-fit inline-block"
-              >
-                Share With Us
-              </Link>
-            </div>
+            <div className="inline-flex relative flex-col items-center gap-4 p-6 rounded dark:to-slate-950 border border-slate-200 dark:border-white/10 shadow dark:shadow overflow-hidden max-w-lg mx-auto w-full transition duration-300">
+              <div className="absolute inset-0 pattern-dots pattern-brand-secondary-500/10 pattern-opacity-100 pattern-size-4 opacity-80 -z-10" />
+              <div className="absolute inset-0 bg-linear-to-br from-brand-secondary-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+              <div className="p-3 bg-brand-secondary-500/10 rounded text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-500/20 transition-colors duration-300">
+                <MessageSquarePlus className="w-6 h-6" />
+              </div>
+              <div className="relative z-10">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 transition-colors duration-300">
+                  Have A Testimony?
+                </h3>
+                <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 transition-colors duration-300">
+                  We value your input! Help us improve our products and services.
+                </p>
+                <Link
+                  href="/feedback"
+                  className="cursor-pointer px-6 py-2 bg-brand-secondary-600 text-sm text-white rounded font-medium hover:bg-brand-secondary-700 transition-colors shadow shadow-brand-secondary-900/20 w-fit inline-block"
+                >
+                  Share With Us
+                </Link>
+              </div>
             </div>
           </FadeInView>
         </div>
