@@ -25,7 +25,7 @@ const PARTNERS: Partner[] = [
     name: "Samsung",
     logo: "/assets/images/partners/samsung.svg",
     logoDark: "/assets/images/partners/samsung-dark.svg",
-    logoClassName: "h-6 sm:h-[42px]",
+    logoClassName: "h-10 sm:h-[48px]",
   },
   { name: "Nvidia", logo: "/assets/images/partners/nvidia.svg" },
   { name: "Intel", logo: "/assets/images/partners/intel.svg" },

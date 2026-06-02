@@ -6,12 +6,12 @@ const values = [
   {
     icon: Truck,
     title: "Free Delivery",
-    description: "On orders over GH₵500",
+    description: "On orders over GH₵2,000",
   },
   {
     icon: Verified,
     title: "Verified Products",
-    description: "Authentic hardware guaranteed",
+    description: "Authentic hardware",
   },
   {
     icon: Headset,
@@ -27,7 +27,7 @@ const values = [
 
 const LandingValueProps = () => {
   return (
-    <section className="relative w-full py-8 lg:py-10 bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-900 transition-colors duration-300">
+    <section className="relative w-full sm:py-2 bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-900 transition-colors duration-300">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <StaggerContainer
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0"

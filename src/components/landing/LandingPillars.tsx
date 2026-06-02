@@ -382,7 +382,7 @@ const PILLARS: PillarsProps[] = [
     header: "Hardware & Accessories",
     subheader: "Curated Shop",
     content:
-      "Enterprise workstation hardware and high-performance components curated for productivity, fully configured and deployed.",
+      "We supply a wide range of high-quality hardware and accessories for your business needs. From Computers to Servers, we have everything you need to get the job done.",
     icon: <ShoppingBag className="w-6 h-6" />,
     className: "md:col-span-1",
     gradient: "from-blue-500/20 to-cyan-500/20",
@@ -390,10 +390,10 @@ const PILLARS: PillarsProps[] = [
     widget: <HardwareTerminal />,
   },
   {
-    header: "SmartBoutique Retail POS",
-    subheader: "Built to Scale",
+    header: "Custom Softwares",
+    subheader: "Tailored Solutions",
     content:
-      "Our professional boutique retail sales platform, featuring multi-store inventory synchronization and loyalty programs.",
+      "Custom software solutions for your business needs. Get one made for your business that integrates seamlessly with your existing systems and workflows.",
     icon: <Server className="w-6 h-6" />,
     className: "md:col-span-1",
     gradient: "from-brand-secondary-500/20 to-green-500/20",
@@ -404,7 +404,7 @@ const PILLARS: PillarsProps[] = [
     header: "Managed IT Support",
     subheader: "On-Call Expertise",
     content:
-      "Proactive server monitoring, infrastructure maintenance, and rapid SLA ticketing to guarantee minimal business drag.",
+      "Proactive infrastructure maintenance, monitoring and support services to keep your business running smoothly.",
     icon: <MessageSquare className="w-6 h-6" />,
     className: "md:col-span-1",
     gradient: "from-purple-500/20 to-pink-500/20",
@@ -412,10 +412,10 @@ const PILLARS: PillarsProps[] = [
     widget: <SupportSlaConsole />,
   },
   {
-    header: "Pharmasyst ERP & Custom Systems",
+    header: "ERP & Custom Systems",
     subheader: "Digital Ecosystem",
     content:
-      "Custom-engineered digital platforms—like our robust pharmacy management ERP—designed to integrate perfectly with compliance frameworks and networks.",
+      "Custom-engineered digital platforms for businesses, designed to integrate with existing systems and workflows.",
     icon: <Code className="w-6 h-6" />,
     className: "md:col-span-3",
     gradient: "from-indigo-500/20 to-violet-500/20",
@@ -447,7 +447,7 @@ const BentoPillarCard = ({ pillar }: { pillar: PillarsProps }) => {
       onMouseLeave={() => setIsHovered(false)}
       className="group relative overflow-hidden rounded bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-white/10 p-6 sm:p-8 hover:border-brand-secondary-500/40 dark:hover:border-white/20 transition-all duration-300 hover:-translate-y-0.5 h-full flex flex-col justify-between gap-6"
     >
-      {/* 1. Dynamic Cursor Spotlight (The Qymmo Hover Glow) */}
+      {/* 1. Dynamic Cursor Spotlight */}
       <div
         className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         style={{
