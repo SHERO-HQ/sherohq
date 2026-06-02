@@ -104,7 +104,7 @@ const LandingAbout = () => {
               </div>
 
               {/* Sleek, High-Fidelity 10x Efficiency Badge - Positioned Clear of Orbit Path (Strict Brand Palette) */}
-              <div className="absolute flex items-center justify-center gap-2 -top-16 -right-12 bg-white/95 dark:bg-slate-900/90 border border-brand-secondary-500/20 dark:border-brand-secondary-500/30 px-3.5 py-1.5 rounded shadow-md backdrop-blur-xs hover:scale-105 transition-transform duration-300 z-30">
+              <div className="absolute flex items-center justify-center gap-2 -top-16 sm:-right-12 right-3 bg-white/95 dark:bg-slate-900/90 border border-brand-secondary-500/20 dark:border-brand-secondary-500/30 px-3.5 py-1.5 rounded shadow-md backdrop-blur-xs hover:scale-105 transition-transform duration-300 z-30">
                 <p className="text-base font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 tracking-tight font-sora leading-none">
                   10x
                 </p>

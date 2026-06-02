@@ -76,7 +76,7 @@ const Support = () => {
               <LifeBuoy className="size-4" />
               <span>Customer Support</span>
             </motion.div>
-            <h1 className="text-2xl md:text-5xl font-bold text-foreground mb-6 tracking-tight transition-colors duration-300">
+            <h1 className="text-2xl md:text-4xl font-bold text-foreground mb-6 tracking-tight transition-colors duration-300">
               Get Help in <span className="text-brand-secondary-600">Minutes</span>
             </h1>
             <p className="text-muted-foreground text-base max-w-2xl mx-auto mb-8 leading-relaxed">

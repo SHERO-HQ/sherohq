@@ -99,7 +99,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
 
   if (isLoading || !spotlightItems.length) {
     return (
-      <div className="relative w-full h-[60vh] lg:h-[70vh] bg-slate-100 dark:bg-slate-900 animate-pulse rounded overflow-hidden">
+      <div className="relative w-full h-[60vh] sm:h-[65vh] lg:h-[70vh] bg-slate-100 dark:bg-slate-900 animate-pulse rounded overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center">
           <Package className="w-12 h-12 text-slate-300 animate-bounce" />
         </div>
@@ -139,133 +139,137 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                   type: "spring",
                   damping: 20,
                 }}
-                className="relative w-full bg-linear-to-br from-white/5 to-transparent dark:from-white/2 lg:dark:from-transparent rounded lg:rounded-none overflow-hidden"
+                className="relative w-full overflow-visible"
               >
-                <div className="flex flex-col lg:flex-row lg:items-center lg:gap-12 relative">
-                  {/* Left Side: Info (Overlay on Mobile, Split on LG) */}
-                  <div className="absolute inset-x-0 bottom-0 z-20 lg:relative lg:inset-auto lg:w-1/2 flex flex-col justify-end lg:justify-center p-6 sm:p-8 lg:p-0 bg-linear-to-t from-slate-950/90 via-slate-950/60 to-transparent lg:bg-none lg:-0">
+                <div className="flex flex-col-reverse lg:flex-row lg:items-stretch gap-6 lg:gap-8 relative w-full">
+                  {/* Left Side: Info Card */}
+                  <div className="w-full lg:w-1/2 flex flex-col justify-between p-6 sm:p-8 lg:p-10 bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl">
                     <motion.div
                       initial={{ y: 20, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.4 }}
-                      className="max-w-xl"
+                      className="max-w-xl flex flex-col justify-between h-full"
                     >
-                      <h2 className="text-2xl lg:text-6xl font-bold text-white lg:text-slate-900 lg:dark:text-white leading-[1.05] tracking-tighter mb-3 uppercase">
-                        {currentProduct.name.split(" ").map((word, i) => (
-                          <span
-                            key={i}
-                            className={i === 0 ? "text-brand-secondary-500" : ""}
-                          >
-                            {word}{" "}
-                          </span>
-                        ))}
-                      </h2>
-
-                      <p className="text-xs lg:text-base text-slate-300 lg:text-slate-600 lg:dark:text-slate-400 mb-6 lg:mb-8 line-clamp-2 lg:line-clamp-none max-w-xl leading-relaxed">
-                        {currentProduct.description ||
-                          "Unlocking the next level of performance with precision engineering and state-of-the-art technology."}
-                      </p>
-
-                      <div className="flex flex-wrap items-center gap-4 sm:gap-6 lg:gap-8">
-                        <div className="flex flex-col">
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 lg:text-slate-500 mb-1">
-                            Price
-                          </span>
-                          <span className="text-lg lg:text-2xl font-bold text-white lg:text-slate-900 lg:dark:text-white">
-                            {formatCurrency(currentProduct.price)}
-                          </span>
-                        </div>
-
-                        {currentProduct.rating > 0 && (
-                          <div className="flex flex-col">
-                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 lg:text-slate-500 mb-1">
-                              Satisfaction
+                      <div>
+                        <h2 className="text-2xl lg:text-5xl font-bold text-slate-900 dark:text-white leading-[1.1] tracking-tighter mb-4 uppercase">
+                          {currentProduct.name.split(" ").map((word, i) => (
+                            <span
+                              key={i}
+                              className={i === 0 ? "text-brand-secondary-500" : ""}
+                            >
+                              {word}{" "}
                             </span>
-                            <div className="flex items-center gap-1.5">
-                              <Star
-                                size={14}
-                                className="fill-amber-400 text-amber-400"
-                              />
-                              <span className="text-sm lg:text-lg font-bold text-white lg:text-slate-900 lg:dark:text-white">
-                                {currentProduct.rating}
-                              </span>
-                            </div>
-                          </div>
-                        )}
+                          ))}
+                        </h2>
 
-                        <div className="ml-auto lg:ml-0 pointer-events-auto">
-                          <Link
-                            href={getAbsoluteUrl(
-                              `/shop/${currentProduct.slug || currentProduct.sku || currentProduct.id}`,
-                            )}
-                            className="group flex items-center justify-center gap-3 px-4 py-2 bg-brand-secondary-500 hover:bg-brand-secondary-400 text-white rounded font-bold uppercase tracking-widest text-[10px] transition-all shadow shadow-brand-secondary-500/20 hover:-translate-y-0.5"
-                          >
-                            Details
-                            <ArrowRight
-                              size={14}
-                              className="group-hover:translate-x-1 transition-transform"
-                            />
-                          </Link>
-                        </div>
+                        <p className="text-xs lg:text-base text-slate-600 dark:text-slate-400 mb-6 lg:mb-8 line-clamp-3 lg:line-clamp-none max-w-xl leading-relaxed">
+                          {currentProduct.description ||
+                            "Unlocking the next level of performance with precision engineering and state-of-the-art technology."}
+                        </p>
                       </div>
 
-                      {/* Carousel Controls - Below Price on Large Screens */}
-                      <div className="hidden lg:flex items-center gap-8 mt-8 pt-8 border-t border-slate-200 dark:border-slate-800">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            prevSlide();
-                            setIsAutoPlaying(false);
-                          }}
-                          className="p-2 rounded bg-slate-100 dark:bg-slate-900 hover:bg-brand-secondary-500 hover:text-white text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 transition-all active:scale-90 pointer-events-auto group/nav"
-                        >
-                          <ChevronLeft className="size-6 group-hover/nav:-translate-x-0.5 transition-transform" />
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            nextSlide();
-                            setIsAutoPlaying(false);
-                          }}
-                          className="p-2 rounded bg-slate-100 dark:bg-slate-900 hover:bg-brand-secondary-500 hover:text-white text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 transition-all active:scale-90 pointer-events-auto group/nav"
-                        >
-                          <ChevronRight className="size-6 group-hover/nav:translate-x-0.5 transition-transform" />
-                        </button>
+                      <div>
+                        <div className="flex flex-wrap items-center gap-4 sm:gap-6 lg:gap-8">
+                          <div className="flex flex-col">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
+                              Price
+                            </span>
+                            <span className="text-lg lg:text-2xl font-bold text-slate-900 dark:text-white">
+                              {formatCurrency(currentProduct.price)}
+                            </span>
+                          </div>
 
-                        <div className="flex items-center gap-2 pointer-events-auto">
-                          {spotlightItems.map((_, i) => (
-                            <button
-                              key={i}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                e.preventDefault();
-                                setCurrentIndex(i);
-                                setIsAutoPlaying(false);
-                              }}
-                              className={`h-1.5 transition-all duration-500 rounded-full ${i === safeCurrentIndex
-                                ? "w-8 bg-brand-secondary-500"
-                                : "w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600"
+                          {currentProduct.rating > 0 && (
+                            <div className="flex flex-col">
+                              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
+                                Satisfaction
+                              </span>
+                              <div className="flex items-center gap-1.5">
+                                <Star
+                                  size={14}
+                                  className="fill-amber-400 text-amber-400"
+                                />
+                                <span className="text-sm lg:text-lg font-bold text-slate-900 dark:text-white">
+                                  {currentProduct.rating}
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          <div className="ml-auto lg:ml-0 pointer-events-auto">
+                            <Link
+                              href={getAbsoluteUrl(
+                                `/shop/${currentProduct.slug || currentProduct.sku || currentProduct.id}`,
+                              )}
+                              className="group flex items-center justify-center gap-3 px-4 py-2 bg-brand-secondary-500 hover:bg-brand-secondary-400 text-white rounded font-bold uppercase tracking-widest text-[10px] transition-all shadow shadow-brand-secondary-500/20 hover:-translate-y-0.5"
+                            >
+                              Details
+                              <ArrowRight
+                                size={14}
+                                className="group-hover:translate-x-1 transition-transform"
+                              />
+                            </Link>
+                          </div>
+                        </div>
+
+                        {/* Carousel Controls - Below Price on Large Screens */}
+                        <div className="hidden lg:flex items-center gap-8 mt-8 pt-8 border-t border-slate-200 dark:border-slate-800">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              prevSlide();
+                              setIsAutoPlaying(false);
+                            }}
+                            className="p-2 rounded bg-slate-100 dark:bg-slate-900 hover:bg-brand-secondary-500 hover:text-white text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 transition-all active:scale-90 pointer-events-auto group/nav"
+                          >
+                            <ChevronLeft className="size-6 group-hover/nav:-translate-x-0.5 transition-transform" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              nextSlide();
+                              setIsAutoPlaying(false);
+                            }}
+                            className="p-2 rounded bg-slate-100 dark:bg-slate-900 hover:bg-brand-secondary-500 hover:text-white text-slate-900 dark:text-white border border-slate-200 dark:border-slate-800 transition-all active:scale-90 pointer-events-auto group/nav"
+                          >
+                            <ChevronRight className="size-6 group-hover/nav:translate-x-0.5 transition-transform" />
+                          </button>
+
+                          <div className="flex items-center gap-2 pointer-events-auto">
+                            {spotlightItems.map((_, i) => (
+                              <button
+                                key={i}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  e.preventDefault();
+                                  setCurrentIndex(i);
+                                  setIsAutoPlaying(false);
+                                }}
+                                className={`h-1.5 transition-all duration-500 rounded-full ${
+                                  i === safeCurrentIndex
+                                    ? "w-8 bg-brand-secondary-500"
+                                    : "w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600"
                                 }`}
-                            />
-                          ))}
+                              />
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </motion.div>
                   </div>
 
-                  {/* Right Side: Image with Content Wrapper (Background on Mobile, Relative Fixed on LG) */}
-                  <div className="relative w-full lg:w-[56%] aspect-4/5 sm:aspect-16/10 lg:aspect-auto h-[75vh] sm:h-[65vh] lg:h-190 group/image overflow-hidden lg:rounded">
+                  {/* Right Side: Image Card */}
+                  <div className="relative w-full lg:w-1/2 h-[30vh] sm:h-[35vh] lg:h-auto min-h-[280px] lg:min-h-[460px] bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl shadow-xl overflow-hidden group/image flex items-center justify-center p-6">
                     {/* Image */}
                     <AppImage
                       src={getImageUrl(currentProduct.image)}
                       alt={currentProduct.name}
                       fill
                       priority
-                      className="object-cover object-center lg:object-contain transition-transform duration-1000 group-hover/image:scale-105"
+                      className="absolute inset-4 sm:inset-8 object-contain transition-transform duration-1000 group-hover/image:scale-105"
                     />
-                    <div className="absolute inset-0 group-hover/image:bg-transparent transition-colors duration-700" />
 
                     {/* Carousel Navigation - Arrows (Only on Mobile/Tablet) */}
                     <div className="lg:hidden absolute inset-0 z-30 pointer-events-none flex items-center justify-between px-4 sm:px-6">
@@ -276,7 +280,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           prevSlide();
                           setIsAutoPlaying(false);
                         }}
-                        className="p-2 rounded bg-black/10 hover:bg-brand-secondary-500 text-white  border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
+                        className="p-2 rounded bg-black/10 hover:bg-brand-secondary-500 text-white border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
                       >
                         <ChevronLeft className="size-5 sm:size-6 lg:size-7 group-hover/nav:-translate-x-0.5 transition-transform" />
                       </button>
@@ -287,7 +291,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           nextSlide();
                           setIsAutoPlaying(false);
                         }}
-                        className="p-2 rounded bg-black/10 hover:bg-brand-secondary-500 text-white  border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
+                        className="p-2 rounded bg-black/10 hover:bg-brand-secondary-500 text-white border border-white/10 transition-all active:scale-90 pointer-events-auto group/nav"
                       >
                         <ChevronRight className="size-5 sm:size-6 lg:size-7 group-hover/nav:translate-x-0.5 transition-transform" />
                       </button>
@@ -304,10 +308,11 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                             setCurrentIndex(i);
                             setIsAutoPlaying(false);
                           }}
-                          className={`h-1 transition-all duration-500 rounded-full ${i === safeCurrentIndex
-                            ? "w-8 bg-brand-secondary-500"
-                            : "w-2 dark:bg-white/40 bg-slate-600/40 hover:bg-white/60"
-                            }`}
+                          className={`h-1 transition-all duration-500 rounded-full ${
+                            i === safeCurrentIndex
+                              ? "w-8 bg-brand-secondary-500"
+                              : "w-2 dark:bg-white/40 bg-slate-600/40 hover:bg-white/60"
+                          }`}
                         />
                       ))}
                     </div>
