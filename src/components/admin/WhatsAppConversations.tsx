@@ -165,13 +165,29 @@ export default function WhatsAppConversations({
   const renderStatus = (status: string) => {
     switch (status) {
       case "read":
-        return <CheckCheck className="w-4 h-4 text-cyan-400 shrink-0" title="Read" />;
+        return (
+          <span title="Read" className="inline-flex">
+            <CheckCheck className="w-4 h-4 text-cyan-400 shrink-0" />
+          </span>
+        );
       case "delivered":
-        return <CheckCheck className="w-4 h-4 text-slate-400 shrink-0" title="Delivered" />;
+        return (
+          <span title="Delivered" className="inline-flex">
+            <CheckCheck className="w-4 h-4 text-slate-400 shrink-0" />
+          </span>
+        );
       case "sent":
-        return <Check className="w-4 h-4 text-slate-400 shrink-0" title="Sent" />;
+        return (
+          <span title="Sent" className="inline-flex">
+            <Check className="w-4 h-4 text-slate-400 shrink-0" />
+          </span>
+        );
       case "failed":
-        return <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0" title="Failed" />;
+        return (
+          <span title="Failed" className="inline-flex">
+            <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0" />
+          </span>
+        );
       default:
         return null;
     }
