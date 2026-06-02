@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, createContext, useContext, type ReactNode } from "react";
+import React, { useState, useEffect, useRef, createContext, useContext, type ReactNode } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface Props {
@@ -42,7 +42,7 @@ export const FadeInView = ({
   delay = 0,
   direction = "up",
   fullWidth = true,
-  threshold = 0.1,
+  threshold = 0.05,
   once = true,
 }: Props) => {
   const prefersReducedMotion = useReducedMotion();
@@ -68,7 +68,7 @@ export const FadeInView = ({
       },
       {
         threshold,
-        rootMargin: "0px 0px -50px 0px",
+        rootMargin: "0px 0px -20px 0px",
       }
     );
 
@@ -90,10 +90,11 @@ export const FadeInView = ({
       className={fullWidth ? "w-full" : ""}
     >
       <div
-        className="transition-all ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,opacity]"
+        className="transition ease-[cubic-bezier(0.16,1,0.3,1)]"
         style={{
           transitionDuration: prefersReducedMotion ? "10ms" : "0.75s",
           transitionDelay: prefersReducedMotion ? "0s" : `${delay}s`,
+          transitionProperty: "opacity, transform",
           opacity: prefersReducedMotion ? 1 : isInView ? 1 : 0,
           transform: prefersReducedMotion
             ? "none"
@@ -119,7 +120,7 @@ export const StaggerContainer = ({
   staggerDelay = 0.12,
   delayChildren = 0.05,
   once = true,
-  threshold = 0.08,
+  threshold = 0.05,
 }: ContainerProps) => {
   const prefersReducedMotion = useReducedMotion();
   const [isInView, setIsInView] = useState(false);
@@ -144,7 +145,7 @@ export const StaggerContainer = ({
       },
       {
         threshold,
-        rootMargin: "0px 0px -60px 0px",
+        rootMargin: "0px 0px -20px 0px",
       }
     );
 
@@ -160,11 +161,11 @@ export const StaggerContainer = ({
   const Tag = as as any;
   const finalClassNames = className || `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${gap}`;
 
-  // Automatically inject child indices so markup remains perfectly clean
-  const childrenWithIndex = typeof children === "object" 
-    ? (Array.isArray(children) ? children : [children]).map((child, index) => {
-        if (child && typeof child === "object" && "type" in child) {
-          return {...child, props: { ...child.props, index }};
+  // Automatically inject child indices so markup remains perfectly clean using React.cloneElement (React 19 compatible)
+  const childrenWithIndex = typeof children === "object"
+    ? React.Children.map(children, (child, index) => {
+        if (React.isValidElement(child)) {
+          return React.cloneElement(child, { index } as any);
         }
         return child;
       })
@@ -199,10 +200,11 @@ export const StaggerItem = ({
 
   return (
     <div
-      className={`${className} transition-all ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,opacity]`}
+      className={`${className} transition ease-[cubic-bezier(0.16,1,0.3,1)]`}
       style={{
         transitionDuration: prefersReducedMotion ? "10ms" : `${duration}s`,
         transitionDelay: prefersReducedMotion ? "0s" : `${delay}s`,
+        transitionProperty: "opacity, transform",
         opacity: prefersReducedMotion ? 1 : isInView ? 1 : 0,
         transform: prefersReducedMotion
           ? "none"

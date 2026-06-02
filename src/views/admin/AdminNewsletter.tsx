@@ -21,6 +21,7 @@ import {
   Search,
   Send,
   SlidersHorizontal,
+  Target,
   Trash2,
   Users,
   XCircle,
@@ -684,7 +685,7 @@ export default function AdminNewsletter() {
           label="Current Target"
           value={estimatedAudience}
           detail={`${audienceStatus} audience`}
-          icon={SlidersHorizontal}
+          icon={Target}
           tone="amber"
         />
       </div>

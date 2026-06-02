@@ -436,6 +436,36 @@ html.theme-transitioning :where(header,
         box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Premium Metal Chrome Reflection & Floating Utilities */
+.chrome-sweep {
+    position: relative;
+    overflow: hidden;
+}
+
+.chrome-sweep::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 300%;
+    height: 200%;
+    background: linear-gradient(
+        115deg,
+        rgba(255, 255, 255, 0) 30%,
+        rgba(255, 255, 255, 0.08) 45%,
+        rgba(255, 255, 255, 0.18) 50%,
+        rgba(255, 255, 255, 0.08) 55%,
+        rgba(255, 255, 255, 0) 70%
+    );
+    transition: all 0.9s cubic-bezier(0.19, 1, 0.22, 1);
+    pointer-events: none;
+    transform: rotate(-15deg);
+}
+
+.chrome-sweep:hover::after {
+    left: 150%;
+}
+
 /* Accessibility: Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
 

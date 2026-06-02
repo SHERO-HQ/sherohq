@@ -1,6 +1,17 @@
 import { NextResponse } from "next/server";
 import type { Product } from "@/types/product";
 import { CATALOG_SUMMARY, GUIDE_MAPPING, SUPPORT_KNOWLEDGE } from "./knowledge";
+import { query as dbQuery } from "@/lib/db";
+import { v4 as uuidv4 } from "uuid";
+import { logActivity } from "@/lib/activity";
+import { getUserFromSession } from "@/lib/auth";
+
+const STOP_WORDS = new Set([
+  "for", "with", "and", "the", "need", "want", "best", "good", "help", "my",
+  "a", "an", "to", "in", "as", "at", "of", "by", "on", "is", "it", "me", "we",
+  "he", "so", "be", "do", "go", "if", "no", "or", "up", "us", "am", "are", "can",
+  "please", "thanks", "thank", "hello", "hi", "hey", "looking", "buy", "get"
+]);
 
 /** Resolve the internal backend URL (server-side only) */
 const BACKEND_URL = (
@@ -11,19 +22,176 @@ const BACKEND_URL = (
     : "http://127.0.0.1:5000")
 ).replace(/\/$/, "");
 
-async function fetchDynamicCatalogSummary(): Promise<string> {
+export function getVariantTokens(token: string): string[] {
+  const variants = [token];
+  if (token.endsWith("es") && token.length > 4) {
+    variants.push(token.slice(0, -2)); // e.g. switches -> switch
+  } else if (token.endsWith("s") && token.length > 3) {
+    variants.push(token.slice(0, -1)); // e.g. laptops -> laptop
+  }
+  return variants;
+}
+
+async function dbFetchProducts(search?: string, category?: string, limit: number = 40): Promise<Product[]> {
+  const runSearch = async (joinType: "AND" | "OR" = "AND"): Promise<Product[]> => {
+    try {
+      let queryText = `
+        SELECT
+          p.*,
+          COALESCE(c_by_id.name, c_by_name.name) as category_name,
+          COALESCE(c_by_id.id, c_by_name.id) as resolved_category_id
+        FROM products p
+        LEFT JOIN categories c_by_id ON p.category = c_by_id.id
+        LEFT JOIN categories c_by_name ON p.category = c_by_name.name
+      `;
+
+      const sqlParams: (string | number)[] = [];
+      const conditions: string[] = [];
+      let paramIndex = 1;
+
+      if (category && category !== "all") {
+        conditions.push(
+          `(p.category = $${paramIndex} OR c_by_id.id = $${paramIndex} OR c_by_name.name ILIKE $${paramIndex})`,
+        );
+        sqlParams.push(`%${category}%`);
+        paramIndex++;
+      }
+
+      if (search) {
+        const tokens = search
+          .toLowerCase()
+          .split(/\s+/)
+          .filter((t) => t.length >= 2 && !STOP_WORDS.has(t));
+
+        if (tokens.length > 0) {
+          const tokenConditions: string[] = [];
+          tokens.forEach((token) => {
+            const variants = getVariantTokens(token);
+            const orParts: string[] = [];
+            
+            variants.forEach((v) => {
+              orParts.push(`(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR p.specifications::text ILIKE $${paramIndex} OR p.features::text ILIKE $${paramIndex} OR c_by_id.name ILIKE $${paramIndex} OR c_by_name.name ILIKE $${paramIndex})`);
+              sqlParams.push(`%${v}%`);
+              paramIndex++;
+            });
+            
+            tokenConditions.push(`(${orParts.join(" OR ")})`);
+          });
+          
+          conditions.push(`(${tokenConditions.join(` ${joinType} `)})`);
+        } else {
+          conditions.push(
+            `(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR p.specifications::text ILIKE $${paramIndex} OR p.features::text ILIKE $${paramIndex} OR c_by_id.name ILIKE $${paramIndex} OR c_by_name.name ILIKE $${paramIndex})`,
+          );
+          sqlParams.push(`%${search}%`);
+          paramIndex++;
+        }
+      }
+
+      if (conditions.length > 0) {
+        queryText += " WHERE " + conditions.join(" AND ");
+      }
+
+      queryText += ` ORDER BY p.inStock DESC, p."createdAt" DESC LIMIT $${paramIndex}`;
+      sqlParams.push(limit);
+
+      const result = await dbQuery(queryText, sqlParams);
+      
+      return result.rows.map((row: any) => {
+        const safeParse = (val: unknown): unknown => {
+          if (!val) return null;
+          if (typeof val !== "string") return val;
+          try {
+            return JSON.parse(val);
+          } catch (e) {
+            return val;
+          }
+        };
+
+        return {
+          ...row,
+          category: row.category_name || row.category,
+          categoryId: row.resolved_category_id || row.category,
+          price: Number(row.price),
+          originalPrice: row.originalPrice ? Number(row.originalPrice) : null,
+          rating: Number(row.rating),
+          images: safeParse(row.images),
+          features: safeParse(row.features),
+          specifications: safeParse(row.specifications),
+          inStock: Boolean(row.inStock),
+          sku: row.sku || null,
+          slug: row.slug || null,
+          stockQuantity: row.stockQuantity,
+          quantity: row.stockQuantity,
+          condition: row.condition || "New",
+          isSpotlight: Boolean(row.isSpotlight),
+          isFeatured: Boolean(row.isFeatured),
+        } as Product;
+      });
+    } catch (error) {
+      console.error(`Direct DB fetch (${joinType}) failed:`, error);
+      return [];
+    }
+  };
+
+  // Try strict AND search first
+  let results = await runSearch("AND");
+  if (results.length === 0 && search) {
+    // Relax search to OR matching if AND returned nothing
+    results = await runSearch("OR");
+  }
+  return results;
+}
+
+async function fetchDynamicCatalogSummary(userQuery?: string): Promise<string> {
   try {
-    const res = await fetch(`${BACKEND_URL}/api/products`);
-    if (!res.ok) return CATALOG_SUMMARY; // Fallback
-    const products: Product[] = await res.json();
+    let products: Product[] = [];
+    if (userQuery) {
+      // Look for query-specific keywords before running RAG search
+      const hasProductKeywords = /\b(laptop|notebook|macbook|pc|router|switch|wifi|network|printer|server|adapter|headset|earbuds|screen|monitor|jbl|hp|dell|lenovo|samsung|price|buy|cost|get)\b/i.test(userQuery);
+      if (hasProductKeywords) {
+        products = await dbFetchProducts(userQuery, undefined, 15);
+      }
+    }
 
-    // Group by category and pick top items
-    const summary = products
-      .slice(0, 10)
-      .map((p) => `- ${p.name} (GHS ${p.price}) ID: ${p.id}`)
-      .join("\n");
+    // Fill details with newest products if search yielded too few items
+    if (products.length < 10) {
+      const recentProducts = await dbFetchProducts(undefined, undefined, 30);
+      const seen = new Set(products.map((p) => p.id));
+      recentProducts.forEach((p) => {
+        if (!seen.has(p.id)) {
+          products.push(p);
+          seen.add(p.id);
+        }
+      });
+    }
 
-    return summary || CATALOG_SUMMARY;
+    if (!Array.isArray(products) || products.length === 0) return CATALOG_SUMMARY;
+
+    // Group by category and build a clean bulleted list
+    const categories: Record<string, string[]> = {};
+    products.forEach((p) => {
+      const cat = p.category || "Other";
+      if (!categories[cat]) categories[cat] = [];
+      const stockStatus = p.inStock ? "In Stock" : "Out of Stock";
+      const specsSummary = p.specifications
+        ? Object.entries(p.specifications)
+            .map(([k, v]) => `${k}: ${v}`)
+            .slice(0, 3)
+            .join(", ")
+        : "";
+      const specsPart = specsSummary ? ` (${specsSummary})` : "";
+      categories[cat].push(`${p.name}${specsPart} - GHS ${p.price} - ${stockStatus} [ID: ${p.id}]`);
+    });
+
+    let result = "CURRENT INVENTORY:\n";
+    for (const [cat, items] of Object.entries(categories)) {
+      result += `- ${cat}:\n`;
+      items.forEach((item) => {
+        result += `  - ${item}\n`;
+      });
+    }
+    return result;
   } catch (error) {
     if (process.env.NODE_ENV !== "production") {
       console.error("Failed to fetch dynamic catalog:", error);
@@ -42,8 +210,10 @@ OBJECTIVE
 
 TAGGING RULES
 - Use [RECOMMEND: query] when the user is asking for products, options, pricing, or comparisons.
-- Use [BOOK: topic] only when the user explicitly asks to consult, schedule, call, or speak to an expert.
-- Use [TICKET] only after troubleshooting guidance was attempted and the user says it still failed or they cannot follow the guide.
+- Use [BOOK: topic] when the user wants to consult or speak to an expert but hasn't provided booking details yet.
+- Use [BOOK_DIRECT: {"name": "...", "email": "...", "phone": "...", "service": "...", "date": "YYYY-MM-DD", "time": "...", "message": "..."}] when the user wants to book/schedule a consultation and has provided their booking details (name, email, date, time, and service like Managed IT, Custom Software, Cyber Security, etc.).
+- Use [TICKET] only when the user wants to create a support ticket but hasn't provided details (name, email, subject, message) yet.
+- Use [TICKET_DIRECT: {"name": "...", "email": "...", "phone": "...", "subject": "...", "message": "...", "priority": "medium", "category": "General"}] when you tried troubleshooting but it failed, and the user wants to open a support ticket and has provided their details (name, email, subject, message).
 - Use [CART: product name] only when user explicitly asks to buy/add/order now.
 - Use [TRACK_ORDER: id] or [TRACK_TICKET: id] only when the user provides a valid ID.
 
@@ -51,9 +221,12 @@ IMPORTANT
 - Do NOT default to [BOOK] or [TICKET] for normal product questions.
 - Do NOT claim actions were completed unless a tag indicates the action.
 - If tracking is requested without an ID, ask for the order/ticket ID.
+- For booking/scheduling: If they say they want to book a call/consultation but haven't provided details, ask them to provide their name, email, preferred date (YYYY-MM-DD), time, and service so you can book it for them directly.
+- For support tickets: If they say they want to open a support ticket or speak to support but haven't provided details, ask them to provide their name, email, ticket subject, and a description of the issue so you can create the ticket directly.
 - For budget requests, reflect Ghana cedi context (GHS).
 - Never recommend products above the user's stated budget cap.
 - If no SHERO troubleshooting guide is available, provide concise general troubleshooting steps before escalating to support.
+- When recommending, present product choices in a clear, formatted bulleted list with GHS price and stock status.
 
 KNOWLEDGE
 ${catalog}
@@ -297,7 +470,7 @@ function buildInlineTroubleshootingSteps(userMessage: string): string {
   return "Let's troubleshoot this: 1) Restart the device and install pending updates. 2) Check storage, memory, and background apps. 3) Run built-in diagnostics and share any error code so I can guide the next fix.";
 }
 
-async function fetchRecommendedProducts(query: string, budgetCap?: number) {
+export async function fetchRecommendedProducts(query: string, budgetCap?: number) {
   try {
     const normalizedQuery = query.trim().toLowerCase();
     if (process.env.NODE_ENV !== "production") {
@@ -312,23 +485,6 @@ async function fetchRecommendedProducts(query: string, budgetCap?: number) {
       "featured",
       "products",
       "options",
-    ]);
-
-    const stopWords = new Set([
-      "for",
-      "with",
-      "and",
-      "the",
-      "need",
-      "want",
-      "best",
-      "good",
-      "help",
-      "my",
-      "a",
-      "an",
-      "to",
-      "in",
     ]);
 
     const keywordMappings: Array<{ pattern: RegExp; term: string }> = [
@@ -371,23 +527,15 @@ async function fetchRecommendedProducts(query: string, budgetCap?: number) {
       param: "search" | "category",
       term: string,
     ): Promise<Product[]> => {
-      const response = await fetch(
-        `${BACKEND_URL}/api/products?${param}=${encodeURIComponent(term)}&limit=40`,
-      );
-      if (!response.ok) return [];
-
-      const payload = await response.json();
-      return Array.isArray(payload) ? (payload as Product[]) : [];
+      if (param === "search") {
+        return dbFetchProducts(term, undefined, 40);
+      } else {
+        return dbFetchProducts(undefined, term, 40);
+      }
     };
 
     const fetchFeatured = async (): Promise<Product[]> => {
-      const response = await fetch(`${BACKEND_URL}/api/products?limit=40`);
-      if (!response.ok) return [];
-
-      const payload = await response.json();
-      if (!Array.isArray(payload)) return [];
-
-      const products = payload as Product[];
+      const products = await dbFetchProducts(undefined, undefined, 40);
       return finalizeRecommendations(products);
     };
 
@@ -396,17 +544,20 @@ async function fetchRecommendedProducts(query: string, budgetCap?: number) {
     }
 
     const searchTerms = new Set<string>();
+    // 1. Full query is most specific
     searchTerms.add(normalizedQuery);
 
+    // 2. Individual tokens (like brand names) are second most specific
+    for (const token of normalizedQuery.split(/\s+/)) {
+      if (token.length < 2 || STOP_WORDS.has(token)) continue;
+      searchTerms.add(token);
+    }
+
+    // 3. Mapped categories (like 'laptop') are least specific fallback terms
     for (const mapping of keywordMappings) {
       if (mapping.pattern.test(normalizedQuery)) {
         searchTerms.add(mapping.term);
       }
-    }
-
-    for (const token of normalizedQuery.split(/\s+/)) {
-      if (token.length < 3 || stopWords.has(token)) continue;
-      searchTerms.add(token);
     }
 
     const terms = [...searchTerms].slice(0, 6);
@@ -519,7 +670,7 @@ function buildFallbackReply(
     "repair",
   ];
   if (escalatesToSupport) {
-    return "Thanks for trying those steps. I will connect you with direct support now so we can resolve this faster. [TICKET]";
+    return "I see those troubleshooting steps didn't resolve the issue. I can help you open a support ticket directly from this chat. Would you like me to do that? Please click 'Open Support Ticket Inline' below or provide your Name, Email, Subject, and a brief description. [TICKET]";
   }
 
   if (supportKeywords.some((k) => normalized.includes(k))) {
@@ -546,11 +697,18 @@ function buildFallbackReply(
       }
       return `I can help fix laptop performance first. Start with this troubleshooting guide, then tell me exactly which step didn't help: [GUIDE: ${guideSlug}]`;
     }
+
+    let brand = "";
+    if (normalized.includes("hp")) brand = "hp ";
+    else if (normalized.includes("dell")) brand = "dell ";
+    else if (normalized.includes("lenovo")) brand = "lenovo ";
+    else if (normalized.includes("apple") || normalized.includes("macbook")) brand = "apple ";
+
     if (budget && budget < 6000)
-      return `I recommend these entry-level laptops within your ${formatGhs(budget)} budget: [RECOMMEND: student laptop]`;
+      return `I recommend these entry-level ${brand}laptops within your ${formatGhs(budget)} budget: [RECOMMEND: ${brand}student laptop]`;
     if (budget)
-      return `I've found some premium options for your ${formatGhs(budget)} budget: [RECOMMEND: laptop]`;
-    return "I can help you browse our current laptop inventory: [RECOMMEND: laptop]";
+      return `I've found some premium options for your ${formatGhs(budget)} budget: [RECOMMEND: ${brand}laptop]`;
+    return `I can help you browse our current ${brand}laptop inventory: [RECOMMEND: ${brand}laptop]`;
   }
 
   const networkKeywords = ["network", "router", "switch", "wifi", "internet"];
@@ -579,7 +737,7 @@ export async function POST(request: Request) {
       ? history
       : [];
     const budgetCap = resolveBudgetFromConversation(message, safeHistory);
-    const catalogSummary = await fetchDynamicCatalogSummary();
+    const catalogSummary = await fetchDynamicCatalogSummary(message);
 
     let replyContent = "";
 
@@ -654,6 +812,11 @@ export async function POST(request: Request) {
                 parts: [{ text: getSystemPrompt(catalogSummary) }],
               },
               contents,
+              tools: [
+                {
+                  googleSearch: {}
+                }
+              ],
               generationConfig: {
                 temperature: 0.7,
               },
@@ -712,37 +875,61 @@ export async function POST(request: Request) {
     let trackOrder: string | undefined = undefined;
     let trackTicket: string | undefined = undefined;
     let bookStore: string | undefined = undefined;
+    let bookDirect: any = undefined;
+    let ticketDirect: any = undefined;
 
     // Detect new Elite tags
-    const cartMatch = replyContent.match(/\[CART:\s*["']?(.*?)["']?\]/i);
+    const cartMatch = replyContent.match(/\[CART:\s*["']?([\s\S]*?)["']?\]/i);
     if (cartMatch) {
       cartProduct = cartMatch[1].trim();
-      replyContent = replyContent.replace(/\[CART:.*?\]/gi, "").trim();
+      replyContent = replyContent.replace(/\[CART:[\s\S]*?\]/gi, "").trim();
     }
 
-    const orderMatch = replyContent.match(/\[TRACK_ORDER:\s*(.*?)\]/i);
+    const orderMatch = replyContent.match(/\[TRACK_ORDER:\s*([\s\S]*?)\]/i);
     if (orderMatch) {
       trackOrder = orderMatch[1].trim();
-      replyContent = replyContent.replace(/\[TRACK_ORDER:.*?\]/gi, "").trim();
+      replyContent = replyContent.replace(/\[TRACK_ORDER:[\s\S]*?\]/gi, "").trim();
     }
 
-    const ticketTrackMatch = replyContent.match(/\[TRACK_TICKET:\s*(.*?)\]/i);
+    const ticketTrackMatch = replyContent.match(/\[TRACK_TICKET:\s*([\s\S]*?)\]/i);
     if (ticketTrackMatch) {
       trackTicket = ticketTrackMatch[1].trim();
-      replyContent = replyContent.replace(/\[TRACK_TICKET:.*?\]/gi, "").trim();
+      replyContent = replyContent.replace(/\[TRACK_TICKET:[\s\S]*?\]/gi, "").trim();
     }
 
-    const bookMatch = replyContent.match(/\[BOOK:\s*(.*?)\]/i);
+    const ticketDirectMatch = replyContent.match(/\[TICKET_DIRECT:\s*(\{[\s\S]*?\})\]/i);
+    if (ticketDirectMatch) {
+      try {
+        const jsonStr = ticketDirectMatch[1].trim();
+        ticketDirect = JSON.parse(jsonStr);
+        replyContent = replyContent.replace(/\[TICKET_DIRECT:[\s\S]*?\]/gi, "").trim();
+      } catch (e) {
+        console.error("Failed to parse TICKET_DIRECT JSON:", e);
+      }
+    }
+
+    const bookDirectMatch = replyContent.match(/\[BOOK_DIRECT:\s*(\{[\s\S]*?\})\]/i);
+    if (bookDirectMatch) {
+      try {
+        const jsonStr = bookDirectMatch[1].trim();
+        bookDirect = JSON.parse(jsonStr);
+        replyContent = replyContent.replace(/\[BOOK_DIRECT:[\s\S]*?\]/gi, "").trim();
+      } catch (e) {
+        console.error("Failed to parse BOOK_DIRECT JSON:", e);
+      }
+    }
+
+    const bookMatch = replyContent.match(/\[BOOK:\s*([\s\S]*?)\]/i);
     if (bookMatch) {
       bookStore = bookMatch[1].trim();
-      replyContent = replyContent.replace(/\[BOOK:.*?\]/gi, "").trim();
+      replyContent = replyContent.replace(/\[BOOK:[\s\S]*?\]/gi, "").trim();
     }
 
     // Detect [GUIDE: slug] tags
-    const guideMatch = replyContent.match(/\[GUIDE:\s*(.*?)\]/i);
+    const guideMatch = replyContent.match(/\[GUIDE:\s*([\s\S]*?)\]/i);
     if (guideMatch) {
       guideSlug = guideMatch[1].trim();
-      replyContent = replyContent.replace(/\[GUIDE:\s*.*?\]/gi, "").trim();
+      replyContent = replyContent.replace(/\[GUIDE:\s*[\s\S]*?\]/gi, "").trim();
     }
 
     // Detect [TICKET] or [CONTACT] tags
@@ -840,7 +1027,7 @@ export async function POST(request: Request) {
             supportAction = "ticket";
             if (!replyContent) {
               replyContent =
-                "Thanks for trying those steps. I will connect you with support so we can resolve this quickly.";
+                "I see those troubleshooting steps didn't resolve the issue. I can help you open a support ticket directly from this chat. Please click 'Open Support Ticket Inline' below or provide your Name, Email, Subject, and a brief description to proceed.";
             }
           } else if (inferredGuide) {
             guideSlug = inferredGuide;
@@ -928,6 +1115,145 @@ export async function POST(request: Request) {
       replyContent = `I could not find products at or below ${formatGhs(budgetCap)} right now. If you share a higher budget or another category, I can refine the shortlist.`;
     }
 
+    // Direct background DB status checks for live tracking inquiries
+    if (trackOrder) {
+      try {
+        const orderResult = await dbQuery(
+          `SELECT status, total, "createdAt" FROM orders WHERE id = $1 OR replace(lower(id), '-', '') LIKE $1 || '%' LIMIT 1`,
+          [trackOrder.toLowerCase()]
+        );
+        const order = orderResult.rows[0];
+        if (order) {
+          const statusText = order.status.toUpperCase();
+          const orderDate = new Date(order.createdAt).toLocaleDateString("en-GH");
+          replyContent = `Found order #${trackOrder.slice(0, 8)}. Status: **${statusText}** (Created: ${orderDate}). Here are your tracking details:`;
+        } else {
+          replyContent = `I searched our system but could not find an order matching identifier **#${trackOrder}**. Please verify your order ID.`;
+        }
+      } catch (e) {
+        replyContent = "Here is the status of your order:";
+      }
+    }
+
+    if (trackTicket) {
+      try {
+        const ticketResult = await dbQuery(
+          `SELECT status, subject, "createdAt" FROM tickets WHERE id = $1 OR ticket_no = $2 LIMIT 1`,
+          [trackTicket, /^\d+$/.test(trackTicket) ? parseInt(trackTicket, 10) : -1]
+        );
+        const ticket = ticketResult.rows[0];
+        if (ticket) {
+          const statusText = ticket.status.toUpperCase();
+          const ticketDate = new Date(ticket.createdAt).toLocaleDateString("en-GH");
+          replyContent = `Found ticket #${trackTicket}. Subject: **"${ticket.subject}"** | Status: **${statusText}** (Opened: ${ticketDate}). Here is the live ticket card:`;
+        } else {
+          replyContent = `I searched our records but could not find a ticket matching **#${trackTicket}**. Please check the ticket number.`;
+        }
+      } catch (e) {
+        replyContent = "Here is the status of your support ticket:";
+      }
+    }
+
+    if (bookDirect) {
+      try {
+        const { name, email, phone, service, date, time, message: bookMsg } = bookDirect;
+        if (name && email && service && date && time) {
+          const id = uuidv4();
+          await dbQuery(
+            `INSERT INTO consultations (id, name, email, phone, service, date, time, message, status)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'pending')`,
+            [id, name, email, phone || null, service, date, time, bookMsg || "Booked via AI Chat Assistant"]
+          );
+          
+          await logActivity(null, "Consultation Requested", "info", `New consultation for ${service} from ${name} (via AI Chat)`);
+          
+          const formattedDate = new Date(date).toLocaleDateString("en-GH", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+          replyContent = `I have scheduled your consultation for **${service}** on **${formattedDate}** at **${time}**. We look forward to speaking with you, ${name}!`;
+          
+          // Re-assign bookDirect to contain the resolved info for frontend rendering
+          bookDirect = {
+            id,
+            name,
+            email,
+            phone,
+            service,
+            date,
+            time,
+            status: "pending"
+          };
+        } else {
+          replyContent = "I wanted to book a consultation for you, but some details (name, email, service, date, or time) were missing.";
+          bookDirect = undefined;
+        }
+      } catch (error) {
+        console.error("Direct booking failed:", error);
+        replyContent = "I encountered an issue while scheduling your consultation. Please try again or visit our booking page.";
+        bookDirect = undefined;
+      }
+    }
+
+    if (ticketDirect) {
+      try {
+        const { name, email, phone, subject, message: ticketMsg, priority, category } = ticketDirect;
+        if (name && email && subject && ticketMsg) {
+          const id = uuidv4();
+          
+          // Retrieve next ticket number safely
+          const numResult = await dbQuery("SELECT COALESCE(MAX(ticket_no), 1000) + 1 AS next_no FROM tickets");
+          const nextTicketNo = numResult.rows[0]?.next_no || 1001;
+
+          // Resolve userId from session
+          let finalUserId = null;
+          const userSession = await getUserFromSession();
+          if (userSession) {
+            finalUserId = userSession.id;
+          }
+
+          await dbQuery(
+            `INSERT INTO tickets (
+              id, ticket_no, name, email, phone, subject, message, category, priority, status, "userId", "createdAt"
+            ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'open', $10, NOW())`,
+            [
+              id,
+              nextTicketNo,
+              name,
+              email,
+              phone || null,
+              subject,
+              ticketMsg,
+              category || "General",
+              priority || "medium",
+              finalUserId
+            ]
+          );
+
+          await logActivity(null, "Support Ticket Created", "info", `New support ticket #${nextTicketNo} created from ${name} (via AI Chat)`);
+          
+          replyContent = `I have successfully opened support ticket **#${nextTicketNo}** for you. Our technicians have been notified and will contact you via email at **${email}** shortly.`;
+          
+          ticketDirect = {
+            id,
+            ticket_no: nextTicketNo,
+            name,
+            email,
+            phone,
+            subject,
+            message: ticketMsg,
+            category: category || "General",
+            priority: priority || "medium",
+            status: "open"
+          };
+        } else {
+          replyContent = "I wanted to create a support ticket for you, but some details (name, email, subject, or message) were missing.";
+          ticketDirect = undefined;
+        }
+      } catch (error) {
+        console.error("Direct ticketing failed:", error);
+        replyContent = "I encountered an issue while creating your support ticket. Please try again or visit our support page to submit a ticket.";
+        ticketDirect = undefined;
+      }
+    }
+
     if (!replyContent) {
       if (recommendedProducts.length > 0) {
         replyContent = "Here are the best matches I found for you:";
@@ -939,7 +1265,8 @@ export async function POST(request: Request) {
       } else if (trackTicket) {
         replyContent = "Here is your latest ticket status:";
       } else if (supportAction === "ticket") {
-        replyContent = "I can help you open a support ticket for this issue.";
+        replyContent =
+          "I can help you open a support ticket directly from this chat. Please click 'Open Support Ticket Inline' below or provide your Name, Email, Subject, and a brief description to get started.";
       } else if (supportAction === "contact") {
         replyContent = "I can connect you with our support team.";
       } else if (bookStore) {
@@ -1004,6 +1331,8 @@ export async function POST(request: Request) {
       trackOrder,
       trackTicket,
       bookStore,
+      bookDirect,
+      ticketDirect,
     });
   } catch (error) {
     console.error("Chat API Error:", error);

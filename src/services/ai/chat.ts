@@ -18,6 +18,8 @@ export interface ChatMessage {
   trackOrder?: string;
   trackTicket?: string;
   bookStore?: string;
+  bookDirect?: any;
+  ticketDirect?: any;
   imageData?: string;
   audioData?: string;
 }

@@ -146,23 +146,23 @@ const PWAInstallBanner = () => {
                   <Image
                     src={sheroIcon}
                     alt="SHERO"
-                    className="w-7 h-7 object-contain"
+                    className="w-6 h-6 object-contain"
                   />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-brand-secondary-600 dark:text-brand-secondary-400">
+                  <p className="text-[10px] font-semibold tracking-wide text-brand-secondary-600 dark:text-brand-secondary-400">
                     Install SHERO
                   </p>
-                  <p className="mt-0.5 text-[11px] leading-tight text-slate-600 dark:text-slate-400 font-medium">
+                  <p className="mt-0.5 text-[9px] leading-tight text-slate-600 dark:text-slate-400">
                     Tap Share → Add to Home Screen for the best experience
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={handleIPhoneInstall}
-                  className="inline-flex items-center justify-center h-8 px-3 rounded font-bold bg-brand-secondary-600 hover:bg-brand-secondary-700 dark:bg-brand-secondary-500 dark:hover:bg-brand-secondary-400 text-white text-[11px] transition-all active:scale-95 whitespace-nowrap shadow-sm shadow-brand-secondary-500/20"
+                  className="inline-flex items-center justify-center h-6 px-2 rounded font-semibold bg-brand-secondary-600 hover:bg-brand-secondary-700 dark:bg-brand-secondary-500 dark:hover:bg-brand-secondary-400 text-white text-[10px] transition-all active:scale-95 whitespace-nowrap shadow-sm shadow-brand-secondary-500/20"
                 >
-                  <Download className="h-3.5 w-3.5 mr-1.5" />
+                  <Download className="h-3 w-3 mr-1.5" />
                   Install
                 </button>
                 <button
@@ -187,18 +187,18 @@ const PWAInstallBanner = () => {
             animate={{ x: 0, opacity: 1, scale: 1 }}
             exit={{ x: 300, opacity: 0, scale: 0.9 }}
             transition={{ type: "spring", stiffness: 260, damping: 20 }}
-            className="fixed bottom-20 md:bottom-6 right-6 z-100 w-[calc(100vw-3rem)] sm:w-[380px]"
+            className="fixed bottom-20 md:bottom-14 right-6 z-100 w-[calc(100vw-14rem)] sm:w-[280px]"
           >
             <div className="glass-surface-md p-4 rounded shadow transition-colors duration-300">
               <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded bg-brand-secondary-50 dark:bg-brand-secondary-900/20 text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-100/50 dark:border-brand-secondary-800/30">
-                  <Download className="h-6 w-6" />
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-brand-secondary-50 dark:bg-brand-secondary-900/20 text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-100/50 dark:border-brand-secondary-800/30">
+                    <Image src={sheroIcon} alt="SHERO" className="w-6 h-6 object-contain" />
                 </div>
                 <div className="min-w-0 flex-1 pt-0.5">
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-brand-secondary-600 dark:text-brand-secondary-400">
+                  <p className="text-[11px] font-medium text-brand-secondary-600 dark:text-brand-secondary-400">
                     Install SHERO
                   </p>
-                  <p className="mt-1 text-[12px] text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
+                  <p className="mt-1 text-[10px] text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
                     Install now for premium features and offline access on this
                     device.
                   </p>
@@ -206,16 +206,16 @@ const PWAInstallBanner = () => {
                     <button
                       type="button"
                       onClick={handleInstallPWA}
-                      className="inline-flex items-center justify-center h-8 px-6 rounded font-bold bg-brand-secondary-600 hover:bg-brand-secondary-700 dark:bg-brand-secondary-500 dark:hover:bg-brand-secondary-400 text-white text-[12px] transition-all active:scale-95 shadow shadow-brand-secondary-500/20"
+                      className="inline-flex items-center justify-center h-8 px-6 rounded font-medium text-slate-900 bg-brand-secondary-600 hover:bg-brand-secondary-700 dark:bg-brand-secondary-500 dark:hover:bg-brand-secondary-400 text-[11px] transition-all active:scale-95 shadow shadow-brand-secondary-500/20"
                     >
-                      Install App
+                      Install
                     </button>
                     <button
                       type="button"
                       onClick={handleDismissPWABanner}
-                      className="inline-flex items-center justify-center h-8 px-4 rounded font-bold bg-slate-100 hover:bg-slate-200 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 text-[12px] transition-all active:scale-95"
+                      className="inline-flex items-center justify-center h-8 px-4 rounded font-medium bg-slate-200 hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-[11px] transition-all active:scale-95"
                     >
-                      Maybe Later
+                      Later
                     </button>
                   </div>
                 </div>

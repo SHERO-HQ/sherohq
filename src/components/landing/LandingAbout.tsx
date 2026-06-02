@@ -79,16 +79,16 @@ const LandingAbout = () => {
           </FadeInView>
 
           {/* RIGHT COLUMN: Tech Nexus Visualization */}
-          <div className="w-full lg:w-1/2 relative h-125 flex items-center justify-center">
+          <div className="w-full lg:w-1/2 relative h-125 flex items-center justify-center select-none">
             <div className="absolute inset-0 pattern-dots mask-radial-faded" />
 
-            <div className="relative z-20 w-80 h-80 rounded-full flex items-center justify-center border-2 border-brand-secondary-600/20">
-              {/* Rotating Rings */}
-              <div className="absolute inset-4 border-2 border-brand-secondary-600/30 rounded-full" />
-              <div className="absolute inset-8 border-2 border-brand-secondary-500/20 rounded-full" />
+            <div className="relative z-20 w-96 h-96 rounded-full flex items-center justify-center border-2 border-dashed border-brand-secondary-600/20 bg-brand-secondary-500/1">
+              {/* Concentric Blueprint Rings */}
+              <div className="absolute inset-6 border-2 border-dashed border-brand-secondary-600/35 rounded-full animate-[spin_60s_linear_infinite]" />
+              <div className="absolute inset-12 border-2 border-dashed border-brand-secondary-500/20 rounded-full animate-[spin_40s_linear_infinite]" />
 
               {/* Central Pattern Centerpiece */}
-              <div className="relative z-10 w-32 h-32 rounded-full flex items-center justify-center border border-brand-secondary-600/10 overflow-hidden">
+              <div className="relative z-10 w-32 h-32 rounded-full flex items-center justify-center border border-brand-secondary-600/10 overflow-hidden bg-white/70 dark:bg-slate-900/70 backdrop-blur-xs">
                 {/* Pattern as the 'Glow' */}
                 <div className="absolute inset-0 pattern-dots opacity-40 dark:opacity-60 mask-radial-faded scale-150" />
 
@@ -98,42 +98,74 @@ const LandingAbout = () => {
                   alt="SHERO"
                   width={64}
                   height={64}
-                  className="relative z-20 w-16 h-16 drop-shadow-sm"
+                  className="relative z-20 w-16 h-16 drop-shadow-sm hover:scale-105 transition-transform duration-300"
                   suppressHydrationWarning
                 />
               </div>
 
-              {/* Floating Badge Overlay */}
-              <div className="absolute -top-24 right-0 dark:bg-brand-secondary-50/10 bg-white/40  border border-white/20 dark:border-brand-secondary-600/20 px-4 py-2 rounded transform translate-y-1/2 shadow">
-                <p className="text-sm font-bold dark:text-white text-slate-600 tracking-wider">
+              {/* Sleek, High-Fidelity 10x Efficiency Badge - Positioned Clear of Orbit Path (Strict Brand Palette) */}
+              <div className="absolute flex items-center justify-center gap-2 -top-16 -right-12 bg-white/95 dark:bg-slate-900/90 border border-brand-secondary-500/20 dark:border-brand-secondary-500/30 px-3.5 py-1.5 rounded shadow-md backdrop-blur-xs hover:scale-105 transition-transform duration-300 z-30">
+                <p className="text-base font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 tracking-tight font-sora leading-none">
                   10x
                 </p>
-                <p className="text-xs dark:text-brand-secondary-300 text-brand-secondary-700 tracking-wider">
-                  {" "}
-                  Efficiency Impact
+                <p className="text-[9px] text-brand-secondary-700 dark:text-brand-secondary-300 font-mono tracking-widest uppercase font-medium">
+                  Efficiency
                 </p>
               </div>
-            </div>
 
-            {/* Floating Elements (Orbiting) */}
-            <FloatingCard
-              icon={
-                <Globe2 className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-blue-800 dark:text-blue-700" />
-              }
-              className="absolute sm:top-10 sm:right-20 md:top-8 md:right-28 top-30 left-10 z-10"
-            />
-            <FloatingCard
-              icon={
-                <Cpu className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-indigo-800 dark:text-indigo-700" />
-              }
-              className="absolute bottom-25 sm:left-40 md:left-20 left-15 z-30"
-            />
-            <FloatingCard
-              icon={
-                <Code2 className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-brand-secondary-800 dark:text-brand-secondary-500" />
-              }
-              className="absolute sm:bottom-1/3 sm:right-38 md:right-14 bottom-60 right-2 -translate-y-10 z-10"
-            />
+              {/* Multi-layered Concentric Orbits: Synchronized in a resonant 45s spin cycle, cardinally aligned (Globe top, Cpu bottom, Code right) to keep them perfectly in line and clear of overlays */}
+              
+              {/* 1. Globe2 - Orbiting the Outermost Ring (Radius 192px, Top cardinal start) */}
+              <div 
+                className="absolute inset-0 z-30 pointer-events-none rounded-full"
+                style={{ animation: "spin 45s linear infinite" }}
+              >
+                <div 
+                  className="absolute top-[-16px] left-1/2 -translate-x-1/2 pointer-events-auto"
+                  style={{ animation: "spin 45s linear infinite reverse" }}
+                >
+                  <FloatingCard
+                    icon={
+                      <Globe2 className="w-4.5 h-4.5 text-brand-primary-700 dark:text-brand-primary-400" />
+                    }
+                  />
+                </div>
+              </div>
+
+              {/* 2. Cpu - Orbiting the Middle Ring (Radius 168px / inset-6, Bottom cardinal start) */}
+              <div 
+                className="absolute inset-6 z-30 pointer-events-none rounded-full"
+                style={{ animation: "spin 45s linear infinite" }}
+              >
+                <div 
+                  className="absolute bottom-[-16px] left-1/2 -translate-x-1/2 pointer-events-auto"
+                  style={{ animation: "spin 45s linear infinite reverse" }}
+                >
+                  <FloatingCard
+                    icon={
+                      <Cpu className="w-4.5 h-4.5 text-brand-secondary-600 dark:text-brand-secondary-400" />
+                    }
+                  />
+                </div>
+              </div>
+
+              {/* 3. Code2 - Orbiting the Innermost Ring (Radius 144px / inset-12, Right cardinal start) */}
+              <div 
+                className="absolute inset-12 z-30 pointer-events-none rounded-full"
+                style={{ animation: "spin 45s linear infinite" }}
+              >
+                <div 
+                  className="absolute right-[-16px] top-1/2 -translate-y-1/2 pointer-events-auto"
+                  style={{ animation: "spin 45s linear infinite reverse" }}
+                >
+                  <FloatingCard
+                    icon={
+                      <Code2 className="w-4.5 h-4.5 text-brand-primary-600 dark:text-brand-primary-300" />
+                    }
+                  />
+                </div>
+              </div>
+            </div>
 
             {/* Abstract Background Mesh for Column */}
             <div className="absolute inset-10 pattern-grid-brand opacity-10 dark:opacity-20 mask-radial-faded rounded-full" />
@@ -144,25 +176,18 @@ const LandingAbout = () => {
   );
 };
 
-// Helper for floating cards
+// Helper for floating cards: Lightweight Glassmorphism strictly adhering to the Brand Guide
 const FloatingCard = ({
   icon,
-  label,
-  className,
 }: {
   icon: React.ReactNode;
-  label?: string;
-  className?: string;
 }) => (
-  <div className={`${className}`}>
-    <Card
-      className={`flex items-center justify-center ${label ? "gap-3 px-4 py-2" : "p-3"} border-none bg-transparent transition duration-300 shadow-none`}
+  <div className="hover:scale-110 transition-transform duration-300">
+    <div
+      className="flex items-center justify-center p-2 rounded-full bg-white/95 dark:bg-slate-900/90 border border-brand-secondary-500/20 dark:border-brand-secondary-500/35 shadow-md backdrop-blur-xs hover:border-brand-primary-500/40 dark:hover:border-brand-primary-400/40 transition-all duration-300"
     >
       {icon}
-      {label && (
-        <span className="text-sm font-semibold user-select-none">{label}</span>
-      )}
-    </Card>
+    </div>
   </div>
 );
 

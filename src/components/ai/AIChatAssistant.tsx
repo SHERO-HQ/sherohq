@@ -14,12 +14,14 @@ import {
   Trash2,
 } from "lucide-react";
 import { type ChatMessage, sendChatMessage } from "@/services/ai/chat";
-import ProductCard from "@/components/products/ProductCard";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { Package, Ticket, Calendar, Brain } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDialog } from "@/hooks/useDialog";
+import type { Product } from "@/types/product";
+import AppImage from "@/components/common/AppImage";
+import { getImageUrl } from "@/services/api";
 
 type TrackingData = {
   id?: string | number;
@@ -30,6 +32,86 @@ type TrackingData = {
 type TriggerDetail = {
   message?: string;
   open?: boolean;
+};
+
+const ChatProductCard = ({ product }: { product: Product }) => {
+  const { addItem, setIsCartOpen } = useCart();
+  const discount = product.originalPrice
+    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    : 0;
+
+  return (
+    <div
+      onClick={() => {
+        window.location.href = `/shop/${product.slug || product.sku || product.id}`;
+      }}
+      className="group relative rounded-xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 hover:border-brand-secondary-500/80 dark:hover:border-brand-secondary-500/80 hover:shadow-lg transition-all duration-300 flex flex-col h-full cursor-pointer w-full"
+    >
+      {/* Compact Image */}
+      <div className="relative aspect-video w-full bg-slate-50 dark:bg-slate-950 overflow-hidden shrink-0 border-b border-slate-150 dark:border-slate-800/60">
+        {product.image && (product.image.startsWith("/uploads") || product.image.startsWith("http")) ? (
+          <AppImage
+            src={getImageUrl(product.image)}
+            alt={product.name}
+            fill
+            sizes="160px"
+            className="object-contain p-2 group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center text-3xl select-none opacity-30">
+            {product.image}
+          </div>
+        )}
+        {/* Badges */}
+        <div className="absolute top-1.5 left-1.5 flex gap-1">
+          {discount > 0 && (
+            <span className="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase bg-red-500 text-white leading-none">
+              -{discount}%
+            </span>
+          )}
+          {!product.inStock && (
+            <span className="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase bg-slate-950/80 text-white leading-none">
+              Sold Out
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="p-2.5 flex flex-col flex-1 gap-1">
+        <span className="text-[8px] font-bold font-mono text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest block">
+          {product.category}
+        </span>
+        <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight line-clamp-1 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors">
+          {product.name}
+        </h4>
+        <div className="flex items-center justify-between mt-auto pt-2 gap-2">
+          <span className="text-xs font-extrabold text-slate-900 dark:text-white leading-none">
+            GHS {product.price.toLocaleString("en-GH")}
+          </span>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (!product.inStock) return;
+              addItem({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+                category: product.category,
+              });
+              setIsCartOpen(true);
+            }}
+            disabled={!product.inStock}
+            className="px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded-md transition-colors disabled:opacity-50 cursor-pointer active:scale-95 shrink-0"
+          >
+            + Add
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 const INITIAL_ASSISTANT_MESSAGE: ChatMessage = {
@@ -150,6 +232,7 @@ export default function AIChatAssistant() {
   const audioChunksRef = useRef<Blob[]>([]);
   const recordingStartTimeRef = useRef<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textInputRef = useRef<HTMLInputElement>(null);
   const isInitialized = useRef(false);
   const messagesRef = useRef<ChatMessage[]>([INITIAL_ASSISTANT_MESSAGE]);
 
@@ -266,10 +349,24 @@ export default function AIChatAssistant() {
 
         // ELITE: Automatic Cart Addition
         if (response.cartProduct) {
-          // Try to find the product in the recommended list or dynamic catalog
-          const productToAdd = response.recommendedProducts?.find((p) =>
+          let productToAdd = response.recommendedProducts?.find((p) =>
             p.name.toLowerCase().includes(response.cartProduct!.toLowerCase()),
           );
+
+          if (!productToAdd) {
+            // Fallback: Fetch full catalog and scan
+            try {
+              const res = await fetch("/api/products");
+              if (res.ok) {
+                const products: Product[] = await res.json();
+                productToAdd = products.find((p) =>
+                  p.name.toLowerCase().includes(response.cartProduct!.toLowerCase())
+                );
+              }
+            } catch (e) {
+              console.error("Failed to fetch full catalog for cart addition:", e);
+            }
+          }
 
           if (productToAdd) {
             addItem({
@@ -581,9 +678,9 @@ export default function AIChatAssistant() {
                             {msg.recommendedProducts.map((product) => (
                               <div
                                 key={product.id}
-                                className="w-45 sm:w-55 shrink-0 pointer-events-auto"
+                                className="w-40 sm:w-48 shrink-0 pointer-events-auto"
                               >
-                                <ProductCard product={product} />
+                                <ChatProductCard product={product} />
                               </div>
                             ))}
                           </div>
@@ -593,13 +690,16 @@ export default function AIChatAssistant() {
                       {msg.role === "assistant" && msg.supportAction && (
                         <div className="mt-3 flex flex-col gap-2 w-full">
                           {msg.supportAction === "ticket" && (
-                            <Link
-                              href="/support"
-                              className="w-full py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded text-center text-xs font-medium transition-colors flex items-center justify-center gap-2"
+                            <button
+                              onClick={() => {
+                                setInput("Create ticket - Name: , Email: , Subject: , Message: ");
+                                setTimeout(() => textInputRef.current?.focus(), 50);
+                              }}
+                              className="w-full py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded text-center text-xs font-medium transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
                             >
-                              Go to Support Page to Open Ticket
+                              Open Support Ticket Inline
                               <ArrowRight size={14} />
-                            </Link>
+                            </button>
                           )}
                           {msg.supportAction === "contact" && (
                             <Link
@@ -711,6 +811,112 @@ export default function AIChatAssistant() {
                           </Link>
                         </div>
                       )}
+
+                      {/* ELITE: Direct Booking Confirmation Card */}
+                      {msg.role === "assistant" && msg.bookDirect && (
+                        <div className="mt-3 w-full p-3.5 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/30 rounded-xl flex flex-col gap-2.5 shadow-xs">
+                          <div className="flex items-center gap-2">
+                            <div className="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white text-[10px] shrink-0 shadow-sm animate-pulse">
+                              ✓
+                            </div>
+                            <span className="text-[10px] font-extrabold font-mono text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+                              Appointment Confirmed
+                            </span>
+                          </div>
+                          <div className="bg-white dark:bg-slate-900/60 p-2.5 rounded-lg border border-emerald-100/50 dark:border-emerald-900/20 text-left flex flex-col gap-1.5 shadow-2xs">
+                            <div className="flex justify-between items-start gap-2 border-b border-slate-100 dark:border-slate-800 pb-1.5 mb-0.5">
+                              <div>
+                                <p className="text-[8px] font-mono text-slate-400 uppercase">Consultation ID</p>
+                                <p className="text-[10px] font-bold text-slate-800 dark:text-slate-200 tracking-tighter">
+                                  #{msg.bookDirect.id?.slice(0, 8)}
+                                </p>
+                              </div>
+                              <span className="px-1.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-[8px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wide">
+                                {msg.bookDirect.status}
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 text-xs">
+                              <div>
+                                <p className="text-[8px] text-slate-400 uppercase">Service</p>
+                                <p className="font-bold text-slate-800 dark:text-slate-200 leading-tight">
+                                  {msg.bookDirect.service}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-[8px] text-slate-400 uppercase">Client</p>
+                                <p className="font-bold text-slate-800 dark:text-slate-200 leading-tight">
+                                  {msg.bookDirect.name}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-[8px] text-slate-400 uppercase">Date</p>
+                                <p className="font-semibold text-slate-700 dark:text-slate-300 leading-tight">
+                                  {msg.bookDirect.date}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-[8px] text-slate-400 uppercase">Time</p>
+                                <p className="font-semibold text-slate-700 dark:text-slate-300 leading-tight">
+                                  {msg.bookDirect.time}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* ELITE: Direct Ticket Confirmation Card */}
+                      {msg.role === "assistant" && msg.ticketDirect && (
+                        <div className="mt-3 w-full p-3.5 bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-900/30 rounded-xl flex flex-col gap-2.5 shadow-xs">
+                          <div className="flex items-center gap-2">
+                            <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-[10px] shrink-0 shadow-sm animate-pulse">
+                              ✓
+                            </div>
+                            <span className="text-[10px] font-extrabold font-mono text-blue-600 dark:text-blue-400 uppercase tracking-wider">
+                              Support Ticket Opened
+                            </span>
+                          </div>
+                          <div className="bg-white dark:bg-slate-900/60 p-2.5 rounded-lg border border-blue-100/50 dark:border-blue-900/20 text-left flex flex-col gap-1.5 shadow-2xs">
+                            <div className="flex justify-between items-start gap-2 border-b border-slate-100 dark:border-slate-800 pb-1.5 mb-0.5">
+                              <div>
+                                <p className="text-[8px] font-mono text-slate-400 uppercase">Ticket Number</p>
+                                <p className="text-[10px] font-bold text-slate-800 dark:text-slate-200 tracking-tighter">
+                                  #{msg.ticketDirect.ticket_no}
+                                </p>
+                              </div>
+                              <span className="px-1.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-[8px] font-bold text-blue-700 dark:text-blue-400 uppercase tracking-wide">
+                                {msg.ticketDirect.status}
+                              </span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2 text-xs">
+                              <div>
+                                <p className="text-[8px] text-slate-400 uppercase">Subject</p>
+                                <p className="font-bold text-slate-800 dark:text-slate-200 leading-tight truncate">
+                                  {msg.ticketDirect.subject}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-[8px] text-slate-400 uppercase">Category</p>
+                                <p className="font-bold text-slate-800 dark:text-slate-200 leading-tight">
+                                  {msg.ticketDirect.category}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-[8px] text-slate-400 uppercase">Created For</p>
+                                <p className="font-semibold text-slate-700 dark:text-slate-300 leading-tight truncate">
+                                  {msg.ticketDirect.name}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-[8px] text-slate-400 uppercase">Priority</p>
+                                <p className="font-semibold text-slate-700 dark:text-slate-300 leading-tight uppercase">
+                                  {msg.ticketDirect.priority}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
 
@@ -771,26 +977,31 @@ export default function AIChatAssistant() {
                       <ImageIcon size={18} />
                     </button>
                     <div className="flex-1 relative">
-                      {isRecording && (
-                        <div className="absolute -top-12 left-0 right-0 flex justify-center pointer-events-none">
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="bg-red-500 text-white text-[10px] font-bold px-3 py-1.5 rounded-full flex items-center gap-2 border border-white/20"
-                          >
-                            <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-                            RECORDING... SPEAK NOW
-                          </motion.div>
+                      {isRecording ? (
+                        <div className="w-full flex items-center justify-between px-4 py-2.5 bg-red-500/10 dark:bg-red-500/5 border border-red-500/35 rounded-lg text-xs text-red-650 dark:text-red-400 font-semibold select-none h-11 shrink-0">
+                          <span className="flex items-center gap-2">
+                            <span className="w-2 h-2 bg-red-500 rounded-full animate-ping" />
+                            Listening... Speak now
+                          </span>
+                          <div className="flex items-center gap-0.5 h-4">
+                            <span className="w-0.5 bg-red-550 dark:bg-red-400 rounded-full animate-[pulse_0.8s_infinite]" style={{ height: '50%' }} />
+                            <span className="w-0.5 bg-red-550 dark:bg-red-400 rounded-full animate-[pulse_0.6s_infinite_0.1s]" style={{ height: '90%' }} />
+                            <span className="w-0.5 bg-red-550 dark:bg-red-400 rounded-full animate-[pulse_0.7s_infinite_0.2s]" style={{ height: '30%' }} />
+                            <span className="w-0.5 bg-red-550 dark:bg-red-400 rounded-full animate-[pulse_0.9s_infinite_0.3s]" style={{ height: '70%' }} />
+                            <span className="w-0.5 bg-red-550 dark:bg-red-400 rounded-full animate-[pulse_0.5s_infinite_0.4s]" style={{ height: '40%' }} />
+                          </div>
                         </div>
+                      ) : (
+                        <input
+                          ref={textInputRef}
+                          type="text"
+                          value={input}
+                          onChange={(e) => setInput(e.target.value)}
+                          placeholder="e.g. Need laptops for 5 designers, budget 12,000 GHS"
+                          disabled={isTyping}
+                          className="w-full pl-4 pr-26 py-3 bg-slate-100 dark:bg-black/20 border border-transparent dark:border-white/5 focus:border-brand-secondary-500/50 focus:bg-white rounded text-sm outline-none transition-all disabled:opacity-50"
+                        />
                       )}
-                      <input
-                        type="text"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        placeholder="e.g. Need laptops for 5 designers, budget 12,000 GHS"
-                        disabled={isTyping}
-                        className="w-full pl-4 pr-26 py-3 bg-slate-100 dark:bg-black/20 border border-transparent dark:border-white/5 focus:border-brand-secondary-500/50 focus:bg-white rounded text-sm outline-none transition-all disabled:opacity-50"
-                      />
                     </div>
 
                     <div className="absolute right-1 flex items-center gap-1">

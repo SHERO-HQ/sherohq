@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { usePathname } from "next/navigation";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -8,6 +8,17 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 export function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const prefersReducedMotion = useReducedMotion();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    // Return children directly during SSR and initial client hydration
+    // to guarantee no blank page or styling freezes on initial load.
+    return <>{children}</>;
+  }
 
   return (
     <AnimatePresence mode="wait">
@@ -26,3 +37,4 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
     </AnimatePresence>
   );
 }
+

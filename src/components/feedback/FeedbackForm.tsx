@@ -15,7 +15,8 @@ import {
   Camera,
   User,
   ShieldCheck,
-  ShieldOff
+  ShieldOff,
+  HatGlasses
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -115,7 +116,7 @@ const StarRating = ({
           >
             <Star
               className={cn(
-                "h-7 w-7 sm:h-10 sm:w-10 transition-all duration-500",
+                "h-6 w-6 sm:h-8 sm:w-8 transition-all duration-500",
                 (hovered !== null ? star <= hovered : star <= value)
                   ? (hovered || value) <= 2
                     ? "fill-rose-500 text-rose-500 drop-shadow-[0_0_15px_rgba(244,63,94,0.5)]"
@@ -137,10 +138,10 @@ const StarRating = ({
             exit={{ opacity: 0, y: -5 }}
             className="flex flex-col"
           >
-            <span className="text-lg font-bold uppercase tracking-tighter text-slate-900 dark:text-white">
+            <span className="text-sm font-medium uppercase text-slate-900 dark:text-white">
               {ratingOptions.find((opt) => opt.value === (hovered || value))?.label}
             </span>
-            <span className="text-xs font-medium text-slate-400 uppercase tracking-widest">
+            <span className="text-xs font-medium text-slate-400">
               {ratingOptions.find((opt) => opt.value === (hovered || value))?.description}
             </span>
           </motion.div>
@@ -262,7 +263,7 @@ export default function FeedbackForm({
             className="w-full"
           >
             <CardHeader className="text-center pb-2 relative px-4 sm:px-6">
-              <CardTitle className="text-2xl sm:text-3xl font-bold tracking-tighter uppercase">{title}</CardTitle>
+              <CardTitle className="text-xl font-semibold tracking-tighter">{title}</CardTitle>
               <CardDescription className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
                 {description}
               </CardDescription>
@@ -290,7 +291,7 @@ export default function FeedbackForm({
                 {/* Identity Section */}
                 <div className="space-y-4 sm:space-y-6">
                   <div className="flex items-center justify-between">
-                    <h4 className="text-xs font-bold uppercase tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
+                    <h4 className="text-xs font-medium tracking-widest text-slate-900 dark:text-white flex items-center gap-2">
                       {anonymousValue ? <ShieldCheck className="h-4 w-4 text-emerald-500" /> : <ShieldOff className="h-4 w-4 text-slate-400" />}
                       Identity
                     </h4>
@@ -298,14 +299,14 @@ export default function FeedbackForm({
                       type="button"
                       onClick={() => setValue("anonymous", !anonymousValue)}
                       className={cn(
-                        "flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest px-4 py-2 rounded transition-all duration-300 border shadow-sm active:scale-95",
+                        "flex items-center gap-2 text-[10px] font-medium px-4 py-1 rounded transition-all duration-300 border shadow-sm active:scale-95",
                         anonymousValue
                           ? "bg-emerald-500 text-white border-emerald-600 shadow-emerald-500/20"
                           : "bg-white dark:bg-white/5 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/10"
                       )}
                     >
-                      {anonymousValue && <ShieldCheck className="h-3 w-3" />}
-                      {anonymousValue ? "Private" : "Go Anonymous"}
+                      {anonymousValue && <HatGlasses className="h-3 w-3" />}
+                      {anonymousValue ? "Anonymous" : "Public"}
                     </button>
                     <input type="hidden" {...register("anonymous")} />
                   </div>

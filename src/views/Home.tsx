@@ -5,6 +5,9 @@ import dynamic from "next/dynamic";
 const LandingValueProps = dynamic(
   () => import("@/components/landing/LandingValueProps"),
 );
+const LandingAbout = dynamic(
+  () => import("@/components/landing/LandingAbout"),
+);
 const LandingPartners = dynamic(
   () => import("@/components/landing/LandingPartners"),
 );
@@ -23,6 +26,7 @@ const Home = () => {
     <>
       <LandingHero />
       <LandingValueProps />
+      <LandingAbout />
       <LandingPartners />
       <LandingPillars />
       <LandingProducts />

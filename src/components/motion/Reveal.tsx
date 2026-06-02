@@ -51,8 +51,8 @@ export const Reveal = ({
         }
       },
       {
-        threshold: 0.2,
-        rootMargin: "0px 0px -50px 0px",
+        threshold: 0.05,
+        rootMargin: "0px 0px -20px 0px",
       }
     );
 
@@ -79,10 +79,11 @@ export const Reveal = ({
       className={className}
     >
       <div
-        className="transition-all ease-[cubic-bezier(0.16,1,0.3,1)] will-change-[transform,opacity]"
+        className="transition ease-[cubic-bezier(0.16,1,0.3,1)]"
         style={{
           transitionDuration: prefersReducedMotion ? "10ms" : `${duration}s`,
           transitionDelay: prefersReducedMotion ? "0s" : `${delay}s`,
+          transitionProperty: "opacity, transform, filter",
           opacity: prefersReducedMotion ? 1 : isInView ? 1 : 0,
           transform: prefersReducedMotion
             ? "none"

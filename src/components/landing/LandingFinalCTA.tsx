@@ -27,7 +27,7 @@ const LandingFinalCTA = () => {
 
             <div className="flex items-center gap-3">
               <Link
-                href="/contact-us"
+                href="/consultation"
                 className="inline-flex items-center px-4 py-2 h-9 rounded bg-brand-secondary-600 text-white text-sm font-medium hover:bg-brand-secondary-500 transition"
               >
                 Book a free call

@@ -245,8 +245,8 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                                 setIsAutoPlaying(false);
                               }}
                               className={`h-1.5 transition-all duration-500 rounded-full ${i === safeCurrentIndex
-                                  ? "w-8 bg-brand-secondary-500"
-                                  : "w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600"
+                                ? "w-8 bg-brand-secondary-500"
+                                : "w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600"
                                 }`}
                             />
                           ))}
@@ -305,8 +305,8 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                             setIsAutoPlaying(false);
                           }}
                           className={`h-1 transition-all duration-500 rounded-full ${i === safeCurrentIndex
-                              ? "w-8 bg-brand-secondary-500"
-                              : "w-2 dark:bg-white/40 bg-slate-600/40 hover:bg-white/60"
+                            ? "w-8 bg-brand-secondary-500"
+                            : "w-2 dark:bg-white/40 bg-slate-600/40 hover:bg-white/60"
                             }`}
                         />
                       ))}

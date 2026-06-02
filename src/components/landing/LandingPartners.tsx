@@ -10,7 +10,11 @@ interface Partner {
 const PARTNERS: Partner[] = [
   { name: "HP", logo: "/assets/images/partners/hp.svg" },
   { name: "Dell", logo: "/assets/images/partners/dell.svg" },
-  { name: "Lenovo", logo: "/assets/images/partners/lenovo.svg" },
+  {
+    name: "Lenovo",
+    logo: "/assets/images/partners/lenovo.svg",
+    logoClassName: "h-4 sm:h-7",
+  },
   { name: "JBL", logo: "/assets/images/partners/jbl.svg" },
   {
     name: "Apple",
@@ -21,18 +25,18 @@ const PARTNERS: Partner[] = [
     name: "Samsung",
     logo: "/assets/images/partners/samsung.svg",
     logoDark: "/assets/images/partners/samsung-dark.svg",
-    logoClassName: "h-8 sm:h-14",
+    logoClassName: "h-6 sm:h-[42px]",
   },
   { name: "Nvidia", logo: "/assets/images/partners/nvidia.svg" },
   { name: "Intel", logo: "/assets/images/partners/intel.svg" },
 ];
 
 const logoImageClass = (logoClassName?: string) =>
-  `h-6 sm:h-10 w-auto max-w-full object-contain transition-transform duration-300 ${logoClassName ?? ""}`;
+  `w-auto max-w-full object-contain filter grayscale opacity-45 dark:opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 ${logoClassName ?? "h-6 sm:h-12"}`;
 
 const PartnerLogo = ({ partner }: { partner: Partner }) => (
   <div
-    className="group flex h-10 w-full items-center justify-center opacity-40 transition-all duration-300 hover:scale-105 hover:opacity-100 sm:h-16"
+    className="group flex flex-col items-center justify-center py-2 sm:h-20 transition-all duration-300 hover:scale-105"
     title={partner.name}
   >
     <img

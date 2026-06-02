@@ -1044,7 +1044,7 @@ const CheckoutFlow = () => {
             )}
             {currentStep === 4 && (
               <div className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6 text-center">
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">
                   Rate Your Experience
                 </h3>
                 <p className="text-slate-600 dark:text-slate-400 mb-6 text-sm">
@@ -1052,7 +1052,7 @@ const CheckoutFlow = () => {
                   improve.
                 </p>
                 <Button
-                  onClick={() => router.push("/contact-us")}
+                  onClick={() => router.push("/feedback")}
                   variant="brand"
                   className="w-full font-bold px-8"
                 >

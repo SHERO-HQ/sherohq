@@ -1,14 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 
-const getReducedMotionPreference = (): boolean => {
-  if (typeof window === "undefined") return false;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-};
-
 /**
  * Custom Hook: useReducedMotion
- * Detects user's motion preferences from OS system settings
+ * Detects user's motion preferences from OS system settings.
+ * Initialized to false to avoid hydration mismatches between server and client.
  *
  * @returns boolean indicating if user prefers reduced motion
  *
@@ -18,17 +14,24 @@ const getReducedMotionPreference = (): boolean => {
  * ```
  */
 export const useReducedMotion = (): boolean => {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(
-    getReducedMotionPreference,
-  );
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mediaQuery.matches);
+
     const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
 
-    mediaQuery.addEventListener("change", handler);
-    return () => mediaQuery.removeEventListener("change", handler);
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", handler);
+      return () => mediaQuery.removeEventListener("change", handler);
+    } else {
+      // Deprecated methods supported by older WebKit versions and in-app webviews
+      mediaQuery.addListener(handler);
+      return () => mediaQuery.removeListener(handler);
+    }
   }, []);
 
   return prefersReducedMotion;
 };
+
