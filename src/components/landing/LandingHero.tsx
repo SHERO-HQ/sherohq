@@ -159,9 +159,9 @@ const LandingHero: React.FC = () => {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onClick={() => setFocusedWindow(null)}
-      className="relative min-h-[80dvh] lg:min-h-dvh w-full overflow-hidden
+      className="relative min-h-fit lg:min-h-dvh w-full overflow-hidden
  bg-slate-50 dark:bg-slate-950
- flex items-center"
+ flex items-center py-12 sm:py-16 lg:py-0"
       role="banner"
       aria-label="Hero section - Company mission statement"
     >
@@ -187,7 +187,7 @@ const LandingHero: React.FC = () => {
       )}
 
       <div className="absolute top-0 left-0 right-0 h-36 bg-linear-to-b from-primary/8 to-transparent pointer-events-none" />
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-10">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-0 lg:py-10">
         <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-8">
           <motion.div
             variants={heroBlock}
@@ -230,7 +230,7 @@ const LandingHero: React.FC = () => {
 
             <motion.div
               variants={heroItem}
-              className="flex flex-row items-center gap-2 sm:gap-4 pt-1 w-fit sm:w-auto mb-14 sm:mb-0"
+              className="flex flex-row items-center gap-2 sm:gap-4 pt-1 w-fit sm:w-auto"
             >
               <Button
                 asChild
@@ -265,7 +265,7 @@ const LandingHero: React.FC = () => {
  </motion.div> */}
           </motion.div>
 
-          <div className="hidden w-full lg:w-[46%] relative h-[480px] sm:h-[540px] sm:flex items-center justify-center lg:py-0 mb-16 sm:mb-0">
+          <div className="hidden lg:flex w-full lg:w-[46%] relative h-[540px] items-center justify-center lg:py-0">
             <motion.div
               variants={heroPanel}
               initial={prefersReducedMotion ? false : "hidden"}

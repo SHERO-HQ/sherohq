@@ -245,9 +245,8 @@ const AboutTestimonials = () => {
           {/* Particles background - we can add particles background to the testimonial section */}
 
           <FadeInView direction="up" delay={0}>
-            <div className="inline-flex relative flex-col items-center gap-4 p-6 rounded dark:to-slate-950 border border-slate-200 dark:border-white/10 shadow dark:shadow overflow-hidden max-w-lg mx-auto w-full transition duration-300">
+            <div className="inline-flex relative flex-col items-center gap-4 p-6 rounded bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 shadow dark:shadow overflow-hidden max-w-lg mx-auto w-full transition duration-300">
               <div className="absolute inset-0 pattern-dots pattern-brand-secondary-500/10 pattern-opacity-100 pattern-size-4 opacity-80 -z-10" />
-              <div className="absolute inset-0 bg-linear-to-br from-brand-secondary-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
               <div className="p-3 bg-brand-secondary-500/10 rounded text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-500/20 transition-colors duration-300">
                 <MessageSquarePlus className="w-6 h-6" />

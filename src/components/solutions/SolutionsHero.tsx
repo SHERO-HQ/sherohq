@@ -52,7 +52,7 @@ const SolutionsHero = () => {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onClick={() => setFocusedWindow(null)}
-      className="relative w-full min-h-[75dvh] sm:min-h-dvh lg:h-[80dvh] flex items-start lg:items-center pt-14 sm:pt-24 lg:pt-0 overflow-hidden bg-slate-50 dark:bg-slate-950"
+      className="relative w-full min-h-fit lg:h-[80dvh] flex items-start lg:items-center pt-16 pb-12 sm:pt-24 sm:pb-16 lg:py-0 overflow-hidden bg-slate-50 dark:bg-slate-950"
     >
       <HeroBackground />
 
@@ -149,7 +149,7 @@ const SolutionsHero = () => {
               damping: 15,
             }}
             style={prefersReducedMotion ? {} : { rotateX, rotateY, transformStyle: "preserve-3d" }}
-            className="relative hidden md:flex items-center justify-center order-1 lg:order-2 w-full lg:w-1/2 h-[480px] sm:h-[540px]"
+            className="relative hidden lg:flex items-center justify-center order-1 lg:order-2 w-full lg:w-1/2 h-[540px]"
           >
             {/* Background Ambient Glows */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-brand-secondary-500/4 dark:bg-brand-secondary-500/4 blur-[60px] rounded-full pointer-events-none" />
