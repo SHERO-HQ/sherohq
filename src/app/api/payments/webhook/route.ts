@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     await client.query("BEGIN");
 
     const orderRes = await client.query(
-      "SELECT status FROM orders WHERE id = $1 FOR UPDATE",
+      `SELECT status, "shippingInfo", items, total FROM orders WHERE id = $1 FOR UPDATE`,
       [orderId],
     );
 
@@ -114,6 +114,23 @@ export async function POST(request: NextRequest) {
           `Payment received via ${provider}. Reference: ${orderId}`,
         ],
       );
+
+      // Trigger email and whatsapp notification since payment is now successful
+      try {
+        const { notificationService } = await import("@/lib/notifications");
+        const order = orderRes.rows[0];
+        const parsedItems = typeof order.items === "string" ? JSON.parse(order.items) : order.items;
+        const parsedShipping = typeof order.shippingInfo === "string" ? JSON.parse(order.shippingInfo) : order.shippingInfo;
+        
+        notificationService.sendOrderConfirmation(
+          orderId, 
+          parsedShipping, 
+          parsedItems, 
+          Number(order.total)
+        ).catch(err => console.error("Webhook Notification failed:", err));
+      } catch (err) {
+        console.error("Failed to parse order details for notification:", err);
+      }
     }
 
     await client.query("COMMIT");

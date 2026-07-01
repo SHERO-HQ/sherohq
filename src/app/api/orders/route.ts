@@ -157,9 +157,11 @@ export async function POST(request: NextRequest) {
 
     await client.query("COMMIT");
 
-    // Notifications (Async)
-    notificationService.sendOrderConfirmation(orderId, shippingInfo, normalizedItems, finalTotal)
-      .catch(err => console.error("Notification failed:", err));
+    // Notifications (Async) - Delay sending email unless Cash on Delivery
+    if (normalizedPaymentMethod === "cash_on_delivery") {
+      notificationService.sendOrderConfirmation(orderId, shippingInfo, normalizedItems, finalTotal)
+        .catch(err => console.error("Notification failed:", err));
+    }
     
     logActivity(null, "New Order Received", "success", `Order ${orderId.substring(0,8)} placed by ${shippingInfo.firstName}`)
       .catch(err => console.error("Log failed:", err));
