@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { query, getClient } from "@/lib/db";
-import { v4 as uuidv4 } from "uuid";
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHmac, timingSafeEqual, randomUUID } from "node:crypto";
 
 function isValidPaystackSignature(rawBody: string, signature: string | null) {
   const secret = process.env.PAYSTACK_SECRET || process.env.PAYSTACK_SECRET_KEY;
@@ -40,9 +39,44 @@ export async function POST(request: NextRequest) {
       orderId = data.data.metadata?.orderId || data.data.reference;
       status = data.data.status === "success" ? "Success" : "Failed";
     } else if (data.ClientReference && data.Status) {
+      // ── Hubtel webhook ──────────────────────────────────────────────
+      const {
+        normalizeHubtelStatus,
+        verifyHubtelTransaction,
+      } = await import("@/lib/hubtel");
+
       provider = "hubtel";
       orderId = data.ClientReference;
-      status = data.Status;
+
+      // Normalize the various Hubtel status values
+      status = normalizeHubtelStatus(data.Status);
+
+      console.log("[Hubtel webhook]", {
+        clientReference: orderId,
+        rawStatus: data.Status,
+        normalizedStatus: status,
+        transactionId: data.TransactionId ?? "N/A",
+        amount: data.Amount ?? "N/A",
+        paymentMethod: data.PaymentMethod ?? "N/A",
+      });
+
+      // Server-side verification: confirm the transaction with Hubtel's API
+      // This is the recommended best practice since Hubtel does not use HMAC signatures
+      if (status === "Success") {
+        const { verified, status: confirmedStatus } =
+          await verifyHubtelTransaction(orderId);
+
+        if (!verified) {
+          console.warn(
+            `[Hubtel webhook] Verification failed for ${orderId}. ` +
+              `Webhook claimed Success but Hubtel API returned: ${confirmedStatus}`,
+          );
+          return NextResponse.json(
+            { success: false, message: "Transaction verification failed" },
+            { status: 200 },
+          );
+        }
+      }
     } else {
       return new NextResponse("Unknown webhook format", { status: 400 });
     }
@@ -74,7 +108,7 @@ export async function POST(request: NextRequest) {
         `INSERT INTO activity_logs (id, action, type, details, "createdAt")
          VALUES ($1, $2, $3, $4, NOW())`,
         [
-          uuidv4(),
+          randomUUID(),
           "order_payment",
           "success",
           `Payment received via ${provider}. Reference: ${orderId}`,

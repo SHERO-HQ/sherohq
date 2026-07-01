@@ -11,13 +11,13 @@ let pool: Pool | null = null;
 function getPool(): Pool {
   if (pool) return pool;
 
-  const connectionString = process.env.DATABASE_URL;
+  const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
 
   if (!connectionString) {
     if (process.env.NODE_ENV === "production") {
-      throw new Error("DATABASE_URL is not defined");
+      throw new Error("DATABASE_URL or POSTGRES_URL is not defined");
     } else {
-      console.warn("⚠️ [DB] DATABASE_URL is not defined. Check your .env.local file.");
+      console.warn("⚠️ [DB] DATABASE_URL or POSTGRES_URL is not defined. Check your .env.local file.");
     }
   }
 
