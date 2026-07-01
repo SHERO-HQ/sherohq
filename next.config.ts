@@ -38,6 +38,22 @@ const nextConfig: NextConfig = {
   // Optimise production builds
   productionBrowserSourceMaps: false,
 
+  // Redirect old checkout complete URLs to the new success page
+  async redirects() {
+    return [
+      {
+        source: "/checkout/complete",
+        destination: "/shop/checkout/success",
+        permanent: false,
+      },
+      {
+        source: "/shop/checkout/complete",
+        destination: "/shop/checkout/success",
+        permanent: false,
+      },
+    ];
+  },
+
   // Cache headers for static assets and security headers
   async headers() {
     return [

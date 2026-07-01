@@ -161,6 +161,13 @@ export default function proxy(request: NextRequest) {
     }
 
     if (!path.startsWith("/shop")) {
+      // /checkout/* routes (pay, mock-payment) exist at their own
+      // (public)/checkout/ path and should NOT be prefixed with /shop
+      if (path.startsWith("/checkout")) {
+        console.log(`[Proxy] Bypassing shop rewrite for checkout path: ${path}`);
+        return NextResponse.next();
+      }
+
       url.pathname = `/shop${path}`;
       console.log(`[Proxy] Rewriting shop subdomain path to: ${url.pathname}`);
       return NextResponse.rewrite(url);

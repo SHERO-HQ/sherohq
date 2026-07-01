@@ -50,9 +50,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Prefer the origin of the incoming request so callbacks match the subdomain
+    // the user is on (e.g. shop.sherohq.com). Fall back to the env var for
+    // environments where nextUrl.origin may be localhost-relative.
     const publicUrl =
+      request.nextUrl.origin ||
       process.env.NEXT_PUBLIC_SITE_URL || 
-      request.nextUrl.origin || 
       "http://localhost:3000";
 
     // Provider-specific initializations
@@ -69,7 +72,7 @@ export async function POST(request: NextRequest) {
       // Paystack expects amount in the smallest currency unit (e.g., kobo/pesewa)
       const amount = Math.round((order.total ?? 0) * 100);
       // Redirect customer to confirmation page after payment (webhook handles server-side processing)
-      const callback_url = `${publicUrl.replace(/\/$/, "")}/checkout/complete?reference=${orderId}&readableOrderId=${toReadableOrderId(orderId)}`;
+      const callback_url = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${orderId}`;
 
       const resp = await fetch(
         "https://api.paystack.co/transaction/initialize",
@@ -113,7 +116,7 @@ export async function POST(request: NextRequest) {
       }
 
       const callbackUrl = `${publicUrl}/api/payments/webhook`;
-      const returnUrl = `${publicUrl.replace(/\/$/, "")}/checkout/complete?reference=${orderId}&readableOrderId=${toReadableOrderId(orderId)}`;
+      const returnUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${orderId}`;
       
       const payload = {
         totalAmount: Math.round((order.total ?? 0) * 100) / 100,

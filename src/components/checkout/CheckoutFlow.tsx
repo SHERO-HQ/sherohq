@@ -978,7 +978,7 @@ const CheckoutFlow = () => {
                               Order ID
                             </p>
                             <p className="font-mono text-sm font-bold text-slate-900 dark:text-white bg-slate-200 dark:bg-slate-800 px-3 py-2 rounded break-all">
-                              {orderId}
+                              {toReadableOrderId(orderId || "")}
                             </p>
                           </div>
                         )}

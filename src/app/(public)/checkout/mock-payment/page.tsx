@@ -59,10 +59,10 @@ function MockPaymentContent() {
         }
 
         // Redirect to complete page
-        router.push(`/checkout/complete?reference=${orderId}&readableOrderId=${toReadableOrderId(orderId)}`);
+        router.push(`/shop/checkout/success?orderId=${orderId}`);
       } else {
         // Redirect to complete page with no webhook success (this triggers verification failure/support view)
-        router.push(`/checkout/complete?reference=${orderId}&readableOrderId=${toReadableOrderId(orderId)}`);
+        router.push(`/shop/checkout/success?orderId=${orderId}`);
       }
     } catch (err) {
       console.error("Simulation error:", err);
