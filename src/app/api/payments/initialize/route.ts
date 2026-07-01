@@ -51,7 +51,9 @@ export async function POST(request: NextRequest) {
     }
 
     const publicUrl =
-      process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+      process.env.NEXT_PUBLIC_SITE_URL || 
+      request.nextUrl.origin || 
+      "http://localhost:3000";
 
     // Provider-specific initializations
     if (provider === "paystack") {
