@@ -11,7 +11,8 @@ let pool: Pool | null = null;
 function getPool(): Pool {
   if (pool) return pool;
 
-  const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  // Use Vercel's Direct Connection (IPv6) first to bypass Supabase pooler password bugs
+  const connectionString = process.env.POSTGRES_URL_NON_POOLING || process.env.DATABASE_URL || process.env.POSTGRES_URL;
 
   if (!connectionString) {
     if (process.env.NODE_ENV === "production") {
