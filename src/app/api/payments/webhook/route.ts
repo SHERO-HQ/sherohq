@@ -163,6 +163,20 @@ export async function POST(request: NextRequest) {
           ],
         );
 
+        // Restore stock for cancelled order
+        try {
+          const order = orderRes.rows[0];
+          const parsedItems = typeof order.items === "string" ? JSON.parse(order.items) : order.items;
+          for (const item of parsedItems) {
+            await client.query(
+              `UPDATE products SET "stockQuantity" = "stockQuantity" + $1, "inStock" = true WHERE id = $2`,
+              [item.quantity, item.id]
+            );
+          }
+        } catch (err) {
+          console.error("Failed to restore stock for cancelled order:", err);
+        }
+
         // Trigger failure notification
         try {
           const { notificationService } = await import("@/lib/notifications");

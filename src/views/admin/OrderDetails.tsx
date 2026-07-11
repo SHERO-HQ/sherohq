@@ -45,6 +45,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { COMPANY_EMAILS } from "@/constants/emails";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 
 export default function OrderDetails() {
   const { id } = useParams<{ id: string }>();
@@ -501,8 +502,9 @@ export default function OrderDetails() {
   const printOrderId = toReadableOrderId(order.id);
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 pb-20">
-      {/* Header Actions */}
+    <ErrorBoundary>
+      <div className="max-w-6xl mx-auto space-y-6 pb-20">
+        {/* Header Actions */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4 text-white">
           <Button
@@ -1212,6 +1214,7 @@ export default function OrderDetails() {
           </div>,
           document.body,
         )}
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 }

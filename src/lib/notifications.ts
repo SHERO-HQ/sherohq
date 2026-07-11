@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 import { Resend } from "resend";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { COMPANY_EMAILS } from "@/constants/emails";
+import { logActivity } from "@/lib/activity";
 
 interface OrderItem {
   id: string;
@@ -103,7 +104,9 @@ class NotificationService {
       }
       console.log(`✅ WhatsApp alert sent successfully to ${to}`);
     } catch (error) {
+      const msg = this.getErrorMessage(error);
       console.error(`❌ WhatsApp Cloud API error for ${to}:`, error);
+      logActivity(null, "system_alert", "error", `WhatsApp notification failed for ${to}: ${msg}`).catch(() => {});
     }
   }
 
@@ -157,13 +160,18 @@ class NotificationService {
         }
       }
     } catch (error) {
+      const msg = this.getErrorMessage(error);
       console.error(`${logPrefix} ❌ [Email Error]:`, error);
+      
+      // Log to database so admin is aware
+      logActivity(null, "system_alert", "error", `Email delivery failed for ${to}: ${msg}`).catch(() => {});
+
       if (options.throwOnError) {
         const provider = this.getEmailProviderName();
         const providerPrefix = provider
           ? `${provider} email delivery failed`
           : "Email delivery failed";
-        throw new Error(`${providerPrefix}: ${this.getErrorMessage(error)}`);
+        throw new Error(`${providerPrefix}: ${msg}`);
       }
     }
   }

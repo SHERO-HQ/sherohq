@@ -34,12 +34,10 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
 import { toReadableOrderId } from "@/utils/orderId";
-import {
-  useAdminOrdersQuery,
-  useUpdateOrderStatus,
-} from "@/hooks/queries/useOrders";
+import { useAdminOrdersQuery, useUpdateOrderStatus } from "@/hooks/queries/useOrders";
 import { Card } from "@/components/ui/card";
 import { memo } from "react";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 
 // Memoized row component for maximum performance during polling
 const OrderRow = memo(
@@ -305,10 +303,11 @@ export default function AdminOrders() {
   const error = queryError instanceof Error ? queryError.message : "";
 
   return (
-    <div className="space-y-6 relative">
-      {isPlaceholderData && (
-        <div className="absolute inset-0 bg-slate-900/10 -[1px] z-10 pointer-events-none transition-opacity" />
-      )}
+    <ErrorBoundary>
+      <div className="space-y-6 relative">
+        {isPlaceholderData && (
+          <div className="absolute inset-0 bg-slate-900/10 -[1px] z-10 pointer-events-none transition-opacity" />
+        )}
 
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -658,5 +657,6 @@ export default function AdminOrders() {
         </div>
       )}
     </div>
+    </ErrorBoundary>
   );
 }
