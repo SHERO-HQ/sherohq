@@ -38,7 +38,12 @@ export async function POST(request: NextRequest) {
       provider = "paystack";
       orderId = data.data.metadata?.orderId || data.data.reference;
       status = data.data.status === "success" ? "Success" : "Failed";
-    } else if (data.ClientReference && data.Status) {
+    } else if (
+      // Nested format: { ResponseCode, Status, Data: { ClientReference, ... } }
+      (data.Data?.ClientReference && (data.Status || data.Data?.Status)) ||
+      // Legacy flat format: { ClientReference, Status, ... }
+      (data.ClientReference && data.Status && !data.event)
+    ) {
       // ── Hubtel webhook ──────────────────────────────────────────────
       const {
         normalizeHubtelStatus,
@@ -46,18 +51,25 @@ export async function POST(request: NextRequest) {
       } = await import("@/lib/hubtel");
 
       provider = "hubtel";
-      orderId = data.ClientReference;
 
-      // Normalize the various Hubtel status values
-      status = normalizeHubtelStatus(data.Status);
+      // Extract fields from nested Data object first, fall back to flat
+      const nested = data.Data;
+      orderId = nested?.ClientReference || data.ClientReference;
+      const rawStatus = nested?.Status || data.Status;
+      status = normalizeHubtelStatus(rawStatus);
 
       console.log("[Hubtel webhook]", {
         clientReference: orderId,
-        rawStatus: data.Status,
+        rawStatus,
         normalizedStatus: status,
-        transactionId: data.TransactionId ?? "N/A",
-        amount: data.Amount ?? "N/A",
-        paymentMethod: data.PaymentMethod ?? "N/A",
+        checkoutId: nested?.CheckoutId ?? "N/A",
+        salesInvoiceId: nested?.SalesInvoiceId ?? "N/A",
+        amount: nested?.Amount ?? data.Amount ?? "N/A",
+        customerPhone: nested?.CustomerPhoneNumber ?? data.CustomerMsisdn ?? "N/A",
+        paymentType: nested?.PaymentDetails?.PaymentType ?? data.PaymentMethod ?? "N/A",
+        channel: nested?.PaymentDetails?.Channel ?? "N/A",
+        description: nested?.Description ?? data.Description ?? "N/A",
+        topLevelResponseCode: data.ResponseCode ?? "N/A",
       });
 
       // Server-side verification: confirm the transaction with Hubtel's API

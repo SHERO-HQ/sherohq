@@ -68,20 +68,37 @@ export interface HubtelCheckoutResponse {
   };
 }
 
-/** Hubtel webhook callback payload. */
+/** Hubtel payment details nested inside the callback Data object. */
+export interface HubtelPaymentDetails {
+  MobileMoneyNumber?: string;
+  PaymentType?: string; // "mobilemoney" | etc.
+  Channel?: string; // "mtn-gh" | "vodafone-gh" | "tigo-gh" | etc.
+}
+
+/** Hubtel webhook callback payload (nested Data structure). */
 export interface HubtelWebhookPayload {
+  /** Top-level response code, e.g. "0000" for success */
+  ResponseCode?: string;
+  /** Top-level status — may mirror Data.Status */
+  Status?: string;
+  /** Nested data object containing the actual transaction details */
+  Data?: {
+    CheckoutId?: string;
+    SalesInvoiceId?: string;
+    ClientReference?: string;
+    Status?: string; // "Success" | "Completed" | "Failed" | "Cancelled" | "Pending"
+    Amount?: number;
+    CustomerPhoneNumber?: string;
+    PaymentDetails?: HubtelPaymentDetails;
+    Description?: string;
+  };
+  // ── Legacy / flat fields (some Hubtel products may still use these) ──
   TransactionId?: string;
-  ClientReference: string;
-  InvoiceId?: string;
+  ClientReference?: string;
   Amount?: number;
-  Status: string; // "Success" | "Completed" | "Failed" | "Cancelled" | "Pending"
   PaymentMethod?: string;
-  CustomerName?: string;
   CustomerMsisdn?: string;
   Description?: string;
-  Timestamp?: string;
-  ResponseCode?: string;
-  ResponseMessage?: string;
 }
 
 /** Shape of the Hubtel transaction status query response. */
