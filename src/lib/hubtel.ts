@@ -75,7 +75,31 @@ export interface HubtelPaymentDetails {
   Channel?: string; // "mtn-gh" | "vodafone-gh" | "tigo-gh" | etc.
 }
 
-/** Hubtel webhook callback payload (nested Data structure). */
+/**
+ * Hubtel webhook callback payload (nested Data structure).
+ *
+ * Actual callback received from Hubtel Online Checkout:
+ * ```json
+ * {
+ *   "ResponseCode": "0000",
+ *   "Status": "Success",
+ *   "Data": {
+ *     "CheckoutId": "59e2fbbff4e443b98e09346881ac7e9a",
+ *     "SalesInvoiceId": "e96ccfb4746045bba13f425bd573a31c",
+ *     "ClientReference": "Kaks545253",
+ *     "Status": "Success",
+ *     "Amount": 0.5,
+ *     "CustomerPhoneNumber": "233242825109",
+ *     "PaymentDetails": {
+ *       "MobileMoneyNumber": "233242825109",
+ *       "PaymentType": "mobilemoney",
+ *       "Channel": "mtn-gh"
+ *     },
+ *     "Description": "The MTN Mobile Money payment has been approved and processed successfully."
+ *   }
+ * }
+ * ```
+ */
 export interface HubtelWebhookPayload {
   /** Top-level response code, e.g. "0000" for success */
   ResponseCode?: string;
@@ -136,8 +160,11 @@ export async function verifyHubtelTransaction(
     console.warn(
       "Hubtel credentials not configured — skipping webhook verification",
     );
-    // In production without credentials we should not trust the webhook,
-    // but during initial integration we allow it through with a warning.
+    // In production we must fail-closed — never trust an unverified webhook.
+    // In development we allow it through so the mock simulator works.
+    if (process.env.NODE_ENV === "production") {
+      return { verified: false, status: null };
+    }
     return { verified: true, status: null };
   }
 

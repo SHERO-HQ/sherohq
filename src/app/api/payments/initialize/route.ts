@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
         return apiResponse.error("Hubtel not configured on server", 500);
       }
 
-      const callbackUrl = `${publicUrl}/api/payments/webhook`;
+      const callbackUrl = `${publicUrl.replace(/\/$/, "")}/api/payments/webhook`;
       const returnUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${orderId}`;
       
       const payload = {
