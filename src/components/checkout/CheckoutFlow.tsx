@@ -368,9 +368,10 @@ const CheckoutFlow = () => {
       }
     } catch (error) {
       console.error("Failed to place order:", error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to place order. Please try again.";
       addNotification(
         "Order Error",
-        "Failed to place order. Please try again.",
+        errorMessage,
         "error",
       );
     } finally {

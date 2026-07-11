@@ -93,9 +93,8 @@ export async function POST(request: NextRequest) {
       return new NextResponse("Unknown webhook format", { status: 400 });
     }
 
-    if (status !== "Success") {
-      return new NextResponse("Payment failed acknowledged", { status: 200 });
-    }
+    // Do not return early on failure, we want to update the database to failed
+    // and notify the customer.
 
     client = await getClient();
     await client.query("BEGIN");
@@ -110,38 +109,73 @@ export async function POST(request: NextRequest) {
       return new NextResponse("Order not found", { status: 200 });
     }
 
-    if (orderRes.rows[0].status === "pending") {
-      await client.query("UPDATE orders SET status = $1 WHERE id = $2", [
-        "processing",
-        orderId,
-      ]);
+    if (status === "Success") {
+      if (orderRes.rows[0].status === "pending") {
+        await client.query("UPDATE orders SET status = $1 WHERE id = $2", [
+          "processing",
+          orderId,
+        ]);
 
-      await client.query(
-        `INSERT INTO activity_logs (id, action, type, details, "createdAt")
-         VALUES ($1, $2, $3, $4, NOW())`,
-        [
-          randomUUID(),
-          "order_payment",
-          "success",
-          `Payment received via ${provider}. Reference: ${orderId}`,
-        ],
-      );
+        await client.query(
+          `INSERT INTO activity_logs (id, action, type, details, "createdAt")
+           VALUES ($1, $2, $3, $4, NOW())`,
+          [
+            randomUUID(),
+            "order_payment",
+            "success",
+            `Payment received via ${provider}. Reference: ${orderId}`,
+          ],
+        );
 
-      // Trigger email and whatsapp notification since payment is now successful
-      try {
-        const { notificationService } = await import("@/lib/notifications");
-        const order = orderRes.rows[0];
-        const parsedItems = typeof order.items === "string" ? JSON.parse(order.items) : order.items;
-        const parsedShipping = typeof order.shippingInfo === "string" ? JSON.parse(order.shippingInfo) : order.shippingInfo;
-        
-        notificationService.sendOrderConfirmation(
-          orderId, 
-          parsedShipping, 
-          parsedItems, 
-          Number(order.total)
-        ).catch(err => console.error("Webhook Notification failed:", err));
-      } catch (err) {
-        console.error("Failed to parse order details for notification:", err);
+        // Trigger email and whatsapp notification since payment is now successful
+        try {
+          const { notificationService } = await import("@/lib/notifications");
+          const order = orderRes.rows[0];
+          const parsedItems = typeof order.items === "string" ? JSON.parse(order.items) : order.items;
+          const parsedShipping = typeof order.shippingInfo === "string" ? JSON.parse(order.shippingInfo) : order.shippingInfo;
+          
+          notificationService.sendOrderConfirmation(
+            orderId, 
+            parsedShipping, 
+            parsedItems, 
+            Number(order.total)
+          ).catch(err => console.error("Webhook Notification failed:", err));
+        } catch (err) {
+          console.error("Failed to parse order details for notification:", err);
+        }
+      }
+    } else {
+      // Payment failed handling
+      if (orderRes.rows[0].status === "pending") {
+        await client.query("UPDATE orders SET status = $1 WHERE id = $2", [
+          "cancelled",
+          orderId,
+        ]);
+
+        await client.query(
+          `INSERT INTO activity_logs (id, action, type, details, "createdAt")
+           VALUES ($1, $2, $3, $4, NOW())`,
+          [
+            randomUUID(),
+            "order_payment",
+            "failed",
+            `Payment failed via ${provider}. Reference: ${orderId}`,
+          ],
+        );
+
+        // Trigger failure notification
+        try {
+          const { notificationService } = await import("@/lib/notifications");
+          const order = orderRes.rows[0];
+          const parsedShipping = typeof order.shippingInfo === "string" ? JSON.parse(order.shippingInfo) : order.shippingInfo;
+          
+          notificationService.sendPaymentFailureNotification(
+            orderId, 
+            parsedShipping
+          ).catch(err => console.error("Webhook Failure Notification failed:", err));
+        } catch (err) {
+          console.error("Failed to parse order details for failure notification:", err);
+        }
       }
     }
 

@@ -10,6 +10,7 @@ import { getOrderAccessToken } from "@/utils/orderAccess";
 import { toReadableOrderId } from "@/utils/orderId";
 import { WhatsAppIcon } from "@/assets/icons/icons";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
+import { COMPANY_EMAILS } from "@/constants/emails";
 
 const CheckoutSuccess = () => {
   const searchParams = useSearchParams();
@@ -219,6 +220,18 @@ const CheckoutSuccess = () => {
           <p className="text-3xl font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
             GHS {order?.total.toFixed(2)}
           </p>
+        </div>
+
+        <div className="bg-blue-50 dark:bg-blue-900/10 rounded p-6 mb-8 max-w-md mx-auto border border-blue-100 dark:border-blue-900/20 text-left">
+          <h3 className="font-semibold text-slate-900 dark:text-white mb-2">What happens next?</h3>
+          <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
+            You will receive an email and WhatsApp notification shortly with your order details. 
+            If you need any immediate assistance, feel free to contact us.
+          </p>
+          <div className="text-sm text-slate-700 dark:text-slate-300 space-y-1">
+            <p><strong>Call/WhatsApp:</strong> {COMPANY_CONTACTS.WHATSAPP}</p>
+            <p><strong>Email:</strong> {COMPANY_EMAILS.SUPPORT}</p>
+          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

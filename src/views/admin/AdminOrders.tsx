@@ -439,6 +439,9 @@ export default function AdminOrders() {
                 <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
                   Date
                 </th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  Payment Status
+                </th>
                 <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">
                   Total
                 </th>
@@ -469,6 +472,9 @@ export default function AdminOrders() {
                     <td className="px-6 py-4">
                       <div className="h-4 bg-slate-800 rounded w-16" />
                     </td>
+                    <td className="px-6 py-4">
+                      <div className="h-4 bg-slate-800 rounded w-20" />
+                    </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex flex-col items-end gap-1">
                         <div className="h-4 bg-slate-800 rounded w-16" />
@@ -486,7 +492,7 @@ export default function AdminOrders() {
               ) : currentOrders.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={6}
+                    colSpan={7}
                     className="px-6 py-12 text-center text-slate-500"
                   >
                     No orders found matching your criteria.
@@ -536,6 +542,11 @@ export default function AdminOrders() {
                       <td className="px-6 py-4">
                         <p className="text-xs text-slate-300">
                           {new Date(order.createdAt).toLocaleDateString()}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400 max-w-[120px] truncate" title={order.paymentMessage || "Pending"}>
+                          {order.paymentMessage || "Pending"}
                         </p>
                       </td>
                       <td className="px-6 py-4 text-right">

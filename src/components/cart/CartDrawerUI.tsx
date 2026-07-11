@@ -194,7 +194,7 @@ const CartDrawer = () => {
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Shipping and taxes calculated at checkout.
+                  Free shipping within Ghana. Taxes calculated at checkout.
                 </p>
                 <Button
                   onClick={() => {

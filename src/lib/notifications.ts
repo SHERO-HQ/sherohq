@@ -74,9 +74,7 @@ class NotificationService {
   private async sendWhatsAppNotification(to: string, message: string) {
     const { WHATSAPP_ACCESS_TOKEN, WHATSAPP_PHONE_NUMBER_ID } = process.env;
     if (!WHATSAPP_ACCESS_TOKEN || !WHATSAPP_PHONE_NUMBER_ID) {
-      if (process.env.NODE_ENV !== "production") {
-        console.log(`[WhatsApp Simulation] To: ${to}, Message: ${message}`);
-      }
+      console.warn(`[WhatsApp Token Missing - Simulation] To: ${to}`);
       return;
     }
 
@@ -159,9 +157,7 @@ class NotificationService {
         }
       }
     } catch (error) {
-      if (process.env.NODE_ENV !== "production") {
-        console.error(`${logPrefix} ❌ [Email Error]:`, error);
-      }
+      console.error(`${logPrefix} ❌ [Email Error]:`, error);
       if (options.throwOnError) {
         const provider = this.getEmailProviderName();
         const providerPrefix = provider
@@ -287,6 +283,43 @@ class NotificationService {
       
       this.sendWhatsAppNotification(customerPhone, customerMsg)
         .catch((err) => console.error("Customer WhatsApp notification failed:", err));
+    }
+  }
+
+  public async sendPaymentFailureNotification(
+    orderId: string,
+    shippingInfo: ShippingInfo,
+  ) {
+    const readableOrderId = toReadableOrderId(orderId);
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
+
+    const htmlContent = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+        <h1 style="color: #dc2626; text-align: center;">Payment Failed</h1>
+        <p>Hi ${shippingInfo.firstName},</p>
+        <p>Unfortunately, your payment for order <strong>${readableOrderId}</strong> could not be processed successfully.</p>
+        <p>Please try again or contact our support team if you need assistance.</p>
+        <p><a href="${baseUrl}/track/${orderId}">View your order details</a></p>
+      </div>
+    `;
+
+    await this.sendEmail(
+      shippingInfo.email,
+      `Payment Failed - Order ${readableOrderId}`,
+      htmlContent,
+    );
+
+    // Alert Customer via WhatsApp
+    const customerPhone = this.formatToInternationalPhone(shippingInfo.phone);
+    if (customerPhone) {
+      const customerMsg =
+        `Hi ${shippingInfo.firstName},\n\n` +
+        `Unfortunately, the payment for your order *${readableOrderId}* at *SHERO TECHNOLOGIES* failed.\n\n` +
+        `You can try again or contact us for help.\n\n` +
+        `🔗 *View Order:* ${baseUrl}/track/${orderId}`;
+      
+      this.sendWhatsAppNotification(customerPhone, customerMsg)
+        .catch((err) => console.error("Customer WhatsApp failure notification failed:", err));
     }
   }
 }

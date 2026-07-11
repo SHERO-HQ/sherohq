@@ -53,6 +53,7 @@ export interface Order {
   status: string;
   createdAt: Date;
   referralCode?: string;
+  paymentMessage?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -177,7 +178,7 @@ export async function updateOrderStatus(
   id: string,
   status: string,
 ): Promise<{ success: boolean; order: Order }> {
-  const response = await authFetch(`${API_BASE}/orders/${id}/status`, {
+  const response = await authFetch(`${API_BASE}/orders/${id}`, {
     method: "PATCH",
     body: JSON.stringify({ status }),
   });

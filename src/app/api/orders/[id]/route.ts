@@ -18,11 +18,18 @@ export async function GET(
 
     if (!order) return apiResponse.notFound("Order not found");
 
+    const logsResult = await query(
+      `SELECT details FROM activity_logs WHERE action = 'order_payment' AND details LIKE $1 ORDER BY "createdAt" DESC LIMIT 1`,
+      [`%${id}%`]
+    );
+    const paymentMessage = logsResult.rows[0]?.details || null;
+
     return apiResponse.success({
       ...order,
       items: safeParse(order.items),
       shippingInfo: safeParse(order.shippingInfo),
       total: parseFloat(order.total),
+      paymentMessage,
     });
   } catch (error) {
     console.error("Fetch order error:", error);

@@ -29,7 +29,15 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get("startDate");
     const endDate = searchParams.get("endDate");
 
-    let queryText = "SELECT * FROM orders";
+    let queryText = `
+      SELECT o.*, 
+        (SELECT details 
+         FROM activity_logs a 
+         WHERE a.action = 'order_payment' AND a.details LIKE '%' || o.id::text || '%' 
+         ORDER BY a."createdAt" DESC LIMIT 1
+        ) as "paymentMessage"
+      FROM orders o
+    `;
     const sqlParams: (string | number)[] = [];
     const conditions: string[] = [];
     let paramIndex = 1;
@@ -65,6 +73,7 @@ export async function GET(request: NextRequest) {
       items: safeParse(order.items),
       shippingInfo: safeParse(order.shippingInfo),
       total: Number(order.total),
+      paymentMessage: order.paymentMessage,
     }));
 
     return NextResponse.json(orders);
@@ -114,7 +123,11 @@ export async function POST(request: NextRequest) {
     for (const item of items) {
       const product = productMap.get(item.id);
       if (!product || !product.inStock || product.stockQuantity < item.quantity) {
-        throw new Error(`Insufficient stock for ${product?.name || 'unknown product'}`);
+        await client.query("ROLLBACK");
+        return NextResponse.json(
+          { error: `Insufficient stock for ${product?.name || 'unknown product'}. Only ${product?.stockQuantity || 0} left.` }, 
+          { status: 400 }
+        );
       }
 
       const unitPrice = roundCurrency(Number(product.price));

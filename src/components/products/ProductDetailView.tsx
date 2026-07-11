@@ -546,11 +546,14 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
               </span>
             </div>
             <button
-              onClick={handleAddToCart}
-              disabled={!product.inStock || isAddedToCart}
+              onClick={() => {
+                handleAddToCart();
+                router.push("/shop/checkout");
+              }}
+              disabled={!product.inStock}
               className="flex-1 h-10 bg-brand-secondary-600 text-white rounded font-bold text-xs uppercase tracking-widest active:scale-95 transition-transform"
             >
-              {isAddedToCart ? "Added!" : "Buy Now"}
+              Buy Now
             </button>
             <button
               onClick={() =>

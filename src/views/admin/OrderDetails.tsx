@@ -790,6 +790,12 @@ export default function OrderDetails() {
                   </span>
                 </div>
               </div>
+              {order.paymentMessage && (
+                <div className="mt-3 text-xs bg-slate-950/40 p-3 rounded border border-white/5 text-slate-400 leading-relaxed">
+                  <span className="font-semibold text-slate-300 block mb-1">Payment Status:</span> 
+                  {order.paymentMessage}
+                </div>
+              )}
             </div>
 
             <div className="relative z-10">
@@ -962,7 +968,7 @@ export default function OrderDetails() {
               >
                 <div className="text-center">
                   <h1 className="text-lg font-bold tracking-wide">SHERO</h1>
-                  <p className="text-[9px]">TECHNOLOGY & GADGETS</p>
+                  <p className="tracking-widest">TECHNOLOGIES</p>
                   <p className="text-[9px]">OFFICIAL SALES RECEIPT</p>
                 </div>
 
@@ -1082,7 +1088,7 @@ export default function OrderDetails() {
                       SHERO
                     </h1>
                     <p className="text-slate-500 text-sm">
-                      Technology & Gadgets
+                      Technologies
                     </p>
                   </div>
                   <div className="text-right">
@@ -1198,7 +1204,7 @@ export default function OrderDetails() {
                     Thank you for your business!
                   </p>
                   <p className="text-slate-500 text-[9px] mt-1">
-                    SHERO Tech & Gadgets • {COMPANY_CONTACTS.HQ_LOCATION} • {COMPANY_CONTACTS.WEBSITE_DISPLAY}
+                    SHERO Technologies • {COMPANY_CONTACTS.HQ_LOCATION} • {COMPANY_CONTACTS.WEBSITE_DISPLAY}
                   </p>
                 </div>
               </div>
