@@ -34,14 +34,27 @@ const CheckoutSuccess = () => {
     clearCart();
 
     let attempts = 0;
+    let consecutiveErrors = 0;
     const maxAttempts = 30; // 30 attempts * 2s = 60s timeout
+    const maxConsecutiveErrors = 5; // Give up after 5 straight failures
+
     const interval = setInterval(async () => {
       attempts++;
+
+      // Timeout guard — runs even if trackOrder throws every time
+      if (attempts > maxAttempts) {
+        clearInterval(interval);
+        setStatus("pending");
+        return;
+      }
+
       try {
         const data = await trackOrder(
           orderId,
           getOrderAccessToken(orderId) || undefined,
         );
+
+        consecutiveErrors = 0; // reset on success
 
         // Check if paid/processing
         if (
@@ -61,8 +74,14 @@ const CheckoutSuccess = () => {
           setStatus("pending");
         }
       } catch (error) {
+        consecutiveErrors++;
         if (process.env.NODE_ENV !== "production") {
           console.error("Verification error:", error);
+        }
+        // If the API is consistently failing, stop and show error
+        if (consecutiveErrors >= maxConsecutiveErrors) {
+          clearInterval(interval);
+          setStatus("failed");
         }
       }
     }, 2000);
