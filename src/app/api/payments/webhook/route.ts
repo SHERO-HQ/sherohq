@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
     await client.query("BEGIN");
 
     const orderRes = await client.query(
-      `SELECT status, "shippingInfo", items, total FROM orders WHERE id = $1 FOR UPDATE`,
+      `SELECT status, "shippingInfo", items, total, "paymentMethod" FROM orders WHERE id = $1 FOR UPDATE`,
       [orderId],
     );
 
@@ -138,7 +138,8 @@ export async function POST(request: NextRequest) {
             orderId, 
             parsedShipping, 
             parsedItems, 
-            Number(order.total)
+            Number(order.total),
+            order.paymentMethod
           ).catch(err => console.error("Webhook Notification failed:", err));
         } catch (err) {
           console.error("Failed to parse order details for notification:", err);

@@ -117,13 +117,15 @@ export async function POST(request: NextRequest) {
 
       const callbackUrl = `${publicUrl.replace(/\/$/, "")}/api/payments/webhook`;
       const returnUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${orderId}`;
+      // Separate cancellation URL with status param so frontend shows failure instantly
+      const cancelUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${orderId}&status=Cancelled`;
       
       const payload = {
         totalAmount: Math.round((order.total ?? 0) * 100) / 100,
         description: description || `Order ${toReadableOrderId(orderId)}`,
         callbackUrl,
         returnUrl,
-        cancellationUrl: returnUrl,
+        cancellationUrl: cancelUrl,
         merchantAccountNumber,
         clientReference: orderId,
       };

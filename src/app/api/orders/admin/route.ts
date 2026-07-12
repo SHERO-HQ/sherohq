@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
 
     // Send order confirmation via email if status is pending (invoice)
     if (status === "pending") {
-      notificationService.sendOrderConfirmation(orderId, shippingInfo, normalizedItems, finalTotal)
+      notificationService.sendOrderConfirmation(orderId, shippingInfo, normalizedItems, finalTotal, "cash_on_delivery")
         .catch(err => console.error("Notification failed:", err));
     }
 

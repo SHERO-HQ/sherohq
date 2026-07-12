@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import { z } from "zod";
+import { notificationService } from "@/lib/notifications";
 
 const RegisterSchema = z.object({
   email: z.string().email(),
@@ -69,9 +70,10 @@ export async function POST(request: NextRequest) {
       path: "/",
     });
 
-    // Send verification email (async)
-    // notificationService.sendVerificationEmail(...) - logic needed in notifications.ts
-
+    // Send welcome email (async)
+    notificationService.sendWelcomeEmail(email, name).catch((err) => {
+      console.error("Failed to send welcome email:", err);
+    });
     return NextResponse.json(
       {
         success: true,

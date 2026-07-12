@@ -238,7 +238,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
             </div>
           </Card>
         ) : order.status === "cancelled" ? (
-          <Card className="p-8 bg-rose-500/5 border-rose-500/10 flex items-center gap-4">
+          <Card className="p-8 bg-rose-500/5 border-rose-500/10 flex flex-col md:flex-row items-center gap-4">
             <div className="w-12 h-12 bg-rose-500 text-white rounded-full flex items-center justify-center">
               <AlertCircle className="w-6 h-6" />
             </div>
@@ -250,7 +250,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
             </div>
           </Card>
         ) : (
-          <Card className="p-8 bg-brand-secondary-500/5 border-brand-secondary-500/10 flex items-center gap-4">
+          <Card className="p-8 bg-brand-secondary-500/5 border-brand-secondary-500/10 flex flex-col md:flex-row items-center gap-4">
             <div className="w-12 h-12 bg-brand-secondary-500 text-white rounded-full flex items-center justify-center">
               <Package className="w-6 h-6" />
             </div>

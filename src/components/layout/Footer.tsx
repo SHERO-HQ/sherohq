@@ -21,6 +21,8 @@ import { COMPANY_EMAILS } from "@/constants/emails";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { getAbsoluteUrl } from "@/utils/subdomain";
 import { subscribeToNewsletter } from "@/services/api";
+import Image from "next/image";
+import { SOCIAL_LINKS } from "@/constants/socials";
 import PaymentIcons from "./PaymentIcons";
 
 const Footer = () => {
@@ -42,22 +44,22 @@ const Footer = () => {
   const socialLinks = [
     {
       name: "X (Twitter)",
-      url: "https://x.com/sherohq",
+      url: SOCIAL_LINKS.TWITTER,
       icon: TwitterXIcon,
     },
     {
       name: "TikTok",
-      url: "https://tiktok.com/@sherohq",
+      url: SOCIAL_LINKS.TIKTOK,
       icon: TikTokIcon,
     },
     {
       name: "Facebook",
-      url: "https://web.facebook.com/profile.php?id=61583887925479",
+      url: SOCIAL_LINKS.FACEBOOK,
       icon: FacebookIcon,
     },
     {
       name: "Instagram",
-      url: "https://instagram.com/sherohq",
+      url: SOCIAL_LINKS.INSTAGRAM,
       icon: InstagramIcon,
     },
   ];

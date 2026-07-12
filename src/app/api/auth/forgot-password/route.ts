@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { randomBytes } from "node:crypto";
 import { z } from "zod";
+import { notificationService } from "@/lib/notifications";
 
 const ForgotPasswordSchema = z.object({
   email: z.string().email(),
@@ -53,16 +54,11 @@ export async function POST(request: NextRequest) {
       `);
     }
 
-    // In a real app, use Resend or Nodemailer here
-    // try {
-    //   await sendEmail({
-    //     to: email,
-    //     subject: "Reset your password",
-    //     text: `Click here to reset your password: ${resetLink}`,
-    //   });
-    // } catch (e) {
-    //   console.error("Failed to send email:", e);
-    // }
+    try {
+      await notificationService.sendPasswordResetEmail(email, user.name, resetLink);
+    } catch (e) {
+      console.error("Failed to send password reset email:", e);
+    }
 
     return NextResponse.json({
       success: true,

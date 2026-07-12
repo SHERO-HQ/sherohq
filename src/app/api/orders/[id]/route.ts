@@ -3,6 +3,7 @@ import { query } from "@/lib/db";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 import { safeParse } from "@/lib/orderUtils";
+import { notificationService, ShippingInfo, OrderItem } from "@/lib/notifications";
 
 export async function GET(
   request: NextRequest,
@@ -71,6 +72,18 @@ export async function PATCH(
     );
 
     if (result.rowCount === 0) return apiResponse.notFound("Order not found");
+
+    const updatedOrder = result.rows[0];
+
+    if (status === "shipped" || status === "delivered") {
+      notificationService.sendOrderStatusUpdateNotification(
+        id,
+        status,
+        safeParse(updatedOrder.shippingInfo) as ShippingInfo,
+        safeParse(updatedOrder.items) as OrderItem[],
+        parseFloat(updatedOrder.total)
+      ).catch(console.error);
+    }
 
     const { logActivity } = await import("@/lib/activity");
     await logActivity(admin.id, "order_update", "info", `Updated order ${id}: status=${status || 'N/A'}`);

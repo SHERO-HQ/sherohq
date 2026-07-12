@@ -21,6 +21,7 @@ import {
 import NavLink from "@/components/common/NavLink";
 
 import { AnimatePresence, motion } from "motion/react";
+import { SOCIAL_LINKS } from "@/constants/socials";
 import { navLinkClass, navLinkClassVariant } from "@/lib/utils";
 import {
   WhatsAppIcon,
@@ -707,7 +708,7 @@ const Nav = () => {
                   </a>
                   {/* TikTok */}
                   <a
-                    href="https://tiktok.com/@sherohq"
+                    href={SOCIAL_LINKS.TIKTOK}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-slate-400 hover:text-brand-secondary-500 transition-all hover:scale-110 active:scale-95"
@@ -716,7 +717,7 @@ const Nav = () => {
                   </a>
                   {/* Instagram */}
                   <a
-                    href="https://instagram.com/sherohq"
+                    href={SOCIAL_LINKS.INSTAGRAM}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-slate-400 hover:text-brand-secondary-500 transition-all hover:scale-110 active:scale-95"
@@ -725,7 +726,7 @@ const Nav = () => {
                   </a>
                   {/* Facebook */}
                   <a
-                    href="https://facebook.com/profile.php?id=61583887925479"
+                    href={SOCIAL_LINKS.FACEBOOK}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-slate-400 hover:text-brand-secondary-500 transition-all hover:scale-110 active:scale-95"

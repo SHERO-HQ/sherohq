@@ -2,9 +2,10 @@ import nodemailer from "nodemailer";
 import { Resend } from "resend";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { COMPANY_EMAILS } from "@/constants/emails";
+import { SOCIAL_LINKS } from "@/constants/socials";
 import { logActivity } from "@/lib/activity";
 
-interface OrderItem {
+export interface OrderItem {
   id: string;
   name: string;
   price: number;
@@ -12,7 +13,7 @@ interface OrderItem {
   image?: string;
 }
 
-interface ShippingInfo {
+export interface ShippingInfo {
   firstName: string;
   lastName: string;
   email: string;
@@ -49,6 +50,52 @@ class NotificationService {
         auth: { user: SMTP_USER, pass: SMTP_PASS },
       });
     }
+  }
+
+  /**
+   * Wrap email body HTML with a branded header (logo) and footer.
+   * Uses a PNG logo hosted on the site since SVG is poorly supported in email clients.
+   */
+  private wrapEmailHtml(bodyHtml: string, options?: { hideFooterContact?: boolean; preheader?: string }): string {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
+    const logoUrl = `${baseUrl.replace(/\/$/, "")}/assets/logo/shero.png`;
+    const year = new Date().getFullYear();
+
+    const preheaderHtml = options?.preheader
+      ? `<div style="display: none; max-height: 0px; overflow: hidden;">${options.preheader}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;</div>`
+      : "";
+
+    return `
+      ${preheaderHtml}
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+        <!-- Header with Logo -->
+        <div style="text-align: center; padding: 28px 20px 20px; border-bottom: 2px solid #059669;">
+          <a href="${baseUrl}" target="_blank" style="text-decoration: none;">
+            <img src="${logoUrl}" alt="SHERO TECHNOLOGIES" width="48" height="48" style="display: inline-block; vertical-align: middle;" />
+          </a>
+          <div style="margin-top: 8px; font-size: 16px; font-weight: 700; color: #0f172a; letter-spacing: 1px;">SHERO TECHNOLOGIES</div>
+        </div>
+
+        <!-- Body -->
+        <div style="padding: 28px 24px 12px;">
+          ${bodyHtml}
+        </div>
+
+        <!-- Footer -->
+        <div style="border-top: 1px solid #e2e8f0; padding: 20px 24px; text-align: center; color: #94a3b8; font-size: 12px; line-height: 1.6;">
+          ${!options?.hideFooterContact ? `
+            <p style="margin: 0 0 8px;">Need help? <a href="https://wa.me/${COMPANY_CONTACTS.WHATSAPP}" style="color: #059669; text-decoration: none;">WhatsApp</a> · <a href="mailto:${COMPANY_EMAILS.SUPPORT}" style="color: #059669; text-decoration: none;">${COMPANY_EMAILS.SUPPORT}</a></p>
+          ` : ""}
+          <div style="margin: 12px 0;">
+            <a href="${SOCIAL_LINKS.TWITTER}" style="color: #64748b; text-decoration: none; margin: 0 8px;">Twitter</a>
+            <a href="${SOCIAL_LINKS.TIKTOK}" style="color: #64748b; text-decoration: none; margin: 0 8px;">TikTok</a>
+            <a href="${SOCIAL_LINKS.FACEBOOK}" style="color: #64748b; text-decoration: none; margin: 0 8px;">Facebook</a>
+            <a href="${SOCIAL_LINKS.INSTAGRAM}" style="color: #64748b; text-decoration: none; margin: 0 8px;">Instagram</a>
+          </div>
+          <p style="margin: 0;">&copy; ${year} SHERO TECHNOLOGIES. All rights reserved.</p>
+        </div>
+      </div>
+    `;
   }
 
   private getEmailProviderName() {
@@ -176,6 +223,36 @@ class NotificationService {
     }
   }
 
+  public async sendWelcomeEmail(email: string, name: string) {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
+    const bodyHtml = `
+      <h1 style="color: #059669; text-align: center; margin: 0 0 20px;">Welcome to SHERO TECHNOLOGIES!</h1>
+      <p>Hi ${name},</p>
+      <p>We're thrilled to have you here. Your account has been successfully created.</p>
+      <p>Start exploring the best technology products, gadgets, and accessories today.</p>
+      <p style="text-align: center; margin-top: 24px;">
+        <a href="${baseUrl}/shop" style="display: inline-block; padding: 12px 32px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Start Shopping</a>
+      </p>
+    `;
+    const htmlContent = this.wrapEmailHtml(bodyHtml, { preheader: "Welcome to SHERO! Let's get started." });
+    await this.sendEmail(email, "Welcome to SHERO TECHNOLOGIES!", htmlContent);
+  }
+
+  public async sendPasswordResetEmail(email: string, name: string, resetLink: string) {
+    const bodyHtml = `
+      <h1 style="text-align: center; margin: 0 0 20px;">Reset Your Password</h1>
+      <p>Hi ${name},</p>
+      <p>We received a request to reset your password for your SHERO TECHNOLOGIES account.</p>
+      <p>Click the button below to set a new password. This link is valid for 1 hour.</p>
+      <p style="text-align: center; margin-top: 24px;">
+        <a href="${resetLink}" style="display: inline-block; padding: 12px 32px; background: #0f172a; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Reset Password</a>
+      </p>
+      <p style="margin-top: 24px; font-size: 13px; color: #64748b;">If you didn't request this, you can safely ignore this email.</p>
+    `;
+    const htmlContent = this.wrapEmailHtml(bodyHtml, { preheader: "Action required: Reset your SHERO password." });
+    await this.sendEmail(email, "Reset Your Password", htmlContent);
+  }
+
   public async sendNewsletterCampaignEmail(
     to: string,
     subject: string,
@@ -183,17 +260,15 @@ class NotificationService {
     unsubscribeUrl: string,
     requestId?: string,
   ) {
-    const htmlContent = `
-      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-        <div style="margin-bottom: 20px; white-space: pre-wrap;">${content}</div>
-        <hr />
-        <p style="font-size: 12px; color: #666; text-align: center;">
-          You are receiving this because you subscribed to SHERO TECHNOLOGIES updates.
-          <br />
-          <a href="${unsubscribeUrl}">Unsubscribe</a>
-        </p>
-      </div>
+    const bodyHtml = `
+      <div style="margin-bottom: 20px; white-space: pre-wrap;">${content}</div>
+      <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
+      <p style="font-size: 12px; color: #94a3b8; text-align: center;">
+        You are receiving this because you subscribed to SHERO TECHNOLOGIES updates.<br />
+        <a href="${unsubscribeUrl}" style="color: #059669;">Unsubscribe</a>
+      </p>
     `;
+    const htmlContent = this.wrapEmailHtml(bodyHtml, { hideFooterContact: true });
     await this.sendEmail(to, subject, htmlContent, {
       throwOnError: true,
       requestId,
@@ -205,39 +280,158 @@ class NotificationService {
     shippingInfo: ShippingInfo,
     items: OrderItem[],
     total: number,
+    paymentMethod?: string,
   ) {
     const readableOrderId = toReadableOrderId(orderId);
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
 
+    // Derive subtotal and shipping from items vs. the stored total
+    const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const shipping = Math.max(0, Math.round((total - subtotal) * 100) / 100);
+    const isFreeShipping = shipping === 0;
+
+    // Estimated delivery: 3-5 business days from now
+    const deliveryStart = new Date();
+    let addedDays = 0;
+    while (addedDays < 3) {
+      deliveryStart.setDate(deliveryStart.getDate() + 1);
+      if (deliveryStart.getDay() !== 0 && deliveryStart.getDay() !== 6) addedDays++;
+    }
+    const deliveryEnd = new Date(deliveryStart);
+    addedDays = 0;
+    while (addedDays < 2) {
+      deliveryEnd.setDate(deliveryEnd.getDate() + 1);
+      if (deliveryEnd.getDay() !== 0 && deliveryEnd.getDay() !== 6) addedDays++;
+    }
+    const dateOpts: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" };
+    const deliveryRange = `${deliveryStart.toLocaleDateString("en-GH", dateOpts)} – ${deliveryEnd.toLocaleDateString("en-GH", dateOpts)}`;
+
+    // Build item rows
     const itemsHtml = items
       .map(
-        (item) => `
-      <tr>
-        <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.name} x ${item.quantity}</td>
-        <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">GH₵${(item.price * item.quantity).toFixed(2)}</td>
-      </tr>
-    `,
+        (item) => {
+          const imgUrl = item.image && !item.image.startsWith("http") 
+            ? `${baseUrl}${item.image}` 
+            : item.image || "";
+          
+          const imgHtml = imgUrl 
+            ? `<img src="${imgUrl}" alt="${item.name}" width="40" height="40" style="border-radius: 4px; object-fit: cover; margin-right: 12px; border: 1px solid #e2e8f0; vertical-align: middle;" />`
+            : "";
+
+          return `
+          <tr>
+            <td style="padding: 10px 8px; border-bottom: 1px solid #f1f5f9; color: #334155;">
+              <table style="border: 0; padding: 0; margin: 0; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 0;">${imgHtml}</td>
+                  <td style="padding: 0; vertical-align: middle;">
+                    <strong style="display: block; margin-bottom: 2px;">${item.name}</strong>
+                    <span style="font-size: 12px; color: #94a3b8;">Qty: ${item.quantity} × GH₵${item.price.toFixed(2)}</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td style="padding: 10px 8px; border-bottom: 1px solid #f1f5f9; text-align: right; color: #0f172a; font-weight: 600; white-space: nowrap; vertical-align: top;">
+              GH₵${(item.price * item.quantity).toFixed(2)}
+            </td>
+          </tr>`;
+        }
       )
       .join("");
 
-    const htmlContent = `
-      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-        <h1 style="color: #059669; text-align: center;">Order Confirmed!</h1>
-        <p>Hi ${shippingInfo.firstName},</p>
-        <p>Thank you for your order at <strong>SHERO TECHNOLOGIES</strong>.</p>
-        <div style="background: #f9fafb; padding: 15px; border-radius: 3px; margin: 20px 0;">
-          <p><strong>Order ID:</strong> ${readableOrderId}</p>
-          <table style="width: 100%; border-collapse: collapse;">
+    const orderDate = new Date().toLocaleString("en-GH", { 
+      year: "numeric", month: "short", day: "numeric", 
+      hour: "numeric", minute: "2-digit", hour12: true 
+    });
+
+    const bodyHtml = `
+      <h1 style="color: #059669; text-align: center; margin: 0 0 8px;">Order Confirmed!</h1>
+      <p style="text-align: center; color: #64748b; font-size: 14px; margin: 0 0 24px;">Order <strong style="color: #0f172a;">${readableOrderId}</strong> &middot; ${orderDate}</p>
+
+      <p style="margin: 0 0 20px;">Hi ${shippingInfo.firstName},</p>
+      <p style="margin: 0 0 24px;">Thank you for your order at <strong>SHERO TECHNOLOGIES</strong>. Here's your receipt:</p>
+
+      <!-- Items Table -->
+      <div style="background: #f8fafc; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; margin-bottom: 24px;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background: #f1f5f9;">
+              <th style="padding: 10px 8px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 600;">Item</th>
+              <th style="padding: 10px 8px; text-align: right; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 600;">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
             ${itemsHtml}
+          </tbody>
+        </table>
+
+        <!-- Summary Rows -->
+        <div style="padding: 12px 8px 4px; border-top: 2px solid #e2e8f0;">
+          <table style="width: 100%; border-collapse: collapse;">
             <tr>
-              <td style="padding: 8px; font-weight: bold;">Total</td>
-              <td style="padding: 8px; font-weight: bold; text-align: right;">GH₵${total.toFixed(2)}</td>
+              <td style="padding: 6px 0; color: #64748b; font-size: 14px;">Subtotal</td>
+              <td style="padding: 6px 0; text-align: right; color: #334155; font-size: 14px;">GH₵${subtotal.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 0; color: #64748b; font-size: 14px;">Shipping</td>
+              <td style="padding: 6px 0; text-align: right; font-size: 14px;">
+                ${isFreeShipping
+                  ? '<span style="color: #059669; font-weight: 600;">FREE</span>'
+                  : `<span style="color: #334155;">GH₵${shipping.toFixed(2)}</span>`
+                }
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" style="padding: 8px 0 0;"><div style="border-top: 1px solid #e2e8f0;"></div></td>
+            </tr>
+            <tr>
+              <td style="padding: 10px 0; font-weight: 700; font-size: 16px; color: #0f172a;">Total</td>
+              <td style="padding: 10px 0; text-align: right; font-weight: 700; font-size: 18px; color: #059669;">GH₵${total.toFixed(2)}</td>
             </tr>
           </table>
         </div>
-        <p>Track your order here: <a href="${baseUrl}/track/${orderId}">${baseUrl}/track/${orderId}</a></p>
+      </div>
+
+      <!-- Delivery Info -->
+      <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="vertical-align: top; width: 50%; padding: 4px 8px 4px 0;">
+              <p style="margin: 0 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #16a34a; font-weight: 600;">Estimated Delivery</p>
+              <p style="margin: 0; font-size: 14px; color: #0f172a; font-weight: 600;">${deliveryRange}</p>
+              <p style="margin: 4px 0 0; font-size: 12px; color: #64748b;">3–5 business days</p>
+
+              ${paymentMethod ? `
+                <p style="margin: 16px 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #16a34a; font-weight: 600;">Payment Method</p>
+                <p style="margin: 0; font-size: 14px; color: #0f172a; font-weight: 600;">${
+                  paymentMethod === 'cash_on_delivery' ? 'Cash on Delivery' :
+                  paymentMethod === 'store_pickup' ? 'Store Pickup' :
+                  paymentMethod === 'card' ? 'Card Payment' :
+                  paymentMethod === 'momo' ? 'Mobile Money' : 'Paid'
+                }</p>
+              ` : ''}
+            </td>
+            <td style="vertical-align: top; width: 50%; padding: 4px 0 4px 8px; border-left: 1px solid #bbf7d0;">
+              <p style="margin: 0 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #16a34a; font-weight: 600;">Delivery Address</p>
+              <p style="margin: 0; font-size: 13px; color: #334155; line-height: 1.5;">${shippingInfo.address}<br />${shippingInfo.city}, ${shippingInfo.region}</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- CTA -->
+      <p style="text-align: center; margin: 0 0 24px;">
+        <a href="${baseUrl}/track/${orderId}" style="display: inline-block; padding: 12px 32px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 15px;">Track Your Order</a>
+      </p>
+
+      <!-- Referral Nudge -->
+      <div style="background: #f8fafc; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 12px; border: 1px solid #e2e8f0;">
+        <p style="margin: 0 0 8px; font-size: 16px; font-weight: 600; color: #0f172a;">Love SHERO?</p>
+        <p style="margin: 0 0 16px; font-size: 14px; color: #64748b;">Share the experience with a friend and they'll thank you later.</p>
+        <a href="${baseUrl}" style="color: #059669; font-weight: 600; text-decoration: none;">Share SHERO Store →</a>
       </div>
     `;
+    const htmlContent = this.wrapEmailHtml(bodyHtml, { preheader: "Thank you for your order! Here's your receipt." });
 
     await this.sendEmail(
       shippingInfo.email,
@@ -251,12 +445,15 @@ class NotificationService {
     await this.sendEmail(
       adminEmail,
       `🚨 NEW ORDER: ${readableOrderId}`,
-      `
-      <h2>New Order Received!</h2>
-      <p>Customer: ${shippingInfo.firstName} ${shippingInfo.lastName}</p>
-      <p>Total: GH₵${total.toFixed(2)}</p>
-      <p><a href="${baseUrl}/admin/orders/${orderId}">View in Admin Panel</a></p>
-    `,
+      this.wrapEmailHtml(`
+        <h2 style="color: #059669; margin: 0 0 16px;">🚨 New Order Received!</h2>
+        <p><strong>Customer:</strong> ${shippingInfo.firstName} ${shippingInfo.lastName}</p>
+        <p><strong>Phone:</strong> ${shippingInfo.phone}</p>
+        <p><strong>Total:</strong> GH₵${total.toFixed(2)}</p>
+        <p style="text-align: center; margin-top: 20px;">
+          <a href="${baseUrl}/admin/orders/${orderId}" style="display: inline-block; padding: 10px 28px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">View in Admin Panel</a>
+        </p>
+      `),
     );
 
     // -------------------------------------------------------------------------
@@ -294,6 +491,85 @@ class NotificationService {
     }
   }
 
+  public async sendOrderStatusUpdateNotification(
+    orderId: string,
+    newStatus: string,
+    shippingInfo: ShippingInfo,
+    items?: OrderItem[],
+    total?: number,
+  ) {
+    const readableOrderId = toReadableOrderId(orderId);
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
+    
+    let title = "Order Update";
+    let message = `There is an update on your order <strong>${readableOrderId}</strong>.`;
+    let preheader = "Update on your SHERO order.";
+
+    if (newStatus === "shipped") {
+      title = "Your Order is on the Way!";
+      message = `Great news, ${shippingInfo.firstName}! Your order <strong>${readableOrderId}</strong> has been shipped and is on its way to you.`;
+      preheader = "Your SHERO order has shipped!";
+    } else if (newStatus === "delivered") {
+      title = "Your Order has been Delivered!";
+      message = `Hi ${shippingInfo.firstName}, your order <strong>${readableOrderId}</strong> has been delivered. We hope you love your new gear!`;
+      preheader = "Your SHERO order has been delivered!";
+    }
+
+    const bodyHtml = `
+      <h1 style="color: #059669; text-align: center; margin: 0 0 20px;">${title}</h1>
+      <p style="margin: 0 0 16px;">${message}</p>
+      <p style="text-align: center; margin-top: 24px;">
+        <a href="${baseUrl}/track/${orderId}" style="display: inline-block; padding: 12px 32px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Track Your Order</a>
+      </p>
+    `;
+    
+    const htmlContent = this.wrapEmailHtml(bodyHtml, { preheader });
+
+    await this.sendEmail(
+      shippingInfo.email,
+      `Order Update: ${title}`,
+      htmlContent,
+    );
+
+    // WhatsApp Notification
+    const customerPhone = this.formatToInternationalPhone(shippingInfo.phone);
+    if (customerPhone) {
+      let waMessage = `Hi ${shippingInfo.firstName},\n\nThere is an update on your order *${readableOrderId}* at *SHERO TECHNOLOGIES*.\n\n`;
+      if (newStatus === "shipped") waMessage = `Hi ${shippingInfo.firstName} 🚚\n\nYour order *${readableOrderId}* from *SHERO TECHNOLOGIES* has been shipped and is on its way to you!\n\n`;
+      if (newStatus === "delivered") waMessage = `Hi ${shippingInfo.firstName} 🎉\n\nYour order *${readableOrderId}* from *SHERO TECHNOLOGIES* has been delivered!\n\nWe hope you love it.\n\n`;
+      
+      waMessage += `🔗 *Track your order:* ${baseUrl}/track/${orderId}`;
+      
+      this.sendWhatsAppNotification(customerPhone, waMessage)
+        .catch((err) => console.error("Customer WhatsApp status update notification failed:", err));
+    }
+  }
+
+  public async sendReviewRequestNotification(
+    orderId: string,
+    shippingInfo: ShippingInfo,
+  ) {
+    const readableOrderId = toReadableOrderId(orderId);
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
+
+    const bodyHtml = `
+      <h1 style="color: #059669; text-align: center; margin: 0 0 20px;">How did we do?</h1>
+      <p style="margin: 0 0 16px;">Hi ${shippingInfo.firstName},</p>
+      <p style="margin: 0 0 16px;">Your order <strong>${readableOrderId}</strong> was recently delivered. We'd love to hear about your experience!</p>
+      <p style="text-align: center; margin-top: 24px;">
+        <a href="${baseUrl}/feedback?order=${orderId}" style="display: inline-block; padding: 12px 32px; background: #0f172a; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Leave a Review</a>
+      </p>
+    `;
+    
+    const htmlContent = this.wrapEmailHtml(bodyHtml, { preheader: "How was your experience with SHERO?" });
+
+    await this.sendEmail(
+      shippingInfo.email,
+      `How was your order ${readableOrderId}?`,
+      htmlContent,
+    );
+  }
+
   public async sendPaymentFailureNotification(
     orderId: string,
     shippingInfo: ShippingInfo,
@@ -301,15 +577,19 @@ class NotificationService {
     const readableOrderId = toReadableOrderId(orderId);
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
 
-    const htmlContent = `
-      <div style="font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
-        <h1 style="color: #dc2626; text-align: center;">Payment Failed</h1>
-        <p>Hi ${shippingInfo.firstName},</p>
-        <p>Unfortunately, your payment for order <strong>${readableOrderId}</strong> could not be processed successfully.</p>
-        <p>Please try again or contact our support team if you need assistance.</p>
-        <p><a href="${baseUrl}/track/${orderId}">View your order details</a></p>
-      </div>
+    const bodyHtml = `
+      <h1 style="color: #dc2626; text-align: center; margin: 0 0 20px;">Payment Was Not Completed</h1>
+      <p>Hi ${shippingInfo.firstName},</p>
+      <p>Unfortunately, your payment for order <strong>${readableOrderId}</strong> could not be processed successfully.</p>
+      <p>Don't worry — no money has been deducted from your account. You can try again or contact our support team for assistance.</p>
+      <p style="text-align: center; margin-top: 20px;">
+        <a href="${baseUrl}/shop/checkout?retry=${orderId}" style="display: inline-block; padding: 10px 28px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Try Again</a>
+      </p>
+      <p style="text-align: center; margin-top: 8px;">
+        <a href="${baseUrl}/track/${orderId}" style="color: #059669; text-decoration: none;">View your order details →</a>
+      </p>
     `;
+    const htmlContent = this.wrapEmailHtml(bodyHtml);
 
     await this.sendEmail(
       shippingInfo.email,

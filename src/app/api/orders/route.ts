@@ -172,7 +172,7 @@ export async function POST(request: NextRequest) {
 
     // Notifications (Async) - Delay sending email unless Cash on Delivery
     if (normalizedPaymentMethod === "cash_on_delivery") {
-      notificationService.sendOrderConfirmation(orderId, shippingInfo, normalizedItems, finalTotal)
+      notificationService.sendOrderConfirmation(orderId, shippingInfo, normalizedItems, finalTotal, normalizedPaymentMethod)
         .catch(err => console.error("Notification failed:", err));
     }
     
