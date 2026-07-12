@@ -110,9 +110,8 @@ export async function POST(request: NextRequest) {
 
     await client.query("BEGIN");
 
-    // Lock and check stock
     const productsRes = await client.query(
-      `SELECT id, name, price, "costPrice", "stockQuantity", "inStock", images FROM products WHERE id = ANY($1) FOR UPDATE`,
+      `SELECT id, name, price, "costPrice", "stockQuantity", "inStock", sku, images FROM products WHERE id = ANY($1) FOR UPDATE`,
       [productIds]
     );
 
@@ -142,6 +141,7 @@ export async function POST(request: NextRequest) {
         price: unitPrice,
         costPrice: costPrice,
         quantity: item.quantity,
+        sku: product.sku || null,
         image: item.image || product.images?.[0] || null,
       });
 

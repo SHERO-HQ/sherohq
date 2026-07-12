@@ -25,9 +25,24 @@ export async function GET(
     );
     const paymentMessage = logsResult.rows[0]?.details || null;
 
+    let parsedItems = safeParse(order.items) as any[];
+    if (!Array.isArray(parsedItems)) parsedItems = [];
+    const productIds = parsedItems.map((i: any) => i.id).filter(Boolean);
+    if (productIds.length > 0) {
+      const productsRes = await query(`SELECT id, sku, images FROM products WHERE id = ANY($1)`, [productIds]);
+      const productMap = new Map(productsRes.rows.map((r: any) => [r.id, r]));
+      for (const item of parsedItems) {
+        const p = productMap.get(item.id);
+        if (p) {
+          if (!item.sku && p.sku) item.sku = p.sku;
+          if (!item.image && p.images && p.images.length > 0) item.image = p.images[0];
+        }
+      }
+    }
+
     return apiResponse.success({
       ...order,
-      items: safeParse(order.items),
+      items: parsedItems,
       shippingInfo: safeParse(order.shippingInfo),
       total: parseFloat(order.total),
       paymentMessage,
