@@ -11,3 +11,12 @@ declare module "*.woff2" {
   const src: string;
   export default src;
 }
+
+// Font files
+declare module "*.ttf" {
+  const content: string;
+  export default content;
+}
+
+// Fallback declaration for pdfkit in case @types/pdfkit is dropped by Vercel
+declare module "pdfkit";
