@@ -78,6 +78,10 @@ export async function POST(request: NextRequest) {
           `UPDATE products SET "stockQuantity" = $1, "inStock" = $2 WHERE id = $3`,
           [newQuantity, newQuantity > 0, product.id]
         );
+
+        if (newQuantity <= 5) {
+          notificationService.sendLowStockAlert(product.name, newQuantity).catch(console.error);
+        }
       } else {
         // Custom item or service
         const unitPrice = roundCurrency(Number(item.price));

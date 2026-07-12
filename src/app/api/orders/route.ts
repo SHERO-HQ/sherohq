@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
 
     // Lock and check stock
     const productsRes = await client.query(
-      `SELECT id, name, price, "stockQuantity", "inStock" FROM products WHERE id = ANY($1) FOR UPDATE`,
+      `SELECT id, name, price, "stockQuantity", "inStock", images FROM products WHERE id = ANY($1) FOR UPDATE`,
       [productIds]
     );
 
@@ -138,6 +138,7 @@ export async function POST(request: NextRequest) {
         name: product.name,
         price: unitPrice,
         quantity: item.quantity,
+        image: item.image || product.images?.[0] || null,
       });
 
       // Update stock
@@ -146,6 +147,10 @@ export async function POST(request: NextRequest) {
         `UPDATE products SET "stockQuantity" = $1, "inStock" = $2 WHERE id = $3`,
         [newQuantity, newQuantity > 0, product.id]
       );
+
+      if (newQuantity <= 5) {
+        notificationService.sendLowStockAlert(product.name, newQuantity).catch(console.error);
+      }
     }
 
     const finalTotal = roundCurrency(serverTotal);

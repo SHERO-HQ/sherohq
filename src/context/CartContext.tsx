@@ -56,6 +56,23 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
  useEffect(() => {
  if (!isLoaded) return;
  localStorage.setItem("sherotech_cart", JSON.stringify(cart));
+
+ // Sync cart with server for abandoned carts recovery
+ const timeoutId = setTimeout(() => {
+   let guestId = localStorage.getItem("sherotech_guest_id");
+   if (!guestId) {
+     guestId = "guest-" + Math.random().toString(36).substring(2, 15);
+     localStorage.setItem("sherotech_guest_id", guestId);
+   }
+
+   fetch("/api/carts/sync", {
+     method: "POST",
+     headers: { "Content-Type": "application/json" },
+     body: JSON.stringify({ items: cart, guestId })
+   }).catch(console.error);
+ }, 3000);
+
+ return () => clearTimeout(timeoutId);
  }, [cart, isLoaded]);
 
  const addItem = useCallback((newItem: Omit<CartItem, "quantity">) => {

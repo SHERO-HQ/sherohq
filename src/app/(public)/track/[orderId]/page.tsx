@@ -430,9 +430,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
                   <Link href="/support">Need Help?</Link>
                 </Button>
               </div>
-            </Card>
-
-            <div className="text-center">
+            </Card>            <div className="text-center">
               <p className="text-[10px] text-slate-400 uppercase tracking-widest leading-loose">
                 Thank you for choosing
                 <br />
@@ -443,6 +441,33 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
             </div>
           </div>
         </div>
+
+        {/* Detailed Timeline */}
+        {(order as any).activityLogs && (order as any).activityLogs.length > 0 && (
+          <Card className="p-6 mt-8 dark:bg-slate-900 border shadow-sm">
+            <h3 className="font-bold text-lg mb-6 text-slate-800 dark:text-slate-200">Detailed Timeline</h3>
+            <div className="space-y-0">
+              {(order as any).activityLogs.map((log: any, idx: number) => (
+                <div key={idx} className="flex gap-4">
+                  <div className="flex flex-col items-center">
+                    <div className="w-3 h-3 rounded-full bg-brand-secondary-500 mt-1.5 z-10 shadow shadow-brand-secondary-500/20"></div>
+                    {idx < (order as any).activityLogs.length - 1 && (
+                      <div className="w-0.5 h-full bg-slate-200 dark:bg-slate-800 -mt-2 min-h-12"></div>
+                    )}
+                  </div>
+                  <div className="pb-6">
+                    <p className="font-semibold text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wide">
+                      {log.action.replace("order_", "").replace(/_/g, " ")}
+                    </p>
+                    <p className="text-xs text-slate-500 mt-1 font-mono">
+                      {new Date(log.createdAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
       </div>
     </div>
   );

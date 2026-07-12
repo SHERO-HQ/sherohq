@@ -48,6 +48,12 @@ export async function GET(
     const providedToken = request.headers.get("x-order-access-token")?.trim() || null;
     const hasValidToken = providedToken && order.orderAccessTokenHash && hashOrderAccessToken(providedToken) === order.orderAccessTokenHash;
 
+    const logsResult = await query(
+      `SELECT action, type, details, "createdAt" FROM activity_logs WHERE action LIKE 'order_%' AND details LIKE $1 ORDER BY "createdAt" ASC`,
+      [`%${order.id}%`]
+    );
+    const activityLogs = logsResult.rows;
+
     const isAuthorized = Boolean(admin) || (user && order.userId === user.id) || hasValidToken;
 
     if (!isAuthorized) {
@@ -56,6 +62,7 @@ export async function GET(
         status: order.status,
         createdAt: order.createdAt,
         paymentMethod: order.paymentMethod,
+        activityLogs: activityLogs.map(l => ({ action: l.action, createdAt: l.createdAt })),
       });
     }
 
@@ -65,6 +72,7 @@ export async function GET(
       shippingInfo: safeParse(order.shippingInfo),
       total: Number(order.total),
       orderAccessTokenHash: undefined,
+      activityLogs,
     });
   } catch (error) {
     console.error("Error tracking order:", error);

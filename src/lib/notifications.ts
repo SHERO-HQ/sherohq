@@ -4,6 +4,7 @@ import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { COMPANY_EMAILS } from "@/constants/emails";
 import { SOCIAL_LINKS } from "@/constants/socials";
 import { logActivity } from "@/lib/activity";
+import { generateInvoicePdf } from "./pdfInvoice";
 
 export interface OrderItem {
   id: string;
@@ -161,7 +162,7 @@ class NotificationService {
     to: string,
     subject: string,
     html: string,
-    options: { throwOnError?: boolean; requestId?: string } = {},
+    options: { throwOnError?: boolean; requestId?: string; attachments?: { filename: string; content: Buffer }[] } = {},
   ) {
     const logPrefix = options.requestId
       ? `[Newsletter ${options.requestId}]`
@@ -181,6 +182,7 @@ class NotificationService {
           to,
           subject,
           html,
+          attachments: options.attachments,
         });
 
         if (result.error) {
@@ -192,6 +194,7 @@ class NotificationService {
           to,
           subject,
           html,
+          attachments: options.attachments,
         });
       } else {
         if (process.env.NODE_ENV === "production" && options.throwOnError) {
@@ -251,6 +254,68 @@ class NotificationService {
     `;
     const htmlContent = this.wrapEmailHtml(bodyHtml, { preheader: "Action required: Reset your SHERO password." });
     await this.sendEmail(email, "Reset Your Password", htmlContent);
+  }
+
+  public async sendLowStockAlert(productName: string, stockLeft: number) {
+    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.INFO;
+    const isOutOfStock = stockLeft <= 0;
+    
+    const bodyHtml = `
+      <h2 style="color: ${isOutOfStock ? '#dc2626' : '#d97706'}; margin: 0 0 16px;">
+        ${isOutOfStock ? '🚨 OUT OF STOCK ALERT' : '⚠️ LOW STOCK WARNING'}
+      </h2>
+      <p><strong>Product:</strong> ${productName}</p>
+      <p><strong>Remaining Stock:</strong> <span style="font-size: 18px; font-weight: bold; color: ${isOutOfStock ? '#dc2626' : '#d97706'}">${stockLeft}</span></p>
+      <p style="margin-top: 16px;">Please log into the admin dashboard to restock this item.</p>
+    `;
+
+    const htmlContent = this.wrapEmailHtml(bodyHtml, { preheader: `Stock Alert: ${productName} has ${stockLeft} units left.` });
+
+    await this.sendEmail(
+      adminEmail,
+      `${isOutOfStock ? '🚨 OUT OF STOCK' : '⚠️ LOW STOCK'}: ${productName}`,
+      htmlContent
+    );
+  }
+
+  public async sendAbandonedCartEmail(
+    email: string,
+    firstName: string,
+    items: any[],
+    checkoutUrl: string
+  ) {
+    const itemRows = items.map((item: any) => `
+      <tr>
+        <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
+          <p style="margin: 0; font-weight: 600; color: #0f172a;">${item.name}</p>
+          <p style="margin: 4px 0 0; font-size: 13px; color: #64748b;">Qty: ${item.quantity} | Price: GH₵${Number(item.price).toFixed(2)}</p>
+        </td>
+      </tr>
+    `).join("");
+
+    const bodyHtml = `
+      <h2 style="color: #0f172a; margin: 0 0 16px;">Hey ${firstName}, you left something behind!</h2>
+      <p style="font-size: 16px; color: #334155; line-height: 1.6;">
+        We noticed you left some amazing items in your cart. They're still waiting for you, but they might not stay in stock forever.
+      </p>
+      
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 24px 0;">
+        <h3 style="margin: 0 0 12px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b;">Your Cart</h3>
+        <table style="width: 100%; border-collapse: collapse;">
+          ${itemRows}
+        </table>
+      </div>
+
+      <p style="text-align: center; margin: 32px 0;">
+        <a href="${checkoutUrl}" style="display: inline-block; padding: 14px 32px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px;">
+          Complete Your Purchase
+        </a>
+      </p>
+    `;
+
+    const htmlContent = this.wrapEmailHtml(bodyHtml, { preheader: "Your SHERO cart is waiting for you." });
+
+    await this.sendEmail(email, "Did you forget something? 🛒", htmlContent);
   }
 
   public async sendNewsletterCampaignEmail(
@@ -433,10 +498,19 @@ class NotificationService {
     `;
     const htmlContent = this.wrapEmailHtml(bodyHtml, { preheader: "Thank you for your order! Here's your receipt." });
 
+    let attachments;
+    try {
+      const pdfBuffer = await generateInvoicePdf(orderId, shippingInfo, items, total, paymentMethod || "cash_on_delivery");
+      attachments = [{ filename: `Invoice-${readableOrderId}.pdf`, content: pdfBuffer }];
+    } catch (e) {
+      console.error("Failed to generate PDF invoice:", e);
+    }
+
     await this.sendEmail(
       shippingInfo.email,
       `Order Confirmation - ${readableOrderId}`,
       htmlContent,
+      { attachments }
     );
 
     // Admin alert
