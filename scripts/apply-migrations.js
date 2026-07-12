@@ -20,7 +20,10 @@ const migrationFiles = [
   "002-fix-database-security.sql",
   "003-remove-duplicate-indexes.sql",
   "004-disable-unnecessary-rls.sql",
-  "005-add-missing-indexes.sql"
+  "005-add-missing-indexes.sql",
+  "006-create-product-reviews-and-carts.sql",
+  "007-add-cost-price-and-cogs.sql",
+  "008-add-seo-columns.sql"
 ];
 
 async function runMigrations() {

@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     }
 
     const ordersResult = await query(
-      `SELECT TO_CHAR("createdAt", 'YYYY-MM-DD') as date, total 
+      `SELECT TO_CHAR("createdAt", 'YYYY-MM-DD') as date, total, cogs 
        FROM orders 
        WHERE status NOT IN ('cancelled', 'pending', 'quote')
        ${queryConditions}
@@ -48,17 +48,18 @@ export async function GET(request: NextRequest) {
       params
     );
 
-    const groupedData: Record<string, { revenue: number; orders: number; expenses: number }> = {};
+    const groupedData: Record<string, { revenue: number; cogs: number; orders: number; expenses: number }> = {};
     const currentDate = new Date(dateRangeStart);
     while (currentDate <= dateRangeEnd) {
       const dateStr = currentDate.toISOString().split("T")[0];
-      groupedData[dateStr] = { revenue: 0, orders: 0, expenses: 0 };
+      groupedData[dateStr] = { revenue: 0, cogs: 0, orders: 0, expenses: 0 };
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
     ordersResult.rows.forEach((order) => {
       if (groupedData[order.date]) {
-        groupedData[order.date].revenue += parseFloat(order.total);
+        groupedData[order.date].revenue += parseFloat(order.total || "0");
+        groupedData[order.date].cogs += parseFloat(order.cogs || "0");
         groupedData[order.date].orders += 1;
       }
     });
@@ -73,7 +74,7 @@ export async function GET(request: NextRequest) {
       .map(([date, data]) => ({
         ...data,
         date,
-        profit: data.revenue - data.expenses,
+        profit: data.revenue - data.cogs - data.expenses,
       }))
       .sort((a, b) => a.date.localeCompare(b.date));
 

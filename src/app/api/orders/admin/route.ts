@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
 
     if (productIds.length > 0) {
       const productsRes = await client.query(
-        `SELECT id, name, price, "stockQuantity", "inStock" FROM products WHERE id = ANY($1) FOR UPDATE`,
+        `SELECT id, name, price, "costPrice", "stockQuantity", "inStock" FROM products WHERE id = ANY($1) FOR UPDATE`,
         [productIds]
       );
       productMap = new Map(productsRes.rows.map(r => [r.id, r]));
@@ -52,6 +52,7 @@ export async function POST(request: NextRequest) {
 
     const normalizedItems = [];
     let serverTotal = 0;
+    let serverCogs = 0;
 
     for (const item of items) {
       if (item.id && productMap.has(item.id)) {
@@ -62,12 +63,15 @@ export async function POST(request: NextRequest) {
         }
 
         const unitPrice = roundCurrency(Number(product.price));
+        const costPrice = roundCurrency(Number(product.costPrice || 0));
         serverTotal += unitPrice * item.quantity;
+        serverCogs += costPrice * item.quantity;
 
         normalizedItems.push({
           id: product.id,
           name: product.name,
           price: unitPrice,
+          costPrice: costPrice,
           quantity: item.quantity,
           image: item.image || product.image || null,
         });
@@ -85,12 +89,14 @@ export async function POST(request: NextRequest) {
       } else {
         // Custom item or service
         const unitPrice = roundCurrency(Number(item.price));
+        // For custom items, assume cost is 0 or equal to price? Let's assume 0.
         serverTotal += unitPrice * item.quantity;
 
         normalizedItems.push({
           id: item.id || null,
           name: item.name,
           price: unitPrice,
+          costPrice: 0,
           quantity: item.quantity,
           image: item.image || null,
         });
@@ -98,16 +104,18 @@ export async function POST(request: NextRequest) {
     }
 
     const finalTotal = roundCurrency(serverTotal);
+    const finalCogs = roundCurrency(serverCogs);
 
     await client.query(
-      `INSERT INTO orders (id, "guestId", "userId", items, total, "shippingInfo", "paymentMethod", status, "referralCode", "orderAccessTokenHash")
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+      `INSERT INTO orders (id, "guestId", "userId", items, total, cogs, "shippingInfo", "paymentMethod", status, "referralCode", "orderAccessTokenHash")
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
       [
         orderId,
         resolvedGuestId,
         null,
         JSON.stringify(normalizedItems),
         finalTotal,
+        finalCogs,
         JSON.stringify(shippingInfo),
         "invoice_payment",
         status,

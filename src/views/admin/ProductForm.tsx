@@ -26,6 +26,7 @@ import ProductIdentityCard from "@/components/admin/product/ProductIdentityCard"
 import ProductMediaCard from "@/components/admin/product/ProductMediaCard";
 import ProductSpecsCard, { type SpecRow } from "@/components/admin/product/ProductSpecsCard";
 import ProductFeaturesCard from "@/components/admin/product/ProductFeaturesCard";
+import ProductSEOCard from "@/components/admin/product/ProductSEOCard";
 import ProductSidebarMeta from "@/components/admin/product/ProductSidebarMeta";
 
 interface Category {
@@ -46,6 +47,7 @@ const defaultProductData = (): Partial<Product> => ({
   category: "",
   price: 0,
   originalPrice: undefined,
+  costPrice: undefined,
   image: "",
   inStock: true,
   description: "",
@@ -249,6 +251,9 @@ export default function ProductForm() {
     if ((productData.price ?? 0) <= 0) {
       newErrors.price = "Price must be greater than 0";
     }
+    if ((productData.costPrice ?? 0) <= 0) {
+      newErrors.costPrice = "Cost Price is required";
+    }
     if (!productData.category) {
       newErrors.category = "Please select a category";
     }
@@ -390,7 +395,7 @@ export default function ProductForm() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6 pb-20">
+    <div className="max-w-7xl mx-auto space-y-6 pb-20 px-4">
       {/* Sticky Header Action Bar */}
       <div className="sticky top-20 bg-slate-950/80 backdrop-blur-md z-20 py-4 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300">
         <div className="flex items-center gap-4">
@@ -481,16 +486,29 @@ export default function ProductForm() {
 
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+        className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
       >
+        {/* Sticky Table of Contents (Desktop Only) */}
+        <div className="hidden lg:block lg:col-span-2 sticky top-36 space-y-1">
+          <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Sections</p>
+          <a href="#general" className="block px-3 py-2 text-sm text-slate-400 hover:text-brand-secondary-400 hover:bg-white/5 rounded-md transition-colors">General Info</a>
+          <a href="#media" className="block px-3 py-2 text-sm text-slate-400 hover:text-brand-secondary-400 hover:bg-white/5 rounded-md transition-colors">Media & Images</a>
+          <a href="#features" className="block px-3 py-2 text-sm text-slate-400 hover:text-brand-secondary-400 hover:bg-white/5 rounded-md transition-colors">Features List</a>
+          <a href="#specs" className="block px-3 py-2 text-sm text-slate-400 hover:text-brand-secondary-400 hover:bg-white/5 rounded-md transition-colors">Specifications</a>
+          <a href="#seo" className="block px-3 py-2 text-sm text-slate-400 hover:text-brand-secondary-400 hover:bg-white/5 rounded-md transition-colors">Search Engine</a>
+        </div>
+
         {/* Main Content Area */}
-        <div className="lg:col-span-2 space-y-8">
+        <div className="lg:col-span-7 space-y-8">
+          <div id="general" className="scroll-mt-36">
           <ProductIdentityCard
             productData={productData}
             onUpdateProductData={updateProductData}
             errors={errors}
           />
+          </div>
 
+          <div id="media" className="scroll-mt-36">
           <ProductMediaCard
             images={productData.images || []}
             primaryImage={productData.image || ""}
@@ -499,8 +517,11 @@ export default function ProductForm() {
             onUploadFiles={uploadFiles}
             onRemove={removeImage}
             onSetPrimary={setMainImage}
+            onReorder={(newImages) => updateProductData({ images: newImages })}
           />
+          </div>
 
+          <div id="features" className="scroll-mt-36">
           <ProductFeaturesCard
             features={productData.features || []}
             newFeature={newFeature}
@@ -508,13 +529,25 @@ export default function ProductForm() {
             onAddFeature={addFeature}
             onRemoveFeature={removeFeature}
           />
+          </div>
 
+          <div id="specs" className="scroll-mt-36">
           <ProductSpecsCard
             specsList={specsList}
             onAddSpecRow={addSpecRow}
             onRemoveSpecRow={removeSpecRow}
             onUpdateSpecRow={updateSpecRow}
           />
+          </div>
+
+
+
+          <div id="seo" className="scroll-mt-36">
+            <ProductSEOCard
+              productData={productData}
+              onUpdateProductData={updateProductData}
+            />
+          </div>
 
           {/* Desktop Secondary Action Bar */}
           <div className="hidden md:flex items-center gap-3 pt-6 border-t border-white/5">
@@ -548,12 +581,15 @@ export default function ProductForm() {
         </div>
 
         {/* Sidebar Area */}
-        <ProductSidebarMeta
-          productData={productData}
-          categories={categories}
-          onUpdateProductData={updateProductData}
-          errors={errors}
-        />
+        <div className="lg:col-span-3">
+          <ProductSidebarMeta
+            productData={productData}
+            categories={categories}
+            onUpdateProductData={updateProductData}
+            errors={errors}
+            onCategoryAdded={(cat) => setCategories((prev) => [...prev, cat])}
+          />
+        </div>
       </form>
 
       {/* Mobile Sticky Bottom Action Dock */}

@@ -16,6 +16,7 @@ const ProductQuerySchema = z.object({
 const CreateProductSchema = z.object({
   name: z.string().min(1).max(200),
   price: z.number().positive(),
+  costPrice: z.number().nonnegative().optional().nullable(),
   category: z.string().uuid(),
   description: z.string().optional(),
   stockQuantity: z.number().int().nonnegative().default(0),
@@ -33,6 +34,8 @@ const CreateProductSchema = z.object({
   condition: z.enum(["New", "Used", "Refurbished"]).optional(),
   isSpotlight: z.boolean().optional().default(false),
   isFeatured: z.boolean().optional().default(false),
+  metaTitle: z.string().max(60).optional().nullable(),
+  metaDescription: z.string().max(160).optional().nullable(),
 });
 
 interface ProductRow {
@@ -44,6 +47,7 @@ interface ProductRow {
   category_name?: string;
   price: string;
   originalPrice: string | null;
+  costPrice: string | null;
   image: string | null;
   images: string | null;
   rating: string;
@@ -59,6 +63,8 @@ interface ProductRow {
   isFeatured: boolean;
   createdAt: Date;
   resolved_category_id?: string | null;
+  metaTitle: string | null;
+  metaDescription: string | null;
 }
 
 function parseProduct(row: ProductRow) {
@@ -78,6 +84,7 @@ function parseProduct(row: ProductRow) {
     categoryId: row.resolved_category_id || row.category,
     price: Number(row.price),
     originalPrice: row.originalPrice ? Number(row.originalPrice) : null,
+    costPrice: row.costPrice ? Number(row.costPrice) : null,
     rating: Number(row.rating),
     images: safeParse(row.images),
     features: safeParse(row.features),
@@ -90,6 +97,8 @@ function parseProduct(row: ProductRow) {
     condition: row.condition || "New",
     isSpotlight: Boolean(row.isSpotlight),
     isFeatured: Boolean(row.isFeatured),
+    metaTitle: row.metaTitle || null,
+    metaDescription: row.metaDescription || null,
   };
 }
 
@@ -170,6 +179,7 @@ export async function POST(request: NextRequest) {
     const {
       name,
       price,
+      costPrice,
       category,
       description,
       stockQuantity,
@@ -187,6 +197,8 @@ export async function POST(request: NextRequest) {
       condition,
       isSpotlight,
       isFeatured,
+      metaTitle,
+      metaDescription,
     } = validated;
 
     const productId = uuidv4();
@@ -204,14 +216,15 @@ export async function POST(request: NextRequest) {
         : null;
 
     await query(
-      `INSERT INTO products (id, name, sku, category, price, "originalPrice", "stockQuantity", "inStock", description, slug, image, images, features, specifications, badge, rating, reviews, condition, "isSpotlight", "isFeatured")
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)`,
+      `INSERT INTO products (id, name, sku, category, price, "costPrice", "originalPrice", "stockQuantity", "inStock", description, slug, image, images, features, specifications, badge, rating, reviews, condition, "isSpotlight", "isFeatured", "metaTitle", "metaDescription")
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)`,
       [
         productId,
         name,
         finalSku,
         category,
         price,
+        costPrice || 0,
         originalPrice || null,
         stockQuantity || 0,
         inStock,
@@ -227,6 +240,8 @@ export async function POST(request: NextRequest) {
         condition || "New",
         isSpotlight || false,
         isFeatured || false,
+        metaTitle || null,
+        metaDescription || null,
       ],
     );
 

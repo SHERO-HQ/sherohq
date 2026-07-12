@@ -14,6 +14,7 @@ interface ProductMediaCardProps {
   onUploadFiles?: (files: File[]) => void;
   onRemove: (url: string) => void;
   onSetPrimary: (url: string) => void;
+  onReorder?: (newImages: string[]) => void;
 }
 
 export default function ProductMediaCard({
@@ -24,8 +25,10 @@ export default function ProductMediaCard({
   onUploadFiles,
   onRemove,
   onSetPrimary,
+  onReorder,
 }: ProductMediaCardProps) {
   const [isDragging, setIsDragging] = useState(false);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [deletingUrls, setDeletingUrls] = useState<Record<string, number>>({});
   const timersRef = useRef<Record<string, NodeJS.Timeout>>({});
 
@@ -37,6 +40,29 @@ export default function ProductMediaCard({
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
+  };
+
+  const handleItemDragStart = (index: number, e: React.DragEvent) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleItemDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === index) return;
+    if (onReorder) {
+      const newImages = [...images];
+      const draggedImage = newImages[draggedIndex];
+      newImages.splice(draggedIndex, 1);
+      newImages.splice(index, 0, draggedImage);
+      onReorder(newImages);
+      setDraggedIndex(index);
+    }
+  };
+
+  const handleItemDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDraggedIndex(null);
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -123,19 +149,26 @@ export default function ProductMediaCard({
       <div className="space-y-6">
         {/* Image Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-          {images.map((url) => {
+          {images.map((url, index) => {
             const isDeleting = url in deletingUrls;
             const secondsLeft = deletingUrls[url];
 
             return (
               <div
                 key={url}
+                draggable={!isDeleting}
+                onDragStart={(e) => handleItemDragStart(index, e)}
+                onDragOver={(e) => handleItemDragOver(e, index)}
+                onDrop={handleItemDrop}
+                onDragEnd={() => setDraggedIndex(null)}
                 className={cn(
                   "relative aspect-square w-full rounded bg-slate-800 border-2 overflow-hidden shadow transition-all duration-300",
+                  draggedIndex !== null ? "cursor-grabbing" : "cursor-grab",
+                  draggedIndex === index && "opacity-50 scale-95",
                   primaryImage === url
                     ? "border-brand-secondary-500 shadow-brand-secondary-500/10"
                     : "border-white/5",
-                  isDeleting && "opacity-90 grayscale-30 scale-95 border-rose-500/40"
+                  isDeleting && "opacity-90 grayscale-30 scale-95 border-rose-500/40 pointer-events-none"
                 )}
               >
                 <AppImage

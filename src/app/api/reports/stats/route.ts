@@ -18,26 +18,34 @@ export async function GET(request: NextRequest) {
       WITH order_stats AS (
         SELECT 
           SUM(total) FILTER (WHERE "createdAt" >= CURRENT_DATE) as rev_today,
+          SUM(cogs) FILTER (WHERE "createdAt" >= CURRENT_DATE) as cogs_today,
           COUNT(*) FILTER (WHERE "createdAt" >= CURRENT_DATE) as ord_today,
           SUM(total) FILTER (WHERE "createdAt" < CURRENT_DATE AND "createdAt" >= CURRENT_DATE - INTERVAL '1 day') as prev_rev_today,
+          SUM(cogs) FILTER (WHERE "createdAt" < CURRENT_DATE AND "createdAt" >= CURRENT_DATE - INTERVAL '1 day') as prev_cogs_today,
           COUNT(*) FILTER (WHERE "createdAt" < CURRENT_DATE AND "createdAt" >= CURRENT_DATE - INTERVAL '1 day') as prev_ord_today,
           
           SUM(total) FILTER (WHERE "createdAt" >= NOW() - INTERVAL '7 days') as rev_week,
+          SUM(cogs) FILTER (WHERE "createdAt" >= NOW() - INTERVAL '7 days') as cogs_week,
           COUNT(*) FILTER (WHERE "createdAt" >= NOW() - INTERVAL '7 days') as ord_week,
           SUM(total) FILTER (WHERE "createdAt" < NOW() - INTERVAL '7 days' AND "createdAt" >= NOW() - INTERVAL '14 days') as prev_rev_week,
+          SUM(cogs) FILTER (WHERE "createdAt" < NOW() - INTERVAL '7 days' AND "createdAt" >= NOW() - INTERVAL '14 days') as prev_cogs_week,
           COUNT(*) FILTER (WHERE "createdAt" < NOW() - INTERVAL '7 days' AND "createdAt" >= NOW() - INTERVAL '14 days') as prev_ord_week,
           
           SUM(total) FILTER (WHERE "createdAt" >= NOW() - INTERVAL '30 days') as rev_month,
+          SUM(cogs) FILTER (WHERE "createdAt" >= NOW() - INTERVAL '30 days') as cogs_month,
           COUNT(*) FILTER (WHERE "createdAt" >= NOW() - INTERVAL '30 days') as ord_month,
           SUM(total) FILTER (WHERE "createdAt" < NOW() - INTERVAL '30 days' AND "createdAt" >= NOW() - INTERVAL '60 days') as prev_rev_month,
+          SUM(cogs) FILTER (WHERE "createdAt" < NOW() - INTERVAL '30 days' AND "createdAt" >= NOW() - INTERVAL '60 days') as prev_cogs_month,
           COUNT(*) FILTER (WHERE "createdAt" < NOW() - INTERVAL '30 days' AND "createdAt" >= NOW() - INTERVAL '60 days') as prev_ord_month,
           
           SUM(total) FILTER (WHERE "createdAt" >= NOW() - INTERVAL '365 days') as rev_year,
+          SUM(cogs) FILTER (WHERE "createdAt" >= NOW() - INTERVAL '365 days') as cogs_year,
           COUNT(*) FILTER (WHERE "createdAt" >= NOW() - INTERVAL '365 days') as ord_year,
           SUM(total) FILTER (WHERE "createdAt" < NOW() - INTERVAL '365 days' AND "createdAt" >= NOW() - INTERVAL '730 days') as prev_rev_year,
+          SUM(cogs) FILTER (WHERE "createdAt" < NOW() - INTERVAL '365 days' AND "createdAt" >= NOW() - INTERVAL '730 days') as prev_cogs_year,
           COUNT(*) FILTER (WHERE "createdAt" < NOW() - INTERVAL '365 days' AND "createdAt" >= NOW() - INTERVAL '730 days') as prev_ord_year,
           
-          ${hasCustomRange ? `SUM(total) FILTER (WHERE "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date) as rev_custom, COUNT(*) FILTER (WHERE "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date) as ord_custom,` : ""}
+          ${hasCustomRange ? `SUM(total) FILTER (WHERE "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date) as rev_custom, SUM(cogs) FILTER (WHERE "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date) as cogs_custom, COUNT(*) FILTER (WHERE "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date) as ord_custom,` : ""}
           
           SUM(total) as lifetime_revenue,
           COUNT(*) as lifetime_orders,
@@ -90,8 +98,10 @@ export async function GET(request: NextRequest) {
 
     const formatStats = (
       rev: string | null,
+      cogs: string | null,
       ord: string | null,
       prevRev: string | null,
+      prevCogs: string | null,
       prevOrd: string | null,
       newProd: string | null,
       exp: string | null,
@@ -99,23 +109,23 @@ export async function GET(request: NextRequest) {
     ) => ({
       revenue: parseFloat(rev || "0"),
       expenses: parseFloat(exp || "0"),
-      profit: parseFloat(rev || "0") - parseFloat(exp || "0"),
+      profit: parseFloat(rev || "0") - parseFloat(cogs || "0") - parseFloat(exp || "0"),
       orders: parseInt(ord || "0", 10),
       revenueGrowth: calculateGrowth(parseFloat(rev || "0"), parseFloat(prevRev || "0")),
       ordersGrowth: calculateGrowth(parseInt(ord || "0", 10), parseInt(prevOrd || "0", 10)),
       profitGrowth: calculateGrowth(
-        parseFloat(rev || "0") - parseFloat(exp || "0"),
-        parseFloat(prevRev || "0") - parseFloat(prevExp || "0")
+        parseFloat(rev || "0") - parseFloat(cogs || "0") - parseFloat(exp || "0"),
+        parseFloat(prevRev || "0") - parseFloat(prevCogs || "0") - parseFloat(prevExp || "0")
       ),
       newProducts: parseInt(newProd || "0", 10),
     });
 
     const kpis = {
-      today: formatStats(s.rev_today, s.ord_today, s.prev_rev_today, s.prev_ord_today, ps.new_today, e.exp_today, e.prev_exp_today),
-      week: formatStats(s.rev_week, s.ord_week, s.prev_rev_week, s.prev_ord_week, ps.new_week, e.exp_week, e.prev_exp_week),
-      month: formatStats(s.rev_month, s.ord_month, s.prev_rev_month, s.prev_ord_month, ps.new_month, e.exp_month, e.prev_exp_month),
-      year: formatStats(s.rev_year, s.ord_year, s.prev_rev_year, s.prev_ord_year, ps.new_year, e.exp_year, e.prev_exp_year),
-      custom: hasCustomRange ? formatStats(s.rev_custom, s.ord_custom, null, null, "0", e.exp_custom, null) : null,
+      today: formatStats(s.rev_today, s.cogs_today, s.ord_today, s.prev_rev_today, s.prev_cogs_today, s.prev_ord_today, ps.new_today, e.exp_today, e.prev_exp_today),
+      week: formatStats(s.rev_week, s.cogs_week, s.ord_week, s.prev_rev_week, s.prev_cogs_week, s.prev_ord_week, ps.new_week, e.exp_week, e.prev_exp_week),
+      month: formatStats(s.rev_month, s.cogs_month, s.ord_month, s.prev_rev_month, s.prev_cogs_month, s.prev_ord_month, ps.new_month, e.exp_month, e.prev_exp_month),
+      year: formatStats(s.rev_year, s.cogs_year, s.ord_year, s.prev_rev_year, s.prev_cogs_year, s.prev_ord_year, ps.new_year, e.exp_year, e.prev_exp_year),
+      custom: hasCustomRange ? formatStats(s.rev_custom, s.cogs_custom, s.ord_custom, null, null, null, "0", e.exp_custom, null) : null,
     };
 
     return NextResponse.json({

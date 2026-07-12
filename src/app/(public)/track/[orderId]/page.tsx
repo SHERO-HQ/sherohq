@@ -185,56 +185,60 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
         {/* Tracking Timeline */}
         {order.status !== "cancelled" && !isStorePickupOrder ? (
           <Card className="p-8 dark:bg-slate-900 border-none shadow-sm overflow-hidden border">
-            <div className="relative flex justify-between">
+            <div className="relative">
               {/* Progress Line Background */}
-              <div className="absolute top-6 left-0 right-0 h-1 bg-slate-100 dark:bg-slate-800 z-0"></div>
+              <div className="absolute top-6 left-[12.5%] right-[12.5%] h-1 bg-slate-100 dark:bg-slate-800 z-0"></div>
               {/* Active Progress Line */}
-              <div
-                className="absolute top-6 left-0 h-1 bg-brand-secondary-500 transition-all duration-1000 ease-out z-0"
-                style={{
-                  width: `${Math.max(0, (currentStep - 1) / (steps.length - 1)) * 100}%`,
-                }}
-              ></div>
+              <div className="absolute top-6 left-[12.5%] right-[12.5%] h-1 z-0">
+                <div
+                  className="absolute top-0 left-0 h-1 bg-brand-secondary-500 transition-all duration-1000 ease-out"
+                  style={{
+                    width: `${Math.max(0, (currentStep - 1) / (steps.length - 1)) * 100}%`,
+                  }}
+                ></div>
+              </div>
 
-              {steps.map((step, idx) => {
-                const stepNum = idx + 1;
-                const isCompleted = currentStep > stepNum;
-                const isActive = currentStep === stepNum;
+              <div className="relative z-10 grid grid-cols-4 gap-2">
+                {steps.map((step, idx) => {
+                  const stepNum = idx + 1;
+                  const isCompleted = currentStep > stepNum;
+                  const isActive = currentStep === stepNum;
 
-                return (
-                  <div
-                    key={step.label}
-                    className="relative z-10 flex flex-col items-center"
-                  >
+                  return (
                     <div
-                      className={cn(
-                        "w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500",
-                        isCompleted
-                          ? "bg-brand-secondary-500 text-white"
-                          : isActive
-                            ? "bg-brand-secondary-500 text-white scale-110 shadow shadow-brand-secondary-500/20"
-                            : "bg-white dark:bg-slate-800 text-slate-400 border-2 border-slate-100 dark:border-slate-800",
-                      )}
+                      key={step.label}
+                      className="flex flex-col items-center text-center"
                     >
-                      {isCompleted ? (
-                        <CheckCircle2 className="w-6 h-6" />
-                      ) : (
-                        <step.icon className="w-6 h-6" />
-                      )}
+                      <div
+                        className={cn(
+                          "w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 mx-auto",
+                          isCompleted
+                            ? "bg-brand-secondary-500 text-white"
+                            : isActive
+                              ? "bg-brand-secondary-500 text-white scale-110 shadow shadow-brand-secondary-500/20"
+                              : "bg-white dark:bg-slate-800 text-slate-400 border-2 border-slate-100 dark:border-slate-800",
+                        )}
+                      >
+                        {isCompleted ? (
+                          <CheckCircle2 className="w-6 h-6" />
+                        ) : (
+                          <step.icon className="w-6 h-6" />
+                        )}
+                      </div>
+                      <span
+                        className={cn(
+                          "mt-4 text-[10px] md:text-xs font-bold uppercase tracking-wider",
+                          isActive
+                            ? "text-brand-secondary-500"
+                            : "text-slate-400 dark:text-slate-500",
+                        )}
+                      >
+                        {step.label}
+                      </span>
                     </div>
-                    <span
-                      className={cn(
-                        "mt-4 text-[10px] md:text-xs font-bold uppercase tracking-wider",
-                        isActive
-                          ? "text-brand-secondary-500"
-                          : "text-slate-400 dark:text-slate-500",
-                      )}
-                    >
-                      {step.label}
-                    </span>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </Card>
         ) : order.status === "cancelled" ? (

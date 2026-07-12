@@ -79,6 +79,7 @@ export interface ProductInput {
   category: string;
   price: number;
   originalPrice?: number | null;
+  costPrice?: number | null;
   image?: string;
   images?: string[];
   rating?: number;

@@ -569,8 +569,6 @@ class NotificationService {
     orderId: string,
     newStatus: string,
     shippingInfo: ShippingInfo,
-    items?: OrderItem[],
-    total?: number,
   ) {
     const readableOrderId = toReadableOrderId(orderId);
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";

@@ -79,9 +79,7 @@ export async function PATCH(
       notificationService.sendOrderStatusUpdateNotification(
         id,
         status,
-        safeParse(updatedOrder.shippingInfo) as ShippingInfo,
-        safeParse(updatedOrder.items) as OrderItem[],
-        parseFloat(updatedOrder.total)
+        safeParse(updatedOrder.shippingInfo) as ShippingInfo
       ).catch(console.error);
     }
 

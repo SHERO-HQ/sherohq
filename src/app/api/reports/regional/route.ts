@@ -10,18 +10,18 @@ export async function GET() {
 
     const result = await query(`
       SELECT 
-        COALESCE(JSONB_EXTRACT_PATH_TEXT("shippingInfo", 'country'), 'Unknown') as country,
+        COALESCE(JSONB_EXTRACT_PATH_TEXT("shippingInfo", 'region'), 'Unknown') as region,
         COUNT(*) as orders,
         SUM(total) as revenue
       FROM orders
       WHERE status NOT IN ('cancelled', 'pending', 'quote')
-      GROUP BY country
+      GROUP BY region
       ORDER BY revenue DESC
       LIMIT 10
     `);
 
     const data = result.rows.map((row) => ({
-      name: row.country,
+      name: row.region,
       orders: parseInt(row.orders, 10),
       revenue: parseFloat(row.revenue || "0"),
     }));

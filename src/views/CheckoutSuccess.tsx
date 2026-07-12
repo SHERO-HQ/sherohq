@@ -4,7 +4,6 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import {
   CheckCircle,
-  AlertCircle,
   Loader,
   XCircle,
   RefreshCw,

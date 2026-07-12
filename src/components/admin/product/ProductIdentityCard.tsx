@@ -1,10 +1,13 @@
 "use client";
 import React from "react";
+import dynamic from "next/dynamic";
 import { Card } from "@/components/ui/card";
 import { Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/types/product";
+
+const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
 interface ProductIdentityCardProps {
   productData: Partial<Product>;
@@ -112,24 +115,28 @@ export default function ProductIdentityCard({
         </div>
 
         {/* Description */}
-        <div className="space-y-2">
+        <div className="space-y-2" data-color-mode="dark">
           <label
             htmlFor="description"
             className="text-sm font-medium text-slate-400"
           >
             Description *
           </label>
-          <textarea
-            id="description"
-            placeholder="Provide a detailed, rich description of this product..."
-            value={productData.description || ""}
-            onChange={(e) => handleInputChange("description", e.target.value)}
-            className={cn(
-              "w-full min-h-48 bg-slate-800/50 border border-white/5 rounded p-4 text-white focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 resize-y leading-relaxed text-sm transition-all",
-              errors.description && "border-rose-500 bg-rose-500/5 focus:ring-rose-500"
-            )}
-            required
-          />
+          <div className={cn(
+            "rounded overflow-hidden border border-white/5 transition-all",
+            errors.description && "border-rose-500"
+          )}>
+            <MDEditor
+              value={productData.description || ""}
+              onChange={(val) => handleInputChange("description", val || "")}
+              preview="edit"
+              height={300}
+              textareaProps={{
+                placeholder: "Provide a detailed, rich description of this product... (Markdown supported)"
+              }}
+              className="!bg-slate-800/50"
+            />
+          </div>
           {errors.description && (
             <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
               {errors.description}

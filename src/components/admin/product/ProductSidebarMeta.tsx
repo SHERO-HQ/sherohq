@@ -16,6 +16,7 @@ interface ProductSidebarMetaProps {
   categories: Category[];
   onUpdateProductData: (updates: Partial<Product>) => void;
   errors?: Record<string, string>;
+  onCategoryAdded?: (cat: Category) => void;
 }
 
 export default function ProductSidebarMeta({
@@ -23,7 +24,52 @@ export default function ProductSidebarMeta({
   categories,
   onUpdateProductData,
   errors = {},
+  onCategoryAdded,
 }: ProductSidebarMetaProps) {
+  const [discountMode, setDiscountMode] = React.useState<"percentage" | "fixed">("percentage");
+
+  const regularPrice = productData.originalPrice || productData.price || 0;
+  const salePrice = productData.price || 0;
+
+  const currentDiscountFixed = Math.max(0, regularPrice - salePrice);
+  const currentDiscountPerc = regularPrice > 0 ? (currentDiscountFixed / regularPrice) * 100 : 0;
+
+  const displayDiscountValue = discountMode === "percentage" 
+    ? Number(currentDiscountPerc.toFixed(2)) 
+    : currentDiscountFixed;
+
+  React.useEffect(() => {
+    if (productData.originalPrice && productData.originalPrice > (productData.price || 0)) {
+      const diff = productData.originalPrice - (productData.price || 0);
+      const perc = (diff / productData.originalPrice) * 100;
+      if (Number.isInteger(perc)) {
+        setDiscountMode("percentage");
+      } else {
+        setDiscountMode("fixed");
+      }
+    }
+  }, [productData.id]);
+
+  const handleRegularPriceChange = (val: number) => {
+    const newOriginalPrice = val > salePrice ? val : undefined;
+    onUpdateProductData({ originalPrice: newOriginalPrice, price: salePrice > val ? val : salePrice });
+  };
+
+  const handleSalePriceChange = (val: number) => {
+    const newOriginalPrice = regularPrice > val ? regularPrice : undefined;
+    onUpdateProductData({ price: val, originalPrice: newOriginalPrice });
+  };
+
+  const handleDiscountChange = (val: number) => {
+    let newSalePrice = salePrice;
+    if (discountMode === "percentage") {
+      newSalePrice = Math.max(0, regularPrice - (regularPrice * val / 100));
+    } else {
+      newSalePrice = Math.max(0, regularPrice - val);
+    }
+    const newOriginalPrice = regularPrice > newSalePrice ? regularPrice : undefined;
+    onUpdateProductData({ price: newSalePrice, originalPrice: newOriginalPrice });
+  };
   const handleInputChange = (field: keyof Product, value: unknown) => {
     onUpdateProductData({ [field]: value });
   };
@@ -43,24 +89,68 @@ export default function ProductSidebarMeta({
         <div className="space-y-4">
           <div className="space-y-2">
             <label
+              htmlFor="regularPrice"
+              className="text-sm font-medium text-slate-400 flex items-center justify-between"
+            >
+              <span>Regular Price (MSRP) *</span>
+              <span className="text-xs text-slate-600 font-mono">GH₵</span>
+            </label>
+            <Input
+              id="regularPrice"
+              type="number"
+              value={regularPrice || ""}
+              onChange={(e) => handleRegularPriceChange(e.target.value ? Number.parseFloat(e.target.value) : 0)}
+              className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500"
+              placeholder="0.00"
+            />
+          </div>
+
+          {/* Discount Section */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-400">Discount Type</label>
+              <select
+                value={discountMode}
+                onChange={(e) => setDiscountMode(e.target.value as "percentage" | "fixed")}
+                className="w-full h-10 px-3 py-2 bg-slate-800/50 border border-white/5 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 text-sm"
+              >
+                <option value="percentage">Percentage (%)</option>
+                <option value="fixed">Fixed Amount (GH₵)</option>
+              </select>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-400 flex items-center justify-between">
+                <span>Discount Value</span>
+                <span className="text-xs text-slate-600 font-mono">
+                  {discountMode === "percentage" ? "%" : "GH₵"}
+                </span>
+              </label>
+              <Input
+                type="number"
+                value={displayDiscountValue || ""}
+                onChange={(e) => handleDiscountChange(e.target.value ? Number.parseFloat(e.target.value) : 0)}
+                className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500"
+                placeholder="0"
+                disabled={regularPrice === 0}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label
               htmlFor="price"
               className="text-sm font-medium text-slate-400 flex items-center justify-between"
             >
-              <span>Sale Price (Active) *</span>
+              <span>Final Sale Price *</span>
               <span className="text-xs text-slate-600 font-mono">GH₵</span>
             </label>
             <Input
               id="price"
               type="number"
-              value={productData.price ?? ""}
-              onChange={(e) =>
-                handleInputChange(
-                  "price",
-                  e.target.value ? Number.parseFloat(e.target.value) : 0
-                )
-              }
+              value={salePrice || ""}
+              onChange={(e) => handleSalePriceChange(e.target.value ? Number.parseFloat(e.target.value) : 0)}
               className={cn(
-                "bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500",
+                "bg-slate-800/50 border-brand-secondary-500/30 text-white focus-visible:ring-brand-secondary-500",
                 errors.price && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
               )}
               placeholder="0.00"
@@ -71,33 +161,47 @@ export default function ProductSidebarMeta({
                 {errors.price}
               </p>
             )}
+            {regularPrice > salePrice && (
+              <p className="text-[10px] text-emerald-400 italic mt-1 leading-relaxed">
+                Customers will see a strikethrough price of GH₵{regularPrice}.
+              </p>
+            )}
           </div>
 
           <div className="space-y-2">
             <label
-              htmlFor="originalPrice"
+              htmlFor="costPrice"
               className="text-sm font-medium text-slate-400 flex items-center justify-between"
             >
-              <span>Original Price (Strikethrough)</span>
+              <span>Cost Price (Buying Price) *</span>
               <span className="text-xs text-slate-600 font-mono">GH₵</span>
             </label>
             <Input
-              id="originalPrice"
+              id="costPrice"
               type="number"
-              value={productData.originalPrice ?? ""}
+              value={productData.costPrice ?? ""}
               onChange={(e) =>
                 handleInputChange(
-                  "originalPrice",
+                  "costPrice",
                   e.target.value
                     ? Number.parseFloat(e.target.value)
                     : undefined
                 )
               }
-              className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500"
-              placeholder="Optional comparison price"
+              className={cn(
+                "bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500",
+                errors.costPrice && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
+              )}
+              placeholder="Initial buying price"
+              required
             />
+            {errors.costPrice && (
+              <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
+                {errors.costPrice}
+              </p>
+            )}
             <p className="text-[10px] text-slate-500 italic mt-1 leading-relaxed">
-              Shows a strikethrough cost when a product sale is active.
+              Internal only. Used to accurately calculate Net Profit.
             </p>
           </div>
 
@@ -161,12 +265,48 @@ export default function ProductSidebarMeta({
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <label
-              htmlFor="category"
-              className="text-sm font-medium text-slate-400"
-            >
-              Category *
-            </label>
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="category"
+                className="text-sm font-medium text-slate-400"
+              >
+                Category *
+              </label>
+              <button
+                type="button"
+                className="text-xs text-brand-secondary-400 hover:text-brand-secondary-300 transition-colors"
+                onClick={() => {
+                  const newCat = window.prompt("Enter new category name:");
+                  if (newCat?.trim()) {
+                    // For now, since categories are usually fetched from API in the parent form,
+                    // we can't easily persist to DB from here without adding a fetch call.
+                    // We'll create it via API and optimistically update.
+                    fetch("/api/categories", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ name: newCat.trim() })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                      if (data.success && data.category) {
+                        // The parent form manages categories, so we'd need a prop to add to parent.
+                        if (onCategoryAdded) {
+                          onCategoryAdded(data.category);
+                          onUpdateProductData({ category: data.category.id });
+                        } else {
+                          alert("Category added! Please save draft and refresh to see it in the list.");
+                        }
+                      } else {
+                        alert(data.error || "Failed to add category");
+                      }
+                    })
+                    .catch(() => alert("Network error"));
+                  }
+                }}
+              >
+                + Quick Add
+              </button>
+            </div>
             <select
               id="category"
               className={cn(
@@ -185,9 +325,9 @@ export default function ProductSidebarMeta({
               ))}
             </select>
             {errors.category && (
-              <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
-                {errors.category}
-              </p>
+               <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
+                 {errors.category}
+               </p>
             )}
           </div>
 

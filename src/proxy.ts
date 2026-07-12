@@ -45,7 +45,7 @@ function isAllowedOrigin(request: NextRequest) {
     const originHost = new URL(requestOrigin).host; // host includes port
     const serverHost = request.nextUrl.host; // includes port
     if (originHost.endsWith(serverHost.replace(/^www\./, ""))) return true;
-  } catch (e) {
+  } catch {
     // if URL parsing fails, fall through to rejection
   }
 
@@ -71,27 +71,52 @@ export default function proxy(request: NextRequest) {
   }
 
 
-  if (
-    path.startsWith("/api") &&
-    isUnsafeMethod(request.method) &&
-    !isCsrfExemptPath(path)
-  ) {
-    if (!isAllowedOrigin(request)) {
-      // Log useful headers to help debug CSRF failures in development
-      console.error("[CSRF] validation failed", {
-        path: request.nextUrl.pathname,
-        method: request.method,
-        origin: request.headers.get("origin"),
-        referer: request.headers.get("referer"),
-        host: request.headers.get("host"),
-        nextOrigin: request.nextUrl.origin,
-      });
+  if (path.startsWith("/api")) {
+    const isAllowed = isAllowedOrigin(request);
 
-      return NextResponse.json(
-        { success: false, error: "CSRF validation failed" },
-        { status: 403 },
+    // Block unsafe methods that fail CSRF/Origin validation
+    if (isUnsafeMethod(request.method) && !isCsrfExemptPath(path)) {
+      if (!isAllowed) {
+        // Log useful headers to help debug CSRF failures in development
+        console.error("[CSRF] validation failed", {
+          path: request.nextUrl.pathname,
+          method: request.method,
+          origin: request.headers.get("origin"),
+          referer: request.headers.get("referer"),
+          host: request.headers.get("host"),
+          nextOrigin: request.nextUrl.origin,
+        });
+
+        return NextResponse.json(
+          { success: false, error: "CSRF validation failed" },
+          { status: 403 },
+        );
+      }
+    }
+
+    // Pass the request forward but inject CORS headers for the allowed origin
+    const response = NextResponse.next();
+    const origin = getRequestOrigin(request);
+    
+    if (origin && isAllowed) {
+      response.headers.set("Access-Control-Allow-Origin", origin);
+      response.headers.set("Access-Control-Allow-Credentials", "true");
+      response.headers.set(
+        "Access-Control-Allow-Methods",
+        "GET,OPTIONS,PATCH,DELETE,POST,PUT"
+      );
+      response.headers.set(
+        "Access-Control-Allow-Headers",
+        "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, x-order-access-token"
       );
     }
+    
+    // Handle preflight requests directly
+    if (request.method === "OPTIONS") {
+      return response;
+    }
+
+    return response;
   }
 
   // NOTE: Do NOT redirect www ↔ non-www here.

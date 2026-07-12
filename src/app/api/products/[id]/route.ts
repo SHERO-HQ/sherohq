@@ -26,6 +26,8 @@ interface ProductRow {
   isFeatured: boolean;
   createdAt: Date;
   resolved_category_id?: string | null;
+  metaTitle: string | null;
+  metaDescription: string | null;
 }
 
 function parseProduct(row: ProductRow) {
@@ -57,6 +59,8 @@ function parseProduct(row: ProductRow) {
     condition: row.condition || "New",
     isSpotlight: Boolean(row.isSpotlight),
     isFeatured: Boolean(row.isFeatured),
+    metaTitle: row.metaTitle || null,
+    metaDescription: row.metaDescription || null,
   };
 }
 
@@ -126,9 +130,10 @@ export async function PUT(
     }
 
     const allowedFields = [
-      "name", "sku", "category", "price", "originalPrice", "image", "images",
+      "name", "sku", "category", "price", "originalPrice", "costPrice", "image", "images",
       "badge", "inStock", "stockQuantity", "description", "features",
-      "specifications", "condition", "slug", "isSpotlight", "isFeatured"
+      "specifications", "condition", "slug", "isSpotlight", "isFeatured",
+      "metaTitle", "metaDescription"
     ];
 
     const updates: string[] = [];

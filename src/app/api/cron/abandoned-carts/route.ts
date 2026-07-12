@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
           cart.email,
           cart.firstName,
           items,
-          `${process.env.NEXT_PUBLIC_APP_URL || "https://shop.sherohq.com"}/shop/checkout`
+          `${process.env.NEXT_PUBLIC_SITE_URL || "https://shop.sherohq.com"}/shop/checkout`
         );
         
         await query(

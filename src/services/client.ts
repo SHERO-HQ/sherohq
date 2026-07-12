@@ -11,9 +11,15 @@ export type { Product, Project, Testimonial, SiteStat };
 // ---------------------------------------------------------------------------
 
 const getApiBase = () => {
+  // Client-side must ALWAYS use relative same-origin /api proxy
+  // to avoid CORS issues across subdomains (e.g., admin.localhost vs localhost)
+  if (typeof window !== "undefined") {
+    return "/api";
+  }
+
+  // Server-side (SSR) requires absolute URLs
   const envUrl = process.env.NEXT_PUBLIC_API_URL;
-  const serverEnvUrl =
-    typeof window === "undefined" ? process.env.API_URL : undefined;
+  const serverEnvUrl = process.env.API_URL;
   const resolvedEnvUrl = envUrl || serverEnvUrl;
 
   if (resolvedEnvUrl) {
@@ -24,19 +30,13 @@ const getApiBase = () => {
     return resolvedEnvUrl;
   }
 
-  // Server-side (SSR) requires absolute URLs
-  if (typeof window === "undefined") {
-    const siteUrl =
-      process.env.NEXT_PUBLIC_SITE_URL ||
-      process.env.SITE_URL ||
-      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "") ||
-      process.env.URL ||
-      "http://localhost:3000";
-    return `${siteUrl.replace(/\/$/, "")}/api`;
-  }
-
-  // Client-side can use relative same-origin /api proxy (Vercel/Netlify rewrites)
-  return "/api";
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.SITE_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "") ||
+    process.env.URL ||
+    "http://localhost:3000";
+  return `${siteUrl.replace(/\/$/, "")}/api`;
 };
 
 let apiBase = getApiBase();

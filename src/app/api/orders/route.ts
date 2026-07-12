@@ -112,13 +112,14 @@ export async function POST(request: NextRequest) {
 
     // Lock and check stock
     const productsRes = await client.query(
-      `SELECT id, name, price, "stockQuantity", "inStock", images FROM products WHERE id = ANY($1) FOR UPDATE`,
+      `SELECT id, name, price, "costPrice", "stockQuantity", "inStock", images FROM products WHERE id = ANY($1) FOR UPDATE`,
       [productIds]
     );
 
     const productMap = new Map(productsRes.rows.map(r => [r.id, r]));
     const normalizedItems = [];
     let serverTotal = 0;
+    let serverCogs = 0;
 
     for (const item of items) {
       const product = productMap.get(item.id);
@@ -131,12 +132,15 @@ export async function POST(request: NextRequest) {
       }
 
       const unitPrice = roundCurrency(Number(product.price));
+      const costPrice = roundCurrency(Number(product.costPrice || 0));
       serverTotal += unitPrice * item.quantity;
+      serverCogs += costPrice * item.quantity;
 
       normalizedItems.push({
         id: product.id,
         name: product.name,
         price: unitPrice,
+        costPrice: costPrice,
         quantity: item.quantity,
         image: item.image || product.images?.[0] || null,
       });
@@ -154,17 +158,19 @@ export async function POST(request: NextRequest) {
     }
 
     const finalTotal = roundCurrency(serverTotal);
+    const finalCogs = roundCurrency(serverCogs);
     const resolvedGuestId = guestId || uuidv4();
 
     await client.query(
-      `INSERT INTO orders (id, "guestId", "userId", items, total, "shippingInfo", "paymentMethod", status, "referralCode", "orderAccessTokenHash")
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+      `INSERT INTO orders (id, "guestId", "userId", items, total, cogs, "shippingInfo", "paymentMethod", status, "referralCode", "orderAccessTokenHash")
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
       [
         orderId,
         resolvedGuestId,
         requesterUserId,
         JSON.stringify(normalizedItems),
         finalTotal,
+        finalCogs,
         JSON.stringify(shippingInfo),
         normalizedPaymentMethod,
         "pending",

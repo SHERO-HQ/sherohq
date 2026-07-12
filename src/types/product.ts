@@ -14,6 +14,7 @@ export interface Product {
   categoryId?: string;
   price: number;
   originalPrice?: number;
+  costPrice?: number;
   image: string;
   images?: string[];
   rating: number;
@@ -28,4 +29,6 @@ export interface Product {
   specifications?: Record<string, string>;
   isSpotlight?: boolean;
   isFeatured?: boolean;
+  metaTitle?: string;
+  metaDescription?: string;
 }
