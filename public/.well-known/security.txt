@@ -2,6 +2,7 @@
 # https://securitytxt.org/
 
 Contact: mailto:security@sherohq.com
+Contact: mailto:ibeevpersie@gmail.com
 Expires: 2027-04-15T00:00:00.000Z
 Preferred-Languages: en
 Canonical: https://sherohq.com/.well-known/security.txt
