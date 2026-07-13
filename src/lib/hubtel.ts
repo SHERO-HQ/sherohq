@@ -169,7 +169,13 @@ export async function verifyHubtelTransaction(
   }
 
   try {
-    const url = `${HUBTEL_API_BASE}/items/status/${encodeURIComponent(clientReference)}`;
+    const merchantAccount = getHubtelMerchantAccount();
+    if (!merchantAccount) {
+      console.warn("Hubtel merchant account not configured — skipping webhook verification");
+      return { verified: false, status: null };
+    }
+
+    const url = `https://api-txnstatus.hubtel.com/transactions/${merchantAccount}/status?clientReference=${encodeURIComponent(clientReference)}`;
 
     const resp = await fetch(url, {
       method: "GET",

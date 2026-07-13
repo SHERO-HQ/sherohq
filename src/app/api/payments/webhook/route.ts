@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
       // Extract fields from nested Data object first, fall back to flat
       const nested = data.Data;
       orderId = nested?.ClientReference || data.ClientReference;
+      
       const rawStatus = nested?.Status || data.Status;
       status = normalizeHubtelStatus(rawStatus);
 
@@ -99,21 +100,29 @@ export async function POST(request: NextRequest) {
     client = await getClient();
     await client.query("BEGIN");
 
-    const orderRes = await client.query(
-      `SELECT status, "shippingInfo", items, total, "paymentMethod" FROM orders WHERE id = $1 FOR UPDATE`,
-      [orderId],
-    );
+    let dbQuery = `SELECT id, status, "shippingInfo", items, total, "paymentMethod" FROM orders WHERE id = $1 FOR UPDATE`;
+    let dbParams = [orderId];
+
+    if (orderId && orderId.toUpperCase().startsWith("ORD-")) {
+      const hexPrefix = orderId.substring(4).toLowerCase();
+      dbQuery = `SELECT id, status, "shippingInfo", items, total, "paymentMethod" FROM orders WHERE id::text LIKE $1 FOR UPDATE`;
+      dbParams = [`${hexPrefix}%`];
+    }
+
+    const orderRes = await client.query(dbQuery, dbParams);
 
     if (orderRes.rowCount === 0) {
       await client.query("ROLLBACK");
       return new NextResponse("Order not found", { status: 200 });
     }
 
+    const actualOrderId = orderRes.rows[0].id;
+
     if (status === "Success") {
       if (orderRes.rows[0].status === "pending") {
         await client.query("UPDATE orders SET status = $1 WHERE id = $2", [
           "processing",
-          orderId,
+          actualOrderId,
         ]);
 
         await client.query(
@@ -123,7 +132,7 @@ export async function POST(request: NextRequest) {
             randomUUID(),
             "order_payment",
             "success",
-            `Payment received via ${provider}. Reference: ${orderId}`,
+            `Payment received via ${provider}. Reference: ${actualOrderId}`,
           ],
         );
 
@@ -135,7 +144,7 @@ export async function POST(request: NextRequest) {
           const parsedShipping = typeof order.shippingInfo === "string" ? JSON.parse(order.shippingInfo) : order.shippingInfo;
           
           notificationService.sendOrderConfirmation(
-            orderId, 
+            actualOrderId, 
             parsedShipping, 
             parsedItems, 
             Number(order.total),
@@ -150,7 +159,7 @@ export async function POST(request: NextRequest) {
       if (orderRes.rows[0].status === "pending") {
         await client.query("UPDATE orders SET status = $1 WHERE id = $2", [
           "cancelled",
-          orderId,
+          actualOrderId,
         ]);
 
         await client.query(
@@ -160,7 +169,7 @@ export async function POST(request: NextRequest) {
             randomUUID(),
             "order_payment",
             "failed",
-            `Payment failed via ${provider}. Reference: ${orderId}`,
+            `Payment failed via ${provider}. Reference: ${actualOrderId}`,
           ],
         );
 
@@ -185,7 +194,7 @@ export async function POST(request: NextRequest) {
           const parsedShipping = typeof order.shippingInfo === "string" ? JSON.parse(order.shippingInfo) : order.shippingInfo;
           
           notificationService.sendPaymentFailureNotification(
-            orderId, 
+            actualOrderId, 
             parsedShipping
           ).catch(err => console.error("Webhook Failure Notification failed:", err));
         } catch (err) {

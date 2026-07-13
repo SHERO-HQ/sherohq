@@ -127,7 +127,8 @@ export async function POST(request: NextRequest) {
         returnUrl,
         cancellationUrl: cancelUrl,
         merchantAccountNumber,
-        clientReference: orderId,
+        // The user prefers using the shortened readable order ID (e.g. ORD-ABCDEF12)
+        clientReference: toReadableOrderId(orderId),
       };
 
       try {
