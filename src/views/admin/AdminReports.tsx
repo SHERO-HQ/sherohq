@@ -87,7 +87,7 @@ const getOrderStatusStyles = (status: string) => {
       return "bg-amber-500/10 border border-amber-500/20 text-amber-400";
     case "processing":
       return "bg-blue-500/10 border border-blue-500/20 text-blue-400";
-    case "shipped":
+    case "intransit":
       return "bg-purple-500/10 border border-purple-500/20 text-purple-400";
     default:
       return "bg-rose-500/10 border border-rose-500/20 text-rose-400";

@@ -90,7 +90,7 @@ export async function PATCH(
 
     const updatedOrder = result.rows[0];
 
-    if (status === "shipped" || status === "delivered") {
+    if (status === "intransit" || status === "delivered") {
       notificationService.sendOrderStatusUpdateNotification(
         id,
         status,

@@ -209,7 +209,7 @@ export default function OrderDetails() {
         return { color: "text-amber-400 bg-amber-500/10", icon: Clock };
       case "processing":
         return { color: "text-blue-400 bg-blue-500/10", icon: Truck };
-      case "shipped":
+      case "intransit":
         return { color: "text-purple-400 bg-purple-500/10", icon: Truck };
       case "delivered":
         return {
@@ -246,7 +246,7 @@ export default function OrderDetails() {
         return "bg-amber-500/10 border border-amber-500/20 text-amber-400";
       case "processing":
         return "bg-blue-500/10 border border-blue-500/20 text-blue-400";
-      case "shipped":
+      case "intransit":
         return "bg-purple-500/10 border border-purple-500/20 text-purple-400";
       default:
         return "bg-rose-500/10 border border-rose-500/20 text-rose-400";
@@ -614,7 +614,7 @@ export default function OrderDetails() {
                 <Truck className="w-4 h-4 mr-2 text-blue-400" /> Processing
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => handleUpdateStatus("shipped")}
+                onClick={() => handleUpdateStatus("intransit")}
                 className="cursor-pointer hover:bg-white/5"
               >
                 <Truck className="w-4 h-4 mr-2 text-purple-400" /> Shipped

@@ -136,7 +136,7 @@ const OrderRow = memo(
                   Processing
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => handleUpdateStatus(order.id, "shipped")}
+                  onClick={() => handleUpdateStatus(order.id, "intransit")}
                   className="cursor-pointer hover:bg-white/5"
                 >
                   <Truck className="w-4 h-4 mr-2 text-purple-400" /> Shipped
@@ -253,7 +253,7 @@ export default function AdminOrders() {
         return { color: "text-amber-400 bg-amber-500/10", icon: Clock };
       case "processing":
         return { color: "text-blue-400 bg-blue-500/10", icon: Truck };
-      case "shipped":
+      case "intransit":
         return { color: "text-purple-400 bg-purple-500/10", icon: Truck };
       case "delivered":
         return {
@@ -396,7 +396,7 @@ export default function AdminOrders() {
               { id: "all", label: "All" },
               { id: "pending", label: "Pending" },
               { id: "processing", label: "Processing" },
-              { id: "shipped", label: "Shipped" },
+              { id: "intransit", label: "In Transit" },
               { id: "delivered", label: "Delivered" },
               { id: "cancelled", label: "Cancelled" },
             ].map((status) => (
@@ -593,7 +593,7 @@ export default function AdminOrders() {
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() =>
-                                  handleUpdateStatus(order.id, "shipped")
+                                  handleUpdateStatus(order.id, "intransit")
                                 }
                                 className="cursor-pointer hover:bg-white/5"
                               >

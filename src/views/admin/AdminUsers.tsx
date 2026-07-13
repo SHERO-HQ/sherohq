@@ -69,7 +69,7 @@ const getStatusColor = (status: string) => {
   const colors: Record<string, string> = {
     pending: "bg-yellow-500/20 text-yellow-400",
     processing: "bg-blue-500/20 text-blue-400",
-    shipped: "bg-purple-500/20 text-purple-400",
+    intransit: "bg-purple-500/20 text-purple-400",
     delivered: "bg-brand-secondary-500/20 text-brand-secondary-400",
     cancelled: "bg-red-500/20 text-red-400",
   };

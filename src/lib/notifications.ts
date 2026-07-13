@@ -355,16 +355,16 @@ class NotificationService {
     const shipping = Math.max(0, Math.round((total - subtotal) * 100) / 100);
     const isFreeShipping = shipping === 0;
 
-    // Estimated delivery: 3-5 business days from now
+    // Estimated delivery: 24hrs to 5 business days from now
     const deliveryStart = new Date();
     let addedDays = 0;
-    while (addedDays < 3) {
+    while (addedDays < 1) {
       deliveryStart.setDate(deliveryStart.getDate() + 1);
       if (deliveryStart.getDay() !== 0 && deliveryStart.getDay() !== 6) addedDays++;
     }
     const deliveryEnd = new Date(deliveryStart);
     addedDays = 0;
-    while (addedDays < 2) {
+    while (addedDays < 4) {
       deliveryEnd.setDate(deliveryEnd.getDate() + 1);
       if (deliveryEnd.getDay() !== 0 && deliveryEnd.getDay() !== 6) addedDays++;
     }
@@ -464,7 +464,7 @@ class NotificationService {
             <td style="vertical-align: top; width: 50%; padding: 4px 8px 4px 0;">
               <p style="margin: 0 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #16a34a; font-weight: 600;">Estimated Delivery</p>
               <p style="margin: 0; font-size: 14px; color: #0f172a; font-weight: 600;">${deliveryRange}</p>
-              <p style="margin: 4px 0 0; font-size: 12px; color: #64748b;">3–5 business days</p>
+              <p style="margin: 4px 0 0; font-size: 12px; color: #64748b;">24hrs to 5 days</p>
 
               ${paymentMethod ? `
                 <p style="margin: 16px 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #16a34a; font-weight: 600;">Payment Method</p>
@@ -577,10 +577,10 @@ class NotificationService {
     let message = `There is an update on your order <strong>${readableOrderId}</strong>.`;
     let preheader = "Update on your SHERO order.";
 
-    if (newStatus === "shipped") {
+    if (newStatus === "intransit") {
       title = "Your Order is on the Way!";
-      message = `Great news, ${shippingInfo.firstName}! Your order <strong>${readableOrderId}</strong> has been shipped and is on its way to you.`;
-      preheader = "Your SHERO order has shipped!";
+      message = `Great news, ${shippingInfo.firstName}! Your order <strong>${readableOrderId}</strong> has been dispatched and is in transit to you.`;
+      preheader = "Your SHERO order is in transit!";
     } else if (newStatus === "delivered") {
       title = "Your Order has been Delivered!";
       message = `Hi ${shippingInfo.firstName}, your order <strong>${readableOrderId}</strong> has been delivered. We hope you love your new gear!`;
@@ -607,7 +607,7 @@ class NotificationService {
     const customerPhone = this.formatToInternationalPhone(shippingInfo.phone);
     if (customerPhone) {
       let waMessage = `Hi ${shippingInfo.firstName},\n\nThere is an update on your order *${readableOrderId}* at *SHERO TECHNOLOGIES*.\n\n`;
-      if (newStatus === "shipped") waMessage = `Hi ${shippingInfo.firstName} 🚚\n\nYour order *${readableOrderId}* from *SHERO TECHNOLOGIES* has been shipped and is on its way to you!\n\n`;
+      if (newStatus === "intransit") waMessage = `Hi ${shippingInfo.firstName} 🚚\n\nYour order *${readableOrderId}* from *SHERO TECHNOLOGIES* has been dispatched and is in transit to you!\n\n`;
       if (newStatus === "delivered") waMessage = `Hi ${shippingInfo.firstName} 🎉\n\nYour order *${readableOrderId}* from *SHERO TECHNOLOGIES* has been delivered!\n\nWe hope you love it.\n\n`;
       
       waMessage += `🔗 *Track your order:* ${baseUrl}/track/${orderId}`;

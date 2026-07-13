@@ -62,7 +62,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
     const s = status.toLowerCase();
     if (s === "pending" || s === "quote") return 1;
     if (s === "processing") return 2;
-    if (s === "shipped") return 3;
+    if (s === "intransit") return 3;
     if (s === "delivered") return 4;
     if (s === "cancelled") return -1;
     return 1;
@@ -71,7 +71,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
   const steps = [
     { label: "Ordered", icon: ShoppingBag },
     { label: "Processing", icon: Clock },
-    { label: "Shipped", icon: Truck },
+    { label: "In Transit", icon: Truck },
     { label: "Delivered", icon: CheckCircle2 },
   ];
 

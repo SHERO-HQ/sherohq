@@ -17,7 +17,7 @@ export async function GET() {
     const colors: Record<string, string> = {
       pending: "#f59e0b",
       processing: "#3b82f6",
-      shipped: "#8b5cf6",
+      intransit: "#8b5cf6",
       delivered: "#10b981",
       cancelled: "#ef4444",
       quote: "#6b7280",

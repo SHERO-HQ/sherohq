@@ -41,7 +41,7 @@ const getStatusBadge = (status: string) => {
     return "bg-amber-500/15 text-amber-600 dark:text-amber-400";
   if (s === "processing")
     return "bg-blue-500/15 text-blue-600 dark:text-blue-400";
-  if (s === "shipped")
+  if (s === "intransit")
     return "bg-purple-500/15 text-purple-600 dark:text-purple-400";
   if (s === "delivered")
     return "bg-brand-secondary-500/15 text-brand-secondary-600 dark:text-brand-secondary-400";

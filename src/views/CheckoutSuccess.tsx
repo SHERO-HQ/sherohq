@@ -91,7 +91,7 @@ const CheckoutSuccess = () => {
         // ✅ SUCCESS — payment confirmed
         if (
           data.status === "processing" ||
-          data.status === "shipped" ||
+          data.status === "intransit" ||
           data.status === "delivered"
         ) {
           setOrder(data);

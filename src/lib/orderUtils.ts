@@ -38,7 +38,7 @@ export const safeParse = (val: unknown): unknown => {
 export const ORDER_STATUSES = new Set([
   "pending",
   "processing",
-  "shipped",
+  "intransit",
   "delivered",
   "cancelled",
   "quote",
