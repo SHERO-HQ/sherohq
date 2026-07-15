@@ -223,6 +223,15 @@ const Support = () => {
                     <Phone className="w-5 h-5" />
                     <span>Call Support</span>
                   </a>
+                  <a
+                    href={`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 px-6 py-2 rounded bg-[#25D366] text-white font-medium text-sm hover:bg-[#128C7E] transition shadow shadow-green-500/20 hover:scale-[1.02] active:scale-95 w-fit md:w-auto justify-center"
+                  >
+                    <WhatsAppIcon className="w-5 h-5 fill-current" />
+                    <span>WhatsApp</span>
+                  </a>
                 </div>
               </div>
             </div>

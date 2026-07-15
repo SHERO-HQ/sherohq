@@ -131,6 +131,9 @@ export async function POST(request: NextRequest) {
         clientReference: toReadableOrderId(orderId),
       };
 
+      console.log("=== HUBTEL INIT PAYLOAD ===");
+      console.log(JSON.stringify(payload, null, 2));
+
       try {
         const resp = await fetch(`${HUBTEL_API_BASE}/items/initiate`, {
           method: "POST",
