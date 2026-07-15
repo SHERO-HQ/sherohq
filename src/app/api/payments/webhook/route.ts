@@ -18,6 +18,12 @@ export async function POST(request: NextRequest) {
   let client: any = null;
   try {
     const rawBody = await request.text();
+    
+    // Log the exact raw payload for debugging with Hubtel
+    console.log("=== RAW WEBHOOK PAYLOAD ===");
+    console.log(rawBody);
+    console.log("===========================");
+    
     const data = JSON.parse(rawBody);
     let orderId = "";
     let provider = "";
