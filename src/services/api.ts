@@ -53,6 +53,7 @@ export {
   fetchOrderById,
   updateOrderStatus,
   initializePayment,
+  verifyPayment,
 } from "./orders";
 
 // User auth, verification, profile

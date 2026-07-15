@@ -107,6 +107,24 @@ const CheckoutSuccess = () => {
           return; // Stop polling
         }
 
+        // Trigger manual verification on the 3rd and 7th attempt as a fallback if webhook is delayed
+        if (attempts === 3 || attempts === 7) {
+          try {
+            const { verifyPayment } = await import("@/services/api");
+            // Assuming Hubtel here since Paystack webhooks are typically instant. 
+            // We can just pass "hubtel" for now to force a check if it happens to be Hubtel.
+            const verifyRes = await verifyPayment(orderId, "hubtel");
+            if (verifyRes.success && verifyRes.status === "processing") {
+              setOrder({ ...data, status: "processing" });
+              setStatus("success");
+              setTimeout(() => setShowRatingModal(true), 1500);
+              return;
+            }
+          } catch (err) {
+            console.error("Manual verify failed during poll", err);
+          }
+        }
+
         // ⏳ Still pending — continue polling
         if (attempts >= maxAttempts) {
           setOrder(data);

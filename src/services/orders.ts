@@ -214,3 +214,19 @@ export async function initializePayment(
   });
   return handleResponse(response);
 }
+
+export async function verifyPayment(
+  orderId: string,
+  provider: string,
+): Promise<{ success: boolean; status?: string; verified?: boolean; hubtelStatus?: string }> {
+  const response = await fetch(`${API_BASE}/payments/verify`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Protection": "1",
+    },
+    credentials: "include",
+    body: JSON.stringify({ orderId, provider }),
+  });
+  return await response.json();
+}

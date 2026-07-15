@@ -193,13 +193,20 @@ export async function verifyHubtelTransaction(
       return { verified: false, status: null };
     }
 
-    const data: HubtelTransactionStatusResponse = await resp.json();
-
-    const txStatus = data.data?.status?.toLowerCase() ?? "";
+    const responseData = await resp.json();
+    
+    // Hubtel APIs can be inconsistent with capitalization (Data vs data) 
+    // and sometimes return an array when querying by clientReference
+    const dataField = responseData.data || responseData.Data;
+    const txObj = Array.isArray(dataField) ? dataField[0] : dataField;
+    
+    const rawStatus = txObj?.status || txObj?.Status || "";
+    const txStatus = rawStatus.toLowerCase();
+    
     const isSuccess =
       txStatus === "success" || txStatus === "completed" || txStatus === "paid";
 
-    return { verified: isSuccess, status: data.data?.status ?? null };
+    return { verified: isSuccess, status: rawStatus || null };
   } catch (err) {
     console.error("Hubtel transaction verification error:", err);
     return { verified: false, status: null };
