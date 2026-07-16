@@ -154,7 +154,7 @@ export interface HubtelTransactionStatusResponse {
  */
 export async function verifyHubtelTransaction(
   clientReference: string,
-): Promise<{ verified: boolean; status: string | null }> {
+): Promise<{ verified: boolean; status: string | null; amount: number | null }> {
   const auth = buildHubtelAuth();
   if (!auth) {
     console.warn(
@@ -163,16 +163,16 @@ export async function verifyHubtelTransaction(
     // In production we must fail-closed — never trust an unverified webhook.
     // In development we allow it through so the mock simulator works.
     if (process.env.NODE_ENV === "production") {
-      return { verified: false, status: null };
+      return { verified: false, status: null, amount: null };
     }
-    return { verified: true, status: null };
+    return { verified: true, status: null, amount: null };
   }
 
   try {
     const merchantAccount = getHubtelMerchantAccount();
     if (!merchantAccount) {
       console.warn("Hubtel merchant account not configured — skipping webhook verification");
-      return { verified: false, status: null };
+      return { verified: false, status: null, amount: null };
     }
 
     const url = `https://api-txnstatus.hubtel.com/transactions/${merchantAccount}/status?clientReference=${encodeURIComponent(clientReference)}`;
@@ -190,7 +190,7 @@ export async function verifyHubtelTransaction(
       console.error(
         `Hubtel status check failed: HTTP ${resp.status} for ref ${clientReference}`,
       );
-      return { verified: false, status: null };
+      return { verified: false, status: null, amount: null };
     }
 
     const responseData = await resp.json();
@@ -206,10 +206,13 @@ export async function verifyHubtelTransaction(
     const isSuccess =
       txStatus === "success" || txStatus === "completed" || txStatus === "paid";
 
-    return { verified: isSuccess, status: rawStatus || null };
+    const rawAmount = txObj?.amount || txObj?.Amount;
+    const amount = rawAmount !== undefined ? Number(rawAmount) : null;
+
+    return { verified: isSuccess, status: rawStatus || null, amount };
   } catch (err) {
     console.error("Hubtel transaction verification error:", err);
-    return { verified: false, status: null };
+    return { verified: false, status: null, amount: null };
   }
 }
 

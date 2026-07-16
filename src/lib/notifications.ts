@@ -5,6 +5,7 @@ import { COMPANY_EMAILS } from "@/constants/emails";
 import { SOCIAL_LINKS } from "@/constants/socials";
 import { logActivity } from "@/lib/activity";
 import { generateInvoicePdf } from "./pdfInvoice";
+import { toReadableOrderId } from "@/utils/orderId";
 
 export interface OrderItem {
   id: string;
@@ -25,13 +26,7 @@ export interface ShippingInfo {
   postalCode?: string;
 }
 
-const toReadableOrderId = (orderId: string): string => {
-  const compact = String(orderId ?? "")
-    .replace(/-/g, "")
-    .trim();
-  if (!compact) return "ORD-UNKNOWN";
-  return `ORD-${compact.slice(0, 8).toUpperCase()}`;
-};
+
 
 class NotificationService {
   private transporter: nodemailer.Transporter | null = null;

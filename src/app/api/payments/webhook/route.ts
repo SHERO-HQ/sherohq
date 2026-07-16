@@ -20,14 +20,17 @@ export async function POST(request: NextRequest) {
     const rawBody = await request.text();
     
     // Log the exact raw payload for debugging with Hubtel
-    console.log("=== RAW WEBHOOK PAYLOAD ===");
-    console.log(rawBody);
-    console.log("===========================");
+    if (process.env.NODE_ENV !== "production") {
+      console.log("=== RAW WEBHOOK PAYLOAD ===");
+      console.log(rawBody);
+      console.log("===========================");
+    }
     
     const data = JSON.parse(rawBody);
     let orderId = "";
     let provider = "";
     let status = "";
+    let verifiedAmount: number | null = null;
 
     // Basic logic mirroring legacy webhook
     if (data.event?.startsWith("charge.") && data.data) {
@@ -44,6 +47,9 @@ export async function POST(request: NextRequest) {
       provider = "paystack";
       orderId = data.data.metadata?.orderId || data.data.reference;
       status = data.data.status === "success" ? "Success" : "Failed";
+      if (status === "Success") {
+        verifiedAmount = data.data.amount / 100;
+      }
     } else if (
       // Nested format: { ResponseCode, Status, Data: { ClientReference, ... } }
       (data.Data?.ClientReference && (data.Status || data.Data?.Status)) ||
@@ -82,8 +88,10 @@ export async function POST(request: NextRequest) {
       // Server-side verification: confirm the transaction with Hubtel's API
       // This is the recommended best practice since Hubtel does not use HMAC signatures
       if (status === "Success") {
-        const { verified, status: confirmedStatus } =
+        const { verified, status: confirmedStatus, amount: confirmedAmount } =
           await verifyHubtelTransaction(orderId);
+
+        verifiedAmount = confirmedAmount;
 
         if (!verified) {
           console.warn(
@@ -111,7 +119,7 @@ export async function POST(request: NextRequest) {
 
     if (orderId && orderId.toUpperCase().startsWith("ORD-")) {
       const hexPrefix = orderId.substring(4).toLowerCase();
-      dbQuery = `SELECT id, status, "shippingInfo", items, total, "paymentMethod" FROM orders WHERE id::text LIKE $1 FOR UPDATE`;
+      dbQuery = `SELECT id, status, "shippingInfo", items, total, "paymentMethod" FROM orders WHERE id::text LIKE $1 ORDER BY "createdAt" DESC LIMIT 1 FOR UPDATE`;
       dbParams = [`${hexPrefix}%`];
     }
 
@@ -119,12 +127,30 @@ export async function POST(request: NextRequest) {
 
     if (orderRes.rowCount === 0) {
       await client.query("ROLLBACK");
-      return new NextResponse("Order not found", { status: 200 });
+      return new NextResponse("Order not found", { status: 404 });
     }
 
     const actualOrderId = orderRes.rows[0].id;
 
     if (status === "Success") {
+      const orderTotal = Number(orderRes.rows[0].total);
+
+      if (verifiedAmount !== null && verifiedAmount < orderTotal) {
+        console.error(`[Amount Mismatch] Order ${actualOrderId} expected ${orderTotal}, but received ${verifiedAmount}`);
+        await client.query(
+          `INSERT INTO activity_logs (id, action, type, details, "createdAt")
+           VALUES ($1, $2, $3, $4, NOW())`,
+          [
+            randomUUID(),
+            "order_payment",
+            "failed",
+            `Amount mismatch via ${provider}. Expected: GHS ${orderTotal}, Received: GHS ${verifiedAmount}`,
+          ],
+        );
+        await client.query("COMMIT");
+        return new NextResponse("Amount mismatch", { status: 400 });
+      }
+
       if (orderRes.rows[0].status === "pending") {
         await client.query("UPDATE orders SET status = $1 WHERE id = $2", [
           "processing",
@@ -162,12 +188,9 @@ export async function POST(request: NextRequest) {
       }
     } else {
       // Payment failed handling
+      // We do NOT cancel the order so the user can retry checkout.
+      // We only log the failure and notify the customer.
       if (orderRes.rows[0].status === "pending") {
-        await client.query("UPDATE orders SET status = $1 WHERE id = $2", [
-          "cancelled",
-          actualOrderId,
-        ]);
-
         await client.query(
           `INSERT INTO activity_logs (id, action, type, details, "createdAt")
            VALUES ($1, $2, $3, $4, NOW())`,
@@ -178,20 +201,6 @@ export async function POST(request: NextRequest) {
             `Payment failed via ${provider}. Reference: ${actualOrderId}`,
           ],
         );
-
-        // Restore stock for cancelled order
-        try {
-          const order = orderRes.rows[0];
-          const parsedItems = typeof order.items === "string" ? JSON.parse(order.items) : order.items;
-          for (const item of parsedItems) {
-            await client.query(
-              `UPDATE products SET "stockQuantity" = "stockQuantity" + $1, "inStock" = true WHERE id = $2`,
-              [item.quantity, item.id]
-            );
-          }
-        } catch (err) {
-          console.error("Failed to restore stock for cancelled order:", err);
-        }
 
         // Trigger failure notification
         try {

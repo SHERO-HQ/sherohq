@@ -2,18 +2,8 @@ import { NextRequest } from "next/server";
 import { query } from "@/lib/db";
 import { apiResponse } from "@/lib/api-utils";
 import { getUserFromSession, getAdminFromSession } from "@/lib/auth";
-import { createHash } from "node:crypto";
-
-const hashOrderAccessToken = (token: string): string =>
-  createHash("sha256").update(token).digest("hex");
-
-const toReadableOrderId = (orderId: string): string => {
-  const compact = String(orderId ?? "")
-    .replace(/-/g, "")
-    .trim();
-  if (!compact) return "ORD-UNKNOWN";
-  return `ORD-${compact.slice(0, 8).toUpperCase()}`;
-};
+import { hashOrderAccessToken } from "@/lib/orderUtils";
+import { toReadableOrderId } from "@/utils/orderId";
 
 export async function POST(request: NextRequest) {
   try {
@@ -131,8 +121,10 @@ export async function POST(request: NextRequest) {
         clientReference: toReadableOrderId(orderId),
       };
 
-      console.log("=== HUBTEL INIT PAYLOAD ===");
-      console.log(JSON.stringify(payload, null, 2));
+      if (process.env.NODE_ENV !== "production") {
+        console.log("=== HUBTEL INIT PAYLOAD ===");
+        console.log(JSON.stringify(payload, null, 2));
+      }
 
       try {
         const resp = await fetch(`${HUBTEL_API_BASE}/items/initiate`, {

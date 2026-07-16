@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, notFound } from "next/navigation";
 import { CreditCard, ShieldAlert, Sparkles, Check, X, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toReadableOrderId } from "@/utils/orderId";
@@ -173,6 +173,10 @@ function MockPaymentContent() {
 }
 
 export default function MockPaymentPage() {
+  if (process.env.NODE_ENV === "production") {
+    notFound();
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-32 pb-16">
       <div className="max-w-xl mx-auto px-4">
