@@ -1,13 +1,14 @@
 "use client";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import {
-  CheckCircle,
-  Loader,
   XCircle,
   RefreshCw,
-  PhoneCall,
+  Smartphone,
+  ArrowRight,
+  ShieldCheck,
+  Check,
 } from "lucide-react";
 import { trackOrder, type Order } from "@/services/api";
 import { useCart } from "@/context/CartContext";
@@ -16,7 +17,7 @@ import { getOrderAccessToken } from "@/utils/orderAccess";
 import { toReadableOrderId } from "@/utils/orderId";
 import { WhatsAppIcon } from "@/assets/icons/icons";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
-import { COMPANY_EMAILS } from "@/constants/emails";
+import { supabase } from "@/lib/supabase";
 
 const CheckoutSuccess = () => {
   const searchParams = useSearchParams();
@@ -24,7 +25,6 @@ const CheckoutSuccess = () => {
   const { clearCart } = useCart();
   const orderId = searchParams.get("orderId") || searchParams.get("reference");
 
-  // Hubtel appends status param when redirecting on cancellation/failure
   const urlStatus = searchParams.get("status");
   const isUrlCancelledOrFailed =
     urlStatus?.toLowerCase() === "cancelled" ||
@@ -37,361 +37,419 @@ const CheckoutSuccess = () => {
   const [order, setOrder] = useState<Order | null>(null);
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [isRetrying, setIsRetrying] = useState(false);
-  const pollingRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  
+  const [loadingText, setLoadingText] = useState("Contacting provider...");
 
-  // Retry payment — redirect back to checkout with the same order
   const handleRetryPayment = useCallback(() => {
     if (!orderId) return;
     setIsRetrying(true);
-    // Go back to the checkout page so the customer can re-initiate payment
     router.push(`/shop/checkout?retry=${orderId}`);
   }, [orderId, router]);
 
-  // Poll for payment status
+  // Simulated Progress Text
+  useEffect(() => {
+    if (status !== "verifying" && status !== "pending") return;
+    const messages = ["Contacting provider...", "Waiting for PIN...", "Securing transaction...", "Verifying details..."];
+    let currentIndex = 0;
+    const interval = setInterval(() => {
+      currentIndex = (currentIndex + 1) % messages.length;
+      setLoadingText(messages[currentIndex]);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [status]);
+
+  // Initial Fetch & Realtime Subscription
   useEffect(() => {
     if (!orderId) {
       router.push("/");
       return;
     }
 
-    // If URL already indicates cancellation/failure, skip polling entirely
-    if (isUrlCancelledOrFailed) {
-      // Still fetch the order once for display purposes (amount, reference)
-      trackOrder(orderId, getOrderAccessToken(orderId) || undefined)
-        .then((data) => setOrder(data))
-        .catch(() => { }); // Ignore errors — we already know it failed
-      return;
-    }
-
-    // Clear cart immediately since we have an order ID
-    clearCart();
-
-    let attempts = 0;
-    let consecutiveErrors = 0;
-    const maxAttempts = 30;
-    const maxConsecutiveErrors = 5;
-
-    const poll = async () => {
-      attempts++;
-
-      // Timeout guard
-      if (attempts > maxAttempts) {
-        setStatus("pending");
-        return;
-      }
-
-      try {
-        const data = await trackOrder(
-          orderId,
-          getOrderAccessToken(orderId) || undefined,
-        );
-
-        consecutiveErrors = 0;
-
-        // ✅ SUCCESS — payment confirmed
-        if (
-          data.status === "processing" ||
-          data.status === "intransit" ||
-          data.status === "delivered"
-        ) {
-          setOrder(data);
+    // Initial fetch
+    trackOrder(orderId, getOrderAccessToken(orderId) || undefined)
+      .then((data) => {
+        setOrder(data);
+        if (data.status === "processing" || data.status === "intransit" || data.status === "delivered") {
           setStatus("success");
           setTimeout(() => setShowRatingModal(true), 1500);
-          return; // Stop polling
-        }
-
-        // ❌ FAILED/CANCELLED — detected immediately, no waiting
-        if (data.status === "cancelled" || data.status === "failed") {
-          setOrder(data);
+        } else if (data.status === "cancelled" || data.status === "failed") {
           setStatus("failed");
-          return; // Stop polling
+        } else if (isUrlCancelledOrFailed) {
+          setStatus("failed");
         }
+      })
+      .catch(() => {
+        if (isUrlCancelledOrFailed) setStatus("failed");
+      });
 
-        // Trigger manual verification on the 3rd and 7th attempt as a fallback if webhook is delayed
-        if (attempts === 3 || attempts === 7) {
-          try {
-            const { verifyPayment } = await import("@/services/api");
-            // Assuming Hubtel here since Paystack webhooks are typically instant. 
-            // We can just pass "hubtel" for now to force a check if it happens to be Hubtel.
-            const verifyRes = await verifyPayment(orderId, "hubtel");
-            if (verifyRes.success && verifyRes.status === "processing") {
-              setOrder({ ...data, status: "processing" });
+    if (isUrlCancelledOrFailed) return;
+    clearCart();
+
+    // Supabase Realtime for instant webhook updates
+    const channel = supabase
+      .channel(`order-${orderId}`)
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "orders", filter: `id=eq.${orderId}` },
+        (payload: any) => {
+          const newStatus = payload.new.status;
+          if (newStatus) {
+            if (newStatus === "processing" || newStatus === "intransit" || newStatus === "delivered") {
               setStatus("success");
               setTimeout(() => setShowRatingModal(true), 1500);
-              return;
+            } else if (newStatus === "cancelled" || newStatus === "failed") {
+              setStatus("failed");
+            } else {
+              setStatus("pending");
             }
-          } catch (err) {
-            console.error("Manual verify failed during poll", err);
+            setOrder((prev) => prev ? { ...prev, status: newStatus } as Order : prev);
           }
         }
-
-        // ⏳ Still pending — continue polling
-        if (attempts >= maxAttempts) {
-          setOrder(data);
-          setStatus("pending");
-          return; // Stop polling
-        }
-      } catch (error) {
-        consecutiveErrors++;
-        if (process.env.NODE_ENV !== "production") {
-          console.error("Verification error:", error);
-        }
-        if (consecutiveErrors >= maxConsecutiveErrors) {
-          setStatus("failed");
-          return; // Stop polling
-        }
-      }
-
-      // Adaptive polling: 1s for first 5 attempts, then 2s
-      const delay = attempts <= 5 ? 1000 : 2000;
-      pollingRef.current = setTimeout(poll, delay);
-    };
-
-    // Start first poll quickly (500ms) so fast webhooks are caught immediately
-    pollingRef.current = setTimeout(poll, 500);
+      )
+      .subscribe();
 
     return () => {
-      if (pollingRef.current) clearTimeout(pollingRef.current);
+      supabase.removeChannel(channel);
     };
   }, [orderId, router, clearCart, isUrlCancelledOrFailed]);
 
   if (!orderId) return null;
-
   const readableOrderId = toReadableOrderId(orderId);
-  const whatsappSupportUrl = `https://wa.me/${COMPANY_CONTACTS.WHATSAPP}?text=${encodeURIComponent(
-    `Hello SHERO, I need help with my order ${readableOrderId}. Can you assist me?`,
-  )}`;
+
+  // Dynamic Branding
+  const getBrandColors = () => {
+    const method = order?.paymentMethod?.toLowerCase() || "";
+    if (method.includes("mtn")) {
+      return { 
+        ring: "bg-amber-500/20", 
+        border: "border-amber-500/30", 
+        iconBg: "bg-amber-50 dark:bg-amber-500/10",
+        iconText: "text-amber-600 dark:text-amber-400",
+        pulse: "bg-amber-500",
+        glow: "via-amber-500/20"
+      };
+    }
+    if (method.includes("vodafone") || method.includes("telecel") || method.includes("airtel") || method.includes("tigo")) {
+      return { 
+        ring: "bg-red-500/20", 
+        border: "border-red-500/30", 
+        iconBg: "bg-red-50 dark:bg-red-500/10",
+        iconText: "text-red-600 dark:text-red-400",
+        pulse: "bg-red-500",
+        glow: "via-red-500/20"
+      };
+    }
+    // Default (Emerald / Generic)
+    return { 
+      ring: "bg-emerald-500/20", 
+      border: "border-emerald-500/30", 
+      iconBg: "bg-emerald-50 dark:bg-emerald-500/10",
+      iconText: "text-emerald-600 dark:text-emerald-400",
+      pulse: "bg-emerald-500",
+      glow: "via-emerald-500/20"
+    };
+  };
+
+  const brand = getBrandColors();
 
   const renderContent = () => {
-    // ── VERIFYING ────────────────────────────────────────────────────
     if (status === "verifying") {
       return (
-        <div className="py-12">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="w-16 h-16 border-4 border-brand-secondary-200 border-t-brand-secondary-600 rounded-full mx-auto mb-6"
-          />
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-            Verifying Payment...
+        <div className="py-16 flex flex-col items-center justify-center">
+          <div className="relative w-32 h-32 mb-10 flex items-center justify-center">
+            <motion.div
+              animate={{ scale: [1, 1.5], opacity: [0.8, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+              className={`absolute inset-0 ${brand.ring} rounded-full`}
+            />
+            <motion.div
+              animate={{ scale: [1, 1.5], opacity: [0.8, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeOut", delay: 1 }}
+              className={`absolute inset-0 ${brand.ring} rounded-full`}
+            />
+            <div className={`w-16 h-16 ${brand.iconBg} rounded-full flex items-center justify-center z-10 border border-slate-100 dark:border-slate-800`}>
+              <Smartphone className={`w-7 h-7 ${brand.iconText}`} />
+            </div>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              className={`absolute inset-0 border border-dashed ${brand.border} rounded-full`}
+            />
+          </div>
+          <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-3 tracking-tight">
+            Check your phone
           </h2>
-          <p className="text-slate-600 dark:text-slate-400">
-            Please approve the transaction on your mobile device.
+          <div className="h-6 overflow-hidden mb-2">
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={loadingText}
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -10, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="text-slate-500 dark:text-slate-400 text-sm font-medium"
+              >
+                {loadingText}
+              </motion.p>
+            </AnimatePresence>
+          </div>
+          <p className="text-slate-400 dark:text-slate-500 text-sm max-w-[280px] mx-auto text-center leading-relaxed">
+            Enter your PIN to authorize the transaction.
           </p>
         </div>
       );
     }
 
-    // ── PENDING (timeout — webhook not yet received) ─────────────────
     if (status === "pending") {
       return (
-        <div className="py-12">
-          <div className="w-20 h-20 bg-blue-50 dark:bg-blue-950 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Loader className="w-10 h-10 animate-spin text-blue-600 dark:text-blue-400" />
+        <div className="py-8 flex flex-col items-center justify-center w-full max-w-sm mx-auto">
+          <div className="w-14 h-14 bg-slate-100 dark:bg-slate-800/50 rounded-2xl flex items-center justify-center mb-6 shadow-inner">
+             <ShieldCheck className="w-7 h-7 text-slate-400 dark:text-slate-500" />
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-            Verification Pending
+          
+          <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-2 text-center tracking-tight">
+            Processing Transfer
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md mx-auto">
-            Your payment verification is taking a little longer than usual.
-            If you have already authorized the prompt on your phone, your
-            order will be processed shortly.
-          </p>
-          <div className="bg-slate-50 dark:bg-slate-950 rounded p-6 mb-8 max-w-sm mx-auto border border-slate-100 dark:border-slate-800">
-            <p className="text-sm text-slate-500 mb-1">Order Reference</p>
-            <p className="font-mono text-base font-bold text-slate-900 dark:text-white break-all mb-4 bg-slate-200/50 dark:bg-slate-800 px-3 py-1.5 rounded">
-              {readableOrderId}
-            </p>
-            {order && order.total > 0 && (
-              <>
-                <p className="text-sm text-slate-500 mb-1">Total Amount</p>
-                <p className="text-2xl font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
-                  GHS {order.total.toFixed(2)}
-                </p>
-              </>
-            )}
+          <div className="h-6 overflow-hidden mb-6">
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={loadingText}
+                initial={{ y: 10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -10, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="text-slate-500 dark:text-slate-400 text-sm font-medium"
+              >
+                {loadingText}
+              </motion.p>
+            </AnimatePresence>
           </div>
-          <div className="flex flex-col gap-4 max-w-md mx-auto mb-6">
+
+          <div className="w-full bg-white dark:bg-[#0f1115] shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-3xl p-8 mb-8 border border-slate-100 dark:border-slate-800/60 relative overflow-hidden">
+            <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent ${brand.glow} to-transparent`} />
+            
+            <div className="flex flex-col items-center mb-10">
+              <span className="text-slate-400 text-[11px] uppercase tracking-[0.2em] font-semibold mb-3">
+                Total Amount
+              </span>
+              {order && order.total > 0 ? (
+                <div className="flex items-start gap-1">
+                  <span className="text-lg font-medium text-slate-400 mt-1">GHS</span>
+                  <span className="text-5xl font-light tracking-tight text-slate-900 dark:text-white">
+                    {order.total.toFixed(2)}
+                  </span>
+                </div>
+              ) : (
+                <div className="h-12 w-32 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse" />
+              )}
+            </div>
+            
+            <div className="space-y-5">
+              <div className="flex justify-between items-center pb-5 border-b border-slate-100 dark:border-slate-800/60">
+                <span className="text-slate-500 text-sm font-medium">To</span>
+                <span className="text-slate-900 dark:text-slate-100 text-sm font-semibold">Shero Technologies</span>
+              </div>
+              <div className="flex justify-between items-center pb-5 border-b border-slate-100 dark:border-slate-800/60">
+                <span className="text-slate-500 text-sm font-medium">Ref ID</span>
+                <span className="text-slate-900 dark:text-slate-100 text-sm font-mono">{readableOrderId}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-500 text-sm font-medium">Network</span>
+                <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/50 px-3 py-1.5 rounded-full">
+                   <div className={`w-2 h-2 rounded-full ${brand.pulse} animate-pulse`} />
+                   <span className="text-slate-700 dark:text-slate-300 text-xs font-semibold uppercase tracking-wide">
+                     Authorizing
+                   </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="w-full space-y-3">
             <a
               href={`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}?text=${encodeURIComponent(
-                `Hello SHERO, I completed payment for order ${readableOrderId} but it's still showing as pending. Can you verify?`
+                `Hello SHERO, my transfer for order ${readableOrderId} is still authorizing. Can you check?`
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-bold px-8 py-3 rounded bg-[#25D366] text-white hover:bg-[#20bd5a] transition flex items-center justify-center gap-2 shadow-sm"
+              className="w-full flex items-center justify-between px-6 py-4 rounded-2xl bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/50 dark:hover:bg-slate-800 text-slate-900 dark:text-white transition-colors group"
             >
-              <WhatsAppIcon className="w-5 h-5 fill-current" />
-              <span>Verify on WhatsApp</span>
+              <div className="flex items-center gap-3">
+                <WhatsAppIcon className="w-5 h-5 text-[#25D366]" />
+                <span className="font-semibold text-sm">Contact Support</span>
+              </div>
+              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
             </a>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            
             <button
               onClick={() => router.push(`/track/${orderId}`)}
-              className="px-8 py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded font-bold transition shadow shadow-brand-secondary-500/20"
+              className="w-full flex items-center justify-between px-6 py-4 rounded-2xl bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/50 dark:hover:bg-slate-800 text-slate-900 dark:text-white transition-colors group"
             >
-              Track Order
-            </button>
-            <button
-              onClick={() => router.push("/shop")}
-              className="px-8 py-2 border-2 border-slate-200 dark:border-slate-700 hover:border-brand-secondary-500 dark:hover:border-brand-secondary-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
-            >
-              Continue Shopping
+              <div className="flex items-center gap-3">
+                <div className="w-5 h-5 rounded-full border-2 border-slate-400 dark:border-slate-500 flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500" />
+                </div>
+                <span className="font-semibold text-sm">Track Status Later</span>
+              </div>
+              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         </div>
       );
     }
 
-    // ── FAILED / CANCELLED ───────────────────────────────────────────
     if (status === "failed") {
       return (
-        <div className="py-12">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", duration: 0.5 }}
-            className="w-20 h-20 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-6"
-          >
-            <XCircle className="w-10 h-10 text-red-600 dark:text-red-400" />
-          </motion.div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-            Payment Was Not Completed
+        <div className="py-8 flex flex-col items-center justify-center w-full max-w-sm mx-auto">
+          <div className="relative w-24 h-24 mb-6 flex items-center justify-center">
+            <motion.div
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", bounce: 0.5 }}
+              className="absolute inset-0 bg-red-100 dark:bg-red-900/30 rounded-full"
+            />
+            <XCircle className="w-10 h-10 text-red-600 dark:text-red-400 z-10" />
+          </div>
+          
+          <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-2 text-center tracking-tight">
+            Transfer Failed
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 mb-2 max-w-md mx-auto">
-            Your payment was not successful. This could happen if the
-            transaction was declined, cancelled, or timed out.
-          </p>
-          <p className="text-sm text-slate-500 dark:text-slate-500 mb-8">
-            Don't worry, no money has been deducted from your account.
+          <p className="text-slate-500 dark:text-slate-400 mb-8 text-center text-sm leading-relaxed px-4">
+            Your transaction was declined or timed out. No funds were deducted.
           </p>
 
-          {/* Order details */}
-          <div className="bg-slate-50 dark:bg-slate-950 rounded p-6 mb-8 max-w-sm mx-auto border border-slate-100 dark:border-slate-800">
-            <p className="text-sm text-slate-500 mb-1">Order Reference</p>
-            <p className="font-mono text-base font-bold text-slate-900 dark:text-white break-all mb-4 bg-slate-200/50 dark:bg-slate-800 px-3 py-1.5 rounded">
-              {readableOrderId}
-            </p>
-            {order && order.total > 0 && (
-              <>
-                <p className="text-sm text-slate-500 mb-1">Amount</p>
-                <p className="text-2xl font-bold text-slate-700 dark:text-slate-300">
-                  GHS {order.total.toFixed(2)}
-                </p>
-              </>
-            )}
+          <div className="w-full bg-white dark:bg-[#0f1115] shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-3xl p-8 mb-8 border border-slate-100 dark:border-slate-800/60 relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-red-500/20 to-transparent" />
+            
+            <div className="flex flex-col items-center mb-10">
+              <span className="text-slate-400 text-[11px] uppercase tracking-[0.2em] font-semibold mb-3">
+                Attempted Amount
+              </span>
+              {order && order.total > 0 ? (
+                <div className="flex items-start gap-1">
+                  <span className="text-lg font-medium text-slate-400 mt-1">GHS</span>
+                  <span className="text-5xl font-light tracking-tight text-slate-900 dark:text-white">
+                    {order.total.toFixed(2)}
+                  </span>
+                </div>
+              ) : (
+                <div className="h-12 w-32 bg-slate-100 dark:bg-slate-800 rounded-lg" />
+              )}
+            </div>
+            
+            <div className="space-y-5">
+              <div className="flex justify-between items-center pb-5 border-b border-slate-100 dark:border-slate-800/60">
+                <span className="text-slate-500 text-sm font-medium">Ref ID</span>
+                <span className="text-slate-900 dark:text-slate-100 text-sm font-mono">{readableOrderId}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-500 text-sm font-medium">Status</span>
+                <div className="flex items-center gap-2 bg-red-50 dark:bg-red-500/10 px-3 py-1.5 rounded-full">
+                   <span className="text-red-700 dark:text-red-400 text-xs font-semibold uppercase tracking-wide">
+                     Failed
+                   </span>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Primary actions */}
-          <div className="flex flex-col gap-3 max-w-sm mx-auto mb-8">
+          <div className="w-full space-y-3">
             <button
               onClick={handleRetryPayment}
               disabled={isRetrying}
-              className="w-full px-8 py-3 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded font-bold transition shadow shadow-brand-secondary-500/20 flex items-center justify-center gap-2 disabled:opacity-60"
+              className="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-slate-200 text-white dark:text-slate-900 font-semibold transition-colors disabled:opacity-60"
             >
-              {isRetrying ? (
-                <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  Redirecting...
-                </>
-              ) : (
-                <>
-                  <RefreshCw className="w-4 h-4" />
-                  Try Again
-                </>
-              )}
+              {isRetrying ? <RefreshCw className="w-5 h-5 animate-spin" /> : <RefreshCw className="w-5 h-5" />}
+              <span>{isRetrying ? "Redirecting..." : "Try Again"}</span>
             </button>
             <button
               onClick={() => router.push("/shop")}
-              className="w-full px-8 py-2 border-2 border-slate-200 dark:border-slate-700 hover:border-brand-secondary-500 dark:hover:border-brand-secondary-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
+              className="w-full flex items-center justify-center px-6 py-4 rounded-2xl bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/50 dark:hover:bg-slate-800 text-slate-900 dark:text-white font-semibold transition-colors"
             >
               Continue Shopping
             </button>
-          </div>
-
-          {/* Support section */}
-          <div className="bg-blue-50 dark:bg-blue-900/10 rounded p-6 max-w-md mx-auto border border-blue-100 dark:border-blue-900/20 text-left">
-            <h3 className="font-semibold text-slate-900 dark:text-white mb-2">
-              Need help?
-            </h3>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-              If you believe you were charged or need assistance, our support
-              team is ready to help.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-2">
-              <a
-                href={whatsappSupportUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded bg-[#25D366] text-white font-bold hover:bg-[#128C7E] transition-colors text-sm"
-              >
-                <WhatsAppIcon className="w-4 h-4 fill-current" />
-                Chat Support
-              </a>
-              <a
-                href={`tel:${COMPANY_CONTACTS.WHATSAPP}`}
-                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-bold border border-slate-200 dark:border-slate-700 hover:bg-slate-50 transition-colors text-sm"
-              >
-                <PhoneCall className="w-4 h-4" />
-                Call Us
-              </a>
-            </div>
           </div>
         </div>
       );
     }
 
-    // ── SUCCESS ──────────────────────────────────────────────────────
     return (
-      <div>
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", delay: 0.2 }}
-          className="w-24 h-24 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center mx-auto mb-6"
-        >
-          <CheckCircle className="w-12 h-12 text-brand-secondary-600 dark:text-brand-secondary-400" />
-        </motion.div>
-
-        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-4">
-          Payment Successful!
-        </h1>
-        <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-md mx-auto">
-          Thank you for your purchase. Your order{" "}
-          <span className="font-mono font-bold text-brand-secondary-600">
-            {order ? toReadableOrderId(order.id) : readableOrderId}
-          </span>{" "}
-          has been confirmed.
+      <div className="py-8 flex flex-col items-center justify-center w-full max-w-sm mx-auto">
+        <div className="relative w-24 h-24 mb-6 flex items-center justify-center">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", bounce: 0.5 }}
+            className="absolute inset-0 bg-emerald-500 rounded-full"
+          />
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", bounce: 0.5, delay: 0.1 }}
+          >
+            <Check className="w-12 h-12 text-white z-10 stroke-[3]" />
+          </motion.div>
+        </div>
+        
+        <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-2 text-center tracking-tight">
+          Payment Successful
+        </h2>
+        <p className="text-slate-500 dark:text-slate-400 mb-8 text-center text-sm leading-relaxed px-4">
+          Your order has been confirmed. You will receive an email shortly.
         </p>
 
-        <div className="bg-slate-50 dark:bg-slate-950 rounded p-6 mb-8 max-w-sm mx-auto border border-slate-100 dark:border-slate-800">
-          <p className="text-sm text-slate-500 mb-1">Amount Paid</p>
-          <p className="text-3xl font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
-            GHS{order?.total.toFixed(2)}
-          </p>
-        </div>
-
-        <div className="bg-blue-50 dark:bg-blue-900/10 rounded p-6 mb-8 max-w-md mx-auto border border-blue-100 dark:border-blue-900/20 text-left">
-          <h3 className="font-semibold text-slate-900 dark:text-white mb-2">What happens next?</h3>
-          <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
-            You will receive an email and/or WhatsApp notification shortly with your order details.
-            If you need any immediate assistance, feel free to contact us.
-          </p>
-          <div className="text-sm text-slate-700 dark:text-slate-300 space-y-1">
-            <p><strong>Call/WhatsApp:</strong> {COMPANY_CONTACTS.WHATSAPP}</p>
-            <p><strong>Email:</strong> {COMPANY_EMAILS.SUPPORT}</p>
+        <div className="w-full bg-white dark:bg-[#0f1115] shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] rounded-3xl p-8 mb-8 border border-slate-100 dark:border-slate-800/60 relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-emerald-500/20 to-transparent" />
+          
+          <div className="flex flex-col items-center mb-10">
+            <span className="text-slate-400 text-[11px] uppercase tracking-[0.2em] font-semibold mb-3">
+              Amount Paid
+            </span>
+            {order && order.total > 0 ? (
+              <div className="flex items-start gap-1">
+                <span className="text-lg font-medium text-slate-400 mt-1">GHS</span>
+                <span className="text-5xl font-light tracking-tight text-slate-900 dark:text-white">
+                  {order.total.toFixed(2)}
+                </span>
+              </div>
+            ) : (
+              <div className="h-12 w-32 bg-slate-100 dark:bg-slate-800 rounded-lg" />
+            )}
+          </div>
+          
+          <div className="space-y-5">
+            <div className="flex justify-between items-center pb-5 border-b border-slate-100 dark:border-slate-800/60">
+              <span className="text-slate-500 text-sm font-medium">Ref ID</span>
+              <span className="text-slate-900 dark:text-slate-100 text-sm font-mono">{readableOrderId}</span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-slate-500 text-sm font-medium">Status</span>
+              <div className="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-500/10 px-3 py-1.5 rounded-full">
+                 <span className="text-emerald-700 dark:text-emerald-400 text-xs font-semibold uppercase tracking-wide">
+                   Completed
+                 </span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="w-full space-y-3">
           <button
             onClick={() => router.push(`/track/${orderId}`)}
-            className="px-8 py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded font-bold transition shadow shadow-brand-secondary-500/20"
+            className="w-full flex items-center justify-between px-6 py-4 rounded-2xl bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/50 dark:hover:bg-slate-800 text-slate-900 dark:text-white transition-colors group"
           >
-            Track Order
+            <div className="flex items-center gap-3">
+              <div className="w-5 h-5 rounded-full border-2 border-slate-400 dark:border-slate-500 flex items-center justify-center">
+                <div className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500" />
+              </div>
+              <span className="font-semibold text-sm">Track My Order</span>
+            </div>
+            <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
           </button>
+          
           <button
             onClick={() => router.push("/shop")}
-            className="px-8 py-2 border-2 border-slate-200 dark:border-slate-700 hover:border-brand-secondary-500 dark:hover:border-brand-secondary-500 text-slate-700 dark:text-slate-300 rounded font-bold transition-colors"
+            className="w-full flex items-center justify-center px-6 py-4 rounded-2xl bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800/50 text-slate-500 dark:text-slate-400 font-semibold transition-colors"
           >
             Continue Shopping
           </button>
@@ -401,18 +459,17 @@ const CheckoutSuccess = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-8 pb-12 px-4">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-white dark:bg-black pt-8 pb-12 px-4 flex items-center justify-center">
+      <div className="w-full max-w-lg mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 p-8 sm:p-12 text-center"
+          className="w-full"
         >
           {renderContent()}
         </motion.div>
       </div>
 
-      {/* Rating Modal */}
       {orderId && (
         <OrderRatingModal
           isOpen={showRatingModal}
