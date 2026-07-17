@@ -40,13 +40,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Prefer the origin of the incoming request so callbacks match the subdomain
-    // the user is on (e.g. shop.sherohq.com). Fall back to the env var for
-    // environments where nextUrl.origin may be localhost-relative.
-    const publicUrl =
-      request.nextUrl.origin ||
-      process.env.NEXT_PUBLIC_SITE_URL || 
-      "http://localhost:3000";
+    // Use host header to get the exact domain the user is accessing (e.g. sherohq.com or shop.sherohq.com)
+    // This avoids Vercel's internal localhost/0.0.0.0 origins leaking into webhooks
+    const host = request.headers.get("host") || "localhost:3000";
+    const protocol = request.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
+    const publicUrl = process.env.NEXT_PUBLIC_SITE_URL && process.env.NODE_ENV === "development"
+      ? process.env.NEXT_PUBLIC_SITE_URL 
+      : `${protocol}://${host}`;
 
     // Provider-specific initializations
     if (provider === "paystack") {
@@ -105,10 +105,11 @@ export async function POST(request: NextRequest) {
         return apiResponse.error("Hubtel not configured on server", 500);
       }
 
+      const readableId = toReadableOrderId(orderId);
       const callbackUrl = `${publicUrl.replace(/\/$/, "")}/api/payments/webhook`;
-      const returnUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${orderId}`;
+      const returnUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}`;
       // Separate cancellation URL with status param so frontend shows failure instantly
-      const cancelUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${orderId}&status=Cancelled`;
+      const cancelUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}&status=Cancelled`;
       
       const payload = {
         totalAmount: Math.round((order.total ?? 0) * 100) / 100,
@@ -117,8 +118,7 @@ export async function POST(request: NextRequest) {
         returnUrl,
         cancellationUrl: cancelUrl,
         merchantAccountNumber,
-        // The user prefers using the shortened readable order ID (e.g. ORD-ABCDEF12)
-        clientReference: toReadableOrderId(orderId),
+        clientReference: readableId,
       };
 
       if (process.env.NODE_ENV !== "production") {

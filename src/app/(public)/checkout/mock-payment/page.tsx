@@ -49,7 +49,7 @@ function MockPaymentContent() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            ClientReference: orderId,
+            ClientReference: toReadableOrderId(orderId),
             Status: "Success",
           }),
         });

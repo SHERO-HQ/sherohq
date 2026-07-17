@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
 
     if (orderId && orderId.toUpperCase().startsWith("ORD-")) {
       const hexPrefix = orderId.substring(4).toLowerCase();
-      dbQuery = `SELECT id, status, "shippingInfo", items, total, "paymentMethod" FROM orders WHERE id::text LIKE $1 ORDER BY "createdAt" DESC LIMIT 1 FOR UPDATE`;
+      dbQuery = `SELECT id, status, "shippingInfo", items, total, "paymentMethod" FROM orders WHERE replace(id::text, '-', '') LIKE $1 ORDER BY "createdAt" DESC LIMIT 1 FOR UPDATE`;
       dbParams = [`${hexPrefix}%`];
     }
 
