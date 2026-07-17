@@ -50,51 +50,7 @@ export async function POST(request: NextRequest) {
 
     // Provider-specific initializations
     if (provider === "paystack") {
-      const PAYSTACK_SECRET =
-        process.env.PAYSTACK_SECRET || process.env.PAYSTACK_SECRET_KEY;
-      if (!PAYSTACK_SECRET) {
-        return apiResponse.error("Paystack not configured on server", 500);
-      }
-
-      const shipping = order.shippingInfo || {};
-      const email = shipping.email || "customers@unknown.local";
-
-      // Paystack expects amount in the smallest currency unit (e.g., kobo/pesewa)
-      const amount = Math.round((order.total ?? 0) * 100);
-      // Redirect customer to confirmation page after payment (webhook handles server-side processing)
-      const readableId = toReadableOrderId(orderId);
-      const callback_url = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}`;
-
-      const resp = await fetch(
-        "https://api.paystack.co/transaction/initialize",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${PAYSTACK_SECRET}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            amount,
-            reference: orderId,
-            callback_url,
-            metadata: { orderId },
-          }),
-        },
-      );
-
-      const data = await resp.json();
-      if (!data || !data.status) {
-        console.error("Paystack initialize failed:", data);
-        return apiResponse.error("Failed to initialize Paystack payment", 502);
-      }
-
-      return apiResponse.success({
-        checkoutUrl: data.data.authorization_url,
-        provider: "paystack",
-        reference: data.data.reference,
-        readableOrderId: toReadableOrderId(orderId),
-      });
+      return await initializePaystackTransaction(order, orderId, publicUrl);
     }
 
     if (provider === "hubtel") {
@@ -140,8 +96,8 @@ export async function POST(request: NextRequest) {
         const data = await resp.json();
         
         if (!resp.ok || !data?.data?.checkoutUrl) {
-          console.error("Hubtel initialize failed:", data);
-          return apiResponse.error("Failed to initialize Hubtel payment", 502);
+          console.warn("Hubtel initialize failed, falling back to Paystack:", data);
+          return await initializePaystackTransaction(order, orderId, publicUrl);
         }
 
         return apiResponse.success({
@@ -150,8 +106,8 @@ export async function POST(request: NextRequest) {
           readableOrderId: toReadableOrderId(orderId),
         });
       } catch (err) {
-        console.error("Hubtel initialize network error:", err);
-        return apiResponse.error("Failed to connect to Hubtel", 502);
+        console.warn("Hubtel initialize network error, falling back to Paystack:", err);
+        return await initializePaystackTransaction(order, orderId, publicUrl);
       }
     }
 
@@ -165,4 +121,49 @@ export async function POST(request: NextRequest) {
     console.error("Payment init error:", error);
     return apiResponse.error("Failed to initialize payment");
   }
+}
+
+async function initializePaystackTransaction(order: any, orderId: string, publicUrl: string) {
+  const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET || process.env.PAYSTACK_SECRET_KEY;
+  if (!PAYSTACK_SECRET) {
+    return apiResponse.error("Paystack not configured on server", 500);
+  }
+
+  const shipping = order.shippingInfo || {};
+  const email = shipping.email || "customers@unknown.local";
+
+  // Paystack expects amount in the smallest currency unit (e.g., kobo/pesewa)
+  const amount = Math.round((order.total ?? 0) * 100);
+  
+  // Redirect customer to confirmation page after payment
+  const readableId = toReadableOrderId(orderId);
+  const callback_url = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}`;
+
+  const resp = await fetch("https://api.paystack.co/transaction/initialize", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${PAYSTACK_SECRET}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      amount,
+      reference: orderId,
+      callback_url,
+      metadata: { orderId },
+    }),
+  });
+
+  const data = await resp.json();
+  if (!data || !data.status) {
+    console.error("Paystack initialize failed:", data);
+    return apiResponse.error("Failed to initialize Paystack payment", 502);
+  }
+
+  return apiResponse.success({
+    checkoutUrl: data.data.authorization_url,
+    provider: "paystack",
+    reference: data.data.reference,
+    readableOrderId: toReadableOrderId(orderId),
+  });
 }

@@ -6,7 +6,9 @@ import { randomUUID } from "node:crypto";
 
 export async function POST(request: NextRequest) {
   try {
-    const { orderId, provider } = await request.json();
+    const payload = await request.json();
+    const { orderId } = payload;
+    let { provider } = payload;
 
     if (!orderId) {
       return apiResponse.error("Order ID is required", 400);
@@ -40,6 +42,25 @@ export async function POST(request: NextRequest) {
       verified = result.verified;
       providerStatus = normalizeHubtelStatus(result.status || "");
       verifiedAmount = result.amount;
+      
+      if (!verified) {
+        // Fallback: check Paystack in case Hubtel failed during initialize and we fell back to Paystack
+        const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET || process.env.PAYSTACK_SECRET_KEY;
+        if (PAYSTACK_SECRET) {
+          try {
+            const resp = await fetch(`https://api.paystack.co/transaction/verify/${orderId}`, {
+              headers: { Authorization: `Bearer ${PAYSTACK_SECRET}` },
+            });
+            const data = await resp.json();
+            if (data.status && data.data?.status === "success") {
+              verified = true;
+              providerStatus = data.data.status;
+              verifiedAmount = data.data?.amount ? data.data.amount / 100 : null;
+              provider = "paystack (fallback)"; // Update provider for logging
+            }
+          } catch (err) {}
+        }
+      }
       
       if (!verified && (providerStatus === "Failed" || providerStatus === "Cancelled")) {
         return apiResponse.success({
