@@ -62,7 +62,8 @@ export async function POST(request: NextRequest) {
       // Paystack expects amount in the smallest currency unit (e.g., kobo/pesewa)
       const amount = Math.round((order.total ?? 0) * 100);
       // Redirect customer to confirmation page after payment (webhook handles server-side processing)
-      const callback_url = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${orderId}`;
+      const readableId = toReadableOrderId(orderId);
+      const callback_url = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}`;
 
       const resp = await fetch(
         "https://api.paystack.co/transaction/initialize",
