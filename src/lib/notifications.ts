@@ -26,8 +26,6 @@ export interface ShippingInfo {
   postalCode?: string;
 }
 
-
-
 class NotificationService {
   private transporter: nodemailer.Transporter | null = null;
   private resend: Resend | null = null;
@@ -52,7 +50,10 @@ class NotificationService {
    * Wrap email body HTML with a branded header (logo) and footer.
    * Uses a PNG logo hosted on the site since SVG is poorly supported in email clients.
    */
-  private wrapEmailHtml(bodyHtml: string, options?: { hideFooterContact?: boolean; preheader?: string }): string {
+  private wrapEmailHtml(
+    bodyHtml: string,
+    options?: { hideFooterContact?: boolean; preheader?: string },
+  ): string {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
     const logoUrl = `${baseUrl.replace(/\/$/, "")}/assets/logo/shero.png`;
     const year = new Date().getFullYear();
@@ -65,11 +66,11 @@ class NotificationService {
       ${preheaderHtml}
       <div style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
         <!-- Header with Logo -->
-        <div style="text-align: center; padding: 28px 20px 20px; border-bottom: 2px solid #059669;">
+        <div style="text-align: center; padding: 28px 20px 20px; border-bottom: 1.5px solid #059669;">
           <a href="${baseUrl}" target="_blank" style="text-decoration: none;">
             <img src="${logoUrl}" alt="SHERO TECHNOLOGIES" width="40" height="40" style="display: inline-block; vertical-align: middle;" />
           </a>
-
+          </div>
         <!-- Body -->
         <div style="padding: 28px 24px 12px;">
           ${bodyHtml}
@@ -130,7 +131,7 @@ class NotificationService {
         {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
+            Authorization: `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
@@ -140,7 +141,7 @@ class NotificationService {
             type: "text",
             text: { preview_url: false, body: message },
           }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -151,7 +152,12 @@ class NotificationService {
     } catch (error) {
       const msg = this.getErrorMessage(error);
       console.error(`❌ WhatsApp Cloud API error for ${to}:`, error);
-      logActivity(null, "system_alert", "error", `WhatsApp notification failed for ${to}: ${msg}`).catch(() => {});
+      logActivity(
+        null,
+        "system_alert",
+        "error",
+        `WhatsApp notification failed for ${to}: ${msg}`,
+      ).catch(() => {});
     }
   }
 
@@ -159,7 +165,11 @@ class NotificationService {
     to: string,
     subject: string,
     html: string,
-    options: { throwOnError?: boolean; requestId?: string; attachments?: { filename: string; content: Buffer }[] } = {},
+    options: {
+      throwOnError?: boolean;
+      requestId?: string;
+      attachments?: { filename: string; content: Buffer }[];
+    } = {},
   ) {
     const logPrefix = options.requestId
       ? `[Newsletter ${options.requestId}]`
@@ -209,9 +219,14 @@ class NotificationService {
     } catch (error) {
       const msg = this.getErrorMessage(error);
       console.error(`${logPrefix} ❌ [Email Error]:`, error);
-      
+
       // Log to database so admin is aware
-      logActivity(null, "system_alert", "error", `Email delivery failed for ${to}: ${msg}`).catch(() => {});
+      logActivity(
+        null,
+        "system_alert",
+        "error",
+        `Email delivery failed for ${to}: ${msg}`,
+      ).catch(() => {});
 
       if (options.throwOnError) {
         const provider = this.getEmailProviderName();
@@ -234,11 +249,17 @@ class NotificationService {
         <a href="${baseUrl}/shop" style="display: inline-block; padding: 12px 32px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Start Shopping</a>
       </p>
     `;
-    const htmlContent = this.wrapEmailHtml(bodyHtml, { preheader: "Welcome to SHERO! Let's get started." });
+    const htmlContent = this.wrapEmailHtml(bodyHtml, {
+      preheader: "Welcome to SHERO! Let's get started.",
+    });
     await this.sendEmail(email, "Welcome to SHERO TECHNOLOGIES!", htmlContent);
   }
 
-  public async sendPasswordResetEmail(email: string, name: string, resetLink: string) {
+  public async sendPasswordResetEmail(
+    email: string,
+    name: string,
+    resetLink: string,
+  ) {
     const bodyHtml = `
       <h1 style="text-align: center; margin: 0 0 20px;">Reset Your Password</h1>
       <p>Hi ${name},</p>
@@ -249,29 +270,34 @@ class NotificationService {
       </p>
       <p style="margin-top: 24px; font-size: 13px; color: #64748b;">If you didn't request this, you can safely ignore this email.</p>
     `;
-    const htmlContent = this.wrapEmailHtml(bodyHtml, { preheader: "Action required: Reset your SHERO password." });
+    const htmlContent = this.wrapEmailHtml(bodyHtml, {
+      preheader: "Action required: Reset your SHERO password.",
+    });
     await this.sendEmail(email, "Reset Your Password", htmlContent);
   }
 
   public async sendLowStockAlert(productName: string, stockLeft: number) {
-    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.INFO;
+    const adminEmail =
+      process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.INFO;
     const isOutOfStock = stockLeft <= 0;
-    
+
     const bodyHtml = `
-      <h2 style="color: ${isOutOfStock ? '#dc2626' : '#d97706'}; margin: 0 0 16px;">
-        ${isOutOfStock ? '🚨 OUT OF STOCK ALERT' : '⚠️ LOW STOCK WARNING'}
+      <h2 style="color: ${isOutOfStock ? "#dc2626" : "#d97706"}; margin: 0 0 16px;">
+        ${isOutOfStock ? "🚨 OUT OF STOCK ALERT" : "⚠️ LOW STOCK WARNING"}
       </h2>
       <p><strong>Product:</strong> ${productName}</p>
-      <p><strong>Remaining Stock:</strong> <span style="font-size: 16px; font-weight: bold; color: ${isOutOfStock ? '#dc2626' : '#d97706'}">${stockLeft}</span></p>
+      <p><strong>Remaining Stock:</strong> <span style="font-size: 13px; font-weight: bold; color: ${isOutOfStock ? "#dc2626" : "#d97706"}">${stockLeft}</span></p>
       <p style="margin-top: 16px;">Please log into the admin dashboard to restock this item.</p>
     `;
 
-    const htmlContent = this.wrapEmailHtml(bodyHtml, { preheader: `Stock Alert: ${productName} has ${stockLeft} units left.` });
+    const htmlContent = this.wrapEmailHtml(bodyHtml, {
+      preheader: `Stock Alert: ${productName} has ${stockLeft} units left.`,
+    });
 
     await this.sendEmail(
       adminEmail,
-      `${isOutOfStock ? '🚨 OUT OF STOCK' : '⚠️ LOW STOCK'}: ${productName}`,
-      htmlContent
+      `${isOutOfStock ? "🚨 OUT OF STOCK" : "⚠️ LOW STOCK"}: ${productName}`,
+      htmlContent,
     );
   }
 
@@ -279,38 +305,44 @@ class NotificationService {
     email: string,
     firstName: string,
     items: any[],
-    checkoutUrl: string
+    checkoutUrl: string,
   ) {
-    const itemRows = items.map((item: any) => `
+    const itemRows = items
+      .map(
+        (item: any) => `
       <tr>
         <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
           <p style="margin: 0; font-weight: 600; color: #0f172a;">${item.name}</p>
           <p style="margin: 4px 0 0; font-size: 13px; color: #64748b;">Qty: ${item.quantity} | Price: GH₵${Number(item.price).toFixed(2)}</p>
         </td>
       </tr>
-    `).join("");
+    `,
+      )
+      .join("");
 
     const bodyHtml = `
       <h2 style="color: #0f172a; margin: 0 0 16px;">Hey ${firstName}, you left something behind!</h2>
-      <p style="font-size: 16px; color: #334155; line-height: 1.6;">
+      <p style="font-size: 13px; color: #334155; line-height: 1.6;">
         We noticed you left some amazing items in your cart. They're still waiting for you, but they might not stay in stock forever.
       </p>
       
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 24px 0;">
-        <h3 style="margin: 0 0 12px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b;">Your Cart</h3>
+        <h3 style="margin: 0 0 12px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b;">Your Cart</h3>
         <table style="width: 100%; border-collapse: collapse;">
           ${itemRows}
         </table>
       </div>
 
       <p style="text-align: center; margin: 32px 0;">
-        <a href="${checkoutUrl}" style="display: inline-block; padding: 14px 32px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px;">
+        <a href="${checkoutUrl}" style="display: inline-block; padding: 14px 32px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 13px;">
           Complete Your Purchase
         </a>
       </p>
     `;
 
-    const htmlContent = this.wrapEmailHtml(bodyHtml, { preheader: "Your SHERO cart is waiting for you." });
+    const htmlContent = this.wrapEmailHtml(bodyHtml, {
+      preheader: "Your SHERO cart is waiting for you.",
+    });
 
     await this.sendEmail(email, "Did you forget something? 🛒", htmlContent);
   }
@@ -330,7 +362,9 @@ class NotificationService {
         <a href="${unsubscribeUrl}" style="color: #059669;">Unsubscribe</a>
       </p>
     `;
-    const htmlContent = this.wrapEmailHtml(bodyHtml, { hideFooterContact: true });
+    const htmlContent = this.wrapEmailHtml(bodyHtml, {
+      hideFooterContact: true,
+    });
     await this.sendEmail(to, subject, htmlContent, {
       throwOnError: true,
       requestId,
@@ -348,7 +382,10 @@ class NotificationService {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
 
     // Derive subtotal and shipping from items vs. the stored total
-    const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const subtotal = items.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0,
+    );
     const shipping = Math.max(0, Math.round((total - subtotal) * 100) / 100);
     const isFreeShipping = shipping === 0;
 
@@ -357,7 +394,8 @@ class NotificationService {
     let addedDays = 0;
     while (addedDays < 1) {
       deliveryStart.setDate(deliveryStart.getDate() + 1);
-      if (deliveryStart.getDay() !== 0 && deliveryStart.getDay() !== 6) addedDays++;
+      if (deliveryStart.getDay() !== 0 && deliveryStart.getDay() !== 6)
+        addedDays++;
     }
     const deliveryEnd = new Date(deliveryStart);
     addedDays = 0;
@@ -365,22 +403,25 @@ class NotificationService {
       deliveryEnd.setDate(deliveryEnd.getDate() + 1);
       if (deliveryEnd.getDay() !== 0 && deliveryEnd.getDay() !== 6) addedDays++;
     }
-    const dateOpts: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" };
+    const dateOpts: Intl.DateTimeFormatOptions = {
+      month: "short",
+      day: "numeric",
+    };
     const deliveryRange = `${deliveryStart.toLocaleDateString("en-GH", dateOpts)} – ${deliveryEnd.toLocaleDateString("en-GH", dateOpts)}`;
 
     // Build item rows
     const itemsHtml = items
-      .map(
-        (item) => {
-          const imgUrl = item.image && !item.image.startsWith("http") 
-            ? `${baseUrl}${item.image}` 
+      .map((item) => {
+        const imgUrl =
+          item.image && !item.image.startsWith("http")
+            ? `${baseUrl}${item.image}`
             : item.image || "";
-          
-          const imgHtml = imgUrl 
-            ? `<img src="${imgUrl}" alt="${item.name}" width="40" height="40" style="border-radius: 4px; object-fit: cover; margin-right: 12px; border: 1px solid #e2e8f0; vertical-align: middle;" />`
-            : "";
 
-          return `
+        const imgHtml = imgUrl
+          ? `<img src="${imgUrl}" alt="${item.name}" width="40" height="40" style="border-radius: 4px; object-fit: cover; margin-right: 12px; border: 1px solid #e2e8f0; vertical-align: middle;" />`
+          : "";
+
+        return `
           <tr>
             <td style="padding: 10px 8px; border-bottom: 1px solid #f1f5f9; color: #334155;">
               <table style="border: 0; padding: 0; margin: 0; border-collapse: collapse;">
@@ -397,18 +438,21 @@ class NotificationService {
               GH₵${(item.price * item.quantity).toFixed(2)}
             </td>
           </tr>`;
-        }
-      )
+      })
       .join("");
 
-    const orderDate = new Date().toLocaleString("en-GH", { 
-      year: "numeric", month: "short", day: "numeric", 
-      hour: "numeric", minute: "2-digit", hour12: true 
+    const orderDate = new Date().toLocaleString("en-GH", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
     });
 
     const bodyHtml = `
       <h1 style="color: #059669; text-align: center; margin: 0 0 8px;">Order Confirmed!</h1>
-      <p style="text-align: center; color: #64748b; font-size: 14px; margin: 0 0 24px;">Order <strong style="color: #0f172a;">${readableOrderId}</strong> &middot; ${orderDate}</p>
+      <p style="text-align: center; color: #64748b; font-size: 12px; margin: 0 0 24px;">Order <strong style="color: #0f172a;">${readableOrderId}</strong> &middot; ${orderDate}</p>
 
       <p style="margin: 0 0 20px;">Hi ${shippingInfo.firstName},</p>
       <p style="margin: 0 0 24px;">Thank you for your order at <strong>SHERO TECHNOLOGIES</strong>. Here's your receipt:</p>
@@ -431,15 +475,16 @@ class NotificationService {
         <div style="padding: 12px 8px 4px; border-top: 2px solid #e2e8f0;">
           <table style="width: 100%; border-collapse: collapse;">
             <tr>
-              <td style="padding: 6px 0; color: #64748b; font-size: 14px;">Subtotal</td>
-              <td style="padding: 6px 0; text-align: right; color: #334155; font-size: 14px;">GH₵${subtotal.toFixed(2)}</td>
+              <td style="padding: 6px 0; color: #64748b; font-size: 12px;">Subtotal</td>
+              <td style="padding: 6px 0; text-align: right; color: #334155; font-size: 12px;">GH₵${subtotal.toFixed(2)}</td>
             </tr>
             <tr>
-              <td style="padding: 6px 0; color: #64748b; font-size: 14px;">Shipping</td>
-              <td style="padding: 6px 0; text-align: right; font-size: 14px;">
-                ${isFreeShipping
-                  ? '<span style="color: #059669; font-weight: 600;">FREE</span>'
-                  : `<span style="color: #334155;">GH₵${shipping.toFixed(2)}</span>`
+              <td style="padding: 6px 0; color: #64748b; font-size: 12px;">Shipping</td>
+              <td style="padding: 6px 0; text-align: right; font-size: 12px;">
+                ${
+                  isFreeShipping
+                    ? '<span style="color: #059669; font-weight: 600;">FREE</span>'
+                    : `<span style="color: #334155;">GH₵${shipping.toFixed(2)}</span>`
                 }
               </td>
             </tr>
@@ -447,8 +492,8 @@ class NotificationService {
               <td colspan="2" style="padding: 8px 0 0;"><div style="border-top: 1px solid #e2e8f0;"></div></td>
             </tr>
             <tr>
-              <td style="padding: 10px 0; font-weight: 700; font-size: 16px; color: #0f172a;">Total</td>
-              <td style="padding: 10px 0; text-align: right; font-weight: 700; font-size: 16px; color: #059669;">GH₵${total.toFixed(2)}</td>
+              <td style="padding: 10px 0; font-weight: 700; font-size: 13px; color: #0f172a;">Total</td>
+              <td style="padding: 10px 0; text-align: right; font-weight: 700; font-size: 13px; color: #059669;">GH₵${total.toFixed(2)}</td>
             </tr>
           </table>
         </div>
@@ -460,18 +505,27 @@ class NotificationService {
           <tr>
             <td style="vertical-align: top; width: 50%; padding: 4px 8px 4px 0;">
               <p style="margin: 0 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #16a34a; font-weight: 600;">Estimated Delivery</p>
-              <p style="margin: 0; font-size: 14px; color: #0f172a; font-weight: 600;">${deliveryRange}</p>
+              <p style="margin: 0; font-size: 12px; color: #0f172a; font-weight: 600;">${deliveryRange}</p>
               <p style="margin: 4px 0 0; font-size: 12px; color: #64748b;">24hrs to 5 days</p>
 
-              ${paymentMethod ? `
+              ${
+                paymentMethod
+                  ? `
                 <p style="margin: 16px 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #16a34a; font-weight: 600;">Payment Method</p>
-                <p style="margin: 0; font-size: 14px; color: #0f172a; font-weight: 600;">${
-                  paymentMethod === 'cash_on_delivery' ? 'Cash on Delivery' :
-                  paymentMethod === 'store_pickup' ? 'Store Pickup' :
-                  paymentMethod === 'card' ? 'Card Payment' :
-                  paymentMethod === 'momo' ? 'Mobile Money' : 'Paid'
+                <p style="margin: 0; font-size: 12px; color: #0f172a; font-weight: 600;">${
+                  paymentMethod === "cash_on_delivery"
+                    ? "Cash on Delivery"
+                    : paymentMethod === "store_pickup"
+                      ? "Store Pickup"
+                      : paymentMethod === "card"
+                        ? "Card Payment"
+                        : paymentMethod === "momo"
+                          ? "Mobile Money"
+                          : "Paid"
                 }</p>
-              ` : ''}
+              `
+                  : ""
+              }
             </td>
             <td style="vertical-align: top; width: 50%; padding: 4px 0 4px 8px; border-left: 1px solid #bbf7d0;">
               <p style="margin: 0 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #16a34a; font-weight: 600;">Delivery Address</p>
@@ -488,17 +542,27 @@ class NotificationService {
 
       <!-- Referral Nudge -->
       <div style="background: #f8fafc; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 12px; border: 1px solid #e2e8f0;">
-        <p style="margin: 0 0 8px; font-size: 16px; font-weight: 600; color: #0f172a;">Love SHERO?</p>
-        <p style="margin: 0 0 16px; font-size: 14px; color: #64748b;">Share the experience with a friend and they'll thank you later.</p>
+        <p style="margin: 0 0 8px; font-size: 13px; font-weight: 600; color: #0f172a;">Love SHERO?</p>
+        <p style="margin: 0 0 16px; font-size: 12px; color: #64748b;">Share the experience with a friend and they'll thank you later.</p>
         <a href="${baseUrl}" style="color: #059669; font-weight: 600; text-decoration: none;">Share SHERO Store →</a>
       </div>
     `;
-    const htmlContent = this.wrapEmailHtml(bodyHtml, { preheader: "Thank you for your order! Here's your receipt." });
+    const htmlContent = this.wrapEmailHtml(bodyHtml, {
+      preheader: "Thank you for your order! Here's your receipt.",
+    });
 
     let attachments;
     try {
-      const pdfBuffer = await generateInvoicePdf(orderId, shippingInfo, items, total, paymentMethod || "cash_on_delivery");
-      attachments = [{ filename: `Invoice-${readableOrderId}.pdf`, content: pdfBuffer }];
+      const pdfBuffer = await generateInvoicePdf(
+        orderId,
+        shippingInfo,
+        items,
+        total,
+        paymentMethod || "cash_on_delivery",
+      );
+      attachments = [
+        { filename: `Invoice-${readableOrderId}.pdf`, content: pdfBuffer },
+      ];
     } catch (e) {
       console.error("Failed to generate PDF invoice:", e);
     }
@@ -507,7 +571,7 @@ class NotificationService {
       shippingInfo.email,
       `Order Confirmation - ${readableOrderId}`,
       htmlContent,
-      { attachments }
+      { attachments },
     );
 
     // Admin alert
@@ -530,10 +594,11 @@ class NotificationService {
     // -------------------------------------------------------------------------
     // WhatsApp Notifications (Meta Business Cloud API)
     // -------------------------------------------------------------------------
-    
+
     // 1. Alert Admin
-    const adminWhatsapp = process.env.ADMIN_WHATSAPP_NUMBER || COMPANY_CONTACTS.WHATSAPP;
-    const adminAlertText = 
+    const adminWhatsapp =
+      process.env.ADMIN_WHATSAPP_NUMBER || COMPANY_CONTACTS.WHATSAPP;
+    const adminAlertText =
       `🚨 *NEW ORDER RECEIVED!*\n\n` +
       `📦 *Order ID:* ${readableOrderId}\n` +
       `👤 *Customer:* ${shippingInfo.firstName} ${shippingInfo.lastName}\n` +
@@ -541,9 +606,10 @@ class NotificationService {
       `📞 *Phone:* ${shippingInfo.phone}\n` +
       `📍 *Region:* ${shippingInfo.region} - ${shippingInfo.city}\n\n` +
       `🔗 _View in Admin:_ ${baseUrl}/admin/orders/${orderId}`;
-    
-    this.sendWhatsAppNotification(adminWhatsapp, adminAlertText)
-      .catch((err) => console.error("Admin WhatsApp notification failed:", err));
+
+    this.sendWhatsAppNotification(adminWhatsapp, adminAlertText).catch((err) =>
+      console.error("Admin WhatsApp notification failed:", err),
+    );
 
     // 2. Alert Customer
     const customerPhone = this.formatToInternationalPhone(shippingInfo.phone);
@@ -556,9 +622,10 @@ class NotificationService {
         `📍 *Delivery Details:* ${shippingInfo.address}, ${shippingInfo.city}\n\n` +
         `🔗 *Live Track:* ${baseUrl}/track/${orderId}\n\n` +
         `If you need immediate support, reply directly to this chat. Thank you for choosing SHERO!`;
-      
-      this.sendWhatsAppNotification(customerPhone, customerMsg)
-        .catch((err) => console.error("Customer WhatsApp notification failed:", err));
+
+      this.sendWhatsAppNotification(customerPhone, customerMsg).catch((err) =>
+        console.error("Customer WhatsApp notification failed:", err),
+      );
     }
   }
 
@@ -569,18 +636,18 @@ class NotificationService {
   ) {
     const readableOrderId = toReadableOrderId(orderId);
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
-    
+
     let title = "Order Update";
     let message = `There is an update on your order <strong>${readableOrderId}</strong>.`;
     let preheader = "Update on your SHERO order.";
 
     if (newStatus === "intransit") {
       title = "Your Order is on the Way!";
-      message = `Great news, ${shippingInfo.firstName}! Your order <strong>${readableOrderId}</strong> has been dispatched and is in transit to you.`;
+      message = `Great news, ${shippingInfo.firstName.trim()}! Your order <strong>${readableOrderId}</strong> has been dispatched and is in transit to you.`;
       preheader = "Your SHERO order is in transit!";
     } else if (newStatus === "delivered") {
       title = "Your Order has been Delivered!";
-      message = `Hi ${shippingInfo.firstName}, your order <strong>${readableOrderId}</strong> has been delivered. We hope you love your new gear!`;
+      message = `Hi ${shippingInfo.firstName.trim()}, your order <strong>${readableOrderId}</strong> has been delivered. We hope you love your new gear!`;
       preheader = "Your SHERO order has been delivered!";
     }
 
@@ -591,7 +658,7 @@ class NotificationService {
         <a href="${baseUrl}/track/${orderId}" style="display: inline-block; padding: 12px 32px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Track Your Order</a>
       </p>
     `;
-    
+
     const htmlContent = this.wrapEmailHtml(bodyHtml, { preheader });
 
     await this.sendEmail(
@@ -604,13 +671,19 @@ class NotificationService {
     const customerPhone = this.formatToInternationalPhone(shippingInfo.phone);
     if (customerPhone) {
       let waMessage = `Hi ${shippingInfo.firstName},\n\nThere is an update on your order *${readableOrderId}* at *SHERO TECHNOLOGIES*.\n\n`;
-      if (newStatus === "intransit") waMessage = `Hi ${shippingInfo.firstName} 🚚\n\nYour order *${readableOrderId}* from *SHERO TECHNOLOGIES* has been dispatched and is in transit to you!\n\n`;
-      if (newStatus === "delivered") waMessage = `Hi ${shippingInfo.firstName} 🎉\n\nYour order *${readableOrderId}* from *SHERO TECHNOLOGIES* has been delivered!\n\nWe hope you love it.\n\n`;
-      
+      if (newStatus === "intransit")
+        waMessage = `Hi ${shippingInfo.firstName} 🚚\n\nYour order *${readableOrderId}* from *SHERO TECHNOLOGIES* has been dispatched and is in transit to you!\n\n`;
+      if (newStatus === "delivered")
+        waMessage = `Hi ${shippingInfo.firstName} 🎉\n\nYour order *${readableOrderId}* from *SHERO TECHNOLOGIES* has been delivered!\n\nWe hope you love it.\n\n`;
+
       waMessage += `🔗 *Track your order:* ${baseUrl}/track/${orderId}`;
-      
-      this.sendWhatsAppNotification(customerPhone, waMessage)
-        .catch((err) => console.error("Customer WhatsApp status update notification failed:", err));
+
+      this.sendWhatsAppNotification(customerPhone, waMessage).catch((err) =>
+        console.error(
+          "Customer WhatsApp status update notification failed:",
+          err,
+        ),
+      );
     }
   }
 
@@ -629,8 +702,10 @@ class NotificationService {
         <a href="${baseUrl}/feedback?order=${orderId}" style="display: inline-block; padding: 12px 32px; background: #0f172a; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Leave a Review</a>
       </p>
     `;
-    
-    const htmlContent = this.wrapEmailHtml(bodyHtml, { preheader: "How was your experience with SHERO?" });
+
+    const htmlContent = this.wrapEmailHtml(bodyHtml, {
+      preheader: "How was your experience with SHERO?",
+    });
 
     await this.sendEmail(
       shippingInfo.email,
@@ -674,9 +749,10 @@ class NotificationService {
         `Unfortunately, the payment for your order *${readableOrderId}* at *SHERO TECHNOLOGIES* failed.\n\n` +
         `You can try again or contact us for help.\n\n` +
         `🔗 *View Order:* ${baseUrl}/track/${orderId}`;
-      
-      this.sendWhatsAppNotification(customerPhone, customerMsg)
-        .catch((err) => console.error("Customer WhatsApp failure notification failed:", err));
+
+      this.sendWhatsAppNotification(customerPhone, customerMsg).catch((err) =>
+        console.error("Customer WhatsApp failure notification failed:", err),
+      );
     }
   }
 }
