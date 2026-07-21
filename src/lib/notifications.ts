@@ -241,7 +241,7 @@ class NotificationService {
   public async sendWelcomeEmail(email: string, name: string) {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
     const bodyHtml = `
-      <h1 style="color: #059669; text-align: center; margin: 0 0 20px;">Welcome to SHERO TECHNOLOGIES!</h1>
+      <h1 style="color: #059669; text-align: center; margin: 0 0 20px; font-size: 14px;">Welcome to SHERO TECHNOLOGIES!</h1>
       <p>Hi ${name},</p>
       <p>We're thrilled to have you here. Your account has been successfully created.</p>
       <p>Start exploring the best technology products, gadgets, and accessories today.</p>
@@ -261,7 +261,7 @@ class NotificationService {
     resetLink: string,
   ) {
     const bodyHtml = `
-      <h1 style="text-align: center; margin: 0 0 20px;">Reset Your Password</h1>
+      <h1 style="text-align: center; margin: 0 0 20px; font-size: 14px;">Reset Your Password</h1>
       <p>Hi ${name},</p>
       <p>We received a request to reset your password for your SHERO TECHNOLOGIES account.</p>
       <p>Click the button below to set a new password. This link is valid for 1 hour.</p>
@@ -451,7 +451,7 @@ class NotificationService {
     });
 
     const bodyHtml = `
-      <h1 style="color: #059669; text-align: center; margin: 0 0 8px;">Order Confirmed!</h1>
+      <h1 style="color: #059669; text-align: center; margin: 0 0 8px; font-size: 14px;">Order Confirmed!</h1>
       <p style="text-align: center; color: #64748b; font-size: 12px; margin: 0 0 24px;">Order <strong style="color: #0f172a;">${readableOrderId}</strong> &middot; ${orderDate}</p>
 
       <p style="margin: 0 0 20px;">Hi ${shippingInfo.firstName},</p>
@@ -652,7 +652,7 @@ class NotificationService {
     }
 
     const bodyHtml = `
-      <h1 style="color: #059669; text-align: center; margin: 0 0 20px;">${title}</h1>
+      <h1 style="color: #059669; text-align: center; margin: 0 0 20px; font-size: 14px;">${title}</h1>
       <p style="margin: 0 0 16px;">${message}</p>
       <p style="text-align: center; margin-top: 24px;">
         <a href="${baseUrl}/track/${orderId}" style="display: inline-block; padding: 12px 32px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Track Your Order</a>
@@ -695,7 +695,7 @@ class NotificationService {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
 
     const bodyHtml = `
-      <h1 style="color: #059669; text-align: center; margin: 0 0 20px;">How did we do?</h1>
+      <h1 style="color: #059669; text-align: center; margin: 0 0 20px; font-size: 14px;">How did we do?</h1>
       <p style="margin: 0 0 16px;">Hi ${shippingInfo.firstName},</p>
       <p style="margin: 0 0 16px;">Your order <strong>${readableOrderId}</strong> was recently delivered. We'd love to hear about your experience!</p>
       <p style="text-align: center; margin-top: 24px;">
@@ -722,7 +722,7 @@ class NotificationService {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
 
     const bodyHtml = `
-      <h1 style="color: #dc2626; text-align: center; margin: 0 0 20px;">Payment Was Not Completed</h1>
+      <h1 style="color: #dc2626; text-align: center; margin: 0 0 20px; font-size: 14px;">Payment Was Not Completed</h1>
       <p>Hi ${shippingInfo.firstName},</p>
       <p>Unfortunately, your payment for order <strong>${readableOrderId}</strong> could not be processed successfully.</p>
       <p>Don't worry — no money has been deducted from your account. You can try again or contact our support team for assistance.</p>
