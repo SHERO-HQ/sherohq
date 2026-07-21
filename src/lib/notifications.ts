@@ -63,14 +63,12 @@ class NotificationService {
 
     return `
       ${preheaderHtml}
-      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+      <div style="font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
         <!-- Header with Logo -->
         <div style="text-align: center; padding: 28px 20px 20px; border-bottom: 2px solid #059669;">
           <a href="${baseUrl}" target="_blank" style="text-decoration: none;">
-            <img src="${logoUrl}" alt="SHERO TECHNOLOGIES" width="48" height="48" style="display: inline-block; vertical-align: middle;" />
+            <img src="${logoUrl}" alt="SHERO TECHNOLOGIES" width="40" height="40" style="display: inline-block; vertical-align: middle;" />
           </a>
-          <div style="margin-top: 8px; font-size: 16px; font-weight: 700; color: #0f172a; letter-spacing: 1px;">SHERO TECHNOLOGIES</div>
-        </div>
 
         <!-- Body -->
         <div style="padding: 28px 24px 12px;">
@@ -79,9 +77,13 @@ class NotificationService {
 
         <!-- Footer -->
         <div style="border-top: 1px solid #e2e8f0; padding: 20px 24px; text-align: center; color: #94a3b8; font-size: 12px; line-height: 1.6;">
-          ${!options?.hideFooterContact ? `
+          ${
+            !options?.hideFooterContact
+              ? `
             <p style="margin: 0 0 8px;">Need help? <a href="https://wa.me/${COMPANY_CONTACTS.WHATSAPP}" style="color: #059669; text-decoration: none;">WhatsApp</a> · <a href="mailto:${COMPANY_EMAILS.SUPPORT}" style="color: #059669; text-decoration: none;">${COMPANY_EMAILS.SUPPORT}</a></p>
-          ` : ""}
+          `
+              : ""
+          }
           <div style="margin: 12px 0;">
             <a href="${SOCIAL_LINKS.TWITTER}" style="color: #64748b; text-decoration: none; margin: 0 8px;">Twitter</a>
             <a href="${SOCIAL_LINKS.TIKTOK}" style="color: #64748b; text-decoration: none; margin: 0 8px;">TikTok</a>
@@ -260,7 +262,7 @@ class NotificationService {
         ${isOutOfStock ? '🚨 OUT OF STOCK ALERT' : '⚠️ LOW STOCK WARNING'}
       </h2>
       <p><strong>Product:</strong> ${productName}</p>
-      <p><strong>Remaining Stock:</strong> <span style="font-size: 18px; font-weight: bold; color: ${isOutOfStock ? '#dc2626' : '#d97706'}">${stockLeft}</span></p>
+      <p><strong>Remaining Stock:</strong> <span style="font-size: 16px; font-weight: bold; color: ${isOutOfStock ? '#dc2626' : '#d97706'}">${stockLeft}</span></p>
       <p style="margin-top: 16px;">Please log into the admin dashboard to restock this item.</p>
     `;
 
@@ -446,7 +448,7 @@ class NotificationService {
             </tr>
             <tr>
               <td style="padding: 10px 0; font-weight: 700; font-size: 16px; color: #0f172a;">Total</td>
-              <td style="padding: 10px 0; text-align: right; font-weight: 700; font-size: 18px; color: #059669;">GH₵${total.toFixed(2)}</td>
+              <td style="padding: 10px 0; text-align: right; font-weight: 700; font-size: 16px; color: #059669;">GH₵${total.toFixed(2)}</td>
             </tr>
           </table>
         </div>
