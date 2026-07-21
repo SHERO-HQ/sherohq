@@ -14,7 +14,6 @@ if (!databaseUrl) {
   process.exit(1);
 }
 
-// Order of migration files to apply
 const migrationFiles = [
   "001-create-customer-feedback-table.sql",
   "002-fix-database-security.sql",
@@ -23,7 +22,8 @@ const migrationFiles = [
   "005-add-missing-indexes.sql",
   "006-create-product-reviews-and-carts.sql",
   "007-add-cost-price-and-cogs.sql",
-  "008-add-seo-columns.sql"
+  "008-add-seo-columns.sql",
+  "009-add-payment-columns.sql"
 ];
 
 async function runMigrations() {

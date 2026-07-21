@@ -2,16 +2,55 @@ import { NextRequest } from "next/server";
 import { query, getClient } from "@/lib/db";
 import { apiResponse } from "@/lib/api-utils";
 import { toReadableOrderId } from "@/utils/orderId";
+import { getAdminFromSession, getUserFromSession } from "@/lib/auth";
+import { hashOrderAccessToken } from "@/lib/orderUtils";
 import { randomUUID } from "node:crypto";
+import { rateLimit } from "@/lib/rate-limit";
+
+function getPaymentStatusFromOrderStatus(status: string) {
+  const normalized = status.toLowerCase();
+  if (["processing", "intransit", "delivered"].includes(normalized)) {
+    return "confirmed";
+  }
+  if (["failed", "cancelled", "canceled"].includes(normalized)) {
+    return "failed";
+  }
+  return "pending";
+}
 
 export async function POST(request: NextRequest) {
+  let orderId = "";
+  let provider = "";
+
   try {
     const payload = await request.json();
-    const { orderId } = payload;
-    let { provider } = payload;
+    orderId = payload.orderId;
+    provider =
+      payload.provider === "hubtel" || payload.provider === "paystack"
+        ? payload.provider
+        : "";
 
     if (!orderId) {
       return apiResponse.error("Order ID is required", 400);
+    }
+    if (!provider) {
+      return apiResponse.error("Payment provider is required", 400);
+    }
+
+    // Rate limit: 15 verify calls per minute per order (generous for 12-attempt polling + retries)
+    const ip =
+      request.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
+    const rateLimitResult = await rateLimit(
+      `payment-verify:${orderId}`,
+      15,
+      60_000,
+    );
+    if (!rateLimitResult.success) {
+      console.warn("[payment:verify] Rate limit exceeded", { orderId, ip });
+      return apiResponse.error(
+        "Too many verification attempts. Please wait a moment.",
+        429,
+      );
     }
 
     const orderRes = await query(`SELECT * FROM orders WHERE id = $1`, [
@@ -23,10 +62,28 @@ export async function POST(request: NextRequest) {
     }
 
     const order = orderRes.rows[0];
+    const [user, admin] = await Promise.all([
+      getUserFromSession(),
+      getAdminFromSession(),
+    ]);
+    const tokenHeader = request.headers.get("x-order-access-token");
+    const hasValidOrderAccessToken =
+      tokenHeader &&
+      order.orderAccessTokenHash &&
+      hashOrderAccessToken(tokenHeader.trim()) === order.orderAccessTokenHash;
+    const isAuthorized =
+      !!admin ||
+      (!!user && user.id === order.userId) ||
+      !!hasValidOrderAccessToken;
+
+    if (!isAuthorized) return apiResponse.unauthorized();
 
     // If order is already processed, no need to verify again
     if (order.status !== "pending") {
-      return apiResponse.success({ status: order.status });
+      return apiResponse.success({
+        status: order.status,
+        paymentStatus: getPaymentStatusFromOrderStatus(order.status),
+      });
     }
 
     let verified = false;
@@ -42,29 +99,21 @@ export async function POST(request: NextRequest) {
       verified = result.verified;
       providerStatus = normalizeHubtelStatus(result.status || "");
       verifiedAmount = result.amount;
-      
-      if (!verified) {
-        // Fallback: check Paystack in case Hubtel failed during initialize and we fell back to Paystack
-        const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET || process.env.PAYSTACK_SECRET_KEY;
-        if (PAYSTACK_SECRET) {
-          try {
-            const resp = await fetch(`https://api.paystack.co/transaction/verify/${orderId}`, {
-              headers: { Authorization: `Bearer ${PAYSTACK_SECRET}` },
-            });
-            const data = await resp.json();
-            if (data.status && data.data?.status === "success") {
-              verified = true;
-              providerStatus = data.data.status;
-              verifiedAmount = data.data?.amount ? data.data.amount / 100 : null;
-              provider = "paystack (fallback)"; // Update provider for logging
-            }
-          } catch (err) {}
-        }
-      }
-      
-      if (!verified && (providerStatus === "Failed" || providerStatus === "Cancelled")) {
+
+      if (
+        !verified &&
+        (providerStatus === "Failed" || providerStatus === "Cancelled")
+      ) {
+        console.log("[payment:verify]", {
+          provider,
+          orderId,
+          event: "provider_declined",
+          providerStatus,
+        });
         return apiResponse.success({
-          status: "pending",
+          // Keep order pending so this declined payment can be retried.
+          status: order.status,
+          paymentStatus: "failed",
           hubtelStatus: result.status,
           verified: false,
         });
@@ -74,25 +123,45 @@ export async function POST(request: NextRequest) {
         process.env.PAYSTACK_SECRET || process.env.PAYSTACK_SECRET_KEY;
       if (PAYSTACK_SECRET) {
         try {
-          const resp = await fetch(`https://api.paystack.co/transaction/verify/${orderId}`, {
-            headers: {
-              Authorization: `Bearer ${PAYSTACK_SECRET}`,
+          const resp = await fetch(
+            `https://api.paystack.co/transaction/verify/${orderId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${PAYSTACK_SECRET}`,
+              },
+              signal: AbortSignal.timeout(10_000),
             },
-          });
+          );
           const data = await resp.json();
           verified = data.status && data.data?.status === "success";
           providerStatus = data.data?.status || "failed";
           verifiedAmount = data.data?.amount ? data.data.amount / 100 : null;
-          
-          if (!verified && (providerStatus === "failed" || providerStatus === "abandoned")) {
+
+          if (
+            !verified &&
+            ["failed", "abandoned", "reversed"].includes(providerStatus)
+          ) {
+            console.log("[payment:verify]", {
+              provider,
+              orderId,
+              event: "provider_declined",
+              providerStatus,
+            });
             return apiResponse.success({
-              status: "pending",
+              // Keep order pending so this declined payment can be retried.
+              status: order.status,
+              paymentStatus: "failed",
               paystackStatus: providerStatus,
               verified: false,
             });
           }
         } catch (err) {
-          console.error("Paystack verify error:", err);
+          console.error("[payment:verify]", {
+            provider,
+            orderId,
+            event: "provider_fetch_error",
+            error: err instanceof Error ? err.message : err,
+          });
         }
       }
     }
@@ -100,20 +169,36 @@ export async function POST(request: NextRequest) {
     if (verified) {
       const orderTotal = Number(order.total);
       if (verifiedAmount !== null && verifiedAmount < orderTotal) {
-        console.error(`[Amount Mismatch] Verify API: Order ${orderId} expected ${orderTotal}, but received ${verifiedAmount}`);
+        console.error("[payment:verify]", {
+          event: "amount_mismatch",
+          provider,
+          orderId,
+          expected: orderTotal,
+          received: verifiedAmount,
+        });
         return apiResponse.error("Payment amount mismatch detected", 400);
       }
 
       const client = await getClient();
       try {
         await client.query("BEGIN");
-        
-        const checkRes = await client.query(`SELECT status FROM orders WHERE id = $1 FOR UPDATE`, [orderId]);
+
+        const checkRes = await client.query(
+          `SELECT status FROM orders WHERE id = $1 FOR UPDATE`,
+          [orderId],
+        );
         if (checkRes.rows[0].status === "pending") {
-          await client.query("UPDATE orders SET status = $1 WHERE id = $2", [
-            "processing",
-            orderId,
-          ]);
+          await client.query(
+            `UPDATE orders
+             SET status = $1, "paymentStatus" = $2, "paymentMessage" = $3
+             WHERE id = $4`,
+            [
+              "processing",
+              "confirmed",
+              `Payment verified via ${provider}`,
+              orderId,
+            ],
+          );
 
           await client.query(
             `INSERT INTO activity_logs (id, action, type, details, "createdAt")
@@ -123,10 +208,17 @@ export async function POST(request: NextRequest) {
               "order_payment",
               "success",
               `Payment manually verified via ${provider}. Reference: ${orderId}`,
-            ]
+            ],
           );
 
-          // trigger notifications
+          console.log("[payment:verify]", {
+            event: "order_confirmed",
+            provider,
+            orderId,
+            newStatus: "processing",
+          });
+
+          // Trigger confirmation notification
           try {
             const { notificationService } = await import("@/lib/notifications");
             const parsedItems =
@@ -144,27 +236,56 @@ export async function POST(request: NextRequest) {
                 parsedShipping,
                 parsedItems,
                 Number(order.total),
-                order.paymentMethod
+                order.paymentMethod,
               )
               .catch((err) =>
-                console.error("Verify API Notification failed:", err)
+                console.error("[payment:verify] Confirmation notification failed:", {
+                  orderId,
+                  error: err instanceof Error ? err.message : err,
+                }),
               );
-          } catch (err) {}
+          } catch (err) {
+            console.error(
+              "[payment:verify] Failed to import/call notificationService:",
+              {
+                orderId,
+                error: err instanceof Error ? err.message : err,
+              },
+            );
+          }
         }
         await client.query("COMMIT");
-        return apiResponse.success({ status: "processing" });
+        return apiResponse.success({
+          status: "processing",
+          paymentStatus: "confirmed",
+          verified: true,
+        });
       } catch (err) {
         await client.query("ROLLBACK");
-        console.error("Manual verify DB error:", err);
+        console.error("[payment:verify]", {
+          event: "db_error",
+          provider,
+          orderId,
+          error: err instanceof Error ? err.message : err,
+        });
         return apiResponse.error("Database error during verification", 500);
       } finally {
         client.release();
       }
     }
 
-    return apiResponse.success({ status: order.status });
+    return apiResponse.success({
+      status: order.status,
+      paymentStatus: "pending",
+      verified: false,
+    });
   } catch (err) {
-    console.error("Manual verify error:", err);
+    console.error("[payment:verify]", {
+      event: "unhandled_error",
+      orderId,
+      provider,
+      error: err instanceof Error ? err.message : err,
+    });
     return apiResponse.error("Server error");
   }
 }

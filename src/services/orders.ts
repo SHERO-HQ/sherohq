@@ -23,6 +23,7 @@ export interface ShippingInfo {
   city: string;
   region: string;
   postalCode?: string;
+  gpsAddress?: string;
 }
 
 export interface CreateOrderPayload {
@@ -54,6 +55,7 @@ export interface Order {
   createdAt: Date;
   referralCode?: string;
   paymentMessage?: string;
+  paymentStatus?: "confirmed" | "failed" | "pending";
 }
 
 // ---------------------------------------------------------------------------
@@ -218,7 +220,14 @@ export async function initializePayment(
 export async function verifyPayment(
   orderId: string,
   provider: string,
-): Promise<{ success: boolean; status?: string; verified?: boolean; hubtelStatus?: string }> {
+): Promise<{
+  success: boolean;
+  status?: string;
+  paymentStatus?: string;
+  verified?: boolean;
+  hubtelStatus?: string;
+  paystackStatus?: string;
+}> {
   const response = await fetch(`${API_BASE}/payments/verify`, {
     method: "POST",
     headers: {
@@ -228,5 +237,12 @@ export async function verifyPayment(
     credentials: "include",
     body: JSON.stringify({ orderId, provider }),
   });
-  return await response.json();
+  return handleResponse<{
+    success: boolean;
+    status?: string;
+    paymentStatus?: string;
+    verified?: boolean;
+    hubtelStatus?: string;
+    paystackStatus?: string;
+  }>(response);
 }

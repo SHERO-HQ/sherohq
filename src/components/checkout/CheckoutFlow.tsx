@@ -4,15 +4,16 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { checkoutSchema, type CheckoutInput } from "@/lib/validations/checkout";
 import { getGuestId } from "@/utils/guestSession";
-import { saveOrderAccessToken } from "@/utils/orderAccess";
+import { getOrderAccessToken, saveOrderAccessToken } from "@/utils/orderAccess";
 import {
   createOrder,
   initializePayment,
   getImageUrl,
+  trackOrder,
   updateOrderPaymentMethod,
 } from "@/services/api";
 import { motion, AnimatePresence } from "motion/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ShoppingBag,
   Truck,
@@ -47,6 +48,7 @@ import AppImage from "@/components/common/AppImage";
 import { toReadableOrderId } from "@/utils/orderId";
 import { WhatsAppIcon } from "@/assets/icons/icons";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
+import { getRetryOrderId } from "@/lib/checkoutRetry";
 
 type PaymentMethodValue = "momo" | "card" | "cod" | "store_pickup";
 
@@ -101,6 +103,8 @@ const CHECKOUT_STEPS = [
 
 const CheckoutFlow = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const retryOrderId = getRetryOrderId(searchParams);
   const {
     cart,
     updateQuantity,
@@ -120,6 +124,7 @@ const CheckoutFlow = () => {
 
   const [paymentError, setPaymentError] = useState(false);
   const [isUpdatingOffline, setIsUpdatingOffline] = useState(false);
+  const [isRestoringRetry, setIsRestoringRetry] = useState(false);
 
   useEffect(() => {
     if (currentStep >= 4) return;
@@ -191,22 +196,99 @@ const CheckoutFlow = () => {
     }
   }, [isAuthenticated, user, setValue]);
 
-  // Redirect if cart is empty (must be in useEffect to avoid setState during render)
   useEffect(() => {
+    if (retryOrderId) return;
+
     if (cart.length === 0 && currentStep < 4) {
       router.push("/products");
     }
-  }, [cart.length, currentStep, router]);
+  }, [cart.length, currentStep, router, retryOrderId]);
 
-  // Show nothing while redirecting
-  if (cart.length === 0 && currentStep < 4) {
+  useEffect(() => {
+    if (!retryOrderId || isRestoringRetry) return;
+
+    let isCancelled = false;
+
+    const restoreRetryOrder = async () => {
+      setIsRestoringRetry(true);
+      setIsSubmitting(true);
+      setPaymentError(false);
+
+      try {
+        const order = await trackOrder(
+          retryOrderId,
+          getOrderAccessToken(retryOrderId) || undefined,
+        );
+
+        if (isCancelled) return;
+
+        setOrderId(order.id);
+        setConfirmedTotal(order.total ?? 0);
+        setCurrentStep(3);
+
+        if (order.status !== "pending") {
+          setPaymentError(true);
+          return;
+        }
+
+        const shippingInfo = order.shippingInfo || {};
+        setValue("email", shippingInfo.email || "");
+        setValue("phone", shippingInfo.phone || "");
+        setValue("shippingAddress.firstName", shippingInfo.firstName || "");
+        setValue("shippingAddress.lastName", shippingInfo.lastName || "");
+        setValue("shippingAddress.address", shippingInfo.address || "");
+        setValue("shippingAddress.city", shippingInfo.city || "");
+        setValue("shippingAddress.region", shippingInfo.region || "");
+        setValue("shippingAddress.postalCode", shippingInfo.postalCode || "");
+        setValue("shippingAddress.gpsAddress", shippingInfo.gpsAddress || "");
+
+        const paymentMethodValue =
+          order.paymentMethod === "cash_on_delivery"
+            ? "cod"
+            : order.paymentMethod === "store_pickup"
+              ? "store_pickup"
+              : order.paymentMethod === "card"
+                ? "card"
+                : "momo";
+        setValue(
+          "paymentMethod",
+          paymentMethodValue as CheckoutInput["paymentMethod"],
+        );
+
+        if (paymentMethodValue !== "momo" && paymentMethodValue !== "card") {
+          setPaymentError(true);
+          return;
+        }
+
+        await processPayment(order.id, order.total, paymentMethodValue);
+      } catch (error) {
+        console.error("Failed to restore retry order:", error);
+        setPaymentError(true);
+      } finally {
+        if (!isCancelled) {
+          setIsSubmitting(false);
+          setIsRestoringRetry(false);
+        }
+      }
+    };
+
+    void restoreRetryOrder();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [retryOrderId, setValue]);
+
+  // Show nothing while redirecting for a normal cart checkout.
+  // Retry-based restorations should still render the payment step for the existing order.
+  if (cart.length === 0 && currentStep < 4 && !retryOrderId) {
     return null;
   }
 
   // Calculate pricing
   const subtotal = totalPrice;
   const isFreeShipping = paymentMethod === "store_pickup" || subtotal > 500;
-  const shipping = isFreeShipping ? 0 : 50;
+  const shipping = 0; // Auto shipping fee removed
   const tax = 0;
   const total = subtotal + shipping + tax;
 
@@ -242,26 +324,38 @@ const CheckoutFlow = () => {
     }
   };
 
-  const processPayment = async (orderId: string) => {
+  const processPayment = async (
+    orderId: string,
+    amountOverride?: number,
+    paymentMethodOverride?: PaymentMethodValue,
+  ) => {
     try {
+      const paymentAmount = amountOverride ?? total;
+      const selectedPaymentMethod = paymentMethodOverride ?? paymentMethod;
+
       // Choose provider based on selected payment method (frontend invisible)
       const provider =
-        paymentMethod === "card"
+        selectedPaymentMethod === "card"
           ? "paystack"
-          : paymentMethod === "momo"
+          : selectedPaymentMethod === "momo"
             ? "hubtel"
             : undefined;
 
       const paymentResponse = await initializePayment(
         orderId,
-        total,
+        paymentAmount,
         `Order ${toReadableOrderId(orderId)}`,
         provider,
       );
 
-      if (paymentResponse.success && paymentResponse.checkoutUrl) {
+      const checkoutUrl = paymentResponse.checkoutUrl?.trim();
+      const isSafeCheckoutUrl = Boolean(
+        checkoutUrl && /^(https?:\/\/)/i.test(checkoutUrl),
+      );
+
+      if (paymentResponse.success && isSafeCheckoutUrl) {
         clearCart();
-        window.location.href = paymentResponse.checkoutUrl;
+        window.location.assign(checkoutUrl);
       } else {
         setPaymentError(true);
         window.dispatchEvent(
@@ -274,7 +368,10 @@ const CheckoutFlow = () => {
         );
       }
     } catch (error) {
-      console.error("Payment initialization failed:", error);
+      console.error("[payment:processPayment]", {
+        orderId,
+        error: error instanceof Error ? error.message : error,
+      });
       setPaymentError(true);
       window.dispatchEvent(
         new CustomEvent("shoro-ai-trigger", {
@@ -359,7 +456,7 @@ const CheckoutFlow = () => {
         setConfirmedTotal(response.total ?? total);
 
         if (["momo", "card"].includes(data.paymentMethod)) {
-          await processPayment(response.orderId);
+          await processPayment(response.orderId, total, data.paymentMethod);
           return;
         }
 
@@ -368,12 +465,11 @@ const CheckoutFlow = () => {
       }
     } catch (error) {
       console.error("Failed to place order:", error);
-      const errorMessage = error instanceof Error ? error.message : "Failed to place order. Please try again.";
-      addNotification(
-        "Order Error",
-        errorMessage,
-        "error",
-      );
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Failed to place order. Please try again.";
+      addNotification("Order Error", errorMessage, "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -523,7 +619,7 @@ const CheckoutFlow = () => {
                 >
                   <PaymentFailureSupport
                     orderId={orderId}
-                    amount={total}
+                    amount={confirmedTotal > 0 ? confirmedTotal : total}
                     onRetry={handleRetryPayment}
                     onSwitchToOffline={handleSwitchToOffline}
                     isUpdatingOffline={isUpdatingOffline}
@@ -659,7 +755,7 @@ const CheckoutFlow = () => {
                             id="email"
                             type="email"
                             label="Email Address"
-                            placeholder="john@example.com"
+                            placeholder="john@shero.com"
                             leftIcon={<Mail className="w-4 h-4" />}
                             error={errors.email?.message}
                             {...register("email")}

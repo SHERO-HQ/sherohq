@@ -5,16 +5,17 @@ import AboutTeam from "@/components/about/AboutTeam";
 import LandingStats from "@/components/landing/LandingStats";
 import AboutTestimonials from "@/components/about/AboutTestimonials";
 import AboutStory from "@/components/about/AboutStory";
+import AboutHero from "@/components/about/AboutHero";
 
 const About = () => {
  return (
  <>
  {/* <AboutHero /> */}
  <AboutStory />
- <LandingStats />
+ {/* <LandingStats /> */}
  <AboutValues />
  <AboutTestimonials />
- <AboutTeam />
+ {/* <AboutTeam /> */}
  </>
  );
 };

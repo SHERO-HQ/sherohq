@@ -4,10 +4,40 @@ import { apiResponse } from "@/lib/api-utils";
 import { getUserFromSession, getAdminFromSession } from "@/lib/auth";
 import { hashOrderAccessToken } from "@/lib/orderUtils";
 import { toReadableOrderId } from "@/utils/orderId";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
+  let orderId: string = "";
+  let normalizedProvider: "hubtel" | "paystack" | undefined;
+  let description: string | undefined;
+
   try {
-    const { orderId, description, provider } = await request.json();
+    const body = await request.json();
+    orderId = body.orderId || "";
+    const provider = body.provider;
+    description = body.description;
+    normalizedProvider =
+      provider === "hubtel" || provider === "paystack" ? provider : undefined;
+
+    if (!normalizedProvider) {
+      return apiResponse.error("Payment provider is required", 400);
+    }
+
+    // Rate limit: 5 initialize calls per minute per order
+    const ip =
+      request.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
+    const rateLimitResult = await rateLimit(
+      `payment-init:${orderId ?? ip}`,
+      5,
+      60_000,
+    );
+    if (!rateLimitResult.success) {
+      console.warn("[payment:initialize] Rate limit exceeded", { orderId, ip });
+      return apiResponse.error(
+        "Too many payment requests. Please wait a moment.",
+        429,
+      );
+    }
 
     const orderRes = await query(
       `SELECT "shippingInfo", total, status, "userId", "orderAccessTokenHash" FROM orders WHERE id = $1`,
@@ -43,23 +73,30 @@ export async function POST(request: NextRequest) {
     // Use host header to get the exact domain the user is accessing (e.g. sherohq.com or shop.sherohq.com)
     // This avoids Vercel's internal localhost/0.0.0.0 origins leaking into webhooks
     const host = request.headers.get("host") || "localhost:3000";
-    const protocol = request.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
-    const publicUrl = process.env.NEXT_PUBLIC_SITE_URL && process.env.NODE_ENV === "development"
-      ? process.env.NEXT_PUBLIC_SITE_URL 
-      : `${protocol}://${host}`;
+    const protocol =
+      request.headers.get("x-forwarded-proto") ||
+      (host.includes("localhost") ? "http" : "https");
+    const publicUrl =
+      process.env.NEXT_PUBLIC_SITE_URL && process.env.NODE_ENV === "development"
+        ? process.env.NEXT_PUBLIC_SITE_URL
+        : `${protocol}://${host}`;
 
     // Provider-specific initializations
-    if (provider === "paystack") {
+    if (normalizedProvider === "paystack") {
       return await initializePaystackTransaction(order, orderId, publicUrl);
     }
 
-    if (provider === "hubtel") {
-      const { buildHubtelAuth, getHubtelMerchantAccount, HUBTEL_API_BASE } = await import("@/lib/hubtel");
+    if (normalizedProvider === "hubtel") {
+      const { buildHubtelAuth, getHubtelMerchantAccount, HUBTEL_API_BASE } =
+        await import("@/lib/hubtel");
       const auth = buildHubtelAuth();
       const merchantAccountNumber = getHubtelMerchantAccount();
 
       if (!auth || !merchantAccountNumber) {
-        return apiResponse.error("Hubtel not configured on server", 500);
+        return apiResponse.error(
+          "Hubtel payment setup is incomplete. Please contact support.",
+          503,
+        );
       }
 
       const readableId = toReadableOrderId(orderId);
@@ -67,7 +104,7 @@ export async function POST(request: NextRequest) {
       const returnUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}`;
       // Separate cancellation URL with status param so frontend shows failure instantly
       const cancelUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}&status=Cancelled`;
-      
+
       const payload = {
         totalAmount: Math.round((order.total ?? 0) * 100) / 100,
         description: description || `Order ${toReadableOrderId(orderId)}`,
@@ -78,10 +115,13 @@ export async function POST(request: NextRequest) {
         clientReference: readableId,
       };
 
-      if (process.env.NODE_ENV !== "production") {
-        console.log("=== HUBTEL INIT PAYLOAD ===");
-        console.log(JSON.stringify(payload, null, 2));
-      }
+      console.log("[payment:initialize]", {
+        provider: "hubtel",
+        orderId,
+        callbackUrl,
+        returnUrl,
+        amount: payload.totalAmount,
+      });
 
       try {
         const resp = await fetch(`${HUBTEL_API_BASE}/items/initiate`, {
@@ -91,13 +131,22 @@ export async function POST(request: NextRequest) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(payload),
+          signal: AbortSignal.timeout(10_000),
         });
 
         const data = await resp.json();
-        
+
         if (!resp.ok || !data?.data?.checkoutUrl) {
-          console.warn("Hubtel initialize failed, falling back to Paystack:", data);
-          return await initializePaystackTransaction(order, orderId, publicUrl);
+          console.error("[payment:initialize]", {
+            provider: "hubtel",
+            orderId,
+            event: "init_failed",
+            response: data,
+          });
+          return apiResponse.error(
+            "We couldn't start the Hubtel payment flow. Please try again or contact support.",
+            502,
+          );
         }
 
         return apiResponse.success({
@@ -106,25 +155,38 @@ export async function POST(request: NextRequest) {
           readableOrderId: toReadableOrderId(orderId),
         });
       } catch (err) {
-        console.warn("Hubtel initialize network error, falling back to Paystack:", err);
-        return await initializePaystackTransaction(order, orderId, publicUrl);
+        console.error("[payment:initialize]", {
+          provider: "hubtel",
+          orderId,
+          event: "network_error",
+          error: err instanceof Error ? err.message : err,
+        });
+        return apiResponse.error(
+          "We couldn't reach the Hubtel payment service. Please try again or contact support.",
+          502,
+        );
       }
     }
 
-    // Fallback: return a mock checkout URL so frontend flows keep working in dev
-    const checkoutUrl = `${publicUrl}/checkout/mock-payment?orderId=${orderId}&provider=${provider || "unknown"}`;
-    return apiResponse.success({
-      checkoutUrl,
-      readableOrderId: toReadableOrderId(orderId),
-    });
+    return apiResponse.error("Unsupported payment provider", 400);
   } catch (error) {
-    console.error("Payment init error:", error);
+    console.error("[payment:initialize]", {
+      orderId,
+      provider: normalizedProvider,
+      event: "unhandled_error",
+      error: error instanceof Error ? error.message : error,
+    });
     return apiResponse.error("Failed to initialize payment");
   }
 }
 
-async function initializePaystackTransaction(order: any, orderId: string, publicUrl: string) {
-  const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET || process.env.PAYSTACK_SECRET_KEY;
+async function initializePaystackTransaction(
+  order: any,
+  orderId: string,
+  publicUrl: string,
+) {
+  const PAYSTACK_SECRET =
+    process.env.PAYSTACK_SECRET || process.env.PAYSTACK_SECRET_KEY;
   if (!PAYSTACK_SECRET) {
     return apiResponse.error("Paystack not configured on server", 500);
   }
@@ -134,7 +196,7 @@ async function initializePaystackTransaction(order: any, orderId: string, public
 
   // Paystack expects amount in the smallest currency unit (e.g., kobo/pesewa)
   const amount = Math.round((order.total ?? 0) * 100);
-  
+
   // Redirect customer to confirmation page after payment
   const readableId = toReadableOrderId(orderId);
   const callback_url = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}`;
@@ -152,11 +214,17 @@ async function initializePaystackTransaction(order: any, orderId: string, public
       callback_url,
       metadata: { orderId },
     }),
+    signal: AbortSignal.timeout(10_000),
   });
 
   const data = await resp.json();
   if (!data || !data.status) {
-    console.error("Paystack initialize failed:", data);
+    console.error("[payment:initialize]", {
+      provider: "paystack",
+      orderId,
+      event: "init_failed",
+      response: data,
+    });
     return apiResponse.error("Failed to initialize Paystack payment", 502);
   }
 

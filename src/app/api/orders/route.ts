@@ -14,6 +14,7 @@ import { v4 as uuidv4 } from "uuid";
 import { randomBytes } from "node:crypto";
 import { notificationService } from "@/lib/notifications";
 import { logActivity } from "@/lib/activity";
+import { toReadableOrderId } from "@/utils/orderId";
 
 // GET handler for admin list
 export async function GET(request: NextRequest) {
@@ -30,12 +31,7 @@ export async function GET(request: NextRequest) {
     const endDate = searchParams.get("endDate");
 
     let queryText = `
-      SELECT o.*, 
-        (SELECT details 
-         FROM activity_logs a 
-         WHERE a.action = 'order_payment' AND a.details LIKE '%' || o.id::text || '%' 
-         ORDER BY a."createdAt" DESC LIMIT 1
-        ) as "paymentMessage"
+      SELECT o.*
       FROM orders o
     `;
     const sqlParams: (string | number)[] = [];
@@ -73,7 +69,6 @@ export async function GET(request: NextRequest) {
       items: safeParse(order.items),
       shippingInfo: safeParse(order.shippingInfo),
       total: Number(order.total),
-      paymentMessage: order.paymentMessage,
     }));
 
     return NextResponse.json(orders);
@@ -105,6 +100,7 @@ export async function POST(request: NextRequest) {
 
     const productIds = items.map((i: any) => i.id);
     const orderId = uuidv4();
+    const clientReference = toReadableOrderId(orderId); // e.g. "ORD-A1B2C3D4"
     const orderAccessToken = randomBytes(32).toString("hex");
     const orderAccessTokenHash = hashOrderAccessToken(orderAccessToken);
 
@@ -162,8 +158,8 @@ export async function POST(request: NextRequest) {
     const resolvedGuestId = guestId || uuidv4();
 
     await client.query(
-      `INSERT INTO orders (id, "guestId", "userId", items, total, cogs, "shippingInfo", "paymentMethod", status, "referralCode", "orderAccessTokenHash")
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+      `INSERT INTO orders (id, "guestId", "userId", items, total, cogs, "shippingInfo", "paymentMethod", status, "referralCode", "orderAccessTokenHash", "clientReference")
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
       [
         orderId,
         resolvedGuestId,
@@ -176,6 +172,7 @@ export async function POST(request: NextRequest) {
         "pending",
         referralCode || null,
         orderAccessTokenHash,
+        clientReference,
       ]
     );
 

@@ -62,6 +62,8 @@ export async function GET(
         status: order.status,
         createdAt: order.createdAt,
         paymentMethod: order.paymentMethod,
+        paymentStatus: order.paymentStatus,
+        paymentMessage: order.paymentMessage,
         activityLogs: activityLogs.map(l => ({ action: l.action, createdAt: l.createdAt })),
       });
     }
@@ -86,6 +88,8 @@ export async function GET(
       items: parsedItems,
       shippingInfo: safeParse(order.shippingInfo),
       total: Number(order.total),
+      paymentStatus: order.paymentStatus,
+      paymentMessage: order.paymentMessage,
       orderAccessTokenHash: undefined,
       activityLogs,
     });

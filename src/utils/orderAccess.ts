@@ -33,7 +33,26 @@ export function getOrderAccessToken(orderId: string): string | null {
   if (!orderId) return null;
 
   const map = readOrderAccessMap();
-  return map[orderId] || null;
+  const directToken = map[orderId];
+  if (directToken) return directToken;
+
+  // Payment providers return the safe, readable `ORD-XXXXXXXX` reference.
+  // Tokens are stored against the canonical UUID, so resolve that reference
+  // locally only when it identifies exactly one of this browser's orders.
+  const compactReference = String(orderId)
+    .trim()
+    .replace(/^ord-/i, "")
+    .replace(/[^0-9a-f]/gi, "")
+    .toLowerCase();
+
+  if (compactReference.length < 8) return null;
+
+  const matchingTokens = Object.entries(map).filter(([storedOrderId]) =>
+    storedOrderId.replace(/[^0-9a-f]/gi, "").toLowerCase()
+      .startsWith(compactReference),
+  );
+
+  return matchingTokens.length === 1 ? matchingTokens[0][1] : null;
 }
 
 export function clearOrderAccessToken(orderId: string): void {

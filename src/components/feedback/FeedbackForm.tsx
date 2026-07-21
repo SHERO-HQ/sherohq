@@ -331,7 +331,7 @@ export default function FeedbackForm({
                           <Input
                             label="Email Address"
                             type="email"
-                            placeholder="john@example.com"
+                            placeholder="john@shero.com"
                             className="bg-transparent border-slate-200 dark:border-white/10 rounded"
                             {...register("email")}
                             error={errors.email?.message}

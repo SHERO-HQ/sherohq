@@ -99,7 +99,7 @@ export default function InvoiceCustomerCard({
             <Input
               id="email"
               type="email"
-              placeholder="john@example.com"
+              placeholder="john@shero.com"
               value={customer.email || ""}
               autoComplete="off"
               onChange={(e) => handleInputChange("email", e.target.value)}

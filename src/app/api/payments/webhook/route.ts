@@ -16,88 +16,102 @@ function isValidPaystackSignature(rawBody: string, signature: string | null) {
 
 export async function POST(request: NextRequest) {
   let client: any = null;
+  let provider = "";
+  let orderId = "";
+
   try {
     const rawBody = await request.text();
-    
-    // Log the exact raw payload for debugging with Hubtel
-    if (process.env.NODE_ENV !== "production") {
-      console.log("=== RAW WEBHOOK PAYLOAD ===");
-      console.log(rawBody);
-      console.log("===========================");
-    }
-    
+
+    console.log("[payment:webhook] incoming", {
+      contentLength: rawBody.length,
+      contentType: request.headers.get("content-type"),
+    });
+
     const data = JSON.parse(rawBody);
-    let orderId = "";
-    let provider = "";
     let status = "";
     let verifiedAmount: number | null = null;
 
-    // Basic logic mirroring legacy webhook
+    // ── Paystack webhook ──────────────────────────────────────────────────────
     if (data.event?.startsWith("charge.") && data.data) {
       const signature = request.headers.get("x-paystack-signature");
       if (!isValidPaystackSignature(rawBody, signature)) {
+        console.warn("[payment:webhook] Invalid Paystack HMAC signature");
         return new NextResponse("Invalid Paystack signature", { status: 401 });
-      }
-
-      // Only process successful charge events
-      if (data.event !== "charge.success") {
-        return new NextResponse("Event ignored", { status: 200 });
       }
 
       provider = "paystack";
       orderId = data.data.metadata?.orderId || data.data.reference;
-      status = data.data.status === "success" ? "Success" : "Failed";
-      if (status === "Success") {
+
+      if (data.event === "charge.success") {
+        status = "Success";
         verifiedAmount = data.data.amount / 100;
+      } else if (
+        data.event === "charge.failed" ||
+        data.event === "charge.reversed"
+      ) {
+        // Paystack-side decline — treat as a failure that needs DB update + notification
+        status = "Failed";
+        console.log("[payment:webhook]", {
+          event: data.event,
+          provider: "paystack",
+          orderId,
+          paystackStatus: data.data?.status,
+        });
+      } else {
+        // Other Paystack events (e.g. transfer.success) — not relevant
+        return new NextResponse("Event ignored", { status: 200 });
       }
+
+    // ── Hubtel webhook ────────────────────────────────────────────────────────
     } else if (
-      // Nested format: { ResponseCode, Status, Data: { ClientReference, ... } }
       (data.Data?.ClientReference && (data.Status || data.Data?.Status)) ||
-      // Legacy flat format: { ClientReference, Status, ... }
       (data.ClientReference && data.Status && !data.event)
     ) {
-      // ── Hubtel webhook ──────────────────────────────────────────────
-      const {
-        normalizeHubtelStatus,
-        verifyHubtelTransaction,
-      } = await import("@/lib/hubtel");
+      const { normalizeHubtelStatus, verifyHubtelTransaction } =
+        await import("@/lib/hubtel");
 
       provider = "hubtel";
 
-      // Extract fields from nested Data object first, fall back to flat
       const nested = data.Data;
       orderId = nested?.ClientReference || data.ClientReference;
-      
+
       const rawStatus = nested?.Status || data.Status;
       status = normalizeHubtelStatus(rawStatus);
 
-      console.log("[Hubtel webhook]", {
+      console.log("[payment:webhook]", {
+        provider: "hubtel",
         clientReference: orderId,
         rawStatus,
         normalizedStatus: status,
         checkoutId: nested?.CheckoutId ?? "N/A",
         salesInvoiceId: nested?.SalesInvoiceId ?? "N/A",
         amount: nested?.Amount ?? data.Amount ?? "N/A",
-        customerPhone: nested?.CustomerPhoneNumber ?? data.CustomerMsisdn ?? "N/A",
-        paymentType: nested?.PaymentDetails?.PaymentType ?? data.PaymentMethod ?? "N/A",
+        customerPhone:
+          nested?.CustomerPhoneNumber ?? data.CustomerMsisdn ?? "N/A",
+        paymentType:
+          nested?.PaymentDetails?.PaymentType ?? data.PaymentMethod ?? "N/A",
         channel: nested?.PaymentDetails?.Channel ?? "N/A",
-        description: nested?.Description ?? data.Description ?? "N/A",
         topLevelResponseCode: data.ResponseCode ?? "N/A",
       });
 
-      // Server-side verification: confirm the transaction with Hubtel's API
-      // This is the recommended best practice since Hubtel does not use HMAC signatures
+      // Server-side verification: confirm with Hubtel's API before trusting the webhook
       if (status === "Success") {
-        const { verified, status: confirmedStatus, amount: confirmedAmount } =
-          await verifyHubtelTransaction(orderId);
+        const {
+          verified,
+          status: confirmedStatus,
+          amount: confirmedAmount,
+        } = await verifyHubtelTransaction(orderId);
 
         verifiedAmount = confirmedAmount;
 
         if (!verified) {
-          console.warn(
-            `[Hubtel webhook] Verification failed for ${orderId}. ` +
-              `Webhook claimed Success but Hubtel API returned: ${confirmedStatus}`,
-          );
+          console.warn("[payment:webhook]", {
+            provider: "hubtel",
+            orderId,
+            event: "verification_mismatch",
+            webhookClaimed: "Success",
+            hubtelApiReturned: confirmedStatus,
+          });
           return NextResponse.json(
             { success: false, message: "Transaction verification failed" },
             { status: 200 },
@@ -105,38 +119,49 @@ export async function POST(request: NextRequest) {
         }
       }
     } else {
+      console.warn("[payment:webhook] Unknown webhook format received", {
+        keys: Object.keys(data),
+      });
       return new NextResponse("Unknown webhook format", { status: 400 });
     }
 
-    // Do not return early on failure, we want to update the database to failed
-    // and notify the customer.
-
+    // ── Database update ───────────────────────────────────────────────────────
     client = await getClient();
     await client.query("BEGIN");
 
-    let dbQuery = `SELECT id, status, "shippingInfo", items, total, "paymentMethod" FROM orders WHERE id = $1 FOR UPDATE`;
-    let dbParams = [orderId];
-
-    if (orderId && orderId.toUpperCase().startsWith("ORD-")) {
-      const hexPrefix = orderId.substring(4).toLowerCase();
-      dbQuery = `SELECT id, status, "shippingInfo", items, total, "paymentMethod" FROM orders WHERE replace(id::text, '-', '') LIKE $1 ORDER BY "createdAt" DESC LIMIT 1 FOR UPDATE`;
-      dbParams = [`${hexPrefix}%`];
-    }
-
-    const orderRes = await client.query(dbQuery, dbParams);
+    // Exact-match lookup via clientReference index (safe, no LIKE prefix risk)
+    const orderRes = await client.query(
+      `SELECT id, status, "shippingInfo", items, total, "paymentMethod", "paymentStatus"
+       FROM orders
+       WHERE "clientReference" = $1
+       FOR UPDATE`,
+      [orderId],
+    );
 
     if (orderRes.rowCount === 0) {
       await client.query("ROLLBACK");
+      console.error("[payment:webhook]", {
+        event: "order_not_found",
+        provider,
+        clientReference: orderId,
+      });
       return new NextResponse("Order not found", { status: 404 });
     }
 
-    const actualOrderId = orderRes.rows[0].id;
+    const order = orderRes.rows[0];
+    const actualOrderId = order.id;
 
     if (status === "Success") {
-      const orderTotal = Number(orderRes.rows[0].total);
+      const orderTotal = Number(order.total);
 
       if (verifiedAmount !== null && verifiedAmount < orderTotal) {
-        console.error(`[Amount Mismatch] Order ${actualOrderId} expected ${orderTotal}, but received ${verifiedAmount}`);
+        console.error("[payment:webhook]", {
+          event: "amount_mismatch",
+          provider,
+          orderId: actualOrderId,
+          expected: orderTotal,
+          received: verifiedAmount,
+        });
         await client.query(
           `INSERT INTO activity_logs (id, action, type, details, "createdAt")
            VALUES ($1, $2, $3, $4, NOW())`,
@@ -151,11 +176,18 @@ export async function POST(request: NextRequest) {
         return new NextResponse("Amount mismatch", { status: 400 });
       }
 
-      if (orderRes.rows[0].status === "pending") {
-        await client.query("UPDATE orders SET status = $1 WHERE id = $2", [
-          "processing",
-          actualOrderId,
-        ]);
+      if (order.status === "pending") {
+        await client.query(
+          `UPDATE orders
+           SET status = $1, "paymentStatus" = $2, "paymentMessage" = $3
+           WHERE id = $4`,
+          [
+            "processing",
+            "confirmed",
+            `Payment confirmed via ${provider}`,
+            actualOrderId,
+          ],
+        );
 
         await client.query(
           `INSERT INTO activity_logs (id, action, type, details, "createdAt")
@@ -164,57 +196,117 @@ export async function POST(request: NextRequest) {
             randomUUID(),
             "order_payment",
             "success",
-            `Payment received via ${provider}. Reference: ${actualOrderId}`,
+            `Payment confirmed via ${provider}. Reference: ${actualOrderId}`,
           ],
         );
 
-        // Trigger email and whatsapp notification since payment is now successful
+        console.log("[payment:webhook]", {
+          event: "order_confirmed",
+          provider,
+          orderId: actualOrderId,
+          newStatus: "processing",
+        });
+
+        // Trigger order confirmation notification
         try {
           const { notificationService } = await import("@/lib/notifications");
-          const order = orderRes.rows[0];
-          const parsedItems = typeof order.items === "string" ? JSON.parse(order.items) : order.items;
-          const parsedShipping = typeof order.shippingInfo === "string" ? JSON.parse(order.shippingInfo) : order.shippingInfo;
-          
-          notificationService.sendOrderConfirmation(
-            actualOrderId, 
-            parsedShipping, 
-            parsedItems, 
-            Number(order.total),
-            order.paymentMethod
-          ).catch(err => console.error("Webhook Notification failed:", err));
+          const parsedItems =
+            typeof order.items === "string"
+              ? JSON.parse(order.items)
+              : order.items;
+          const parsedShipping =
+            typeof order.shippingInfo === "string"
+              ? JSON.parse(order.shippingInfo)
+              : order.shippingInfo;
+
+          notificationService
+            .sendOrderConfirmation(
+              actualOrderId,
+              parsedShipping,
+              parsedItems,
+              Number(order.total),
+              order.paymentMethod,
+            )
+            .catch((err) =>
+              console.error("[payment:webhook] Confirmation notification failed:", {
+                orderId: actualOrderId,
+                error: err instanceof Error ? err.message : err,
+              }),
+            );
         } catch (err) {
-          console.error("Failed to parse order details for notification:", err);
+          console.error("[payment:webhook] Failed to import notificationService:", {
+            orderId: actualOrderId,
+            error: err instanceof Error ? err.message : err,
+          });
         }
+      } else {
+        console.log("[payment:webhook]", {
+          event: "order_already_processed",
+          provider,
+          orderId: actualOrderId,
+          currentStatus: order.status,
+        });
       }
     } else {
-      // Payment failed handling
-      // We do NOT cancel the order so the user can retry checkout.
-      // We only log the failure and notify the customer.
-      if (orderRes.rows[0].status === "pending") {
-        await client.query(
-          `INSERT INTO activity_logs (id, action, type, details, "createdAt")
-           VALUES ($1, $2, $3, $4, NOW())`,
-          [
-            randomUUID(),
-            "order_payment",
-            "failed",
-            `Payment failed via ${provider}. Reference: ${actualOrderId}`,
-          ],
-        );
+      // Payment failed / cancelled
+      // Idempotency: only act on still-pending orders
+      if (order.status !== "pending") {
+        await client.query("COMMIT");
+        console.log("[payment:webhook]", {
+          event: "failure_skipped_not_pending",
+          provider,
+          orderId: actualOrderId,
+          currentStatus: order.status,
+        });
+        return new NextResponse("OK", { status: 200 });
+      }
 
-        // Trigger failure notification
-        try {
-          const { notificationService } = await import("@/lib/notifications");
-          const order = orderRes.rows[0];
-          const parsedShipping = typeof order.shippingInfo === "string" ? JSON.parse(order.shippingInfo) : order.shippingInfo;
-          
-          notificationService.sendPaymentFailureNotification(
-            actualOrderId, 
-            parsedShipping
-          ).catch(err => console.error("Webhook Failure Notification failed:", err));
-        } catch (err) {
-          console.error("Failed to parse order details for failure notification:", err);
-        }
+      // Write failure outcome — keep order pending so customer can retry
+      await client.query(
+        `UPDATE orders
+         SET "paymentStatus" = $1, "paymentMessage" = $2
+         WHERE id = $3`,
+        ["failed", `Payment failed via ${provider}`, actualOrderId],
+      );
+
+      await client.query(
+        `INSERT INTO activity_logs (id, action, type, details, "createdAt")
+         VALUES ($1, $2, $3, $4, NOW())`,
+        [
+          randomUUID(),
+          "order_payment",
+          "failed",
+          `Payment failed via ${provider}. Reference: ${actualOrderId}`,
+        ],
+      );
+
+      console.log("[payment:webhook]", {
+        event: "payment_failed",
+        provider,
+        orderId: actualOrderId,
+      });
+
+      // Trigger failure notification
+      try {
+        const { notificationService } = await import("@/lib/notifications");
+        const parsedShipping =
+          typeof order.shippingInfo === "string"
+            ? JSON.parse(order.shippingInfo)
+            : order.shippingInfo;
+
+        notificationService
+          .sendPaymentFailureNotification(actualOrderId, parsedShipping)
+          .catch((err) =>
+            console.error("[payment:webhook] Failure notification failed:", {
+              orderId: actualOrderId,
+              error: err instanceof Error ? err.message : err,
+            }),
+          );
+      } catch (err) {
+        console.error("[payment:webhook] Failed to import notificationService for failure:", {
+          orderId: actualOrderId,
+          error: err instanceof Error ? err.message : err,
+        });
       }
     }
 
@@ -222,7 +314,12 @@ export async function POST(request: NextRequest) {
     return new NextResponse("OK", { status: 200 });
   } catch (error) {
     if (client) await client.query("ROLLBACK");
-    console.error("Webhook error:", error);
+    console.error("[payment:webhook]", {
+      event: "unhandled_error",
+      provider,
+      orderId,
+      error: error instanceof Error ? error.message : error,
+    });
     return new NextResponse("Internal Error", { status: 500 });
   } finally {
     if (client) client.release();

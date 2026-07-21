@@ -34,10 +34,14 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
 import { toReadableOrderId } from "@/utils/orderId";
-import { useAdminOrdersQuery, useUpdateOrderStatus } from "@/hooks/queries/useOrders";
+import {
+  useAdminOrdersQuery,
+  useUpdateOrderStatus,
+} from "@/hooks/queries/useOrders";
 import { Card } from "@/components/ui/card";
 import { memo } from "react";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
+import { getAdminOrderPaymentStatus } from "@/lib/paymentStatus";
 
 // Memoized row component for maximum performance during polling
 const OrderRow = memo(
@@ -53,6 +57,11 @@ const OrderRow = memo(
     handleUpdateStatus: (id: string, status: string) => void;
   }) => {
     const status = getStatusConfig(order.status);
+    const paymentStatus = getAdminOrderPaymentStatus({
+      paymentStatus: order.paymentStatus,
+      status: order.status,
+      paymentMessage: order.paymentMessage,
+    });
     return (
       <motion.tr
         initial={{ opacity: 0, y: 10 }}
@@ -93,6 +102,20 @@ const OrderRow = memo(
           <p className="text-xs text-slate-300">
             {new Date(order.createdAt).toLocaleDateString()}
           </p>
+        </td>
+        <td className="px-6 py-4">
+          <Badge
+            className={cn(
+              "text-[10px] font-bold uppercase border-none",
+              paymentStatus.tone === "success"
+                ? "text-emerald-400 bg-emerald-500/10"
+                : paymentStatus.tone === "danger"
+                  ? "text-rose-400 bg-rose-500/10"
+                  : "text-amber-400 bg-amber-500/10",
+            )}
+          >
+            {paymentStatus.label}
+          </Badge>
         </td>
         <td className="px-6 py-4 text-right">
           <p className="text-sm font-bold text-white">
@@ -309,354 +332,235 @@ export default function AdminOrders() {
           <div className="absolute inset-0 bg-slate-900/10 -[1px] z-10 pointer-events-none transition-opacity" />
         )}
 
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-white">Orders</h1>
-          <p className="text-slate-400 text-sm">
-            Monitor and manage customer transactions
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => refetch()}
-            disabled={isFetching}
-            className="bg-slate-800/50 border-white/5"
-          >
-            <RefreshCw
-              className={cn("w-4 h-4", isFetching && "animate-spin")}
-            />
-          </Button>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="bg-slate-800/50 border-white/10 text-white hover:bg-white/5"
-              >
-                <Printer className="mr-2 h-4 w-4" /> Export
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="bg-slate-900 border-white/10 text-white"
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-white">Orders</h1>
+            <p className="text-slate-400 text-sm">
+              Monitor and manage customer transactions
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => refetch()}
+              disabled={isFetching}
+              className="bg-slate-800/50 border-white/5"
             >
-              <DropdownMenuItem
-                onClick={() => handleExport("csv")}
-                className="cursor-pointer hover:bg-white/5"
-              >
-                Export as CSV
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => handleExport("excel")}
-                className="cursor-pointer hover:bg-white/5"
-              >
-                Export as Excel
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => handleExport("pdf")}
-                className="cursor-pointer hover:bg-white/5"
-              >
-                Export as PDF
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <Link href="/admin/orders/new">
-            <Button className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold transition shadow shadow-brand-secondary-500/20">
-              <Plus className="mr-2 h-4 w-4" /> Create Order
+              <RefreshCw
+                className={cn("w-4 h-4", isFetching && "animate-spin")}
+              />
             </Button>
-          </Link>
-        </div>
-      </div>
 
-      {/* Error State */}
-      {error && (
-        <div className="bg-rose-500/10 border border-rose-500/20 p-4 rounded text-rose-400 text-sm">
-          {error}
-        </div>
-      )}
-
-      {/* Filters */}
-      <Card className="bg-slate-900/40 border-white/5 p-4">
-        <div className="flex flex-col lg:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-            <Input
-              placeholder="Search by Order ID, customer name or email..."
-              className="pl-10 bg-slate-800/50 border-white/5 text-white placeholder:text-slate-500"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <div className="flex flex-wrap items-center gap-2 lg:gap-0 lg:bg-slate-950/50 lg:p-1 lg:rounded lg:border lg:border-white/5 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
-            {[
-              { id: "all", label: "All" },
-              { id: "pending", label: "Pending" },
-              { id: "processing", label: "Processing" },
-              { id: "intransit", label: "In Transit" },
-              { id: "delivered", label: "Delivered" },
-              { id: "cancelled", label: "Cancelled" },
-            ].map((status) => (
-              <button
-                key={status.id}
-                onClick={() => {
-                  setStatusFilter(status.id);
-                  setCurrentPage(1);
-                }}
-                className={cn(
-                  "px-4 py-1 rounded text-sm font-medium transition whitespace-nowrap",
-                  statusFilter === status.id
-                    ? "bg-brand-secondary-600 text-white shadow shadow-brand-secondary-500/20"
-                    : "text-slate-400 hover:text-white hover:bg-white/5",
-                )}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="bg-slate-800/50 border-white/10 text-white hover:bg-white/5"
+                >
+                  <Printer className="mr-2 h-4 w-4" /> Export
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                className="bg-slate-900 border-white/10 text-white"
               >
-                {status.label}
-              </button>
-            ))}
+                <DropdownMenuItem
+                  onClick={() => handleExport("csv")}
+                  className="cursor-pointer hover:bg-white/5"
+                >
+                  Export as CSV
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleExport("excel")}
+                  className="cursor-pointer hover:bg-white/5"
+                >
+                  Export as Excel
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleExport("pdf")}
+                  className="cursor-pointer hover:bg-white/5"
+                >
+                  Export as PDF
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <Link href="/admin/orders/new">
+              <Button className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold transition shadow shadow-brand-secondary-500/20">
+                <Plus className="mr-2 h-4 w-4" /> Create Order
+              </Button>
+            </Link>
           </div>
         </div>
-      </Card>
 
-      {/* Orders Table */}
-      <div className="bg-slate-900/40  border border-white/10 rounded overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left min-w-[1000px]">
-            <thead>
-              <tr className="bg-slate-800/50 border-b border-white/5">
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  Order ID
-                </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  Customer
-                </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                  Payment Status
-                </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">
-                  Total
-                </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              {isLoading ? (
-                new Array(5).fill(0).map((_, i) => (
-                  <tr
-                    key={`skel-${i}`}
-                    className="animate-pulse border-b border-white/5"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="h-3 bg-slate-800 rounded w-20" />
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="space-y-2">
-                        <div className="h-4 bg-slate-800 rounded w-32" />
-                        <div className="h-3 bg-slate-800 rounded w-24 opacity-50" />
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="h-5 bg-slate-800 rounded w-24" />
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="h-4 bg-slate-800 rounded w-16" />
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="h-4 bg-slate-800 rounded w-20" />
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex flex-col items-end gap-1">
-                        <div className="h-4 bg-slate-800 rounded w-16" />
-                        <div className="h-3 bg-slate-800 rounded w-8 opacity-50" />
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex justify-end gap-2">
-                        <div className="w-8 h-8 rounded bg-slate-800" />
-                        <div className="w-8 h-8 rounded bg-slate-800" />
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : currentOrders.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={7}
-                    className="px-6 py-12 text-center text-slate-500"
-                  >
-                    No orders found matching your criteria.
-                  </td>
+        {/* Error State */}
+        {error && (
+          <div className="bg-rose-500/10 border border-rose-500/20 p-4 rounded text-rose-400 text-sm">
+            {error}
+          </div>
+        )}
+
+        {/* Filters */}
+        <Card className="bg-slate-900/40 border-white/5 p-4">
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <Input
+                placeholder="Search by Order ID, customer name or email..."
+                className="pl-10 bg-slate-800/50 border-white/5 text-white placeholder:text-slate-500"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-wrap items-center gap-2 lg:gap-0 lg:bg-slate-950/50 lg:p-1 lg:rounded lg:border lg:border-white/5 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
+              {[
+                { id: "all", label: "All" },
+                { id: "pending", label: "Pending" },
+                { id: "processing", label: "Processing" },
+                { id: "intransit", label: "In Transit" },
+                { id: "delivered", label: "Delivered" },
+                { id: "cancelled", label: "Cancelled" },
+              ].map((status) => (
+                <button
+                  key={status.id}
+                  onClick={() => {
+                    setStatusFilter(status.id);
+                    setCurrentPage(1);
+                  }}
+                  className={cn(
+                    "px-4 py-1 rounded text-sm font-medium transition whitespace-nowrap",
+                    statusFilter === status.id
+                      ? "bg-brand-secondary-600 text-white shadow shadow-brand-secondary-500/20"
+                      : "text-slate-400 hover:text-white hover:bg-white/5",
+                  )}
+                >
+                  {status.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </Card>
+
+        {/* Orders Table */}
+        <div className="bg-slate-900/40  border border-white/10 rounded overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left min-w-[1000px]">
+              <thead>
+                <tr className="bg-slate-800/50 border-b border-white/5">
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Order ID
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Customer
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Order Status
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Date
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    Payment Status
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">
+                    Total
+                  </th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">
+                    Actions
+                  </th>
                 </tr>
-              ) : (
-                currentOrders.map((order, index) => {
-                  const status = getStatusConfig(order.status);
-                  return (
-                    <motion.tr
-                      key={order.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.03 }}
-                      className="hover:bg-white/5 transition-colors group"
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {isLoading ? (
+                  new Array(5).fill(0).map((_, i) => (
+                    <tr
+                      key={`skel-${i}`}
+                      className="animate-pulse border-b border-white/5"
                     >
                       <td className="px-6 py-4">
-                        <Link
-                          href={`/admin/orders/${order.id}`}
-                          className="text-xs font-mono text-slate-400 hover:text-brand-secondary-400 transition-colors"
-                        >
-                          {toReadableOrderId(order.id)}
-                        </Link>
+                        <div className="h-3 bg-slate-800 rounded w-20" />
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex flex-col">
-                          <span className="text-sm font-semibold text-white group-hover:text-brand-secondary-400 transition-colors">
-                            {order.shippingInfo.firstName}{" "}
-                            {order.shippingInfo.lastName}
-                          </span>
-                          <span className="text-xs text-slate-500 truncate max-w-[150px]">
-                            {order.shippingInfo.email}
-                          </span>
+                        <div className="space-y-2">
+                          <div className="h-4 bg-slate-800 rounded w-32" />
+                          <div className="h-3 bg-slate-800 rounded w-24 opacity-50" />
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <Badge
-                          className={cn(
-                            "text-[10px] font-bold uppercase border-none",
-                            status.color,
-                          )}
-                        >
-                          <status.icon className="w-3 h-3 mr-1" />
-                          {order.status}
-                        </Badge>
+                        <div className="h-5 bg-slate-800 rounded w-24" />
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-xs text-slate-300">
-                          {new Date(order.createdAt).toLocaleDateString()}
-                        </p>
+                        <div className="h-4 bg-slate-800 rounded w-16" />
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400 max-w-[120px] truncate" title={order.paymentMessage || "Pending"}>
-                          {order.paymentMessage || "Pending"}
-                        </p>
+                        <div className="h-4 bg-slate-800 rounded w-20" />
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <p className="text-sm font-bold text-white">
-                          GH₵{order.total.toLocaleString()}
-                        </p>
-                        <p className="text-[10px] text-slate-500">
-                          {order.items?.length || 0} items
-                        </p>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="h-8 w-8 text-slate-400 hover:text-white"
-                            asChild
-                          >
-                            <Link href={`/admin/orders/${order.id}`}>
-                              <Eye className="w-4 h-4" />
-                            </Link>
-                          </Button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                className="h-8 w-8 text-slate-400 hover:text-white"
-                              >
-                                <RefreshCw className="w-4 h-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                              align="end"
-                              className="bg-slate-900 border-white/10 text-white"
-                            >
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  handleUpdateStatus(order.id, "processing")
-                                }
-                                className="cursor-pointer hover:bg-white/5"
-                              >
-                                <PackageSearch className="w-4 h-4 mr-2 text-blue-400" />{" "}
-                                Processing
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  handleUpdateStatus(order.id, "intransit")
-                                }
-                                className="cursor-pointer hover:bg-white/5"
-                              >
-                                <Truck className="w-4 h-4 mr-2 text-purple-400" />{" "}
-                                Shipped
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  handleUpdateStatus(order.id, "delivered")
-                                }
-                                className="cursor-pointer hover:bg-white/5"
-                              >
-                                <PackageCheck className="w-4 h-4 mr-2 text-brand-secondary-400" />{" "}
-                                Delivered
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator className="bg-white/5" />
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  handleUpdateStatus(order.id, "cancelled")
-                                }
-                                className="cursor-pointer text-rose-400 focus:text-rose-400 focus:bg-rose-500/10"
-                              >
-                                <PackageX className="w-4 h-4 mr-2 text-rose-400" />{" "}
-                                Cancelled
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                        <div className="flex flex-col items-end gap-1">
+                          <div className="h-4 bg-slate-800 rounded w-16" />
+                          <div className="h-3 bg-slate-800 rounded w-8 opacity-50" />
                         </div>
                       </td>
-                    </motion.tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
+                      <td className="px-6 py-4">
+                        <div className="flex justify-end gap-2">
+                          <div className="w-8 h-8 rounded bg-slate-800" />
+                          <div className="w-8 h-8 rounded bg-slate-800" />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : currentOrders.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={7}
+                      className="px-6 py-12 text-center text-slate-500"
+                    >
+                      No orders found matching your criteria.
+                    </td>
+                  </tr>
+                ) : (
+                  currentOrders.map((order, index) => (
+                    <OrderRow
+                      key={order.id}
+                      order={order}
+                      index={index}
+                      getStatusConfig={getStatusConfig}
+                      handleUpdateStatus={handleUpdateStatus}
+                    />
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
 
-      {/* Pagination */}
-      {!isLoading && filteredOrders.length > itemsPerPage && (
-        <div className="flex items-center justify-center gap-4 py-6">
-          <Button
-            variant="ghost"
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage((prev) => prev - 1)}
-            className="text-slate-400 hover:text-white"
-          >
-            <ChevronLeft className="w-4 h-4 mr-2" /> Previous
-          </Button>
-          <span className="text-sm font-medium text-slate-400">
-            Page {currentPage} of {totalPages}
-          </span>
-          <Button
-            variant="ghost"
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-            className="text-slate-400 hover:text-white"
-          >
-            Next <ChevronRight className="w-4 h-4 ml-2" />
-          </Button>
-        </div>
-      )}
-    </div>
+        {/* Pagination */}
+        {!isLoading && filteredOrders.length > itemsPerPage && (
+          <div className="flex items-center justify-center gap-4 py-6">
+            <Button
+              variant="ghost"
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((prev) => prev - 1)}
+              className="text-slate-400 hover:text-white"
+            >
+              <ChevronLeft className="w-4 h-4 mr-2" /> Previous
+            </Button>
+            <span className="text-sm font-medium text-slate-400">
+              Page {currentPage} of {totalPages}
+            </span>
+            <Button
+              variant="ghost"
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((prev) => prev + 1)}
+              className="text-slate-400 hover:text-white"
+            >
+              Next <ChevronRight className="w-4 h-4 ml-2" />
+            </Button>
+          </div>
+        )}
+      </div>
     </ErrorBoundary>
   );
 }
