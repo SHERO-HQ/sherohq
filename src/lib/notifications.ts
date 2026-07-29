@@ -725,7 +725,7 @@ class NotificationService {
       <h1 style="color: #dc2626; text-align: center; margin: 0 0 20px; font-size: 18px;">Payment Was Not Completed</h1>
       <p>Hi ${shippingInfo.firstName},</p>
       <p>Unfortunately, your payment for order <strong>${readableOrderId}</strong> could not be processed successfully.</p>
-      <p>Don't worry — no money has been deducted from your account. You can try again or contact our support team for assistance.</p>
+      <p>Don't worry, no money was deducted from your account. You can try again or contact our support team for assistance.</p>
       <p style="text-align: center; margin-top: 20px;">
         <a href="${baseUrl}/shop/checkout?retry=${orderId}" style="display: inline-block; padding: 10px 28px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Try Again</a>
       </p>
