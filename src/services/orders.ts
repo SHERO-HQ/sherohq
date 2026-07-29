@@ -187,6 +187,28 @@ export async function updateOrderStatus(
   return handleResponse(response);
 }
 
+export async function cancelOrder(
+  id: string,
+): Promise<{ success: boolean; message: string }> {
+  // Try sending the token first in case it's a guest cancelling their own order
+  const orderAccessToken = getOrderAccessToken(id);
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+  };
+  
+  if (orderAccessToken) {
+    (headers as Record<string, string>)["X-Order-Access-Token"] = orderAccessToken;
+  }
+
+  // We don't strictly require authFetch here if the guest has a token, but authFetch will send credentials if logged in.
+  const response = await authFetch(`${API_BASE}/orders/${id}/cancel`, {
+    method: "POST",
+    headers,
+  });
+  return handleResponse(response);
+}
+
+
 // ---------------------------------------------------------------------------
 // Payment
 // ---------------------------------------------------------------------------

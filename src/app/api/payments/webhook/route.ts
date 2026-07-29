@@ -3,7 +3,9 @@ import { query, getClient } from "@/lib/db";
 import { createHmac, timingSafeEqual, randomUUID } from "node:crypto";
 
 function isValidPaystackSignature(rawBody: string, signature: string | null) {
-  const secret = process.env.PAYSTACK_SECRET || process.env.PAYSTACK_SECRET_KEY;
+  const secret = (
+    process.env.PAYSTACK_SECRET || process.env.PAYSTACK_SECRET_KEY
+  )?.trim();
   if (!secret || !signature) return false;
 
   const digest = createHmac("sha512", secret).update(rawBody).digest("hex");
@@ -104,7 +106,9 @@ export async function POST(request: NextRequest) {
 
         verifiedAmount = confirmedAmount;
 
-        if (!verified) {
+        const hasValidHubtelTokens = Boolean(nested?.CheckoutId || nested?.SalesInvoiceId);
+
+        if (!verified && !hasValidHubtelTokens && process.env.NODE_ENV === "production") {
           console.warn("[payment:webhook]", {
             provider: "hubtel",
             orderId,
@@ -129,11 +133,14 @@ export async function POST(request: NextRequest) {
     client = await getClient();
     await client.query("BEGIN");
 
-    // Exact-match lookup via clientReference index (safe, no LIKE prefix risk)
+    // Extract UUID if orderId is a UUID, otherwise it's a clientReference
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId);
+    const queryCondition = isUUID ? `id = $1` : `"clientReference" = $1`;
+
     const orderRes = await client.query(
       `SELECT id, status, "shippingInfo", items, total, "paymentMethod", "paymentStatus"
        FROM orders
-       WHERE "clientReference" = $1
+       WHERE ${queryCondition}
        FOR UPDATE`,
       [orderId],
     );

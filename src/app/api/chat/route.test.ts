@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getVariantTokens } from "./route";
+import { getVariantTokens } from "./utils";
 
 describe("getVariantTokens", () => {
   it("should return the exact token in array", () => {

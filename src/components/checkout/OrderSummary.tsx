@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "motion/react";
-import { CheckCircle, Truck } from "lucide-react";
+import { CheckCircle, LockKeyhole, Truck } from "lucide-react";
 
 interface OrderSummaryProps {
   subtotal: number;
@@ -68,16 +68,16 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
 
       {/* Trust Badges */}
       <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-800 grid grid-cols-2 place-items-center gap-2">
-        <div className="flex items-center gap-2 text-center">
+        <div className="flex items-center gap-1 text-center">
           <Truck className="w-4 h-4 text-brand-secondary-600 dark:text-brand-secondary-400" />
           <span className="text-xs text-slate-600 dark:text-slate-400">
             Fast Delivery
           </span>
         </div>
-        <div className="flex items-center gap-2 text-center">
-          <CheckCircle className="w-4 h-4 text-brand-secondary-600 dark:text-brand-secondary-400" />
+        <div className="flex items-center gap-1 text-center">
+          <LockKeyhole className="w-4 h-4 text-brand-secondary-600 dark:text-brand-secondary-400" />
           <span className="text-xs text-slate-600 dark:text-slate-400">
-            Secure Payment
+            Secure Checkout
           </span>
         </div>
       </div>

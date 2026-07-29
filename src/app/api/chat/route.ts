@@ -5,6 +5,7 @@ import { query as dbQuery } from "@/lib/db";
 import { v4 as uuidv4 } from "uuid";
 import { logActivity } from "@/lib/activity";
 import { getUserFromSession } from "@/lib/auth";
+import { getVariantTokens } from "./utils";
 
 const STOP_WORDS = new Set([
   "for", "with", "and", "the", "need", "want", "best", "good", "help", "my",
@@ -22,15 +23,7 @@ const BACKEND_URL = (
     : "http://127.0.0.1:5000")
 ).replace(/\/$/, "");
 
-export function getVariantTokens(token: string): string[] {
-  const variants = [token];
-  if (token.endsWith("es") && token.length > 4) {
-    variants.push(token.slice(0, -2)); // e.g. switches -> switch
-  } else if (token.endsWith("s") && token.length > 3) {
-    variants.push(token.slice(0, -1)); // e.g. laptops -> laptop
-  }
-  return variants;
-}
+
 
 async function dbFetchProducts(search?: string, category?: string, limit: number = 40): Promise<Product[]> {
   const runSearch = async (joinType: "AND" | "OR" = "AND"): Promise<Product[]> => {
@@ -470,7 +463,7 @@ function buildInlineTroubleshootingSteps(userMessage: string): string {
   return "Let's troubleshoot this: 1) Restart the device and install pending updates. 2) Check storage, memory, and background apps. 3) Run built-in diagnostics and share any error code so I can guide the next fix.";
 }
 
-export async function fetchRecommendedProducts(query: string, budgetCap?: number) {
+async function fetchRecommendedProducts(query: string, budgetCap?: number) {
   try {
     const normalizedQuery = query.trim().toLowerCase();
     if (process.env.NODE_ENV !== "production") {

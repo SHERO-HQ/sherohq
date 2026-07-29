@@ -40,7 +40,7 @@ const CheckoutSuccess = () => {
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [isRetrying, setIsRetrying] = useState(false);
 
-  const [loadingText, setLoadingText] = useState("Contacting provider...");
+  const [loadingText, setLoadingText] = useState("Connecting to payment gateway...");
 
   const handleRetryPayment = useCallback(() => {
     if (!orderId) return;
@@ -52,10 +52,10 @@ const CheckoutSuccess = () => {
   useEffect(() => {
     if (status !== "verifying" && status !== "pending") return;
     const messages = [
-      "Contacting provider...",
-      "Securing transaction...",
-      "Confirming Transaction...",
-      "Verifying details...",
+      "Connecting to payment gateway...",
+      "Confirming transaction status...",
+      "Verifying payment response...",
+      "Finalizing order confirmation...",
     ];
     let currentIndex = 0;
     const interval = setInterval(() => {
@@ -93,6 +93,9 @@ const CheckoutSuccess = () => {
           setStatus("failed");
         } else if (isUrlCancelledOrFailed) {
           setStatus("failed");
+        } else {
+          // Move from initial verifying to pending view if transaction status is pending
+          setStatus("pending");
         }
       })
       .catch(() => {
@@ -155,8 +158,11 @@ const CheckoutSuccess = () => {
     const maxAttempts = 12; // Poll for about 48 seconds
     const interval = setInterval(() => {
       attempts++;
-      if (attempts > maxAttempts) {
+      if (attempts >= maxAttempts) {
         clearInterval(interval);
+        if (status === "verifying") {
+          setStatus("pending");
+        }
         return;
       }
 
@@ -306,7 +312,7 @@ const CheckoutSuccess = () => {
             <div
               className={`w-16 h-16 ${brand.iconBg} rounded-full flex items-center justify-center z-10 border border-slate-100 dark:border-slate-800`}
             >
-              <Smartphone className={`w-7 h-7 ${brand.iconText}`} />
+              <ShieldCheck className={`w-7 h-7 ${brand.iconText}`} />
             </div>
             <motion.div
               animate={{ rotate: 360 }}
@@ -315,7 +321,7 @@ const CheckoutSuccess = () => {
             />
           </div>
           <h2 className="text-3xl font-semibold text-slate-900 dark:text-white mb-3 tracking-tight">
-            Check your phone
+            Confirming Your Payment
           </h2>
           <div className="h-6 overflow-hidden mb-2">
             <AnimatePresence mode="wait">
@@ -332,7 +338,7 @@ const CheckoutSuccess = () => {
             </AnimatePresence>
           </div>
           <p className="text-slate-400 dark:text-slate-500 text-sm max-w-70 mx-auto text-center leading-relaxed">
-            Enter your PIN to authorize the transaction.
+            Please wait while we confirm your payment details with the gateway.
           </p>
         </div>
       );

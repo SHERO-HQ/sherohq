@@ -23,8 +23,8 @@ export const HUBTEL_API_BASE =
  * Returns `null` if credentials are not configured.
  */
 export function buildHubtelAuth(): string | null {
-  const clientId = process.env.HUBTEL_CLIENT_ID;
-  const clientSecret = process.env.HUBTEL_CLIENT_SECRET;
+  const clientId = process.env.HUBTEL_CLIENT_ID?.trim();
+  const clientSecret = process.env.HUBTEL_CLIENT_SECRET?.trim();
 
   if (!clientId || !clientSecret) return null;
 
@@ -38,7 +38,7 @@ export function buildHubtelAuth(): string | null {
  * Get the Merchant Account Number from environment.
  */
 export function getHubtelMerchantAccount(): string | undefined {
-  return process.env.HUBTEL_MERCHANT_ACCOUNT_NUMBER;
+  return process.env.HUBTEL_MERCHANT_ACCOUNT_NUMBER?.trim();
 }
 
 // ---------------------------------------------------------------------------
@@ -156,25 +156,19 @@ export async function verifyHubtelTransaction(
   clientReference: string,
 ): Promise<{ verified: boolean; status: string | null; amount: number | null }> {
   const auth = buildHubtelAuth();
-  if (!auth) {
+  const merchantAccount = getHubtelMerchantAccount();
+
+  if (!auth || !merchantAccount) {
     console.warn(
-      "Hubtel credentials not configured — skipping webhook verification",
+      "Hubtel credentials or merchant account not configured — skipping webhook verification",
     );
-    // In production we must fail-closed — never trust an unverified webhook.
-    // In development we allow it through so the mock simulator works.
-    if (process.env.NODE_ENV === "production") {
-      return { verified: false, status: null, amount: null };
+    if (process.env.NODE_ENV === "development") {
+      return { verified: true, status: "Success", amount: null };
     }
-    return { verified: true, status: null, amount: null };
+    return { verified: false, status: null, amount: null };
   }
 
   try {
-    const merchantAccount = getHubtelMerchantAccount();
-    if (!merchantAccount) {
-      console.warn("Hubtel merchant account not configured — skipping webhook verification");
-      return { verified: false, status: null, amount: null };
-    }
-
     const url = `https://api-txnstatus.hubtel.com/transactions/${merchantAccount}/status?clientReference=${encodeURIComponent(clientReference)}`;
 
     const resp = await fetch(url, {
@@ -190,6 +184,9 @@ export async function verifyHubtelTransaction(
       console.error(
         `Hubtel status check failed: HTTP ${resp.status} for ref ${clientReference}`,
       );
+      if (process.env.NODE_ENV === "development") {
+        return { verified: true, status: "Success", amount: null };
+      }
       return { verified: false, status: null, amount: null };
     }
 
@@ -200,18 +197,32 @@ export async function verifyHubtelTransaction(
     const dataField = responseData.data || responseData.Data;
     const txObj = Array.isArray(dataField) ? dataField[0] : dataField;
     
-    const rawStatus = txObj?.status || txObj?.Status || "";
-    const txStatus = rawStatus.toLowerCase();
+    const rawStatus =
+      responseData.status ||
+      responseData.Status ||
+      txObj?.status ||
+      txObj?.Status ||
+      txObj?.transactionStatus ||
+      txObj?.paymentStatus ||
+      (responseData.responseCode === "0000" &&
+      responseData.message?.toLowerCase() === "success"
+        ? "Success"
+        : "");
+        
+    const txStatus = (rawStatus || "").toLowerCase();
     
     const isSuccess =
       txStatus === "success" || txStatus === "completed" || txStatus === "paid";
 
-    const rawAmount = txObj?.amount || txObj?.Amount;
-    const amount = rawAmount !== undefined ? Number(rawAmount) : null;
+    const rawAmount = txObj?.amount || txObj?.Amount || responseData.amount || responseData.Amount;
+    const amount = rawAmount !== undefined && rawAmount !== null ? Number(rawAmount) : null;
 
     return { verified: isSuccess, status: rawStatus || null, amount };
   } catch (err) {
     console.error("Hubtel transaction verification error:", err);
+    if (process.env.NODE_ENV === "development") {
+      return { verified: true, status: "Success", amount: null };
+    }
     return { verified: false, status: null, amount: null };
   }
 }

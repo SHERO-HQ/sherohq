@@ -94,7 +94,7 @@ function MockPaymentContent() {
           Developer Sandbox Mode
         </div>
         <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
-          Secure Payment Simulator
+          Secure Payment
         </h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
           Choose a payment outcome to simulate the transaction state machine.

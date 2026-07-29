@@ -1,130 +1,54 @@
 "use client";
-import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { checkoutSchema, type CheckoutInput } from "@/lib/validations/checkout";
-import { getGuestId } from "@/utils/guestSession";
-import { getOrderAccessToken, saveOrderAccessToken } from "@/utils/orderAccess";
-import {
-  createOrder,
-  initializePayment,
-  getImageUrl,
-  trackOrder,
-  updateOrderPaymentMethod,
-} from "@/services/api";
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { useRouter, useSearchParams } from "next/navigation";
-import {
-  ShoppingBag,
-  Truck,
-  CreditCard,
-  CheckCircle,
-  ChevronRight,
-  ChevronLeft,
-  Minus,
-  Plus,
-  Trash2,
-  MapPin,
-  Phone,
-  Mail,
-  Wallet,
-  Smartphone,
-  ChevronDown,
-  ChevronUp,
-  ShoppingCart,
-  Store,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import { useCart } from "@/context/CartContext";
-import { useAuth } from "@/context/AuthContext";
-import { useNotifications } from "@/hooks/useNotifications";
-import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
+import { useRouter } from "next/navigation";
+import { ChevronDown, ChevronUp, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import OrderSummary from "./OrderSummary";
 import PaymentFailureSupport from "./PaymentFailureSupport";
-import PaymentIcons from "@/components/layout/PaymentIcons";
-import AppImage from "@/components/common/AppImage";
-import { toReadableOrderId } from "@/utils/orderId";
-import { WhatsAppIcon } from "@/assets/icons/icons";
-import { COMPANY_CONTACTS } from "@/constants/contacts";
-import { getRetryOrderId } from "@/lib/checkoutRetry";
-
-type PaymentMethodValue = "momo" | "card" | "cod" | "store_pickup";
-
-type PaymentMethodOption = {
-  value: PaymentMethodValue;
-  title: string;
-  description: string;
-  helper: string;
-  icon: LucideIcon;
-};
-
-const ONLINE_PAYMENT_OPTIONS: PaymentMethodOption[] = [
-  {
-    value: "momo",
-    title: "Momo",
-    description: "Mobile money checkout for MTN and Telecel Cash.",
-    helper: "Best for fast local payments.",
-    icon: Smartphone,
-  },
-  {
-    value: "card",
-    title: "Credit / Bank",
-    description: "Visa, Mastercard, and bank card payment.",
-    helper: "You will be redirected to the available secure gateway.",
-    icon: CreditCard,
-  },
-];
-
-const OFFLINE_PAYMENT_OPTIONS: PaymentMethodOption[] = [
-  {
-    value: "cod",
-    title: "Cash on Delivery",
-    description: "Pay when your order arrives.",
-    helper: "Good for local delivery orders.",
-    icon: Wallet,
-  },
-  {
-    value: "store_pickup",
-    title: "Store Pickup",
-    description: "Pay when you collect in store.",
-    helper: "No payment redirect at checkout.",
-    icon: Store,
-  },
-];
+import { CheckoutProvider, useCheckout } from "./CheckoutContext";
+import CheckoutProgress from "./CheckoutProgress";
+import CheckoutStepCart from "./steps/CheckoutStepCart";
+import CheckoutStepDelivery from "./steps/CheckoutStepDelivery";
+import CheckoutStepPayment from "./steps/CheckoutStepPayment";
+import CheckoutStepConfirmation from "./steps/CheckoutStepConfirmation";
+import { createOrder, cancelOrder } from "@/services/api";
+import { getGuestId } from "@/utils/guestSession";
+import { saveOrderAccessToken } from "@/utils/orderAccess";
+import { useNotifications } from "@/hooks/useNotifications";
+import type { CheckoutInput } from "@/lib/validations/checkout";
+import { useCart } from "@/context/CartContext";
 
 const CHECKOUT_STEPS = [
-  { num: 1, title: "Cart Review", icon: ShoppingBag },
-  { num: 2, title: "Delivery Address", icon: Truck },
-  { num: 3, title: "Payment", icon: CreditCard },
-  { num: 4, title: "Confirmation", icon: CheckCircle },
-] as const;
+  { num: 1, title: "Cart Review" },
+  { num: 2, title: "Delivery Address" },
+  { num: 3, title: "Payment" },
+  { num: 4, title: "Confirmation" },
+];
 
-const CheckoutFlow = () => {
+function CheckoutContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const retryOrderId = getRetryOrderId(searchParams);
-  const {
-    cart,
-    updateQuantity,
-    removeItem,
-    totalPrice,
-    totalQuantity,
-    clearCart,
-  } = useCart();
-  const { user, isAuthenticated } = useAuth();
+  const { cart, totalQuantity } = useCart();
   const { addNotification } = useNotifications();
+  const {
+    currentStep, setCurrentStep,
+    orderId, setOrderId,
+    setConfirmedTotal,
+    isSubmitting, setIsSubmitting,
+    showMobileSummary, setShowMobileSummary,
+    paymentError, setPaymentError,
+    isUpdatingOffline,
+    isRetryOrder, isRestoringRetry,
+    processPayment, handleRetryPayment, handleSwitchToOffline,
+    subtotal, shipping, tax, total
+  } = useCheckout();
 
-  const [currentStep, setCurrentStep] = useState(1);
-  const [orderId, setOrderId] = useState<string | null>(null);
-  const [confirmedTotal, setConfirmedTotal] = useState<number>(0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showMobileSummary, setShowMobileSummary] = useState(false);
-
-  const [paymentError, setPaymentError] = useState(false);
-  const [isUpdatingOffline, setIsUpdatingOffline] = useState(false);
-  const [isRestoringRetry, setIsRestoringRetry] = useState(false);
+  useEffect(() => {
+    if (cart.length === 0 && !orderId && !isRetryOrder && !isRestoringRetry && currentStep < 4) {
+      addNotification("Empty Cart", "Your cart is empty. Please add items to checkout.", "warning");
+      router.push("/products");
+    }
+  }, [cart.length, orderId, isRetryOrder, isRestoringRetry, currentStep, router, addNotification]);
 
   useEffect(() => {
     if (currentStep >= 4) return;
@@ -140,476 +64,118 @@ const CheckoutFlow = () => {
     return () => clearTimeout(timer);
   }, [currentStep]);
 
-  const {
-    register,
-    handleSubmit,
-    trigger,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useForm<CheckoutInput>({
-    resolver: zodResolver(checkoutSchema),
-    defaultValues: {
-      email: "",
-      shippingAddress: {
-        firstName: "",
-        lastName: "",
-        address: "",
-        city: "",
-        region: "",
-        postalCode: "",
-        gpsAddress: "",
-      },
-      paymentMethod: "momo",
-      referralCode: "",
-    },
-  });
-
-  const paymentMethod = watch("paymentMethod");
-  const email = watch("email");
-
-  // Autofill shipping info for logged-in users
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      const nameParts = user.name?.split(" ") || [];
-      setValue("email", user.email || "");
-      setValue("phone", user.phone || "");
-      setValue(
-        "shippingAddress.firstName",
-        user.shippingAddress?.firstName || nameParts[0] || "",
-      );
-      setValue(
-        "shippingAddress.lastName",
-        user.shippingAddress?.lastName || nameParts.slice(1).join(" ") || "",
-      );
-      setValue("shippingAddress.address", user.shippingAddress?.address || "");
-      setValue("shippingAddress.city", user.shippingAddress?.city || "");
-      setValue("shippingAddress.region", user.shippingAddress?.region || "");
-      setValue(
-        "shippingAddress.postalCode",
-        user.shippingAddress?.postalCode || "",
-      );
-      setValue(
-        "shippingAddress.gpsAddress",
-        user.shippingAddress?.gpsAddress || "",
-      );
-    }
-  }, [isAuthenticated, user, setValue]);
-
-  useEffect(() => {
-    if (retryOrderId) return;
-
-    if (cart.length === 0 && currentStep < 4) {
-      router.push("/products");
-    }
-  }, [cart.length, currentStep, router, retryOrderId]);
-
-  useEffect(() => {
-    if (!retryOrderId || isRestoringRetry) return;
-
-    let isCancelled = false;
-
-    const restoreRetryOrder = async () => {
-      setIsRestoringRetry(true);
-      setIsSubmitting(true);
-      setPaymentError(false);
-
-      try {
-        const order = await trackOrder(
-          retryOrderId,
-          getOrderAccessToken(retryOrderId) || undefined,
-        );
-
-        if (isCancelled) return;
-
-        setOrderId(order.id);
-        setConfirmedTotal(order.total ?? 0);
-        setCurrentStep(3);
-
-        if (order.status !== "pending") {
-          setPaymentError(true);
-          return;
-        }
-
-        const shippingInfo = order.shippingInfo || {};
-        setValue("email", shippingInfo.email || "");
-        setValue("phone", shippingInfo.phone || "");
-        setValue("shippingAddress.firstName", shippingInfo.firstName || "");
-        setValue("shippingAddress.lastName", shippingInfo.lastName || "");
-        setValue("shippingAddress.address", shippingInfo.address || "");
-        setValue("shippingAddress.city", shippingInfo.city || "");
-        setValue("shippingAddress.region", shippingInfo.region || "");
-        setValue("shippingAddress.postalCode", shippingInfo.postalCode || "");
-        setValue("shippingAddress.gpsAddress", shippingInfo.gpsAddress || "");
-
-        const paymentMethodValue =
-          order.paymentMethod === "cash_on_delivery"
-            ? "cod"
-            : order.paymentMethod === "store_pickup"
-              ? "store_pickup"
-              : order.paymentMethod === "card"
-                ? "card"
-                : "momo";
-        setValue(
-          "paymentMethod",
-          paymentMethodValue as CheckoutInput["paymentMethod"],
-        );
-
-        if (paymentMethodValue !== "momo" && paymentMethodValue !== "card") {
-          setPaymentError(true);
-          return;
-        }
-
-        await processPayment(order.id, order.total, paymentMethodValue);
-      } catch (error) {
-        console.error("Failed to restore retry order:", error);
-        setPaymentError(true);
-      } finally {
-        if (!isCancelled) {
-          setIsSubmitting(false);
-          setIsRestoringRetry(false);
-        }
-      }
-    };
-
-    void restoreRetryOrder();
-
-    return () => {
-      isCancelled = true;
-    };
-  }, [retryOrderId, setValue]);
-
-  // Show nothing while redirecting for a normal cart checkout.
-  // Retry-based restorations should still render the payment step for the existing order.
-  if (cart.length === 0 && currentStep < 4 && !retryOrderId) {
-    return null;
-  }
-
-  // Calculate pricing
-  const subtotal = totalPrice;
-  const isFreeShipping = paymentMethod === "store_pickup" || subtotal > 500;
-  const shipping = 0; // Auto shipping fee removed
-  const tax = 0;
-  const total = subtotal + shipping + tax;
-
-  const validateStep = async (step: number) => {
-    if (step === 2) {
-      return await trigger([
-        "email",
-        "phone",
-        "shippingAddress.firstName",
-        "shippingAddress.lastName",
-        "shippingAddress.address",
-        "shippingAddress.city",
-        "shippingAddress.region",
-      ]);
-    }
-    if (step === 3) {
-      return await trigger("paymentMethod");
-    }
-    return true;
-  };
-
-  const handleNext = async () => {
-    if (await validateStep(currentStep)) {
-      if (currentStep < 4) {
-        setCurrentStep(currentStep + 1);
-      }
-    }
-  };
-
-  const handleBack = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-
-  const processPayment = async (
-    orderId: string,
-    amountOverride?: number,
-    paymentMethodOverride?: PaymentMethodValue,
-  ) => {
-    try {
-      const paymentAmount = amountOverride ?? total;
-      const selectedPaymentMethod = paymentMethodOverride ?? paymentMethod;
-
-      // Choose provider based on selected payment method (frontend invisible)
-      const provider =
-        selectedPaymentMethod === "card"
-          ? "paystack"
-          : selectedPaymentMethod === "momo"
-            ? "hubtel"
-            : undefined;
-
-      const paymentResponse = await initializePayment(
-        orderId,
-        paymentAmount,
-        `Order ${toReadableOrderId(orderId)}`,
-        provider,
-      );
-
-      const checkoutUrl = paymentResponse.checkoutUrl?.trim();
-      const isSafeCheckoutUrl = Boolean(
-        checkoutUrl && /^(https?:\/\/)/i.test(checkoutUrl),
-      );
-
-      if (paymentResponse.success && isSafeCheckoutUrl) {
-        clearCart();
-        window.location.assign(checkoutUrl);
-      } else {
-        setPaymentError(true);
-        window.dispatchEvent(
-          new CustomEvent("shoro-ai-trigger", {
-            detail: {
-              message:
-                "I encountered a payment connection error during checkout. Can you help?",
-            },
-          }),
-        );
-      }
-    } catch (error) {
-      console.error("[payment:processPayment]", {
-        orderId,
-        error: error instanceof Error ? error.message : error,
-      });
-      setPaymentError(true);
-      window.dispatchEvent(
-        new CustomEvent("shoro-ai-trigger", {
-          detail: {
-            message:
-              "The payment system is busy and I cannot complete my order. What should I do?",
-          },
-        }),
-      );
-      addNotification(
-        "Payment System Busy",
-        "We couldn't connect to the payment provider. We've saved your order!",
-        "warning",
-      );
-    }
-  };
-
-  const handleRetryPayment = async () => {
-    if (!orderId) return;
-    setIsSubmitting(true);
-    setPaymentError(false);
-    await processPayment(orderId);
-    setIsSubmitting(false);
-  };
-
-  const handleSwitchToOffline = async (method: "cod" | "store_pickup") => {
-    if (!orderId) return;
-    setIsUpdatingOffline(true);
-    try {
-      await updateOrderPaymentMethod(orderId, {
-        paymentMethod: method === "cod" ? "cash_on_delivery" : "store_pickup",
-      });
-
-      setPaymentError(false);
-      setCurrentStep(4);
-      clearCart();
-    } catch (error) {
-      console.error("Failed to switch to offline payment:", error);
-      addNotification(
-        "Error",
-        "Failed to update order. Please contact support.",
-        "error",
-      );
-    } finally {
-      setIsUpdatingOffline(false);
-    }
-  };
-
   const onSubmit = async (data: CheckoutInput) => {
     setIsSubmitting(true);
     setPaymentError(false);
-    try {
-      const guestId = getGuestId();
-      const paymentMethodMap: Record<string, string> = {
-        momo: "momo",
-        card: "card",
-        cod: "cash_on_delivery",
-        store_pickup: "store_pickup",
-      };
 
-      const response = await createOrder({
-        guestId,
-        items: cart.map((item) => ({ ...item })),
-        total,
+    try {
+      const isOnline = data.paymentMethod === "card" || data.paymentMethod === "momo";
+
+      const orderData = {
+        guestId: getGuestId(),
+        items: cart.map((item) => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          image: item.image,
+        })),
+        total: total,
         shippingInfo: {
-          ...data.shippingAddress,
+          firstName: data.shippingAddress.firstName,
+          lastName: data.shippingAddress.lastName,
           email: data.email,
           phone: data.phone,
+          address: data.shippingAddress.address,
+          city: data.shippingAddress.city,
+          region: data.shippingAddress.region,
+          postalCode: data.shippingAddress.postalCode,
+          gpsAddress: data.shippingAddress.gpsAddress,
         },
-        paymentMethod: paymentMethodMap[data.paymentMethod],
+        paymentMethod: data.paymentMethod,
         referralCode: data.referralCode,
-        userId: user?.id,
-      });
+      };
 
-      if (response.success) {
-        setOrderId(response.orderId);
-
-        if (response.orderAccessToken) {
-          saveOrderAccessToken(response.orderId, response.orderAccessToken);
-        }
-
-        setConfirmedTotal(response.total ?? total);
-
-        if (["momo", "card"].includes(data.paymentMethod)) {
-          await processPayment(response.orderId, total, data.paymentMethod);
-          return;
-        }
-
-        setCurrentStep(4);
-        clearCart();
+      const result = await createOrder(orderData);
+      
+      setOrderId(result.orderId);
+      setConfirmedTotal(result.total ?? 0);
+      
+      if (result.orderAccessToken) {
+        saveOrderAccessToken(result.orderId, result.orderAccessToken);
       }
-    } catch (error) {
-      console.error("Failed to place order:", error);
-      const errorMessage =
-        error instanceof Error
-          ? error.message
-          : "Failed to place order. Please try again.";
-      addNotification("Order Error", errorMessage, "error");
+
+      if (isOnline) {
+        await processPayment(result.orderId);
+      } else {
+        setCurrentStep(4);
+      }
+    } catch (error: any) {
+      console.error("Order creation failed:", error);
+      addNotification("Checkout Failed", error.message || "Failed to create order", "error");
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  if (cart.length === 0 && !orderId && !isRetryOrder && !isRestoringRetry && currentStep < 4) {
+    return null;
+  }
+
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-32 pb-16">
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Progress Steps (Mobile) */}
-        <div className="mb-8 sm:hidden">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-brand-secondary-600 dark:text-brand-secondary-400">
-                Step {currentStep} of {CHECKOUT_STEPS.length}
-              </p>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
-                {CHECKOUT_STEPS[currentStep - 1].title}
-              </h2>
-            </div>
-            <div className="w-12 h-12 rounded-full bg-brand-secondary-100 dark:bg-brand-secondary-900/30 flex items-center justify-center text-brand-secondary-600 dark:text-brand-secondary-400">
-              {(() => {
-                const Icon = CHECKOUT_STEPS[currentStep - 1].icon;
-                return <Icon className="w-6 h-6" />;
-              })()}
-            </div>
-          </div>
-          {/* Progress Bar Line */}
-          <div className="mt-4 h-1.5 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-brand-secondary-600 rounded-full transition duration-300"
-              style={{
-                width: `${(currentStep / CHECKOUT_STEPS.length) * 100}%`,
-              }}
-            />
-          </div>
-        </div>
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 py-12">
+      {currentStep < 4 && !paymentError && <CheckoutProgress />}
 
-        {/* Progress Steps (Desktop) */}
-        <div className="mb-12 hidden sm:block">
-          <div className="max-w-4xl mx-auto relative px-4">
-            {/* Progress Track & Line */}
-            <div className="absolute top-6 left-6 right-6 h-1 bg-slate-200 dark:bg-slate-800 -translate-y-1/2 rounded-full">
-              <div
-                className="h-full bg-brand-secondary-600 transition duration-300 rounded-full"
-                style={{
-                  width: `${((currentStep - 1) / (CHECKOUT_STEPS.length - 1)) * 100}%`,
-                }}
-              />
-            </div>
-
-            <div className="flex justify-between relative z-10">
-              {CHECKOUT_STEPS.map((step) => {
-                const Icon = step.icon;
-                const isActive = currentStep === step.num;
-                const isCompleted = currentStep > step.num;
-
-                let stepBaseStyle =
-                  "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-400";
-                if (isCompleted) {
-                  stepBaseStyle =
-                    "bg-brand-secondary-600 border-brand-secondary-600 text-white";
-                } else if (isActive) {
-                  stepBaseStyle =
-                    "bg-brand-secondary-600 border-brand-secondary-100 dark:border-brand-secondary-900/50 text-white shadow shadow-brand-secondary-500/30";
-                }
-
-                return (
-                  <div
-                    key={step.num}
-                    className="flex flex-col items-center gap-2 relative z-20 w-12"
-                  >
-                    <div
-                      className={`w-12 h-12 rounded-full flex items-center justify-center transition border-4 ${stepBaseStyle}`}
-                    >
-                      <Icon className="w-5 h-5" />
-                    </div>
-                    <span
-                      className={`text-sm font-medium whitespace-nowrap ${
-                        isActive || isCompleted
-                          ? "text-slate-900 dark:text-white"
-                          : "text-slate-500"
-                      }`}
-                    >
-                      {step.title}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Collapsible Order Summary */}
-        <div className="lg:hidden mb-6 bg-slate-50 dark:bg-slate-900 border-y border-slate-200 dark:border-slate-800 -mx-4 px-4 sm:mx-0 sm:px-0 sm:border sm:rounded overflow-hidden">
-          <button
-            onClick={() => setShowMobileSummary(!showMobileSummary)}
-            className="w-full py-2 flex items-center justify-between text-left"
-          >
-            <div className="flex items-center gap-2 text-brand-secondary-600 dark:text-brand-secondary-400 font-medium">
-              <ShoppingCart className="w-5 h-5" />
-              <span>{showMobileSummary ? "Hide" : "Show"} Order Summary</span>
-              {showMobileSummary ? (
-                <ChevronUp className="w-4 h-4" />
-              ) : (
-                <ChevronDown className="w-4 h-4" />
-              )}
-            </div>
-            <span className="font-bold text-slate-900 dark:text-white text-lg">
-              GHS {total.toFixed(2)}
-            </span>
-          </button>
-
-          <AnimatePresence>
-            {showMobileSummary && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                className="overflow-hidden"
-              >
-                <div className="pb-6 border-t border-slate-200 dark:border-slate-800 pt-4">
+      <div className="max-w-6xl mx-auto px-4">
+        {currentStep < 4 && (
+          <div className="mb-6 lg:hidden">
+            <Button
+              variant="outline"
+              onClick={() => setShowMobileSummary(!showMobileSummary)}
+              className="w-full flex items-center justify-between border-brand-secondary-200 dark:border-brand-secondary-900/50 bg-white dark:bg-slate-900 shadow-sm"
+            >
+              <div className="flex items-center gap-2 text-brand-secondary-600 dark:text-brand-secondary-400">
+                <ShoppingCart className="w-5 h-5" />
+                <span className="font-semibold">
+                  {showMobileSummary ? "Hide Order Summary" : "Show Order Summary"}
+                </span>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="font-bold text-slate-900 dark:text-white">
+                  GHS {total.toFixed(2)}
+                </span>
+                {showMobileSummary ? (
+                  <ChevronUp className="w-5 h-5 text-slate-400" />
+                ) : (
+                  <ChevronDown className="w-5 h-5 text-slate-400" />
+                )}
+              </div>
+            </Button>
+            
+            <AnimatePresence>
+              {showMobileSummary && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden mt-4"
+                >
                   <OrderSummary
                     subtotal={subtotal}
                     shipping={shipping}
                     tax={tax}
                     total={total}
                     itemCount={totalQuantity}
-                    className="p-0! border-0! shadow-none bg-transparent dark:bg-transparent"
                   />
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Main Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <AnimatePresence mode="wait">
-              {/* Payment Failure Support View */}
               {paymentError && orderId ? (
                 <motion.div
                   key="payment-error"
@@ -619,11 +185,20 @@ const CheckoutFlow = () => {
                 >
                   <PaymentFailureSupport
                     orderId={orderId}
-                    amount={confirmedTotal > 0 ? confirmedTotal : total}
+                    amount={total}
                     onRetry={handleRetryPayment}
                     onSwitchToOffline={handleSwitchToOffline}
                     isUpdatingOffline={isUpdatingOffline}
-                    onBack={() => {
+                    onBack={async () => {
+                      if (!isRetryOrder && orderId) {
+                        try {
+                          await cancelOrder(orderId);
+                          addNotification("Order Cancelled", "Your pending order has been cancelled and stock restored.", "info");
+                        } catch (error) {
+                          console.error("Failed to cancel order on back:", error);
+                        }
+                      }
+                      setOrderId(null);
                       setPaymentError(false);
                       setCurrentStep(3);
                     }}
@@ -631,505 +206,15 @@ const CheckoutFlow = () => {
                 </motion.div>
               ) : (
                 <>
-                  {/* STEP 1: Cart Review */}
-                  {currentStep === 1 && (
-                    <motion.div
-                      key="step1"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6"
-                    >
-                      <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
-                        Review Your Cart
-                      </h2>
-
-                      <div className="space-y-4">
-                        {cart.map((item) => (
-                          <div key={item.id} className="space-y-2">
-                            <div className="flex flex-row sm:flex-row gap-4 p-4 rounded border border-slate-200 dark:border-slate-800 hover:border-brand-secondary-500 dark:hover:border-brand-secondary-500 transition-colors">
-                              <div className="relative w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded flex items-center justify-center overflow-hidden shrink-0">
-                                {item.image &&
-                                (item.image.startsWith("/uploads") ||
-                                  item.image.startsWith("http")) ? (
-                                  <AppImage
-                                    src={getImageUrl(item.image)}
-                                    alt={item.name}
-                                    fill
-                                    sizes="80px"
-                                    className="object-cover"
-                                  />
-                                ) : (
-                                  <div className="text-3xl">{item.image}</div>
-                                )}
-                              </div>
-
-                              <div className="flex-1">
-                                <h3 className="font-bold text-slate-900 dark:text-white">
-                                  {item.name}
-                                </h3>
-                                <p className="text-sm text-slate-500 dark:text-slate-400">
-                                  {item.category}
-                                </p>
-                                <p className="text-lg font-bold text-brand-secondary-600 dark:text-brand-secondary-400 mt-2">
-                                  GHS {item.price}
-                                </p>
-                              </div>
-                            </div>
-                            <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 mt-2 sm:mt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-800 pt-4 sm:pt-0">
-                              <div className="flex items-center gap-2 border border-slate-200 dark:border-slate-700 rounded overflow-hidden">
-                                <button
-                                  onClick={() => updateQuantity(item.id, -1)}
-                                  className="cursor-pointer p-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                                >
-                                  <Minus className="w-4 h-4" />
-                                </button>
-                                <span className="px-4 font-bold text-slate-900 dark:text-white">
-                                  {item.quantity}
-                                </span>
-                                <button
-                                  onClick={() => updateQuantity(item.id, 1)}
-                                  className="cursor-pointer p-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                                >
-                                  <Plus className="w-4 h-4" />
-                                </button>
-                              </div>
-                              <button
-                                onClick={() => removeItem(item.id)}
-                                className="cursor-pointer text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 text-sm flex items-center gap-1"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                                Remove
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-
-                      <div className="flex justify-end mt-8">
-                        <Button
-                          onClick={handleNext}
-                          variant="brand"
-                          className="font-bold gap-2 px-8"
-                        >
-                          Continue to Delivery
-                          <ChevronRight className="w-5 h-5" />
-                        </Button>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* STEP 2: Delivery Details */}
-                  {currentStep === 2 && (
-                    <motion.div
-                      key="step2"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6"
-                    >
-                      <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">
-                        Delivery Details
-                      </h2>
-
-                      <form className="space-y-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <Input
-                            id="firstName"
-                            label="First Name"
-                            placeholder="John"
-                            error={errors.shippingAddress?.firstName?.message}
-                            {...register("shippingAddress.firstName")}
-                          />
-                          <Input
-                            id="lastName"
-                            label="Last Name"
-                            placeholder="Doe"
-                            error={errors.shippingAddress?.lastName?.message}
-                            {...register("shippingAddress.lastName")}
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <Input
-                            id="email"
-                            type="email"
-                            label="Email Address"
-                            placeholder="john@shero.com"
-                            leftIcon={<Mail className="w-4 h-4" />}
-                            error={errors.email?.message}
-                            {...register("email")}
-                          />
-                          <Input
-                            id="phone"
-                            type="tel"
-                            label="Phone Number"
-                            placeholder="024 123 4567"
-                            leftIcon={<Phone className="w-4 h-4" />}
-                            error={errors.phone?.message}
-                            {...register("phone")}
-                          />
-                        </div>
-
-                        <Input
-                          id="referralCode"
-                          label="Referral Code (Phone Number) - Optional"
-                          placeholder="024 123 4567"
-                          leftIcon={<Phone className="w-4 h-4" />}
-                          error={errors.referralCode?.message}
-                          {...register("referralCode")}
-                        />
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <Input
-                            id="address"
-                            label="Street Address"
-                            placeholder="123 Main Street"
-                            leftIcon={<MapPin className="w-4 h-4" />}
-                            error={errors.shippingAddress?.address?.message}
-                            {...register("shippingAddress.address")}
-                          />
-                          <Input
-                            id="gpsAddress"
-                            label="GhanaPost GPS Address (Optional)"
-                            placeholder="e.g. GA-183-1892"
-                            leftIcon={<MapPin className="w-4 h-4" />}
-                            error={errors.shippingAddress?.gpsAddress?.message}
-                            {...register("shippingAddress.gpsAddress")}
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                          <Input
-                            id="city"
-                            label="City"
-                            placeholder="Accra"
-                            error={errors.shippingAddress?.city?.message}
-                            {...register("shippingAddress.city")}
-                          />
-                          <Select
-                            id="region"
-                            label="Region"
-                            error={errors.shippingAddress?.region?.message}
-                            {...register("shippingAddress.region")}
-                            options={[
-                              { value: "", label: "Select Region" },
-                              {
-                                value: "Greater Accra",
-                                label: "Greater Accra",
-                              },
-                              { value: "Ashanti", label: "Ashanti" },
-                              { value: "Central", label: "Central" },
-                              { value: "Eastern", label: "Eastern" },
-                              { value: "Northern", label: "Northern" },
-                              { value: "Western", label: "Western" },
-                              { value: "Bono", label: "Bono" },
-                              { value: "Bono East", label: "Bono East" },
-                              { value: "Ahafo", label: "Ahafo" },
-                              { value: "Upper East", label: "Upper East" },
-                              { value: "Upper West", label: "Upper West" },
-                              { value: "Savannah", label: "Savannah" },
-                              { value: "North East", label: "North East" },
-                              { value: "Oti", label: "Oti" },
-                              { value: "Volta", label: "Volta" },
-                              {
-                                value: "Western North",
-                                label: "Western North",
-                              },
-                            ]}
-                          />
-                        </div>
-                      </form>
-
-                      <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-4 mt-8">
-                        <Button
-                          onClick={handleBack}
-                          variant="outline"
-                          className="font-bold gap-2 px-8 border-slate-300 dark:border-slate-700"
-                        >
-                          <ChevronLeft className="w-5 h-5" />
-                          Back to Cart
-                        </Button>
-                        <Button
-                          onClick={handleNext}
-                          variant="brand"
-                          className="font-bold gap-2 px-8"
-                        >
-                          Continue to Payment
-                          <ChevronRight className="w-5 h-5" />
-                        </Button>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* STEP 3: Payment Method */}
-                  {currentStep === 3 && (
-                    <motion.div
-                      key="step3"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6"
-                    >
-                      <div className="flex items-start justify-between gap-4 mb-4 sm:mb-6">
-                        <div>
-                          <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
-                            Choose Payment
-                          </h2>
-                          <p className="mt-1 text-sm text-slate-600 dark:text-slate-400 max-w-xl">
-                            Pick one method. Momo and Credit / Bank will
-                            redirect to the right available secure gateway.
-                          </p>
-                        </div>
-                        <div className="hidden sm:inline-flex items-center gap-2 rounded border border-emerald-200 dark:border-emerald-900/40 bg-emerald-50 dark:bg-emerald-900/10 px-3 py-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-300 w-fit">
-                          <CheckCircle className="w-4 h-4" />
-                          Secured Payment
-                        </div>
-                      </div>
-
-                      <div className="space-y-5">
-                        <div className="space-y-3">
-                          <div className="flex items-center justify-between gap-3">
-                            <div>
-                              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-                                Online payment
-                              </p>
-                              <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                                Fast, secure, and redirected automatically.
-                              </p>
-                            </div>
-                            <PaymentIcons />
-                          </div>
-
-                          <div className="grid gap-2">
-                            {ONLINE_PAYMENT_OPTIONS.map((option) => {
-                              const isSelected = paymentMethod === option.value;
-                              const OptionIcon = option.icon;
-
-                              return (
-                                <button
-                                  key={option.value}
-                                  type="button"
-                                  onClick={() =>
-                                    setValue("paymentMethod", option.value)
-                                  }
-                                  className={`w-full rounded border p-3 text-left transition-all ${
-                                    isSelected
-                                      ? "border-brand-secondary-500 bg-brand-secondary-50 dark:bg-brand-secondary-900/20"
-                                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-brand-secondary-400"
-                                  }`}
-                                >
-                                  <div className="flex items-center gap-3">
-                                    <div
-                                      className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${
-                                        isSelected
-                                          ? "bg-brand-secondary-600 text-white"
-                                          : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
-                                      }`}
-                                    >
-                                      <OptionIcon className="w-4 h-4" />
-                                    </div>
-                                    <div className="min-w-0 flex-1">
-                                      <div className="flex items-center justify-between gap-3">
-                                        <h3 className="text-sm sm:text-[15px] font-semibold text-slate-900 dark:text-white">
-                                          {option.title}
-                                        </h3>
-                                        {isSelected && (
-                                          <span className="inline-flex items-center rounded-full bg-brand-secondary-600 px-2 py-0.5 text-[10px] font-semibold text-white">
-                                            Selected
-                                          </span>
-                                        )}
-                                      </div>
-                                      <p className="mt-0.5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-snug">
-                                        {option.description}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-
-                        <div className="space-y-3">
-                          <div>
-                            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
-                              Offline payment
-                            </p>
-                            <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                              For orders that do not need an online redirect.
-                            </p>
-                          </div>
-
-                          <div className="grid gap-2 md:grid-cols-2">
-                            {OFFLINE_PAYMENT_OPTIONS.map((option) => {
-                              const isSelected = paymentMethod === option.value;
-                              const OptionIcon = option.icon;
-
-                              return (
-                                <button
-                                  key={option.value}
-                                  type="button"
-                                  onClick={() =>
-                                    setValue("paymentMethod", option.value)
-                                  }
-                                  className={`w-full rounded border p-3 text-left transition-all ${
-                                    isSelected
-                                      ? "border-brand-secondary-500 bg-brand-secondary-50 dark:bg-brand-secondary-900/20"
-                                      : "border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 hover:border-brand-secondary-400"
-                                  }`}
-                                >
-                                  <div className="flex items-center gap-3">
-                                    <div
-                                      className={`w-9 h-9 rounded-full flex items-center justify-center shrink-0 ${
-                                        isSelected
-                                          ? "bg-brand-secondary-600 text-white"
-                                          : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
-                                      }`}
-                                    >
-                                      <OptionIcon className="w-4 h-4" />
-                                    </div>
-                                    <div className="min-w-0 flex-1">
-                                      <div className="flex items-center justify-between gap-3">
-                                        <h3 className="text-sm sm:text-[15px] font-semibold text-slate-900 dark:text-white">
-                                          {option.title}
-                                        </h3>
-                                        {isSelected && (
-                                          <span className="inline-flex items-center rounded-full bg-brand-secondary-600 px-2 py-0.5 text-[10px] font-semibold text-white">
-                                            Selected
-                                          </span>
-                                        )}
-                                      </div>
-                                      <p className="mt-0.5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-snug">
-                                        {option.description}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </div>
-
-                        {errors.paymentMethod && (
-                          <p className="text-red-500 text-sm mt-2">
-                            {errors.paymentMethod.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="flex flex-col-reverse sm:flex-row sm:justify-between gap-4 mt-8">
-                        <Button
-                          onClick={handleBack}
-                          variant="outline"
-                          className="font-bold gap-2 px-8 border-slate-300 dark:border-slate-700"
-                        >
-                          <ChevronLeft className="w-5 h-5" />
-                          Back
-                        </Button>
-                        <Button
-                          onClick={handleSubmit(onSubmit)}
-                          disabled={isSubmitting}
-                          variant="brand"
-                          className="font-bold gap-2 px-8"
-                        >
-                          {isSubmitting ? "Processing..." : "Place Order"}
-                          <CheckCircle className="w-5 h-5" />
-                        </Button>
-                      </div>
-                    </motion.div>
-                  )}
-
-                  {/* STEP 4: Order Confirmation */}
-                  {currentStep === 4 && (
-                    <motion.div
-                      key="step4"
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6 sm:p-12 text-center"
-                    >
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: 0.2, type: "spring" }}
-                        className="w-24 h-24 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center mx-auto mb-6"
-                      >
-                        <CheckCircle className="w-12 h-12 text-brand-secondary-600 dark:text-brand-secondary-400" />
-                      </motion.div>
-
-                      <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-4">
-                        Order Confirmed!
-                      </h2>
-                      <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-md mx-auto">
-                        Thank you for your order! We've sent a confirmation
-                        email to{" "}
-                        <span className="font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 block sm:inline wrap-break-word">
-                          {email}
-                        </span>
-                      </p>
-
-                      <div className="bg-slate-50 dark:bg-slate-950 rounded p-6 mb-8 max-w-md mx-auto">
-                        {orderId && (
-                          <div className="mb-4">
-                            <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">
-                              Order ID
-                            </p>
-                            <p className="font-mono text-sm font-bold text-slate-900 dark:text-white bg-slate-200 dark:bg-slate-800 px-3 py-2 rounded break-all">
-                              {toReadableOrderId(orderId || "")}
-                            </p>
-                          </div>
-                        )}
-                        <p className="text-sm text-slate-600 dark:text-slate-400 mb-2">
-                          Order Total
-                        </p>
-                        <p className="text-2xl sm:text-4xl font-bold text-brand-secondary-600 dark:text-brand-secondary-400 wrap-break-word">
-                          GHS {confirmedTotal.toFixed(2)}
-                        </p>
-                      </div>
-
-                      <div className="flex flex-col gap-4 max-w-md mx-auto mb-8">
-                        <a
-                          href={`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}?text=${encodeURIComponent(
-                            `Hello SHERO, I just placed an order! Here are my details:\n\n` +
-                              `📦 *Order ID:* ${toReadableOrderId(orderId || "")}\n` +
-                              `💰 *Total:* GHS ${confirmedTotal.toFixed(2)}\n` +
-                              `👤 *Name:* ${watch("shippingAddress.firstName")} ${watch("shippingAddress.lastName")}\n` +
-                              `📞 *Phone:* ${watch("phone")}\n\n` +
-                              `Please confirm my delivery options. Thank you!`,
-                          )}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-bold px-8 py-3 rounded bg-[#25D366] text-white hover:bg-[#20bd5a] transition flex items-center justify-center gap-2 shadow-sm"
-                        >
-                          <WhatsAppIcon className="w-5 h-5 fill-current" />
-                          <span>Confirm on WhatsApp</span>
-                        </a>
-                      </div>
-
-                      <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Button
-                          onClick={() => router.push("/products")}
-                          variant="outline"
-                          className="font-bold px-8 border-slate-300 dark:border-slate-700"
-                        >
-                          Continue Shopping
-                        </Button>
-                        <Button
-                          onClick={() => router.push("/")}
-                          variant="brand"
-                          className="font-bold px-8"
-                        >
-                          Back to Home
-                        </Button>
-                      </div>
-                    </motion.div>
-                  )}
+                  {currentStep === 1 && <CheckoutStepCart />}
+                  {currentStep === 2 && <CheckoutStepDelivery />}
+                  {currentStep === 3 && <CheckoutStepPayment onSubmit={onSubmit} />}
+                  {currentStep === 4 && <CheckoutStepConfirmation />}
                 </>
               )}
             </AnimatePresence>
           </div>
 
-          {/* Order Summary Sidebar / Feedback Prompt */}
           <div className="lg:col-span-1 hidden lg:block">
             {currentStep < 4 && (
               <OrderSummary
@@ -1146,8 +231,7 @@ const CheckoutFlow = () => {
                   Rate Your Experience
                 </h3>
                 <p className="text-slate-600 dark:text-slate-400 mb-6 text-sm">
-                  We'd love to hear your thoughts! Let us know how we can
-                  improve.
+                  We'd love to hear your thoughts! Let us know how we can improve.
                 </p>
                 <Button
                   onClick={() => router.push("/feedback")}
@@ -1163,6 +247,12 @@ const CheckoutFlow = () => {
       </div>
     </div>
   );
-};
+}
 
-export default CheckoutFlow;
+export default function CheckoutFlow() {
+  return (
+    <CheckoutProvider>
+      <CheckoutContent />
+    </CheckoutProvider>
+  );
+}

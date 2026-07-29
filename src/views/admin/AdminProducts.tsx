@@ -268,7 +268,19 @@ export default function AdminProducts() {
 
   const handleToggleStock = async (product: Product) => {
     try {
-      const newQuantity = product.inStock ? 0 : 10;
+      let newQuantity = 0;
+      
+      if (!product.inStock) {
+        const input = window.prompt("Enter the stock quantity for this product:", "1");
+        if (input === null) return; // User cancelled
+        
+        newQuantity = parseInt(input, 10);
+        if (isNaN(newQuantity) || newQuantity <= 0) {
+          addNotification("Error", "Please enter a valid number greater than 0", "error");
+          return;
+        }
+      }
+
       await stockMutation.mutateAsync({
         id: product.id,
         quantity: newQuantity,
