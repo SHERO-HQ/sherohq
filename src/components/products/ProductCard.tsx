@@ -165,7 +165,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       <div className="p-4 flex flex-col flex-1">
         <div className="flex-1">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold font-mono text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest bg-brand-secondary-500/10 px-2 py-0.5 rounded">
+            <span className="text-[10px] font-bold font-mono text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest bg-brand-secondary-500/10 px-2 py-0.5 rounded">
               {product.category}
             </span>
             {product.rating > 0 && (
