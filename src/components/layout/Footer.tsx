@@ -308,7 +308,7 @@ const Footer = () => {
           <PaymentIcons />
 
         {/* Meta verification text */}
-        <p className="text-[10px] text-slate-500 dark:text-slate-400 text-center py-4">
+        <p className="text-[10px] text-slate-500 dark:text-slate-400 text-center py-2">
           <span className="font-bold">SHERO HQ</span> is a brand of <span className="font-bold">SHERO FINTECH</span>
         </p>
         </div>
