@@ -306,12 +306,12 @@ const Footer = () => {
             </div>
           </div>
           <PaymentIcons />
-        </div>
 
         {/* Meta verification text */}
-        <p className="text-[10px] text-slate-500 dark:text-slate-400 text-center">
+        <p className="text-[10px] text-slate-500 dark:text-slate-400 text-center py-4">
           <span className="font-bold">SHERO HQ</span> is a brand of <span className="font-bold">SHERO FINTECH</span>
         </p>
+        </div>
 
         {/* MASSIVE TYPOGRAPHY (Background Layer) */}
         <div className="absolute sm:-bottom-10 bottom-10 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none overflow-hidden z-0 opacity-[0.03] dark:opacity-5 transition-opacity duration-300">
