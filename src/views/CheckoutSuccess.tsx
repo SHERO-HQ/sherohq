@@ -490,7 +490,7 @@ const CheckoutSuccess = () => {
                   <span className="text-lg font-medium text-slate-400 mt-1">
                     GHS
                   </span>
-                  <span className="text-5xl font-light tracking-tight text-slate-900 dark:text-white">
+                  <span className="text-5xl font-semibold tracking-tight text-slate-900 dark:text-white">
                     {order.total.toFixed(2)}
                   </span>
                 </div>
