@@ -22,7 +22,7 @@ export async function PATCH(
     }
 
     const result = await query(
-      `UPDATE tickets SET status = $1, "updatedAt" = NOW() WHERE id = $2 OR ticket_no::text = $2 RETURNING *`,
+      `UPDATE tickets SET status = $1 WHERE id = $2 OR ticket_no::text = $2 RETURNING *`,
       [status, ticketId]
     );
 
