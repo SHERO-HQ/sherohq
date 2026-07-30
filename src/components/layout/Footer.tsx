@@ -204,13 +204,13 @@ const Footer = () => {
 
                   <div className="space-y-4">
                     <a
-                      href={`mailto:${COMPANY_EMAILS.INFO}`}
+                      href={`mailto:${COMPANY_EMAILS.HELLO}`}
                       className="flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-emerald-600 transition-colors group"
                     >
                       <div className="p-1 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 group-hover:border-emerald-500/50 transition-colors">
                         <Mail className="w-4 h-4" />
                       </div>
-                      <span className="text-sm font-medium">{COMPANY_EMAILS.INFO}</span>
+                      <span className="text-sm font-medium">{COMPANY_EMAILS.HELLO}</span>
                     </a>
 
                     <a

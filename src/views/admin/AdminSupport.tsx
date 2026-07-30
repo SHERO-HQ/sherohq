@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { getErrorMessage } from "@/utils/error";
 import {
   MessageSquare,
+  MessageCircle,
   Calendar,
   Headset,
   Search,
@@ -11,6 +12,7 @@ import {
   Clock,
   Mail,
   Phone,
+  PhoneCall,
   ArrowRight,
   ArrowLeft,
   Trash2,
@@ -474,8 +476,29 @@ const AdminSupport = () => {
                             }
                             className="text-slate-400 hover:text-white hover:bg-white/5"
                           >
-                            Reply via Email
+                            <Mail className="w-4 h-4 mr-1" />
+                            Email
                           </Button>
+                          {ticket.phone && (
+                            <>
+                              <a
+                                href={`tel:${ticket.phone}`}
+                                className="inline-flex items-center gap-1 px-3 py-1.5 text-sm text-slate-400 hover:text-white hover:bg-white/5 rounded-md transition-colors"
+                              >
+                                <PhoneCall className="w-4 h-4" />
+                                Call
+                              </a>
+                              <a
+                                href={`https://wa.me/${ticket.phone.replace(/^0/, '233').replace(/[^0-9]/g, '')}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 px-3 py-1.5 text-sm text-slate-400 hover:text-green-400 hover:bg-white/5 rounded-md transition-colors"
+                              >
+                                <MessageCircle className="w-4 h-4" />
+                                WhatsApp
+                              </a>
+                            </>
+                          )}
                           {ticket.status !== "Resolved" && (
                             <Button
                               onClick={() => handleResolveTicket(ticket.id)}
@@ -623,13 +646,24 @@ const AdminSupport = () => {
                           {c.email}
                         </button>
                         {c.phone && (
-                          <a
-                            href={`tel:${c.phone}`}
-                            className="flex items-center gap-2 text-sm text-slate-400 hover:text-brand-secondary-400 transition-colors w-full text-left"
-                          >
-                            <Phone className="w-4 h-4 text-brand-secondary-500" />
-                            {c.phone}
-                          </a>
+                          <>
+                            <a
+                              href={`tel:${c.phone}`}
+                              className="flex items-center gap-2 text-sm text-slate-400 hover:text-brand-secondary-400 transition-colors w-full text-left"
+                            >
+                              <PhoneCall className="w-4 h-4 text-brand-secondary-500" />
+                              {c.phone}
+                            </a>
+                            <a
+                              href={`https://wa.me/${c.phone.replace(/^0/, '233').replace(/[^0-9]/g, '')}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 text-sm text-slate-400 hover:text-green-400 transition-colors w-full text-left"
+                            >
+                              <MessageCircle className="w-4 h-4 text-green-500" />
+                              WhatsApp
+                            </a>
+                          </>
                         )}
                       </div>
                       {c.message && (
@@ -765,6 +799,7 @@ const AdminSupport = () => {
                                     inquiry.name,
                                   )
                                 }
+                                title="Reply via Email"
                                 className="h-8 w-8 p-0 text-slate-500 hover:text-white group-hover:bg-white/10"
                               >
                                 <Mail className="h-4 w-4" />

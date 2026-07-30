@@ -61,7 +61,7 @@ const Contact = () => {
                     <Mail className="w-5 h-5 text-teal-700 dark:text-brand-secondary-400" />
                   }
                   label="Email Us"
-                  value={COMPANY_EMAILS.INFO}
+                  value={COMPANY_EMAILS.HELLO}
                   delay={0.2}
                 />
                 <ContactItem

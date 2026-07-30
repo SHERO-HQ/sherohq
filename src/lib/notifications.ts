@@ -278,7 +278,7 @@ class NotificationService {
 
   public async sendLowStockAlert(productName: string, stockLeft: number) {
     const adminEmail =
-      process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.INFO;
+      process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.HELLO;
     const isOutOfStock = stockLeft <= 0;
 
     const bodyHtml = `
@@ -576,7 +576,7 @@ class NotificationService {
 
     // Admin alert
     const adminEmail =
-      process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.INFO;
+      process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.HELLO;
     await this.sendEmail(
       adminEmail,
       `🚨 NEW ORDER: ${readableOrderId}`,
@@ -839,7 +839,7 @@ class NotificationService {
     time: string;
     message?: string;
   }) {
-    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.INFO;
+    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.HELLO;
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
     const bodyHtml = `
       <h2 style="color: #059669; margin: 0 0 16px;">📅 New Consultation Requested</h2>
@@ -902,7 +902,7 @@ class NotificationService {
     subject: string;
     message: string;
   }) {
-    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.INFO;
+    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.HELLO;
     const bodyHtml = `
       <h2 style="color: #059669; margin: 0 0 16px;">📩 New Inquiry Submitted</h2>
       <p><strong>From:</strong> ${inquiry.name} (&lt;${inquiry.email}&gt;)</p>
