@@ -33,13 +33,17 @@ function getPool(): Pool {
   // we set ssl explicitly below based on the host.
   delete dbConfig.ssl;
 
+  const host = String(dbConfig.host || "");
+  const isLocalhost = host === "localhost" || host === "127.0.0.1" || host === "::1";
+
   const poolConfig: PoolConfig = {
     ...dbConfig,
-    max: 25,
+    // Serverless optimization: keep max low per container to avoid pool exhaustion
+    max: process.env.NODE_ENV === "production" ? 5 : 10,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 10000,
+    connectionTimeoutMillis: 5000,
     statement_timeout: 30000, // 30s timeout
-    ssl: optimizedConnectionString?.includes("supabase.com") ? { rejectUnauthorized: false } : false,
+    ssl: !isLocalhost ? { rejectUnauthorized: false } : false,
   };
 
   // Singleton for Next.js hot-reloading
