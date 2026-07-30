@@ -516,8 +516,7 @@ export default function OrderDetails() {
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono text-slate-500 mb-1">
-              <Hash className="w-3 h-3" />
+            <div className="flex items-center gap-2 text-sm font-mono text-slate-500 mb-1">
               <span>{printOrderId}</span>
               <button
                 type="button"

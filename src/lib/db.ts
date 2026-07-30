@@ -28,7 +28,10 @@ function getPool(): Pool {
     : connectionString;
 
   // Manually parse to ensure all fields are correctly typed
-  const dbConfig = optimizedConnectionString ? parse(optimizedConnectionString) : {};
+  const dbConfig: Record<string, unknown> = optimizedConnectionString ? parse(optimizedConnectionString) : {};
+  // Remove any parsed ssl/sslmode to avoid pg v8 deprecation warning —
+  // we set ssl explicitly below based on the host.
+  delete dbConfig.ssl;
 
   const poolConfig: PoolConfig = {
     ...dbConfig,
