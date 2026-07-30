@@ -5,10 +5,15 @@ import { apiResponse } from "@/lib/api-utils";
 
 export async function GET(request: NextRequest) {
   try {
-    const admin = await getAdminFromSession();
-    if (!admin) return apiResponse.unauthorized();
-
     const { searchParams } = new URL(request.url);
+    const token = searchParams.get("token");
+    const secret = process.env.JWT_SECRET || process.env.CRON_SECRET;
+
+    const isAuthorizedToken = Boolean(token && secret && token === secret);
+    const admin = await getAdminFromSession();
+
+    if (!admin && !isAuthorizedToken) return apiResponse.unauthorized();
+
     const format = searchParams.get("format");
     const limit = Math.min(Number(searchParams.get("limit") || 500), 1000);
 
