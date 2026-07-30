@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
 import { getUserFromSession, getAdminFromSession } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
+import { notificationService } from "@/lib/notifications";
 
 // Schema-like check for POST payload validation
 interface CreateTicketBody {
@@ -74,6 +75,29 @@ export async function POST(request: NextRequest) {
         finalUserId,
       ]
     );
+
+    const ticketObj = {
+      id: ticketId,
+      ticket_no: nextTicketNo,
+      name: body.name,
+      email: body.email,
+      phone: body.phone,
+      subject: body.subject,
+      message: body.message,
+      category: body.category,
+      priority: body.priority || "medium",
+      status: "open",
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      await Promise.all([
+        notificationService.sendSupportTicketCreatedEmail(ticketObj),
+        notificationService.sendNewSupportTicketAdminAlert(ticketObj),
+      ]);
+    } catch (emailErr) {
+      console.error("Failed to send ticket creation notifications:", emailErr);
+    }
 
     return NextResponse.json({
       success: true,

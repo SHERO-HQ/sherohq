@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useDialog } from "@/hooks/useDialog";
 import {
   ResponsiveContainer,
   BarChart,
@@ -71,6 +72,7 @@ interface AnalyticsData {
 
 export default function WhatsAppDashboard() {
   const prefersReducedMotion = useReducedMotion();
+  const dialog = useDialog();
   const [activeTab, setActiveTab] = useState("conversations");
   const [selectedPhone, setSelectedPhone] = useState<string | null>(null);
 
@@ -86,6 +88,13 @@ export default function WhatsAppDashboard() {
   // Analytics States
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [loadingAnalytics, setLoadingAnalytics] = useState(false);
+
+  // Settings States
+  const [settings, setSettings] = useState({
+    autoRetryEnabled: true,
+    maxRetryAttempts: 3,
+    retryIntervalMinutes: 15,
+  });
 
   // Settings & Test States
   const [testPhone, setTestPhone] = useState("");
@@ -135,7 +144,7 @@ export default function WhatsAppDashboard() {
           prev.map((t) => (t.id === ticketId ? { ...t, status: newStatus as any } : t))
         );
       } else {
-        alert(data.error || "Failed to update ticket status");
+        void dialog.alert({ title: "Update Failed", message: data.error || "Failed to update ticket status", type: "error" });
       }
     } catch (err) {
       console.error(err);
@@ -167,10 +176,10 @@ export default function WhatsAppDashboard() {
       });
       const data = await res.json();
       if (data.success) {
-        alert("Retry triggered successfully!");
+        void dialog.alert({ title: "Success", message: "Retry triggered successfully!", type: "success" });
         void fetchRetries();
       } else {
-        alert(data.error || "Manual retry failed");
+        void dialog.alert({ title: "Retry Failed", message: data.error || "Manual retry failed", type: "error" });
       }
     } catch (err) {
       console.error(err);
@@ -205,10 +214,10 @@ export default function WhatsAppDashboard() {
       });
       const data = await res.json();
       if (data.success) {
-        alert(`Bulk retry complete. Processed: ${data.processed}, Successful: ${data.successful}, Failed: ${data.failed}`);
+        void dialog.alert({ title: "Bulk Retry Complete", message: `Bulk retry complete. Processed: ${data.processed}, Successful: ${data.successful}, Failed: ${data.failed}`, type: "success" });
         void fetchRetries();
       } else {
-        alert(data.error || "Failed to trigger bulk retries");
+        void dialog.alert({ title: "Bulk Retry Failed", message: data.error || "Failed to trigger bulk retries", type: "error" });
       }
     } catch (err) {
       console.error(err);

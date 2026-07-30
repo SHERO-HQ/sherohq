@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Package, Tag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { useDialog } from "@/hooks/useDialog";
 import type { Product } from "@/types/product";
 
 interface Category {
@@ -26,6 +27,7 @@ export default function ProductSidebarMeta({
   errors = {},
   onCategoryAdded,
 }: ProductSidebarMetaProps) {
+  const dialog = useDialog();
   const [discountMode, setDiscountMode] = React.useState<"percentage" | "fixed">("percentage");
 
   const regularPrice = productData.originalPrice || productData.price || 0;
@@ -275,12 +277,13 @@ export default function ProductSidebarMeta({
               <button
                 type="button"
                 className="text-xs text-brand-secondary-400 hover:text-brand-secondary-300 transition-colors"
-                onClick={() => {
-                  const newCat = window.prompt("Enter new category name:");
+                onClick={async () => {
+                  const newCat = await dialog.prompt({
+                    title: "Add New Category",
+                    message: "Enter new category name:",
+                    placeholder: "e.g. Gaming Laptops",
+                  });
                   if (newCat?.trim()) {
-                    // For now, since categories are usually fetched from API in the parent form,
-                    // we can't easily persist to DB from here without adding a fetch call.
-                    // We'll create it via API and optimistically update.
                     fetch("/api/categories", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
@@ -289,18 +292,17 @@ export default function ProductSidebarMeta({
                     .then(res => res.json())
                     .then(data => {
                       if (data.success && data.category) {
-                        // The parent form manages categories, so we'd need a prop to add to parent.
                         if (onCategoryAdded) {
                           onCategoryAdded(data.category);
                           onUpdateProductData({ category: data.category.id });
                         } else {
-                          alert("Category added! Please save draft and refresh to see it in the list.");
+                          void dialog.alert({ title: "Category Added", message: "Category added! Please save draft and refresh to see it in the list.", type: "success" });
                         }
                       } else {
-                        alert(data.error || "Failed to add category");
+                        void dialog.alert({ title: "Error", message: data.error || "Failed to add category", type: "error" });
                       }
                     })
-                    .catch(() => alert("Network error"));
+                    .catch(() => void dialog.alert({ title: "Network Error", message: "Network error", type: "error" }));
                   }
                 }}
               >

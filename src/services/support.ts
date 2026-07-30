@@ -89,19 +89,29 @@ export async function scheduleConsultation(data: {
   phone: string;
   message: string;
 }): Promise<{ success: boolean; message: string }> {
-  const response = await fetch(`${API_BASE}/inquiry/schedule`, {
+  const payload = {
+    name: `${data.firstName || ""} ${data.lastName || ""}`.trim(),
+    email: data.email,
+    phone: data.phone,
+    service: data.service,
+    date: data.date instanceof Date ? data.date.toISOString().split("T")[0] : String(data.date),
+    time: data.time,
+    message: data.message,
+  };
+
+  const response = await fetch(`${API_BASE}/consultations`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "X-CSRF-Protection": "1",
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(payload),
   });
   return handleResponse(response);
 }
 
 export async function fetchConsultations(): Promise<Consultation[]> {
-  const response = await authFetch(`${API_BASE}/inquiry/consultations`);
+  const response = await authFetch(`${API_BASE}/consultations`);
   return handleResponse(response);
 }
 
@@ -110,7 +120,7 @@ export async function updateConsultationStatus(
   status: string,
 ): Promise<{ success: boolean; consultation: Consultation }> {
   const response = await authFetch(
-    `${API_BASE}/inquiry/consultations/${id}/status`,
+    `${API_BASE}/consultations/${id}/status`,
     {
       method: "PATCH",
       body: JSON.stringify({ status }),
@@ -122,7 +132,7 @@ export async function updateConsultationStatus(
 export async function deleteConsultation(
   id: string,
 ): Promise<{ success: boolean; message: string }> {
-  const response = await authFetch(`${API_BASE}/inquiry/consultations/${id}`, {
+  const response = await authFetch(`${API_BASE}/consultations/${id}`, {
     method: "DELETE",
   });
   return handleResponse(response);
@@ -148,7 +158,7 @@ export async function sendContactMessage(data: {
   subject: string;
   message: string;
 }): Promise<{ success: boolean; message: string }> {
-  const response = await fetch(`${API_BASE}/inquiry/contact`, {
+  const response = await fetch(`${API_BASE}/inquiries`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -160,7 +170,7 @@ export async function sendContactMessage(data: {
 }
 
 export async function fetchInquiries(): Promise<Inquiry[]> {
-  const response = await authFetch(`${API_BASE}/inquiry/list`);
+  const response = await authFetch(`${API_BASE}/inquiries`);
   return handleResponse(response);
 }
 
@@ -169,7 +179,7 @@ export async function updateInquiryStatus(
   status: string,
 ): Promise<{ success: boolean; inquiry: Inquiry }> {
   const response = await authFetch(
-    `${API_BASE}/inquiry/inquiries/${id}/status`,
+    `${API_BASE}/inquiries/${id}/status`,
     {
       method: "PATCH",
       body: JSON.stringify({ status }),
@@ -180,7 +190,7 @@ export async function updateInquiryStatus(
 export async function deleteInquiry(
   id: string,
 ): Promise<{ success: boolean; message: string }> {
-  const response = await authFetch(`${API_BASE}/inquiry/inquiries/${id}`, {
+  const response = await authFetch(`${API_BASE}/inquiries/${id}`, {
     method: "DELETE",
   });
   return handleResponse(response);

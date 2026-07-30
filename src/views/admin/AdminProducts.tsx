@@ -3,6 +3,7 @@ import React, { useState, useMemo, memo } from "react";
 import Link from "next/link";
 import { getImageUrl } from "@/services/api";
 import { useNotifications } from "@/hooks/useNotifications";
+import { useDialog } from "@/hooks/useDialog";
 import { getErrorMessage } from "@/utils/error";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import type { Product, Category } from "@/types/product";
@@ -204,6 +205,7 @@ const ProductRow = memo(({
 
 export default function AdminProducts() {
   const { addNotification } = useNotifications();
+  const dialog = useDialog();
   const { admin: currentAdmin } = useAdmin();
   const canDelete = !["clerk", "attendant"].includes(currentAdmin?.role || "");
 
@@ -255,8 +257,13 @@ export default function AdminProducts() {
   );
 
   const handleDelete = async (id: string) => {
-    if (!globalThis.confirm?.("Are you sure you want to delete this product?"))
-      return;
+    const confirmed = await dialog.confirm({
+      title: "Delete Product",
+      message: "Are you sure you want to delete this product?",
+      type: "error",
+      confirmText: "Delete",
+    });
+    if (!confirmed) return;
 
     try {
       await deleteMutation.mutateAsync(id);
@@ -271,8 +278,12 @@ export default function AdminProducts() {
       let newQuantity = 0;
       
       if (!product.inStock) {
-        const input = window.prompt("Enter the stock quantity for this product:", "1");
-        if (input === null) return; // User cancelled
+        const input = await dialog.prompt({
+          title: "Update Stock Quantity",
+          message: "Enter the stock quantity for this product:",
+          defaultValue: "1",
+        });
+        if (input === null || input.trim() === "") return; // User cancelled
         
         newQuantity = parseInt(input, 10);
         if (isNaN(newQuantity) || newQuantity <= 0) {

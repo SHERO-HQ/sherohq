@@ -9,6 +9,8 @@ import {
   ArrowRight,
   ShieldCheck,
   Check,
+  TruckElectric,
+  ShoppingBag,
 } from "lucide-react";
 import { trackOrder, type Order } from "@/services/api";
 import { useCart } from "@/context/CartContext";
@@ -582,7 +584,7 @@ const CheckoutSuccess = () => {
                 <span className="text-lg font-medium text-slate-400 mt-1">
                   GHS
                 </span>
-                <span className="text-5xl font-light tracking-tight text-slate-900 dark:text-white">
+                <span className="text-5xl font-semibold tracking-tight text-slate-900 dark:text-white">
                   {order.total.toFixed(2)}
                 </span>
               </div>
@@ -602,7 +604,7 @@ const CheckoutSuccess = () => {
               <span className="text-slate-500 text-sm font-medium">Status</span>
               <div
                 className={cn(
-                  "flex items-center gap-2 px-3 py-1.5 rounded-full",
+                  "flex items-center gap-2 px-3 py-1.5 rounded",
                   confirmationState.badgeClassName,
                 )}
               >
@@ -621,7 +623,7 @@ const CheckoutSuccess = () => {
           >
             <div className="flex items-center gap-3">
               <div className="w-5 h-5 rounded-full border-2 border-slate-400 dark:border-slate-500 flex items-center justify-center">
-                <div className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-slate-500" />
+                <TruckElectric className="w-3 h-3" />
               </div>
               <span className="font-semibold text-sm">Track My Order</span>
             </div>
@@ -632,6 +634,7 @@ const CheckoutSuccess = () => {
             onClick={() => router.push("/shop")}
             className="w-full flex items-center justify-center px-6 py-4 rounded bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800/50 text-slate-500 dark:text-slate-400 font-semibold transition-colors"
           >
+            <ShoppingBag className="w-4 h-4 mr-2" />
             Continue Shopping
           </button>
         </div>

@@ -167,7 +167,7 @@ const SupportTicketForm = ({
  <Input
  label="Phone Number (Optional)"
  type="tel"
- placeholder="+1 (555) 000-0000"
+ placeholder="+233 50 000 0000"
  error={errors.phone?.message}
  {...register("phone")}
  />

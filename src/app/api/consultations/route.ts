@@ -4,6 +4,7 @@ import { getAdminFromSession } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
 import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
+import { notificationService } from "@/lib/notifications";
 
 export async function GET() {
   try {
@@ -35,6 +36,28 @@ export async function POST(request: NextRequest) {
     );
 
     await logActivity(null, "Consultation Requested", "info", `New consultation for ${service} from ${name}`);
+
+    const consultationObj = {
+      id,
+      name,
+      email,
+      phone,
+      service,
+      date,
+      time,
+      message,
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      await Promise.all([
+        notificationService.sendConsultationScheduledEmail(consultationObj),
+        notificationService.sendNewConsultationAdminAlert(consultationObj),
+      ]);
+    } catch (emailErr) {
+      console.error("Failed to send consultation emails:", emailErr);
+    }
 
     return apiResponse.success({ success: true, message: "Consultation scheduled" }, 201);
   } catch (error) {

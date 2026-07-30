@@ -3,6 +3,6 @@ export function toReadableOrderId(orderId: string): string {
     .trim()
     .replace(/^ord-/i, "")
     .replace(/[^0-9a-f]/gi, "");
-  if (!compact) return "ORD-UNKNOWN";
-  return `ORD-${compact.slice(0, 8).toUpperCase()}`;
+  if (!compact) return "#UNKNOWN";
+  return `#${compact.slice(0, 8).toUpperCase()}`;
 }

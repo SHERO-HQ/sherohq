@@ -4,6 +4,7 @@ import { getAdminFromSession } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
 import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
+import { notificationService } from "@/lib/notifications";
 
 export async function GET() {
   try {
@@ -28,11 +29,31 @@ export async function POST(request: NextRequest) {
     }
 
     const id = uuidv4();
+    const finalSubject = subject || "General Inquiry";
     await query(
       `INSERT INTO inquiries (id, name, email, subject, message, status)
        VALUES ($1, $2, $3, $4, $5, 'pending')`,
-      [id, name, email, subject || "General Inquiry", message]
+      [id, name, email, finalSubject, message]
     );
+
+    const inquiryObj = {
+      id,
+      name,
+      email,
+      subject: finalSubject,
+      message,
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+      await Promise.all([
+        notificationService.sendInquiryConfirmationEmail(inquiryObj),
+        notificationService.sendNewInquiryAdminAlert(inquiryObj),
+      ]);
+    } catch (emailErr) {
+      console.error("Failed to send inquiry emails:", emailErr);
+    }
 
     return apiResponse.success({ success: true, message: "Inquiry sent successfully" }, 201);
   } catch (error) {

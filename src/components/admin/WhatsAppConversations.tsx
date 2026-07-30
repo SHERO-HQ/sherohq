@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { formatDistanceToNow } from "date-fns";
 import { Send, Check, CheckCheck, AlertTriangle, RefreshCw, MessageSquare, Code, Loader2 } from "lucide-react";
+import { useDialog } from "@/hooks/useDialog";
 
 interface ConversationMessage {
   id: string;
@@ -33,6 +34,7 @@ export default function WhatsAppConversations({
   selectedPhone: propPhone,
   setSelectedPhone: propSetPhone,
 }: WhatsAppConversationsProps) {
+  const dialog = useDialog();
   const [conversations, setConversations] = useState<ConversationSummary[]>([]);
   const [localSelectedPhone, localSetSelectedPhone] = useState<string | null>(null);
 
@@ -148,11 +150,11 @@ export default function WhatsAppConversations({
         await syncMessages(selectedPhone);
         void fetchConversations();
       } else {
-        alert(`Error: ${data.error || "Failed to send message"}`);
+        void dialog.alert({ title: "Send Failed", message: `Error: ${data.error || "Failed to send message"}`, type: "error" });
       }
     } catch (error) {
       console.error("Failed to send message:", error);
-      alert("Failed to send message. Please try again.");
+      void dialog.alert({ title: "Send Error", message: "Failed to send message. Please try again.", type: "error" });
     } finally {
       setSending(false);
     }
