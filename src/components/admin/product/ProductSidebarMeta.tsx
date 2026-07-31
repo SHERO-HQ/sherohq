@@ -36,8 +36,8 @@ export default function ProductSidebarMeta({
   const currentDiscountFixed = Math.max(0, regularPrice - salePrice);
   const currentDiscountPerc = regularPrice > 0 ? (currentDiscountFixed / regularPrice) * 100 : 0;
 
-  const displayDiscountValue = discountMode === "percentage" 
-    ? Number(currentDiscountPerc.toFixed(2)) 
+  const displayDiscountValue = discountMode === "percentage"
+    ? Number(currentDiscountPerc.toFixed(2))
     : currentDiscountFixed;
 
   React.useEffect(() => {
@@ -114,7 +114,7 @@ export default function ProductSidebarMeta({
               <select
                 value={discountMode}
                 onChange={(e) => setDiscountMode(e.target.value as "percentage" | "fixed")}
-                className="w-full h-10 px-3 py-2 bg-muted/50 border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 text-sm"
+                className="w-full h-10 px-3 py-2 bg-muted/50 border border-border rounded text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 text-sm"
               >
                 <option value="percentage">Percentage (%)</option>
                 <option value="fixed">Fixed Amount (GH₵)</option>
@@ -289,21 +289,21 @@ export default function ProductSidebarMeta({
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({ name: newCat.trim() })
                     })
-                    .then(res => res.json())
-                    .then(data => {
-                      if (data.success && data.id) {
-                        const newCategory = { id: data.id, name: data.name };
-                        if (onCategoryAdded) {
-                          onCategoryAdded(newCategory);
-                          onUpdateProductData({ category: data.id });
+                      .then(res => res.json())
+                      .then(data => {
+                        if (data.success && data.id) {
+                          const newCategory = { id: data.id, name: data.name };
+                          if (onCategoryAdded) {
+                            onCategoryAdded(newCategory);
+                            onUpdateProductData({ category: data.id });
+                          } else {
+                            void dialog.alert({ title: "Category Added", message: "Category added! Please save draft and refresh to see it in the list.", type: "success" });
+                          }
                         } else {
-                          void dialog.alert({ title: "Category Added", message: "Category added! Please save draft and refresh to see it in the list.", type: "success" });
+                          void dialog.alert({ title: "Error", message: data.error || "Failed to add category", type: "error" });
                         }
-                      } else {
-                        void dialog.alert({ title: "Error", message: data.error || "Failed to add category", type: "error" });
-                      }
-                    })
-                    .catch(() => void dialog.alert({ title: "Network Error", message: "Network error", type: "error" }));
+                      })
+                      .catch(() => void dialog.alert({ title: "Network Error", message: "Network error", type: "error" }));
                   }
                 }}
               >
@@ -328,9 +328,9 @@ export default function ProductSidebarMeta({
               ))}
             </select>
             {errors.category && (
-               <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
-                 {errors.category}
-               </p>
+              <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
+                {errors.category}
+              </p>
             )}
           </div>
 

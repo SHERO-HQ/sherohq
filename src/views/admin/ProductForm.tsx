@@ -493,53 +493,53 @@ export default function ProductForm() {
         {/* Sticky Table of Contents (Desktop Only) */}
         <div className="hidden lg:block lg:col-span-2 sticky top-36 space-y-1">
           <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3 px-3">Sections</p>
-          <a href="#general" className="block px-3 py-2 text-sm text-muted-foreground hover:text-brand-secondary-400 hover:bg-accent rounded-md transition-colors">General Info</a>
-          <a href="#media" className="block px-3 py-2 text-sm text-muted-foreground hover:text-brand-secondary-400 hover:bg-accent rounded-md transition-colors">Media & Images</a>
-          <a href="#features" className="block px-3 py-2 text-sm text-muted-foreground hover:text-brand-secondary-400 hover:bg-accent rounded-md transition-colors">Features List</a>
-          <a href="#specs" className="block px-3 py-2 text-sm text-muted-foreground hover:text-brand-secondary-400 hover:bg-accent rounded-md transition-colors">Specifications</a>
-          <a href="#seo" className="block px-3 py-2 text-sm text-muted-foreground hover:text-brand-secondary-400 hover:bg-accent rounded-md transition-colors">Search Engine</a>
+          <a href="#general" className="block px-3 py-2 text-sm text-muted-foreground hover:text-brand-secondary-400 hover:bg-accent rounded transition-colors">General Info</a>
+          <a href="#media" className="block px-3 py-2 text-sm text-muted-foreground hover:text-brand-secondary-400 hover:bg-accent rounded transition-colors">Media & Images</a>
+          <a href="#features" className="block px-3 py-2 text-sm text-muted-foreground hover:text-brand-secondary-400 hover:bg-accent rounded transition-colors">Features List</a>
+          <a href="#specs" className="block px-3 py-2 text-sm text-muted-foreground hover:text-brand-secondary-400 hover:bg-accent rounded transition-colors">Specifications</a>
+          <a href="#seo" className="block px-3 py-2 text-sm text-muted-foreground hover:text-brand-secondary-400 hover:bg-accent rounded transition-colors">Search Engine</a>
         </div>
 
         {/* Main Content Area */}
         <div className="lg:col-span-7 space-y-8">
           <div id="general" className="scroll-mt-36">
-          <ProductIdentityCard
-            productData={productData}
-            onUpdateProductData={updateProductData}
-            errors={errors}
-          />
+            <ProductIdentityCard
+              productData={productData}
+              onUpdateProductData={updateProductData}
+              errors={errors}
+            />
           </div>
 
           <div id="media" className="scroll-mt-36">
-          <ProductMediaCard
-            images={productData.images || []}
-            primaryImage={productData.image || ""}
-            isUploading={isUploading}
-            onUpload={handleImageUpload}
-            onUploadFiles={uploadFiles}
-            onRemove={removeImage}
-            onSetPrimary={setMainImage}
-            onReorder={(newImages) => updateProductData({ images: newImages })}
-          />
+            <ProductMediaCard
+              images={productData.images || []}
+              primaryImage={productData.image || ""}
+              isUploading={isUploading}
+              onUpload={handleImageUpload}
+              onUploadFiles={uploadFiles}
+              onRemove={removeImage}
+              onSetPrimary={setMainImage}
+              onReorder={(newImages) => updateProductData({ images: newImages })}
+            />
           </div>
 
           <div id="features" className="scroll-mt-36">
-          <ProductFeaturesCard
-            features={productData.features || []}
-            newFeature={newFeature}
-            onNewFeatureChange={setNewFeature}
-            onAddFeature={addFeature}
-            onRemoveFeature={removeFeature}
-          />
+            <ProductFeaturesCard
+              features={productData.features || []}
+              newFeature={newFeature}
+              onNewFeatureChange={setNewFeature}
+              onAddFeature={addFeature}
+              onRemoveFeature={removeFeature}
+            />
           </div>
 
           <div id="specs" className="scroll-mt-36">
-          <ProductSpecsCard
-            specsList={specsList}
-            onAddSpecRow={addSpecRow}
-            onRemoveSpecRow={removeSpecRow}
-            onUpdateSpecRow={updateSpecRow}
-          />
+            <ProductSpecsCard
+              specsList={specsList}
+              onAddSpecRow={addSpecRow}
+              onRemoveSpecRow={removeSpecRow}
+              onUpdateSpecRow={updateSpecRow}
+            />
           </div>
 
 

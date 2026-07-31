@@ -197,10 +197,10 @@ const CheckoutSuccess = () => {
             setOrder((prev) =>
               prev
                 ? ({
-                    ...prev,
-                    status: data.status || "processing",
-                    paymentStatus: verificationState.paymentStatus,
-                  } as Order)
+                  ...prev,
+                  status: data.status || "processing",
+                  paymentStatus: verificationState.paymentStatus,
+                } as Order)
                 : prev,
             );
             setTimeout(() => setShowRatingModal(true), 1500);
@@ -210,10 +210,10 @@ const CheckoutSuccess = () => {
             setOrder((prev) =>
               prev
                 ? ({
-                    ...prev,
-                    // A declined payment keeps the order pending for retry.
-                    paymentStatus: verificationState.paymentStatus,
-                  } as Order)
+                  ...prev,
+                  // A declined payment keeps the order pending for retry.
+                  paymentStatus: verificationState.paymentStatus,
+                } as Order)
                 : prev,
             );
             clearInterval(interval);
@@ -274,21 +274,21 @@ const CheckoutSuccess = () => {
   const confirmationState =
     status === "failed"
       ? {
-          heading: "Payment Failed",
-          description:
-            "Your payment could not be completed. Please try again or contact support.",
-          badge: "Failed",
-          badgeClassName:
-            "bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-400",
-        }
+        heading: "Payment Failed",
+        description:
+          "Your payment could not be completed. Please try again or contact support.",
+        badge: "Failed",
+        badgeClassName:
+          "bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-400",
+      }
       : {
-          heading: "Payment Successful",
-          description:
-            "Your payment was successful and your order is confirmed.",
-          badge: "Success",
-          badgeClassName:
-            "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
-        };
+        heading: "Payment Successful",
+        description:
+          "Your payment was successful and your order is confirmed.",
+        badge: "Success",
+        badgeClassName:
+          "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
+      };
 
   const renderContent = () => {
     if (status === "verifying") {
@@ -389,7 +389,7 @@ const CheckoutSuccess = () => {
                   </span>
                 </div>
               ) : (
-                <div className="h-12 w-32 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse" />
+                <div className="h-12 w-32 bg-slate-100 dark:bg-slate-800 rounded animate-pulse" />
               )}
             </div>
 
@@ -496,7 +496,7 @@ const CheckoutSuccess = () => {
                   </span>
                 </div>
               ) : (
-                <div className="h-12 w-32 bg-slate-100 dark:bg-slate-800 rounded-lg" />
+                <div className="h-12 w-32 bg-slate-100 dark:bg-slate-800 rounded" />
               )}
             </div>
 
@@ -588,7 +588,7 @@ const CheckoutSuccess = () => {
                 </span>
               </div>
             ) : (
-              <div className="h-12 w-32 bg-slate-100 dark:bg-slate-800 rounded-lg" />
+              <div className="h-12 w-32 bg-slate-100 dark:bg-slate-800 rounded" />
             )}
           </div>
 

@@ -96,12 +96,12 @@ export function ConfirmDialog({
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
             transition={{ type: "spring", duration: 0.3 }}
-            className="relative glass-surface-lg w-full max-w-md overflow-hidden shadow-2xl rounded-2xl border border-slate-700/50 bg-slate-900/95"
+            className="relative glass-surface-lg w-full max-w-md overflow-hidden shadow-2xl rounded border border-slate-700/50 bg-slate-900/95"
           >
             {/* Header */}
             <div className="flex items-start justify-between p-6 pb-0">
               <div className="flex items-center gap-4">
-                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${styles.icon}`}>
+                <div className={`w-12 h-12 rounded flex items-center justify-center ${styles.icon}`}>
                   {variant === "danger" || variant === "warning" ? (
                     <AlertTriangle className="w-6 h-6" />
                   ) : variant === "success" ? (
@@ -136,7 +136,7 @@ export function ConfirmDialog({
                     onKeyDown={handleKeyDown}
                     placeholder={placeholder}
                     autoFocus
-                    className="w-full px-4 py-2.5 bg-slate-800/80 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-sm"
+                    className="w-full px-4 py-2.5 bg-slate-800/80 border border-slate-700 rounded text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-sm"
                   />
                 </div>
               )}

@@ -21,7 +21,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({
   const [query, setQuery] = useState(initialQuery);
   const [isFocused, setIsFocused] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
+
   const debouncedQuery = useDebounce(query, 300);
   const { data: productsData, isLoading } = useProducts(undefined, debouncedQuery);
 
@@ -87,7 +87,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({
 
       {/* Auto-complete Dropdown */}
       {showDropdown && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-lg shadow-xl overflow-hidden z-50">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded shadow-xl overflow-hidden z-50">
           {isLoading ? (
             <div className="p-4 text-center text-slate-500 dark:text-slate-400">
               Searching...

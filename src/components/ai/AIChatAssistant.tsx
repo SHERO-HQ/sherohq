@@ -11,7 +11,8 @@ import {
   Image as ImageIcon,
   Mic,
   Volume2,
-  Trash2} from "lucide-react";
+  Trash2,
+  User} from "lucide-react";
 import { type ChatMessage, sendChatMessageStreaming } from "@/services/ai/chat";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -572,21 +573,37 @@ export default function AIChatAssistant() {
                   {messages.map((msg) => (
                     <div
                       key={msg.id}
-                      className={`flex flex-col max-w-[85%] ${msg.role === "user" ? "ml-auto" : "mr-auto"
-                        }`}
+                      className={`flex gap-2 max-w-[85%] items-end ${msg.role === "user" ? "ml-auto flex-row-reverse" : "mr-auto"}`}
                     >
-                      <div
-                        className={`p-3 rounded text-sm ${msg.role === "user"
-                          ? "bg-primary text-white rounded-br-sm"
-                          : "bg-white dark:bg-white/10 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 rounded-bl-sm"
-                          }`}
-                      >
-                        {msg.role === "user" ? (
-                          msg.content
+                      {/* Avatar */}
+                      <div className="w-6 h-6 rounded-full shrink-0 flex items-center justify-center text-[10px] shadow-sm overflow-hidden border border-slate-200/50 dark:border-white/10">
+                        {msg.role === "assistant" ? (
+                          <div className="w-full h-full bg-brand-secondary-500 text-white flex items-center justify-center">
+                            <Sparkles size={12} fill="currentColor" />
+                          </div>
                         ) : (
-                          <ChatMarkdown content={msg.content} />
+                          <div className="w-full h-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center">
+                            <User size={12} />
+                          </div>
                         )}
                       </div>
+
+                      {/* Message Content Container */}
+                      <div className={`flex flex-col gap-2 min-w-0 flex-1 ${msg.role === "user" ? "items-end" : "items-start"}`}>
+                        {msg.content && (
+                          <div
+                            className={`px-4 py-2.5 text-[13px] leading-relaxed shadow-sm ${msg.role === "user"
+                              ? "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-2xl rounded-br-[4px]"
+                              : "bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700/50 text-slate-800 dark:text-slate-200 rounded-2xl rounded-bl-[4px]"
+                              }`}
+                          >
+                          {msg.role === "user" ? (
+                            msg.content
+                          ) : (
+                            <ChatMarkdown content={msg.content} />
+                          )}
+                        </div>
+                      )}
 
                       {/* Recommend Products UI block */}
                       {msg.role === "assistant" &&
@@ -834,18 +851,19 @@ export default function AIChatAssistant() {
                           </div>
                         </div>
                       )}
+                      </div>
                     </div>
                   ))}
 
                   {isTyping && (
-                    <div className="flex flex-col gap-1.5 mr-auto">
-                      <div className="w-12 h-8 bg-white dark:bg-white/10 border border-slate-200 dark:border-white/5 rounded rounded-bl-sm flex items-center justify-center gap-1 shrink-0">
+                    <div className="flex items-center gap-2 mr-auto px-2 py-1">
+                      <div className="flex items-center gap-1 mt-0.5">
                         <span className="w-1.5 h-1.5 bg-brand-secondary-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
                         <span className="w-1.5 h-1.5 bg-brand-secondary-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
                         <span className="w-1.5 h-1.5 bg-brand-secondary-500 rounded-full animate-bounce"></span>
                       </div>
-                      <span className="text-[9px] font-bold text-brand-secondary-500/70 animate-pulse ml-1">
-                        SHERO IS THINKING...
+                      <span className="text-[10px] font-bold text-brand-secondary-500/70 animate-pulse uppercase tracking-wide">
+                        Shero is typing...
                       </span>
                     </div>
                   )}

@@ -39,8 +39,8 @@ export default function ProductQuickViewModal({
 
   const discount = product.originalPrice
     ? Math.round(
-        ((product.originalPrice - product.price) / product.originalPrice) * 100
-      )
+      ((product.originalPrice - product.price) / product.originalPrice) * 100
+    )
     : 0;
 
   const stockCount = typeof product.quantity === "number" ? product.quantity : 10;
@@ -91,7 +91,7 @@ export default function ProductQuickViewModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", duration: 0.3 }}
-            className="relative w-full max-w-3xl bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden z-10 my-auto text-white"
+            className="relative w-full max-w-3xl bg-slate-900 border border-slate-800 rounded shadow-2xl overflow-hidden z-10 my-auto text-white"
           >
             {/* Close Button */}
             <button
@@ -104,7 +104,7 @@ export default function ProductQuickViewModal({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 sm:p-8">
               {/* Media Section */}
               <div className="flex flex-col gap-4">
-                <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-950 border border-white/5 flex items-center justify-center">
+                <div className="relative aspect-square rounded overflow-hidden bg-slate-950 border border-white/5 flex items-center justify-center">
                   <AppImage
                     src={getImageUrl(currentImage)}
                     alt={product.name}
@@ -112,7 +112,7 @@ export default function ProductQuickViewModal({
                     className="object-contain p-4"
                   />
                   {discount > 0 && (
-                    <span className="absolute top-3 left-3 bg-red-500 text-white font-bold text-xs px-2.5 py-1 rounded-lg">
+                    <span className="absolute top-3 left-3 bg-red-500 text-white font-bold text-xs px-2.5 py-1 rounded">
                       -{discount}% OFF
                     </span>
                   )}
@@ -125,11 +125,10 @@ export default function ProductQuickViewModal({
                       <button
                         key={`${img}-${idx}`}
                         onClick={() => setSelectedImage(img)}
-                        className={`relative w-14 h-14 rounded-xl overflow-hidden border-2 transition-all flex-shrink-0 ${
-                          currentImage === img
-                            ? "border-emerald-500 scale-105"
-                            : "border-white/10 opacity-60 hover:opacity-100"
-                        }`}
+                        className={`relative w-14 h-14 rounded overflow-hidden border-2 transition-all flex-shrink-0 ${currentImage === img
+                          ? "border-emerald-500 scale-105"
+                          : "border-white/10 opacity-60 hover:opacity-100"
+                          }`}
                       >
                         <AppImage
                           src={getImageUrl(img)}
@@ -168,11 +167,10 @@ export default function ProductQuickViewModal({
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star
                           key={`star-${i}`}
-                          className={`w-4 h-4 ${
-                            i < Math.floor(product.rating || 5)
-                              ? "fill-current"
-                              : "text-slate-700"
-                          }`}
+                          className={`w-4 h-4 ${i < Math.floor(product.rating || 5)
+                            ? "fill-current"
+                            : "text-slate-700"
+                            }`}
                         />
                       ))}
                     </div>
@@ -204,17 +202,17 @@ export default function ProductQuickViewModal({
                   {/* Quantity selector */}
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium text-slate-400">Quantity</span>
-                    <div className="flex items-center gap-3 bg-slate-800 border border-slate-700 rounded-xl p-1">
+                    <div className="flex items-center gap-3 bg-slate-800 border border-slate-700 rounded p-1">
                       <button
                         onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                        className="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors font-bold"
+                        className="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-white hover:bg-white/10 rounded transition-colors font-bold"
                       >
                         -
                       </button>
                       <span className="w-8 text-center font-bold text-sm">{quantity}</span>
                       <button
                         onClick={() => setQuantity((q) => q + 1)}
-                        className="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors font-bold"
+                        className="w-8 h-8 flex items-center justify-center text-slate-300 hover:text-white hover:bg-white/10 rounded transition-colors font-bold"
                       >
                         +
                       </button>
@@ -225,7 +223,7 @@ export default function ProductQuickViewModal({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <button
                       onClick={handleAddToCart}
-                      className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl shadow-lg shadow-emerald-600/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                      className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded shadow-lg shadow-emerald-600/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
                     >
                       <ShoppingCart className="w-4 h-4" />
                       Add to Cart
@@ -233,7 +231,7 @@ export default function ProductQuickViewModal({
 
                     <button
                       onClick={handleWhatsAppOrder}
-                      className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-600/40 text-emerald-400 font-bold rounded-xl transition-all"
+                      className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-600/40 text-emerald-400 font-bold rounded transition-all"
                     >
                       <WhatsAppIcon className="w-4 h-4 fill-current" />
                       Order on WhatsApp

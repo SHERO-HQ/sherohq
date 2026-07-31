@@ -217,7 +217,7 @@ const SupportTicketForm = ({
                       exit={{ opacity: 0, height: 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="bg-brand-secondary-50 dark:bg-brand-secondary-500/5 rounded-lg border border-brand-secondary-200 dark:border-brand-secondary-500/20 p-4 space-y-3">
+                      <div className="bg-brand-secondary-50 dark:bg-brand-secondary-500/5 rounded border border-brand-secondary-200 dark:border-brand-secondary-500/20 p-4 space-y-3">
                         <div className="flex items-center gap-2 text-brand-secondary-700 dark:text-brand-secondary-400 font-semibold text-sm">
                           <BookOpen className="w-4 h-4" />
                           <span>Suggested Articles</span>

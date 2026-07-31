@@ -461,7 +461,7 @@ const Portfolio = () => {
                           <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest block">
                             Strategic Solution
                           </span>
-                          <div className="relative p-5 bg-linear-to-br from-brand-secondary-50/50 to-slate-50/50 dark:from-brand-secondary-950/10 dark:to-slate-900/30 rounded-xl border border-brand-secondary-500/20 dark:border-brand-secondary-500/10 overflow-hidden">
+                          <div className="relative p-5 bg-linear-to-br from-brand-secondary-50/50 to-slate-50/50 dark:from-brand-secondary-950/10 dark:to-slate-900/30 rounded border border-brand-secondary-500/20 dark:border-brand-secondary-500/10 overflow-hidden">
                             <div className="absolute top-0 right-0 p-3 opacity-5 text-brand-secondary-600 dark:text-brand-secondary-400 select-none pointer-events-none">
                               <Info className="w-16 h-16" />
                             </div>

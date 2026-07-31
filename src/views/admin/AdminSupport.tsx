@@ -913,57 +913,57 @@ const AdminSupport = () => {
         >
           <form onSubmit={handleReschedule} className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-2">
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-muted-foreground mb-1">
-                New Date
-              </label>
-              <Input
-                type="date"
-                required
-                min={new Date().toISOString().split("T")[0]}
-                value={rescheduleModal.currentDate}
-                onChange={(e) =>
-                  setRescheduleModal({
-                    ...rescheduleModal,
-                    currentDate: e.target.value,
-                  })
-                }
-                className="bg-card/50 border-border text-foreground"
-              />
-            </div>
-            <div className="flex-1">
-              <label className="block text-sm font-medium text-muted-foreground mb-1">
-                New Time
-              </label>
-              <select
-                required
-                value={rescheduleModal.currentTime}
-                onChange={(e) =>
-                  setRescheduleModal({
-                    ...rescheduleModal,
-                    currentTime: e.target.value,
-                  })
-                }
-                className="flex h-10 w-full rounded-md border border-border bg-card/50 px-3 py-2 text-sm text-foreground focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500"
-              >
-                <option value="" disabled>
-                  Select a time slot
-                </option>
-                {[
-                  "09:00 AM",
-                  "10:00 AM",
-                  "11:00 AM",
-                  "01:00 PM",
-                  "02:00 PM",
-                  "03:00 PM",
-                  "04:00 PM",
-                ].map((slot) => (
-                  <option key={slot} value={slot} className="bg-card">
-                    {slot}
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-muted-foreground mb-1">
+                  New Date
+                </label>
+                <Input
+                  type="date"
+                  required
+                  min={new Date().toISOString().split("T")[0]}
+                  value={rescheduleModal.currentDate}
+                  onChange={(e) =>
+                    setRescheduleModal({
+                      ...rescheduleModal,
+                      currentDate: e.target.value,
+                    })
+                  }
+                  className="bg-card/50 border-border text-foreground"
+                />
+              </div>
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-muted-foreground mb-1">
+                  New Time
+                </label>
+                <select
+                  required
+                  value={rescheduleModal.currentTime}
+                  onChange={(e) =>
+                    setRescheduleModal({
+                      ...rescheduleModal,
+                      currentTime: e.target.value,
+                    })
+                  }
+                  className="flex h-10 w-full rounded border border-border bg-card/50 px-3 py-2 text-sm text-foreground focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500"
+                >
+                  <option value="" disabled>
+                    Select a time slot
                   </option>
-                ))}
-              </select>
-            </div>
+                  {[
+                    "09:00 AM",
+                    "10:00 AM",
+                    "11:00 AM",
+                    "01:00 PM",
+                    "02:00 PM",
+                    "03:00 PM",
+                    "04:00 PM",
+                  ].map((slot) => (
+                    <option key={slot} value={slot} className="bg-card">
+                      {slot}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="flex justify-end gap-3 pt-4 border-t border-border">
               <Button

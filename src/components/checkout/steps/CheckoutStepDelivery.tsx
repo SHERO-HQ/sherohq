@@ -61,7 +61,7 @@ export default function CheckoutStepDelivery() {
           />
         </div>
 
-        <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700">
+        <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded border border-slate-200 dark:border-slate-700">
           <div className="flex items-center h-5">
             <input
               id="wantsWhatsAppUpdates"
@@ -150,9 +150,9 @@ export default function CheckoutStepDelivery() {
               <p className="text-xs text-brand-secondary-600 dark:text-brand-secondary-400 font-medium px-1">
                 Estimated Delivery: {
                   watch("shippingAddress.region") === "Greater Accra" ? "24–48 hours" :
-                  ["Ashanti", "Central", "Eastern"].includes(watch("shippingAddress.region") || "") ? "2-3 days" :
-                  ["Western", "Bono", "Bono East", "Ahafo", "Volta", "Oti"].includes(watch("shippingAddress.region") || "") ? "3-5 days" :
-                  "4-7 days"
+                    ["Ashanti", "Central", "Eastern"].includes(watch("shippingAddress.region") || "") ? "2-3 days" :
+                      ["Western", "Bono", "Bono East", "Ahafo", "Volta", "Oti"].includes(watch("shippingAddress.region") || "") ? "3-5 days" :
+                        "4-7 days"
                 }
               </p>
             )}

@@ -12,9 +12,10 @@ import { SUPPORT_KNOWLEDGE } from "./knowledge";
 // ---------------------------------------------------------------------------
 
 const GEMINI_MODEL_CANDIDATES = [
+  "gemini-3.6-flash",
+  "gemini-3.5-flash",
+  "gemini-3.1-flash-lite",
   "gemini-2.0-flash",
-  "gemini-1.5-flash",
-  "gemini-1.5-pro",
 ];
 
 // ---------------------------------------------------------------------------
@@ -76,13 +77,14 @@ CAPABILITIES
 6. **Consultation Booking** — Schedule expert consultations for Managed IT, Custom Software, Cyber Security, or other services using the book_consultation tool.
 
 RULES
+- Be a polite and conversational IT assistant.
+- ONLY call tools when the user explicitly requests something that requires a tool.
+- If the user makes small talk or asks an off-topic question (like "I am not feeling well"), acknowledge it briefly, explicitly state that you are an IT assistant and can only help with tech-related issues, and ask how you can help them with technology today. Do not offer unrelated services.
 - For product questions, ALWAYS call recommend_products so the frontend renders product cards. Don't just describe products in text.
-- Never recommend products above a stated budget.
-- If the user asks to track something without an ID, ask for the ID first before calling tracking tools.
-- For booking: ask for name, email, date (YYYY-MM-DD), time, and service type if not provided before calling book_consultation.
-- For tickets: ask for name, email, subject, and description if not provided before calling create_support_ticket.
+- If the user explicitly asks to track an order but doesn't give an ID, reply asking for the ID. Do not call the track_order tool until you have the ID.
+- For booking: ask for name, email, date, time, and service type if missing.
+- For tickets: ask for name, email, subject, and description if missing.
 - When troubleshooting: try at least one round of guided steps before suggesting a support ticket.
-- Stay on topic. If asked about non-IT topics, politely redirect: "I specialize in IT solutions — how can I help you with technology today?"
 
 INVENTORY DATA
 ${catalog}
@@ -105,7 +107,7 @@ export async function categorizeIntent(message: string): Promise<"tech_support" 
   
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -137,7 +139,7 @@ export async function summarizeChatHistory(history: Array<{ role: string; conten
   
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -166,7 +168,7 @@ export const GEMINI_TOOLS = [
     functionDeclarations: [
       {
         name: "recommend_products",
-        description: "Recommend products from the catalog. Use this when the user is asking for product options, pricing, or comparisons. This displays product cards on the screen.",
+        description: "Recommend products from the catalog. ONLY call this when the user explicitly asks to buy, browse, or compare products. DO NOT call this if the user is asking for support, order tracking, or general help.",
         parameters: {
           type: "OBJECT",
           properties: {
@@ -178,7 +180,7 @@ export const GEMINI_TOOLS = [
       },
       {
         name: "track_order",
-        description: "Look up an order's status when the user provides an order ID.",
+        description: "Look up an order's status. ONLY call this if the user has provided an order ID.",
         parameters: {
           type: "OBJECT",
           properties: {
@@ -189,7 +191,7 @@ export const GEMINI_TOOLS = [
       },
       {
         name: "track_ticket",
-        description: "Look up a support ticket's status when the user provides a ticket ID or number.",
+        description: "Look up a support ticket's status. ONLY call this if the user has provided a ticket ID.",
         parameters: {
           type: "OBJECT",
           properties: {

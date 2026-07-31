@@ -21,7 +21,7 @@ const pillars = [
   {
     icon: Shield,
     title: "Software",
-    description: "Custom-engineered solutions built for your exact workflow — no off-the-shelf compromises.",
+    description: "Custom-engineered solutions built for your exact workflow, no off-the-shelf compromises.",
   },
   {
     icon: Headphones,
@@ -63,13 +63,13 @@ const AboutManifesto = () => {
             className="max-w-5xl mx-auto"
           >
             {/* Label */}
-            <motion.div variants={fadeUp} className="flex items-center justify-center gap-3 mb-10">
+            {/* <motion.div variants={fadeUp} className="flex items-center justify-center gap-3 mb-10">
               <div className="h-px w-12 bg-brand-secondary-500/50" />
               <span className="text-xs md:text-sm font-mono uppercase tracking-[0.25em] text-brand-secondary-400 font-bold">
                 Our Manifesto
               </span>
               <div className="h-px w-12 bg-brand-secondary-500/50" />
-            </motion.div>
+            </motion.div> */}
 
             {/* Big quote with decorative marks */}
             <motion.blockquote variants={fadeUp} className="relative text-center px-4 md:px-12">

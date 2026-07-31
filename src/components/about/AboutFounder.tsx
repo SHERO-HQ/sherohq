@@ -32,13 +32,13 @@ const AboutFounder = () => {
                 alt="SHERO Logo"
                 width={80}
                 height={80}
-                className="rounded-lg"
+                className="rounded"
               />
             </div>
 
             {/* Label */}
             <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-brand-secondary-500 dark:text-brand-secondary-400 font-bold mb-4">
-              A Word from Our Founder
+              Founder's Message
             </h2>
 
             {/* Quote */}
@@ -59,7 +59,7 @@ const AboutFounder = () => {
 
             {/* Attribution */}
             <motion.p variants={fadeUp} className="mt-4 text-xs text-muted-foreground">
-              — Founder, SHERO Technologies
+              — Founder, SHERO
             </motion.p>
           </motion.div>
         </motion.div>
