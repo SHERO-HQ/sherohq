@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest} from "next/server";
 import { query } from "@/lib/db";
 import { getAdminFromSession } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
@@ -47,16 +47,14 @@ export async function PATCH(
         name: updatedTicket.name,
         email: updatedTicket.email,
         subject: updatedTicket.subject,
-        status: updatedTicket.status,
-      });
+        status: updatedTicket.status});
     } catch (e) {
       console.error("Failed to send ticket status email:", e);
     }
 
     return apiResponse.success({
       success: true,
-      ticket: updatedTicket,
-    });
+      ticket: updatedTicket});
   } catch (error) {
     console.error("Update ticket status error:", error);
     return apiResponse.error("Failed to update ticket status");

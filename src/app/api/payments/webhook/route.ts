@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { query, getClient } from "@/lib/db";
+import { getClient } from "@/lib/db";
 import { createHmac, timingSafeEqual, randomUUID } from "node:crypto";
 
 function isValidPaystackSignature(rawBody: string, signature: string | null) {
@@ -26,8 +26,7 @@ export async function POST(request: NextRequest) {
 
     console.log("[payment:webhook] incoming", {
       contentLength: rawBody.length,
-      contentType: request.headers.get("content-type"),
-    });
+      contentType: request.headers.get("content-type")});
 
     const data = JSON.parse(rawBody);
     let status = "";
@@ -57,8 +56,7 @@ export async function POST(request: NextRequest) {
           event: data.event,
           provider: "paystack",
           orderId,
-          paystackStatus: data.data?.status,
-        });
+          paystackStatus: data.data?.status});
       } else {
         // Other Paystack events (e.g. transfer.success) — not relevant
         return new NextResponse("Event ignored", { status: 200 });
@@ -93,16 +91,14 @@ export async function POST(request: NextRequest) {
         paymentType:
           nested?.PaymentDetails?.PaymentType ?? data.PaymentMethod ?? "N/A",
         channel: nested?.PaymentDetails?.Channel ?? "N/A",
-        topLevelResponseCode: data.ResponseCode ?? "N/A",
-      });
+        topLevelResponseCode: data.ResponseCode ?? "N/A"});
 
       // Server-side verification: confirm with Hubtel's API before trusting the webhook
       if (status === "Success") {
         const {
           verified,
           status: confirmedStatus,
-          amount: confirmedAmount,
-        } = await verifyHubtelTransaction(orderId);
+          amount: confirmedAmount} = await verifyHubtelTransaction(orderId);
 
         verifiedAmount = confirmedAmount;
 
@@ -114,8 +110,7 @@ export async function POST(request: NextRequest) {
             orderId,
             event: "verification_mismatch",
             webhookClaimed: "Success",
-            hubtelApiReturned: confirmedStatus,
-          });
+            hubtelApiReturned: confirmedStatus});
           return NextResponse.json(
             { success: false, message: "Transaction verification failed" },
             { status: 200 },
@@ -124,8 +119,7 @@ export async function POST(request: NextRequest) {
       }
     } else {
       console.warn("[payment:webhook] Unknown webhook format received", {
-        keys: Object.keys(data),
-      });
+        keys: Object.keys(data)});
       return new NextResponse("Unknown webhook format", { status: 400 });
     }
 
@@ -150,8 +144,7 @@ export async function POST(request: NextRequest) {
       console.error("[payment:webhook]", {
         event: "order_not_found",
         provider,
-        clientReference: orderId,
-      });
+        clientReference: orderId});
       return new NextResponse("Order not found", { status: 404 });
     }
 
@@ -167,8 +160,7 @@ export async function POST(request: NextRequest) {
           provider,
           orderId: actualOrderId,
           expected: orderTotal,
-          received: verifiedAmount,
-        });
+          received: verifiedAmount});
         await client.query(
           `INSERT INTO activity_logs (id, action, type, details, "createdAt")
            VALUES ($1, $2, $3, $4, NOW())`,
@@ -211,8 +203,7 @@ export async function POST(request: NextRequest) {
           event: "order_confirmed",
           provider,
           orderId: actualOrderId,
-          newStatus: "processing",
-        });
+          newStatus: "processing"});
 
         // Trigger order confirmation notification
         try {
@@ -237,22 +228,19 @@ export async function POST(request: NextRequest) {
             .catch((err) =>
               console.error("[payment:webhook] Confirmation notification failed:", {
                 orderId: actualOrderId,
-                error: err instanceof Error ? err.message : err,
-              }),
+                error: err instanceof Error ? err.message : err}),
             );
         } catch (err) {
           console.error("[payment:webhook] Failed to import notificationService:", {
             orderId: actualOrderId,
-            error: err instanceof Error ? err.message : err,
-          });
+            error: err instanceof Error ? err.message : err});
         }
       } else {
         console.log("[payment:webhook]", {
           event: "order_already_processed",
           provider,
           orderId: actualOrderId,
-          currentStatus: order.status,
-        });
+          currentStatus: order.status});
       }
     } else {
       // Payment failed / cancelled
@@ -263,8 +251,7 @@ export async function POST(request: NextRequest) {
           event: "failure_skipped_not_pending",
           provider,
           orderId: actualOrderId,
-          currentStatus: order.status,
-        });
+          currentStatus: order.status});
         return new NextResponse("OK", { status: 200 });
       }
 
@@ -290,8 +277,7 @@ export async function POST(request: NextRequest) {
       console.log("[payment:webhook]", {
         event: "payment_failed",
         provider,
-        orderId: actualOrderId,
-      });
+        orderId: actualOrderId});
 
       // Trigger failure notification
       try {
@@ -306,14 +292,12 @@ export async function POST(request: NextRequest) {
           .catch((err) =>
             console.error("[payment:webhook] Failure notification failed:", {
               orderId: actualOrderId,
-              error: err instanceof Error ? err.message : err,
-            }),
+              error: err instanceof Error ? err.message : err}),
           );
       } catch (err) {
         console.error("[payment:webhook] Failed to import notificationService for failure:", {
           orderId: actualOrderId,
-          error: err instanceof Error ? err.message : err,
-        });
+          error: err instanceof Error ? err.message : err});
       }
     }
 
@@ -325,8 +309,7 @@ export async function POST(request: NextRequest) {
       event: "unhandled_error",
       provider,
       orderId,
-      error: error instanceof Error ? error.message : error,
-    });
+      error: error instanceof Error ? error.message : error});
     return new NextResponse("Internal Error", { status: 500 });
   } finally {
     if (client) client.release();

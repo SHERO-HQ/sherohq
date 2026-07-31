@@ -14,8 +14,7 @@ import {
   Minus,
   BadgeCheck,
   Maximize2,
-  X,
-} from "lucide-react";
+  X} from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/hooks/useWishlist";
 import { getImageUrl } from "@/services/api";
@@ -69,8 +68,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         name: product.name,
         price: product.price,
         image: product.image,
-        category: product.category,
-      });
+        category: product.category});
     }
     setIsAddedToCart(true);
     setTimeout(() => setIsAddedToCart(false), 2000);
@@ -102,8 +100,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
     sku: product.sku || product.id,
     brand: {
       "@type": "Brand",
-      name: "SHERO",
-    },
+      name: "SHERO"},
     offers: {
       "@type": "Offer",
       url: shareUrl,
@@ -120,18 +117,14 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         : "https://schema.org/OutOfStock",
       seller: {
         "@type": "Organization",
-        name: "SHERO",
-      },
-    },
+        name: "SHERO"}},
     aggregateRating:
       product.reviews > 0
         ? {
             "@type": "AggregateRating",
             ratingValue: product.rating,
-            reviewCount: product.reviews,
-          }
-        : undefined,
-  };
+            reviewCount: product.reviews}
+        : undefined};
 
   return (
     <>
@@ -389,8 +382,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                           name: product.name,
                           price: product.price,
                           image: product.image,
-                          category: product.category,
-                        })
+                          category: product.category})
                       }
                       className={`w-10 h-10 rounded flex items-center justify-center border-2 transition-colors shrink-0 ${
                         isWishlisted
@@ -562,8 +554,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   name: product.name,
                   price: product.price,
                   image: product.image,
-                  category: product.category,
-                })
+                  category: product.category})
               }
               className={`w-10 h-10 rounded border flex items-center justify-center ${
                 isWishlisted

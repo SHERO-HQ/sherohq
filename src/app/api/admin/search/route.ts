@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest} from "next/server";
 import { query } from "@/lib/db";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
@@ -41,8 +41,7 @@ export async function GET(request: NextRequest) {
       products: products.rows,
       orders: orders.rows,
       users: users.rows,
-      inquiries: inquiries.rows,
-    });
+      inquiries: inquiries.rows});
   } catch (error) {
     console.error("Global search error:", error);
     return apiResponse.error("Search failed");

@@ -47,14 +47,9 @@ export const FadeInView = ({
   const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
-    if (prefersReducedMotion) {
-      setIsInView(true);
-      return;
-    }
-
     const timer = setTimeout(() => {
       setIsInView(true);
-    }, delay * 1000);
+    }, prefersReducedMotion ? 0 : delay * 1000);
 
     return () => clearTimeout(timer);
   }, [delay, prefersReducedMotion]);
@@ -99,13 +94,10 @@ export const StaggerContainer = ({
   const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
-    if (prefersReducedMotion) {
+    const frame = requestAnimationFrame(() => {
       setIsInView(true);
-      return;
-    }
-
-    // Trigger sequential animations on mount
-    setIsInView(true);
+    });
+    return () => cancelAnimationFrame(frame);
   }, [prefersReducedMotion]);
 
   const Tag = as as any;

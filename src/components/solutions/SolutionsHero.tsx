@@ -1,6 +1,6 @@
 "use client";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "motion/react";
-import { ArrowRight, Code, Terminal, Database, Shield, Zap, Server } from "lucide-react";
+import { ArrowRight, Code, Shield, Zap, Server } from "lucide-react";
 import Link from "next/link";
 import { useRef, useEffect, useState } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";

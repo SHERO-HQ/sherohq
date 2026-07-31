@@ -92,7 +92,7 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
     checkAuth();
   }, [checkAuth]);
 
-  async function login(username: string, password: string) {
+  const login = useCallback(async (username: string, password: string) => {
     setRequiresMFA(false);
     setMfaToken(null);
     try {
@@ -111,9 +111,9 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
     } catch (error) {
       throw new Error(formatAuthError(error));
     }
-  }
+  }, []);
 
-  async function verifyMFA(code: string) {
+  const verifyMFA = useCallback(async (code: string) => {
     if (!mfaToken) throw new Error("MFA session expired. Please login again.");
 
     try {
@@ -127,13 +127,13 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
     } catch (error) {
       throw new Error(formatAuthError(error));
     }
-  }
+  }, [mfaToken]);
 
-  async function logout() {
+  const logout = useCallback(async () => {
     await apiLogout();
     setAdmin(null);
     setMustReset(false);
-  }
+  }, []);
 
   const value = useMemo(
     () => ({
@@ -158,7 +158,9 @@ export function AdminProvider({ children }: { readonly children: ReactNode }) {
       requiresMFA,
       mfaToken,
       isSidebarOpen,
+      login,
       verifyMFA,
+      logout,
     ],
   );
 

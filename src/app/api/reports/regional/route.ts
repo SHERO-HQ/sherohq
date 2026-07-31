@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { } from "next/server";
 import { query } from "@/lib/db";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
@@ -23,8 +23,7 @@ export async function GET() {
     const data = result.rows.map((row) => ({
       name: row.region,
       orders: parseInt(row.orders, 10),
-      revenue: parseFloat(row.revenue || "0"),
-    }));
+      revenue: parseFloat(row.revenue || "0")}));
 
     return apiResponse.success(data);
   } catch (error) {

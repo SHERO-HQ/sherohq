@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   XCircle,
   RefreshCw,
-  Smartphone,
   ArrowRight,
   ShieldCheck,
   Check,

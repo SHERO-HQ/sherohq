@@ -40,7 +40,6 @@ import {
   TrendingUp,
   BarChart3,
   LineChart as LineChartIcon,
-  Loader2,
   Printer,
   type LucideIcon,
 } from "lucide-react";

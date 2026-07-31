@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   AlertCircle,
   Loader2,
-  Send,
   RefreshCcw,
   Camera,
   User,
@@ -30,8 +29,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  CardTitle} from "@/components/ui/card";
 import {
   sendContactMessage,
   submitPublicTestimonial,
@@ -45,22 +43,19 @@ const feedbackSchema = z.object({
   rating: z.number().min(1).max(5),
   message: z.string().min(10, "Feedback must be at least 10 characters long").max(1000, "Feedback is too long"),
   role: z.string(),
-  company: z.string(),
-}).superRefine((data, ctx) => {
+  company: z.string()}).superRefine((data, ctx) => {
   if (!data.anonymous) {
     if (!data.name || data.name.length < 2) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Name is required",
-        path: ["name"],
-      });
+        path: ["name"]});
     }
     if (!data.email || !/^\S+@\S+\.\S+$/.test(data.email)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Valid email is required",
-        path: ["email"],
-      });
+        path: ["email"]});
     }
   }
 });
@@ -168,8 +163,7 @@ export default function FeedbackForm({
     watch,
     setValue,
     reset,
-    formState: { errors, isSubmitting },
-  } = useForm<FeedbackValues>({
+    formState: { errors, isSubmitting }} = useForm<FeedbackValues>({
     resolver: zodResolver(feedbackSchema),
     defaultValues: {
       rating: 5,
@@ -178,9 +172,7 @@ export default function FeedbackForm({
       name: "",
       email: "",
       role: "",
-      company: "",
-    },
-  });
+      company: ""}});
 
   const {
     rating: ratingValue,
@@ -223,15 +215,13 @@ export default function FeedbackForm({
         rating: data.rating,
         image: imageUrl,
         role: data.role || "Verified Customer",
-        company: data.company || "Direct Feedback",
-      });
+        company: data.company || "Direct Feedback"});
 
       await sendContactMessage({
         name: data.anonymous ? "Anonymous" : (data.name || "Guest"),
         email: data.email || "no-email@provided.com",
         subject: "feedback_submission",
-        message: `[Rating: ${data.rating}/5 stars]${imageUrl ? `\n[Image: ${imageUrl}]` : ""}${data.role ? `\n[Role: ${data.role}]` : ""}${data.company ? `\n[Company: ${data.company}]` : ""}\n\n${data.message}`,
-      });
+        message: `[Rating: ${data.rating}/5 stars]${imageUrl ? `\n[Image: ${imageUrl}]` : ""}${data.role ? `\n[Role: ${data.role}]` : ""}${data.company ? `\n[Company: ${data.company}]` : ""}\n\n${data.message}`});
 
       setIsSuccess(true);
       reset();

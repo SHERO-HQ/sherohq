@@ -174,10 +174,7 @@ export async function adminChangePassword(
 }
 
 export async function adminLogout(): Promise<void> {
-  try {
-    await authFetch(`${API_BASE}/admin-auth/logout`, { method: "POST" });
-  } finally {
-  }
+  await authFetch(`${API_BASE}/admin-auth/logout`, { method: "POST" }).catch(() => {});
 }
 
 export async function getAdminMe(): Promise<{

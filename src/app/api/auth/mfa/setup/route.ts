@@ -13,8 +13,7 @@ export async function POST(request: NextRequest) {
     // Generate a secure TOTP secret
     const secret = speakeasy.generateSecret({
       name: `Sherotech:${user.email}`,
-      issuer: "Sherotech",
-    });
+      issuer: "Sherotech"});
 
     // Generate QR code data URL
     const qrCodeUrl = await QRCode.toDataURL(secret.otpauth_url || "");

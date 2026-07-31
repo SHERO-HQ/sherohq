@@ -16,6 +16,7 @@ type PaymentMethodOption = {
   icon: LucideIcon;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const ONLINE_PAYMENT_OPTIONS: PaymentMethodOption[] = [
   {
     value: "momo",
@@ -33,6 +34,7 @@ export const ONLINE_PAYMENT_OPTIONS: PaymentMethodOption[] = [
   },
 ];
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const OFFLINE_PAYMENT_OPTIONS: PaymentMethodOption[] = [
   {
     value: "cod",

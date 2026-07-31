@@ -7,9 +7,8 @@ import {
   Code2,
   Cpu,
   Globe,
-  Globe2,
-} from "lucide-react";
-import { Card } from "@/components/ui/card";
+  Globe2} from "lucide-react";
+import { } from "@/components/ui/card";
 
 const LandingAbout = () => {
   const features = [
@@ -178,8 +177,7 @@ const LandingAbout = () => {
 
 // Helper for floating cards: Lightweight Glassmorphism strictly adhering to the Brand Guide
 const FloatingCard = ({
-  icon,
-}: {
+  icon}: {
   icon: React.ReactNode;
 }) => (
   <div className="hover:scale-110 transition-transform duration-300">

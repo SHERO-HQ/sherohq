@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest} from "next/server";
 import { query } from "@/lib/db";
 import { getAdminFromSession } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
@@ -47,8 +47,7 @@ export async function POST(request: NextRequest) {
       time,
       message,
       status: "pending",
-      createdAt: new Date().toISOString(),
-    };
+      createdAt: new Date().toISOString()};
 
     try {
       await Promise.all([

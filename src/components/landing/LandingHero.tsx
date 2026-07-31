@@ -14,17 +14,11 @@ import { RocketIcon } from "@/assets/icons/icons";
 import {
   ArrowRight,
   ShoppingCart,
-  Verified,
   Laptop,
   Gem,
   Plus,
-  Eye,
   Server,
-  Shield,
-  Activity,
-  Star,
-  Sparkles,
-} from "lucide-react";
+  Star} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // Type Definitions
@@ -38,8 +32,7 @@ const HERO_CONTENT: HeroContent = {
   mainHeader:
     "Hardware, Software, and Managed IT Support \n for Your Business.",
   subHeader:
-    "We supply premium hardware, engineer custom software, and manage your entire IT ecosystem under one dependable partner.",
-} as const;
+    "We supply premium hardware, engineer custom software, and manage your entire IT ecosystem under one dependable partner."} as const;
 
 const heroBlock = {
   hidden: { opacity: 0, y: 18 },
@@ -50,10 +43,7 @@ const heroBlock = {
       duration: 0.75,
       ease: [0.23, 1, 0.32, 1],
       staggerChildren: 0.08,
-      delayChildren: 0.08,
-    },
-  },
-} as const;
+      delayChildren: 0.08}}} as const;
 
 const heroItem = {
   hidden: { opacity: 0, y: 10 },
@@ -62,10 +52,7 @@ const heroItem = {
     y: 0,
     transition: {
       duration: 0.65,
-      ease: [0.23, 1, 0.32, 1],
-    },
-  },
-} as const;
+      ease: [0.23, 1, 0.32, 1]}}} as const;
 
 const heroPanel = {
   hidden: { opacity: 0, scale: 0.985, y: 18 },
@@ -75,10 +62,7 @@ const heroPanel = {
     y: 0,
     transition: {
       duration: 0.85,
-      ease: [0.23, 1, 0.32, 1],
-    },
-  },
-} as const;
+      ease: [0.23, 1, 0.32, 1]}}} as const;
 
 const LandingHero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -305,8 +289,7 @@ const LandingHero: React.FC = () => {
                     <motion.div
                       animate={{
                         y: motionEnabled ? [0, -6, 0] : 0,
-                        rotate: motionEnabled ? [-0.5, 0.5, -0.5] : 0,
-                      }}
+                        rotate: motionEnabled ? [-0.5, 0.5, -0.5] : 0}}
                       transition={{
                         duration: 5.5,
                         repeat: Infinity,
@@ -433,8 +416,7 @@ const LandingHero: React.FC = () => {
                     <motion.div
                       animate={{
                         y: motionEnabled ? [0, -8, 0] : 0,
-                        x: motionEnabled ? [0, 3, 0] : 0,
-                      }}
+                        x: motionEnabled ? [0, 3, 0] : 0}}
                       transition={{
                         duration: 6.5,
                         repeat: Infinity,
@@ -555,8 +537,7 @@ const LandingHero: React.FC = () => {
                     <motion.div
                       animate={{
                         y: motionEnabled ? [0, -5, 0] : 0,
-                        rotate: motionEnabled ? [0, 1, 0] : 0,
-                      }}
+                        rotate: motionEnabled ? [0, 1, 0] : 0}}
                       transition={{
                         duration: 4.8,
                         repeat: Infinity,

@@ -87,8 +87,7 @@ export async function POST(request: NextRequest) {
       category: body.category,
       priority: body.priority || "medium",
       status: "open",
-      createdAt: new Date().toISOString(),
-    };
+      createdAt: new Date().toISOString()};
 
     try {
       await Promise.all([
@@ -103,8 +102,7 @@ export async function POST(request: NextRequest) {
       success: true,
       message: "Ticket submitted successfully",
       ticketId,
-      ticketNo: nextTicketNo,
-    }, { status: 201 });
+      ticketNo: nextTicketNo}, { status: 201 });
   } catch (error: any) {
     console.error("Error creating ticket:", error);
     return NextResponse.json(

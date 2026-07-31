@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useAdmin } from "@/context/AdminContext";
+import { } from "@/context/AdminContext";
 import { getErrorMessage } from "@/utils/error";
 import {
   MessageSquareQuote,
@@ -12,22 +12,20 @@ import {
   GripVertical,
   CheckCircle2,
   XCircle,
-  Star,
-} from "lucide-react";
+  Star} from "lucide-react";
 import {
   useAdminTestimonials,
   useCreateTestimonial,
   useUpdateTestimonial,
   useDeleteTestimonial,
-  useSyncTrustpilotTestimonials,
-} from "@/hooks/queries/useTestimonials";
+  useSyncTrustpilotTestimonials} from "@/hooks/queries/useTestimonials";
 import { useNotifications } from "@/hooks/useNotifications";
 import { type Testimonial } from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/Modal";
 import { Label } from "@/components/ui/label";
-import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+
 import { Textarea } from "@/components/ui/textarea";
 import AppImage from "@/components/common/AppImage";
 
@@ -74,8 +72,7 @@ const AdminTestimonials = () => {
     image: "",
     order: 0,
     active: true,
-    rating: 5,
-  });
+    rating: 5});
 
   const filteredTestimonials = testimonials
     .filter(
@@ -95,8 +92,7 @@ const AdminTestimonials = () => {
       image: "",
       order: testimonials.length,
       active: true,
-      rating: 5,
-    });
+      rating: 5});
     setIsModalOpen(true);
   };
 
@@ -110,8 +106,7 @@ const AdminTestimonials = () => {
       image: t.image || "",
       order: t.order || 0,
       active: t.active ?? true,
-      rating: t.rating || 5,
-    });
+      rating: t.rating || 5});
     setIsModalOpen(true);
   };
 
@@ -121,8 +116,7 @@ const AdminTestimonials = () => {
       if (editingTestimonial) {
         await updateMutation.mutateAsync({
           id: editingTestimonial.id,
-          data: formData,
-        });
+          data: formData});
         addNotification(
           "Success",
           "Testimonial updated successfully",
@@ -189,8 +183,7 @@ const AdminTestimonials = () => {
       const newStatus = !t.active;
       await updateMutation.mutateAsync({
         id: t.id,
-        data: { active: newStatus },
-      });
+        data: { active: newStatus }});
       const statusLabel = newStatus ? "activated" : "deactivated";
       addNotification("Success", `Testimonial ${statusLabel}`, "success");
     } catch (error) {

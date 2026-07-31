@@ -13,9 +13,8 @@ import { getErrorMessage } from "@/utils/error";
 import {
  useAdminGuides,
  useUpdateGuide,
- useDeleteGuide,
-} from "@/hooks/queries/useGuides";
-import { useAdmin } from "@/context/AdminContext";
+ useDeleteGuide} from "@/hooks/queries/useGuides";
+import { } from "@/context/AdminContext";
 import { ArrowLeft } from "lucide-react";
 
 const AdminGuides = () => {
@@ -51,8 +50,7 @@ const AdminGuides = () => {
  try {
  await updateMutation.mutateAsync({
  id: guide.id,
- data: { published: !guide.published },
- });
+ data: { published: !guide.published }});
  const message = guide.published ? "Guide unpublished" : "Guide published";
  addNotification("Success", message, "success");
  } catch (error) {

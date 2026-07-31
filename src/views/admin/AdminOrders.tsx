@@ -16,17 +16,15 @@ import {
   RefreshCw,
   PackageSearch,
   PackageCheck,
-  Plus,
-} from "lucide-react";
-import { useAdmin } from "@/context/AdminContext";
+  Plus} from "lucide-react";
+import { } from "@/context/AdminContext";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuSeparator} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "motion/react";
@@ -36,8 +34,7 @@ import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
 import { toReadableOrderId } from "@/utils/orderId";
 import {
   useAdminOrdersQuery,
-  useUpdateOrderStatus,
-} from "@/hooks/queries/useOrders";
+  useUpdateOrderStatus} from "@/hooks/queries/useOrders";
 import { Card } from "@/components/ui/card";
 import { memo } from "react";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
@@ -49,8 +46,7 @@ const OrderRow = memo(
     order,
     index,
     getStatusConfig,
-    handleUpdateStatus,
-  }: {
+    handleUpdateStatus}: {
     order: any;
     index: number;
     getStatusConfig: (status: string) => any;
@@ -60,8 +56,7 @@ const OrderRow = memo(
     const paymentStatus = getAdminOrderPaymentStatus({
       paymentStatus: order.paymentStatus,
       status: order.status,
-      paymentMessage: order.paymentMessage,
-    });
+      paymentMessage: order.paymentMessage});
     return (
       <motion.tr
         initial={{ opacity: 0, y: 10 }}
@@ -205,11 +200,9 @@ export default function AdminOrders() {
     isPlaceholderData,
     refetch,
     isFetching,
-    error: queryError,
-  } = useAdminOrdersQuery(
+    error: queryError} = useAdminOrdersQuery(
     {
-      status: statusFilter === "all" ? undefined : statusFilter,
-    },
+      status: statusFilter === "all" ? undefined : statusFilter},
     ADMIN_POLLING_INTERVAL,
   );
 
@@ -220,8 +213,7 @@ export default function AdminOrders() {
       // Hook expects { id, status }
       await updateStatusMutation.mutateAsync({
         id: orderId,
-        status: newStatus,
-      });
+        status: newStatus});
       addNotification(
         "Success",
         `Order status updated to ${newStatus}`,
@@ -281,8 +273,7 @@ export default function AdminOrders() {
       case "delivered":
         return {
           color: "text-brand-secondary-400 bg-brand-secondary-500/10",
-          icon: CheckCircle2,
-        };
+          icon: CheckCircle2};
       case "cancelled":
         return { color: "text-rose-400 bg-rose-500/10", icon: XCircle };
       default:
@@ -303,8 +294,7 @@ export default function AdminOrders() {
       Status: order.status.toUpperCase(),
       Method: formatPaymentMethod(order.paymentMethod).toUpperCase(),
       Items: order.items?.length || 0,
-      Date: new Date(order.createdAt).toLocaleDateString(),
-    }));
+      Date: new Date(order.createdAt).toLocaleDateString()}));
 
     const fileName = `SHERO-Orders-${new Date().toISOString().split("T")[0]}`;
     const columns = [

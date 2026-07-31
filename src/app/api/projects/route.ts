@@ -17,8 +17,7 @@ function parseProject(row: any) {
 
   return {
     ...row,
-    technologies: safeParse(row.technologies),
-  };
+    technologies: safeParse(row.technologies)};
 }
 
 export async function GET(request: NextRequest) {

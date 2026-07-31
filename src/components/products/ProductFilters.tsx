@@ -6,11 +6,10 @@ import {
   Check,
   Trash2,
   ArrowRight,
-  Star,
-} from "lucide-react";
-import { useState, useEffect } from "react";
+  Star} from "lucide-react";
+import { useState} from "react";
 import type { Category } from "./ProductsCategories";
-import { Button } from "@/components/ui/button";
+import { } from "@/components/ui/button";
 
 export interface FilterState {
   priceRange: [number, number];
@@ -31,16 +30,16 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
   filters,
   onFilterChange,
   isOpen,
-  onClose,
-}) => {
+  onClose}) => {
   const [tempFilters, setTempFilters] = useState<FilterState>(filters);
 
-  // Sync internal state with props when modal opens or props change
-  useEffect(() => {
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
     if (isOpen) {
       setTempFilters(filters);
     }
-  }, [filters, isOpen]);
+  }
 
   const [activeTab, setActiveTab] = useState<
     "sort" | "price" | "brand" | "rating" | "stock"
@@ -68,20 +67,16 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
   const priceRanges = [
     {
       label: "Elite (Above S5,000)",
-      range: [5000, 1000000] as [number, number],
-    },
+      range: [5000, 1000000] as [number, number]},
     {
       label: "Premium (S3,000 - S5,000)",
-      range: [3000, 5000] as [number, number],
-    },
+      range: [3000, 5000] as [number, number]},
     {
       label: "Mid-Tier (S1,000 - S3,000)",
-      range: [1000, 3000] as [number, number],
-    },
+      range: [1000, 3000] as [number, number]},
     {
       label: "Standard (S500 - S1,000)",
-      range: [500, 1000] as [number, number],
-    },
+      range: [500, 1000] as [number, number]},
     { label: "Entry (Under S500)", range: [0, 500] as [number, number] },
   ];
 
@@ -96,8 +91,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
       brands: [],
       minRating: 0,
       inStock: false,
-      sortBy: "newest",
-    };
+      sortBy: "newest"};
     setTempFilters(resetFilters);
   };
 
@@ -203,8 +197,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                         onClick={() =>
                           setTempFilters({
                             ...tempFilters,
-                            sortBy: option.value,
-                          })
+                            sortBy: option.value})
                         }
                         className={`group flex items-center justify-between p-2 rounded transition border-2 ${tempFilters.sortBy === option.value
                             ? "bg-brand-secondary-500/10 border-brand-secondary-500/50"
@@ -237,8 +230,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                         onClick={() =>
                           setTempFilters({
                             ...tempFilters,
-                            priceRange: range.range,
-                          })
+                            priceRange: range.range})
                         }
                         className={`flex items-center justify-between p-2 rounded transition border-2 ${isPriceRangeActive(range.range)
                             ? "bg-brand-secondary-500/10 border-brand-secondary-500/50"

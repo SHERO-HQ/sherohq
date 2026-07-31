@@ -13,16 +13,14 @@ import {
  ChevronRight,
  RefreshCw,
  MoreVertical,
- Briefcase,
-} from "lucide-react";
-import { useAdmin } from "@/context/AdminContext";
+ Briefcase} from "lucide-react";
+import { } from "@/context/AdminContext";
 import { Button } from "@/components/ui/button";
 import {
  DropdownMenu,
  DropdownMenuContent,
  DropdownMenuItem,
- DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+ DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -47,8 +45,7 @@ export default function AdminProjects() {
  data: allProjects = [],
  isLoading,
  refetch,
- isFetching,
- } = useProjects(categoryFilter);
+ isFetching} = useProjects(categoryFilter);
 
  const deleteMutation = useDeleteProject();
 

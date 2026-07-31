@@ -7,7 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { useSearchParams } from "next/navigation";
 import { getRetryOrderId } from "@/lib/checkoutRetry";
-import { trackOrder, getImageUrl, initializePayment, updateOrderPaymentMethod, cancelOrder } from "@/services/api";
+import { trackOrder, initializePayment, updateOrderPaymentMethod} from "@/services/api";
 import { getOrderAccessToken } from "@/utils/orderAccess";
 import { useNotifications } from "@/hooks/useNotifications";
 import { toReadableOrderId } from "@/utils/orderId";
@@ -46,6 +46,7 @@ interface CheckoutContextValue {
 
 const CheckoutContext = createContext<CheckoutContextValue | null>(null);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useCheckout = () => {
   const context = useContext(CheckoutContext);
   if (!context) {
@@ -83,12 +84,9 @@ export const CheckoutProvider = ({ children }: { children: ReactNode }) => {
         city: "",
         region: "",
         postalCode: "",
-        gpsAddress: "",
-      },
+        gpsAddress: ""},
       paymentMethod: "momo",
-      referralCode: "",
-    },
-  });
+      referralCode: ""}});
 
   const { setValue, watch, trigger } = formMethods;
   const paymentMethod = watch("paymentMethod");
@@ -150,8 +148,7 @@ export const CheckoutProvider = ({ children }: { children: ReactNode }) => {
         setPaymentError(true);
         window.dispatchEvent(
           new CustomEvent("shoro-ai-trigger", {
-            detail: { message: "I encountered a payment connection error during checkout. Can you help?" },
-          }),
+            detail: { message: "I encountered a payment connection error during checkout. Can you help?" }}),
         );
       }
     } catch (error) {
@@ -159,8 +156,7 @@ export const CheckoutProvider = ({ children }: { children: ReactNode }) => {
       setPaymentError(true);
       window.dispatchEvent(
         new CustomEvent("shoro-ai-trigger", {
-          detail: { message: "The payment system is busy and I cannot complete my order. What should I do?" },
-        }),
+          detail: { message: "The payment system is busy and I cannot complete my order. What should I do?" }}),
       );
       addNotification("Payment System Busy", "We couldn't connect to the payment provider. We've saved your order!", "warning");
     }
@@ -179,8 +175,7 @@ export const CheckoutProvider = ({ children }: { children: ReactNode }) => {
     setIsUpdatingOffline(true);
     try {
       await updateOrderPaymentMethod(orderId, {
-        paymentMethod: method === "cod" ? "cash_on_delivery" : "store_pickup",
-      });
+        paymentMethod: method === "cod" ? "cash_on_delivery" : "store_pickup"});
       setPaymentError(false);
       setCurrentStep(4);
       clearCart();
@@ -309,8 +304,7 @@ export const CheckoutProvider = ({ children }: { children: ReactNode }) => {
         formMethods,
         processPayment, handleRetryPayment, handleSwitchToOffline,
         handleNext, handleBack,
-        subtotal, shipping, tax, total, isFreeShipping,
-      }}
+        subtotal, shipping, tax, total, isFreeShipping}}
     >
       {children}
     </CheckoutContext.Provider>

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest} from "next/server";
 import { query } from "@/lib/db";
 import { getUserFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
@@ -6,8 +6,7 @@ import { z } from "zod";
 
 const SyncCartSchema = z.object({
   guestId: z.string().optional(),
-  items: z.array(z.any()),
-});
+  items: z.array(z.any())});
 
 export async function POST(request: NextRequest) {
   try {

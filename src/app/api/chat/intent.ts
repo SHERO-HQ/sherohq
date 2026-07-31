@@ -7,7 +7,6 @@
  */
 
 import { GUIDE_MAPPING } from "./knowledge";
-import { STOP_WORDS } from "./products";
 
 export type ChatHistoryMessage = {
   role: string;
@@ -266,22 +265,22 @@ export function buildFallbackReply(
 
   // Tracking intents
   const orderIdMatch = userMessage.match(
-    /(?:order(?:\s*id)?[:#\s-]*)([a-zA-Z0-9-]{5,})/i,
+    /(?:order(?:\s*id)?[:#\s-]*)([a-zA-Z0-9-]{5})/i,
   );
   const ticketIdMatch = userMessage.match(
-    /(?:ticket(?:\s*id)?[:#\s-]*)([a-zA-Z0-9-]{4,})/i,
+    /(?:ticket(?:\s*id)?[:#\s-]*)([a-zA-Z0-9-]{4})/i,
   );
 
   if (normalized.includes("track") && normalized.includes("order")) {
     if (orderIdMatch?.[1]) {
-      return `Got it. Tracking your order now. [TRACK_ORDER:${orderIdMatch[1]}]`;
+      return `Got it. I would track your order ${orderIdMatch[1]} now, but my live tracking system is currently offline. Please check your email for updates.`;
     }
     return "Sure. Share your order ID and I will track it for you.";
   }
 
   if (normalized.includes("track") && normalized.includes("ticket")) {
     if (ticketIdMatch?.[1]) {
-      return `Got it. Tracking your ticket now. [TRACK_TICKET:${ticketIdMatch[1]}]`;
+      return `Got it. I would check ticket ${ticketIdMatch[1]} now, but my live system is currently offline. Please check your email for updates.`;
     }
     return "Sure. Share your ticket ID and I will check the status.";
   }
@@ -309,7 +308,7 @@ export function buildFallbackReply(
     normalized.includes("meeting") ||
     normalized.includes("talk to someone")
   ) {
-    return "I've flagged this for a professional consultation. You can schedule a time here: [BOOK: Enterprise IT Consultation]";
+    return "I've flagged this for a professional consultation. You can schedule a time by visiting our Consultation page.";
   }
 
   // Support escalation
@@ -320,21 +319,21 @@ export function buildFallbackReply(
   ];
 
   if (escalatesToSupport) {
-    return "I see those troubleshooting steps didn't resolve the issue. I can help you open a support ticket directly from this chat. Would you like me to do that? Please click 'Open Support Ticket Inline' below or provide your Name, Email, Subject, and a brief description. [TICKET]";
+    return "I see those troubleshooting steps didn't resolve the issue. Please reach out to our support team directly via email or phone.";
   }
 
   if (supportKeywords.some((k) => normalized.includes(k))) {
     if (!guideSlug) {
       return buildInlineTroubleshootingSteps(userMessage);
     }
-    return `Let's troubleshoot this first. Start with this step-by-step guide and tell me where you get stuck: [GUIDE: ${guideSlug}]`;
+    return `Let's troubleshoot this first. I recommend reading our guide on this topic in the Support section.`;
   }
 
   if (normalized.includes("help") && hasTroubleshootingIntent(userMessage)) {
     if (!guideSlug) {
       return buildInlineTroubleshootingSteps(userMessage);
     }
-    return `I can help you fix this. Start with this guide and I will walk you through each step: [GUIDE: ${guideSlug}]`;
+    return `I can help you fix this. I recommend checking our Support guides for step-by-step instructions.`;
   }
 
   // Product discovery
@@ -345,25 +344,25 @@ export function buildFallbackReply(
       if (!guideSlug) {
         return buildInlineTroubleshootingSteps(userMessage);
       }
-      return `I can help fix laptop performance first. Start with this troubleshooting guide, then tell me exactly which step didn't help: [GUIDE: ${guideSlug}]`;
+      return `I can help fix laptop performance first. Check our performance troubleshooting guide in the Support section.`;
     }
 
     let brand = "";
-    if (normalized.includes("hp")) brand = "hp ";
-    else if (normalized.includes("dell")) brand = "dell ";
-    else if (normalized.includes("lenovo")) brand = "lenovo ";
-    else if (normalized.includes("apple") || normalized.includes("macbook")) brand = "apple ";
+    if (normalized.includes("hp")) brand = "HP ";
+    else if (normalized.includes("dell")) brand = "Dell ";
+    else if (normalized.includes("lenovo")) brand = "Lenovo ";
+    else if (normalized.includes("apple") || normalized.includes("macbook")) brand = "Apple ";
 
     if (budget && budget < 6000)
-      return `I recommend these entry-level ${brand}laptops within your ${formatGhs(budget)} budget: [RECOMMEND: ${brand}student laptop]`;
+      return `I recommend browsing our entry-level ${brand}laptops within your ${formatGhs(budget)} budget on our Products page. (AI Offline Mode)`;
     if (budget)
-      return `I've found some premium options for your ${formatGhs(budget)} budget: [RECOMMEND: ${brand}laptop]`;
-    return `I can help you browse our current ${brand}laptop inventory: [RECOMMEND: ${brand}laptop]`;
+      return `I've found some premium options for your ${formatGhs(budget)} budget in our store. (AI Offline Mode)`;
+    return `I can help you browse our current ${brand}laptop inventory. Please visit the Products page to see our full catalog. (AI Offline Mode)`;
   }
 
   const networkKeywords = ["network", "router", "switch", "wifi", "internet"];
   if (networkKeywords.some((k) => normalized.includes(k))) {
-    return "Check out our networking hardware including routers and switches: [RECOMMEND: router switch]";
+    return "Check out our networking hardware including routers and switches on the Products page. (AI Offline Mode)";
   }
 
   // Budget-only check
@@ -374,8 +373,8 @@ export function buildFallbackReply(
 
   // Generic catch-all
   if (history.length > 4) {
-    return "I can narrow this quickly. Tell me your exact use case and budget (GHS), and I will recommend the best options.";
+    return "I can narrow this quickly. Tell me your exact use case and budget (GHS), and I will recommend the best options. (AI Offline Mode)";
   }
 
-  return "I can help you find hardware or IT services. What's your need and budget (GHS)? [RECOMMEND: laptops]";
+  return "I am currently running in Offline Fallback Mode because the Gemini API is unavailable (missing API key or quota exceeded). Please add a valid GEMINI_API_KEY to your .env.local file to restore my full intelligence!";
 }

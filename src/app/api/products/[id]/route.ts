@@ -60,8 +60,7 @@ function parseProduct(row: ProductRow) {
     isSpotlight: Boolean(row.isSpotlight),
     isFeatured: Boolean(row.isFeatured),
     metaTitle: row.metaTitle || null,
-    metaDescription: row.metaDescription || null,
-  };
+    metaDescription: row.metaDescription || null};
 }
 
 export async function GET(
@@ -91,9 +90,7 @@ export async function GET(
 
     return NextResponse.json(parseProduct(product), {
       headers: {
-        "Cache-Control": "public, s-maxage=120, stale-while-revalidate=600",
-      },
-    });
+        "Cache-Control": "public, s-maxage=120, stale-while-revalidate=600"}});
   } catch (error) {
     console.error("Error fetching product:", error);
     return NextResponse.json({ error: "Failed to fetch product" }, { status: 500 });

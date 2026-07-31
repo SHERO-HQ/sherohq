@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useAdmin } from "@/context/AdminContext";
+import { } from "@/context/AdminContext";
 import { getErrorMessage } from "@/utils/error";
 import {
   Users,
@@ -22,8 +22,7 @@ import {
   BadgeX,
   KeyRound,
   Ban,
-  CircleCheck,
-} from "lucide-react";
+  CircleCheck} from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useNotifications } from "@/hooks/useNotifications";
 import {
@@ -31,8 +30,7 @@ import {
   useCustomerDetails,
   useDeleteCustomer,
   useResetUserPassword,
-  useToggleUserActive,
-} from "@/hooks/queries/useUsers";
+  useToggleUserActive} from "@/hooks/queries/useUsers";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -40,8 +38,7 @@ import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuItem} from "@/components/ui/dropdown-menu";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
 import { toReadableOrderId } from "@/utils/orderId";
 import AppImage from "@/components/common/AppImage";
@@ -50,15 +47,13 @@ import type {
   AdminUserDetails,
   AdminUserStats,
   AdminUsersPagination,
-  Order,
-} from "@/services/api";
+  Order} from "@/services/api";
 
 const formatDate = (date: string | Date) => {
   return new Date(date).toLocaleDateString("en-GB", {
     day: "numeric",
     month: "short",
-    year: "numeric",
-  });
+    year: "numeric"});
 };
 
 const formatCurrency = (amount: number) => {
@@ -71,8 +66,7 @@ const getStatusColor = (status: string) => {
     processing: "bg-blue-500/20 text-blue-400",
     intransit: "bg-purple-500/20 text-purple-400",
     delivered: "bg-brand-secondary-500/20 text-brand-secondary-400",
-    cancelled: "bg-red-500/20 text-red-400",
-  };
+    cancelled: "bg-red-500/20 text-red-400"};
   return colors[status.toLowerCase()] || "bg-slate-500/20 text-muted-foreground";
 };
 
@@ -91,8 +85,7 @@ const AdminUsersHeader = ({
   refetchUsers,
   handleExport,
   search,
-  setSearch,
-}: HeaderProps) => (
+  setSearch}: HeaderProps) => (
   <div className="space-y-6">
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
@@ -178,8 +171,7 @@ const UserTableRow = ({
   onDelete,
   onResetPassword,
   onToggleActive,
-  isTogglingActive,
-}: UserTableRowProps) => (
+  isTogglingActive}: UserTableRowProps) => (
   <motion.tr
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
@@ -456,8 +448,7 @@ const UserTable = ({
   setDeleteConfirmId,
   onResetPassword,
   onToggleActive,
-  isTogglingActive,
-}: UserTableProps) => {
+  isTogglingActive}: UserTableProps) => {
   if (loading && !users.length) {
     return <UsersListSkeleton />;
   }
@@ -649,8 +640,7 @@ const UserDetailsModal = ({
   onResetPassword,
   onToggleActive,
   onDelete,
-  isTogglingActive,
-}: UserDetailsModalProps) => (
+  isTogglingActive}: UserDetailsModalProps) => (
   <AnimatePresence>
     {show && (
       <motion.div
@@ -827,8 +817,7 @@ const ResetPasswordModal = ({
   userName,
   onClose,
   onConfirm,
-  isPending,
-}: ResetPasswordModalProps) => (
+  isPending}: ResetPasswordModalProps) => (
   <AnimatePresence>
     {userId && (
       <motion.div
@@ -888,8 +877,7 @@ const DeleteConfirmationModal = ({
   userId,
   onClose,
   onConfirm,
-  isPending,
-}: DeleteModalProps) => (
+  isPending}: DeleteModalProps) => (
   <AnimatePresence>
     {userId && (
       <motion.div
@@ -971,13 +959,11 @@ export default function AdminUsers() {
     isLoading: loading,
     isPlaceholderData,
     refetch: refetchUsers,
-    isFetching,
-  } = useCustomers(
+    isFetching} = useCustomers(
     {
       page,
       limit: 20,
-      search: debouncedSearch,
-    },
+      search: debouncedSearch},
     ADMIN_POLLING_INTERVAL,
   );
 
@@ -986,8 +972,7 @@ export default function AdminUsers() {
     page: 1,
     limit: 20,
     total: 0,
-    totalPages: 0,
-  };
+    totalPages: 0};
 
   // User details query
   const { data: detailsData, isLoading: detailsLoading } = useCustomerDetails(
@@ -1068,8 +1053,7 @@ export default function AdminUsers() {
       Email: user.email,
       Phone: user.phone || "N/A",
       Status: user.emailVerified ? "Verified" : "Unverified",
-      JoinedDate: new Date(user.createdAt).toLocaleDateString(),
-    }));
+      JoinedDate: new Date(user.createdAt).toLocaleDateString()}));
 
     const fileName = `customers_export_${new Date().toISOString().split("T")[0]}`;
 

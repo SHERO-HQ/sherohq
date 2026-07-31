@@ -9,8 +9,7 @@ import {
     Loader2,
     Zap,
     Eye,
-    EyeOff,
-} from "lucide-react";
+    EyeOff} from "lucide-react";
 import { getSubdomain } from "@/utils/subdomain";
 import AppImage from "@/components/common/AppImage";
 

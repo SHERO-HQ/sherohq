@@ -30,6 +30,8 @@ export interface ChatRequest {
   context?: {
     currentPath?: string;
     cartItemIds?: string[];
+    sessionId?: string;
+    user?: { id: string; name: string; email: string } | null;
   };
   imageData?: string;
   audioData?: string;
@@ -92,7 +94,7 @@ export async function sendChatMessageStreaming(
             if (data.metadata) {
               metadata = data.metadata;
             }
-          } catch (e) {
+          } catch {
             // ignore partial json
           }
         }

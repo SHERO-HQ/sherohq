@@ -3,7 +3,6 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
 import type { Product } from "@/types/product";
 
 interface ProductSEOCardProps {
@@ -13,8 +12,7 @@ interface ProductSEOCardProps {
 
 export default function ProductSEOCard({
   productData,
-  onUpdateProductData,
-}: ProductSEOCardProps) {
+  onUpdateProductData}: ProductSEOCardProps) {
   const handleInputChange = (field: keyof Product, value: string) => {
     onUpdateProductData({ [field]: value });
   };

@@ -11,17 +11,18 @@ import {
   Image as ImageIcon,
   Mic,
   Volume2,
-  Trash2,
-} from "lucide-react";
+  Trash2} from "lucide-react";
 import { type ChatMessage, sendChatMessageStreaming } from "@/services/ai/chat";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import { Package, Ticket, Calendar, Brain } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDialog } from "@/hooks/useDialog";
 import type { Product } from "@/types/product";
 import AppImage from "@/components/common/AppImage";
-import { getImageUrl } from "@/services/api";
+import { } from "@/services/api";
 import { ChatProductCard } from "./chat/ChatProductCard";
 import { LiveTrackingCard } from "./chat/LiveTrackingCard";
 import { ChatMarkdown } from "./chat/ChatMarkdown";
@@ -43,16 +44,27 @@ const INITIAL_ASSISTANT_MESSAGE: ChatMessage = {
   id: "initial",
   role: "assistant",
   content:
-    "Hi! I'm your Shero Expert. How can I help you with IT solutions or products today?",
-};
+    "Hi! I'm your Shero Expert. How can I help you with IT solutions or products today?"};
 
 
 
 export default function AIChatAssistant() {
-  const { addItem, setIsCartOpen } = useCart();
+  const pathname = usePathname();
+  const { cart, addItem, setIsCartOpen } = useCart();
+  const { user } = useAuth();
   const dialog = useDialog();
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [guestId, setGuestId] = useState("");
+
+  useEffect(() => {
+    let stored = localStorage.getItem("shero_ai_guest_id");
+    if (!stored) {
+      stored = "guest_" + crypto.randomUUID();
+      localStorage.setItem("shero_ai_guest_id", stored);
+    }
+    setGuestId(stored);
+  }, []);
   const [messages, setMessages] = useState<ChatMessage[]>([
     INITIAL_ASSISTANT_MESSAGE,
   ]);
@@ -185,6 +197,12 @@ export default function AIChatAssistant() {
             message: userMessage.content,
             history: historyForRequest,
             imageData: imageData,
+            context: {
+              currentPath: pathname || "",
+              cartItemIds: cart.map(item => item.id),
+              sessionId: user?.id || guestId,
+              user: user ? { id: user.id, name: user.name, email: user.email } : null
+            }
           },
           (chunk) => {
             fullText += chunk;
@@ -235,8 +253,7 @@ export default function AIChatAssistant() {
               price: productToAdd.price,
               image: productToAdd.image,
               category: productToAdd.category,
-              sku: productToAdd.sku,
-            });
+              sku: productToAdd.sku});
             setIsCartOpen(true);
           }
         }
@@ -248,8 +265,7 @@ export default function AIChatAssistant() {
             id: crypto.randomUUID(),
             role: "assistant",
             content:
-              "I hit a temporary issue while processing that. Please retry in a moment.",
-          },
+              "I hit a temporary issue while processing that. Please retry in a moment."},
         ]);
       } finally {
         setIsTyping(false);
@@ -331,8 +347,7 @@ export default function AIChatAssistant() {
       recorder.onstop = async () => {
         const duration = Date.now() - recordingStartTimeRef.current;
         const audioBlob = new Blob(audioChunksRef.current, {
-          type: "audio/webm",
-        });
+          type: "audio/webm"});
 
         /* Recording stopped */
 
@@ -380,8 +395,7 @@ export default function AIChatAssistant() {
       id: crypto.randomUUID(),
       role: "user",
       content: "[Audio Message]",
-      audioData: audioData,
-    };
+      audioData: audioData};
 
     // `message` carries the current user turn, so history should include prior turns only.
     const historyForRequest = messagesRef.current.slice(-15);
@@ -402,8 +416,7 @@ export default function AIChatAssistant() {
         {
           message: userMessage.content,
           history: historyForRequest,
-          audioData: audioData,
-        },
+          audioData: audioData},
         (chunk) => {
           fullText += chunk;
           setMessages((prev) =>
@@ -463,8 +476,7 @@ export default function AIChatAssistant() {
             animate={{
               y: 0,
               opacity: 1,
-              scale: 1,
-            }}
+              scale: 1}}
             exit={{ y: 20, opacity: 0, scale: 0.95 }}
             className={`fixed inset-x-0 bottom-0 sm:inset-auto sm:bottom-6 sm:right-6 z-60 w-full sm:w-100 border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950 flex flex-col overflow-hidden transition-all duration-300 ${isMinimized ? "h-16" : "h-150 sm:h-137.5 sm:rounded"
               }`}
@@ -516,11 +528,28 @@ export default function AIChatAssistant() {
             {/* Quick Actions (Sticky at Top) */}
             {!isMinimized && messages.length <= 1 && (
               <div className="px-4 py-2 flex flex-wrap gap-2 bg-white/50 dark:bg-black/20 border-b border-slate-200 dark:border-white/10 shrink-0">
-                {[
-                  { label: "Track my order", icon: Package },
-                  { label: "Book consultation", icon: Calendar },
-                  { label: "Fix slow laptop", icon: Brain },
-                ].map((action) => (
+                {(
+                  pathname?.includes("/product/") 
+                    ? [
+                        { label: "Compare with similar products", icon: Brain },
+                        { label: "Is this compatible with...", icon: Sparkles },
+                      ]
+                    : pathname?.includes("/checkout") || cart.length > 0
+                    ? [
+                        { label: "Apply a discount code", icon: Package },
+                        { label: "Estimate shipping", icon: Package },
+                      ]
+                    : pathname?.includes("/support")
+                    ? [
+                        { label: "Open a support ticket", icon: Ticket },
+                        { label: "Troubleshooting guide", icon: Brain },
+                      ]
+                    : [
+                        { label: "Track my order", icon: Package },
+                        { label: "Book consultation", icon: Calendar },
+                        { label: "Fix slow laptop", icon: Brain },
+                      ]
+                ).map((action) => (
                   <button
                     key={action.label}
                     onClick={() => {
@@ -640,8 +669,7 @@ export default function AIChatAssistant() {
                                     id: crypto.randomUUID(),
                                     role: "assistant",
                                     content:
-                                      "Glad I could help! Is there anything else you need?",
-                                  },
+                                      "Glad I could help! Is there anything else you need?"},
                                 ]);
                               }}
                               className="flex-1 py-1.5 px-3 bg-white border border-slate-200 rounded text-[10px] font-medium text-slate-600 hover:bg-brand-secondary-50 hover:border-brand-secondary-200 hover:text-brand-secondary-700 transition-all font-mono tracking-tighter"
@@ -938,9 +966,14 @@ export default function AIChatAssistant() {
                       </button>
                     </div>
                   </form>
-                  <p className="text-[9px] text-center text-slate-400 mt-2">
-                    AI can make mistakes. Verify critical specifications.
-                  </p>
+                  <div className="flex items-center justify-between mt-2 px-1">
+                    <p className="text-[9px] text-slate-400">
+                      AI can make mistakes. Verify critical specifications.
+                    </p>
+                    <p className="text-[9px] font-semibold text-slate-400 flex items-center gap-1">
+                      Powered by Gemini <Sparkles size={10} className="text-brand-secondary-400" />
+                    </p>
+                  </div>
                 </div>
               </>
             )}

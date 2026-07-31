@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest} from "next/server";
 import { query } from "@/lib/db";
 import { getAdminFromSession } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
@@ -17,8 +17,7 @@ function parseProject(row: any) {
 
   return {
     ...row,
-    technologies: safeParse(row.technologies),
-  };
+    technologies: safeParse(row.technologies)};
 }
 
 export async function GET(

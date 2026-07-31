@@ -5,8 +5,7 @@ import {
   useEffect,
   useMemo,
   useState,
-  type ReactNode,
-} from "react";
+  type ReactNode} from "react";
 import { format } from "date-fns";
 import {
   ArrowLeft,
@@ -16,16 +15,11 @@ import {
   History,
   Mail,
   MessageCircle,
-  Play,
   RefreshCw,
-  Search,
   Send,
   SlidersHorizontal,
-  Target,
-  Trash2,
   Users,
-  XCircle,
-} from "lucide-react";
+  XCircle} from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -46,8 +40,7 @@ import {
   updateNewsletterSubscriberContact,
   updateNewsletterSubscriberStatus,
   type NewsletterCampaign,
-  type NewsletterSubscriber,
-} from "@/services/api";
+  type NewsletterSubscriber} from "@/services/api";
 import { getErrorMessage } from "@/utils/error";
 
 import { NewsletterStats } from "@/components/admin/newsletter/NewsletterStats";
@@ -83,8 +76,7 @@ function Field({
   label,
   htmlFor,
   children,
-  className,
-}: {
+  className}: {
   label: string;
   htmlFor?: string;
   children: ReactNode;
@@ -108,8 +100,7 @@ function MetricTile({
   value,
   detail,
   icon: Icon,
-  tone = "slate",
-}: {
+  tone = "slate"}: {
   label: string;
   value: string | number;
   detail: string;
@@ -121,8 +112,7 @@ function MetricTile({
     green:
       "text-brand-secondary-300 bg-brand-secondary-500/10 border-brand-secondary-500/20",
     amber: "text-amber-300 bg-amber-500/10 border-amber-500/20",
-    blue: "text-sky-300 bg-sky-500/10 border-sky-500/20",
-  }[tone];
+    blue: "text-sky-300 bg-sky-500/10 border-sky-500/20"}[tone];
 
   return (
     <div className="rounded border border-border bg-slate-950/30 p-4">
@@ -183,8 +173,7 @@ export default function AdminNewsletter() {
   const [counts, setCounts] = useState({
     total: 0,
     active: 0,
-    unsubscribed: 0,
-  });
+    unsubscribed: 0});
 
   const [subject, setSubject] = useState("");
   const [content, setContent] = useState("");
@@ -229,8 +218,7 @@ export default function AdminNewsletter() {
       setIsLoading(true);
       const data = await fetchNewsletterSubscribers({
         status: statusFilter,
-        search: searchQuery.trim() || undefined,
-      });
+        search: searchQuery.trim() || undefined});
       setSubscribers(data.subscribers);
       setCounts(data.counts);
     } catch (error) {
@@ -350,8 +338,7 @@ export default function AdminNewsletter() {
                 unsubscribedAt:
                   nextStatus === "unsubscribed"
                     ? new Date().toISOString()
-                    : null,
-              }
+                    : null}
             : item,
         ),
       );
@@ -360,8 +347,7 @@ export default function AdminNewsletter() {
         return {
           ...prev,
           active: Math.max(0, prev.active + activeDelta),
-          unsubscribed: Math.max(0, prev.unsubscribed - activeDelta),
-        };
+          unsubscribed: Math.max(0, prev.unsubscribed - activeDelta)};
       });
       addNotification("Success", "Subscriber status updated", "success");
     } catch (error) {
@@ -397,8 +383,7 @@ export default function AdminNewsletter() {
     try {
       setIsSavingContact(true);
       const response = await updateNewsletterSubscriberContact(subscriberId, {
-        phone: trimmed || null,
-      });
+        phone: trimmed || null});
 
       setSubscribers((prev) =>
         prev.map((item) =>
@@ -519,8 +504,7 @@ export default function AdminNewsletter() {
           : undefined,
         audienceSubscribedBefore: audienceSubscribedBefore
           ? new Date(audienceSubscribedBefore).toISOString()
-          : undefined,
-      });
+          : undefined});
 
       addNotification(
         "Success",
@@ -576,8 +560,7 @@ export default function AdminNewsletter() {
       message: "Are you sure you want to cancel this scheduled campaign?",
       confirmText: "Cancel campaign",
       cancelText: "Keep scheduled",
-      type: "warning",
-    });
+      type: "warning"});
 
     if (!shouldCancel) return;
 
@@ -605,8 +588,7 @@ export default function AdminNewsletter() {
         "Are you sure you want to delete this campaign? This cannot be undone.",
       confirmText: "Delete campaign",
       cancelText: "Keep campaign",
-      type: "warning",
-    });
+      type: "warning"});
 
     if (!shouldDelete) return;
 

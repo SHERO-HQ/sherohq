@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import AppImage from "@/components/common/AppImage";
 import { MFASetupDialog } from "@/components/admin/MFASetupDialog";
-import { verifyAdminMFASetup } from "@/services/admin";
+import { } from "@/services/admin";
 import { useDialog } from "@/hooks/useDialog";
 
 export default function AdminProfile() {
@@ -64,8 +64,7 @@ export default function AdminProfile() {
       const res = await updateAdminProfile({
         phone: phone || undefined,
         password: password || undefined,
-        avatar: avatar || undefined,
-      });
+        avatar: avatar || undefined});
 
       setAdmin(res.user);
       addNotification("Success", "Profile updated successfully", "success");
@@ -89,8 +88,7 @@ export default function AdminProfile() {
         "Are you sure you want to disable Multi-Factor Authentication? Your account will be less secure.",
       confirmText: "Disable MFA",
       cancelText: "Keep MFA",
-      type: "warning",
-    });
+      type: "warning"});
 
     if (!shouldDisable) {
       return;

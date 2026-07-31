@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { } from "next/server";
 import { query } from "@/lib/db";
 import { getAdminFromSession } from "@/lib/auth";
-import { logActivity } from "@/lib/activity";
+import { } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
 
 export async function GET() {

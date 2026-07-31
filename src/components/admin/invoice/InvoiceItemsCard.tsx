@@ -43,8 +43,7 @@ export default function InvoiceItemsCard({
   isLoadingProducts,
   onAddProduct,
   onAddCustomItem,
-  errors = {},
-}: InvoiceItemsCardProps) {
+  errors = {}}: InvoiceItemsCardProps) {
   const [deletingIds, setDeletingIds] = useState<Record<string, number>>({});
   const timersRef = useRef<Record<string, NodeJS.Timeout>>({});
 

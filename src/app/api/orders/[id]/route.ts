@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest} from "next/server";
 import { query } from "@/lib/db";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 import { safeParse } from "@/lib/orderUtils";
-import { notificationService, ShippingInfo, OrderItem } from "@/lib/notifications";
+import { notificationService, ShippingInfo} from "@/lib/notifications";
 
 export async function GET(
   request: NextRequest,
@@ -45,8 +45,7 @@ export async function GET(
       items: parsedItems,
       shippingInfo: safeParse(order.shippingInfo),
       total: parseFloat(order.total),
-      paymentMessage,
-    });
+      paymentMessage});
   } catch (error) {
     console.error("Fetch order error:", error);
     return apiResponse.error("Failed to fetch order");
@@ -105,8 +104,7 @@ export async function PATCH(
       ...result.rows[0],
       items: safeParse(result.rows[0].items),
       shippingInfo: safeParse(result.rows[0].shippingInfo),
-      total: parseFloat(result.rows[0].total),
-    });
+      total: parseFloat(result.rows[0].total)});
   } catch (error) {
     console.error("Update order error:", error);
     return apiResponse.error("Failed to update order");

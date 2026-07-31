@@ -10,7 +10,6 @@ interface RevealProps {
   duration?: number;
   direction?: "up" | "down" | "left" | "right" | "none";
   distance?: number;
-  once?: boolean;
   className?: string;
   blur?: boolean;
 }
@@ -25,7 +24,6 @@ export const Reveal = ({
   duration = 0.8,
   direction = "up",
   distance = 30,
-  once = true,
   className = "",
   blur = false,
 }: RevealProps) => {
@@ -33,14 +31,9 @@ export const Reveal = ({
   const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
-    if (prefersReducedMotion) {
-      setIsInView(true);
-      return;
-    }
-
     const timer = setTimeout(() => {
       setIsInView(true);
-    }, delay * 1000);
+    }, prefersReducedMotion ? 0 : delay * 1000);
 
     return () => clearTimeout(timer);
   }, [delay, prefersReducedMotion]);

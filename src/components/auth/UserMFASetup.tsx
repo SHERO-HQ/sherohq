@@ -46,8 +46,7 @@ export default function UserMFASetup({ isOpen, onClose, onSuccess }: UserMFASetu
       const res = await fetch("/api/auth/mfa/verify", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code }),
-      });
+        body: JSON.stringify({ code })});
       const data = await res.json();
       if (data.success) {
         setRecoveryCodes(data.data.recoveryCodes);

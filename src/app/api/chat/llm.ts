@@ -21,8 +21,45 @@ const GEMINI_MODEL_CANDIDATES = [
 // System prompt
 // ---------------------------------------------------------------------------
 
-export function getSystemPrompt(catalog: string): string {
+export function getSystemPrompt(
+  catalog: string, 
+  context?: { currentPath?: string; cartItemIds?: string[]; user?: { id: string; name: string; email: string } | null },
+  agentRoute: string = "general"
+): string {
+  let contextSection = "";
+  if (context) {
+    contextSection = "\nUSER CONTEXT\n";
+    if (context.user) contextSection += `- Logged-in User: ${context.user.name} (${context.user.email})\n`;
+    if (context.currentPath) contextSection += `- Current Page URL: ${context.currentPath}\n`;
+    if (context.cartItemIds?.length) contextSection += `- Items in Cart (IDs): ${context.cartItemIds.join(", ")}\n`;
+    else contextSection += `- Cart is currently empty.\n`;
+  }
+
+  let routeInstructions = "";
+  if (agentRoute === "tech_support") {
+    routeInstructions = `
+ROLE: TECH SUPPORT SPECIALIST
+- Focus strictly on technical troubleshooting, diagnostics, and step-by-step resolution.
+- Ask for error codes, operating system versions, and specific symptoms.
+- Do NOT pitch sales or push new products unless the current product is completely unfixable.
+- Maintain a highly technical, precise, and analytical tone.`;
+  } else if (agentRoute === "sales") {
+    routeInstructions = `
+ROLE: SALES & SOLUTIONS EXPERT
+- Focus on value propositions, maximizing budget, and highlighting SHERO's competitive edge.
+- Compare options clearly and emphasize warranties and after-sales support.
+- Encourage booking consultations or checking out.
+- Maintain an enthusiastic, persuasive, and consultative tone.`;
+  } else {
+    routeInstructions = `
+ROLE: GENERAL ASSISTANT
+- Be helpful, friendly, and guide the user to the right resources.
+- Answer general FAQs clearly and concisely.`;
+  }
+
   return `You are **SHERO AI** — a knowledgeable, professional IT assistant for SHERO Technologies, a Ghana-based IT solutions and hardware company.
+
+${routeInstructions}
 
 PERSONALITY
 - Warm, professional, and concise. You're a real expert, not a generic chatbot.
@@ -59,7 +96,65 @@ COMPANY INFO
 - Delivery: Accra same-day/next-day, other regions 2-5 business days
 - Warranty: All products come with minimum 3-month warranty
 - Returns: 7-day return policy for defective items
-- Contact: support@sherohq.com | WhatsApp: available on the website`;
+- Contact: support@sherohq.com | WhatsApp: available on the website${contextSection}`;
+}
+
+export async function categorizeIntent(message: string): Promise<"tech_support" | "sales" | "general"> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey || !message) return "general";
+  
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ 
+            role: "user", 
+            parts: [{ text: `Categorize this message into exactly one of these three categories: "tech_support", "sales", or "general". Return ONLY the category string.\n\nMessage: "${message}"` }] 
+          }],
+          generationConfig: { temperature: 0.1 }
+        })
+      }
+    );
+    if (response.ok) {
+      const data = await response.json();
+      const category = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim().toLowerCase();
+      if (category === "tech_support" || category === "sales") return category as any;
+    }
+  } catch (e) {
+    console.error("Intent categorization failed", e);
+  }
+  return "general";
+}
+
+export async function summarizeChatHistory(history: Array<{ role: string; content: string }>): Promise<string> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey || history.length === 0) return "";
+
+  const textToSummarize = history.map(msg => `${msg.role.toUpperCase()}: ${msg.content}`).join("\n");
+  
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: `Summarize the following chat history briefly so an AI assistant can remember the context of the conversation:\n\n${textToSummarize}` }] }],
+          generationConfig: { temperature: 0.3 }
+        })
+      }
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    }
+  } catch (e) {
+    console.error("Summarization failed", e);
+  }
+  return "";
 }
 
 // ---------------------------------------------------------------------------
@@ -261,7 +356,11 @@ export async function callLLMStreaming(
     
     // Only continue if the error is 404 (model not found) or similar
     if (response.status !== 404) {
-      return response;
+      const errorText = await response.text();
+      console.error("Gemini API Error:", response.status, errorText);
+      // We can't return response if we already consumed text(), so we'll just return null or throw. 
+      // Actually, returning null will trigger the fallback which is what is happening.
+      return null;
     }
   }
 

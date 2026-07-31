@@ -8,12 +8,10 @@ import {
   Smartphone,
   AlertCircle,
   Clock,
-  CheckCircle,
   ShieldCheck,
   ChevronDown,
   ChevronUp,
-  Package,
-} from "lucide-react";
+  Package} from "lucide-react";
 import { trackOrder, initializePayment, type Order } from "@/services/orders";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

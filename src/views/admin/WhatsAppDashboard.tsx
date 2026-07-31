@@ -11,7 +11,6 @@ import {
   RefreshCw,
   AlertTriangle,
   CheckCircle,
-  XCircle,
   Play,
   X,
   Loader2,
@@ -93,8 +92,7 @@ export default function WhatsAppDashboard() {
   const [settings, setSettings] = useState({
     autoRetryEnabled: true,
     maxRetryAttempts: 3,
-    retryIntervalMinutes: 15,
-  });
+    retryIntervalMinutes: 15});
 
   // Settings & Test States
   const [testPhone, setTestPhone] = useState("");
@@ -136,8 +134,7 @@ export default function WhatsAppDashboard() {
       const res = await fetch("/api/admin/whatsapp/support", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ticketId, status: newStatus }),
-      });
+        body: JSON.stringify({ ticketId, status: newStatus })});
       const data = await res.json();
       if (data.success) {
         setTickets((prev) =>
@@ -172,8 +169,7 @@ export default function WhatsAppDashboard() {
       const res = await fetch("/api/admin/whatsapp/retries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "retry", messageId }),
-      });
+        body: JSON.stringify({ action: "retry", messageId })});
       const data = await res.json();
       if (data.success) {
         void dialog.alert({ title: "Success", message: "Retry triggered successfully!", type: "success" });
@@ -191,8 +187,7 @@ export default function WhatsAppDashboard() {
       const res = await fetch("/api/admin/whatsapp/retries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "cancel", messageId }),
-      });
+        body: JSON.stringify({ action: "cancel", messageId })});
       const data = await res.json();
       if (data.success) {
         setRetries((prev) =>
@@ -210,8 +205,7 @@ export default function WhatsAppDashboard() {
       const res = await fetch("/api/admin/whatsapp/retries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "retry_all" }),
-      });
+        body: JSON.stringify({ action: "retry_all" })});
       const data = await res.json();
       if (data.success) {
         void dialog.alert({ title: "Bulk Retry Complete", message: `Bulk retry complete. Processed: ${data.processed}, Successful: ${data.successful}, Failed: ${data.failed}`, type: "success" });

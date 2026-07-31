@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { } from "next/server";
 import { query } from "@/lib/db";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
@@ -20,14 +20,12 @@ export async function GET() {
       intransit: "#8b5cf6",
       delivered: "#10b981",
       cancelled: "#ef4444",
-      quote: "#6b7280",
-    };
+      quote: "#6b7280"};
 
     const data = result.rows.map((row) => ({
       name: row.status.charAt(0).toUpperCase() + row.status.slice(1),
       value: parseInt(row.count, 10),
-      color: colors[row.status] || "#cbd5e1",
-    }));
+      color: colors[row.status] || "#cbd5e1"}));
 
     return apiResponse.success(data);
   } catch (error) {

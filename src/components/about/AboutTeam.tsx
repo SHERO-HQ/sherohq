@@ -1,7 +1,7 @@
 "use client";
 import { useState, type ElementType } from "react";
 import { StaggerContainer, StaggerItem } from "@/components/motion/AnimateSection";
-import { ArrowRight, Github, Linkedin, Users } from "lucide-react";
+import { Github, Linkedin, Users } from "lucide-react";
 import { useTeam } from "@/hooks/queries/useTeam";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/utils";
@@ -203,8 +203,7 @@ const AboutTeam = () => {
 
 const SocialLink = ({
   href,
-  icon: Icon,
-}: {
+  icon: Icon}: {
   href: string;
   icon: ElementType;
 }) => (

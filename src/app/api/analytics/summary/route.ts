@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { } from "next/server";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 
@@ -13,8 +13,7 @@ export async function GET() {
       totalInteractions: 1250,
       imageInteractions: 450,
       failedRecommendations: 12,
-      openGapRequests: 5,
-    };
+      openGapRequests: 5};
 
     const topIntents = [
       { intent: "Product Search", count: 450 },
@@ -27,13 +26,11 @@ export async function GET() {
       {
         keyword: "RTX 5090",
         queryCount: 45,
-        lastRequested: new Date().toISOString(),
-      },
+        lastRequested: new Date().toISOString()},
       {
         keyword: "DDR6 RAM",
         queryCount: 32,
-        lastRequested: new Date().toISOString(),
-      },
+        lastRequested: new Date().toISOString()},
     ];
 
     const dailyVolume = Array.from({ length: 7 }).map((_, i) => {
@@ -41,16 +38,14 @@ export async function GET() {
       d.setDate(d.getDate() - (6 - i));
       return {
         day: d.toISOString().split("T")[0],
-        count: Math.floor(Math.random() * 100) + 100,
-      };
+        count: Math.floor(Math.random() * 100) + 100};
     });
 
     return apiResponse.success({
       totals,
       topIntents,
       topGaps,
-      dailyVolume,
-    });
+      dailyVolume});
   } catch (error) {
     console.error("AI Analytics Summary Error:", error);
     return apiResponse.error("Failed to fetch AI analytics summary");

@@ -96,7 +96,7 @@ export async function dbFetchProducts(
         queryText += " WHERE " + conditions.join(" AND ");
       }
 
-      queryText += ` ORDER BY p.inStock DESC, p."createdAt" DESC LIMIT $${paramIndex}`;
+      queryText += ` ORDER BY p."inStock" DESC, p."createdAt" DESC LIMIT $${paramIndex}`;
       sqlParams.push(limit);
 
       const result = await dbQuery(queryText, sqlParams);
@@ -129,8 +129,7 @@ export async function dbFetchProducts(
           quantity: row.stockQuantity,
           condition: row.condition || "New",
           isSpotlight: Boolean(row.isSpotlight),
-          isFeatured: Boolean(row.isFeatured),
-        } as Product;
+          isFeatured: Boolean(row.isFeatured)} as Product;
       });
     } catch (error) {
       console.error(`Direct DB fetch (${joinType}) failed:`, error);

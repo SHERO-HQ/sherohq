@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest} from "next/server";
 import { supabase } from "@/lib/supabase";
 import { getAdminFromSession } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
@@ -44,8 +44,7 @@ export async function POST(request: NextRequest) {
       .from("products")
       .upload(filePath, buffer, {
         contentType: file.type,
-        upsert: false,
-      });
+        upsert: false});
 
     if (error) throw error;
 
@@ -55,8 +54,7 @@ export async function POST(request: NextRequest) {
 
     return apiResponse.success({
       imageUrl: publicUrl,
-      filename: fileName,
-    });
+      filename: fileName});
   } catch (error) {
     console.error("Upload error:", error);
     return apiResponse.error("Failed to upload image");

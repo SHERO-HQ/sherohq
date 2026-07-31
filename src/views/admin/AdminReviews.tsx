@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useAdmin } from "@/context/AdminContext";
-import { MessageSquare, Trash2, Search, Star, Loader2 } from "lucide-react";
+import { } from "@/context/AdminContext";
+import { MessageSquare, Trash2, Search, Star} from "lucide-react";
 import { useAdminReviews, useDeleteReview } from "@/hooks/queries/useReviews";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import { useNotifications } from "@/hooks/useNotifications";

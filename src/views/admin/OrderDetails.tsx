@@ -1,14 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { createPortal } from "react-dom";
+import { } from "react-dom";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   fetchOrderById,
   updateOrderStatus,
   type Order,
-  getImageUrl,
-} from "@/services/api";
+  getImageUrl} from "@/services/api";
 import { useNotifications } from "@/hooks/useNotifications";
 
 import {
@@ -16,8 +15,6 @@ import {
   Copy,
   Clock,
   Mail,
-  Phone,
-  MapPin,
   CreditCard,
   Package,
   Truck,
@@ -27,10 +24,9 @@ import {
   ShoppingBag,
   Printer,
   Loader2,
-  FileText,
-} from "lucide-react";
+  FileText} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import AppImage from "@/components/common/AppImage";
@@ -41,15 +37,14 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import { COMPANY_CONTACTS } from "@/constants/contacts";
-import { COMPANY_EMAILS } from "@/constants/emails";
+  DropdownMenuSeparator} from "@/components/ui/dropdown-menu";
+import { } from "@/constants/contacts";
+import { } from "@/constants/emails";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
-import { OrderItemsCard } from "@/components/admin/orders/OrderItemsCard";
+import { } from "@/components/admin/orders/OrderItemsCard";
 import { OrderCustomerCard } from "@/components/admin/orders/OrderCustomerCard";
-import { OrderSidebarCard } from "@/components/admin/orders/OrderSidebarCard";
-import { OrderInternalActionsCard } from "@/components/admin/orders/OrderInternalActionsCard";
+import { } from "@/components/admin/orders/OrderSidebarCard";
+import { } from "@/components/admin/orders/OrderInternalActionsCard";
 import { OrderDetailsSkeleton } from "@/components/admin/orders/OrderDetailsSkeleton";
 import { OrderPrintPortal } from "@/components/admin/orders/OrderPrintPortal";
 
@@ -97,16 +92,14 @@ export default function OrderDetails() {
         orderId: order.id,
         amount: order.total,
         date: order.createdAt,
-        customer: `${order.shippingInfo.firstName} ${order.shippingInfo.lastName}`,
-      };
+        customer: `${order.shippingInfo.firstName} ${order.shippingInfo.lastName}`};
 
       try {
         const QRCode = (await import("qrcode")).default;
         const dataUrl = await QRCode.toDataURL(JSON.stringify(payload), {
           width: 180,
           margin: 1,
-          color: { dark: "#000000", light: "#ffffff" },
-        });
+          color: { dark: "#000000", light: "#ffffff" }});
 
         if (!cancelled) setReceiptQrUrl(dataUrl);
       } catch {
@@ -196,8 +189,7 @@ export default function OrderDetails() {
       SKU: item.sku || "-",
       Price: `GH₵ ${item.price.toLocaleString()}`,
       Quantity: item.quantity,
-      Total: `GH₵ ${(item.price * item.quantity).toLocaleString()}`,
-    }));
+      Total: `GH₵ ${(item.price * item.quantity).toLocaleString()}`}));
 
     const columns = ["Item", "SKU", "Price", "Quantity", "Total"];
     await exportToPDF(
@@ -221,8 +213,7 @@ export default function OrderDetails() {
       case "delivered":
         return {
           color: "text-brand-secondary-400 bg-brand-secondary-500/10",
-          icon: CheckCircle2,
-        };
+          icon: CheckCircle2};
       case "cancelled":
         return { color: "text-rose-400 bg-rose-500/10", icon: XCircle };
       default:

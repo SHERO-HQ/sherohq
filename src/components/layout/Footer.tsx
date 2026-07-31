@@ -8,15 +8,13 @@ import {
   Phone,
   Send,
   MapPin,
-  Clock,
-} from "lucide-react";
+  Clock} from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import {
   FacebookIcon,
   InstagramIcon,
   TikTokIcon,
-  TwitterXIcon,
-} from "@/assets/icons/icons";
+  TwitterXIcon} from "@/assets/icons/icons";
 import { COMPANY_EMAILS } from "@/constants/emails";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { getAbsoluteUrl } from "@/utils/subdomain";
@@ -45,23 +43,19 @@ const Footer = () => {
     {
       name: "X (Twitter)",
       url: SOCIAL_LINKS.TWITTER,
-      icon: TwitterXIcon,
-    },
+      icon: TwitterXIcon},
     {
       name: "TikTok",
       url: SOCIAL_LINKS.TIKTOK,
-      icon: TikTokIcon,
-    },
+      icon: TikTokIcon},
     {
       name: "Facebook",
       url: SOCIAL_LINKS.FACEBOOK,
-      icon: FacebookIcon,
-    },
+      icon: FacebookIcon},
     {
       name: "Instagram",
       url: SOCIAL_LINKS.INSTAGRAM,
-      icon: InstagramIcon,
-    },
+      icon: InstagramIcon},
   ];
 
   const handleNewsletterSubmit = async (
@@ -76,8 +70,7 @@ const Footer = () => {
     try {
       await subscribeToNewsletter({
         email: trimmedEmail,
-        source: "footer",
-      });
+        source: "footer"});
       setNewsletterStatus("success");
       setNewsletterEmail("");
     } catch (error) {

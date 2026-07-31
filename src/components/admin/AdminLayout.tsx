@@ -3,7 +3,7 @@ import AdminSidebar from "./AdminSidebar";
 import AdminHeader from "./AdminHeader";
 import { ChangePasswordModal } from "./ChangePasswordModal";
 import { cn } from "@/lib/utils";
-import { motion } from "motion/react";
+import { } from "motion/react";
 import { useAdmin } from "@/context/AdminContext";
 import { PageTransition } from "@/components/common/PageTransition";
 

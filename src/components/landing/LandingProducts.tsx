@@ -50,7 +50,10 @@ const LandingProducts = () => {
       const regular = inStock.filter((p) => !p.isFeatured);
       const shuffledFeatured = [...featured].sort(() => 0.5 - Math.random());
       const shuffledRegular = [...regular].sort(() => 0.5 - Math.random());
-      setShuffledProducts([...shuffledFeatured, ...shuffledRegular]);
+      const timer = setTimeout(() => {
+        setShuffledProducts([...shuffledFeatured, ...shuffledRegular]);
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [allProducts]);
 

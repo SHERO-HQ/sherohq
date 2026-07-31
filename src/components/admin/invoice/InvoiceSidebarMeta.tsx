@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Card } from "@/components/ui/card";
-import { CheckCircle2, Loader2, DollarSign, Calendar } from "lucide-react";
+import { CheckCircle2, Loader2, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -18,8 +18,7 @@ export default function InvoiceSidebarMeta({
   isSaving,
   mode,
   onSubmit,
-  hasItems,
-}: InvoiceSidebarMetaProps) {
+  hasItems}: InvoiceSidebarMetaProps) {
   return (
     <div className="space-y-6">
       <Card className="bg-card border border-border p-6 sticky top-24">

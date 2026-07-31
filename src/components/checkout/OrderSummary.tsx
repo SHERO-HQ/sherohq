@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "motion/react";
-import { CheckCircle, LockKeyhole, Truck } from "lucide-react";
+import { LockKeyhole, Truck } from "lucide-react";
 
 interface OrderSummaryProps {
   subtotal: number;
@@ -17,8 +17,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   tax,
   total,
   itemCount,
-  className = "",
-}) => {
+  className = ""}) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

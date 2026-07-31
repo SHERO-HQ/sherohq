@@ -2,8 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   StaggerContainer,
-  StaggerItem,
-} from "@/components/motion/AnimateSection";
+  StaggerItem} from "@/components/motion/AnimateSection";
 import Reveal from "@/components/motion/Reveal";
 import {
   ShoppingBag,
@@ -15,8 +14,7 @@ import {
   CheckCircle,
   Database,
   RefreshCw,
-  AlertTriangle,
-} from "lucide-react";
+  AlertTriangle} from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
 // ============================================================================
@@ -38,23 +36,19 @@ const HardwareTerminal: React.FC = () => {
     {
       label: "DEVICE PROVISIONING",
       detail: "Shero Workstation Pro v4",
-      status: "Active",
-    },
+      status: "Active"},
     {
       label: "CPU CORE TEST",
       detail: "16-Core Xeon Processor",
-      status: "[Passed]",
-    },
+      status: "[Passed]"},
     {
       label: "ECC MEMORY CONFIG",
       detail: "64GB DDR5 Secure Storage",
-      status: "[Passed]",
-    },
+      status: "[Passed]"},
     {
       label: "OS SECURE DEPLOYMENT",
       detail: "Fully Provisioned & Encrypted",
-      status: "Ready",
-    },
+      status: "Ready"},
   ];
 
   return (
@@ -184,18 +178,15 @@ const SupportSlaConsole: React.FC = () => {
     {
       msg: "ALERT: Port 443 Latency Spike",
       type: "warning",
-      tag: "MIT_PENDING",
-    },
+      tag: "MIT_PENDING"},
     {
       msg: "SheroAgent auto-failover bridge routing",
       type: "mitigating",
-      tag: "RESOLVING",
-    },
+      tag: "RESOLVING"},
     {
       msg: "System stable. Redundant node synced",
       type: "success",
-      tag: "RESOLVED",
-    },
+      tag: "RESOLVED"},
   ];
 
   return (
@@ -288,14 +279,12 @@ const PharmasystWidget: React.FC = () => {
             {
               name: "Paracetamol (500mg)",
               qty: stockCycle === 0 ? 210 : 800,
-              alert: stockCycle === 0,
-            },
+              alert: stockCycle === 0},
             { name: "Ibuprofen (400mg)", qty: 880, alert: false },
             {
               name: "Ciprofloxacin (500)",
               qty: stockCycle === 0 ? 90 : 450,
-              alert: stockCycle === 0,
-            },
+              alert: stockCycle === 0},
           ].map((item) => (
             <div
               key={item.name}
@@ -387,8 +376,7 @@ const PILLARS: PillarsProps[] = [
     className: "md:col-span-1",
     gradient: "from-blue-500/20 to-cyan-500/20",
     glowColor: "rgba(6, 182, 212, 0.12)", // Cyan
-    widget: <HardwareTerminal />,
-  },
+    widget: <HardwareTerminal />},
   {
     header: "Custom Softwares",
     subheader: "Tailored Solutions",
@@ -398,8 +386,7 @@ const PILLARS: PillarsProps[] = [
     className: "md:col-span-1",
     gradient: "from-brand-secondary-500/20 to-green-500/20",
     glowColor: "rgba(59, 130, 246, 0.12)", // Blue
-    widget: <SmartBoutiqueWidget />,
-  },
+    widget: <SmartBoutiqueWidget />},
   {
     header: "Managed IT Support",
     subheader: "On-Call Expertise",
@@ -409,8 +396,7 @@ const PILLARS: PillarsProps[] = [
     className: "md:col-span-1",
     gradient: "from-purple-500/20 to-pink-500/20",
     glowColor: "rgba(168, 85, 247, 0.12)", // Purple
-    widget: <SupportSlaConsole />,
-  },
+    widget: <SupportSlaConsole />},
   {
     header: "ERP & Custom Systems",
     subheader: "Digital Ecosystem",
@@ -420,8 +406,7 @@ const PILLARS: PillarsProps[] = [
     className: "md:col-span-3",
     gradient: "from-indigo-500/20 to-violet-500/20",
     glowColor: "rgba(16, 185, 129, 0.12)", // Emerald
-    widget: <PharmasystWidget />,
-  },
+    widget: <PharmasystWidget />},
 ];
 
 // Tactical, Custom-Engineered Bento Card with Cursor-Tracking Spotlight
@@ -435,8 +420,7 @@ const BentoPillarCard = ({ pillar }: { pillar: PillarsProps }) => {
     const rect = cardRef.current.getBoundingClientRect();
     setCoords({
       x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
+      y: e.clientY - rect.top});
   };
 
   return (
@@ -451,8 +435,7 @@ const BentoPillarCard = ({ pillar }: { pillar: PillarsProps }) => {
       <div
         className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         style={{
-          background: `radial-gradient(200px circle at ${coords.x}px ${coords.y}px, ${pillar.glowColor || "rgba(16, 185, 129, 0.08)"}, transparent 70%)`,
-        }}
+          background: `radial-gradient(200px circle at ${coords.x}px ${coords.y}px, ${pillar.glowColor || "rgba(16, 185, 129, 0.08)"}, transparent 70%)`}}
       />
 
       {/* 2. Sleek Top and Left Laser-Cut Glowing Edges on Hover */}

@@ -64,7 +64,7 @@ function getPool(): Pool {
   if (globalForDb.pool) {
     try {
       globalForDb.pool.end();
-    } catch (e) {
+    } catch {
       // ignore
     }
   }

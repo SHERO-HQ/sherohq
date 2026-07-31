@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { query, getClient } from "@/lib/db";
+import { getClient } from "@/lib/db";
 import { apiResponse } from "@/lib/api-utils";
 import { safeParse, hashOrderAccessToken } from "@/lib/orderUtils";
 import { getUserFromSession, getAdminFromSession } from "@/lib/auth";

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { X, ShoppingCart, Star, Check, ArrowRight, Flame } from "lucide-react";
+import { X, ShoppingCart, Star, ArrowRight, Flame } from "lucide-react";
 import type { Product } from "@/types/product";
 import { useCart } from "@/context/CartContext";
 import { useNotifications } from "@/hooks/useNotifications";

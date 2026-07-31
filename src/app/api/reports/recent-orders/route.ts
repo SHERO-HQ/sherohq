@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest} from "next/server";
 import { query } from "@/lib/db";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
@@ -33,9 +33,7 @@ export async function GET(request: NextRequest) {
         customer: {
           firstName: shippingInfo?.firstName || "Unknown",
           lastName: shippingInfo?.lastName || "",
-          email: shippingInfo?.email || "N/A",
-        },
-      };
+          email: shippingInfo?.email || "N/A"}};
     });
 
     return apiResponse.success(orders);

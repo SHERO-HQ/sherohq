@@ -10,8 +10,7 @@ const ProductQuerySchema = z.object({
   category: z.string().optional(),
   search: z.string().max(200).optional(),
   limit: z.coerce.number().int().min(1).max(100).default(50),
-  offset: z.coerce.number().int().nonnegative().default(0),
-});
+  offset: z.coerce.number().int().nonnegative().default(0)});
 
 const CreateProductSchema = z.object({
   name: z.string().min(1).max(200),
@@ -35,8 +34,7 @@ const CreateProductSchema = z.object({
   isSpotlight: z.boolean().optional().default(false),
   isFeatured: z.boolean().optional().default(false),
   metaTitle: z.string().max(60).optional().nullable(),
-  metaDescription: z.string().max(160).optional().nullable(),
-});
+  metaDescription: z.string().max(160).optional().nullable()});
 
 interface ProductRow {
   id: string;
@@ -98,8 +96,7 @@ function parseProduct(row: ProductRow) {
     isSpotlight: Boolean(row.isSpotlight),
     isFeatured: Boolean(row.isFeatured),
     metaTitle: row.metaTitle || null,
-    metaDescription: row.metaDescription || null,
-  };
+    metaDescription: row.metaDescription || null};
 }
 
 export async function GET(request: NextRequest) {
@@ -109,8 +106,7 @@ export async function GET(request: NextRequest) {
       category: searchParams.get("category") || undefined,
       search: searchParams.get("search") || undefined,
       limit: searchParams.get("limit") || undefined,
-      offset: searchParams.get("offset") || undefined,
-    };
+      offset: searchParams.get("offset") || undefined};
 
     const validated = ProductQuerySchema.parse(paramsObj);
     const { category, search, limit, offset } = validated;
@@ -155,9 +151,7 @@ export async function GET(request: NextRequest) {
     const result = await query(queryText, sqlParams);
     return NextResponse.json(result.rows.map(parseProduct), {
       headers: {
-        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
-      },
-    });
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300"}});
   } catch (error) {
     console.error("Error fetching products:", error);
     return NextResponse.json(
@@ -198,8 +192,7 @@ export async function POST(request: NextRequest) {
       isSpotlight,
       isFeatured,
       metaTitle,
-      metaDescription,
-    } = validated;
+      metaDescription} = validated;
 
     const productId = uuidv4();
     const finalSku = generateSku(productId, sku);
@@ -264,8 +257,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error:
-          error instanceof Error ? error.message : "Failed to create product",
-      },
+          error instanceof Error ? error.message : "Failed to create product"},
       { status: 500 },
     );
   }

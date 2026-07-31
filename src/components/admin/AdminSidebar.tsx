@@ -22,11 +22,9 @@ import {
   FileText,
   DollarSign,
   Brain,
-  Mail,
   Download,
   Megaphone,
-  MessageSquare,
-} from "lucide-react";
+  MessageSquare} from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
@@ -35,8 +33,7 @@ import {
   getAdminStats,
   fetchActivityLogs,
   fetchRecentOrders,
-  fetchAnalytics,
-} from "@/services/api";
+  fetchAnalytics} from "@/services/api";
 import { motion, AnimatePresence } from "motion/react";
 import AppImage from "@/components/common/AppImage";
 
@@ -77,8 +74,7 @@ const navItems = [
   {
     icon: MessageSquareQuote,
     label: "Testimonials",
-    href: "/admin/testimonials",
-  },
+    href: "/admin/testimonials"},
   { icon: BarChart, label: "Site Stats", href: "/admin/stats" },
   { icon: Users, label: "Customers", href: "/admin/users" },
   { icon: User, label: "Profile", href: "/admin/profile" },
@@ -137,20 +133,16 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
     if (href === "/admin/dashboard") {
       queryClient.prefetchQuery({
         queryKey: ADMIN_KEYS.stats(),
-        queryFn: getAdminStats,
-      });
+        queryFn: getAdminStats});
       queryClient.prefetchQuery({
         queryKey: ADMIN_KEYS.analytics("today"),
-        queryFn: () => fetchAnalytics("today"),
-      });
+        queryFn: () => fetchAnalytics("today")});
       queryClient.prefetchQuery({
         queryKey: ADMIN_KEYS.recentOrders(),
-        queryFn: () => fetchRecentOrders(),
-      });
+        queryFn: () => fetchRecentOrders()});
       queryClient.prefetchQuery({
         queryKey: ADMIN_KEYS.activity(),
-        queryFn: fetchActivityLogs,
-      });
+        queryFn: fetchActivityLogs});
     }
   };
 

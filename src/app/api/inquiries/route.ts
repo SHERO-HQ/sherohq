@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest} from "next/server";
 import { query } from "@/lib/db";
 import { getAdminFromSession } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
-import { logActivity } from "@/lib/activity";
+import { } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
 import { notificationService } from "@/lib/notifications";
 
@@ -43,8 +43,7 @@ export async function POST(request: NextRequest) {
       subject: finalSubject,
       message,
       status: "pending",
-      createdAt: new Date().toISOString(),
-    };
+      createdAt: new Date().toISOString()};
 
     try {
       await Promise.all([

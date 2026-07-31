@@ -48,8 +48,7 @@ export async function GET(request: NextRequest) {
       direction: directionCounts.rows,
       status: statusCounts.rows,
       retries: retryCounts.rows,
-      dailyVolume: dailyVolume.rows,
-    });
+      dailyVolume: dailyVolume.rows});
   } catch (error: any) {
     console.error("WhatsApp Analytics API Error:", error);
     return apiResponse.error(error.message || "Failed to fetch analytics");

@@ -4,10 +4,8 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   Send,
   CheckCircle2,
-  ChevronDown,
   Code,
   HelpCircle,
-  Briefcase,
   Verified,
   ArrowRight,
   ArrowLeft,
@@ -32,8 +30,7 @@ const ContactForm = () => {
     proposalService: "software", // "software" | "cloud" | "mit" | "hardware"
     proposalSize: "10-50",       // "<10" | "10-50" | "50+"
     // Order-specific fields
-    orderId: "",
-  });
+    orderId: ""});
 
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
@@ -78,8 +75,7 @@ const ContactForm = () => {
         software: "Custom Software Development",
         cloud: "Cloud & Infrastructure Solutions",
         mit: "Managed IT Support & SLA",
-        hardware: "Hardware Supply & POS Setup",
-      }[formData.proposalService] || formData.proposalService;
+        hardware: "Hardware Supply & POS Setup"}[formData.proposalService] || formData.proposalService;
 
       formattedMessage = `[Custom Project Proposal Request]
 • Service Requested: ${serviceLabel}
@@ -106,8 +102,7 @@ ${formData.message}`;
         name: formData.name,
         email: formData.email,
         subject: subject,
-        message: formattedMessage,
-      });
+        message: formattedMessage});
       setStatus("success");
       setFormData({
         name: "",
@@ -115,8 +110,7 @@ ${formData.message}`;
         message: "",
         proposalService: "software",
         proposalSize: "10-50",
-        orderId: "",
-      });
+        orderId: ""});
       setStep(1);
       setInquiryType(null);
     } catch (error) {

@@ -56,9 +56,7 @@ function CheckoutContent() {
       window.dispatchEvent(
         new CustomEvent("shoro-ai-trigger", {
           detail: {
-            message: `I've been on the ${CHECKOUT_STEPS[currentStep - 1].title} step for a while. I might need some help or clarification.`,
-          },
-        }),
+            message: `I've been on the ${CHECKOUT_STEPS[currentStep - 1].title} step for a while. I might need some help or clarification.`}}),
       );
     }, 120000);
     return () => clearTimeout(timer);
@@ -78,8 +76,7 @@ function CheckoutContent() {
           name: item.name,
           quantity: item.quantity,
           price: item.price,
-          image: item.image,
-        })),
+          image: item.image})),
         total: total,
         shippingInfo: {
           firstName: data.shippingAddress.firstName,
@@ -91,11 +88,9 @@ function CheckoutContent() {
           region: data.shippingAddress.region,
           postalCode: data.shippingAddress.postalCode,
           gpsAddress: data.shippingAddress.gpsAddress,
-          wantsWhatsAppUpdates: data.wantsWhatsAppUpdates,
-        },
+          wantsWhatsAppUpdates: data.wantsWhatsAppUpdates},
         paymentMethod: data.paymentMethod,
-        referralCode: data.referralCode,
-      };
+        referralCode: data.referralCode};
 
       const result = await createOrder(orderData);
       

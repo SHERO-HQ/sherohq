@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useAdmin } from "@/context/AdminContext";
+import { } from "@/context/AdminContext";
 import { getErrorMessage } from "@/utils/error";
 import {
  BarChart,
@@ -14,14 +14,12 @@ import {
  Globe,
  Users as UsersIcon,
  Trophy,
- Box,
-} from "lucide-react";
+ Box} from "lucide-react";
 import {
  useStats,
  useCreateStat,
  useUpdateStat,
- useDeleteStat,
-} from "@/hooks/queries/useStats";
+ useDeleteStat} from "@/hooks/queries/useStats";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import { useNotifications } from "@/hooks/useNotifications";
 import { type SiteStat } from "@/services/api";
@@ -81,8 +79,7 @@ const AdminStats = () => {
  prefix: "",
  icon: "Users",
  color: "text-brand-secondary-500",
- order: 0,
- });
+ order: 0});
 
  const filteredStats = stats
  .filter((s) => s.label.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -97,8 +94,7 @@ const AdminStats = () => {
  prefix: "",
  icon: "Users",
  color: "text-brand-secondary-500",
- order: stats.length,
- });
+ order: stats.length});
  setIsModalOpen(true);
  };
 
@@ -111,8 +107,7 @@ const AdminStats = () => {
  prefix: s.prefix || "",
  icon: s.icon || "Users",
  color: s.color || "text-brand-secondary-500",
- order: s.order || 0,
- });
+ order: s.order || 0});
  setIsModalOpen(true);
  };
 
@@ -122,8 +117,7 @@ const AdminStats = () => {
  if (editingStat) {
  await updateMutation.mutateAsync({
  id: editingStat.id,
- data: formData,
- });
+ data: formData});
  addNotification("Success", "Stat updated successfully", "success");
  } else {
  await createMutation.mutateAsync(formData);
@@ -314,8 +308,7 @@ const AdminStats = () => {
  }
  options={iconOptions.map((opt) => ({
  value: opt.value,
- label: opt.label,
- }))}
+ label: opt.label}))}
  className="bg-muted border-border"
  />
  </div>

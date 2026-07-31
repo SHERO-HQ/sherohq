@@ -32,8 +32,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       count: conversations.length,
-      conversations,
-    });
+      conversations});
   } catch (error) {
     console.error("Error fetching conversations list:", error);
     return NextResponse.json(

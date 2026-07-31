@@ -2,8 +2,8 @@
 
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter, notFound } from "next/navigation";
-import { CreditCard, ShieldAlert, Sparkles, Check, X, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { CreditCard, ShieldAlert, Sparkles, ShieldCheck } from "lucide-react";
+import { } from "@/components/ui/button";
 import { toReadableOrderId } from "@/utils/orderId";
 
 function MockPaymentContent() {
@@ -50,9 +50,7 @@ function MockPaymentContent() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             ClientReference: toReadableOrderId(orderId),
-            Status: "Success",
-          }),
-        });
+            Status: "Success"})});
 
         if (!res.ok) {
           throw new Error("Failed to process simulation on server");

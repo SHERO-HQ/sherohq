@@ -1,5 +1,4 @@
 import { sendEmail, wrapEmailHtml } from "../core/email";
-import { COMPANY_EMAILS } from "@/constants/emails";
 
 export const marketingNotifications = {
   async sendAbandonedCartEmail(
@@ -42,8 +41,7 @@ export const marketingNotifications = {
     `;
 
     const htmlContent = wrapEmailHtml(bodyHtml, {
-      preheader: "Your SHERO cart is waiting for you.",
-    });
+      preheader: "Your SHERO cart is waiting for you."});
 
     await sendEmail(email, "Did you forget something? 🛒", htmlContent);
   },
@@ -64,11 +62,9 @@ export const marketingNotifications = {
       </p>
     `;
     const htmlContent = wrapEmailHtml(bodyHtml, {
-      hideFooterContact: true,
-    });
+      hideFooterContact: true});
     await sendEmail(to, subject, htmlContent, {
       throwOnError: true,
-      requestId,
-    });
+      requestId});
   }
 };

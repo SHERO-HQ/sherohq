@@ -14,14 +14,13 @@ import {
   type ChatHistoryMessage,
   resolveBudgetFromConversation,
   formatGhs,
-  inferGuideSlug,
   shouldEscalateToSupport,
   hasTroubleshootingIntent,
   buildFallbackReply,
-  buildInlineTroubleshootingSteps,
-} from "./intent";
+  buildInlineTroubleshootingSteps} from "./intent";
 import { handleBookDirect, handleTicketDirect, handleTrackOrder, handleTrackTicket } from "./actions";
-import { getSystemPrompt, callLLMStreaming, buildGeminiContents } from "./llm";
+import { getSystemPrompt, callLLMStreaming, buildGeminiContents, summarizeChatHistory, categorizeIntent } from "./llm";
+import { query as dbQuery } from "@/lib/db";
 
 const BACKEND_URL = (
   process.env.API_URL ||
@@ -33,15 +32,67 @@ const BACKEND_URL = (
 
 export async function POST(request: Request) {
   try {
-    const { message, history, imageData, audioData } = await request.json();
+    const { message, history, imageData, audioData, context } = await request.json();
     const safeHistory: ChatHistoryMessage[] = Array.isArray(history) ? history : [];
     const budgetCap = resolveBudgetFromConversation(message, safeHistory);
 
     const catalogSummary = await fetchDynamicCatalogSummary(message);
-    const systemPrompt = getSystemPrompt(catalogSummary);
-    const contents = buildGeminiContents(safeHistory, message, imageData, audioData);
+    
+    // Categorize intent for multi-agent routing
+    const agentRoute = await categorizeIntent(message);
+    const systemPrompt = getSystemPrompt(catalogSummary, context, agentRoute);
 
-    const llmResponse = await callLLMStreaming(systemPrompt, contents);
+    // Fetch DB summary if user has a session
+    let dbSummary = "";
+    if (context?.sessionId) {
+      try {
+        const res = await dbQuery("SELECT summary FROM ai_chat_sessions WHERE session_id = $1", [context.sessionId]);
+        if (res.rows[0]?.summary) {
+          dbSummary = res.rows[0].summary;
+        }
+      } catch (e) {
+        console.error("Failed to fetch DB summary:", e);
+      }
+    }
+
+    let finalHistory = safeHistory;
+    let summarizedContext = dbSummary;
+    let shouldUpdateDb = false;
+
+    if (safeHistory.length > 10) {
+      const messagesToSummarize = safeHistory.slice(0, safeHistory.length - 5);
+      finalHistory = safeHistory.slice(safeHistory.length - 5);
+      
+      const newSummaryPart = await summarizeChatHistory(messagesToSummarize);
+      if (newSummaryPart) {
+        // Combine DB summary with new overflow summary
+        summarizedContext = dbSummary 
+          ? await summarizeChatHistory([{ role: "system", content: "Combine these summaries: " + dbSummary + " AND " + newSummaryPart }])
+          : newSummaryPart;
+        shouldUpdateDb = true;
+      }
+    }
+
+    // Save back to DB if updated
+    if (shouldUpdateDb && context?.sessionId) {
+      try {
+        await dbQuery(
+          `INSERT INTO ai_chat_sessions (session_id, user_id, summary) 
+           VALUES ($1, $2, $3) 
+           ON CONFLICT (session_id) 
+           DO UPDATE SET summary = EXCLUDED.summary, last_updated = CURRENT_TIMESTAMP`,
+          [context.sessionId, context.user?.id || null, summarizedContext]
+        );
+      } catch (e) {
+        console.error("Failed to save DB summary:", e);
+      }
+    }
+
+    const finalSystemPrompt = systemPrompt + (summarizedContext ? `\n\nLONG-TERM MEMORY (PAST CONVERSATIONS):\n${summarizedContext}` : "");
+
+    const contents = buildGeminiContents(finalHistory, message, imageData, audioData);
+
+    const llmResponse = await callLLMStreaming(finalSystemPrompt, contents);
 
     if (!llmResponse || !llmResponse.ok || !llmResponse.body) {
       // Fallback if no LLM
@@ -52,8 +103,7 @@ export async function POST(request: Request) {
     const metadata: any = {
       id: crypto.randomUUID(),
       role: "assistant",
-      recommendedProducts: [],
-    };
+      recommendedProducts: []};
 
     // We create a TransformStream to process the SSE from Gemini, handle function calls,
     // and stream text to the client.
@@ -154,17 +204,14 @@ export async function POST(request: Request) {
       headers: {
         "Content-Type": "text/event-stream",
         "Cache-Control": "no-cache, no-transform",
-        Connection: "keep-alive",
-      },
-    });
+        Connection: "keep-alive"}});
   } catch (error) {
     console.error("Chat API Error:", error);
     return NextResponse.json(
       {
         id: crypto.randomUUID(),
         role: "assistant",
-        content: "I can still help you shortlist the right options. Tell me your use case and budget in Ghana cedis (GHS), and I will guide you to the best fit.",
-      },
+        content: "I can still help you shortlist the right options. Tell me your use case and budget in Ghana cedis (GHS), and I will guide you to the best fit."},
       { status: 200 },
     );
   }
@@ -190,30 +237,26 @@ function logAnalytics(message: string, finalContent: string, metadata: any, hasI
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRF-Protection": "1",
-      },
+        "X-CSRF-Protection": "1"},
       body: JSON.stringify({
         query: message,
         response: finalContent || "Action executed",
         intent,
         recommendedProducts: metadata.recommendedProducts?.map((p: any) => p.id) || [],
-        hasImage,
-      }),
-    }).catch(() => {});
+        hasImage})}).catch(() => {});
   } catch (e) {}
 }
 
 function handleFallback(message: string, safeHistory: ChatHistoryMessage[]) {
   let replyContent = buildFallbackReply(message, safeHistory);
-  let metadata: any = {
+  const metadata: any = {
     id: crypto.randomUUID(),
-    role: "assistant",
-  };
+    role: "assistant"};
 
   const lowerMessage = message.toLowerCase();
   
   if (lowerMessage.includes("track") && lowerMessage.includes("order")) {
-    const match = message.match(/(?:order(?:\s*id)?[:#\s-]*)([a-zA-Z0-9-]{5,})/i);
+    const match = message.match(/(?:order(?:\s*id)?[:#\s-]*)([a-zA-Z0-9-]{5})/i);
     if (match?.[1]) {
       metadata.trackOrder = match[1];
     } else {

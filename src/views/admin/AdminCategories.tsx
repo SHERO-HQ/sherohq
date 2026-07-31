@@ -1,28 +1,26 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useAdmin } from "@/context/AdminContext";
+import { } from "@/context/AdminContext";
 import { Tag, Plus, Search, Loader2, Trash2, Edit2 } from "lucide-react";
 import { getErrorMessage } from "@/utils/error";
 import {
   useCategories,
   useCreateCategory,
   useUpdateCategory,
-  useDeleteCategory,
-} from "@/hooks/queries/useCategories";
+  useDeleteCategory} from "@/hooks/queries/useCategories";
 import { useNotifications } from "@/hooks/useNotifications";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/Modal";
 import { Label } from "@/components/ui/label";
-import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+
 import * as Icons from "lucide-react";
 
 // Icon Selector Component (Simplified)
 const IconSelector = ({
   value,
-  onChange,
-}: {
+  onChange}: {
   value: string;
   onChange: (val: string) => void;
 }) => {
@@ -125,8 +123,7 @@ const AdminCategories = () => {
       if (editingCategory) {
         await updateMutation.mutateAsync({
           id: editingCategory.id,
-          data: formData,
-        });
+          data: formData});
         addNotification("Success", "Category updated successfully", "success");
       } else {
         await createMutation.mutateAsync(formData);

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest} from "next/server";
 import { query } from "@/lib/db";
 import { getUserFromSession, getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
@@ -87,8 +87,7 @@ export async function PATCH(
 
     return apiResponse.success({
       success: true,
-      message: "Payment method updated successfully",
-    });
+      message: "Payment method updated successfully"});
   } catch (error) {
     console.error("Failed to update order payment method:", error);
     return apiResponse.error("Failed to update payment method");

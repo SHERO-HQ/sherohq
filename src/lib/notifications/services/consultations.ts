@@ -1,5 +1,4 @@
 import { COMPANY_EMAILS } from "@/constants/emails";
-import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { sendEmail, wrapEmailHtml } from "../core/email";
 
 export const consultationsNotifications = {
@@ -27,8 +26,7 @@ export const consultationsNotifications = {
       <p>Our specialists will contact you shortly to confirm the appointment and send the meeting schedule.</p>
     `;
     const htmlContent = wrapEmailHtml(bodyHtml, {
-      preheader: `Consultation requested for ${consultation.service}`,
-    });
+      preheader: `Consultation requested for ${consultation.service}`});
     await sendEmail(consultation.email, `Consultation Request - ${consultation.service}`, htmlContent);
   },
 
