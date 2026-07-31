@@ -16,6 +16,8 @@ import { ErrorState } from "@/components/common/ErrorState";
 import { ActiveFilters } from "./ActiveFilters";
 import ProductFiltersSidebar from "./ProductFiltersSidebar";
 
+import ProductQuickViewModal from "./ProductQuickViewModal";
+
 interface ApiCategory {
   id: string;
   name: string;
@@ -25,6 +27,7 @@ const ShopView = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
   // TanStack Query
   const {
@@ -378,6 +381,7 @@ const ShopView = () => {
                   products={filteredProducts}
                   loading={loading}
                   columns={3}
+                  onQuickView={(prod) => setQuickViewProduct(prod)}
                   onReset={handleReset}
                 />
               )}
@@ -392,6 +396,13 @@ const ShopView = () => {
         onFilterChange={handleFilterChange}
         isOpen={showMobileFilters}
         onClose={() => setShowMobileFilters(false)}
+      />
+
+      {/* Quick View Modal */}
+      <ProductQuickViewModal
+        product={quickViewProduct}
+        isOpen={Boolean(quickViewProduct)}
+        onClose={() => setQuickViewProduct(null)}
       />
     </div>
   );

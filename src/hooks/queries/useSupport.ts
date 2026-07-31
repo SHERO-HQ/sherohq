@@ -6,6 +6,7 @@ import {
   fetchInquiries,
   updateTicketStatus,
   updateConsultationStatus,
+  rescheduleConsultation,
   deleteConsultation,
   updateInquiryStatus,
   deleteInquiry,
@@ -58,6 +59,17 @@ export const useUpdateConsultationStatus = () => {
   return useMutation({
     mutationFn: ({ id, status }: { id: string; status: string }) =>
       updateConsultationStatus(id, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: SUPPORT_KEYS.consultations() });
+    },
+  });
+};
+
+export const useRescheduleConsultation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, date, time }: { id: string; date: string; time: string }) =>
+      rescheduleConsultation(id, date, time),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: SUPPORT_KEYS.consultations() });
     },

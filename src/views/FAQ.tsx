@@ -59,7 +59,7 @@ const FAQ = () => {
               <HelpCircle className="size-4" />
               Help Center
             </div>
-            <h1 className="text-3xl md:text-6xl font-bold text-slate-900 dark:text-slate-100 mb-4 tracking-tight transition-colors duration-300">
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 tracking-tight transition-colors duration-300">
               Answers to common{" "}
               <span className="text-brand-secondary-600">Questions</span>
             </h1>

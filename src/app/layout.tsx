@@ -27,7 +27,7 @@ const aubette = localFont({
 export const metadata: Metadata = {
   title: {
     default: "SHERO",
-    template: "%s | Shero",
+    template: "%s | SHERO",
   },
   description:
     "SHERO - Premium technology solutions, custom software development, and quality tech hardware. Redefine possible with our innovative expertise.",

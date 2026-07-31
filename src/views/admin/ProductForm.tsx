@@ -251,8 +251,10 @@ export default function ProductForm() {
     if ((productData.price ?? 0) <= 0) {
       newErrors.price = "Price must be greater than 0";
     }
-    if ((productData.costPrice ?? 0) <= 0) {
+    if (productData.costPrice === undefined || productData.costPrice === null) {
       newErrors.costPrice = "Cost Price is required";
+    } else if (productData.costPrice < 0) {
+      newErrors.costPrice = "Cost Price cannot be negative";
     }
     if (!productData.category) {
       newErrors.category = "Please select a category";

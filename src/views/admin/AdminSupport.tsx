@@ -25,6 +25,7 @@ import {
   useInquiries,
   useUpdateTicketStatus,
   useUpdateConsultationStatus,
+  useRescheduleConsultation,
   useDeleteConsultation,
   useUpdateInquiryStatus,
   useDeleteInquiry,
@@ -63,6 +64,7 @@ const AdminSupport = () => {
 
   const resolveTicketMutation = useUpdateTicketStatus();
   const updateConsultationStatusMutation = useUpdateConsultationStatus();
+  const rescheduleMutation = useRescheduleConsultation();
   const updateInquiryStatusMutation = useUpdateInquiryStatus();
   const deleteConsultationMutation = useDeleteConsultation();
   const deleteInquiryMutation = useDeleteInquiry();
@@ -82,6 +84,19 @@ const AdminSupport = () => {
     isOpen: false,
     type: null,
     id: null,
+  });
+
+  // Reschedule Modal State
+  const [rescheduleModal, setRescheduleModal] = useState<{
+    isOpen: boolean;
+    id: string | null;
+    currentDate: string;
+    currentTime: string;
+  }>({
+    isOpen: false,
+    id: null,
+    currentDate: "",
+    currentTime: "",
   });
 
   const handleResolveTicket = async (id: string) => {
@@ -139,6 +154,23 @@ const AdminSupport = () => {
     } catch (err) {
       console.error("Failed to delete support item:", err);
       addNotification("Error", `Failed to delete ${type}`, "error");
+    }
+  };
+
+  const handleReschedule = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!rescheduleModal.id) return;
+    try {
+      await rescheduleMutation.mutateAsync({
+        id: rescheduleModal.id,
+        date: rescheduleModal.currentDate,
+        time: rescheduleModal.currentTime,
+      });
+      setRescheduleModal({ isOpen: false, id: null, currentDate: "", currentTime: "" });
+      addNotification("Success", "Consultation rescheduled successfully", "success");
+    } catch (err) {
+      console.error("Failed to reschedule consultation:", err);
+      addNotification("Error", getErrorMessage(err, "Failed to reschedule consultation"), "error");
     }
   };
 
@@ -465,40 +497,36 @@ const AdminSupport = () => {
                               ? "Hide Details"
                               : "View Details"}
                           </Button>
-                          <Button
-                            variant="ghost"
-                            onClick={() =>
-                              handleReplyEmail(
-                                ticket.email,
-                                ticket.subject,
-                                ticket.name,
-                              )
-                            }
-                            className="text-slate-400 hover:text-white hover:bg-white/5"
-                          >
-                            <Mail className="w-4 h-4 mr-1" />
-                            Email
-                          </Button>
-                          {ticket.phone && (
-                            <>
-                              <a
-                                href={`tel:${ticket.phone}`}
-                                className="inline-flex items-center gap-1 px-3 py-1.5 text-sm text-slate-400 hover:text-white hover:bg-white/5 rounded-md transition-colors"
-                              >
-                                <PhoneCall className="w-4 h-4" />
-                                Call
-                              </a>
-                              <a
-                                href={`https://wa.me/${ticket.phone.replace(/^0/, '233').replace(/[^0-9]/g, '')}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-1 px-3 py-1.5 text-sm text-slate-400 hover:text-green-400 hover:bg-white/5 rounded-md transition-colors"
-                              >
-                                <MessageCircle className="w-4 h-4" />
-                                WhatsApp
-                              </a>
-                            </>
-                          )}
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="text-slate-400 hover:text-white hover:bg-white/5">
+                                <MessageSquare className="w-4 h-4 mr-1" />
+                                Contact
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="bg-slate-900 border-white/10">
+                              <DropdownMenuItem onSelect={() => handleReplyEmail(ticket.email, ticket.subject, ticket.name)} className="text-slate-300 hover:text-white focus:bg-white/5 cursor-pointer">
+                                <Mail className="w-4 h-4 mr-2" />
+                                Email
+                              </DropdownMenuItem>
+                              {ticket.phone && (
+                                <>
+                                  <DropdownMenuItem asChild className="text-slate-300 hover:text-white focus:bg-white/5 cursor-pointer">
+                                    <a href={`tel:${ticket.phone}`}>
+                                      <PhoneCall className="w-4 h-4 mr-2" />
+                                      Call
+                                    </a>
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem asChild className="text-slate-300 hover:text-white focus:bg-white/5 cursor-pointer">
+                                    <a href={`https://wa.me/${ticket.phone.replace(/^0/, '233').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer">
+                                      <MessageCircle className="w-4 h-4 mr-2 text-green-400" />
+                                      WhatsApp
+                                    </a>
+                                  </DropdownMenuItem>
+                                </>
+                              )}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                           {ticket.status !== "Resolved" && (
                             <Button
                               onClick={() => handleResolveTicket(ticket.id)}
@@ -571,13 +599,14 @@ const AdminSupport = () => {
                           >
                             <DropdownMenuItem
                               onSelect={() =>
-                                addNotification(
-                                  "Info",
-                                  "Reschedule feature coming soon",
-                                  "info",
-                                )
+                                setRescheduleModal({
+                                  isOpen: true,
+                                  id: c.id,
+                                  currentDate: c.date,
+                                  currentTime: c.time,
+                                })
                               }
-                              className="text-slate-300 hover:text-white focus:bg-white/5"
+                              className="text-slate-300 hover:text-white focus:bg-white/5 cursor-pointer"
                             >
                               Reschedule
                             </DropdownMenuItem>
@@ -632,39 +661,36 @@ const AdminSupport = () => {
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <button
-                          onClick={() =>
-                            handleReplyEmail(
-                              c.email,
-                              `Consultation: ${c.service}`,
-                              c.name,
-                            )
-                          }
-                          className="flex items-center gap-2 text-sm text-slate-400 hover:text-brand-secondary-400 transition-colors w-full text-left"
-                        >
-                          <Mail className="w-4 h-4 text-brand-secondary-500" />
-                          {c.email}
-                        </button>
-                        {c.phone && (
-                          <>
-                            <a
-                              href={`tel:${c.phone}`}
-                              className="flex items-center gap-2 text-sm text-slate-400 hover:text-brand-secondary-400 transition-colors w-full text-left"
-                            >
-                              <PhoneCall className="w-4 h-4 text-brand-secondary-500" />
-                              {c.phone}
-                            </a>
-                            <a
-                              href={`https://wa.me/${c.phone.replace(/^0/, '233').replace(/[^0-9]/g, '')}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center gap-2 text-sm text-slate-400 hover:text-green-400 transition-colors w-full text-left"
-                            >
-                              <MessageCircle className="w-4 h-4 text-green-500" />
-                              WhatsApp
-                            </a>
-                          </>
-                        )}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="w-full justify-start text-slate-400 hover:text-white border-white/10 bg-slate-950/50 hover:bg-white/5 rounded group">
+                              <MessageSquare className="w-4 h-4 mr-2" />
+                              Contact Customer
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="start" className="w-64 bg-slate-900 border-white/10">
+                            <DropdownMenuItem onSelect={() => handleReplyEmail(c.email, `Consultation: ${c.service}`, c.name)} className="text-slate-300 hover:text-white focus:bg-white/5 cursor-pointer">
+                              <Mail className="w-4 h-4 mr-2 text-brand-secondary-500" />
+                              Email ({c.email})
+                            </DropdownMenuItem>
+                            {c.phone && (
+                              <>
+                                <DropdownMenuItem asChild className="text-slate-300 hover:text-white focus:bg-white/5 cursor-pointer">
+                                  <a href={`tel:${c.phone}`}>
+                                    <PhoneCall className="w-4 h-4 mr-2 text-brand-secondary-500" />
+                                    Call ({c.phone})
+                                  </a>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem asChild className="text-slate-300 hover:text-white focus:bg-white/5 cursor-pointer">
+                                  <a href={`https://wa.me/${c.phone.replace(/^0/, '233').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer">
+                                    <MessageCircle className="w-4 h-4 mr-2 text-green-500" />
+                                    WhatsApp
+                                  </a>
+                                </DropdownMenuItem>
+                              </>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                       {c.message && (
                         <div className="pt-4 border-t border-white/5 mt-auto">
@@ -870,6 +896,102 @@ const AdminSupport = () => {
               </Button>
             </div>
           </div>
+        </Modal>
+
+        {/* Reschedule Consultation Modal */}
+        <Modal
+          isOpen={rescheduleModal.isOpen}
+          onClose={() =>
+            setRescheduleModal({
+              isOpen: false,
+              id: null,
+              currentDate: "",
+              currentTime: "",
+            })
+          }
+          title="Reschedule Consultation"
+        >
+          <form onSubmit={handleReschedule} className="space-y-4">
+            <div className="flex flex-col sm:flex-row gap-2">
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-slate-300 mb-1">
+                New Date
+              </label>
+              <Input
+                type="date"
+                required
+                min={new Date().toISOString().split("T")[0]}
+                value={rescheduleModal.currentDate}
+                onChange={(e) =>
+                  setRescheduleModal({
+                    ...rescheduleModal,
+                    currentDate: e.target.value,
+                  })
+                }
+                className="bg-slate-900/50 border-white/10 text-white"
+              />
+            </div>
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-slate-300 mb-1">
+                New Time
+              </label>
+              <select
+                required
+                value={rescheduleModal.currentTime}
+                onChange={(e) =>
+                  setRescheduleModal({
+                    ...rescheduleModal,
+                    currentTime: e.target.value,
+                  })
+                }
+                className="flex h-10 w-full rounded-md border border-white/10 bg-slate-900/50 px-3 py-2 text-sm text-white focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500"
+              >
+                <option value="" disabled>
+                  Select a time slot
+                </option>
+                {[
+                  "09:00 AM",
+                  "10:00 AM",
+                  "11:00 AM",
+                  "01:00 PM",
+                  "02:00 PM",
+                  "03:00 PM",
+                  "04:00 PM",
+                ].map((slot) => (
+                  <option key={slot} value={slot} className="bg-slate-900">
+                    {slot}
+                  </option>
+                ))}
+              </select>
+            </div>
+            </div>
+            <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() =>
+                  setRescheduleModal({
+                    isOpen: false,
+                    id: null,
+                    currentDate: "",
+                    currentTime: "",
+                  })
+                }
+                className="border-white/10 text-slate-300 hover:text-white"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={rescheduleMutation.isPending}
+                className="bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white"
+              >
+                {rescheduleMutation.isPending
+                  ? "Rescheduling..."
+                  : "Reschedule"}
+              </Button>
+            </div>
+          </form>
         </Modal>
       </div>
     </div>

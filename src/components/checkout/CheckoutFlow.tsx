@@ -91,6 +91,7 @@ function CheckoutContent() {
           region: data.shippingAddress.region,
           postalCode: data.shippingAddress.postalCode,
           gpsAddress: data.shippingAddress.gpsAddress,
+          wantsWhatsAppUpdates: data.wantsWhatsAppUpdates,
         },
         paymentMethod: data.paymentMethod,
         referralCode: data.referralCode,

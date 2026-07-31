@@ -284,17 +284,18 @@ export default function ProductSidebarMeta({
                     placeholder: "e.g. Gaming Laptops",
                   });
                   if (newCat?.trim()) {
-                    fetch("/api/categories", {
+                    fetch("/api/products/categories", {
                       method: "POST",
                       headers: { "Content-Type": "application/json" },
                       body: JSON.stringify({ name: newCat.trim() })
                     })
                     .then(res => res.json())
                     .then(data => {
-                      if (data.success && data.category) {
+                      if (data.success && data.id) {
+                        const newCategory = { id: data.id, name: data.name };
                         if (onCategoryAdded) {
-                          onCategoryAdded(data.category);
-                          onUpdateProductData({ category: data.category.id });
+                          onCategoryAdded(newCategory);
+                          onUpdateProductData({ category: data.id });
                         } else {
                           void dialog.alert({ title: "Category Added", message: "Category added! Please save draft and refresh to see it in the list.", type: "success" });
                         }

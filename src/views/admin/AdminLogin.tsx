@@ -178,7 +178,7 @@ export default function AdminLogin() {
                                         value={mfaCode}
                                         onChange={(e) => setMfaCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))}
                                         placeholder="Enter 6-digit code"
-                                        className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-slate-700 rounded text-white text-center text-2xl tracking-[0.5em] font-mono placeholder:text-sm placeholder:tracking-normal placeholder:font-sans focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                        className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-slate-700 rounded text-white text-center text-2xl tracking-[0.5em] placeholder:text-sm placeholder:tracking-normal placeholder:font-sans focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
                                         required
                                         autoFocus
                                         autoComplete="one-time-code"

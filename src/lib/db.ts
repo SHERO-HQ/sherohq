@@ -11,8 +11,19 @@ let pool: Pool | null = null;
 function getPool(): Pool {
   if (pool) return pool;
 
-  // Use Vercel's Direct Connection (IPv6) first to bypass Supabase pooler password bugs
-  const connectionString = process.env.POSTGRES_URL_NON_POOLING || process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  const candidates = [
+    process.env.DATABASE_URL,
+    process.env.POSTGRES_URL,
+    process.env.POSTGRES_URL_NON_POOLING,
+  ];
+
+  const validUrl = candidates.find(
+    (url) => typeof url === "string" && url.trim().length > 0 && !url.includes("127.0.0.1") && !url.includes("localhost")
+  ) || candidates.find(
+    (url) => typeof url === "string" && url.trim().length > 0
+  );
+
+  const connectionString = validUrl || "";
 
   if (!connectionString) {
     if (process.env.NODE_ENV === "production") {
@@ -48,14 +59,19 @@ function getPool(): Pool {
 
   // Singleton for Next.js hot-reloading
   const globalForDb = global as unknown as { pool: Pool };
-  if (process.env.NODE_ENV !== "production") {
-    if (!globalForDb.pool) {
-      globalForDb.pool = new Pool(poolConfig);
+  
+  // Force recreate the pool to fix AggregateError from stale connections
+  if (globalForDb.pool) {
+    try {
+      globalForDb.pool.end();
+    } catch (e) {
+      // ignore
     }
-    pool = globalForDb.pool;
-  } else {
-    pool = new Pool(poolConfig);
   }
+  
+  console.log(`[DB] Creating new pool connected to host: ${poolConfig.host}:${poolConfig.port}`);
+  globalForDb.pool = new Pool(poolConfig);
+  pool = globalForDb.pool;
 
   return pool;
 }

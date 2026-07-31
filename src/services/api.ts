@@ -140,6 +140,7 @@ export {
   scheduleConsultation,
   fetchConsultations,
   updateConsultationStatus,
+  rescheduleConsultation,
   deleteConsultation,
   sendContactMessage,
   fetchInquiries,

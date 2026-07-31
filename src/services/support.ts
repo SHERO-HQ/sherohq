@@ -129,6 +129,21 @@ export async function updateConsultationStatus(
   return handleResponse(response);
 }
 
+export async function rescheduleConsultation(
+  id: string,
+  date: string,
+  time: string,
+): Promise<{ success: boolean; consultation: Consultation }> {
+  const response = await authFetch(
+    `${API_BASE}/consultations/${id}/reschedule`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ date, time }),
+    },
+  );
+  return handleResponse(response);
+}
+
 export async function deleteConsultation(
   id: string,
 ): Promise<{ success: boolean; message: string }> {

@@ -1,5 +1,5 @@
 "use client";
-import { ShoppingCart, Heart, Eye, Star } from "lucide-react";
+import { ShoppingCart, Heart, Eye, Star, Flame } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -151,6 +151,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
           {discount > 0 && (
             <span className="px-2.5 py-1 rounded text-[9px] font-semibold uppercase tracking-tight bg-red-600 text-white">
               -{discount}%
+            </span>
+          )}
+          {product.inStock && typeof product.quantity === "number" && product.quantity > 0 && product.quantity <= 5 && (
+            <span className="px-2.5 py-1 rounded text-[9px] font-bold uppercase tracking-tight bg-amber-500 text-slate-950 flex items-center gap-1 animate-pulse">
+              <Flame size={10} className="fill-current" />
+              Only {product.quantity} left!
             </span>
           )}
           {!product.inStock && (
