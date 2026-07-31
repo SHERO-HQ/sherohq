@@ -219,7 +219,7 @@ export default function WhatsAppConversations({
             placeholder="Search phone number..."
             value={searchPhone}
             onChange={(e) => setSearchPhone(e.target.value)}
-            className="w-full px-3 py-2 bg-slate-950/50 border border-border rounded text-sm text-foreground placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 focus:border-transparent transition-all"
+            className="w-full px-3 py-2 bg-card border border-border rounded text-sm text-foreground placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 focus:border-transparent transition-all"
           />
         </div>
 
@@ -291,7 +291,7 @@ export default function WhatsAppConversations({
             </div>
 
             {/* Chat Thread */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-950/20 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-card custom-scrollbar">
               {loading && messages.length === 0 ? (
                 <div className="flex items-center justify-center h-full">
                   <Loader2 className="w-8 h-8 text-brand-secondary-500 animate-spin" />
@@ -310,7 +310,7 @@ export default function WhatsAppConversations({
                     <div
                       className={`max-w-md px-4 py-2.5 rounded ${msg.direction === "inbound"
                         ? "bg-muted border border-border text-slate-100 rounded-tl-none"
-                        : "bg-brand-secondary-600 text-white rounded-tr-none shadow-[0_4px_12px_rgba(16,185,129,0.15)]"
+                        : "bg-brand-secondary-600 text-foreground rounded-tr-none shadow-[0_4px_12px_rgba(16,185,129,0.15)]"
                         }`}
                     >
                       <p className="text-sm whitespace-pre-wrap leading-relaxed">
@@ -350,7 +350,7 @@ export default function WhatsAppConversations({
                   type="button"
                   onClick={() => setSendType("text")}
                   className={`px-3 py-1 text-xs font-semibold rounded transition-colors flex items-center gap-1 ${sendType === "text"
-                    ? "bg-brand-secondary-600 text-white"
+                    ? "bg-brand-secondary-600 text-foreground"
                     : "text-muted-foreground hover:text-foreground hover:bg-accent"
                     }`}
                 >
@@ -361,7 +361,7 @@ export default function WhatsAppConversations({
                   type="button"
                   onClick={() => setSendType("template")}
                   className={`px-3 py-1 text-xs font-semibold rounded transition-colors flex items-center gap-1 ${sendType === "template"
-                    ? "bg-brand-secondary-600 text-white"
+                    ? "bg-brand-secondary-600 text-foreground"
                     : "text-muted-foreground hover:text-foreground hover:bg-accent"
                     }`}
                 >
@@ -379,19 +379,19 @@ export default function WhatsAppConversations({
                       onChange={(e) => setMessageText(e.target.value)}
                       placeholder="Type a message..."
                       disabled={sending}
-                      className="flex-1 px-4 py-2 bg-slate-950 border border-border rounded text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 focus:border-transparent disabled:opacity-50 transition-all"
+                      className="flex-1 px-4 py-2 bg-card border border-border rounded text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 focus:border-transparent disabled:opacity-50 transition-all"
                     />
                     <button
                       type="submit"
                       disabled={sending || !messageText.trim()}
-                      className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white px-4 py-2 rounded font-semibold text-sm transition-colors flex items-center gap-1.5 disabled:opacity-50 shrink-0"
+                      className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground px-4 py-2 rounded font-semibold text-sm transition-colors flex items-center gap-1.5 disabled:opacity-50 shrink-0"
                     >
                       {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                       Send
                     </button>
                   </div>
                 ) : (
-                  <div className="space-y-3 bg-slate-950 p-4 rounded border border-border">
+                  <div className="space-y-3 bg-card p-4 rounded border border-border">
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <label className="block text-[10px] uppercase font-bold text-muted-foreground mb-1" htmlFor="composer-template-name">
@@ -440,7 +440,7 @@ export default function WhatsAppConversations({
                       <button
                         type="submit"
                         disabled={sending || !templateName.trim()}
-                        className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white px-4 py-1.5 rounded font-semibold text-xs transition-colors flex items-center gap-1.5 disabled:opacity-50"
+                        className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground px-4 py-1.5 rounded font-semibold text-xs transition-colors flex items-center gap-1.5 disabled:opacity-50"
                       >
                         {sending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
                         Send Template

@@ -79,7 +79,7 @@ import { toReadableOrderId } from "@/utils/orderId";
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-slate-950/90 backdrop-blur-md border border-border p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
+      <div className="bg-card backdrop-blur-md border border-border p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
         <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider font-mono">
           {label ? new Date(label).toLocaleDateString("en-US", {
             month: "short",
@@ -425,7 +425,7 @@ export default function AdminDashboard() {
                 className={cn(
                   "px-3 py-1 text-xs font-semibold rounded transition",
                   period === opt.value
-                    ? "bg-brand-secondary-600 text-white shadow"
+                    ? "bg-brand-secondary-600 text-foreground shadow"
                     : "text-muted-foreground hover:text-foreground hover:bg-accent",
                 )}
               >
@@ -455,7 +455,7 @@ export default function AdminDashboard() {
             </Link>
           </Button>
           <Button
-            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-bold"
             asChild
           >
             <Link href="/admin/products/new">
@@ -659,7 +659,7 @@ export default function AdminDashboard() {
                 <Link
                   key={action.title}
                   href={action.link}
-                  className="flex items-center justify-between p-3 rounded bg-slate-950/20 border border-border hover:border-brand-secondary-500/20 hover:bg-card/50 transition-all duration-300 group"
+                  className="flex items-center justify-between p-3 rounded bg-card border border-border hover:border-brand-secondary-500/20 hover:bg-card/50 transition-all duration-300 group"
                 >
                   <div className="flex items-center gap-3">
                     <div className={cn("p-2 rounded", action.color)}>
@@ -749,9 +749,9 @@ export default function AdminDashboard() {
               </Link>
             </Button>
           </CardHeader>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto max-h-[480px] overflow-y-auto">
             <table className="w-full text-left border-collapse">
-              <thead>
+              <thead className="sticky top-0 z-10 bg-card">
                 <tr className="bg-muted/50">
                   <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Order ID

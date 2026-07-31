@@ -4,6 +4,7 @@ import { getAbsoluteUrl } from "@/utils/subdomain";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useRef, useEffect, useState } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useDevicePerformance } from "@/hooks/useDevicePerformance";
 import dynamic from "next/dynamic";
 
 const ParticleField = dynamic(
@@ -83,11 +84,14 @@ const LandingHero: React.FC = () => {
   const translateY = useTransform(smoothY, [-0.5, 0.5], [-6, 6]);
 
   const prefersReducedMotion = useReducedMotion();
+  const { isLowEnd } = useDevicePerformance();
   const [heroReady, setHeroReady] = useState(false);
   const [hoveredWindow, setHoveredWindow] = useState<number | null>(null);
   const [focusedWindow, setFocusedWindow] = useState<number | null>(null);
   const [openWindows, setOpenWindows] = useState<boolean[]>([true, true, true]);
-  const motionEnabled = heroReady && !prefersReducedMotion;
+  
+  // Disable heavy motion if the user prefers reduced motion or is on a low-end device
+  const motionEnabled = heroReady && !prefersReducedMotion && !isLowEnd;
 
   const [headlineLead = "", headlineAccent = ""] = HERO_CONTENT.mainHeader
     .split("\n")

@@ -143,7 +143,7 @@ export default function ProjectSidebarMeta({
             <Button
               type="button"
               onClick={onAddTech}
-              className="bg-muted hover:bg-slate-700 text-foreground border border-border h-9 w-9 p-0 flex items-center justify-center"
+              className="bg-muted hover:bg-accent text-foreground border border-border h-9 w-9 p-0 flex items-center justify-center"
             >
               <Plus className="w-4 h-4" />
             </Button>
@@ -154,7 +154,7 @@ export default function ProjectSidebarMeta({
               projectData.technologies.map((tech, index) => (
                 <Badge
                   key={`${tech}-${index}`}
-                  className="bg-muted hover:bg-slate-700 text-slate-200 border-border py-1 px-2.5 text-xs flex items-center gap-1.5"
+                  className="bg-muted hover:bg-accent text-muted-foreground border-border py-1 px-2.5 text-xs flex items-center gap-1.5"
                 >
                   {tech}
                   <button

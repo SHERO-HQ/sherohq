@@ -363,7 +363,7 @@ const AdminSupport = () => {
           <TabsList className="bg-card/50 border border-border p-1 mb-8 flex justify-center items-center flex-wrap sm:flex-nowrap overflow-x-auto scrollbar-hide w-fit">
             <TabsTrigger
               value="tickets"
-              className="data-[state=active]:bg-brand-secondary-500 data-[state=active]:text-white data-[state=active]:shadow data-[state=active]:shadow-brand-secondary-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
+              className="data-[state=active]:bg-brand-secondary-500 data-[state=active]:text-foreground data-[state=active]:shadow data-[state=active]:shadow-brand-secondary-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
             >
               <Headset className="w-4 h-4 mr-1 sm:mr-2" />
               <span className="hidden xs:inline">Support </span>Tickets
@@ -373,7 +373,7 @@ const AdminSupport = () => {
             </TabsTrigger>
             <TabsTrigger
               value="consultations"
-              className="data-[state=active]:bg-brand-secondary-500 data-[state=active]:text-white data-[state=active]:shadow data-[state=active]:shadow-brand-secondary-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
+              className="data-[state=active]:bg-brand-secondary-500 data-[state=active]:text-foreground data-[state=active]:shadow data-[state=active]:shadow-brand-secondary-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
             >
               <Calendar className="w-4 h-4 mr-1 sm:mr-2" />
               Consultations
@@ -383,7 +383,7 @@ const AdminSupport = () => {
             </TabsTrigger>
             <TabsTrigger
               value="inquiries"
-              className="data-[state=active]:bg-brand-secondary-500 data-[state=active]:text-white data-[state=active]:shadow data-[state=active]:shadow-brand-secondary-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
+              className="data-[state=active]:bg-brand-secondary-500 data-[state=active]:text-foreground data-[state=active]:shadow data-[state=active]:shadow-brand-secondary-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
             >
               <MessageSquare className="w-4 h-4 mr-1 sm:mr-2" />
               <span className="hidden xs:inline">Contact </span>Messages
@@ -530,7 +530,7 @@ const AdminSupport = () => {
                           {ticket.status !== "Resolved" && (
                             <Button
                               onClick={() => handleResolveTicket(ticket.id)}
-                              className="bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white rounded px-6"
+                              className="bg-brand-secondary-500 hover:bg-brand-secondary-600 text-foreground rounded px-6"
                             >
                               Resolve
                             </Button>
@@ -642,7 +642,7 @@ const AdminSupport = () => {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4 flex-1">
-                      <div className="bg-slate-950/50 rounded p-4 space-y-3">
+                      <div className="bg-card rounded p-4 space-y-3">
                         <div className="flex items-center justify-between">
                           <span className="text-xs text-muted-foreground font-mono uppercase tracking-widest">
                             Date
@@ -663,7 +663,7 @@ const AdminSupport = () => {
                       <div className="space-y-2">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="w-full justify-start text-muted-foreground hover:text-foreground border-border bg-slate-950/50 hover:bg-accent rounded group">
+                            <Button variant="outline" className="w-full justify-start text-muted-foreground hover:text-foreground border-border bg-card hover:bg-accent rounded group">
                               <MessageSquare className="w-4 h-4 mr-2" />
                               Contact Customer
                             </Button>
@@ -984,7 +984,7 @@ const AdminSupport = () => {
               <Button
                 type="submit"
                 disabled={rescheduleMutation.isPending}
-                className="bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white"
+                className="bg-brand-secondary-500 hover:bg-brand-secondary-600 text-foreground"
               >
                 {rescheduleMutation.isPending
                   ? "Rescheduling..."

@@ -55,7 +55,7 @@ export default function Toaster() {
  notification.type === "warning" &&
  "bg-amber-950/95 border-amber-500/20 text-amber-50",
  notification.type === "info" &&
- "bg-card/95 border-slate-700/50 text-slate-50",
+ "bg-card/95 border-border text-slate-50",
  )}
  >
  <div className="shrink-0 mt-0.5">

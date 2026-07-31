@@ -116,7 +116,7 @@ const AdminReviews = () => {
               className="bg-muted/30 border border-border rounded p-6 flex flex-col md:flex-row gap-6 hover:bg-muted/50 transition-colors relative overflow-hidden"
             >
               {isDeleting && (
-                <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs z-10 flex items-center justify-between px-6 py-4 animate-in fade-in duration-200 select-none">
+                <div className="absolute inset-0 bg-card backdrop-blur-xs z-10 flex items-center justify-between px-6 py-4 animate-in fade-in duration-200 select-none">
                   <span className="text-xs font-bold text-rose-400 animate-pulse">
                     Removing review in {secondsLeft}s
                   </span>

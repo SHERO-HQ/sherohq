@@ -109,7 +109,7 @@ export default function ActivityFeed({ logs, isLoading }: ActivityFeedProps) {
  </div>
  <div className="flex-1 min-w-0">
  <div className="flex justify-between items-start mb-0.5">
- <p className="text-sm font-medium text-slate-200 truncate">
+ <p className="text-sm font-medium text-muted-foreground truncate">
  {log.action}
  </p>
  <span className="text-[10px] text-muted-foreground whitespace-nowrap ml-2">

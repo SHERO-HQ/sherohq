@@ -10,10 +10,10 @@ import { type NewsletterSubscriber } from "@/services/api";
 type SubscriberFilter = "all" | "active" | "unsubscribed";
 
 const inputClass =
-  "border-border bg-slate-950/40 text-foreground placeholder:text-muted-foreground focus-visible:border-brand-secondary-500/70 focus-visible:ring-brand-secondary-500/20";
+  "border-border bg-card text-foreground placeholder:text-muted-foreground focus-visible:border-brand-secondary-500/70 focus-visible:ring-brand-secondary-500/20";
 
 const selectClass =
-  "h-9 w-full rounded border border-border bg-slate-950/40 px-3 text-sm text-foreground outline-none transition focus:border-brand-secondary-500/70 focus:ring-2 focus:ring-brand-secondary-500/20";
+  "h-9 w-full rounded border border-border bg-card px-3 text-sm text-foreground outline-none transition focus:border-brand-secondary-500/70 focus:ring-2 focus:ring-brand-secondary-500/20";
 
 function safeDate(value?: string | null, pattern = "PPP") {
   if (!value) return "-";
@@ -24,7 +24,7 @@ function safeDate(value?: string | null, pattern = "PPP") {
 
 function EmptyState({ title }: { title: string }) {
   return (
-    <div className="rounded border border-dashed border-border bg-slate-950/20 px-4 py-10 text-center text-sm text-muted-foreground">
+    <div className="rounded border border-dashed border-border bg-card px-4 py-10 text-center text-sm text-muted-foreground">
       {title}
     </div>
   );
@@ -68,7 +68,7 @@ export function NewsletterSubscribersTab({
 }: NewsletterSubscribersTabProps) {
   return (
     <TabsContent value="subscribers" className="mt-5">
-      <section className="rounded border border-border bg-slate-950/30 shadow-sm shadow-black/10">
+      <section className="rounded border border-border bg-card shadow-sm shadow-black/10">
         <div className="flex flex-col gap-4 border-b border-border p-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <h2 className="text-base font-semibold text-foreground">
@@ -176,7 +176,7 @@ export function NewsletterSubscribersTab({
                             <>
                               <Button
                                 size="sm"
-                                className="h-8 bg-brand-secondary-600 text-white hover:bg-brand-secondary-500"
+                                className="h-8 bg-brand-secondary-600 text-foreground hover:bg-brand-secondary-500"
                                 disabled={isSavingContact}
                                 onClick={() => onSaveSubscriberContact(subscriber.id)}
                               >

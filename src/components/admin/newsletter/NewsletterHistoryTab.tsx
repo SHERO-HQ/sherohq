@@ -20,7 +20,7 @@ function statusIcon(status: NewsletterCampaign["status"]) {
 
 function EmptyState({ title }: { title: string }) {
   return (
-    <div className="rounded border border-dashed border-border bg-slate-950/20 px-4 py-10 text-center text-sm text-muted-foreground">
+    <div className="rounded border border-dashed border-border bg-card px-4 py-10 text-center text-sm text-muted-foreground">
       {title}
     </div>
   );
@@ -49,7 +49,7 @@ export function NewsletterHistoryTab({
 }: NewsletterHistoryTabProps) {
   return (
     <TabsContent value="history" className="mt-5">
-      <section className="rounded border border-border bg-slate-950/30 shadow-sm shadow-black/10">
+      <section className="rounded border border-border bg-card shadow-sm shadow-black/10">
         <div className="flex flex-col gap-3 border-b border-border p-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-base font-semibold text-foreground">
@@ -146,7 +146,7 @@ export function NewsletterHistoryTab({
                               </span>
                               <span>{progress}%</span>
                             </div>
-                            <div className="mt-1 h-1.5 w-full rounded bg-slate-800">
+                            <div className="mt-1 h-1.5 w-full rounded bg-muted">
                               <div
                                 className="h-full rounded bg-brand-secondary-500"
                                 style={{ width: `${progress}%` }}

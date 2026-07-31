@@ -109,7 +109,7 @@ const AdminUsersHeader = ({
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-medium px-6">
+            <Button className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-medium px-6">
               <Printer className="mr-2 h-4 w-4" /> Export
             </Button>
           </DropdownMenuTrigger>
@@ -848,7 +848,7 @@ const ResetPasswordModal = ({
             <div className="flex gap-3">
               <button
                 onClick={onClose}
-                className="flex-1 px-4 py-2.5 bg-muted text-foreground rounded hover:bg-slate-700 transition-colors"
+                className="flex-1 px-4 py-2.5 bg-muted text-foreground rounded hover:bg-accent transition-colors"
               >
                 Cancel
               </button>
@@ -908,7 +908,7 @@ const DeleteConfirmationModal = ({
             <div className="flex gap-3">
               <button
                 onClick={onClose}
-                className="flex-1 px-4 py-2.5 bg-muted text-foreground rounded hover:bg-slate-700 transition-colors"
+                className="flex-1 px-4 py-2.5 bg-muted text-foreground rounded hover:bg-accent transition-colors"
               >
                 Cancel
               </button>

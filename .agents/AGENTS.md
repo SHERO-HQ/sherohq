@@ -1,0 +1,3 @@
+# SheroTech Workspace Rules
+
+- **Strict Adherence to Documentation Guidelines**: Before making ANY changes to the codebase, including structural, architectural, visual, or functional, you MUST strictly adhere to the guidelines set in the `docs/` folder (such as `DESIGN_GUIDE.md`, `BRAND_STYLE_REFERENCE.md`, `COMPONENT_IMPLEMENTATION_GUIDE.md`). Always verify that your implementation aligns with the established UI/UX consistency, OKLCH color system, typography rules, accessibility requirements, and performance best practices.

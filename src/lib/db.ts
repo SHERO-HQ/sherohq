@@ -1,5 +1,7 @@
 import { Pool, PoolConfig } from "pg";
 import { parse } from "pg-connection-string";
+import { drizzle } from "drizzle-orm/node-postgres";
+import * as schema from "./drizzle/schema";
 
 /**
  * Singleton database connection pool for Next.js
@@ -121,8 +123,11 @@ export async function query(text: string, params?: any[], retries = 2) {
   throw new Error("DB Query failed after retries");
 }
 
+export const db = drizzle(getPool(), { schema });
+
 export default {
   query,
   getPool,
   getClient,
+  db,
 };

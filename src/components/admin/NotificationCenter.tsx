@@ -67,7 +67,7 @@ export default function NotificationCenter() {
                     isOpen
                         ? "bg-brand-secondary-500/80 text-brand-secondary-400 border-brand-secondary-500/20"
                         : "text-muted-foreground hover:text-foreground hover:bg-white/80",
-                    "border border-white/80 dark:border-slate-800/60",
+                    "border border-white/80 dark:border-border",
                 )}
                 title="Notifications"
             >
@@ -83,7 +83,7 @@ export default function NotificationCenter() {
             {isOpen && (
                 <div className="absolute right-0 mt-2 w-80 sm:w-96 glass-surface rounded shadow z-50 overflow-hidden">
                     {/* Header */}
-                    <div className="p-4 border-b border-slate-800 flex items-center justify-between">
+                    <div className="p-4 border-b border-border flex items-center justify-between">
                         <h3 className="font-semibold text-foreground">
                             Notifications
                         </h3>

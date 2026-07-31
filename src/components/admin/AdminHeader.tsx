@@ -27,6 +27,7 @@ import NotificationCenter from "./NotificationCenter";
 import { cn } from "@/lib/utils";
 import AppImage from "@/components/common/AppImage";
 import GlobalSearch from "./GlobalSearch";
+import { ToggleTheme } from "@/components/layout/toggle-theme";
 
 interface HeaderProps {
  onMenuClick: () => void;
@@ -180,6 +181,9 @@ const AdminHeader = memo(({
       <Globe className="w-4 h-4 mr-1" />
       <span>View Site</span>
      </a>
+
+     {/* Theme Toggle */}
+     <ToggleTheme />
 
      {/* Notifications */}
      <NotificationCenter />

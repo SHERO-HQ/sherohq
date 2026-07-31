@@ -350,7 +350,7 @@ export default function AdminExpenses() {
         <div className="flex items-center gap-3">
           <Button
             onClick={() => handleOpenForm()}
-            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-bold"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add Expense
@@ -442,7 +442,7 @@ export default function AdminExpenses() {
                 className={cn(
                   "px-3 py-1 rounded text-xs font-medium transition",
                   dateFilter === opt.value
-                    ? "bg-slate-700 text-foreground shadow"
+                    ? "bg-accent text-foreground shadow"
                     : "text-muted-foreground hover:text-foreground",
                 )}
               >
@@ -460,7 +460,7 @@ export default function AdminExpenses() {
                 className={cn(
                   "bg-muted/50 border-border text-muted-foreground hover:text-foreground h-9 py-0",
                   dateFilter === "range" &&
-                  "bg-slate-700 text-foreground border-brand-secondary-500/50",
+                  "bg-accent text-foreground border-brand-secondary-500/50",
                 )}
                 onClick={() => setDateFilter("range")}
               >
@@ -468,7 +468,7 @@ export default function AdminExpenses() {
               </Button>
             </PopoverTrigger>
             <PopoverContent
-              className="w-auto p-0 dark border-slate-800 bg-card"
+              className="w-auto p-0 dark border-border bg-card"
               align="end"
             >
               <Calendar
@@ -786,7 +786,7 @@ export default function AdminExpenses() {
                 <Button
                   type="submit"
                   disabled={isSaving}
-                  className="flex-1 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold"
+                  className="flex-1 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-bold"
                 >
                   {isSaving ? (
                     <>

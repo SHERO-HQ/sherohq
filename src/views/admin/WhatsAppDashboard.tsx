@@ -330,7 +330,7 @@ export default function WhatsAppDashboard() {
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2 text-xs font-semibold rounded transition-all flex items-center gap-2 ${activeTab === tab.id
-              ? "bg-brand-secondary-600 text-white shadow-md shadow-brand-secondary-600/10"
+              ? "bg-brand-secondary-600 text-foreground shadow-md shadow-brand-secondary-600/10"
               : "text-muted-foreground hover:text-foreground hover:bg-accent"
               }`}
           >
@@ -380,7 +380,7 @@ export default function WhatsAppDashboard() {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="bg-slate-950/40 text-muted-foreground text-xs font-bold border-b border-border">
+                    <tr className="bg-card text-muted-foreground text-xs font-bold border-b border-border">
                       <th className="px-6 py-4">Customer Details</th>
                       <th className="px-6 py-4">Issue Description</th>
                       <th className="px-6 py-4">Priority</th>
@@ -412,7 +412,7 @@ export default function WhatsAppDashboard() {
                           <select
                             value={t.status}
                             onChange={(e) => void handleUpdateTicketStatus(t.id, e.target.value)}
-                            className="bg-slate-950 border border-border rounded px-2 py-1 text-xs text-muted-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500"
+                            className="bg-card border border-border rounded px-2 py-1 text-xs text-muted-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500"
                           >
                             <option value="open">Open</option>
                             <option value="in_progress">In Progress</option>
@@ -423,7 +423,7 @@ export default function WhatsAppDashboard() {
                               setSelectedPhone(t.customer_phone);
                               setActiveTab("conversations");
                             }}
-                            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white px-3 py-1 rounded text-xs font-semibold transition-colors"
+                            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground px-3 py-1 rounded text-xs font-semibold transition-colors"
                           >
                             Chat
                           </button>
@@ -447,7 +447,7 @@ export default function WhatsAppDashboard() {
                 <button
                   onClick={handleRunBulkRetry}
                   disabled={triggeringBulk}
-                  className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white py-2 rounded font-semibold text-xs transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground py-2 rounded font-semibold text-xs transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {triggeringBulk ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5" />}
                   Run Retry Worker
@@ -498,7 +498,7 @@ export default function WhatsAppDashboard() {
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="bg-slate-950/40 text-muted-foreground text-xs font-bold border-b border-border">
+                      <tr className="bg-card text-muted-foreground text-xs font-bold border-b border-border">
                         <th className="px-6 py-4">Recipient</th>
                         <th className="px-6 py-4">Message Content</th>
                         <th className="px-6 py-4">Attempts</th>
@@ -546,14 +546,14 @@ export default function WhatsAppDashboard() {
                               <>
                                 <button
                                   onClick={() => void handleRetryMessage(r.message_id)}
-                                  className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white px-2.5 py-1 rounded text-xs font-semibold transition-colors"
+                                  className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground px-2.5 py-1 rounded text-xs font-semibold transition-colors"
                                   title="Retry right now"
                                 >
                                   Retry Now
                                 </button>
                                 <button
                                   onClick={() => void handleCancelRetry(r.message_id)}
-                                  className="bg-slate-950 hover:bg-card border border-border text-muted-foreground hover:text-foreground px-2 py-1 rounded text-xs transition-colors"
+                                  className="bg-card hover:bg-card border border-border text-muted-foreground hover:text-foreground px-2 py-1 rounded text-xs transition-colors"
                                   title="Cancel future attempts"
                                 >
                                   Cancel
@@ -727,7 +727,7 @@ export default function WhatsAppDashboard() {
               </div>
 
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-3.5 bg-slate-950/40 rounded border border-border">
+                <div className="flex items-center justify-between p-3.5 bg-card rounded border border-border">
                   <div>
                     <h5 className="text-xs font-bold text-foreground">Meta API Token</h5>
                     <p className="text-[10px] text-muted-foreground font-mono mt-0.5">WHATSAPP_ACCESS_TOKEN</p>
@@ -743,7 +743,7 @@ export default function WhatsAppDashboard() {
                   )}
                 </div>
 
-                <div className="flex items-center justify-between p-3.5 bg-slate-950/40 rounded border border-border">
+                <div className="flex items-center justify-between p-3.5 bg-card rounded border border-border">
                   <div>
                     <h5 className="text-xs font-bold text-foreground">Meta Phone Number ID</h5>
                     <p className="text-[10px] text-muted-foreground font-mono mt-0.5">WHATSAPP_PHONE_NUMBER_ID</p>
@@ -759,7 +759,7 @@ export default function WhatsAppDashboard() {
                   )}
                 </div>
 
-                <div className="flex items-center justify-between p-3.5 bg-slate-950/40 rounded border border-border">
+                <div className="flex items-center justify-between p-3.5 bg-card rounded border border-border">
                   <div>
                     <h5 className="text-xs font-bold text-foreground">Incoming Messages Webhook</h5>
                     <p className="text-[10px] text-muted-foreground font-mono mt-0.5">GET/POST /api/webhooks/whatsapp</p>
@@ -772,7 +772,7 @@ export default function WhatsAppDashboard() {
 
               <div className="border-t border-border pt-6">
                 <h5 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Meta Webhook Target URL</h5>
-                <code className="block bg-slate-950/70 p-3 rounded border border-border text-xs text-brand-secondary-400 break-all select-all font-mono">
+                <code className="block bg-card p-3 rounded border border-border text-xs text-brand-secondary-400 break-all select-all font-mono">
                   {typeof window !== "undefined"
                     ? `${window.location.origin}/api/webhooks/whatsapp`
                     : "https://yourdomain.com/api/webhooks/whatsapp"}
@@ -799,7 +799,7 @@ export default function WhatsAppDashboard() {
                     onChange={(e) => setTestPhone(e.target.value)}
                     placeholder="+233541234567"
                     required
-                    className="w-full px-4 py-2.5 bg-slate-950 border border-border rounded text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 focus:border-transparent transition-all"
+                    className="w-full px-4 py-2.5 bg-card border border-border rounded text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 focus:border-transparent transition-all"
                   />
                 </div>
 
@@ -815,7 +815,7 @@ export default function WhatsAppDashboard() {
                       onChange={(e) => setTestTemplate(e.target.value)}
                       placeholder="verification_code"
                       required
-                      className="w-full px-4 py-2.5 bg-slate-950 border border-border rounded text-sm text-foreground focus:outline-none"
+                      className="w-full px-4 py-2.5 bg-card border border-border rounded text-sm text-foreground focus:outline-none"
                     />
                   </div>
                   <div>
@@ -828,7 +828,7 @@ export default function WhatsAppDashboard() {
                       value={testParams}
                       onChange={(e) => setTestParams(e.target.value)}
                       placeholder="e.g. 123456"
-                      className="w-full px-4 py-2.5 bg-slate-950 border border-border rounded text-sm text-foreground focus:outline-none"
+                      className="w-full px-4 py-2.5 bg-card border border-border rounded text-sm text-foreground focus:outline-none"
                     />
                   </div>
                 </div>
@@ -836,7 +836,7 @@ export default function WhatsAppDashboard() {
                 <button
                   type="submit"
                   disabled={sendingTest}
-                  className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white py-2.5 rounded font-semibold text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground py-2.5 rounded font-semibold text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {sendingTest ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                   Send Test Template

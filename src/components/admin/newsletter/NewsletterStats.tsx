@@ -23,7 +23,7 @@ function MetricTile({
   }[tone];
 
   return (
-    <div className="rounded border border-border bg-slate-950/30 p-4">
+    <div className="rounded border border-border bg-card p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-xs font-medium text-muted-foreground">{label}</p>

@@ -248,7 +248,7 @@ export default function AdminUserManagement() {
  {canManageRoles && (
  <Button
  onClick={() => setIsRegisterModalOpen(true)}
- className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white shadow shadow-brand-secondary-500/20"
+ className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground shadow shadow-brand-secondary-500/20"
  >
  <Plus className="w-4 h-4 mr-2" />
  Add Admin User
@@ -620,7 +620,7 @@ export default function AdminUserManagement() {
  <Button
  type="submit"
  disabled={registerMutation.isPending}
- className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-30"
+ className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground min-w-30"
  >
  {registerMutation.isPending ? (
  <Loader2 className="w-4 h-4 animate-spin" />

@@ -110,7 +110,7 @@ const parseLabel = (label: any) => {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-slate-950/90 backdrop-blur-md border border-border p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
+      <div className="bg-card backdrop-blur-md border border-border p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
         <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider font-mono">
           {parseLabel(label)}
         </p>
@@ -144,7 +144,7 @@ const ReportsSkeleton = () => (
     {/* Stats Grid */}
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {new Array(3).fill(0).map((_, i) => (
-        <div key={i} className="bg-card/50 border border-slate-800 rounded p-6 flex flex-col gap-3">
+        <div key={i} className="bg-card/50 border border-border rounded p-6 flex flex-col gap-3">
           <div className="flex items-center gap-4">
             <div className="p-3 rounded bg-accent/50 h-12 w-12" />
             <div className="space-y-2">
@@ -158,7 +158,7 @@ const ReportsSkeleton = () => (
     </div>
 
     {/* Main Area Chart Card */}
-    <div className="bg-card/50 border border-slate-800 rounded p-6 space-y-6">
+    <div className="bg-card/50 border border-border rounded p-6 space-y-6">
       <div className="flex justify-between items-center">
         <div className="h-5 w-48 bg-accent/50 rounded" />
         <div className="h-8 w-24 bg-accent/50 rounded" />
@@ -173,7 +173,7 @@ const ReportsSkeleton = () => (
     {/* Three Pie/Bar columns */}
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {new Array(3).fill(0).map((_, i) => (
-        <div key={i} className="bg-card/50 border border-slate-800 rounded p-6 space-y-6">
+        <div key={i} className="bg-card/50 border border-border rounded p-6 space-y-6">
           <div className="h-5 w-36 bg-accent/50 rounded" />
           <div className="h-48 bg-accent/50 rounded flex items-center justify-center">
             {i < 2 ? (
@@ -337,7 +337,7 @@ export default function AdminReports() {
                     className={cn(
                       "px-4 py-1 rounded text-sm font-medium transition",
                       range === option.value
-                        ? "bg-slate-700 text-foreground shadow"
+                        ? "bg-accent text-foreground shadow"
                         : "text-muted-foreground hover:text-foreground",
                     )}
                   >
@@ -354,7 +354,7 @@ export default function AdminReports() {
                     className={cn(
                       "bg-muted/50 border-border text-muted-foreground hover:text-foreground h-9",
                       range === "custom" &&
-                      "bg-slate-700 text-foreground border-brand-secondary-500/50",
+                      "bg-accent text-foreground border-brand-secondary-500/50",
                     )}
                     onClick={() => setRange("custom")}
                   >
@@ -362,7 +362,7 @@ export default function AdminReports() {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent
-                  className="w-auto p-0 dark border-slate-800 bg-card"
+                  className="w-auto p-0 dark border-border bg-card"
                   align="end"
                 >
                   <Calendar
@@ -551,7 +551,7 @@ function RevenueChartSection({
         <button
           onClick={() => setChartType("line")}
           className={`p-1.5 rounded transition-colors ${chartType === "line"
-              ? "bg-slate-700 text-foreground"
+              ? "bg-accent text-foreground"
               : "text-muted-foreground hover:text-foreground"
             }`}
           title="Line Chart"
@@ -561,7 +561,7 @@ function RevenueChartSection({
         <button
           onClick={() => setChartType("bar")}
           className={`p-1.5 rounded transition-colors ${chartType === "bar"
-              ? "bg-slate-700 text-foreground"
+              ? "bg-accent text-foreground"
               : "text-muted-foreground hover:text-foreground"
             }`}
           title="Bar Chart"
@@ -830,7 +830,7 @@ function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
           orders.map((order) => (
             <div
               key={order.id}
-              className="flex items-center justify-between p-3.5 rounded bg-slate-950/20 border border-border hover:border-blue-500/20 hover:bg-card/50 transition-all duration-300"
+              className="flex items-center justify-between p-3.5 rounded bg-card border border-border hover:border-blue-500/20 hover:bg-card/50 transition-all duration-300"
             >
               <div className="flex items-center gap-3">
                 <div className="flex flex-col">
@@ -879,7 +879,7 @@ function TopProducts({ products }: { readonly products: TopProduct[] }) {
         {(products || []).map((product, idx) => (
           <div
             key={`${product.name}-${idx}`}
-            className="flex items-center justify-between p-3.5 rounded bg-slate-950/20 border border-border hover:border-purple-500/20 hover:bg-card/50 transition-all duration-300"
+            className="flex items-center justify-between p-3.5 rounded bg-card border border-border hover:border-purple-500/20 hover:bg-card/50 transition-all duration-300"
           >
             <div className="flex items-center gap-3">
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-muted/80 border border-border text-[10px] font-bold text-foreground font-mono">

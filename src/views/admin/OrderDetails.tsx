@@ -501,7 +501,7 @@ export default function OrderDetails() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold h-10"
+                className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-bold h-10"
                 disabled={isUpdating}
               >
                 {isUpdating ? (
@@ -569,7 +569,7 @@ export default function OrderDetails() {
               {order.items.map((item) => (
                 <div
                   key={item.id || item.name}
-                  className="p-6 flex items-center gap-6 group/item hover:bg-slate-950/20 transition-colors duration-200"
+                  className="p-6 flex items-center gap-6 group/item hover:bg-card transition-colors duration-200"
                 >
                   <div className="relative w-20 h-20 rounded bg-muted border border-border overflow-hidden flex items-center justify-center shrink-0">
                     {item.image &&
@@ -643,7 +643,7 @@ export default function OrderDetails() {
                 </div>
               </div>
               {order.paymentMessage && (
-                <div className="mt-3 text-xs bg-slate-950/40 p-3 rounded border border-border text-muted-foreground leading-relaxed">
+                <div className="mt-3 text-xs bg-card p-3 rounded border border-border text-muted-foreground leading-relaxed">
                   <span className="font-semibold text-muted-foreground block mb-1">Payment Status:</span> 
                   {order.paymentMessage}
                 </div>
@@ -654,7 +654,7 @@ export default function OrderDetails() {
               <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">
                 Payment Information
               </h3>
-              <div className="space-y-3 bg-slate-950/20 border border-border rounded p-3 text-xs">
+              <div className="space-y-3 bg-card border border-border rounded p-3 text-xs">
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Method</span>
                   <span className="text-foreground font-semibold flex items-center gap-1">
@@ -688,7 +688,7 @@ export default function OrderDetails() {
           </Card>
 
           {/* Quick Actions */}
-          <div className="bg-slate-950/30 rounded p-5 border border-border relative group overflow-hidden">
+          <div className="bg-card rounded p-5 border border-border relative group overflow-hidden">
             <div className="absolute inset-0 bg-radial-gradient from-white/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3 relative z-10">
               Internal Actions

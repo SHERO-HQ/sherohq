@@ -399,7 +399,7 @@ export default function ProductForm() {
   return (
     <div className="max-w-7xl mx-auto space-y-6 pb-20 px-4">
       {/* Sticky Header Action Bar */}
-      <div className="sticky top-20 bg-slate-950/80 backdrop-blur-md z-20 py-4 border-b border-border flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300">
+      <div className="sticky top-20 bg-card backdrop-blur-md z-20 py-4 border-b border-border flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
@@ -431,7 +431,7 @@ export default function ProductForm() {
             type="button"
             onClick={handleSubmit}
             disabled={isSaving}
-            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-30"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground min-w-30"
           >
             {isSaving ? (
               <>
@@ -455,7 +455,7 @@ export default function ProductForm() {
               <Badge className="bg-emerald-500/10 text-emerald-300 border-emerald-500/20">
                 Local draft
               </Badge>
-              <span className="text-sm text-slate-200">
+              <span className="text-sm text-muted-foreground">
                 Draft autosave is enabled for this form.
               </span>
             </div>
@@ -565,7 +565,7 @@ export default function ProductForm() {
               type="button"
               onClick={handleSubmit}
               disabled={isSaving}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-30"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground min-w-30"
             >
               {isSaving ? (
                 <>
@@ -595,7 +595,7 @@ export default function ProductForm() {
       </form>
 
       {/* Mobile Sticky Bottom Action Dock */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/90 backdrop-blur-md border-t border-border p-4 flex items-center justify-between gap-4 md:hidden shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-card backdrop-blur-md border-t border-border p-4 flex items-center justify-between gap-4 md:hidden shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
         <Button
           type="button"
           variant="ghost"
@@ -608,7 +608,7 @@ export default function ProductForm() {
           type="button"
           onClick={handleSubmit}
           disabled={isSaving}
-          className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white w-2/3"
+          className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground w-2/3"
         >
           {isSaving ? (
             <>

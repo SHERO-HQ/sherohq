@@ -234,7 +234,7 @@ export default function AdminCreateInvoice() {
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-20">
       {/* Sticky Header Action Bar */}
-      <div className="sticky top-20 bg-slate-950/80 backdrop-blur-md z-20 py-4 border-b border-border flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300">
+      <div className="sticky top-20 bg-card backdrop-blur-md z-20 py-4 border-b border-border flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
@@ -261,7 +261,7 @@ export default function AdminCreateInvoice() {
               className={cn(
                 "px-3.5 py-1.5 rounded text-xs font-bold transition flex items-center gap-1.5 select-none",
                 mode === "invoice"
-                  ? "bg-brand-secondary-600 text-white shadow shadow-brand-secondary-500/25"
+                  ? "bg-brand-secondary-600 text-foreground shadow shadow-brand-secondary-500/25"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
@@ -323,7 +323,7 @@ export default function AdminCreateInvoice() {
               <Badge className="bg-emerald-500/10 text-emerald-300 border-emerald-500/20">
                 Local draft
               </Badge>
-              <span className="text-sm text-slate-200">
+              <span className="text-sm text-muted-foreground">
                 Draft autosave is enabled for this form.
               </span>
             </div>
@@ -424,7 +424,7 @@ export default function AdminCreateInvoice() {
       </div>
 
       {/* Mobile Sticky Bottom Action Dock */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/90 backdrop-blur-md border-t border-border p-4 flex items-center justify-between gap-4 md:hidden shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-card backdrop-blur-md border-t border-border p-4 flex items-center justify-between gap-4 md:hidden shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
         <Button
           type="button"
           variant="ghost"

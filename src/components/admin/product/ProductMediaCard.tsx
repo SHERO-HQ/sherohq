@@ -181,7 +181,7 @@ export default function ProductMediaCard({
 
                 {/* Soft Delete Countdown Overlay */}
                 {isDeleting ? (
-                  <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xs z-20 flex flex-col items-center justify-center p-2 text-center animate-in fade-in zoom-in-95 duration-200">
+                  <div className="absolute inset-0 bg-card backdrop-blur-xs z-20 flex flex-col items-center justify-center p-2 text-center animate-in fade-in zoom-in-95 duration-200">
                     <p className="text-[10px] font-semibold text-rose-400 uppercase tracking-widest animate-pulse">
                       Deleting in {secondsLeft}s
                     </p>
@@ -219,7 +219,7 @@ export default function ProductMediaCard({
                         className={cn(
                           "w-full py-1.5 px-2 rounded text-[9px] font-semibold tracking-wider transition-all shadow",
                           primaryImage === url
-                            ? "bg-brand-secondary-500 text-white cursor-default shadow-brand-secondary-500/25"
+                            ? "bg-brand-secondary-500 text-foreground cursor-default shadow-brand-secondary-500/25"
                             : "bg-white/20 hover:bg-white/30 text-foreground"
                         )}
                         disabled={primaryImage === url}

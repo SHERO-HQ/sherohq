@@ -45,7 +45,7 @@ export default function ProductFeaturesCard({
           <Button
             type="button"
             onClick={onAddFeature}
-            className="bg-muted text-foreground hover:bg-slate-700"
+            className="bg-muted text-foreground hover:bg-accent"
           >
             <Plus className="w-4 h-4" />
           </Button>
@@ -55,7 +55,7 @@ export default function ProductFeaturesCard({
           {features.map((feature, index) => (
             <Badge
               key={feature}
-              className="bg-muted text-slate-200 border-border py-1.5 px-3 group"
+              className="bg-muted text-muted-foreground border-border py-1.5 px-3 group"
             >
               {feature}
               <button

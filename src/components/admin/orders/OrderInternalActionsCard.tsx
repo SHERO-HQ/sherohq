@@ -15,7 +15,7 @@ export function OrderInternalActionsCard({
   onCopyPaymentLink,
 }: OrderInternalActionsCardProps) {
   return (
-    <div className="bg-slate-950/30 rounded p-5 border border-border relative group overflow-hidden">
+    <div className="bg-card rounded p-5 border border-border relative group overflow-hidden">
       <div className="absolute inset-0 bg-radial-gradient from-white/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3 relative z-10">
         Internal Actions

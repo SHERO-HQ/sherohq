@@ -53,13 +53,13 @@ type AudienceStatusFilter = "active" | "unsubscribed" | "all";
 type CampaignChannel = "email" | "sms" | "whatsapp";
 
 const inputClass =
-  "border-border bg-slate-950/40 text-foreground placeholder:text-muted-foreground focus-visible:border-brand-secondary-500/70 focus-visible:ring-brand-secondary-500/20";
+  "border-border bg-card text-foreground placeholder:text-muted-foreground focus-visible:border-brand-secondary-500/70 focus-visible:ring-brand-secondary-500/20";
 
 const selectClass =
-  "h-9 w-full rounded border border-border bg-slate-950/40 px-3 text-sm text-foreground outline-none transition focus:border-brand-secondary-500/70 focus:ring-2 focus:ring-brand-secondary-500/20";
+  "h-9 w-full rounded border border-border bg-card px-3 text-sm text-foreground outline-none transition focus:border-brand-secondary-500/70 focus:ring-2 focus:ring-brand-secondary-500/20";
 
 const panelClass =
-  "rounded border border-border bg-slate-950/30 shadow-sm shadow-black/10";
+  "rounded border border-border bg-card shadow-sm shadow-black/10";
 
 const channels: Array<{
   value: CampaignChannel;
@@ -115,7 +115,7 @@ function MetricTile({
     blue: "text-sky-300 bg-sky-500/10 border-sky-500/20"}[tone];
 
   return (
-    <div className="rounded border border-border bg-slate-950/30 p-4">
+    <div className="rounded border border-border bg-card p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-xs font-medium text-muted-foreground">{label}</p>
@@ -132,7 +132,7 @@ function MetricTile({
 
 function EmptyState({ title }: { title: string }) {
   return (
-    <div className="rounded border border-dashed border-border bg-slate-950/20 px-4 py-10 text-center text-sm text-muted-foreground">
+    <div className="rounded border border-dashed border-border bg-card px-4 py-10 text-center text-sm text-muted-foreground">
       {title}
     </div>
   );
@@ -656,7 +656,7 @@ export default function AdminNewsletter() {
       />
 
       <Tabs defaultValue="compose" className="w-full">
-        <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded border border-border bg-slate-950/40 p-1 text-muted-foreground sm:grid-cols-3 lg:inline-grid lg:w-auto">
+        <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded border border-border bg-card p-1 text-muted-foreground sm:grid-cols-3 lg:inline-grid lg:w-auto">
           <TabsTrigger
             value="compose"
             className="gap-2 rounded data-[state=active]:bg-brand-secondary-500/15 data-[state=active]:text-brand-secondary-200"
@@ -715,9 +715,9 @@ export default function AdminNewsletter() {
                           "inline-flex h-9 items-center justify-center gap-2 rounded border px-3 text-sm font-medium transition",
                           isSelected
                             ? "border-brand-secondary-500/40 bg-brand-secondary-500/15 text-brand-secondary-200"
-                            : "border-border bg-slate-950/30 text-muted-foreground hover:bg-accent hover:text-foreground",
+                            : "border-border bg-card text-muted-foreground hover:bg-accent hover:text-foreground",
                           item.disabled &&
-                            "cursor-not-allowed opacity-45 hover:bg-slate-950/30 hover:text-muted-foreground",
+                            "cursor-not-allowed opacity-45 hover:bg-card hover:text-muted-foreground",
                         )}
                       >
                         <Icon className="h-4 w-4" />
@@ -955,7 +955,7 @@ export default function AdminNewsletter() {
                   />
                 </Field>
 
-                <div className="mt-4 rounded border border-border bg-slate-950/40">
+                <div className="mt-4 rounded border border-border bg-card">
                   <div className="grid grid-cols-1 gap-0 border-b border-border sm:grid-cols-2 sm:divide-x sm:divide-white/10">
                     <div className="p-3">
                       <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
@@ -982,7 +982,7 @@ export default function AdminNewsletter() {
 
                 <Button
                   disabled={isSending}
-                  className="mt-4 w-full bg-brand-secondary-600 text-white hover:bg-brand-secondary-500"
+                  className="mt-4 w-full bg-brand-secondary-600 text-foreground hover:bg-brand-secondary-500"
                   onClick={() => void handleSendCampaign("live")}
                 >
                   <Send className="h-4 w-4" />

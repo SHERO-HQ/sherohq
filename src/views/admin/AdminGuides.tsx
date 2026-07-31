@@ -161,7 +161,7 @@ const AdminGuides = () => {
  className={
  guide.published
  ? "bg-brand-secondary-500/20 text-brand-secondary-400 border-brand-secondary-500/30"
- : "bg-muted text-muted-foreground border-slate-700"
+ : "bg-muted text-muted-foreground border-border"
  }
  >
  {guide.published ? "Published" : "Draft"}
@@ -238,7 +238,7 @@ const AdminGuides = () => {
  onChange={(e) => setSearchQuery(e.target.value)}
  />
  <Button
- className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+ className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
  asChild
  >
  <Link href="/admin/guides/new">New Guide</Link>

@@ -62,7 +62,7 @@ export default function AdminLogin() {
     }
 
     return (
-        <div className="dark min-h-screen bg-slate-950 flex items-center justify-center px-4">
+        <div className="dark min-h-screen bg-card flex items-center justify-center px-4">
             {/* Background elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
@@ -91,7 +91,7 @@ export default function AdminLogin() {
                 </div>
 
                 {/* Login Card */}
-                <div className="bg-card/50  border border-slate-800 rounded p-8">
+                <div className="bg-card/50  border border-border rounded p-8">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Error Message */}
                         {error && (
@@ -119,7 +119,7 @@ export default function AdminLogin() {
                                             value={username}
                                             onChange={(e) => setUsername(e.target.value)}
                                             placeholder="Enter your username"
-                                            className="w-full pl-10 pr-4 py-2 bg-muted/50 border border-slate-700 rounded text-foreground placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                            className="w-full pl-10 pr-4 py-2 bg-muted/50 border border-border rounded text-foreground placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
                                             required
                                             autoComplete="username"
                                         />
@@ -141,7 +141,7 @@ export default function AdminLogin() {
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                             placeholder="Enter your password"
-                                            className="w-full pl-10 pr-12 py-2 bg-muted/50 border border-slate-700 rounded text-foreground placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                            className="w-full pl-10 pr-12 py-2 bg-muted/50 border border-border rounded text-foreground placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
                                             required
                                             autoComplete="current-password"
                                         />
@@ -177,7 +177,7 @@ export default function AdminLogin() {
                                         value={mfaCode}
                                         onChange={(e) => setMfaCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))}
                                         placeholder="Enter 6-digit code"
-                                        className="w-full pl-10 pr-4 py-3 bg-muted/50 border border-slate-700 rounded text-foreground text-center text-2xl tracking-[0.5em] placeholder:text-sm placeholder:tracking-normal placeholder:font-sans focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                        className="w-full pl-10 pr-4 py-3 bg-muted/50 border border-border rounded text-foreground text-center text-2xl tracking-[0.5em] placeholder:text-sm placeholder:tracking-normal placeholder:font-sans focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
                                         required
                                         autoFocus
                                         autoComplete="one-time-code"
@@ -206,7 +206,7 @@ export default function AdminLogin() {
                         </button>
                     </form>
 
-                    <div className="mt-6 pt-6 border-t border-slate-800 ">
+                    <div className="mt-6 pt-6 border-t border-border ">
                         <p className="text-xs text-muted-foreground text-center inline-flex items-center gap-1 justify-center w-full">
                             {" "}
                             SHERO TECHNOLOGIES <Zap className="size-3" />{" "}

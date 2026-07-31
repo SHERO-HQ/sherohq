@@ -55,9 +55,9 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-      <div className="w-full max-w-md bg-card border border-slate-800 rounded shadow-2xl overflow-hidden">
-        <div className="p-6 border-b border-slate-800 flex items-center justify-between">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-card backdrop-blur-sm">
+      <div className="w-full max-w-md bg-card border border-border rounded shadow-2xl overflow-hidden">
+        <div className="p-6 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Shield className="w-5 h-5 text-brand-secondary-400" />
             <h3 className="text-lg font-bold text-foreground">Setup Multi-Factor Auth</h3>
@@ -87,7 +87,7 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
               <Button 
                 onClick={handleStartSetup} 
                 disabled={loading}
-                className="w-full bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white font-bold"
+                className="w-full bg-brand-secondary-500 hover:bg-brand-secondary-600 text-foreground font-bold"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                 Get Started
@@ -106,7 +106,7 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
               
               <div className="space-y-2">
                 <p className="text-xs text-muted-foreground">Or enter this secret key manually:</p>
-                <div className="flex items-center gap-2 bg-slate-950 p-2 rounded border border-slate-800">
+                <div className="flex items-center gap-2 bg-card p-2 rounded border border-border">
                   <code className="text-xs text-brand-secondary-400 font-mono flex-1">{mfaData.secret}</code>
                   <button onClick={copySecret} className="text-muted-foreground hover:text-foreground transition-colors">
                     {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
@@ -116,7 +116,7 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
 
               <Button 
                 onClick={() => setStep("verify")} 
-                className="w-full bg-muted hover:bg-slate-700 text-foreground"
+                className="w-full bg-muted hover:bg-accent text-foreground"
               >
                 I've scanned it
               </Button>
@@ -137,7 +137,7 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
                 value={code}
                 onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))}
                 placeholder="000000"
-                className="w-full bg-slate-950 border border-slate-800 rounded py-4 text-center text-3xl tracking-[0.5em] font-mono text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500"
+                className="w-full bg-card border border-border rounded py-4 text-center text-3xl tracking-[0.5em] font-mono text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500"
                 autoFocus
               />
 
@@ -159,7 +159,7 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
                 <Button 
                   onClick={handleVerify} 
                   disabled={loading || code.length !== 6}
-                  className="flex-2 bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white font-bold"
+                  className="flex-2 bg-brand-secondary-500 hover:bg-brand-secondary-600 text-foreground font-bold"
                 >
                   {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : "Enable MFA"}
                 </Button>

@@ -77,7 +77,7 @@ export function OrderSidebarCard({ order }: { order: Order }) {
           </div>
         </div>
         {order.paymentMessage && (
-          <div className="mt-3 text-xs bg-slate-950/40 p-3 rounded border border-border text-muted-foreground leading-relaxed">
+          <div className="mt-3 text-xs bg-card p-3 rounded border border-border text-muted-foreground leading-relaxed">
             <span className="font-semibold text-muted-foreground block mb-1">Payment Status:</span> 
             {order.paymentMessage}
           </div>
@@ -88,7 +88,7 @@ export function OrderSidebarCard({ order }: { order: Order }) {
         <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">
           Payment Information
         </h3>
-        <div className="space-y-3 bg-slate-950/20 border border-border rounded p-3 text-xs">
+        <div className="space-y-3 bg-card border border-border rounded p-3 text-xs">
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground">Method</span>
             <span className="text-foreground font-semibold flex items-center gap-1">

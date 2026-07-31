@@ -27,11 +27,11 @@ export default function InvoiceSidebarMeta({
         <div className="space-y-4 mb-6">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Subtotal</span>
-            <span className="text-slate-200 font-mono">GH₵{totalAmount.toLocaleString()}</span>
+            <span className="text-muted-foreground font-mono">GH₵{totalAmount.toLocaleString()}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Tax (0%)</span>
-            <span className="text-slate-200 font-mono">GH₵0.00</span>
+            <span className="text-muted-foreground font-mono">GH₵0.00</span>
           </div>
           <div className="border-t border-border pt-4 flex justify-between items-center">
             <span className="font-bold text-foreground text-base">Total Due</span>

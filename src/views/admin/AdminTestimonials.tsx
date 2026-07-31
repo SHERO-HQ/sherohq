@@ -237,7 +237,7 @@ const AdminTestimonials = () => {
           </Button>
           <Button
             onClick={handleOpenCreate}
-            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add Testimonial
@@ -275,7 +275,7 @@ const AdminTestimonials = () => {
                   className="bg-muted/30 border border-border rounded p-4 flex items-center gap-4 group hover:border-brand-secondary-500/30 transition relative overflow-hidden"
                 >
                   {isDeleting && (
-                    <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs z-10 flex items-center justify-between px-4 py-2 animate-in fade-in duration-200 select-none">
+                    <div className="absolute inset-0 bg-card backdrop-blur-xs z-10 flex items-center justify-between px-4 py-2 animate-in fade-in duration-200 select-none">
                       <span className="text-xs font-bold text-rose-400 animate-pulse">
                         Removing testimonial in {secondsLeft}s
                       </span>
@@ -294,7 +294,7 @@ const AdminTestimonials = () => {
                     <GripVertical className="w-5 h-5" />
                   </div>
 
-                  <div className="relative w-12 h-12 rounded bg-slate-700/50 overflow-hidden shrink-0 flex items-center justify-center">
+                  <div className="relative w-12 h-12 rounded bg-accent overflow-hidden shrink-0 flex items-center justify-center">
                     {t.image ? (
                       <AppImage
                         src={t.image}
@@ -521,7 +521,7 @@ const AdminTestimonials = () => {
             <Button
               type="submit"
               disabled={createMutation.isPending || updateMutation.isPending}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
             >
               {createMutation.isPending || updateMutation.isPending ? (
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />

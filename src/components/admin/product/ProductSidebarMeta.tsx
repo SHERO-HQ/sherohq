@@ -240,7 +240,7 @@ export default function ProductSidebarMeta({
                 onClick={() => handleInputChange("inStock", !productData.inStock)}
                 className={cn(
                   "relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-brand-secondary-500",
-                  productData.inStock ? "bg-brand-secondary-600" : "bg-slate-700"
+                  productData.inStock ? "bg-brand-secondary-600" : "bg-accent"
                 )}
               >
                 <span
@@ -387,7 +387,7 @@ export default function ProductSidebarMeta({
             <div className={cn(
               "w-5 h-5 rounded flex items-center justify-center border transition-all duration-200",
               productData.isSpotlight
-                ? "border-brand-secondary-500 bg-brand-secondary-600 text-white"
+                ? "border-brand-secondary-500 bg-brand-secondary-600 text-foreground"
                 : "border-border bg-card group-hover:border-border"
             )}>
               {productData.isSpotlight && (
@@ -422,7 +422,7 @@ export default function ProductSidebarMeta({
             <div className={cn(
               "w-5 h-5 rounded flex items-center justify-center border transition-all duration-200",
               productData.isFeatured
-                ? "border-brand-secondary-500 bg-brand-secondary-600 text-white"
+                ? "border-brand-secondary-500 bg-brand-secondary-600 text-foreground"
                 : "border-border bg-card group-hover:border-border"
             )}>
               {productData.isFeatured && (

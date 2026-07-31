@@ -187,7 +187,7 @@ const AdminTeam = () => {
           {canAddMember && (
             <Button
               onClick={handleOpenCreate}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Member
@@ -225,7 +225,7 @@ const AdminTeam = () => {
                   <GripVertical className="w-5 h-5" />
                 </div>
 
-                <div className="relative w-12 h-12 rounded bg-slate-700/50 overflow-hidden shrink-0">
+                <div className="relative w-12 h-12 rounded bg-accent overflow-hidden shrink-0">
                   {member.image ? (
                     <AppImage
                       src={member.image}
@@ -398,7 +398,7 @@ const AdminTeam = () => {
               <Button
                 type="submit"
                 disabled={createMutation.isPending || updateMutation.isPending}
-                className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+                className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
               >
                 {createMutation.isPending || updateMutation.isPending ? (
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />

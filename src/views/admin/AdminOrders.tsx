@@ -378,7 +378,7 @@ export default function AdminOrders() {
             </DropdownMenu>
 
             <Link href="/admin/orders/new">
-              <Button className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold transition shadow shadow-brand-secondary-500/20">
+              <Button className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-bold transition shadow shadow-brand-secondary-500/20">
                 <Plus className="mr-2 h-4 w-4" /> Create Order
               </Button>
             </Link>
@@ -404,7 +404,7 @@ export default function AdminOrders() {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            <div className="flex flex-wrap items-center gap-2 lg:gap-0 lg:bg-slate-950/50 lg:p-1 lg:rounded lg:border lg:border-border overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
+            <div className="flex flex-wrap items-center gap-2 lg:gap-0 lg:bg-card lg:p-1 lg:rounded lg:border lg:border-border overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
               {[
                 { id: "all", label: "All" },
                 { id: "pending", label: "Pending" },
@@ -422,7 +422,7 @@ export default function AdminOrders() {
                   className={cn(
                     "px-4 py-1 rounded text-sm font-medium transition whitespace-nowrap",
                     statusFilter === status.id
-                      ? "bg-brand-secondary-600 text-white shadow shadow-brand-secondary-500/20"
+                      ? "bg-brand-secondary-600 text-foreground shadow shadow-brand-secondary-500/20"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent",
                   )}
                 >

@@ -131,7 +131,7 @@ export default function GuideMediaCard({
 
             {/* Soft Delete Countdown Overlay */}
             {isDeleting ? (
-              <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-xs z-20 flex flex-col items-center justify-center p-2 text-center animate-in fade-in zoom-in-95 duration-200">
+              <div className="absolute inset-0 bg-card backdrop-blur-xs z-20 flex flex-col items-center justify-center p-2 text-center animate-in fade-in zoom-in-95 duration-200">
                 <p className="text-xs font-semibold text-rose-400 uppercase tracking-widest animate-pulse">
                   Deleting in {secondsLeft}s
                 </p>

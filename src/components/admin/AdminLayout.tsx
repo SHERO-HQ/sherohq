@@ -54,7 +54,7 @@ const AdminLayout = memo(({ children }: Readonly<AdminLayoutProps>) => {
  }, [setIsSidebarOpen]);
 
  return (
-  <div className="dark min-h-screen bg-slate-950 text-slate-200 relative print:bg-white">
+  <div className="min-h-screen bg-background text-foreground relative print:bg-white">
    {/* Background Pattern: Tiny dots for "Elite" texture */}
    <div className="fixed inset-0 pattern-dots opacity-10 pointer-events-none z-0 print:hidden" />
 

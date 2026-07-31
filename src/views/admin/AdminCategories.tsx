@@ -56,7 +56,7 @@ const IconSelector = ({
               key={name}
               type="button"
               onClick={() => onChange(name)}
-              className={`p-2 rounded flex items-center justify-center transition-colors ${value === name ? "bg-brand-secondary-500 text-white" : "hover:bg-accent text-muted-foreground"}`}
+              className={`p-2 rounded flex items-center justify-center transition-colors ${value === name ? "bg-brand-secondary-500 text-foreground" : "hover:bg-accent text-muted-foreground"}`}
               title={name}
             >
               <Icon className="w-5 h-5" />
@@ -203,7 +203,7 @@ const AdminCategories = () => {
         </div>
         <Button
           onClick={handleOpenCreate}
-          className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+          className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
         >
           <Plus className="w-4 h-4 mr-2" />
           Add Category
@@ -239,7 +239,7 @@ const AdminCategories = () => {
                 className="bg-muted/30 border border-border rounded p-4 flex items-center justify-between group hover:border-brand-secondary-500/30 transition relative overflow-hidden"
               >
                 {isDeleting && (
-                  <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs z-10 flex items-center justify-between px-3 py-2 animate-in fade-in duration-200 select-none">
+                  <div className="absolute inset-0 bg-card backdrop-blur-xs z-10 flex items-center justify-between px-3 py-2 animate-in fade-in duration-200 select-none">
                     <span className="text-[10px] font-bold text-rose-400 animate-pulse truncate mr-1">
                       Removing in {secondsLeft}s
                     </span>
@@ -319,7 +319,7 @@ const AdminCategories = () => {
             <Button
               type="submit"
               disabled={createMutation.isPending || updateMutation.isPending}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
             >
               {createMutation.isPending || updateMutation.isPending ? (
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />

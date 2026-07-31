@@ -115,13 +115,13 @@ export default function InvoiceItemsCard({
             placeholder="Search products by name..."
             value={searchQuery}
             onChange={(e) => onSearchQueryChange(e.target.value)}
-            className="bg-slate-950 border-border text-foreground pl-10 focus-visible:ring-brand-secondary-500"
+            className="bg-card border-border text-foreground pl-10 focus-visible:ring-brand-secondary-500"
           />
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         </div>
 
         {searchQuery && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-slate-950 border border-border rounded shadow-2xl z-50 max-h-60 overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded shadow-2xl z-50 max-h-60 overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
             {isLoadingProducts ? (
               <div className="p-4 text-center text-muted-foreground">
                 <Loader2 className="w-5 h-5 animate-spin mx-auto text-brand-secondary-400" />
@@ -187,12 +187,12 @@ export default function InvoiceItemsCard({
                 <div
                   key={item.id}
                   className={cn(
-                    "bg-slate-950/40 p-4 rounded border transition-all duration-300 relative overflow-hidden",
+                    "bg-card p-4 rounded border transition-all duration-300 relative overflow-hidden",
                     isDeleting ? "border-rose-500/25 bg-rose-500/2 opacity-90 scale-[0.99]" : "border-border"
                   )}
                 >
                   {isDeleting ? (
-                    <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs z-20 flex items-center justify-between px-6 py-2 text-center animate-in fade-in duration-200">
+                    <div className="absolute inset-0 bg-card backdrop-blur-xs z-20 flex items-center justify-between px-6 py-2 text-center animate-in fade-in duration-200">
                       <span className="text-xs font-semibold text-rose-400 uppercase tracking-widest animate-pulse">
                         Removing "{item.name}" in {secondsLeft}s
                       </span>
@@ -218,7 +218,7 @@ export default function InvoiceItemsCard({
                         }
                         className={cn(
                           "bg-transparent border-transparent text-foreground font-bold h-auto focus-visible:ring-0 focus-visible:border-border text-sm placeholder:text-slate-600 truncate",
-                          item.type === "product" ? "pointer-events-none select-none text-slate-200" : "hover:border-border"
+                          item.type === "product" ? "pointer-events-none select-none text-muted-foreground" : "hover:border-border"
                         )}
                         placeholder="Item Name"
                         disabled={item.type === "product"}
