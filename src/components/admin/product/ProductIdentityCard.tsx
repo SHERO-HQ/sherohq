@@ -34,12 +34,12 @@ export default function ProductIdentityCard({
 
   return (
     <Card className={cn(
-      "bg-slate-900 border border-white/5 p-6 md:p-8 space-y-6 transition-all duration-300",
+      "bg-card border border-border p-6 md:p-8 space-y-6 transition-all duration-300",
       (errors.name || errors.description) && "border-rose-500/30 bg-rose-500/2"
     )}>
-      <div className="flex items-center gap-2 pb-2 border-b border-white/5">
+      <div className="flex items-center gap-2 pb-2 border-b border-border">
         <Info className="w-5 h-5 text-brand-secondary-400" />
-        <h3 className="text-lg font-bold text-white">General Information</h3>
+        <h3 className="text-lg font-bold text-foreground">General Information</h3>
       </div>
 
       <div className="space-y-4">
@@ -48,7 +48,7 @@ export default function ProductIdentityCard({
           <div className="space-y-2 md:col-span-2">
             <label
               htmlFor="name"
-              className="text-sm font-medium text-slate-400"
+              className="text-sm font-medium text-muted-foreground"
             >
               Product Name *
             </label>
@@ -58,7 +58,7 @@ export default function ProductIdentityCard({
               value={productData.name || ""}
               onChange={(e) => handleInputChange("name", e.target.value)}
               className={cn(
-                "bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500",
+                "bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500",
                 errors.name && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
               )}
               required
@@ -74,7 +74,7 @@ export default function ProductIdentityCard({
           <div className="space-y-2">
             <label
               htmlFor="sku"
-              className="text-sm font-medium text-slate-400"
+              className="text-sm font-medium text-muted-foreground"
             >
               SKU (Optional)
             </label>
@@ -83,9 +83,9 @@ export default function ProductIdentityCard({
               placeholder="e.g. LAP-MAC-16M3"
               value={productData.sku || ""}
               onChange={(e) => handleInputChange("sku", e.target.value)}
-              className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500 font-mono"
+              className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500 font-mono"
             />
-            <p className="text-[10px] text-slate-500 italic mt-1 leading-relaxed">
+            <p className="text-[10px] text-muted-foreground italic mt-1 leading-relaxed">
               Leave blank to auto-generate based on Product ID.
             </p>
           </div>
@@ -94,7 +94,7 @@ export default function ProductIdentityCard({
           <div className="space-y-2">
             <label
               htmlFor="slug"
-              className="text-sm font-medium text-slate-400"
+              className="text-sm font-medium text-muted-foreground"
             >
               URL Slug
             </label>
@@ -103,12 +103,12 @@ export default function ProductIdentityCard({
               placeholder="e.g. macbook-pro-m3"
               value={productData.slug || ""}
               onChange={(e) => handleSlugChange(e.target.value)}
-              className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500 font-mono"
+              className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500 font-mono"
             />
             {/* Dynamic URL Path Preview */}
-            <p className="text-[10px] text-slate-400 mt-1 truncate">
+            <p className="text-[10px] text-muted-foreground mt-1 truncate">
               <span className="text-slate-600 select-none">Live URL: </span>
-              <span className="text-slate-500 font-mono select-all">https://sherotech.com/products/</span>
+              <span className="text-muted-foreground font-mono select-all">https://sherotech.com/products/</span>
               <span className="text-brand-secondary-400 font-semibold font-mono select-all">{productData.slug || "product-slug"}</span>
             </p>
           </div>
@@ -118,12 +118,12 @@ export default function ProductIdentityCard({
         <div className="space-y-2" data-color-mode="dark">
           <label
             htmlFor="description"
-            className="text-sm font-medium text-slate-400"
+            className="text-sm font-medium text-muted-foreground"
           >
             Description *
           </label>
           <div className={cn(
-            "rounded overflow-hidden border border-white/5 transition-all",
+            "rounded overflow-hidden border border-border transition-all",
             errors.description && "border-rose-500"
           )}>
             <MDEditor
@@ -134,7 +134,7 @@ export default function ProductIdentityCard({
               textareaProps={{
                 placeholder: "Provide a detailed, rich description of this product... (Markdown supported)"
               }}
-              className="!bg-slate-800/50"
+              className="!bg-muted/50"
             />
           </div>
           {errors.description && (

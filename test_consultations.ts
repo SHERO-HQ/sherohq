@@ -4,7 +4,7 @@ import path from "path";
 dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
 
 async function run() {
-  const { query } = await import("./src/lib/db.ts");
+  const { query } = await import("./src/lib/db");
 
   console.log("Fetching recent consultations...");
   try {

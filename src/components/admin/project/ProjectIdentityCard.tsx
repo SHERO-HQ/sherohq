@@ -23,12 +23,12 @@ export default function ProjectIdentityCard({
 
   return (
     <Card className={cn(
-      "bg-slate-900 border border-white/5 p-6 md:p-8 space-y-6 transition-all duration-300",
+      "bg-card border border-border p-6 md:p-8 space-y-6 transition-all duration-300",
       (errors.title || errors.description) && "border-rose-500/30 bg-rose-500/2"
     )}>
-      <div className="flex items-center gap-2 pb-2 border-b border-white/5">
+      <div className="flex items-center gap-2 pb-2 border-b border-border">
         <Briefcase className="w-5 h-5 text-brand-secondary-400" />
-        <h3 className="text-lg font-bold text-white">Project Details</h3>
+        <h3 className="text-lg font-bold text-foreground">Project Details</h3>
       </div>
 
       <div className="space-y-4">
@@ -36,7 +36,7 @@ export default function ProjectIdentityCard({
         <div className="space-y-2">
           <label
             htmlFor="title"
-            className="text-sm font-medium text-slate-400"
+            className="text-sm font-medium text-muted-foreground"
           >
             Project Title *
           </label>
@@ -46,7 +46,7 @@ export default function ProjectIdentityCard({
             value={projectData.title || ""}
             onChange={(e) => handleInputChange("title", e.target.value)}
             className={cn(
-              "bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500",
+              "bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500",
               errors.title && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
             )}
             required
@@ -62,7 +62,7 @@ export default function ProjectIdentityCard({
         <div className="space-y-2">
           <label
             htmlFor="description"
-            className="text-sm font-medium text-slate-400"
+            className="text-sm font-medium text-muted-foreground"
           >
             Challenge / Overview *
           </label>
@@ -72,7 +72,7 @@ export default function ProjectIdentityCard({
             value={projectData.description || ""}
             onChange={(e) => handleInputChange("description", e.target.value)}
             className={cn(
-              "w-full min-h-36 bg-slate-800/50 border border-white/5 rounded p-4 text-white focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 resize-y leading-relaxed text-sm transition-all",
+              "w-full min-h-36 bg-muted/50 border border-border rounded p-4 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 resize-y leading-relaxed text-sm transition-all",
               errors.description && "border-rose-500 bg-rose-500/5 focus:ring-rose-500"
             )}
             required
@@ -88,7 +88,7 @@ export default function ProjectIdentityCard({
         <div className="space-y-2">
           <label
             htmlFor="useCase"
-            className="text-sm font-medium text-slate-400"
+            className="text-sm font-medium text-muted-foreground"
           >
             Solution / Use Case
           </label>
@@ -97,7 +97,7 @@ export default function ProjectIdentityCard({
             placeholder="How did you solve it?"
             value={projectData.useCase || ""}
             onChange={(e) => handleInputChange("useCase", e.target.value)}
-            className="w-full min-h-36 bg-slate-800/50 border border-white/5 rounded p-4 text-white focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 resize-y leading-relaxed text-sm transition-all"
+            className="w-full min-h-36 bg-muted/50 border border-border rounded p-4 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 resize-y leading-relaxed text-sm transition-all"
           />
         </div>
       </div>

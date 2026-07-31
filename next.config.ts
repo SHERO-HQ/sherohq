@@ -3,6 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   compress: true,
   transpilePackages: ["motion"],
+  outputFileTracingRoot: process.cwd(),
+
 
   // Note: All /api routes are now handled natively by Next.js API Routes.
   // The Express proxy has been decommissioned for performance and stability.

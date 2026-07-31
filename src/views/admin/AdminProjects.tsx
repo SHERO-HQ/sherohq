@@ -96,10 +96,10 @@ export default function AdminProjects() {
  {/* Header */}
  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
  <div>
- <h1 className="text-2xl font-bold text-white">
+ <h1 className="text-2xl font-bold text-foreground">
  Projects
  </h1>
- <p className="text-slate-400 text-sm">
+ <p className="text-muted-foreground text-sm">
  Showcase your successful solutions and portfolios
  </p>
  </div>
@@ -109,7 +109,7 @@ export default function AdminProjects() {
  size="icon"
  onClick={() => refetch()}
  disabled={isFetching}
- className="bg-slate-800/50 border-white/5"
+ className="bg-muted/50 border-border"
  >
  <RefreshCw
  className={cn("w-4 h-4", isFetching && "animate-spin")}
@@ -129,15 +129,15 @@ export default function AdminProjects() {
  </div>
 
  {/* Filters */}
- <Card className="bg-slate-900/40  border-white/10 p-4">
+ <Card className="bg-card/40  border-border p-4">
  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
  <div className="relative col-span-2">
- <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+ <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
  <Input
  placeholder="Search projects..."
  value={search}
  onChange={(e) => setSearch(e.target.value)}
- className="pl-9 bg-slate-800/50 border-white/5 text-white"
+ className="pl-9 bg-muted/50 border-border text-foreground"
  />
  </div>
  <select
@@ -146,7 +146,7 @@ export default function AdminProjects() {
  setSelectedCategory(e.target.value);
  setCurrentPage(1);
  }}
- className="bg-slate-800/50 border border-white/5 rounded text-sm text-white p-2 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
+ className="bg-muted/50 border border-border rounded text-sm text-foreground p-2 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
  >
  <option value="all">All Categories</option>
  {categories.map((cat) => (
@@ -159,21 +159,21 @@ export default function AdminProjects() {
  </Card>
 
  {/* Projects Table */}
- <div className="bg-slate-900/40  border border-white/10 rounded overflow-hidden">
+ <div className="bg-card/40  border border-border rounded overflow-hidden">
  <div className="overflow-x-auto">
  <table className="w-full text-left">
  <thead>
- <tr className="bg-slate-800/50 border-b border-white/5">
- <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+ <tr className="bg-muted/50 border-b border-border">
+ <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
  Project
  </th>
- <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+ <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
  Category
  </th>
- <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+ <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
  Client
  </th>
- <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">
+ <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">
  Actions
  </th>
  </tr>
@@ -183,7 +183,7 @@ export default function AdminProjects() {
  [1, 2, 3, 4, 5].map((i) => (
  <tr key={`skeleton-${i}`} className="animate-pulse">
  <td colSpan={4} className="px-6 py-8">
- <div className="h-4 bg-slate-800 rounded w-full" />
+ <div className="h-4 bg-muted rounded w-full" />
  </td>
  </tr>
  ))}
@@ -192,7 +192,7 @@ export default function AdminProjects() {
  <tr>
  <td
  colSpan={4}
- className="px-6 py-12 text-center text-slate-500"
+ className="px-6 py-12 text-center text-muted-foreground"
  >
  No projects found.
  </td>
@@ -204,18 +204,18 @@ export default function AdminProjects() {
  paginatedProjects.map((project) => (
  <tr
  key={project.id}
- className="hover:bg-white/5 transition-colors group"
+ className="hover:bg-accent transition-colors group"
  >
  <td className="px-6 py-4">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 rounded bg-slate-800 flex items-center justify-center shrink-0 border border-white/5">
+ <div className="w-10 h-10 rounded bg-muted flex items-center justify-center shrink-0 border border-border">
  <Briefcase className="w-5 h-5 text-brand-secondary-500" />
  </div>
  <div>
- <p className="text-sm font-semibold text-white group-hover:text-brand-secondary-400 transition-colors">
+ <p className="text-sm font-semibold text-foreground group-hover:text-brand-secondary-400 transition-colors">
  {project.title}
  </p>
- <p className="text-xs text-slate-500 line-clamp-1 max-w-xs">
+ <p className="text-xs text-muted-foreground line-clamp-1 max-w-xs">
  {project.description}
  </p>
  </div>
@@ -229,7 +229,7 @@ export default function AdminProjects() {
  {project.category}
  </Badge>
  </td>
- <td className="px-6 py-4 text-sm text-slate-300">
+ <td className="px-6 py-4 text-sm text-muted-foreground">
  {project.client || "N/A"}
  </td>
  <td className="px-6 py-4 text-right">
@@ -237,7 +237,7 @@ export default function AdminProjects() {
  <Button
  size="icon"
  variant="ghost"
- className="h-8 w-8 text-slate-400 hover:text-white"
+ className="h-8 w-8 text-muted-foreground hover:text-foreground"
  asChild
  >
  <Link
@@ -251,17 +251,17 @@ export default function AdminProjects() {
  <Button
  size="icon"
  variant="ghost"
- className="h-8 w-8 text-slate-400 hover:text-white"
+ className="h-8 w-8 text-muted-foreground hover:text-foreground"
  >
  <MoreVertical className="w-4 h-4" />
  </Button>
  </DropdownMenuTrigger>
  <DropdownMenuContent
- className="bg-slate-900 border-white/10 text-white"
+ className="bg-card border-border text-foreground"
  align="end"
  >
  <DropdownMenuItem
- className="hover:bg-white/5 cursor-pointer"
+ className="hover:bg-accent cursor-pointer"
  asChild
  >
  <a
@@ -292,8 +292,8 @@ export default function AdminProjects() {
 
  {/* Pagination */}
  {!isLoading && totalPages > 1 && (
- <div className="px-6 py-4 bg-slate-800/30 border-t border-white/5 flex items-center justify-between">
- <p className="text-sm text-slate-400">
+ <div className="px-6 py-4 bg-muted/30 border-t border-border flex items-center justify-between">
+ <p className="text-sm text-muted-foreground">
  Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
  {Math.min(currentPage * itemsPerPage, filteredProjects.length)}{" "}
  of {filteredProjects.length} projects
@@ -302,20 +302,20 @@ export default function AdminProjects() {
  <Button
  variant="outline"
  size="icon"
- className="h-8 w-8 border-white/10"
+ className="h-8 w-8 border-border"
  disabled={currentPage === 1}
  onClick={() => setCurrentPage((p) => p - 1)}
  >
- <ChevronLeft className="h-4 w-4 text-white" />
+ <ChevronLeft className="h-4 w-4 text-foreground" />
  </Button>
  <Button
  variant="outline"
  size="icon"
- className="h-8 w-8 border-white/10"
+ className="h-8 w-8 border-border"
  disabled={currentPage === totalPages}
  onClick={() => setCurrentPage((p) => p + 1)}
  >
- <ChevronRight className="h-4 w-4 text-white" />
+ <ChevronRight className="h-4 w-4 text-foreground" />
  </Button>
  </div>
  </div>

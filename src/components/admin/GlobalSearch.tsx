@@ -158,13 +158,13 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
             className="relative w-full max-w-2xl glass-surface-lg rounded overflow-hidden shadow flex flex-col"
           >
             {/* Search Input Area */}
-            <div className="flex items-center gap-3 px-4 py-4 border-b border-white/5">
-              <Search className="w-5 h-5 text-slate-500" />
+            <div className="flex items-center gap-3 px-4 py-4 border-b border-border">
+              <Search className="w-5 h-5 text-muted-foreground" />
               <input
                 ref={inputRef}
                 type="text"
                 placeholder="Search products, orders, customers..."
-                className="flex-1 bg-transparent border-none outline-none text-white placeholder-slate-500 text-lg"
+                className="flex-1 bg-transparent border-none outline-none text-foreground placeholder-slate-500 text-lg"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
@@ -174,7 +174,7 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
                 )}
                 <button
                   onClick={onClose}
-                  className="p-1 hover:bg-white/5 rounded text-slate-500 transition-colors"
+                  className="p-1 hover:bg-accent rounded text-muted-foreground transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -184,24 +184,24 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
             {/* Results Area */}
             <div className="max-h-[60vh] overflow-y-auto custom-scrollbar p-2">
               {!results && !isLoading && query.length < 2 && (
-                <div className="py-12 flex flex-col items-center justify-center text-slate-500 text-sm">
+                <div className="py-12 flex flex-col items-center justify-center text-muted-foreground text-sm">
                   <Command className="w-12 h-12 mb-4 opacity-10" />
                   <p>Type at least 2 characters to search...</p>
-                  <div className="mt-6 flex items-center gap-4 text-[10px] text-slate-400 uppercase tracking-widest">
+                  <div className="mt-6 flex items-center gap-4 text-[10px] text-muted-foreground uppercase tracking-widest">
                     <span className="flex items-center gap-1">
-                      <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-white">
+                      <kbd className="px-1.5 py-0.5 rounded bg-accent/50 border border-border text-foreground">
                         ↑↓
                       </kbd>{" "}
                       Navigate
                     </span>
                     <span className="flex items-center gap-1">
-                      <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-white">
+                      <kbd className="px-1.5 py-0.5 rounded bg-accent/50 border border-border text-foreground">
                         ↵
                       </kbd>{" "}
                       Select
                     </span>
                     <span className="flex items-center gap-1">
-                      <kbd className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-white">
+                      <kbd className="px-1.5 py-0.5 rounded bg-accent/50 border border-border text-foreground">
                         ESC
                       </kbd>{" "}
                       Close
@@ -217,7 +217,7 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
               )}
 
               {normalizedResults && flatResults.length === 0 && (
-                <div className="py-12 flex flex-col items-center justify-center text-slate-500">
+                <div className="py-12 flex flex-col items-center justify-center text-muted-foreground">
                   <p>No results found for "{query}"</p>
                 </div>
               )}
@@ -227,7 +227,7 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
                   {/* Products Section */}
                   {normalizedResults.products.length > 0 && (
                     <div>
-                      <h3 className="px-3 py-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                      <h3 className="px-3 py-1 text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
                         <Package className="w-3 h-3" />
                         Products
                       </h3>
@@ -262,7 +262,7 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
                   {/* Orders Section */}
                   {normalizedResults.orders.length > 0 && (
                     <div>
-                      <h3 className="px-3 py-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                      <h3 className="px-3 py-1 text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
                         <ShoppingCart className="w-3 h-3" />
                         Orders
                       </h3>
@@ -291,7 +291,7 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
                   {/* Customers Section */}
                   {normalizedResults.users.length > 0 && (
                     <div>
-                      <h3 className="px-3 py-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                      <h3 className="px-3 py-1 text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
                         <Users className="w-3 h-3" />
                         Customers
                       </h3>
@@ -321,7 +321,7 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
                   {/* Inquiries Section */}
                   {normalizedResults.inquiries.length > 0 && (
                     <div>
-                      <h3 className="px-3 py-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                      <h3 className="px-3 py-1 text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
                         <MessageSquare className="w-3 h-3" />
                         Inquiries
                       </h3>
@@ -351,16 +351,16 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
             </div>
 
             {/* Footer */}
-            <div className="px-4 py-3 bg-white/5 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-500">
+            <div className="px-4 py-3 bg-accent/50 border-t border-border flex items-center justify-between text-[11px] text-muted-foreground">
               <div className="flex items-center gap-4">
                 <span className="flex items-center gap-1">
-                  <kbd className="px-1 rounded bg-slate-800 border border-white/10 text-white">
+                  <kbd className="px-1 rounded bg-muted border border-border text-foreground">
                     ↵
                   </kbd>{" "}
                   Select
                 </span>
                 <span className="flex items-center gap-1">
-                  <kbd className="px-1 rounded bg-slate-800 border border-white/10 text-white">
+                  <kbd className="px-1 rounded bg-muted border border-border text-foreground">
                     ↑↓
                   </kbd>{" "}
                   Navigate
@@ -368,7 +368,7 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
               </div>
               <div className="flex items-center gap-1">
                 <span className="hidden sm:inline">Press</span>
-                <kbd className="px-1 rounded bg-slate-800 border border-white/10 text-white">
+                <kbd className="px-1 rounded bg-muted border border-border text-foreground">
                   ESC
                 </kbd>
                 <span className="hidden sm:inline">to close</span>
@@ -405,7 +405,7 @@ const ResultItem = ({
         "w-full flex items-center gap-3 px-3 py-2 rounded transition-all text-left group",
         isSelected
           ? "bg-brand-secondary-500/10 border-l-2 border-brand-secondary-500 pl-2.5"
-          : "hover:bg-white/5 border-l-2 border-transparent",
+          : "hover:bg-accent border-l-2 border-transparent",
       )}
     >
       <div
@@ -413,7 +413,7 @@ const ResultItem = ({
           "relative shrink-0 w-8 h-8 rounded flex items-center justify-center overflow-hidden border",
           isSelected
             ? "bg-brand-secondary-500/20 border-brand-secondary-500/30 text-brand-secondary-400"
-            : "bg-slate-800 border-white/5 text-slate-500",
+            : "bg-muted border-border text-muted-foreground",
         )}
       >
         {image ? (
@@ -432,12 +432,12 @@ const ResultItem = ({
         <div
           className={cn(
             "text-sm font-medium truncate",
-            isSelected ? "text-white" : "text-slate-300",
+            isSelected ? "text-foreground" : "text-muted-foreground",
           )}
         >
           {title}
         </div>
-        <div className="text-xs text-slate-500 truncate">{subtitle}</div>
+        <div className="text-xs text-muted-foreground truncate">{subtitle}</div>
       </div>
       <ChevronRight
         className={cn(

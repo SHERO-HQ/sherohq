@@ -73,7 +73,7 @@ const getStatusColor = (status: string) => {
     delivered: "bg-brand-secondary-500/20 text-brand-secondary-400",
     cancelled: "bg-red-500/20 text-red-400",
   };
-  return colors[status.toLowerCase()] || "bg-slate-500/20 text-slate-400";
+  return colors[status.toLowerCase()] || "bg-slate-500/20 text-muted-foreground";
 };
 
 // --- Sub-components ---
@@ -96,11 +96,11 @@ const AdminUsersHeader = ({
   <div className="space-y-6">
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+        <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
           <Users className="w-7 h-7 text-brand-secondary-400" />
           Customers
         </h1>
-        <p className="text-slate-400 text-sm">
+        <p className="text-muted-foreground text-sm">
           Manage your customer database and view their activity
         </p>
       </div>
@@ -110,7 +110,7 @@ const AdminUsersHeader = ({
           size="icon"
           onClick={() => refetchUsers()}
           disabled={isFetching}
-          className="bg-slate-800/50 border-white/5"
+          className="bg-muted/50 border-border"
         >
           <RefreshCw className={cn("w-4 h-4", isFetching && "animate-spin")} />
         </Button>
@@ -122,23 +122,23 @@ const AdminUsersHeader = ({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="bg-slate-900 border-white/10 text-white"
+            className="bg-card border-border text-foreground"
           >
             <DropdownMenuItem
               onClick={() => handleExport("csv")}
-              className="cursor-pointer hover:bg-white/5"
+              className="cursor-pointer hover:bg-accent"
             >
               Export as CSV
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => handleExport("excel")}
-              className="cursor-pointer hover:bg-white/5"
+              className="cursor-pointer hover:bg-accent"
             >
               Export as Excel
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => handleExport("pdf")}
-              className="cursor-pointer hover:bg-white/5"
+              className="cursor-pointer hover:bg-accent"
             >
               Export as PDF
             </DropdownMenuItem>
@@ -150,13 +150,13 @@ const AdminUsersHeader = ({
     {/* Search Input */}
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       <div className="relative w-full md:w-80">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
         <input
           type="text"
           placeholder="Search by name or email..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 bg-slate-800/50 border border-white/10 rounded text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
+          className="w-full pl-10 pr-4 py-2.5 bg-muted/50 border border-border rounded text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
         />
       </div>
     </div>
@@ -183,11 +183,11 @@ const UserTableRow = ({
   <motion.tr
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
-    className="hover:bg-white/5 transition-colors"
+    className="hover:bg-accent transition-colors"
   >
     <td className="px-6 py-4">
       <div className="flex items-center gap-3">
-        <div className="relative w-10 h-10 rounded bg-linear-to-br from-brand-secondary-500 to-brand-secondary-500/60 font-bold text-lg flex items-center justify-center text-white overflow-hidden">
+        <div className="relative w-10 h-10 rounded bg-linear-to-br from-brand-secondary-500 to-brand-secondary-500/60 font-bold text-lg flex items-center justify-center text-foreground overflow-hidden">
           {user.avatar ? (
             <AppImage
               src={user.avatar}
@@ -201,20 +201,20 @@ const UserTableRow = ({
           )}
         </div>
         <div>
-          <p className="font-medium text-white">{user.name}</p>
-          <p className="text-sm text-slate-400">{user.email}</p>
+          <p className="font-medium text-foreground">{user.name}</p>
+          <p className="text-sm text-muted-foreground">{user.email}</p>
         </div>
       </div>
     </td>
     <td className="px-6 py-4">
       <div className="space-y-1">
-        <div className="flex items-center gap-2 text-sm text-slate-300">
-          <Mail className="w-4 h-4 text-slate-500" />
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Mail className="w-4 h-4 text-muted-foreground" />
           {user.email}
         </div>
         {user.phone && (
-          <div className="flex items-center gap-2 text-sm text-slate-400">
-            <Phone className="w-4 h-4 text-slate-500" />
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Phone className="w-4 h-4 text-muted-foreground" />
             {user.phone}
           </div>
         )}
@@ -241,19 +241,19 @@ const UserTableRow = ({
         )}
       </div>
     </td>
-    <td className="px-6 py-4 text-slate-300">{formatDate(user.createdAt)}</td>
+    <td className="px-6 py-4 text-muted-foreground">{formatDate(user.createdAt)}</td>
     <td className="px-6 py-4">
       <div className="flex items-center justify-end gap-2">
         <button
           onClick={() => onOpenDetails(user.id)}
-          className="p-2 text-slate-400 hover:text-brand-secondary-400 hover:bg-brand-secondary-500/10 rounded transition-colors"
+          className="p-2 text-muted-foreground hover:text-brand-secondary-400 hover:bg-brand-secondary-500/10 rounded transition-colors"
           title="View Details"
         >
           <Eye className="w-4 h-4" />
         </button>
         <button
           onClick={() => onResetPassword(user.id)}
-          className="p-2 text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 rounded transition-colors"
+          className="p-2 text-muted-foreground hover:text-amber-400 hover:bg-amber-500/10 rounded transition-colors"
           title="Reset Password"
         >
           <KeyRound className="w-4 h-4" />
@@ -263,8 +263,8 @@ const UserTableRow = ({
           disabled={isTogglingActive}
           className={`p-2 rounded transition-colors disabled:opacity-50 ${
             user.isActive
-              ? "text-slate-400 hover:text-orange-400 hover:bg-orange-500/10"
-              : "text-slate-400 hover:text-brand-secondary-400 hover:bg-brand-secondary-500/10"
+              ? "text-muted-foreground hover:text-orange-400 hover:bg-orange-500/10"
+              : "text-muted-foreground hover:text-brand-secondary-400 hover:bg-brand-secondary-500/10"
           }`}
           title={user.isActive ? "Deactivate Account" : "Reactivate Account"}
         >
@@ -276,7 +276,7 @@ const UserTableRow = ({
         </button>
         <button
           onClick={() => onDelete(user.id)}
-          className="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors"
+          className="p-2 text-muted-foreground hover:text-red-400 hover:bg-red-500/10 rounded transition-colors"
           title="Delete User"
         >
           <Trash2 className="w-4 h-4" />
@@ -316,36 +316,36 @@ const StatsCards = ({ total, users }: StatsCardsProps) => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div className="bg-slate-800/30  border border-white/5 rounded p-4">
+      <div className="bg-muted/30  border border-border rounded p-4">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-brand-secondary-500/20 rounded">
             <Users className="w-5 h-5 text-brand-secondary-400" />
           </div>
           <div>
-            <p className="text-slate-400 text-sm">Total Customers</p>
-            <p className="text-xl font-bold text-white">{total}</p>
+            <p className="text-muted-foreground text-sm">Total Customers</p>
+            <p className="text-xl font-bold text-foreground">{total}</p>
           </div>
         </div>
       </div>
-      <div className="bg-slate-800/30  border border-white/5 rounded p-4">
+      <div className="bg-muted/30  border border-border rounded p-4">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-500/20 rounded">
             <BadgeCheck className="w-5 h-5 text-blue-400" />
           </div>
           <div>
-            <p className="text-slate-400 text-sm">Verified Users</p>
-            <p className="text-xl font-bold text-white">{verifiedCount}</p>
+            <p className="text-muted-foreground text-sm">Verified Users</p>
+            <p className="text-xl font-bold text-foreground">{verifiedCount}</p>
           </div>
         </div>
       </div>
-      <div className="bg-slate-800/30  border border-white/5 rounded p-4">
+      <div className="bg-muted/30  border border-border rounded p-4">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-purple-500/20 rounded">
             <Calendar className="w-5 h-5 text-purple-400" />
           </div>
           <div>
-            <p className="text-slate-400 text-sm">This Month</p>
-            <p className="text-xl font-bold text-white">{newThisMonthCount}</p>
+            <p className="text-muted-foreground text-sm">This Month</p>
+            <p className="text-xl font-bold text-foreground">{newThisMonthCount}</p>
           </div>
         </div>
       </div>
@@ -356,44 +356,44 @@ const StatsCards = ({ total, users }: StatsCardsProps) => {
 const UsersListSkeleton = () => (
   <div className="overflow-x-auto select-none animate-pulse">
     <table className="w-full">
-      <thead className="bg-slate-900/50">
+      <thead className="bg-card/50">
         <tr>
-          <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-4">Customer</th>
-          <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-4">Contact</th>
-          <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-4">Status</th>
-          <th className="text-left text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-4">Joined</th>
-          <th className="text-right text-xs font-medium text-slate-500 uppercase tracking-wider px-6 py-4">Actions</th>
+          <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">Customer</th>
+          <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">Contact</th>
+          <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">Status</th>
+          <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">Joined</th>
+          <th className="text-right text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">Actions</th>
         </tr>
       </thead>
       <tbody className="divide-y divide-white/5">
         {[1, 2, 3, 4, 5].map((i) => (
-          <tr key={i} className="bg-slate-800/10">
+          <tr key={i} className="bg-muted/10">
             <td className="px-6 py-4 whitespace-nowrap">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded bg-white/5 shrink-0" />
+                <div className="w-10 h-10 rounded bg-accent/50 shrink-0" />
                 <div className="space-y-2">
-                  <div className="h-4 w-28 bg-white/10 rounded" />
-                  <div className="h-3 w-36 bg-white/5 rounded" />
+                  <div className="h-4 w-28 bg-accent rounded" />
+                  <div className="h-3 w-36 bg-accent/50 rounded" />
                 </div>
               </div>
             </td>
             <td className="px-6 py-4 whitespace-nowrap">
               <div className="space-y-2">
-                <div className="h-3 w-32 bg-white/5 rounded" />
-                <div className="h-3.5 w-24 bg-white/5 rounded" />
+                <div className="h-3 w-32 bg-accent/50 rounded" />
+                <div className="h-3.5 w-24 bg-accent/50 rounded" />
               </div>
             </td>
             <td className="px-6 py-4 whitespace-nowrap">
               <div className="flex gap-2">
-                <div className="h-5 w-16 bg-white/5 rounded-full" />
-                <div className="h-5 w-16 bg-white/5 rounded-full" />
+                <div className="h-5 w-16 bg-accent/50 rounded-full" />
+                <div className="h-5 w-16 bg-accent/50 rounded-full" />
               </div>
             </td>
             <td className="px-6 py-4 whitespace-nowrap">
-              <div className="h-3.5 w-20 bg-white/5 rounded" />
+              <div className="h-3.5 w-20 bg-accent/50 rounded" />
             </td>
             <td className="px-6 py-4 whitespace-nowrap text-right">
-              <div className="inline-block h-8 w-8 bg-white/5 rounded" />
+              <div className="inline-block h-8 w-8 bg-accent/50 rounded" />
             </td>
           </tr>
         ))}
@@ -405,43 +405,43 @@ const UsersListSkeleton = () => (
 const UserDetailsSkeleton = () => (
   <div className="p-6 space-y-6 overflow-y-auto max-h-[calc(80vh-80px)] animate-pulse select-none">
     <div className="flex items-start gap-4">
-      <div className="w-16 h-16 rounded bg-white/10 shrink-0" />
+      <div className="w-16 h-16 rounded bg-accent shrink-0" />
       <div className="flex-1 space-y-2">
-        <div className="h-5 w-40 bg-white/10 rounded" />
-        <div className="h-4 w-52 bg-white/5 rounded" />
-        <div className="h-3.5 w-32 bg-white/5 rounded" />
+        <div className="h-5 w-40 bg-accent rounded" />
+        <div className="h-4 w-52 bg-accent/50 rounded" />
+        <div className="h-3.5 w-32 bg-accent/50 rounded" />
       </div>
       <div className="flex flex-col gap-2 items-end">
-        <div className="h-6 w-20 bg-white/10 rounded" />
-        <div className="h-6 w-24 bg-white/10 rounded" />
+        <div className="h-6 w-20 bg-accent rounded" />
+        <div className="h-6 w-24 bg-accent rounded" />
       </div>
     </div>
     
-    <hr className="border-white/5" />
+    <hr className="border-border" />
     
     <div className="grid grid-cols-2 gap-4">
-      <div className="bg-slate-800/20 border border-white/5 rounded p-4 space-y-2">
-        <div className="h-4 w-24 bg-white/5 rounded" />
-        <div className="h-6 w-16 bg-white/10 rounded" />
+      <div className="bg-muted/20 border border-border rounded p-4 space-y-2">
+        <div className="h-4 w-24 bg-accent/50 rounded" />
+        <div className="h-6 w-16 bg-accent rounded" />
       </div>
-      <div className="bg-slate-800/20 border border-white/5 rounded p-4 space-y-2">
-        <div className="h-4 w-24 bg-white/5 rounded" />
-        <div className="h-6 w-16 bg-white/10 rounded" />
+      <div className="bg-muted/20 border border-border rounded p-4 space-y-2">
+        <div className="h-4 w-24 bg-accent/50 rounded" />
+        <div className="h-6 w-16 bg-accent rounded" />
       </div>
     </div>
     
-    <hr className="border-white/5" />
+    <hr className="border-border" />
     
     <div className="space-y-3">
-      <div className="h-5 w-32 bg-white/10 rounded" />
+      <div className="h-5 w-32 bg-accent rounded" />
       <div className="space-y-2">
         {[1, 2].map((i) => (
-          <div key={i} className="bg-slate-800/20 border border-white/5 rounded p-4 flex items-center justify-between">
+          <div key={i} className="bg-muted/20 border border-border rounded p-4 flex items-center justify-between">
             <div className="space-y-2">
-              <div className="h-4 w-24 bg-white/10 rounded" />
-              <div className="h-3 w-32 bg-white/5 rounded" />
+              <div className="h-4 w-24 bg-accent rounded" />
+              <div className="h-3 w-32 bg-accent/50 rounded" />
             </div>
-            <div className="h-5 w-16 bg-white/5 rounded" />
+            <div className="h-5 w-16 bg-accent/50 rounded" />
           </div>
         ))}
       </div>
@@ -466,7 +466,7 @@ const UserTable = ({
     return (
       <div className="text-center py-20">
         <Users className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-        <p className="text-slate-400">No customers found</p>
+        <p className="text-muted-foreground">No customers found</p>
       </div>
     );
   }
@@ -474,21 +474,21 @@ const UserTable = ({
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
-        <thead className="bg-slate-900/50">
+        <thead className="bg-card/50">
           <tr>
-            <th className="text-left text-xs font-medium text-slate-400 uppercase tracking-wider px-6 py-4">
+            <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">
               Customer
             </th>
-            <th className="text-left text-xs font-medium text-slate-400 uppercase tracking-wider px-6 py-4">
+            <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">
               Contact
             </th>
-            <th className="text-left text-xs font-medium text-slate-400 uppercase tracking-wider px-6 py-4">
+            <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">
               Status
             </th>
-            <th className="text-left text-xs font-medium text-slate-400 uppercase tracking-wider px-6 py-4">
+            <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">
               Joined
             </th>
-            <th className="text-right text-xs font-medium text-slate-400 uppercase tracking-wider px-6 py-4">
+            <th className="text-right text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">
               Actions
             </th>
           </tr>
@@ -520,8 +520,8 @@ const Pagination = ({ pagination, setPage }: PaginationProps) => {
   if (pagination.totalPages <= 1) return null;
 
   return (
-    <div className="flex items-center justify-between px-6 py-4 border-t border-white/5">
-      <p className="text-sm text-slate-400">
+    <div className="flex items-center justify-between px-6 py-4 border-t border-border">
+      <p className="text-sm text-muted-foreground">
         Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
         {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
         {pagination.total} customers
@@ -530,17 +530,17 @@ const Pagination = ({ pagination, setPage }: PaginationProps) => {
         <button
           onClick={() => setPage((p) => Math.max(1, p - 1))}
           disabled={pagination.page === 1}
-          className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
-        <span className="text-slate-300">
+        <span className="text-muted-foreground">
           Page {pagination.page} of {pagination.totalPages}
         </span>
         <button
           onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))}
           disabled={pagination.page === pagination.totalPages}
-          className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           <ChevronRight className="w-5 h-5" />
         </button>
@@ -559,24 +559,24 @@ interface UserStatsGridProps {
 
 const UserStatsGrid = ({ stats }: UserStatsGridProps) => (
   <div className="grid grid-cols-3 gap-4">
-    <div className="bg-slate-800/50 rounded p-4 text-center">
+    <div className="bg-muted/50 rounded p-4 text-center">
       <ShoppingBag className="w-6 h-6 text-brand-secondary-400 mx-auto mb-2" />
-      <p className="text-2xl font-bold text-white">{stats.totalOrders}</p>
-      <p className="text-xs text-slate-400">Total Orders</p>
+      <p className="text-2xl font-bold text-foreground">{stats.totalOrders}</p>
+      <p className="text-xs text-muted-foreground">Total Orders</p>
     </div>
-    <div className="bg-slate-800/50 rounded p-4 text-center">
+    <div className="bg-muted/50 rounded p-4 text-center">
       <Package className="w-6 h-6 text-blue-400 mx-auto mb-2" />
-      <p className="text-2xl font-bold text-white">
+      <p className="text-2xl font-bold text-foreground">
         {formatCurrency(stats.totalSpent)}
       </p>
-      <p className="text-xs text-slate-400">Total Spent</p>
+      <p className="text-xs text-muted-foreground">Total Spent</p>
     </div>
-    <div className="bg-slate-800/50 rounded p-4 text-center">
+    <div className="bg-muted/50 rounded p-4 text-center">
       <Calendar className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-      <p className="text-sm font-bold text-white">
+      <p className="text-sm font-bold text-foreground">
         {stats.lastOrderDate ? formatDate(stats.lastOrderDate) : "N/A"}
       </p>
-      <p className="text-xs text-slate-400">Last Order</p>
+      <p className="text-xs text-muted-foreground">Last Order</p>
     </div>
   </div>
 );
@@ -588,9 +588,9 @@ interface OrderHistoryListProps {
 const OrderHistoryList = ({ orders }: OrderHistoryListProps) => {
   if (orders.length === 0) {
     return (
-      <div className="text-center py-8 bg-slate-800/30 rounded">
+      <div className="text-center py-8 bg-muted/30 rounded">
         <ShoppingBag className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-        <p className="text-slate-500">No orders yet</p>
+        <p className="text-muted-foreground">No orders yet</p>
       </div>
     );
   }
@@ -600,18 +600,18 @@ const OrderHistoryList = ({ orders }: OrderHistoryListProps) => {
       {orders.slice(0, 5).map((order) => (
         <div
           key={order.id}
-          className="bg-slate-800/30 rounded p-4 flex items-center justify-between"
+          className="bg-muted/30 rounded p-4 flex items-center justify-between"
         >
           <div>
-            <p className="text-white font-medium">
+            <p className="text-foreground font-medium">
               Order {toReadableOrderId(order.id)}
             </p>
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-muted-foreground">
               {order.items?.length || 0} item(s) • {formatDate(order.createdAt)}
             </p>
           </div>
           <div className="text-right">
-            <p className="text-white font-medium">
+            <p className="text-foreground font-medium">
               {formatCurrency(Number(order.total))}
             </p>
             <span
@@ -665,14 +665,14 @@ const UserDetailsModal = ({
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
           onClick={(e) => e.stopPropagation()}
-          className="bg-slate-900 border border-white/10 rounded w-full max-w-2xl max-h-[80vh] overflow-hidden"
+          className="bg-card border border-border rounded w-full max-w-2xl max-h-[80vh] overflow-hidden"
         >
           {/* Modal Header */}
-          <div className="flex items-center justify-between p-6 border-b border-white/5">
-            <h2 className="text-xl font-bold text-white">Customer Details</h2>
+          <div className="flex items-center justify-between p-6 border-b border-border">
+            <h2 className="text-xl font-bold text-foreground">Customer Details</h2>
             <button
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded transition-colors"
+              className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -687,7 +687,7 @@ const UserDetailsModal = ({
             if (!user) {
               return (
                 <div className="text-center py-20">
-                  <p className="text-slate-400">User not found</p>
+                  <p className="text-muted-foreground">User not found</p>
                 </div>
               );
             }
@@ -696,7 +696,7 @@ const UserDetailsModal = ({
               <div className="p-6 space-y-6 overflow-y-auto max-h-[calc(80vh-80px)]">
                 {/* User Info */}
                 <div className="flex items-start gap-4">
-                  <div className="relative w-16 h-16 rounded bg-linear-to-br from-brand-secondary-500 to-blue-500 flex items-center justify-center text-white text-2xl font-bold overflow-hidden">
+                  <div className="relative w-16 h-16 rounded bg-linear-to-br from-brand-secondary-500 to-blue-500 flex items-center justify-center text-foreground text-2xl font-bold overflow-hidden">
                     {user.avatar ? (
                       <AppImage
                         src={user.avatar}
@@ -710,12 +710,12 @@ const UserDetailsModal = ({
                     )}
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-white">
+                    <h3 className="text-lg font-semibold text-foreground">
                       {user.name}
                     </h3>
-                    <p className="text-slate-400">{user.email}</p>
+                    <p className="text-muted-foreground">{user.email}</p>
                     {user.phone && (
-                      <p className="text-slate-500 text-sm">{user.phone}</p>
+                      <p className="text-muted-foreground text-sm">{user.phone}</p>
                     )}
                   </div>
                   <div className="flex flex-col gap-2 items-end">
@@ -745,15 +745,15 @@ const UserDetailsModal = ({
 
                 {/* Order History */}
                 <div>
-                  <h4 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-3">
+                  <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-3">
                     Recent Orders
                   </h4>
                   <OrderHistoryList orders={orders} />
                 </div>
 
                 {/* Admin Actions */}
-                <div className="border-t border-white/5 pt-4">
-                  <h4 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-3">
+                <div className="border-t border-border pt-4">
+                  <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-3">
                     Account Actions
                   </h4>
                   <div className="flex flex-wrap gap-3">
@@ -843,30 +843,30 @@ const ResetPasswordModal = ({
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
           onClick={(e) => e.stopPropagation()}
-          className="bg-slate-900 border border-white/10 rounded p-6 w-full max-w-md"
+          className="bg-card border border-border rounded p-6 w-full max-w-md"
         >
           <div className="text-center">
             <div className="w-16 h-16 bg-amber-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <KeyRound className="w-8 h-8 text-amber-400" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">
+            <h3 className="text-xl font-bold text-foreground mb-2">
               Reset Password?
             </h3>
-            <p className="text-slate-400 mb-6">
-              <span className="text-white font-medium">{userName}</span> will be
+            <p className="text-muted-foreground mb-6">
+              <span className="text-foreground font-medium">{userName}</span> will be
               logged out and required to set a new password on their next login.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={onClose}
-                className="flex-1 px-4 py-2.5 bg-slate-800 text-white rounded hover:bg-slate-700 transition-colors"
+                className="flex-1 px-4 py-2.5 bg-muted text-foreground rounded hover:bg-slate-700 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={() => onConfirm(userId)}
                 disabled={isPending}
-                className="flex-1 px-4 py-2.5 bg-amber-500 text-white rounded hover:bg-amber-600 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                className="flex-1 px-4 py-2.5 bg-amber-500 text-foreground rounded hover:bg-amber-600 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {isPending ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -904,30 +904,30 @@ const DeleteConfirmationModal = ({
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
           onClick={(e) => e.stopPropagation()}
-          className="bg-slate-900 border border-white/10 rounded p-6 w-full max-w-md"
+          className="bg-card border border-border rounded p-6 w-full max-w-md"
         >
           <div className="text-center">
             <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
               <Trash2 className="w-8 h-8 text-red-400" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">
+            <h3 className="text-xl font-bold text-foreground mb-2">
               Delete Customer?
             </h3>
-            <p className="text-slate-400 mb-6">
+            <p className="text-muted-foreground mb-6">
               This action cannot be undone. The customer's account and all
               associated data will be permanently removed.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={onClose}
-                className="flex-1 px-4 py-2.5 bg-slate-800 text-white rounded hover:bg-slate-700 transition-colors"
+                className="flex-1 px-4 py-2.5 bg-muted text-foreground rounded hover:bg-slate-700 transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={() => onConfirm(userId)}
                 disabled={isPending}
-                className="flex-1 px-4 py-2.5 bg-red-500 text-white rounded hover:bg-red-600 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                className="flex-1 px-4 py-2.5 bg-red-500 text-foreground rounded hover:bg-red-600 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {isPending ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -1095,7 +1095,7 @@ export default function AdminUsers() {
   return (
     <div className="space-y-6 relative">
       {isPlaceholderData && (
-        <div className="absolute inset-0 bg-slate-900/10 -[1px] z-10 pointer-events-none transition-opacity" />
+        <div className="absolute inset-0 bg-card/10 -[1px] z-10 pointer-events-none transition-opacity" />
       )}
 
       <AdminUsersHeader
@@ -1109,7 +1109,7 @@ export default function AdminUsers() {
       <StatsCards total={pagination.total} users={users} />
 
       {/* Users Table */}
-      <div className="bg-slate-800/30  border border-white/5 rounded overflow-hidden relative">
+      <div className="bg-muted/30  border border-border rounded overflow-hidden relative">
         <UserTable
           loading={loading}
           users={users}

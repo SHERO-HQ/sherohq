@@ -70,10 +70,10 @@ export default function ActivityFeed({ logs, isLoading }: ActivityFeedProps) {
  <div className="space-y-4">
  {[1, 2, 3, 4, 5].map((i) => (
  <div key={`skeleton-${i}`} className="flex gap-4 animate-pulse">
- <div className="w-8 h-8 rounded-full bg-slate-800" />
+ <div className="w-8 h-8 rounded-full bg-muted" />
  <div className="flex-1 space-y-2">
- <div className="h-4 bg-slate-800 rounded w-3/4" />
- <div className="h-3 bg-slate-800 rounded w-1/2" />
+ <div className="h-4 bg-muted rounded w-3/4" />
+ <div className="h-3 bg-muted rounded w-1/2" />
  </div>
  </div>
  ))}
@@ -83,7 +83,7 @@ export default function ActivityFeed({ logs, isLoading }: ActivityFeedProps) {
 
  if (!Array.isArray(logs) || logs.length === 0) {
  return (
- <div className="text-center py-8 text-slate-500">
+ <div className="text-center py-8 text-muted-foreground">
  <Clock className="w-8 h-8 mx-auto mb-2 opacity-20" />
  <p className="text-sm">No recent activity</p>
  </div>
@@ -92,7 +92,7 @@ export default function ActivityFeed({ logs, isLoading }: ActivityFeedProps) {
 
  return (
  <div className="space-y-4">
- <div className="relative space-y-4 before:absolute before:left-4 before:top-2 before:bottom-2 before:w-px before:bg-white/5">
+ <div className="relative space-y-4 before:absolute before:left-4 before:top-2 before:bottom-2 before:w-px before:bg-accent/50">
  {logs.map((log) => {
  const typeColor = getTypeColor(log.type);
  const icon = getIcon(log.action, log.type);
@@ -112,12 +112,12 @@ export default function ActivityFeed({ logs, isLoading }: ActivityFeedProps) {
  <p className="text-sm font-medium text-slate-200 truncate">
  {log.action}
  </p>
- <span className="text-[10px] text-slate-500 whitespace-nowrap ml-2">
+ <span className="text-[10px] text-muted-foreground whitespace-nowrap ml-2">
  {formatTime(log.createdAt)}
  </span>
  </div>
  {log.details && (
- <p className="text-xs text-slate-500 line-clamp-1">
+ <p className="text-xs text-muted-foreground line-clamp-1">
  {log.details}
  </p>
  )}

@@ -20,17 +20,17 @@ export default function GuideSidebarMeta({
   return (
     <div className="space-y-6">
       {/* Classification Card */}
-      <Card className="bg-slate-900 border border-white/5 p-6 space-y-6">
-        <div className="flex items-center gap-2 pb-2 border-b border-white/5">
+      <Card className="bg-card border border-border p-6 space-y-6">
+        <div className="flex items-center gap-2 pb-2 border-b border-border">
           <Tag className="w-4 h-4 text-brand-secondary-400" />
-          <h3 className="font-bold text-white text-sm">Classification</h3>
+          <h3 className="font-bold text-foreground text-sm">Classification</h3>
         </div>
 
         <div className="space-y-4">
           <div className="space-y-2">
             <label
               htmlFor="category"
-              className="text-xs font-semibold text-slate-400 uppercase tracking-wider"
+              className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
             >
               Category *
             </label>
@@ -38,7 +38,7 @@ export default function GuideSidebarMeta({
               id="category"
               value={category}
               onChange={(e) => onCategoryChange(e.target.value as "hardware" | "software")}
-              className="w-full bg-slate-800 border-white/5 text-white rounded px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-brand-secondary-500/50"
+              className="w-full bg-muted border-border text-foreground rounded px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-brand-secondary-500/50"
               required
             >
               <option value="hardware">Hardware</option>
@@ -49,10 +49,10 @@ export default function GuideSidebarMeta({
       </Card>
 
       {/* Visibility Settings Card */}
-      <Card className="bg-slate-900 border border-white/5 p-6 space-y-6">
-        <div className="flex items-center gap-2 pb-2 border-b border-white/5">
+      <Card className="bg-card border border-border p-6 space-y-6">
+        <div className="flex items-center gap-2 pb-2 border-b border-border">
           <Eye className="w-4 h-4 text-brand-secondary-400" />
-          <h3 className="font-bold text-white text-sm">Visibility</h3>
+          <h3 className="font-bold text-foreground text-sm">Visibility</h3>
         </div>
 
         <div className="space-y-4">
@@ -63,7 +63,7 @@ export default function GuideSidebarMeta({
               "flex items-start gap-3 p-4 rounded border cursor-pointer transition-all duration-300 select-none",
               published
                 ? "bg-emerald-500/5 border-emerald-500/30 text-emerald-100"
-                : "bg-slate-800/40 border-white/5 text-slate-300 hover:bg-slate-800/60"
+                : "bg-muted/40 border-border text-muted-foreground hover:bg-muted/60"
             )}
           >
             <input
@@ -72,7 +72,7 @@ export default function GuideSidebarMeta({
               checked={published}
               onChange={(e) => onPublishedChange(e.target.checked)}
               onClick={(e) => e.stopPropagation()} // Prevent double trigger
-              className="w-4 h-4 rounded border-white/20 bg-slate-800 text-brand-secondary-500 focus:ring-brand-secondary-500 focus:ring-offset-slate-900 cursor-pointer mt-0.5"
+              className="w-4 h-4 rounded border-border bg-muted text-brand-secondary-500 focus:ring-brand-secondary-500 focus:ring-offset-slate-900 cursor-pointer mt-0.5"
             />
             <div className="space-y-1">
               <label
@@ -82,7 +82,7 @@ export default function GuideSidebarMeta({
               >
                 {published ? "Published" : "Draft"}
               </label>
-              <p className="text-xs text-slate-500 leading-relaxed">
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 {published
                   ? "Visible to users immediately on the support center page."
                   : "Hidden from public view. Only administrators can view/edit."}
@@ -90,9 +90,9 @@ export default function GuideSidebarMeta({
             </div>
           </div>
 
-          <div className="p-3 rounded bg-slate-800/30 border border-white/5 flex gap-2">
+          <div className="p-3 rounded bg-muted/30 border border-border flex gap-2">
             <Info className="w-4 h-4 shrink-0 text-brand-secondary-400 mt-0.5" />
-            <p className="text-[10px] text-slate-500 leading-relaxed">
+            <p className="text-[10px] text-muted-foreground leading-relaxed">
               Ensure you review markdown code rendering before publishing articles publicly.
             </p>
           </div>

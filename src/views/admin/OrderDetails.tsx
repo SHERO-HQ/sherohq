@@ -219,7 +219,7 @@ export default function OrderDetails() {
       case "cancelled":
         return { color: "text-rose-400 bg-rose-500/10", icon: XCircle };
       default:
-        return { color: "text-slate-400 bg-slate-500/10", icon: Clock };
+        return { color: "text-muted-foreground bg-slate-500/10", icon: Clock };
     }
   };
 
@@ -258,61 +258,61 @@ export default function OrderDetails() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-9 h-9 rounded bg-white/5 animate-pulse" />
+          <div className="w-9 h-9 rounded bg-accent/50 animate-pulse" />
           <div className="space-y-2">
-            <div className="h-3 w-20 bg-white/5 rounded" />
-            <div className="h-6 w-36 bg-white/10 rounded" />
+            <div className="h-3 w-20 bg-accent/50 rounded" />
+            <div className="h-6 w-36 bg-accent rounded" />
           </div>
         </div>
         <div className="flex gap-2">
-          <div className="h-10 w-24 bg-white/5 rounded" />
-          <div className="h-10 w-24 bg-white/5 rounded" />
-          <div className="h-10 w-32 bg-white/10 rounded" />
+          <div className="h-10 w-24 bg-accent/50 rounded" />
+          <div className="h-10 w-24 bg-accent/50 rounded" />
+          <div className="h-10 w-32 bg-accent rounded" />
         </div>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="bg-slate-900 border-white/5 p-6 space-y-6">
-            <div className="flex justify-between items-center pb-4 border-b border-white/5">
-              <div className="h-5 w-32 bg-white/5 rounded" />
-              <div className="h-5 w-20 bg-white/5 rounded-full" />
+          <Card className="bg-card border-border p-6 space-y-6">
+            <div className="flex justify-between items-center pb-4 border-b border-border">
+              <div className="h-5 w-32 bg-accent/50 rounded" />
+              <div className="h-5 w-20 bg-accent/50 rounded-full" />
             </div>
             <div className="space-y-4">
               {[1, 2].map((i) => (
                 <div key={i} className="flex items-center gap-6 py-2">
-                  <div className="w-20 h-20 bg-white/5 rounded shrink-0" />
+                  <div className="w-20 h-20 bg-accent/50 rounded shrink-0" />
                   <div className="flex-1 space-y-2">
-                    <div className="h-4 w-40 bg-white/10 rounded" />
-                    <div className="h-3 w-24 bg-white/5 rounded" />
+                    <div className="h-4 w-40 bg-accent rounded" />
+                    <div className="h-3 w-24 bg-accent/50 rounded" />
                   </div>
                   <div className="text-right space-y-2">
-                    <div className="h-4 w-16 bg-white/10 rounded ml-auto" />
-                    <div className="h-3 w-10 bg-white/5 rounded ml-auto" />
+                    <div className="h-4 w-16 bg-accent rounded ml-auto" />
+                    <div className="h-3 w-10 bg-accent/50 rounded ml-auto" />
                   </div>
                 </div>
               ))}
             </div>
-            <div className="h-14 bg-white/5 rounded w-full" />
+            <div className="h-14 bg-accent/50 rounded w-full" />
           </Card>
 
           <div className="grid md:grid-cols-2 gap-6">
-            <Card className="bg-slate-900 border-white/5 p-6 space-y-4">
-              <div className="h-4 w-32 bg-white/5 rounded" />
+            <Card className="bg-card border-border p-6 space-y-4">
+              <div className="h-4 w-32 bg-accent/50 rounded" />
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-white/5" />
+                <div className="w-10 h-10 rounded-full bg-accent/50" />
                 <div className="space-y-2 flex-1">
-                  <div className="h-4 w-28 bg-white/10 rounded" />
-                  <div className="h-3 w-36 bg-white/5 rounded" />
+                  <div className="h-4 w-28 bg-accent rounded" />
+                  <div className="h-3 w-36 bg-accent/50 rounded" />
                 </div>
               </div>
             </Card>
-            <Card className="bg-slate-900 border-white/5 p-6 space-y-4">
-              <div className="h-4 w-32 bg-white/5 rounded" />
+            <Card className="bg-card border-border p-6 space-y-4">
+              <div className="h-4 w-32 bg-accent/50 rounded" />
               <div className="space-y-2">
-                <div className="h-4 w-48 bg-white/10 rounded" />
-                <div className="h-3 w-32 bg-white/5 rounded" />
+                <div className="h-4 w-48 bg-accent rounded" />
+                <div className="h-3 w-32 bg-accent/50 rounded" />
               </div>
             </Card>
           </div>
@@ -320,24 +320,24 @@ export default function OrderDetails() {
 
         {/* Sidebar */}
         <div className="space-y-6">
-          <Card className="bg-slate-900 border-white/5 p-6 space-y-6">
+          <Card className="bg-card border-border p-6 space-y-6">
             <div className="space-y-2">
-              <div className="h-3 w-20 bg-white/5 rounded" />
-              <div className="h-10 bg-white/5 rounded" />
+              <div className="h-3 w-20 bg-accent/50 rounded" />
+              <div className="h-10 bg-accent/50 rounded" />
             </div>
-            <div className="space-y-3 pt-4 border-t border-white/5">
-              <div className="h-3 w-24 bg-white/5 rounded" />
+            <div className="space-y-3 pt-4 border-t border-border">
+              <div className="h-3 w-24 bg-accent/50 rounded" />
               <div className="flex justify-between">
-                <div className="h-4 w-12 bg-white/5 rounded" />
-                <div className="h-4 w-20 bg-white/10 rounded" />
+                <div className="h-4 w-12 bg-accent/50 rounded" />
+                <div className="h-4 w-20 bg-accent rounded" />
               </div>
               <div className="flex justify-between">
-                <div className="h-4 w-12 bg-white/5 rounded" />
-                <div className="h-4 w-20 bg-white/10 rounded" />
+                <div className="h-4 w-12 bg-accent/50 rounded" />
+                <div className="h-4 w-20 bg-accent rounded" />
               </div>
             </div>
           </Card>
-          <div className="h-24 bg-slate-900/50 rounded border border-white/5 animate-pulse" />
+          <div className="h-24 bg-card/50 rounded border border-border animate-pulse" />
         </div>
       </div>
     </div>
@@ -481,14 +481,14 @@ export default function OrderDetails() {
         <div className="w-20 h-20 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto">
           <XCircle className="w-10 h-10 text-rose-500" />
         </div>
-        <h1 className="text-2xl font-bold text-white">Order Not Found</h1>
-        <p className="text-slate-400">
+        <h1 className="text-2xl font-bold text-foreground">Order Not Found</h1>
+        <p className="text-muted-foreground">
           {error ||
             "The order you are looking for does not exist or has been removed."}
         </p>
         <Button
           variant="outline"
-          className="text-white border-white/10 hover:bg-white/5"
+          className="text-foreground border-border hover:bg-accent"
           asChild
         >
           <Link href="/admin/orders">
@@ -506,22 +506,22 @@ export default function OrderDetails() {
       <div className="max-w-6xl mx-auto space-y-6 pb-20">
         {/* Header Actions */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-4 text-white">
+        <div className="flex items-center gap-4 text-foreground">
           <Button
             variant="ghost"
             size="icon"
-            className="text-slate-400 hover:text-white hover:bg-white/5"
+            className="text-muted-foreground hover:text-foreground hover:bg-accent"
             onClick={() => router.back()}
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
-            <div className="flex items-center gap-2 text-sm font-mono text-slate-500 mb-1">
+            <div className="flex items-center gap-2 text-sm font-mono text-muted-foreground mb-1">
               <span>{printOrderId}</span>
               <button
                 type="button"
                 onClick={() => void handleCopyOrderId()}
-                className="inline-flex items-center gap-1 text-slate-400 hover:text-white transition-colors"
+                className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
                 title="Copy order ID"
                 aria-label="Copy order ID"
               >
@@ -554,33 +554,33 @@ export default function OrderDetails() {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="bg-slate-900 border-white/10 text-white w-48"
+              className="bg-card border-border text-foreground w-48"
             >
               <DropdownMenuItem
                 onClick={() => handlePrint("invoice")}
-                className="cursor-pointer hover:bg-white/5"
+                className="cursor-pointer hover:bg-accent"
               >
                 <Printer className="w-4 h-4 mr-2 text-brand-secondary-400" />
                 Print Invoice
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => handlePrint("receipt80")}
-                className="cursor-pointer hover:bg-white/5"
+                className="cursor-pointer hover:bg-accent"
               >
                 <Printer className="w-4 h-4 mr-2 text-blue-400" />
                 Print Thermal 80mm
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => handlePrint("receipt58")}
-                className="cursor-pointer hover:bg-white/5"
+                className="cursor-pointer hover:bg-accent"
               >
                 <Printer className="w-4 h-4 mr-2 text-cyan-400" />
                 Print Thermal 58mm
               </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-white/5 sm:hidden" />
+              <DropdownMenuSeparator className="bg-accent/50 sm:hidden" />
               <DropdownMenuItem
                 onClick={handleExportPDF}
-                className="cursor-pointer hover:bg-white/5 sm:hidden"
+                className="cursor-pointer hover:bg-accent sm:hidden"
               >
                 <FileText className="w-4 h-4 mr-2 text-amber-400" />
                 Export PDF
@@ -604,28 +604,28 @@ export default function OrderDetails() {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="bg-slate-900 border-white/10 text-white w-48"
+              className="bg-card border-border text-foreground w-48"
             >
               <DropdownMenuItem
                 onClick={() => handleUpdateStatus("processing")}
-                className="cursor-pointer hover:bg-white/5"
+                className="cursor-pointer hover:bg-accent"
               >
                 <Truck className="w-4 h-4 mr-2 text-blue-400" /> Processing
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => handleUpdateStatus("intransit")}
-                className="cursor-pointer hover:bg-white/5"
+                className="cursor-pointer hover:bg-accent"
               >
                 <Truck className="w-4 h-4 mr-2 text-purple-400" /> Shipped
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => handleUpdateStatus("delivered")}
-                className="cursor-pointer hover:bg-white/5"
+                className="cursor-pointer hover:bg-accent"
               >
                 <CheckCircle2 className="w-4 h-4 mr-2 text-brand-secondary-400" />{" "}
                 Delivered
               </DropdownMenuItem>
-              <DropdownMenuSeparator className="bg-white/5" />
+              <DropdownMenuSeparator className="bg-accent/50" />
               <DropdownMenuItem
                 onClick={() => handleUpdateStatus("cancelled")}
                 className="cursor-pointer text-rose-400 focus:text-rose-400 focus:bg-rose-500/10"
@@ -639,10 +639,10 @@ export default function OrderDetails() {
       <div className="grid lg:grid-cols-3 gap-8">
         {/* Main Content: Items & Summary */}
         <div className="lg:col-span-2 space-y-6">
-          <Card className="bg-slate-900/40 border-white/10 overflow-hidden relative group duration-300 hover:border-brand-secondary-500/20">
+          <Card className="bg-card/40 border-border overflow-hidden relative group duration-300 hover:border-brand-secondary-500/20">
             <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-            <div className="p-6 border-b border-white/5 flex items-center justify-between relative z-10">
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <div className="p-6 border-b border-border flex items-center justify-between relative z-10">
+              <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
                 <ShoppingBag className="w-5 h-5 text-brand-secondary-400" />
                 Order Items
               </h2>
@@ -661,7 +661,7 @@ export default function OrderDetails() {
                   key={item.id || item.name}
                   className="p-6 flex items-center gap-6 group/item hover:bg-slate-950/20 transition-colors duration-200"
                 >
-                  <div className="relative w-20 h-20 rounded bg-slate-800 border border-white/5 overflow-hidden flex items-center justify-center shrink-0">
+                  <div className="relative w-20 h-20 rounded bg-muted border border-border overflow-hidden flex items-center justify-center shrink-0">
                     {item.image &&
                       (item.image.startsWith("/uploads") ||
                         item.image.startsWith("http")) ? (
@@ -679,27 +679,27 @@ export default function OrderDetails() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-white font-bold truncate group-hover/item:text-brand-secondary-400 transition-colors">
+                    <p className="text-foreground font-bold truncate group-hover/item:text-brand-secondary-400 transition-colors">
                       {item.name}
                     </p>
-                    <p className="text-sm text-slate-500 mt-1 font-mono">
+                    <p className="text-sm text-muted-foreground mt-1 font-mono">
                       {item.sku ? `SKU: ${item.sku}` : "No SKU"}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-white font-bold font-mono">
+                    <p className="text-foreground font-bold font-mono">
                       GH₵{item.price.toLocaleString()}
                     </p>
-                    <p className="text-sm text-slate-500 mt-1">
+                    <p className="text-sm text-muted-foreground mt-1">
                       Qty: {item.quantity}
                     </p>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="p-6 bg-white/5 border-t border-white/5 relative z-10">
+            <div className="p-6 bg-accent/50 border-t border-border relative z-10">
               <div className="flex justify-between items-center">
-                <span className="text-slate-400">Total Amount</span>
+                <span className="text-muted-foreground">Total Amount</span>
                 <span className="text-2xl font-bold text-brand-secondary-400 font-mono">
                   GH₵{order.total.toLocaleString()}
                 </span>
@@ -709,35 +709,35 @@ export default function OrderDetails() {
 
           {/* Customer & Shipping Info */}
           <div className="grid md:grid-cols-2 gap-6">
-            <Card className="bg-slate-900/40 border-white/10 p-6 hover:border-blue-500/20 duration-300 relative group overflow-hidden">
+            <Card className="bg-card/40 border-border p-6 hover:border-blue-500/20 duration-300 relative group overflow-hidden">
               <div className="absolute inset-0 bg-radial-gradient from-blue-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-              <h3 className="text-white font-bold mb-4 flex items-center gap-2 relative z-10">
+              <h3 className="text-foreground font-bold mb-4 flex items-center gap-2 relative z-10">
                 <Mail className="w-4 h-4 text-blue-400" />
                 Customer Contact
               </h3>
               <div className="space-y-4 relative z-10">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-slate-800 border border-white/5 flex items-center justify-center text-slate-400 font-bold font-mono uppercase">
+                  <div className="w-10 h-10 rounded-full bg-muted border border-border flex items-center justify-center text-muted-foreground font-bold font-mono uppercase">
                     {order.shippingInfo.firstName[0]}
                     {order.shippingInfo.lastName[0]}
                   </div>
                   <div>
-                    <p className="text-white font-semibold">
+                    <p className="text-foreground font-semibold">
                       {order.shippingInfo.firstName}{" "}
                       {order.shippingInfo.lastName}
                     </p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-muted-foreground">
                       {order.shippingInfo.email}
                     </p>
                   </div>
                 </div>
-                <div className="pt-2 space-y-2 border-t border-white/5">
-                  <div className="flex items-center gap-2 text-sm text-slate-400">
-                    <Mail className="w-3.5 h-3.5 text-slate-500" />
+                <div className="pt-2 space-y-2 border-t border-border">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Mail className="w-3.5 h-3.5 text-muted-foreground" />
                     <span>{order.shippingInfo.email}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-slate-400">
-                    <Phone className="w-3.5 h-3.5 text-slate-500" />
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Phone className="w-3.5 h-3.5 text-muted-foreground" />
                     <span>
                       {order.shippingInfo.phone || "No phone provided"}
                     </span>
@@ -746,20 +746,20 @@ export default function OrderDetails() {
               </div>
             </Card>
 
-            <Card className="bg-slate-900/40 border-white/10 p-6 hover:border-amber-500/20 duration-300 relative group overflow-hidden">
+            <Card className="bg-card/40 border-border p-6 hover:border-amber-500/20 duration-300 relative group overflow-hidden">
               <div className="absolute inset-0 bg-radial-gradient from-amber-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-              <h3 className="text-white font-bold mb-4 flex items-center gap-2 relative z-10">
+              <h3 className="text-foreground font-bold mb-4 flex items-center gap-2 relative z-10">
                 <MapPin className="w-4 h-4 text-amber-400" />
                 Shipping Address
               </h3>
-              <div className="text-sm text-slate-400 space-y-2 relative z-10">
-                <p className="text-white font-medium">
+              <div className="text-sm text-muted-foreground space-y-2 relative z-10">
+                <p className="text-foreground font-medium">
                   {order.shippingInfo.address}
                 </p>
                 <p className="text-xs">
                   {order.shippingInfo.city}, {order.shippingInfo.region}
                 </p>
-                <div className="pt-2.5 flex items-center gap-2 border-t border-white/5 mt-2">
+                <div className="pt-2.5 flex items-center gap-2 border-t border-border mt-2">
                   <Truck className="w-4 h-4 text-brand-secondary-400" />
                   <span className="text-[10px] uppercase font-bold tracking-wider text-brand-secondary-400">
                     Standard Delivery
@@ -772,10 +772,10 @@ export default function OrderDetails() {
 
         {/* Sidebar Info */}
         <div className="space-y-6">
-          <Card className="bg-slate-900/40 border-white/10 p-6 space-y-6 hover:border-brand-secondary-500/20 duration-300 relative group overflow-hidden">
+          <Card className="bg-card/40 border-border p-6 space-y-6 hover:border-brand-secondary-500/20 duration-300 relative group overflow-hidden">
             <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             <div className="relative z-10">
-              <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">
+              <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">
                 Order Status
               </h3>
               <div
@@ -792,35 +792,35 @@ export default function OrderDetails() {
                 </div>
               </div>
               {order.paymentMessage && (
-                <div className="mt-3 text-xs bg-slate-950/40 p-3 rounded border border-white/5 text-slate-400 leading-relaxed">
-                  <span className="font-semibold text-slate-300 block mb-1">Payment Status:</span> 
+                <div className="mt-3 text-xs bg-slate-950/40 p-3 rounded border border-border text-muted-foreground leading-relaxed">
+                  <span className="font-semibold text-muted-foreground block mb-1">Payment Status:</span> 
                   {order.paymentMessage}
                 </div>
               )}
             </div>
 
             <div className="relative z-10">
-              <h3 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">
+              <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3">
                 Payment Information
               </h3>
-              <div className="space-y-3 bg-slate-950/20 border border-white/5 rounded p-3 text-xs">
+              <div className="space-y-3 bg-slate-950/20 border border-border rounded p-3 text-xs">
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-500">Method</span>
-                  <span className="text-white font-semibold flex items-center gap-1">
-                    <CreditCard className="w-3.5 h-3.5 text-slate-400" />
+                  <span className="text-muted-foreground">Method</span>
+                  <span className="text-foreground font-semibold flex items-center gap-1">
+                    <CreditCard className="w-3.5 h-3.5 text-muted-foreground" />
                     {formatPaymentMethod(order.paymentMethod)}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-500">Date</span>
-                  <span className="text-white font-mono">
+                  <span className="text-muted-foreground">Date</span>
+                  <span className="text-foreground font-mono">
                     {new Date(order.createdAt).toLocaleDateString()}
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-white/5 relative z-10">
+            <div className="pt-4 border-t border-border relative z-10">
               <div className="bg-brand-secondary-500/5 p-4 rounded border border-brand-secondary-500/10">
                 <div className="flex items-center gap-2 text-brand-secondary-400 mb-1.5">
                   <Package className="w-4 h-4" />
@@ -828,7 +828,7 @@ export default function OrderDetails() {
                     Inventory Note
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-400 leading-relaxed">
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
                   Stock levels were adjusted automatically when this order was
                   confirmed.
                 </p>
@@ -837,27 +837,27 @@ export default function OrderDetails() {
           </Card>
 
           {/* Quick Actions */}
-          <div className="bg-slate-950/30 rounded p-5 border border-white/5 relative group overflow-hidden">
+          <div className="bg-slate-950/30 rounded p-5 border border-border relative group overflow-hidden">
             <div className="absolute inset-0 bg-radial-gradient from-white/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-            <h4 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 relative z-10">
+            <h4 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-3 relative z-10">
               Internal Actions
             </h4>
             <div className="space-y-2 relative z-10">
               <Button
                 variant="ghost"
                 onClick={handleResendConfirmation}
-                className="w-full justify-start text-xs text-slate-400 hover:text-white hover:bg-white/5 h-9 rounded transition-all duration-200"
+                className="w-full justify-start text-xs text-muted-foreground hover:text-foreground hover:bg-accent h-9 rounded transition-all duration-200"
               >
-                <Mail className="w-3.5 h-3.5 mr-2 text-slate-500" />
+                <Mail className="w-3.5 h-3.5 mr-2 text-muted-foreground" />
                 Resend Confirmation
               </Button>
               <Button
                 variant="ghost"
                 onClick={handleCopyTrackingLink}
                 disabled={isStorePickupOrder}
-                className="w-full justify-start text-xs text-slate-400 hover:text-white hover:bg-white/5 h-9 rounded transition-all duration-200"
+                className="w-full justify-start text-xs text-muted-foreground hover:text-foreground hover:bg-accent h-9 rounded transition-all duration-200"
               >
-                <Hash className="w-3.5 h-3.5 mr-2 text-slate-500" />
+                <Hash className="w-3.5 h-3.5 mr-2 text-muted-foreground" />
                 {isStorePickupOrder
                   ? "Tracking not available"
                   : "Copy Tracking link"}
@@ -865,9 +865,9 @@ export default function OrderDetails() {
               <Button
                 variant="ghost"
                 onClick={handleCopyPaymentLink}
-                className="w-full justify-start text-xs text-slate-400 hover:text-white hover:bg-white/5 h-9 rounded transition-all duration-200"
+                className="w-full justify-start text-xs text-muted-foreground hover:text-foreground hover:bg-accent h-9 rounded transition-all duration-200"
               >
-                <CreditCard className="w-3.5 h-3.5 mr-2 text-slate-500" />
+                <CreditCard className="w-3.5 h-3.5 mr-2 text-muted-foreground" />
                 Copy Payment link
               </Button>
             </div>
@@ -1088,14 +1088,14 @@ export default function OrderDetails() {
                     <h1 className="text-3xl font-bold text-brand-secondary-600">
                       SHERO
                     </h1>
-                    <p className="text-slate-500 text-sm">
+                    <p className="text-muted-foreground text-sm">
                       Technologies
                     </p>
                   </div>
                   <div className="text-right">
                     <h2 className="text-xl font-bold uppercase">{printMode}</h2>
                     <p className="font-mono text-sm">#{printOrderId}</p>
-                    <p className="text-slate-500 text-xs">
+                    <p className="text-muted-foreground text-xs">
                       {new Date().toLocaleDateString()}
                     </p>
                   </div>
@@ -1103,7 +1103,7 @@ export default function OrderDetails() {
 
                 <div className="grid grid-cols-2 gap-8 mb-8 pb-8 border-b border-slate-100">
                   <div>
-                    <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+                    <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">
                       Billed To
                     </h3>
                     <p className="font-bold">
@@ -1118,7 +1118,7 @@ export default function OrderDetails() {
                     </p>
                   </div>
                   <div>
-                    <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
+                    <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">
                       Shipping Address
                     </h3>
                     <p className="text-sm text-slate-600">
@@ -1133,16 +1133,16 @@ export default function OrderDetails() {
                 <table className="w-full mb-8">
                   <thead>
                     <tr className="border-b-2 border-slate-100">
-                      <th className="text-left py-3 text-[10px] uppercase text-slate-400">
+                      <th className="text-left py-3 text-[10px] uppercase text-muted-foreground">
                         Description
                       </th>
-                      <th className="text-center py-3 text-[10px] uppercase text-slate-400">
+                      <th className="text-center py-3 text-[10px] uppercase text-muted-foreground">
                         Qty
                       </th>
-                      <th className="text-right py-3 text-[10px] uppercase text-slate-400">
+                      <th className="text-right py-3 text-[10px] uppercase text-muted-foreground">
                         Price
                       </th>
-                      <th className="text-right py-3 text-[10px] uppercase text-slate-400">
+                      <th className="text-right py-3 text-[10px] uppercase text-muted-foreground">
                         Total
                       </th>
                     </tr>
@@ -1153,7 +1153,7 @@ export default function OrderDetails() {
                         <td className="py-4">
                           <p className="font-bold">{item.name}</p>
                           {item.sku && (
-                            <p className="text-[10px] text-slate-500 font-mono">
+                            <p className="text-[10px] text-muted-foreground font-mono">
                               SKU: {item.sku}
                             </p>
                           )}
@@ -1173,11 +1173,11 @@ export default function OrderDetails() {
                 <div className="flex justify-end pt-8">
                   <div className="w-64 space-y-3">
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-500">Subtotal</span>
+                      <span className="text-muted-foreground">Subtotal</span>
                       <span>GH₵{order.total.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-slate-500">Tax (0%)</span>
+                      <span className="text-muted-foreground">Tax (0%)</span>
                       <span>GH₵0.00</span>
                     </div>
                     <div className="flex justify-between text-lg font-bold border-t border-slate-100 pt-3 text-brand-secondary-600">
@@ -1194,17 +1194,17 @@ export default function OrderDetails() {
                       alt="Invoice verification QR"
                       className="w-28 h-28 mx-auto"
                     />
-                    <p className="text-[10px] text-slate-500 mt-2">
+                    <p className="text-[10px] text-muted-foreground mt-2">
                       Scan to verify invoice details
                     </p>
                   </div>
                 )}
 
                 <div className="mt-20 pt-8 border-t border-slate-100 text-center">
-                  <p className="text-slate-400 text-[10px] uppercase tracking-widest">
+                  <p className="text-muted-foreground text-[10px] uppercase tracking-widest">
                     Thank you for your business!
                   </p>
-                  <p className="text-slate-500 text-[9px] mt-1">
+                  <p className="text-muted-foreground text-[9px] mt-1">
                     SHERO Technologies • {COMPANY_CONTACTS.HQ_LOCATION} • {COMPANY_CONTACTS.WEBSITE_DISPLAY}
                   </p>
                 </div>

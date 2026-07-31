@@ -98,7 +98,7 @@ const AdminHeader = memo(({
      {/* Universal Sidebar Toggle */}
      <button
       onClick={onMenuClick}
-      className="p-2 rounded text-slate-400 hover:text-brand-secondary-400 hover:bg-white/5 transition-all shrink-0 group ring-1 ring-white/5"
+      className="p-2 rounded text-muted-foreground hover:text-brand-secondary-400 hover:bg-accent transition-all shrink-0 group ring-1 ring-white/5"
       aria-label={isSidebarOpen ? "Collapse Sidebar" : "Expand Sidebar"}
      >
       {isSidebarOpen ? (
@@ -113,7 +113,7 @@ const AdminHeader = memo(({
        <li>
         <Link
          href="/admin/dashboard"
-         className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors"
+         className="flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
         >
          <LayoutDashboard className="w-3.5 h-3.5" />
          <span>Dashboard</span>
@@ -134,7 +134,7 @@ const AdminHeader = memo(({
           ) : (
            <Link
             href={to}
-            className="text-slate-400 hover:text-white transition-colors capitalize"
+            className="text-muted-foreground hover:text-foreground transition-colors capitalize"
            >
             {displayLabel}
            </Link>
@@ -151,12 +151,12 @@ const AdminHeader = memo(({
      {/* Search Bar - Trigger */}
      <button
       onClick={() => setIsSearchOpen(true)}
-      className="hidden lg:flex items-center gap-3 w-64 px-4 py-2 glass-surface-md text-sm text-slate-500 hover:bg-slate-800/80 hover:border-white/20 transition group text-left rounded"
+      className="hidden lg:flex items-center gap-3 w-64 px-4 py-2 glass-surface-md text-sm text-muted-foreground hover:bg-muted/80 hover:border-border transition group text-left rounded"
      >
       <Search className="w-4 h-4 group-hover:text-brand-secondary-400 transition-colors" />
       <span className="flex-1">Search everything...</span>
       <div className="flex items-center gap-1">
-       <kbd className="px-1.5 py-0.5 rounded bg-slate-900 border border-white/10 text-[10px] font-medium text-slate-400">
+       <kbd className="px-1.5 py-0.5 rounded bg-card border border-border text-[10px] font-medium text-muted-foreground">
         ⌘K
        </kbd>
       </div>
@@ -165,7 +165,7 @@ const AdminHeader = memo(({
      {/* Mobile Search Icon */}
      <button
       onClick={() => setIsSearchOpen(true)}
-      className="lg:hidden p-2 text-slate-400 hover:text-white transition-colors"
+      className="lg:hidden p-2 text-muted-foreground hover:text-foreground transition-colors"
       aria-label="Search"
      >
       <Search className="w-5 h-5" />
@@ -174,7 +174,7 @@ const AdminHeader = memo(({
      {/* View Site */}
      <a
       href={getAbsoluteUrl("/")}
-      className="hidden md:flex items-center px-3 py-2 text-sm text-slate-400 hover:text-white hover:bg-brand-secondary-500/5 rounded transition-colors"
+      className="hidden md:flex items-center px-3 py-2 text-sm text-muted-foreground hover:text-foreground hover:bg-brand-secondary-500/5 rounded transition-colors"
       title="View Site"
      >
       <Globe className="w-4 h-4 mr-1" />
@@ -191,7 +191,7 @@ const AdminHeader = memo(({
         variant="ghost"
         className="flex items-center hover:bg-transparent p-0"
        >
-        <div className="relative flex items-center justify-center p-1 w-10 h-10 shrink-0 overflow-hidden hover:bg-white/5 rounded  border border-white/10 hover:border-white/5 transition outline-none">
+        <div className="relative flex items-center justify-center p-1 w-10 h-10 shrink-0 overflow-hidden hover:bg-accent rounded  border border-border hover:border-border transition outline-none">
          {admin?.avatar ? (
           <AppImage
            src={admin.avatar}
@@ -205,34 +205,34 @@ const AdminHeader = memo(({
          )}
         </div>
         <div className="hidden sm:flex flex-col items-start ml-3">
-         <span className="text-sm font-semibold text-white capitalize leading-none mb-1">
+         <span className="text-sm font-semibold text-foreground capitalize leading-none mb-1">
           {admin?.username || "Admin"}
          </span>
-         <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">
+         <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
           {admin?.role || "Super Admin"}
          </span>
         </div>
-        <ChevronDown className="w-4 h-4 text-slate-500 ml-2 hidden sm:block" />
+        <ChevronDown className="w-4 h-4 text-muted-foreground ml-2 hidden sm:block" />
        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
        align="end"
-       className="w-56 bg-slate-900 border-white/10 text-white"
+       className="w-56 bg-card border-border text-foreground"
       >
        <DropdownMenuLabel className="">
         My Account
        </DropdownMenuLabel>
-       <DropdownMenuSeparator className="bg-white/5" />
+       <DropdownMenuSeparator className="bg-accent/50" />
        <DropdownMenuItem asChild>
         <Link
          href="/admin/profile"
-         className="flex items-center cursor-pointer hover:bg-white/5"
+         className="flex items-center cursor-pointer hover:bg-accent"
         >
          <User className="mr-2 h-4 w-4" />
          <span>Profile</span>
         </Link>
        </DropdownMenuItem>
-       <DropdownMenuSeparator className="bg-white/5" />
+       <DropdownMenuSeparator className="bg-accent/50" />
        <DropdownMenuItem
         onClick={() => logout()}
         className="flex items-center text-rose-400 focus:text-rose-400 cursor-pointer focus:bg-rose-500/10"

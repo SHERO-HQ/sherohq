@@ -182,7 +182,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
           <Link
             href="/admin/dashboard"
             className={cn(
-              "h-20 flex items-center shrink-0 hover:bg-white/5 transition-colors group border-b border-white/5",
+              "h-20 flex items-center shrink-0 hover:bg-accent transition-colors group border-b border-border",
               isOpen ? "px-6" : "px-0 justify-center",
             )}
           >
@@ -206,7 +206,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
               </div>
               <span
                 className={cn(
-                  "text-white font-bold text-sm whitespace-nowrap transition-all duration-200",
+                  "text-foreground font-bold text-sm whitespace-nowrap transition-all duration-200",
                   isOpen
                     ? "opacity-100 translate-x-0 w-auto"
                     : "opacity-0 -translate-x-4 pointer-events-none w-0 overflow-hidden",
@@ -248,7 +248,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                       isOpen ? "gap-3" : "gap-0",
                       isActive
                         ? "bg-brand-secondary-500/10 text-brand-secondary-400 border border-brand-secondary-500/20 shadow-sm"
-                        : "text-slate-400 hover:text-white hover:bg-white/5 border border-transparent",
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent border border-transparent",
                       !isOpen && "justify-center px-0",
                     )
                   }
@@ -260,7 +260,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                           "w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110",
                           isActive
                             ? "text-brand-secondary-400"
-                            : "text-slate-400 group-hover:text-white",
+                            : "text-muted-foreground group-hover:text-foreground",
                         )}
                       />
                       <span
@@ -285,10 +285,10 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
               ))}
 
             {/* Quick Actions Section */}
-            <div className="mt-8 pt-8 border-t border-white/5 space-y-4 px-2">
+            <div className="mt-8 pt-8 border-t border-border space-y-4 px-2">
               <p
                 className={cn(
-                  "text-[10px] font-bold text-slate-500 uppercase tracking-widest px-2 transition-all duration-200",
+                  "text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-2 transition-all duration-200",
                   isOpen
                     ? "opacity-100 translate-x-0"
                     : "opacity-0 -translate-x-4 pointer-events-none",
@@ -305,7 +305,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                       isOpen ? "gap-2" : "gap-0 justify-center px-0",
                       isActive
                         ? "bg-brand-secondary-500/10 text-brand-secondary-400"
-                        : "text-slate-400 hover:text-white hover:bg-white/5",
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent",
                     )
                   }
                 >
@@ -329,7 +329,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                       isOpen ? "gap-2" : "gap-0 justify-center px-0",
                       isActive
                         ? "bg-amber-500/10 text-amber-400"
-                        : "text-slate-400 hover:text-white hover:bg-white/5",
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent",
                     )
                   }
                 >
@@ -353,7 +353,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                       isOpen ? "gap-2" : "gap-0 justify-center px-0",
                       isActive
                         ? "bg-blue-500/10 text-blue-400"
-                        : "text-slate-400 hover:text-white hover:bg-white/5",
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent",
                     )
                   }
                 >
@@ -377,7 +377,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                       isOpen ? "gap-2" : "gap-0 justify-center px-0",
                       isActive
                         ? "bg-rose-500/10 text-rose-400"
-                        : "text-slate-400 hover:text-white hover:bg-white/5",
+                        : "text-muted-foreground hover:text-foreground hover:bg-accent",
                     )
                   }
                 >
@@ -398,7 +398,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
           </nav>
 
           {/* User & Settings */}
-          <div className="p-3 border-t border-white/5 space-y-2 shrink-0">
+          <div className="p-3 border-t border-border space-y-2 shrink-0">
             {pwaPrompt && (
               <button
                 onClick={() => void handleInstallClick()}
@@ -425,7 +425,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
             <button
               onClick={() => logout()}
               className={cn(
-                "w-full flex items-center px-3 py-3 rounded text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-all duration-200 group",
+                "w-full flex items-center px-3 py-3 rounded text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10 transition-all duration-200 group",
                 isOpen ? "gap-3" : "gap-0 justify-center px-0",
               )}
             >
@@ -445,11 +445,11 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
             {/* Profile Summary */}
             <div
               className={cn(
-                "flex items-center px-3 py-2  border border-white/10 mt-4 rounded transition-all duration-200",
+                "flex items-center px-3 py-2  border border-border mt-4 rounded transition-all duration-200",
                 isOpen ? "gap-3" : "gap-0 justify-center px-0",
               )}
             >
-              <div className="relative w-8 h-8 flex items-center justify-center shrink-0 overflow-hidden border-r border-white/10 p-1">
+              <div className="relative w-8 h-8 flex items-center justify-center shrink-0 overflow-hidden border-r border-border p-1">
                 {admin?.avatar ? (
                   <AppImage
                     src={admin.avatar}
@@ -459,7 +459,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                     className="object-cover"
                   />
                 ) : (
-                  <User className="w-4 h-4 text-slate-400" />
+                  <User className="w-4 h-4 text-muted-foreground" />
                 )}
               </div>
               <div
@@ -470,10 +470,10 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                     : "opacity-0 -translate-x-4 pointer-events-none w-0 overflow-hidden",
                 )}
               >
-                <p className="text-sm font-semibold text-white truncate">
+                <p className="text-sm font-semibold text-foreground truncate">
                   {admin?.username.toUpperCase() || "Admin"}
                 </p>
-                <p className="text-[10px] text-slate-500 truncate capitalize font-medium">
+                <p className="text-[10px] text-muted-foreground truncate capitalize font-medium">
                   {admin?.role || "Administrator"}
                 </p>
               </div>

@@ -36,15 +36,15 @@ const TestimonialsGridSkeleton = () => (
     {[1, 2, 3].map((i) => (
       <div
         key={i}
-        className="bg-slate-800/20 border border-white/5 rounded p-4 flex items-center gap-4"
+        className="bg-muted/20 border border-border rounded p-4 flex items-center gap-4"
       >
-        <div className="w-5 h-5 bg-white/5 rounded shrink-0" />
-        <div className="w-12 h-12 rounded bg-white/5 shrink-0" />
+        <div className="w-5 h-5 bg-accent/50 rounded shrink-0" />
+        <div className="w-12 h-12 rounded bg-accent/50 shrink-0" />
         <div className="flex-1 space-y-2">
-          <div className="h-4 w-28 bg-white/10 rounded" />
-          <div className="h-3 w-3/4 bg-white/5 rounded" />
+          <div className="h-4 w-28 bg-accent rounded" />
+          <div className="h-3 w-3/4 bg-accent/50 rounded" />
         </div>
-        <div className="h-8 w-24 bg-white/5 rounded" />
+        <div className="h-8 w-24 bg-accent/50 rounded" />
       </div>
     ))}
   </div>
@@ -221,11 +221,11 @@ const AdminTestimonials = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
             <MessageSquareQuote className="w-7 h-7 text-brand-secondary-400" />
             Testimonials
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-muted-foreground text-sm mt-1">
             Manage customer reviews and success stories
           </p>
         </div>
@@ -233,7 +233,7 @@ const AdminTestimonials = () => {
           <Button
             onClick={handleSyncTrustpilot}
             disabled={syncTrustpilotMutation.isPending}
-            className="bg-blue-600 hover:bg-blue-500 text-white"
+            className="bg-blue-600 hover:bg-blue-500 text-foreground"
           >
             {syncTrustpilotMutation.isPending ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -254,12 +254,12 @@ const AdminTestimonials = () => {
 
       {/* Search */}
       <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
           placeholder="Search testimonials..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
+          className="pl-10 bg-card/50 border-border text-foreground placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
         />
       </div>
 
@@ -269,9 +269,9 @@ const AdminTestimonials = () => {
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {filteredTestimonials.length === 0 ? (
-            <div className="text-center py-20 bg-slate-800/30 rounded border border-white/5">
+            <div className="text-center py-20 bg-muted/30 rounded border border-border">
               <MessageSquareQuote className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-              <p className="text-slate-400">No testimonials found</p>
+              <p className="text-muted-foreground">No testimonials found</p>
             </div>
           ) : (
             filteredTestimonials.map((t) => {
@@ -279,7 +279,7 @@ const AdminTestimonials = () => {
               return (
                 <div
                   key={t.id}
-                  className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center gap-4 group hover:border-brand-secondary-500/30 transition relative overflow-hidden"
+                  className="bg-muted/30 border border-border rounded p-4 flex items-center gap-4 group hover:border-brand-secondary-500/30 transition relative overflow-hidden"
                 >
                   {isDeleting && (
                     <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs z-10 flex items-center justify-between px-4 py-2 animate-in fade-in duration-200 select-none">
@@ -290,7 +290,7 @@ const AdminTestimonials = () => {
                         type="button"
                         variant="ghost"
                         onClick={() => handleCancelDelete(t.id)}
-                        className="h-8 px-4 bg-white/10 hover:bg-white/20 text-white rounded text-[11px] font-bold transition-all shrink-0"
+                        className="h-8 px-4 bg-accent hover:bg-white/20 text-foreground rounded text-[11px] font-bold transition-all shrink-0"
                       >
                         Undo Deletion
                       </Button>
@@ -311,7 +311,7 @@ const AdminTestimonials = () => {
                         className="object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-slate-400 font-bold bg-brand-secondary-500/10">
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground font-bold bg-brand-secondary-500/10">
                         {t.author.charAt(0)}
                       </div>
                     )}
@@ -319,16 +319,16 @@ const AdminTestimonials = () => {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-medium text-white truncate">
+                      <h3 className="font-medium text-foreground truncate">
                         {t.author}
                       </h3>
                       {!t.active && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-500 border border-white/5 uppercase">
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground border border-border uppercase">
                           Inactive
                         </span>
                       )}
                     </div>
-                    <p className="text-sm text-slate-400 truncate italic">
+                    <p className="text-sm text-muted-foreground truncate italic">
                       "{t.quote}"
                     </p>
                     {typeof t.rating === "number" && (
@@ -358,7 +358,7 @@ const AdminTestimonials = () => {
                       className={
                         t.active
                           ? "text-brand-secondary-500 hover:text-brand-secondary-400"
-                          : "text-slate-500 hover:text-slate-400"
+                          : "text-muted-foreground hover:text-muted-foreground"
                       }
                     >
                       {t.active ? (
@@ -371,7 +371,7 @@ const AdminTestimonials = () => {
                       variant="ghost"
                       size="icon"
                       onClick={() => handleOpenEdit(t)}
-                      className="text-slate-400 hover:text-white"
+                      className="text-muted-foreground hover:text-foreground"
                     >
                       <Edit2 className="w-4 h-4" />
                     </Button>
@@ -379,7 +379,7 @@ const AdminTestimonials = () => {
                       variant="ghost"
                       size="icon"
                       onClick={() => startSoftDelete(t.id)}
-                      className="text-slate-400 hover:text-rose-400"
+                      className="text-muted-foreground hover:text-rose-400"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -410,7 +410,7 @@ const AdminTestimonials = () => {
                 setFormData({ ...formData, author: e.target.value })
               }
               required
-              className="bg-slate-800 border-white/10"
+              className="bg-muted border-border"
             />
           </div>
 
@@ -424,7 +424,7 @@ const AdminTestimonials = () => {
                   setFormData({ ...formData, role: e.target.value })
                 }
                 placeholder="e.g. CEO"
-                className="bg-slate-800 border-white/10"
+                className="bg-muted border-border"
               />
             </div>
             <div className="space-y-2">
@@ -436,7 +436,7 @@ const AdminTestimonials = () => {
                   setFormData({ ...formData, company: e.target.value })
                 }
                 placeholder="e.g. Acme Inc"
-                className="bg-slate-800 border-white/10"
+                className="bg-muted border-border"
               />
             </div>
           </div>
@@ -450,7 +450,7 @@ const AdminTestimonials = () => {
                 setFormData({ ...formData, quote: e.target.value })
               }
               required
-              className="bg-slate-800 border-white/10 min-h-[120px]"
+              className="bg-muted border-border min-h-[120px]"
             />
           </div>
 
@@ -464,7 +464,7 @@ const AdminTestimonials = () => {
                   setFormData({ ...formData, image: e.target.value })
                 }
                 placeholder="https://..."
-                className="bg-slate-800 border-white/10"
+                className="bg-muted border-border"
               />
             </div>
             <div className="space-y-2">
@@ -476,12 +476,12 @@ const AdminTestimonials = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, order: Number(e.target.value) })
                 }
-                className="bg-slate-800 border-white/10"
+                className="bg-muted border-border"
               />
             </div>
           </div>
 
-          <div className="space-y-3 py-2 border-t border-white/5">
+          <div className="space-y-3 py-2 border-t border-border">
             <Label>Rating</Label>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((val) => (
@@ -510,14 +510,14 @@ const AdminTestimonials = () => {
               onChange={(e) =>
                 setFormData({ ...formData, active: e.target.checked })
               }
-              className="w-4 h-4 rounded border-white/10 bg-slate-800"
+              className="w-4 h-4 rounded border-border bg-muted"
             />
             <Label htmlFor="active" className="cursor-pointer">
               Active
             </Label>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-white/5">
+          <div className="flex justify-end gap-3 pt-4 border-t border-border">
             <Button
               type="button"
               variant="ghost"

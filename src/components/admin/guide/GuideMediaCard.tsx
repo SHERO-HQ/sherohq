@@ -87,10 +87,10 @@ export default function GuideMediaCard({
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       className={cn(
-        "bg-slate-900 border p-6 md:p-8 space-y-6 transition-all duration-300 relative select-none",
+        "bg-card border p-6 md:p-8 space-y-6 transition-all duration-300 relative select-none",
         isDragging
           ? "border-brand-secondary-500 bg-brand-secondary-500/5 scale-[0.99] shadow-[0_0_15px_rgba(16,185,129,0.1)]"
-          : "border-white/5"
+          : "border-border"
       )}
     >
       {/* Drag overlay guide */}
@@ -100,16 +100,16 @@ export default function GuideMediaCard({
           <p className="text-sm font-bold text-brand-secondary-300">
             Drop your banner image here
           </p>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Releasing files will automatically compress and queue upload
           </p>
         </div>
       )}
 
-      <div className="flex items-center justify-between pb-2 border-b border-white/5">
+      <div className="flex items-center justify-between pb-2 border-b border-border">
         <div className="flex items-center gap-2">
           <ImageIcon className="w-5 h-5 text-brand-secondary-400" />
-          <h3 className="font-bold text-white">Cover Banner Image</h3>
+          <h3 className="font-bold text-foreground">Cover Banner Image</h3>
         </div>
       </div>
 
@@ -117,8 +117,8 @@ export default function GuideMediaCard({
         {coverImage ? (
           <div
             className={cn(
-              "relative aspect-video w-full rounded bg-slate-800 border-2 overflow-hidden shadow transition-all duration-300",
-              isDeleting ? "opacity-90 grayscale-30 scale-95 border-rose-500/40" : "border-white/5"
+              "relative aspect-video w-full rounded bg-muted border-2 overflow-hidden shadow transition-all duration-300",
+              isDeleting ? "opacity-90 grayscale-30 scale-95 border-rose-500/40" : "border-border"
             )}
           >
             <AppImage
@@ -139,7 +139,7 @@ export default function GuideMediaCard({
                   type="button"
                   variant="ghost"
                   onClick={cancelDelete}
-                  className="mt-2 h-7 px-3 bg-white/10 hover:bg-white/20 text-white rounded text-[10px] flex items-center gap-1.5 transition-all"
+                  className="mt-2 h-7 px-3 bg-accent hover:bg-white/20 text-foreground rounded text-[10px] flex items-center gap-1.5 transition-all"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   Undo
@@ -151,7 +151,7 @@ export default function GuideMediaCard({
                 <button
                   type="button"
                   onClick={initiateDelete}
-                  className="p-1.5 bg-rose-500/90 text-white rounded shadow hover:bg-rose-600 transition-colors"
+                  className="p-1.5 bg-rose-500/90 text-foreground rounded shadow hover:bg-rose-600 transition-colors"
                   title="Remove Banner"
                 >
                   <svg className="w-4 h-4 stroke-2 stroke-current fill-none" viewBox="0 0 24 24">
@@ -162,9 +162,9 @@ export default function GuideMediaCard({
             )}
           </div>
         ) : isUploading ? (
-          <div className="aspect-video w-full rounded bg-slate-800/40 border border-brand-secondary-500/20 overflow-hidden relative shadow animate-pulse flex flex-col items-center justify-center gap-2">
+          <div className="aspect-video w-full rounded bg-muted/40 border border-brand-secondary-500/20 overflow-hidden relative shadow animate-pulse flex flex-col items-center justify-center gap-2">
             <Loader2 className="w-6 h-6 text-brand-secondary-400 animate-spin" />
-            <span className="text-[10px] text-slate-500 font-semibold tracking-widest uppercase">
+            <span className="text-[10px] text-muted-foreground font-semibold tracking-widest uppercase">
               COMPRESSING & UPLOADING...
             </span>
           </div>
@@ -172,7 +172,7 @@ export default function GuideMediaCard({
           <label
             className={cn(
               "aspect-video rounded w-full border-2 border-dashed flex flex-col items-center justify-center gap-2 cursor-pointer transition-all duration-300",
-              "border-white/10 hover:border-brand-secondary-500/50 hover:bg-brand-secondary-500/5 hover:scale-[0.98]"
+              "border-border hover:border-brand-secondary-500/50 hover:bg-brand-secondary-500/5 hover:scale-[0.98]"
             )}
           >
             <input
@@ -181,8 +181,8 @@ export default function GuideMediaCard({
               className="hidden"
               onChange={onUpload}
             />
-            <Plus className="w-6 h-6 text-slate-500 transition-colors" />
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest">
+            <Plus className="w-6 h-6 text-muted-foreground transition-colors" />
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-widest">
               Upload Banner Image
             </span>
             <span className="text-[10px] text-slate-600 tracking-wider">
@@ -192,12 +192,12 @@ export default function GuideMediaCard({
         )}
 
         {/* Parity: Paste an external URL */}
-        <div className="space-y-2 pt-2 border-t border-white/5">
+        <div className="space-y-2 pt-2 border-t border-border">
           <label
             htmlFor="coverImageUrl"
-            className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5"
+            className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5"
           >
-            <Link2 className="w-3.5 h-3.5 text-slate-500" />
+            <Link2 className="w-3.5 h-3.5 text-muted-foreground" />
             Or provide a direct image URL
           </label>
           <Input
@@ -206,12 +206,12 @@ export default function GuideMediaCard({
             value={coverImage}
             onChange={(e) => onCoverImageChange(e.target.value)}
             placeholder="https://example.com/banner-image.jpg"
-            className="bg-slate-800/50 border-white/5 text-white placeholder:text-slate-600 focus-visible:ring-brand-secondary-500 text-xs h-9"
+            className="bg-muted/50 border-border text-foreground placeholder:text-slate-600 focus-visible:ring-brand-secondary-500 text-xs h-9"
           />
         </div>
 
-        <div className="p-4 rounded bg-slate-800/30 border border-white/5">
-          <p className="text-xs text-slate-500 flex items-center gap-2 italic">
+        <div className="p-4 rounded bg-muted/30 border border-border">
+          <p className="text-xs text-muted-foreground flex items-center gap-2 italic">
             <Info className="w-3.5 h-3.5 shrink-0 text-brand-secondary-400" />
             Provides a beautiful, high-quality banner for guide headers. Drag images to upload, or paste a URL.
           </p>

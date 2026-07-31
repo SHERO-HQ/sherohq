@@ -874,7 +874,7 @@ class NotificationService {
       <p>If you have any questions or need to reschedule, please feel free to reach out to us via email or WhatsApp.</p>
     `;
     const htmlContent = this.wrapEmailHtml(bodyHtml);
-    await this.sendEmail(consultation.email, `Consultation Update - ${consultation.service}`, htmlContent);
+    await this.sendEmail(consultation.email, `Consultation Update: ${consultation.service}`, htmlContent);
   }
 
   public async sendInquiryConfirmationEmail(inquiry: {

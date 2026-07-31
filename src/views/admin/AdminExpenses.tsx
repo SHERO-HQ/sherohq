@@ -70,7 +70,7 @@ const Textarea = (props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) => (
   <textarea
     {...props}
     className={cn(
-      "flex min-h-20 w-full rounded border border-white/5 bg-slate-800 px-3 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 disabled:cursor-not-allowed disabled:opacity-50",
+      "flex min-h-20 w-full rounded border border-border bg-muted px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 disabled:cursor-not-allowed disabled:opacity-50",
       props.className,
     )}
   />
@@ -354,8 +354,8 @@ export default function AdminExpenses() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">Expenses</h1>
-          <p className="text-slate-400 text-sm">
+          <h1 className="text-2xl font-bold text-foreground">Expenses</h1>
+          <p className="text-muted-foreground text-sm">
             Track your business spending and overheads
           </p>
         </div>
@@ -372,42 +372,42 @@ export default function AdminExpenses() {
 
       {/* Stats Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-slate-900/40  border-white/5 p-6">
+        <Card className="bg-card/40  border-border p-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded bg-brand-secondary-500/10 flex items-center justify-center">
               <DollarSign className="w-6 h-6 text-brand-secondary-500" />
             </div>
             <div>
-              <p className="text-slate-400 text-sm font-medium">
+              <p className="text-muted-foreground text-sm font-medium">
                 Total Expenses
               </p>
-              <p className="text-2xl font-bold text-white mt-1">
+              <p className="text-2xl font-bold text-foreground mt-1">
                 GH₵{totalAmount.toLocaleString()}
               </p>
             </div>
           </div>
         </Card>
-        <Card className="bg-slate-900/40  border-white/5 p-6">
+        <Card className="bg-card/40  border-border p-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded bg-blue-500/10 flex items-center justify-center">
               <Tag className="w-6 h-6 text-blue-500" />
             </div>
             <div>
-              <p className="text-slate-400 text-sm font-medium">Items Count</p>
-              <p className="text-2xl font-bold text-white mt-1">
+              <p className="text-muted-foreground text-sm font-medium">Items Count</p>
+              <p className="text-2xl font-bold text-foreground mt-1">
                 {filteredExpenses.length} Records
               </p>
             </div>
           </div>
         </Card>
-        <Card className="bg-slate-900/40  border-white/5 p-6">
+        <Card className="bg-card/40  border-border p-6">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded bg-purple-500/10 flex items-center justify-center">
               <TrendingUp className="w-6 h-6 text-purple-500" />
             </div>
             <div>
-              <p className="text-slate-400 text-sm font-medium">Top Category</p>
-              <p className="text-2xl font-bold text-white mt-1">
+              <p className="text-muted-foreground text-sm font-medium">Top Category</p>
+              <p className="text-2xl font-bold text-foreground mt-1">
                 {filteredExpenses.length > 0
                   ? filteredExpenses[0].category
                   : "N/A"}
@@ -418,21 +418,21 @@ export default function AdminExpenses() {
       </div>
 
       {/* Filters */}
-      <Card className="bg-slate-900/40  border-white/5 p-4">
+      <Card className="bg-card/40  border-border p-4">
         <div className="flex flex-wrap gap-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               placeholder="Search description..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9 bg-slate-800/50 border-white/5 text-white"
+              className="pl-9 bg-muted/50 border-border text-foreground"
             />
           </div>
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="bg-slate-800/50 border border-white/5 rounded text-sm text-white p-2"
+            className="bg-muted/50 border border-border rounded text-sm text-foreground p-2"
           >
             <option value="all">All Categories</option>
             {CATEGORIES.map((cat) => (
@@ -441,7 +441,7 @@ export default function AdminExpenses() {
               </option>
             ))}
           </select>
-          <div className="flex bg-slate-800/50 border border-white/5 rounded p-1 w-fit">
+          <div className="flex bg-muted/50 border border-border rounded p-1 w-fit">
             {[
               { value: "all", label: "All" },
               { value: "7d", label: "7d" },
@@ -454,8 +454,8 @@ export default function AdminExpenses() {
                 className={cn(
                   "px-3 py-1 rounded text-xs font-medium transition",
                   dateFilter === opt.value
-                    ? "bg-slate-700 text-white shadow"
-                    : "text-slate-400 hover:text-white",
+                    ? "bg-slate-700 text-foreground shadow"
+                    : "text-muted-foreground hover:text-foreground",
                 )}
               >
                 {opt.label}
@@ -470,9 +470,9 @@ export default function AdminExpenses() {
                 variant="outline"
                 size="sm"
                 className={cn(
-                  "bg-slate-800/50 border-white/10 text-slate-300 hover:text-white h-9 py-0",
+                  "bg-muted/50 border-border text-muted-foreground hover:text-foreground h-9 py-0",
                   dateFilter === "range" &&
-                  "bg-slate-700 text-white border-brand-secondary-500/50",
+                  "bg-slate-700 text-foreground border-brand-secondary-500/50",
                 )}
                 onClick={() => setDateFilter("range")}
               >
@@ -480,7 +480,7 @@ export default function AdminExpenses() {
               </Button>
             </PopoverTrigger>
             <PopoverContent
-              className="w-auto p-0 dark border-slate-800 bg-slate-900"
+              className="w-auto p-0 dark border-slate-800 bg-card"
               align="end"
             >
               <Calendar
@@ -498,30 +498,30 @@ export default function AdminExpenses() {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="border-white/5 text-slate-400 hover:text-white py-0"
+                  className="border-border text-muted-foreground hover:text-foreground py-0"
                 >
                   <Download className="w-4 h-4 mr-2" /> Export
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="bg-slate-900 border-white/10"
+                className="bg-card border-border"
               >
                 <DropdownMenuItem
                   onClick={() => handleExport("csv")}
-                  className="text-white hover:bg-white/5 gap-2"
+                  className="text-foreground hover:bg-accent gap-2"
                 >
                   <FileText className="w-4 h-4" /> CSV
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleExport("excel")}
-                  className="text-white hover:bg-white/5 gap-2"
+                  className="text-foreground hover:bg-accent gap-2"
                 >
                   <FileText className="w-4 h-4" /> Excel
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleExport("pdf")}
-                  className="text-white hover:bg-white/5 gap-2"
+                  className="text-foreground hover:bg-accent gap-2"
                 >
                   <FileText className="w-4 h-4" /> PDF
                 </DropdownMenuItem>
@@ -532,24 +532,24 @@ export default function AdminExpenses() {
       </Card>
 
       {/* Expenses List */}
-      <Card className="bg-slate-900/40  border-white/5 overflow-hidden">
+      <Card className="bg-card/40  border-border overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
-              <tr className="bg-slate-800/50 border-b border-white/5">
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase">
+              <tr className="bg-muted/50 border-b border-border">
+                <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase">
                   Expense
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase">
+                <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase">
                   Category
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase">
+                <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase">
                   Date
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase text-right">
+                <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase text-right">
                   Amount
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase text-right">
+                <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase text-right">
                   Actions
                 </th>
               </tr>
@@ -559,7 +559,7 @@ export default function AdminExpenses() {
                 ["sk1", "sk2", "sk3", "sk4", "sk5"].map((id) => (
                   <tr key={id} className="animate-pulse">
                     <td colSpan={5} className="px-6 py-8">
-                      <div className="h-4 bg-slate-800 rounded w-full" />
+                      <div className="h-4 bg-muted rounded w-full" />
                     </td>
                   </tr>
                 ))}
@@ -568,7 +568,7 @@ export default function AdminExpenses() {
                 <tr>
                   <td
                     colSpan={5}
-                    className="px-6 py-12 text-center text-slate-500"
+                    className="px-6 py-12 text-center text-muted-foreground"
                   >
                     No expense records found.
                   </td>
@@ -580,19 +580,19 @@ export default function AdminExpenses() {
                 filteredExpenses.map((expense) => (
                   <tr
                     key={expense.id}
-                    className="hover:bg-white/5 transition-colors"
+                    className="hover:bg-accent transition-colors"
                   >
                     <td className="px-6 py-4">
                       <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 rounded bg-slate-800 flex items-center justify-center shrink-0">
-                          <FileText className="w-4 h-4 text-slate-400" />
+                        <div className="w-8 h-8 rounded bg-muted flex items-center justify-center shrink-0">
+                          <FileText className="w-4 h-4 text-muted-foreground" />
                         </div>
                         <div>
-                          <p className="text-white font-medium">
+                          <p className="text-foreground font-medium">
                             {expense.title}
                           </p>
                           {expense.description && (
-                            <p className="text-xs text-slate-500 line-clamp-1">
+                            <p className="text-xs text-muted-foreground line-clamp-1">
                               {expense.description}
                             </p>
                           )}
@@ -607,11 +607,11 @@ export default function AdminExpenses() {
                         {expense.category}
                       </Badge>
                     </td>
-                    <td className="px-6 py-4 text-sm text-slate-300">
+                    <td className="px-6 py-4 text-sm text-muted-foreground">
                       {format(new Date(expense.date), "MMM dd, yyyy")}
                     </td>
                     <td className="px-6 py-4 text-right">
-                      <p className="text-white font-bold">
+                      <p className="text-foreground font-bold">
                         GH₵{Number(expense.amount).toLocaleString()}
                       </p>
                     </td>
@@ -620,7 +620,7 @@ export default function AdminExpenses() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-slate-400 hover:text-white"
+                          className="h-8 w-8 text-muted-foreground hover:text-foreground"
                           onClick={() => handleOpenForm(expense)}
                         >
                           <Edit2 className="w-4 h-4" />
@@ -628,7 +628,7 @@ export default function AdminExpenses() {
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-8 w-8 text-slate-400 hover:text-rose-400"
+                          className="h-8 w-8 text-muted-foreground hover:text-rose-400"
                           onClick={() => setDeleteConfirmId(expense.id)}
                           disabled={isDeleting === expense.id}
                         >
@@ -651,24 +651,24 @@ export default function AdminExpenses() {
       {isFormOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
           <Card className={cn(
-            "w-full max-w-lg bg-slate-900 border shadow-2xl p-6 md:p-8 relative transition-all duration-300",
-            Object.keys(errors).length > 0 ? "border-rose-500/30" : "border-white/10"
+            "w-full max-w-lg bg-card border shadow-2xl p-6 md:p-8 relative transition-all duration-300",
+            Object.keys(errors).length > 0 ? "border-rose-500/30" : "border-border"
           )}>
             <button
               onClick={handleCloseForm}
-              className="absolute right-4 top-4 p-1.5 text-slate-400 hover:text-white hover:bg-white/5 rounded transition-colors"
+              className="absolute right-4 top-4 p-1.5 text-muted-foreground hover:text-foreground hover:bg-accent rounded transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h2 className="text-xl font-bold text-white mb-6">
+            <h2 className="text-xl font-bold text-foreground mb-6">
               {editingId ? "Edit Expense" : "Add New Expense"}
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Title */}
               <div className="space-y-1.5">
-                <Label className="text-slate-400 text-sm font-medium">Title *</Label>
+                <Label className="text-muted-foreground text-sm font-medium">Title *</Label>
                 <Input
                   value={formData.title}
                   onChange={(e) =>
@@ -676,7 +676,7 @@ export default function AdminExpenses() {
                   }
                   placeholder="e.g., Office Rent - Feb"
                   className={cn(
-                    "bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500",
+                    "bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500",
                     errors.title && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
                   )}
                   required
@@ -691,7 +691,7 @@ export default function AdminExpenses() {
               {/* Amount & Date */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <Label className="text-slate-400 text-sm font-medium">Amount (GH₵) *</Label>
+                  <Label className="text-muted-foreground text-sm font-medium">Amount (GH₵) *</Label>
                   <Input
                     type="number"
                     value={formData.amount}
@@ -700,7 +700,7 @@ export default function AdminExpenses() {
                     }
                     placeholder="0.00"
                     className={cn(
-                      "bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500 font-mono",
+                      "bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500 font-mono",
                       errors.amount && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
                     )}
                     required
@@ -713,14 +713,14 @@ export default function AdminExpenses() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label className="text-slate-400 text-sm font-medium">Date *</Label>
+                  <Label className="text-muted-foreground text-sm font-medium">Date *</Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full bg-slate-800/50 border-white/5 text-slate-300 justify-start font-normal h-10 overflow-hidden focus-visible:ring-brand-secondary-500",
-                          !formData.date && "text-slate-500",
+                          "w-full bg-muted/50 border-border text-muted-foreground justify-start font-normal h-10 overflow-hidden focus-visible:ring-brand-secondary-500",
+                          !formData.date && "text-muted-foreground",
                           errors.date && "border-rose-500 bg-rose-500/5"
                         )}
                       >
@@ -755,17 +755,17 @@ export default function AdminExpenses() {
 
               {/* Category Dropdown */}
               <div className="space-y-1.5">
-                <Label className="text-slate-400 text-sm font-medium">Category *</Label>
+                <Label className="text-muted-foreground text-sm font-medium">Category *</Label>
                 <select
                   value={formData.category}
                   onChange={(e) =>
                     setFormData({ ...formData, category: e.target.value })
                   }
-                  className="w-full bg-slate-800/50 border border-white/5 rounded text-sm text-white h-10 px-3 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 transition-all duration-200 cursor-pointer"
+                  className="w-full bg-muted/50 border border-border rounded text-sm text-foreground h-10 px-3 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 transition-all duration-200 cursor-pointer"
                   required
                 >
                   {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat} className="bg-slate-900 text-white">
+                    <option key={cat} value={cat} className="bg-card text-foreground">
                       {cat}
                     </option>
                   ))}
@@ -774,24 +774,24 @@ export default function AdminExpenses() {
 
               {/* Description */}
               <div className="space-y-1.5">
-                <Label className="text-slate-400 text-sm font-medium">Description</Label>
+                <Label className="text-muted-foreground text-sm font-medium">Description</Label>
                 <Textarea
                   value={formData.description}
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                     setFormData({ ...formData, description: e.target.value })
                   }
                   placeholder="Additional expense notes..."
-                  className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500"
+                  className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500"
                   rows={3}
                 />
               </div>
 
               {/* Buttons */}
-              <div className="flex gap-3 pt-4 border-t border-white/5">
+              <div className="flex gap-3 pt-4 border-t border-border">
                 <Button
                   type="button"
                   variant="ghost"
-                  className="flex-1 text-slate-400 hover:text-white"
+                  className="flex-1 text-muted-foreground hover:text-foreground"
                   onClick={handleCloseForm}
                 >
                   Cancel
@@ -822,13 +822,13 @@ export default function AdminExpenses() {
       {/* Modern Custom Delete Confirmation Overlay Modal */}
       {deleteConfirmId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200 select-none">
-          <Card className="w-full max-w-sm bg-slate-900 border border-rose-500/20 shadow-2xl p-6 text-center space-y-4 animate-in zoom-in-95 duration-200">
+          <Card className="w-full max-w-sm bg-card border border-rose-500/20 shadow-2xl p-6 text-center space-y-4 animate-in zoom-in-95 duration-200">
             <div className="w-12 h-12 rounded-full bg-rose-500/10 flex items-center justify-center mx-auto text-rose-500">
               <Trash2 className="w-5 h-5 stroke-[2px]" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-lg font-bold text-white">Delete Expense Record?</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <h3 className="text-lg font-bold text-foreground">Delete Expense Record?</h3>
+              <p className="text-xs text-muted-foreground leading-relaxed">
                 Are you sure you want to permanently delete this expense record? This action is irreversible.
               </p>
             </div>
@@ -836,14 +836,14 @@ export default function AdminExpenses() {
               <Button
                 type="button"
                 variant="ghost"
-                className="flex-1 text-slate-400 hover:text-white"
+                className="flex-1 text-muted-foreground hover:text-foreground"
                 onClick={() => setDeleteConfirmId(null)}
               >
                 Cancel
               </Button>
               <Button
                 type="button"
-                className="flex-1 bg-rose-600 hover:bg-rose-500 text-white font-bold"
+                className="flex-1 bg-rose-600 hover:bg-rose-500 text-foreground font-bold"
                 onClick={async () => {
                   const id = deleteConfirmId;
                   setDeleteConfirmId(null);

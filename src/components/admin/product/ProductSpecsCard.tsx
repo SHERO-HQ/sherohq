@@ -29,18 +29,18 @@ export default function ProductSpecsCard({
   onUpdateSpecRow,
 }: ProductSpecsCardProps) {
   return (
-    <Card className="bg-slate-900 border-white/5 p-6 md:p-8 space-y-6 pt-4">
-      <div className="flex items-center justify-between pb-2 border-b border-white/5">
+    <Card className="bg-card border-border p-6 md:p-8 space-y-6 pt-4">
+      <div className="flex items-center justify-between pb-2 border-b border-border">
         <div className="flex items-center gap-2">
           <Tag className="w-5 h-5 text-brand-secondary-400" />
-          <h3 className="text-lg font-bold text-white">Specifications</h3>
+          <h3 className="text-lg font-bold text-foreground">Specifications</h3>
         </div>
         <Button
           type="button"
           onClick={onAddSpecRow}
           variant="outline"
           size="sm"
-          className="border-white/10 text-white hover:bg-white/5 hover:text-brand-secondary-400"
+          className="border-border text-foreground hover:bg-accent hover:text-brand-secondary-400"
         >
           <Plus className="w-4 h-4 mr-2" />
           Add Spec
@@ -51,7 +51,7 @@ export default function ProductSpecsCard({
         {specsList.map((spec) => (
           <div
             key={spec.id}
-            className="flex gap-3 items-start p-3 rounded bg-slate-800/30 border border-white/5 animate-in fade-in slide-in-from-top-1 duration-200"
+            className="flex gap-3 items-start p-3 rounded bg-muted/30 border border-border animate-in fade-in slide-in-from-top-1 duration-200"
           >
             <div className="flex-1 space-y-1">
               <Input
@@ -60,7 +60,7 @@ export default function ProductSpecsCard({
                 onChange={(e) =>
                   onUpdateSpecRow(spec.id, "key", e.target.value)
                 }
-                className="bg-slate-800/50 border-white/5 text-white h-9 text-sm"
+                className="bg-muted/50 border-border text-foreground h-9 text-sm"
               />
             </div>
             <div className="flex-1 space-y-1">
@@ -70,7 +70,7 @@ export default function ProductSpecsCard({
                 onChange={(e) =>
                   onUpdateSpecRow(spec.id, "value", e.target.value)
                 }
-                className="bg-slate-800/50 border-white/5 text-white h-9 text-sm"
+                className="bg-muted/50 border-border text-foreground h-9 text-sm"
               />
             </div>
             <Button
@@ -78,7 +78,7 @@ export default function ProductSpecsCard({
               onClick={() => onRemoveSpecRow(spec.id)}
               variant="ghost"
               size="icon"
-              className="h-9 w-9 text-slate-500 hover:text-rose-400 hover:bg-rose-950/20 shrink-0"
+              className="h-9 w-9 text-muted-foreground hover:text-rose-400 hover:bg-rose-950/20 shrink-0"
             >
               <Trash2 className="w-4 h-4" />
             </Button>
@@ -86,8 +86,8 @@ export default function ProductSpecsCard({
         ))}
 
         {specsList.length === 0 && (
-          <div className="text-center py-8 border-2 border-dashed border-white/5 rounded">
-            <p className="text-slate-500 text-sm italic mb-2">
+          <div className="text-center py-8 border-2 border-dashed border-border rounded">
+            <p className="text-muted-foreground text-sm italic mb-2">
               No technical specifications added.
             </p>
             <Button

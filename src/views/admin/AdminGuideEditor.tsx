@@ -194,7 +194,7 @@ const AdminGuideEditor = () => {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-brand-secondary-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-slate-400 font-medium">Loading guide editor...</p>
+          <p className="text-muted-foreground font-medium">Loading guide editor...</p>
         </div>
       </div>
     );
@@ -202,21 +202,21 @@ const AdminGuideEditor = () => {
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-20">
       {/* Sticky Header Action Bar */}
-      <div className="sticky top-20 bg-slate-950/80 backdrop-blur-md z-20 py-4 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300">
+      <div className="sticky top-20 bg-slate-950/80 backdrop-blur-md z-20 py-4 border-b border-border flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
-            className="text-slate-400 hover:text-white"
+            className="text-muted-foreground hover:text-foreground"
             onClick={() => router.push("/admin/guides")}
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-white">
+            <h1 className="text-2xl font-bold text-foreground">
               {isEditing ? "Edit Guide" : "New Guide"}
             </h1>
-            <p className="text-slate-400 text-sm">
+            <p className="text-muted-foreground text-sm">
               Create and manage helpful resources for your customers
             </p>
           </div>
@@ -225,7 +225,7 @@ const AdminGuideEditor = () => {
           <Button
             type="button"
             variant="ghost"
-            className="text-slate-400 hover:text-white"
+            className="text-muted-foreground hover:text-foreground"
             onClick={() => router.push("/admin/guides")}
           >
             Cancel
@@ -262,7 +262,7 @@ const AdminGuideEditor = () => {
                 Draft autosave is enabled for this form.
               </span>
             </div>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-muted-foreground">
               {draftSavedAt
                 ? `Last saved ${new Date(draftSavedAt).toLocaleString()}.`
                 : "Your changes will be saved locally as you type."}
@@ -281,7 +281,7 @@ const AdminGuideEditor = () => {
               type="button"
               variant="ghost"
               onClick={clearDraft}
-              className="text-slate-300 hover:text-white hover:bg-white/5"
+              className="text-muted-foreground hover:text-foreground hover:bg-accent"
             >
               Clear draft
             </Button>
@@ -315,11 +315,11 @@ const AdminGuideEditor = () => {
           />
 
           {/* Desktop Secondary Action Bar */}
-          <div className="hidden md:flex items-center gap-3 pt-6 border-t border-white/5">
+          <div className="hidden md:flex items-center gap-3 pt-6 border-t border-border">
             <Button
               type="button"
               variant="ghost"
-              className="text-slate-400 hover:text-white"
+              className="text-muted-foreground hover:text-foreground"
               onClick={() => router.push("/admin/guides")}
             >
               Cancel
@@ -355,11 +355,11 @@ const AdminGuideEditor = () => {
       </form>
 
       {/* Mobile Sticky Bottom Action Dock */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/90 backdrop-blur-md border-t border-white/10 p-4 flex items-center justify-between gap-4 md:hidden shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/90 backdrop-blur-md border-t border-border p-4 flex items-center justify-between gap-4 md:hidden shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
         <Button
           type="button"
           variant="ghost"
-          className="text-slate-400 hover:text-white w-1/3"
+          className="text-muted-foreground hover:text-foreground w-1/3"
           onClick={() => router.push("/admin/guides")}
         >
           Cancel

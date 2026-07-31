@@ -75,18 +75,18 @@ const AdminGuides = () => {
  {[1, 2, 3].map((i) => (
  <div
  key={`skeleton-${i}`}
- className="bg-slate-900/40 rounded border border-white/10 p-6 animate-pulse"
+ className="bg-card/40 rounded border border-border p-6 animate-pulse"
  >
- <div className="h-5 bg-slate-800 rounded w-1/3 mb-3" />
- <div className="h-4 bg-slate-800 rounded w-2/3" />
+ <div className="h-5 bg-muted rounded w-1/3 mb-3" />
+ <div className="h-4 bg-muted rounded w-2/3" />
  </div>
  ))}
  </div>
  );
  } else if (filteredGuides.length === 0) {
  renderContent = (
- <div className="text-center py-16 bg-slate-900/40 rounded border border-white/10">
- <h3 className="text-xl font-semibold text-slate-400 mb-2">
+ <div className="text-center py-16 bg-card/40 rounded border border-border">
+ <h3 className="text-xl font-semibold text-muted-foreground mb-2">
  No guides found
  </h3>
  <Button
@@ -99,24 +99,24 @@ const AdminGuides = () => {
  );
  } else {
  renderContent = (
- <div className="bg-slate-900/40 rounded border border-white/10 overflow-hidden">
+ <div className="bg-card/40 rounded border border-border overflow-hidden">
  <div className="overflow-x-auto">
  <table className="w-full text-left min-w-[700px]">
- <thead className="bg-white/5 border-b border-white/5">
+ <thead className="bg-accent/50 border-b border-border">
  <tr>
- <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-slate-500">
+ <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
  Guide
  </th>
- <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-slate-500">
+ <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
  Category
  </th>
- <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-slate-500">
+ <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
  Status
  </th>
- <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-slate-500">
+ <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
  Date
  </th>
- <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-slate-500 text-right">
+ <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground text-right">
  Actions
  </th>
  </tr>
@@ -125,18 +125,18 @@ const AdminGuides = () => {
  {filteredGuides.map((guide) => (
  <tr
  key={guide.id}
- className="hover:bg-white/5 transition-colors"
+ className="hover:bg-accent transition-colors"
  >
  <td className="px-6 py-4">
  <div className="flex items-center gap-3">
- <div className="w-10 h-10 bg-slate-800 rounded flex items-center justify-center text-brand-secondary-400">
+ <div className="w-10 h-10 bg-muted rounded flex items-center justify-center text-brand-secondary-400">
  {guide.category === "hardware" ? "H" : "S"}
  </div>
  <div>
- <span className="text-white font-medium block">
+ <span className="text-foreground font-medium block">
  {guide.title}
  </span>
- <span className="text-slate-500 text-sm">
+ <span className="text-muted-foreground text-sm">
  {guide.slug}
  </span>
  </div>
@@ -163,14 +163,14 @@ const AdminGuides = () => {
  className={
  guide.published
  ? "bg-brand-secondary-500/20 text-brand-secondary-400 border-brand-secondary-500/30"
- : "bg-slate-800 text-slate-400 border-slate-700"
+ : "bg-muted text-muted-foreground border-slate-700"
  }
  >
  {guide.published ? "Published" : "Draft"}
  </Badge>
  </button>
  </td>
- <td className="px-6 py-4 text-slate-400 text-sm">
+ <td className="px-6 py-4 text-muted-foreground text-sm">
  {format(new Date(guide.createdAt), "MMM d, yyyy")}
  </td>
  <td className="px-6 py-4">
@@ -178,12 +178,12 @@ const AdminGuides = () => {
  <Link
  href={`/support/${guide.category}/${guide.slug}`}
  target="_blank"
- className="text-slate-400 hover:text-white"
+ className="text-muted-foreground hover:text-foreground"
  >
  View
  </Link>
  <button
- className="text-slate-400 hover:text-white ml-4"
+ className="text-muted-foreground hover:text-foreground ml-4"
  onClick={() =>
  router.push(`/admin/guides/edit/${guide.id}`)
  }
@@ -194,7 +194,7 @@ const AdminGuides = () => {
  onClick={() =>
  setDeleteTarget({ id: guide.id, title: guide.title })
  }
- className="text-slate-400 hover:text-red-400 ml-4"
+ className="text-muted-foreground hover:text-red-400 ml-4"
  >
  Delete
  </button>
@@ -216,7 +216,7 @@ const AdminGuides = () => {
  <div>
  <Link
  href="/admin/dashboard"
- className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-brand-secondary-400 transition-colors group"
+ className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-brand-secondary-400 transition-colors group"
  >
  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
  <span>Back to Dashboard</span>
@@ -225,17 +225,17 @@ const AdminGuides = () => {
 
  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
  <div>
- <h1 className="text-3xl font-bold text-white">
+ <h1 className="text-3xl font-bold text-foreground">
  Support Guides
  </h1>
- <p className="text-slate-400 mt-1">
+ <p className="text-muted-foreground mt-1">
  Create and manage hardware & software guides
  </p>
  </div>
  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
  <Input
  placeholder="Search guides..."
- className="pl-4 w-full sm:w-64 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600"
+ className="pl-4 w-full sm:w-64 bg-card/50 border-border text-foreground placeholder:text-slate-600"
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
  />

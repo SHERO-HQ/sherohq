@@ -80,19 +80,19 @@ export default function ProductSidebarMeta({
     <div className="space-y-6">
       {/* Pricing & Stock Card */}
       <Card className={cn(
-        "bg-slate-900 border border-white/5 p-6 space-y-6 transition-all duration-300",
+        "bg-card border border-border p-6 space-y-6 transition-all duration-300",
         (errors.price || errors.stockQuantity) && "border-rose-500/30 bg-rose-500/2"
       )}>
-        <div className="flex items-center gap-2 pb-2 border-b border-white/5">
+        <div className="flex items-center gap-2 pb-2 border-b border-border">
           <Package className="w-5 h-5 text-brand-secondary-400" />
-          <h3 className="text-lg font-bold text-white">Pricing & Stock</h3>
+          <h3 className="text-lg font-bold text-foreground">Pricing & Stock</h3>
         </div>
 
         <div className="space-y-4">
           <div className="space-y-2">
             <label
               htmlFor="regularPrice"
-              className="text-sm font-medium text-slate-400 flex items-center justify-between"
+              className="text-sm font-medium text-muted-foreground flex items-center justify-between"
             >
               <span>Regular Price (MSRP) *</span>
               <span className="text-xs text-slate-600 font-mono">GH₵</span>
@@ -102,7 +102,7 @@ export default function ProductSidebarMeta({
               type="number"
               value={regularPrice || ""}
               onChange={(e) => handleRegularPriceChange(e.target.value ? Number.parseFloat(e.target.value) : 0)}
-              className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500"
+              className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500"
               placeholder="0.00"
             />
           </div>
@@ -110,18 +110,18 @@ export default function ProductSidebarMeta({
           {/* Discount Section */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-400">Discount Type</label>
+              <label className="text-sm font-medium text-muted-foreground">Discount Type</label>
               <select
                 value={discountMode}
                 onChange={(e) => setDiscountMode(e.target.value as "percentage" | "fixed")}
-                className="w-full h-10 px-3 py-2 bg-slate-800/50 border border-white/5 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 text-sm"
+                className="w-full h-10 px-3 py-2 bg-muted/50 border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 text-sm"
               >
                 <option value="percentage">Percentage (%)</option>
                 <option value="fixed">Fixed Amount (GH₵)</option>
               </select>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-400 flex items-center justify-between">
+              <label className="text-sm font-medium text-muted-foreground flex items-center justify-between">
                 <span>Discount Value</span>
                 <span className="text-xs text-slate-600 font-mono">
                   {discountMode === "percentage" ? "%" : "GH₵"}
@@ -131,7 +131,7 @@ export default function ProductSidebarMeta({
                 type="number"
                 value={displayDiscountValue || ""}
                 onChange={(e) => handleDiscountChange(e.target.value ? Number.parseFloat(e.target.value) : 0)}
-                className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500"
+                className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500"
                 placeholder="0"
                 disabled={regularPrice === 0}
               />
@@ -141,7 +141,7 @@ export default function ProductSidebarMeta({
           <div className="space-y-2">
             <label
               htmlFor="price"
-              className="text-sm font-medium text-slate-400 flex items-center justify-between"
+              className="text-sm font-medium text-muted-foreground flex items-center justify-between"
             >
               <span>Final Sale Price *</span>
               <span className="text-xs text-slate-600 font-mono">GH₵</span>
@@ -152,7 +152,7 @@ export default function ProductSidebarMeta({
               value={salePrice || ""}
               onChange={(e) => handleSalePriceChange(e.target.value ? Number.parseFloat(e.target.value) : 0)}
               className={cn(
-                "bg-slate-800/50 border-brand-secondary-500/30 text-white focus-visible:ring-brand-secondary-500",
+                "bg-muted/50 border-brand-secondary-500/30 text-foreground focus-visible:ring-brand-secondary-500",
                 errors.price && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
               )}
               placeholder="0.00"
@@ -173,7 +173,7 @@ export default function ProductSidebarMeta({
           <div className="space-y-2">
             <label
               htmlFor="costPrice"
-              className="text-sm font-medium text-slate-400 flex items-center justify-between"
+              className="text-sm font-medium text-muted-foreground flex items-center justify-between"
             >
               <span>Cost Price (Buying Price) *</span>
               <span className="text-xs text-slate-600 font-mono">GH₵</span>
@@ -191,7 +191,7 @@ export default function ProductSidebarMeta({
                 )
               }
               className={cn(
-                "bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500",
+                "bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500",
                 errors.costPrice && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
               )}
               placeholder="Initial buying price"
@@ -202,16 +202,16 @@ export default function ProductSidebarMeta({
                 {errors.costPrice}
               </p>
             )}
-            <p className="text-[10px] text-slate-500 italic mt-1 leading-relaxed">
+            <p className="text-[10px] text-muted-foreground italic mt-1 leading-relaxed">
               Internal only. Used to accurately calculate Net Profit.
             </p>
           </div>
 
-          <div className="border-t border-white/5 pt-4 space-y-4">
+          <div className="border-t border-border pt-4 space-y-4">
             <div className="space-y-2">
               <label
                 htmlFor="stockQuantity"
-                className="text-sm font-medium text-slate-400"
+                className="text-sm font-medium text-muted-foreground"
               >
                 Stock Quantity
               </label>
@@ -229,12 +229,12 @@ export default function ProductSidebarMeta({
                     quantity: val,
                   });
                 }}
-                className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500"
+                className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500"
               />
             </div>
 
-            <div className="flex items-center justify-between p-3 rounded bg-slate-800/30 border border-white/5">
-              <span className="text-sm text-white font-medium">In Stock Status</span>
+            <div className="flex items-center justify-between p-3 rounded bg-muted/30 border border-border">
+              <span className="text-sm text-foreground font-medium">In Stock Status</span>
               <button
                 type="button"
                 onClick={() => handleInputChange("inStock", !productData.inStock)}
@@ -257,12 +257,12 @@ export default function ProductSidebarMeta({
 
       {/* Categorization Card */}
       <Card className={cn(
-        "bg-slate-900 border border-white/5 p-6 space-y-6 transition-all duration-300",
+        "bg-card border border-border p-6 space-y-6 transition-all duration-300",
         errors.category && "border-rose-500/30 bg-rose-500/2"
       )}>
-        <div className="flex items-center gap-2 pb-2 border-b border-white/5">
+        <div className="flex items-center gap-2 pb-2 border-b border-border">
           <Tag className="w-5 h-5 text-brand-secondary-400" />
-          <h3 className="text-lg font-bold text-white">Categorization</h3>
+          <h3 className="text-lg font-bold text-foreground">Categorization</h3>
         </div>
 
         <div className="space-y-4">
@@ -270,7 +270,7 @@ export default function ProductSidebarMeta({
             <div className="flex items-center justify-between">
               <label
                 htmlFor="category"
-                className="text-sm font-medium text-slate-400"
+                className="text-sm font-medium text-muted-foreground"
               >
                 Category *
               </label>
@@ -313,7 +313,7 @@ export default function ProductSidebarMeta({
             <select
               id="category"
               className={cn(
-                "w-full bg-slate-800 border border-white/5 text-white rounded px-4 py-2 outline-none focus:ring-2 focus:ring-brand-secondary-500/50",
+                "w-full bg-muted border border-border text-foreground rounded px-4 py-2 outline-none focus:ring-2 focus:ring-brand-secondary-500/50",
                 errors.category && "border-rose-500 focus:ring-rose-500/50 bg-rose-500/5"
               )}
               value={productData.category || ""}
@@ -337,13 +337,13 @@ export default function ProductSidebarMeta({
           <div className="space-y-2">
             <label
               htmlFor="condition"
-              className="text-sm font-medium text-slate-400"
+              className="text-sm font-medium text-muted-foreground"
             >
               Condition
             </label>
             <select
               id="condition"
-              className="w-full bg-slate-800 border border-white/5 text-white rounded px-4 py-2 outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
+              className="w-full bg-muted border border-border text-foreground rounded px-4 py-2 outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
               value={productData.condition || "New"}
               onChange={(e) => handleInputChange("condition", e.target.value)}
             >
@@ -356,10 +356,10 @@ export default function ProductSidebarMeta({
       </Card>
 
       {/* Visibility & Promotion Card */}
-      <Card className="bg-slate-900 border border-white/5 p-6 space-y-6">
-        <div className="flex items-center gap-2 pb-2 border-b border-white/5">
+      <Card className="bg-card border border-border p-6 space-y-6">
+        <div className="flex items-center gap-2 pb-2 border-b border-border">
           <Tag className="w-5 h-5 text-amber-500" />
-          <h3 className="text-lg font-bold text-white">Promotion & Visibility</h3>
+          <h3 className="text-lg font-bold text-foreground">Promotion & Visibility</h3>
         </div>
 
         <div className="space-y-4">
@@ -367,20 +367,20 @@ export default function ProductSidebarMeta({
           <div
             onClick={() => handleInputChange("isSpotlight", !productData.isSpotlight)}
             className={cn(
-              "cursor-pointer flex items-center justify-between p-4 bg-slate-800/30 border rounded transition-all duration-300 hover:bg-slate-800/50 group select-none",
+              "cursor-pointer flex items-center justify-between p-4 bg-muted/30 border rounded transition-all duration-300 hover:bg-muted/50 group select-none",
               productData.isSpotlight
                 ? "border-brand-secondary-500 bg-brand-secondary-500/5 shadow-[0_0_12px_rgba(16,185,129,0.08)]"
-                : "border-white/5"
+                : "border-border"
             )}
           >
             <div className="space-y-1">
               <span className={cn(
                 "block text-sm font-medium transition-colors",
-                productData.isSpotlight ? "text-brand-secondary-400" : "text-white"
+                productData.isSpotlight ? "text-brand-secondary-400" : "text-foreground"
               )}>
                 Featured in Hero Spotlight
               </span>
-              <span className="text-[10px] text-slate-500 leading-tight block">
+              <span className="text-[10px] text-muted-foreground leading-tight block">
                 Showcases this item in the top homepage carousel.
               </span>
             </div>
@@ -388,7 +388,7 @@ export default function ProductSidebarMeta({
               "w-5 h-5 rounded flex items-center justify-center border transition-all duration-200",
               productData.isSpotlight
                 ? "border-brand-secondary-500 bg-brand-secondary-600 text-white"
-                : "border-white/10 bg-slate-900 group-hover:border-white/20"
+                : "border-border bg-card group-hover:border-border"
             )}>
               {productData.isSpotlight && (
                 <svg className="w-3.5 h-3.5 stroke-2 stroke-current" fill="none" viewBox="0 0 24 24">
@@ -402,20 +402,20 @@ export default function ProductSidebarMeta({
           <div
             onClick={() => handleInputChange("isFeatured", !productData.isFeatured)}
             className={cn(
-              "cursor-pointer flex items-center justify-between p-4 bg-slate-800/30 border rounded transition-all duration-300 hover:bg-slate-800/50 group select-none",
+              "cursor-pointer flex items-center justify-between p-4 bg-muted/30 border rounded transition-all duration-300 hover:bg-muted/50 group select-none",
               productData.isFeatured
                 ? "border-brand-secondary-500 bg-brand-secondary-500/5 shadow-[0_0_12px_rgba(16,185,129,0.08)]"
-                : "border-white/5"
+                : "border-border"
             )}
           >
             <div className="space-y-1">
               <span className={cn(
                 "block text-sm font-medium transition-colors",
-                productData.isFeatured ? "text-brand-secondary-400" : "text-white"
+                productData.isFeatured ? "text-brand-secondary-400" : "text-foreground"
               )}>
                 Featured Recommendations
               </span>
-              <span className="text-[10px] text-slate-500 leading-tight block">
+              <span className="text-[10px] text-muted-foreground leading-tight block">
                 Prioritizes this item in recommendation lists and search.
               </span>
             </div>
@@ -423,7 +423,7 @@ export default function ProductSidebarMeta({
               "w-5 h-5 rounded flex items-center justify-center border transition-all duration-200",
               productData.isFeatured
                 ? "border-brand-secondary-500 bg-brand-secondary-600 text-white"
-                : "border-white/10 bg-slate-900 group-hover:border-white/20"
+                : "border-border bg-card group-hover:border-border"
             )}>
               {productData.isFeatured && (
                 <svg className="w-3.5 h-3.5 stroke-2 stroke-current" fill="none" viewBox="0 0 24 24">

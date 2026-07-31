@@ -79,8 +79,8 @@ import { toReadableOrderId } from "@/utils/orderId";
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-slate-950/90 backdrop-blur-md border border-white/10 p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
-        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">
+      <div className="bg-slate-950/90 backdrop-blur-md border border-border p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
+        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider font-mono">
           {label ? new Date(label).toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",
@@ -94,10 +94,10 @@ const CustomTooltip = ({ active, payload, label }: any) => {
                 className="w-2 h-2 rounded-full shadow-xs"
                 style={{ backgroundColor: item.stroke || item.color }}
               />
-              <span className="text-xs text-slate-400 font-medium capitalize">
+              <span className="text-xs text-muted-foreground font-medium capitalize">
                 {item.name === "revenue" ? "Revenue" : item.name === "orders" ? "Orders" : item.name}:
               </span>
-              <span className="text-xs text-white font-bold font-mono">
+              <span className="text-xs text-foreground font-bold font-mono">
                 {item.name === "revenue" ? `GH₵${(item.value || 0).toLocaleString()}` : item.value}
               </span>
             </div>
@@ -112,14 +112,14 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 // --- Shape-Preserving AreaChart Shimmer Loader ---
 const ChartSkeleton = () => (
   <div className="w-full h-full animate-pulse flex flex-col justify-between p-4 space-y-4 select-none">
-    <div className="flex-1 w-full flex items-end gap-3 pt-6 border-b border-white/5 pb-2">
+    <div className="flex-1 w-full flex items-end gap-3 pt-6 border-b border-border pb-2">
       {[40, 65, 80, 50, 95, 70, 110].map((height, i) => (
         <div key={i} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
           <div
-            className="w-full bg-white/5 rounded-t transition-all duration-500"
+            className="w-full bg-accent/50 rounded-t transition-all duration-500"
             style={{ height: `${(height / 110) * 100}%` }}
           />
-          <div className="h-1.5 w-8 bg-white/5 rounded" />
+          <div className="h-1.5 w-8 bg-accent/50 rounded" />
         </div>
       ))}
     </div>
@@ -129,9 +129,9 @@ const ChartSkeleton = () => (
 // --- Shape-Preserving PieChart Shimmer Loader ---
 const PieSkeleton = () => (
   <div className="w-full h-full animate-pulse flex items-center justify-center relative py-6 select-none">
-    <div className="w-28 h-28 rounded-full border-[6px] border-white/5 flex items-center justify-center">
-      <div className="w-16 h-16 rounded-full bg-slate-900 border-2 border-slate-950/20 flex items-center justify-center">
-        <div className="h-3 w-8 bg-white/5 rounded" />
+    <div className="w-28 h-28 rounded-full border-[6px] border-border flex items-center justify-center">
+      <div className="w-16 h-16 rounded-full bg-card border-2 border-slate-950/20 flex items-center justify-center">
+        <div className="h-3 w-8 bg-accent/50 rounded" />
       </div>
     </div>
   </div>
@@ -197,12 +197,12 @@ const MagneticStatCard = ({
       }}
       className="perspective-distant"
     >
-      <Card className="bg-slate-900/40  border-white/10 hover:border-brand-secondary-500/40 transition-colors duration-500 group relative overflow-hidden h-full">
+      <Card className="bg-card/40  border-border hover:border-brand-secondary-500/40 transition-colors duration-500 group relative overflow-hidden h-full">
         {/* Subtle Glow Overlay */}
         <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
         <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
-          <CardTitle className="text-sm font-medium text-slate-400">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             {stat.title}
           </CardTitle>
           <div className={cn("p-2 rounded", stat.bgColor)}>
@@ -210,7 +210,7 @@ const MagneticStatCard = ({
           </div>
         </CardHeader>
         <CardContent className="relative z-10">
-          <div className="text-2xl font-bold text-white mb-1 tracking-tight">
+          <div className="text-2xl font-bold text-foreground mb-1 tracking-tight">
             {stat.value}
           </div>
           <div className="flex items-center gap-2">
@@ -224,7 +224,7 @@ const MagneticStatCard = ({
             >
               {stat.trend}
             </span>
-            <span className="text-xs text-slate-500">{stat.subtext}</span>
+            <span className="text-xs text-muted-foreground">{stat.subtext}</span>
           </div>
         </CardContent>
       </Card>
@@ -372,20 +372,20 @@ export default function AdminDashboard() {
         <div className="p-4 rounded bg-rose-500/10 mb-4">
           <XCircle className="w-12 h-12 text-rose-500" />
         </div>
-        <h2 className="text-xl font-bold text-white mb-2">
+        <h2 className="text-xl font-bold text-foreground mb-2">
           Failed to load dashboard
         </h2>
-        <p className="text-slate-400 mb-6 max-w-md">
+        <p className="text-muted-foreground mb-6 max-w-md">
           {error}
           <br />
-          <span className="text-xs text-slate-500 mt-2 block">
+          <span className="text-xs text-muted-foreground mt-2 block">
             Target: {process.env.NEXT_PUBLIC_API_URL || "/api"}
           </span>
         </p>
         <Button
           onClick={handleManualRefresh}
           variant="outline"
-          className="border-white/10 hover:bg-white/5"
+          className="border-border hover:bg-accent"
         >
           Try Again
         </Button>
@@ -398,10 +398,10 @@ export default function AdminDashboard() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight text-white">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">
             Dashboard Overview
           </h1>
-          <p className="text-slate-400 text-sm">
+          <p className="text-muted-foreground text-sm">
             Welcome back,{" "}
             <span className="text-brand-secondary-400 font-semibold">
               {admin?.username}
@@ -410,7 +410,7 @@ export default function AdminDashboard() {
           </p>
         </div>
         <div className="flex items-center flex-wrap gap-3">
-          <div className="flex bg-slate-900/50 p-1 rounded border border-white/5">
+          <div className="flex bg-card/50 p-1 rounded border border-border">
             {[
               { value: "today", label: "Today" },
               { value: "week", label: "Week" },
@@ -426,7 +426,7 @@ export default function AdminDashboard() {
                   "px-3 py-1 text-xs font-semibold rounded transition",
                   period === opt.value
                     ? "bg-brand-secondary-600 text-white shadow"
-                    : "text-slate-400 hover:text-white hover:bg-white/5",
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent",
                 )}
               >
                 {opt.label}
@@ -438,7 +438,7 @@ export default function AdminDashboard() {
             size="icon"
             onClick={handleManualRefresh}
             disabled={isRefreshing}
-            className="border-white/10 text-slate-400 hover:text-white hover:bg-white/5 h-9 w-9"
+            className="border-border text-muted-foreground hover:text-foreground hover:bg-accent h-9 w-9"
             title="Refresh Data"
           >
             <RefreshCw
@@ -447,7 +447,7 @@ export default function AdminDashboard() {
           </Button>
           <Button
             variant="outline"
-            className="border-white/10 text-white hover:bg-white/5"
+            className="border-border text-foreground hover:bg-accent"
             asChild
           >
             <Link href="/admin/reports">
@@ -471,16 +471,16 @@ export default function AdminDashboard() {
           ? new Array(4).fill(0).map((_, i) => (
             <div
               key={`skeleton-stat-summary-${i}`}
-              className="h-36 rounded bg-slate-900/40  border border-white/10 animate-pulse relative overflow-hidden"
+              className="h-36 rounded bg-card/40  border border-border animate-pulse relative overflow-hidden"
             >
               <div className="p-6 space-y-4">
                 <div className="flex justify-between items-center">
-                  <div className="h-4 w-24 bg-white/5 rounded" />
-                  <div className="h-8 w-8 bg-white/5 rounded" />
+                  <div className="h-4 w-24 bg-accent/50 rounded" />
+                  <div className="h-8 w-8 bg-accent/50 rounded" />
                 </div>
                 <div className="space-y-2">
-                  <div className="h-8 w-32 bg-white/10 rounded" />
-                  <div className="h-4 w-20 bg-white/5 rounded" />
+                  <div className="h-8 w-32 bg-accent rounded" />
+                  <div className="h-4 w-20 bg-accent/50 rounded" />
                 </div>
               </div>
             </div>
@@ -493,24 +493,24 @@ export default function AdminDashboard() {
       {/* Row 1: Revenue Trends and Sales Widgets */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Revenue Chart */}
-        <Card className="lg:col-span-2 bg-slate-900/40  border-white/10 p-2">
+        <Card className="lg:col-span-2 bg-card/40  border-border p-2">
           <CardHeader className="flex flex-row items-center justify-between">
             <div>
-              <CardTitle className="text-lg text-white">
+              <CardTitle className="text-lg text-foreground">
                 Revenue & Order Trends
               </CardTitle>
-              <CardDescription className="text-slate-500">
+              <CardDescription className="text-muted-foreground">
                 Last 7 days performance
               </CardDescription>
             </div>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded bg-brand-secondary-500" />
-                <span className="text-xs text-slate-400">Revenue</span>
+                <span className="text-xs text-muted-foreground">Revenue</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded bg-blue-500" />
-                <span className="text-xs text-slate-400">Orders</span>
+                <span className="text-xs text-muted-foreground">Orders</span>
               </div>
             </div>
           </CardHeader>
@@ -616,10 +616,10 @@ export default function AdminDashboard() {
 
         {/* Side Widgets */}
         <div className="space-y-6">
-          <Card className="bg-slate-900/40  border-white/10 overflow-hidden">
-            <div className="p-6 bg-linear-to-br from-brand-secondary-600/20 to-transparent border-b border-white/5">
-              <h3 className="text-lg font-bold text-white">Quick Launch</h3>
-              <p className="text-slate-400 text-sm mt-1">
+          <Card className="bg-card/40  border-border overflow-hidden">
+            <div className="p-6 bg-linear-to-br from-brand-secondary-600/20 to-transparent border-b border-border">
+              <h3 className="text-lg font-bold text-foreground">Quick Launch</h3>
+              <p className="text-muted-foreground text-sm mt-1">
                 Common administrative tasks
               </p>
             </div>
@@ -653,19 +653,19 @@ export default function AdminDashboard() {
                   title: "Admin Settings",
                   icon: Settings,
                   link: "/admin/profile",
-                  color: "bg-slate-500/10 text-slate-400",
+                  color: "bg-slate-500/10 text-muted-foreground",
                 },
               ].map((action) => (
                 <Link
                   key={action.title}
                   href={action.link}
-                  className="flex items-center justify-between p-3 rounded bg-slate-950/20 border border-white/5 hover:border-brand-secondary-500/20 hover:bg-slate-900/50 transition-all duration-300 group"
+                  className="flex items-center justify-between p-3 rounded bg-slate-950/20 border border-border hover:border-brand-secondary-500/20 hover:bg-card/50 transition-all duration-300 group"
                 >
                   <div className="flex items-center gap-3">
                     <div className={cn("p-2 rounded", action.color)}>
                       <action.icon className="w-4 h-4" />
                     </div>
-                    <span className="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">
+                    <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
                       {action.title}
                     </span>
                   </div>
@@ -675,14 +675,14 @@ export default function AdminDashboard() {
             </div>
           </Card>
 
-          <Card className="bg-slate-900/40 border-white/10 overflow-hidden relative group">
+          <Card className="bg-card/40 border-border overflow-hidden relative group">
             <div className="absolute inset-0 bg-radial-gradient from-blue-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-            <CardHeader className="pb-4 border-b border-white/5">
+            <CardHeader className="pb-4 border-b border-border">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-sm text-white">
+                <CardTitle className="text-sm text-foreground">
                   Orders by Status
                 </CardTitle>
-                <ShoppingCart className="w-4 h-4 text-slate-500" />
+                <ShoppingCart className="w-4 h-4 text-muted-foreground" />
               </div>
             </CardHeader>
             <CardContent className="pt-6">
@@ -729,13 +729,13 @@ export default function AdminDashboard() {
       {/* Row 2: Tables & Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Recent Orders Table */}
-        <Card className="lg:col-span-2 bg-slate-900/40  border-white/10 overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between border-b border-white/5">
+        <Card className="lg:col-span-2 bg-card/40  border-border overflow-hidden">
+          <CardHeader className="flex flex-row items-center justify-between border-b border-border">
             <div>
-              <CardTitle className="text-lg text-white">
+              <CardTitle className="text-lg text-foreground">
                 Recent Incoming Orders
               </CardTitle>
-              <CardDescription className="text-slate-500">
+              <CardDescription className="text-muted-foreground">
                 Real-time order tracking
               </CardDescription>
             </div>
@@ -752,23 +752,23 @@ export default function AdminDashboard() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-800/50">
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                <tr className="bg-muted/50">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Order ID
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Customer
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Date
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Amount
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">
                     Action
                   </th>
                 </tr>
@@ -784,28 +784,28 @@ export default function AdminDashboard() {
                     return new Array(5).fill(0).map((_, i) => (
                       <tr
                         key={`skeleton-recent-order-${i}`}
-                        className="animate-pulse border-b border-white/5 last:border-0"
+                        className="animate-pulse border-b border-border last:border-0"
                       >
                         <td className="px-6 py-4">
-                          <div className="h-4 bg-white/5 rounded w-16" />
+                          <div className="h-4 bg-accent/50 rounded w-16" />
                         </td>
                         <td className="px-6 py-4">
                           <div className="space-y-2">
-                            <div className="h-4 bg-white/10 rounded w-32" />
-                            <div className="h-3 bg-white/5 rounded w-24" />
+                            <div className="h-4 bg-accent rounded w-32" />
+                            <div className="h-3 bg-accent/50 rounded w-24" />
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <div className="h-4 bg-white/5 rounded w-20" />
+                          <div className="h-4 bg-accent/50 rounded w-20" />
                         </td>
                         <td className="px-6 py-4">
-                          <div className="h-4 bg-white/10 rounded w-16" />
+                          <div className="h-4 bg-accent rounded w-16" />
                         </td>
                         <td className="px-6 py-4">
-                          <div className="h-5 bg-white/5 rounded-full w-20" />
+                          <div className="h-5 bg-accent/50 rounded-full w-20" />
                         </td>
                         <td className="px-6 py-4 text-right">
-                          <div className="h-8 bg-white/5 rounded w-16 ml-auto" />
+                          <div className="h-8 bg-accent/50 rounded w-16 ml-auto" />
                         </td>
                       </tr>
                     ));
@@ -816,7 +816,7 @@ export default function AdminDashboard() {
                       <tr>
                         <td
                           colSpan={6}
-                          className="px-6 py-8 text-center text-slate-500 italic"
+                          className="px-6 py-8 text-center text-muted-foreground italic"
                         >
                           No recent orders found
                         </td>
@@ -827,12 +827,12 @@ export default function AdminDashboard() {
                   return recentOrders.map((order) => (
                     <tr
                       key={order.id}
-                      className="border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors"
+                      className="border-b border-border last:border-0 hover:bg-accent transition-colors"
                     >
                       <td className="px-6 py-4">
                         <Link
                           href={`/admin/orders/${order.id}`}
-                          className="text-sm font-mono text-slate-400 group-hover:text-brand-secondary-400 transition-colors"
+                          className="text-sm font-mono text-muted-foreground group-hover:text-brand-secondary-400 transition-colors"
                         >
                           {toReadableOrderId(order.id)}
                         </Link>
@@ -842,15 +842,15 @@ export default function AdminDashboard() {
                           href={`/admin/orders/${order.id}`}
                           className="flex flex-col"
                         >
-                          <span className="text-sm font-semibold text-white group-hover:text-brand-secondary-400 transition-colors">
+                          <span className="text-sm font-semibold text-foreground group-hover:text-brand-secondary-400 transition-colors">
                             {order.customer.firstName} {order.customer.lastName}
                           </span>
-                          <span className="text-xs text-slate-500">
+                          <span className="text-xs text-muted-foreground">
                             {order.customer.email}
                           </span>
                         </Link>
                       </td>
-                      <td className="px-6 py-4 text-sm text-slate-400">
+                      <td className="px-6 py-4 text-sm text-muted-foreground">
                         {new Date(order.createdAt).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 text-sm font-bold text-brand-secondary-400">
@@ -870,7 +870,7 @@ export default function AdminDashboard() {
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="h-8 px-2 text-slate-400 hover:text-white hover:bg-white/10"
+                          className="h-8 px-2 text-muted-foreground hover:text-foreground hover:bg-accent"
                           asChild
                         >
                           <Link href={`/admin/orders/${order.id}`}>
@@ -887,13 +887,13 @@ export default function AdminDashboard() {
         </Card>
 
         {/* Recent Activity Card */}
-        <Card className="bg-slate-900/40  border-white/10">
-          <CardHeader className="pb-4 border-b border-white/5">
+        <Card className="bg-card/40  border-border">
+          <CardHeader className="pb-4 border-b border-border">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm text-white">
+              <CardTitle className="text-sm text-foreground">
                 Recent Activity
               </CardTitle>
-              <Clock className="w-4 h-4 text-slate-500" />
+              <Clock className="w-4 h-4 text-muted-foreground" />
             </div>
           </CardHeader>
           <CardContent className="pt-6 max-h-125 overflow-y-auto">

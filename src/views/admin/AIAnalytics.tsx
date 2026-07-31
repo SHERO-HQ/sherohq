@@ -45,9 +45,9 @@ const EMPTY_TOTALS: AIAnalyticsTotals = {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-slate-950/90 backdrop-blur-md border border-white/10 p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
+      <div className="bg-slate-950/90 backdrop-blur-md border border-border p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
         {label && (
-          <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">
+          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider font-mono">
             {label}
           </p>
         )}
@@ -60,7 +60,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
                   backgroundColor: item.fill || item.stroke || item.color,
                 }}
               />
-              <span className="text-xs text-slate-400 font-medium capitalize">
+              <span className="text-xs text-muted-foreground font-medium capitalize">
                 {item.name === "count"
                   ? "Interactions"
                   : item.name === "queryCount"
@@ -68,7 +68,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
                     : item.name}
                 :
               </span>
-              <span className="text-xs text-white font-bold font-mono">
+              <span className="text-xs text-foreground font-bold font-mono">
                 {item.value.toLocaleString()}
               </span>
             </div>
@@ -84,8 +84,8 @@ const AIAnalyticsSkeleton = () => (
   <div className="space-y-8 animate-pulse select-none">
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div className="space-y-2">
-        <div className="h-8 w-64 bg-white/5 rounded" />
-        <div className="h-4 w-96 bg-white/5 rounded" />
+        <div className="h-8 w-64 bg-accent/50 rounded" />
+        <div className="h-4 w-96 bg-accent/50 rounded" />
       </div>
     </div>
 
@@ -94,15 +94,15 @@ const AIAnalyticsSkeleton = () => (
       {new Array(4).fill(0).map((_, i) => (
         <Card
           key={i}
-          className="bg-slate-900 border border-white/5 p-6 space-y-4"
+          className="bg-card border border-border p-6 space-y-4"
         >
           <div className="flex justify-between items-center">
-            <div className="h-4 w-28 bg-white/5 rounded" />
-            <div className="h-6 w-6 bg-white/5 rounded" />
+            <div className="h-4 w-28 bg-accent/50 rounded" />
+            <div className="h-6 w-6 bg-accent/50 rounded" />
           </div>
           <div className="space-y-2">
-            <div className="h-8 w-24 bg-white/10 rounded" />
-            <div className="h-3 w-32 bg-white/5 rounded" />
+            <div className="h-8 w-24 bg-accent rounded" />
+            <div className="h-3 w-32 bg-accent/50 rounded" />
           </div>
         </Card>
       ))}
@@ -113,26 +113,26 @@ const AIAnalyticsSkeleton = () => (
       {new Array(4).fill(0).map((_, i) => (
         <Card
           key={i}
-          className="bg-slate-900 border border-white/5 p-6 space-y-6"
+          className="bg-card border border-border p-6 space-y-6"
         >
           <div className="space-y-2">
-            <div className="h-5 w-40 bg-white/5 rounded" />
-            <div className="h-3 w-28 bg-white/5 rounded" />
+            <div className="h-5 w-40 bg-accent/50 rounded" />
+            <div className="h-3 w-28 bg-accent/50 rounded" />
           </div>
-          <div className="h-60 bg-white/5 rounded w-full flex items-end p-4">
+          <div className="h-60 bg-accent/50 rounded w-full flex items-end p-4">
             {i % 2 === 0 ? (
               <div className="w-full flex items-end gap-3 h-full">
                 {[30, 60, 45, 80, 55, 90, 40].map((h, index) => (
                   <div
                     key={index}
-                    className="flex-1 bg-white/5 rounded-t"
+                    className="flex-1 bg-accent/50 rounded-t"
                     style={{ height: `${h}%` }}
                   />
                 ))}
               </div>
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <div className="w-24 h-24 rounded-full border-4 border-white/5 flex items-center justify-center" />
+                <div className="w-24 h-24 rounded-full border-4 border-border flex items-center justify-center" />
               </div>
             )}
           </div>
@@ -221,10 +221,10 @@ export default function AIAnalytics() {
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight text-white flex items-center gap-3">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-3">
             <Brain className="text-brand-secondary-500" /> AI Intelligence Hub
           </h1>
-          <p className="text-slate-400 text-sm">
+          <p className="text-muted-foreground text-sm">
             Real-time insights into user queries, intent patterns, and catalog
             gaps.
           </p>
@@ -233,63 +233,63 @@ export default function AIAnalytics() {
 
       {/* Stats Summary */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-        <Card className="bg-slate-900 border-white/10">
+        <Card className="bg-card border-border">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400 flex items-center gap-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <MessageSquare className="w-4 h-4 text-blue-400" /> Total AI
               Interactions
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-2xl font-bold text-foreground">
               {totalInteractions}
             </div>
-            <p className="text-xs text-slate-500 mt-1">Past 30 days volume</p>
+            <p className="text-xs text-muted-foreground mt-1">Past 30 days volume</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900 border-white/10">
+        <Card className="bg-card border-border">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400 flex items-center gap-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Activity className="w-4 h-4 text-cyan-400" /> Avg Daily Load
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-2xl font-bold text-foreground">
               {avgDailyVolume.toFixed(1)}
             </div>
-            <p className="text-xs text-slate-500 mt-1">Conversations per day</p>
+            <p className="text-xs text-muted-foreground mt-1">Conversations per day</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900 border-white/10">
+        <Card className="bg-card border-border">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400 flex items-center gap-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Camera className="w-4 h-4 text-purple-400" /> Image-Assisted
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-2xl font-bold text-foreground">
               {imageUsageRate.toFixed(1)}%
             </div>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               Image-assisted sessions
             </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900 border-white/10">
+        <Card className="bg-card border-border">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-400 flex items-center gap-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-brand-secondary-400" />{" "}
               Resolution Rate
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-2xl font-bold text-foreground">
               {resolutionRate.toFixed(1)}%
             </div>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               Non-fallback response ratio
             </p>
           </CardContent>
@@ -298,11 +298,11 @@ export default function AIAnalytics() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Interaction Volume */}
-        <Card className="bg-slate-900/40 border-white/10 hover:border-brand-secondary-500/30 transition-colors duration-300 relative group overflow-hidden">
+        <Card className="bg-card/40 border-border hover:border-brand-secondary-500/30 transition-colors duration-300 relative group overflow-hidden">
           <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
           <CardHeader>
-            <CardTitle className="text-white">Interaction Trends</CardTitle>
-            <CardDescription className="text-slate-500">
+            <CardTitle className="text-foreground">Interaction Trends</CardTitle>
+            <CardDescription className="text-muted-foreground">
               30-day AI usage volume
             </CardDescription>
           </CardHeader>
@@ -354,11 +354,11 @@ export default function AIAnalytics() {
         </Card>
 
         {/* Volume Velocity */}
-        <Card className="bg-slate-900/40 border-white/10 hover:border-blue-500/30 transition-colors duration-300 relative group overflow-hidden">
+        <Card className="bg-card/40 border-border hover:border-blue-500/30 transition-colors duration-300 relative group overflow-hidden">
           <div className="absolute inset-0 bg-radial-gradient from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
           <CardHeader>
-            <CardTitle className="text-white">Engagement Velocity</CardTitle>
-            <CardDescription className="text-slate-500">
+            <CardTitle className="text-foreground">Engagement Velocity</CardTitle>
+            <CardDescription className="text-muted-foreground">
               {trendDelta >= 0 ? "+" : ""}
               {trendDelta.toFixed(1)}% change from first to latest day
             </CardDescription>
@@ -416,11 +416,11 @@ export default function AIAnalytics() {
         </Card>
 
         {/* User Intent Distribution */}
-        <Card className="bg-slate-900/40 border-white/10 hover:border-purple-500/30 transition-colors duration-300 relative group overflow-hidden">
+        <Card className="bg-card/40 border-border hover:border-purple-500/30 transition-colors duration-300 relative group overflow-hidden">
           <div className="absolute inset-0 bg-radial-gradient from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
           <CardHeader>
-            <CardTitle className="text-white">User Intent Map</CardTitle>
-            <CardDescription className="text-slate-500">
+            <CardTitle className="text-foreground">User Intent Map</CardTitle>
+            <CardDescription className="text-muted-foreground">
               Why users are talking to SHERO
             </CardDescription>
           </CardHeader>
@@ -463,7 +463,7 @@ export default function AIAnalytics() {
                           backgroundColor: COLORS[index % COLORS.length],
                         }}
                       />
-                      <span className="text-slate-400 capitalize">
+                      <span className="text-muted-foreground capitalize">
                         {entry.intent}
                       </span>
                     </div>
@@ -471,7 +471,7 @@ export default function AIAnalytics() {
                 </div>
               </>
             ) : (
-              <div className="h-full flex items-center justify-center text-slate-500 text-sm">
+              <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
                 No intent data available yet.
               </div>
             )}
@@ -479,11 +479,11 @@ export default function AIAnalytics() {
         </Card>
 
         {/* Catalog Gap Pressure */}
-        <Card className="bg-slate-900/40 border-white/10 hover:border-amber-500/30 transition-colors duration-300 relative group overflow-hidden">
+        <Card className="bg-card/40 border-border hover:border-amber-500/30 transition-colors duration-300 relative group overflow-hidden">
           <div className="absolute inset-0 bg-radial-gradient from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
           <CardHeader>
-            <CardTitle className="text-white">Gap Pressure</CardTitle>
-            <CardDescription className="text-slate-500">
+            <CardTitle className="text-foreground">Gap Pressure</CardTitle>
+            <CardDescription className="text-muted-foreground">
               Open gap requests: {totals.openGapRequests}
             </CardDescription>
           </CardHeader>
@@ -547,7 +547,7 @@ export default function AIAnalytics() {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-full flex items-center justify-center text-slate-500 text-sm">
+              <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
                 No unresolved catalog gaps to chart.
               </div>
             )}
@@ -556,15 +556,15 @@ export default function AIAnalytics() {
       </div>
 
       {/* Catalog Gaps Table */}
-      <Card className="bg-slate-900/40 border-white/10 overflow-hidden relative group">
+      <Card className="bg-card/40 border-border overflow-hidden relative group">
         <div className="absolute inset-0 bg-radial-gradient from-amber-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-        <CardHeader className="border-b border-white/5 bg-slate-900/30">
+        <CardHeader className="border-b border-border bg-card/30">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-lg text-white">
+              <CardTitle className="text-lg text-foreground">
                 Catalog Deficiency Analysis
               </CardTitle>
-              <CardDescription className="text-slate-500">
+              <CardDescription className="text-muted-foreground">
                 Products or services users asked for that we don't have
               </CardDescription>
             </div>
@@ -576,17 +576,17 @@ export default function AIAnalytics() {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-800/40">
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+              <tr className="bg-muted/40">
+                <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   Unmet Need (Keyword)
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   Requests
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   Last Request
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">
+                <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">
                   Status
                 </th>
               </tr>
@@ -595,10 +595,10 @@ export default function AIAnalytics() {
               {data?.topGaps.map((gap) => (
                 <tr
                   key={gap.keyword}
-                  className="border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors duration-200"
+                  className="border-b border-border last:border-0 hover:bg-accent transition-colors duration-200"
                 >
                   <td className="px-6 py-4">
-                    <span className="text-sm font-bold text-white capitalize">
+                    <span className="text-sm font-bold text-foreground capitalize">
                       {gap.keyword}
                     </span>
                   </td>
@@ -607,7 +607,7 @@ export default function AIAnalytics() {
                       {gap.queryCount}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-400">
+                  <td className="px-6 py-4 text-sm text-muted-foreground">
                     {new Date(gap.lastRequested).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 text-right">
@@ -621,7 +621,7 @@ export default function AIAnalytics() {
                 <tr>
                   <td
                     colSpan={4}
-                    className="px-6 py-12 text-center text-slate-500 italic"
+                    className="px-6 py-12 text-center text-muted-foreground italic"
                   >
                     No catalog gaps identified yet. Our inventory matching is
                     currently 100%.

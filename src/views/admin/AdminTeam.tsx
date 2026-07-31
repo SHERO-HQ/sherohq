@@ -32,17 +32,17 @@ const TeamGridSkeleton = () => (
     {[1, 2, 3, 4].map((i) => (
       <div
         key={i}
-        className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center gap-4"
+        className="bg-muted/30 border border-border rounded p-4 flex items-center gap-4"
       >
-        <div className="w-5 h-5 bg-white/5 rounded shrink-0" />
-        <div className="w-12 h-12 rounded bg-white/10 shrink-0" />
+        <div className="w-5 h-5 bg-accent/50 rounded shrink-0" />
+        <div className="w-12 h-12 rounded bg-accent shrink-0" />
         <div className="flex-1 space-y-2">
-          <div className="h-4 w-32 bg-white/10 rounded" />
-          <div className="h-3 w-24 bg-white/5 rounded" />
+          <div className="h-4 w-32 bg-accent rounded" />
+          <div className="h-3 w-24 bg-accent/50 rounded" />
         </div>
         <div className="flex gap-2">
-          <div className="h-8 w-8 bg-white/5 rounded" />
-          <div className="h-8 w-8 bg-white/5 rounded" />
+          <div className="h-8 w-8 bg-accent/50 rounded" />
+          <div className="h-8 w-8 bg-accent/50 rounded" />
         </div>
       </div>
     ))}
@@ -176,11 +176,11 @@ const AdminTeam = () => {
     <div className="space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+            <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
               <Users className="w-7 h-7 text-brand-secondary-400" />
               Team Members
             </h1>
-            <p className="text-slate-400 text-sm mt-1">
+            <p className="text-muted-foreground text-sm mt-1">
               Manage your team profiles and roles
             </p>
           </div>
@@ -197,12 +197,12 @@ const AdminTeam = () => {
 
         {/* Search */}
         <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             placeholder="Search team members..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
+            className="pl-10 bg-card/50 border-border text-foreground placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
           />
         </div>
 
@@ -210,16 +210,16 @@ const AdminTeam = () => {
         {isLoading ? (
           <TeamGridSkeleton />
         ) : filteredTeam.length === 0 ? (
-          <div className="text-center py-20 bg-slate-800/30 rounded border border-white/5">
+          <div className="text-center py-20 bg-muted/30 rounded border border-border">
             <Users className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-            <p className="text-slate-400">No team members found</p>
+            <p className="text-muted-foreground">No team members found</p>
           </div>
         ) : (
           <div className="space-y-4">
             {filteredTeam.map((member) => (
               <div
                 key={member.id}
-                className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center gap-4 group hover:border-brand-secondary-500/30 transition"
+                className="bg-muted/30 border border-border rounded p-4 flex items-center gap-4 group hover:border-brand-secondary-500/30 transition"
               >
                 <div className="text-slate-600 cursor-move opacity-0 group-hover:opacity-100 transition-opacity">
                   <GripVertical className="w-5 h-5" />
@@ -235,14 +235,14 @@ const AdminTeam = () => {
                       className="object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-400 font-bold">
+                    <div className="w-full h-full flex items-center justify-center text-muted-foreground font-bold">
                       {member.name.charAt(0)}
                     </div>
                   )}
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-white truncate">
+                  <h3 className="font-medium text-foreground truncate">
                     {member.name}
                   </h3>
                   <p className="text-sm text-brand-secondary-500 truncate">
@@ -255,7 +255,7 @@ const AdminTeam = () => {
                     variant="ghost"
                     size="icon"
                     onClick={() => handleOpenEdit(member)}
-                    className="h-8 w-8 text-slate-400 hover:text-white"
+                    className="h-8 w-8 text-muted-foreground hover:text-foreground"
                   >
                     <Edit2 className="w-4 h-4" />
                   </Button>
@@ -263,7 +263,7 @@ const AdminTeam = () => {
                     variant="ghost"
                     size="icon"
                     onClick={() => setDeleteId(member.id)}
-                    className="h-8 w-8 text-slate-400 hover:text-red-400"
+                    className="h-8 w-8 text-muted-foreground hover:text-red-400"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -293,7 +293,7 @@ const AdminTeam = () => {
                     setFormData({ ...formData, name: e.target.value })
                   }
                   required
-                  className="bg-slate-800 border-white/10"
+                  className="bg-muted border-border"
                 />
               </div>
               <div className="space-y-2">
@@ -305,7 +305,7 @@ const AdminTeam = () => {
                     setFormData({ ...formData, role: e.target.value })
                   }
                   required
-                  className="bg-slate-800 border-white/10"
+                  className="bg-muted border-border"
                 />
               </div>
             </div>
@@ -319,7 +319,7 @@ const AdminTeam = () => {
                   setFormData({ ...formData, image: e.target.value })
                 }
                 placeholder="https://..."
-                className="bg-slate-800 border-white/10"
+                className="bg-muted border-border"
               />
             </div>
 
@@ -331,7 +331,7 @@ const AdminTeam = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, bio: e.target.value })
                 }
-                className="bg-slate-800 border-white/10 min-h-25"
+                className="bg-muted border-border min-h-25"
               />
             </div>
 
@@ -347,7 +347,7 @@ const AdminTeam = () => {
                       social: { ...formData.social, twitter: e.target.value },
                     })
                   }
-                  className="bg-slate-800 border-white/10"
+                  className="bg-muted border-border"
                 />
                 <Input
                   placeholder="LinkedIn URL"
@@ -358,7 +358,7 @@ const AdminTeam = () => {
                       social: { ...formData.social, linkedin: e.target.value },
                     })
                   }
-                  className="bg-slate-800 border-white/10"
+                  className="bg-muted border-border"
                 />
                 <Input
                   placeholder="GitHub URL"
@@ -369,7 +369,7 @@ const AdminTeam = () => {
                       social: { ...formData.social, github: e.target.value },
                     })
                   }
-                  className="bg-slate-800 border-white/10"
+                  className="bg-muted border-border"
                 />
               </div>
             </div>
@@ -383,7 +383,7 @@ const AdminTeam = () => {
                 onChange={(e) =>
                   setFormData({ ...formData, order: Number(e.target.value) })
                 }
-                className="bg-slate-800 border-white/10"
+                className="bg-muted border-border"
               />
             </div>
 

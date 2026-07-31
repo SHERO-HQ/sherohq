@@ -32,12 +32,12 @@ export default function InvoiceCustomerCard({
 
   return (
     <Card className={cn(
-      "bg-slate-900 border border-white/5 p-6 md:p-8 space-y-6 transition-all duration-300",
+      "bg-card border border-border p-6 md:p-8 space-y-6 transition-all duration-300",
       (errors.firstName || errors.email || errors.address) && "border-rose-500/30 bg-rose-500/2"
     )}>
-      <div className="flex items-center gap-2 pb-2 border-b border-white/5">
+      <div className="flex items-center gap-2 pb-2 border-b border-border">
         <User className="w-5 h-5 text-brand-secondary-400" />
-        <h3 className="text-lg font-bold text-white">Customer Information</h3>
+        <h3 className="text-lg font-bold text-foreground">Customer Information</h3>
       </div>
 
       <div className="space-y-4">
@@ -46,7 +46,7 @@ export default function InvoiceCustomerCard({
           <div className="space-y-2">
             <label
               htmlFor="firstName"
-              className="text-sm font-medium text-slate-400"
+              className="text-sm font-medium text-muted-foreground"
             >
               First Name *
             </label>
@@ -57,7 +57,7 @@ export default function InvoiceCustomerCard({
               autoComplete="off"
               onChange={(e) => handleInputChange("firstName", e.target.value)}
               className={cn(
-                "bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500",
+                "bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500",
                 errors.firstName && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
               )}
               required
@@ -72,7 +72,7 @@ export default function InvoiceCustomerCard({
           <div className="space-y-2">
             <label
               htmlFor="lastName"
-              className="text-sm font-medium text-slate-400"
+              className="text-sm font-medium text-muted-foreground"
             >
               Last Name
             </label>
@@ -82,7 +82,7 @@ export default function InvoiceCustomerCard({
               value={customer.lastName || ""}
               autoComplete="off"
               onChange={(e) => handleInputChange("lastName", e.target.value)}
-              className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500"
+              className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500"
             />
           </div>
         </div>
@@ -92,9 +92,9 @@ export default function InvoiceCustomerCard({
           <div className="space-y-2">
             <label
               htmlFor="email"
-              className="text-sm font-medium text-slate-400 flex items-center gap-1.5"
+              className="text-sm font-medium text-muted-foreground flex items-center gap-1.5"
             >
-              Email Address * <Mail className="w-3.5 h-3.5 text-slate-500" />
+              Email Address * <Mail className="w-3.5 h-3.5 text-muted-foreground" />
             </label>
             <Input
               id="email"
@@ -104,7 +104,7 @@ export default function InvoiceCustomerCard({
               autoComplete="off"
               onChange={(e) => handleInputChange("email", e.target.value)}
               className={cn(
-                "bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500",
+                "bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500",
                 errors.email && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
               )}
               required
@@ -119,9 +119,9 @@ export default function InvoiceCustomerCard({
           <div className="space-y-2">
             <label
               htmlFor="phone"
-              className="text-sm font-medium text-slate-400 flex items-center gap-1.5"
+              className="text-sm font-medium text-muted-foreground flex items-center gap-1.5"
             >
-              Phone Number <Phone className="w-3.5 h-3.5 text-slate-500" />
+              Phone Number <Phone className="w-3.5 h-3.5 text-muted-foreground" />
             </label>
             <Input
               id="phone"
@@ -129,19 +129,19 @@ export default function InvoiceCustomerCard({
               value={customer.phone || ""}
               autoComplete="off"
               onChange={(e) => handleInputChange("phone", e.target.value)}
-              className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500"
+              className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500"
             />
           </div>
         </div>
 
         {/* Address Fields */}
-        <div className="space-y-4 pt-2 border-t border-white/5">
+        <div className="space-y-4 pt-2 border-t border-border">
           <div className="space-y-2">
             <label
               htmlFor="address"
-              className="text-sm font-medium text-slate-400 flex items-center gap-1.5"
+              className="text-sm font-medium text-muted-foreground flex items-center gap-1.5"
             >
-              Street Address * <MapPin className="w-3.5 h-3.5 text-slate-500" />
+              Street Address * <MapPin className="w-3.5 h-3.5 text-muted-foreground" />
             </label>
             <Input
               id="address"
@@ -150,7 +150,7 @@ export default function InvoiceCustomerCard({
               autoComplete="off"
               onChange={(e) => handleInputChange("address", e.target.value)}
               className={cn(
-                "bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500",
+                "bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500",
                 errors.address && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
               )}
               required
@@ -166,7 +166,7 @@ export default function InvoiceCustomerCard({
             <div className="space-y-2">
               <label
                 htmlFor="city"
-                className="text-sm font-medium text-slate-400"
+                className="text-sm font-medium text-muted-foreground"
               >
                 City
               </label>
@@ -175,14 +175,14 @@ export default function InvoiceCustomerCard({
                 placeholder="Accra"
                 value={customer.city || ""}
                 onChange={(e) => handleInputChange("city", e.target.value)}
-                className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500"
+                className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500"
               />
             </div>
 
             <div className="space-y-2">
               <label
                 htmlFor="region"
-                className="text-sm font-medium text-slate-400"
+                className="text-sm font-medium text-muted-foreground"
               >
                 Region
               </label>
@@ -191,7 +191,7 @@ export default function InvoiceCustomerCard({
                 placeholder="Greater Accra"
                 value={customer.region || ""}
                 onChange={(e) => handleInputChange("region", e.target.value)}
-                className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500"
+                className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500"
               />
             </div>
           </div>

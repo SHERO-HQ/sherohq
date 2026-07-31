@@ -87,20 +87,20 @@ export default function InvoiceItemsCard({
 
   return (
     <Card className={cn(
-      "bg-slate-900 border border-white/5 p-6 md:p-8 space-y-6 transition-all duration-300",
+      "bg-card border border-border p-6 md:p-8 space-y-6 transition-all duration-300",
       errors.items && "border-rose-500/30 bg-rose-500/2"
     )}>
-      <div className="flex items-center justify-between pb-4 border-b border-white/5">
+      <div className="flex items-center justify-between pb-4 border-b border-border">
         <div className="flex items-center gap-2">
           <FileText className="w-5 h-5 text-brand-secondary-400" />
-          <h2 className="text-lg font-bold text-white">Invoice Items</h2>
+          <h2 className="text-lg font-bold text-foreground">Invoice Items</h2>
         </div>
         <Button
           type="button"
           variant="outline"
           size="sm"
           onClick={onAddCustomItem}
-          className="border-white/10 text-brand-secondary-400 hover:bg-brand-secondary-500/10"
+          className="border-border text-brand-secondary-400 hover:bg-brand-secondary-500/10"
         >
           <Plus className="w-4 h-4 mr-2" /> Add Custom Item
         </Button>
@@ -108,7 +108,7 @@ export default function InvoiceItemsCard({
 
       {/* Product Search */}
       <div className="relative" id="items">
-        <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-2">
+        <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-2">
           Search products to add
         </label>
         <div className="relative">
@@ -116,15 +116,15 @@ export default function InvoiceItemsCard({
             placeholder="Search products by name..."
             value={searchQuery}
             onChange={(e) => onSearchQueryChange(e.target.value)}
-            className="bg-slate-950 border-white/10 text-white pl-10 focus-visible:ring-brand-secondary-500"
+            className="bg-slate-950 border-border text-foreground pl-10 focus-visible:ring-brand-secondary-500"
           />
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         </div>
 
         {searchQuery && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-slate-950 border border-white/10 rounded shadow-2xl z-50 max-h-60 overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="absolute top-full left-0 right-0 mt-2 bg-slate-950 border border-border rounded shadow-2xl z-50 max-h-60 overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
             {isLoadingProducts ? (
-              <div className="p-4 text-center text-slate-400">
+              <div className="p-4 text-center text-muted-foreground">
                 <Loader2 className="w-5 h-5 animate-spin mx-auto text-brand-secondary-400" />
               </div>
             ) : products.length > 0 ? (
@@ -133,9 +133,9 @@ export default function InvoiceItemsCard({
                   type="button"
                   key={product.id}
                   onClick={() => onAddProduct(product)}
-                  className="w-full text-left p-3 hover:bg-white/5 flex items-center gap-3 border-b border-white/5 last:border-0 transition-colors"
+                  className="w-full text-left p-3 hover:bg-accent flex items-center gap-3 border-b border-border last:border-0 transition-colors"
                 >
-                  <div className="w-10 h-10 bg-slate-800 border border-white/5 rounded overflow-hidden shrink-0">
+                  <div className="w-10 h-10 bg-muted border border-border rounded overflow-hidden shrink-0">
                     {product.image && (
                       <img
                         src={product.image}
@@ -145,7 +145,7 @@ export default function InvoiceItemsCard({
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold text-white truncate">
+                    <p className="text-sm font-bold text-foreground truncate">
                       {product.name}
                     </p>
                     <p className="text-xs text-brand-secondary-400 font-semibold font-mono">
@@ -156,7 +156,7 @@ export default function InvoiceItemsCard({
                 </button>
               ))
             ) : (
-              <div className="p-4 text-center text-slate-500 text-xs italic">
+              <div className="p-4 text-center text-muted-foreground text-xs italic">
                 No matching products found.
               </div>
             )}
@@ -173,7 +173,7 @@ export default function InvoiceItemsCard({
         )}
 
         {items.length === 0 ? (
-          <div className="text-center py-10 text-slate-500 border border-dashed border-white/10 rounded flex flex-col items-center justify-center gap-2">
+          <div className="text-center py-10 text-muted-foreground border border-dashed border-border rounded flex flex-col items-center justify-center gap-2">
             <Info className="w-6 h-6 text-slate-600" />
             <p className="text-sm">No items added to this invoice yet.</p>
             <p className="text-xs text-slate-600">Search products or add custom items to get started.</p>
@@ -189,7 +189,7 @@ export default function InvoiceItemsCard({
                   key={item.id}
                   className={cn(
                     "bg-slate-950/40 p-4 rounded border transition-all duration-300 relative overflow-hidden",
-                    isDeleting ? "border-rose-500/25 bg-rose-500/2 opacity-90 scale-[0.99]" : "border-white/5"
+                    isDeleting ? "border-rose-500/25 bg-rose-500/2 opacity-90 scale-[0.99]" : "border-border"
                   )}
                 >
                   {isDeleting ? (
@@ -201,7 +201,7 @@ export default function InvoiceItemsCard({
                         type="button"
                         variant="ghost"
                         onClick={() => cancelDelete(item.id)}
-                        className="h-8 px-4 bg-white/10 hover:bg-white/20 text-white rounded text-[11px] flex items-center gap-1.5 transition-all"
+                        className="h-8 px-4 bg-accent hover:bg-white/20 text-foreground rounded text-[11px] flex items-center gap-1.5 transition-all"
                       >
                         <RotateCcw className="w-3.5 h-3.5" />
                         Undo Deletion
@@ -218,8 +218,8 @@ export default function InvoiceItemsCard({
                           onUpdateItem(item.id, "name", e.target.value)
                         }
                         className={cn(
-                          "bg-transparent border-transparent text-white font-bold h-auto focus-visible:ring-0 focus-visible:border-white/10 text-sm placeholder:text-slate-600 truncate",
-                          item.type === "product" ? "pointer-events-none select-none text-slate-200" : "hover:border-white/5"
+                          "bg-transparent border-transparent text-foreground font-bold h-auto focus-visible:ring-0 focus-visible:border-border text-sm placeholder:text-slate-600 truncate",
+                          item.type === "product" ? "pointer-events-none select-none text-slate-200" : "hover:border-border"
                         )}
                         placeholder="Item Name"
                         disabled={item.type === "product"}
@@ -227,7 +227,7 @@ export default function InvoiceItemsCard({
 
                       <div className="flex gap-4">
                         <div className="w-28 space-y-1">
-                          <Label className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">
+                          <Label className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">
                             Price (GH₵)
                           </Label>
                           <Input
@@ -240,11 +240,11 @@ export default function InvoiceItemsCard({
                                 Number(e.target.value)
                               )
                             }
-                            className="h-8 bg-slate-900 border-white/5 text-white focus-visible:ring-brand-secondary-500 text-xs font-mono"
+                            className="h-8 bg-card border-border text-foreground focus-visible:ring-brand-secondary-500 text-xs font-mono"
                           />
                         </div>
                         <div className="w-24 space-y-1">
-                          <Label className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">
+                          <Label className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">
                             Qty
                           </Label>
                           <Input
@@ -258,14 +258,14 @@ export default function InvoiceItemsCard({
                                 Number(e.target.value)
                               )
                             }
-                            className="h-8 bg-slate-900 border-white/5 text-white focus-visible:ring-brand-secondary-500 text-xs font-mono"
+                            className="h-8 bg-card border-border text-foreground focus-visible:ring-brand-secondary-500 text-xs font-mono"
                           />
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex sm:flex-col items-end justify-between sm:justify-start w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-white/5">
-                      <p className="text-sm font-bold text-white font-mono">
+                    <div className="flex sm:flex-col items-end justify-between sm:justify-start w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border">
+                      <p className="text-sm font-bold text-foreground font-mono">
                         GH₵{(item.price * item.quantity).toLocaleString()}
                       </p>
                       <Button
@@ -273,7 +273,7 @@ export default function InvoiceItemsCard({
                         variant="ghost"
                         size="icon"
                         onClick={() => initiateDelete(item.id)}
-                        className="h-8 w-8 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 rounded transition-all mt-1"
+                        className="h-8 w-8 text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10 rounded transition-all mt-1"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>

@@ -56,7 +56,7 @@ export function CropModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Crop Image">
       <div className="space-y-6">
-        <div className="relative h-100 w-full bg-slate-800 rounded overflow-hidden border border-white/5">
+        <div className="relative h-100 w-full bg-muted rounded overflow-hidden border border-border">
           <Cropper
             image={image}
             crop={crop}
@@ -70,7 +70,7 @@ export function CropModal({
 
         <div className="flex flex-col gap-4">
           <div className="space-y-2">
-            <div className="flex justify-between text-xs font-medium text-slate-400 uppercase tracking-wider">
+            <div className="flex justify-between text-xs font-medium text-muted-foreground uppercase tracking-wider">
               <span>Zoom</span>
               <span>{Math.round(zoom * 100)}%</span>
             </div>
@@ -82,7 +82,7 @@ export function CropModal({
               step={0.1}
               aria-labelledby="Zoom"
               onChange={(e) => setZoom(Number(e.target.value))}
-              className="w-full h-1.5 bg-slate-800 rounded appearance-none cursor-pointer accent-brand-secondary-500"
+              className="w-full h-1.5 bg-muted rounded appearance-none cursor-pointer accent-brand-secondary-500"
             />
           </div>
 
@@ -94,7 +94,7 @@ export function CropModal({
                 setZoom(1);
                 setCrop({ x: 0, y: 0 });
               }}
-              className="text-slate-400 hover:text-white"
+              className="text-muted-foreground hover:text-foreground"
             >
               <RotateCcw className="w-4 h-4 mr-2" />
               Reset
@@ -104,7 +104,7 @@ export function CropModal({
               type="button"
               variant="ghost"
               onClick={onClose}
-              className="text-slate-400 hover:text-white"
+              className="text-muted-foreground hover:text-foreground"
             >
               <X className="w-4 h-4 mr-2" />
               Cancel

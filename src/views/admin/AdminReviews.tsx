@@ -15,18 +15,18 @@ const ReviewsTableSkeleton = () => (
     {[1, 2, 3].map((i) => (
       <div
         key={i}
-        className="bg-slate-800/20 border border-white/5 rounded p-6 flex flex-col md:flex-row gap-6"
+        className="bg-muted/20 border border-border rounded p-6 flex flex-col md:flex-row gap-6"
       >
         <div className="flex-1 space-y-3">
           <div className="flex items-center gap-3">
-            <div className="h-4 w-12 bg-white/10 rounded" />
-            <div className="h-3 w-20 bg-white/5 rounded" />
-            <div className="h-3 w-32 bg-white/5 rounded" />
+            <div className="h-4 w-12 bg-accent rounded" />
+            <div className="h-3 w-20 bg-accent/50 rounded" />
+            <div className="h-3 w-32 bg-accent/50 rounded" />
           </div>
-          <div className="h-4 w-3/4 bg-white/10 rounded" />
-          <div className="h-3 w-24 bg-white/5 rounded" />
+          <div className="h-4 w-3/4 bg-accent rounded" />
+          <div className="h-3 w-24 bg-accent/50 rounded" />
         </div>
-        <div className="h-8 w-20 bg-white/5 rounded mt-auto md:mt-0" />
+        <div className="h-8 w-20 bg-accent/50 rounded mt-auto md:mt-0" />
       </div>
     ))}
   </div>
@@ -99,9 +99,9 @@ const AdminReviews = () => {
 
     if (filteredReviews.length === 0) {
       return (
-        <div className="text-center py-20 bg-slate-800/30 rounded border border-white/5">
+        <div className="text-center py-20 bg-muted/30 rounded border border-border">
           <MessageSquare className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-          <p className="text-slate-400">No reviews found</p>
+          <p className="text-muted-foreground">No reviews found</p>
         </div>
       );
     }
@@ -113,7 +113,7 @@ const AdminReviews = () => {
           return (
             <div
               key={review.id}
-              className="bg-slate-800/30 border border-white/5 rounded p-6 flex flex-col md:flex-row gap-6 hover:bg-slate-800/50 transition-colors relative overflow-hidden"
+              className="bg-muted/30 border border-border rounded p-6 flex flex-col md:flex-row gap-6 hover:bg-muted/50 transition-colors relative overflow-hidden"
             >
               {isDeleting && (
                 <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs z-10 flex items-center justify-between px-6 py-4 animate-in fade-in duration-200 select-none">
@@ -124,7 +124,7 @@ const AdminReviews = () => {
                     type="button"
                     variant="ghost"
                     onClick={() => handleCancelDelete(review.id)}
-                    className="h-8 px-4 bg-white/10 hover:bg-white/20 text-white rounded text-[11px] font-bold transition-all shrink-0"
+                    className="h-8 px-4 bg-accent hover:bg-white/20 text-foreground rounded text-[11px] font-bold transition-all shrink-0"
                   >
                     Undo Deletion
                   </Button>
@@ -137,16 +137,16 @@ const AdminReviews = () => {
                     <Star className="w-4 h-4 fill-current" />
                     <span className="font-bold">{review.rating}</span>
                   </div>
-                  <span className="text-slate-500">•</span>
-                  <span className="font-medium text-white">
+                  <span className="text-muted-foreground">•</span>
+                  <span className="font-medium text-foreground">
                     {review.userName}
                   </span>
-                  <span className="text-slate-500 text-sm">
+                  <span className="text-muted-foreground text-sm">
                     on Product ID: {review.productId}
                   </span>
                 </div>
-                <p className="text-slate-300 leading-relaxed">{review.comment}</p>
-                <p className="text-xs text-slate-500">
+                <p className="text-muted-foreground leading-relaxed">{review.comment}</p>
+                <p className="text-xs text-muted-foreground">
                   Posted on {format(new Date(review.createdAt), "PPP")}
                 </p>
               </div>
@@ -155,7 +155,7 @@ const AdminReviews = () => {
                   variant="ghost"
                   size="sm"
                   onClick={() => startSoftDelete(review.id)}
-                  className="text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 h-9 px-3 rounded"
+                  className="text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10 h-9 px-3 rounded"
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
                   Delete
@@ -172,21 +172,21 @@ const AdminReviews = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
             <Star className="w-7 h-7 text-yellow-400" />
             Product Reviews
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-muted-foreground text-sm mt-1">
             Manage and moderate customer reviews
           </p>
         </div>
         <div className="relative w-64">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             placeholder="Search reviews..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
+            className="pl-10 bg-card/50 border-border text-foreground placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
           />
         </div>
       </div>

@@ -11,7 +11,7 @@ import dynamic from "next/dynamic";
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
   ssr: false,
   loading: () => (
-    <div className="h-[400px] w-full bg-slate-900/50 rounded animate-pulse" />
+    <div className="h-[400px] w-full bg-card/50 rounded animate-pulse" />
   ),
 });
 
@@ -36,18 +36,18 @@ export default function GuideIdentityCard({
 }: GuideIdentityCardProps) {
   return (
     <Card className={cn(
-      "bg-slate-900 border border-white/5 p-6 md:p-8 space-y-6 transition-all duration-300",
+      "bg-card border border-border p-6 md:p-8 space-y-6 transition-all duration-300",
       (errors.title || errors.content) && "border-rose-500/30 bg-rose-500/2"
     )}>
-      <div className="flex items-center gap-2 pb-2 border-b border-white/5">
+      <div className="flex items-center gap-2 pb-2 border-b border-border">
         <FileText className="w-5 h-5 text-brand-secondary-400" />
-        <h3 className="text-lg font-bold text-white">Guide Content</h3>
+        <h3 className="text-lg font-bold text-foreground">Guide Content</h3>
       </div>
 
       <div className="space-y-6">
         {/* Title */}
         <div className="space-y-2">
-          <Label htmlFor="title" className="text-slate-400 text-sm font-medium">
+          <Label htmlFor="title" className="text-muted-foreground text-sm font-medium">
             Guide Title *
           </Label>
           <Input
@@ -56,7 +56,7 @@ export default function GuideIdentityCard({
             onChange={(e) => onTitleChange(e.target.value)}
             placeholder="e.g. How to Install RAM on Enterprise Servers"
             className={cn(
-              "bg-slate-800/50 border-white/5 text-white placeholder:text-slate-600 focus-visible:ring-brand-secondary-500",
+              "bg-muted/50 border-border text-foreground placeholder:text-slate-600 focus-visible:ring-brand-secondary-500",
               errors.title && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
             )}
             required
@@ -70,7 +70,7 @@ export default function GuideIdentityCard({
 
         {/* Summary */}
         <div className="space-y-2">
-          <Label htmlFor="summary" className="text-slate-400 text-sm font-medium">
+          <Label htmlFor="summary" className="text-muted-foreground text-sm font-medium">
             Summary (Optional)
           </Label>
           <Textarea
@@ -78,18 +78,18 @@ export default function GuideIdentityCard({
             value={summary}
             onChange={(e) => onSummaryChange(e.target.value)}
             placeholder="A brief explanation of this guide displayed on listings..."
-            className="bg-slate-800/50 border-white/5 text-white placeholder:text-slate-600 min-h-20 focus-visible:ring-brand-secondary-500"
+            className="bg-muted/50 border-border text-foreground placeholder:text-slate-600 min-h-20 focus-visible:ring-brand-secondary-500"
             rows={3}
           />
         </div>
 
         {/* Content (Markdown Editor) */}
         <div className="space-y-2" data-color-mode="dark">
-          <Label htmlFor="content" className="text-slate-400 text-sm font-medium">
+          <Label htmlFor="content" className="text-muted-foreground text-sm font-medium">
             Detailed Content * (Markdown Supported)
           </Label>
           <div className={cn(
-            "rounded border border-white/5 overflow-hidden",
+            "rounded border border-border overflow-hidden",
             errors.content && "border-rose-500"
           )}>
             <MDEditor
@@ -105,7 +105,7 @@ export default function GuideIdentityCard({
               {errors.content}
             </p>
           )}
-          <p className="text-[11px] text-slate-500 flex items-center gap-1.5 mt-1">
+          <p className="text-[11px] text-muted-foreground flex items-center gap-1.5 mt-1">
             <Info className="w-3.5 h-3.5 shrink-0 text-brand-secondary-400" />
             Markdown layout is active. Use standard markdown symbols like # for titles, ** for bold text.
           </p>

@@ -388,7 +388,7 @@ export default function ProductForm() {
       <div className="flex flex-col items-center justify-center min-h-100">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-brand-secondary-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-slate-400 font-medium">
+          <p className="text-muted-foreground font-medium">
             Loading product details...
           </p>
         </div>
@@ -399,21 +399,21 @@ export default function ProductForm() {
   return (
     <div className="max-w-7xl mx-auto space-y-6 pb-20 px-4">
       {/* Sticky Header Action Bar */}
-      <div className="sticky top-20 bg-slate-950/80 backdrop-blur-md z-20 py-4 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300">
+      <div className="sticky top-20 bg-slate-950/80 backdrop-blur-md z-20 py-4 border-b border-border flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
-            className="text-slate-400 hover:text-white"
+            className="text-muted-foreground hover:text-foreground"
             onClick={() => router.push("/admin/products")}
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-white">
+            <h1 className="text-2xl font-bold text-foreground">
               {isEdit ? "Edit Product" : "New Product"}
             </h1>
-            <p className="text-slate-400 text-sm">
+            <p className="text-muted-foreground text-sm">
               {isEdit ? "Update your product listing details" : "Fill in the details to create a product listing"}
             </p>
           </div>
@@ -422,7 +422,7 @@ export default function ProductForm() {
           <Button
             type="button"
             variant="ghost"
-            className="text-slate-400 hover:text-white"
+            className="text-muted-foreground hover:text-foreground"
             onClick={() => router.push("/admin/products")}
           >
             Cancel
@@ -459,7 +459,7 @@ export default function ProductForm() {
                 Draft autosave is enabled for this form.
               </span>
             </div>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-muted-foreground">
               {draftSavedAt
                 ? `Last saved ${new Date(draftSavedAt).toLocaleString()}.`
                 : "Your changes will be saved locally as you type."}
@@ -478,7 +478,7 @@ export default function ProductForm() {
               type="button"
               variant="ghost"
               onClick={clearDraft}
-              className="text-slate-300 hover:text-white hover:bg-white/5"
+              className="text-muted-foreground hover:text-foreground hover:bg-accent"
             >
               Clear draft
             </Button>
@@ -492,12 +492,12 @@ export default function ProductForm() {
       >
         {/* Sticky Table of Contents (Desktop Only) */}
         <div className="hidden lg:block lg:col-span-2 sticky top-36 space-y-1">
-          <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 px-3">Sections</p>
-          <a href="#general" className="block px-3 py-2 text-sm text-slate-400 hover:text-brand-secondary-400 hover:bg-white/5 rounded-md transition-colors">General Info</a>
-          <a href="#media" className="block px-3 py-2 text-sm text-slate-400 hover:text-brand-secondary-400 hover:bg-white/5 rounded-md transition-colors">Media & Images</a>
-          <a href="#features" className="block px-3 py-2 text-sm text-slate-400 hover:text-brand-secondary-400 hover:bg-white/5 rounded-md transition-colors">Features List</a>
-          <a href="#specs" className="block px-3 py-2 text-sm text-slate-400 hover:text-brand-secondary-400 hover:bg-white/5 rounded-md transition-colors">Specifications</a>
-          <a href="#seo" className="block px-3 py-2 text-sm text-slate-400 hover:text-brand-secondary-400 hover:bg-white/5 rounded-md transition-colors">Search Engine</a>
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-3 px-3">Sections</p>
+          <a href="#general" className="block px-3 py-2 text-sm text-muted-foreground hover:text-brand-secondary-400 hover:bg-accent rounded-md transition-colors">General Info</a>
+          <a href="#media" className="block px-3 py-2 text-sm text-muted-foreground hover:text-brand-secondary-400 hover:bg-accent rounded-md transition-colors">Media & Images</a>
+          <a href="#features" className="block px-3 py-2 text-sm text-muted-foreground hover:text-brand-secondary-400 hover:bg-accent rounded-md transition-colors">Features List</a>
+          <a href="#specs" className="block px-3 py-2 text-sm text-muted-foreground hover:text-brand-secondary-400 hover:bg-accent rounded-md transition-colors">Specifications</a>
+          <a href="#seo" className="block px-3 py-2 text-sm text-muted-foreground hover:text-brand-secondary-400 hover:bg-accent rounded-md transition-colors">Search Engine</a>
         </div>
 
         {/* Main Content Area */}
@@ -552,11 +552,11 @@ export default function ProductForm() {
           </div>
 
           {/* Desktop Secondary Action Bar */}
-          <div className="hidden md:flex items-center gap-3 pt-6 border-t border-white/5">
+          <div className="hidden md:flex items-center gap-3 pt-6 border-t border-border">
             <Button
               type="button"
               variant="ghost"
-              className="text-slate-400 hover:text-white"
+              className="text-muted-foreground hover:text-foreground"
               onClick={() => router.push("/admin/products")}
             >
               Cancel
@@ -595,11 +595,11 @@ export default function ProductForm() {
       </form>
 
       {/* Mobile Sticky Bottom Action Dock */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/90 backdrop-blur-md border-t border-white/10 p-4 flex items-center justify-between gap-4 md:hidden shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/90 backdrop-blur-md border-t border-border p-4 flex items-center justify-between gap-4 md:hidden shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
         <Button
           type="button"
           variant="ghost"
-          className="text-slate-400 hover:text-white w-1/3"
+          className="text-muted-foreground hover:text-foreground w-1/3"
           onClick={() => router.push("/admin/products")}
         >
           Cancel

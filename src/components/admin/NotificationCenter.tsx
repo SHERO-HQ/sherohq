@@ -66,7 +66,7 @@ export default function NotificationCenter() {
                     "relative p-2 rounded transition duration-300",
                     isOpen
                         ? "bg-brand-secondary-500/80 text-brand-secondary-400 border-brand-secondary-500/20"
-                        : "text-slate-400 hover:text-white hover:bg-white/80",
+                        : "text-muted-foreground hover:text-foreground hover:bg-white/80",
                     "border border-white/80 dark:border-slate-800/60",
                 )}
                 title="Notifications"
@@ -84,21 +84,21 @@ export default function NotificationCenter() {
                 <div className="absolute right-0 mt-2 w-80 sm:w-96 glass-surface rounded shadow z-50 overflow-hidden">
                     {/* Header */}
                     <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-                        <h3 className="font-semibold text-white">
+                        <h3 className="font-semibold text-foreground">
                             Notifications
                         </h3>
                         {notifications.length > 0 && (
                             <div className="flex gap-2">
                                 <button
                                     onClick={markAllAsRead}
-                                    className="p-1.5 text-slate-400 hover:text-purple-400 hover:bg-slate-800 rounded transition-colors"
+                                    className="p-1.5 text-muted-foreground hover:text-purple-400 hover:bg-muted rounded transition-colors"
                                     title="Mark all as read"
                                 >
                                     <Check className="w-4 h-4" />
                                 </button>
                                 <button
                                     onClick={clearAll}
-                                    className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded transition-colors"
+                                    className="p-1.5 text-muted-foreground hover:text-red-400 hover:bg-muted rounded transition-colors"
                                     title="Clear all"
                                 >
                                     <Trash2 className="w-4 h-4" />
@@ -110,7 +110,7 @@ export default function NotificationCenter() {
                     {/* List */}
                     <div className="max-h-96 overflow-y-auto">
                         {notifications.length === 0 ? (
-                            <div className="p-8 text-center text-slate-500">
+                            <div className="p-8 text-center text-muted-foreground">
                                 <Bell className="w-8 h-8 mx-auto mb-2 opacity-20" />
                                 <p>No notifications</p>
                             </div>
@@ -119,23 +119,23 @@ export default function NotificationCenter() {
                                 {notifications.map((notification) => (
                                     <div
                                         key={notification.id}
-                                        className={`p-4 flex gap-3 hover:bg-slate-800/50 transition-colors ${!notification.read ? "bg-slate-800/20" : ""
+                                        className={`p-4 flex gap-3 hover:bg-muted/50 transition-colors ${!notification.read ? "bg-muted/20" : ""
                                             }`}
                                     >
                                         <div className="mt-1">{getIcon(notification.type)}</div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex justify-between items-start mb-1">
                                                 <h4
-                                                    className={`text-sm font-medium ${notification.read ? "text-slate-300" : "text-white"
+                                                    className={`text-sm font-medium ${notification.read ? "text-muted-foreground" : "text-foreground"
                                                         }`}
                                                 >
                                                     {notification.title}
                                                 </h4>
-                                                <span className="text-xs text-slate-500 whitespace-nowrap ml-2">
+                                                <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
                                                     {formatTime(notification.createdAt)}
                                                 </span>
                                             </div>
-                                            <p className="text-xs text-slate-400 leading-relaxed mb-2">
+                                            <p className="text-xs text-muted-foreground leading-relaxed mb-2">
                                                 {notification.message}
                                             </p>
                                             {notification.link && (

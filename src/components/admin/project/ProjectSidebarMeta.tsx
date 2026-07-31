@@ -42,12 +42,12 @@ export default function ProjectSidebarMeta({
     <div className="space-y-6">
       {/* Category & Details */}
       <Card className={cn(
-        "bg-slate-900 border border-white/5 p-6 space-y-6 transition-all duration-300",
+        "bg-card border border-border p-6 space-y-6 transition-all duration-300",
         errors.category && "border-rose-500/30"
       )}>
-        <div className="flex items-center gap-2 pb-2 border-b border-white/5">
+        <div className="flex items-center gap-2 pb-2 border-b border-border">
           <Tag className="w-4 h-4 text-brand-secondary-400" />
-          <h3 className="font-bold text-white text-sm">Classification</h3>
+          <h3 className="font-bold text-foreground text-sm">Classification</h3>
         </div>
 
         <div className="space-y-4">
@@ -55,7 +55,7 @@ export default function ProjectSidebarMeta({
           <div className="space-y-2">
             <label
               htmlFor="category"
-              className="text-xs font-semibold text-slate-400 uppercase tracking-wider"
+              className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
             >
               Category *
             </label>
@@ -64,7 +64,7 @@ export default function ProjectSidebarMeta({
               value={projectData.category || ""}
               onChange={(e) => handleInputChange("category", e.target.value)}
               className={cn(
-                "w-full bg-slate-800 border-white/5 text-white rounded px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-brand-secondary-500/50",
+                "w-full bg-muted border-border text-foreground rounded px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-brand-secondary-500/50",
                 errors.category && "border-rose-500 bg-rose-500/5 focus:ring-rose-500"
               )}
               required
@@ -87,7 +87,7 @@ export default function ProjectSidebarMeta({
           <div className="space-y-2">
             <label
               htmlFor="client"
-              className="text-xs font-semibold text-slate-400 uppercase tracking-wider"
+              className="text-xs font-semibold text-muted-foreground uppercase tracking-wider"
             >
               Client Name
             </label>
@@ -96,7 +96,7 @@ export default function ProjectSidebarMeta({
               placeholder="e.g. Acme Innovations"
               value={projectData.client || ""}
               onChange={(e) => handleInputChange("client", e.target.value)}
-              className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500"
+              className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500"
             />
           </div>
 
@@ -104,7 +104,7 @@ export default function ProjectSidebarMeta({
           <div className="space-y-2">
             <label
               htmlFor="link"
-              className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5"
+              className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5"
             >
               Project Link <LinkIcon className="w-3.5 h-3.5" />
             </label>
@@ -113,17 +113,17 @@ export default function ProjectSidebarMeta({
               placeholder="https://example.com"
               value={projectData.link || ""}
               onChange={(e) => handleInputChange("link", e.target.value)}
-              className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500"
+              className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500"
             />
           </div>
         </div>
       </Card>
 
       {/* Technologies */}
-      <Card className="bg-slate-900 border border-white/5 p-6 space-y-6">
-        <div className="flex items-center gap-2 pb-2 border-b border-white/5">
+      <Card className="bg-card border border-border p-6 space-y-6">
+        <div className="flex items-center gap-2 pb-2 border-b border-border">
           <Globe className="w-4 h-4 text-brand-secondary-400" />
-          <h3 className="font-bold text-white text-sm">Stack / Technologies</h3>
+          <h3 className="font-bold text-foreground text-sm">Stack / Technologies</h3>
         </div>
 
         <div className="space-y-4">
@@ -138,12 +138,12 @@ export default function ProjectSidebarMeta({
                   onAddTech();
                 }
               }}
-              className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500 text-sm h-9"
+              className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500 text-sm h-9"
             />
             <Button
               type="button"
               onClick={onAddTech}
-              className="bg-slate-800 hover:bg-slate-700 text-white border border-white/5 h-9 w-9 p-0 flex items-center justify-center"
+              className="bg-muted hover:bg-slate-700 text-foreground border border-border h-9 w-9 p-0 flex items-center justify-center"
             >
               <Plus className="w-4 h-4" />
             </Button>
@@ -154,13 +154,13 @@ export default function ProjectSidebarMeta({
               projectData.technologies.map((tech, index) => (
                 <Badge
                   key={`${tech}-${index}`}
-                  className="bg-slate-800 hover:bg-slate-700 text-slate-200 border-white/5 py-1 px-2.5 text-xs flex items-center gap-1.5"
+                  className="bg-muted hover:bg-slate-700 text-slate-200 border-border py-1 px-2.5 text-xs flex items-center gap-1.5"
                 >
                   {tech}
                   <button
                     type="button"
                     onClick={() => onRemoveTech(index)}
-                    className="text-slate-500 hover:text-rose-400 transition-colors"
+                    className="text-muted-foreground hover:text-rose-400 transition-colors"
                   >
                     <X className="w-3 h-3" />
                   </button>

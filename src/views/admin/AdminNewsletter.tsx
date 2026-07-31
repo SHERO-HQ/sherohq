@@ -55,13 +55,13 @@ type AudienceStatusFilter = "active" | "unsubscribed" | "all";
 type CampaignChannel = "email" | "sms" | "whatsapp";
 
 const inputClass =
-  "border-white/10 bg-slate-950/40 text-white placeholder:text-slate-500 focus-visible:border-brand-secondary-500/70 focus-visible:ring-brand-secondary-500/20";
+  "border-border bg-slate-950/40 text-foreground placeholder:text-muted-foreground focus-visible:border-brand-secondary-500/70 focus-visible:ring-brand-secondary-500/20";
 
 const selectClass =
-  "h-9 w-full rounded border border-white/10 bg-slate-950/40 px-3 text-sm text-white outline-none transition focus:border-brand-secondary-500/70 focus:ring-2 focus:ring-brand-secondary-500/20";
+  "h-9 w-full rounded border border-border bg-slate-950/40 px-3 text-sm text-foreground outline-none transition focus:border-brand-secondary-500/70 focus:ring-2 focus:ring-brand-secondary-500/20";
 
 const panelClass =
-  "rounded border border-white/10 bg-slate-950/30 shadow-sm shadow-black/10";
+  "rounded border border-border bg-slate-950/30 shadow-sm shadow-black/10";
 
 const channels: Array<{
   value: CampaignChannel;
@@ -89,7 +89,7 @@ function Field({
     <div className={cn("space-y-2", className)}>
       <Label
         htmlFor={htmlFor}
-        className="text-[11px] font-semibold uppercase tracking-wide text-slate-400"
+        className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground"
       >
         {label}
       </Label>
@@ -112,7 +112,7 @@ function MetricTile({
   tone?: "slate" | "green" | "amber" | "blue";
 }) {
   const toneClass = {
-    slate: "text-slate-300 bg-slate-500/10 border-slate-500/15",
+    slate: "text-muted-foreground bg-slate-500/10 border-slate-500/15",
     green:
       "text-brand-secondary-300 bg-brand-secondary-500/10 border-brand-secondary-500/20",
     amber: "text-amber-300 bg-amber-500/10 border-amber-500/20",
@@ -120,12 +120,12 @@ function MetricTile({
   }[tone];
 
   return (
-    <div className="rounded border border-white/10 bg-slate-950/30 p-4">
+    <div className="rounded border border-border bg-slate-950/30 p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-xs font-medium text-slate-400">{label}</p>
-          <p className="mt-2 text-2xl font-semibold text-white">{value}</p>
-          <p className="mt-1 text-xs text-slate-500">{detail}</p>
+          <p className="text-xs font-medium text-muted-foreground">{label}</p>
+          <p className="mt-2 text-2xl font-semibold text-foreground">{value}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{detail}</p>
         </div>
         <div className={cn("rounded border p-2", toneClass)}>
           <Icon className="h-4 w-4" />
@@ -137,7 +137,7 @@ function MetricTile({
 
 function EmptyState({ title }: { title: string }) {
   return (
-    <div className="rounded border border-dashed border-white/10 bg-slate-950/20 px-4 py-10 text-center text-sm text-slate-400">
+    <div className="rounded border border-dashed border-border bg-slate-950/20 px-4 py-10 text-center text-sm text-muted-foreground">
       {title}
     </div>
   );
@@ -627,7 +627,7 @@ export default function AdminNewsletter() {
       <div className="space-y-4">
         <Link
           href="/admin/dashboard"
-          className="inline-flex items-center gap-2 text-sm text-slate-400 transition-colors hover:text-brand-secondary-300"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-brand-secondary-300"
         >
           <ArrowLeft className="h-4 w-4" />
           <span>Back to Dashboard</span>
@@ -636,7 +636,7 @@ export default function AdminNewsletter() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-3xl font-semibold tracking-tight text-white">
+              <h1 className="text-3xl font-semibold tracking-tight text-foreground">
                 Newsletter
               </h1>
               {scheduledCampaigns.length > 0 ? (
@@ -650,7 +650,7 @@ export default function AdminNewsletter() {
           <Button
             onClick={() => void refreshWorkspace()}
             variant="outline"
-            className="w-full border-white/10 text-slate-300 hover:text-white sm:w-auto"
+            className="w-full border-border text-muted-foreground hover:text-foreground sm:w-auto"
             disabled={isLoading || isCampaignHistoryLoading}
           >
             <RefreshCw className="h-4 w-4" />
@@ -691,7 +691,7 @@ export default function AdminNewsletter() {
       </div>
 
       <Tabs defaultValue="compose" className="w-full">
-        <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded border border-white/10 bg-slate-950/40 p-1 text-slate-400 sm:grid-cols-3 lg:inline-grid lg:w-auto">
+        <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded border border-border bg-slate-950/40 p-1 text-muted-foreground sm:grid-cols-3 lg:inline-grid lg:w-auto">
           <TabsTrigger
             value="compose"
             className="gap-2 rounded data-[state=active]:bg-brand-secondary-500/15 data-[state=active]:text-brand-secondary-200"
@@ -718,12 +718,12 @@ export default function AdminNewsletter() {
         <TabsContent value="compose" className="mt-5">
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_390px]">
             <section className={cn(panelClass, "p-4 lg:p-5")}>
-              <div className="flex flex-col gap-4 border-b border-white/10 pb-4 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex flex-col gap-4 border-b border-border pb-4 lg:flex-row lg:items-center lg:justify-between">
                 <div>
-                  <h2 className="text-base font-semibold text-white">
+                  <h2 className="text-base font-semibold text-foreground">
                     Campaign content
                   </h2>
-                  <p className="mt-1 text-xs text-slate-500">
+                  <p className="mt-1 text-xs text-muted-foreground">
                     {content.length} characters
                   </p>
                 </div>
@@ -750,9 +750,9 @@ export default function AdminNewsletter() {
                           "inline-flex h-9 items-center justify-center gap-2 rounded border px-3 text-sm font-medium transition",
                           isSelected
                             ? "border-brand-secondary-500/40 bg-brand-secondary-500/15 text-brand-secondary-200"
-                            : "border-white/10 bg-slate-950/30 text-slate-400 hover:bg-white/5 hover:text-white",
+                            : "border-border bg-slate-950/30 text-muted-foreground hover:bg-accent hover:text-foreground",
                           item.disabled &&
-                            "cursor-not-allowed opacity-45 hover:bg-slate-950/30 hover:text-slate-400",
+                            "cursor-not-allowed opacity-45 hover:bg-slate-950/30 hover:text-muted-foreground",
                         )}
                       >
                         <Icon className="h-4 w-4" />
@@ -858,10 +858,10 @@ export default function AdminNewsletter() {
             <aside className="space-y-4">
               <section className={cn(panelClass, "p-4")}>
                 <div className="mb-4 flex items-center justify-between gap-3">
-                  <h2 className="text-sm font-semibold text-white">
+                  <h2 className="text-sm font-semibold text-foreground">
                     Send test
                   </h2>
-                  <Badge className="border-white/10 bg-white/5 text-slate-300">
+                  <Badge className="border-border bg-accent/50 text-muted-foreground">
                     {channelLabel}
                   </Badge>
                 </div>
@@ -877,7 +877,7 @@ export default function AdminNewsletter() {
                 <Button
                   disabled={isSending}
                   variant="outline"
-                  className="mt-4 w-full border-white/10 text-slate-300 hover:text-white"
+                  className="mt-4 w-full border-border text-muted-foreground hover:text-foreground"
                   onClick={() => void handleSendCampaign("test")}
                 >
                   <Mail className="h-4 w-4" />
@@ -888,7 +888,7 @@ export default function AdminNewsletter() {
               <section className={cn(panelClass, "p-4")}>
                 <div className="mb-4 flex items-center gap-2">
                   <Users className="h-4 w-4 text-brand-secondary-300" />
-                  <h2 className="text-sm font-semibold text-white">Audience</h2>
+                  <h2 className="text-sm font-semibold text-foreground">Audience</h2>
                 </div>
                 <div className="grid grid-cols-1 gap-4">
                   <Field label="Status" htmlFor="newsletter-audience-status">
@@ -948,7 +948,7 @@ export default function AdminNewsletter() {
               <section className={cn(panelClass, "p-4")}>
                 <div className="mb-4 flex items-center gap-2">
                   <SlidersHorizontal className="h-4 w-4 text-brand-secondary-300" />
-                  <h2 className="text-sm font-semibold text-white">Delivery</h2>
+                  <h2 className="text-sm font-semibold text-foreground">Delivery</h2>
                 </div>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <Field label="Batch size" htmlFor="newsletter-batch-size">
@@ -990,26 +990,26 @@ export default function AdminNewsletter() {
                   />
                 </Field>
 
-                <div className="mt-4 rounded border border-white/10 bg-slate-950/40">
-                  <div className="grid grid-cols-1 gap-0 border-b border-white/10 sm:grid-cols-2 sm:divide-x sm:divide-white/10">
+                <div className="mt-4 rounded border border-border bg-slate-950/40">
+                  <div className="grid grid-cols-1 gap-0 border-b border-border sm:grid-cols-2 sm:divide-x sm:divide-white/10">
                     <div className="p-3">
-                      <p className="text-[11px] uppercase tracking-wide text-slate-500">
+                      <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
                         Targets
                       </p>
-                      <p className="mt-1 text-lg font-semibold text-white">
+                      <p className="mt-1 text-lg font-semibold text-foreground">
                         {estimatedAudience}
                       </p>
                     </div>
                     <div className="p-3">
-                      <p className="text-[11px] uppercase tracking-wide text-slate-500">
+                      <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
                         Send time
                       </p>
-                      <p className="mt-1 truncate text-sm font-medium text-white">
+                      <p className="mt-1 truncate text-sm font-medium text-foreground">
                         {scheduleAt ? safeDate(scheduleAt, "MMM d, p") : "Now"}
                       </p>
                     </div>
                   </div>
-                  <div className="p-3 text-xs text-slate-400">
+                  <div className="p-3 text-xs text-muted-foreground">
                     {channelLabel} / {audienceStatus}
                     {audienceSource ? ` / ${audienceSource}` : ""}
                   </div>
@@ -1030,12 +1030,12 @@ export default function AdminNewsletter() {
 
         <TabsContent value="history" className="mt-5">
           <section className={panelClass}>
-            <div className="flex flex-col gap-3 border-b border-white/10 p-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col gap-3 border-b border-border p-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h2 className="text-base font-semibold text-white">
+                <h2 className="text-base font-semibold text-foreground">
                   Campaign history
                 </h2>
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-muted-foreground">
                   {campaigns.length} recent campaigns
                 </p>
               </div>
@@ -1043,7 +1043,7 @@ export default function AdminNewsletter() {
                 onClick={() => void handleProcessScheduled()}
                 disabled={isProcessingScheduled}
                 variant="outline"
-                className="border-white/10 text-slate-300 hover:text-white"
+                className="border-border text-muted-foreground hover:text-foreground"
               >
                 <Play className="h-4 w-4" />
                 Process Scheduled
@@ -1059,7 +1059,7 @@ export default function AdminNewsletter() {
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-225 text-sm">
                     <thead>
-                      <tr className="border-b border-white/10 text-left text-[11px] uppercase tracking-wide text-slate-500">
+                      <tr className="border-b border-border text-left text-[11px] uppercase tracking-wide text-muted-foreground">
                         <th className="px-3 py-3 font-semibold">Campaign</th>
                         <th className="px-3 py-3 font-semibold">Channel</th>
                         <th className="px-3 py-3 font-semibold">Status</th>
@@ -1089,18 +1089,18 @@ export default function AdminNewsletter() {
                         return (
                           <tr
                             key={campaign.id}
-                            className="border-b border-white/5 text-slate-300 transition hover:bg-white/3"
+                            className="border-b border-border text-muted-foreground transition hover:bg-white/3"
                           >
                             <td className="px-3 py-4">
                               <div
-                                className="max-w-70 truncate font-medium text-white"
+                                className="max-w-70 truncate font-medium text-foreground"
                                 title={campaign.subject}
                               >
                                 {campaign.subject}
                               </div>
                             </td>
                             <td className="px-3 py-4">
-                              <Badge className="border-white/10 bg-white/5 text-slate-300 uppercase">
+                              <Badge className="border-border bg-accent/50 text-muted-foreground uppercase">
                                 {campaign.channel}
                               </Badge>
                             </td>
@@ -1120,7 +1120,7 @@ export default function AdminNewsletter() {
                                 {campaign.audienceStatus}
                               </span>
                               {campaign.audienceSource ? (
-                                <span className="text-slate-500">
+                                <span className="text-muted-foreground">
                                   {" "}
                                   / {campaign.audienceSource}
                                 </span>
@@ -1138,7 +1138,7 @@ export default function AdminNewsletter() {
                                     </span>
                                   ) : null}
                                 </div>
-                                <div className="mt-2 h-1.5 overflow-hidden rounded bg-slate-800">
+                                <div className="mt-2 h-1.5 overflow-hidden rounded bg-muted">
                                   <div
                                     className="h-full rounded bg-brand-secondary-500"
                                     style={{ width: `${progress}%` }}
@@ -1146,10 +1146,10 @@ export default function AdminNewsletter() {
                                 </div>
                               </div>
                             </td>
-                            <td className="px-3 py-4 text-slate-400">
+                            <td className="px-3 py-4 text-muted-foreground">
                               {safeDate(campaign.scheduledAt, "MMM d, p")}
                             </td>
-                            <td className="px-3 py-4 text-slate-400">
+                            <td className="px-3 py-4 text-muted-foreground">
                               {safeDate(campaign.sentAt, "MMM d, p")}
                             </td>
                             <td className="px-3 py-4">
@@ -1196,12 +1196,12 @@ export default function AdminNewsletter() {
 
         <TabsContent value="subscribers" className="mt-5">
           <section className={panelClass}>
-            <div className="flex flex-col gap-4 border-b border-white/10 p-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="flex flex-col gap-4 border-b border-border p-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <h2 className="text-base font-semibold text-white">
+                <h2 className="text-base font-semibold text-foreground">
                   Subscribers
                 </h2>
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-1 text-xs text-muted-foreground">
                   {sortedSubscribers.length} visible records
                 </p>
               </div>
@@ -1237,7 +1237,7 @@ export default function AdminNewsletter() {
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-220 text-sm">
                     <thead>
-                      <tr className="border-b border-white/10 text-left text-[11px] uppercase tracking-wide text-slate-500">
+                      <tr className="border-b border-border text-left text-[11px] uppercase tracking-wide text-muted-foreground">
                         <th className="px-3 py-3 font-semibold">Subscriber</th>
                         <th className="px-3 py-3 font-semibold">Phone</th>
                         <th className="px-3 py-3 font-semibold">Source</th>
@@ -1255,14 +1255,14 @@ export default function AdminNewsletter() {
                       {sortedSubscribers.map((subscriber) => (
                         <tr
                           key={subscriber.id}
-                          className="border-b border-white/5 text-slate-300 transition hover:bg-white/3"
+                          className="border-b border-border text-muted-foreground transition hover:bg-white/3"
                         >
                           <td className="px-3 py-4">
-                            <div className="font-medium text-white">
+                            <div className="font-medium text-foreground">
                               {subscriber.email}
                             </div>
                             {subscriber.name ? (
-                              <div className="mt-1 text-xs text-slate-500">
+                              <div className="mt-1 text-xs text-muted-foreground">
                                 {subscriber.name}
                               </div>
                             ) : null}
@@ -1281,13 +1281,13 @@ export default function AdminNewsletter() {
                               subscriber.phone || "-"
                             )}
                           </td>
-                          <td className="px-3 py-4 text-slate-400">
+                          <td className="px-3 py-4 text-muted-foreground">
                             {subscriber.source || "-"}
                           </td>
-                          <td className="px-3 py-4 text-slate-400">
+                          <td className="px-3 py-4 text-muted-foreground">
                             {safeDate(subscriber.subscribedAt)}
                           </td>
-                          <td className="px-3 py-4 text-slate-400">
+                          <td className="px-3 py-4 text-muted-foreground">
                             {safeDate(subscriber.lastCampaignAt)}
                           </td>
                           <td className="px-3 py-4">
@@ -1322,7 +1322,7 @@ export default function AdminNewsletter() {
                                   <Button
                                     size="sm"
                                     variant="outline"
-                                    className="h-8 border-white/10 text-slate-300 hover:text-white"
+                                    className="h-8 border-border text-muted-foreground hover:text-foreground"
                                     disabled={isSavingContact}
                                     onClick={handleCancelEditSubscriber}
                                   >
@@ -1334,7 +1334,7 @@ export default function AdminNewsletter() {
                                   <Button
                                     size="sm"
                                     variant="outline"
-                                    className="h-8 border-white/10 text-slate-300 hover:text-white"
+                                    className="h-8 border-border text-muted-foreground hover:text-foreground"
                                     onClick={() =>
                                       handleStartEditSubscriber(subscriber)
                                     }
@@ -1344,7 +1344,7 @@ export default function AdminNewsletter() {
                                   <Button
                                     size="sm"
                                     variant="outline"
-                                    className="h-8 border-white/10 text-slate-300 hover:text-white"
+                                    className="h-8 border-border text-muted-foreground hover:text-foreground"
                                     onClick={() =>
                                       void handleStatusChange(
                                         subscriber,

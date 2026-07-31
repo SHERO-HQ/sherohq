@@ -56,16 +56,16 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-      <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded shadow-2xl overflow-hidden">
+      <div className="w-full max-w-md bg-card border border-slate-800 rounded shadow-2xl overflow-hidden">
         <div className="p-6 border-b border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Shield className="w-5 h-5 text-brand-secondary-400" />
-            <h3 className="text-lg font-bold text-white">Setup Multi-Factor Auth</h3>
+            <h3 className="text-lg font-bold text-foreground">Setup Multi-Factor Auth</h3>
           </div>
           {step !== "success" && (
             <button 
               onClick={onCancel}
-              className="text-slate-500 hover:text-white transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors"
             >
               ✕
             </button>
@@ -79,8 +79,8 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
                 <Shield className="w-8 h-8 text-brand-secondary-400" />
               </div>
               <div className="space-y-2">
-                <p className="text-white font-medium">Strengthen your account</p>
-                <p className="text-sm text-slate-400">
+                <p className="text-foreground font-medium">Strengthen your account</p>
+                <p className="text-sm text-muted-foreground">
                   MFA adds a mandatory second step to your login. You'll need an authenticator app like Google Authenticator or Microsoft Authenticator.
                 </p>
               </div>
@@ -97,7 +97,7 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
 
           {step === "setup" && mfaData && (
             <div className="space-y-6 text-center">
-              <p className="text-sm text-slate-300">
+              <p className="text-sm text-muted-foreground">
                 1. Scan this QR code with your authenticator app:
               </p>
               <div className="bg-white p-4 rounded inline-block shadow-inner mx-auto">
@@ -105,10 +105,10 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
               </div>
               
               <div className="space-y-2">
-                <p className="text-xs text-slate-500">Or enter this secret key manually:</p>
+                <p className="text-xs text-muted-foreground">Or enter this secret key manually:</p>
                 <div className="flex items-center gap-2 bg-slate-950 p-2 rounded border border-slate-800">
                   <code className="text-xs text-brand-secondary-400 font-mono flex-1">{mfaData.secret}</code>
-                  <button onClick={copySecret} className="text-slate-500 hover:text-white transition-colors">
+                  <button onClick={copySecret} className="text-muted-foreground hover:text-foreground transition-colors">
                     {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
                   </button>
                 </div>
@@ -116,7 +116,7 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
 
               <Button 
                 onClick={() => setStep("verify")} 
-                className="w-full bg-slate-800 hover:bg-slate-700 text-white"
+                className="w-full bg-muted hover:bg-slate-700 text-foreground"
               >
                 I've scanned it
               </Button>
@@ -126,8 +126,8 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
           {step === "verify" && (
             <div className="space-y-6 text-center">
               <div className="space-y-2">
-                <p className="text-white font-medium">Verify Setup</p>
-                <p className="text-sm text-slate-400">
+                <p className="text-foreground font-medium">Verify Setup</p>
+                <p className="text-sm text-muted-foreground">
                   Enter the 6-digit code from your app to confirm.
                 </p>
               </div>
@@ -137,7 +137,7 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
                 value={code}
                 onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))}
                 placeholder="000000"
-                className="w-full bg-slate-950 border border-slate-800 rounded py-4 text-center text-3xl tracking-[0.5em] font-mono text-white focus:outline-none focus:ring-2 focus:ring-brand-secondary-500"
+                className="w-full bg-slate-950 border border-slate-800 rounded py-4 text-center text-3xl tracking-[0.5em] font-mono text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500"
                 autoFocus
               />
 
@@ -152,7 +152,7 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
                 <Button 
                   variant="ghost" 
                   onClick={() => setStep("setup")}
-                  className="flex-1 text-slate-400 hover:text-white"
+                  className="flex-1 text-muted-foreground hover:text-foreground"
                 >
                   Back
                 </Button>
@@ -173,8 +173,8 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
                 <CheckCircle2 className="w-10 h-10 text-green-500" />
               </div>
               <div className="space-y-2">
-                <p className="text-xl font-bold text-white">MFA Enabled!</p>
-                <p className="text-sm text-slate-400">
+                <p className="text-xl font-bold text-foreground">MFA Enabled!</p>
+                <p className="text-sm text-muted-foreground">
                   Your account is now more secure. You'll need your authenticator app for future logins.
                 </p>
               </div>

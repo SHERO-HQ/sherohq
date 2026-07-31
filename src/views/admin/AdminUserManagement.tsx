@@ -78,7 +78,7 @@ const roleConfig: Record<
  clerk: {
  label: "Clerk",
  icon: UserCog,
- color: "text-slate-400",
+ color: "text-muted-foreground",
  bgColor: "bg-slate-500/10",
  },
 };
@@ -88,25 +88,25 @@ const AdminUserManagementSkeleton = () => (
     {["sk1", "sk2", "sk3", "sk4", "sk5", "sk6"].map((id) => (
       <div
         key={id}
-        className="relative bg-slate-900/40 border border-white/5 rounded p-6 animate-pulse select-none"
+        className="relative bg-card/40 border border-border rounded p-6 animate-pulse select-none"
       >
         <div className="flex items-start gap-4">
           <div className="relative">
-            <div className="w-14 h-14 rounded bg-white/5 border border-white/5 shrink-0" />
-            <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded bg-white/10 border border-slate-950" />
+            <div className="w-14 h-14 rounded bg-accent/50 border border-border shrink-0" />
+            <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded bg-accent border border-slate-950" />
           </div>
 
           <div className="flex-1 min-w-0 space-y-2">
-            <div className="h-4 w-28 bg-white/10 rounded" />
-            <div className="h-3 w-40 bg-white/5 rounded" />
-            <div className="h-3 w-32 bg-white/5 rounded" />
-            <div className="h-5 w-24 bg-white/5 rounded-full mt-2" />
+            <div className="h-4 w-28 bg-accent rounded" />
+            <div className="h-3 w-40 bg-accent/50 rounded" />
+            <div className="h-3 w-32 bg-accent/50 rounded" />
+            <div className="h-5 w-24 bg-accent/50 rounded-full mt-2" />
           </div>
         </div>
 
-        <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
-          <div className="h-3 w-20 bg-white/5 rounded" />
-          <div className="h-3.5 w-8 bg-white/5 rounded" />
+        <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
+          <div className="h-3 w-20 bg-accent/50 rounded" />
+          <div className="h-3.5 w-8 bg-accent/50 rounded" />
         </div>
       </div>
     ))}
@@ -237,10 +237,10 @@ export default function AdminUserManagement() {
  {/* Header */}
  <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
  <div>
- <h1 className="text-3xl font-bold tracking-tight text-white">
+ <h1 className="text-3xl font-bold tracking-tight text-foreground">
  Admin Management
  </h1>
- <p className="text-slate-400 text-sm mt-1">
+ <p className="text-muted-foreground text-sm mt-1">
  Manage system access and roles for your team.
  </p>
  </div>
@@ -260,18 +260,18 @@ export default function AdminUserManagement() {
  {/* Filters */}
  <div className="flex flex-col sm:flex-row gap-4">
  <div className="relative flex-1 max-w-md">
- <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+ <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
  <Input
  placeholder="Search by name, email or role..."
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="pl-10 bg-slate-900/40 border-white/10 text-white placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
+ className="pl-10 bg-card/40 border-border text-foreground placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
  />
  </div>
  <select
  value={roleFilter}
  onChange={(e) => setRoleFilter(e.target.value)}
- className="bg-slate-900 border border-white/10 rounded px-3 py-2 text-sm text-slate-300 focus:outline-none focus:ring-1 focus:ring-brand-secondary-500/20 appearance-none min-w-35"
+ className="bg-card border border-border rounded px-3 py-2 text-sm text-muted-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500/20 appearance-none min-w-35"
  >
  <option value="all">All Roles</option>
  {Object.entries(roleConfig).map(([role, cfg]) => (
@@ -287,9 +287,9 @@ export default function AdminUserManagement() {
   {isLoading && <AdminUserManagementSkeleton />}
 
  {!isLoading && filteredAdmins.length === 0 && (
- <div className="col-span-full py-20 text-center bg-slate-900/20 rounded border border-white/5 border-dashed">
+ <div className="col-span-full py-20 text-center bg-card/20 rounded border border-border border-dashed">
  <Users className="w-12 h-12 text-slate-700 mx-auto mb-4" />
- <p className="text-slate-500 font-medium">No admin users found</p>
+ <p className="text-muted-foreground font-medium">No admin users found</p>
  </div>
  )}
 
@@ -302,7 +302,7 @@ export default function AdminUserManagement() {
  return (
  <div
  key={user.id}
- className="group relative bg-slate-900/40  border border-white/5 rounded p-6 hover:border-brand-secondary-500/30 transition duration-500"
+ className="group relative bg-card/40  border border-border rounded p-6 hover:border-brand-secondary-500/30 transition duration-500"
  >
  <div className="absolute top-4 right-4 ring-offset-slate-950">
  <DropdownMenu>
@@ -310,20 +310,20 @@ export default function AdminUserManagement() {
  <Button
  variant="ghost"
  size="icon"
- className="h-8 w-8 text-slate-500 hover:text-white"
+ className="h-8 w-8 text-muted-foreground hover:text-foreground"
  >
  <MoreVertical className="w-4 h-4" />
  </Button>
  </DropdownMenuTrigger>
  <DropdownMenuContent
  align="end"
- className="bg-slate-900 border-white/10 text-slate-300"
+ className="bg-card border-border text-muted-foreground"
  >
  <DropdownMenuLabel>Actions</DropdownMenuLabel>
- <DropdownMenuSeparator className="bg-white/5" />
+ <DropdownMenuSeparator className="bg-accent/50" />
  {canManageRoles && user.id !== currentAdmin?.id && (
  <>
- <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-slate-500 py-1">
+ <DropdownMenuLabel className="text-[10px] uppercase tracking-widest text-muted-foreground py-1">
  Change Role
  </DropdownMenuLabel>
  {Object.entries(roleConfig).map(([role, cfg]) => {
@@ -341,7 +341,7 @@ export default function AdminUserManagement() {
  handleUpdateRole(user.id, role)
  }
  className={cn(
- "flex items-center gap-2 cursor-pointer hover:bg-white/5",
+ "flex items-center gap-2 cursor-pointer hover:bg-accent",
  user.role === role &&
  "text-brand-secondary-400 bg-brand-secondary-500/5",
  )}
@@ -353,7 +353,7 @@ export default function AdminUserManagement() {
  </DropdownMenuItem>
  );
  })}
- <DropdownMenuSeparator className="bg-white/5" />
+ <DropdownMenuSeparator className="bg-accent/50" />
  {/* Reset password — admin and above */}
  <DropdownMenuItem
  onClick={() => setResetPasswordId(user.id)}
@@ -401,7 +401,7 @@ export default function AdminUserManagement() {
  )}
  <DropdownMenuItem
  asChild
- className="cursor-pointer hover:bg-white/5"
+ className="cursor-pointer hover:bg-accent"
  >
  <a href={`mailto:${user.email}`}>
  <Mail className="w-4 h-4 mr-2" />
@@ -411,7 +411,7 @@ export default function AdminUserManagement() {
  {user.phone && (
  <DropdownMenuItem
  asChild
- className="cursor-pointer hover:bg-white/5"
+ className="cursor-pointer hover:bg-accent"
  >
  <a href={`tel:${user.phone}`}>
  <Phone className="w-4 h-4 mr-2" />
@@ -425,7 +425,7 @@ export default function AdminUserManagement() {
 
  <div className="flex items-start gap-4">
  <div className="relative">
- <div className="relative w-14 h-14 rounded bg-slate-800 flex items-center justify-center text-xl font-bold text-white overflow-hidden border border-white/5 shadow-inner">
+ <div className="relative w-14 h-14 rounded bg-muted flex items-center justify-center text-xl font-bold text-foreground overflow-hidden border border-border shadow-inner">
  {user.avatar ? (
  <AppImage
  src={user.avatar}
@@ -450,7 +450,7 @@ export default function AdminUserManagement() {
 
  <div className="flex-1 min-w-0">
  <div className="flex items-center gap-2 flex-wrap">
- <h3 className="font-bold text-white truncate tracking-tight">
+ <h3 className="font-bold text-foreground truncate tracking-tight">
  {user.username}
  </h3>
  {user.isActive === false && (
@@ -461,14 +461,14 @@ export default function AdminUserManagement() {
  </div>
  <a
  href={`mailto:${user.email}`}
- className="text-xs text-slate-500 hover:text-brand-secondary-400 transition-colors truncate mb-1 block"
+ className="text-xs text-muted-foreground hover:text-brand-secondary-400 transition-colors truncate mb-1 block"
  >
  {user.email}
  </a>
  {user.phone && (
  <a
  href={`tel:${user.phone}`}
- className="text-[10px] text-slate-500 hover:text-brand-secondary-400 transition-colors truncate flex items-center gap-1 mb-2"
+ className="text-[10px] text-muted-foreground hover:text-brand-secondary-400 transition-colors truncate flex items-center gap-1 mb-2"
  >
  <Phone className="w-3 h-3 text-slate-600" />
  {user.phone}
@@ -487,8 +487,8 @@ export default function AdminUserManagement() {
  </div>
  </div>
 
- <div className="mt-6 pt-4 border-t border-white/5 grid grid-cols-2 gap-4">
- <div className="flex items-center gap-2 text-slate-500">
+ <div className="mt-6 pt-4 border-t border-border grid grid-cols-2 gap-4">
+ <div className="flex items-center gap-2 text-muted-foreground">
  <Calendar className="w-3.5 h-3.5" />
  <span className="text-[10px] font-medium uppercase tracking-tight">
  {user.createdAt
@@ -517,7 +517,7 @@ export default function AdminUserManagement() {
  >
  <form onSubmit={handleRegister} className="space-y-5">
  <div className="space-y-2">
- <Label htmlFor="reg-username" className="text-slate-400">
+ <Label htmlFor="reg-username" className="text-muted-foreground">
  Username
  </Label>
  <Input
@@ -528,12 +528,12 @@ export default function AdminUserManagement() {
  }
  required
  placeholder="e.g. john_doe"
- className="bg-slate-900 border-white/10 text-white placeholder:text-slate-700 focus:ring-brand-secondary-500/20"
+ className="bg-card border-border text-foreground placeholder:text-slate-700 focus:ring-brand-secondary-500/20"
  />
  </div>
 
  <div className="space-y-2">
- <Label htmlFor="reg-email" className="text-slate-400">
+ <Label htmlFor="reg-email" className="text-muted-foreground">
  Email Address
  </Label>
  <Input
@@ -545,12 +545,12 @@ export default function AdminUserManagement() {
  }
  required
  placeholder="john@example.com"
- className="bg-slate-900 border-white/10 text-white placeholder:text-slate-700 focus:ring-brand-secondary-500/20"
+ className="bg-card border-border text-foreground placeholder:text-slate-700 focus:ring-brand-secondary-500/20"
  />
  </div>
 
  <div className="space-y-2">
- <Label htmlFor="reg-phone" className="text-slate-400">
+ <Label htmlFor="reg-phone" className="text-muted-foreground">
  Phone Number (Optional)
  </Label>
  <Input
@@ -561,12 +561,12 @@ export default function AdminUserManagement() {
  setFormData({ ...formData, phone: e.target.value })
  }
  placeholder="02XXXXXXXX or 05XXXXXXXX"
- className="bg-slate-900 border-white/10 text-white placeholder:text-slate-700 focus:ring-brand-secondary-500/20"
+ className="bg-card border-border text-foreground placeholder:text-slate-700 focus:ring-brand-secondary-500/20"
  />
  </div>
 
  <div className="space-y-2">
- <Label htmlFor="reg-password" className="text-slate-400">
+ <Label htmlFor="reg-password" className="text-muted-foreground">
  Temporary Password
  </Label>
  <Input
@@ -578,15 +578,15 @@ export default function AdminUserManagement() {
  }
  required
  placeholder="••••••••"
- className="bg-slate-900 border-white/10 text-white placeholder:text-slate-700 focus:ring-brand-secondary-500/20"
+ className="bg-card border-border text-foreground placeholder:text-slate-700 focus:ring-brand-secondary-500/20"
  />
- <p className="text-[10px] text-slate-500">
+ <p className="text-[10px] text-muted-foreground">
  Min 8 characters — requires uppercase, lowercase, and a number.
  </p>
  </div>
 
  <div className="space-y-2">
- <Label htmlFor="reg-role" className="text-slate-400">
+ <Label htmlFor="reg-role" className="text-muted-foreground">
  Assigned Role
  </Label>
  <select
@@ -595,7 +595,7 @@ export default function AdminUserManagement() {
  onChange={(e) =>
  setFormData({ ...formData, role: e.target.value })
  }
- className="w-full bg-slate-900 border border-white/10 rounded px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-brand-secondary-500/20 appearance-none"
+ className="w-full bg-card border border-border rounded px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500/20 appearance-none"
  >
  {Object.entries(roleConfig).map(([role, cfg]) => {
  if (role === "superadmin" && !isSuperAdmin) return null;
@@ -613,7 +613,7 @@ export default function AdminUserManagement() {
  type="button"
  variant="ghost"
  onClick={() => setIsRegisterModalOpen(false)}
- className="text-slate-500"
+ className="text-muted-foreground"
  >
  Cancel
  </Button>

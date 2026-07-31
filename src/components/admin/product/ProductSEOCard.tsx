@@ -24,13 +24,13 @@ export default function ProductSEOCard({
   const previewSlug = productData.slug || "product-slug";
 
   return (
-    <Card className="bg-slate-900 border border-white/5 p-6 md:p-8 space-y-6">
-      <div className="flex items-center gap-2 pb-2 border-b border-white/5">
+    <Card className="bg-card border border-border p-6 md:p-8 space-y-6">
+      <div className="flex items-center gap-2 pb-2 border-b border-border">
         <Search className="w-5 h-5 text-brand-secondary-400" />
-        <h3 className="text-lg font-bold text-white">Search Engine Optimization</h3>
+        <h3 className="text-lg font-bold text-foreground">Search Engine Optimization</h3>
       </div>
 
-      <p className="text-sm text-slate-400">
+      <p className="text-sm text-muted-foreground">
         Improve your ranking and how your product page will appear in search engines results.
       </p>
 
@@ -40,10 +40,10 @@ export default function ProductSEOCard({
           <div className="space-y-2">
             <label
               htmlFor="metaTitle"
-              className="text-sm font-medium text-slate-400 flex justify-between"
+              className="text-sm font-medium text-muted-foreground flex justify-between"
             >
               <span>Meta Title</span>
-              <span className="text-xs text-slate-500">{productData.metaTitle?.length || 0}/60</span>
+              <span className="text-xs text-muted-foreground">{productData.metaTitle?.length || 0}/60</span>
             </label>
             <Input
               id="metaTitle"
@@ -51,7 +51,7 @@ export default function ProductSEOCard({
               value={productData.metaTitle || ""}
               onChange={(e) => handleInputChange("metaTitle", e.target.value)}
               maxLength={60}
-              className="bg-slate-800/50 border-white/5 text-white focus-visible:ring-brand-secondary-500"
+              className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500"
             />
           </div>
 
@@ -59,10 +59,10 @@ export default function ProductSEOCard({
           <div className="space-y-2">
             <label
               htmlFor="metaDescription"
-              className="text-sm font-medium text-slate-400 flex justify-between"
+              className="text-sm font-medium text-muted-foreground flex justify-between"
             >
               <span>Meta Description</span>
-              <span className="text-xs text-slate-500">{productData.metaDescription?.length || 0}/160</span>
+              <span className="text-xs text-muted-foreground">{productData.metaDescription?.length || 0}/160</span>
             </label>
             <textarea
               id="metaDescription"
@@ -70,14 +70,14 @@ export default function ProductSEOCard({
               value={productData.metaDescription || ""}
               onChange={(e) => handleInputChange("metaDescription", e.target.value)}
               maxLength={160}
-              className="w-full h-24 bg-slate-800/50 border border-white/5 rounded p-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 resize-none text-sm transition-all"
+              className="w-full h-24 bg-muted/50 border border-border rounded p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 resize-none text-sm transition-all"
             />
           </div>
         </div>
 
         {/* Google Preview Box */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-slate-400">Search Engine Preview</label>
+          <label className="text-sm font-medium text-muted-foreground">Search Engine Preview</label>
           <div className="bg-white rounded p-5 shadow-sm space-y-1 font-sans">
             <p className="text-[12px] text-[#202124] flex items-center gap-2 overflow-hidden">
               <span className="bg-slate-200 rounded-full w-4 h-4 shrink-0 inline-block"></span>

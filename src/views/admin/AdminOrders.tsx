@@ -67,22 +67,22 @@ const OrderRow = memo(
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.03 }}
-        className="hover:bg-white/5 transition-colors group"
+        className="hover:bg-accent transition-colors group"
       >
         <td className="px-6 py-4">
           <Link
             href={`/admin/orders/${order.id}`}
-            className="text-xs font-mono text-slate-400 hover:text-brand-secondary-400 transition-colors"
+            className="text-xs font-mono text-muted-foreground hover:text-brand-secondary-400 transition-colors"
           >
             {toReadableOrderId(order.id)}
           </Link>
         </td>
         <td className="px-6 py-4">
           <div className="flex flex-col">
-            <span className="text-sm font-semibold text-white group-hover:text-brand-secondary-400 transition-colors">
+            <span className="text-sm font-semibold text-foreground group-hover:text-brand-secondary-400 transition-colors">
               {order.shippingInfo.firstName} {order.shippingInfo.lastName}
             </span>
-            <span className="text-xs text-slate-500 truncate max-w-[150px]">
+            <span className="text-xs text-muted-foreground truncate max-w-[150px]">
               {order.shippingInfo.email}
             </span>
           </div>
@@ -99,7 +99,7 @@ const OrderRow = memo(
           </Badge>
         </td>
         <td className="px-6 py-4">
-          <p className="text-xs text-slate-300">
+          <p className="text-xs text-muted-foreground">
             {new Date(order.createdAt).toLocaleDateString()}
           </p>
         </td>
@@ -118,10 +118,10 @@ const OrderRow = memo(
           </Badge>
         </td>
         <td className="px-6 py-4 text-right">
-          <p className="text-sm font-bold text-white">
+          <p className="text-sm font-bold text-foreground">
             GH₵{order.total.toLocaleString()}
           </p>
-          <p className="text-[10px] text-slate-500">
+          <p className="text-[10px] text-muted-foreground">
             {order.items?.length || 0} items
           </p>
         </td>
@@ -130,7 +130,7 @@ const OrderRow = memo(
             <Button
               size="icon"
               variant="ghost"
-              className="h-8 w-8 text-slate-400 hover:text-white"
+              className="h-8 w-8 text-muted-foreground hover:text-foreground"
               asChild
             >
               <Link href={`/admin/orders/${order.id}`}>
@@ -142,36 +142,36 @@ const OrderRow = memo(
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="h-8 w-8 text-slate-400 hover:text-white"
+                  className="h-8 w-8 text-muted-foreground hover:text-foreground"
                 >
                   <RefreshCw className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="bg-slate-900 border-white/10 text-white"
+                className="bg-card border-border text-foreground"
               >
                 <DropdownMenuItem
                   onClick={() => handleUpdateStatus(order.id, "processing")}
-                  className="cursor-pointer hover:bg-white/5"
+                  className="cursor-pointer hover:bg-accent"
                 >
                   <PackageSearch className="w-4 h-4 mr-2 text-blue-400" />{" "}
                   Processing
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleUpdateStatus(order.id, "intransit")}
-                  className="cursor-pointer hover:bg-white/5"
+                  className="cursor-pointer hover:bg-accent"
                 >
                   <Truck className="w-4 h-4 mr-2 text-purple-400" /> Shipped
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleUpdateStatus(order.id, "delivered")}
-                  className="cursor-pointer hover:bg-white/5"
+                  className="cursor-pointer hover:bg-accent"
                 >
                   <PackageCheck className="w-4 h-4 mr-2 text-brand-secondary-400" />{" "}
                   Delivered
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-white/5" />
+                <DropdownMenuSeparator className="bg-accent/50" />
                 <DropdownMenuItem
                   onClick={() => handleUpdateStatus(order.id, "cancelled")}
                   className="cursor-pointer text-rose-400 focus:text-rose-400 focus:bg-rose-500/10"
@@ -286,7 +286,7 @@ export default function AdminOrders() {
       case "cancelled":
         return { color: "text-rose-400 bg-rose-500/10", icon: XCircle };
       default:
-        return { color: "text-slate-400 bg-slate-500/10", icon: Clock };
+        return { color: "text-muted-foreground bg-slate-500/10", icon: Clock };
     }
   };
 
@@ -329,14 +329,14 @@ export default function AdminOrders() {
     <ErrorBoundary>
       <div className="space-y-6 relative">
         {isPlaceholderData && (
-          <div className="absolute inset-0 bg-slate-900/10 -[1px] z-10 pointer-events-none transition-opacity" />
+          <div className="absolute inset-0 bg-card/10 -[1px] z-10 pointer-events-none transition-opacity" />
         )}
 
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-white">Orders</h1>
-            <p className="text-slate-400 text-sm">
+            <h1 className="text-2xl font-bold text-foreground">Orders</h1>
+            <p className="text-muted-foreground text-sm">
               Monitor and manage customer transactions
             </p>
           </div>
@@ -346,7 +346,7 @@ export default function AdminOrders() {
               size="icon"
               onClick={() => refetch()}
               disabled={isFetching}
-              className="bg-slate-800/50 border-white/5"
+              className="bg-muted/50 border-border"
             >
               <RefreshCw
                 className={cn("w-4 h-4", isFetching && "animate-spin")}
@@ -357,30 +357,30 @@ export default function AdminOrders() {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="bg-slate-800/50 border-white/10 text-white hover:bg-white/5"
+                  className="bg-muted/50 border-border text-foreground hover:bg-accent"
                 >
                   <Printer className="mr-2 h-4 w-4" /> Export
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 align="end"
-                className="bg-slate-900 border-white/10 text-white"
+                className="bg-card border-border text-foreground"
               >
                 <DropdownMenuItem
                   onClick={() => handleExport("csv")}
-                  className="cursor-pointer hover:bg-white/5"
+                  className="cursor-pointer hover:bg-accent"
                 >
                   Export as CSV
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleExport("excel")}
-                  className="cursor-pointer hover:bg-white/5"
+                  className="cursor-pointer hover:bg-accent"
                 >
                   Export as Excel
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleExport("pdf")}
-                  className="cursor-pointer hover:bg-white/5"
+                  className="cursor-pointer hover:bg-accent"
                 >
                   Export as PDF
                 </DropdownMenuItem>
@@ -403,18 +403,18 @@ export default function AdminOrders() {
         )}
 
         {/* Filters */}
-        <Card className="bg-slate-900/40 border-white/5 p-4">
+        <Card className="bg-card/40 border-border p-4">
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder="Search by Order ID, customer name or email..."
-                className="pl-10 bg-slate-800/50 border-white/5 text-white placeholder:text-slate-500"
+                className="pl-10 bg-muted/50 border-border text-foreground placeholder:text-muted-foreground"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            <div className="flex flex-wrap items-center gap-2 lg:gap-0 lg:bg-slate-950/50 lg:p-1 lg:rounded lg:border lg:border-white/5 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
+            <div className="flex flex-wrap items-center gap-2 lg:gap-0 lg:bg-slate-950/50 lg:p-1 lg:rounded lg:border lg:border-border overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
               {[
                 { id: "all", label: "All" },
                 { id: "pending", label: "Pending" },
@@ -433,7 +433,7 @@ export default function AdminOrders() {
                     "px-4 py-1 rounded text-sm font-medium transition whitespace-nowrap",
                     statusFilter === status.id
                       ? "bg-brand-secondary-600 text-white shadow shadow-brand-secondary-500/20"
-                      : "text-slate-400 hover:text-white hover:bg-white/5",
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent",
                   )}
                 >
                   {status.label}
@@ -444,30 +444,30 @@ export default function AdminOrders() {
         </Card>
 
         {/* Orders Table */}
-        <div className="bg-slate-900/40  border border-white/10 rounded overflow-hidden">
+        <div className="bg-card/40  border border-border rounded overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left min-w-[1000px]">
               <thead>
-                <tr className="bg-slate-800/50 border-b border-white/5">
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                <tr className="bg-muted/50 border-b border-border">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Order ID
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Customer
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Order Status
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Date
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Payment Status
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">
                     Total
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">
                     Actions
                   </th>
                 </tr>
@@ -477,36 +477,36 @@ export default function AdminOrders() {
                   new Array(5).fill(0).map((_, i) => (
                     <tr
                       key={`skel-${i}`}
-                      className="animate-pulse border-b border-white/5"
+                      className="animate-pulse border-b border-border"
                     >
                       <td className="px-6 py-4">
-                        <div className="h-3 bg-slate-800 rounded w-20" />
+                        <div className="h-3 bg-muted rounded w-20" />
                       </td>
                       <td className="px-6 py-4">
                         <div className="space-y-2">
-                          <div className="h-4 bg-slate-800 rounded w-32" />
-                          <div className="h-3 bg-slate-800 rounded w-24 opacity-50" />
+                          <div className="h-4 bg-muted rounded w-32" />
+                          <div className="h-3 bg-muted rounded w-24 opacity-50" />
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="h-5 bg-slate-800 rounded w-24" />
+                        <div className="h-5 bg-muted rounded w-24" />
                       </td>
                       <td className="px-6 py-4">
-                        <div className="h-4 bg-slate-800 rounded w-16" />
+                        <div className="h-4 bg-muted rounded w-16" />
                       </td>
                       <td className="px-6 py-4">
-                        <div className="h-4 bg-slate-800 rounded w-20" />
+                        <div className="h-4 bg-muted rounded w-20" />
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex flex-col items-end gap-1">
-                          <div className="h-4 bg-slate-800 rounded w-16" />
-                          <div className="h-3 bg-slate-800 rounded w-8 opacity-50" />
+                          <div className="h-4 bg-muted rounded w-16" />
+                          <div className="h-3 bg-muted rounded w-8 opacity-50" />
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex justify-end gap-2">
-                          <div className="w-8 h-8 rounded bg-slate-800" />
-                          <div className="w-8 h-8 rounded bg-slate-800" />
+                          <div className="w-8 h-8 rounded bg-muted" />
+                          <div className="w-8 h-8 rounded bg-muted" />
                         </div>
                       </td>
                     </tr>
@@ -515,7 +515,7 @@ export default function AdminOrders() {
                   <tr>
                     <td
                       colSpan={7}
-                      className="px-6 py-12 text-center text-slate-500"
+                      className="px-6 py-12 text-center text-muted-foreground"
                     >
                       No orders found matching your criteria.
                     </td>
@@ -543,18 +543,18 @@ export default function AdminOrders() {
               variant="ghost"
               disabled={currentPage === 1}
               onClick={() => setCurrentPage((prev) => prev - 1)}
-              className="text-slate-400 hover:text-white"
+              className="text-muted-foreground hover:text-foreground"
             >
               <ChevronLeft className="w-4 h-4 mr-2" /> Previous
             </Button>
-            <span className="text-sm font-medium text-slate-400">
+            <span className="text-sm font-medium text-muted-foreground">
               Page {currentPage} of {totalPages}
             </span>
             <Button
               variant="ghost"
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage((prev) => prev + 1)}
-              className="text-slate-400 hover:text-white"
+              className="text-muted-foreground hover:text-foreground"
             >
               Next <ChevronRight className="w-4 h-4 ml-2" />
             </Button>

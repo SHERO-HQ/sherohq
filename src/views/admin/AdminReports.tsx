@@ -111,8 +111,8 @@ const parseLabel = (label: any) => {
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="bg-slate-950/90 backdrop-blur-md border border-white/10 p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
-        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider font-mono">
+      <div className="bg-slate-950/90 backdrop-blur-md border border-border p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
+        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider font-mono">
           {parseLabel(label)}
         </p>
         <div className="space-y-1">
@@ -122,10 +122,10 @@ const CustomTooltip = ({ active, payload, label }: any) => {
                 className="w-2 h-2 rounded-full shadow-xs"
                 style={{ backgroundColor: item.stroke || item.color }}
               />
-              <span className="text-xs text-slate-400 font-medium capitalize">
+              <span className="text-xs text-muted-foreground font-medium capitalize">
                 {item.name === "revenue" ? "Revenue" : item.name === "expenses" ? "Expenses" : item.name === "profit" ? "Net Profit" : item.name}:
               </span>
-              <span className="text-xs text-white font-bold font-mono">
+              <span className="text-xs text-foreground font-bold font-mono">
                 {String(item.name).toLowerCase().includes("revenue") || String(item.name).toLowerCase().includes("expenses") || String(item.name).toLowerCase().includes("profit")
                   ? `GH₵${(item.value || 0).toLocaleString()}`
                   : item.value}
@@ -145,28 +145,28 @@ const ReportsSkeleton = () => (
     {/* Stats Grid */}
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {new Array(3).fill(0).map((_, i) => (
-        <div key={i} className="bg-slate-900/50 border border-slate-800 rounded p-6 flex flex-col gap-3">
+        <div key={i} className="bg-card/50 border border-slate-800 rounded p-6 flex flex-col gap-3">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded bg-white/5 h-12 w-12" />
+            <div className="p-3 rounded bg-accent/50 h-12 w-12" />
             <div className="space-y-2">
-              <div className="h-4 w-24 bg-white/5 rounded" />
-              <div className="h-6 w-32 bg-white/10 rounded" />
+              <div className="h-4 w-24 bg-accent/50 rounded" />
+              <div className="h-6 w-32 bg-accent rounded" />
             </div>
           </div>
-          <div className="h-4 w-28 bg-white/5 rounded mt-2" />
+          <div className="h-4 w-28 bg-accent/50 rounded mt-2" />
         </div>
       ))}
     </div>
 
     {/* Main Area Chart Card */}
-    <div className="bg-slate-900/50 border border-slate-800 rounded p-6 space-y-6">
+    <div className="bg-card/50 border border-slate-800 rounded p-6 space-y-6">
       <div className="flex justify-between items-center">
-        <div className="h-5 w-48 bg-white/5 rounded" />
-        <div className="h-8 w-24 bg-white/5 rounded" />
+        <div className="h-5 w-48 bg-accent/50 rounded" />
+        <div className="h-8 w-24 bg-accent/50 rounded" />
       </div>
-      <div className="h-80 bg-white/5 rounded w-full flex items-end p-4 gap-3">
+      <div className="h-80 bg-accent/50 rounded w-full flex items-end p-4 gap-3">
         {[30, 45, 60, 40, 75, 50, 90, 65, 80, 55].map((h, index) => (
-          <div key={index} className="flex-1 bg-white/5 rounded-t" style={{ height: `${h}%` }} />
+          <div key={index} className="flex-1 bg-accent/50 rounded-t" style={{ height: `${h}%` }} />
         ))}
       </div>
     </div>
@@ -174,15 +174,15 @@ const ReportsSkeleton = () => (
     {/* Three Pie/Bar columns */}
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {new Array(3).fill(0).map((_, i) => (
-        <div key={i} className="bg-slate-900/50 border border-slate-800 rounded p-6 space-y-6">
-          <div className="h-5 w-36 bg-white/5 rounded" />
-          <div className="h-48 bg-white/5 rounded flex items-center justify-center">
+        <div key={i} className="bg-card/50 border border-slate-800 rounded p-6 space-y-6">
+          <div className="h-5 w-36 bg-accent/50 rounded" />
+          <div className="h-48 bg-accent/50 rounded flex items-center justify-center">
             {i < 2 ? (
-              <div className="w-24 h-24 rounded-full border-4 border-white/5" />
+              <div className="w-24 h-24 rounded-full border-4 border-border" />
             ) : (
               <div className="w-full h-full flex items-end p-4 gap-2">
                 {[40, 70, 50, 90].map((h, idx) => (
-                  <div key={idx} className="flex-1 bg-white/5 rounded-t" style={{ height: `${h}%` }} />
+                  <div key={idx} className="flex-1 bg-accent/50 rounded-t" style={{ height: `${h}%` }} />
                 ))}
               </div>
             )}
@@ -313,19 +313,19 @@ export default function AdminReports() {
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded bg-linear-to-br from-purple-500 to-blue-600">
-                <TrendingUp className="w-6 h-6 text-white" />
+                <TrendingUp className="w-6 h-6 text-foreground" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white">
+                <h1 className="text-2xl font-bold text-foreground">
                   Reports & Analytics
                 </h1>
-                <p className="text-slate-400 text-sm">
+                <p className="text-muted-foreground text-sm">
                   Overview of your store performance
                 </p>
               </div>
             </div>
             <div className="flex flex-col lg:flex-row gap-2 lg:items-center lg:justify-end">
-              <div className="flex bg-slate-800 rounded p-1">
+              <div className="flex bg-muted rounded p-1">
                 {[
                   { value: "7d", label: "7 Days" },
                   { value: "30d", label: "30 Days" },
@@ -338,8 +338,8 @@ export default function AdminReports() {
                     className={cn(
                       "px-4 py-1 rounded text-sm font-medium transition",
                       range === option.value
-                        ? "bg-slate-700 text-white shadow"
-                        : "text-slate-400 hover:text-white",
+                        ? "bg-slate-700 text-foreground shadow"
+                        : "text-muted-foreground hover:text-foreground",
                     )}
                   >
                     {option.label}
@@ -353,9 +353,9 @@ export default function AdminReports() {
                     type="button"
                     variant="outline"
                     className={cn(
-                      "bg-slate-800/50 border-white/10 text-slate-300 hover:text-white h-9",
+                      "bg-muted/50 border-border text-muted-foreground hover:text-foreground h-9",
                       range === "custom" &&
-                      "bg-slate-700 text-white border-brand-secondary-500/50",
+                      "bg-slate-700 text-foreground border-brand-secondary-500/50",
                     )}
                     onClick={() => setRange("custom")}
                   >
@@ -363,7 +363,7 @@ export default function AdminReports() {
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent
-                  className="w-auto p-0 dark border-slate-800 bg-slate-900"
+                  className="w-auto p-0 dark border-slate-800 bg-card"
                   align="end"
                 >
                   <Calendar
@@ -380,30 +380,30 @@ export default function AdminReports() {
                   <DropdownMenuTrigger asChild>
                     <Button
                       variant="outline"
-                      className="border-white/10 text-white hover:bg-white/5"
+                      className="border-border text-foreground hover:bg-accent"
                     >
                       <Printer className="mr-2 h-4 w-4" /> Export Summary
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     align="end"
-                    className="bg-slate-900 border-white/10 text-white"
+                    className="bg-card border-border text-foreground"
                   >
                     <DropdownMenuItem
                       onSelect={() => handleExport("csv")}
-                      className="cursor-pointer hover:bg-white/5"
+                      className="cursor-pointer hover:bg-accent"
                     >
                       Export as CSV
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onSelect={() => handleExport("excel")}
-                      className="cursor-pointer hover:bg-white/5"
+                      className="cursor-pointer hover:bg-accent"
                     >
                       Export as Excel
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onSelect={() => handleExport("pdf")}
-                      className="cursor-pointer hover:bg-white/5"
+                      className="cursor-pointer hover:bg-accent"
                     >
                       Export as PDF
                     </DropdownMenuItem>
@@ -414,10 +414,10 @@ export default function AdminReports() {
           </div>
           {/* KPI Period Selector */}
           <div className="flex items-center gap-2 mb-4">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               KPI Period:
             </span>
-            <div className="flex bg-slate-800 p-0.5 rounded border border-white/5">
+            <div className="flex bg-muted p-0.5 rounded border border-border">
               {[
                 { value: "today", label: "Today" },
                 { value: "week", label: "Week" },
@@ -430,8 +430,8 @@ export default function AdminReports() {
                   type="button"
                   onClick={() => setKpiPeriod(opt.value as KpiPeriod)}
                   className={`px-3 py-1 text-[10px] font-bold rounded transition ${kpiPeriod === opt.value
-                      ? "bg-purple-600 text-white shadow"
-                      : "text-slate-400 hover:text-white"
+                      ? "bg-purple-600 text-foreground shadow"
+                      : "text-muted-foreground hover:text-foreground"
                     }`}
                 >
                   {opt.label}
@@ -506,15 +506,15 @@ function StatCard({
   };
 
   return (
-    <div className="bg-slate-900/40 border border-white/10 hover:border-brand-secondary-500/30 transition-all duration-300 rounded p-5 flex flex-col gap-3 relative group overflow-hidden">
+    <div className="bg-card/40 border border-border hover:border-brand-secondary-500/30 transition-all duration-300 rounded p-5 flex flex-col gap-3 relative group overflow-hidden">
       <div className="absolute inset-0 bg-radial-gradient from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
       <div className="flex items-center gap-4 relative z-10">
         <div className={`p-2.5 rounded ${bg} ${color}`}>
           <Icon className="w-5 h-5" />
         </div>
         <div>
-          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{title}</p>
-          <p className="text-xl font-bold text-white mt-0.5 tracking-tight">{value}</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{title}</p>
+          <p className="text-xl font-bold text-foreground mt-0.5 tracking-tight">{value}</p>
         </div>
       </div>
       {trend !== undefined && (
@@ -524,7 +524,7 @@ function StatCard({
           >
             {renderTrendValue()}
           </span>
-          {subtext && <span className="text-xs text-slate-500">{subtext}</span>}
+          {subtext && <span className="text-xs text-muted-foreground">{subtext}</span>}
         </div>
       )}
     </div>
@@ -542,18 +542,18 @@ function RevenueChartSection({
 }) {
   const prefersReducedMotion = useReducedMotion();
   return (
-    <div className="bg-slate-900/40 border border-white/10 rounded p-6 relative group overflow-hidden">
+    <div className="bg-card/40 border border-border rounded p-6 relative group overflow-hidden">
       <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-      <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+      <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
         <DollarSign className="w-5 h-5 text-brand-secondary-400" />
         Revenue Over Time
       </h3>
-      <div className="absolute top-6 right-6 bg-slate-800/80 backdrop-blur-md rounded border border-white/5 p-0.5 flex">
+      <div className="absolute top-6 right-6 bg-muted/80 backdrop-blur-md rounded border border-border p-0.5 flex">
         <button
           onClick={() => setChartType("line")}
           className={`p-1.5 rounded transition-colors ${chartType === "line"
-              ? "bg-slate-700 text-white"
-              : "text-slate-400 hover:text-white"
+              ? "bg-slate-700 text-foreground"
+              : "text-muted-foreground hover:text-foreground"
             }`}
           title="Line Chart"
         >
@@ -562,8 +562,8 @@ function RevenueChartSection({
         <button
           onClick={() => setChartType("bar")}
           className={`p-1.5 rounded transition-colors ${chartType === "bar"
-              ? "bg-slate-700 text-white"
-              : "text-slate-400 hover:text-white"
+              ? "bg-slate-700 text-foreground"
+              : "text-muted-foreground hover:text-foreground"
             }`}
           title="Bar Chart"
         >
@@ -679,8 +679,8 @@ function StockDistributionChart({
 }) {
   const prefersReducedMotion = useReducedMotion();
   return (
-    <div className="bg-slate-900/40 border border-white/10 rounded p-6 hover:border-blue-500/20 transition-colors duration-300">
-      <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+    <div className="bg-card/40 border border-border rounded p-6 hover:border-blue-500/20 transition-colors duration-300">
+      <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
         <PieChartIcon className="w-5 h-5 text-blue-400" />
         Stock Distribution
       </h3>
@@ -724,8 +724,8 @@ function OrderStatusChart({
 }) {
   const prefersReducedMotion = useReducedMotion();
   return (
-    <div className="bg-slate-900/40 border border-white/10 rounded p-6 hover:border-amber-500/20 transition-colors duration-300">
-      <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+    <div className="bg-card/40 border border-border rounded p-6 hover:border-amber-500/20 transition-colors duration-300">
+      <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
         <ShoppingCart className="w-5 h-5 text-amber-400" />
         OrderStatus Chart
       </h3>
@@ -770,8 +770,8 @@ function OrderStatusChart({
 function RegionalSalesChart({ data }: { readonly data: RegionalData[] }) {
   const prefersReducedMotion = useReducedMotion();
   return (
-    <div className="bg-slate-900/40 border border-white/10 rounded p-6 hover:border-brand-secondary-500/20 transition-colors duration-300">
-      <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+    <div className="bg-card/40 border border-border rounded p-6 hover:border-brand-secondary-500/20 transition-colors duration-300">
+      <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
         <TrendingUp className="w-5 h-5 text-brand-secondary-400" />
         Sales by Region
       </h3>
@@ -820,9 +820,9 @@ function RegionalSalesChart({ data }: { readonly data: RegionalData[] }) {
 
 function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
   return (
-    <div className="lg:col-span-2 bg-slate-900/40 border border-white/10 rounded p-6 relative group overflow-hidden">
+    <div className="lg:col-span-2 bg-card/40 border border-border rounded p-6 relative group overflow-hidden">
       <div className="absolute inset-0 bg-radial-gradient from-blue-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-      <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+      <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
         <ShoppingCart className="w-5 h-5 text-blue-400" />
         Recent Orders
       </h3>
@@ -831,17 +831,17 @@ function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
           orders.map((order) => (
             <div
               key={order.id}
-              className="flex items-center justify-between p-3.5 rounded bg-slate-950/20 border border-white/5 hover:border-blue-500/20 hover:bg-slate-900/50 transition-all duration-300"
+              className="flex items-center justify-between p-3.5 rounded bg-slate-950/20 border border-border hover:border-blue-500/20 hover:bg-card/50 transition-all duration-300"
             >
               <div className="flex items-center gap-3">
                 <div className="flex flex-col">
-                  <span className="font-mono text-sm text-slate-300 font-bold">
+                  <span className="font-mono text-sm text-muted-foreground font-bold">
                     {toReadableOrderId(order.id)}
                   </span>
-                  <span className="text-xs text-white font-semibold mt-0.5">
+                  <span className="text-xs text-foreground font-semibold mt-0.5">
                     {order.customer.firstName} {order.customer.lastName}
                   </span>
-                  <span className="text-[10px] text-slate-500 truncate max-w-30 font-mono mt-0.5">
+                  <span className="text-[10px] text-muted-foreground truncate max-w-30 font-mono mt-0.5">
                     {order.customer.email}
                   </span>
                 </div>
@@ -861,7 +861,7 @@ function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
             </div>
           ))
         ) : (
-          <p className="text-slate-500 text-center py-4 italic">No orders yet</p>
+          <p className="text-muted-foreground text-center py-4 italic">No orders yet</p>
         )}
       </div>
     </div>
@@ -870,9 +870,9 @@ function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
 
 function TopProducts({ products }: { readonly products: TopProduct[] }) {
   return (
-    <div className="lg:col-span-1 bg-slate-900/40 border border-white/10 rounded p-6 relative group overflow-hidden">
+    <div className="lg:col-span-1 bg-card/40 border border-border rounded p-6 relative group overflow-hidden">
       <div className="absolute inset-0 bg-radial-gradient from-purple-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-      <h3 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
+      <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
         <Package className="w-5 h-5 text-purple-400" />
         Top Selling Products
       </h3>
@@ -880,17 +880,17 @@ function TopProducts({ products }: { readonly products: TopProduct[] }) {
         {(products || []).map((product, idx) => (
           <div
             key={`${product.name}-${idx}`}
-            className="flex items-center justify-between p-3.5 rounded bg-slate-950/20 border border-white/5 hover:border-purple-500/20 hover:bg-slate-900/50 transition-all duration-300"
+            className="flex items-center justify-between p-3.5 rounded bg-slate-950/20 border border-border hover:border-purple-500/20 hover:bg-card/50 transition-all duration-300"
           >
             <div className="flex items-center gap-3">
-              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-slate-800/80 border border-white/10 text-[10px] font-bold text-white font-mono">
+              <span className="flex items-center justify-center w-6 h-6 rounded-full bg-muted/80 border border-border text-[10px] font-bold text-foreground font-mono">
                 {idx + 1}
               </span>
               <div>
-                <p className="font-semibold text-white text-sm line-clamp-1">
+                <p className="font-semibold text-foreground text-sm line-clamp-1">
                   {product.name}
                 </p>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-muted-foreground mt-0.5">
                   {product.quantity} sold
                 </p>
               </div>
@@ -901,7 +901,7 @@ function TopProducts({ products }: { readonly products: TopProduct[] }) {
           </div>
         ))}
         {products.length === 0 && (
-          <p className="text-slate-500 text-center py-4 italic">No sales data yet</p>
+          <p className="text-muted-foreground text-center py-4 italic">No sales data yet</p>
         )}
       </div>
     </div>

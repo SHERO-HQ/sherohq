@@ -45,17 +45,17 @@ const StatsPageSkeleton = () => (
     {[1, 2, 3, 4].map((i) => (
       <div
         key={i}
-        className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center gap-4"
+        className="bg-muted/30 border border-border rounded p-4 flex items-center gap-4"
       >
-        <div className="w-5 h-5 bg-white/5 rounded shrink-0" />
-        <div className="w-12 h-12 rounded bg-white/10 shrink-0 flex items-center justify-center" />
+        <div className="w-5 h-5 bg-accent/50 rounded shrink-0" />
+        <div className="w-12 h-12 rounded bg-accent shrink-0 flex items-center justify-center" />
         <div className="flex-1 min-w-0 space-y-2">
-          <div className="h-4 w-32 bg-white/10 rounded" />
-          <div className="h-4 w-16 bg-white/5 rounded" />
+          <div className="h-4 w-32 bg-accent rounded" />
+          <div className="h-4 w-16 bg-accent/50 rounded" />
         </div>
         <div className="flex gap-2">
-          <div className="h-8 w-8 bg-white/5 rounded" />
-          <div className="h-8 w-8 bg-white/5 rounded" />
+          <div className="h-8 w-8 bg-accent/50 rounded" />
+          <div className="h-8 w-8 bg-accent/50 rounded" />
         </div>
       </div>
     ))}
@@ -152,11 +152,11 @@ const AdminStats = () => {
  <div className="space-y-8 animate-in fade-in duration-500 pb-12">
  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
  <div>
- <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+ <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
  <BarChart className="w-7 h-7 text-brand-secondary-400" />
  Site Statistics
  </h1>
- <p className="text-slate-400 text-sm mt-1">
+ <p className="text-muted-foreground text-sm mt-1">
  Manage marketing stats displayed on the landing page
  </p>
  </div>
@@ -171,12 +171,12 @@ const AdminStats = () => {
 
  {/* Search */}
  <div className="relative max-w-md">
- <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+ <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
  <Input
  placeholder="Search stats..."
  value={searchQuery}
  onChange={(e) => setSearchQuery(e.target.value)}
- className="pl-10 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
+ className="pl-10 bg-card/50 border-border text-foreground placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
  />
  </div>
 
@@ -186,9 +186,9 @@ const AdminStats = () => {
  ) : (
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  {filteredStats.length === 0 ? (
- <div className="col-span-full text-center py-20 bg-slate-800/30 rounded border border-white/5">
+ <div className="col-span-full text-center py-20 bg-muted/30 rounded border border-border">
  <BarChart className="w-12 h-12 text-slate-600 mx-auto mb-4" />
- <p className="text-slate-400">No stats found</p>
+ <p className="text-muted-foreground">No stats found</p>
  </div>
  ) : (
  filteredStats.map((s) => {
@@ -197,7 +197,7 @@ const AdminStats = () => {
  return (
  <div
  key={s.id}
- className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center gap-4 group hover:border-brand-secondary-500/30 transition"
+ className="bg-muted/30 border border-border rounded p-4 flex items-center gap-4 group hover:border-brand-secondary-500/30 transition"
  >
  <div className="text-slate-600 cursor-move opacity-0 group-hover:opacity-100 transition-opacity">
  <GripVertical className="w-5 h-5" />
@@ -208,7 +208,7 @@ const AdminStats = () => {
  </div>
 
  <div className="flex-1 min-w-0">
- <h3 className="font-medium text-white truncate">
+ <h3 className="font-medium text-foreground truncate">
  {s.label}
  </h3>
  <p className="text-sm font-bold text-brand-secondary-400">
@@ -223,7 +223,7 @@ const AdminStats = () => {
  variant="ghost"
  size="icon"
  onClick={() => handleOpenEdit(s)}
- className="text-slate-400 hover:text-white"
+ className="text-muted-foreground hover:text-foreground"
  >
  <Edit2 className="w-4 h-4" />
  </Button>
@@ -231,7 +231,7 @@ const AdminStats = () => {
  variant="ghost"
  size="icon"
  onClick={() => setDeleteId(s.id)}
- className="text-slate-400 hover:text-red-400"
+ className="text-muted-foreground hover:text-red-400"
  >
  <Trash2 className="w-4 h-4" />
  </Button>
@@ -259,7 +259,7 @@ const AdminStats = () => {
  setFormData({ ...formData, label: e.target.value })
  }
  required
- className="bg-slate-800 border-white/10"
+ className="bg-muted border-border"
  placeholder="e.g. Happy Customers"
  />
  </div>
@@ -274,7 +274,7 @@ const AdminStats = () => {
  setFormData({ ...formData, prefix: e.target.value })
  }
  placeholder="$"
- className="bg-slate-800 border-white/10"
+ className="bg-muted border-border"
  />
  </div>
  <div className="space-y-2">
@@ -287,7 +287,7 @@ const AdminStats = () => {
  }
  required
  placeholder="100"
- className="bg-slate-800 border-white/10"
+ className="bg-muted border-border"
  />
  </div>
  <div className="space-y-2">
@@ -299,7 +299,7 @@ const AdminStats = () => {
  setFormData({ ...formData, suffix: e.target.value })
  }
  placeholder="+"
- className="bg-slate-800 border-white/10"
+ className="bg-muted border-border"
  />
  </div>
  </div>
@@ -316,7 +316,7 @@ const AdminStats = () => {
  value: opt.value,
  label: opt.label,
  }))}
- className="bg-slate-800 border-white/10"
+ className="bg-muted border-border"
  />
  </div>
  <div className="space-y-2">
@@ -328,7 +328,7 @@ const AdminStats = () => {
  onChange={(e) =>
  setFormData({ ...formData, order: Number(e.target.value) })
  }
- className="bg-slate-800 border-white/10"
+ className="bg-muted border-border"
  />
  </div>
  </div>
@@ -342,11 +342,11 @@ const AdminStats = () => {
  setFormData({ ...formData, color: e.target.value })
  }
  placeholder="text-brand-secondary-500"
- className="bg-slate-800 border-white/10"
+ className="bg-muted border-border"
  />
  </div>
 
- <div className="flex justify-end gap-3 pt-4 border-t border-white/5">
+ <div className="flex justify-end gap-3 pt-4 border-t border-border">
  <Button
  type="button"
  variant="ghost"

@@ -46,9 +46,9 @@ const IconSelector = ({
         placeholder="Search icons (e.g. 'Smartphone')..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="bg-slate-800 border-white/10"
+        className="bg-muted border-border"
       />
-      <div className="grid grid-cols-6 gap-2 max-h-40 overflow-y-auto p-2 bg-slate-800/50 rounded border border-white/5">
+      <div className="grid grid-cols-6 gap-2 max-h-40 overflow-y-auto p-2 bg-muted/50 rounded border border-border">
         {displayIcons.map((name) => {
           // @ts-expect-error - Dynamic icon access
           const Icon = Icons[name];
@@ -58,7 +58,7 @@ const IconSelector = ({
               key={name}
               type="button"
               onClick={() => onChange(name)}
-              className={`p-2 rounded flex items-center justify-center transition-colors ${value === name ? "bg-brand-secondary-500 text-white" : "hover:bg-white/10 text-slate-400"}`}
+              className={`p-2 rounded flex items-center justify-center transition-colors ${value === name ? "bg-brand-secondary-500 text-white" : "hover:bg-accent text-muted-foreground"}`}
               title={name}
             >
               <Icon className="w-5 h-5" />
@@ -66,7 +66,7 @@ const IconSelector = ({
           );
         })}
       </div>
-      {value && <p className="text-xs text-slate-400">Selected: {value}</p>}
+      {value && <p className="text-xs text-muted-foreground">Selected: {value}</p>}
     </div>
   );
 };
@@ -74,9 +74,9 @@ const IconSelector = ({
 const CategoriesTableSkeleton = () => (
   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 animate-pulse select-none">
     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
-      <div key={i} className="bg-slate-800/20 border border-white/5 rounded p-4 flex items-center gap-3">
-        <div className="w-10 h-10 rounded bg-white/5" />
-        <div className="h-4 w-20 bg-white/10 rounded" />
+      <div key={i} className="bg-muted/20 border border-border rounded p-4 flex items-center gap-3">
+        <div className="w-10 h-10 rounded bg-accent/50" />
+        <div className="h-4 w-20 bg-accent rounded" />
       </div>
     ))}
   </div>
@@ -196,11 +196,11 @@ const AdminCategories = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-3">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
             <Tag className="w-7 h-7 text-brand-secondary-400" />
             Categories
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-muted-foreground text-sm mt-1">
             Manage product categories and icons
           </p>
         </div>
@@ -215,12 +215,12 @@ const AdminCategories = () => {
 
       {/* Search */}
       <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
           placeholder="Search categories..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
+          className="pl-10 bg-card/50 border-border text-foreground placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
         />
       </div>
 
@@ -228,9 +228,9 @@ const AdminCategories = () => {
       {isLoading ? (
         <CategoriesTableSkeleton />
       ) : filteredCategories.length === 0 ? (
-        <div className="text-center py-20 bg-slate-800/30 rounded border border-white/5">
+        <div className="text-center py-20 bg-muted/30 rounded border border-border">
           <Tag className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-          <p className="text-slate-400">No categories found</p>
+          <p className="text-muted-foreground">No categories found</p>
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -239,7 +239,7 @@ const AdminCategories = () => {
             return (
               <div
                 key={cat.id}
-                className="bg-slate-800/30 border border-white/5 rounded p-4 flex items-center justify-between group hover:border-brand-secondary-500/30 transition relative overflow-hidden"
+                className="bg-muted/30 border border-border rounded p-4 flex items-center justify-between group hover:border-brand-secondary-500/30 transition relative overflow-hidden"
               >
                 {isDeleting && (
                   <div className="absolute inset-0 bg-slate-950/90 backdrop-blur-xs z-10 flex items-center justify-between px-3 py-2 animate-in fade-in duration-200 select-none">
@@ -249,7 +249,7 @@ const AdminCategories = () => {
                     <button
                       type="button"
                       onClick={() => handleCancelDelete(cat.id)}
-                      className="px-2 py-1 bg-white/10 hover:bg-white/20 text-white rounded text-[9px] font-bold transition-all shrink-0"
+                      className="px-2 py-1 bg-accent hover:bg-white/20 text-foreground rounded text-[9px] font-bold transition-all shrink-0"
                     >
                       Undo
                     </button>
@@ -260,14 +260,14 @@ const AdminCategories = () => {
                   <div className="w-10 h-10 rounded bg-brand-secondary-500/10 flex items-center justify-center text-brand-secondary-400">
                     {renderIcon(cat.icon)}
                   </div>
-                  <span className="font-medium text-white">{cat.name}</span>
+                  <span className="font-medium text-foreground">{cat.name}</span>
                 </div>
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity relative z-5">
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => handleOpenEdit(cat)}
-                    className="h-8 w-8 text-slate-400 hover:text-white"
+                    className="h-8 w-8 text-muted-foreground hover:text-foreground"
                   >
                     <Edit2 className="w-4 h-4" />
                   </Button>
@@ -275,7 +275,7 @@ const AdminCategories = () => {
                     variant="ghost"
                     size="icon"
                     onClick={() => startSoftDelete(cat.id)}
-                    className="h-8 w-8 text-slate-400 hover:text-rose-400"
+                    className="h-8 w-8 text-muted-foreground hover:text-rose-400"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -302,7 +302,7 @@ const AdminCategories = () => {
                 setFormData({ ...formData, name: e.target.value })
               }
               required
-              className="bg-slate-800 border-white/10"
+              className="bg-muted border-border"
             />
           </div>
 

@@ -112,8 +112,8 @@ export default function AdminProfile() {
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-12">
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold text-white">Account Settings</h1>
-        <p className="text-slate-400 text-sm">
+        <h1 className="text-3xl font-bold text-foreground">Account Settings</h1>
+        <p className="text-muted-foreground text-sm">
           Manage your administrative profile and security preferences.
         </p>
       </div>
@@ -162,10 +162,10 @@ export default function AdminProfile() {
                 </div>
               </div>
               <div className="text-center space-y-1">
-                <h2 className="text-xl font-bold capitalize text-white">
+                <h2 className="text-xl font-bold capitalize text-foreground">
                   {username || "Admin"}
                 </h2>
-                <p className="text-sm text-slate-500 font-medium uppercase tracking-wider">
+                <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
                   {admin?.role || "Super Administrator"}
                 </p>
               </div>
@@ -179,7 +179,7 @@ export default function AdminProfile() {
                 <h4 className="text-sm font-bold text-brand-secondary-400">
                   Security Tip
                 </h4>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   Keep your password alphanumeric for better security.
                 </p>
               </div>
@@ -198,7 +198,7 @@ export default function AdminProfile() {
                   <div className="space-y-2">
                     <label
                       htmlFor="username"
-                      className="text-sm font-medium text-slate-400"
+                      className="text-sm font-medium text-muted-foreground"
                     >
                       Username
                     </label>
@@ -206,13 +206,13 @@ export default function AdminProfile() {
                       id="username"
                       value={username}
                       readOnly
-                      className="bg-muted/30 border-border text-slate-500 cursor-not-allowed focus:ring-0"
+                      className="bg-muted/30 border-border text-muted-foreground cursor-not-allowed focus:ring-0"
                     />
                   </div>
                   <div className="space-y-2">
                     <label
                       htmlFor="email"
-                      className="text-sm font-medium text-slate-400"
+                      className="text-sm font-medium text-muted-foreground"
                     >
                       Email Address
                     </label>
@@ -220,7 +220,7 @@ export default function AdminProfile() {
                       id="email"
                       value={email}
                       readOnly
-                      className="bg-muted/30 border-border text-slate-500 cursor-not-allowed focus:ring-0"
+                      className="bg-muted/30 border-border text-muted-foreground cursor-not-allowed focus:ring-0"
                     />
                   </div>
                 </div>
@@ -228,7 +228,7 @@ export default function AdminProfile() {
                 <div className="space-y-2">
                   <label
                     htmlFor="phone"
-                    className="text-sm font-medium text-slate-400"
+                    className="text-sm font-medium text-muted-foreground"
                   >
                     Phone Number
                   </label>
@@ -243,7 +243,7 @@ export default function AdminProfile() {
                 </div>
 
                 <div className="p-4 rounded bg-muted/30 border border-border space-y-6">
-                  <p className="text-sm text-slate-500 flex items-center gap-2">
+                  <p className="text-sm text-muted-foreground flex items-center gap-2">
                     <AlertCircle className="w-4 h-4" /> Keep blank to maintain
                     current password
                   </p>
@@ -251,7 +251,7 @@ export default function AdminProfile() {
                     <div className="space-y-2">
                       <label
                         htmlFor="new-password"
-                        className="text-sm font-medium text-slate-400"
+                        className="text-sm font-medium text-muted-foreground"
                       >
                         New Password
                       </label>
@@ -267,7 +267,7 @@ export default function AdminProfile() {
                     <div className="space-y-2">
                       <label
                         htmlFor="confirm-password"
-                        className="text-sm font-medium text-slate-400"
+                        className="text-sm font-medium text-muted-foreground"
                       >
                         Confirm New Password
                       </label>
@@ -306,11 +306,11 @@ export default function AdminProfile() {
             <div className="p-6 md:p-8 space-y-6">
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                  <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
                     <Shield className="w-5 h-5 text-brand-secondary-400" />
                     Two-Factor Authentication (MFA)
                   </h3>
-                  <p className="text-sm text-slate-500">
+                  <p className="text-sm text-muted-foreground">
                     Add an extra layer of security to your account.
                   </p>
                 </div>
@@ -319,7 +319,7 @@ export default function AdminProfile() {
                     "px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider",
                     admin?.mfaEnabled
                       ? "bg-brand-secondary-500/10 text-brand-secondary-400"
-                      : "bg-slate-800 text-slate-500",
+                      : "bg-muted text-muted-foreground",
                   )}
                 >
                   {admin?.mfaEnabled ? "Enabled" : "Disabled"}
@@ -327,16 +327,16 @@ export default function AdminProfile() {
               </div>
 
               {!admin?.mfaEnabled ? (
-                <div className="p-6 rounded bg-slate-900/50 border border-white/5 space-y-4">
+                <div className="p-6 rounded bg-card/50 border border-border space-y-4">
                   <div className="flex gap-4">
                     <div className="w-10 h-10 rounded-full bg-brand-secondary-500/10 flex items-center justify-center shrink-0">
                       <Shield className="w-5 h-5 text-brand-secondary-400" />
                     </div>
                     <div className="space-y-1">
-                      <p className="text-sm font-semibold text-white">
+                      <p className="text-sm font-semibold text-foreground">
                         Protect your account
                       </p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-muted-foreground">
                         MFA adds a second step to your login process by
                         requiring a code from an authenticator app.
                       </p>
@@ -357,10 +357,10 @@ export default function AdminProfile() {
                       <Shield className="w-5 h-5 text-brand-secondary-400" />
                     </div>
                     <div className="space-y-1">
-                      <p className="text-sm font-semibold text-white">
+                      <p className="text-sm font-semibold text-foreground">
                         MFA is active
                       </p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-muted-foreground">
                         Your account is protected with two-factor
                         authentication.
                       </p>

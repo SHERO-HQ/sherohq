@@ -87,7 +87,7 @@ const AdminLayout = memo(({ children }: Readonly<AdminLayoutProps>) => {
     </main>
 
     {/* Simple Footer */}
-    <footer className="py-3 md:px-8 border-t border-white/5 text-center text-slate-500 text-xs print:hidden">
+    <footer className="py-3 md:px-8 border-t border-border text-center text-muted-foreground text-xs print:hidden">
      <p suppressHydrationWarning>
       {" "}
       &copy; {new Date().getFullYear()}{" "}

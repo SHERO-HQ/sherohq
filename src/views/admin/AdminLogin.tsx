@@ -85,14 +85,14 @@ export default function AdminLogin() {
                             suppressHydrationWarning
                         />
                     </div>
-                    <h1 className="text-xl font-bold text-white">
+                    <h1 className="text-xl font-bold text-foreground">
                         SHERO TECHNOLOGIES
                     </h1>
-                    <p className="text-slate-400 mt-1 text-sm">Sign in to access the dashboard</p>
+                    <p className="text-muted-foreground mt-1 text-sm">Sign in to access the dashboard</p>
                 </div>
 
                 {/* Login Card */}
-                <div className="bg-slate-900/50  border border-slate-800 rounded p-8">
+                <div className="bg-card/50  border border-slate-800 rounded p-8">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Error Message */}
                         {error && (
@@ -108,19 +108,19 @@ export default function AdminLogin() {
                                 <div>
                                     <label
                                         htmlFor="username"
-                                        className="block text-sm font-medium text-slate-300 mb-2"
+                                        className="block text-sm font-medium text-muted-foreground mb-2"
                                     >
                                         Username
                                     </label>
                                     <div className="relative">
-                                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                                         <input
                                             id="username"
                                             type="text"
                                             value={username}
                                             onChange={(e) => setUsername(e.target.value)}
                                             placeholder="Enter your username"
-                                            className="w-full pl-10 pr-4 py-2 bg-slate-800/50 border border-slate-700 rounded text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                            className="w-full pl-10 pr-4 py-2 bg-muted/50 border border-slate-700 rounded text-foreground placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
                                             required
                                             autoComplete="username"
                                         />
@@ -130,19 +130,19 @@ export default function AdminLogin() {
                                 <div>
                                     <label
                                         htmlFor="password"
-                                        className="block text-sm font-medium text-slate-300 mb-2"
+                                        className="block text-sm font-medium text-muted-foreground mb-2"
                                     >
                                         Password
                                     </label>
                                     <div className="relative">
-                                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                                         <input
                                             id="password"
                                             type={showPassword ? "text" : "password"}
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                             placeholder="Enter your password"
-                                            className="w-full pl-10 pr-12 py-2 bg-slate-800/50 border border-slate-700 rounded text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                            className="w-full pl-10 pr-12 py-2 bg-muted/50 border border-slate-700 rounded text-foreground placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
                                             required
                                             autoComplete="current-password"
                                         />
@@ -150,7 +150,7 @@ export default function AdminLogin() {
                                         <button
                                             type="button"
                                             onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 focus:outline-none transition-colors"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground focus:outline-none transition-colors"
                                         >
                                             {showPassword ? (
                                                 <EyeOff className="w-5 h-5" />
@@ -166,25 +166,25 @@ export default function AdminLogin() {
                             <div>
                                 <label
                                     htmlFor="mfaCode"
-                                    className="block text-sm font-medium text-slate-300 mb-2"
+                                    className="block text-sm font-medium text-muted-foreground mb-2"
                                 >
                                     Authentication Code
                                 </label>
                                 <div className="relative">
-                                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                                     <input
                                         id="mfaCode"
                                         type="text"
                                         value={mfaCode}
                                         onChange={(e) => setMfaCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))}
                                         placeholder="Enter 6-digit code"
-                                        className="w-full pl-10 pr-4 py-3 bg-slate-800/50 border border-slate-700 rounded text-white text-center text-2xl tracking-[0.5em] placeholder:text-sm placeholder:tracking-normal placeholder:font-sans focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                        className="w-full pl-10 pr-4 py-3 bg-muted/50 border border-slate-700 rounded text-foreground text-center text-2xl tracking-[0.5em] placeholder:text-sm placeholder:tracking-normal placeholder:font-sans focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
                                         required
                                         autoFocus
                                         autoComplete="one-time-code"
                                     />
                                 </div>
-                                <p className="text-xs text-slate-500 mt-4 text-center">
+                                <p className="text-xs text-muted-foreground mt-4 text-center">
                                     Enter the code from your authenticator app to continue.
                                 </p>
                             </div>
@@ -194,7 +194,7 @@ export default function AdminLogin() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full mx-auto py-2 px-12 bg-linear-to-r from-purple-600 to-blue-600 text-white font-medium rounded hover:from-purple-500 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
+                            className="w-full mx-auto py-2 px-12 bg-linear-to-r from-purple-600 to-blue-600 text-foreground font-medium rounded hover:from-purple-500 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
                         >
                             {isLoading ? (
                                 <>
@@ -208,7 +208,7 @@ export default function AdminLogin() {
                     </form>
 
                     <div className="mt-6 pt-6 border-t border-slate-800 ">
-                        <p className="text-xs text-slate-500 text-center inline-flex items-center gap-1 justify-center w-full">
+                        <p className="text-xs text-muted-foreground text-center inline-flex items-center gap-1 justify-center w-full">
                             {" "}
                             SHERO TECHNOLOGIES <Zap className="size-3" />{" "}
                         </p>

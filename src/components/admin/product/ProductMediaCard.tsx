@@ -117,10 +117,10 @@ export default function ProductMediaCard({
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       className={cn(
-        "bg-slate-900 border p-6 md:p-8 space-y-6 transition-all duration-300 relative select-none",
+        "bg-card border p-6 md:p-8 space-y-6 transition-all duration-300 relative select-none",
         isDragging
           ? "border-brand-secondary-500 bg-brand-secondary-500/5 scale-[0.99] shadow-[0_0_15px_rgba(16,185,129,0.1)]"
-          : "border-white/5"
+          : "border-border"
       )}
     >
       {/* Drag overlay guide */}
@@ -130,18 +130,18 @@ export default function ProductMediaCard({
           <p className="text-sm font-bold text-brand-secondary-300">
             Drop your product images here
           </p>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Releasing files will automatically compress and queue uploads
           </p>
         </div>
       )}
 
-      <div className="flex items-center justify-between pb-2 border-b border-white/5">
+      <div className="flex items-center justify-between pb-2 border-b border-border">
         <div className="flex items-center gap-2">
           <ImageIcon className="w-5 h-5 text-brand-secondary-400" />
-          <h3 className="font-bold text-white">Product Media</h3>
+          <h3 className="font-bold text-foreground">Product Media</h3>
         </div>
-        <span className="text-xs text-slate-500 font-medium">
+        <span className="text-xs text-muted-foreground font-medium">
           {images.length} / 5 Images
         </span>
       </div>
@@ -162,12 +162,12 @@ export default function ProductMediaCard({
                 onDrop={handleItemDrop}
                 onDragEnd={() => setDraggedIndex(null)}
                 className={cn(
-                  "relative aspect-square w-full rounded bg-slate-800 border-2 overflow-hidden shadow transition-all duration-300",
+                  "relative aspect-square w-full rounded bg-muted border-2 overflow-hidden shadow transition-all duration-300",
                   draggedIndex !== null ? "cursor-grabbing" : "cursor-grab",
                   draggedIndex === index && "opacity-50 scale-95",
                   primaryImage === url
                     ? "border-brand-secondary-500 shadow-brand-secondary-500/10"
-                    : "border-white/5",
+                    : "border-border",
                   isDeleting && "opacity-90 grayscale-30 scale-95 border-rose-500/40 pointer-events-none"
                 )}
               >
@@ -189,7 +189,7 @@ export default function ProductMediaCard({
                       type="button"
                       variant="ghost"
                       onClick={() => cancelDelete(url)}
-                      className="mt-2 h-7 px-3 bg-white/10 hover:bg-white/20 text-white rounded text-[10px] flex items-center gap-1.5 transition-all"
+                      className="mt-2 h-7 px-3 bg-accent hover:bg-white/20 text-foreground rounded text-[10px] flex items-center gap-1.5 transition-all"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
                       Undo
@@ -202,7 +202,7 @@ export default function ProductMediaCard({
                       <button
                         type="button"
                         onClick={() => initiateDelete(url)}
-                        className="p-1.5 bg-rose-500/90 text-white rounded shadow hover:bg-rose-600 transition-colors"
+                        className="p-1.5 bg-rose-500/90 text-foreground rounded shadow hover:bg-rose-600 transition-colors"
                         title="Remove Image"
                       >
                         <svg className="w-3.5 h-3.5 stroke-2 stroke-current fill-none" viewBox="0 0 24 24">
@@ -220,7 +220,7 @@ export default function ProductMediaCard({
                           "w-full py-1.5 px-2 rounded text-[9px] font-semibold tracking-wider transition-all shadow",
                           primaryImage === url
                             ? "bg-brand-secondary-500 text-white cursor-default shadow-brand-secondary-500/25"
-                            : "bg-white/20 hover:bg-white/30 text-white"
+                            : "bg-white/20 hover:bg-white/30 text-foreground"
                         )}
                         disabled={primaryImage === url}
                       >
@@ -235,9 +235,9 @@ export default function ProductMediaCard({
 
           {/* Pending Upload Skeletons */}
           {isUploading && (
-            <div className="aspect-square w-full rounded bg-slate-800/40 border border-brand-secondary-500/20 overflow-hidden relative shadow animate-pulse flex flex-col items-center justify-center gap-2">
+            <div className="aspect-square w-full rounded bg-muted/40 border border-brand-secondary-500/20 overflow-hidden relative shadow animate-pulse flex flex-col items-center justify-center gap-2">
               <Loader2 className="w-6 h-6 text-brand-secondary-400 animate-spin" />
-              <span className="text-[9px] text-slate-500 font-semibold tracking-widest uppercase">
+              <span className="text-[9px] text-muted-foreground font-semibold tracking-widest uppercase">
                 COMPRESSING...
               </span>
             </div>
@@ -248,7 +248,7 @@ export default function ProductMediaCard({
             <label
               className={cn(
                 "aspect-square rounded w-full border-2 border-dashed flex flex-col items-center justify-center gap-2 cursor-pointer transition-all duration-300",
-                "border-white/10 hover:border-brand-secondary-500/50 hover:bg-brand-secondary-500/5 hover:scale-[0.98]"
+                "border-border hover:border-brand-secondary-500/50 hover:bg-brand-secondary-500/5 hover:scale-[0.98]"
               )}
             >
               <input
@@ -258,8 +258,8 @@ export default function ProductMediaCard({
                 className="hidden"
                 onChange={onUpload}
               />
-              <Plus className="w-6 h-6 text-slate-500 group-hover:text-brand-secondary-400 transition-colors" />
-              <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">
+              <Plus className="w-6 h-6 text-muted-foreground group-hover:text-brand-secondary-400 transition-colors" />
+              <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
                 Upload Image
               </span>
               <span className="text-[8px] text-slate-600 tracking-wider">
@@ -269,8 +269,8 @@ export default function ProductMediaCard({
           )}
         </div>
 
-        <div className="p-4 rounded bg-slate-800/30 border border-white/5">
-          <p className="text-xs text-slate-500 flex items-center gap-2 italic">
+        <div className="p-4 rounded bg-muted/30 border border-border">
+          <p className="text-xs text-muted-foreground flex items-center gap-2 italic">
             <Info className="w-3.5 h-3.5 shrink-0 text-brand-secondary-400" />
             First uploaded asset becomes the primary display image. Drag files here to upload. Max 5 images.
           </p>

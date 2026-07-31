@@ -55,10 +55,10 @@ const ProductRow = memo(({
   handleDelete: (id: string) => void;
   handleToggleStock: (product: Product) => void;
 }) => (
-  <tr className="hover:bg-white/5 transition-colors group">
+  <tr className="hover:bg-accent transition-colors group">
     <td className="px-6 py-4">
       <div className="flex items-center gap-3">
-        <div className="relative w-10 h-10 rounded bg-slate-800 overflow-hidden shrink-0 border border-white/5">
+        <div className="relative w-10 h-10 rounded bg-muted overflow-hidden shrink-0 border border-border">
           <AppImage
             src={getImageUrl(product.image)}
             alt={product.name}
@@ -70,18 +70,18 @@ const ProductRow = memo(({
         <div>
           <Link
             href={`/admin/products/${product.slug || product.sku || product.id}/edit`}
-            className="text-sm font-semibold text-white hover:text-brand-secondary-400 transition-colors"
+            className="text-sm font-semibold text-foreground hover:text-brand-secondary-400 transition-colors"
           >
             {product.name}
           </Link>
-          <p className="text-xs text-slate-500 font-mono">
+          <p className="text-xs text-muted-foreground font-mono">
             ID: {product.id.slice(0, 8)}
           </p>
         </div>
       </div>
     </td>
     <td className="px-6 py-4">
-      <span className="text-xs font-mono text-slate-400 bg-slate-800/50 px-2 py-1 rounded">
+      <span className="text-xs font-mono text-muted-foreground bg-muted/50 px-2 py-1 rounded">
         {product.sku || "-"}
       </span>
     </td>
@@ -93,7 +93,7 @@ const ProductRow = memo(({
         {product.category}
       </Badge>
     </td>
-    <td className="px-6 py-4 text-sm font-bold text-white">
+    <td className="px-6 py-4 text-sm font-bold text-foreground">
       GH₵{product.price.toLocaleString()}
     </td>
     <td className="px-6 py-4">
@@ -112,7 +112,7 @@ const ProductRow = memo(({
             ? "Out of stock"
             : `${product.quantity || 0} in stock`}
         </span>
-        <div className="w-12 h-1 bg-slate-800 rounded-full overflow-hidden">
+        <div className="w-12 h-1 bg-muted rounded-full overflow-hidden">
           <div
             className={cn(
               "h-full rounded-full transition duration-500",
@@ -134,7 +134,7 @@ const ProductRow = memo(({
         <Button
           size="icon"
           variant="ghost"
-          className="h-8 w-8 text-slate-400 hover:text-white"
+          className="h-8 w-8 text-muted-foreground hover:text-foreground"
           asChild
         >
           <Link
@@ -148,17 +148,17 @@ const ProductRow = memo(({
             <Button
               size="icon"
               variant="ghost"
-              className="h-8 w-8 text-slate-400 hover:text-white"
+              className="h-8 w-8 text-muted-foreground hover:text-foreground"
             >
               <MoreVertical className="w-4 h-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="bg-slate-900 border-white/10 text-white"
+            className="bg-card border-border text-foreground"
             align="end"
           >
             <DropdownMenuItem
-              className="hover:bg-white/5 cursor-pointer"
+              className="hover:bg-accent cursor-pointer"
               asChild
             >
               <a
@@ -171,7 +171,7 @@ const ProductRow = memo(({
               </a>
             </DropdownMenuItem>
             <DropdownMenuItem
-              className="hover:bg-white/5 cursor-pointer"
+              className="hover:bg-accent cursor-pointer"
               onClick={() => handleToggleStock(product)}
             >
               {product.inStock ? (
@@ -186,7 +186,7 @@ const ProductRow = memo(({
                 </>
               )}
             </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-white/5" />
+            <DropdownMenuSeparator className="bg-accent/50" />
             {canDelete && (
               <DropdownMenuItem
                 className="text-rose-400 hover:bg-rose-500/10 cursor-pointer"
@@ -333,14 +333,14 @@ export default function AdminProducts() {
   return (
     <div className="space-y-6 relative">
         {isPlaceholderData && (
-          <div className="absolute inset-0 bg-slate-900/10 -[1px] z-10 pointer-events-none transition-opacity" />
+          <div className="absolute inset-0 bg-card/10 -[1px] z-10 pointer-events-none transition-opacity" />
         )}
 
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-white">Products</h1>
-            <p className="text-slate-400 text-sm">
+            <h1 className="text-2xl font-bold text-foreground">Products</h1>
+            <p className="text-muted-foreground text-sm">
               Manage your store inventory and pricing
             </p>
           </div>
@@ -350,7 +350,7 @@ export default function AdminProducts() {
               size="icon"
               onClick={() => refetchProducts()}
               disabled={isFetching}
-              className="bg-slate-800/50 border-white/5"
+              className="bg-muted/50 border-border"
             >
               <RefreshCw
                 className={cn("w-4 h-4", isFetching && "animate-spin")}
@@ -361,30 +361,30 @@ export default function AdminProducts() {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
-                  className="bg-slate-800/50 border-white/5 text-white hover:bg-white/5"
+                  className="bg-muted/50 border-border text-foreground hover:bg-accent"
                 >
                   <Printer className="w-4 h-4 mr-2" /> Export
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="bg-slate-900 border-white/10 text-white"
+                className="bg-card border-border text-foreground"
                 align="end"
               >
                 <DropdownMenuItem
                   onClick={() => handleExport("csv")}
-                  className="hover:bg-white/5 cursor-pointer"
+                  className="hover:bg-accent cursor-pointer"
                 >
                   Export as CSV
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleExport("excel")}
-                  className="hover:bg-white/5 cursor-pointer"
+                  className="hover:bg-accent cursor-pointer"
                 >
                   Export as Excel
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => handleExport("pdf")}
-                  className="hover:bg-white/5 cursor-pointer"
+                  className="hover:bg-accent cursor-pointer"
                 >
                   Export as PDF
                 </DropdownMenuItem>
@@ -404,15 +404,15 @@ export default function AdminProducts() {
         </div>
 
         {/* Filters */}
-        <Card className="bg-slate-900/40  border-white/10 p-4">
+        <Card className="bg-card/40  border-border p-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 placeholder="Search products..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 bg-slate-800/50 border-white/5 text-white"
+                className="pl-9 bg-muted/50 border-border text-foreground"
               />
             </div>
             <select
@@ -421,7 +421,7 @@ export default function AdminProducts() {
                 setSelectedCategory(e.target.value);
                 setCurrentPage(1);
               }}
-              className="bg-slate-800/50 border border-white/5 rounded text-sm text-white p-2 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
+              className="bg-muted/50 border border-border rounded text-sm text-foreground p-2 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
             >
               <option value="all">All Categories</option>
               {categories.map((cat: Category) => (
@@ -436,7 +436,7 @@ export default function AdminProducts() {
                 setStockFilter(e.target.value);
                 setCurrentPage(1);
               }}
-              className="bg-slate-800/50 border border-white/5 rounded text-sm text-white p-2 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
+              className="bg-muted/50 border border-border rounded text-sm text-foreground p-2 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
             >
               <option value="all">All Stock Status</option>
               <option value="low">Low Stock (≤ 5)</option>
@@ -446,27 +446,27 @@ export default function AdminProducts() {
         </Card>
 
         {/* Products Table */}
-        <div className="bg-slate-900/40  border border-white/10 rounded overflow-hidden">
+        <div className="bg-card/40  border border-border rounded overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead>
-                <tr className="bg-slate-800/50 border-b border-white/5">
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                <tr className="bg-muted/50 border-b border-border">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Product
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     SKU
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Category
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Price
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                     Stock
                   </th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">
+                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">
                     Actions
                   </th>
                 </tr>
@@ -474,35 +474,35 @@ export default function AdminProducts() {
               <tbody className="divide-y divide-white/5">
                 {isLoading ? (
                   new Array(5).fill(0).map((_, i) => (
-                    <tr key={`skel-${i}`} className="animate-pulse border-b border-white/5">
+                    <tr key={`skel-${i}`} className="animate-pulse border-b border-border">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded bg-slate-800 shrink-0" />
+                          <div className="w-10 h-10 rounded bg-muted shrink-0" />
                           <div className="space-y-2">
-                            <div className="h-4 bg-slate-800 rounded w-24" />
-                            <div className="h-3 bg-slate-800 rounded w-16 opacity-50" />
+                            <div className="h-4 bg-muted rounded w-24" />
+                            <div className="h-3 bg-muted rounded w-16 opacity-50" />
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="h-4 bg-slate-800 rounded w-12" />
+                        <div className="h-4 bg-muted rounded w-12" />
                       </td>
                       <td className="px-6 py-4">
-                        <div className="h-6 bg-slate-800 rounded w-20" />
+                        <div className="h-6 bg-muted rounded w-20" />
                       </td>
                       <td className="px-6 py-4">
-                        <div className="h-4 bg-slate-800 rounded w-16" />
+                        <div className="h-4 bg-muted rounded w-16" />
                       </td>
                       <td className="px-6 py-4">
                         <div className="space-y-2">
-                          <div className="h-4 bg-slate-800 rounded w-20" />
-                          <div className="h-1 bg-slate-800 rounded w-12" />
+                          <div className="h-4 bg-muted rounded w-20" />
+                          <div className="h-1 bg-muted rounded w-12" />
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex justify-end gap-2">
-                          <div className="w-8 h-8 rounded bg-slate-800" />
-                          <div className="w-8 h-8 rounded bg-slate-800" />
+                          <div className="w-8 h-8 rounded bg-muted" />
+                          <div className="w-8 h-8 rounded bg-muted" />
                         </div>
                       </td>
                     </tr>
@@ -511,7 +511,7 @@ export default function AdminProducts() {
                   <tr>
                     <td
                       colSpan={6}
-                      className="px-6 py-12 text-center text-slate-500"
+                      className="px-6 py-12 text-center text-muted-foreground"
                     >
                       No products found matching your criteria.
                     </td>
@@ -533,8 +533,8 @@ export default function AdminProducts() {
 
           {/* Pagination */}
           {!isLoading && totalPages > 1 && (
-            <div className="px-6 py-4 bg-slate-800/30 border-t border-white/5 flex items-center justify-between">
-              <p className="text-sm text-slate-400">
+            <div className="px-6 py-4 bg-muted/30 border-t border-border flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">
                 Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
                 {Math.min(currentPage * itemsPerPage, filteredProducts.length)}{" "}
                 of {filteredProducts.length} entries
@@ -543,11 +543,11 @@ export default function AdminProducts() {
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-8 w-8 border-white/10"
+                  className="h-8 w-8 border-border"
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage((p) => p - 1)}
                 >
-                  <ChevronLeft className="h-4 w-4 text-white" />
+                  <ChevronLeft className="h-4 w-4 text-foreground" />
                 </Button>
                 <div className="flex items-center gap-1">
                   {new Array(totalPages).fill(0).map((_, i) => (
@@ -558,7 +558,7 @@ export default function AdminProducts() {
                         "h-8 w-8 text-xs",
                         currentPage === i + 1
                           ? "bg-brand-secondary-600 hover:bg-brand-secondary-500 border-none"
-                          : "border-white/10 text-white",
+                          : "border-border text-foreground",
                       )}
                       onClick={() => setCurrentPage(i + 1)}
                     >
@@ -569,11 +569,11 @@ export default function AdminProducts() {
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-8 w-8 border-white/10"
+                  className="h-8 w-8 border-border"
                   disabled={currentPage === totalPages}
                   onClick={() => setCurrentPage((p) => p + 1)}
                 >
-                  <ChevronRight className="h-4 w-4 text-white" />
+                  <ChevronRight className="h-4 w-4 text-foreground" />
                 </Button>
               </div>
             </div>

@@ -282,7 +282,7 @@ const AdminSupport = () => {
           <div>
             <Link
               href="/admin/dashboard"
-              className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-brand-secondary-400 transition-colors group"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-brand-secondary-400 transition-colors group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               <span>Back to Dashboard</span>
@@ -291,19 +291,19 @@ const AdminSupport = () => {
 
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-white">
+              <h1 className="text-3xl font-bold text-foreground">
                 Support & Inquiries
               </h1>
-              <p className="text-slate-400 mt-1 text-sm">
+              <p className="text-muted-foreground mt-1 text-sm">
                 Manage user tickets, consultations, and contact messages
               </p>
             </div>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
               <div className="relative flex-1 sm:flex-none">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   placeholder="Search inquiries..."
-                  className="pl-10 w-full sm:w-64 bg-slate-900/50 border-white/10 text-white placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
+                  className="pl-10 w-full sm:w-64 bg-card/50 border-border text-foreground placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -312,7 +312,7 @@ const AdminSupport = () => {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
-                    className="border-white/10 text-slate-300 hover:text-white"
+                    className="border-border text-muted-foreground hover:text-foreground"
                   >
                     <Filter className="w-4 h-4 mr-2" />
                     {statusFilter === "all"
@@ -322,7 +322,7 @@ const AdminSupport = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   align="end"
-                  className="bg-slate-900 border-white/10"
+                  className="bg-card border-border"
                 >
                   <DropdownMenuItem onSelect={() => setStatusFilter("all")}>
                     All Statuses
@@ -360,14 +360,14 @@ const AdminSupport = () => {
         </div>
 
         <Tabs defaultValue="tickets" className="w-full">
-          <TabsList className="bg-slate-900/50 border border-white/5 p-1 mb-8 flex justify-center items-center flex-wrap sm:flex-nowrap overflow-x-auto scrollbar-hide w-fit">
+          <TabsList className="bg-card/50 border border-border p-1 mb-8 flex justify-center items-center flex-wrap sm:flex-nowrap overflow-x-auto scrollbar-hide w-fit">
             <TabsTrigger
               value="tickets"
               className="data-[state=active]:bg-brand-secondary-500 data-[state=active]:text-white data-[state=active]:shadow data-[state=active]:shadow-brand-secondary-500/20 px-3 sm:px-6 text-xs sm:text-sm whitespace-nowrap"
             >
               <Headset className="w-4 h-4 mr-1 sm:mr-2" />
               <span className="hidden xs:inline">Support </span>Tickets
-              <Badge className="ml-1 sm:ml-2 bg-white/10 text-white border-none text-[10px] sm:text-xs">
+              <Badge className="ml-1 sm:ml-2 bg-accent text-foreground border-none text-[10px] sm:text-xs">
                 {filteredTickets.length}
               </Badge>
             </TabsTrigger>
@@ -377,7 +377,7 @@ const AdminSupport = () => {
             >
               <Calendar className="w-4 h-4 mr-1 sm:mr-2" />
               Consultations
-              <Badge className="ml-1 sm:ml-2 bg-white/10 text-white border-none text-[10px] sm:text-xs">
+              <Badge className="ml-1 sm:ml-2 bg-accent text-foreground border-none text-[10px] sm:text-xs">
                 {filteredConsultations.length}
               </Badge>
             </TabsTrigger>
@@ -387,7 +387,7 @@ const AdminSupport = () => {
             >
               <MessageSquare className="w-4 h-4 mr-1 sm:mr-2" />
               <span className="hidden xs:inline">Contact </span>Messages
-              <Badge className="ml-1 sm:ml-2 bg-white/10 text-white border-none text-[10px] sm:text-xs">
+              <Badge className="ml-1 sm:ml-2 bg-accent text-foreground border-none text-[10px] sm:text-xs">
                 {filteredInquiries.length}
               </Badge>
             </TabsTrigger>
@@ -400,18 +400,18 @@ const AdminSupport = () => {
                 [1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="h-32 bg-slate-900/40 rounded animate-pulse border border-white/5"
+                    className="h-32 bg-card/40 rounded animate-pulse border border-border"
                   />
                 ))
               ) : filteredTickets.length === 0 ? (
-                <Card className="bg-slate-900/40 border-dashed border-white/10 text-center py-12">
+                <Card className="bg-card/40 border-dashed border-border text-center py-12">
                   <Headset className="w-12 h-12 text-slate-700 mx-auto mb-4" />
-                  <h3 className="text-white font-medium">
+                  <h3 className="text-foreground font-medium">
                     {searchQuery || statusFilter !== "all"
                       ? "No matching tickets found"
                       : "No support tickets found"}
                   </h3>
-                  <p className="text-slate-500 text-sm">
+                  <p className="text-muted-foreground text-sm">
                     {searchQuery || statusFilter !== "all"
                       ? "Try adjusting your search or filters"
                       : "Tickets created by users will appear here"}
@@ -421,7 +421,7 @@ const AdminSupport = () => {
                 filteredTickets.map((ticket) => (
                   <Card
                     key={ticket.id}
-                    className={`bg-slate-900/40 hover:bg-slate-900/60 border-white/10 transition group ${selectedTicketId === ticket.id ? "ring-1 ring-brand-secondary-500/50" : ""}`}
+                    className={`bg-card/40 hover:bg-card/60 border-border transition group ${selectedTicketId === ticket.id ? "ring-1 ring-brand-secondary-500/50" : ""}`}
                   >
                     <CardContent className="p-6">
                       <div className="flex flex-col lg:flex-row justify-between gap-6">
@@ -430,11 +430,11 @@ const AdminSupport = () => {
                             {getStatusBadge(ticket.status)}
                             <Badge
                               variant="outline"
-                              className="border-white/10 text-slate-400 capitalize"
+                              className="border-border text-muted-foreground capitalize"
                             >
                               {ticket.category}
                             </Badge>
-                            <span className="text-xs text-slate-500 flex items-center">
+                            <span className="text-xs text-muted-foreground flex items-center">
                               <Clock className="w-3 h-3 mr-1" />
                               {format(new Date(ticket.createdAt), "PPP")}
                             </span>
@@ -444,37 +444,37 @@ const AdminSupport = () => {
                               <span className="text-brand-secondary-500 font-mono font-bold">
                                 #{ticket.ticket_no}
                               </span>
-                              <h3 className="text-lg font-bold text-white group-hover:text-brand-secondary-400 transition-colors uppercase tracking-tight">
+                              <h3 className="text-lg font-bold text-foreground group-hover:text-brand-secondary-400 transition-colors uppercase tracking-tight">
                                 {ticket.subject}
                               </h3>
                             </div>
                             <p
-                              className={`text-slate-400 text-sm mt-1 ${selectedTicketId === ticket.id ? "" : "line-clamp-2"}`}
+                              className={`text-muted-foreground text-sm mt-1 ${selectedTicketId === ticket.id ? "" : "line-clamp-2"}`}
                             >
                               {ticket.message}
                             </p>
                           </div>
-                          <div className="flex flex-wrap items-center gap-6 pt-2 border-t border-white/5">
+                          <div className="flex flex-wrap items-center gap-6 pt-2 border-t border-border">
                             <div className="flex items-center gap-2">
                               <div className="w-6 h-6 rounded-full bg-brand-secondary-500/10 flex items-center justify-center">
                                 <span className="text-[10px] font-bold text-brand-secondary-500">
                                   {ticket.name.charAt(0)}
                                 </span>
                               </div>
-                              <span className="text-xs font-medium text-slate-300">
+                              <span className="text-xs font-medium text-muted-foreground">
                                 {ticket.name}
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <Mail className="w-3 h-3 text-slate-500" />
-                              <span className="text-xs text-slate-500">
+                              <Mail className="w-3 h-3 text-muted-foreground" />
+                              <span className="text-xs text-muted-foreground">
                                 {ticket.email}
                               </span>
                             </div>
                             {ticket.phone && (
                               <div className="flex items-center gap-2">
-                                <Phone className="w-3 h-3 text-slate-500" />
-                                <span className="text-xs text-slate-500">
+                                <Phone className="w-3 h-3 text-muted-foreground" />
+                                <span className="text-xs text-muted-foreground">
                                   {ticket.phone}
                                 </span>
                               </div>
@@ -491,7 +491,7 @@ const AdminSupport = () => {
                                   : ticket.id,
                               )
                             }
-                            className="text-slate-400 hover:text-white hover:bg-white/5"
+                            className="text-muted-foreground hover:text-foreground hover:bg-accent"
                           >
                             {selectedTicketId === ticket.id
                               ? "Hide Details"
@@ -499,25 +499,25 @@ const AdminSupport = () => {
                           </Button>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" className="text-slate-400 hover:text-white hover:bg-white/5">
+                              <Button variant="ghost" className="text-muted-foreground hover:text-foreground hover:bg-accent">
                                 <MessageSquare className="w-4 h-4 mr-1" />
                                 Contact
                               </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="bg-slate-900 border-white/10">
-                              <DropdownMenuItem onSelect={() => handleReplyEmail(ticket.email, ticket.subject, ticket.name)} className="text-slate-300 hover:text-white focus:bg-white/5 cursor-pointer">
+                            <DropdownMenuContent align="end" className="bg-card border-border">
+                              <DropdownMenuItem onSelect={() => handleReplyEmail(ticket.email, ticket.subject, ticket.name)} className="text-muted-foreground hover:text-foreground focus:bg-accent/50 cursor-pointer">
                                 <Mail className="w-4 h-4 mr-2" />
                                 Email
                               </DropdownMenuItem>
                               {ticket.phone && (
                                 <>
-                                  <DropdownMenuItem asChild className="text-slate-300 hover:text-white focus:bg-white/5 cursor-pointer">
+                                  <DropdownMenuItem asChild className="text-muted-foreground hover:text-foreground focus:bg-accent/50 cursor-pointer">
                                     <a href={`tel:${ticket.phone}`}>
                                       <PhoneCall className="w-4 h-4 mr-2" />
                                       Call
                                     </a>
                                   </DropdownMenuItem>
-                                  <DropdownMenuItem asChild className="text-slate-300 hover:text-white focus:bg-white/5 cursor-pointer">
+                                  <DropdownMenuItem asChild className="text-muted-foreground hover:text-foreground focus:bg-accent/50 cursor-pointer">
                                     <a href={`https://wa.me/${ticket.phone.replace(/^0/, '233').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer">
                                       <MessageCircle className="w-4 h-4 mr-2 text-green-400" />
                                       WhatsApp
@@ -551,19 +551,19 @@ const AdminSupport = () => {
                 [1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="h-80 bg-slate-900/40 rounded animate-pulse border border-white/5"
+                    className="h-80 bg-card/40 rounded animate-pulse border border-border"
                   />
                 ))
               ) : filteredConsultations.length === 0 ? (
                 <div className="col-span-full">
-                  <Card className="bg-slate-900/40 border-dashed border-white/10 text-center py-12">
+                  <Card className="bg-card/40 border-dashed border-border text-center py-12">
                     <Calendar className="w-12 h-12 text-slate-700 mx-auto mb-4" />
-                    <h3 className="text-white font-medium">
+                    <h3 className="text-foreground font-medium">
                       {searchQuery || statusFilter !== "all"
                         ? "No matching consultations found"
                         : "No consultations scheduled"}
                     </h3>
-                    <p className="text-slate-500 text-sm">
+                    <p className="text-muted-foreground text-sm">
                       {searchQuery || statusFilter !== "all"
                         ? "Try adjusting your search or filters"
                         : "Booking requests will appear here"}
@@ -574,7 +574,7 @@ const AdminSupport = () => {
                 filteredConsultations.map((c) => (
                   <Card
                     key={c.id}
-                    className="bg-slate-900/40 border-white/10 hover:border-brand-secondary-500/30 transition flex flex-col h-full"
+                    className="bg-card/40 border-border hover:border-brand-secondary-500/30 transition flex flex-col h-full"
                   >
                     <CardHeader className="pb-4">
                       <div className="flex justify-between items-start">
@@ -588,14 +588,14 @@ const AdminSupport = () => {
                           <DropdownMenuTrigger asChild>
                             <Button
                               variant="ghost"
-                              className="h-8 w-8 p-0 text-slate-400 hover:text-white"
+                              className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
                             >
                               <MoreVertical className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent
                             align="end"
-                            className="bg-slate-900 border-white/10"
+                            className="bg-card border-border"
                           >
                             <DropdownMenuItem
                               onSelect={() =>
@@ -606,7 +606,7 @@ const AdminSupport = () => {
                                   currentTime: c.time,
                                 })
                               }
-                              className="text-slate-300 hover:text-white focus:bg-white/5 cursor-pointer"
+                              className="text-muted-foreground hover:text-foreground focus:bg-accent/50 cursor-pointer"
                             >
                               Reschedule
                             </DropdownMenuItem>
@@ -618,7 +618,7 @@ const AdminSupport = () => {
                                   "Cancelled",
                                 )
                               }
-                              className="text-slate-300 hover:text-white focus:bg-white/5"
+                              className="text-muted-foreground hover:text-foreground focus:bg-accent/50"
                             >
                               Cancel
                             </DropdownMenuItem>
@@ -633,10 +633,10 @@ const AdminSupport = () => {
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
-                      <CardTitle className="text-white text-lg">
+                      <CardTitle className="text-foreground text-lg">
                         {c.name}
                       </CardTitle>
-                      <CardDescription className="text-slate-500 flex items-center gap-1">
+                      <CardDescription className="text-muted-foreground flex items-center gap-1">
                         <Clock className="w-3 h-3" />
                         Requested on {format(new Date(c.createdAt), "PP")}
                       </CardDescription>
@@ -644,18 +644,18 @@ const AdminSupport = () => {
                     <CardContent className="space-y-4 flex-1">
                       <div className="bg-slate-950/50 rounded p-4 space-y-3">
                         <div className="flex items-center justify-between">
-                          <span className="text-xs text-slate-500 font-mono uppercase tracking-widest">
+                          <span className="text-xs text-muted-foreground font-mono uppercase tracking-widest">
                             Date
                           </span>
-                          <span className="text-xs font-bold text-white">
+                          <span className="text-xs font-bold text-foreground">
                             {format(new Date(c.date), "PPP")}
                           </span>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-xs text-slate-500 font-mono uppercase tracking-widest">
+                          <span className="text-xs text-muted-foreground font-mono uppercase tracking-widest">
                             Time
                           </span>
-                          <span className="text-xs font-bold text-white">
+                          <span className="text-xs font-bold text-foreground">
                             {c.time}
                           </span>
                         </div>
@@ -663,25 +663,25 @@ const AdminSupport = () => {
                       <div className="space-y-2">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="w-full justify-start text-slate-400 hover:text-white border-white/10 bg-slate-950/50 hover:bg-white/5 rounded group">
+                            <Button variant="outline" className="w-full justify-start text-muted-foreground hover:text-foreground border-border bg-slate-950/50 hover:bg-accent rounded group">
                               <MessageSquare className="w-4 h-4 mr-2" />
                               Contact Customer
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="start" className="w-64 bg-slate-900 border-white/10">
-                            <DropdownMenuItem onSelect={() => handleReplyEmail(c.email, `Consultation: ${c.service}`, c.name)} className="text-slate-300 hover:text-white focus:bg-white/5 cursor-pointer">
+                          <DropdownMenuContent align="start" className="w-64 bg-card border-border">
+                            <DropdownMenuItem onSelect={() => handleReplyEmail(c.email, `Consultation: ${c.service}`, c.name)} className="text-muted-foreground hover:text-foreground focus:bg-accent/50 cursor-pointer">
                               <Mail className="w-4 h-4 mr-2 text-brand-secondary-500" />
                               Email ({c.email})
                             </DropdownMenuItem>
                             {c.phone && (
                               <>
-                                <DropdownMenuItem asChild className="text-slate-300 hover:text-white focus:bg-white/5 cursor-pointer">
+                                <DropdownMenuItem asChild className="text-muted-foreground hover:text-foreground focus:bg-accent/50 cursor-pointer">
                                   <a href={`tel:${c.phone}`}>
                                     <PhoneCall className="w-4 h-4 mr-2 text-brand-secondary-500" />
                                     Call ({c.phone})
                                   </a>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem asChild className="text-slate-300 hover:text-white focus:bg-white/5 cursor-pointer">
+                                <DropdownMenuItem asChild className="text-muted-foreground hover:text-foreground focus:bg-accent/50 cursor-pointer">
                                   <a href={`https://wa.me/${c.phone.replace(/^0/, '233').replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer">
                                     <MessageCircle className="w-4 h-4 mr-2 text-green-500" />
                                     WhatsApp
@@ -693,8 +693,8 @@ const AdminSupport = () => {
                         </DropdownMenu>
                       </div>
                       {c.message && (
-                        <div className="pt-4 border-t border-white/5 mt-auto">
-                          <p className="text-xs text-slate-500 italic">
+                        <div className="pt-4 border-t border-border mt-auto">
+                          <p className="text-xs text-muted-foreground italic">
                             "{c.message}"
                           </p>
                         </div>
@@ -726,27 +726,27 @@ const AdminSupport = () => {
 
           {/* Inquiries Content */}
           <TabsContent value="inquiries">
-            <div className="bg-slate-900/40 rounded border border-white/10 overflow-hidden">
+            <div className="bg-card/40 rounded border border-border overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left min-w-200">
-                  <thead className="bg-white/5 border-b border-white/5">
+                  <thead className="bg-accent/50 border-b border-border">
                     <tr>
-                      <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-slate-500">
+                      <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
                         Contact
                       </th>
-                      <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-slate-500">
+                      <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
                         Subject
                       </th>
-                      <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-slate-500">
+                      <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
                         Message
                       </th>
-                      <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-slate-500">
+                      <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
                         Date
                       </th>
-                      <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-slate-500">
+                      <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
                         Status
                       </th>
-                      <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-slate-500">
+                      <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
                         Actions
                       </th>
                     </tr>
@@ -762,12 +762,12 @@ const AdminSupport = () => {
                       <tr>
                         <td colSpan={6} className="px-6 py-20 text-center">
                           <MessageSquare className="w-12 h-12 text-slate-700 mx-auto mb-4" />
-                          <h3 className="text-white font-medium">
+                          <h3 className="text-foreground font-medium">
                             {searchQuery || statusFilter !== "all"
                               ? "No matching messages found"
                               : "No contact messages"}
                           </h3>
-                          <p className="text-slate-500 text-sm">
+                          <p className="text-muted-foreground text-sm">
                             {searchQuery || statusFilter !== "all"
                               ? "Try adjusting your search or filters"
                               : "General inquiries will appear here"}
@@ -778,14 +778,14 @@ const AdminSupport = () => {
                       filteredInquiries.map((inquiry) => (
                         <tr
                           key={inquiry.id}
-                          className="hover:bg-white/5 transition-colors group"
+                          className="hover:bg-accent transition-colors group"
                         >
                           <td className="px-6 py-6">
                             <div className="flex flex-col">
-                              <span className="text-sm font-bold text-white">
+                              <span className="text-sm font-bold text-foreground">
                                 {inquiry.name}
                               </span>
-                              <span className="text-xs text-slate-500">
+                              <span className="text-xs text-muted-foreground">
                                 {inquiry.email}
                               </span>
                             </div>
@@ -793,18 +793,18 @@ const AdminSupport = () => {
                           <td className="px-6 py-6">
                             <Badge
                               variant="outline"
-                              className="border-white/10 text-slate-300 font-mono text-[10px] tracking-tight truncate max-w-37.5"
+                              className="border-border text-muted-foreground font-mono text-[10px] tracking-tight truncate max-w-37.5"
                             >
                               {inquiry.subject || "No Subject"}
                             </Badge>
                           </td>
                           <td className="px-6 py-6 max-w-md">
-                            <p className="text-sm text-slate-400 line-clamp-2">
+                            <p className="text-sm text-muted-foreground line-clamp-2">
                               {inquiry.message}
                             </p>
                           </td>
                           <td className="px-6 py-6">
-                            <span className="text-xs text-slate-500">
+                            <span className="text-xs text-muted-foreground">
                               {format(
                                 new Date(inquiry.createdAt),
                                 "MMM d, yyyy",
@@ -826,7 +826,7 @@ const AdminSupport = () => {
                                   )
                                 }
                                 title="Reply via Email"
-                                className="h-8 w-8 p-0 text-slate-500 hover:text-white group-hover:bg-white/10"
+                                className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground group-hover:bg-accent"
                               >
                                 <Mail className="h-4 w-4" />
                               </Button>
@@ -841,7 +841,7 @@ const AdminSupport = () => {
                                     )
                                   }
                                   title="Mark as Responded"
-                                  className="h-8 w-8 p-0 text-slate-500 hover:text-brand-secondary-500 group-hover:bg-white/10"
+                                  className="h-8 w-8 p-0 text-muted-foreground hover:text-brand-secondary-500 group-hover:bg-accent"
                                 >
                                   <ArrowRight className="h-4 w-4" />
                                 </Button>
@@ -851,7 +851,7 @@ const AdminSupport = () => {
                                 onClick={() =>
                                   confirmDelete("inquiry", inquiry.id)
                                 }
-                                className="h-8 w-8 p-0 text-red-500/60 hover:text-red-500 group-hover:bg-white/10"
+                                className="h-8 w-8 p-0 text-red-500/60 hover:text-red-500 group-hover:bg-accent"
                               >
                                 <Trash2 className="h-4 w-4" />
                               </Button>
@@ -873,7 +873,7 @@ const AdminSupport = () => {
           title={`Delete ${deleteModal.type === "consultation" ? "Consultation" : "Inquiry"}`}
         >
           <div className="space-y-4">
-            <p className="text-slate-300">
+            <p className="text-muted-foreground">
               Are you sure you want to delete this{" "}
               {deleteModal.type === "consultation" ? "consultation" : "inquiry"}
               ? This action cannot be undone.
@@ -884,7 +884,7 @@ const AdminSupport = () => {
                 onClick={() =>
                   setDeleteModal({ ...deleteModal, isOpen: false })
                 }
-                className="border-white/10 text-slate-300 hover:text-white"
+                className="border-border text-muted-foreground hover:text-foreground"
               >
                 Cancel
               </Button>
@@ -914,7 +914,7 @@ const AdminSupport = () => {
           <form onSubmit={handleReschedule} className="space-y-4">
             <div className="flex flex-col sm:flex-row gap-2">
             <div className="flex-1">
-              <label className="block text-sm font-medium text-slate-300 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 New Date
               </label>
               <Input
@@ -928,11 +928,11 @@ const AdminSupport = () => {
                     currentDate: e.target.value,
                   })
                 }
-                className="bg-slate-900/50 border-white/10 text-white"
+                className="bg-card/50 border-border text-foreground"
               />
             </div>
             <div className="flex-1">
-              <label className="block text-sm font-medium text-slate-300 mb-1">
+              <label className="block text-sm font-medium text-muted-foreground mb-1">
                 New Time
               </label>
               <select
@@ -944,7 +944,7 @@ const AdminSupport = () => {
                     currentTime: e.target.value,
                   })
                 }
-                className="flex h-10 w-full rounded-md border border-white/10 bg-slate-900/50 px-3 py-2 text-sm text-white focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500"
+                className="flex h-10 w-full rounded-md border border-border bg-card/50 px-3 py-2 text-sm text-foreground focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500"
               >
                 <option value="" disabled>
                   Select a time slot
@@ -958,14 +958,14 @@ const AdminSupport = () => {
                   "03:00 PM",
                   "04:00 PM",
                 ].map((slot) => (
-                  <option key={slot} value={slot} className="bg-slate-900">
+                  <option key={slot} value={slot} className="bg-card">
                     {slot}
                   </option>
                 ))}
               </select>
             </div>
             </div>
-            <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
+            <div className="flex justify-end gap-3 pt-4 border-t border-border">
               <Button
                 type="button"
                 variant="outline"
@@ -977,7 +977,7 @@ const AdminSupport = () => {
                     currentTime: "",
                   })
                 }
-                className="border-white/10 text-slate-300 hover:text-white"
+                className="border-border text-muted-foreground hover:text-foreground"
               >
                 Cancel
               </Button>

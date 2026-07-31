@@ -234,35 +234,35 @@ export default function AdminCreateInvoice() {
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-20">
       {/* Sticky Header Action Bar */}
-      <div className="sticky top-20 bg-slate-950/80 backdrop-blur-md z-20 py-4 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300">
+      <div className="sticky top-20 bg-slate-950/80 backdrop-blur-md z-20 py-4 border-b border-border flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300">
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
-            className="text-slate-400 hover:text-white"
+            className="text-muted-foreground hover:text-foreground"
             onClick={() => router.push("/admin/orders")}
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-white">
+            <h1 className="text-2xl font-bold text-foreground">
               Create New {mode === "invoice" ? "Invoice" : "Quote"}
             </h1>
-            <p className="text-slate-400 text-sm">
+            <p className="text-muted-foreground text-sm">
               Manually create orders or quotes for customers.
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex bg-slate-900 p-1 rounded border border-white/10 shrink-0">
+          <div className="flex bg-card p-1 rounded border border-border shrink-0">
             <button
               onClick={() => setMode("invoice")}
               className={cn(
                 "px-3.5 py-1.5 rounded text-xs font-bold transition flex items-center gap-1.5 select-none",
                 mode === "invoice"
                   ? "bg-brand-secondary-600 text-white shadow shadow-brand-secondary-500/25"
-                  : "text-slate-400 hover:text-white"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               <FileSpreadsheet className="w-3.5 h-3.5" /> Invoice
@@ -272,8 +272,8 @@ export default function AdminCreateInvoice() {
               className={cn(
                 "px-3.5 py-1.5 rounded text-xs font-bold transition flex items-center gap-1.5 select-none",
                 mode === "quote"
-                  ? "bg-blue-600 text-white shadow shadow-blue-500/25"
-                  : "text-slate-400 hover:text-white"
+                  ? "bg-blue-600 text-foreground shadow shadow-blue-500/25"
+                  : "text-muted-foreground hover:text-foreground"
               )}
             >
               <FileText className="w-3.5 h-3.5" /> Quote
@@ -284,7 +284,7 @@ export default function AdminCreateInvoice() {
             <Button
               type="button"
               variant="ghost"
-              className="text-slate-400 hover:text-white"
+              className="text-muted-foreground hover:text-foreground"
               onClick={() => router.push("/admin/orders")}
             >
               Cancel
@@ -327,7 +327,7 @@ export default function AdminCreateInvoice() {
                 Draft autosave is enabled for this form.
               </span>
             </div>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-muted-foreground">
               {draftSavedAt
                 ? `Last saved ${new Date(draftSavedAt).toLocaleString()}.`
                 : "Your changes will be saved locally as you type."}
@@ -346,7 +346,7 @@ export default function AdminCreateInvoice() {
               type="button"
               variant="ghost"
               onClick={clearDraft}
-              className="text-slate-300 hover:text-white hover:bg-white/5"
+              className="text-muted-foreground hover:text-foreground hover:bg-accent"
             >
               Clear draft
             </Button>
@@ -378,11 +378,11 @@ export default function AdminCreateInvoice() {
           />
 
           {/* Desktop Secondary Action Bar */}
-          <div className="hidden md:flex items-center gap-3 pt-6 border-t border-white/5">
+          <div className="hidden md:flex items-center gap-3 pt-6 border-t border-border">
             <Button
               type="button"
               variant="ghost"
-              className="text-slate-400 hover:text-white"
+              className="text-muted-foreground hover:text-foreground"
               onClick={() => router.push("/admin/orders")}
             >
               Cancel
@@ -424,11 +424,11 @@ export default function AdminCreateInvoice() {
       </div>
 
       {/* Mobile Sticky Bottom Action Dock */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/90 backdrop-blur-md border-t border-white/10 p-4 flex items-center justify-between gap-4 md:hidden shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-slate-950/90 backdrop-blur-md border-t border-border p-4 flex items-center justify-between gap-4 md:hidden shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
         <Button
           type="button"
           variant="ghost"
-          className="text-slate-400 hover:text-white w-1/3"
+          className="text-muted-foreground hover:text-foreground w-1/3"
           onClick={() => router.push("/admin/orders")}
         >
           Cancel
