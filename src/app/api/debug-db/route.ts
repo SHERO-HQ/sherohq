@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { query } from "@/lib/db";
 
 export async function GET() {
-  const dbUrl = process.env.DATABASE_URL || "";
+  const dbUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL || "";
   const pgUrl = process.env.POSTGRES_URL || "";
   const pgPrisma = process.env.POSTGRES_PRISMA_URL || "";
   

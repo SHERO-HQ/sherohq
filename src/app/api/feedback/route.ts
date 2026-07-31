@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     const message = String(body.message).trim();
 
     // Try to persist to DB if available
-    if (process.env.DATABASE_URL) {
+    if (process.env.POSTGRES_URL || process.env.DATABASE_URL) {
       try {
         const insertSql = `
           INSERT INTO customer_feedback (name, email, rating, message, page, created_at)

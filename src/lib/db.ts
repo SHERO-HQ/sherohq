@@ -12,9 +12,9 @@ function getPool(): Pool {
   if (pool) return pool;
 
   const candidates = [
-    process.env.DATABASE_URL,
     process.env.POSTGRES_URL,
     process.env.POSTGRES_URL_NON_POOLING,
+    process.env.DATABASE_URL,
   ];
 
   const validUrl = candidates.find(

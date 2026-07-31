@@ -2,7 +2,7 @@ import React from "react";
 import { query as dbQuery } from "../../../lib/db";
 
 export default async function Page() {
-  if (!process.env.DATABASE_URL) {
+  if (!process.env.POSTGRES_URL && !process.env.DATABASE_URL) {
     return (
       <div style={{ padding: 24 }}>
         <h2>Feedback admin</h2>
