@@ -22,6 +22,8 @@ import { useDialog } from "@/hooks/useDialog";
 import type { Product } from "@/types/product";
 import AppImage from "@/components/common/AppImage";
 import { getImageUrl } from "@/services/api";
+import { ChatProductCard } from "./chat/ChatProductCard";
+import { LiveTrackingCard } from "./chat/LiveTrackingCard";
 
 type TrackingData = {
   id?: string | number;
@@ -34,85 +36,7 @@ type TriggerDetail = {
   open?: boolean;
 };
 
-const ChatProductCard = ({ product }: { product: Product }) => {
-  const { addItem, setIsCartOpen } = useCart();
-  const discount = product.originalPrice
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-    : 0;
 
-  return (
-    <div
-      onClick={() => {
-        window.location.href = `/shop/${product.slug || product.sku || product.id}`;
-      }}
-      className="group relative rounded overflow-hidden bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 hover:border-brand-secondary-500/80 dark:hover:border-brand-secondary-500/80 hover:shadow-lg transition-all duration-300 flex flex-col h-full cursor-pointer w-full"
-    >
-      {/* Compact Image */}
-      <div className="relative aspect-video w-full bg-slate-50 dark:bg-slate-950 overflow-hidden shrink-0 border-b border-slate-150 dark:border-slate-800/60">
-        {product.image && (product.image.startsWith("/uploads") || product.image.startsWith("http")) ? (
-          <AppImage
-            src={getImageUrl(product.image)}
-            alt={product.name}
-            fill
-            sizes="160px"
-            className="object-contain p-2 group-hover:scale-105 transition-transform duration-300"
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center text-3xl select-none opacity-30">
-            {product.image}
-          </div>
-        )}
-        {/* Badges */}
-        <div className="absolute top-1.5 left-1.5 flex gap-1">
-          {discount > 0 && (
-            <span className="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase bg-red-500 text-white leading-none">
-              -{discount}%
-            </span>
-          )}
-          {!product.inStock && (
-            <span className="px-1.5 py-0.5 rounded text-[8px] font-bold uppercase bg-slate-950/80 text-white leading-none">
-              Sold Out
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="p-2.5 flex flex-col flex-1 gap-1">
-        <span className="text-[8px] font-bold font-mono text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest block">
-          {product.category}
-        </span>
-        <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 leading-tight line-clamp-1 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors">
-          {product.name}
-        </h4>
-        <div className="flex items-center justify-between mt-auto pt-2 gap-2">
-          <span className="text-xs font-extrabold text-slate-900 dark:text-white leading-none">
-            GHS {product.price.toLocaleString("en-GH")}
-          </span>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              if (!product.inStock) return;
-              addItem({
-                id: product.id,
-                name: product.name,
-                price: product.price,
-                image: product.image,
-                category: product.category,
-              });
-              setIsCartOpen(true);
-            }}
-            disabled={!product.inStock}
-            className="px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded transition-colors disabled:opacity-50 cursor-pointer active:scale-95 shrink-0"
-          >
-            + Add
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const INITIAL_ASSISTANT_MESSAGE: ChatMessage = {
   id: "initial",
@@ -121,99 +45,7 @@ const INITIAL_ASSISTANT_MESSAGE: ChatMessage = {
     "Hi! I'm your Shero Expert. How can I help you with IT solutions or products today?",
 };
 
-const LiveTrackingCard = ({
-  id,
-  type,
-}: {
-  id: string;
-  type: "order" | "ticket";
-}) => {
-  const [data, setData] = useState<TrackingData | null>(null);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const url =
-          type === "order"
-            ? `/api/orders/track/${id}`
-            : `/api/tickets/track/${id}`;
-        const res = await fetch(url);
-        if (res.ok) {
-          const json = await res.json();
-          setData(json);
-        }
-      } catch (e) {
-        console.error("Tracking Error:", e);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, [id, type]);
-
-  if (loading)
-    return (
-      <div className="mt-3 w-full p-3 bg-slate-50 border border-slate-200 rounded animate-pulse h-20" />
-    );
-
-  if (!data)
-    return (
-      <div className="mt-3 w-full p-3 bg-red-50 border border-red-100 rounded">
-        <p className="text-[10px] font-bold text-red-600 uppercase">
-          Tracking Failed
-        </p>
-        <p className="text-xs text-red-500">
-          Could not find {type} #{id}
-        </p>
-      </div>
-    );
-
-  return (
-    <div
-      className={`mt-3 w-full p-3 ${type === "order" ? "bg-brand-secondary-50 border-brand-secondary-100" : "bg-blue-50 border-blue-100"} border rounded`}
-    >
-      <div className="flex items-center gap-3 mb-2">
-        {type === "order" ? (
-          <Package size={16} className="text-brand-secondary-600" />
-        ) : (
-          <Ticket size={16} className="text-blue-600" />
-        )}
-        <span
-          className={`text-[10px] font-bold ${type === "order" ? "text-brand-secondary-600" : "text-blue-600"} uppercase`}
-        >
-          Live {type} Status
-        </span>
-      </div>
-      <div
-        className={`flex justify-between items-center bg-white p-2 rounded border ${type === "order" ? "border-brand-secondary-100" : "border-blue-100"}`}
-      >
-        <div>
-          <p className="text-[10px] text-slate-500 uppercase">{type} ID</p>
-          <p className="text-xs font-bold text-slate-800 tracking-tighter">
-            #{data.ticket_no || data.id}
-          </p>
-        </div>
-        <div className="text-right">
-          <p className="text-[10px] text-slate-500 uppercase">Status</p>
-          <div
-            className={`px-2 py-0.5 ${type === "order" ? "bg-brand-secondary-100 text-brand-secondary-700" : "bg-blue-100 text-blue-700"} rounded-full text-[9px] font-bold uppercase`}
-          >
-            {data.status}
-          </div>
-        </div>
-      </div>
-      {type === "order" && (
-        <Link
-          href={`/profile/orders`}
-          className="mt-2 block text-center text-[10px] font-bold text-brand-secondary-600 hover:underline"
-        >
-          View Full Details
-        </Link>
-      )}
-    </div>
-  );
-};
 
 export default function AIChatAssistant() {
   const { addItem, setIsCartOpen } = useCart();

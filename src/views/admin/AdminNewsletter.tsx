@@ -50,6 +50,11 @@ import {
 } from "@/services/api";
 import { getErrorMessage } from "@/utils/error";
 
+import { NewsletterStats } from "@/components/admin/newsletter/NewsletterStats";
+import { NewsletterHistoryTab } from "@/components/admin/newsletter/NewsletterHistoryTab";
+import { NewsletterSubscribersTab } from "@/components/admin/newsletter/NewsletterSubscribersTab";
+
+
 type SubscriberFilter = "all" | "active" | "unsubscribed";
 type AudienceStatusFilter = "active" | "unsubscribed" | "all";
 type CampaignChannel = "email" | "sms" | "whatsapp";
@@ -659,36 +664,14 @@ export default function AdminNewsletter() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
-        <MetricTile
-          label="Total Subscribers"
-          value={counts.total}
-          detail={`${activeRate}% active`}
-          icon={Users}
-          tone="slate"
-        />
-        <MetricTile
-          label="Active Audience"
-          value={counts.active}
-          detail={`${counts.unsubscribed} unsubscribed`}
-          icon={CheckCircle2}
-          tone="green"
-        />
-        <MetricTile
-          label="Delivery Rate"
-          value={`${deliveryRate}%`}
-          detail={`${deliveryStats.sent}/${deliveryStats.targets} delivered`}
-          icon={Send}
-          tone="blue"
-        />
-        <MetricTile
-          label="Current Target"
-          value={estimatedAudience}
-          detail={`${audienceStatus} audience`}
-          icon={Target}
-          tone="amber"
-        />
-      </div>
+      <NewsletterStats
+        counts={counts}
+        activeRate={activeRate}
+        deliveryRate={deliveryRate}
+        deliveryStats={deliveryStats}
+        estimatedAudience={estimatedAudience as number}
+        audienceStatus={audienceStatus}
+      />
 
       <Tabs defaultValue="compose" className="w-full">
         <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded border border-border bg-slate-950/40 p-1 text-muted-foreground sm:grid-cols-3 lg:inline-grid lg:w-auto">
@@ -1028,349 +1011,33 @@ export default function AdminNewsletter() {
           </div>
         </TabsContent>
 
-        <TabsContent value="history" className="mt-5">
-          <section className={panelClass}>
-            <div className="flex flex-col gap-3 border-b border-border p-4 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h2 className="text-base font-semibold text-foreground">
-                  Campaign history
-                </h2>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {campaigns.length} recent campaigns
-                </p>
-              </div>
-              <Button
-                onClick={() => void handleProcessScheduled()}
-                disabled={isProcessingScheduled}
-                variant="outline"
-                className="border-border text-muted-foreground hover:text-foreground"
-              >
-                <Play className="h-4 w-4" />
-                Process Scheduled
-              </Button>
-            </div>
+        <NewsletterHistoryTab
+          campaigns={campaigns}
+          isCampaignHistoryLoading={isCampaignHistoryLoading}
+          isProcessingScheduled={isProcessingScheduled}
+          isCancellingCampaign={isCancellingCampaign}
+          isDeletingCampaign={isDeletingCampaign}
+          onProcessScheduled={handleProcessScheduled}
+          onCancelCampaign={handleCancelCampaign}
+          onDeleteCampaign={handleDeleteCampaign}
+        />
 
-            <div className="p-4">
-              {isCampaignHistoryLoading ? (
-                <EmptyState title="Loading campaign history..." />
-              ) : campaigns.length === 0 ? (
-                <EmptyState title="No campaigns yet." />
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full min-w-225 text-sm">
-                    <thead>
-                      <tr className="border-b border-border text-left text-[11px] uppercase tracking-wide text-muted-foreground">
-                        <th className="px-3 py-3 font-semibold">Campaign</th>
-                        <th className="px-3 py-3 font-semibold">Channel</th>
-                        <th className="px-3 py-3 font-semibold">Status</th>
-                        <th className="px-3 py-3 font-semibold">Audience</th>
-                        <th className="px-3 py-3 font-semibold">Delivery</th>
-                        <th className="px-3 py-3 font-semibold">Scheduled</th>
-                        <th className="px-3 py-3 font-semibold">Sent</th>
-                        <th className="px-3 py-3 text-right font-semibold">
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {campaigns.map((campaign) => {
-                        const StatusIcon = statusIcon(campaign.status);
-                        const progress =
-                          campaign.totalTargets > 0
-                            ? Math.min(
-                                100,
-                                Math.round(
-                                  (campaign.sentCount / campaign.totalTargets) *
-                                    100,
-                                ),
-                              )
-                            : 0;
-
-                        return (
-                          <tr
-                            key={campaign.id}
-                            className="border-b border-border text-muted-foreground transition hover:bg-white/3"
-                          >
-                            <td className="px-3 py-4">
-                              <div
-                                className="max-w-70 truncate font-medium text-foreground"
-                                title={campaign.subject}
-                              >
-                                {campaign.subject}
-                              </div>
-                            </td>
-                            <td className="px-3 py-4">
-                              <Badge className="border-border bg-accent/50 text-muted-foreground uppercase">
-                                {campaign.channel}
-                              </Badge>
-                            </td>
-                            <td className="px-3 py-4">
-                              <Badge
-                                className={cn(
-                                  "gap-1.5 capitalize",
-                                  campaignStatusClass(campaign.status),
-                                )}
-                              >
-                                <StatusIcon className="h-3 w-3" />
-                                {campaign.status}
-                              </Badge>
-                            </td>
-                            <td className="px-3 py-4">
-                              <span className="capitalize">
-                                {campaign.audienceStatus}
-                              </span>
-                              {campaign.audienceSource ? (
-                                <span className="text-muted-foreground">
-                                  {" "}
-                                  / {campaign.audienceSource}
-                                </span>
-                              ) : null}
-                            </td>
-                            <td className="px-3 py-4">
-                              <div className="min-w-37.5">
-                                <div className="flex items-center justify-between text-xs">
-                                  <span>
-                                    {campaign.sentCount}/{campaign.totalTargets}
-                                  </span>
-                                  {campaign.failedCount > 0 ? (
-                                    <span className="text-rose-300">
-                                      {campaign.failedCount} failed
-                                    </span>
-                                  ) : null}
-                                </div>
-                                <div className="mt-2 h-1.5 overflow-hidden rounded bg-muted">
-                                  <div
-                                    className="h-full rounded bg-brand-secondary-500"
-                                    style={{ width: `${progress}%` }}
-                                  />
-                                </div>
-                              </div>
-                            </td>
-                            <td className="px-3 py-4 text-muted-foreground">
-                              {safeDate(campaign.scheduledAt, "MMM d, p")}
-                            </td>
-                            <td className="px-3 py-4 text-muted-foreground">
-                              {safeDate(campaign.sentAt, "MMM d, p")}
-                            </td>
-                            <td className="px-3 py-4">
-                              <div className="flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-end">
-                                {campaign.status === "scheduled" ? (
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="h-8 border-sky-500/20 text-sky-300 hover:bg-sky-500/10"
-                                    onClick={() =>
-                                      void handleCancelCampaign(campaign.id)
-                                    }
-                                    disabled={
-                                      isCancellingCampaign === campaign.id
-                                    }
-                                  >
-                                    Cancel
-                                  </Button>
-                                ) : null}
-                                <Button
-                                  size="icon"
-                                  variant="outline"
-                                  aria-label={`Delete campaign ${campaign.subject}`}
-                                  className="h-8 w-8 border-rose-500/20 text-rose-300 hover:bg-rose-500/10"
-                                  onClick={() =>
-                                    void handleDeleteCampaign(campaign.id)
-                                  }
-                                  disabled={isDeletingCampaign === campaign.id}
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-          </section>
-        </TabsContent>
-
-        <TabsContent value="subscribers" className="mt-5">
-          <section className={panelClass}>
-            <div className="flex flex-col gap-4 border-b border-border p-4 lg:flex-row lg:items-end lg:justify-between">
-              <div>
-                <h2 className="text-base font-semibold text-foreground">
-                  Subscribers
-                </h2>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {sortedSubscribers.length} visible records
-                </p>
-              </div>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,280px)_170px]">
-                <Input
-                  value={searchQuery}
-                  onChange={(event) => setSearchQuery(event.target.value)}
-                  placeholder="Search subscribers"
-                  leftIcon={<Search className="h-4 w-4" />}
-                  className={inputClass}
-                />
-                <select
-                  value={statusFilter}
-                  onChange={(event) =>
-                    setStatusFilter(event.target.value as SubscriberFilter)
-                  }
-                  className={selectClass}
-                  aria-label="Subscriber status filter"
-                >
-                  <option value="all">All statuses</option>
-                  <option value="active">Active</option>
-                  <option value="unsubscribed">Unsubscribed</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="p-4">
-              {isLoading ? (
-                <EmptyState title="Loading subscribers..." />
-              ) : sortedSubscribers.length === 0 ? (
-                <EmptyState title="No subscribers found for this filter." />
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full min-w-220 text-sm">
-                    <thead>
-                      <tr className="border-b border-border text-left text-[11px] uppercase tracking-wide text-muted-foreground">
-                        <th className="px-3 py-3 font-semibold">Subscriber</th>
-                        <th className="px-3 py-3 font-semibold">Phone</th>
-                        <th className="px-3 py-3 font-semibold">Source</th>
-                        <th className="px-3 py-3 font-semibold">Subscribed</th>
-                        <th className="px-3 py-3 font-semibold">
-                          Last campaign
-                        </th>
-                        <th className="px-3 py-3 font-semibold">Status</th>
-                        <th className="px-3 py-3 text-right font-semibold">
-                          Actions
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {sortedSubscribers.map((subscriber) => (
-                        <tr
-                          key={subscriber.id}
-                          className="border-b border-border text-muted-foreground transition hover:bg-white/3"
-                        >
-                          <td className="px-3 py-4">
-                            <div className="font-medium text-foreground">
-                              {subscriber.email}
-                            </div>
-                            {subscriber.name ? (
-                              <div className="mt-1 text-xs text-muted-foreground">
-                                {subscriber.name}
-                              </div>
-                            ) : null}
-                          </td>
-                          <td className="px-3 py-4">
-                            {editingSubscriberId === subscriber.id ? (
-                              <Input
-                                value={editPhoneValue}
-                                onChange={(event) =>
-                                  setEditPhoneValue(event.target.value)
-                                }
-                                placeholder="+233XXXXXXXXX"
-                                className={cn(inputClass, "h-8")}
-                              />
-                            ) : (
-                              subscriber.phone || "-"
-                            )}
-                          </td>
-                          <td className="px-3 py-4 text-muted-foreground">
-                            {subscriber.source || "-"}
-                          </td>
-                          <td className="px-3 py-4 text-muted-foreground">
-                            {safeDate(subscriber.subscribedAt)}
-                          </td>
-                          <td className="px-3 py-4 text-muted-foreground">
-                            {safeDate(subscriber.lastCampaignAt)}
-                          </td>
-                          <td className="px-3 py-4">
-                            <Badge
-                              className={
-                                subscriber.status === "active"
-                                  ? "border-brand-secondary-500/20 bg-brand-secondary-500/10 text-brand-secondary-300"
-                                  : "border-amber-500/20 bg-amber-500/10 text-amber-300"
-                              }
-                            >
-                              {subscriber.status === "active"
-                                ? "Active"
-                                : "Unsubscribed"}
-                            </Badge>
-                          </td>
-                          <td className="px-3 py-4">
-                            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-end">
-                              {editingSubscriberId === subscriber.id ? (
-                                <>
-                                  <Button
-                                    size="sm"
-                                    className="h-8 bg-brand-secondary-600 text-white hover:bg-brand-secondary-500"
-                                    disabled={isSavingContact}
-                                    onClick={() =>
-                                      void handleSaveSubscriberContact(
-                                        subscriber.id,
-                                      )
-                                    }
-                                  >
-                                    Save
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="h-8 border-border text-muted-foreground hover:text-foreground"
-                                    disabled={isSavingContact}
-                                    onClick={handleCancelEditSubscriber}
-                                  >
-                                    Cancel
-                                  </Button>
-                                </>
-                              ) : (
-                                <>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="h-8 border-border text-muted-foreground hover:text-foreground"
-                                    onClick={() =>
-                                      handleStartEditSubscriber(subscriber)
-                                    }
-                                  >
-                                    Edit Phone
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="h-8 border-border text-muted-foreground hover:text-foreground"
-                                    onClick={() =>
-                                      void handleStatusChange(
-                                        subscriber,
-                                        subscriber.status === "active"
-                                          ? "unsubscribed"
-                                          : "active",
-                                      )
-                                    }
-                                  >
-                                    {subscriber.status === "active"
-                                      ? "Unsubscribe"
-                                      : "Reactivate"}
-                                  </Button>
-                                </>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
-          </section>
-        </TabsContent>
+        <NewsletterSubscribersTab
+          subscribers={sortedSubscribers}
+          isLoading={isLoading}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+          editingSubscriberId={editingSubscriberId}
+          editPhoneValue={editPhoneValue}
+          setEditPhoneValue={setEditPhoneValue}
+          isSavingContact={isSavingContact}
+          onSaveSubscriberContact={handleSaveSubscriberContact}
+          onCancelEditSubscriber={handleCancelEditSubscriber}
+          onStartEditSubscriber={handleStartEditSubscriber}
+          onStatusChange={handleStatusChange}
+        />
       </Tabs>
     </div>
   );

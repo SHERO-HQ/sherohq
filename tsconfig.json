@@ -42,6 +42,7 @@
     "playwright.config.ts",
     "next.config.ts",
     "postcss.config.js",
-    "tailwind.config.ts"
+    "tailwind.config.ts",
+    "test_*.ts"
   ]
 }

@@ -180,8 +180,11 @@ export async function POST(request: NextRequest) {
 
     // Notifications (Async) - Delay sending email unless Cash on Delivery
     if (normalizedPaymentMethod === "cash_on_delivery") {
-      notificationService.sendOrderConfirmation(orderId, shippingInfo, normalizedItems, finalTotal, normalizedPaymentMethod)
-        .catch(err => console.error("Notification failed:", err));
+      try {
+        await notificationService.sendOrderConfirmation(orderId, shippingInfo, normalizedItems, finalTotal, normalizedPaymentMethod);
+      } catch (err) {
+        console.error("Notification failed:", err);
+      }
     }
     
     logActivity(null, "New Order Received", "success", `Order ${orderId.substring(0,8)} placed by ${shippingInfo.firstName}`)
