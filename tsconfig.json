@@ -43,6 +43,7 @@
     "next.config.ts",
     "postcss.config.js",
     "tailwind.config.ts",
-    "test_*.ts"
+    "test_*.ts",
+    "drizzle.config.ts"
   ]
 }
