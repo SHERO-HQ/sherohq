@@ -1,7 +1,11 @@
 /**
  * SHERO Knowledge Hub
- * Condensed catalog and support data to feed into the AI system prompt.
- * SYNCED WITH LIVE DB INVENTORY
+ * 
+ * Condensed catalog fallback, support knowledge, guide mappings,
+ * and company information for the AI system prompt.
+ * 
+ * NOTE: The live catalog is fetched dynamically from the database.
+ * CATALOG_SUMMARY is only used as a fallback when the DB is unreachable.
  */
 
 export const CATALOG_SUMMARY = `
@@ -18,13 +22,41 @@ export const CATALOG_SUMMARY = `
 `;
 
 export const SUPPORT_KNOWLEDGE = `
-- Hardware/Power issues: Check unboxing/power guide (setup-shero-laptop). If it won't boot, try hard reset.
-- Software issues: See Software Installation guide (software-installation-guide).
-- General crashing: If OS crashes, recommend "Troubleshooting Power Issues" (troubleshooting-power) or creating a ticket.
+TROUBLESHOOTING GUIDES
+- Hardware/Power issues: Check the unboxing & power guide (setup-shero-laptop). If it won't boot, try a hard reset (hold power 15s).
+- Software issues: See the Software Installation guide (software-installation-guide) for driver updates, OS reinstalls, and app setup.
+- General crashing: If OS crashes repeatedly, use "Troubleshooting Power Issues" (troubleshooting-power) or escalate to a support ticket.
+- Slow performance: Close heavy startup apps, clear temp files, check for malware, ensure 15%+ free disk space.
+- Network issues: Restart router, check cable connections, verify ISP status, try alternate DNS (8.8.8.8).
+- Overheating: Clean vents, use on hard surface, update BIOS/drivers, check fan with diagnostics.
+
+COMMON QUESTIONS
+- Warranty: All SHERO products include a minimum 3-month warranty. Extended warranties available on request.
+- Returns: 7-day return policy for defective items. Contact support with your order ID.
+- Delivery: Accra same-day or next-day delivery. Other Ghana regions 2-5 business days.
+- Payment: Mobile Money (MTN, Vodafone, AirtelTigo), bank transfer, and cash on delivery available.
+- Business hours: Mon-Fri 9AM-6PM, Sat 10AM-3PM (GMT).
+
+SERVICES OFFERED
+- Managed IT Support: Remote and on-site IT management for businesses.
+- Custom Software Development: Bespoke web, mobile, and enterprise applications.
+- Cyber Security: Network audits, vulnerability assessments, endpoint protection.
+- Cloud Solutions: Migration, hosting, and infrastructure management.
+- Hardware Sales: Laptops, networking equipment, peripherals, and accessories.
 `;
 
 export const GUIDE_MAPPING = [
-  { slug: "setup-shero-laptop", keywords: ["setup", "unboxing", "start", "new"] },
-  { slug: "software-installation-guide", keywords: ["install", "update", "software", "app"] },
-  { slug: "troubleshooting-power", keywords: ["crash", "power", "boot", "battery", "dead", "black screen"] },
+  {
+    slug: "setup-shero-laptop",
+    keywords: ["setup", "unboxing", "start", "new", "first time", "getting started", "configure"],
+  },
+  {
+    slug: "software-installation-guide",
+    keywords: ["install", "update", "software", "app", "driver", "program", "download", "reinstall", "windows"],
+  },
+  {
+    slug: "troubleshooting-power",
+    keywords: ["crash", "power", "boot", "battery", "dead", "black screen", "won't turn on", "shutdown", "restart loop", "blue screen", "bsod"],
+  },
 ];
+

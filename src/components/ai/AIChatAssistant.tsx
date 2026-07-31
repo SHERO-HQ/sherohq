@@ -13,7 +13,7 @@ import {
   Volume2,
   Trash2,
 } from "lucide-react";
-import { type ChatMessage, sendChatMessage } from "@/services/ai/chat";
+import { type ChatMessage, sendChatMessageStreaming } from "@/services/ai/chat";
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { Package, Ticket, Calendar, Brain } from "lucide-react";
@@ -24,6 +24,7 @@ import AppImage from "@/components/common/AppImage";
 import { getImageUrl } from "@/services/api";
 import { ChatProductCard } from "./chat/ChatProductCard";
 import { LiveTrackingCard } from "./chat/LiveTrackingCard";
+import { ChatMarkdown } from "./chat/ChatMarkdown";
 
 type TrackingData = {
   id?: string | number;
@@ -170,19 +171,46 @@ export default function AIChatAssistant() {
       setIsTyping(true);
 
       try {
-        const response = await sendChatMessage({
-          message: userMessage.content,
-          history: historyForRequest,
-          imageData: imageData,
-        });
+        const assistantMsgId = crypto.randomUUID();
+        let fullText = "";
 
-        setMessages((prev) => [...prev, response]);
-        if (isSpeaking) speak(response.content);
+        // Add empty assistant message placeholder
+        setMessages((prev) => [
+          ...prev,
+          { id: assistantMsgId, role: "assistant", content: "" },
+        ]);
+
+        const responseMetadata = await sendChatMessageStreaming(
+          {
+            message: userMessage.content,
+            history: historyForRequest,
+            imageData: imageData,
+          },
+          (chunk) => {
+            fullText += chunk;
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg.id === assistantMsgId
+                  ? { ...msg, content: fullText }
+                  : msg
+              )
+            );
+          }
+        );
+
+        // Update the final message with metadata (products, actions)
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantMsgId ? { ...msg, ...responseMetadata } : msg
+          )
+        );
+
+        if (isSpeaking && fullText) speak(fullText);
 
         // ELITE: Automatic Cart Addition
-        if (response.cartProduct) {
-          let productToAdd = response.recommendedProducts?.find((p) =>
-            p.name.toLowerCase().includes(response.cartProduct!.toLowerCase()),
+        if (responseMetadata.cartProduct) {
+          let productToAdd = responseMetadata.recommendedProducts?.find((p) =>
+            p.name.toLowerCase().includes(responseMetadata.cartProduct!.toLowerCase()),
           );
 
           if (!productToAdd) {
@@ -192,7 +220,7 @@ export default function AIChatAssistant() {
               if (res.ok) {
                 const products: Product[] = await res.json();
                 productToAdd = products.find((p) =>
-                  p.name.toLowerCase().includes(response.cartProduct!.toLowerCase())
+                  p.name.toLowerCase().includes(responseMetadata.cartProduct!.toLowerCase())
                 );
               }
             } catch (e) {
@@ -362,14 +390,39 @@ export default function AIChatAssistant() {
     setIsTyping(true);
 
     try {
-      const response = await sendChatMessage({
-        message: userMessage.content,
-        history: historyForRequest,
-        audioData: audioData,
-      });
+      const assistantMsgId = crypto.randomUUID();
+      let fullText = "";
 
-      setMessages((prev) => [...prev, response]);
-      if (isSpeaking) speak(response.content);
+      setMessages((prev) => [
+        ...prev,
+        { id: assistantMsgId, role: "assistant", content: "" },
+      ]);
+
+      const responseMetadata = await sendChatMessageStreaming(
+        {
+          message: userMessage.content,
+          history: historyForRequest,
+          audioData: audioData,
+        },
+        (chunk) => {
+          fullText += chunk;
+          setMessages((prev) =>
+            prev.map((msg) =>
+              msg.id === assistantMsgId
+                ? { ...msg, content: fullText }
+                : msg
+            )
+          );
+        }
+      );
+
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === assistantMsgId ? { ...msg, ...responseMetadata } : msg
+        )
+      );
+
+      if (isSpeaking && fullText) speak(fullText);
     } catch (error) {
       console.error("Voice processing error:", error);
     } finally {
@@ -499,7 +552,11 @@ export default function AIChatAssistant() {
                           : "bg-white dark:bg-white/10 border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 rounded-bl-sm"
                           }`}
                       >
-                        {msg.content}
+                        {msg.role === "user" ? (
+                          msg.content
+                        ) : (
+                          <ChatMarkdown content={msg.content} />
+                        )}
                       </div>
 
                       {/* Recommend Products UI block */}
