@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 
 import type { Variants } from "motion/react";
 import AppImage from "../common/AppImage";
+import { Particles } from "@/components/ui/particles";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 16 },
@@ -11,8 +12,9 @@ const fadeUp: Variants = {
 
 const AboutFounder = () => {
   return (
-    <section className="py-20 md:py-28 bg-slate-50 dark:bg-slate-950/50">
-      <div className="container mx-auto px-4">
+    <section className="relative overflow-hidden py-20 md:py-28 bg-slate-50 dark:bg-slate-950/50">
+      <Particles count={80} color="148, 163, 184" className="opacity-80" />
+      <div className="container mx-auto px-4 relative z-10">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -26,9 +28,9 @@ const AboutFounder = () => {
           {/* Centered layout */}
           <motion.div variants={fadeUp} className="text-center">
             {/* Logo */}
-            <div className="inline-flex items-center justify-center size-20 mb-6">
+            <div className="inline-flex items-center justify-center size-20 mb-6 bg-white dark:bg-transparent rounded-lg p-2">
               <AppImage
-                src="/assets/sherologo.png"
+                src="/assets/logo/shero.png"
                 alt="SHERO Logo"
                 width={80}
                 height={80}

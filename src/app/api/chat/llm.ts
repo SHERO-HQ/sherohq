@@ -359,9 +359,7 @@ export async function callLLMStreaming(
     // Only continue if the error is 404 (model not found) or similar
     if (response.status !== 404) {
       const errorText = await response.text();
-      console.error("Gemini API Error:", response.status, errorText);
-      // We can't return response if we already consumed text(), so we'll just return null or throw. 
-      // Actually, returning null will trigger the fallback which is what is happening.
+      console.error("Gemini API Error for model", model, "Status:", response.status, "Error:", errorText);
       return null;
     }
   }
