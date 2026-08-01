@@ -27,8 +27,14 @@ const LandingFinalCTA = () => {
 
             <div className="flex items-center gap-3">
               <Link
+                href="/feedback"
+                className="hidden sm:inline-flex items-center px-4 py-2 h-9 rounded border border-slate-200 dark:border-slate-700 bg-transparent text-slate-600 dark:text-slate-300 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors"
+              >
+                Share your experience
+              </Link>
+              <Link
                 href="/consultation"
-                className="inline-flex items-center px-4 py-2 h-9 rounded bg-brand-secondary-600 text-white text-sm font-medium hover:bg-brand-secondary-500 transition"
+                className="inline-flex items-center px-4 py-2 h-9 rounded bg-brand-secondary-600 text-white text-sm font-medium hover:bg-brand-secondary-500 transition shadow-sm hover:shadow-md shadow-brand-secondary-500/20"
               >
                 Book a free call
                 <Phone className="w-4 h-4 ml-2" />

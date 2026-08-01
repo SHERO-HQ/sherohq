@@ -91,17 +91,19 @@ export default function ProductQuickViewModal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", duration: 0.3 }}
-            className="relative w-full max-w-3xl bg-slate-900 border border-slate-800 rounded shadow-2xl overflow-hidden z-10 my-auto text-white"
+            className="relative w-full max-w-3xl bg-slate-900 border border-slate-800 rounded shadow-2xl overflow-hidden z-10 my-auto text-white flex flex-col max-h-[90vh]"
           >
             {/* Close Button */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 z-20 p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-full transition-colors"
+              className="absolute top-4 right-4 z-20 p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-full transition-colors bg-slate-900/80 backdrop-blur"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 sm:p-8">
+            {/* Scrollable Content */}
+            <div className="overflow-y-auto custom-scrollbar w-full">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 sm:p-8">
               {/* Media Section */}
               <div className="flex flex-col gap-4">
                 <div className="relative aspect-square rounded overflow-hidden bg-slate-950 border border-white/5 flex items-center justify-center">
@@ -247,6 +249,7 @@ export default function ProductQuickViewModal({
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
+              </div>
               </div>
             </div>
           </motion.div>
