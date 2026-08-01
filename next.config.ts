@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   compress: true,
+  serverExternalPackages: ["pdfkit"],
   transpilePackages: ["motion"],
   outputFileTracingRoot: process.cwd(),
 

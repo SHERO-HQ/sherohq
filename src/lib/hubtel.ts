@@ -181,8 +181,10 @@ export async function verifyHubtelTransaction(
     });
 
     if (!resp.ok) {
-      console.error(
-        `Hubtel status check failed: HTTP ${resp.status} for ref ${clientReference}`,
+      const logFn = resp.status === 403 ? console.warn : console.error;
+      logFn(
+        `Hubtel status check failed: HTTP ${resp.status} for ref ${clientReference}. ` + 
+        (resp.status === 403 ? 'This may indicate missing API permissions for api-txnstatus.hubtel.com. Relying on webhook tokens.' : '')
       );
       if (process.env.NODE_ENV === "development") {
         return { verified: true, status: "Success", amount: null };

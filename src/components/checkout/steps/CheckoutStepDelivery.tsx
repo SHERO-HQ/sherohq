@@ -149,8 +149,8 @@ export default function CheckoutStepDelivery() {
             {watch("shippingAddress.region") && (
               <p className="text-xs text-brand-secondary-600 dark:text-brand-secondary-400 font-medium px-1">
                 Estimated Delivery: {
-                  watch("shippingAddress.region") === "Greater Accra" ? "24–48 hours" :
-                    ["Ashanti", "Central", "Eastern"].includes(watch("shippingAddress.region") || "") ? "2-3 days" :
+                  watch("shippingAddress.region") === "Northern" ? "Same day delivery" :
+                    ["Ashanti", "Central", "Eastern", "Greater Accra"].includes(watch("shippingAddress.region") || "") ? "2-3 days" :
                       ["Western", "Bono", "Bono East", "Ahafo", "Volta", "Oti"].includes(watch("shippingAddress.region") || "") ? "3-5 days" :
                         "4-7 days"
                 }
