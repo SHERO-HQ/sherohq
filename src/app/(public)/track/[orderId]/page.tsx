@@ -14,6 +14,7 @@ import {
   Mail,
   Phone,
   AlertCircle,
+  PackageCheck,
 } from "lucide-react";
 import { trackOrder, type Order } from "@/services/orders";
 import { Button } from "@/components/ui/button";
@@ -72,7 +73,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
     { label: "Ordered", icon: ShoppingBag },
     { label: "Processing", icon: Clock },
     { label: "In Transit", icon: Truck },
-    { label: "Delivered", icon: CheckCircle2 },
+    { label: "Delivered", icon: PackageCheck },
   ];
 
   const currentStep = order ? getStatusStep(order.status) : 0;
@@ -184,12 +185,12 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
 
         {/* Tracking Timeline */}
         {order.status !== "cancelled" && !isStorePickupOrder ? (
-          <Card className="p-8 dark:bg-slate-900 border-none shadow-sm overflow-hidden border">
+          <Card className="py-6 dark:bg-slate-900 border-none shadow-sm overflow-hidden border">
             <div className="relative">
               {/* Progress Line Background */}
-              <div className="absolute top-6 left-[12.5%] right-[12.5%] h-1 bg-slate-100 dark:bg-slate-800 z-0"></div>
+              <div className="absolute top-4 left-[12.5%] right-[12.5%] h-1 bg-slate-100 dark:bg-slate-800 z-0"></div>
               {/* Active Progress Line */}
-              <div className="absolute top-6 left-[12.5%] right-[12.5%] h-1 z-0">
+              <div className="absolute top-4 left-[12.5%] right-[12.5%] h-1 z-0">
                 <div
                   className="absolute top-0 left-0 h-1 bg-brand-secondary-500 transition-all duration-1000 ease-out"
                   style={{
@@ -211,7 +212,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
                     >
                       <div
                         className={cn(
-                          "w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500 mx-auto",
+                          "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 mx-auto",
                           isCompleted
                             ? "bg-brand-secondary-500 text-white"
                             : isActive
@@ -222,12 +223,12 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
                         {isCompleted ? (
                           <CheckCircle2 className="w-6 h-6" />
                         ) : (
-                          <step.icon className="w-6 h-6" />
+                          <step.icon className="w-4.5 h-4.5" />
                         )}
                       </div>
                       <span
                         className={cn(
-                          "mt-4 text-[10px] md:text-xs font-bold uppercase tracking-wider",
+                          "mt-2 text-[10px] md:text-xs font-bold tracking-wider",
                           isActive
                             ? "text-brand-secondary-500"
                             : "text-slate-400 dark:text-slate-500",
