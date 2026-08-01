@@ -59,7 +59,7 @@ const HardwareTerminal: React.FC = () => {
       <div className="flex items-center justify-between pb-1.5 border-b border-slate-200 dark:border-slate-800 mb-2">
         <span className="text-brand-secondary-500 font-bold flex items-center gap-1">
           <span className="w-1.5 h-1.5 rounded-full bg-brand-secondary-500 animate-ping" />
-          SHERO-PRV-CONSOLE
+          SHERO-Hardware
         </span>
         <span className="text-slate-700 dark:text-slate-300">SYS_OK</span>
       </div>

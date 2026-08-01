@@ -24,7 +24,9 @@ import {
   ShoppingBag,
   Printer,
   Loader2,
-  FileText} from "lucide-react";
+  FileText,
+  ChevronLeft} from "lucide-react";
+import { formatCurrency } from "@/utils/format";
 import { Button } from "@/components/ui/button";
 import { } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -187,9 +189,9 @@ export default function OrderDetails() {
     const dataToExport = order.items.map((item) => ({
       Item: item.name,
       SKU: item.sku || "-",
-      Price: `GH₵ ${item.price.toLocaleString()}`,
+      Price: formatCurrency(item.price),
       Quantity: item.quantity,
-      Total: `GH₵ ${(item.price * item.quantity).toLocaleString()}`}));
+      Total: formatCurrency(item.price * item.quantity)}));
 
     const columns = ["Item", "SKU", "Price", "Quantity", "Total"];
     await exportToPDF(
@@ -598,7 +600,7 @@ export default function OrderDetails() {
                   </div>
                   <div className="text-right">
                     <p className="text-foreground font-bold font-mono">
-                      GH₵{item.price.toLocaleString()}
+                      {formatCurrency(item.price)}
                     </p>
                     <p className="text-sm text-muted-foreground mt-1">
                       Qty: {item.quantity}
@@ -611,7 +613,7 @@ export default function OrderDetails() {
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Total Amount</span>
                 <span className="text-2xl font-bold text-brand-secondary-400 font-mono">
-                  GH₵{order.total.toLocaleString()}
+                  {formatCurrency(order.total)}
                 </span>
               </div>
             </div>

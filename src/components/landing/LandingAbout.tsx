@@ -40,7 +40,7 @@ const LandingAbout = () => {
                 </h2>
 
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl transition-colors duration-300">
-                  SHERO is more than a tech company. We are architects of
+                  SHERO is more than a technology company. We are architects of
                   innovation, bridging the gap between hardware excellence and
                   digital potential. Our mission is to redefine what is possible
                   for communities, businesses and individuals alike.

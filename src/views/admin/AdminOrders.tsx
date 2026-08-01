@@ -2,6 +2,7 @@
 import React, { useState, useMemo } from "react";
 import { useNotifications } from "@/hooks/useNotifications";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
+import { formatCurrency } from "@/utils/format";
 import {
   Search,
   Eye,
@@ -114,7 +115,7 @@ const OrderRow = memo(
         </td>
         <td className="px-6 py-4 text-right">
           <p className="text-sm font-bold text-foreground">
-            GH₵{order.total.toLocaleString()}
+            {formatCurrency(order.total)}
           </p>
           <p className="text-[10px] text-muted-foreground">
             {order.items?.length || 0} items
@@ -290,7 +291,7 @@ export default function AdminOrders() {
       ID: toExportOrderId(order.id),
       Customer: `${order.shippingInfo.firstName} ${order.shippingInfo.lastName}`,
       Email: order.shippingInfo.email,
-      Total: `GH₵ ${order.total.toLocaleString()}`,
+      Total: formatCurrency(order.total),
       Status: order.status.toUpperCase(),
       Method: formatPaymentMethod(order.paymentMethod).toUpperCase(),
       Items: order.items?.length || 0,

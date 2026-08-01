@@ -33,6 +33,17 @@ const HERO_CONTENT: HeroContent = {
     "We supply premium hardware, engineer custom software, and manage your entire IT ecosystem under one dependable partner."
 } as const;
 
+const PARTNERS = [
+  { name: "HP", logo: "/assets/images/partners/hp.svg" },
+  { name: "Dell", logo: "/assets/images/partners/dell.svg" },
+  { name: "Lenovo", logo: "/assets/images/partners/lenovo.svg", logoClassName: "h-5 sm:h-8" },
+  { name: "JBL", logo: "/assets/images/partners/jbl.svg" },
+  { name: "Apple", logo: "/assets/images/partners/apple.svg", logoDark: "/assets/images/partners/apple-dark.svg" },
+  { name: "Samsung", logo: "/assets/images/partners/samsung.svg", logoDark: "/assets/images/partners/samsung-dark.svg", logoClassName: "h-5 sm:h-7" },
+  { name: "Nvidia", logo: "/assets/images/partners/nvidia.svg" },
+  { name: "Intel", logo: "/assets/images/partners/intel.svg" },
+];
+
 const heroBlock = {
   hidden: { opacity: 0, y: 18 },
   show: {
@@ -150,9 +161,9 @@ const LandingHero: React.FC = () => {
     <header
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative min-h-fit lg:min-h-dvh w-full overflow-hidden
+      className="relative min-h-fit lg:min-h-[85dvh] w-full overflow-hidden
  bg-slate-50 dark:bg-slate-950
- flex flex-col items-center pt-12 sm:pt-20 pb-1 sm:pb-0"
+ flex flex-col items-center justify-center pt-14 sm:pt-0 pb-36 md:pb-24 lg:pb-16"
       role="banner"
       aria-label="Hero section - Company mission statement"
     >
@@ -194,8 +205,8 @@ const LandingHero: React.FC = () => {
             variants={heroItem}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded text-xs border border-brand-secondary-500/20 bg-brand-secondary-500/5 transition-colors duration-300"
           >
-            <RocketIcon className="size-4 text-brand-secondary-500" />
-            <span className="text-xs font-medium uppercase tracking-wide text-brand-secondary-600 dark:text-brand-secondary-400">
+            <RocketIcon className="size-4 text-brand-secondary-600" />
+            <span className="text-[.8rem] font-medium uppercase tracking-wide text-brand-secondary-600 dark:text-brand-secondary-400">
               Trusted Technology Partner
             </span>
           </motion.div>
@@ -247,8 +258,39 @@ const LandingHero: React.FC = () => {
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </NavLink>
           </motion.div>
+
         </motion.div>
       </div>
+
+      {/* Trusted Brands Grid - Fixed at bottom of hero */}
+      <motion.div
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
+        animate={prefersReducedMotion ? undefined : heroReady ? { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.5 } } : { opacity: 0, y: 10 }}
+        className="absolute bottom-6 sm:bottom-10 left-0 right-0 w-full"
+      >
+        <div className="container max-w-7xl mx-auto px-4">
+          <ul className="grid grid-cols-4 md:flex md:flex-wrap justify-center items-center gap-x-6 gap-y-6 sm:gap-x-12 w-full opacity-90 transition-opacity duration-500">
+            {PARTNERS.map((partner) => (
+              <li key={partner.name} className="flex justify-center items-center transition-transform duration-300 hover:scale-105" title={partner.name}>
+                <img
+                  src={`${partner.logo}?v=2`}
+                  alt={`${partner.name} logo`}
+                  className={`w-auto max-w-full object-contain filter grayscale opacity-60 dark:opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300 ${partner.logoClassName ?? "h-8 sm:h-10"} ${partner.logoDark ? "dark:hidden" : ""}`}
+                  loading="eager"
+                />
+                {partner.logoDark && (
+                  <img
+                    src={`${partner.logoDark}?v=2`}
+                    alt={`${partner.name} logo`}
+                    className={`w-auto max-w-full object-contain filter grayscale opacity-60 dark:opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300 ${partner.logoClassName ?? "h-8 sm:h-10"} hidden dark:block`}
+                    loading="eager"
+                  />
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </motion.div>
     </header>
   );
 };

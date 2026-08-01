@@ -28,7 +28,7 @@ const AboutFounder = () => {
           {/* Centered layout */}
           <motion.div variants={fadeUp} className="text-center">
             {/* Logo */}
-            <div className="inline-flex items-center justify-center size-20 mb-6 bg-white dark:bg-transparent rounded-lg p-2">
+            <div className="inline-flex items-center justify-center size-20 mb-6 bg-white dark:bg-transparent rounded p-2">
               <AppImage
                 src="/assets/logo/shero.png"
                 alt="SHERO Logo"

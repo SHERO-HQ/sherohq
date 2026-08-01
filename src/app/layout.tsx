@@ -30,11 +30,12 @@ export const metadata: Metadata = {
     template: "%s | SHERO",
   },
   description:
-    "SHERO - Premium technology solutions, custom software development, and quality tech hardware. Redefine possible with our innovative expertise.",
+    "SHERO - Premium technology solutions, custom software development, and quality hardware technology. Redefine possible with our innovative expertise.",
   keywords: [
     "SHERO",
     "SHERO HQ",
     "SHERO Tech",
+    "SHERO Technologies",
     "SHERO Ghana",
     "SHERO Africa",
     "SHERO Shop",

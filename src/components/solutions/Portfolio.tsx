@@ -184,10 +184,13 @@ const Portfolio = () => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.08 }}
-                whileHover={{ y: -6, scale: 1.01 }}
+                transition={{ 
+                  opacity: { duration: 0.5, delay: idx * 0.08 },
+                  y: { duration: 0.5, delay: idx * 0.08 },
+                  layout: { type: "spring", stiffness: 350, damping: 30 }
+                }}
                 onClick={() => setSelectedProject(project)}
-                className="group bg-white/70 dark:bg-slate-900/40 backdrop-blur-md  border border-slate-200 dark:border-slate-800/80 overflow-hidden hover:border-brand-secondary-500/80 dark:hover:border-brand-secondary-500/80 hover:shadow-xl hover:shadow-brand-secondary-500/5 transition-all duration-300 flex flex-col h-full cursor-pointer"
+                className="group bg-white/70 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200 dark:border-slate-800/80 overflow-hidden hover:-translate-y-1.5 hover:scale-[1.01] hover:border-brand-secondary-500/80 dark:hover:border-brand-secondary-500/80 hover:shadow-xl hover:shadow-brand-secondary-500/5 transition-all duration-300 flex flex-col h-full cursor-pointer"
                 style={{ borderRadius: 16 }}
               >
                 {/* Project Image Box */}
@@ -209,7 +212,7 @@ const Portfolio = () => {
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-slate-50 dark:bg-slate-900/50 overflow-hidden relative group-hover:scale-105 transition-transform duration-500 select-none">
                       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:12px_12px]" />
-                      <div className="relative z-10 p-3.5 rounded bg-white/60 dark:bg-slate-800/60 backdrop-blur-md shadow-sm border border-slate-200/50 dark:border-slate-700/50">
+                      <div className="relative z-10 p-3.5 rounded bg-white/95 dark:bg-slate-800/95 shadow-sm border border-slate-200/50 dark:border-slate-700/50">
                         <Layers className="w-8 h-8 text-brand-secondary-500/70" />
                       </div>
                     </div>
@@ -217,7 +220,7 @@ const Portfolio = () => {
 
                   {/* Hover details overlay */}
                   <div className="absolute inset-0 bg-brand-secondary-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <span className="px-3.5 py-2 bg-slate-950/80 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider rounded border border-white/10 flex items-center gap-1.5 translate-y-2 group-hover:translate-y-0 transition-all duration-300 shadow-md">
+                    <span className="px-3.5 py-2 bg-slate-950/95 text-white text-[10px] font-bold uppercase tracking-wider rounded border border-white/10 flex items-center gap-1.5 translate-y-2 group-hover:translate-y-0 transition-all duration-300 shadow-md">
                       View Details <Info className="w-3.5 h-3.5" />
                     </span>
                   </div>
@@ -313,17 +316,21 @@ const Portfolio = () => {
               {/* Modal Panel (morphic card container) */}
               <motion.div
                 layoutId={`card-container-${selectedProject.id}`}
+                transition={{ layout: { type: "spring", stiffness: 350, damping: 30 } }}
                 className="relative w-full max-w-4xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800  overflow-hidden shadow-2xl z-10 flex flex-col max-h-[90vh] custom-scrollbar"
                 style={{ borderRadius: 16 }}
               >
                 {/* Close Button floating absolute on top right */}
-                <button
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1, transition: { delay: 0.2 } }}
+                  exit={{ opacity: 0, transition: { duration: 0.1 } }}
                   onClick={() => setSelectedProject(null)}
-                  className="absolute top-4 right-4 z-20 p-2 rounded-full bg-slate-950/50 hover:bg-slate-950/75 text-white backdrop-blur-md transition-all duration-200 border border-white/10 hover:scale-105 cursor-pointer active:scale-95"
+                  className="absolute top-4 right-4 z-20 p-2 rounded-full bg-slate-950/50 hover:bg-slate-950/75 text-white backdrop-blur-md transition-colors duration-200 border border-white/10 hover:scale-105 cursor-pointer active:scale-95"
                   aria-label="Close Case Study"
                 >
                   <X className="w-5 h-5" />
-                </button>
+                </motion.button>
 
                 {/* Hero Image Section */}
                 <motion.div
@@ -345,7 +352,7 @@ const Portfolio = () => {
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-slate-50 dark:bg-slate-900/50 overflow-hidden relative select-none">
                       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
-                      <div className="relative z-10 p-6 rounded bg-white/60 dark:bg-slate-800/60 backdrop-blur-md shadow-lg shadow-black/5 border border-slate-200/50 dark:border-slate-700/50">
+                      <div className="relative z-10 p-6 rounded bg-white/95 dark:bg-slate-800/95 shadow-lg shadow-black/5 border border-slate-200/50 dark:border-slate-700/50">
                         <Layers className="w-16 h-16 text-brand-secondary-500/70" />
                       </div>
                     </div>
@@ -365,9 +372,14 @@ const Portfolio = () => {
                         {selectedProject.category}
                       </motion.span>
                       {selectedProject.client && (
-                        <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                        <motion.span 
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1, transition: { delay: 0.1 } }}
+                          exit={{ opacity: 0, transition: { duration: 0.05 } }}
+                          className="text-xs font-medium text-slate-500 dark:text-slate-400"
+                        >
                           for {selectedProject.client}
-                        </span>
+                        </motion.span>
                       )}
                     </div>
                     <motion.h3
@@ -379,7 +391,12 @@ const Portfolio = () => {
                   </div>
 
                   {/* Split Pane Details Content */}
-                  <div className="grid grid-cols-1 md:grid-cols-5 gap-8 pt-4 border-t border-slate-100 dark:border-slate-800/80">
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1, transition: { delay: 0.15 } }}
+                    exit={{ opacity: 0, transition: { duration: 0.05 } }}
+                    className="grid grid-cols-1 md:grid-cols-5 gap-8 pt-4 border-t border-slate-100 dark:border-slate-800/80"
+                  >
                     {/* Left Column (Metadata Details - 2 Cols) */}
                     <div className="md:col-span-2 space-y-6 order-2 md:order-1">
                       {selectedProject.client && (
@@ -478,12 +495,17 @@ const Portfolio = () => {
                         </div>
                       )}
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
 
                 {/* Bottom Sticky Action Bar */}
                 {selectedProject.link && (
-                  <div className="p-4 md:p-6 bg-slate-50 dark:bg-slate-900/80 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-end shrink-0">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}
+                    exit={{ opacity: 0, transition: { duration: 0.05 } }}
+                    className="p-4 md:p-6 bg-slate-50 dark:bg-slate-900/80 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-end shrink-0"
+                  >
                     <a
                       href={selectedProject.link}
                       target="_blank"
@@ -493,7 +515,7 @@ const Portfolio = () => {
                       <span>Launch Live Project</span>
                       <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
                     </a>
-                  </div>
+                  </motion.div>
                 )}
               </motion.div>
             </div>

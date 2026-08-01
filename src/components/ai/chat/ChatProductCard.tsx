@@ -15,7 +15,7 @@ export const ChatProductCard = ({ product }: { product: Product }) => {
   return (
     <Link
       href={`/shop/${product.slug || product.sku || product.id}`}
-      className="group relative rounded-2xl overflow-hidden bg-white dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-md transition-all duration-300 flex flex-col h-full w-full block"
+      className="group relative rounded overflow-hidden bg-white dark:bg-slate-800 border border-slate-200/50 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-md transition-all duration-300 flex flex-col h-full w-full block"
     >
       {/* Compact Image */}
       <div className="relative aspect-square w-full bg-slate-50 dark:bg-slate-900/50 overflow-hidden shrink-0 border-b border-slate-100 dark:border-slate-700/30">

@@ -22,6 +22,7 @@ import {
   RefreshCw,
   MoreVertical,
 } from "lucide-react";
+import { formatCurrency } from "@/utils/format";
 import { useAdmin } from "@/context/AdminContext";
 import { Button } from "@/components/ui/button";
 import {
@@ -94,7 +95,7 @@ const ProductRow = memo(({
       </Badge>
     </td>
     <td className="px-6 py-4 text-sm font-bold text-foreground">
-      GH₵{product.price.toLocaleString()}
+      {formatCurrency(product.price)}
     </td>
     <td className="px-6 py-4">
       <div className="flex flex-col gap-1">
@@ -311,7 +312,7 @@ export default function AdminProducts() {
       ID: p.id,
       Name: p.name,
       Category: p.category,
-      Price: `GH₵ ${p.price.toLocaleString()}`,
+      Price: formatCurrency(p.price),
       Stock: p.quantity ?? 0,
       Status: (p.quantity ?? 0) > 0 ? "In Stock" : "Out of Stock",
     }));

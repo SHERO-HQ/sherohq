@@ -77,8 +77,8 @@ const ProcessStep = ({ step, index }: { step: typeof steps[0]; index: number }) 
             {/* Giant Number Watermark */}
             <div
               className={`absolute -bottom-4 ${
-                isEven ? "md:-left-2 right-4" : "-right-2 md:-right-4"
-              } text-[100px] font-black text-slate-900/5 dark:text-white/5 select-none pointer-events-none leading-none tracking-tighter transition-colors duration-500 ${
+                isEven ? "md:-left-2 right-0" : "right-1 md:right-1"
+              } text-[100px] font-black text-slate-900/10 dark:text-white/10 select-none pointer-events-none leading-none tracking-tighter transition-colors duration-500 ${
                 isInView
                   ? "text-brand-secondary-500/10 dark:text-brand-secondary-400/10"
                   : "group-hover:text-brand-secondary-500/5"

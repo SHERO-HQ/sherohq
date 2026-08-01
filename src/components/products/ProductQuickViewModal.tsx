@@ -67,7 +67,7 @@ export default function ProductQuickViewModal({
 
   const handleWhatsAppOrder = () => {
     const text = encodeURIComponent(
-      `Hello SHERO Technologies! I'd like to order: ${product.name} (Qty: ${quantity}, Price: ${formatCurrency(product.price * quantity)}). URL: https://sherohq.com/shop/${product.slug || product.id}`
+      `Hello SHERO! I'd like to order: ${product.name} (Qty: ${quantity}, Price: ${formatCurrency(product.price * quantity)}). URL: https://sherohq.com/shop/${product.slug || product.id}`
     );
     window.open(`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}?text=${text}`, "_blank");
   };
