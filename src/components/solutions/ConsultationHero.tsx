@@ -11,7 +11,7 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 10 },
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
 };
 
@@ -95,7 +95,7 @@ const ConsultationHero = () => {
             <motion.div variants={itemVariants}>
               <button
                 onClick={scrollToScheduler}
-                className="group inline-flex items-center justify-center gap-2 px-8 py-3 text-base font-medium text-white bg-slate-900 dark:bg-white dark:text-slate-900 rounded-full shadow-lg hover:shadow-xl hover:bg-slate-800 dark:hover:bg-slate-100 hover:-translate-y-0.5 transition-all duration-300"
+                className="group inline-flex items-center justify-center gap-2 px-8 py-3 text-base font-medium text-white bg-slate-900 dark:bg-white dark:text-slate-900 rounded-full shadow hover:shadow-xl hover:bg-slate-800 dark:hover:bg-slate-100 hover:-translate-y-0.5 transition-all duration-300"
               >
                 Book a Session
                 <ArrowRight className="size-5 group-hover:translate-x-1 transition-transform" />
@@ -118,7 +118,7 @@ const ConsultationHero = () => {
               <motion.div 
                 animate={{ y: [-10, 10, -10] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-[20%] left-0 right-12 z-20 bg-white dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/60 p-6 rounded shadow-2xl flex items-start gap-5"
+                className="absolute top-[20%] left-0 right-12 z-20 bg-white dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/60 p-6 rounded shadow flex items-start gap-5"
               >
                 <div className="size-14 rounded bg-brand-primary-50 dark:bg-brand-primary-900/30 flex items-center justify-center shrink-0 border border-brand-primary-100 dark:border-brand-primary-800/50">
                   <Calendar className="size-7 text-brand-primary-600 dark:text-brand-primary-400" />
@@ -136,7 +136,7 @@ const ConsultationHero = () => {
               <motion.div 
                 animate={{ y: [10, -10, 10] }}
                 transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute bottom-[25%] left-16 right-0 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/50 dark:border-slate-800/50 p-5 rounded shadow-xl flex items-center justify-between"
+                className="absolute bottom-[25%] left-16 right-0 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/50 dark:border-slate-800/50 p-5 rounded shadow flex items-center justify-between"
               >
                  <div className="flex items-center gap-4">
                     <div className="flex -space-x-3">
