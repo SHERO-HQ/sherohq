@@ -3,23 +3,21 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import type { Product } from "@/types/product";
+import { useFormContext } from "react-hook-form";
+import type { ProductFormValues } from "@/lib/validations/product";
 
-interface ProductSEOCardProps {
-  productData: Partial<Product>;
-  onUpdateProductData: (updates: Partial<Product>) => void;
-}
+export default function ProductSEOCard() {
+  const { register, watch } = useFormContext<ProductFormValues>();
 
-export default function ProductSEOCard({
-  productData,
-  onUpdateProductData}: ProductSEOCardProps) {
-  const handleInputChange = (field: keyof Product, value: string) => {
-    onUpdateProductData({ [field]: value });
-  };
+  const name = watch("name");
+  const description = watch("description");
+  const metaTitle = watch("metaTitle");
+  const metaDescription = watch("metaDescription");
+  const slug = watch("slug");
 
-  const previewTitle = productData.metaTitle || productData.name || "Product Name";
-  const previewDescription = productData.metaDescription || productData.description?.slice(0, 155) || "A great description of your product goes here...";
-  const previewSlug = productData.slug || "product-slug";
+  const previewTitle = metaTitle || name || "Product Name";
+  const previewDescription = metaDescription || description?.slice(0, 155) || "A great description of your product goes here...";
+  const previewSlug = slug || "product-slug";
 
   return (
     <Card className="bg-card border border-border p-6 md:p-8 space-y-6">
@@ -41,13 +39,12 @@ export default function ProductSEOCard({
               className="text-sm font-medium text-muted-foreground flex justify-between"
             >
               <span>Meta Title</span>
-              <span className="text-xs text-muted-foreground">{productData.metaTitle?.length || 0}/60</span>
+              <span className="text-xs text-muted-foreground">{metaTitle?.length || 0}/60</span>
             </label>
             <Input
               id="metaTitle"
               placeholder="Leave blank to use Product Name"
-              value={productData.metaTitle || ""}
-              onChange={(e) => handleInputChange("metaTitle", e.target.value)}
+              {...register("metaTitle")}
               maxLength={60}
               className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500"
             />
@@ -60,13 +57,12 @@ export default function ProductSEOCard({
               className="text-sm font-medium text-muted-foreground flex justify-between"
             >
               <span>Meta Description</span>
-              <span className="text-xs text-muted-foreground">{productData.metaDescription?.length || 0}/160</span>
+              <span className="text-xs text-muted-foreground">{metaDescription?.length || 0}/160</span>
             </label>
             <textarea
               id="metaDescription"
               placeholder="Leave blank to use the start of your product description"
-              value={productData.metaDescription || ""}
-              onChange={(e) => handleInputChange("metaDescription", e.target.value)}
+              {...register("metaDescription")}
               maxLength={160}
               className="w-full h-24 bg-muted/50 border border-border rounded p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 resize-none text-sm transition-all"
             />

@@ -38,9 +38,9 @@ const AboutStory = () => {
                 className="relative w-full object-cover"
               />
 
-              <div className="absolute sm:bottom-46 md:bottom-30 sm:left-4 md:left-0 bottom-25 -left-2 bg-white/90 dark:bg-slate-900/90  py-2 px-3 rounded-full border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
-                <div className="size-7 sm:size-8 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center">
-                  <Lightbulb className="w-4 h-4 text-brand-secondary-700 dark:text-brand-secondary-400" />
+              <div className="absolute sm:bottom-48 md:bottom-32 sm:left-4 md:left-0 bottom-24 -left-2 bg-white/60 dark:bg-slate-900/40 backdrop-blur-md py-2 px-3 rounded-full border border-slate-200/50 dark:border-slate-700/50 flex items-center gap-2 sm:gap-3 shadow-md">
+                <div className="size-7 sm:size-8 bg-brand-secondary-500 dark:bg-brand-secondary-500/20 rounded-full flex items-center justify-center">
+                  <Lightbulb className="w-4 h-4 text-white dark:text-brand-secondary-400" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-slate-900 dark:text-white leading-tight">
@@ -49,9 +49,9 @@ const AboutStory = () => {
                 </div>
               </div>
 
-              <div className="absolute sm:top-30 sm:right-8 top-20 right-5 bg-white/90 dark:bg-slate-900/90  py-2 px-3 rounded-full border border-slate-200 dark:border-slate-800 flex items-center gap-2 sm:gap-3">
-                <div className="size-7 sm:size-8 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center">
-                  <SearchCheck className="w-4 h-4 text-brand-secondary-700 dark:text-brand-secondary-400" />
+              <div className="absolute sm:top-32 sm:right-8 top-20 right-5 bg-white/60 dark:bg-slate-900/40 backdrop-blur-md py-2 px-3 rounded-full border border-slate-200/50 dark:border-slate-700/50 flex items-center gap-2 sm:gap-3 shadow-md">
+                <div className="size-7 sm:size-8 bg-brand-secondary-500 dark:bg-brand-secondary-500/20 rounded-full flex items-center justify-center">
+                  <SearchCheck className="w-4 h-4 text-white dark:text-brand-secondary-400" />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-slate-900 dark:text-white leading-tight">
@@ -81,7 +81,7 @@ const AboutStory = () => {
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
                 Founded to bridge Africa's digital divide,{" "}
                 <span className="font-bold text-brand-secondary-700 dark:text-brand-secondary-400">
-                  SHERO Technologies
+                  SHERO
                 </span>{" "}
                 is making quality technology accessible. We have evolved into a
                 comprehensive technology partner, equipping people, businesses
@@ -102,7 +102,7 @@ const AboutStory = () => {
         <StaggerContainer className="grid md:grid-cols-2 gap-8 mb-16 lg:grid-cols-2!">
           {/* Mission */}
           <StaggerItem>
-            <div className="group h-full bg-linear-to-br from-white to-slate-50 dark:from-slate-900/40 dark:to-slate-950 p-8 lg:p-10 rounded border border-slate-200 dark:border-white/5 hover:border-brand-secondary-500/30 transition duration-500 shadow-sm hover:shadow hover:shadow-brand-secondary-500/5">
+            <div className="group h-full bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-8 lg:p-10 rounded border border-slate-200/80 dark:border-slate-800/80 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-500/50 transition-all duration-500 shadow-sm hover:shadow-xl hover:-translate-y-1">
               <div className="w-12 h-12 bg-brand-primary-500 rounded flex items-center justify-center mb-4 shadow shadow-brand-secondary-500/20 group-hover:scale-110 transition-transform">
                 <Target className="w-8 h-8 text-white" />
               </div>
@@ -119,7 +119,7 @@ const AboutStory = () => {
 
           {/* Vision */}
           <StaggerItem>
-            <div className="group h-full bg-linear-to-br from-white to-slate-50 dark:from-slate-900/40 dark:to-slate-950 p-8 lg:p-10 rounded border border-slate-200 dark:border-white/5 hover:border-blue-500/30 transition duration-500 shadow-sm hover:shadow hover:shadow-blue-500/5">
+            <div className="group h-full bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-8 lg:p-10 rounded border border-slate-200/80 dark:border-slate-800/80 hover:border-blue-500/50 dark:hover:border-blue-500/50 transition-all duration-500 shadow-sm hover:shadow-xl hover:-translate-y-1">
               <div className="w-12 h-12 bg-brand-secondary-500 rounded flex items-center justify-center mb-4 shadow shadow-blue-600/20 group-hover:scale-110 transition-transform">
                 <Globe className="w-8 h-8 text-white" />
               </div>
@@ -138,7 +138,7 @@ const AboutStory = () => {
 
         {/* What Sets Us Apart */}
         <Reveal direction="up" distance={40}>
-          <div className="bg-slate-50 dark:bg-slate-900/50 rounded p-8 md:p-12 border border-slate-200 dark:border-slate-800">
+          <div className="bg-white/60 dark:bg-slate-900/40 backdrop-blur-md rounded p-8 md:p-12 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
             <div className="flex items-center gap-3 mb-6 justify-center">
               <Lightbulb className="size-5 text-brand-secondary-600" />
               <h3 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">

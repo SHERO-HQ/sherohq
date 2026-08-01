@@ -234,7 +234,7 @@ const AdminGuideEditor = () => {
             type="button"
             onClick={handleSubmit}
             disabled={isSaving}
-            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground min-w-30"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-30"
           >
             {isSaving ? (
               <>
@@ -255,7 +255,7 @@ const AdminGuideEditor = () => {
         <div className="flex flex-col gap-3 rounded border border-emerald-500/20 bg-emerald-500/5 px-4 py-3 md:flex-row md:items-center md:justify-between">
           <div className="space-y-1">
             <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
-              <Badge className="bg-emerald-500/10 text-emerald-300 border-emerald-500/20">
+              <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border-emerald-500/20">
                 Local draft
               </Badge>
               <span className="text-sm text-muted-foreground">
@@ -273,7 +273,7 @@ const AdminGuideEditor = () => {
               type="button"
               variant="outline"
               onClick={handleSaveDraft}
-              className="border-emerald-500/30 text-emerald-200 hover:bg-emerald-500/10 hover:text-emerald-100"
+              className="border-emerald-500/30 text-emerald-600 dark:text-emerald-200 hover:bg-emerald-500/10 hover:text-emerald-700 dark:hover:text-emerald-100"
             >
               Save draft now
             </Button>
@@ -328,7 +328,7 @@ const AdminGuideEditor = () => {
               type="button"
               onClick={handleSubmit}
               disabled={isSaving}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground min-w-30"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-30"
             >
               {isSaving ? (
                 <>
@@ -368,7 +368,7 @@ const AdminGuideEditor = () => {
           type="button"
           onClick={handleSubmit}
           disabled={isSaving}
-          className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground w-2/3"
+          className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white w-2/3"
         >
           {isSaving ? (
             <>

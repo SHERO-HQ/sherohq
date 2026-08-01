@@ -145,7 +145,7 @@ export function ChangePasswordModal() {
             type="submit"
             disabled={isSubmitting}
             className={cn(
-              "w-full py-2.5 px-4 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-semibold text-sm transition flex items-center justify-center gap-2",
+              "w-full py-2.5 px-4 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-semibold text-sm transition flex items-center justify-center gap-2",
               isSubmitting && "opacity-70 cursor-not-allowed",
             )}
           >

@@ -80,7 +80,7 @@ const SolutionsHero = () => {
           <div className="relative overflow-hidden group">
             <motion.h1
               variants={heroItem}
-              className="font-bold font-sora leading-[1.1] text-4xl sm:text-5xl md:text-6xl lg:text-[4rem] px-2 sm:px-auto tracking-tighter text-slate-900 dark:text-white relative z-10"
+              className="font-bold font-sora leading-[1.1] text-4xl sm:text-5xl md:text-6xl lg:text-[4rem] px-2 sm:px-0 tracking-tighter text-slate-900 dark:text-white relative z-10"
             >
               <span>Software and IT</span>
               <br />
@@ -124,7 +124,7 @@ const SolutionsHero = () => {
                   className="flex flex-col sm:flex-row items-center justify-center gap-2 p-3 rounded bg-white/50 dark:bg-white/5 border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-sm"
                 >
                   <Icon className="size-5 text-brand-secondary-500" />
-                  <span className="text-xs font-semibold uppercase tracking-tight text-slate-700 dark:text-slate-300">
+                  <span className="text-xs font-semibold uppercase tracking-tight text-slate-700 dark:text-slate-300 text-center sm:text-left">
                     {feature.label}
                   </span>
                 </div>

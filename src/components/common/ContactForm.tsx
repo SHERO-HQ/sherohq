@@ -37,29 +37,13 @@ const ContactForm = () => {
   const handleSelectType = (type: "proposal" | "general" | "order" | "partnership") => {
     setInquiryType(type);
     setDirection(1);
-    if (type === "proposal" || type === "order") {
-      setStep(2);
-    } else {
-      setStep(3); // Skip step 2 for general and partnership
-    }
+    setStep(2);
   };
 
   const handleBack = () => {
     setDirection(-1);
-    if (step === 3 && (inquiryType === "general" || inquiryType === "partnership")) {
-      setStep(1);
-      setInquiryType(null);
-    } else if (step === 3) {
-      setStep(2);
-    } else if (step === 2) {
-      setStep(1);
-      setInquiryType(null);
-    }
-  };
-
-  const handleContinue = () => {
-    setDirection(1);
-    setStep(3);
+    setStep(1);
+    setTimeout(() => setInquiryType(null), 300); // Clear after animation
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -119,11 +103,11 @@ ${formData.message}`;
     }
   };
 
-  const totalSteps = inquiryType === "proposal" || inquiryType === "order" ? 3 : 2;
-  const currentDisplayStep = step === 3 && (inquiryType === "general" || inquiryType === "partnership") ? 2 : step;
+  const totalSteps = 2;
+  const currentDisplayStep = step;
 
   return (
-    <div className="w-full max-w-2xl mx-auto glass-surface-md border border-slate-200/80 dark:border-slate-800/80 p-6 md:p-8 rounded shadow-xl select-none relative overflow-hidden bg-white/70 dark:bg-slate-900/60 backdrop-blur-md">
+    <div className="w-full max-w-2xl mx-auto glass-surface-md border border-slate-200/80 dark:border-slate-800/80 p-6 md:p-8 rounded shadow-xl relative overflow-hidden bg-white/70 dark:bg-slate-900/60 backdrop-blur-md">
       {/* Background ambient glow */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-secondary-500/5 rounded-full blur-3xl pointer-events-none" />
 
@@ -143,10 +127,7 @@ ${formData.message}`;
             </span>
             <div className="flex items-center gap-1.5">
               <span className={`w-2 h-2 rounded-full transition-all duration-300 ${step >= 1 ? "bg-brand-secondary-600 scale-110" : "bg-slate-200 dark:bg-slate-700"}`} />
-              {(inquiryType === "proposal" || inquiryType === "order") && (
-                <span className={`w-2 h-2 rounded-full transition-all duration-300 ${step >= 2 ? "bg-brand-secondary-600 scale-110" : "bg-slate-200 dark:bg-slate-700"}`} />
-              )}
-              <span className={`w-2 h-2 rounded-full transition-all duration-300 ${step >= 3 ? "bg-brand-secondary-600 scale-110" : "bg-slate-200 dark:bg-slate-700"}`} />
+              <span className={`w-2 h-2 rounded-full transition-all duration-300 ${step >= 2 ? "bg-brand-secondary-600 scale-110" : "bg-slate-200 dark:bg-slate-700"}`} />
             </div>
           </div>
         </div>
@@ -292,21 +273,19 @@ ${formData.message}`;
                 </div>
               )}
 
-              {/* STEP 2: CONTEXTUAL SPECIFICS */}
+              {/* STEP 2: CONTEXTUAL SPECIFICS & CONTACT DETAILS */}
               {step === 2 && (
                 <div className="space-y-6">
+                  {/* Contextual Fields (Rendered at top if applicable) */}
                   {inquiryType === "proposal" && (
-                    <div className="space-y-5">
+                    <div className="space-y-5 pb-4 border-b border-slate-100 dark:border-slate-800/60">
                       <div>
                         <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                          Select the Target Service
+                          Project Requirements
                         </h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                          Which ecosystem solution is most aligned with your goals?
-                        </p>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-2.5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         {[
                           { id: "software", label: "Custom Software", icon: Code },
                           { id: "cloud", label: "Cloud Systems", icon: Server },
@@ -328,16 +307,7 @@ ${formData.message}`;
                         ))}
                       </div>
 
-                      <div className="pt-2">
-                        <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                          Organization Scale
-                        </h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                          Choose the bracket that closest fits your current team.
-                        </p>
-                      </div>
-
-                      <div className="flex gap-2">
+                      <div className="flex flex-col sm:flex-row gap-2 pt-1">
                         {["<10 members", "10-50 members", "50+ members"].map((size) => (
                           <button
                             key={size}
@@ -356,16 +326,12 @@ ${formData.message}`;
                   )}
 
                   {inquiryType === "order" && (
-                    <div className="space-y-4">
+                    <div className="space-y-4 pb-4 border-b border-slate-100 dark:border-slate-800/60">
                       <div>
                         <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                          Enter your Order ID
+                          Order Details
                         </h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                          Providing a valid Order ID helps our checkout team pull up details instantly.
-                        </p>
                       </div>
-
                       <div className="space-y-1.5">
                         <label htmlFor="orderId" className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">
                           Order ID (Optional)
@@ -375,42 +341,18 @@ ${formData.message}`;
                           type="text"
                           value={formData.orderId}
                           onChange={(e) => setFormData({ ...formData, orderId: e.target.value })}
-                          className="w-full px-4 py-2.5  border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500/10 focus:border-brand-secondary-500 transition"
-                          placeholder="e.g. #SHERO-202612"
+                          className="w-full px-4 py-2.5  border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/10 focus:border-brand-secondary-500 transition"
+                          placeholder="e.g. #E4G432901"
                         />
                       </div>
                     </div>
                   )}
 
-                  <div className="flex justify-between gap-4 pt-4 border-t border-slate-100 dark:border-slate-800/80">
-                    <button
-                      type="button"
-                      onClick={handleBack}
-                      className="flex items-center gap-1 px-4 h-10  text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition"
-                    >
-                      Back
-                    </button>
-                    <Button
-                      type="button"
-                      onClick={handleContinue}
-                      className="px-6 h-10  text-sm font-bold bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white"
-                    >
-                      Continue <ArrowRight className="w-4 h-4 ml-1.5" />
-                    </Button>
-                  </div>
-                </div>
-              )}
-
-              {/* STEP 3: CONTACT & MESSAGE */}
-              {step === 3 && (
-                <div className="space-y-4">
+                  {/* Standard Contact Fields */}
                   <div>
                     <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                      Tell us more
+                      Your Information
                     </h3>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                      Provide your coordinates and inquiry details so we can reach you.
-                    </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -424,7 +366,7 @@ ${formData.message}`;
                         required
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500/10 focus:border-brand-secondary-500 transition"
+                        className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/10 focus:border-brand-secondary-500 transition"
                         placeholder="John Doe"
                       />
                     </div>
@@ -438,7 +380,7 @@ ${formData.message}`;
                         required
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500/10 focus:border-brand-secondary-500 transition"
+                        className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/10 focus:border-brand-secondary-500 transition"
                         placeholder="john@shero.com"
                       />
                     </div>
@@ -454,7 +396,7 @@ ${formData.message}`;
                       rows={4}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500/10 focus:border-brand-secondary-500 transition resize-none"
+                      className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/10 focus:border-brand-secondary-500 transition resize-none"
                       placeholder={
                         inquiryType === "proposal"
                           ? "Briefly tell us about your project features, expected timelines, or integrations..."

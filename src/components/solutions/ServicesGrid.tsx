@@ -138,18 +138,18 @@ const ServicesGrid = () => {
               key={service.title}
               variants={cardVariants}
               whileHover={{ y: -8 }}
-              className="group relative bg-white dark:bg-slate-900 rounded p-6
-              border-2 border-slate-200 dark:border-slate-800
+              className="group relative bg-white/60 dark:bg-slate-900/40 backdrop-blur-md rounded p-6
+              border border-slate-200/80 dark:border-slate-800/80
               hover:border-transparent
-              shadow hover:shadow
-              transition duration-300 overflow-hidden"
+              shadow-sm hover:shadow-xl hover:shadow-brand-secondary-500/5
+              transition-all duration-300 overflow-hidden"
             >
               {/* Gradient border on hover */}
               <div
                 className={`absolute inset-0 bg-linear-to-br ${service.gradient} 
                 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10`}
               />
-              <div className="absolute inset-0.5 bg-white dark:bg-slate-900 rounded -z-10" />
+              <div className="absolute inset-[1px] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded -z-10" />
 
               {/* Icon */}
               <div

@@ -1,26 +1,30 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { List, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { useFormContext } from "react-hook-form";
+import type { ProductFormValues } from "@/lib/validations/product";
 
-interface ProductFeaturesCardProps {
-  features: string[];
-  newFeature: string;
-  onNewFeatureChange: (value: string) => void;
-  onAddFeature: () => void;
-  onRemoveFeature: (index: number) => void;
-}
+export default function ProductFeaturesCard() {
+  const { watch, setValue } = useFormContext<ProductFormValues>();
+  const features = watch("features") || [];
 
-export default function ProductFeaturesCard({
-  features,
-  newFeature,
-  onNewFeatureChange,
-  onAddFeature,
-  onRemoveFeature,
-}: ProductFeaturesCardProps) {
+  const [newFeature, setNewFeature] = useState("");
+
+  const handleAddFeature = () => {
+    if (!newFeature.trim()) return;
+    setValue("features", [...features, newFeature.trim()], { shouldDirty: true });
+    setNewFeature("");
+  };
+
+  const handleRemoveFeature = (index: number) => {
+    const updated = features.filter((_, i) => i !== index);
+    setValue("features", updated, { shouldDirty: true });
+  };
+
   return (
     <Card className="bg-card border-border p-6 md:p-8 space-y-6">
       <div className="flex items-center gap-2 pb-2 border-b border-border">
@@ -33,18 +37,18 @@ export default function ProductFeaturesCard({
           <Input
             placeholder="Add a product feature..."
             value={newFeature}
-            onChange={(e) => onNewFeatureChange(e.target.value)}
+            onChange={(e) => setNewFeature(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
-                onAddFeature();
+                handleAddFeature();
               }
             }}
             className="bg-muted/50 border-border text-foreground"
           />
           <Button
             type="button"
-            onClick={onAddFeature}
+            onClick={handleAddFeature}
             className="bg-muted text-foreground hover:bg-accent"
           >
             <Plus className="w-4 h-4" />
@@ -54,13 +58,13 @@ export default function ProductFeaturesCard({
         <div className="flex flex-wrap gap-2">
           {features.map((feature, index) => (
             <Badge
-              key={feature}
+              key={`${feature}-${index}`}
               className="bg-muted text-muted-foreground border-border py-1.5 px-3 group"
             >
               {feature}
               <button
                 type="button"
-                onClick={() => onRemoveFeature(index)}
+                onClick={() => handleRemoveFeature(index)}
                 className="ml-2 text-muted-foreground hover:text-rose-400 transition-colors"
               >
                 <X className="w-3 h-3" />

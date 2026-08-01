@@ -8,7 +8,7 @@ export function generateSku(productId: string, customSku?: string | null): strin
     return customSku.trim();
   }
   const idPart = productId.split("-")[0].toUpperCase();
-  return `SHERO-${idPart}`;
+  return `shr-${idPart}`;
 }
 
 /**

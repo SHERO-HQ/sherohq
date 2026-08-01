@@ -425,7 +425,7 @@ export default function AdminDashboard() {
                 className={cn(
                   "px-3 py-1 text-xs font-semibold rounded transition",
                   period === opt.value
-                    ? "bg-brand-secondary-600 text-foreground shadow"
+                    ? "bg-brand-secondary-600 text-white shadow"
                     : "text-muted-foreground hover:text-foreground hover:bg-accent",
                 )}
               >
@@ -455,7 +455,7 @@ export default function AdminDashboard() {
             </Link>
           </Button>
           <Button
-            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-bold"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold"
             asChild
           >
             <Link href="/admin/products/new">
@@ -515,7 +515,7 @@ export default function AdminDashboard() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="h-125 w-full mt-4">
+            <div className="h-[400px] w-full mt-4">
               {analyticsLoading ? (
                 <ChartSkeleton />
               ) : (
@@ -686,7 +686,7 @@ export default function AdminDashboard() {
               </div>
             </CardHeader>
             <CardContent className="pt-6">
-              <div className="h-50 w-full">
+              <div className="h-[300px] w-full">
                 {statsLoading ? (
                   <PieSkeleton />
                 ) : (
@@ -749,7 +749,7 @@ export default function AdminDashboard() {
               </Link>
             </Button>
           </CardHeader>
-          <div className="overflow-x-auto max-h-[480px] overflow-y-auto">
+          <div className="overflow-auto max-h-[480px] custom-scrollbar">
             <table className="w-full text-left border-collapse">
               <thead className="sticky top-0 z-10 bg-card">
                 <tr className="bg-muted/50">
@@ -896,7 +896,7 @@ export default function AdminDashboard() {
               <Clock className="w-4 h-4 text-muted-foreground" />
             </div>
           </CardHeader>
-          <CardContent className="pt-6 max-h-125 overflow-y-auto">
+          <CardContent className="pt-6 max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
             <ActivityFeed
               logs={activityLogs || []}
               isLoading={activityLoading}

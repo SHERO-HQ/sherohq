@@ -237,7 +237,7 @@ const AdminTestimonials = () => {
           </Button>
           <Button
             onClick={handleOpenCreate}
-            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add Testimonial
@@ -521,7 +521,7 @@ const AdminTestimonials = () => {
             <Button
               type="submit"
               disabled={createMutation.isPending || updateMutation.isPending}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
             >
               {createMutation.isPending || updateMutation.isPending ? (
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />

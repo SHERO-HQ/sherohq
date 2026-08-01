@@ -65,9 +65,9 @@ export default function NotificationCenter() {
                 className={cn(
                     "relative p-2 rounded transition duration-300",
                     isOpen
-                        ? "bg-brand-secondary-500/80 text-brand-secondary-400 border-brand-secondary-500/20"
-                        : "text-muted-foreground hover:text-foreground hover:bg-white/80",
-                    "border border-white/80 dark:border-border",
+                        ? "bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 border-brand-secondary-500/20"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted",
+                    "border border-border",
                 )}
                 title="Notifications"
             >
@@ -75,7 +75,7 @@ export default function NotificationCenter() {
                 {unreadCount > 0 && (
                     <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center">
                         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-secondary-400 opacity-75" />
-                        <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-brand-secondary-500 ring-2 ring-slate-900" />
+                        <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-brand-secondary-500 ring-2 ring-background" />
                     </span>
                 )}
             </button>
@@ -91,7 +91,7 @@ export default function NotificationCenter() {
                             <div className="flex gap-2">
                                 <button
                                     onClick={markAllAsRead}
-                                    className="p-1.5 text-muted-foreground hover:text-purple-400 hover:bg-muted rounded transition-colors"
+                                    className="p-1.5 text-muted-foreground hover:text-brand-secondary-500 dark:hover:text-brand-secondary-400 hover:bg-muted rounded transition-colors"
                                     title="Mark all as read"
                                 >
                                     <Check className="w-4 h-4" />
@@ -115,7 +115,7 @@ export default function NotificationCenter() {
                                 <p>No notifications</p>
                             </div>
                         ) : (
-                            <div className="divide-y divide-slate-800">
+                            <div className="divide-y divide-border">
                                 {notifications.map((notification) => (
                                     <div
                                         key={notification.id}
@@ -145,7 +145,7 @@ export default function NotificationCenter() {
                                                         markAsRead(notification.id);
                                                         setIsOpen(false);
                                                     }}
-                                                    className="text-xs text-purple-400 hover:text-purple-300 font-medium"
+                                                    className="text-xs text-brand-secondary-600 dark:text-brand-secondary-400 hover:text-brand-secondary-500 font-medium"
                                                 >
                                                     View Details →
                                                 </Link>
@@ -154,7 +154,7 @@ export default function NotificationCenter() {
                                         {!notification.read && (
                                             <button
                                                 onClick={() => markAsRead(notification.id)}
-                                                className="self-start mt-1 w-2 h-2 rounded-full bg-purple-500"
+                                                className="self-start mt-1 w-2 h-2 rounded-full bg-brand-secondary-500"
                                                 title="Mark as read"
                                             />
                                         )}

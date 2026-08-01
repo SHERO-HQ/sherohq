@@ -141,7 +141,7 @@ export default function AdminProfile() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="absolute bottom-1 right-1 p-1.5 bg-brand-secondary-500 rounded text-foreground hover:bg-brand-secondary-400 transition-colors shadow"
+                    className="absolute bottom-1 right-1 p-1.5 bg-brand-secondary-500 rounded text-white hover:bg-brand-secondary-400 transition-colors shadow"
                     disabled={isUpdating}
                   >
                     {isUpdating ? (

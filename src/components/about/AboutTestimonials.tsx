@@ -7,7 +7,8 @@ import {
   MessageSquarePlus,
   ChevronLeft,
   ChevronRight,
-  Star
+  Star,
+  Rocket
 } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
@@ -240,29 +241,27 @@ const AboutTestimonials = () => {
           </>
         )}
 
-        {/* Feedback CTA */}
-        <div className="cursor-pointer text-center relative group">
-          {/* Particles background - we can add particles background to the testimonial section */}
-
+        {/* Sales CTA */}
+        <div className="cursor-pointer text-center relative group mt-8">
           <FadeInView direction="up" delay={0}>
-            <div className="inline-flex relative flex-col items-center gap-4 p-6 rounded bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-white/10 shadow dark:shadow overflow-hidden max-w-lg mx-auto w-full transition duration-300">
+            <div className="inline-flex relative flex-col items-center gap-4 p-8 md:p-10 rounded bg-white/60 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 shadow-lg dark:shadow-xl overflow-hidden max-w-2xl mx-auto w-full transition duration-300">
               <div className="absolute inset-0 pattern-dots pattern-brand-secondary-500/10 pattern-opacity-100 pattern-size-4 opacity-80 -z-10" />
 
-              <div className="p-3 bg-brand-secondary-500/10 rounded text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-500/20 transition-colors duration-300">
-                <MessageSquarePlus className="w-6 h-6" />
+              <div className="p-4 bg-brand-secondary-500/10 rounded-full text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-500/20 transition-colors duration-300 mb-2">
+                <Rocket className="w-8 h-8" />
               </div>
               <div className="relative z-10">
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 transition-colors duration-300">
-                  Have A Testimony?
+                <h3 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-3 transition-colors duration-300">
+                  Ready to Redefine Possible?
                 </h3>
-                <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 transition-colors duration-300">
-                  We value your input! Help us improve our products and services.
+                <p className="text-slate-600 dark:text-slate-400 text-base md:text-lg mb-8 transition-colors duration-300 max-w-lg mx-auto">
+                  Partner with us to build enterprise-grade infrastructure that scales with your ambition.
                 </p>
                 <Link
-                  href="/feedback"
-                  className="cursor-pointer px-6 py-2 bg-brand-secondary-600 text-sm text-white rounded font-medium hover:bg-brand-secondary-700 transition-colors shadow shadow-brand-secondary-900/20 w-fit inline-block"
+                  href="/contact-us"
+                  className="cursor-pointer px-8 py-3 bg-brand-secondary-600 text-sm text-white rounded font-bold hover:bg-brand-secondary-700 transition-all shadow-lg shadow-brand-secondary-500/20 hover:-translate-y-1 hover:shadow-brand-secondary-500/40 w-fit inline-block"
                 >
-                  Share With Us
+                  Let's Build Together
                 </Link>
               </div>
             </div>

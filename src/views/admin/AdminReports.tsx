@@ -825,7 +825,7 @@ function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
         <ShoppingCart className="w-5 h-5 text-blue-400" />
         Recent Orders
       </h3>
-      <div className="space-y-3">
+      <div className="space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
         {orders.length > 0 ? (
           orders.map((order) => (
             <div

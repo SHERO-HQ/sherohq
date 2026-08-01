@@ -109,7 +109,7 @@ const AdminUsersHeader = ({
         </Button>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-medium px-6">
+            <Button className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-medium px-6">
               <Printer className="mr-2 h-4 w-4" /> Export
             </Button>
           </DropdownMenuTrigger>
@@ -587,7 +587,7 @@ const OrderHistoryList = ({ orders }: OrderHistoryListProps) => {
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 max-h-[350px] overflow-y-auto custom-scrollbar pr-2">
       {orders.slice(0, 5).map((order) => (
         <div
           key={order.id}

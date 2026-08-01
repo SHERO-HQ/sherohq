@@ -501,7 +501,7 @@ export default function OrderDetails() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-bold h-10"
+                className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold h-10"
                 disabled={isUpdating}
               >
                 {isUpdating ? (

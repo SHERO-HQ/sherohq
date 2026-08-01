@@ -27,7 +27,7 @@ const Contact = () => {
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="space-y-8"
+              className="space-y-8 order-2 lg:order-1"
             >
               <div>
                 <div className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-500/40 uppercase tracking-wider transition-colors duration-300">
@@ -104,7 +104,7 @@ const Contact = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative"
+              className="relative order-1 lg:order-2"
             >
               {/* Form Container */}
               <div className="relative bg-white/90 dark:bg-slate-900/90  border border-slate-200 dark:border-white/10 rounded p-6 shadow">

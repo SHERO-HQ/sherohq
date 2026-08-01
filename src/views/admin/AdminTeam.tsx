@@ -18,6 +18,7 @@ import {
   useDeleteTeamMember,
 } from "@/hooks/queries/useTeam";
 import { useNotifications } from "@/hooks/useNotifications";
+import { useImageUpload } from "@/hooks/useImageUpload";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -79,6 +80,16 @@ const AdminTeam = () => {
     image: "",
     social: { twitter: "", linkedin: "", github: "" },
     order: 0,
+  });
+
+  const { isUploading, handleFileChangeEvent } = useImageUpload({
+    maxImages: 1,
+    currentImagesCount: formData.image ? 1 : 0,
+    onSuccess: (urls) => {
+      if (urls.length > 0) {
+        setFormData((prev) => ({ ...prev, image: urls[0] }));
+      }
+    }
   });
 
   const filteredTeam = team.filter((member) =>
@@ -187,7 +198,7 @@ const AdminTeam = () => {
           {canAddMember && (
             <Button
               onClick={handleOpenCreate}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add Member
@@ -311,16 +322,52 @@ const AdminTeam = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="image">Image URL</Label>
-              <Input
-                id="image"
-                value={formData.image}
-                onChange={(e) =>
-                  setFormData({ ...formData, image: e.target.value })
-                }
-                placeholder="https://..."
-                className="bg-muted border-border"
-              />
+              <Label>Image</Label>
+              <div className="flex items-center gap-4">
+                {formData.image ? (
+                  <div className="relative w-24 h-24 rounded border border-border overflow-hidden group shrink-0 bg-accent">
+                    <AppImage
+                      src={formData.image}
+                      alt="Avatar preview"
+                      fill
+                      sizes="96px"
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setFormData((prev) => ({ ...prev, image: "" }))}
+                        className="text-white hover:bg-white/20 hover:text-white"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <label className="w-24 h-24 rounded border-2 border-dashed border-border hover:border-brand-secondary-500/50 hover:bg-brand-secondary-500/5 flex flex-col items-center justify-center cursor-pointer transition-colors relative overflow-hidden shrink-0">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleFileChangeEvent}
+                      disabled={isUploading}
+                    />
+                    {isUploading ? (
+                      <Loader2 className="w-6 h-6 text-brand-secondary-400 animate-spin" />
+                    ) : (
+                      <>
+                        <Plus className="w-6 h-6 text-muted-foreground" />
+                        <span className="text-xs text-muted-foreground mt-1 font-medium">Upload</span>
+                      </>
+                    )}
+                  </label>
+                )}
+                <div className="flex-1 text-xs text-muted-foreground max-w-[200px]">
+                  Recommended size: 400x400px (1:1 ratio). Will be cropped to a circle.
+                </div>
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -398,7 +445,7 @@ const AdminTeam = () => {
               <Button
                 type="submit"
                 disabled={createMutation.isPending || updateMutation.isPending}
-                className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
+                className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
               >
                 {createMutation.isPending || updateMutation.isPending ? (
                   <Loader2 className="w-4 h-4 animate-spin mr-2" />

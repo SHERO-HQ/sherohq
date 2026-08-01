@@ -261,7 +261,7 @@ export default function AdminCreateInvoice() {
               className={cn(
                 "px-3.5 py-1.5 rounded text-xs font-bold transition flex items-center gap-1.5 select-none",
                 mode === "invoice"
-                  ? "bg-brand-secondary-600 text-foreground shadow shadow-brand-secondary-500/25"
+                  ? "bg-brand-secondary-600 text-white shadow shadow-brand-secondary-500/25"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
@@ -320,7 +320,7 @@ export default function AdminCreateInvoice() {
         <div className="flex flex-col gap-3 rounded border border-emerald-500/20 bg-emerald-500/5 px-4 py-3 md:flex-row md:items-center md:justify-between">
           <div className="space-y-1">
             <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
-              <Badge className="bg-emerald-500/10 text-emerald-300 border-emerald-500/20">
+              <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border-emerald-500/20">
                 Local draft
               </Badge>
               <span className="text-sm text-muted-foreground">
@@ -338,7 +338,7 @@ export default function AdminCreateInvoice() {
               type="button"
               variant="outline"
               onClick={handleSaveDraft}
-              className="border-emerald-500/30 text-emerald-200 hover:bg-emerald-500/10 hover:text-emerald-100"
+              className="border-emerald-500/30 text-emerald-600 dark:text-emerald-200 hover:bg-emerald-500/10 hover:text-emerald-700 dark:hover:text-emerald-100"
             >
               Save draft now
             </Button>

@@ -330,7 +330,7 @@ export default function WhatsAppDashboard() {
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2 text-xs font-semibold rounded transition-all flex items-center gap-2 ${activeTab === tab.id
-              ? "bg-brand-secondary-600 text-foreground shadow-md shadow-brand-secondary-600/10"
+              ? "bg-brand-secondary-600 text-white shadow-md shadow-brand-secondary-600/10"
               : "text-muted-foreground hover:text-foreground hover:bg-accent"
               }`}
           >
@@ -423,7 +423,7 @@ export default function WhatsAppDashboard() {
                               setSelectedPhone(t.customer_phone);
                               setActiveTab("conversations");
                             }}
-                            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground px-3 py-1 rounded text-xs font-semibold transition-colors"
+                            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white px-3 py-1 rounded text-xs font-semibold transition-colors"
                           >
                             Chat
                           </button>
@@ -447,7 +447,7 @@ export default function WhatsAppDashboard() {
                 <button
                   onClick={handleRunBulkRetry}
                   disabled={triggeringBulk}
-                  className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground py-2 rounded font-semibold text-xs transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white py-2 rounded font-semibold text-xs transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {triggeringBulk ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5" />}
                   Run Retry Worker
@@ -546,7 +546,7 @@ export default function WhatsAppDashboard() {
                               <>
                                 <button
                                   onClick={() => void handleRetryMessage(r.message_id)}
-                                  className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground px-2.5 py-1 rounded text-xs font-semibold transition-colors"
+                                  className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white px-2.5 py-1 rounded text-xs font-semibold transition-colors"
                                   title="Retry right now"
                                 >
                                   Retry Now
@@ -836,7 +836,7 @@ export default function WhatsAppDashboard() {
                 <button
                   type="submit"
                   disabled={sendingTest}
-                  className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground py-2.5 rounded font-semibold text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white py-2.5 rounded font-semibold text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {sendingTest ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                   Send Test Template

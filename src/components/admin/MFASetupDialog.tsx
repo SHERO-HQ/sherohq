@@ -87,7 +87,7 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
               <Button 
                 onClick={handleStartSetup} 
                 disabled={loading}
-                className="w-full bg-brand-secondary-500 hover:bg-brand-secondary-600 text-foreground font-bold"
+                className="w-full bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white font-bold"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
                 Get Started
@@ -159,7 +159,7 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
                 <Button 
                   onClick={handleVerify} 
                   disabled={loading || code.length !== 6}
-                  className="flex-2 bg-brand-secondary-500 hover:bg-brand-secondary-600 text-foreground font-bold"
+                  className="flex-2 bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white font-bold"
                 >
                   {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : "Enable MFA"}
                 </Button>

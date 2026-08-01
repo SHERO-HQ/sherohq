@@ -350,7 +350,7 @@ export default function AdminExpenses() {
         <div className="flex items-center gap-3">
           <Button
             onClick={() => handleOpenForm()}
-            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-bold"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add Expense
@@ -786,7 +786,7 @@ export default function AdminExpenses() {
                 <Button
                   type="submit"
                   disabled={isSaving}
-                  className="flex-1 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-bold"
+                  className="flex-1 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold"
                 >
                   {isSaving ? (
                     <>

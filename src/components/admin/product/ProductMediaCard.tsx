@@ -5,28 +5,24 @@ import { Image as ImageIcon, Plus, Loader2, Info, RotateCcw } from "lucide-react
 import AppImage from "@/components/common/AppImage";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useFormContext } from "react-hook-form";
+import type { ProductFormValues } from "@/lib/validations/product";
 
 interface ProductMediaCardProps {
-  images: string[];
-  primaryImage: string;
   isUploading: boolean;
   onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onUploadFiles?: (files: File[]) => void;
-  onRemove: (url: string) => void;
-  onSetPrimary: (url: string) => void;
-  onReorder?: (newImages: string[]) => void;
 }
 
 export default function ProductMediaCard({
-  images,
-  primaryImage,
   isUploading,
   onUpload,
   onUploadFiles,
-  onRemove,
-  onSetPrimary,
-  onReorder,
 }: ProductMediaCardProps) {
+  const { watch, setValue, formState: { errors } } = useFormContext<ProductFormValues>();
+  const images = watch("images") || [];
+  const primaryImage = watch("image") || "";
+
   const [isDragging, setIsDragging] = useState(false);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [deletingUrls, setDeletingUrls] = useState<Record<string, number>>({});
@@ -50,14 +46,12 @@ export default function ProductMediaCard({
   const handleItemDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault();
     if (draggedIndex === null || draggedIndex === index) return;
-    if (onReorder) {
-      const newImages = [...images];
-      const draggedImage = newImages[draggedIndex];
-      newImages.splice(draggedIndex, 1);
-      newImages.splice(index, 0, draggedImage);
-      onReorder(newImages);
-      setDraggedIndex(index);
-    }
+    const newImages = [...images];
+    const draggedImage = newImages[draggedIndex];
+    newImages.splice(draggedIndex, 1);
+    newImages.splice(index, 0, draggedImage);
+    setValue("images", newImages, { shouldDirty: true, shouldValidate: true });
+    setDraggedIndex(index);
   };
 
   const handleItemDrop = (e: React.DragEvent) => {
@@ -71,6 +65,14 @@ export default function ProductMediaCard({
     const files = Array.from(e.dataTransfer.files || []);
     if (files.length > 0 && onUploadFiles) {
       onUploadFiles(files);
+    }
+  };
+
+  const onRemove = (url: string) => {
+    const newImages = images.filter((img) => img !== url);
+    setValue("images", newImages, { shouldDirty: true, shouldValidate: true });
+    if (primaryImage === url) {
+      setValue("image", newImages[0] || "", { shouldDirty: true, shouldValidate: true });
     }
   };
 
@@ -120,7 +122,8 @@ export default function ProductMediaCard({
         "bg-card border p-6 md:p-8 space-y-6 transition-all duration-300 relative select-none",
         isDragging
           ? "border-brand-secondary-500 bg-brand-secondary-500/5 scale-[0.99] shadow-[0_0_15px_rgba(16,185,129,0.1)]"
-          : "border-border"
+          : "border-border",
+        errors.images && "border-rose-500/30 bg-rose-500/2"
       )}
     >
       {/* Drag overlay guide */}
@@ -215,11 +218,11 @@ export default function ProductMediaCard({
                     <div className="absolute bottom-0 inset-x-0 p-3 bg-linear-to-t from-black/90 via-black/40 to-transparent z-10">
                       <button
                         type="button"
-                        onClick={() => onSetPrimary(url)}
+                        onClick={() => setValue("image", url, { shouldDirty: true, shouldValidate: true })}
                         className={cn(
                           "w-full py-1.5 px-2 rounded text-[9px] font-semibold tracking-wider transition-all shadow",
                           primaryImage === url
-                            ? "bg-brand-secondary-500 text-foreground cursor-default shadow-brand-secondary-500/25"
+                            ? "bg-brand-secondary-500 text-white cursor-default shadow-brand-secondary-500/25"
                             : "bg-white/20 hover:bg-white/30 text-foreground"
                         )}
                         disabled={primaryImage === url}

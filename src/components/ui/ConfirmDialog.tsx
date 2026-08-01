@@ -95,8 +95,7 @@ export function ConfirmDialog({
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            transition={{ type: "spring", duration: 0.3 }}
-            className="relative glass-surface-lg w-full max-w-md overflow-hidden shadow-2xl rounded border border-slate-700/50 bg-slate-900/95"
+            className="relative glass-surface-lg w-full max-w-md overflow-hidden shadow-2xl rounded text-foreground"
           >
             {/* Header */}
             <div className="flex items-start justify-between p-6 pb-0">
@@ -111,13 +110,13 @@ export function ConfirmDialog({
                   )}
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-white">{title}</h3>
+                  <h3 className="text-lg font-semibold text-foreground">{title}</h3>
                 </div>
               </div>
               <button
                 onClick={onClose}
                 disabled={isLoading}
-                className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-full transition-colors disabled:opacity-50"
+                className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-full transition-colors disabled:opacity-50"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -125,7 +124,7 @@ export function ConfirmDialog({
 
             {/* Content */}
             <div className="p-6 space-y-4">
-              {message && <p className="text-slate-300 text-sm leading-relaxed">{message}</p>}
+              {message && <p className="text-muted-foreground text-sm leading-relaxed">{message}</p>}
 
               {isPrompt && (
                 <div className="mt-2">
@@ -136,7 +135,7 @@ export function ConfirmDialog({
                     onKeyDown={handleKeyDown}
                     placeholder={placeholder}
                     autoFocus
-                    className="w-full px-4 py-2.5 bg-slate-800/80 border border-slate-700 rounded text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-sm"
+                    className="w-full px-4 py-2.5 bg-muted/50 border border-border rounded text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition-all text-sm"
                   />
                 </div>
               )}
@@ -148,7 +147,7 @@ export function ConfirmDialog({
                 <Button
                   onClick={onClose}
                   disabled={isLoading}
-                  className="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700"
+                  className="bg-muted hover:bg-accent text-foreground border border-border"
                 >
                   {cancelText}
                 </Button>

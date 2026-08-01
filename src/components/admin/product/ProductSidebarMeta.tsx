@@ -5,7 +5,8 @@ import { Package, Tag } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useDialog } from "@/hooks/useDialog";
-import type { Product } from "@/types/product";
+import { useFormContext } from "react-hook-form";
+import type { ProductFormValues } from "@/lib/validations/product";
 
 interface Category {
   id: string;
@@ -13,25 +14,24 @@ interface Category {
 }
 
 interface ProductSidebarMetaProps {
-  productData: Partial<Product>;
   categories: Category[];
-  onUpdateProductData: (updates: Partial<Product>) => void;
-  errors?: Record<string, string>;
   onCategoryAdded?: (cat: Category) => void;
 }
 
 export default function ProductSidebarMeta({
-  productData,
   categories,
-  onUpdateProductData,
-  errors = {},
   onCategoryAdded,
 }: ProductSidebarMetaProps) {
   const dialog = useDialog();
+  const { register, watch, setValue, formState: { errors } } = useFormContext<ProductFormValues>();
+  
   const [discountMode, setDiscountMode] = React.useState<"percentage" | "fixed">("percentage");
 
-  const regularPrice = productData.originalPrice || productData.price || 0;
-  const salePrice = productData.price || 0;
+  const originalPrice = watch("originalPrice");
+  const price = watch("price");
+  
+  const regularPrice = originalPrice || price || 0;
+  const salePrice = price || 0;
 
   const currentDiscountFixed = Math.max(0, regularPrice - salePrice);
   const currentDiscountPerc = regularPrice > 0 ? (currentDiscountFixed / regularPrice) * 100 : 0;
@@ -41,25 +41,29 @@ export default function ProductSidebarMeta({
     : currentDiscountFixed;
 
   React.useEffect(() => {
-    if (productData.originalPrice && productData.originalPrice > (productData.price || 0)) {
-      const diff = productData.originalPrice - (productData.price || 0);
-      const perc = (diff / productData.originalPrice) * 100;
+    if (originalPrice && originalPrice > price) {
+      const diff = originalPrice - price;
+      const perc = (diff / originalPrice) * 100;
       if (Number.isInteger(perc)) {
         setDiscountMode("percentage");
       } else {
         setDiscountMode("fixed");
       }
     }
-  }, [productData.id]);
+  }, [originalPrice, price]);
 
   const handleRegularPriceChange = (val: number) => {
     const newOriginalPrice = val > salePrice ? val : undefined;
-    onUpdateProductData({ originalPrice: newOriginalPrice, price: salePrice > val ? val : salePrice });
+    setValue("originalPrice", newOriginalPrice, { shouldDirty: true, shouldValidate: true });
+    if (salePrice > val) {
+      setValue("price", val, { shouldDirty: true, shouldValidate: true });
+    }
   };
 
   const handleSalePriceChange = (val: number) => {
     const newOriginalPrice = regularPrice > val ? regularPrice : undefined;
-    onUpdateProductData({ price: val, originalPrice: newOriginalPrice });
+    setValue("price", val, { shouldDirty: true, shouldValidate: true });
+    setValue("originalPrice", newOriginalPrice, { shouldDirty: true, shouldValidate: true });
   };
 
   const handleDiscountChange = (val: number) => {
@@ -70,18 +74,20 @@ export default function ProductSidebarMeta({
       newSalePrice = Math.max(0, regularPrice - val);
     }
     const newOriginalPrice = regularPrice > newSalePrice ? regularPrice : undefined;
-    onUpdateProductData({ price: newSalePrice, originalPrice: newOriginalPrice });
+    setValue("price", newSalePrice, { shouldDirty: true, shouldValidate: true });
+    setValue("originalPrice", newOriginalPrice, { shouldDirty: true, shouldValidate: true });
   };
-  const handleInputChange = (field: keyof Product, value: unknown) => {
-    onUpdateProductData({ [field]: value });
-  };
+
+  const inStock = watch("inStock");
+  const isSpotlight = watch("isSpotlight");
+  const isFeatured = watch("isFeatured");
 
   return (
     <div className="space-y-6">
       {/* Pricing & Stock Card */}
       <Card className={cn(
         "bg-card border border-border p-6 space-y-6 transition-all duration-300",
-        (errors.price || errors.stockQuantity) && "border-rose-500/30 bg-rose-500/2"
+        (errors.price || errors.stockQuantity || errors.costPrice) && "border-rose-500/30 bg-rose-500/2"
       )}>
         <div className="flex items-center gap-2 pb-2 border-b border-border">
           <Package className="w-5 h-5 text-brand-secondary-400" />
@@ -102,6 +108,7 @@ export default function ProductSidebarMeta({
               type="number"
               value={regularPrice || ""}
               onChange={(e) => handleRegularPriceChange(e.target.value ? Number.parseFloat(e.target.value) : 0)}
+              onWheel={(e) => (e.target as HTMLInputElement).blur()}
               className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500"
               placeholder="0.00"
             />
@@ -110,19 +117,19 @@ export default function ProductSidebarMeta({
           {/* Discount Section */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-muted-foreground">Discount Type</label>
+              <label className="text-sm font-medium text-muted-foreground flex items-center justify-between">Discount</label>
               <select
                 value={discountMode}
                 onChange={(e) => setDiscountMode(e.target.value as "percentage" | "fixed")}
                 className="w-full h-10 px-3 py-2 bg-muted/50 border border-border rounded text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 text-sm"
               >
-                <option value="percentage">Percentage (%)</option>
-                <option value="fixed">Fixed Amount (GH₵)</option>
+                <option value="percentage">%</option>
+                <option value="fixed">GH₵</option>
               </select>
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-muted-foreground flex items-center justify-between">
-                <span>Discount Value</span>
+                <span>Discount</span>
                 <span className="text-xs text-slate-600 font-mono">
                   {discountMode === "percentage" ? "%" : "GH₵"}
                 </span>
@@ -131,6 +138,7 @@ export default function ProductSidebarMeta({
                 type="number"
                 value={displayDiscountValue || ""}
                 onChange={(e) => handleDiscountChange(e.target.value ? Number.parseFloat(e.target.value) : 0)}
+                onWheel={(e) => (e.target as HTMLInputElement).blur()}
                 className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500"
                 placeholder="0"
                 disabled={regularPrice === 0}
@@ -151,16 +159,16 @@ export default function ProductSidebarMeta({
               type="number"
               value={salePrice || ""}
               onChange={(e) => handleSalePriceChange(e.target.value ? Number.parseFloat(e.target.value) : 0)}
+              onWheel={(e) => (e.target as HTMLInputElement).blur()}
               className={cn(
                 "bg-muted/50 border-brand-secondary-500/30 text-foreground focus-visible:ring-brand-secondary-500",
                 errors.price && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
               )}
               placeholder="0.00"
-              required
             />
             {errors.price && (
               <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
-                {errors.price}
+                {errors.price.message}
               </p>
             )}
             {regularPrice > salePrice && (
@@ -181,25 +189,17 @@ export default function ProductSidebarMeta({
             <Input
               id="costPrice"
               type="number"
-              value={productData.costPrice ?? ""}
-              onChange={(e) =>
-                handleInputChange(
-                  "costPrice",
-                  e.target.value
-                    ? Number.parseFloat(e.target.value)
-                    : undefined
-                )
-              }
+              {...register("costPrice")}
+              onWheel={(e) => (e.target as HTMLInputElement).blur()}
               className={cn(
                 "bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500",
                 errors.costPrice && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
               )}
               placeholder="Initial buying price"
-              required
             />
             {errors.costPrice && (
               <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
-                {errors.costPrice}
+                {errors.costPrice.message}
               </p>
             )}
             <p className="text-[10px] text-muted-foreground italic mt-1 leading-relaxed">
@@ -219,16 +219,8 @@ export default function ProductSidebarMeta({
                 id="stockQuantity"
                 type="number"
                 placeholder="Available units (Optional)"
-                value={productData.stockQuantity ?? ""}
-                onChange={(e) => {
-                  const val = e.target.value
-                    ? Number.parseInt(e.target.value)
-                    : undefined;
-                  onUpdateProductData({
-                    stockQuantity: val,
-                    quantity: val,
-                  });
-                }}
+                {...register("stockQuantity")}
+                onWheel={(e) => (e.target as HTMLInputElement).blur()}
                 className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500"
               />
             </div>
@@ -237,16 +229,16 @@ export default function ProductSidebarMeta({
               <span className="text-sm text-foreground font-medium">In Stock Status</span>
               <button
                 type="button"
-                onClick={() => handleInputChange("inStock", !productData.inStock)}
+                onClick={() => setValue("inStock", !inStock, { shouldDirty: true, shouldValidate: true })}
                 className={cn(
                   "relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-brand-secondary-500",
-                  productData.inStock ? "bg-brand-secondary-600" : "bg-accent"
+                  inStock ? "bg-brand-secondary-600" : "bg-accent"
                 )}
               >
                 <span
                   className={cn(
                     "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
-                    productData.inStock ? "translate-x-6" : "translate-x-1"
+                    inStock ? "translate-x-6" : "translate-x-1"
                   )}
                 />
               </button>
@@ -295,7 +287,7 @@ export default function ProductSidebarMeta({
                           const newCategory = { id: data.id, name: data.name };
                           if (onCategoryAdded) {
                             onCategoryAdded(newCategory);
-                            onUpdateProductData({ category: data.id });
+                            setValue("category", data.id, { shouldDirty: true, shouldValidate: true });
                           } else {
                             void dialog.alert({ title: "Category Added", message: "Category added! Please save draft and refresh to see it in the list.", type: "success" });
                           }
@@ -316,9 +308,7 @@ export default function ProductSidebarMeta({
                 "w-full bg-muted border border-border text-foreground rounded px-4 py-2 outline-none focus:ring-2 focus:ring-brand-secondary-500/50",
                 errors.category && "border-rose-500 focus:ring-rose-500/50 bg-rose-500/5"
               )}
-              value={productData.category || ""}
-              onChange={(e) => handleInputChange("category", e.target.value)}
-              required
+              {...register("category")}
             >
               <option value="">Select Category</option>
               {categories.map((cat) => (
@@ -329,7 +319,7 @@ export default function ProductSidebarMeta({
             </select>
             {errors.category && (
               <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
-                {errors.category}
+                {errors.category.message}
               </p>
             )}
           </div>
@@ -344,8 +334,7 @@ export default function ProductSidebarMeta({
             <select
               id="condition"
               className="w-full bg-muted border border-border text-foreground rounded px-4 py-2 outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
-              value={productData.condition || "New"}
-              onChange={(e) => handleInputChange("condition", e.target.value)}
+              {...register("condition")}
             >
               <option value="New">New</option>
               <option value="Used">Used</option>
@@ -365,10 +354,10 @@ export default function ProductSidebarMeta({
         <div className="space-y-4">
           {/* Spotlight Checkbox Card */}
           <div
-            onClick={() => handleInputChange("isSpotlight", !productData.isSpotlight)}
+            onClick={() => setValue("isSpotlight", !isSpotlight, { shouldDirty: true, shouldValidate: true })}
             className={cn(
               "cursor-pointer flex items-center justify-between p-4 bg-muted/30 border rounded transition-all duration-300 hover:bg-muted/50 group select-none",
-              productData.isSpotlight
+              isSpotlight
                 ? "border-brand-secondary-500 bg-brand-secondary-500/5 shadow-[0_0_12px_rgba(16,185,129,0.08)]"
                 : "border-border"
             )}
@@ -376,7 +365,7 @@ export default function ProductSidebarMeta({
             <div className="space-y-1">
               <span className={cn(
                 "block text-sm font-medium transition-colors",
-                productData.isSpotlight ? "text-brand-secondary-400" : "text-foreground"
+                isSpotlight ? "text-brand-secondary-400" : "text-foreground"
               )}>
                 Featured in Hero Spotlight
               </span>
@@ -386,11 +375,11 @@ export default function ProductSidebarMeta({
             </div>
             <div className={cn(
               "w-5 h-5 rounded flex items-center justify-center border transition-all duration-200",
-              productData.isSpotlight
-                ? "border-brand-secondary-500 bg-brand-secondary-600 text-foreground"
+              isSpotlight
+                ? "border-brand-secondary-500 bg-brand-secondary-600 text-white"
                 : "border-border bg-card group-hover:border-border"
             )}>
-              {productData.isSpotlight && (
+              {isSpotlight && (
                 <svg className="w-3.5 h-3.5 stroke-2 stroke-current" fill="none" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
@@ -400,10 +389,10 @@ export default function ProductSidebarMeta({
 
           {/* Featured Checkbox Card */}
           <div
-            onClick={() => handleInputChange("isFeatured", !productData.isFeatured)}
+            onClick={() => setValue("isFeatured", !isFeatured, { shouldDirty: true, shouldValidate: true })}
             className={cn(
               "cursor-pointer flex items-center justify-between p-4 bg-muted/30 border rounded transition-all duration-300 hover:bg-muted/50 group select-none",
-              productData.isFeatured
+              isFeatured
                 ? "border-brand-secondary-500 bg-brand-secondary-500/5 shadow-[0_0_12px_rgba(16,185,129,0.08)]"
                 : "border-border"
             )}
@@ -411,7 +400,7 @@ export default function ProductSidebarMeta({
             <div className="space-y-1">
               <span className={cn(
                 "block text-sm font-medium transition-colors",
-                productData.isFeatured ? "text-brand-secondary-400" : "text-foreground"
+                isFeatured ? "text-brand-secondary-400" : "text-foreground"
               )}>
                 Featured Recommendations
               </span>
@@ -421,11 +410,11 @@ export default function ProductSidebarMeta({
             </div>
             <div className={cn(
               "w-5 h-5 rounded flex items-center justify-center border transition-all duration-200",
-              productData.isFeatured
-                ? "border-brand-secondary-500 bg-brand-secondary-600 text-foreground"
+              isFeatured
+                ? "border-brand-secondary-500 bg-brand-secondary-600 text-white"
                 : "border-border bg-card group-hover:border-border"
             )}>
-              {productData.isFeatured && (
+              {isFeatured && (
                 <svg className="w-3.5 h-3.5 stroke-2 stroke-current" fill="none" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>

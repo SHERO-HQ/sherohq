@@ -377,12 +377,12 @@ export default function FeedbackForm({
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, y: -10 }}
-                        className="flex items-center gap-4 p-4 rounded bg-emerald-500/5 border border-emerald-500/20 text-center space-y-2"
+                        className="flex gap-4 p-4 rounded bg-emerald-500/5 border border-emerald-500/20 space-y-2"
                       >
                         <ShieldCheck className="h-8 w-8 text-emerald-500" />
                         <div className="flex flex-col gap-2">
                           <h5 className="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Anonymous Mode</h5>
-                          <p className="text-[10px] text-slate-500 dark:text-slate-400 max-w-[200px] mx-auto leading-relaxed">Your identity will be protected and no personal information will be stored or displayed.</p>
+                          <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-relaxed">Your identity will be protected and no personal information will be stored or displayed.</p>
                         </div>
                       </motion.div>
                     )}

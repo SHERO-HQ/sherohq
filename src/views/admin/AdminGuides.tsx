@@ -238,7 +238,7 @@ const AdminGuides = () => {
  onChange={(e) => setSearchQuery(e.target.value)}
  />
  <Button
- className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
+ className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
  asChild
  >
  <Link href="/admin/guides/new">New Guide</Link>

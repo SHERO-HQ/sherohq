@@ -5,32 +5,24 @@ import { Card } from "@/components/ui/card";
 import { Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import type { Product } from "@/types/product";
+import { useFormContext, Controller } from "react-hook-form";
+import type { ProductFormValues } from "@/lib/validations/product";
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
 
-interface ProductIdentityCardProps {
-  productData: Partial<Product>;
-  onUpdateProductData: (updates: Partial<Product>) => void;
-  errors?: Record<string, string>;
-}
+export default function ProductIdentityCard() {
+  const { register, control, watch, setValue, formState: { errors } } = useFormContext<ProductFormValues>();
 
-export default function ProductIdentityCard({
-  productData,
-  onUpdateProductData,
-  errors = {},
-}: ProductIdentityCardProps) {
-  const handleInputChange = (field: keyof Product, value: string) => {
-    onUpdateProductData({ [field]: value });
-  };
-
-  const handleSlugChange = (value: string) => {
+  const handleSlugChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
     const sanitized = value
       .toLowerCase()
       .replaceAll(/[^a-z0-9]+/g, "-")
       .replaceAll(/(^-|-$)/g, "");
-    onUpdateProductData({ slug: sanitized });
+    setValue("slug", sanitized, { shouldDirty: true, shouldValidate: true });
   };
+
+  const slug = watch("slug");
 
   return (
     <Card className={cn(
@@ -55,17 +47,15 @@ export default function ProductIdentityCard({
             <Input
               id="name"
               placeholder="e.g. MacBook Pro M3"
-              value={productData.name || ""}
-              onChange={(e) => handleInputChange("name", e.target.value)}
+              {...register("name")}
               className={cn(
                 "bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500",
                 errors.name && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
               )}
-              required
             />
             {errors.name && (
               <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
-                {errors.name}
+                {errors.name.message}
               </p>
             )}
           </div>
@@ -81,8 +71,7 @@ export default function ProductIdentityCard({
             <Input
               id="sku"
               placeholder="e.g. LAP-MAC-16M3"
-              value={productData.sku || ""}
-              onChange={(e) => handleInputChange("sku", e.target.value)}
+              {...register("sku")}
               className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500 font-mono"
             />
             <p className="text-[10px] text-muted-foreground italic mt-1 leading-relaxed">
@@ -101,15 +90,15 @@ export default function ProductIdentityCard({
             <Input
               id="slug"
               placeholder="e.g. macbook-pro-m3"
-              value={productData.slug || ""}
-              onChange={(e) => handleSlugChange(e.target.value)}
+              {...register("slug")}
+              onChange={handleSlugChange}
               className="bg-muted/50 border-border text-foreground focus-visible:ring-brand-secondary-500 font-mono"
             />
             {/* Dynamic URL Path Preview */}
             <p className="text-[10px] text-muted-foreground mt-1 truncate">
               <span className="text-slate-600 select-none">Live URL: </span>
               <span className="text-muted-foreground font-mono select-all">https://sherotech.com/products/</span>
-              <span className="text-brand-secondary-400 font-semibold font-mono select-all">{productData.slug || "product-slug"}</span>
+              <span className="text-brand-secondary-400 font-semibold font-mono select-all">{slug || "product-slug"}</span>
             </p>
           </div>
         </div>
@@ -126,20 +115,26 @@ export default function ProductIdentityCard({
             "rounded overflow-hidden border border-border transition-all",
             errors.description && "border-rose-500"
           )}>
-            <MDEditor
-              value={productData.description || ""}
-              onChange={(val) => handleInputChange("description", val || "")}
-              preview="edit"
-              height={300}
-              textareaProps={{
-                placeholder: "Provide a detailed, rich description of this product... (Markdown supported)"
-              }}
-              className="!bg-muted/50"
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <MDEditor
+                  value={field.value || ""}
+                  onChange={(val) => field.onChange(val || "")}
+                  preview="edit"
+                  height={300}
+                  textareaProps={{
+                    placeholder: "Provide a detailed, rich description of this product... (Markdown supported)"
+                  }}
+                  className="!bg-muted/50"
+                />
+              )}
             />
           </div>
           {errors.description && (
             <p className="text-xs text-rose-400 animate-in slide-in-from-top-1 opacity-100 mt-1">
-              {errors.description}
+              {errors.description.message}
             </p>
           )}
         </div>

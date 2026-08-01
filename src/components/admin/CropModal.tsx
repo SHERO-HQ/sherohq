@@ -112,7 +112,7 @@ export function CropModal({
             <Button
               type="button"
               onClick={handleDone}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground min-w-[120px]"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-[120px]"
             >
               <Check className="w-4 h-4 mr-2" />
               Apply Crop
