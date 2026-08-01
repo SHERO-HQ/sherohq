@@ -47,7 +47,7 @@ const Consultation = () => {
         </div>
       </section>
 
-      <section className="py-16 px-4 bg-slate-50 dark:bg-slate-950 relative z-20">
+      <section id="scheduler-section" className="py-16 px-4 bg-slate-50 dark:bg-slate-950 relative z-20">
         <div className="container max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
