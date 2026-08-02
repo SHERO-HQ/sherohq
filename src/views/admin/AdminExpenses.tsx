@@ -370,7 +370,7 @@ export default function AdminExpenses() {
                 Total Expenses
               </p>
               <p className="text-2xl font-bold text-foreground mt-1">
-                GH₵{totalAmount.toLocaleString()}
+                GH₵{totalAmount.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
             </div>
           </div>
@@ -600,7 +600,7 @@ export default function AdminExpenses() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <p className="text-foreground font-bold">
-                        GH₵{Number(expense.amount).toLocaleString()}
+                        GH₵{Number(expense.amount).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </p>
                     </td>
                     <td className="px-6 py-4 text-right">

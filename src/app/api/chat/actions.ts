@@ -15,10 +15,7 @@ import { getUserFromSession } from "@/lib/auth";
 // Direct Booking (BOOK_DIRECT)
 // ---------------------------------------------------------------------------
 
-export async function handleBookDirect(bookData: any): Promise<{
-  reply: string;
-  resolved: any | undefined;
-}> {
+export async function handleBookDirect(bookData: any): Promise<any> {
   try {
     const { name, email, phone, service, date, time, message: bookMsg } = bookData;
     if (name && email && service && date && time) {
@@ -36,28 +33,21 @@ export async function handleBookDirect(bookData: any): Promise<{
         `New consultation for ${service} from ${name} (via AI Chat)`,
       );
 
-      const formattedDate = new Date(date).toLocaleDateString("en-GH", {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      });
-
       return {
-        reply: `I have scheduled your consultation for **${service}** on **${formattedDate}** at **${time}**. We look forward to speaking with you, ${name}!`,
-        resolved: { id, name, email, phone, service, date, time, status: "pending" },
+        success: true,
+        data: { id, name, email, phone, service, date, time, status: "pending" },
       };
     }
 
     return {
-      reply: "I wanted to book a consultation for you, but some details (name, email, service, date, or time) were missing.",
-      resolved: undefined,
+      success: false,
+      error: "Missing details (name, email, service, date, or time).",
     };
   } catch (error) {
     console.error("Direct booking failed:", error);
     return {
-      reply: "I encountered an issue while scheduling your consultation. Please try again or visit our booking page.",
-      resolved: undefined,
+      success: false,
+      error: "Encountered an issue while scheduling consultation.",
     };
   }
 }
@@ -66,10 +56,7 @@ export async function handleBookDirect(bookData: any): Promise<{
 // Direct Ticket (TICKET_DIRECT)
 // ---------------------------------------------------------------------------
 
-export async function handleTicketDirect(ticketData: any): Promise<{
-  reply: string;
-  resolved: any | undefined;
-}> {
+export async function handleTicketDirect(ticketData: any): Promise<any> {
   try {
     const { name, email, phone, subject, message: ticketMsg, priority, category } = ticketData;
     if (name && email && subject && ticketMsg) {
@@ -112,8 +99,8 @@ export async function handleTicketDirect(ticketData: any): Promise<{
       );
 
       return {
-        reply: `I have successfully opened support ticket **#${nextTicketNo}** for you. Our technicians have been notified and will contact you via email at **${email}** shortly.`,
-        resolved: {
+        success: true,
+        data: {
           id,
           ticket_no: nextTicketNo,
           name,
@@ -129,14 +116,14 @@ export async function handleTicketDirect(ticketData: any): Promise<{
     }
 
     return {
-      reply: "I wanted to create a support ticket for you, but some details (name, email, subject, or message) were missing.",
-      resolved: undefined,
+      success: false,
+      error: "Missing details (name, email, subject, or message).",
     };
   } catch (error) {
     console.error("Direct ticketing failed:", error);
     return {
-      reply: "I encountered an issue while creating your support ticket. Please try again or visit our support page to submit a ticket.",
-      resolved: undefined,
+      success: false,
+      error: "Encountered an issue while creating your support ticket.",
     };
   }
 }
@@ -145,7 +132,7 @@ export async function handleTicketDirect(ticketData: any): Promise<{
 // Order tracking (TRACK_ORDER)
 // ---------------------------------------------------------------------------
 
-export async function handleTrackOrder(orderId: string): Promise<string> {
+export async function handleTrackOrder(orderId: string): Promise<any> {
   try {
     const orderResult = await dbQuery(
       `SELECT status, total, "createdAt" FROM orders WHERE id = $1 OR replace(lower(id), '-', '') LIKE $1 || '%' LIMIT 1`,
@@ -153,13 +140,11 @@ export async function handleTrackOrder(orderId: string): Promise<string> {
     );
     const order = orderResult.rows[0];
     if (order) {
-      const statusText = order.status.toUpperCase();
-      const orderDate = new Date(order.createdAt).toLocaleDateString("en-GH");
-      return `Found order #${orderId.slice(0, 8)}. Status: **${statusText}** (Created: ${orderDate}). Here are your tracking details:`;
+      return { success: true, order };
     }
-    return `I searched our system but could not find an order matching identifier **#${orderId}**. Please verify your order ID.`;
-  } catch {
-    return "Here is the status of your order:";
+    return { success: false, error: "Order not found" };
+  } catch (error) {
+    return { success: false, error: "Error looking up order" };
   }
 }
 
@@ -167,7 +152,7 @@ export async function handleTrackOrder(orderId: string): Promise<string> {
 // Ticket tracking (TRACK_TICKET)
 // ---------------------------------------------------------------------------
 
-export async function handleTrackTicket(ticketId: string): Promise<string> {
+export async function handleTrackTicket(ticketId: string): Promise<any> {
   try {
     const ticketResult = await dbQuery(
       `SELECT status, subject, "createdAt" FROM tickets WHERE id = $1 OR ticket_no = $2 LIMIT 1`,
@@ -175,12 +160,10 @@ export async function handleTrackTicket(ticketId: string): Promise<string> {
     );
     const ticket = ticketResult.rows[0];
     if (ticket) {
-      const statusText = ticket.status.toUpperCase();
-      const ticketDate = new Date(ticket.createdAt).toLocaleDateString("en-GH");
-      return `Found ticket #${ticketId}. Subject: **"${ticket.subject}"** | Status: **${statusText}** (Opened: ${ticketDate}). Here is the live ticket card:`;
+      return { success: true, ticket };
     }
-    return `I searched our records but could not find a ticket matching **#${ticketId}**. Please check the ticket number.`;
-  } catch {
-    return "Here is the status of your support ticket:";
+    return { success: false, error: "Ticket not found" };
+  } catch (error) {
+    return { success: false, error: "Error looking up ticket" };
   }
 }

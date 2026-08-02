@@ -221,7 +221,7 @@ export const ordersNotifications = {
 
     await sendEmail(
       shippingInfo.email,
-      `Order Confirmation - ${readableOrderId}`,
+      `Order Confirmation: ${readableOrderId}`,
       htmlContent,
       { attachments },
     );

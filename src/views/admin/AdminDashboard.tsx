@@ -99,7 +99,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
                 {item.name === "revenue" ? "Revenue" : item.name === "orders" ? "Orders" : item.name}:
               </span>
               <span className="text-xs text-foreground font-bold font-mono">
-                {item.name === "revenue" ? `GH₵${(item.value || 0).toLocaleString()}` : item.value}
+                {item.name === "revenue" ? `GH₵${(item.value || 0).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : item.value}
               </span>
             </div>
           ))}
@@ -317,7 +317,7 @@ export default function AdminDashboard() {
     return [
       {
         title: "Total Revenue",
-        value: `GH₵${kpi.revenue.toLocaleString()}`,
+        value: `GH₵${kpi.revenue.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
         icon: DollarSign,
         color: "text-brand-secondary-400",
         bgColor: "bg-brand-secondary-400/10",
@@ -855,7 +855,7 @@ export default function AdminDashboard() {
                         {new Date(order.createdAt).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 text-sm font-bold text-brand-secondary-400">
-                        GH₵{order.total.toLocaleString()}
+                        GH₵{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
                       <td className="px-6 py-4">
                         <span

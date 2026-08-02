@@ -69,7 +69,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
                 :
               </span>
               <span className="text-xs text-foreground font-bold font-mono">
-                {item.value.toLocaleString()}
+                {item.value.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
             </div>
           ))}

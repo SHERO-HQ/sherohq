@@ -8,7 +8,7 @@ import { COMPANY_EMAILS } from "@/constants/emails";
 
 interface OrderPrintPortalProps {
   order: Order;
-  printMode: "invoice" | "receipt" | "receipt58" | null;
+  printMode: "invoice" | "receipt" | "receiptA5" | "receipt58" | null;
   receiptQrUrl: string;
 }
 
@@ -25,8 +25,8 @@ export function OrderPrintPortal({
         {`
           @media print {
             @page { 
-              margin: 0.5cm; 
-              size: portrait; 
+              margin: ${printMode === "receiptA5" ? "0" : "0.5cm"}; 
+              size: ${printMode === "receiptA5" ? "A5 portrait" : "portrait"}; 
             }
             @page thermal {
               size: 80mm auto;
@@ -104,20 +104,21 @@ export function OrderPrintPortal({
               padding-top: 10px;
             }
             
-            /* Standard A4 Print Overrides */
+            /* Standard Print Overrides (A4 / A5) */
             .print-document {
               position: relative;
-              max-width: 21cm;
+              max-width: ${printMode === "receiptA5" ? "14.8cm" : "21cm"};
               margin: 0 auto;
-              padding: 1.5cm 2cm;
+              padding: ${printMode === "receiptA5" ? "1cm" : "1.5cm 2cm"};
               box-sizing: border-box;
+              font-size: ${printMode === "receiptA5" ? "0.85em" : "1em"};
             }
             .print-watermark {
               position: fixed;
               top: 60%;
               left: 50%;
               transform: translate(-50%, -50%);
-              width: 15cm;
+              width: ${printMode === "receiptA5" ? "10cm" : "15cm"};
               opacity: 0.05;
               pointer-events: none;
               z-index: 0;
@@ -190,7 +191,7 @@ export function OrderPrintPortal({
                   </td>
                   <td className="text-center">{item.quantity}</td>
                   <td className="text-right">
-                    {(item.price * item.quantity).toLocaleString()}
+                    {(item.price * item.quantity).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </td>
                 </tr>
               ))}
@@ -202,7 +203,7 @@ export function OrderPrintPortal({
           <div className="text-[9px] space-y-1">
             <div className="flex justify-between">
               <span>Subtotal</span>
-              <span>GH₵{order.total.toLocaleString()}</span>
+              <span>GH₵{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </div>
             <div className="flex justify-between">
               <span>Tax</span>
@@ -210,7 +211,7 @@ export function OrderPrintPortal({
             </div>
             <div className="flex justify-between text-sm font-bold pt-1 border-t border-black/20">
               <span>TOTAL</span>
-              <span>GH₵{order.total.toLocaleString()}</span>
+              <span>GH₵{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </div>
           </div>
 
@@ -264,7 +265,7 @@ export function OrderPrintPortal({
               </div>
               <div className="text-right space-y-1">
                 <h2 className="text-3xl font-black uppercase tracking-tighter text-slate-200 mb-2">
-                  {printMode}
+                  {printMode === "receiptA5" ? "RECEIPT" : printMode}
                 </h2>
                 <p className="font-mono text-sm text-slate-700 font-medium">Ref: {displayOrderId(order.id)}</p>
                 <p className="text-slate-500 text-xs mb-3">
@@ -336,10 +337,10 @@ export function OrderPrintPortal({
                     </td>
                     <td className="text-center py-4 text-sm text-slate-600">{item.quantity}</td>
                     <td className="text-right py-4 text-sm text-slate-600 font-mono">
-                      GH₵{item.price.toLocaleString()}
+                      GH₵{item.price.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
                     <td className="text-right py-4 text-sm font-bold text-slate-800 font-mono">
-                      GH₵{(item.price * item.quantity).toLocaleString()}
+                      GH₵{(item.price * item.quantity).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
                   </tr>
                 ))}
@@ -367,7 +368,7 @@ export function OrderPrintPortal({
               <div className="w-72 space-y-3">
                 <div className="flex justify-between text-sm text-slate-600">
                   <span>Subtotal</span>
-                  <span className="font-mono">GH₵{order.total.toLocaleString()}</span>
+                  <span className="font-mono">GH₵{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
                 <div className="flex justify-between text-sm text-slate-600">
                   <span>Tax (0%)</span>
@@ -375,7 +376,7 @@ export function OrderPrintPortal({
                 </div>
                 <div className="flex justify-between items-center text-lg font-bold border-t border-slate-200 pt-3 text-brand-secondary-600 mt-2">
                   <span className="uppercase tracking-tight text-sm">Grand Total</span>
-                  <span className="text-xl">GH₵{order.total.toLocaleString()}</span>
+                  <span className="text-xl">GH₵{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
               </div>
             </div>

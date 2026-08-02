@@ -12,10 +12,9 @@ import { SUPPORT_KNOWLEDGE } from "./knowledge";
 // ---------------------------------------------------------------------------
 
 const GEMINI_MODEL_CANDIDATES = [
-  "gemini-3.6-flash",
-  "gemini-3.5-flash",
-  "gemini-3.1-flash-lite",
   "gemini-2.0-flash",
+  "gemini-1.5-flash",
+  "gemini-1.5-flash-8b",
 ];
 
 // ---------------------------------------------------------------------------
@@ -101,20 +100,23 @@ COMPANY INFO
 - Contact: support@sherohq.com | WhatsApp: available on the website${contextSection}`;
 }
 
-export async function categorizeIntent(message: string): Promise<"tech_support" | "sales" | "general"> {
+export async function categorizeIntent(message: string, history: Array<{ role: string; content: string }> = []): Promise<"tech_support" | "sales" | "general"> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey || !message) return "general";
   
+  const recentHistory = history.slice(-3).map(h => `${h.role.toUpperCase()}: ${h.content}`).join("\n");
+  const textPrompt = `Categorize the User Message into exactly one of these three categories: "tech_support", "sales", or "general". Return ONLY the category string.\n\nRecent History (for context):\n${recentHistory}\n\nUser Message: "${message}"`;
+
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           contents: [{ 
             role: "user", 
-            parts: [{ text: `Categorize this message into exactly one of these three categories: "tech_support", "sales", or "general". Return ONLY the category string.\n\nMessage: "${message}"` }] 
+            parts: [{ text: textPrompt }] 
           }],
           generationConfig: { temperature: 0.1 }
         })
@@ -139,12 +141,12 @@ export async function summarizeChatHistory(history: Array<{ role: string; conten
   
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text: `Summarize the following chat history briefly so an AI assistant can remember the context of the conversation:\n\n${textToSummarize}` }] }],
+          contents: [{ role: "user", parts: [{ text: `Summarize the following chat history briefly so an AI assistant can remember the context of the conversation. Focus on extracting key facts, user preferences (e.g., budget, preferred brands), and any unresolved issues:\n\n${textToSummarize}` }] }],
           generationConfig: { temperature: 0.3 }
         })
       }

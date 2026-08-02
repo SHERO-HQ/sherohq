@@ -62,21 +62,25 @@ export const generateInvoicePdf = async (
       doc.fillColor("#059669").text(COMPANY_CONTACTS.WEBSITE_DISPLAY, 50, currentY);
 
       // Right Side Header Text
-      doc.fillColor("#e2e8f0").fontSize(24).font("Helvetica-Bold").text("RECEIPT", 350, 50, { align: "right" });
+      doc.fillColor("#e2e8f0").fontSize(24).font("Helvetica-Bold").text("RECEIPT", 350, 50, { align: "right", characterSpacing: -1 });
       
-      doc.fillColor("#334155").fontSize(10).font("Helvetica-Bold").text(`Ref: ${readableId}`, 350, 85, { align: "right" });
+      doc.fillColor("#334155").fontSize(10).font("Courier-Bold").text(`Ref: ${readableId}`, 350, 85, { align: "right" });
       doc.fillColor("#64748b").fontSize(8).font("Helvetica").text(`Date: ${orderDate.toLocaleDateString("en-GB", { year: 'numeric', month: 'long', day: 'numeric' })}`, 350, 100, { align: "right" });
 
       const statusColors = {
-        FAILED: { bg: "#fef2f2", text: "#b91c1c" },
-        PENDING: { bg: "#fffbeb", text: "#b45309" },
-        CONFIRMED: { bg: "#ecfdf5", text: "#047857" }
+        FAILED: { bg: "#fef2f2", text: "#b91c1c", border: "#fee2e2" },
+        PENDING: { bg: "#fffbeb", text: "#b45309", border: "#fef3c7" },
+        CONFIRMED: { bg: "#ecfdf5", text: "#047857", border: "#d1fae5" }
       };
       
       const statusText = paymentStatus === "FAILED" ? "PAYMENT FAILED" : (paymentStatus === "PENDING" ? "PAYMENT PENDING" : "PAID");
       const statusColor = statusColors[paymentStatus] || statusColors.CONFIRMED;
 
-      doc.fillColor(statusColor.text).fontSize(8).font("Helvetica-Bold").text(statusText, 350, 115, { align: "right" });
+      doc.fontSize(8).font("Helvetica-Bold");
+      const textWidth = doc.widthOfString(statusText) + 16;
+      const textX = 545 - textWidth;
+      doc.roundedRect(textX, 111, textWidth, 16, 2).fillAndStroke(statusColor.bg, statusColor.border);
+      doc.fillColor(statusColor.text).text(statusText, textX, 116, { align: "center", width: textWidth });
 
       currentY = 160;
 
@@ -169,7 +173,7 @@ export const generateInvoicePdf = async (
 
       doc.fillColor("#059669").font("Helvetica-Bold").fontSize(10);
       doc.text("GRAND TOTAL", 350, currentY, { characterSpacing: 1 });
-      doc.fillColor("#1e293b").font("Helvetica-Bold").fontSize(14).text(`GH₵${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 400, currentY - 2, { align: "right", width: 145 });
+      doc.fillColor("#059669").font("Helvetica-Bold").fontSize(16).text(`GH₵${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 400, currentY - 2, { align: "right", width: 145 });
 
       // --- Footer ---
       let footerY = 740;

@@ -127,7 +127,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
               </span>
               <span className="text-xs text-foreground font-bold font-mono">
                 {String(item.name).toLowerCase().includes("revenue") || String(item.name).toLowerCase().includes("expenses") || String(item.name).toLowerCase().includes("profit")
-                  ? `GH₵${(item.value || 0).toLocaleString()}`
+                  ? `GH₵${(item.value || 0).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
                   : item.value}
               </span>
             </div>
@@ -855,7 +855,7 @@ function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
                   {order.status}
                 </span>
                 <span className="font-bold text-brand-secondary-400 text-sm font-mono">
-                  GH₵{order.total.toLocaleString()}
+                  GH₵{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
               </div>
             </div>
@@ -896,7 +896,7 @@ function TopProducts({ products }: { readonly products: TopProduct[] }) {
               </div>
             </div>
             <span className="font-bold text-brand-secondary-400 text-sm font-mono">
-              GH₵{product.revenue.toLocaleString()}
+              GH₵{product.revenue.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           </div>
         ))}
@@ -932,7 +932,7 @@ function StatsGrid({
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-2">
       <StatCard
         title="Total Revenue"
-        value={`GH₵${(getKpiData(kpiPeriod)?.revenue ?? stats?.revenue ?? 0).toLocaleString()}`}
+        value={`GH₵${(getKpiData(kpiPeriod)?.revenue ?? stats?.revenue ?? 0).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
         icon={DollarSign}
         color="text-brand-secondary-400"
         bg="bg-brand-secondary-400/10"
@@ -941,7 +941,7 @@ function StatsGrid({
       />
       <StatCard
         title="Total Expenses"
-        value={`GH₵${(getKpiData(kpiPeriod)?.expenses ?? stats?.expenses ?? 0).toLocaleString()}`}
+        value={`GH₵${(getKpiData(kpiPeriod)?.expenses ?? stats?.expenses ?? 0).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
         icon={BarChart3}
         color="text-rose-400"
         bg="bg-rose-400/10"
@@ -950,7 +950,7 @@ function StatsGrid({
       />
       <StatCard
         title="Net Profit"
-        value={`GH₵${(getKpiData(kpiPeriod)?.profit ?? stats?.profit ?? 0).toLocaleString()}`}
+        value={`GH₵${(getKpiData(kpiPeriod)?.profit ?? stats?.profit ?? 0).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
         icon={TrendingUp}
         color="text-blue-400"
         bg="bg-blue-400/10"

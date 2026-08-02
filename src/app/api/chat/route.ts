@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     const catalogSummary = await fetchDynamicCatalogSummary(message);
     
     // Categorize intent for multi-agent routing
-    const agentRoute = await categorizeIntent(message);
+    const agentRoute = await categorizeIntent(message, safeHistory);
     const systemPrompt = getSystemPrompt(catalogSummary, context, agentRoute);
 
     // Fetch DB summary if user has a session
@@ -59,9 +59,9 @@ export async function POST(request: Request) {
     let summarizedContext = dbSummary;
     let shouldUpdateDb = false;
 
-    if (safeHistory.length > 10) {
-      const messagesToSummarize = safeHistory.slice(0, safeHistory.length - 5);
-      finalHistory = safeHistory.slice(safeHistory.length - 5);
+    if (safeHistory.length > 20) {
+      const messagesToSummarize = safeHistory.slice(0, safeHistory.length - 10);
+      finalHistory = safeHistory.slice(safeHistory.length - 10);
       
       const newSummaryPart = await summarizeChatHistory(messagesToSummarize);
       if (newSummaryPart) {
@@ -114,78 +114,101 @@ export async function POST(request: Request) {
     const encoder = new TextEncoder();
 
     // Fire and forget parsing
-    const body = llmResponse.body;
     (async () => {
       try {
-        const reader = body.getReader();
-        let buffer = "";
+        let currentBody = llmResponse.body;
+        let currentContents = [...contents];
+        let keepLooping = true;
         let finalContent = "";
-        let functionCallReceived = false;
+        let loopCount = 0;
 
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
+        while (keepLooping && loopCount < 4) {
+          loopCount++;
+          keepLooping = false;
+          if (!currentBody) break;
+          const reader = currentBody.getReader();
+          let buffer = "";
+          let functionCallOccurred = false;
+          let currentFunctionName = "";
+          let currentFunctionArgs: any = null;
 
-          buffer += decoder.decode(value, { stream: true });
-          const lines = buffer.split("\n");
-          buffer = lines.pop() || "";
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
 
-          for (const line of lines) {
-            if (line.startsWith("data: ")) {
-              const dataStr = line.slice(6).trim();
-              if (dataStr === "[DONE]") continue;
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split("\n");
+            buffer = lines.pop() || "";
 
-              try {
-                const data = JSON.parse(dataStr);
-                const part = data?.candidates?.[0]?.content?.parts?.[0];
+            for (const line of lines) {
+              if (line.startsWith("data: ")) {
+                const dataStr = line.slice(6).trim();
+                if (dataStr === "[DONE]") continue;
 
-                if (part?.text) {
-                  const text = part.text;
-                  finalContent += text;
-                  await writer.write(encoder.encode(`data: ${JSON.stringify({ text })}\n\n`));
-                } else if (part?.functionCall) {
-                  functionCallReceived = true;
-                  const { name, args } = part.functionCall;
-                  
-                  // Handle function execution
-                  if (name === "recommend_products") {
-                    metadata.recommendQuery = args.query;
-                    metadata.recommendedProducts = await fetchRecommendedProducts(args.query, args.budget_ghs || budgetCap || undefined);
-                    if (metadata.recommendedProducts.length === 0 && budgetCap) {
-                      const fallbackMsg = "I could not find products at or below " + formatGhs(budgetCap) + " right now. If you share a higher budget or another category, I can refine the shortlist.";
-                      await writer.write(encoder.encode(`data: ${JSON.stringify({ text: fallbackMsg })}\n\n`));
-                    }
-                  } else if (name === "track_order") {
-                    metadata.trackOrder = args.order_id;
-                    const result = await handleTrackOrder(args.order_id);
-                    await writer.write(encoder.encode(`data: ${JSON.stringify({ text: result })}\n\n`));
-                  } else if (name === "track_ticket") {
-                    metadata.trackTicket = args.ticket_id;
-                    const result = await handleTrackTicket(args.ticket_id);
-                    await writer.write(encoder.encode(`data: ${JSON.stringify({ text: result })}\n\n`));
-                  } else if (name === "book_consultation") {
-                    const result = await handleBookDirect(args);
-                    await writer.write(encoder.encode(`data: ${JSON.stringify({ text: result.reply })}\n\n`));
-                    metadata.bookDirect = result.resolved;
-                  } else if (name === "create_support_ticket") {
-                    const result = await handleTicketDirect(args);
-                    await writer.write(encoder.encode(`data: ${JSON.stringify({ text: result.reply })}\n\n`));
-                    metadata.ticketDirect = result.resolved;
-                  } else if (name === "open_guide") {
-                    metadata.guideSlug = args.slug;
-                    await writer.write(encoder.encode(`data: ${JSON.stringify({ text: "Here is the guide you requested:" })}\n\n`));
-                  } else if (name === "add_to_cart") {
-                    metadata.cartProduct = args.product_name;
-                    const cartMsg = "I've added " + args.product_name + " to your cart.";
-                    await writer.write(encoder.encode(`data: ${JSON.stringify({ text: cartMsg })}\n\n`));
+                try {
+                  const data = JSON.parse(dataStr);
+                  const part = data?.candidates?.[0]?.content?.parts?.[0];
+
+                  if (part?.text) {
+                    const text = part.text;
+                    finalContent += text;
+                    await writer.write(encoder.encode(`data: ${JSON.stringify({ text })}\n\n`));
+                  } else if (part?.functionCall) {
+                    functionCallOccurred = true;
+                    currentFunctionName = part.functionCall.name;
+                    currentFunctionArgs = part.functionCall.args;
                   }
+                } catch (e) {
+                  // Ignore parsing errors for partial chunks
                 }
-              } catch (e) {
-                // Ignore parsing errors for partial chunks
               }
             }
           }
-        }
+
+          if (functionCallOccurred) {
+            // execute the function
+            let result: any = null;
+            const name = currentFunctionName;
+            const args = currentFunctionArgs;
+            
+            if (name === "recommend_products") {
+              metadata.recommendQuery = args.query;
+              metadata.recommendedProducts = await fetchRecommendedProducts(args.query, args.budget_ghs || budgetCap || undefined);
+              result = { 
+                productsFound: metadata.recommendedProducts.length, 
+                topProducts: metadata.recommendedProducts.slice(0, 4).map((p: any) => ({ name: p.name, price: p.price, inStock: p.inStock, id: p.id })) 
+              };
+            } else if (name === "track_order") {
+              metadata.trackOrder = args.order_id;
+              result = await handleTrackOrder(args.order_id);
+            } else if (name === "track_ticket") {
+              metadata.trackTicket = args.ticket_id;
+              result = await handleTrackTicket(args.ticket_id);
+            } else if (name === "book_consultation") {
+              result = await handleBookDirect(args);
+              metadata.bookDirect = result?.data;
+            } else if (name === "create_support_ticket") {
+              result = await handleTicketDirect(args);
+              metadata.ticketDirect = result?.data;
+            } else if (name === "open_guide") {
+              metadata.guideSlug = args.slug;
+              result = { success: true, message: "Guide opened in UI." };
+            } else if (name === "add_to_cart") {
+              metadata.cartProduct = args.product_name;
+              result = { success: true, message: "Product added to cart." };
+            }
+
+            // Append to contents and call again
+            currentContents.push({ role: "model", parts: [{ functionCall: { name, args } }] });
+            currentContents.push({ role: "user", parts: [{ functionResponse: { name, response: result } }] });
+            
+            const nextLlmResponse = await callLLMStreaming(finalSystemPrompt, currentContents);
+            if (nextLlmResponse && nextLlmResponse.ok && nextLlmResponse.body) {
+              currentBody = nextLlmResponse.body;
+              keepLooping = true;
+            }
+          }
+        } // end while keepLooping
 
         // Send metadata payload
         await writer.write(encoder.encode(`data: ${JSON.stringify({ metadata })}\n\n`));

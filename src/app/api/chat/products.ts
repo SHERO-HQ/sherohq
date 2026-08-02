@@ -294,23 +294,26 @@ export async function fetchRecommendedProducts(
     }
 
     const terms = [...searchTerms].slice(0, 6);
-    const collected: Product[] = [];
+    let collected: Product[] = [];
 
     for (const term of terms) {
       const searchResults = await fetchByParam("search", term);
       if (searchResults.length > 0) {
         collected.push(...searchResults);
       }
-      if (collected.length >= 4) break;
+      // Apply budget filter temporarily to check if we have enough valid items
+      const validSoFar = applyBudgetCap(collected);
+      if (validSoFar.length >= 4) break;
     }
 
-    if (collected.length < 3) {
+    if (applyBudgetCap(collected).length < 3) {
       for (const term of terms) {
         const categoryResults = await fetchByParam("category", term);
         if (categoryResults.length > 0) {
           collected.push(...categoryResults);
         }
-        if (collected.length >= 4) break;
+        const validSoFar = applyBudgetCap(collected);
+        if (validSoFar.length >= 4) break;
       }
     }
 
@@ -319,7 +322,18 @@ export async function fetchRecommendedProducts(
       return finalizedFromCollected;
     }
 
-    return fetchFeatured();
+    // Fallback: If no matches for search/category, try featured items within budget
+    const featured = await fetchFeatured();
+    if (featured.length > 0) return featured;
+    
+    // Absolute fallback: If budget is so low nothing is found, return the cheapest items
+    if (budgetCap) {
+        const cheapest = await dbFetchProducts(undefined, undefined, 40);
+        cheapest.sort((a, b) => Number(a.price) - Number(b.price));
+        return finalizeRecommendations(cheapest.slice(0, 10));
+    }
+
+    return [];
   } catch (error) {
     if (process.env.NODE_ENV !== "production") {
       console.error("Error fetching recommended products:", error);

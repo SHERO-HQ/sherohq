@@ -13,6 +13,14 @@ let redis: Redis | null | undefined;
 
 function getRedis(): Redis | null {
   if (redis !== undefined) return redis;
+
+  // In development, skip Redis to avoid long timeouts if the instance is paused/deleted
+  // (unless explicitly forced via an env variable)
+  if (process.env.NODE_ENV === "development" && process.env.FORCE_REDIS_IN_DEV !== "true") {
+    redis = null;
+    return redis;
+  }
+
   redis =
     process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
       ? new Redis({

@@ -138,7 +138,7 @@ const StatItem = ({ stat }: { stat: Stat }) => {
       <div className="flex items-baseline gap-1">
         <span className="text-4xl md:text-5xl font-semibold text-slate-900 dark:text-white tracking-tighter">
           {stat.prefix}
-          {count.toLocaleString()}
+          {count.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           {stat.suffix}
         </span>
       </div>

@@ -70,7 +70,7 @@ export function OrderItemsCard({ order }: { order: Order }) {
             </div>
             <div className="text-right">
               <p className="text-foreground font-bold font-mono">
-                GH₵{item.price.toLocaleString()}
+                GH₵{item.price.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
               <p className="text-sm text-muted-foreground mt-1">
                 Qty: {item.quantity}
@@ -83,7 +83,7 @@ export function OrderItemsCard({ order }: { order: Order }) {
         <div className="flex justify-between items-center">
           <span className="text-muted-foreground">Total Amount</span>
           <span className="text-2xl font-bold text-brand-secondary-400 font-mono">
-            GH₵{order.total.toLocaleString()}
+            GH₵{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
         </div>
       </div>

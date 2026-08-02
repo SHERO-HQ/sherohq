@@ -61,7 +61,7 @@ export default function OrderDetails() {
   const [isUpdating, setIsUpdating] = useState(false);
   const { addNotification } = useNotifications();
   const [printMode, setPrintMode] = useState<
-    "invoice" | "receipt" | "receipt58" | null
+    "invoice" | "receipt" | "receiptA5" | "receipt58" | null
   >(null);
   const [receiptQrUrl, setReceiptQrUrl] = useState<string>("");
 
@@ -140,7 +140,7 @@ export default function OrderDetails() {
   };
 
   // Print actions
-  const handlePrint = (type: "invoice" | "receipt" | "receipt58") => {
+  const handlePrint = (type: "invoice" | "receipt" | "receiptA5" | "receipt58") => {
     setPrintMode(type);
 
     // Set specific title for print dialog
@@ -482,6 +482,13 @@ export default function OrderDetails() {
               >
                 <Printer className="w-4 h-4 mr-2 text-blue-400" />
                 Print Receipt (A4)
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handlePrint("receiptA5")}
+                className="cursor-pointer hover:bg-accent"
+              >
+                <Printer className="w-4 h-4 mr-2 text-indigo-400" />
+                Print Receipt (A5)
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => handlePrint("receipt58")}

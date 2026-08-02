@@ -312,7 +312,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
                         </div>
                       </div>
                       <p className="font-bold text-sm dark:text-white">
-                        GH₵{(item.price * item.quantity).toLocaleString()}
+                        GH₵{(item.price * item.quantity).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </p>
                     </div>
                   ))
@@ -331,7 +331,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
                       Total Payable
                     </span>
                     <span className="text-xl font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
-                      GH₵{Number(order.total).toLocaleString()}
+                      GH₵{Number(order.total).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
                 </div>

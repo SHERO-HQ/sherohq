@@ -188,7 +188,7 @@ export default function TrackOrder({
                     <p className="text-sm text-slate-600 dark:text-slate-300">
                       {order.items.length} item
                       {order.items.length === 1 ? "" : "s"} • Total GH₵
-                      {order.total.toLocaleString()}
+                      {order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
                   <div className="rounded border border-slate-200 dark:border-slate-700 overflow-hidden">
@@ -206,7 +206,7 @@ export default function TrackOrder({
                           </p>
                         </div>
                         <p className="text-sm text-slate-700 dark:text-slate-200">
-                          GH₵{(item.price * item.quantity).toLocaleString()}
+                          GH₵{(item.price * item.quantity).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </p>
                       </div>
                     ))}
