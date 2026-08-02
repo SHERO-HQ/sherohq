@@ -288,7 +288,7 @@ const CheckoutSuccess = () => {
           "Your payment was successful and your order is confirmed.",
         badge: "Success",
         badgeClassName:
-          "bg-emerald-700/20 text-white dark:text-slate-950 dark:bg-emerald-500/20",
+          "bg-emerald-700 text-white dark:text-slate-950 dark:bg-emerald-300",
       };
 
   const renderContent = () => {

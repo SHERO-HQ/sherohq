@@ -154,6 +154,7 @@ export interface HubtelTransactionStatusResponse {
  */
 export async function verifyHubtelTransaction(
   clientReference: string,
+  checkoutId?: string
 ): Promise<{ verified: boolean; status: string | null; amount: number | null }> {
   const auth = buildHubtelAuth();
   const merchantAccount = getHubtelMerchantAccount();
@@ -169,7 +170,9 @@ export async function verifyHubtelTransaction(
   }
 
   try {
-    const url = `${HUBTEL_API_BASE}/items/status/${encodeURIComponent(clientReference)}`;
+    // Hubtel expects the CheckoutId for status verification on payproxyapi
+    const identifier = checkoutId || clientReference;
+    const url = `${HUBTEL_API_BASE}/items/status/${encodeURIComponent(identifier)}`;
 
     const resp = await fetch(url, {
       method: "GET",

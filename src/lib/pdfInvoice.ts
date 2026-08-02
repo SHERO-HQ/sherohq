@@ -15,6 +15,16 @@ export const generateInvoicePdf = async (
   orderDate: Date = new Date(),
   paymentStatus: "CONFIRMED" | "FAILED" | "PENDING" = "CONFIRMED"
 ): Promise<Buffer> => {
+  let qrBuffer: Buffer | null = null;
+  try {
+    const QRCode = (await import("qrcode")).default;
+    const qrUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com"}/track/${orderId}`;
+    const dataUrl = await QRCode.toDataURL(qrUrl, { margin: 0, width: 80, color: { dark: '#1e293b', light: '#ffffff' } });
+    qrBuffer = Buffer.from(dataUrl.split(',')[1], 'base64');
+  } catch (err) {
+    console.error("Failed to generate QR for PDF:", err);
+  }
+
   return new Promise((resolve, reject) => {
     try {
       const doc = new PDFDocument({ margin: 50, size: 'A4' });
@@ -26,8 +36,16 @@ export const generateInvoicePdf = async (
 
       const readableId = toReadableOrderId(orderId);
 
-      // --- Header ---
+      // --- Watermark ---
       const logoPath = path.join(process.cwd(), "public", "assets", "logo", "shero.png");
+      if (fs.existsSync(logoPath)) {
+        doc.save();
+        doc.opacity(0.05);
+        doc.image(logoPath, 150, 300, { width: 300 });
+        doc.restore();
+      }
+
+      // --- Header ---
       if (fs.existsSync(logoPath)) {
         doc.image(logoPath, 50, 50, { width: 40 });
       }
@@ -63,7 +81,7 @@ export const generateInvoicePdf = async (
       currentY = 160;
 
       // --- Billed To & Shipping Side-by-Side ---
-      doc.roundedRect(50, currentY, 495, 100, 5).strokeColor("#e2e8f0").lineWidth(1).stroke();
+      doc.roundedRect(50, currentY, 495, 100, 5).fillAndStroke("#f8fafc", "#e2e8f0");
 
       // Billed To Column (X: 70)
       doc.fillColor("#94a3b8").fontSize(7).font("Helvetica-Bold").text("BILLED TO", 70, currentY + 15, { characterSpacing: 1 });
@@ -109,8 +127,8 @@ export const generateInvoicePdf = async (
 
         doc.fillColor("#475569").font("Helvetica").fontSize(9);
         doc.text(item.quantity.toString(), 300, currentY, { align: "center", width: 40 });
-        doc.font("Courier").text(`GHC${item.price.toLocaleString()}`, 350, currentY, { align: "right", width: 80 });
-        doc.fillColor("#1e293b").font("Helvetica-Bold").text(`GHC${itemTotal.toLocaleString()}`, 450, currentY, { align: "right", width: 95 }); 
+        doc.font("Courier").text(`GH₵${item.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 350, currentY, { align: "right", width: 80 });
+        doc.fillColor("#1e293b").font("Helvetica-Bold").text(`GH₵${itemTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 450, currentY, { align: "right", width: 95 }); 
         
         currentY += 30; // Row height
 
@@ -129,13 +147,22 @@ export const generateInvoicePdf = async (
       doc.moveTo(350, currentY).lineTo(545, currentY).strokeColor("#e2e8f0").lineWidth(1).stroke();
       currentY += 15;
 
+      const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const shipping = total - subtotal;
+
+      // QR Code
+      if (qrBuffer) {
+        doc.image(qrBuffer, 50, currentY - 10, { width: 60 });
+        doc.fillColor("#94a3b8").fontSize(7).font("Helvetica-Bold").text("SCAN TO VERIFY", 50, currentY + 55, { characterSpacing: 1 });
+      }
+
       doc.fillColor("#475569").font("Helvetica").fontSize(9);
       doc.text("Subtotal", 350, currentY);
-      doc.font("Courier").text(`GHC${total.toLocaleString()}`, 450, currentY, { align: "right", width: 95 });
+      doc.font("Courier").text(`GH₵${subtotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 450, currentY, { align: "right", width: 95 });
 
       currentY += 15;
-      doc.font("Helvetica").text("Tax (0%)", 350, currentY);
-      doc.font("Courier").text(`GHC0.00`, 450, currentY, { align: "right", width: 95 });
+      doc.font("Helvetica").text("Shipping", 350, currentY);
+      doc.font("Courier").text(shipping <= 0 ? "FREE" : `GH₵${shipping.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 450, currentY, { align: "right", width: 95 });
 
       currentY += 20;
       doc.moveTo(350, currentY).lineTo(545, currentY).strokeColor("#e2e8f0").lineWidth(1).stroke();
@@ -143,7 +170,7 @@ export const generateInvoicePdf = async (
 
       doc.fillColor("#059669").font("Helvetica-Bold").fontSize(10);
       doc.text("GRAND TOTAL", 350, currentY, { characterSpacing: 1 });
-      doc.font("Helvetica").fontSize(14).text(`GHC${total.toLocaleString()}`, 400, currentY - 2, { align: "right", width: 145 });
+      doc.fillColor("#1e293b").font("Helvetica-Bold").fontSize(14).text(`GH₵${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 400, currentY - 2, { align: "right", width: 145 });
 
       // --- Footer ---
       let footerY = 740;

@@ -95,10 +95,11 @@ export async function POST(request: NextRequest) {
 
       // Server-side verification: confirm with Hubtel's API before trusting the webhook
       if (status === "Success") {
+        const checkoutId = nested?.CheckoutId;
         const {
           verified,
           status: confirmedStatus,
-          amount: confirmedAmount} = await verifyHubtelTransaction(orderId);
+          amount: confirmedAmount} = await verifyHubtelTransaction(orderId, checkoutId);
 
         verifiedAmount = confirmedAmount;
 
