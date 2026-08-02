@@ -197,7 +197,7 @@ export const ordersNotifications = {
         paymentMethod || "cash_on_delivery",
       );
       attachments = [
-        { filename: `Invoice-${readableOrderId}.pdf`, content: pdfBuffer },
+        { filename: `${readableOrderId}.pdf`.slice(1), content: pdfBuffer },
       ];
     } catch (e) {
       console.error("Failed to generate PDF invoice:", e);

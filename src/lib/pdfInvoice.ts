@@ -1,6 +1,8 @@
 import PDFDocument from "pdfkit";
 import { OrderItem, ShippingInfo } from "./notifications";
 import { toReadableOrderId } from "@/utils/orderId";
+import fs from "fs";
+import path from "path";
 
 export const generateInvoicePdf = async (
   orderId: string,
@@ -23,6 +25,12 @@ export const generateInvoicePdf = async (
       const readableId = toReadableOrderId(orderId);
 
       // --- Header ---
+      const logoPath = path.join(process.cwd(), "public", "assets", "logo", "shero.png");
+      if (fs.existsSync(logoPath)) {
+        doc.image(logoPath, 256, doc.y, { width: 100 });
+        doc.moveDown(6); // Space after image
+      }
+
       doc.fillColor("#059669").fontSize(22).font("Helvetica-Bold").text("SHERO TECHNOLOGIES", { align: "center" });
       doc.moveDown(0.2);
       
@@ -100,10 +108,16 @@ export const generateInvoicePdf = async (
       doc.text(`GHS ${total.toFixed(2)}`, 470, y, { align: "right", width: 80 });
 
       // --- Footer ---
+      doc.x = 50;
       doc.moveDown(5);
       doc.font("Helvetica-Oblique").fontSize(9).fillColor("#64748b");
       doc.text("Thank you for choosing SHERO TECHNOLOGIES!", { align: "center" });
-      doc.text("For questions regarding this receipt, please contact support@sherohq.com or WhatsApp +233 54 871 1582", { align: "center", });
+      doc.moveDown(0.5);
+      doc.text("For questions regarding this receipt, please contact:", { align: "center" });
+      doc.moveDown(0.2);
+      doc.fillColor("#059669").text("support@sherohq.com", { align: "center", link: "mailto:support@sherohq.com", underline: true });
+      doc.moveDown(0.2);
+      doc.text("WhatsApp: +233 54 871 1582", { align: "center", link: "https://wa.me/233548711582", underline: true });
 
       doc.end();
     } catch (err) {

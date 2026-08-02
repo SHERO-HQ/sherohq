@@ -7,14 +7,21 @@ interface RateLimitResult {
   reset: number;
 }
 
-// Initialize Redis only if environment variables are present
-const redis =
-  process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
-    ? new Redis({
-        url: process.env.UPSTASH_REDIS_REST_URL,
-        token: process.env.UPSTASH_REDIS_REST_TOKEN,
-      })
-    : null;
+// Lazy-initialize Redis only when rateLimit() is actually called,
+// so modules that import but never call rateLimit() won't trigger a connection.
+let redis: Redis | null | undefined;
+
+function getRedis(): Redis | null {
+  if (redis !== undefined) return redis;
+  redis =
+    process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
+      ? new Redis({
+          url: process.env.UPSTASH_REDIS_REST_URL,
+          token: process.env.UPSTASH_REDIS_REST_TOKEN,
+        })
+      : null;
+  return redis;
+}
 
 const memoryStore = new Map<string, number[]>();
 
@@ -32,9 +39,10 @@ export async function rateLimit(
   const key = `ratelimit:${identifier}`;
 
   // 1. Production: Use Upstash Redis
-  if (redis) {
+  const redisClient = getRedis();
+  if (redisClient) {
     try {
-      const results = await redis
+      const results = await redisClient
         .pipeline()
         .zremrangebyscore(key, 0, windowStart)
         .zadd(key, { score: now, member: now.toString() })

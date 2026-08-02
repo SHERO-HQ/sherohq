@@ -54,7 +54,7 @@ function getPool(): Pool {
     // Serverless optimization: keep max low per container to avoid pool exhaustion
     max: process.env.NODE_ENV === "production" ? 5 : 10,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 5000,
+    connectionTimeoutMillis: 8000,
     statement_timeout: 30000, // 30s timeout
     ssl: !isLocalhost ? { rejectUnauthorized: false } : false,
   };
