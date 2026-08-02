@@ -3,6 +3,8 @@ import { OrderItem, ShippingInfo } from "./notifications";
 import { toReadableOrderId } from "@/utils/orderId";
 import fs from "fs";
 import path from "path";
+import { COMPANY_CONTACTS } from "@/constants/contacts";
+import { COMPANY_EMAILS } from "@/constants/emails";
 
 export const generateInvoicePdf = async (
   orderId: string,
@@ -15,7 +17,7 @@ export const generateInvoicePdf = async (
 ): Promise<Buffer> => {
   return new Promise((resolve, reject) => {
     try {
-      const doc = new PDFDocument({ margin: 50 });
+      const doc = new PDFDocument({ margin: 50, size: 'A4' });
       const chunks: Buffer[] = [];
 
       doc.on("data", (chunk: Buffer) => chunks.push(chunk));
@@ -27,98 +29,142 @@ export const generateInvoicePdf = async (
       // --- Header ---
       const logoPath = path.join(process.cwd(), "public", "assets", "logo", "shero.png");
       if (fs.existsSync(logoPath)) {
-        doc.image(logoPath, 281, doc.y, { width: 50 });
-        doc.moveDown(5); // Space after image
+        doc.image(logoPath, 50, 50, { width: 40 });
       }
 
-      doc.fillColor("#059669").fontSize(22).font("Helvetica-Bold").text("SHERO TECHNOLOGIES", { align: "center" });
-      doc.moveDown(0.2);
+      // Left Side Header Text
+      let currentY = 100;
+      doc.fillColor("#1e293b").fontSize(10).font("Helvetica-Bold").text("SHERO TECHNOLOGIES", 50, currentY);
+      doc.fillColor("#64748b").fontSize(8).font("Helvetica");
+      currentY += 14;
+      doc.text(COMPANY_CONTACTS.HQ_LOCATION, 50, currentY);
+      currentY += 12;
+      doc.text(COMPANY_CONTACTS.PHONE_DISPLAY, 50, currentY);
+      currentY += 12;
+      doc.fillColor("#059669").text(COMPANY_CONTACTS.WEBSITE_DISPLAY, 50, currentY);
+
+      // Right Side Header Text
+      doc.fillColor("#e2e8f0").fontSize(24).font("Helvetica-Bold").text("RECEIPT", 350, 50, { align: "right" });
       
-      const headerTitle = paymentStatus === "FAILED" ? "ORDER RECEIPT - PAYMENT FAILED" : "OFFICIAL ORDER RECEIPT & INVOICE";
-      doc.fillColor("#0f172a").fontSize(13).font("Helvetica").text(headerTitle, { align: "center" });
-      doc.moveDown(1.5);
+      doc.fillColor("#334155").fontSize(10).font("Helvetica-Bold").text(`Ref: ${readableId}`, 350, 85, { align: "right" });
+      doc.fillColor("#64748b").fontSize(8).font("Helvetica").text(`Date: ${orderDate.toLocaleDateString("en-GB", { year: 'numeric', month: 'long', day: 'numeric' })}`, 350, 100, { align: "right" });
 
-      // --- Status Badge ---
-      const badgeY = doc.y;
-      if (paymentStatus === "FAILED") {
-        doc.fillColor("#dc2626").fontSize(11).font("Helvetica-Bold").text("STATUS: PAYMENT FAILED", 50, badgeY);
-      } else {
-        doc.fillColor("#059669").fontSize(11).font("Helvetica-Bold").text("STATUS: PAYMENT CONFIRMED / PAID", 50, badgeY);
-      }
-      doc.moveDown(1);
+      const statusColors = {
+        FAILED: { bg: "#fef2f2", text: "#b91c1c" },
+        PENDING: { bg: "#fffbeb", text: "#b45309" },
+        CONFIRMED: { bg: "#ecfdf5", text: "#047857" }
+      };
+      
+      const statusText = paymentStatus === "FAILED" ? "PAYMENT FAILED" : (paymentStatus === "PENDING" ? "PAYMENT PENDING" : "PAID");
+      const statusColor = statusColors[paymentStatus] || statusColors.CONFIRMED;
 
-      // --- Meta Info & Billing ---
-      const startY = doc.y;
+      doc.fillColor(statusColor.text).fontSize(8).font("Helvetica-Bold").text(statusText, 350, 115, { align: "right" });
 
-      // Left Column: Bill To
-      doc.fillColor("#64748b").fontSize(9).font("Helvetica-Bold").text("CUSTOMER DETAILS", 50, startY);
-      doc.fillColor("#0f172a").fontSize(10).font("Helvetica-Bold").text(`${shippingInfo.firstName} ${shippingInfo.lastName}`, 50, startY + 14);
-      doc.font("Helvetica").fontSize(9).text(shippingInfo.address || "N/A", 50, startY + 28);
-      doc.text(`${shippingInfo.city || "N/A"}, ${shippingInfo.region || "N/A"}`, 50, startY + 40);
-      if (shippingInfo.phone) doc.text(`Phone: ${shippingInfo.phone}`, 50, startY + 52);
-      if (shippingInfo.email) doc.text(`Email: ${shippingInfo.email}`, 50, startY + 64);
+      currentY = 160;
 
-      // Right Column: Order Meta
-      doc.fillColor("#64748b").fontSize(9).font("Helvetica-Bold").text("ORDER DETAILS", 350, startY);
-      doc.fillColor("#0f172a").fontSize(9).font("Helvetica-Bold").text("Order Reference:", 350, startY + 14);
-      doc.font("Helvetica").text(readableId, 450, startY + 14);
+      // --- Billed To & Shipping Side-by-Side ---
+      doc.roundedRect(50, currentY, 495, 100, 5).strokeColor("#e2e8f0").lineWidth(1).stroke();
 
-      doc.font("Helvetica-Bold").text("Order Date:", 350, startY + 28);
-      doc.font("Helvetica").text(orderDate.toLocaleDateString("en-GH", { year: "numeric", month: "short", day: "numeric" }), 450, startY + 28);
+      // Billed To Column (X: 70)
+      doc.fillColor("#94a3b8").fontSize(7).font("Helvetica-Bold").text("BILLED TO", 70, currentY + 15, { characterSpacing: 1 });
+      doc.fillColor("#1e293b").fontSize(10).font("Helvetica-Bold").text(`${shippingInfo.firstName} ${shippingInfo.lastName}`, 70, currentY + 30);
+      doc.fillColor("#475569").fontSize(8).font("Helvetica").text(shippingInfo.email || "", 70, currentY + 45);
+      doc.text(shippingInfo.phone || "", 70, currentY + 57);
 
-      doc.font("Helvetica-Bold").text("Payment Method:", 350, startY + 40);
-      doc.font("Helvetica").text((paymentMethod || "N/A").replace(/_/g, " ").toUpperCase(), 450, startY + 40);
+      // Shipping Column (X: 300)
+      doc.fillColor("#94a3b8").fontSize(7).font("Helvetica-Bold").text("SHIPPING ADDRESS", 300, currentY + 15, { characterSpacing: 1 });
+      doc.fillColor("#475569").fontSize(8).font("Helvetica").text(shippingInfo.address || "N/A", 300, currentY + 30);
+      doc.text(`${shippingInfo.city || ""}, ${shippingInfo.region || ""}`, 300, currentY + 42);
 
-      doc.moveDown(5);
+      currentY += 130;
 
       // --- Items Table ---
-      const tableTop = doc.y;
-      doc.fillColor("#0f172a").font("Helvetica-Bold").fontSize(9);
+      doc.fillColor("#94a3b8").fontSize(7).font("Helvetica-Bold");
       
-      // Table Headers
-      doc.text("Item Description", 50, tableTop);
-      doc.text("Qty", 340, tableTop, { align: "center", width: 40 });
-      doc.text("Unit Price", 390, tableTop, { align: "right", width: 70 });
-      doc.text("Total", 470, tableTop, { align: "right", width: 80 });
+      doc.text("DESCRIPTION", 50, currentY, { characterSpacing: 1 });
+      doc.text("QTY", 300, currentY, { align: "center", width: 40, characterSpacing: 1 });
+      doc.text("UNIT PRICE", 350, currentY, { align: "right", width: 80, characterSpacing: 1 });
+      doc.text("AMOUNT", 450, currentY, { align: "right", width: 95, characterSpacing: 1 });
 
-      // Header underline
-      doc.moveTo(50, tableTop + 14).lineTo(550, tableTop + 14).strokeColor("#cbd5e1").stroke();
-      
-      let y = tableTop + 22;
-      doc.font("Helvetica").fontSize(9).fillColor("#334155");
+      currentY += 12;
+      doc.moveTo(50, currentY).lineTo(545, currentY).strokeColor("#e2e8f0").lineWidth(1).stroke();
+      currentY += 15;
 
       items.forEach((item) => {
+        // Automatically add page if we are near the bottom
+        if (currentY > 700) {
+          doc.addPage();
+          currentY = 50;
+        }
+
         const itemTotal = item.price * item.quantity;
         
-        doc.text(item.name, 50, y, { width: 280 });
-        doc.text(item.quantity.toString(), 340, y, { align: "center", width: 40 });
-        doc.text(`GHS ${item.price.toFixed(2)}`, 390, y, { align: "right", width: 70 });
-        doc.text(`GHS ${itemTotal.toFixed(2)}`, 470, y, { align: "right", width: 80 });
+        doc.fillColor("#1e293b").font("Helvetica-Bold").fontSize(9);
+        doc.text(item.name, 50, currentY, { width: 240 });
         
-        y = Math.max(doc.y + 8, y + 18);
+        if (item.sku) {
+          doc.fillColor("#94a3b8").font("Courier").fontSize(7);
+          doc.text(`SKU: ${item.sku}`, 50, currentY + 12);
+        }
+
+        doc.fillColor("#475569").font("Helvetica").fontSize(9);
+        doc.text(item.quantity.toString(), 300, currentY, { align: "center", width: 40 });
+        doc.font("Courier").text(`GHC${item.price.toLocaleString()}`, 350, currentY, { align: "right", width: 80 });
+        doc.fillColor("#1e293b").font("Helvetica-Bold").text(`GHC${itemTotal.toLocaleString()}`, 450, currentY, { align: "right", width: 95 }); 
+        
+        currentY += 30; // Row height
+
+        // Draw soft divider
+        doc.moveTo(50, currentY).lineTo(545, currentY).strokeColor("#f1f5f9").lineWidth(1).stroke();
+        currentY += 15;
       });
 
-      // Bottom line of table
-      doc.moveTo(50, y).lineTo(550, y).strokeColor("#e2e8f0").stroke();
-      y += 12;
-
       // --- Totals ---
-      doc.fillColor("#0f172a").font("Helvetica-Bold").fontSize(11);
-      doc.text("Grand Total:", 350, y, { align: "right", width: 110 });
-      doc.text(`GHS ${total.toFixed(2)}`, 470, y, { align: "right", width: 80 });
+      if (currentY > 650) {
+        doc.addPage();
+        currentY = 50;
+      }
+
+      currentY += 10;
+      doc.moveTo(350, currentY).lineTo(545, currentY).strokeColor("#e2e8f0").lineWidth(1).stroke();
+      currentY += 15;
+
+      doc.fillColor("#475569").font("Helvetica").fontSize(9);
+      doc.text("Subtotal", 350, currentY);
+      doc.font("Courier").text(`GHC${total.toLocaleString()}`, 450, currentY, { align: "right", width: 95 });
+
+      currentY += 15;
+      doc.font("Helvetica").text("Tax (0%)", 350, currentY);
+      doc.font("Courier").text(`GHC0.00`, 450, currentY, { align: "right", width: 95 });
+
+      currentY += 20;
+      doc.moveTo(350, currentY).lineTo(545, currentY).strokeColor("#e2e8f0").lineWidth(1).stroke();
+      currentY += 12;
+
+      doc.fillColor("#059669").font("Helvetica-Bold").fontSize(10);
+      doc.text("GRAND TOTAL", 350, currentY, { characterSpacing: 1 });
+      doc.font("Helvetica").fontSize(14).text(`GHC${total.toLocaleString()}`, 400, currentY - 2, { align: "right", width: 145 });
 
       // --- Footer ---
-      doc.x = 50;
-      doc.moveDown(5);
-      doc.font("Helvetica-Oblique").fontSize(9).fillColor("#64748b");
-      doc.text("Thank you for choosing SHERO TECHNOLOGIES!", { align: "center" });
-      doc.moveDown(0.5);
-      doc.text("For questions regarding this receipt, please contact:", { align: "center" });
-      doc.moveDown(0.2);
-      doc.fillColor("#059669").text("support@sherohq.com", { align: "center", link: "mailto:support@sherohq.com", underline: true });
-      doc.moveDown(0.2);
-      doc.text("WhatsApp: +233 54 871 1582", { align: "center", link: "https://wa.me/233548711582", underline: true });
-
+      let footerY = 740;
+      if (currentY > 700) {
+        doc.addPage();
+      }
+      
+      doc.moveTo(50, footerY).lineTo(545, footerY).strokeColor("#f1f5f9").lineWidth(1).stroke();
+      
+      doc.fillColor("#94a3b8").font("Helvetica-Bold").fontSize(7);
+      doc.text("THANK YOU FOR YOUR BUSINESS!", 50, footerY + 15, { align: "center", characterSpacing: 1 });
+      
+      doc.font("Helvetica").fontSize(6);
+      doc.text("This document is a computer-generated invoice and requires no signature. Subject to our standard Terms & Conditions of Sale. Returns and exchanges are governed by our return policy available at " + COMPANY_CONTACTS.WEBSITE_DISPLAY + "/terms.", 50, footerY + 28, { align: "center", width: 495 });
+      
+      doc.fillColor("#64748b").font("Helvetica-Bold").text(`SHERO TECHNOLOGIES | ${COMPANY_CONTACTS.HQ_LOCATION}`, 50, footerY + 42, { align: "center", width: 495 });
+      
+      const cleanPhone = COMPANY_CONTACTS.PHONE_DISPLAY.replace(/[^0-9]/g, '');
+      doc.fillColor("#059669").font("Helvetica").fontSize(7);
+      doc.text(COMPANY_EMAILS.SUPPORT, 50, footerY + 52, { align: "center", width: 495, link: `mailto:${COMPANY_EMAILS.SUPPORT}`, underline: true });
+      doc.text(`WhatsApp: ${COMPANY_CONTACTS.PHONE_DISPLAY}`, 50, footerY + 62, { align: "center", width: 495, link: `https://wa.me/${cleanPhone}`, underline: true });
       doc.end();
     } catch (err) {
       reject(err);

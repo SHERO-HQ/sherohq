@@ -61,7 +61,7 @@ export default function OrderDetails() {
   const [isUpdating, setIsUpdating] = useState(false);
   const { addNotification } = useNotifications();
   const [printMode, setPrintMode] = useState<
-    "invoice" | "receipt80" | "receipt58" | null
+    "invoice" | "receipt" | "receipt58" | null
   >(null);
   const [receiptQrUrl, setReceiptQrUrl] = useState<string>("");
 
@@ -140,7 +140,7 @@ export default function OrderDetails() {
   };
 
   // Print actions
-  const handlePrint = (type: "invoice" | "receipt80" | "receipt58") => {
+  const handlePrint = (type: "invoice" | "receipt" | "receipt58") => {
     setPrintMode(type);
 
     // Set specific title for print dialog
@@ -477,11 +477,11 @@ export default function OrderDetails() {
                 Print Invoice
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => handlePrint("receipt80")}
+                onClick={() => handlePrint("receipt")}
                 className="cursor-pointer hover:bg-accent"
               >
                 <Printer className="w-4 h-4 mr-2 text-blue-400" />
-                Print Thermal 80mm
+                Print Receipt (A4)
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => handlePrint("receipt58")}

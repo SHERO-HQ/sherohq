@@ -4,6 +4,7 @@ export interface OrderItem {
   price: number;
   quantity: number;
   image?: string;
+  sku?: string;
 }
 
 export interface ShippingInfo {

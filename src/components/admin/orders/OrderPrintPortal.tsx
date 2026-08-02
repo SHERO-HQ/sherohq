@@ -8,7 +8,7 @@ import { COMPANY_EMAILS } from "@/constants/emails";
 
 interface OrderPrintPortalProps {
   order: Order;
-  printMode: "invoice" | "receipt80" | "receipt58" | null;
+  printMode: "invoice" | "receipt" | "receipt58" | null;
   receiptQrUrl: string;
 }
 
@@ -42,6 +42,9 @@ export function OrderPrintPortal({
               background-color: white !important;
               -webkit-print-color-adjust: exact !important;
               print-color-adjust: exact !important;
+              min-height: 0 !important;
+              height: auto !important;
+              overflow: visible !important;
             }
             body > *:not(.print-area) {
               display: none !important;
@@ -103,10 +106,27 @@ export function OrderPrintPortal({
             
             /* Standard A4 Print Overrides */
             .print-document {
+              position: relative;
               max-width: 21cm;
               margin: 0 auto;
-              padding: 2cm;
-              font-family: sans-serif;
+              padding: 1.5cm 2cm;
+              box-sizing: border-box;
+            }
+            .print-watermark {
+              position: fixed;
+              top: 60%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              width: 15cm;
+              opacity: 0.05;
+              pointer-events: none;
+              z-index: 0;
+            }
+            .print-content {
+              position: relative;
+              z-index: 10;
+              display: flex;
+              flex-direction: column;
             }
             
             /* Hide UI elements that shouldn't print */
@@ -116,8 +136,7 @@ export function OrderPrintPortal({
           }
         `}
       </style>
-      
-      {printMode.startsWith("receipt") ? (
+      {printMode === "receipt58" ? (
         <div
           className={cn(
             "thermal-print mx-auto",
@@ -125,8 +144,8 @@ export function OrderPrintPortal({
           )}
         >
           <div className="thermal-header">
-            <div className="thermal-logo text-brand-secondary-600">SHERO</div>
-            <div>Technologies</div>
+            <img src="/assets/logo/shero.png" alt="SHERO Logo" className="h-10 w-auto mx-auto mb-2 grayscale contrast-200 mix-blend-multiply" />
+            <div className="font-bold mb-1">SHERO TECHNOLOGIES</div>
             <div>{COMPANY_CONTACTS.HQ_LOCATION}</div>
             <div>{COMPANY_CONTACTS.PHONE_DISPLAY}</div>
             <div className="thermal-divider" />
@@ -223,133 +242,156 @@ export function OrderPrintPortal({
           <div className="thermal-cut">--- CUSTOMER COPY ---</div>
         </div>
       ) : (
-        <div className="print-document">
-          <div className="flex justify-between items-start mb-8">
-            <div>
-              <h1 className="text-3xl font-bold text-brand-secondary-600">
-                SHERO
-              </h1>
-              <p className="text-muted-foreground text-sm">
-                Technologies
-              </p>
-            </div>
-            <div className="text-right">
-              <h2 className="text-xl font-bold uppercase">{printMode}</h2>
-              <p className="font-mono text-sm">{displayOrderId(order.id)}</p>
-              <p className="text-muted-foreground text-xs mb-2">
-                {new Date().toLocaleDateString()}
-              </p>
-              <div className={cn("inline-block px-3 py-1 rounded text-[10px] font-bold uppercase tracking-wider", order.paymentStatus === "failed" ? "bg-red-100 text-red-700" : order.paymentStatus === "pending" ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700")}>
-                {order.paymentStatus === "failed" ? "PAYMENT FAILED" : (order.paymentStatus === "pending" ? "PAYMENT PENDING" : "PAID")}
+        <div className="print-document bg-white">
+          <img src="/assets/logo/shero.png" alt="" className="print-watermark" />
+          <div className="print-content text-slate-900 font-sans">
+            {/* Header */}
+            <div className="flex justify-between items-start mb-12">
+              <div className="space-y-1">
+                <img src="/assets/logo/shero.png" alt="SHERO Logo" className="h-10 w-auto mb-4" />
+                <p className="text-slate-800 font-bold text-sm tracking-tight">
+                  SHERO TECHNOLOGIES
+                </p>
+                <p className="text-slate-500 text-xs">
+                  {COMPANY_CONTACTS.HQ_LOCATION}
+                </p>
+                <p className="text-slate-500 text-xs">
+                  {COMPANY_CONTACTS.PHONE_DISPLAY}
+                </p>
+                <p className="text-brand-secondary-600 text-xs">
+                  {COMPANY_CONTACTS.WEBSITE_DISPLAY}
+                </p>
+              </div>
+              <div className="text-right space-y-1">
+                <h2 className="text-3xl font-black uppercase tracking-tighter text-slate-200 mb-2">
+                  {printMode}
+                </h2>
+                <p className="font-mono text-sm text-slate-700 font-medium">Ref: {displayOrderId(order.id)}</p>
+                <p className="text-slate-500 text-xs mb-3">
+                  Date: {new Date().toLocaleDateString("en-GB", { year: 'numeric', month: 'long', day: 'numeric' })}
+                </p>
+                <div className={cn("inline-block px-3 py-1.5 rounded-sm text-[10px] font-bold uppercase tracking-widest", order.paymentStatus === "failed" ? "bg-red-50 text-red-700 border border-red-100" : order.paymentStatus === "pending" ? "bg-amber-50 text-amber-700 border border-amber-100" : "bg-emerald-50 text-emerald-700 border border-emerald-100")}>
+                  {order.paymentStatus === "failed" ? "PAYMENT FAILED" : (order.paymentStatus === "pending" ? "PAYMENT PENDING" : "PAID")}
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-8 mb-8 pb-8 border-b border-slate-100">
-            <div>
-              <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">
-                Billed To
-              </h3>
-              <p className="font-bold">
-                {order.shippingInfo.firstName} {order.shippingInfo.lastName}
-              </p>
-              <p className="text-sm text-slate-600">
-                {order.shippingInfo.email}
-              </p>
-              <p className="text-sm text-slate-600">
-                {order.shippingInfo.phone}
-              </p>
+            {/* Billed To */}
+            <div className="grid grid-cols-2 gap-12 mb-10 p-6 bg-slate-50 rounded-lg border border-slate-100">
+              <div>
+                <h3 className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-3">
+                  Billed To
+                </h3>
+                <p className="font-bold text-sm text-slate-800 mb-1">
+                  {order.shippingInfo.firstName} {order.shippingInfo.lastName}
+                </p>
+                <p className="text-xs text-slate-600 mb-0.5">
+                  {order.shippingInfo.email}
+                </p>
+                <p className="text-xs text-slate-600">
+                  {order.shippingInfo.phone}
+                </p>
+              </div>
+              <div>
+                <h3 className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-3">
+                  Shipping Address
+                </h3>
+                <p className="text-xs text-slate-600 mb-0.5">
+                  {order.shippingInfo.address}
+                </p>
+                <p className="text-xs text-slate-600">
+                  {order.shippingInfo.city}, {order.shippingInfo.region}
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-2">
-                Shipping Address
-              </h3>
-              <p className="text-sm text-slate-600">
-                {order.shippingInfo.address}
-              </p>
-              <p className="text-sm text-slate-600">
-                {order.shippingInfo.city}, {order.shippingInfo.region}
-              </p>
-            </div>
-          </div>
 
-          <table className="w-full mb-8">
-            <thead>
-              <tr className="border-b-2 border-slate-100">
-                <th className="text-left py-3 text-[10px] uppercase text-muted-foreground">
-                  Description
-                </th>
-                <th className="text-center py-3 text-[10px] uppercase text-muted-foreground">
-                  Qty
-                </th>
-                <th className="text-right py-3 text-[10px] uppercase text-muted-foreground">
-                  Price
-                </th>
-                <th className="text-right py-3 text-[10px] uppercase text-muted-foreground">
-                  Total
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-50">
-              {order.items.map((item) => (
-                <tr key={item.id || item.name}>
-                  <td className="py-4">
-                    <p className="font-bold">{item.name}</p>
-                    {item.sku && (
-                      <p className="text-[10px] text-muted-foreground font-mono">
-                        SKU: {item.sku}
-                      </p>
-                    )}
-                  </td>
-                  <td className="text-center py-4">{item.quantity}</td>
-                  <td className="text-right py-4">
-                    GH₵{item.price.toLocaleString()}
-                  </td>
-                  <td className="text-right py-4 font-bold">
-                    GH₵{(item.price * item.quantity).toLocaleString()}
-                  </td>
+            {/* Items Table */}
+            <table className="w-full mb-8">
+              <thead>
+                <tr className="border-b border-slate-200">
+                  <th className="text-left py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    Description
+                  </th>
+                  <th className="text-center py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    Qty
+                  </th>
+                  <th className="text-right py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    Unit Price
+                  </th>
+                  <th className="text-right py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    Amount
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {order.items.map((item) => (
+                  <tr key={item.id || item.name} className="group">
+                    <td className="py-4 pr-4">
+                      <p className="font-semibold text-sm text-slate-800">{item.name}</p>
+                      {item.sku && (
+                        <p className="text-[10px] text-slate-400 font-mono mt-0.5">
+                          SKU: {item.sku}
+                        </p>
+                      )}
+                    </td>
+                    <td className="text-center py-4 text-sm text-slate-600">{item.quantity}</td>
+                    <td className="text-right py-4 text-sm text-slate-600 font-mono">
+                      GH₵{item.price.toLocaleString()}
+                    </td>
+                    <td className="text-right py-4 text-sm font-bold text-slate-800 font-mono">
+                      GH₵{(item.price * item.quantity).toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
-          <div className="flex justify-end pt-8">
-            <div className="w-64 space-y-3">
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Subtotal</span>
-                <span>GH₵{order.total.toLocaleString()}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Tax (0%)</span>
-                <span>GH₵0.00</span>
-              </div>
-              <div className="flex justify-between text-lg font-bold border-t border-slate-100 pt-3 text-brand-secondary-600">
-                <span>Total</span>
-                <span>GH₵{order.total.toLocaleString()}</span>
+            {/* Totals & Footer */}
+
+            <div className="flex justify-between items-end border-t border-slate-200 pt-6 mt-8">
+              {receiptQrUrl ? (
+                <div className="text-left">
+                  <img
+                    src={receiptQrUrl}
+                    alt="Invoice verification QR"
+                    className="w-20 h-20 mb-2 opacity-80"
+                  />
+                  <p className="text-[9px] text-slate-400 uppercase tracking-widest">
+                    Scan to verify
+                  </p>
+                </div>
+              ) : (
+                <div></div>
+              )}
+
+              <div className="w-72 space-y-3">
+                <div className="flex justify-between text-sm text-slate-600">
+                  <span>Subtotal</span>
+                  <span className="font-mono">GH₵{order.total.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm text-slate-600">
+                  <span>Tax (0%)</span>
+                  <span className="font-mono">GH₵0.00</span>
+                </div>
+                <div className="flex justify-between items-center text-lg font-bold border-t border-slate-200 pt-3 text-brand-secondary-600 mt-2">
+                  <span className="uppercase tracking-tight text-sm">Grand Total</span>
+                  <span className="text-xl">GH₵{order.total.toLocaleString()}</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          {receiptQrUrl && (
-            <div className="mt-8 pt-6 border-t border-slate-100 text-center">
-              <img
-                src={receiptQrUrl}
-                alt="Invoice verification QR"
-                className="w-28 h-28 mx-auto"
-              />
-              <p className="text-[10px] text-muted-foreground mt-2">
-                Scan to verify invoice details
+            {/* Legal Footers */}
+            <div className="mt-12 pt-6 border-t border-slate-100 text-center space-y-2">
+              <p className="text-slate-400 text-[9px] uppercase tracking-widest font-bold">
+                Thank you for your business!
+              </p>
+              <p className="text-slate-400 text-[8px] max-w-xl mx-auto leading-relaxed">
+                This document is a computer-generated invoice and requires no signature. Subject to our standard Terms & Conditions of Sale. Returns and exchanges are governed by our return policy available at {COMPANY_CONTACTS.WEBSITE_DISPLAY}/terms. 
+              </p>
+              <p className="text-slate-500 text-[9px] mt-2 font-medium">
+                SHERO TECHNOLOGIES | {COMPANY_CONTACTS.HQ_LOCATION} | {COMPANY_EMAILS.SUPPORT}
               </p>
             </div>
-          )}
-
-          <div className="mt-20 pt-8 border-t border-slate-100 text-center">
-            <p className="text-muted-foreground text-[10px] uppercase tracking-widest">
-              Thank you for your business!
-            </p>
-            <p className="text-muted-foreground text-[9px] mt-1">
-              SHERO Technologies | {COMPANY_CONTACTS.HQ_LOCATION} | {COMPANY_CONTACTS.WEBSITE_DISPLAY}
-            </p>
           </div>
         </div>
       )}

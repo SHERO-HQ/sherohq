@@ -1,4 +1,4 @@
-# SHERO Technologies Security Policy
+# SHERO TECHNOLOGIES Security Policy
 # https://securitytxt.org/
 
 Contact: mailto:security@sherohq.com
