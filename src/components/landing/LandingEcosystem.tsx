@@ -64,7 +64,7 @@ const LandingEcosystem = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="mt-6 text-lg text-slate-600 dark:text-slate-300 leading-relaxed"
+            className="mt-6 text-sm text-slate-600 dark:text-slate-300 leading-relaxed"
           >
             Software engineered for the hardware we supply, maintained and secured by the team that built it. True synergy eliminates friction.
           </motion.p>

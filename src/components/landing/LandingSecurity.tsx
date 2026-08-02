@@ -70,7 +70,7 @@ const LandingSecurity = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="mt-6 text-lg text-slate-400 leading-relaxed max-w-2xl mx-auto"
+            className="mt-6 text-sm text-slate-400 leading-relaxed max-w-2xl mx-auto"
           >
             We don't just bolt on security as an afterthought. It is woven into the very fabric of our hardware and custom software ecosystem.
           </motion.p>

@@ -103,7 +103,7 @@ export const generateInvoicePdf = async (
       doc.moveDown(5);
       doc.font("Helvetica-Oblique").fontSize(9).fillColor("#64748b");
       doc.text("Thank you for choosing SHERO TECHNOLOGIES!", { align: "center" });
-      doc.text("For questions regarding this receipt, please contact support@sherohq.com or WhatsApp +233 54 871 1582", { align: "center" });
+      doc.text("For questions regarding this receipt, please contact support@sherohq.com or WhatsApp +233 54 871 1582", { align: "center", });
 
       doc.end();
     } catch (err) {

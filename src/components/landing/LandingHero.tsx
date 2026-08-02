@@ -161,7 +161,7 @@ const LandingHero: React.FC = () => {
     <header
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative min-h-fit lg:min-h-[85dvh] w-full overflow-hidden
+      className="relative min-h-fit lg:min-h-[83dvh] w-full overflow-hidden
  bg-slate-50 dark:bg-slate-950
  flex flex-col items-center justify-center pt-14 sm:pt-0 pb-36 md:pb-24 lg:pb-16"
       role="banner"
@@ -266,7 +266,7 @@ const LandingHero: React.FC = () => {
       <motion.div
         initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
         animate={prefersReducedMotion ? undefined : heroReady ? { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.5 } } : { opacity: 0, y: 10 }}
-        className="absolute bottom-6 sm:bottom-10 left-0 right-0 w-full"
+        className="absolute bottom-6 sm:bottom-15 left-0 right-0 w-full"
       >
         <div className="container max-w-7xl mx-auto px-4">
           <ul className="grid grid-cols-4 md:flex md:flex-wrap justify-center items-center gap-x-6 gap-y-6 sm:gap-x-12 w-full opacity-90 transition-opacity duration-500">
@@ -275,14 +275,14 @@ const LandingHero: React.FC = () => {
                 <img
                   src={`${partner.logo}?v=2`}
                   alt={`${partner.name} logo`}
-                  className={`w-auto max-w-full object-contain filter grayscale opacity-60 dark:opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300 ${partner.logoClassName ?? "h-8 sm:h-10"} ${partner.logoDark ? "dark:hidden" : ""}`}
+                  className={`w-auto max-w-full object-contain filter grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300 ${partner.logoClassName ?? "h-8 sm:h-10"} ${partner.logoDark ? "dark:hidden" : ""}`}
                   loading="eager"
                 />
                 {partner.logoDark && (
                   <img
                     src={`${partner.logoDark}?v=2`}
                     alt={`${partner.name} logo`}
-                    className={`w-auto max-w-full object-contain filter grayscale opacity-60 dark:opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300 ${partner.logoClassName ?? "h-8 sm:h-10"} hidden dark:block`}
+                    className={`w-auto max-w-full object-contain filter grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300 ${partner.logoClassName ?? "h-8 sm:h-10"} hidden dark:block`}
                     loading="eager"
                   />
                 )}
