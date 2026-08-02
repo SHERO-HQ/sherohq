@@ -13,7 +13,6 @@ import {
   Plus,
   Headset,
   BookOpen,
-  ShieldCheck,
   Briefcase,
   Tag,
   Star,
@@ -24,7 +23,9 @@ import {
   Brain,
   Download,
   Megaphone,
-  MessageSquare} from "lucide-react";
+  MessageSquare,
+  BriefcaseBusiness,
+  ShieldCheck} from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
@@ -70,6 +71,7 @@ const navItems = [
   { icon: Star, label: "Reviews", href: "/admin/reviews" },
   { icon: Users, label: "Team", href: "/admin/team" },
   { icon: ShieldCheck, label: "Staff", href: "/admin/staff" },
+  { icon: BriefcaseBusiness, label: "Careers", href: "/admin/careers" },
   { icon: Briefcase, label: "Projects", href: "/admin/projects" },
   {
     icon: MessageSquareQuote,

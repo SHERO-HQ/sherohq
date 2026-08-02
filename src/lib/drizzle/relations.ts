@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { adminUsers, sessions, users, abandonedCarts, supportGuides, products, reviews, newsletterCampaigns, activityLogs, userSessions, expenses, tickets, aiChatSessions } from "./schema";
+import { adminUsers, sessions, users, abandonedCarts, supportGuides, products, reviews, newsletterCampaigns, activityLogs, userSessions, expenses, tickets, aiChatSessions, careers, jobApplications } from "./schema";
 
 export const sessionsRelations = relations(sessions, ({one}) => ({
 	adminUser: one(adminUsers, {
@@ -92,5 +92,16 @@ export const aiChatSessionsRelations = relations(aiChatSessions, ({one}) => ({
 	user: one(users, {
 		fields: [aiChatSessions.userId],
 		references: [users.id]
+	}),
+}));
+
+export const careersRelations = relations(careers, ({many}) => ({
+	applications: many(jobApplications),
+}));
+
+export const jobApplicationsRelations = relations(jobApplications, ({one}) => ({
+	job: one(careers, {
+		fields: [jobApplications.jobId],
+		references: [careers.id]
 	}),
 }));

@@ -19,7 +19,7 @@ import PaymentIcons from "./PaymentIcons";
 import FooterNewsletter from "./FooterNewsletter";
 
 // Static Data
-const companyLinks = ["Shop", "Solutions", "About Us", "Contact Us"];
+const companyLinks = ["Shop", "Solutions", "About Us", "Careers", "Contact Us"];
 const resourceLinks = [
   { label: "Consultation", href: "/consultation" },
   { label: "Partners", href: "/partners" },

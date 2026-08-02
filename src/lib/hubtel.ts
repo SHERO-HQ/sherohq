@@ -169,7 +169,7 @@ export async function verifyHubtelTransaction(
   }
 
   try {
-    const url = `https://api-txnstatus.hubtel.com/transactions/${merchantAccount}/status?clientReference=${encodeURIComponent(clientReference)}`;
+    const url = `${HUBTEL_API_BASE}/items/status/${encodeURIComponent(clientReference)}`;
 
     const resp = await fetch(url, {
       method: "GET",
@@ -184,7 +184,7 @@ export async function verifyHubtelTransaction(
       const logFn = resp.status === 403 ? console.warn : console.error;
       logFn(
         `Hubtel status check failed: HTTP ${resp.status} for ref ${clientReference}. ` + 
-        (resp.status === 403 ? 'This may indicate missing API permissions for api-txnstatus.hubtel.com. Relying on webhook tokens.' : '')
+        (resp.status === 403 ? 'This may indicate missing API permissions for payproxyapi.hubtel.com. Relying on webhook tokens.' : '')
       );
       if (process.env.NODE_ENV === "development") {
         return { verified: true, status: "Success", amount: null };

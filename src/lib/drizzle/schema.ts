@@ -509,3 +509,41 @@ export const aiChatSessions = pgTable("ai_chat_sessions", {
 			name: "ai_chat_sessions_user_id_fkey"
 		}).onDelete("set null"),
 ]);
+
+export const careers = pgTable("careers", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	title: text().notNull(),
+	department: text().notNull(),
+	location: text().notNull(),
+	type: text().notNull(),
+	description: text(),
+	requirements: jsonb(),
+	isActive: boolean().default(true),
+	createdAt: timestamp({ mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+	updatedAt: timestamp({ mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+	pgPolicy("public_careers_readable", { as: "permissive", for: "select", to: ["public"], using: sql`true` }),
+	pgPolicy("service_role_careers_all", { as: "permissive", for: "all", to: ["service_role"], using: sql`true`, withCheck: sql`true`  }),
+]);
+
+export const jobApplications = pgTable("job_applications", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	jobId: uuid().notNull(),
+	applicantName: text().notNull(),
+	applicantEmail: text().notNull(),
+	applicantPhone: text(),
+	resumeUrl: text(),
+	coverLetter: text(),
+	status: text().default('pending'),
+	createdAt: timestamp({ mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+	index("idx_job_applications_job_id").using("btree", table.jobId),
+	index("idx_job_applications_status").using("btree", table.status.asc().nullsLast().op("text_ops")),
+	foreignKey({
+			columns: [table.jobId],
+			foreignColumns: [careers.id],
+			name: "job_applications_jobId_fkey"
+		}).onDelete("cascade"),
+	pgPolicy("public_job_applications_insert", { as: "permissive", for: "insert", to: ["public"], withCheck: sql`("applicantEmail" IS NOT NULL)`  }),
+	pgPolicy("service_role_job_applications_all", { as: "permissive", for: "all", to: ["service_role"], using: sql`true`, withCheck: sql`true`  }),
+]);
