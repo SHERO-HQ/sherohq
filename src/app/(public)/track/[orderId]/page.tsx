@@ -453,24 +453,35 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
           <Card className="p-6 mt-8 dark:bg-slate-900 border shadow-sm">
             <h3 className="font-bold text-lg mb-6 text-slate-800 dark:text-slate-200">Detailed Timeline</h3>
             <div className="space-y-0">
-              {(order as any).activityLogs.map((log: any, idx: number) => (
-                <div key={idx} className="flex gap-4">
-                  <div className="flex flex-col items-center">
-                    <div className="w-3 h-3 rounded-full bg-brand-secondary-500 mt-1.5 z-10 shadow shadow-brand-secondary-500/20"></div>
-                    {idx < (order as any).activityLogs.length - 1 && (
-                      <div className="w-0.5 h-full bg-slate-200 dark:bg-slate-800 -mt-2 min-h-12"></div>
-                    )}
+              {(order as any).activityLogs.map((log: any, idx: number) => {
+                let actionText = log.action.replace("order_", "").replace(/_/g, " ").toUpperCase();
+                
+                if (log.action === "order_update" && log.details) {
+                  const match = log.details.match(/status=([\w]+)/i);
+                  if (match) {
+                    actionText = `UPDATE: ${match[1].toUpperCase()}`;
+                  }
+                }
+
+                return (
+                  <div key={idx} className="flex gap-4">
+                    <div className="flex flex-col items-center">
+                      <div className="w-3 h-3 rounded-full bg-brand-secondary-500 mt-1.5 z-10 shadow shadow-brand-secondary-500/20"></div>
+                      {idx < (order as any).activityLogs.length - 1 && (
+                        <div className="w-0.5 h-full bg-slate-200 dark:bg-slate-800 -mt-2 min-h-12"></div>
+                      )}
+                    </div>
+                    <div className="pb-6">
+                      <p className="font-semibold text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wide">
+                        {actionText}
+                      </p>
+                      <p className="text-xs text-slate-500 mt-1 font-mono">
+                        {new Date(log.createdAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}
+                      </p>
+                    </div>
                   </div>
-                  <div className="pb-6">
-                    <p className="font-semibold text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wide">
-                      {log.action.replace("order_", "").replace(/_/g, " ")}
-                    </p>
-                    <p className="text-xs text-slate-500 mt-1 font-mono">
-                      {new Date(log.createdAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </Card>
         )}
