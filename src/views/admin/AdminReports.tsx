@@ -1,4 +1,5 @@
 "use client";
+import { toReadableOrderId } from "@/utils/orderId";
 import React, { useState, useEffect } from "react";
 import {
   PieChart,
@@ -54,7 +55,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { toReadableOrderId } from "@/utils/orderId";
+import { displayOrderId } from "@/utils/orderId";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 
 interface StatCardProps {

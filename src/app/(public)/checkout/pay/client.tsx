@@ -15,7 +15,7 @@ import {
 import { trackOrder, initializePayment, type Order } from "@/services/orders";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { toReadableOrderId } from "@/utils/orderId";
+import { displayOrderId } from "@/utils/orderId";
 import { cn } from "@/lib/utils";
 
 type PaymentMethod = "momo" | "card";
@@ -75,7 +75,7 @@ export default function DynamicPaymentPortal() {
         const paymentResponse = await initializePayment(
           order.id,
           order.total,
-          `Service Payment for Order ${toReadableOrderId(order.id)}`,
+          `Service Payment for Order ${displayOrderId(order.id)}`,
           provider
         );
 
@@ -138,7 +138,7 @@ export default function DynamicPaymentPortal() {
     );
   }
 
-  const readableId = toReadableOrderId(order.id);
+  const readableId = displayOrderId(order.id);
   const total = order.total;
   const billingInfo = order.shippingInfo;
 

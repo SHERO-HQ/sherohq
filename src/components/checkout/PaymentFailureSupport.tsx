@@ -1,4 +1,5 @@
 "use client";
+import { toReadableOrderId } from "@/utils/orderId";
 import { motion } from "motion/react";
 import {
   AlertCircle,
@@ -11,7 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/assets/icons/icons";
-import { toReadableOrderId } from "@/utils/orderId";
+import { displayOrderId } from "@/utils/orderId";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 
 interface PaymentFailureSupportProps {

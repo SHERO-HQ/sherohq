@@ -4,7 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter, notFound } from "next/navigation";
 import { CreditCard, ShieldAlert, Sparkles, ShieldCheck } from "lucide-react";
 import { } from "@/components/ui/button";
-import { toReadableOrderId } from "@/utils/orderId";
+import { toReadableOrderId, displayOrderId } from "@/utils/orderId";
 
 function MockPaymentContent() {
   const searchParams = useSearchParams();
@@ -104,7 +104,7 @@ function MockPaymentContent() {
         <div className="flex justify-between items-center pb-3 border-b border-slate-200 dark:border-slate-800">
           <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Order ID</span>
           <span className="font-mono text-sm font-bold text-slate-900 dark:text-white">
-            {toReadableOrderId(orderId)}
+            {displayOrderId(orderId)}
           </span>
         </div>
         <div className="flex justify-between items-center pb-3 border-b border-slate-200 dark:border-slate-800">

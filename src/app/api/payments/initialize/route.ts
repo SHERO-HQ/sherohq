@@ -101,9 +101,9 @@ export async function POST(request: NextRequest) {
 
       const readableId = toReadableOrderId(orderId);
       const callbackUrl = `${publicUrl.replace(/\/$/, "")}/api/payments/webhook`;
-      const returnUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${encodeURIComponent(readableId)}`;
+      const returnUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}`;
       // Separate cancellation URL with status param so frontend shows failure instantly
-      const cancelUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${encodeURIComponent(readableId)}&status=Cancelled`;
+      const cancelUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}&status=Cancelled`;
 
       const payload = {
         totalAmount: Math.round((order.total ?? 0) * 100) / 100,
@@ -199,7 +199,7 @@ async function initializePaystackTransaction(
 
   // Redirect customer to confirmation page after payment
   const readableId = toReadableOrderId(orderId);
-  const callback_url = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${encodeURIComponent(readableId)}`;
+  const callback_url = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}`;
 
   const resp = await fetch("https://api.paystack.co/transaction/initialize", {
     method: "POST",

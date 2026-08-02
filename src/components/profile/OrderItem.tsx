@@ -1,4 +1,5 @@
 "use client";
+import { toReadableOrderId } from "@/utils/orderId";
 import React from "react";
 import {
   ChevronDown,
@@ -13,7 +14,7 @@ import {
 import type { Order, User } from "@/services/api";
 import { getImageUrl } from "@/services/api";
 import AppImage from "@/components/common/AppImage";
-import { toReadableOrderId } from "@/utils/orderId";
+import { displayOrderId } from "@/utils/orderId";
 
 interface OrderItemProps {
   order: Order;

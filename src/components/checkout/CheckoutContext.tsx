@@ -10,7 +10,7 @@ import { getRetryOrderId } from "@/lib/checkoutRetry";
 import { trackOrder, initializePayment, updateOrderPaymentMethod} from "@/services/api";
 import { getOrderAccessToken } from "@/utils/orderAccess";
 import { useNotifications } from "@/hooks/useNotifications";
-import { toReadableOrderId } from "@/utils/orderId";
+import { displayOrderId } from "@/utils/orderId";
 
 interface CheckoutContextValue {
   currentStep: number;
@@ -133,7 +133,7 @@ export const CheckoutProvider = ({ children }: { children: ReactNode }) => {
       const paymentResponse = await initializePayment(
         targetOrderId,
         paymentAmount,
-        `Order ${toReadableOrderId(targetOrderId)}`,
+        `Order ${displayOrderId(targetOrderId)}`,
         provider,
       );
 

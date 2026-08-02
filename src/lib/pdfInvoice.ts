@@ -27,8 +27,8 @@ export const generateInvoicePdf = async (
       // --- Header ---
       const logoPath = path.join(process.cwd(), "public", "assets", "logo", "shero.png");
       if (fs.existsSync(logoPath)) {
-        doc.image(logoPath, 256, doc.y, { width: 100 });
-        doc.moveDown(6); // Space after image
+        doc.image(logoPath, 281, doc.y, { width: 50 });
+        doc.moveDown(5); // Space after image
       }
 
       doc.fillColor("#059669").fontSize(22).font("Helvetica-Bold").text("SHERO TECHNOLOGIES", { align: "center" });

@@ -1,4 +1,5 @@
 "use client";
+import { toReadableOrderId } from "@/utils/orderId";
 
 import { useEffect, useState, use, useMemo } from "react";
 import Link from "next/link";
@@ -21,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { toReadableOrderId } from "@/utils/orderId";
+import { displayOrderId } from "@/utils/orderId";
 
 type Props = {
   params: Promise<{ orderId: string }>;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { Package, Ticket } from "lucide-react";
+import { displayOrderId } from "@/utils/orderId";
 
 interface TrackingData {
   id?: string;
@@ -78,7 +79,7 @@ export const LiveTrackingCard = ({
         <div>
           <p className="text-[10px] text-slate-500 uppercase">{type} ID</p>
           <p className="text-xs font-bold text-slate-800 tracking-tighter">
-            #{data.ticket_no || data.id}
+            {type === "order" ? displayOrderId(data.id as string) : `#${data.ticket_no || data.id}`}
           </p>
         </div>
         <div className="text-right">

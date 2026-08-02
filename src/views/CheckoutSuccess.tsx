@@ -15,7 +15,7 @@ import { trackOrder, type Order } from "@/services/api";
 import { useCart } from "@/context/CartContext";
 import OrderRatingModal from "@/components/checkout/OrderRatingModal";
 import { getOrderAccessToken } from "@/utils/orderAccess";
-import { toReadableOrderId } from "@/utils/orderId";
+import { displayOrderId } from "@/utils/orderId";
 import { WhatsAppIcon } from "@/assets/icons/icons";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { supabase } from "@/lib/supabase";
@@ -228,7 +228,7 @@ const CheckoutSuccess = () => {
   }, [status, order?.id, order?.paymentMethod, isUrlCancelledOrFailed]);
 
   if (!orderId) return null;
-  const readableOrderId = toReadableOrderId(orderId);
+  const readableOrderId = displayOrderId(orderId);
 
   // Dynamic Branding
   const getBrandColors = () => {

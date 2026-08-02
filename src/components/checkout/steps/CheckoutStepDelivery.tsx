@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { motion } from "motion/react";
-import { ChevronLeft, ChevronRight, Mail, Phone, MapPin, MessageCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -61,28 +61,7 @@ export default function CheckoutStepDelivery() {
           />
         </div>
 
-        <div className="flex items-start gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded border border-slate-200 dark:border-slate-700">
-          <div className="flex items-center h-5">
-            <input
-              id="wantsWhatsAppUpdates"
-              type="checkbox"
-              className="w-4 h-4 rounded border-slate-300 text-brand-secondary-600 focus:ring-brand-secondary-600 dark:border-slate-600 dark:bg-slate-900"
-              {...register("wantsWhatsAppUpdates")}
-            />
-          </div>
-          <div className="flex flex-col">
-            <label
-              htmlFor="wantsWhatsAppUpdates"
-              className="text-sm font-medium text-slate-900 dark:text-white flex items-center gap-2 cursor-pointer"
-            >
-              <MessageCircle className="w-4 h-4 text-green-500" />
-              Get order updates on WhatsApp
-            </label>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              We'll send you tracking info and updates to this phone number.
-            </p>
-          </div>
-        </div>
+
 
         <Input
           id="referralCode"
@@ -150,9 +129,9 @@ export default function CheckoutStepDelivery() {
               <p className="text-xs text-brand-secondary-600 dark:text-brand-secondary-400 font-medium px-1">
                 Estimated Delivery: {
                   watch("shippingAddress.region") === "Northern" ? "Same day delivery" :
-                    ["Ashanti", "Central", "Eastern", "Greater Accra"].includes(watch("shippingAddress.region") || "") ? "2-3 days" :
-                      ["Western", "Bono", "Bono East", "Ahafo", "Volta", "Oti"].includes(watch("shippingAddress.region") || "") ? "3-5 days" :
-                        "4-7 days"
+                    ["Savannah", "North East", "Upper East", "Upper West"].includes(watch("shippingAddress.region") || "") ? "24hours-2days" :
+                      ["Bono", "Bono East", "Ahafo", "Ashanti", "Oti"].includes(watch("shippingAddress.region") || "") ? "2-3 days" :
+                        "2-5 days"
                 }
               </p>
             )}

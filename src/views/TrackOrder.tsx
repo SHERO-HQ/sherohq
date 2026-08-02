@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { trackOrder, type Order, type OrderItem } from "@/services/api";
 import { getOrderAccessToken, saveOrderAccessToken } from "@/utils/orderAccess";
-import { toReadableOrderId } from "@/utils/orderId";
+import { displayOrderId } from "@/utils/orderId";
 
 type TrackOrderProps = {
   orderId: string;
@@ -58,7 +58,7 @@ export default function TrackOrder({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const shortId = useMemo(() => toReadableOrderId(orderId), [orderId]);
+  const shortId = useMemo(() => displayOrderId(orderId), [orderId]);
   const isStorePickupOrder =
     (order?.paymentMethod || "").toLowerCase() === "store_pickup";
 

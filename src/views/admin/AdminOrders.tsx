@@ -32,7 +32,7 @@ import { motion } from "motion/react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
-import { toReadableOrderId } from "@/utils/orderId";
+import { displayOrderId } from "@/utils/orderId";
 import {
   useAdminOrdersQuery,
   useUpdateOrderStatus} from "@/hooks/queries/useOrders";
@@ -70,7 +70,7 @@ const OrderRow = memo(
             href={`/admin/orders/${order.id}`}
             className="text-xs font-mono text-muted-foreground hover:text-brand-secondary-400 transition-colors"
           >
-            {toReadableOrderId(order.id)}
+            {displayOrderId(order.id)}
           </Link>
         </td>
         <td className="px-6 py-4">
@@ -283,7 +283,7 @@ export default function AdminOrders() {
   };
 
   const toExportOrderId = (orderId: string) => {
-    return toReadableOrderId(orderId);
+    return displayOrderId(orderId);
   };
 
   const handleExport = async (format: "csv" | "excel" | "pdf") => {

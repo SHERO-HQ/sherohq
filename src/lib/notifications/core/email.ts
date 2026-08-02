@@ -44,7 +44,7 @@ export function wrapEmailHtml(
       <!-- Header with Logo -->
       <div style="text-align: center; padding: 28px 20px 20px; border-bottom: 1.5px solid #059669;">
         <a href="${baseUrl}" target="_blank" style="text-decoration: none;">
-          <img src="${logoUrl}" alt="SHERO TECHNOLOGIES" width="40" height="40" style="display: inline-block; vertical-align: middle;" />
+          <img src="${logoUrl}" alt="SHERO TECHNOLOGIES" width="32" height="32" style="display: inline-block; vertical-align: middle;" />
         </a>
       </div>
       <!-- Body -->

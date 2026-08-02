@@ -1,11 +1,12 @@
 "use client";
+import { toReadableOrderId } from "@/utils/orderId";
 import React from "react";
 import { motion } from "motion/react";
 import { CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useCheckout } from "../CheckoutContext";
-import { toReadableOrderId } from "@/utils/orderId";
+import { displayOrderId } from "@/utils/orderId";
 import { WhatsAppIcon } from "@/assets/icons/icons";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 

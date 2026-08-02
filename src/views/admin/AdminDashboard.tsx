@@ -1,4 +1,5 @@
 "use client";
+import { toReadableOrderId } from "@/utils/orderId";
 import { useState, useMemo } from "react";
 
 import Link from "next/link";
@@ -73,7 +74,7 @@ import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/utils";
 import ActivityFeed from "@/components/admin/ActivityFeed";
-import { toReadableOrderId } from "@/utils/orderId";
+import { displayOrderId } from "@/utils/orderId";
 
 // --- Premium Glassmorphic Recharts Tooltip ---
 const CustomTooltip = ({ active, payload, label }: any) => {

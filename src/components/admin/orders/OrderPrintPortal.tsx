@@ -1,7 +1,8 @@
+import { toReadableOrderId } from "@/utils/orderId";
 import { createPortal } from "react-dom";
 import { type Order } from "@/services/api";
 import { cn } from "@/lib/utils";
-import { toReadableOrderId } from "@/utils/orderId";
+import { displayOrderId } from "@/utils/orderId";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { COMPANY_EMAILS } from "@/constants/emails";
 
@@ -17,8 +18,6 @@ export function OrderPrintPortal({
   receiptQrUrl,
 }: OrderPrintPortalProps) {
   if (!printMode || !order) return null;
-
-  const printOrderId = toReadableOrderId(order.id);
 
   return createPortal(
     <div className="hidden print:block bg-white text-black p-0 m-0 print-area relative z-10">
@@ -135,7 +134,7 @@ export function OrderPrintPortal({
             <div className="thermal-divider" />
             <div className="thermal-row">
               <span>Order No:</span>
-              <span className="font-bold">#{printOrderId}</span>
+              <span className="font-bold">{displayOrderId(order.id)}</span>
             </div>
             <div className="thermal-row">
               <span>Date:</span>
@@ -148,8 +147,8 @@ export function OrderPrintPortal({
               </span>
             </div>
             <div className="thermal-row">
-              <span>Status:</span>
-              <span className="uppercase font-bold">{order.status}</span>
+              <span>Payment:</span>
+              <span className="uppercase font-bold">{order.paymentStatus === "failed" ? "FAILED" : (order.paymentStatus === "pending" ? "PENDING" : "PAID")}</span>
             </div>
           </div>
 
@@ -236,10 +235,13 @@ export function OrderPrintPortal({
             </div>
             <div className="text-right">
               <h2 className="text-xl font-bold uppercase">{printMode}</h2>
-              <p className="font-mono text-sm">#{printOrderId}</p>
-              <p className="text-muted-foreground text-xs">
+              <p className="font-mono text-sm">{displayOrderId(order.id)}</p>
+              <p className="text-muted-foreground text-xs mb-2">
                 {new Date().toLocaleDateString()}
               </p>
+              <div className={cn("inline-block px-3 py-1 rounded text-[10px] font-bold uppercase tracking-wider", order.paymentStatus === "failed" ? "bg-red-100 text-red-700" : order.paymentStatus === "pending" ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700")}>
+                {order.paymentStatus === "failed" ? "PAYMENT FAILED" : (order.paymentStatus === "pending" ? "PAYMENT PENDING" : "PAID")}
+              </div>
             </div>
           </div>
 

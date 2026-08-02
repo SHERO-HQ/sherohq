@@ -1,4 +1,5 @@
 "use client";
+import { toReadableOrderId } from "@/utils/orderId";
 import { useState, useEffect } from "react";
 import { } from "react-dom";
 import { useParams, useRouter } from "next/navigation";
@@ -33,7 +34,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import AppImage from "@/components/common/AppImage";
 import { exportToPDF } from "@/utils/exportUtils";
-import { toReadableOrderId } from "@/utils/orderId";
+import { displayOrderId } from "@/utils/orderId";
 import {
   DropdownMenu,
   DropdownMenuContent,

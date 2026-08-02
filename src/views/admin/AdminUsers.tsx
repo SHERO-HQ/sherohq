@@ -1,4 +1,5 @@
 "use client";
+import { toReadableOrderId } from "@/utils/orderId";
 import { useState, useEffect } from "react";
 import { } from "@/context/AdminContext";
 import { getErrorMessage } from "@/utils/error";
@@ -40,7 +41,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem} from "@/components/ui/dropdown-menu";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
-import { toReadableOrderId } from "@/utils/orderId";
+import { displayOrderId } from "@/utils/orderId";
 import AppImage from "@/components/common/AppImage";
 import type {
   AdminUserListItem,
