@@ -288,7 +288,7 @@ const CheckoutSuccess = () => {
           "Your payment was successful and your order is confirmed.",
         badge: "Success",
         badgeClassName:
-          "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
+          "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400",
       };
 
   const renderContent = () => {
@@ -398,7 +398,7 @@ const CheckoutSuccess = () => {
               <div className="flex justify-between items-center pb-5 border-b border-slate-100 dark:border-slate-800/60">
                 <span className="text-slate-500 text-sm font-medium">To</span>
                 <span className="text-slate-900 dark:text-slate-100 text-sm font-semibold">
-                  Shero Technologies
+                  SHERO TECHNOLOGIES
                 </span>
               </div>
               <div className="flex justify-between items-center pb-5 border-b border-slate-100 dark:border-slate-800/60">
@@ -442,7 +442,13 @@ const CheckoutSuccess = () => {
             </a>
 
             <button
-              onClick={() => router.push(`/track/${orderId}`)}
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  const isShop = window.location.hostname.includes("shop.");
+                  const targetHost = isShop ? window.location.host.replace("shop.", "") : window.location.host;
+                  window.location.href = `${window.location.protocol}//${targetHost}/track/${orderId}`;
+                }
+              }}
               className="w-full flex items-center justify-between px-6 py-4 rounded bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/50 dark:hover:bg-slate-800 text-slate-900 dark:text-white transition-colors group"
             >
               <div className="flex items-center gap-3">
@@ -561,7 +567,7 @@ const CheckoutSuccess = () => {
             animate={{ scale: 1 }}
             transition={{ type: "spring", bounce: 0.5, delay: 0.1 }}
           >
-            <Check className="w-12 h-12 text-white z-10 stroke-3" />
+            <Check className="w-12 h-12 dark:text-white z-10 stroke-3" />
           </motion.div>
         </div>
 
@@ -618,7 +624,13 @@ const CheckoutSuccess = () => {
 
         <div className="w-full space-y-3">
           <button
-            onClick={() => router.push(`/track/${orderId}`)}
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                const isShop = window.location.hostname.includes("shop.");
+                const targetHost = isShop ? window.location.host.replace("shop.", "") : window.location.host;
+                window.location.href = `${window.location.protocol}//${targetHost}/track/${orderId}`;
+              }
+            }}
             className="w-full flex items-center justify-between px-6 py-4 rounded bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/50 dark:hover:bg-slate-800 text-slate-900 dark:text-white transition-colors group"
           >
             <div className="flex items-center gap-3">

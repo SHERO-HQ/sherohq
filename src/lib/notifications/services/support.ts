@@ -12,6 +12,7 @@ export const supportNotifications = {
     category: string;
   }) {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
+    const trackUrl = baseUrl.includes("shop.") ? baseUrl.replace("shop.", "") : baseUrl;
     const bodyHtml = `
       <h1 style="color: #059669; text-align: center; margin: 0 0 16px; font-size: 18px;">Support Ticket Received</h1>
       <p style="text-align: center; color: #64748b; font-size: 13px; margin: 0 0 20px;">Ticket <strong>#${ticket.ticket_no}</strong></p>
@@ -23,7 +24,7 @@ export const supportNotifications = {
       </div>
       <p>Our support team is reviewing your ticket and will respond as soon as possible, typically within 24 hours.</p>
       <p style="text-align: center; margin-top: 24px;">
-        <a href="${baseUrl}/track/${ticket.ticket_no}" style="display: inline-block; padding: 12px 28px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Track Ticket Status</a>
+        <a href="${trackUrl}/track/${ticket.ticket_no}" style="display: inline-block; padding: 12px 28px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Track Ticket Status</a>
       </p>
     `;
     const htmlContent = wrapEmailHtml(bodyHtml, {
@@ -68,6 +69,7 @@ export const supportNotifications = {
     status: string;
   }) {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
+    const trackUrl = baseUrl.includes("shop.") ? baseUrl.replace("shop.", "") : baseUrl;
     const formattedStatus = ticket.status.replace(/_/g, " ").toUpperCase();
     const isResolved = ticket.status === "resolved" || ticket.status === "closed";
     
@@ -79,7 +81,7 @@ export const supportNotifications = {
       <p>The status of your support ticket <strong>"${ticket.subject}"</strong> has been updated to <strong style="color: ${isResolved ? "#059669" : "#2563eb"};">${formattedStatus}</strong>.</p>
       ${isResolved ? "<p>We hope we answered your questions to your satisfaction! If you need further assistance, feel free to reply or submit a new ticket.</p>" : "<p>Our team is currently handling your request and will follow up shortly.</p>"}
       <p style="text-align: center; margin-top: 24px;">
-        <a href="${baseUrl}/track/${ticket.ticket_no}" style="display: inline-block; padding: 12px 28px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">View Ticket Details</a>
+        <a href="${trackUrl}/track/${ticket.ticket_no}" style="display: inline-block; padding: 12px 28px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">View Ticket Details</a>
       </p>
     `;
     const htmlContent = wrapEmailHtml(bodyHtml, {

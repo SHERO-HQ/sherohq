@@ -16,6 +16,7 @@ export const ordersNotifications = {
   ) {
     const readableOrderId = toReadableOrderId(orderId);
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
+    const trackUrl = baseUrl.includes("shop.") ? baseUrl.replace("shop.", "") : baseUrl;
 
     // Derive subtotal and shipping from items vs. the stored total
     const subtotal = items.reduce(
@@ -59,19 +60,25 @@ export const ordersNotifications = {
 
         return `
           <tr>
-            <td style="padding: 10px 8px; border-bottom: 1px solid #f1f5f9; color: #334155;">
+            <td style="padding: 16px 0; border-bottom: 1px solid #f1f5f9; color: #1e293b;">
               <table style="border: 0; padding: 0; margin: 0; border-collapse: collapse;">
                 <tr>
                   <td style="padding: 0;">${imgHtml}</td>
                   <td style="padding: 0; vertical-align: middle;">
-                    <strong style="display: block; margin-bottom: 2px;">${item.name}</strong>
-                    <span style="font-size: 12px; color: #94a3b8;">Qty: ${item.quantity} × GH₵${item.price.toFixed(2)}</span>
+                    <strong style="display: block; margin-bottom: 4px; font-family: Helvetica, Arial, sans-serif; font-size: 12px; font-weight: bold;">${item.name}</strong>
+                    ${item.sku ? `<span style="font-family: 'Courier New', Courier, monospace; font-size: 10px; color: #94a3b8;">SKU: ${item.sku}</span>` : ""}
                   </td>
                 </tr>
               </table>
             </td>
-            <td style="padding: 10px 8px; border-bottom: 1px solid #f1f5f9; text-align: right; color: #0f172a; font-weight: 600; white-space: nowrap; vertical-align: top;">
-              GH₵${(item.price * item.quantity).toFixed(2)}
+            <td style="padding: 16px 0; border-bottom: 1px solid #f1f5f9; text-align: center; color: #475569; font-family: Helvetica, Arial, sans-serif; font-size: 12px;">
+              ${item.quantity}
+            </td>
+            <td style="padding: 16px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #475569; font-family: 'Courier New', Courier, monospace; font-size: 12px;">
+              GHC${item.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+            </td>
+            <td style="padding: 16px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #1e293b; font-family: Helvetica, Arial, sans-serif; font-weight: bold; font-size: 12px;">
+              GHC${(item.price * item.quantity).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
             </td>
           </tr>`;
       })
@@ -86,102 +93,121 @@ export const ordersNotifications = {
       hour12: true,
     });
 
-    const bodyHtml = `
-      <h1 style="color: #059669; text-align: center; margin: 0 0 8px; font-size: 18px;">Order Confirmed!</h1>
-      <p style="text-align: center; color: #64748b; font-size: 12px; margin: 0 0 24px;">Order <strong style="color: #0f172a;">${readableOrderId}</strong> &middot; ${orderDate}</p>
+    const statusText = paymentMethod === "cash_on_delivery" ? "PAYMENT PENDING" : (paymentMethod === "store_pickup" ? "PAYMENT PENDING" : "PAID");
+    const statusBg = paymentMethod === "cash_on_delivery" || paymentMethod === "store_pickup" ? "#fffbeb" : "#ecfdf5";
+    const statusColor = paymentMethod === "cash_on_delivery" || paymentMethod === "store_pickup" ? "#b45309" : "#047857";
 
-      <p style="margin: 0 0 20px;">Hi ${shippingInfo.firstName},</p>
-      <p style="margin: 0 0 24px;">Thank you for your order at <strong>SHERO TECHNOLOGIES</strong>. Here's your receipt:</p>
+    const bodyHtml = `
+      <!-- Header Area -->
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 32px;">
+        <tr>
+          <td valign="top" style="width: 50%;">
+            <img src="${baseUrl}/assets/logo/shero.png" alt="SHERO" width="40" style="margin-bottom: 12px; display: block;" />
+            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; color: #1e293b; margin-bottom: 4px;">SHERO TECHNOLOGIES</div>
+            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 11px; color: #64748b; line-height: 1.6;">
+              ${COMPANY_CONTACTS.HQ_LOCATION}<br />
+              ${COMPANY_CONTACTS.PHONE_DISPLAY}<br />
+              <span style="color: #059669;">${COMPANY_CONTACTS.WEBSITE_DISPLAY}</span>
+            </div>
+          </td>
+          <td valign="top" style="width: 50%; text-align: right;">
+            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 28px; font-weight: bold; color: #e2e8f0; margin-bottom: 16px; letter-spacing: 1px;">RECEIPT</div>
+            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; font-weight: bold; color: #334155; margin-bottom: 2px;">Ref: ${readableOrderId}</div>
+            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 11px; color: #64748b; margin-bottom: 8px;">Date: ${orderDate}</div>
+            <div style="display: inline-block; background-color: ${statusBg}; color: ${statusColor}; font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 4px;">${statusText}</div>
+          </td>
+        </tr>
+      </table>
+
+      <!-- Billed To & Shipping Side-by-Side -->
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 32px;">
+        <tr>
+          <td valign="top" style="width: 50%; padding: 20px;">
+            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; margin-bottom: 12px;">BILLED TO</div>
+            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; color: #1e293b; margin-bottom: 4px;">${shippingInfo.firstName} ${shippingInfo.lastName}</div>
+            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569; margin-bottom: 2px;">${shippingInfo.email || "N/A"}</div>
+            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569;">${shippingInfo.phone || "N/A"}</div>
+          </td>
+          <td valign="top" style="width: 50%; padding: 20px;">
+            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; margin-bottom: 12px;">SHIPPING ADDRESS</div>
+            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569; margin-bottom: 2px;">${shippingInfo.address || "N/A"}</div>
+            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569; margin-bottom: 8px;">${shippingInfo.city || ""}, ${shippingInfo.region || ""}</div>
+            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 11px; font-weight: bold; color: #059669;">Est. Delivery: ${deliveryRange}</div>
+          </td>
+        </tr>
+      </table>
 
       <!-- Items Table -->
-      <div style="background: #f8fafc; border-radius: 8px; overflow: hidden; border: 1px solid #e2e8f0; margin-bottom: 24px;">
-        <table style="width: 100%; border-collapse: collapse;">
-          <thead>
-            <tr style="background: #f1f5f9;">
-              <th style="padding: 10px 8px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 600;">Item</th>
-              <th style="padding: 10px 8px; text-align: right; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 600;">Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${itemsHtml}
-          </tbody>
-        </table>
-
-        <!-- Summary Rows -->
-        <div style="padding: 12px 8px 4px; border-top: 2px solid #e2e8f0;">
-          <table style="width: 100%; border-collapse: collapse;">
-            <tr>
-              <td style="padding: 6px 0; color: #64748b; font-size: 12px;">Subtotal</td>
-              <td style="padding: 6px 0; text-align: right; color: #334155; font-size: 12px;">GH₵${subtotal.toFixed(2)}</td>
-            </tr>
-            <tr>
-              <td style="padding: 6px 0; color: #64748b; font-size: 12px;">Shipping</td>
-              <td style="padding: 6px 0; text-align: right; font-size: 12px;">
-                ${
-                  isFreeShipping
-                    ? '<span style="color: #059669; font-weight: 600;">FREE</span>'
-                    : `<span style="color: #334155;">GH₵${shipping.toFixed(2)}</span>`
-                }
-              </td>
-            </tr>
-            <tr>
-              <td colspan="2" style="padding: 8px 0 0;"><div style="border-top: 1px solid #e2e8f0;"></div></td>
-            </tr>
-            <tr>
-              <td style="padding: 10px 0; font-weight: 700; font-size: 13px; color: #0f172a;">Total</td>
-              <td style="padding: 10px 0; text-align: right; font-weight: 700; font-size: 13px; color: #059669;">GH₵${total.toFixed(2)}</td>
-            </tr>
-          </table>
-        </div>
-      </div>
-
-      <!-- Delivery Info -->
-      <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
-        <table style="width: 100%; border-collapse: collapse;">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
+        <thead>
           <tr>
-            <td style="vertical-align: top; width: 50%; padding: 4px 8px 4px 0;">
-              <p style="margin: 0 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #16a34a; font-weight: 600;">Estimated Delivery</p>
-              <p style="margin: 0; font-size: 12px; color: #0f172a; font-weight: 600;">${deliveryRange}</p>
-              <p style="margin: 4px 0 0; font-size: 12px; color: #64748b;">24hrs to 5 days</p>
-
-              ${
-                paymentMethod
-                  ? `
-                <p style="margin: 16px 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #16a34a; font-weight: 600;">Payment Method</p>
-                <p style="margin: 0; font-size: 12px; color: #0f172a; font-weight: 600;">${
-                  paymentMethod === "cash_on_delivery"
-                    ? "Cash on Delivery"
-                    : paymentMethod === "store_pickup"
-                      ? "Store Pickup"
-                      : paymentMethod === "card"
-                        ? "Card Payment"
-                        : paymentMethod === "momo"
-                          ? "Mobile Money"
-                          : "Paid"
-                }</p>
-              `
-                  : ""
-              }
-            </td>
-            <td style="vertical-align: top; width: 50%; padding: 4px 0 4px 8px; border-left: 1px solid #bbf7d0;">
-              <p style="margin: 0 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #16a34a; font-weight: 600;">Delivery Address</p>
-              <p style="margin: 0; font-size: 13px; color: #334155; line-height: 1;">${shippingInfo.address}<br />${shippingInfo.city}, ${shippingInfo.region}</p>
-            </td>
+            <th style="padding: 0 0 12px 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0;">DESCRIPTION</th>
+            <th style="padding: 0 0 12px 0; text-align: center; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 60px;">QTY</th>
+            <th style="padding: 0 0 12px 0; text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 100px;">UNIT PRICE</th>
+            <th style="padding: 0 0 12px 0; text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 100px;">AMOUNT</th>
           </tr>
-        </table>
-      </div>
+        </thead>
+        <tbody>
+          ${itemsHtml}
+        </tbody>
+      </table>
+
+      <!-- Totals -->
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 40px;">
+        <tr>
+          <td style="width: 50%;"></td>
+          <td style="width: 50%;">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="padding: 8px 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569;">Subtotal</td>
+                <td style="padding: 8px 0; text-align: right; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #1e293b;">GHC${subtotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569;">Shipping</td>
+                <td style="padding: 8px 0; text-align: right; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #1e293b;">
+                  ${isFreeShipping ? '<span style="color: #059669; font-family: Helvetica, Arial, sans-serif; font-weight: bold;">FREE</span>' : `GHC${shipping.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`}
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2" style="border-bottom: 1px solid #e2e8f0;"></td>
+              </tr>
+              <tr>
+                <td style="padding: 16px 0 0 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 12px; font-weight: bold; color: #059669; letter-spacing: 1px;">GRAND TOTAL</td>
+                <td style="padding: 16px 0 0 0; text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 18px; font-weight: bold; color: #1e293b;">GHC${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
 
       <!-- CTA -->
-      <p style="text-align: center; margin: 0 0 24px;">
-        <a href="${baseUrl}/track/${orderId}" style="display: inline-block; padding: 12px 32px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 15px;">Track Your Order</a>
+      <p style="text-align: center; margin: 0 0 32px;">
+        <a href="${trackUrl}/track/${orderId}" style="display: inline-block; padding: 14px 36px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold; font-family: Helvetica, Arial, sans-serif; font-size: 14px;">Track Your Order</a>
       </p>
 
-      <!-- Referral Nudge -->
-      <div style="background: #f8fafc; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 12px; border: 1px solid #e2e8f0;">
-        <p style="margin: 0 0 8px; font-size: 10px; font-weight: 600; color: #0f172a;">Love SHERO?</p>
-        <p style="margin: 0 0 16px; font-size: 11px; color: #64748b;">Share the experience with a friend and they'll thank you later.</p>
-        <a href="${baseUrl}" style="color: #059669; font-weight: 600; text-decoration: none;">Share with friend</a>
-      </div>
+      <!-- Footer -->
+      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top: 1px solid #f1f5f9; padding-top: 24px; text-align: center;">
+        <tr>
+          <td style="font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; margin-bottom: 12px;">THANK YOU FOR YOUR BUSINESS!</td>
+        </tr>
+        <tr>
+          <td style="font-family: Helvetica, Arial, sans-serif; font-size: 10px; color: #64748b; line-height: 1.5; padding: 12px 0;">
+            This document is a computer-generated invoice and requires no signature. Subject to our standard Terms & Conditions of Sale. Returns and exchanges are governed by our return policy available at ${COMPANY_CONTACTS.WEBSITE_DISPLAY}/terms.
+          </td>
+        </tr>
+        <tr>
+          <td style="font-family: Helvetica, Arial, sans-serif; font-size: 11px; font-weight: bold; color: #64748b; padding-bottom: 8px;">
+            SHERO TECHNOLOGIES | ${COMPANY_CONTACTS.HQ_LOCATION}
+          </td>
+        </tr>
+        <tr>
+          <td style="font-family: Helvetica, Arial, sans-serif; font-size: 11px;">
+            <a href="mailto:${COMPANY_EMAILS.SUPPORT}" style="color: #059669; text-decoration: underline;">${COMPANY_EMAILS.SUPPORT}</a>
+            &nbsp;|&nbsp;
+            <a href="https://wa.me/${COMPANY_CONTACTS.PHONE_DISPLAY.replace(/[^0-9]/g, '')}" style="color: #059669; text-decoration: underline;">WhatsApp: ${COMPANY_CONTACTS.PHONE_DISPLAY}</a>
+          </td>
+        </tr>
+      </table>
     `;
     const htmlContent = wrapEmailHtml(bodyHtml, {
       preheader: "Thank you for your order! Here's your receipt.",
@@ -256,7 +282,7 @@ export const ordersNotifications = {
         `We have successfully received your order *${readableOrderId}*.\n\n` +
         `💰 *Total:* GHS ${total.toFixed(2)}\n` +
         `📍 *Delivery Details:* ${shippingInfo.address}, ${shippingInfo.city}\n\n` +
-        `🔗 *Live Track:* ${baseUrl}/track/${orderId}\n\n` +
+        `🔗 *Live Track:* ${trackUrl}/track/${orderId}\n\n` +
         `If you need immediate support, reply directly to this chat. Thank you for choosing SHERO!`;
 
       sendWhatsAppNotification(customerPhone, customerMsg).catch((err) =>
@@ -272,6 +298,7 @@ export const ordersNotifications = {
   ) {
     const readableOrderId = toReadableOrderId(orderId);
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
+    const trackUrl = baseUrl.includes("shop.") ? baseUrl.replace("shop.", "") : baseUrl;
 
     let title = "Order Update";
     let message = `There is an update on your order <strong>${readableOrderId}</strong>.`;
@@ -302,7 +329,7 @@ export const ordersNotifications = {
       <h1 style="color: #059669; text-align: center; margin: 0 0 20px; font-size: 18px;">${title}</h1>
       <p style="margin: 0 0 16px;">${message}</p>
       <p style="text-align: center; margin-top: 24px;">
-        <a href="${baseUrl}/track/${orderId}" style="display: inline-block; padding: 12px 32px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Track Your Order</a>
+        <a href="${trackUrl}/track/${orderId}" style="display: inline-block; padding: 12px 32px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Track Your Order</a>
       </p>
       ${feedbackNudge}
     `;
@@ -324,7 +351,7 @@ export const ordersNotifications = {
       if (newStatus === "delivered")
         waMessage = `Hi ${shippingInfo.firstName} 🎉\n\nYour order *${readableOrderId}* from *SHERO TECHNOLOGIES* has been delivered!\n\nWe hope you love it.\n\n`;
 
-      waMessage += `🔗 *Track your order:* ${baseUrl}/track/${orderId}`;
+      waMessage += `🔗 *Track your order:* ${trackUrl}/track/${orderId}`;
 
       sendWhatsAppNotification(customerPhone, waMessage).catch((err) =>
         console.error(
@@ -344,6 +371,7 @@ export const ordersNotifications = {
   ) {
     const readableOrderId = toReadableOrderId(orderId);
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
+    const trackUrl = baseUrl.includes("shop.") ? baseUrl.replace("shop.", "") : baseUrl;
 
     const bodyHtml = `
       <h1 style="color: #dc2626; text-align: center; margin: 0 0 20px; font-size: 18px;">Payment Was Not Completed</h1>
@@ -354,7 +382,7 @@ export const ordersNotifications = {
         <a href="${baseUrl}/shop/checkout?retry=${orderId}" style="display: inline-block; padding: 10px 28px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Try Again</a>
       </p>
       <p style="text-align: center; margin-top: 8px;">
-        <a href="${baseUrl}/track/${orderId}" style="color: #059669; text-decoration: none;">View your order details →</a>
+        <a href="${trackUrl}/track/${orderId}" style="color: #059669; text-decoration: none;">View your order details →</a>
       </p>
     `;
     const htmlContent = wrapEmailHtml(bodyHtml);
@@ -393,7 +421,7 @@ export const ordersNotifications = {
         `Hi ${shippingInfo.firstName},\n\n` +
         `Unfortunately, the payment for your order *${readableOrderId}* at *SHERO TECHNOLOGIES* failed.\n\n` +
         `You can try again or contact us for help.\n\n` +
-        `🔗 *View Order:* ${baseUrl}/track/${orderId}`;
+        `🔗 *View Order:* ${trackUrl}/track/${orderId}`;
 
       sendWhatsAppNotification(customerPhone, customerMsg).catch((err) =>
         console.error("Customer WhatsApp failure notification failed:", err),
@@ -407,13 +435,14 @@ export const ordersNotifications = {
   ) {
     const readableOrderId = toReadableOrderId(orderId);
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
+    const trackUrl = baseUrl.includes("shop.") ? baseUrl.replace("shop.", "") : baseUrl;
 
     const bodyHtml = `
       <h1 style="color: #059669; text-align: center; margin: 0 0 20px; font-size: 18px;">How did we do?</h1>
       <p style="margin: 0 0 16px;">Hi ${shippingInfo.firstName},</p>
       <p style="margin: 0 0 16px;">Your order <strong>${readableOrderId}</strong> was recently delivered. We'd love to hear about your experience!</p>
       <p style="text-align: center; margin-top: 24px;">
-        <a href="${baseUrl}/feedback?order=${orderId}" style="display: inline-block; padding: 12px 32px; background: #0f172a; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Leave a Review</a>
+        <a href="${trackUrl}/feedback?order=${orderId}" style="display: inline-block; padding: 12px 32px; background: #0f172a; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Leave a Review</a>
       </p>
     `;
 
