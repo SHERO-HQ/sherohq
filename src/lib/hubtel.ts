@@ -184,10 +184,10 @@ export async function verifyHubtelTransaction(
     });
 
     if (!resp.ok) {
-      const logFn = resp.status === 403 ? console.warn : console.error;
-      logFn(
-        `Hubtel status check failed: HTTP ${resp.status} for ref ${clientReference}. ` + 
-        (resp.status === 403 ? 'This may indicate missing API permissions for payproxyapi.hubtel.com. Relying on webhook tokens.' : '')
+      console.warn(
+        `[Hubtel] Status check returned HTTP ${resp.status} for ref ${identifier}. ` +
+        `This is expected if your Hubtel API keys lack permissions for the status endpoint. ` +
+        `The system will gracefully fall back to verifying the webhook tokens.`
       );
       if (process.env.NODE_ENV === "development") {
         return { verified: true, status: "Success", amount: null };

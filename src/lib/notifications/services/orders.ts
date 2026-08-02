@@ -75,10 +75,10 @@ export const ordersNotifications = {
               ${item.quantity}
             </td>
             <td style="padding: 16px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #475569; font-family: 'Courier New', Courier, monospace; font-size: 12px;">
-              GHC${item.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+              GH₵${item.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
             </td>
             <td style="padding: 16px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #1e293b; font-family: Helvetica, Arial, sans-serif; font-weight: bold; font-size: 12px;">
-              GHC${(item.price * item.quantity).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
+              GH₵${(item.price * item.quantity).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
             </td>
           </tr>`;
       })
@@ -160,20 +160,24 @@ export const ordersNotifications = {
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
               <tr>
                 <td style="padding: 8px 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569;">Subtotal</td>
-                <td style="padding: 8px 0; text-align: right; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #1e293b;">GHC${subtotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                <td style="padding: 8px 0; text-align: right; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #1e293b;">GH₵${subtotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
               </tr>
               <tr>
                 <td style="padding: 8px 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569;">Shipping</td>
                 <td style="padding: 8px 0; text-align: right; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #1e293b;">
-                  ${isFreeShipping ? '<span style="color: #059669; font-family: Helvetica, Arial, sans-serif; font-weight: bold;">FREE</span>' : `GHC${shipping.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`}
+                  ${isFreeShipping ? '<span style="color: #059669; font-family: Helvetica, Arial, sans-serif; font-weight: bold;">FREE</span>' : `GH₵${shipping.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`}
                 </td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569;">Tax (0%)</td>
+                <td style="padding: 8px 0; text-align: right; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #1e293b;">GH₵0.00</td>
               </tr>
               <tr>
                 <td colspan="2" style="border-bottom: 1px solid #e2e8f0;"></td>
               </tr>
               <tr>
                 <td style="padding: 16px 0 0 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 12px; font-weight: bold; color: #059669; letter-spacing: 1px;">GRAND TOTAL</td>
-                <td style="padding: 16px 0 0 0; text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 18px; font-weight: bold; color: #1e293b;">GHC${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                <td style="padding: 16px 0 0 0; text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 18px; font-weight: bold; color: #1e293b;">GH₵${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
               </tr>
             </table>
           </td>
