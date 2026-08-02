@@ -18,14 +18,6 @@ export const ordersNotifications = {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
     const trackUrl = baseUrl.includes("shop.") ? baseUrl.replace("shop.", "") : baseUrl;
 
-    // Derive subtotal and shipping from items vs. the stored total
-    const subtotal = items.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0,
-    );
-    const shipping = Math.max(0, Math.round((total - subtotal) * 100) / 100);
-    const isFreeShipping = shipping === 0;
-
     // Estimated delivery: 24hrs to 5 business days from now
     const deliveryStart = new Date();
     let addedDays = 0;
@@ -160,13 +152,7 @@ export const ordersNotifications = {
             <table width="100%" cellpadding="0" cellspacing="0" border="0">
               <tr>
                 <td style="padding: 8px 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569;">Subtotal</td>
-                <td style="padding: 8px 0; text-align: right; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #1e293b;">GH₵${subtotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569;">Shipping</td>
-                <td style="padding: 8px 0; text-align: right; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #1e293b;">
-                  ${isFreeShipping ? '<span style="color: #059669; font-family: Helvetica, Arial, sans-serif; font-weight: bold;">FREE</span>' : `GH₵${shipping.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`}
-                </td>
+                <td style="padding: 8px 0; text-align: right; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #1e293b;">GH₵${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
               </tr>
               <tr>
                 <td style="padding: 8px 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569;">Tax (0%)</td>

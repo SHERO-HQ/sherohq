@@ -147,8 +147,7 @@ export const generateInvoicePdf = async (
       doc.moveTo(350, currentY).lineTo(545, currentY).strokeColor("#e2e8f0").lineWidth(1).stroke();
       currentY += 15;
 
-      const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-      const shipping = total - subtotal;
+
 
       // QR Code
       if (qrBuffer) {
@@ -158,11 +157,11 @@ export const generateInvoicePdf = async (
 
       doc.fillColor("#475569").font("Helvetica").fontSize(9);
       doc.text("Subtotal", 350, currentY);
-      doc.font("Courier").text(`GH₵${subtotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 450, currentY, { align: "right", width: 95 });
+      doc.font("Courier").text(`GH₵${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 450, currentY, { align: "right", width: 95 });
 
       currentY += 15;
-      doc.font("Helvetica").text("Shipping", 350, currentY);
-      doc.font("Courier").text(shipping <= 0 ? "FREE" : `GH₵${shipping.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 450, currentY, { align: "right", width: 95 });
+      doc.font("Helvetica").text("Tax (0%)", 350, currentY);
+      doc.font("Courier").text(`GH₵0.00`, 450, currentY, { align: "right", width: 95 });
 
       currentY += 20;
       doc.moveTo(350, currentY).lineTo(545, currentY).strokeColor("#e2e8f0").lineWidth(1).stroke();
