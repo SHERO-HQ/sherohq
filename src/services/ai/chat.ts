@@ -48,10 +48,15 @@ export async function sendChatMessageStreaming(
   onUpdate: (chunk: string) => void,
 ): Promise<Partial<ChatMessage>> {
   try {
+    const safeRequest = { ...request };
+    if (safeRequest.message && safeRequest.message.length > 2000) {
+      safeRequest.message = safeRequest.message.substring(0, 2000) + "... [truncated]";
+    }
+
     const response = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
+      body: JSON.stringify(safeRequest),
     });
 
     if (!response.ok) throw new Error(`Error: ${response.statusText}`);

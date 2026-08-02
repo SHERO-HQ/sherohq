@@ -21,6 +21,7 @@ import {
 import { handleBookDirect, handleTicketDirect, handleTrackOrder, handleTrackTicket } from "./actions";
 import { getSystemPrompt, callLLMStreaming, buildGeminiContents, summarizeChatHistory, categorizeIntent } from "./llm";
 import { query as dbQuery } from "@/lib/db";
+import { rateLimit } from "@/lib/rate-limit";
 
 const BACKEND_URL = (
   process.env.API_URL ||
@@ -32,7 +33,14 @@ const BACKEND_URL = (
 
 export async function POST(request: Request) {
   try {
-    const { message, history, imageData, audioData, context } = await request.json();
+    const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
+    const rl = await rateLimit(`chat_${ip}`, 10, 60000); // 10 requests per minute
+    if (!rl.success) {
+      return NextResponse.json({ error: "Too many requests. Please wait a moment." }, { status: 429 });
+    }
+    const payload = await request.json();
+    const message = payload.message?.length > 2000 ? payload.message.substring(0, 2000) + "... [truncated]" : payload.message;
+    const { history, imageData, audioData, context } = payload;
     const safeHistory: ChatHistoryMessage[] = Array.isArray(history) ? history : [];
     const budgetCap = resolveBudgetFromConversation(message, safeHistory);
 

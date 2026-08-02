@@ -77,6 +77,7 @@ CAPABILITIES
 
 RULES
 - Be a polite and conversational IT assistant.
+- You must ONLY execute ONE tool per response. Do not chain multiple tool calls together in a single response.
 - ONLY call tools when the user explicitly requests something that requires a tool.
 - If the user makes small talk or asks an off-topic question (like "I am not feeling well"), acknowledge it briefly, explicitly state that you are an IT assistant and can only help with tech-related issues, and ask how you can help them with technology today. Do not offer unrelated services.
 - For product questions, ALWAYS call recommend_products so the frontend renders product cards. Don't just describe products in text.
@@ -105,18 +106,21 @@ export async function categorizeIntent(message: string, history: Array<{ role: s
   if (!apiKey || !message) return "general";
   
   const recentHistory = history.slice(-3).map(h => `${h.role.toUpperCase()}: ${h.content}`).join("\n");
-  const textPrompt = `Categorize the User Message into exactly one of these three categories: "tech_support", "sales", or "general". Return ONLY the category string.\n\nRecent History (for context):\n${recentHistory}\n\nUser Message: "${message}"`;
+  const systemInstruction = `Categorize the User Message into exactly one of these three categories: "tech_support", "sales", or "general". Return ONLY the category string.\n\nRecent History (for context):\n${recentHistory}`;
 
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          systemInstruction: {
+            parts: [{ text: systemInstruction }]
+          },
           contents: [{ 
             role: "user", 
-            parts: [{ text: textPrompt }] 
+            parts: [{ text: message }] 
           }],
           generationConfig: { temperature: 0.1 }
         })
@@ -141,7 +145,7 @@ export async function summarizeChatHistory(history: Array<{ role: string; conten
   
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

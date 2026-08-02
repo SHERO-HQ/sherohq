@@ -376,5 +376,5 @@ export function buildFallbackReply(
     return "I can narrow this quickly. Tell me your exact use case and budget (GHS), and I will recommend the best options. (AI Offline Mode)";
   }
 
-  return "I am currently running in Offline Fallback Mode because the Gemini API is unavailable (missing API key or quota exceeded). Please add a valid GEMINI_API_KEY to your .env.local file to restore my full intelligence!";
+  return "I'm currently experiencing high traffic or connectivity issues and running in limited offline mode. How can I help you today? (Try asking about laptops, networking, or troubleshooting)";
 }
