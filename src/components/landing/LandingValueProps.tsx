@@ -40,7 +40,7 @@ const LandingValueProps = () => {
 
             return (
               <StaggerItem key={item.title} yOffset={15} scale={1} duration={0.4}>
-                <div className={`flex items-center gap-4 group py-4 lg:py-2 lg:px-6 border-slate-200 dark:border-slate-800/40 ${borderClass}`}>
+                <div className={`flex items-center gap-4 group py-4 lg:py-2 lg:px-6 border-slate-200/80 dark:border-slate-700/70 ${borderClass}`}>
                   <div className="shrink-0 w-12 h-12 flex items-center justify-center text-brand-secondary-600 dark:text-brand-secondary-400 transition duration-300">
                     <item.icon className="w-6 h-6" />
                   </div>

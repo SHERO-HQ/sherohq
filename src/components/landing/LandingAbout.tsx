@@ -35,7 +35,7 @@ const LandingAbout = () => {
                 </span>
 
                 <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 leading-tight">
-                  Empowering Ghana's <br />
+                  Empowering Africa's <br />
                   <span className="text-brand-secondary-600">Digital Economy</span>
                 </h2>
 
