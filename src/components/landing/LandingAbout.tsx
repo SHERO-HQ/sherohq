@@ -12,7 +12,7 @@ import { } from "@/components/ui/card";
 
 const LandingAbout = () => {
   const features = [
-    "Premium Tech Ecosystems",
+    "Premium Technology Ecosystems",
     "Strategic Digital Transformation",
     "Global Partnership Network",
   ];
