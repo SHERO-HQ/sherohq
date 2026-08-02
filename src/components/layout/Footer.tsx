@@ -63,17 +63,17 @@ const Footer = () => {
           
           {/* Branding (Desktop Col 1, Row 1 | Mobile 1st) */}
           <div className="lg:col-span-4 lg:col-start-1 lg:row-start-1 order-1">
-            <NavLink href={getAbsoluteUrl("/")} className="inline-block mb-6">
+            <NavLink href={getAbsoluteUrl("/")} className="inline-block mb-6 shrink-0">
               <img
                 src="/assets/logo/shero-light.svg"
                 alt="Shero Logo"
-                className="h-10 w-auto dark:block hidden"
+                className="h-10 w-auto object-contain shrink-0 dark:block hidden"
                 suppressHydrationWarning
               />
               <img
                 src="/assets/logo/shero-dark.svg"
                 alt="Shero Logo"
-                className="h-10 w-auto dark:hidden block"
+                className="h-10 w-auto object-contain shrink-0 dark:hidden block"
                 suppressHydrationWarning
               />
             </NavLink>

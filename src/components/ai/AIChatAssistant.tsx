@@ -152,6 +152,8 @@ export default function AIChatAssistant() {
     };
   }, [isOpen]);
 
+
+
   const speak = useCallback(
     (text: string) => {
       if (!isSpeaking) return;
@@ -274,6 +276,32 @@ export default function AIChatAssistant() {
     },
     [addItem, isSpeaking, setIsCartOpen, speak],
   );
+
+  useEffect(() => {
+    const handleOpenAiChat = (e: Event) => {
+      const customEvent = e as CustomEvent<TriggerDetail>;
+      setIsOpen(true);
+      setIsMinimized(false);
+      
+      if (customEvent.detail?.message) {
+        setInput(customEvent.detail.message);
+        
+        // Auto-send if requested and not already processing
+        if (customEvent.detail.open && !isTyping && isInitialized.current) {
+          // Small delay to ensure state updates propagate
+          setTimeout(() => {
+            processMessage(customEvent.detail.message!);
+            setInput("");
+          }, 100);
+        }
+      }
+    };
+
+    window.addEventListener("shero-ai-open", handleOpenAiChat);
+    return () => {
+      window.removeEventListener("shero-ai-open", handleOpenAiChat);
+    };
+  }, [isTyping, processMessage]);
 
   // PROACTIVE: Listen for external triggers
   useEffect(() => {

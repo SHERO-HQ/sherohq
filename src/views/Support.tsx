@@ -3,15 +3,15 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import {
   Search,
-  FileText,
-  Download,
-  MessageCircle,
   LifeBuoy,
   Phone,
   Mail,
   ArrowRight,
   Ticket,
   HeadsetIcon,
+  Sparkles,
+  Frown,
+  Meh,
 } from "lucide-react";
 import {
   TelegramIcon,
@@ -24,41 +24,34 @@ import SupportTicketForm from "@/components/support/SupportTicketForm";
 import Link from "next/link";
 import { COMPANY_EMAILS } from "@/constants/emails";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
+import { useGuides } from "@/hooks/queries/useGuides";
+import AppImage from "@/components/common/AppImage";
+import { format } from "date-fns";
 
 const Support = () => {
   const [isTicketModalOpen, setIsTicketModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const { data: guides = [], isLoading } = useGuides();
 
-  const resources = [
-    {
-      title: "Hardware Support",
-      description: "Detailed guides and manuals for all hardware products.",
-      icon: FileText,
-      link: "/support/hardware",
-    },
-    {
-      title: "Software Support",
-      description: "OS updates, driver downloads, and software updates.",
-      icon: Download,
-      link: "/support/software",
-    },
-    {
-      title: "Community Forum",
-      description:
-        "Connect with other users, share tips, and find solutions. Join our community on our social media pages to get started.",
-      icon: MessageCircle,
-      socials: [
-        { icon: WhatsAppIcon, url: `https://wa.me/${COMPANY_CONTACTS.WHATSAPP}` },
-        { icon: TelegramIcon, url: "https://t.me/sherohq" },
-        {
-          icon: FacebookIcon,
-          url: "https://web.facebook.com/profile.php?id=61583887925479",
-        },
-        { icon: InstagramIcon, url: "https://instagram.com/sherohq" },
-        { icon: TwitterXIcon, url: "https://twitter.com/sherohq" },
-      ],
-    },
-  ];
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      const event = new CustomEvent("shero-ai-open", {
+        detail: { message: searchQuery, open: true },
+      });
+      window.dispatchEvent(event);
+      setSearchQuery("");
+    }
+  };
+
+  const filteredGuides = guides.filter((guide) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      guide.title.toLowerCase().includes(q) ||
+      guide.summary?.toLowerCase().includes(q)
+    );
+  });
 
   return (
     <>
@@ -98,79 +91,114 @@ const Support = () => {
             </div>
 
             {/* Search */}
-            <div className="max-w-2xl mx-auto flex flex-col sm:flex-row items-center gap-4">
+            <form onSubmit={handleSearchSubmit} className="max-w-2xl mx-auto flex flex-col sm:flex-row items-center gap-4">
               <div className="relative w-full group">
                 <input
                   type="text"
-                  placeholder="Search for articles, guides, and more..."
+                  placeholder="Search for articles, guides, or ask AI..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-card/40 dark:bg-slate-900/40  border border-border rounded focus:ring-2 focus:ring-brand-secondary-500/50 outline-none transition shadow text-foreground placeholder:text-muted-foreground"
+                  className="w-full pl-12 pr-32 py-4 bg-card/40 dark:bg-slate-900/40  border border-border rounded focus:ring-2 focus:ring-brand-secondary-500/50 outline-none transition shadow text-foreground placeholder:text-muted-foreground"
                 />
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-brand-secondary-500 transition-colors" />
-              </div>
-            </div>
-          </div>
-
-          {/* Resources Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
-            {resources
-              .filter((item) => {
-                if (!searchQuery.trim()) return true;
-                const q = searchQuery.toLowerCase();
-                return (
-                  item.title.toLowerCase().includes(q) ||
-                  item.description.toLowerCase().includes(q)
-                );
-              })
-              .map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="bg-card/40 dark:bg-slate-900/40  p-8 rounded border border-border hover:border-brand-secondary-500/30 hover:bg-card/60 dark:hover:bg-slate-900/60 transition group relative overflow-hidden shadow-sm hover:shadow"
+                <button
+                  type="submit"
+                  disabled={!searchQuery.trim()}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2 px-4 py-2 rounded bg-gradient-to-r from-brand-secondary-600 to-indigo-600 text-white font-medium text-sm hover:from-brand-secondary-500 hover:to-indigo-500 transition shadow disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <div className="absolute pattern-dots pattern-brand-secondary-500/10 pattern-opacity-100 pattern-size-4 top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 -z-10" />
-                  <div className="absolute -top-15 -right-15 w-44 h-44 bg-linear-to-br from-brand-secondary-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-full" />
-
-                  <div className="w-14 h-14 bg-brand-secondary-100 dark:bg-brand-secondary-900/40 rounded flex items-center justify-center mb-6 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:scale-110 group-hover:bg-brand-secondary-500 dark:group-hover:bg-brand-secondary-700/80 group-hover:text-white transition duration-300 shadow shadow-brand-secondary-500/10">
-                    <item.icon className="w-7 h-7" />
-                  </div>
-                  <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3 tracking-tight transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
-                    {item.description}
-                  </p>
-
-                  {item.socials ? (
-                    <div className="flex gap-5">
-                      {item.socials.map((social, i) => (
-                        <a
-                          key={i}
-                          href={social.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 rounded bg-secondary text-muted-foreground hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 hover:bg-brand-secondary-500/10 transition transform hover:-translate-y-1"
-                        >
-                          <social.icon className="w-5 h-5" />
-                        </a>
-                      ))}
-                    </div>
-                  ) : (
-                    <Link
-                      href={item.link!}
-                      className="inline-flex items-center gap-2 text-brand-secondary-600 dark:text-brand-secondary-400 font-bold group-hover:gap-3 transition hover:text-brand-secondary-700 dark:hover:text-brand-secondary-300"
-                    >
-                      <span>Browse Guides</span>
-                      <ArrowRight className="w-5 h-5" />
-                    </Link>
-                  )}
-                </motion.div>
-              ))}
+                  <Sparkles className="w-4 h-4" />
+                  Ask AI
+                </button>
+              </div>
+            </form>
           </div>
+
+          {/* Content Rendering */}
+          {(() => {
+            if (isLoading) {
+              return (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 md:mb-24">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <div
+                      key={`skeleton-${i}`}
+                      className="bg-card/40 dark:bg-slate-900/40 rounded border border-border p-6 animate-pulse"
+                    >
+                      <div className="h-40 bg-secondary/50 rounded mb-6 shadow-inner" />
+                      <div className="h-6 bg-secondary/50 rounded w-3/4 mb-3" />
+                      <div className="h-4 bg-secondary/50 rounded w-full mb-6" />
+                      <div className="h-4 bg-secondary/50 rounded w-1/2" />
+                    </div>
+                  ))}
+                </div>
+              );
+            }
+
+            if (filteredGuides.length === 0) {
+              return (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="mb-24 max-w-2xl mx-auto bg-card/60 dark:bg-slate-900/60 p-8 rounded border border-border text-center shadow-lg relative overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-linear-to-r from-brand-secondary-500/5 to-indigo-500/5 animate-pulse" />
+                  <Meh className="w-14 h-14 mx-auto mb-4 opacity-80 text-muted-foreground" />
+                  <h3 className="text-xl font-bold text-foreground mb-2">No guides found</h3>
+                  <p className="text-muted-foreground text-sm max-w-md mx-auto">
+                    But our AI Expert can help you with that! Click the <strong className="text-foreground">Ask AI</strong> button in the search bar above to get an instant answer.
+                  </p>
+                </motion.div>
+              );
+            }
+
+            return (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 md:mb-24">
+                {filteredGuides.map((guide) => (
+                  <div key={guide.id}>
+                    <Link
+                      href={`/support/${guide.category}/${guide.slug}`}
+                      className="block bg-card dark:bg-slate-900/40 rounded border border-border hover:border-brand-secondary-500/30 hover:shadow hover:shadow-brand-secondary-500/10 transition duration-300 overflow-hidden group h-full relative"
+                    >
+                      <div className="absolute inset-0 bg-linear-to-br from-brand-secondary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                      {guide.coverImage && (
+                        <div className="h-48 overflow-hidden bg-secondary relative">
+                          <AppImage
+                            src={guide.coverImage}
+                            alt={guide.title}
+                            fill
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            className="object-cover group-hover:scale-110 transition-transform duration-700"
+                          />
+                          <div className="absolute inset-0 bg-linear-to-t from-slate-950/60 to-transparent" />
+                        </div>
+                      )}
+                      <div className="p-7 relative z-10">
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className="text-xs font-semibold uppercase tracking-wider text-brand-secondary-600 dark:text-brand-secondary-400">
+                            {guide.category}
+                          </span>
+                        </div>
+                        <h3 className="text-xl font-bold text-foreground group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors line-clamp-2 leading-snug">
+                          {guide.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-6 line-clamp-3 leading-relaxed mt-2">
+                          {guide.summary}
+                        </p>
+                        <div className="flex items-center justify-between mt-auto">
+                          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                            <span className="px-2.5 py-1 rounded bg-secondary border border-border">
+                              {format(new Date(guide.createdAt), "MMM d, yyyy")}
+                            </span>
+                          </div>
+                          <ArrowRight className="w-5 h-5 text-brand-secondary-500 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition duration-300" />
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
 
           {/* Contact Section */}
           <motion.div
@@ -200,40 +228,69 @@ const Support = () => {
                   available Monday through Friday, 9am to 6pm GMT.
                 </p>
 
-                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
+                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
                   <button
                     onClick={() => setIsTicketModalOpen(true)}
-                    className="flex items-center gap-3 px-6 py-2 rounded bg-brand-secondary-600 text-white font-medium text-sm hover:bg-brand-secondary-500 transition shadow shadow-brand-secondary-500/20 hover:scale-[1.02] active:scale-95 w-fit md:w-auto justify-center"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded bg-brand-secondary-600 text-white font-medium text-sm hover:bg-brand-secondary-500 transition shadow-md shadow-brand-secondary-500/20 hover:-translate-y-0.5 active:scale-95 w-full sm:w-auto justify-center"
                     aria-label="Submit a Ticket"
                   >
-                    <Ticket className="w-5 h-5" />
+                    <Ticket className="w-4 h-4 md:w-5 md:h-5" />
                     <span>Open Ticket</span>
                   </button>
-                  <a
-                    href={`mailto:${COMPANY_EMAILS.SUPPORT}`}
-                    className="flex items-center gap-3 px-6 py-2 rounded bg-secondary text-foreground font-medium text-sm hover:bg-accent transition  border border-border w-fit md:w-auto justify-center"
-                  >
-                    <Mail className="w-5 h-5" />
-                    <span>Email Us</span>
-                  </a>
-                  <a
-                    href={`tel:${COMPANY_CONTACTS.WHATSAPP}`}
-                    className="flex items-center gap-3 px-6 py-2 rounded border-2 border-brand-secondary-500/30 text-brand-secondary-600 dark:text-brand-secondary-400 font-medium text-sm hover:bg-brand-secondary-500/10 transition w-fit md:w-auto justify-center"
-                  >
-                    <Phone className="w-5 h-5" />
-                    <span>Call Support</span>
-                  </a>
                   <a
                     href={`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-3 px-6 py-2 rounded bg-[#25D366] text-white font-medium text-sm hover:bg-[#128C7E] transition shadow shadow-green-500/20 hover:scale-[1.02] active:scale-95 w-fit md:w-auto justify-center"
+                    className="flex items-center gap-2 px-5 py-2.5 rounded bg-[#25D366] text-white font-medium text-sm hover:bg-[#128C7E] transition shadow-md shadow-green-500/20 hover:-translate-y-0.5 active:scale-95 w-full sm:w-auto justify-center"
                   >
-                    <WhatsAppIcon className="w-5 h-5 fill-current" />
+                    <WhatsAppIcon className="w-4 h-4 md:w-5 md:h-5 fill-current" />
                     <span>WhatsApp</span>
+                  </a>
+                  <a
+                    href={`tel:${COMPANY_CONTACTS.WHATSAPP}`}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded border-2 border-brand-secondary-500/30 text-brand-secondary-600 dark:text-brand-secondary-400 font-medium text-sm hover:bg-brand-secondary-500/10 transition hover:-translate-y-0.5 w-full sm:w-auto justify-center"
+                  >
+                    <Phone className="w-4 h-4 md:w-5 md:h-5" />
+                    <span>Call Us</span>
+                  </a>
+                  <a
+                    href={`mailto:${COMPANY_EMAILS.SUPPORT}`}
+                    className="flex items-center gap-2 px-5 py-2.5 rounded bg-secondary text-foreground font-medium text-sm hover:bg-accent border border-border transition hover:-translate-y-0.5 w-full sm:w-auto justify-center"
+                  >
+                    <Mail className="w-4 h-4 md:w-5 md:h-5" />
+                    <span>Email Us</span>
                   </a>
                 </div>
               </div>
+            </div>
+          </motion.div>
+
+          {/* Social / Community Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-16 text-center max-w-2xl mx-auto"
+          >
+            <h3 className="text-lg font-semibold text-foreground mb-4">Connect with our Community</h3>
+            <div className="flex flex-wrap justify-center gap-4">
+              {[
+                { icon: WhatsAppIcon, url: `https://chat.whatsapp.com/L3JweRUmQDBLBaxmNjIqUp` },
+                { icon: TelegramIcon, url: "https://t.me/sherohq" },
+                { icon: FacebookIcon, url: "https://web.facebook.com/sherohq1" },
+                { icon: InstagramIcon, url: "https://instagram.com/sherohq" },
+                { icon: TwitterXIcon, url: "https://twitter.com/sherohq" },
+              ].map((social, i) => (
+                <a
+                  key={i}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-full bg-secondary text-muted-foreground hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 hover:bg-brand-secondary-500/10 border border-border transition transform hover:-translate-y-1 shadow-sm hover:shadow"
+                >
+                  <social.icon className="w-5 h-5" />
+                </a>
+              ))}
             </div>
           </motion.div>
         </div>

@@ -131,8 +131,8 @@ export const generateInvoicePdf = async (
 
         doc.fillColor("#475569").font("Helvetica").fontSize(9);
         doc.text(item.quantity.toString(), 300, currentY, { align: "center", width: 40 });
-        doc.font("Courier").text(`GH₵${item.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 350, currentY, { align: "right", width: 80 });
-        doc.fillColor("#1e293b").font("Helvetica-Bold").text(`GH₵${itemTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 450, currentY, { align: "right", width: 95 }); 
+        doc.font("Courier").text(`GHS ${item.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 350, currentY, { align: "right", width: 80 });
+        doc.fillColor("#1e293b").font("Helvetica-Bold").text(`GHS ${itemTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 450, currentY, { align: "right", width: 95 }); 
         
         currentY += 30; // Row height
 
@@ -161,11 +161,11 @@ export const generateInvoicePdf = async (
 
       doc.fillColor("#475569").font("Helvetica").fontSize(9);
       doc.text("Subtotal", 350, currentY);
-      doc.font("Courier").text(`GH₵${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 450, currentY, { align: "right", width: 95 });
+      doc.font("Courier").text(`GHS ${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 450, currentY, { align: "right", width: 95 });
 
       currentY += 15;
       doc.font("Helvetica").text("Tax (0%)", 350, currentY);
-      doc.font("Courier").text(`GH₵0.00`, 450, currentY, { align: "right", width: 95 });
+      doc.font("Courier").text(`GHS 0.00`, 450, currentY, { align: "right", width: 95 });
 
       currentY += 20;
       doc.moveTo(350, currentY).lineTo(545, currentY).strokeColor("#e2e8f0").lineWidth(1).stroke();
@@ -173,11 +173,11 @@ export const generateInvoicePdf = async (
 
       doc.fillColor("#059669").font("Helvetica-Bold").fontSize(10);
       doc.text("GRAND TOTAL", 350, currentY, { characterSpacing: 1 });
-      doc.fillColor("#059669").font("Helvetica-Bold").fontSize(16).text(`GH₵${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 400, currentY - 2, { align: "right", width: 145 });
+      doc.fillColor("#059669").font("Helvetica-Bold").fontSize(16).text(`GHS ${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 400, currentY - 2, { align: "right", width: 145 });
 
       // --- Footer ---
-      let footerY = 740;
-      if (currentY > 700) {
+      let footerY = 715; // Moved up to prevent automatic page breaks (A4 height is 841, bottom margin 50 = 791 limit)
+      if (currentY > 690) {
         doc.addPage();
       }
       
@@ -189,12 +189,12 @@ export const generateInvoicePdf = async (
       doc.font("Helvetica").fontSize(6);
       doc.text("This document is a computer-generated invoice and requires no signature. Subject to our standard Terms & Conditions of Sale. Returns and exchanges are governed by our return policy available at " + COMPANY_CONTACTS.WEBSITE_DISPLAY + "/terms.", 50, footerY + 28, { align: "center", width: 495 });
       
-      doc.fillColor("#64748b").font("Helvetica-Bold").text(`SHERO TECHNOLOGIES | ${COMPANY_CONTACTS.HQ_LOCATION}`, 50, footerY + 42, { align: "center", width: 495 });
+      doc.fillColor("#64748b").font("Helvetica-Bold").text(`SHERO TECHNOLOGIES | ${COMPANY_CONTACTS.HQ_LOCATION}`, 50, footerY + 45, { align: "center", width: 495 });
       
       const cleanPhone = COMPANY_CONTACTS.PHONE_DISPLAY.replace(/[^0-9]/g, '');
       doc.fillColor("#059669").font("Helvetica").fontSize(7);
-      doc.text(COMPANY_EMAILS.SUPPORT, 50, footerY + 52, { align: "center", width: 495, link: `mailto:${COMPANY_EMAILS.SUPPORT}`, underline: true });
-      doc.text(`WhatsApp: ${COMPANY_CONTACTS.PHONE_DISPLAY}`, 50, footerY + 62, { align: "center", width: 495, link: `https://wa.me/${cleanPhone}`, underline: true });
+      doc.text(COMPANY_EMAILS.SUPPORT, 50, footerY + 58, { align: "center", width: 495, link: `mailto:${COMPANY_EMAILS.SUPPORT}`, underline: true });
+      doc.text(`WhatsApp: ${COMPANY_CONTACTS.PHONE_DISPLAY}`, 50, footerY + 68, { align: "center", width: 495, link: `https://wa.me/${cleanPhone}`, underline: true });
       doc.end();
     } catch (err) {
       reject(err);

@@ -64,6 +64,7 @@ export async function GET(
         paymentMethod: order.paymentMethod,
         paymentStatus: order.paymentStatus,
         paymentMessage: order.paymentMessage,
+        total: Number(order.total),
         activityLogs: activityLogs.map(l => ({ action: l.action, createdAt: l.createdAt })),
       });
     }
