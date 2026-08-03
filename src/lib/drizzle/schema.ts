@@ -533,6 +533,7 @@ export const jobApplications = pgTable("job_applications", {
 	applicantEmail: text().notNull(),
 	applicantPhone: text(),
 	resumeUrl: text(),
+	portfolioUrl: text(),
 	coverLetter: text(),
 	status: text().default('pending'),
 	createdAt: timestamp({ mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),

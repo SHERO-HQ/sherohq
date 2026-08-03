@@ -228,13 +228,21 @@ export default function AdminCareers() {
                       </td>
                       <td className="px-6 py-4 text-muted-foreground">{app.jobTitle}</td>
                       <td className="px-6 py-4">
-                        {app.resumeUrl ? (
-                          <a href={app.resumeUrl} target="_blank" rel="noreferrer" className="text-brand-primary-500 hover:underline flex items-center gap-1">
-                            View Resume <ExternalLink className="w-3 h-3" />
-                          </a>
-                        ) : (
-                          <span className="text-muted-foreground">No Resume</span>
-                        )}
+                        <div className="flex flex-col gap-2">
+                          {app.resumeUrl ? (
+                            <a href={app.resumeUrl} target="_blank" rel="noreferrer" className="text-brand-primary-500 hover:underline flex items-center gap-1">
+                              View Resume <ExternalLink className="w-3 h-3" />
+                            </a>
+                          ) : (
+                            <span className="text-muted-foreground">No Resume</span>
+                          )}
+                          
+                          {app.portfolioUrl && (
+                            <a href={app.portfolioUrl} target="_blank" rel="noreferrer" className="text-brand-secondary-600 hover:underline flex items-center gap-1 text-sm">
+                              Portfolio/GitHub <ExternalLink className="w-3 h-3" />
+                            </a>
+                          )}
+                        </div>
                       </td>
                       <td className="px-6 py-4 text-muted-foreground">
                         {new Date(app.createdAt).toLocaleDateString()}
@@ -291,7 +299,7 @@ export default function AdminCareers() {
           </div>
           <div className="space-y-2 text-left">
             <Label htmlFor="description">Description</Label>
-            <Textarea id="description" value={jobFormData.description} onChange={(e) => setJobFormData({...jobFormData, description: e.target.value})} rows={4} />
+            <Textarea id="description" value={jobFormData.description} onChange={(e) => setJobFormData({...jobFormData, description: e.target.value})} rows={15} />
           </div>
           <div className="flex items-center gap-2">
             <input type="checkbox" id="isActive" checked={jobFormData.isActive} onChange={(e) => setJobFormData({...jobFormData, isActive: e.target.checked})} className="rounded border-border text-brand-primary-500 focus:ring-brand-primary-500" />

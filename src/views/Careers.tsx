@@ -124,7 +124,7 @@ export default function Careers() {
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-3xl font-bold text-foreground sm:text-4xl"
+              className="text-2xl font-bold text-foreground sm:text-3xl"
             >
               Build With SHERO
             </motion.h2>
@@ -173,7 +173,7 @@ export default function Careers() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="text-3xl font-bold text-foreground sm:text-4xl"
+                className="text-2xl font-bold text-foreground sm:text-3xl"
               >
                 Open Positions
               </motion.h2>
@@ -225,7 +225,7 @@ export default function Careers() {
                         {role.type}
                       </span>
                       <div className="flex items-center gap-2 text-brand-primary-500 font-semibold">
-                        Apply Now
+                        View Details
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </div>
                     </div>

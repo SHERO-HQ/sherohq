@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { UploadCloud, CheckCircle2 } from "lucide-react";
+import { UploadCloud, CheckCircle2, Briefcase, MapPin, Clock, X } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface ApplicationFormModalProps {
   isOpen: boolean;
@@ -17,12 +19,14 @@ interface ApplicationFormModalProps {
 
 export function ApplicationFormModal({ isOpen, onClose, job }: ApplicationFormModalProps) {
   const { addNotification } = useNotifications();
+  const [viewMode, setViewMode] = useState<"details" | "form">("details");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState({
     applicantName: "",
     applicantEmail: "",
     applicantPhone: "",
+    portfolioUrl: "",
     coverLetter: "",
   });
   const [resumeFile, setResumeFile] = useState<File | null>(null);
@@ -86,7 +90,8 @@ export function ApplicationFormModal({ isOpen, onClose, job }: ApplicationFormMo
     // Reset state after close animation
     setTimeout(() => {
       setIsSuccess(false);
-      setFormData({ applicantName: "", applicantEmail: "", applicantPhone: "", coverLetter: "" });
+      setViewMode("details");
+      setFormData({ applicantName: "", applicantEmail: "", applicantPhone: "", portfolioUrl: "", coverLetter: "" });
       setResumeFile(null);
     }, 300);
   };
@@ -95,7 +100,7 @@ export function ApplicationFormModal({ isOpen, onClose, job }: ApplicationFormMo
     <Modal 
       isOpen={isOpen} 
       onClose={handleClose} 
-      title={isSuccess ? "Application Submitted" : `Apply for ${job?.title}`}
+      title={isSuccess ? "Application Submitted" : viewMode === "details" ? job?.title : `Apply for ${job?.title}`}
     >
       {isSuccess ? (
         <div className="py-8 flex flex-col items-center justify-center text-center space-y-4">
@@ -109,6 +114,67 @@ export function ApplicationFormModal({ isOpen, onClose, job }: ApplicationFormMo
           <Button onClick={handleClose} className="mt-4">
             Close
           </Button>
+        </div>
+      ) : viewMode === "details" ? (
+        <div className="space-y-6 text-left">
+          <div className="sticky -top-6 z-10 -mt-6 -mx-6 px-6 py-3 bg-background/95 backdrop-blur-md flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 border-b border-border shadow-sm">
+            <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+              <span className="flex items-center gap-1.5 bg-secondary px-2.5 py-1 rounded">
+                <Briefcase className="w-4 h-4 text-brand-primary-500" />
+                {job?.department}
+              </span>
+              <span className="flex items-center gap-1.5 bg-secondary px-2.5 py-1 rounded">
+                <MapPin className="w-4 h-4 text-brand-primary-500" />
+                {job?.location}
+              </span>
+              <span className="flex items-center gap-1.5 bg-secondary px-2.5 py-1 rounded">
+                <Clock className="w-4 h-4 text-brand-primary-500" />
+                {job?.type}
+              </span>
+            </div>
+            <Button onClick={() => setViewMode("form")} className="shrink-0 w-full sm:w-auto">Apply Now</Button>
+          </div>
+
+          {job?.description && (
+            <div className="space-y-3">
+              <h4 className="font-semibold text-foreground text-lg">About the Role</h4>
+              <div className="text-sm text-muted-foreground leading-relaxed">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    p: ({ node, ...props }) => <p className="mb-3 last:mb-0" {...props} />,
+                    ul: ({ node, ...props }) => <ul className="list-disc ml-5 mb-3 space-y-1" {...props} />,
+                    ol: ({ node, ...props }) => <ol className="list-decimal ml-5 mb-3 space-y-1" {...props} />,
+                    li: ({ node, ...props }) => <li className="pl-1" {...props} />,
+                    a: ({ node, ...props }) => <a className="text-brand-primary-500 hover:underline" target="_blank" rel="noopener noreferrer" {...props} />,
+                    strong: ({ node, ...props }) => <strong className="font-semibold text-foreground" {...props} />,
+                    h1: ({ node, ...props }) => <h1 className="text-xl font-bold text-foreground mt-6 mb-3" {...props} />,
+                    h2: ({ node, ...props }) => <h2 className="text-lg font-bold text-foreground mt-5 mb-2" {...props} />,
+                    h3: ({ node, ...props }) => <h3 className="text-base font-bold text-foreground mt-4 mb-2" {...props} />,
+                    h4: ({ node, ...props }) => <h4 className="text-sm font-bold text-foreground mt-3 mb-1" {...props} />,
+                  }}
+                >
+                  {job.description}
+                </ReactMarkdown>
+              </div>
+            </div>
+          )}
+
+          {job?.requirements && job.requirements.length > 0 && (
+            <div className="space-y-3">
+              <h4 className="font-semibold text-foreground text-lg">Requirements</h4>
+              <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                {job.requirements.map((req: string, i: number) => (
+                  <li key={i}>{req}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <div className="flex justify-end gap-2 pt-4 border-t border-border mt-6">
+            <Button type="button" variant="outline" onClick={handleClose}>Cancel</Button>
+            <Button onClick={() => setViewMode("form")}>Apply Now</Button>
+          </div>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -147,19 +213,45 @@ export function ApplicationFormModal({ isOpen, onClose, job }: ApplicationFormMo
           </div>
           <div className="space-y-2 text-left">
             <Label htmlFor="resume">Resume (PDF, DOCX) <span className="text-red-500">*</span></Label>
-            <div className="flex items-center gap-4">
-              <Input 
-                id="resume" 
-                type="file"
-                accept=".pdf,.doc,.docx"
-                onChange={(e) => setResumeFile(e.target.files?.[0] || null)} 
-                required
-                className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-brand-primary-50 file:text-brand-primary-700 hover:file:bg-brand-primary-100 cursor-pointer"
-              />
-            </div>
+            {resumeFile ? (
+              <div className="flex items-center justify-between p-3 border border-border rounded-md bg-secondary/30">
+                <div className="flex items-center gap-2 overflow-hidden">
+                  <UploadCloud className="w-4 h-4 text-brand-primary-500 shrink-0" />
+                  <span className="text-sm font-medium truncate">{resumeFile.name}</span>
+                </div>
+                <button 
+                  type="button" 
+                  onClick={() => setResumeFile(null)} 
+                  className="text-muted-foreground hover:text-red-500 transition-colors p-1"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-4">
+                <input 
+                  id="resume" 
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  onChange={(e) => setResumeFile(e.target.files?.[0] || null)} 
+                  required
+                  className="w-full text-sm text-muted-foreground file:mr-4 file:py-1 file:px-4 file:rounded-full file:border-1 file:text-sm file:font-semibold file:bg-brand-primary-50 file:text-brand-primary-700 hover:file:bg-brand-primary-100 cursor-pointer focus:outline-none"
+                />
+              </div>
+            )}
             <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
               <UploadCloud className="w-3 h-3" /> Max size: 5MB
             </p>
+          </div>
+          <div className="space-y-2 text-left">
+            <Label htmlFor="portfolioUrl">Portfolio / GitHub URL</Label>
+            <Input 
+              id="portfolioUrl" 
+              type="url"
+              value={formData.portfolioUrl} 
+              onChange={(e) => setFormData({...formData, portfolioUrl: e.target.value})} 
+              placeholder="https://github.com/janedoe"
+            />
           </div>
           <div className="space-y-2 text-left">
             <Label htmlFor="coverLetter">Cover Letter / Message</Label>
@@ -172,7 +264,7 @@ export function ApplicationFormModal({ isOpen, onClose, job }: ApplicationFormMo
             />
           </div>
           <div className="flex justify-end gap-2 pt-4">
-            <Button type="button" variant="outline" onClick={handleClose}>Cancel</Button>
+            <Button type="button" variant="outline" onClick={() => setViewMode("details")}>Back</Button>
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Submitting..." : "Submit Application"}
             </Button>

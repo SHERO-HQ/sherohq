@@ -21,24 +21,27 @@ export async function POST(request: NextRequest) {
     const fileName = `resumes/${uuidv4()}.${fileExt}`;
 
     const { error } = await supabase.storage
-      .from("products") // Re-using products bucket since we know it exists
+      .from("resumes") // Attempt to use resumes bucket
       .upload(fileName, buffer, {
         contentType: file.type,
         upsert: false,
       });
 
-    if (error) throw error;
+    if (error) {
+      console.error("Supabase storage error:", error);
+      return NextResponse.json({ error: error.message || "Failed to upload resume to storage" }, { status: 500 });
+    }
 
     const { data: publicData } = supabase.storage
-      .from("products")
+      .from("resumes")
       .getPublicUrl(fileName);
 
     return NextResponse.json({
       success: true,
       resumeUrl: publicData.publicUrl,
     });
-  } catch (error) {
-    console.error("Resume upload error:", error);
-    return NextResponse.json({ error: "Failed to upload resume" }, { status: 500 });
+  } catch (error: any) {
+    console.error("Resume upload exception:", error);
+    return NextResponse.json({ error: error?.message || "Failed to upload resume" }, { status: 500 });
   }
 }
