@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Plus, Minus, HelpCircle } from "lucide-react";
+import Link from "next/link";
 
 const FAQ = () => {
   const faqs = [
@@ -19,6 +20,34 @@ const FAQ = () => {
         {
           q: "Where is your physical office located?",
           a: "We are located in Tamale, Northern Region, Ghana. You can find our exact location on the Contact Us page.",
+        },
+      ],
+    },
+    {
+      category: "Orders & Delivery",
+      items: [
+        {
+          q: "How long does delivery usually take?",
+          a: "Delivery within Tamale takes 1-2 business days. National deliveries across Ghana typically take 3-5 business days. Regional deliveries (Nigeria, Ivory Coast) may take 7-14 business days.",
+        },
+        {
+          q: "How can I track my order?",
+          a: (
+            <>
+              Once your order is dispatched, you will receive an email and SMS with a tracking link to monitor your delivery status in real-time. You can also track your order directly on our{" "}
+              <Link
+                href="/track-order"
+                className="text-brand-secondary-600 hover:underline font-medium"
+              >
+                Track Order
+              </Link>{" "}
+              page.
+            </>
+          ),
+        },
+        {
+          q: "What is your return policy?",
+          a: "We offer a 7-day return window for defective products. The item must be in its original packaging with all accessories included.",
         },
       ],
     },
@@ -45,6 +74,30 @@ const FAQ = () => {
         {
           q: "Can you develop custom software for my business?",
           a: "Absolutely. Our software development team specializes in building custom ERPs, mobile apps, and web platforms tailored to your specific business needs.",
+        },
+      ],
+    },
+    {
+      category: "Support & Enterprise",
+      items: [
+        {
+          q: "How do I contact technical support?",
+          a: (
+            <>
+              You can reach our technical support team via the ticketing system on your dashboard, by emailing{" "}
+              <a
+                href="mailto:support@sherotech.com"
+                className="text-brand-secondary-600 hover:underline font-medium"
+              >
+                support@sherotech.com
+              </a>
+              , or through our dedicated WhatsApp support line.
+            </>
+          ),
+        },
+        {
+          q: "Do you offer bulk discounts for corporate clients?",
+          a: "Yes, we provide specialized B2B pricing, bulk discounts, and dedicated account managers for corporate and educational institutions. Please contact our sales team for a formal quotation.",
         },
       ],
     },
@@ -94,7 +147,7 @@ const FAQItem = ({
   answer,
 }: {
   question: string;
-  answer: string;
+  answer: React.ReactNode;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 

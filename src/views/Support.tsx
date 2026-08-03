@@ -95,19 +95,19 @@ const Support = () => {
               <div className="relative w-full group">
                 <input
                   type="text"
-                  placeholder="Search for articles, guides, or ask AI..."
+                  placeholder="Search articles or ask a question..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-12 pr-32 py-4 bg-card/40 dark:bg-slate-900/40  border border-border rounded focus:ring-2 focus:ring-brand-secondary-500/50 outline-none transition shadow text-foreground placeholder:text-muted-foreground"
+                  className="w-full pl-12 pr-16 py-4 bg-card/40 dark:bg-slate-900/40 border border-border rounded focus:ring-2 focus:ring-brand-secondary-500/50 outline-none transition shadow text-foreground placeholder:text-muted-foreground"
                 />
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-brand-secondary-500 transition-colors" />
                 <button
                   type="submit"
                   disabled={!searchQuery.trim()}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2 px-4 py-2 rounded bg-gradient-to-r from-brand-secondary-600 to-indigo-600 text-white font-medium text-sm hover:from-brand-secondary-500 hover:to-indigo-500 transition shadow disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded bg-gradient-to-r from-brand-secondary-600 to-indigo-600 text-white hover:from-brand-secondary-500 hover:to-indigo-500 transition shadow disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Search or Ask AI"
                 >
-                  <Sparkles className="w-4 h-4" />
-                  Ask AI
+                  <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
             </form>
@@ -144,7 +144,7 @@ const Support = () => {
                   <Meh className="w-14 h-14 mx-auto mb-4 opacity-80 text-muted-foreground" />
                   <h3 className="text-xl font-bold text-foreground mb-2">No guides found</h3>
                   <p className="text-muted-foreground text-sm max-w-md mx-auto">
-                    But our AI Expert can help you with that! Click the <strong className="text-foreground">Ask AI</strong> button in the search bar above to get an instant answer.
+                    But our AI Expert can help you with that! Press <strong className="text-foreground">Enter</strong> or click the arrow button in the search bar to ask a question.
                   </p>
                 </motion.div>
               );

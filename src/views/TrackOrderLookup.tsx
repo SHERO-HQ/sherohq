@@ -79,6 +79,9 @@ export default function TrackOrderLookup() {
                 placeholder="Paste token from your order link"
                 className="w-full rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-950 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/40"
               />
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                You can find your secure access token in your order confirmation email.
+              </p>
             </div>
 
             {error && (

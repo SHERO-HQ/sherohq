@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { UploadCloud, CheckCircle2, Briefcase, MapPin, Clock, X } from "lucide-react";
+import { UploadCloud, CheckCircle2, MapPin, Clock, X, Building } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -120,7 +120,7 @@ export function ApplicationFormModal({ isOpen, onClose, job }: ApplicationFormMo
           <div className="sticky -top-6 z-10 -mt-6 -mx-6 px-6 py-3 bg-background/95 backdrop-blur-md flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 border-b border-border shadow-sm">
             <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
               <span className="flex items-center gap-1.5 bg-secondary px-2.5 py-1 rounded">
-                <Briefcase className="w-4 h-4 text-brand-primary-500" />
+                <Building className="w-4 h-4 text-brand-primary-500" />
                 {job?.department}
               </span>
               <span className="flex items-center gap-1.5 bg-secondary px-2.5 py-1 rounded">

@@ -157,25 +157,56 @@ export default function TrackOrder({
                   not available.
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="rounded border border-slate-200 dark:border-slate-700 p-3 text-center">
-                    <Clock className="w-4 h-4 mx-auto text-amber-500 mb-1" />
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Pending
-                    </p>
-                  </div>
-                  <div className="rounded border border-slate-200 dark:border-slate-700 p-3 text-center">
-                    <Truck className="w-4 h-4 mx-auto text-blue-500 mb-1" />
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Shipping
-                    </p>
-                  </div>
-                  <div className="rounded border border-slate-200 dark:border-slate-700 p-3 text-center">
-                    <CheckCircle2 className="w-4 h-4 mx-auto text-brand-secondary-500 mb-1" />
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Delivered
-                    </p>
-                  </div>
+                <div className="rounded border border-slate-200 dark:border-slate-700 p-6">
+                  {order.status.toLowerCase() === "cancelled" ? (
+                    <div className="text-center text-rose-500 font-medium">
+                      <AlertCircle className="w-8 h-8 mx-auto mb-2 opacity-80" />
+                      Order Cancelled
+                    </div>
+                  ) : (
+                    <div className="relative flex items-center justify-between w-full">
+                      {/* Connecting line */}
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-slate-200 dark:bg-slate-700 rounded-full -z-10"></div>
+                      
+                      {/* Progress line */}
+                      <div 
+                        className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-brand-secondary-500 rounded-full -z-10 transition-all duration-500"
+                        style={{
+                          width: order.status.toLowerCase() === 'pending' ? '0%' :
+                                 order.status.toLowerCase() === 'processing' ? '33%' :
+                                 order.status.toLowerCase() === 'intransit' ? '66%' :
+                                 order.status.toLowerCase() === 'delivered' ? '100%' : '0%'
+                        }}
+                      ></div>
+
+                      {[
+                        { id: 'pending', label: 'Pending', icon: Clock },
+                        { id: 'processing', label: 'Processing', icon: RefreshCw },
+                        { id: 'intransit', label: 'In Transit', icon: Truck },
+                        { id: 'delivered', label: 'Delivered', icon: CheckCircle2 }
+                      ].map((step, index) => {
+                        const statuses = ['pending', 'processing', 'intransit', 'delivered'];
+                        const currentIdx = statuses.indexOf(order.status.toLowerCase() || 'pending');
+                        const isCompleted = index <= currentIdx;
+                        const isCurrent = index === currentIdx;
+                        
+                        return (
+                          <div key={step.id} className="flex flex-col items-center bg-white dark:bg-slate-900 px-2 sm:px-4">
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors duration-300 ${
+                              isCompleted 
+                                ? 'bg-brand-secondary-500 border-brand-secondary-500 text-white shadow-sm shadow-brand-secondary-500/30' 
+                                : 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-400'
+                            }`}>
+                              <step.icon className={`w-4 h-4 ${isCurrent ? 'animate-pulse' : ''}`} />
+                            </div>
+                            <span className={`text-[11px] sm:text-xs font-medium mt-2 ${isCompleted ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500 dark:text-slate-500'}`}>
+                              {step.label}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               )}
 
