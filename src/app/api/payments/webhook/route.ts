@@ -78,6 +78,9 @@ export async function POST(request: NextRequest) {
       const rawStatus = nested?.Status || data.Status;
       status = normalizeHubtelStatus(rawStatus);
 
+      // Log the exact raw payload from Hubtel for UAT verification purposes
+      console.log("[payment:webhook:raw_payload]\n", JSON.stringify(data, null, 2));
+
       console.log("[payment:webhook]", {
         provider: "hubtel",
         clientReference: orderId,
