@@ -1,53 +1,59 @@
 "use client";
 import { motion } from "motion/react"
-import { 
-  Briefcase, 
-  Heart, 
-  MapPin, 
-  Zap, 
-  Coffee, 
-  Users, 
-  Monitor, 
-  ArrowRight
+import {
+  Briefcase,
+  MapPin,
+  Users,
+  ArrowRight,
+  GraduationCap,
+  Rocket,
+  Blocks,
+  Trophy
 } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { COMPANY_EMAILS } from "@/constants/emails";
 import { useQuery } from "@tanstack/react-query";
 import { ApplicationFormModal } from "@/components/careers/ApplicationFormModal";
 import { useState } from "react";
+import { SeedSprout } from "@/assets/icons/icons";
 
 const benefits = [
   {
-    title: "Health & Wellness",
-    description: "Comprehensive health insurance including dental and vision for you and your family.",
-    icon: <Heart className="w-6 h-6 text-emerald-500" />,
+    title: "Meaningful Impact",
+    description:
+      "Build software and hardware solutions that solve real-world challenges and create lasting value.",
+    icon: <Rocket className="w-6 h-6 text-emerald-500" />,
   },
   {
-    title: "Flexible Work",
-    description: "Hybrid work options and flexible hours to help you balance work and life.",
-    icon: <MapPin className="w-6 h-6 text-emerald-500" />,
+    title: "Ownership",
+    description:
+      "Take initiative, make decisions, and see your ideas shape products from concept to reality.",
+    icon: <Trophy className="w-6 h-6 text-emerald-500" />,
   },
   {
-    title: "Learning & Development",
-    description: "Annual stipend for courses, conferences, and continuous learning opportunities.",
-    icon: <Zap className="w-6 h-6 text-emerald-500" />,
+    title: "Continuous Learning",
+    description:
+      "Grow through hands-on experience, mentorship, and challenging projects that expand your skills.",
+    icon: <GraduationCap className="w-6 h-6 text-emerald-500" />,
   },
   {
-    title: "Great Culture",
-    description: "Collaborative environment with regular team outings and a supportive atmosphere.",
+    title: "Build the Future",
+    description:
+      "Help create the next generation of software and hardware solutions with a team driven by innovation.",
+    icon: <Blocks className="w-6 h-6 text-emerald-500" />,
+  },
+  {
+    title: "Collaborative Culture",
+    description:
+      "Work alongside curious people who value openness, respect, and continuous improvement.",
     icon: <Users className="w-6 h-6 text-emerald-500" />,
   },
   {
-    title: "Latest Tech",
-    description: "Work with the newest gear. We provide top-of-the-line laptops and accessories.",
-    icon: <Monitor className="w-6 h-6 text-emerald-500" />,
-  },
-  {
-    title: "Snacks & Coffee",
-    description: "Fully stocked kitchen with premium coffee, healthy snacks, and beverages.",
-    icon: <Coffee className="w-6 h-6 text-emerald-500" />,
+    title: "Room to Grow",
+    description:
+      "As SHERO grows, you'll have opportunities to grow your career, leadership, and influence with it.",
+    icon: <SeedSprout className="w-6 h-6 text-emerald-500" />,
   },
 ];
 
@@ -56,7 +62,7 @@ const benefits = [
 export default function Careers() {
   const router = useRouter();
   const [selectedJob, setSelectedJob] = useState<any>(null);
-  
+
   const { data: openRoles = [], isLoading } = useQuery({
     queryKey: ["public_careers"],
     queryFn: async () => {
@@ -73,7 +79,7 @@ export default function Careers() {
       <section className="relative pt-32 pb-20 overflow-hidden lg:pt-48 lg:pb-32">
         <div className="absolute inset-0 bg-muted/30 -z-10" />
         <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-muted to-transparent opacity-50 -z-10" />
-        
+
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
             <motion.div
@@ -82,26 +88,24 @@ export default function Careers() {
               transition={{ duration: 0.5 }}
             >
               <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-7xl">
-                Build the future of <span className="text-brand-primary-500">Retail Technology</span>
+                <span className="text-brand-primary-500">Redefine</span> What's <span className="text-brand-secondary-500">Possible.</span> Together.
               </h1>
               <p className="mt-6 max-w-2xl mx-auto text-sm text-muted-foreground">
-                We're on a mission to make premium technology accessible across Africa. 
-                Join our passionate team and help us redefine the electronics shopping experience.
-              </p>
-              
+                Join a team that's creating software and hardware solutions to solve real-world problems. Grow your skills, own your work, and help redefine what's possible.              </p>
+
               <div className="mt-10 flex justify-center gap-4">
-                <Button 
+                <Button
                   variant="default"
-                  size="lg" 
+                  size="lg"
                   onClick={() => {
                     document.getElementById('open-roles')?.scrollIntoView({ behavior: 'smooth' });
                   }}
                 >
                   View Open Roles
                 </Button>
-                <Button 
-                  variant="secondary" 
-                  size="lg" 
+                <Button
+                  variant="secondary"
+                  size="lg"
                   onClick={() => router.push('/about-us')}
                 >
                   Our Story
@@ -116,23 +120,22 @@ export default function Careers() {
       <section className="py-20 bg-background">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center mb-16">
-            <motion.h2 
+            <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               className="text-3xl font-bold text-foreground sm:text-4xl"
             >
-              Why join SHERO?
+              Build With SHERO
             </motion.h2>
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
               className="mt-4 text-sm text-muted-foreground"
             >
-              We believe in empowering our team members to do their best work in a supportive, 
-              inclusive, and innovative environment.
+              Join a team that's redefining what's possible through software and hardware. Together, we're building technology that solves real problems and creates lasting impact.
             </motion.p>
           </div>
 
@@ -146,7 +149,7 @@ export default function Careers() {
                 transition={{ delay: index * 0.1 }}
                 className="bg-card p-8 rounded border border-border hover:shadow-md transition-shadow duration-300"
               >
-                <div className="w-12 h-12 bg-brand-primary-500/10 rounded-xl flex items-center justify-center mb-6">
+                <div className="w-12 h-12 bg-brand-primary-500/10 rounded flex items-center justify-center mb-6">
                   {benefit.icon}
                 </div>
                 <h3 className="text-xl font-semibold text-card-foreground mb-3">
@@ -166,7 +169,7 @@ export default function Careers() {
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <motion.h2 
+              <motion.h2
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -197,7 +200,7 @@ export default function Careers() {
                   transition={{ delay: index * 0.1 }}
                   className="h-full"
                 >
-                  <div 
+                  <div
                     onClick={() => setSelectedJob(role)}
                     className="group flex flex-col h-full bg-card p-6 sm:p-8 rounded border border-border hover:border-brand-primary-500 hover:shadow-md transition-all duration-300 cursor-pointer"
                   >
@@ -216,7 +219,7 @@ export default function Careers() {
                         </span>
                       </div>
                     </div>
-                    
+
                     <div className="mt-8 pt-4 border-t border-border flex items-center justify-between">
                       <span className="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-muted text-muted-foreground">
                         {role.type}
@@ -235,10 +238,10 @@ export default function Careers() {
       </section>
 
       {selectedJob && (
-        <ApplicationFormModal 
-          isOpen={!!selectedJob} 
-          onClose={() => setSelectedJob(null)} 
-          job={selectedJob} 
+        <ApplicationFormModal
+          isOpen={!!selectedJob}
+          onClose={() => setSelectedJob(null)}
+          job={selectedJob}
         />
       )}
     </div>
