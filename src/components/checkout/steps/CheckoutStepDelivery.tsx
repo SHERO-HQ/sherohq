@@ -6,9 +6,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { useCheckout } from "../CheckoutContext";
+import { GHANA_REGIONS, getCitiesForRegion, getDeliveryEstimate } from "@/lib/ghana-locations";
 
 export default function CheckoutStepDelivery() {
-  const { formMethods: { register, watch, formState: { errors } }, handleNext, handleBack } = useCheckout();
+  const { formMethods: { register, watch, setValue, formState: { errors } }, handleNext, handleBack } = useCheckout();
+
+  const selectedRegion = watch("shippingAddress.region");
+  const cities = getCitiesForRegion(selectedRegion || "");
+  const deliveryEstimate = getDeliveryEstimate(selectedRegion || "");
+
+  // Reset city when region changes (if current city isn't in new region's list)
+  React.useEffect(() => {
+    const currentCity = watch("shippingAddress.city");
+    if (selectedRegion && currentCity && cities.length > 0 && !cities.includes(currentCity)) {
+      setValue("shippingAddress.city", "");
+    }
+  }, [selectedRegion, cities, setValue, watch]);
 
   return (
     <motion.div
@@ -72,33 +85,8 @@ export default function CheckoutStepDelivery() {
           {...register("referralCode")}
         />
 
+        {/* Region → City cascading dropdowns */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Input
-            id="address"
-            label="Street Address"
-            placeholder="123 Main Street"
-            leftIcon={<MapPin className="w-4 h-4" />}
-            error={errors.shippingAddress?.address?.message}
-            {...register("shippingAddress.address")}
-          />
-          <Input
-            id="gpsAddress"
-            label="GhanaPost GPS Address (Optional)"
-            placeholder="e.g. GA-183-1892"
-            leftIcon={<MapPin className="w-4 h-4" />}
-            error={errors.shippingAddress?.gpsAddress?.message}
-            {...register("shippingAddress.gpsAddress")}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Input
-            id="city"
-            label="City"
-            placeholder="Accra"
-            error={errors.shippingAddress?.city?.message}
-            {...register("shippingAddress.city")}
-          />
           <div className="space-y-1">
             <Select
               id="region"
@@ -107,34 +95,56 @@ export default function CheckoutStepDelivery() {
               {...register("shippingAddress.region")}
               options={[
                 { value: "", label: "Select Region" },
-                { value: "Greater Accra", label: "Greater Accra" },
-                { value: "Ashanti", label: "Ashanti" },
-                { value: "Central", label: "Central" },
-                { value: "Eastern", label: "Eastern" },
-                { value: "Northern", label: "Northern" },
-                { value: "Western", label: "Western" },
-                { value: "Bono", label: "Bono" },
-                { value: "Bono East", label: "Bono East" },
-                { value: "Ahafo", label: "Ahafo" },
-                { value: "Upper East", label: "Upper East" },
-                { value: "Upper West", label: "Upper West" },
-                { value: "Savannah", label: "Savannah" },
-                { value: "North East", label: "North East" },
-                { value: "Oti", label: "Oti" },
-                { value: "Volta", label: "Volta" },
-                { value: "Western North", label: "Western North" },
+                ...GHANA_REGIONS.map((r) => ({ value: r.value, label: r.label })),
               ]}
             />
-            {watch("shippingAddress.region") && (
+            {deliveryEstimate && (
               <p className="text-xs text-brand-secondary-600 dark:text-brand-secondary-400 font-medium px-1">
-                Estimated Delivery: {
-                  watch("shippingAddress.region") === "Northern" ? "Same day delivery" :
-                    ["Savannah", "North East", "Upper East", "Upper West"].includes(watch("shippingAddress.region") || "") ? "24hours-2days" :
-                      ["Bono", "Bono East", "Ahafo", "Ashanti", "Oti"].includes(watch("shippingAddress.region") || "") ? "2-3 days" :
-                        "2-5 days"
-                }
+                Estimated Delivery: {deliveryEstimate}
               </p>
             )}
+          </div>
+          <div className="space-y-1">
+            <Select
+              id="city"
+              label="City / Town"
+              error={errors.shippingAddress?.city?.message}
+              {...register("shippingAddress.city")}
+              disabled={!selectedRegion}
+              options={[
+                { value: "", label: selectedRegion ? "Select City / Town" : "Select a region first" },
+                ...cities.map((c) => ({ value: c, label: c })),
+              ]}
+            />
+            {!selectedRegion && (
+              <p className="text-xs text-slate-400 dark:text-slate-500 px-1">
+                Select a region to see available cities
+              </p>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Input
+            id="address"
+            label="Street Address / Landmark"
+            placeholder="123 Main Street, Near Central Mosque"
+            leftIcon={<MapPin className="w-4 h-4" />}
+            error={errors.shippingAddress?.address?.message}
+            {...register("shippingAddress.address")}
+          />
+          <div className="space-y-1">
+            <Input
+              id="gpsAddress"
+              label="GhanaPost GPS Address (Optional)"
+              placeholder="e.g. GA-183-1892"
+              leftIcon={<MapPin className="w-4 h-4" />}
+              error={errors.shippingAddress?.gpsAddress?.message}
+              {...register("shippingAddress.gpsAddress")}
+            />
+            <p className="text-xs text-slate-400 dark:text-slate-500 px-1">
+              Format: XX-XXXX-XXXX (e.g. GA-183-1892)
+            </p>
           </div>
         </div>
       </form>
