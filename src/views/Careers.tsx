@@ -235,7 +235,7 @@ export default function Careers() {
                 </div>
               ) : (
                 <>
-                  <div className="flex flex-wrap justify-center border-b border-border mb-8">
+                  <div className="flex flex-wrap border-b border-border dark:bg-black/50 bg-background/80 mb-8">
                     {departments.map((dept) => (
                       <button
                         key={dept}
