@@ -82,7 +82,7 @@ export default function Careers() {
               transition={{ duration: 0.5 }}
             >
               <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-7xl">
-                Build the future of <span className="text-brand-primary-500">Technology Retail</span>
+                Build the future of <span className="text-brand-primary-500">Retail Technology</span>
               </h1>
               <p className="mt-6 max-w-2xl mx-auto text-sm text-muted-foreground">
                 We're on a mission to make premium technology accessible across Africa. 
