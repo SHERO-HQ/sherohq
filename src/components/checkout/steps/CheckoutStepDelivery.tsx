@@ -14,12 +14,14 @@ export default function CheckoutStepDelivery() {
   const selectedRegion = watch("shippingAddress.region");
   const cities = getCitiesForRegion(selectedRegion || "");
   const deliveryEstimate = getDeliveryEstimate(selectedRegion || "");
+  const [isOtherCity, setIsOtherCity] = React.useState(false);
 
   // Reset city when region changes (if current city isn't in new region's list)
   React.useEffect(() => {
     const currentCity = watch("shippingAddress.city");
     if (selectedRegion && currentCity && cities.length > 0 && !cities.includes(currentCity)) {
       setValue("shippingAddress.city", "");
+      setIsOtherCity(false);
     }
   }, [selectedRegion, cities, setValue, watch]);
 
@@ -108,14 +110,34 @@ export default function CheckoutStepDelivery() {
             <Select
               id="city"
               label="City / Town"
-              error={errors.shippingAddress?.city?.message}
-              {...register("shippingAddress.city")}
+              error={!isOtherCity ? errors.shippingAddress?.city?.message : undefined}
+              value={isOtherCity ? "__other__" : watch("shippingAddress.city") || ""}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (val === "__other__") {
+                  setIsOtherCity(true);
+                  setValue("shippingAddress.city", "");
+                } else {
+                  setIsOtherCity(false);
+                  setValue("shippingAddress.city", val);
+                }
+              }}
               disabled={!selectedRegion}
               options={[
                 { value: "", label: selectedRegion ? "Select City / Town" : "Select a region first" },
                 ...cities.map((c) => ({ value: c, label: c })),
+                ...(selectedRegion ? [{ value: "__other__", label: "Other (type your town)" }] : []),
               ]}
             />
+            {isOtherCity && (
+              <Input
+                id="cityOther"
+                placeholder="Enter your city or town"
+                error={errors.shippingAddress?.city?.message}
+                {...register("shippingAddress.city")}
+                autoFocus
+              />
+            )}
             {!selectedRegion && (
               <p className="text-xs text-slate-400 dark:text-slate-500 px-1">
                 Select a region to see available cities
