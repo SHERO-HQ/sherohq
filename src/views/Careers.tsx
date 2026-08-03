@@ -8,7 +8,8 @@ import {
   GraduationCap,
   Rocket,
   Blocks,
-  Trophy
+  Trophy,
+  Building
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -210,7 +211,7 @@ export default function Careers() {
                       </h3>
                       <div className="mt-4 flex flex-col gap-3 text-sm text-muted-foreground">
                         <span className="flex items-center gap-2">
-                          <Briefcase className="w-4 h-4 text-brand-primary-500" />
+                          <Building className="w-4 h-4 text-brand-primary-500" />
                           {role.department}
                         </span>
                         <span className="flex items-center gap-2">
