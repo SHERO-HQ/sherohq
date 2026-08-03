@@ -248,7 +248,7 @@ export function buildInlineTroubleshootingSteps(userMessage: string): string {
     return "Try this first:\n\n1. **Clean vents** and use the laptop on a hard surface.\n2. **Close heavy apps** and apply system and driver updates.\n3. **Check fan health** with diagnostics.\n\n*If temperature still spikes, tell me when it happens and the exact model.*";
   }
 
-  return "Let's troubleshoot this:\n\n1. **Restart the device** and install pending updates.\n2. **Check storage, memory, and background apps.**\n3. **Run built-in diagnostics** and share any error code so I can guide the next fix.";
+  return "I'm here to help! Could you provide a bit more detail about the exact issue you're facing?\n\nIf you need immediate assistance, please **[visit our Support Center](/support)** to open a ticket or contact our team directly.";
 }
 
 // ---------------------------------------------------------------------------

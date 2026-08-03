@@ -228,38 +228,45 @@ const Support = () => {
                   available Monday through Friday, 9am to 6pm GMT.
                 </p>
 
-                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4">
-                  <button
-                    onClick={() => setIsTicketModalOpen(true)}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded bg-brand-secondary-600 text-white font-medium text-sm hover:bg-brand-secondary-500 transition shadow-md shadow-brand-secondary-500/20 hover:-translate-y-0.5 active:scale-95 w-full sm:w-auto justify-center"
-                    aria-label="Submit a Ticket"
-                  >
-                    <Ticket className="w-4 h-4 md:w-5 md:h-5" />
-                    <span>Open Ticket</span>
-                  </button>
-                  <a
-                    href={`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-5 py-2.5 rounded bg-[#25D366] text-white font-medium text-sm hover:bg-[#128C7E] transition shadow-md shadow-green-500/20 hover:-translate-y-0.5 active:scale-95 w-full sm:w-auto justify-center"
-                  >
-                    <WhatsAppIcon className="w-4 h-4 md:w-5 md:h-5 fill-current" />
-                    <span>WhatsApp</span>
-                  </a>
-                  <a
-                    href={`tel:${COMPANY_CONTACTS.WHATSAPP}`}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded border-2 border-brand-secondary-500/30 text-brand-secondary-600 dark:text-brand-secondary-400 font-medium text-sm hover:bg-brand-secondary-500/10 transition hover:-translate-y-0.5 w-full sm:w-auto justify-center"
-                  >
-                    <Phone className="w-4 h-4 md:w-5 md:h-5" />
-                    <span>Call Us</span>
-                  </a>
-                  <a
-                    href={`mailto:${COMPANY_EMAILS.SUPPORT}`}
-                    className="flex items-center gap-2 px-5 py-2.5 rounded bg-secondary text-foreground font-medium text-sm hover:bg-accent border border-border transition hover:-translate-y-0.5 w-full sm:w-auto justify-center"
-                  >
-                    <Mail className="w-4 h-4 md:w-5 md:h-5" />
-                    <span>Email Us</span>
-                  </a>
+                <div className="flex flex-col gap-6 w-full items-center lg:items-start">
+                  <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-4 w-full sm:w-auto">
+                    <button
+                      onClick={() => setIsTicketModalOpen(true)}
+                      className="flex items-center gap-2 px-6 py-2.5 rounded bg-brand-secondary-600 text-white font-medium text-sm hover:bg-brand-secondary-500 transition shadow-md shadow-brand-secondary-500/20 hover:-translate-y-0.5 active:scale-95 w-full sm:w-auto justify-center"
+                      aria-label="Submit a Ticket"
+                    >
+                      <Ticket className="w-4 h-4 md:w-5 md:h-5" />
+                      <span>Open Ticket</span>
+                    </button>
+                    <a
+                      href={`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-6 py-2.5 rounded border-2 border-brand-secondary-500/30 text-brand-secondary-600 dark:text-brand-secondary-400 font-medium text-sm hover:bg-brand-secondary-500/10 transition hover:-translate-y-0.5 active:scale-95 w-full sm:w-auto justify-center"
+                    >
+                      <WhatsAppIcon className="w-4 h-4 md:w-5 md:h-5 fill-current" />
+                      <span>WhatsApp</span>
+                    </a>
+                  </div>
+
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground w-full sm:w-auto justify-center lg:justify-start">
+                    <span className="text-xs uppercase tracking-wider font-semibold">Other options:</span>
+                    <a
+                      href={`tel:${COMPANY_CONTACTS.WHATSAPP}`}
+                      className="flex items-center gap-1.5 hover:text-foreground transition-colors"
+                    >
+                      <Phone className="w-3.5 h-3.5" />
+                      <span className="underline decoration-border underline-offset-4 hover:decoration-foreground">Call Us</span>
+                    </a>
+                    <span className="text-border text-xs">•</span>
+                    <a
+                      href={`mailto:${COMPANY_EMAILS.SUPPORT}`}
+                      className="flex items-center gap-1.5 hover:text-foreground transition-colors"
+                    >
+                      <Mail className="w-3.5 h-3.5" />
+                      <span className="underline decoration-border underline-offset-4 hover:decoration-foreground">Email Us</span>
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
