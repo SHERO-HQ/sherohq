@@ -349,7 +349,36 @@ export default function AIChatAssistant() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setSelectedImage(reader.result as string);
+        const img = new window.Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 800;
+          const MAX_HEIGHT = 800;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            setSelectedImage(canvas.toDataURL("image/jpeg", 0.7));
+          } else {
+            setSelectedImage(reader.result as string);
+          }
+        };
+        img.src = reader.result as string;
       };
       reader.readAsDataURL(file);
     }
@@ -387,6 +416,7 @@ export default function AIChatAssistant() {
           audioBlob.size < 1000
         ) {
           stream.getTracks().forEach((track) => track.stop());
+          dialog.alert("Audio recording was too short or empty. Please speak a bit longer.");
           return;
         }
 
@@ -619,7 +649,21 @@ export default function AIChatAssistant() {
 
                       {/* Message Content Container */}
                       <div className={`flex flex-col gap-2 min-w-0 flex-1 ${msg.role === "user" ? "items-end" : "items-start"}`}>
-                        {msg.content ? (
+                        {msg.imageData && (
+                          <div className="relative max-w-[200px] rounded-xl overflow-hidden shadow-sm border border-slate-200/50 dark:border-slate-700/50">
+                            <img
+                              src={msg.imageData}
+                              alt="User uploaded"
+                              className="w-full h-auto object-cover"
+                            />
+                          </div>
+                        )}
+                        {msg.audioData && (
+                          <div className="rounded-full overflow-hidden shadow-sm border border-slate-200/50 dark:border-slate-700/50 bg-slate-100 dark:bg-slate-800 p-1">
+                            <audio controls src={msg.audioData} className="h-9 max-w-[220px]" />
+                          </div>
+                        )}
+                        {msg.content && msg.content !== "[Audio Message]" ? (
                           <div
                             className={`px-4 py-2.5 text-[13px] leading-relaxed shadow-sm ${msg.role === "user"
                               ? "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-2xl rounded-br-[4px]"
@@ -983,7 +1027,15 @@ export default function AIChatAssistant() {
 
                       <button
                         type="button"
-                        onClick={() => setIsSpeaking(!isSpeaking)}
+                        onClick={() => {
+                          const newState = !isSpeaking;
+                          setIsSpeaking(newState);
+                          if (newState) {
+                            // Initialize speech synthesis on user interaction to prevent browser blocking
+                            const utterance = new SpeechSynthesisUtterance("");
+                            window.speechSynthesis.speak(utterance);
+                          }
+                        }}
                         className={cn(
                           "w-8 h-8 flex items-center justify-center rounded-full transition-all",
                           isSpeaking

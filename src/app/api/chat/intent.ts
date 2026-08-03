@@ -232,7 +232,7 @@ export function buildInlineTroubleshootingSteps(userMessage: string): string {
     normalized.includes("sluggish") ||
     normalized.includes("lag")
   ) {
-    return "Try this first: 1) Restart and disable heavy startup apps. 2) Keep at least 15% free storage and install OS updates. 3) Run a full malware scan. If still slow, share your OS and laptop model for deeper checks.";
+    return "Try this first:\n\n1. **Restart and disable heavy startup apps.**\n2. **Keep at least 15% free storage** and install OS updates.\n3. **Run a full malware scan.**\n\n*If still slow, share your OS and laptop model for deeper checks.*";
   }
 
   if (
@@ -241,14 +241,14 @@ export function buildInlineTroubleshootingSteps(userMessage: string): string {
     normalized.includes("black screen") ||
     normalized.includes("power")
   ) {
-    return "Try this first: 1) Disconnect charger and peripherals, hold power for 15 seconds, then restart. 2) Try another charger or outlet. 3) Run BIOS or hardware diagnostics if available. If it still fails, share any lights, beeps, or error messages.";
+    return "Try this first:\n\n1. **Disconnect charger and peripherals**, hold power for 15 seconds, then restart.\n2. **Try another charger or outlet.**\n3. **Run BIOS or hardware diagnostics** if available.\n\n*If it still fails, share any lights, beeps, or error messages.*";
   }
 
   if (normalized.includes("overheating") || normalized.includes("hot")) {
-    return "Try this first: 1) Clean vents and use the laptop on a hard surface. 2) Close heavy apps and apply system and driver updates. 3) Check fan health with diagnostics. If temperature still spikes, tell me when it happens and the exact model.";
+    return "Try this first:\n\n1. **Clean vents** and use the laptop on a hard surface.\n2. **Close heavy apps** and apply system and driver updates.\n3. **Check fan health** with diagnostics.\n\n*If temperature still spikes, tell me when it happens and the exact model.*";
   }
 
-  return "Let's troubleshoot this: 1) Restart the device and install pending updates. 2) Check storage, memory, and background apps. 3) Run built-in diagnostics and share any error code so I can guide the next fix.";
+  return "Let's troubleshoot this:\n\n1. **Restart the device** and install pending updates.\n2. **Check storage, memory, and background apps.**\n3. **Run built-in diagnostics** and share any error code so I can guide the next fix.";
 }
 
 // ---------------------------------------------------------------------------
