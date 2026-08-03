@@ -17,6 +17,7 @@ import { getAbsoluteUrl } from "@/utils/subdomain";
 import { SOCIAL_LINKS } from "@/constants/socials";
 import PaymentIcons from "./PaymentIcons";
 import FooterNewsletter from "./FooterNewsletter";
+import { HiringBadge } from "@/components/common/HiringBadge";
 
 // Static Data
 const companyLinks = ["Shop", "Solutions", "About Us", "Careers", "Contact Us"];
@@ -102,6 +103,7 @@ const Footer = () => {
                       >
                         <ArrowRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition" />
                         {link}
+                        {link === "Careers" && <HiringBadge />}
                       </NavLink>
                     </li>
                   ))}

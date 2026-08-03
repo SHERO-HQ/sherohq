@@ -10,7 +10,8 @@ import {
   Blocks,
   Trophy,
   Building,
-  ChevronDown
+  ChevronDown,
+  Meh
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -78,18 +79,20 @@ export default function Careers() {
   const [filterDept, setFilterDept] = useState<string>("All");
   const [openBenefit, setOpenBenefit] = useState<number | null>(0);
 
+  const safeOpenRoles = Array.isArray(openRoles) ? openRoles : (openRoles.data || []);
+
   const departments = useMemo(() => {
     const depts = new Set<string>();
-    openRoles.forEach((role: any) => {
+    safeOpenRoles.forEach((role: any) => {
       if (role.department) depts.add(role.department);
     });
     return ["All", ...Array.from(depts)];
-  }, [openRoles]);
+  }, [safeOpenRoles]);
 
   const filteredRoles = useMemo(() => {
-    if (filterDept === "All") return openRoles;
-    return openRoles.filter((role: any) => role.department === filterDept);
-  }, [openRoles, filterDept]);
+    if (filterDept === "All") return safeOpenRoles;
+    return safeOpenRoles.filter((role: any) => role.department === filterDept);
+  }, [safeOpenRoles, filterDept]);
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
@@ -226,7 +229,9 @@ export default function Careers() {
                 </div>
               ) : openRoles.length === 0 ? (
                 <div className="text-center py-10 text-muted-foreground">
-                  No open positions at the moment. Please check back later.
+                  <Meh className="w-12 h-12 mx-auto text-muted-foreground" />
+                  <p className="mt-4 text-lg">No open positions at the moment.</p>
+                  <p>Please check back later.</p>
                 </div>
               ) : (
                 <>
