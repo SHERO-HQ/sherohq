@@ -88,7 +88,7 @@ export default function AdminProfile() {
         "Are you sure you want to disable Multi-Factor Authentication? Your account will be less secure.",
       confirmText: "Disable MFA",
       cancelText: "Keep MFA",
-      type: "warning"});
+      type: "error"});
 
     if (!shouldDisable) {
       return;

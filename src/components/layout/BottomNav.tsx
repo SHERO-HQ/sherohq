@@ -24,7 +24,7 @@ const BottomNav = () => {
       icon: ShoppingBag,
       label: "Shop",
       path: getAbsoluteUrl("/shop"),
-      end: true,
+      end: false,
       iconClassName: "w-7 h-7",
     },
     {

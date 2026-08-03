@@ -560,7 +560,7 @@ export default function AdminNewsletter() {
       message: "Are you sure you want to cancel this scheduled campaign?",
       confirmText: "Cancel campaign",
       cancelText: "Keep scheduled",
-      type: "warning"});
+      type: "error"});
 
     if (!shouldCancel) return;
 
@@ -588,7 +588,7 @@ export default function AdminNewsletter() {
         "Are you sure you want to delete this campaign? This cannot be undone.",
       confirmText: "Delete campaign",
       cancelText: "Keep campaign",
-      type: "warning"});
+      type: "error"});
 
     if (!shouldDelete) return;
 

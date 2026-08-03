@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useNotifications } from "@/hooks/useNotifications";
+import { useDialog } from "@/hooks/useDialog";
 import { getErrorMessage } from "@/utils/error";
 import { Plus, Edit2, Trash2, Briefcase, FileText, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,7 @@ const apiRequest = async (url: string, method = "GET", body?: any) => {
 
 export default function AdminCareers() {
   const { addNotification } = useNotifications();
+  const dialog = useDialog();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("jobs");
   
@@ -185,8 +187,8 @@ export default function AdminCareers() {
                         <Button variant="ghost" size="icon" onClick={() => openEditJob(job)}>
                           <Edit2 className="w-4 h-4 text-brand-primary-500" />
                         </Button>
-                        <Button variant="ghost" size="icon" onClick={() => {
-                          if (confirm("Delete this job?")) deleteJob.mutate(job.id);
+                        <Button variant="ghost" size="icon" onClick={async () => {
+                          if (await dialog.confirm({ title: "Delete Job?", message: "Are you sure you want to delete this job?", confirmText: "Delete", type: "error" })) deleteJob.mutate(job.id);
                         }}>
                           <Trash2 className="w-4 h-4 text-red-500" />
                         </Button>

@@ -12,7 +12,8 @@ import {
   Mic,
   Volume2,
   Trash2,
-  User} from "lucide-react";
+  User,
+  Laptop} from "lucide-react";
 import { type ChatMessage, sendChatMessageStreaming } from "@/services/ai/chat";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -485,7 +486,7 @@ export default function AIChatAssistant() {
               setIsOpen(true);
               setIsMinimized(false);
             }}
-            className="fixed bottom-20 right-6 z-50 p-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full hover:scale-105 transition-all group flex items-center justify-center"
+            className="fixed bottom-20 right-6 z-50 p-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full hover:scale-105 transition-all group flex items-center justify-center"
             aria-label="AI Assistant"
           >
             <Sparkles className="w-6 h-6 animate-pulse text-brand-secondary-400 dark:text-brand-secondary-600" />
@@ -514,7 +515,7 @@ export default function AIChatAssistant() {
             <div className="p-4 bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-white/10 flex items-center justify-between shrink-0">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 flex items-center justify-center shrink-0">
-                  <Sparkles className="w-4 h-4 text-brand-secondary-600 dark:text-brand-secondary-400" />
+                  <Sparkles className="w-6 h-6 text-brand-secondary-600 dark:text-brand-secondary-400" />
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-brand-secondary-500 uppercase tracking-wider flex items-center">
@@ -576,7 +577,7 @@ export default function AIChatAssistant() {
                     : [
                         { label: "Track my order", icon: Package },
                         { label: "Book consultation", icon: Calendar },
-                        { label: "Fix slow laptop", icon: Brain },
+                        { label: "Fix slow laptop", icon: Laptop },
                       ]
                 ).map((action) => (
                   <button
@@ -607,7 +608,7 @@ export default function AIChatAssistant() {
                       <div className="w-6 h-6 rounded-full shrink-0 flex items-center justify-center text-[10px] shadow-sm overflow-hidden border border-slate-200/50 dark:border-white/10">
                         {msg.role === "assistant" ? (
                           <div className="w-full h-full bg-brand-secondary-500 text-white flex items-center justify-center">
-                            <Sparkles size={12} fill="currentColor" />
+                            <Sparkles size={12} />
                           </div>
                         ) : (
                           <div className="w-full h-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center">
@@ -618,7 +619,7 @@ export default function AIChatAssistant() {
 
                       {/* Message Content Container */}
                       <div className={`flex flex-col gap-2 min-w-0 flex-1 ${msg.role === "user" ? "items-end" : "items-start"}`}>
-                        {msg.content && (
+                        {msg.content ? (
                           <div
                             className={`px-4 py-2.5 text-[13px] leading-relaxed shadow-sm ${msg.role === "user"
                               ? "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-2xl rounded-br-[4px]"
@@ -630,8 +631,19 @@ export default function AIChatAssistant() {
                           ) : (
                             <ChatMarkdown content={msg.content} />
                           )}
-                        </div>
-                      )}
+                          </div>
+                        ) : msg.role === "assistant" && isTyping ? (
+                          <div className="flex items-center gap-2 px-2 py-1 mt-0.5">
+                            <div className="flex items-center gap-1 mt-0.5">
+                              <span className="w-1.5 h-1.5 bg-brand-secondary-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                              <span className="w-1.5 h-1.5 bg-brand-secondary-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                              <span className="w-1.5 h-1.5 bg-brand-secondary-500 rounded-full animate-bounce"></span>
+                            </div>
+                            <span className="text-[10px] font-bold text-brand-secondary-500/70 animate-pulse uppercase tracking-wide">
+                              Shero is typing...
+                            </span>
+                          </div>
+                        ) : null}
 
                       {/* Recommend Products UI block */}
                       {msg.role === "assistant" &&
@@ -882,19 +894,6 @@ export default function AIChatAssistant() {
                       </div>
                     </div>
                   ))}
-
-                  {isTyping && (
-                    <div className="flex items-center gap-2 mr-auto px-2 py-1">
-                      <div className="flex items-center gap-1 mt-0.5">
-                        <span className="w-1.5 h-1.5 bg-brand-secondary-500 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                        <span className="w-1.5 h-1.5 bg-brand-secondary-500 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                        <span className="w-1.5 h-1.5 bg-brand-secondary-500 rounded-full animate-bounce"></span>
-                      </div>
-                      <span className="text-[10px] font-bold text-brand-secondary-500/70 animate-pulse uppercase tracking-wide">
-                        Shero is typing...
-                      </span>
-                    </div>
-                  )}
 
                   <div ref={endOfMessagesRef} className="h-2" />
                 </div>

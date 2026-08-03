@@ -55,17 +55,10 @@ const NavLink = ({
         const url = new URL(hrefStr);
         const currentHost = window.location.hostname;
         
-        // Simple base domain check: if both hostnames end with the same primary domain
-        // (This handles sherohq.com, shop.sherohq.com, etc.)
-        const getBase = (host: string) => {
-          const parts = host.split('.');
-          return parts.slice(-2).join('.');
-        };
-        
-        if (getBase(url.hostname) === getBase(currentHost)) {
+        if (url.hostname === currentHost) {
           targetPath = url.pathname;
         } else {
-          return false; // Truly a different domain
+          return false; // Different subdomain or entirely different domain
         }
       } catch {
         return false;
