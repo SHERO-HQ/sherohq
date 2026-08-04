@@ -118,10 +118,10 @@ export default function ProductForm() {
     maxImages: 5,
     currentImagesCount,
     onSuccess: (uploadedUrls) => {
-      const currentImages = watch("images") || [];
+      const currentImages = methods.getValues("images") || [];
       const newImages = [...currentImages, ...uploadedUrls];
       setValue("images", newImages, { shouldValidate: true, shouldDirty: true });
-      if (!watch("image")) {
+      if (!methods.getValues("image")) {
         setValue("image", uploadedUrls[0], { shouldValidate: true, shouldDirty: true });
       }
     },
@@ -184,6 +184,12 @@ export default function ProductForm() {
 
       const finalData = {
         ...data,
+        sku: data.sku ?? undefined,
+        slug: data.slug ?? undefined,
+        image: data.image ?? undefined,
+        badge: data.badge ?? undefined,
+        metaTitle: data.metaTitle ?? undefined,
+        metaDescription: data.metaDescription ?? undefined,
         originalPrice: data.originalPrice ?? undefined,
         stockQuantity: data.stockQuantity ?? undefined,
         specifications,
