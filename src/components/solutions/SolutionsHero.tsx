@@ -72,7 +72,7 @@ const SolutionsHero = () => {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded text-xs border border-brand-secondary-500/20 bg-brand-secondary-500/5 transition-colors duration-300"
           >
             <Code className="size-4 text-brand-secondary-500" />
-            <span className="text-xs font-semibold uppercase tracking-wide text-brand-secondary-600 dark:text-brand-secondary-400">
+            <span className="text-[.65rem] font-semibold uppercase tracking-wide text-brand-secondary-600 dark:text-brand-secondary-400">
               Technology That Scales
             </span>
           </motion.div>

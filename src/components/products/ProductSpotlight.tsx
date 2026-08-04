@@ -186,7 +186,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
                             Price
                           </span>
-                          <span className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+                          <span className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
                             {formatCurrency(currentProduct.price)}
                           </span>
                         </div>

@@ -35,10 +35,10 @@ const AboutManifesto = () => {
   return (
     <section className="relative overflow-hidden">
       {/* Dark gradient hero block */}
-      <div className="relative bg-gradient-to-br from-slate-950 via-brand-primary-900 to-slate-950 py-14 sm:pt-28">
+      <div className="relative bg-gradient-to-br from-slate-950 via-brand-primary-900 to-slate-950 py-14 sm:pt-28i">
         {/* Particles */}
         <Particles count={80} color="255, 255, 255" className="opacity-60" />
-        
+
         {/* Decorative grid pattern */}
         <div
           className="absolute inset-0 opacity-[0.04]"
@@ -76,38 +76,38 @@ const AboutManifesto = () => {
             </motion.div> */}
 
             {/* Big quote with decorative marks */}
-            <motion.blockquote variants={fadeUp} className="relative text-center pt-4 md:py-16">
+            <motion.blockquote variants={fadeUp} className="relative text-center pt-4 md:py-16 mx-auto">
               {/* Huge background watermark quote */}
               <span
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[240px] md:text-[450px] leading-none font-serif text-brand-primary-400/5 select-none pointer-events-none -z-10"
+                className="absolute mt-16 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[240px] md:text-[450px] leading-none font-serif text-brand-primary-400/5 select-none pointer-events-none -z-10"
                 aria-hidden="true"
               >
                 &ldquo;
               </span>
 
-              <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-[1.2] tracking-tight text-white relative z-10">
-                We don&apos;t just supply technology.{" "}
+              <p className="text-3xl lg:text-5xl font-bold leading-[1.2] tracking-tight text-white relative z-10">
+                We don't just build technology. We build {" "}
                 <span className="bg-gradient-to-r from-brand-secondary-400 via-brand-primary-300 to-brand-secondary-400 bg-clip-text text-transparent">
-                  We architect the infrastructure
-                </span>{" "}
-                that empowers businesses to scale without limits.
+                  what moves businesses forward.
+                </span>
               </p>
             </motion.blockquote>
 
-            {/* Body copy — explaining "Redefine Possible" */}
             <motion.div variants={fadeUp} className="mt-8 mx-auto max-w-6xl space-y-5">
               <p className="text-base md:text-lg text-slate-300/80 leading-relaxed">
-                They said enterprise-quality tech was only for enterprises.
-                That reliable IT support meant expensive contracts.
-                That small businesses had to settle for less.
+                They said world-class technology required enormous budgets, complex systems,
+                and impossible trade-offs.
               </p>
+
               <p className="text-base md:text-lg text-slate-300/80 leading-relaxed">
-                We disagreed. So we built a company where a growing team anywhere in Africa gets the same hardware,
-                the same custom-built software, and the same dedicated support as any global firm, without the global price tag.
+                We believed there was a better way. So we built SHERO to engineer software,
+                deliver reliable hardware, and provide technology solutions that help
+                businesses innovate, operate efficiently, and grow with confidence.
               </p>
+
               <p className="text-base text-center md:text-lg text-slate-300/80 leading-relaxed">
                 <span className="bg-gradient-to-r from-brand-secondary-400 to-brand-primary-300 bg-clip-text text-transparent font-bold">
-                  Redefine Possible.
+                  Redefining What's Possible.
                 </span>
               </p>
             </motion.div>

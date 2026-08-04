@@ -15,6 +15,12 @@ export async function POST(request: NextRequest) {
     const { name, icon } = await request.json();
     if (!name) return apiResponse.error("Category name is required", 400);
 
+    // Check if category already exists (case-insensitive)
+    const existing = await query("SELECT id, name, icon FROM categories WHERE name ILIKE $1", [name]);
+    if (existing.rowCount > 0) {
+      return apiResponse.error("A category with this name already exists", 409);
+    }
+
     const id = uuidv4();
     await query("INSERT INTO categories (id, name, icon) VALUES ($1, $2, $3)", [
       id,

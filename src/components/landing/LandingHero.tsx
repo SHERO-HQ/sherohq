@@ -28,9 +28,9 @@ interface HeroContent {
 // Constants
 const HERO_CONTENT: HeroContent = {
   mainHeader:
-    "Hardware, Software, and Managed IT Support \n for Your Business.",
+    "Software, Hardware & Technology Solutions \nfor Modern Businesses",
   subHeader:
-    "We supply premium hardware, engineer custom software, and manage your entire IT ecosystem under one dependable partner."
+    "We build software, deliver reliable hardware, and provide the technology services businesses need to innovate, operate, and grow."
 } as const;
 
 const PARTNERS = [
@@ -161,9 +161,7 @@ const LandingHero: React.FC = () => {
     <header
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative min-h-fit lg:min-h-[83dvh] w-full overflow-hidden
- bg-slate-50 dark:bg-slate-950
- flex flex-col items-center justify-center pt-14 sm:pt-0 pb-36 md:pb-24 lg:pb-16"
+      className="relative min-h-[85dvh] lg:min-h-[83dvh] w-full overflow-hidden bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center pt-24 sm:pt-0 pb-48 md:pb-44 lg:pb-16"
       role="banner"
       aria-label="Hero section - Company mission statement"
     >
@@ -206,7 +204,7 @@ const LandingHero: React.FC = () => {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded text-xs border border-brand-secondary-500/20 bg-brand-secondary-500/5 transition-colors duration-300"
           >
             <RocketIcon className="size-4 text-brand-secondary-600" />
-            <span className="text-[.8rem] font-medium uppercase tracking-wide text-brand-secondary-600 dark:text-brand-secondary-400">
+            <span className="text-[.65rem] font-medium uppercase tracking-wide text-brand-secondary-600 dark:text-brand-secondary-400">
               Trusted Technology Partner
             </span>
           </motion.div>
@@ -215,10 +213,10 @@ const LandingHero: React.FC = () => {
           <div className="relative overflow-hidden group">
             <motion.h1
               variants={heroItem}
-              className="font-bold leading-[1.1] text-3xl sm:text-5xl md:text-6xl lg:text-[4rem] px-2 sm:px-auto tracking-tighter text-slate-900 dark:text-white relative z-10"
+              className="font-bold leading-[1.15] text-3xl sm:text-5xl md:text-6xl px-2 sm:px-0 tracking-tighter text-slate-900 dark:text-white relative z-10"
             >
-              <span>{headlineLead}</span>
-              <br />
+              <span>{headlineLead} </span>
+              <br className="hidden sm:block" />
               <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
                 {headlineAccent}
               </span>
