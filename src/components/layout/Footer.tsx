@@ -158,12 +158,17 @@ const Footer = () => {
                 <span className="text-sm font-medium">{COMPANY_CONTACTS.PHONE_DISPLAY}</span>
               </a>
 
-              <div className="flex items-center gap-3 text-slate-600 dark:text-slate-400 group">
+              <a
+                href={COMPANY_CONTACTS.MAP_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 text-slate-600 dark:text-slate-400 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors group"
+              >
                 <div className="p-1 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 group-hover:border-brand-secondary-500/50 transition-colors">
                   <MapPin className="w-4 h-4" />
                 </div>
                 <span className="text-sm font-medium">{COMPANY_CONTACTS.HQ_LOCATION}</span>
-              </div>
+              </a>
 
               <div className="flex items-center gap-3 text-slate-600 dark:text-slate-400 group">
                 <div className="p-1 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 group-hover:border-brand-secondary-500/50 transition-colors">

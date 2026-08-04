@@ -90,7 +90,7 @@ const Contact = () => {
                   }
                   label="Visit Us"
                   value="Tamale, Northern Region, Ghana"
-                  href="https://maps.google.com/?q=Tamale,Northern+Region,Ghana"
+                  href="https://maps.app.goo.gl/7JaqnYf5twcrpfDZ6"
                   delay={0.4}
                 />
               </div>
