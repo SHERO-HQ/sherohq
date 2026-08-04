@@ -45,8 +45,24 @@ export async function PATCH(request: NextRequest) {
     const { id, status } = await request.json();
     if (!id || !status) return apiResponse.error("ID and status required", 400);
 
+    // Fetch application details before updating
+    const appResult = await query(`
+      SELECT a."applicantEmail", a."applicantName", c.title as "jobTitle"
+      FROM job_applications a
+      JOIN careers c ON a."jobId" = c.id
+      WHERE a.id = $1
+    `, [id]);
+
     await query(`UPDATE job_applications SET status = $1 WHERE id = $2`, [status, id]);
     await logActivity(admin.id, "application_status_update", "success", `Updated application ${id} status to ${status}`);
+
+    if (appResult.rows.length > 0) {
+      const { applicantEmail, applicantName, jobTitle } = appResult.rows[0];
+      import("@/lib/notifications/services/careers").then(({ sendApplicationStatusEmail }) => {
+        sendApplicationStatusEmail(applicantEmail, applicantName, jobTitle, status)
+          .catch((err) => console.error("Error sending status email:", err));
+      });
+    }
 
     return apiResponse.success({ success: true });
   } catch (error) {

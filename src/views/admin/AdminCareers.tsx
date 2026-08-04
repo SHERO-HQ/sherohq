@@ -12,6 +12,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Select } from "@/components/ui/select";
 import { Modal } from "@/components/ui/Modal";
 import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
@@ -36,13 +37,15 @@ export default function AdminCareers() {
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const [editingJob, setEditingJob] = useState<any>(null);
   const [jobFormData, setJobFormData] = useState({
-    title: "",
-    department: "",
-    location: "",
-    type: "Full-time",
-    description: "",
-    isActive: true
+    title: "", department: "", location: "", type: "Full-time", description: "", requirements: "", isActive: true
   });
+  const [selectedApplication, setSelectedApplication] = useState<any>(null);
+  const [isAppModalOpen, setIsAppModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [deptFilter, setDeptFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [jobFilter, setJobFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   // Queries
   const { data: jobs = [], isLoading: isLoadingJobs } = useQuery({
@@ -105,7 +108,7 @@ export default function AdminCareers() {
 
   const openNewJob = () => {
     setEditingJob(null);
-    setJobFormData({ title: "", department: "", location: "", type: "Full-time", description: "", isActive: true });
+    setJobFormData({ title: "", department: "", location: "", type: "Full-time", description: "", requirements: "", isActive: true });
     setIsJobModalOpen(true);
   };
 
@@ -117,10 +120,27 @@ export default function AdminCareers() {
       location: job.location,
       type: job.type,
       description: job.description || "",
+      requirements: job.requirements || "",
       isActive: job.isActive
     });
     setIsJobModalOpen(true);
   };
+  const filteredJobs = jobs.filter((job: any) => {
+    const searchMatch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                        job.department.toLowerCase().includes(searchTerm.toLowerCase());
+    const deptMatch = deptFilter === "all" || job.department === deptFilter;
+    const typeMatch = typeFilter === "all" || job.type === typeFilter;
+    return searchMatch && deptMatch && typeMatch;
+  });
+
+  const filteredApps = applications.filter((app: any) => {
+    const searchMatch = app.applicantName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        app.applicantEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        app.jobTitle.toLowerCase().includes(searchTerm.toLowerCase());
+    const jobMatch = jobFilter === "all" || app.jobId === jobFilter;
+    const statusMatch = statusFilter === "all" || app.status === statusFilter;
+    return searchMatch && jobMatch && statusMatch;
+  });
 
   return (
     <div className="space-y-6">
@@ -129,11 +149,66 @@ export default function AdminCareers() {
           <h1 className="text-2xl font-bold text-foreground">Careers Management</h1>
           <p className="text-muted-foreground text-sm">Manage job postings and review applications</p>
         </div>
-        {activeTab === "jobs" && (
-          <Button onClick={openNewJob} className="gap-2">
-            <Plus className="w-4 h-4" /> New Job
-          </Button>
-        )}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="relative w-full sm:w-64 shrink-0">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-8"
+            />
+          </div>
+          {activeTab === "jobs" && (
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full">
+              <Select 
+                options={[
+                  { label: "All Depts", value: "all" },
+                  ...Array.from(new Set(jobs.map((j: any) => j.department))).map(d => ({ label: String(d), value: String(d) }))
+                ]}
+                value={deptFilter}
+                onChange={(e) => setDeptFilter(e.target.value)}
+              />
+              <Select 
+                options={[
+                  { label: "All Types", value: "all" },
+                  { label: "Full-time", value: "Full-time" },
+                  { label: "Part-time", value: "Part-time" },
+                  { label: "Contract", value: "Contract" },
+                  { label: "Internship", value: "Internship" }
+                ]}
+                value={typeFilter}
+                onChange={(e) => setTypeFilter(e.target.value)}
+              />
+              <Button onClick={openNewJob} className="gap-2 shrink-0">
+                <Plus className="w-4 h-4" /> New Job
+              </Button>
+            </div>
+          )}
+          {activeTab === "apps" && (
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full">
+              <Select 
+                options={[
+                  { label: "All Jobs", value: "all" },
+                  ...jobs.map((j: any) => ({ label: j.title, value: j.id }))
+                ]}
+                value={jobFilter}
+                onChange={(e) => setJobFilter(e.target.value)}
+              />
+              <Select 
+                options={[
+                  { label: "All Statuses", value: "all" },
+                  { label: "Pending", value: "pending" },
+                  { label: "Reviewed", value: "reviewed" },
+                  { label: "Accepted", value: "accepted" },
+                  { label: "Rejected", value: "rejected" }
+                ]}
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              />
+            </div>
+          )}
+        </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
@@ -169,9 +244,9 @@ export default function AdminCareers() {
                 <tbody className="divide-y divide-border">
                   {isLoadingJobs ? (
                     <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">Loading jobs...</td></tr>
-                  ) : jobs.length === 0 ? (
+                  ) : filteredJobs.length === 0 ? (
                     <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">No jobs found</td></tr>
-                  ) : jobs.map((job: any) => (
+                  ) : filteredJobs.map((job: any) => (
                     <tr key={job.id} className="hover:bg-muted/30">
                       <td className="px-6 py-4 font-medium text-foreground">{job.title}</td>
                       <td className="px-6 py-4 text-muted-foreground">{job.department}</td>
@@ -217,12 +292,20 @@ export default function AdminCareers() {
                 <tbody className="divide-y divide-border">
                   {isLoadingApps ? (
                     <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">Loading applications...</td></tr>
-                  ) : applications.length === 0 ? (
+                  ) : filteredApps.length === 0 ? (
                     <tr><td colSpan={5} className="p-8 text-center text-muted-foreground">No applications found</td></tr>
-                  ) : applications.map((app: any) => (
+                  ) : filteredApps.map((app: any) => (
                     <tr key={app.id} className="hover:bg-muted/30">
                       <td className="px-6 py-4">
-                        <div className="font-medium text-foreground">{app.applicantName}</div>
+                        <button 
+                          onClick={() => {
+                            setSelectedApplication(app);
+                            setIsAppModalOpen(true);
+                          }}
+                          className="font-medium text-brand-primary-500 hover:underline text-left block"
+                        >
+                          {app.applicantName}
+                        </button>
                         <div className="text-xs text-muted-foreground">{app.applicantEmail}</div>
                         {app.applicantPhone && <div className="text-xs text-muted-foreground">{app.applicantPhone}</div>}
                       </td>
@@ -312,6 +395,55 @@ export default function AdminCareers() {
             </Button>
           </div>
         </form>
+      </Modal>
+
+      <Modal isOpen={isAppModalOpen} onClose={() => setIsAppModalOpen(false)} title="Application Details">
+        {selectedApplication && (
+          <div className="space-y-6 text-left">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <h4 className="text-sm font-medium text-muted-foreground">Applicant</h4>
+                <p className="text-base font-semibold">{selectedApplication.applicantName}</p>
+                <p className="text-sm text-muted-foreground">{selectedApplication.applicantEmail}</p>
+                {selectedApplication.applicantPhone && <p className="text-sm text-muted-foreground">{selectedApplication.applicantPhone}</p>}
+              </div>
+              <div>
+                <h4 className="text-sm font-medium text-muted-foreground">Job</h4>
+                <p className="text-base font-semibold">{selectedApplication.jobTitle}</p>
+                <p className="text-sm text-muted-foreground">Applied: {new Date(selectedApplication.createdAt).toLocaleDateString()}</p>
+              </div>
+            </div>
+            
+            {(selectedApplication.resumeUrl || selectedApplication.portfolioUrl) && (
+              <div>
+                <h4 className="text-sm font-medium text-muted-foreground mb-2">Links & Documents</h4>
+                <div className="flex gap-4">
+                  {selectedApplication.resumeUrl && (
+                    <a href={selectedApplication.resumeUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-primary-50 text-brand-primary-700 rounded-md text-sm font-medium hover:bg-brand-primary-100 transition-colors">
+                      <ExternalLink className="w-4 h-4" /> View Resume
+                    </a>
+                  )}
+                  {selectedApplication.portfolioUrl && (
+                    <a href={selectedApplication.portfolioUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-secondary-50 text-brand-secondary-700 rounded-md text-sm font-medium hover:bg-brand-secondary-100 transition-colors">
+                      <ExternalLink className="w-4 h-4" /> Portfolio / GitHub
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
+            
+            <div>
+              <h4 className="text-sm font-medium text-muted-foreground mb-2">Cover Letter / Message</h4>
+              {selectedApplication.coverLetter ? (
+                <div className="p-4 bg-muted/30 rounded-lg text-sm whitespace-pre-wrap border border-border">
+                  {selectedApplication.coverLetter}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground italic">No cover letter provided.</p>
+              )}
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   );
