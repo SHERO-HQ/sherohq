@@ -83,7 +83,7 @@ const AboutValues = () => {
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3 tracking-tighter group-hover:text-brand-secondary-500 transition-colors">
                   {item.title}
                 </h3>
-                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light group-hover:text-slate-800 dark:group-hover:text-slate-300 transition-colors line-clamp-3">
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light group-hover:text-slate-800 dark:group-hover:text-slate-300 transition-colors">
                   {item.description}
                 </p>
               </div>
