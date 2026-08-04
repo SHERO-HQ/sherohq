@@ -79,7 +79,7 @@ const AboutManifesto = () => {
             <motion.blockquote variants={fadeUp} className="relative text-center pt-4 md:py-16 mx-auto">
               {/* Huge background watermark quote */}
               <span
-                className="absolute mt-16 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[240px] md:text-[450px] leading-none font-serif text-brand-primary-400/5 select-none pointer-events-none -z-10"
+                className="absolute mt-16 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[240px] md:text-[450px] leading-none font-serif text-brand-primary-400/20 select-none pointer-events-none -z-10"
                 aria-hidden="true"
               >
                 &ldquo;

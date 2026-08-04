@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Send,
@@ -34,11 +34,20 @@ const ContactForm = () => {
 
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
+  const step2FirstFocusRef = useRef<HTMLButtonElement>(null);
+
   const handleSelectType = (type: "proposal" | "general" | "order" | "partnership") => {
     setInquiryType(type);
     setDirection(1);
     setStep(2);
   };
+
+  useEffect(() => {
+    if (step === 2 && step2FirstFocusRef.current) {
+      // Focus the Back button when arriving on step 2 for keyboard accessibility
+      step2FirstFocusRef.current.focus();
+    }
+  }, [step]);
 
   const handleBack = () => {
     setDirection(-1);
@@ -111,13 +120,20 @@ ${formData.message}`;
       {/* Background ambient glow */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-secondary-500/5 rounded-full blur-3xl pointer-events-none" />
 
+      {/* Screen Reader Live Region for Announcements */}
+      <div aria-live="polite" className="sr-only">
+        {status === "submitting" && "Encrypting and sending message..."}
+        {status === "success" && "Message transmitted successfully."}
+        {status === "error" && "Failed to send message. Please try again."}
+      </div>
+
       {/* Step Indicator Header */}
       {inquiryType && (
         <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100 dark:border-slate-800/60">
           <button
             type="button"
             onClick={handleBack}
-            className="flex items-center gap-1 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+            className="flex items-center gap-1 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 rounded px-1 py-0.5"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Back
           </button>
@@ -151,7 +167,7 @@ ${formData.message}`;
           <Button
             onClick={() => setStatus("idle")}
             variant="outline"
-            className="rounded px-6 mt-4"
+            className="rounded px-6 mt-4 focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
           >
             Send Another Message
           </Button>
@@ -188,7 +204,7 @@ ${formData.message}`;
                       whileTap={{ scale: 0.99 }}
                       type="button"
                       onClick={() => handleSelectType("proposal")}
-                      className="group p-5 text-left rounded border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30 hover:bg-brand-secondary-500/5 dark:hover:bg-brand-secondary-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full"
+                      className="group p-5 text-left rounded border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30 hover:bg-brand-secondary-500/5 dark:hover:bg-brand-secondary-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                     >
                       <div className="p-2.5  bg-blue-500/10 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 shrink-0 transition-transform group-hover:scale-105">
                         <Code className="w-5 h-5" />
@@ -210,7 +226,7 @@ ${formData.message}`;
                       whileTap={{ scale: 0.99 }}
                       type="button"
                       onClick={() => handleSelectType("general")}
-                      className="group p-5 text-left rounded border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30 hover:bg-brand-secondary-500/5 dark:hover:bg-brand-secondary-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full"
+                      className="group p-5 text-left rounded border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30 hover:bg-brand-secondary-500/5 dark:hover:bg-brand-secondary-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                     >
                       <div className="p-2.5  bg-indigo-500/10 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shrink-0 transition-transform group-hover:scale-105">
                         <HelpCircle className="w-5 h-5" />
@@ -232,7 +248,7 @@ ${formData.message}`;
                       whileTap={{ scale: 0.99 }}
                       type="button"
                       onClick={() => handleSelectType("order")}
-                      className="group p-5 text-left rounded border border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30 hover:bg-brand-secondary-500/5 dark:hover:bg-brand-secondary-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full"
+                      className="group p-5 text-left rounded border border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30 hover:bg-brand-secondary-500/5 dark:hover:bg-brand-secondary-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                     >
                       <div className="p-2.5  bg-emerald-500/10 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0 transition-transform group-hover:scale-105">
                         <ShoppingBag className="w-5 h-5" />
@@ -254,7 +270,7 @@ ${formData.message}`;
                       whileTap={{ scale: 0.99 }}
                       type="button"
                       onClick={() => handleSelectType("partnership")}
-                      className="group p-5 text-left rounded border border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30 hover:bg-brand-secondary-500/5 dark:hover:bg-brand-secondary-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full"
+                      className="group p-5 text-left rounded border border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30 hover:bg-brand-secondary-500/5 dark:hover:bg-brand-secondary-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                     >
                       <div className="p-2.5  bg-amber-500/10 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0 transition-transform group-hover:scale-105">
                         <Verified className="w-5 h-5" />
@@ -285,7 +301,7 @@ ${formData.message}`;
                         </h3>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5" role="radiogroup" aria-label="Project Requirements">
                         {[
                           { id: "software", label: "Custom Software", icon: Code },
                           { id: "cloud", label: "Cloud Systems", icon: Server },
@@ -295,25 +311,29 @@ ${formData.message}`;
                           <button
                             key={serv.id}
                             type="button"
+                            role="radio"
+                            aria-checked={formData.proposalService === serv.id}
                             onClick={() => setFormData({ ...formData, proposalService: serv.id })}
-                            className={`flex items-center gap-2.5 p-3 border-2 text-left text-xs font-semibold transition cursor-pointer rounded ${formData.proposalService === serv.id
+                            className={`flex items-center gap-2.5 p-3 border-2 text-left text-xs font-semibold transition cursor-pointer rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 ${formData.proposalService === serv.id
                               ? "border-brand-secondary-500 bg-brand-secondary-500/5 text-slate-900 dark:text-white"
                               : "border-slate-100 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-400"
                               }`}
                           >
-                            <serv.icon className={`w-4 h-4 ${formData.proposalService === serv.id ? "text-brand-secondary-500" : "text-slate-400"}`} />
+                            <serv.icon className={`w-4 h-4 ${formData.proposalService === serv.id ? "text-brand-secondary-500" : "text-slate-400"}`} aria-hidden="true" />
                             {serv.label}
                           </button>
                         ))}
                       </div>
 
-                      <div className="flex flex-col sm:flex-row gap-2 pt-1">
+                      <div className="flex flex-col sm:flex-row gap-2 pt-1" role="radiogroup" aria-label="Organization Size">
                         {["<10 members", "10-50 members", "50+ members"].map((size) => (
                           <button
                             key={size}
                             type="button"
+                            role="radio"
+                            aria-checked={formData.proposalSize === size.split(" ")[0]}
                             onClick={() => setFormData({ ...formData, proposalSize: size.split(" ")[0] })}
-                            className={`flex-1 py-2 text-center text-xs font-semibold border-2 transition cursor-pointer rounded ${formData.proposalSize === size.split(" ")[0]
+                            className={`flex-1 py-2 text-center text-xs font-semibold border-2 transition cursor-pointer rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900 ${formData.proposalSize === size.split(" ")[0]
                               ? "border-brand-secondary-500 bg-brand-secondary-500/5 text-slate-900 dark:text-white font-bold"
                               : "border-slate-100 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 text-slate-600 dark:text-slate-400"
                               }`}
@@ -412,22 +432,23 @@ ${formData.message}`;
                   <div className="flex justify-between gap-4 pt-4 border-t border-slate-100 dark:border-slate-800/80">
                     <button
                       type="button"
+                      ref={step2FirstFocusRef}
                       onClick={handleBack}
-                      className="flex items-center rounded gap-1 px-4 h-10  text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                      className="flex items-center rounded gap-1 px-4 h-10 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500"
                     >
                       Back
                     </button>
                     <Button
                       type="submit"
                       disabled={status === "submitting"}
-                      className="flex-1 md:flex-none px-8 h-10  text-sm font-bold bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white shadow-md shadow-brand-secondary-500/20"
+                      className="flex-1 md:flex-none px-8 h-10 text-sm font-bold bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white shadow-md shadow-brand-secondary-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                     >
                       {status === "submitting" ? (
-                        "Encrypting & Sending..."
+                        <span aria-hidden="true">Encrypting & Sending...</span>
                       ) : (
-                        <>
-                          Submit Inquiry <Send className="ml-2 w-4 h-4" />
-                        </>
+                        <span className="flex items-center gap-2">
+                          Submit Inquiry <Send className="w-4 h-4" aria-hidden="true" />
+                        </span>
                       )}
                     </Button>
                   </div>
