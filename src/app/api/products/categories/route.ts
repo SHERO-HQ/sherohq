@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 
     // Check if category already exists (case-insensitive)
     const existing = await query("SELECT id, name, icon FROM categories WHERE name ILIKE $1", [name]);
-    if (existing.rowCount > 0) {
+    if ((existing.rowCount ?? 0) > 0) {
       return apiResponse.error("A category with this name already exists", 409);
     }
 
