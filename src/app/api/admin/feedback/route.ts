@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     }
 
     const result = await query(
-      `SELECT * FROM customer_feedback ORDER BY created_at DESC`
+      `SELECT id, name, email, rating, message, page, created_at as "createdAt" FROM customer_feedback ORDER BY created_at DESC`
     );
 
     return apiResponse.success(result.rows);
