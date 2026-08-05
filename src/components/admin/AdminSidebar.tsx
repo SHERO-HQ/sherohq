@@ -300,7 +300,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                   {isOpen ? (
                     <button
                       onClick={() => toggleGroup(group.title)}
-                      className="w-full flex items-center justify-between px-3 py-2 text-xs font-bold text-muted-foreground uppercase tracking-widest hover:text-foreground transition-colors group mb-1"
+                      className="w-full flex items-center justify-between px-3 py-2 text-[0.6rem] font-semibold text-muted-foreground uppercase tracking-widest hover:text-foreground transition-colors group mb-1"
                     >
                       <span>{group.title}</span>
                       <ChevronDown
@@ -319,9 +319,9 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                   <AnimatePresence initial={false}>
                     {(isExpanded || !isOpen) && (
                       <motion.div
-                        initial={isOpen ? { height: 0, opacity: 0 } : false}
-                        animate={isOpen ? { height: "auto", opacity: 1 } : false}
-                        exit={isOpen ? { height: 0, opacity: 0 } : false}
+                        initial={isOpen ? { height: 0, opacity: 0 } : undefined}
+                        animate={isOpen ? { height: "auto", opacity: 1 } : undefined}
+                        exit={isOpen ? { height: 0, opacity: 0 } : undefined}
                         transition={{ duration: 0.2 }}
                         className="space-y-1 overflow-hidden"
                       >

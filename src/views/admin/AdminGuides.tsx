@@ -15,7 +15,8 @@ import {
  useUpdateGuide,
  useDeleteGuide} from "@/hooks/queries/useGuides";
 import { } from "@/context/AdminContext";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, BookOpen } from "lucide-react";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 
 const AdminGuides = () => {
  const router = useRouter();
@@ -221,16 +222,11 @@ const AdminGuides = () => {
  </Link>
  </div>
 
- <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
- <div>
- <h1 className="text-3xl font-bold text-foreground">
- Support Guides
- </h1>
- <p className="text-muted-foreground mt-1">
- Create and manage hardware & software guides
- </p>
- </div>
- <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+ <AdminPageHeader
+ title="Support Guides"
+ description="Create and manage hardware & software guides"
+ icon={BookOpen}
+ >
  <Input
  placeholder="Search guides..."
  className="pl-4 w-full sm:w-64 bg-card/50 border-border text-foreground placeholder:text-slate-600"
@@ -243,8 +239,7 @@ const AdminGuides = () => {
  >
  <Link href="/admin/guides/new">New Guide</Link>
  </Button>
- </div>
- </div>
+ </AdminPageHeader>
  </div>
 
  {renderContent}

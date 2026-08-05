@@ -23,6 +23,7 @@ import {
   Settings,
   Brain,
   RefreshCw,
+  LayoutDashboard
 } from "lucide-react";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import { Button } from "@/components/ui/button";
@@ -399,7 +400,8 @@ export default function AdminDashboard() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
+            <LayoutDashboard className="w-7 h-7 text-brand-secondary-400" />
             Dashboard Overview
           </h1>
           <p className="text-muted-foreground text-sm">

@@ -18,9 +18,12 @@ import {
   RefreshCw,
   Send,
   SlidersHorizontal,
-  Users,
-  XCircle} from "lucide-react";
+  XCircle,
+  Megaphone,
+  Users
+} from "lucide-react";
 import Link from "next/link";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -620,20 +623,19 @@ export default function AdminNewsletter() {
           <span>Back to Dashboard</span>
         </Link>
 
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-                Newsletter
-              </h1>
+        <AdminPageHeader
+          title={
+            <>
+              Newsletter
               {scheduledCampaigns.length > 0 ? (
-                <Badge className="border-sky-500/20 bg-sky-500/10 text-sky-300">
+                <Badge className="border-sky-500/20 bg-sky-500/10 text-sky-300 ml-3">
                   {scheduledCampaigns.length} scheduled
                 </Badge>
               ) : null}
-            </div>
-          </div>
-
+            </>
+          }
+          icon={Megaphone}
+        >
           <Button
             onClick={() => void refreshWorkspace()}
             variant="outline"
@@ -643,7 +645,7 @@ export default function AdminNewsletter() {
             <RefreshCw className="h-4 w-4" />
             Refresh
           </Button>
-        </div>
+        </AdminPageHeader>
       </div>
 
       <NewsletterStats

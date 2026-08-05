@@ -23,6 +23,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { useNotifications } from "@/hooks/useNotifications";
 import { authFetch, handleResponse, API_BASE } from "@/services/api";
 import {
@@ -340,23 +341,19 @@ export default function AdminExpenses() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Expenses</h1>
-          <p className="text-muted-foreground text-sm">
-            Track your business spending and overheads
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button
-            onClick={() => handleOpenForm()}
-            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Expense
-          </Button>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Expenses"
+        description="Track your business spending and overheads"
+        icon={DollarSign}
+      >
+        <Button
+          onClick={() => handleOpenForm()}
+          className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Add Expense
+        </Button>
+      </AdminPageHeader>
 
       {/* Stats Summary */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

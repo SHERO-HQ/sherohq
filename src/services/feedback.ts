@@ -1,4 +1,4 @@
-import { apiClient } from "./client";
+import { authFetch, handleResponse, API_BASE } from "./client";
 
 export interface CustomerFeedback {
   id: number;
@@ -11,13 +11,16 @@ export interface CustomerFeedback {
 }
 
 export const fetchAdminFeedback = async (): Promise<CustomerFeedback[]> => {
-  return apiClient("/api/admin/feedback");
+  const response = await authFetch(`${API_BASE}/admin/feedback`);
+  return handleResponse<CustomerFeedback[]>(response);
 };
 
 export const deleteFeedback = async (id: number): Promise<void> => {
-  return apiClient(`/api/admin/feedback/${id}`, { method: "DELETE" });
+  const response = await authFetch(`${API_BASE}/admin/feedback/${id}`, { method: "DELETE" });
+  return handleResponse<void>(response);
 };
 
 export const promoteFeedback = async (id: number): Promise<{ message: string; testimonialId: string }> => {
-  return apiClient(`/api/admin/feedback/${id}/promote`, { method: "POST" });
+  const response = await authFetch(`${API_BASE}/admin/feedback/${id}/promote`, { method: "POST" });
+  return handleResponse<{ message: string; testimonialId: string }>(response);
 };
