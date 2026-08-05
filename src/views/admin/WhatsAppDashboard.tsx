@@ -490,7 +490,7 @@ export default function WhatsAppDashboard() {
 
             {/* List Table */}
             <div className="bg-card/40 border border-border rounded overflow-hidden backdrop-blur-md">
-              <div className="p-6 border-b border-border flex items-center justify-between">
+              <div className="p-6 border-b border-border flex flex-col sm:flex-row items-center justify-between">
                 <div>
                   <h3 className="text-lg font-bold text-foreground">Message Retry Queue</h3>
                   <p className="text-xs text-muted-foreground mt-0.5">Logs of failed broadcast template campaigns and their automated recovery logs.</p>
