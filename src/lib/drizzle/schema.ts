@@ -569,3 +569,22 @@ export const whatsappMessages = pgTable("whatsapp_messages", {
 	index("idx_whatsapp_messages_created").using("btree", table.createdAt.desc().nullsFirst().op("timestamp_ops")),
 	pgPolicy("service_role_only", { as: "permissive", for: "all", to: ["service_role"], using: sql`true`, withCheck: sql`true`  }),
 ]);
+
+export const whatsappMessageRetries = pgTable("whatsapp_message_retries", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	messageId: text("message_id").notNull(),
+	campaignId: text("campaign_id"),
+	recipientPhone: text("recipient_phone").notNull(),
+	content: text(),
+	retryCount: integer("retry_count").default(0),
+	maxRetries: integer("max_retries").default(3),
+	status: text().default('pending'),
+	nextRetryAt: timestamp("next_retry_at", { mode: 'string' }),
+	lastError: text("last_error"),
+	createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+	updatedAt: timestamp("updated_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+	index("idx_whatsapp_retries_message").using("btree", table.messageId.asc().nullsLast().op("text_ops")),
+	index("idx_whatsapp_retries_status").using("btree", table.status.asc().nullsLast().op("text_ops")),
+	pgPolicy("service_role_only", { as: "permissive", for: "all", to: ["service_role"], using: sql`true`, withCheck: sql`true`  }),
+]);
