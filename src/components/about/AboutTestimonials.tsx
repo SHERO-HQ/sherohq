@@ -25,30 +25,36 @@ const getInitials = (name: string) => {
     .toUpperCase();
 };
 
-const AboutTestimonials = () => {
+interface AboutTestimonialsProps {
+  limit?: number;
+}
+
+const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
   const { data: testimonials = [], isLoading } = useTestimonials();
+  
+  const displayTestimonials = limit ? testimonials.slice(0, limit) : testimonials;
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextSlide = useCallback(() => {
-    if (testimonials.length === 0) return;
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-  }, [testimonials.length]);
+    if (displayTestimonials.length === 0) return;
+    setCurrentIndex((prev) => (prev + 1) % displayTestimonials.length);
+  }, [displayTestimonials.length]);
 
   const prevSlide = useCallback(() => {
-    if (testimonials.length === 0) return;
+    if (displayTestimonials.length === 0) return;
     setCurrentIndex(
-      (prev) => (prev - 1 + testimonials.length) % testimonials.length,
+      (prev) => (prev - 1 + displayTestimonials.length) % displayTestimonials.length,
     );
-  }, [testimonials.length]);
+  }, [displayTestimonials.length]);
 
   // Auto-slide effect
   useEffect(() => {
-    if (testimonials.length === 0) return;
+    if (displayTestimonials.length === 0) return;
     const timer = setInterval(() => {
       nextSlide();
     }, 5000);
     return () => clearInterval(timer);
-  }, [nextSlide, testimonials.length]);
+  }, [nextSlide, displayTestimonials.length]);
 
   return (
     <section className="py-12 bg-white dark:bg-slate-950 overflow-hidden relative border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
@@ -59,7 +65,7 @@ const AboutTestimonials = () => {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-125 bg-brand-secondary-500/5 rounded-full blur-[100px] pointer-events-none transition-colors duration-300" />
 
       <div className="container px-4 md:px-6 relative z-10 w-full mx-auto md:w-10/12">
-        {(isLoading || testimonials.length > 0) && (
+        {(isLoading || displayTestimonials.length > 0) && (
           <>
             <div className="text-center mb-10">
               <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
@@ -110,7 +116,7 @@ const AboutTestimonials = () => {
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     className="flex"
                   >
-                    {testimonials.map((item) => (
+                    {displayTestimonials.map((item) => (
                       <div
                         key={item.id || item.author}
                         className="w-full shrink-0 sm:px-4"
@@ -205,11 +211,11 @@ const AboutTestimonials = () => {
                     <ChevronLeft className="w-5 h-5" />
                   </button>
                   <div className="flex gap-2">
-                    {testimonials.map((item) => (
+                    {displayTestimonials.map((item) => (
                       <button
                         key={`dot-${item.author}`}
-                        onClick={() => setCurrentIndex(testimonials.indexOf(item))}
-                        className={`h-2 rounded transition duration-300 ${testimonials.indexOf(item) === currentIndex
+                        onClick={() => setCurrentIndex(displayTestimonials.indexOf(item))}
+                        className={`h-2 rounded transition duration-300 ${displayTestimonials.indexOf(item) === currentIndex
                           ? "w-8 bg-brand-secondary-500"
                           : "w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-500"
                           }`}
@@ -225,11 +231,11 @@ const AboutTestimonials = () => {
                 </div>
 
                 <div className="hidden md:flex gap-2">
-                  {testimonials.map((item) => (
+                  {displayTestimonials.map((item) => (
                     <button
                       key={`desktop-dot-${item.author}`}
-                      onClick={() => setCurrentIndex(testimonials.indexOf(item))}
-                      className={`h-2 rounded transition duration-300 ${testimonials.indexOf(item) === currentIndex
+                      onClick={() => setCurrentIndex(displayTestimonials.indexOf(item))}
+                      className={`h-2 rounded transition duration-300 ${displayTestimonials.indexOf(item) === currentIndex
                         ? "w-8 bg-brand-secondary-500"
                         : "w-2 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-500"
                         }`}

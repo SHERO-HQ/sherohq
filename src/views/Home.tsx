@@ -23,6 +23,9 @@ const LandingProducts = dynamic(
 const LandingFinalCTA = dynamic(
   () => import("@/components/landing/LandingFinalCTA"),
 );
+const AboutTestimonials = dynamic(
+  () => import("@/components/about/AboutTestimonials"),
+);
 
 const Home = () => {
   return (
@@ -34,6 +37,7 @@ const Home = () => {
       <LandingEcosystem />
       <LandingSecurity />
       <LandingProducts />
+      <AboutTestimonials limit={5} />
       <LandingFinalCTA />
     </>
   );
