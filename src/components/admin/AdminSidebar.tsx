@@ -25,7 +25,10 @@ import {
   Megaphone,
   MessageSquare,
   BriefcaseBusiness,
-  ShieldCheck} from "lucide-react";
+  ShieldCheck,
+  ChevronDown,
+  MessageCircle
+} from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
@@ -56,31 +59,74 @@ interface SidebarProps {
   setIsOpen: (open: boolean) => void;
 }
 
-const navItems = [
-  { icon: LayoutDashboard, label: "Dashboard", href: "/admin/dashboard" },
-  { icon: Package, label: "Products", href: "/admin/products" },
-  { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
-  { icon: BarChart3, label: "Reports", href: "/admin/reports" },
-  { icon: Brain, label: "Intelligence", href: "/admin/ai-analytics" },
-  { icon: DollarSign, label: "Expenses", href: "/admin/expenses" },
-  { icon: Headset, label: "Support", href: "/admin/support" },
-  { icon: BookOpen, label: "Guides", href: "/admin/guides" },
-  { icon: Tag, label: "Categories", href: "/admin/categories" },
-  { icon: Megaphone, label: "Campaigns", href: "/admin/newsletter" },
-  { icon: MessageSquare, label: "WhatsApp", href: "/admin/whatsapp" },
-  { icon: Star, label: "Reviews", href: "/admin/reviews" },
-  { icon: Users, label: "Team", href: "/admin/team" },
-  { icon: ShieldCheck, label: "Staff", href: "/admin/staff" },
-  { icon: BriefcaseBusiness, label: "Careers", href: "/admin/careers" },
-  { icon: Briefcase, label: "Projects", href: "/admin/projects" },
+type NavItem = {
+  icon: React.ElementType;
+  label: string;
+  href: string;
+};
+
+type NavGroup = {
+  title: string;
+  items: NavItem[];
+};
+
+const navGroups: NavGroup[] = [
   {
-    icon: MessageSquareQuote,
-    label: "Testimonials",
-    href: "/admin/testimonials"},
-  { icon: MessageSquare, label: "Site Feedback", href: "/admin/feedback" },
-  { icon: BarChart, label: "Site Stats", href: "/admin/stats" },
-  { icon: Users, label: "Customers", href: "/admin/users" },
-  { icon: User, label: "Profile", href: "/admin/profile" },
+    title: "Overview",
+    items: [
+      { icon: LayoutDashboard, label: "Dashboard", href: "/admin/dashboard" },
+      { icon: User, label: "Profile", href: "/admin/profile" },
+    ],
+  },
+  {
+    title: "Commerce",
+    items: [
+      { icon: ShoppingCart, label: "Orders", href: "/admin/orders" },
+      { icon: Package, label: "Products", href: "/admin/products" },
+      { icon: Tag, label: "Categories", href: "/admin/categories" },
+      { icon: DollarSign, label: "Expenses", href: "/admin/expenses" },
+      { icon: Briefcase, label: "Projects", href: "/admin/projects" },
+    ],
+  },
+  {
+    title: "CRM & Engagement",
+    items: [
+      { icon: Users, label: "Customers", href: "/admin/users" },
+      { icon: Headset, label: "Support", href: "/admin/support" },
+      { icon: MessageCircle, label: "WhatsApp", href: "/admin/whatsapp" },
+      { icon: Megaphone, label: "Campaigns", href: "/admin/newsletter" },
+    ],
+  },
+  {
+    title: "Feedback & Trust",
+    items: [
+      { icon: Star, label: "Reviews", href: "/admin/reviews" },
+      { icon: MessageSquareQuote, label: "Testimonials", href: "/admin/testimonials" },
+      { icon: MessageSquare, label: "Site Feedback", href: "/admin/feedback" },
+    ],
+  },
+  {
+    title: "Content & Resources",
+    items: [
+      { icon: BookOpen, label: "Guides", href: "/admin/guides" },
+      { icon: BriefcaseBusiness, label: "Careers", href: "/admin/careers" },
+    ],
+  },
+  {
+    title: "Analytics & Intelligence",
+    items: [
+      { icon: BarChart3, label: "Reports", href: "/admin/reports" },
+      { icon: Brain, label: "Intelligence", href: "/admin/ai-analytics" },
+      { icon: BarChart, label: "Site Stats", href: "/admin/stats" },
+    ],
+  },
+  {
+    title: "Administration",
+    items: [
+      { icon: Users, label: "Team", href: "/admin/team" },
+      { icon: ShieldCheck, label: "Staff", href: "/admin/staff" },
+    ],
+  },
 ];
 
 const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
@@ -98,6 +144,20 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
       return capturedPrompt;
     },
   );
+
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
+    "Overview": true,
+    "Commerce": true,
+  });
+
+  const toggleGroup = (title: string) => {
+    if (!isOpen) {
+      setIsOpen(true);
+      setExpandedGroups((prev) => ({ ...prev, [title]: true }));
+      return;
+    }
+    setExpandedGroups((prev) => ({ ...prev, [title]: !prev[title] }));
+  };
 
   useEffect(() => {
     // Check if app is already installed
@@ -213,14 +273,15 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
           </Link>
 
           {/* Navigation */}
-          <nav className="flex-1 py-6 px-3 space-y-2 overflow-y-auto custom-scrollbar">
-            {navItems
-              .filter((item) => {
-                const isAdminOrSuper =
-                  admin?.role === "superadmin" || admin?.role === "admin";
-                const isManagerOrHigher =
-                  isAdminOrSuper || admin?.role === "manager";
+          <nav className="flex-1 py-6 space-y-4 overflow-y-auto custom-scrollbar">
+            {navGroups.map((group) => {
+              const isAdminOrSuper =
+                admin?.role === "superadmin" || admin?.role === "admin";
+              const isManagerOrHigher =
+                isAdminOrSuper || admin?.role === "manager";
 
+              // Filter items based on RBAC
+              const filteredItems = group.items.filter((item) => {
                 if (item.label === "Staff" || item.label === "Team") {
                   return isAdminOrSuper;
                 }
@@ -228,56 +289,97 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                   return isManagerOrHigher;
                 }
                 return true;
-              })
-              .map((item) => (
-                <NavLink
-                  key={item.href}
-                  href={item.href}
-                  onMouseEnter={() => handlePrefetch(item.href)}
-                  onClick={() => {
-                    if (globalThis.innerWidth < 1024) setIsOpen(false);
-                  }}
-                  className={({ isActive }) =>
-                    cn(
-                      "flex items-center px-3 py-3 rounded group relative transition-all duration-200",
-                      isOpen ? "gap-3" : "gap-0",
-                      isActive
-                        ? "bg-brand-secondary-500/10 text-brand-secondary-400 border border-brand-secondary-500/20 shadow-sm"
-                        : "text-muted-foreground hover:text-foreground hover:bg-accent border border-transparent",
-                      !isOpen && "justify-center px-0",
-                    )
-                  }
-                >
-                  {({ isActive }) => (
-                    <>
-                      <item.icon
+              });
+
+              if (filteredItems.length === 0) return null;
+
+              const isExpanded = expandedGroups[group.title] || false;
+
+              return (
+                <div key={group.title} className="px-3">
+                  {isOpen ? (
+                    <button
+                      onClick={() => toggleGroup(group.title)}
+                      className="w-full flex items-center justify-between px-3 py-2 text-xs font-bold text-muted-foreground uppercase tracking-widest hover:text-foreground transition-colors group mb-1"
+                    >
+                      <span>{group.title}</span>
+                      <ChevronDown
                         className={cn(
-                          "w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110",
-                          isActive
-                            ? "text-brand-secondary-400"
-                            : "text-muted-foreground group-hover:text-foreground",
+                          "w-3 h-3 transition-transform duration-200",
+                          isExpanded ? "rotate-180" : ""
                         )}
                       />
-                      <span
-                        className={cn(
-                          "font-medium text-sm whitespace-nowrap transition-all duration-200",
-                          isOpen
-                            ? "opacity-100 translate-x-0 w-auto"
-                            : "opacity-0 -translate-x-4 pointer-events-none w-0 overflow-hidden",
-                        )}
-                      >
-                        {item.label}
-                      </span>
-                      {isActive && (
-                        <motion.div
-                          layoutId="sidebar-active-indicator"
-                          className="absolute left-0 w-1 h-6 bg-brand-secondary-500 rounded-r-full"
-                        />
-                      )}
-                    </>
+                    </button>
+                  ) : (
+                    <div className="w-full flex justify-center py-2 mb-1">
+                      <div className="h-[1px] w-8 bg-border" />
+                    </div>
                   )}
-                </NavLink>
-              ))}
+
+                  <AnimatePresence initial={false}>
+                    {(isExpanded || !isOpen) && (
+                      <motion.div
+                        initial={isOpen ? { height: 0, opacity: 0 } : false}
+                        animate={isOpen ? { height: "auto", opacity: 1 } : false}
+                        exit={isOpen ? { height: 0, opacity: 0 } : false}
+                        transition={{ duration: 0.2 }}
+                        className="space-y-1 overflow-hidden"
+                      >
+                        {filteredItems.map((item) => (
+                          <NavLink
+                            key={item.href}
+                            href={item.href}
+                            onMouseEnter={() => handlePrefetch(item.href)}
+                            onClick={() => {
+                              if (globalThis.innerWidth < 1024) setIsOpen(false);
+                            }}
+                            className={({ isActive }) =>
+                              cn(
+                                "flex items-center px-3 py-2.5 rounded group relative transition-all duration-200",
+                                isOpen ? "gap-3" : "gap-0",
+                                isActive
+                                  ? "bg-brand-secondary-500/10 text-brand-secondary-400 border border-brand-secondary-500/20 shadow-sm"
+                                  : "text-muted-foreground hover:text-foreground hover:bg-accent border border-transparent",
+                                !isOpen && "justify-center px-0",
+                              )
+                            }
+                          >
+                            {({ isActive }) => (
+                              <>
+                                <item.icon
+                                  className={cn(
+                                    "w-5 h-5 shrink-0 transition-transform duration-200 group-hover:scale-110",
+                                    isActive
+                                      ? "text-brand-secondary-400"
+                                      : "text-muted-foreground group-hover:text-foreground",
+                                  )}
+                                />
+                                <span
+                                  className={cn(
+                                    "font-medium text-sm whitespace-nowrap transition-all duration-200",
+                                    isOpen
+                                      ? "opacity-100 translate-x-0 w-auto"
+                                      : "opacity-0 -translate-x-4 pointer-events-none w-0 overflow-hidden",
+                                  )}
+                                >
+                                  {item.label}
+                                </span>
+                                {isActive && (
+                                  <motion.div
+                                    layoutId="sidebar-active-indicator"
+                                    className="absolute left-0 w-1 h-6 bg-brand-secondary-500 rounded-r-full"
+                                  />
+                                )}
+                              </>
+                            )}
+                          </NavLink>
+                        ))}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
 
             {/* Quick Actions Section */}
             <div className="mt-8 pt-8 border-t border-border space-y-4 px-2">
