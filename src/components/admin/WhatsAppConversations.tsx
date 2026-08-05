@@ -196,7 +196,7 @@ export default function WhatsAppConversations({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Conversations List */}
       <div className="lg:col-span-1 bg-card/40 backdrop-blur-md rounded border border-border flex flex-col h-[700px]">
         <div className="p-6 border-b border-border">
@@ -313,7 +313,7 @@ export default function WhatsAppConversations({
                         : "bg-brand-secondary-600 text-white rounded-tr-none shadow-[0_4px_12px_rgba(16,185,129,0.15)]"
                         }`}
                     >
-                      <p className="text-sm whitespace-pre-wrap leading-relaxed">
+                      <p className="text-sm whitespace-pre-wrap leading-relaxed break-words">
                         {msg.content || `[${msg.message_type}]`}
                       </p>
 

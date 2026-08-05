@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ReloadButton } from "./ReloadButton";
+import { Unplug } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "You're Offline",
@@ -14,28 +15,14 @@ export default function OfflinePage() {
       <div className="max-w-md space-y-6">
         {/* Icon */}
         <div className="flex justify-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-20 w-20 text-muted-foreground"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={1.5}
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M3 3l18 18M9.172 9.172A4 4 0 0112 8c1.657 0 3.156.805 4.096 2.042M6.343 6.343A8 8 0 0118 12m-2 4H6a4 4 0 01-3-6.646M21 12a9 9 0 01-1.343 4.657"
-            />
-          </svg>
+          <Unplug className="size-16 text-brand-secondary-600" />
         </div>
 
         <h1 className="text-3xl font-bold tracking-tight">You're offline</h1>
 
         <p className="text-muted-foreground text-base leading-relaxed">
           It looks like you don't have an internet connection. Check your
-          network and try again — or explore what's cached.
+          network and try again
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">

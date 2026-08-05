@@ -324,7 +324,7 @@ export default function WhatsAppDashboard() {
       </div>
 
       {/* Tabs Menu */}
-      <div className="flex bg-card/50 p-1 rounded border border-border w-fit">
+      <div className="flex bg-card/50 p-1 rounded border border-border w-fit max-w-full overflow-x-auto">
         {tabs.map((tab) => (
           <button
             key={tab.id}
