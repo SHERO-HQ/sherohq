@@ -32,13 +32,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: error.message || "Failed to upload resume to storage" }, { status: 500 });
     }
 
-    const { data: publicData } = supabase.storage
-      .from("resumes")
-      .getPublicUrl(fileName);
-
     return NextResponse.json({
       success: true,
-      resumeUrl: publicData.publicUrl,
+      resumeUrl: fileName, // Store the raw path instead of a public URL
     });
   } catch (error: any) {
     console.error("Resume upload exception:", error);

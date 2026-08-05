@@ -313,7 +313,7 @@ export default function AdminCareers() {
                       <td className="px-6 py-4">
                         <div className="flex flex-col gap-2">
                           {app.resumeUrl ? (
-                            <a href={app.resumeUrl} target="_blank" rel="noreferrer" className="text-brand-primary-500 hover:underline flex items-center gap-1">
+                            <a href={`/api/admin/resume-url?path=${encodeURIComponent(app.resumeUrl)}`} target="_blank" rel="noreferrer" className="text-brand-primary-500 hover:underline flex items-center gap-1">
                               View Resume <ExternalLink className="w-3 h-3" />
                             </a>
                           ) : (
@@ -419,7 +419,7 @@ export default function AdminCareers() {
                 <h4 className="text-sm font-medium text-muted-foreground mb-2">Links & Documents</h4>
                 <div className="flex gap-4">
                   {selectedApplication.resumeUrl && (
-                    <a href={selectedApplication.resumeUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-primary-50 text-brand-primary-700 rounded-md text-sm font-medium hover:bg-brand-primary-100 transition-colors">
+                    <a href={`/api/admin/resume-url?path=${encodeURIComponent(selectedApplication.resumeUrl)}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-primary-50 text-brand-primary-700 rounded-md text-sm font-medium hover:bg-brand-primary-100 transition-colors">
                       <ExternalLink className="w-4 h-4" /> View Resume
                     </a>
                   )}
