@@ -323,21 +323,42 @@ export default function WhatsAppDashboard() {
         </div>
       </div>
 
-      {/* Tabs Menu */}
-      <div className="flex bg-card/50 p-1 rounded border border-border w-fit max-w-full overflow-x-auto">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 text-xs font-semibold rounded transition-all flex items-center gap-2 ${activeTab === tab.id
-              ? "bg-brand-secondary-600 text-white shadow-md shadow-brand-secondary-600/10"
-              : "text-muted-foreground hover:text-foreground hover:bg-accent"
-              }`}
+      {/* Tabs Menu (Mobile Dropdown & Desktop Buttons) */}
+      <div className="mb-2">
+        {/* Mobile Dropdown */}
+        <div className="sm:hidden">
+          <label htmlFor="mobile-tabs" className="sr-only">Select a tab</label>
+          <select
+            id="mobile-tabs"
+            name="mobile-tabs"
+            className="block w-full bg-card border border-border rounded-md text-foreground focus:ring-brand-secondary-500 focus:border-brand-secondary-500 py-3 px-4 text-sm shadow-sm"
+            value={activeTab}
+            onChange={(e) => setActiveTab(e.target.value)}
           >
-            <tab.icon className="w-4 h-4" />
-            {tab.label}
-          </button>
-        ))}
+            {tabs.map((tab) => (
+              <option key={tab.id} value={tab.id}>
+                {tab.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        
+        {/* Desktop Tabs */}
+        <div className="hidden sm:flex bg-card/50 p-1 rounded border border-border w-fit">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-4 py-2 text-xs font-semibold rounded transition-all flex items-center gap-2 ${activeTab === tab.id
+                ? "bg-brand-secondary-600 text-white shadow-md shadow-brand-secondary-600/10"
+                : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                }`}
+            >
+              <tab.icon className="w-4 h-4" />
+              {tab.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Tab Panels */}

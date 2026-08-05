@@ -545,6 +545,27 @@ export const jobApplications = pgTable("job_applications", {
 			foreignColumns: [careers.id],
 			name: "job_applications_jobId_fkey"
 		}).onDelete("cascade"),
-	pgPolicy("public_job_applications_insert", { as: "permissive", for: "insert", to: ["public"], withCheck: sql`("applicantEmail" IS NOT NULL)`  }),
 	pgPolicy("service_role_job_applications_all", { as: "permissive", for: "all", to: ["service_role"], using: sql`true`, withCheck: sql`true`  }),
+]);
+
+export const whatsappMessages = pgTable("whatsapp_messages", {
+	id: text().primaryKey().notNull(),
+	campaignId: text("campaign_id"),
+	phoneNumberId: text("phone_number_id").notNull(),
+	senderWaId: text("sender_wa_id").notNull(),
+	messageType: text("message_type").notNull(),
+	content: text(),
+	status: text().notNull(),
+	direction: text().notNull(),
+	errorCode: text("error_code"),
+	errorMessage: text("error_message"),
+	metadata: jsonb(),
+	processedAt: timestamp("processed_at", { mode: 'string' }),
+	createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+	updatedAt: timestamp("updated_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+	index("idx_whatsapp_messages_sender").using("btree", table.senderWaId.asc().nullsLast().op("text_ops")),
+	index("idx_whatsapp_messages_campaign").using("btree", table.campaignId.asc().nullsLast().op("text_ops")),
+	index("idx_whatsapp_messages_created").using("btree", table.createdAt.desc().nullsFirst().op("timestamp_ops")),
+	pgPolicy("service_role_only", { as: "permissive", for: "all", to: ["service_role"], using: sql`true`, withCheck: sql`true`  }),
 ]);

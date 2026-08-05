@@ -47,10 +47,10 @@ export async function GET(request: NextRequest) {
       success: true,
       count: conversations.length,
       conversations});
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching conversations list:", error);
     return NextResponse.json(
-      { error: "Failed to fetch conversations" },
+      { error: "Failed to fetch conversations", details: error.message || String(error) },
       { status: 500 },
     );
   }
