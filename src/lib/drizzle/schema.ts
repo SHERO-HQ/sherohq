@@ -39,7 +39,7 @@ export const abandonedCarts = pgTable("abandoned_carts", {
 			name: "abandoned_carts_userId_fkey"
 		}).onDelete("cascade"),
 	pgPolicy("service_role_only", { as: "permissive", for: "all", to: ["service_role"], using: sql`true`, withCheck: sql`true`  }),
-]);
+]).enableRLS();
 
 export const supportGuides = pgTable("support_guides", {
 	id: text().primaryKey().notNull(),
@@ -510,7 +510,7 @@ export const aiChatSessions = pgTable("ai_chat_sessions", {
 			name: "ai_chat_sessions_user_id_fkey"
 		}).onDelete("set null"),
 	pgPolicy("service_role_only", { as: "permissive", for: "all", to: ["service_role"], using: sql`true`, withCheck: sql`true`  }),
-]);
+]).enableRLS();
 
 export const careers = pgTable("careers", {
 	id: uuid().defaultRandom().primaryKey().notNull(),
@@ -570,7 +570,7 @@ export const whatsappMessages = pgTable("whatsapp_messages", {
 	index("idx_whatsapp_messages_campaign").using("btree", table.campaignId.asc().nullsLast().op("text_ops")),
 	index("idx_whatsapp_messages_created").using("btree", table.createdAt.desc().nullsFirst().op("timestamp_ops")),
 	pgPolicy("service_role_only", { as: "permissive", for: "all", to: ["service_role"], using: sql`true`, withCheck: sql`true`  }),
-]);
+]).enableRLS();
 
 export const whatsappMessageRetries = pgTable("whatsapp_message_retries", {
 	id: uuid().defaultRandom().primaryKey().notNull(),
@@ -589,5 +589,5 @@ export const whatsappMessageRetries = pgTable("whatsapp_message_retries", {
 	index("idx_whatsapp_retries_message").using("btree", table.messageId.asc().nullsLast().op("text_ops")),
 	index("idx_whatsapp_retries_status").using("btree", table.status.asc().nullsLast().op("text_ops")),
 	pgPolicy("service_role_only", { as: "permissive", for: "all", to: ["service_role"], using: sql`true`, withCheck: sql`true`  }),
-]);
+]).enableRLS();
 
