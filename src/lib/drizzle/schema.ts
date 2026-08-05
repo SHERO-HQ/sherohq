@@ -589,3 +589,14 @@ export const whatsappMessageRetries = pgTable("whatsapp_message_retries", {
 	index("idx_whatsapp_retries_status").using("btree", table.status.asc().nullsLast().op("text_ops")),
 	pgPolicy("service_role_only", { as: "permissive", for: "all", to: ["service_role"], using: sql`true`, withCheck: sql`true`  }),
 ]);
+
+export const aiChatSessions = pgTable("ai_chat_sessions", {
+	sessionId: text("session_id").primaryKey().notNull(),
+	userId: text("user_id"),
+	summary: text(),
+	lastUpdated: timestamp("last_updated", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+	createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+	index("idx_ai_chat_sessions_user").using("btree", table.userId.asc().nullsLast().op("text_ops")),
+	pgPolicy("service_role_only", { as: "permissive", for: "all", to: ["service_role"], using: sql`true`, withCheck: sql`true`  }),
+]);
