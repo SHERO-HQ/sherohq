@@ -83,16 +83,10 @@ const AboutStory = () => {
                 <span className="font-bold text-brand-secondary-700 dark:text-brand-secondary-400">
                   SHERO
                 </span>{" "}
-                is making quality technology accessible. We have evolved into a
-                comprehensive technology partner, equipping people, businesses
-                and communities across West Africa with world-class digital
-                solutions.
+                makes technology more accessible and reliable. We have grown into a comprehensive technology partner, equipping individuals, businesses, and communities across West Africa with world-class digital solutions.
               </p>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                We lead at the intersection of hardware excellence and software
-                innovation, from networking to custom development. Our mission
-                remains constant: to equip our community with the transformative
-                tools and knowledge needed to thrive today.
+                We operate at the intersection of hardware excellence and software innovation, from infrastructure to custom development. Our mission remains constant: to equip our community with the transformative tools and knowledge needed to thrive today.
               </p>
             </div>
           </Reveal>
@@ -153,8 +147,7 @@ const AboutStory = () => {
                   End-to-End Solutions
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                  From hardware procurement to custom software development and
-                  ongoing IT support—we're your complete technology partner.
+                  From hardware infrastructure and custom software to managed IT support, we deliver complete technology solutions.
                 </p>
               </div>
               <div className="py-8 md:py-0 md:px-10">
@@ -164,7 +157,7 @@ const AboutStory = () => {
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                   Deep understanding of the African market combined with
-                  international best practices and cutting-edge technology.
+                  international best practices.
                 </p>
               </div>
               <div className="pt-8 md:pt-0 md:pl-10">
@@ -173,8 +166,7 @@ const AboutStory = () => {
                   Customer-Centric Approach
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                  We don't just sell products—we build long-term partnerships,
-                  offering training, support, and strategic guidance.
+                  We build long-term partnerships through reliable support, practical guidance, and solutions tailored to your needs.
                 </p>
               </div>
             </div>

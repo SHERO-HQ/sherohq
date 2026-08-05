@@ -1,36 +1,36 @@
 "use client";
 import { StaggerContainer, StaggerItem } from "@/components/motion/AnimateSection";
-import { Lightbulb, ShieldCheck, Handshake, Rocket } from "lucide-react";
+import { Lightbulb, ShieldCheck, Handshake, Rocket, Target, BadgeCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const values = [
   {
-    icon: Lightbulb,
-    title: "Innovation First",
+    icon: Target,
+    title: "Purpose",
     description:
-      "We don't just follow trends; we set them. Our approach combines creative problem-solving with cutting-edge technology.",
-    color: "brand-secondary",
+      "We build technology that matters. Every solution we create is driven by a commitment to empower people, strengthen businesses, and create lasting impact.",
+    color: "primary",
   },
   {
     icon: ShieldCheck,
-    title: "Uncompromised Quality",
+    title: "Integrity",
     description:
-      "Excellence is our baseline. We adhere to strict coding standards and rigorous testing to ensure rock-solid performance.",
-    color: "blue",
+      "We do what is right, even when no one is watching. Honesty, transparency, and ethical decision-making guide everything we do.",
+    color: "secondary",
   },
   {
     icon: Handshake,
-    title: "True Partnership",
+    title: "Ownership",
     description:
-      "We build relationships, not just software. Your success is our success, and we work as an extension of your team.",
-    color: "violet",
+      "We take initiative, embrace responsibility, and see every challenge through. We act like builders, taking pride in our work and the impact it creates.",
+    color: "primary",
   },
   {
-    icon: Rocket,
-    title: "Rapid Delivery",
+    icon: BadgeCheck,
+    title: "Reliability",
     description:
-      "Time is money. We optimize our workflows to deliver high-impact results without sacrificing quality or stability.",
-    color: "amber",
+      "We earn trust through consistency. From our technology to our relationships, we deliver dependable solutions and stand behind our commitments.",
+    color: "secondary",
   },
 ];
 
@@ -68,14 +68,10 @@ const AboutValues = () => {
                 <div
                   className={cn(
                     "w-12 h-12 rounded flex items-center justify-center mb-4 transition duration-500 border border-slate-200/50 dark:border-white/5 shadow-sm",
-                    item.color === "brand-secondary" &&
-                    "bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:bg-brand-secondary-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-brand-secondary-500/30",
-                    item.color === "blue" &&
-                    "bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:bg-blue-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-blue-500/30",
-                    item.color === "violet" &&
-                    "bg-violet-500/10 text-violet-600 dark:text-violet-400 group-hover:bg-violet-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-violet-500/30",
-                    item.color === "amber" &&
-                    "bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:bg-amber-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-amber-500/30",
+                    item.color === "primary" &&
+                    "bg-brand-primary-500/10 text-brand-primary-600 dark:text-brand-primary-400 group-hover:bg-brand-primary-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-brand-primary-500/30",
+                    item.color === "secondary" &&
+                    "bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:bg-brand-secondary-600/50 group-hover:text-white group-hover:shadow group-hover:shadow-brand-secondary-500/30"
                   )}
                 >
                   <item.icon className="w-6 h-6" />
@@ -83,7 +79,7 @@ const AboutValues = () => {
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3 tracking-tighter group-hover:text-brand-secondary-500 transition-colors">
                   {item.title}
                 </h3>
-                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed font-light group-hover:text-slate-800 dark:group-hover:text-slate-300 transition-colors">
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed group-hover:text-slate-800 dark:group-hover:text-slate-300 transition-colors">
                   {item.description}
                 </p>
               </div>
