@@ -17,14 +17,14 @@ export const supportNotifications = {
       <h1 style="color: #059669; text-align: center; margin: 0 0 16px; font-size: 18px;">Support Ticket Received</h1>
       <p style="text-align: center; color: #64748b; font-size: 13px; margin: 0 0 20px;">Ticket <strong>#${ticket.ticket_no}</strong></p>
       <p>Hi ${ticket.name},</p>
-      <p>Thank you for reaching out to SHERO TECHNOLOGIES Support. We have received your inquiry regarding <strong>"${ticket.subject}"</strong>.</p>
+      <p>Thank you for reaching out to <strong>SHERO Support</strong>. We have received your inquiry regarding <strong>"${ticket.subject}"</strong>.</p>
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 20px 0;">
         <p style="margin: 0 0 6px; font-size: 12px; color: #64748b; text-transform: uppercase;">Category: ${ticket.category}</p>
         <p style="margin: 0; color: #334155; line-height: 1.5; white-space: pre-wrap;">${ticket.message}</p>
       </div>
       <p>Our support team is reviewing your ticket and will respond as soon as possible, typically within 24 hours.</p>
       <p style="text-align: center; margin-top: 24px;">
-        <a href="${trackUrl}/track/${ticket.ticket_no}" style="display: inline-block; padding: 12px 28px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Track Ticket Status</a>
+        <a href="${trackUrl}/support/track/${ticket.ticket_no}" style="display: inline-block; padding: 12px 28px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Track Ticket Status</a>
       </p>
     `;
     const htmlContent = wrapEmailHtml(bodyHtml, {

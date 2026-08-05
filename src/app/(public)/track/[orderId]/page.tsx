@@ -3,6 +3,7 @@ import { toReadableOrderId } from "@/utils/orderId";
 
 import { useEffect, useState, use, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Package,
   Copy,
@@ -37,9 +38,16 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (!orderId) return;
+
+    // Backwards compatibility for ticket tracking links that were sent out before the route split
+    if (/^\d+$/.test(orderId)) {
+      router.replace(`/support/track/${orderId}`);
+      return;
+    }
 
     const fetchOrder = async () => {
       try {
