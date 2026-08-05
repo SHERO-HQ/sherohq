@@ -77,6 +77,7 @@ const navItems = [
     icon: MessageSquareQuote,
     label: "Testimonials",
     href: "/admin/testimonials"},
+  { icon: MessageSquare, label: "Site Feedback", href: "/admin/feedback" },
   { icon: BarChart, label: "Site Stats", href: "/admin/stats" },
   { icon: Users, label: "Customers", href: "/admin/users" },
   { icon: User, label: "Profile", href: "/admin/profile" },

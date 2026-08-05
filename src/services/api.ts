@@ -184,3 +184,5 @@ export {
   updateStat,
   deleteStat,
 } from "./content";
+
+export * from './feedback';
