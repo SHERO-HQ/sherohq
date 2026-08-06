@@ -100,6 +100,19 @@ export async function handleResponse<T>(response: Response): Promise<T> {
     // Append status to aid debugging in production
     const error = new Error(`${errorMessage} (Status: ${response.status})`);
     (error as any).status = response.status;
+    
+    // Automatically redirect on 401 Unauthorized
+    if (response.status === 401 && typeof window !== "undefined") {
+      const isApiAuthRoute = response.url.includes("/api/auth/") || response.url.includes("/api/admin/auth/");
+      if (!isApiAuthRoute) {
+        if (window.location.pathname.startsWith("/admin")) {
+          window.location.href = "/admin/login?expired=1";
+        } else {
+          window.location.href = "/login?expired=1";
+        }
+      }
+    }
+    
     throw error;
   }
 

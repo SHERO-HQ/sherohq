@@ -1,16 +1,13 @@
 "use client";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { FadeInView } from "@/components/motion/AnimateSection";
 import {
   Quote,
   UserCheck,
   Star,
-  Rocket,
   ChevronRight,
   ChevronLeft
 } from "lucide-react";
-import Link from "next/link";
 import { useTestimonials } from "@/hooks/queries/useTestimonials";
 import AppImage from "@/components/common/AppImage";
 
@@ -24,11 +21,11 @@ const getInitials = (name: string) => {
     .toUpperCase();
 };
 
-interface AboutTestimonialsProps {
+interface LandingTestimonialsProps {
   limit?: number;
 }
 
-const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
+const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
   const { data: testimonials = [], isLoading } = useTestimonials();
   
   const displayTestimonials = useMemo(() => {
@@ -89,45 +86,30 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
 
       <div className="container px-4 md:px-6 relative z-10 w-full mx-auto md:w-11/12 max-w-7xl">
         {(isLoading || displayTestimonials.length > 0) && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center mb-16">
+          <div className="flex flex-col items-center justify-center gap-12 lg:gap-16">
             
             {/* Header Content */}
-            <div className="text-center lg:text-left max-w-xl mx-auto lg:mx-0">
+            <div className="text-center max-w-3xl mx-auto">
               <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-2 text-[9px] font-bold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100/80 dark:bg-brand-secondary-500/10 border border-brand-secondary-500/30 dark:border-brand-secondary-500/20 rounded uppercase tracking-wider transition-colors duration-300">
                 <UserCheck className="size-4" />
                 Client Voices
               </span>
-              <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-3 transition-colors duration-300 leading-tight">
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-6 transition-colors duration-300 leading-tight">
                 Trusted by Leaders across Africa.
               </h2>
               <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 transition-colors duration-300 leading-relaxed">
                 We believe technology exists to expand what's possible. See how we've partnered with innovators to build enterprise-grade infrastructure that removes barriers and creates opportunities.
               </p>
-              
-              <div className="flex items-center justify-center lg:justify-start gap-4">
-                <button
-                  onClick={handlePrev}
-                  className="cursor-pointer p-3 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-secondary-600 dark:hover:text-white hover:border-brand-secondary-500 transition-colors shadow-sm"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={handleNext}
-                  className="cursor-pointer p-3 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-secondary-600 dark:hover:text-white hover:border-brand-secondary-500 transition-colors shadow-sm"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
             </div>
 
             {/* Stack of Cards UI */}
             <div 
-              className="relative w-full max-w-lg mx-auto h-[450px] sm:h-[400px] flex items-center justify-center perspective-[1000px]"
+              className="relative w-full max-w-2xl mx-auto h-[450px] sm:h-[400px] flex items-center justify-center perspective-[1000px]"
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
               {isLoading ? (
-                <div className="w-full h-full bg-slate-50/50 dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-white/5 animate-pulse" />
+                <div className="w-full h-full bg-slate-50/50 dark:bg-slate-900/40 rounded border border-slate-200 dark:border-white/5 animate-pulse" />
               ) : (
                 <AnimatePresence mode="popLayout">
                   {cards.slice(0, 3).map((item, index) => {
@@ -171,7 +153,7 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
                         }}
                         onClick={isFront ? handleNext : undefined}
                       >
-                        <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded border border-slate-200/80 dark:border-slate-800 flex flex-col relative group h-full min-h-[320px]">
+                        <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded border border-slate-200/80 dark:border-slate-800 flex flex-col relative group h-full min-h-[320px] -mt-6 lg:-mt-8">
                           <div className="absolute top-6 right-6 transition-transform duration-300">
                             <Quote className="size-8 text-brand-secondary-500/20" />
                           </div>
@@ -247,38 +229,27 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
                 </AnimatePresence>
               )}
             </div>
+
+            {/* Navigation Arrows */}
+            <div className="flex items-center justify-center gap-4 -mt-20">
+              <button
+                onClick={handlePrev}
+                className="cursor-pointer p-3 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-secondary-600 dark:hover:text-white hover:border-brand-secondary-500 transition-colors shadow-sm"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                onClick={handleNext}
+                className="cursor-pointer p-3 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-secondary-600 dark:hover:text-white hover:border-brand-secondary-500 transition-colors shadow-sm"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         )}
-
-        {/* Sales CTA */}
-        <div className="cursor-pointer text-center relative group mt-10">
-          <FadeInView direction="up" delay={0}>
-            <div className="inline-flex relative flex-col items-center gap-4 p-8 md:p-10 rounded bg-white/60 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 shadow-lg dark:shadow-md overflow-hidden max-w-2xl mx-auto w-full transition duration-300">
-              <div className="absolute inset-0 pattern-dots pattern-brand-secondary-500/10 pattern-opacity-100 pattern-size-4 opacity-80 -z-10" />
-
-              <div className="p-4 bg-brand-secondary-500/10 rounded-full text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-500/20 transition-colors duration-300 mb-2">
-                <Rocket className="w-8 h-8" />
-              </div>
-              <div className="relative z-10">
-                <h3 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-3 transition-colors duration-300">
-                  Ready to Redefine Possible?
-                </h3>
-                <p className="text-slate-600 dark:text-slate-400 text-base sm:text-lg mb-8 transition-colors duration-300 max-w-lg mx-auto">
-                  Partner with us to build enterprise-grade infrastructure that scales with your ambition.
-                </p>
-                <Link
-                  href="/contact-us"
-                  className="cursor-pointer px-8 py-3 bg-brand-secondary-600 text-sm text-white rounded font-bold hover:bg-brand-secondary-700 transition-all shadow shadow-brand-secondary-500/20 hover:-translate-y-1 hover:shadow-brand-secondary-500/40 w-fit inline-block"
-                >
-                  Let's Build Together
-                </Link>
-              </div>
-            </div>
-          </FadeInView>
-        </div>
       </div>
     </section>
   );
 };
 
-export default AboutTestimonials;
+export default LandingTestimonials;
