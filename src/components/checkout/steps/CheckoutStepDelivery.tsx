@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { ChevronLeft, ChevronRight, Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,7 +26,7 @@ export default function CheckoutStepDelivery() {
   }, [selectedRegion, cities, setValue, watch]);
 
   return (
-    <motion.div
+    <m.div
       key="step2"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
@@ -189,6 +189,6 @@ export default function CheckoutStepDelivery() {
           <ChevronRight className="w-5 h-5" />
         </Button>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

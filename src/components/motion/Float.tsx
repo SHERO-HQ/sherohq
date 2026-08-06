@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import type { ReactNode } from "react";
 
 interface FloatProps {
@@ -24,7 +24,7 @@ export const Float = ({
  rotate = 0,
 }: FloatProps) => {
  return (
- <motion.div
+ <m.div
  animate={{
  y: [0, -distance, 0],
  rotate: [rotate, rotate + 2, rotate - 2, rotate],
@@ -39,7 +39,7 @@ export const Float = ({
  className={className}
  >
  {children}
- </motion.div>
+ </m.div>
  );
 };
 

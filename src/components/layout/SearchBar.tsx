@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { useProducts } from "@/hooks/queries/useProducts";
 import { getImageUrl } from "@/services/api";
 import AppImage from "@/components/common/AppImage";
@@ -94,7 +94,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
  {/* Results Dropdown */}
  <AnimatePresence>
  {query.length > 1 && (
- <motion.div
+ <m.div
  initial={{ opacity: 0, y: 10 }}
  animate={{ opacity: 1, y: 0 }}
  exit={{ opacity: 0, y: 10 }}
@@ -136,7 +136,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
  No items found for "{query}"
  </div>
  )}
- </motion.div>
+ </m.div>
  )}
  </AnimatePresence>
  </div>
@@ -160,7 +160,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
  {isOpen && (
  <>
  {/* Backdrop */}
- <motion.div
+ <m.div
  initial={{ opacity: 0 }}
  animate={{ opacity: 1 }}
  exit={{ opacity: 0 }}
@@ -169,7 +169,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
  />
 
  {/* Search Panel */}
- <motion.div
+ <m.div
  initial={{ opacity: 0, y: -20 }}
  animate={{ opacity: 1, y: 0 }}
  exit={{ opacity: 0, y: -20 }}
@@ -295,7 +295,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
  </div>
  )}
  </div>
- </motion.div>
+ </m.div>
  </>
  )}
  </AnimatePresence>

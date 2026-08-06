@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { AlertTriangle, Home, RefreshCw } from "lucide-react";
 import Link from "next/link";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 
 export default function Error({
   error,
@@ -19,7 +19,7 @@ export default function Error({
 
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center p-4">
-      <motion.div
+      <m.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         className="max-w-md w-full text-center space-y-8"
@@ -61,7 +61,7 @@ export default function Error({
         <p className="text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase tracking-widest pt-8">
             Error ID: {error.digest || 'Internal-System-Failure'}
         </p>
-      </motion.div>
+      </m.div>
     </div>
   );
 }

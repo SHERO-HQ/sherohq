@@ -71,7 +71,7 @@ const Legend = dynamic(() => import("recharts").then((mod) => mod.Legend), {
   ssr: false,
 });
 
-import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { m, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/utils";
 import ActivityFeed from "@/components/admin/ActivityFeed";
@@ -186,7 +186,7 @@ const MagneticStatCard = ({
   };
 
   return (
-    <motion.div
+    <m.div
       initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={prefersReducedMotion ? { duration: 0 } : { delay: index * 0.1 }}
@@ -230,7 +230,7 @@ const MagneticStatCard = ({
           </div>
         </CardContent>
       </Card>
-    </motion.div>
+    </m.div>
   );
 };
 

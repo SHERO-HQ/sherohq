@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { m, useMotionValue, useSpring, useTransform } from "motion/react";
 import { StaggerContainer, StaggerItem } from "@/components/motion/AnimateSection";
 import {
  ShoppingBag,
@@ -153,7 +153,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
  };
 
  return (
- <motion.div
+ <m.div
  ref={cardRef}
  onMouseMove={handleMouseMove}
  onMouseLeave={handleMouseLeave}
@@ -165,7 +165,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
  className={`group relative min-h-60 p-6 rounded border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col justify-between overflow-hidden transition-colors hover:border-brand-secondary-500/50 hover:shadow shadow-brand-secondary-500/5 h-full`}
  >
  {/* Dynamic Glow Layer */}
- <motion.div
+ <m.div
  style={prefersReducedMotion ? {} : {
  background: glowBg,
  }}
@@ -209,7 +209,7 @@ const PathwayCard = ({ path }: { path: Pathway }) => {
  <ArrowRight className="w-5 h-5" />
  </Link>
  </div>
- </motion.div>
+ </m.div>
  );
 };
 

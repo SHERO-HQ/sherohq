@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { LockKeyhole, Truck } from "lucide-react";
 
 interface OrderSummaryProps {
@@ -19,7 +19,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   itemCount,
   className = ""}) => {
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className={`bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6 ${className}`}
@@ -80,7 +80,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           </span>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 };
 

@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { ArrowRight, Code, Shield, Zap, Server } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -59,7 +59,7 @@ const SolutionsHero = () => {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex flex-col items-center">
 
         {/* CENTERED TEXT SECTION */}
-        <motion.div
+        <m.div
           variants={heroBlock}
           initial={prefersReducedMotion ? false : "hidden"}
           animate={
@@ -67,7 +67,7 @@ const SolutionsHero = () => {
           }
           className="w-full max-w-4xl flex flex-col items-center gap-5 sm:gap-6 text-center"
         >
-          <motion.div
+          <m.div
             variants={heroItem}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded text-xs border border-brand-secondary-500/20 bg-brand-secondary-500/5 transition-colors duration-300"
           >
@@ -75,10 +75,10 @@ const SolutionsHero = () => {
             <span className="text-[.65rem] font-semibold uppercase tracking-wide text-brand-secondary-600 dark:text-brand-secondary-400">
               Technology That Scales
             </span>
-          </motion.div>
+          </m.div>
 
           <div className="relative overflow-hidden group">
-            <motion.h1
+            <m.h1
               variants={heroItem}
               className="font-bold font-sora leading-[1.1] text-4xl sm:text-5xl md:text-6xl lg:text-[4rem] px-2 sm:px-0 tracking-tighter text-slate-900 dark:text-white relative z-10"
             >
@@ -87,18 +87,18 @@ const SolutionsHero = () => {
               <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-secondary-600 to-brand-primary-700 dark:from-brand-secondary-400 dark:to-brand-primary-500">
                 Built to Scale
               </span>
-            </motion.h1>
+            </m.h1>
           </div>
 
-          <motion.p
+          <m.p
             variants={heroItem}
             className="sm:text-lg text-base text-slate-600 dark:text-slate-300/95 max-w-2xl leading-relaxed mx-auto"
           >
             From high-performance custom platforms to managed enterprise
             infrastructure, we engineer systems that grow with your business.
-          </motion.p>
+          </m.p>
 
-          <motion.div
+          <m.div
             variants={heroItem}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 pt-4 w-full"
           >
@@ -109,10 +109,10 @@ const SolutionsHero = () => {
               <span>Let's Talk</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
-          </motion.div>
+          </m.div>
 
           {/* Features Grid below buttons */}
-          <motion.div
+          <m.div
             variants={heroItem}
             className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-8 lg:mt-12 w-full max-w-3xl"
           >
@@ -130,9 +130,9 @@ const SolutionsHero = () => {
                 </div>
               );
             })}
-          </motion.div>
+          </m.div>
 
-        </motion.div>
+        </m.div>
       </div>
     </header>
   );

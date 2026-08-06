@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import {
   Star,
   CheckCircle2,
@@ -17,6 +17,7 @@ import {
   ShieldOff,
   HatGlasses
 } from "lucide-react";
+import Magnetic from "@/components/motion/Magnetic";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -94,7 +95,7 @@ const StarRating = ({
     <div className="flex flex-col items-center gap-4 py-4">
       <div className="flex items-center gap-2">
         {[1, 2, 3, 4, 5].map((star) => (
-          <motion.button
+          <m.button
             key={star}
             type="button"
             disabled={disabled}
@@ -121,12 +122,12 @@ const StarRating = ({
                   : "text-slate-200 dark:text-slate-800"
               )}
             />
-          </motion.button>
+          </m.button>
         ))}
       </div>
       <div className="text-center h-10">
         <AnimatePresence mode="wait">
-          <motion.div
+          <m.div
             key={hovered || value}
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
@@ -139,7 +140,7 @@ const StarRating = ({
             <span className="text-xs font-medium text-slate-400">
               {ratingOptions.find((opt) => opt.value === (hovered || value))?.description}
             </span>
-          </motion.div>
+          </m.div>
         </AnimatePresence>
       </div>
     </div>
@@ -245,7 +246,7 @@ export default function FeedbackForm({
     )}>
       <AnimatePresence mode="wait">
         {!isSuccess ? (
-          <motion.div
+          <m.div
             key="form-step"
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -303,7 +304,7 @@ export default function FeedbackForm({
 
                   <AnimatePresence mode="popLayout">
                     {!anonymousValue ? (
-                      <motion.div
+                      <m.div
                         key="identity-fields"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -370,9 +371,9 @@ export default function FeedbackForm({
                           </div>
                           <input type="file" ref={fileInputRef} onChange={handleImageChange} accept="image/*" className="hidden" />
                         </div>
-                      </motion.div>
+                      </m.div>
                     ) : (
-                      <motion.div
+                      <m.div
                         key="anonymous-notice"
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -384,7 +385,7 @@ export default function FeedbackForm({
                           <h5 className="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Anonymous Mode</h5>
                           <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-relaxed">Your identity will be protected and no personal information will be stored or displayed.</p>
                         </div>
-                      </motion.div>
+                      </m.div>
                     )}
                   </AnimatePresence>
                 </div>
@@ -409,53 +410,54 @@ export default function FeedbackForm({
                 </div>
 
                 {serverError && (
-                  <motion.div
+                  <m.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="flex items-center gap-3 p-4 rounded bg-red-500/5 text-red-500 text-xs font-bold border border-red-500/20"
                   >
                     <AlertCircle className="h-4 w-4 shrink-0" />
                     <span>{serverError}</span>
-                  </motion.div>
+                  </m.div>
                 )}
               </form>
             </CardContent>
-            <CardFooter className="px-4 sm:px-6 pb-8">
-              <Button
-                type="submit"
-                form="feedback-form"
-                disabled={isSubmitting}
-                variant="brandPrimary"
-                className="w-full h-10 text-sm font-semibold rounded shadow-[0_10px_20px_rgba(var(--brand-secondary-rgb),0.3)] hover:shadow-[0_15px_25px_rgba(var(--brand-secondary-rgb),0.4)] transition-all active:scale-95 disabled:shadow-none"
-              >
-                {isSubmitting ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                ) : (
-                  <span className="flex items-center gap-3">
-                    Submit Feedback
-                    {/* <Send className="h-4 w-4" /> */}
-                  </span>
-                )}
-              </Button>
+            <CardFooter className="px-4 sm:px-6 pb-8 flex justify-center">
+              <Magnetic strength={0.1}>
+                <Button
+                  type="submit"
+                  form="feedback-form"
+                  disabled={isSubmitting}
+                  variant="brandPrimary"
+                  className="w-full sm:w-[300px] h-12 text-sm font-semibold rounded shadow-[0_10px_20px_rgba(var(--brand-secondary-rgb),0.3)] hover:shadow-[0_15px_25px_rgba(var(--brand-secondary-rgb),0.4)] transition-all active:scale-95 disabled:shadow-none"
+                >
+                  {isSubmitting ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <span className="flex items-center gap-3">
+                      Submit Feedback
+                    </span>
+                  )}
+                </Button>
+              </Magnetic>
             </CardFooter>
-          </motion.div>
+          </m.div>
         ) : (
-          <motion.div
+          <m.div
             key="success-step"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12 py-8 sm:py-20 text-center space-y-6 sm:space-y-8"
           >
             <div className="relative">
-              <motion.div
+              <m.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 200, damping: 15 }}
                 className="h-24 w-24 sm:h-32 sm:w-32 bg-emerald-500/10 rounded-full flex items-center justify-center border border-emerald-500/20"
               >
                 <CheckCircle2 className="h-12 w-12 sm:h-16 sm:w-16 text-emerald-500" />
-              </motion.div>
-              <motion.div
+              </m.div>
+              <m.div
                 animate={{ scale: [1, 1.4, 1], opacity: [0, 0.3, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
                 className="absolute inset-0 bg-emerald-400 rounded-full"
@@ -479,7 +481,7 @@ export default function FeedbackForm({
                 Write Another
               </Button>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </Card>

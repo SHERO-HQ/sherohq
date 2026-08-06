@@ -1,6 +1,6 @@
 "use client";
 import { toReadableOrderId } from "@/utils/orderId";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import {
   AlertCircle,
   RefreshCw,
@@ -40,7 +40,7 @@ const PaymentFailureSupport = ({
   const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${supportMessage}`;
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className="max-w-2xl mx-auto"
@@ -177,7 +177,7 @@ const PaymentFailureSupport = ({
           </div>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 };
 

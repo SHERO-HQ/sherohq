@@ -1,5 +1,5 @@
 "use client";
-import { StaggerContainer, StaggerItem } from "@/components/motion/AnimateSection";
+
 import { Truck, Headset, CreditCard, Verified } from "lucide-react";
 
 const values = [
@@ -25,11 +25,7 @@ const LandingValueProps = () => {
   return (
     <section className="relative w-full sm:py-2 bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-900 transition-colors duration-300">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <StaggerContainer
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0"
-          staggerDelay={0.08}
-          threshold={0.1}
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0">
           {values.map((item, index) => {
             const borderClass = [
               "border-b sm:border-r sm:border-b lg:border-b-0 lg:border-r", // Item 0
@@ -39,7 +35,7 @@ const LandingValueProps = () => {
             ][index];
 
             return (
-              <StaggerItem key={item.title} yOffset={15} scale={1} duration={0.4}>
+              <div key={item.title}>
                 <div className={`flex items-center gap-4 group py-4 lg:py-2 lg:px-6 border-slate-200/80 dark:border-slate-700/70 ${borderClass}`}>
                   <div className="shrink-0 w-12 h-12 flex items-center justify-center text-brand-secondary-600 dark:text-brand-secondary-400 transition duration-300">
                     <item.icon className="w-6 h-6" />
@@ -53,10 +49,10 @@ const LandingValueProps = () => {
                     </p>
                   </div>
                 </div>
-              </StaggerItem>
+              </div>
             );
           })}
-        </StaggerContainer>
+        </div>
       </div>
     </section>
   );

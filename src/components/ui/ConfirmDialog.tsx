@@ -1,5 +1,5 @@
 "use client";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { AlertTriangle, Info, CheckCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -81,7 +81,7 @@ export function ConfirmDialog({
       {isOpen && (
         <div className="fixed inset-0 z-9999 flex items-center justify-center p-4">
           {/* Backdrop */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -91,7 +91,7 @@ export function ConfirmDialog({
           />
 
           {/* Alert Card */}
-          <motion.div
+          <m.div
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -163,7 +163,7 @@ export function ConfirmDialog({
                 )}
               </Button>
             </div>
-          </motion.div>
+          </m.div>
         </div>
       )}
     </AnimatePresence>

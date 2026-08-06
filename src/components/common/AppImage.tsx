@@ -53,7 +53,6 @@ export default function AppImage({
       height={!fill ? height : undefined}
       fill={fill}
       priority={priority}
-      unoptimized={isRemote}
       sizes={
         sizes ||
         (fill

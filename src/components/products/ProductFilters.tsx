@@ -1,5 +1,5 @@
 "use client";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import {
   X,
   SlidersHorizontal,
@@ -114,7 +114,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -122,7 +122,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
             className="fixed inset-0 bg-black/60 z-100 "
           />
 
-          <motion.div
+          <m.div
             initial={{ y: "100%", opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: "100%", opacity: 0 }}
@@ -178,7 +178,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                       {tab.label}
                     </span>
                     {activeTab === tab.id && (
-                      <motion.div
+                      <m.div
                         layoutId="activeTabIndicator"
                         className="absolute bottom-0 left-0 right-0 h-0.5 md:h-8 md:w-1 md:left-0 md:top-1/2 md:-translate-y-1/2 bg-brand-secondary-500 md:rounded-r-full shadow-sm"
                       />
@@ -327,7 +327,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
  <div className={`w-10 h-5 sm:w-12 sm:h-6 rounded-full relative transition-colors shrink-0 ${
  tempFilters.inStock ? "bg-brand-secondary-500" : "bg-slate-300 dark:bg-white/10"
  }`}>
- <motion.div 
+ <m.div 
  animate={{ x: tempFilters.inStock ? 26 : 4 }}
  className="absolute top-1 w-3 h-3 sm:w-4 sm:h-4 bg-white rounded-full shadow" 
  />
@@ -358,7 +358,7 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
                 />
               </button>
             </div>
-          </motion.div>
+          </m.div>
         </>
       )}
     </AnimatePresence>

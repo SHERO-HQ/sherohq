@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import {
   Sparkles,
   X,
@@ -508,7 +508,7 @@ export default function AIChatAssistant() {
       {/* Floating Action Button */}
       <AnimatePresence>
         {!isOpen && (
-          <motion.button
+          <m.button
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
@@ -523,14 +523,14 @@ export default function AIChatAssistant() {
             <span className="max-w-0 overflow-hidden ml-0 whitespace-nowrap opacity-0 group-hover:max-w-xs group-hover:ml-2 group-hover:opacity-100 transition-all duration-300 font-medium tracking-tight text-sm">
               Ask <span className="text-brand-secondary-500">SHERO</span>
             </span>
-          </motion.button>
+          </m.button>
         )}
       </AnimatePresence>
 
       {/* Chat Window */}
       <AnimatePresence mode="wait">
         {isOpen && (
-          <motion.div
+          <m.div
             data-version="v-refinement-v3-fix"
             initial={{ y: 20, opacity: 0, scale: 0.95 }}
             animate={{
@@ -1074,7 +1074,7 @@ export default function AIChatAssistant() {
                 </div>
               </>
             )}
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>

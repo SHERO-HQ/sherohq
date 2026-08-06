@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Download, X } from "lucide-react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import sheroIcon from "@/assets/logo/shero.svg";
 
 interface BeforeInstallPromptEvent extends Event {
@@ -134,7 +134,7 @@ const PWAInstallBanner = () => {
       <AnimatePresence>
         {/* iPhone Banner - Top Docked */}
         {showIOSBanner && isIPhone && (
-          <motion.div
+          <m.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -175,14 +175,14 @@ const PWAInstallBanner = () => {
                 </button>
               </div>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
       <AnimatePresence>
         {/* PWA Popup - Bottom Right Fixed */}
         {showPWABanner && deferredPrompt && (
-          <motion.div
+          <m.div
             initial={{ x: 300, opacity: 0, scale: 0.9 }}
             animate={{ x: 0, opacity: 1, scale: 1 }}
             exit={{ x: 300, opacity: 0, scale: 0.9 }}
@@ -229,7 +229,7 @@ const PWAInstallBanner = () => {
                 </button>
               </div>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>

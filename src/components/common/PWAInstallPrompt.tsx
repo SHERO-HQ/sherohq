@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { X, Download } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import Image from "next/image";
 import sheroIcon from "@/assets/logo/shero.svg";
 
@@ -91,7 +91,7 @@ const PWAInstallPrompt = () => {
   return (
     <AnimatePresence>
       {showPrompt && (
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 100 }}
@@ -139,7 +139,7 @@ const PWAInstallPrompt = () => {
               </button>
             </div>
           </div>
-        </motion.div>
+        </m.div>
       )}
     </AnimatePresence>
   );

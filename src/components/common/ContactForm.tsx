@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import {
   Send,
   CheckCircle2,
@@ -150,7 +150,7 @@ ${formData.message}`;
       )}
 
       {status === "success" && (
-        <motion.div
+        <m.div
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           className="text-center py-8 space-y-4"
@@ -171,13 +171,13 @@ ${formData.message}`;
           >
             Send Another Message
           </Button>
-        </motion.div>
+        </m.div>
       )}
 
       {status !== "success" && (
         <form onSubmit={handleSubmit}>
           <AnimatePresence mode="wait" custom={direction}>
-            <motion.div
+            <m.div
               key={step}
               custom={direction}
               initial={{ opacity: 0, x: direction * 15 }}
@@ -199,7 +199,7 @@ ${formData.message}`;
 
                   <div className="grid grid-cols-1 gap-4">
                     {/* Option 1: Proposal */}
-                    <motion.button
+                    <m.button
                       whileHover={{ scale: 1.01, y: -2 }}
                       whileTap={{ scale: 0.99 }}
                       type="button"
@@ -218,10 +218,10 @@ ${formData.message}`;
                           Get a custom quote for software dev, cloud migration, or managed IT SLAs.
                         </p>
                       </div>
-                    </motion.button>
+                    </m.button>
 
                     {/* Option 2: General */}
-                    <motion.button
+                    <m.button
                       whileHover={{ scale: 1.01, y: -2 }}
                       whileTap={{ scale: 0.99 }}
                       type="button"
@@ -240,10 +240,10 @@ ${formData.message}`;
                           Ask quick questions about shop deliveries, local branches, or store pickups.
                         </p>
                       </div>
-                    </motion.button>
+                    </m.button>
 
                     {/* Option 3: Support */}
-                    <motion.button
+                    <m.button
                       whileHover={{ scale: 1.01, y: -2 }}
                       whileTap={{ scale: 0.99 }}
                       type="button"
@@ -262,10 +262,10 @@ ${formData.message}`;
                           Troubleshoot current online order statuses or ask for product setup help.
                         </p>
                       </div>
-                    </motion.button>
+                    </m.button>
 
                     {/* Option 4: Partnerships */}
-                    <motion.button
+                    <m.button
                       whileHover={{ scale: 1.01, y: -2 }}
                       whileTap={{ scale: 0.99 }}
                       type="button"
@@ -284,7 +284,7 @@ ${formData.message}`;
                           Inquire about joint venture collaborations, hardware vendor contracts, or careers.
                         </p>
                       </div>
-                    </motion.button>
+                    </m.button>
                   </div>
                 </div>
               )}
@@ -454,7 +454,7 @@ ${formData.message}`;
                   </div>
                 </div>
               )}
-            </motion.div>
+            </m.div>
           </AnimatePresence>
         </form>
       )}

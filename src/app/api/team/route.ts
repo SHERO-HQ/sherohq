@@ -8,7 +8,9 @@ import { apiResponse } from "@/lib/api-utils";
 export async function GET() {
   try {
     const result = await query(`SELECT * FROM team_members ORDER BY "order" ASC, "createdAt" DESC`);
-    return apiResponse.success(result.rows);
+    return apiResponse.success(result.rows, 200, {
+      "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300"
+    });
   } catch (error) {
     console.error("Fetch team error:", error);
     return apiResponse.error("Failed to fetch team members");

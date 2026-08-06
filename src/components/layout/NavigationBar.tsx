@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import NavLink from "@/components/common/NavLink";
 
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, m } from "motion/react";
 import { SOCIAL_LINKS } from "@/constants/socials";
 import { navLinkClass, navLinkClassVariant } from "@/lib/utils";
 import {
@@ -308,7 +308,7 @@ const Nav = () => {
   return (
     <>
       <nav
-        className={`w-full transition-[background-color,backdrop-filter,border-color,box-shadow] duration-300 ease-in-out z-50 border-t-0 ${isOpen || scrolled ? "glass-surface-md shadow-sm" : "bg-transparent border-b border-transparent"}`}
+        className={`sticky top-0 w-full transition-[background-color,backdrop-filter,border-color,box-shadow] duration-300 ease-in-out z-50 border-t-0 ${isOpen || scrolled ? "glass-surface-md shadow-sm" : "bg-transparent border-b border-transparent"}`}
         aria-label="main navigation"
         id="nav-menu"
       >
@@ -381,7 +381,7 @@ const Nav = () => {
 
                 {/* Active Link Indicator - Glides on the bottom border */}
                 {activeNavIndex !== null && activeNavIndex >= 0 && (
-                  <motion.div
+                  <m.div
                     className="absolute bottom-0 h-1 bg-brand-secondary-500 rounded-t-full shadow-[0_-1px_4px_rgba(16,185,129,0.2)]"
                     initial={false}
                     animate={{
@@ -564,7 +564,7 @@ const Nav = () => {
         {isOpen && (
           <div className="fixed inset-0 z-100 lg:hidden">
             {/* Backdrop */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -574,7 +574,7 @@ const Nav = () => {
             />
 
             {/* Menu Panel (Drawer) */}
-            <motion.div
+            <m.div
               ref={mobileMenuRef}
               variants={menuVars}
               initial="initial"
@@ -621,7 +621,7 @@ const Nav = () => {
                             <>
                               {item.name}
                               {isActive && (
-                                <motion.div
+                                <m.div
                                   layoutId="mobile-nav-indicator"
                                   className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-brand-secondary-500 rounded-r-full"
                                 />
@@ -743,7 +743,7 @@ const Nav = () => {
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           </div>
         )}
       </AnimatePresence>

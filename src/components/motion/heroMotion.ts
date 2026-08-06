@@ -28,13 +28,13 @@ export const CUSTOM_EASINGS = {
  *
  * @example
  * ```tsx
- * <motion.div
+ * <m.div
  *   variants={fadeUp}
  *   initial="hidden"
  *   animate="visible"
  * >
  *   Content
- * </motion.div>
+ * </m.div>
  * ```
  */
 export const fadeUp: Variants = {
@@ -63,13 +63,13 @@ export const fadeUp: Variants = {
  * ```tsx
  * const prefersReducedMotion = useReducedMotion();
  *
- * <motion.div
+ * <m.div
  *   variants={fadeUpAccessible(prefersReducedMotion)}
  *   initial="hidden"
  *   animate="visible"
  * >
  *   Content
- * </motion.div>
+ * </m.div>
  * ```
  */
 export const fadeUpAccessible = (prefersReducedMotion: boolean): Variants => {
@@ -94,14 +94,14 @@ export const fadeUpAccessible = (prefersReducedMotion: boolean): Variants => {
  *
  * @example
  * ```tsx
- * <motion.div
+ * <m.div
  *   variants={staggerContainer}
  *   initial="hidden"
  *   animate="visible"
  * >
- *   <motion.div variants={fadeUp}>Child 1</motion.div>
- *   <motion.div variants={fadeUp}>Child 2</motion.div>
- * </motion.div>
+ *   <m.div variants={fadeUp}>Child 1</m.div>
+ *   <m.div variants={fadeUp}>Child 2</m.div>
+ * </m.div>
  * ```
  */
 export const staggerContainer: Variants = {

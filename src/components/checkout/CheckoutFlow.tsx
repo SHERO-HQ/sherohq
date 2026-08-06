@@ -1,6 +1,6 @@
 "use client";
 import { useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { useRouter } from "next/navigation";
 import { ChevronDown, ChevronUp, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -150,7 +150,7 @@ function CheckoutContent() {
             
             <AnimatePresence>
               {showMobileSummary && (
-                <motion.div
+                <m.div
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
@@ -163,7 +163,7 @@ function CheckoutContent() {
                     total={total}
                     itemCount={totalQuantity}
                   />
-                </motion.div>
+                </m.div>
               )}
             </AnimatePresence>
           </div>
@@ -173,7 +173,7 @@ function CheckoutContent() {
           <div className="lg:col-span-2">
             <AnimatePresence mode="wait">
               {paymentError && orderId ? (
-                <motion.div
+                <m.div
                   key="payment-error"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -199,7 +199,7 @@ function CheckoutContent() {
                       setCurrentStep(3);
                     }}
                   />
-                </motion.div>
+                </m.div>
               ) : (
                 <>
                   {currentStep === 1 && <CheckoutStepCart />}

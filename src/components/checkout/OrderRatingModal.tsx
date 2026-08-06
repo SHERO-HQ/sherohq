@@ -1,6 +1,6 @@
 "use client";
 import { useState, useCallback } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { X, Star, Send, Loader2, CheckCircle2 } from "lucide-react";
 import { sendContactMessage } from "@/services/api";
 import { COMPANY_EMAILS } from "@/constants/emails";
@@ -70,13 +70,13 @@ export default function OrderRatingModal({
  return (
  <AnimatePresence>
  {isOpen && (
- <motion.div
+ <m.div
  initial={{ opacity: 0 }}
  animate={{ opacity: 1 }}
  exit={{ opacity: 0 }}
  className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 "
  >
- <motion.div
+ <m.div
  initial={{ opacity: 0, scale: 0.95, y: 20 }}
  animate={{ opacity: 1, scale: 1, y: 0 }}
  exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -186,8 +186,8 @@ export default function OrderRatingModal({
  </form>
  )}
  </div>
- </motion.div>
- </motion.div>
+ </m.div>
+ </m.div>
  )}
  </AnimatePresence>
  );

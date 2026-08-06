@@ -12,9 +12,9 @@ import { } from "@/components/ui/card";
 
 const LandingAbout = () => {
   const features = [
-    "Premium Technology Ecosystems",
-    "Strategic Digital Transformation",
-    "Global Partnership Network",
+    "Purpose-Built Ecosystems",
+    "Technology that Solves Real Problems",
+    "Trusted Global Partners",
   ];
 
   return (
@@ -35,15 +35,15 @@ const LandingAbout = () => {
                 </span>
 
                 <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 leading-tight">
-                  Empowering Africa's <br />
-                  <span className="text-brand-secondary-600">Digital Economy</span>
+                  Redefining <br />
+                  <span className="text-brand-secondary-600">What's Possible</span>
                 </h2>
 
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl transition-colors duration-300">
-                  SHERO is more than a technology company. We are architects of
-                  innovation, bridging the gap between hardware excellence and
-                  digital potential. Our mission is to redefine what is possible
-                  for communities, businesses and individuals alike.
+                  At SHERO, we believe technology is humanity's greatest enabler
+                  of progress. We build software, supply reliable hardware, and 
+                  manage the IT infrastructure that businesses need to create 
+                  new opportunities and expand their possibilities.
                 </p>
               </div>
 
@@ -102,13 +102,13 @@ const LandingAbout = () => {
                 />
               </div>
 
-              {/* Sleek, High-Fidelity 10x Efficiency Badge - Positioned Clear of Orbit Path (Strict Brand Palette) */}
+              {/* Sleek, High-Fidelity Purpose Driven Badge - Positioned Clear of Orbit Path (Strict Brand Palette) */}
               <div className="absolute flex items-center justify-center gap-2 -top-16 sm:-right-12 right-3 bg-white/95 dark:bg-slate-900/90 border border-brand-secondary-500/20 dark:border-brand-secondary-500/30 px-3.5 py-1.5 rounded shadow-md backdrop-blur-xs hover:scale-105 transition-transform duration-300 z-30">
                 <p className="text-base font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 tracking-tight font-sora leading-none">
-                  10x
+                  Purpose
                 </p>
                 <p className="text-[9px] text-brand-secondary-700 dark:text-brand-secondary-300 font-mono tracking-widest uppercase font-medium">
-                  Efficiency
+                  Driven
                 </p>
               </div>
 

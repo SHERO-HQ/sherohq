@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, createContext, useContext, type ReactNode } from "react";
+import React, { useRef, createContext, useContext, type ReactNode } from "react";
+import { useInView } from "motion/react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
   fullWidth?: boolean;
   threshold?: number;
   once?: boolean;
+  trigger?: "scroll" | "mount";
 }
 
 interface ContainerProps {
@@ -21,6 +23,7 @@ interface ContainerProps {
   delayChildren?: number;
   once?: boolean;
   threshold?: number;
+  trigger?: "scroll" | "mount";
 }
 
 interface ItemProps {
@@ -42,28 +45,29 @@ export const FadeInView = ({
   delay = 0,
   direction = "up",
   fullWidth = true,
+  trigger = "scroll",
 }: Props) => {
   const prefersReducedMotion = useReducedMotion();
-  const [isInView, setIsInView] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const scrollInView = useInView(ref, { once: true, margin: "0px 0px -10% 0px" });
+  const [isMounted, setIsMounted] = React.useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsInView(true);
-    }, prefersReducedMotion ? 0 : delay * 1000);
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
-    return () => clearTimeout(timer);
-  }, [delay, prefersReducedMotion]);
+  const isInView = trigger === "mount" ? isMounted : scrollInView;
 
   const xOffset = direction === "left" ? 40 : direction === "right" ? -40 : 0;
   const yOffset = direction === "up" ? 40 : direction === "down" ? -40 : 0;
 
   return (
-    <div className={fullWidth ? "w-full" : ""}>
+    <div className={fullWidth ? "w-full" : ""} ref={ref}>
       <div
         className="transition ease-[cubic-bezier(0.16,1,0.3,1)]"
         style={{
           transitionDuration: prefersReducedMotion ? "10ms" : "0.75s",
-          transitionDelay: "0s", // Delay is handled by setTimeout above
+          transitionDelay: `${delay}s`, 
           transitionProperty: "opacity, transform",
           opacity: prefersReducedMotion ? 1 : isInView ? 1 : 0,
           transform: prefersReducedMotion
@@ -89,16 +93,18 @@ export const StaggerContainer = ({
   className = "",
   staggerDelay = 0.12,
   delayChildren = 0.05,
+  trigger = "scroll",
 }: ContainerProps) => {
   const prefersReducedMotion = useReducedMotion();
-  const [isInView, setIsInView] = useState(false);
+  const ref = useRef<HTMLElement>(null);
+  const scrollInView = useInView(ref, { once: true, margin: "0px 0px -10% 0px" });
+  const [isMounted, setIsMounted] = React.useState(false);
 
-  useEffect(() => {
-    const frame = requestAnimationFrame(() => {
-      setIsInView(true);
-    });
-    return () => cancelAnimationFrame(frame);
-  }, [prefersReducedMotion]);
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const isInView = trigger === "mount" ? isMounted : scrollInView;
 
   const Tag = as as any;
   const finalClassNames = className || `grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${gap}`;
@@ -115,7 +121,7 @@ export const StaggerContainer = ({
 
   return (
     <StaggerContext.Provider value={{ isInView, staggerDelay, delayChildren }}>
-      <Tag className={finalClassNames}>
+      <Tag ref={ref} className={finalClassNames}>
         {childrenWithIndex}
       </Tag>
     </StaggerContext.Provider>

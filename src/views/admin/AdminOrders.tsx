@@ -28,7 +28,7 @@ import {
   DropdownMenuSeparator} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
@@ -59,7 +59,7 @@ const OrderRow = memo(
       status: order.status,
       paymentMessage: order.paymentMessage});
     return (
-      <motion.tr
+      <m.tr
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.03 }}
@@ -178,7 +178,7 @@ const OrderRow = memo(
             </DropdownMenu>
           </div>
         </td>
-      </motion.tr>
+      </m.tr>
     );
   },
 );

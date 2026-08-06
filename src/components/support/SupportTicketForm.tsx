@@ -1,6 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { X, Send, CheckCircle2, AlertCircle, Loader2, BookOpen, ChevronRight } from "lucide-react";
@@ -109,14 +109,14 @@ const SupportTicketForm = ({
     <AnimatePresence>
       {isOpen && (
         <>
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
             className="fixed inset-0 bg-black/50  z-50"
           />
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 100, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 100, scale: 0.95 }}
@@ -211,7 +211,7 @@ const SupportTicketForm = ({
                 {/* Smart FAQ Suggestions */}
                 <AnimatePresence>
                   {suggestedGuides.length > 0 && (
-                    <motion.div
+                    <m.div
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: "auto" }}
                       exit={{ opacity: 0, height: 0 }}
@@ -245,7 +245,7 @@ const SupportTicketForm = ({
                           ))}
                         </ul>
                       </div>
-                    </motion.div>
+                    </m.div>
                   )}
                 </AnimatePresence>
 
@@ -277,7 +277,7 @@ const SupportTicketForm = ({
                 </Button>
               </form>
             )}
-          </motion.div>
+          </m.div>
         </>
       )}
     </AnimatePresence>

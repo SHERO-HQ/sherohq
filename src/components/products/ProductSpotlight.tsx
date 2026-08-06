@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -113,7 +113,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
       
       {/* Immersive Background: Animates based on current product */}
       <AnimatePresence mode="wait">
-        <motion.div
+        <m.div
           key={`bg-${currentProduct.id}`}
           initial={{ opacity: 0, scale: 1.1 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -128,14 +128,14 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
              className="object-cover opacity-30 dark:opacity-20 blur-[100px] scale-150 transform-gpu"
            />
            <div className="absolute inset-0 bg-slate-50/70 dark:bg-slate-950/70 backdrop-blur-3xl" />
-        </motion.div>
+        </m.div>
       </AnimatePresence>
       
       {/* Kinetic pattern overlay */}
       <div className="absolute inset-0 pattern-dots opacity-40 mix-blend-overlay pointer-events-none z-0" />
 
       <AnimatePresence mode="wait">
-        <motion.div
+        <m.div
           key={`content-${currentProduct.id}`}
           variants={staggerContainer}
           initial="hidden"
@@ -152,12 +152,12 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                 <div className="w-full lg:w-[55%] flex flex-col justify-between p-6 sm:p-10 lg:p-12 bg-white/70 dark:bg-slate-900/60 backdrop-blur-2xl border border-white/40 dark:border-white/10 rounded shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
                   <div className="max-w-xl flex flex-col justify-between h-full">
                     <div>
-                      <motion.div variants={staggerItem} className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-[10px] font-bold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/40 border border-brand-secondary-200 dark:border-brand-secondary-700/50 rounded uppercase tracking-widest shadow-sm">
+                      <m.div variants={staggerItem} className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-[10px] font-bold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/40 border border-brand-secondary-200 dark:border-brand-secondary-700/50 rounded uppercase tracking-widest shadow-sm">
                         <Star className="size-3 fill-brand-secondary-500 text-brand-secondary-500" />
                         <span>Featured Product</span>
-                      </motion.div>
+                      </m.div>
 
-                      <motion.h2 
+                      <m.h2 
                         variants={staggerItem}
                         className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white leading-[1.1] tracking-tight mb-6"
                       >
@@ -169,18 +169,18 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                             {word}{" "}
                           </span>
                         ))}
-                      </motion.h2>
+                      </m.h2>
 
-                      <motion.p 
+                      <m.p 
                         variants={staggerItem}
                         className="text-sm lg:text-lg text-slate-600 dark:text-slate-300 mb-8 line-clamp-3 lg:line-clamp-none leading-relaxed"
                       >
                         {currentProduct.description ||
                           "Unlocking the next level of performance with precision engineering and state-of-the-art technology."}
-                      </motion.p>
+                      </m.p>
                     </div>
 
-                    <motion.div variants={staggerItem}>
+                    <m.div variants={staggerItem}>
                       <div className="flex flex-wrap items-center gap-6 sm:gap-8 bg-slate-50/50 dark:bg-slate-950/50 p-6 rounded border border-slate-200/50 dark:border-slate-800/50">
                         <div className="flex flex-col">
                           <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
@@ -198,11 +198,11 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                             </span>
                             <div className="flex items-center gap-1.5">
                               <Star
-                                size={18}
+                                size={15}
                                 className="fill-amber-400 text-amber-400"
                               />
-                              <span className="text-xl font-bold text-slate-900 dark:text-white">
-                                {currentProduct.rating}
+                              <span className="font-bold text-slate-900 dark:text-white">
+                                {currentProduct.rating} / 5.0
                               </span>
                             </div>
                           </div>
@@ -213,7 +213,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                             href={getAbsoluteUrl(
                               `/shop/${currentProduct.slug || currentProduct.sku || currentProduct.id}`,
                             )}
-                            className="group flex items-center justify-center gap-3 px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full font-bold uppercase tracking-widest text-[11px] shadow-lg shadow-slate-900/20 dark:shadow-white/10 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                            className="group flex items-center justify-center gap-3 px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded font-bold uppercase tracking-widest text-[11px] shadow-lg shadow-slate-900/20 dark:shadow-white/10 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                           >
                             Details
                             <ArrowRight
@@ -236,7 +236,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                                 setCurrentIndex(i);
                                 setIsAutoPlaying(false);
                               }}
-                              className={`h-1.5 transition-all duration-500 rounded-full ${
+                              className={`h-1.5 transition-all duration-500 rounded ${
                                 i === safeCurrentIndex
                                   ? "w-10 bg-brand-secondary-500 shadow-[0_0_10px_rgba(var(--color-brand-secondary-500),0.5)]"
                                   : "w-3 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600"
@@ -252,7 +252,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                               prevSlide();
                               setIsAutoPlaying(false);
                             }}
-                            className="p-2.5 rounded-full bg-white dark:bg-slate-800 hover:bg-brand-secondary-500 hover:text-white text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shadow-sm transition-all active:scale-95 pointer-events-auto group/nav"
+                            className="p-2.5 rounded bg-white dark:bg-slate-800 hover:bg-brand-secondary-500 hover:text-white text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shadow-sm transition-all active:scale-95 pointer-events-auto group/nav"
                           >
                             <ChevronLeft className="size-5 group-hover/nav:-translate-x-0.5 transition-transform" />
                           </button>
@@ -263,19 +263,19 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                               nextSlide();
                               setIsAutoPlaying(false);
                             }}
-                            className="p-2.5 rounded-full bg-white dark:bg-slate-800 hover:bg-brand-secondary-500 hover:text-white text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shadow-sm transition-all active:scale-95 pointer-events-auto group/nav"
+                            className="p-2.5 rounded bg-white dark:bg-slate-800 hover:bg-brand-secondary-500 hover:text-white text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 shadow-sm transition-all active:scale-95 pointer-events-auto group/nav"
                           >
                             <ChevronRight className="size-5 group-hover/nav:translate-x-0.5 transition-transform" />
                           </button>
                         </div>
                       </div>
-                    </motion.div>
+                    </m.div>
                   </div>
                 </div>
 
                 {/* Right Side: Product Image Card */}
                 <div className="relative w-full lg:w-[45%] h-[35vh] sm:h-[45vh] lg:h-auto min-h-[300px] lg:min-h-[500px] overflow-hidden group/image flex items-center justify-center">
-                  <motion.div 
+                  <m.div 
                     className="relative w-full h-full p-8 flex items-center justify-center"
                   >
                     <AppImage
@@ -285,7 +285,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                       priority
                       className="object-contain drop-shadow-2xl rounded transition-transform duration-1000 group-hover/image:scale-110"
                     />
-                  </motion.div>
+                  </m.div>
 
                   {/* Mobile Controls */}
                   <div className="lg:hidden absolute inset-0 z-30 pointer-events-none flex items-center justify-between px-2 sm:px-4">
@@ -296,7 +296,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                         prevSlide();
                         setIsAutoPlaying(false);
                       }}
-                      className="p-3 rounded-full bg-white/50 dark:bg-black/50 backdrop-blur-md hover:bg-brand-secondary-500 text-slate-900 dark:text-white shadow-lg transition-all active:scale-90 pointer-events-auto group/nav"
+                      className="p-3 rounded bg-white/50 dark:bg-black/50 backdrop-blur-md hover:bg-brand-secondary-500 text-slate-900 dark:text-white shadow-lg transition-all active:scale-90 pointer-events-auto group/nav"
                     >
                       <ChevronLeft className="size-5 group-hover/nav:-translate-x-0.5 transition-transform" />
                     </button>
@@ -307,14 +307,14 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                         nextSlide();
                         setIsAutoPlaying(false);
                       }}
-                      className="p-3 rounded-full bg-white/50 dark:bg-black/50 backdrop-blur-md hover:bg-brand-secondary-500 text-slate-900 dark:text-white shadow-lg transition-all active:scale-90 pointer-events-auto group/nav"
+                      className="p-3 rounded bg-white/50 dark:bg-black/50 backdrop-blur-md hover:bg-brand-secondary-500 text-slate-900 dark:text-white shadow-lg transition-all active:scale-90 pointer-events-auto group/nav"
                     >
                       <ChevronRight className="size-5 group-hover/nav:translate-x-0.5 transition-transform" />
                     </button>
                   </div>
 
                   {/* Mobile Dots */}
-                  <div className="lg:hidden absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 pointer-events-auto bg-white/30 dark:bg-black/30 backdrop-blur-md py-2 px-4 rounded-full">
+                  <div className="lg:hidden absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2 pointer-events-auto bg-white/30 dark:bg-black/30 backdrop-blur-md py-2 px-4 rounded">
                     {spotlightItems.map((_, i) => (
                       <button
                         key={i}
@@ -324,7 +324,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           setCurrentIndex(i);
                           setIsAutoPlaying(false);
                         }}
-                        className={`h-1.5 transition-all duration-500 rounded-full ${
+                        className={`h-1.5 transition-all duration-500 rounded ${
                           i === safeCurrentIndex
                             ? "w-6 bg-brand-secondary-500"
                             : "w-2 bg-slate-900/20 dark:bg-white/40 hover:bg-slate-900/40 dark:hover:bg-white/60"
@@ -337,13 +337,13 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
               </div>
             </div>
           </div>
-        </motion.div>
+        </m.div>
       </AnimatePresence>
 
       {/* Autoplay Progress Bar */}
       {isAutoPlaying && (
         <div className="absolute z-20 bottom-0 left-0 right-0 h-1.5 bg-slate-200 dark:bg-white/10 overflow-hidden">
-          <motion.div
+          <m.div
             key={safeCurrentIndex}
             initial={{ x: "-100%" }}
             animate={{ x: "0%" }}

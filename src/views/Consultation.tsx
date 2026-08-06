@@ -1,4 +1,3 @@
-"use client";
 import ConsultationHero from "@/components/solutions/ConsultationHero";
 import Scheduler from "@/components/solutions/Scheduler";
 import { CalendarCheckIcon, Cpu, Target, Zap } from "lucide-react";

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { format } from "date-fns";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { ArrowLeft, Calendar, User, Monitor, Settings } from "lucide-react";
 import { getGuideBySlug, type SupportGuide } from "@/services/guides";
 import ReactMarkdown from "react-markdown";
@@ -108,7 +108,7 @@ const SupportGuideDetail = () => {
             </Link>
           </div>
 
-          <motion.article
+          <m.article
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-card/40 dark:bg-slate-900/40  rounded border border-border overflow-hidden shadow relative"
@@ -187,7 +187,7 @@ const SupportGuideDetail = () => {
                 </ReactMarkdown>
               </div>
             </div>
-          </motion.article>
+          </m.article>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { Minus, Plus, Trash2, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AppImage from "@/components/common/AppImage";
@@ -13,7 +13,7 @@ export default function CheckoutStepCart() {
   const { handleNext } = useCheckout();
 
   return (
-    <motion.div
+    <m.div
       key="step1"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
@@ -96,6 +96,6 @@ export default function CheckoutStepCart() {
           <ChevronRight className="w-5 h-5" />
         </Button>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

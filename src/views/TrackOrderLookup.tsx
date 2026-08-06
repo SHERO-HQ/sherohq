@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { Search } from "lucide-react";
 
 export default function TrackOrderLookup() {
@@ -34,7 +34,7 @@ export default function TrackOrderLookup() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-8 pb-16 px-4">
       <div className="max-w-xl mx-auto">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded p-6 sm:p-8"
@@ -98,7 +98,7 @@ export default function TrackOrderLookup() {
               Track Order
             </button>
           </form>
-        </motion.div>
+        </m.div>
       </div>
     </div>
   );

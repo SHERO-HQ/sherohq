@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 
 export interface Category {
  id: string;
@@ -35,7 +35,7 @@ const ProductCategories: React.FC<ProductCategoriesProps> = ({
  {/* Categories Grid/Scroll */}
  <div className="flex overflow-x-auto pb-2 sm:pb-0 gap-3 sm:grid sm:grid-cols-3 md:grid-cols-5 sm:gap-4 snap-x no-scrollbar">
  {categories.map((category, index) => (
- <motion.button
+ <m.button
  key={category.id}
  initial={{ opacity: 0, y: 20 }}
  animate={{ opacity: 1, y: 0 }}
@@ -89,7 +89,7 @@ const ProductCategories: React.FC<ProductCategoriesProps> = ({
  </span>
  )}
  </div>
- </motion.button>
+ </m.button>
  ))}
  </div>
  </div>

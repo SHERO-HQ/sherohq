@@ -7,7 +7,7 @@ import {
     type Review,
 } from "@/services/api";
 import { useNotifications } from "@/hooks/useNotifications";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 
 interface ProductReviewsProps {
     productId: string;
@@ -105,7 +105,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
                         <div className="grid grid-cols-1 gap-6">
                             <AnimatePresence mode="popLayout">
                                 {reviews.map((review, idx) => (
-                                    <motion.div
+                                    <m.div
                                         key={review.id}
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
@@ -143,7 +143,7 @@ const ProductReviews = ({ productId }: ProductReviewsProps) => {
                                         <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
                                             "{review.comment}"
                                         </p>
-                                    </motion.div>
+                                    </m.div>
                                 ))}
                             </AnimatePresence>
                         </div>

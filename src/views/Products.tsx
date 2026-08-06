@@ -1,4 +1,3 @@
-"use client";
 import ShopView from "@/components/products/ShopPage";
 
 const Products = () => {

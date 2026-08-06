@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { useRouter } from "next/navigation";
 import {
   Heart,
@@ -168,7 +168,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   <Maximize2 size={20} />
                 </button>
                 <AnimatePresence mode="wait">
-                  <motion.div
+                  <m.div
                     key={selectedImage}
                     initial={false}
                     animate={{ opacity: 1, scale: 1 }}
@@ -192,7 +192,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                         {images[selectedImage]}
                       </div>
                     )}
-                  </motion.div>
+                  </m.div>
                 </AnimatePresence>
 
                 {images.length > 1 && (
@@ -570,7 +570,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         {/* Fullscreen Image Preview */}
         <AnimatePresence>
           {isPreviewOpen && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -623,7 +623,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   </button>
                 </div>
               )}
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </div>

@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { ShieldCheck, ArrowRight } from "lucide-react";
 import { WhatsAppIcon } from "@/assets/icons/icons";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
@@ -28,7 +28,7 @@ export function PaymentPending({
       </h2>
       <div className="h-6 overflow-hidden mb-6">
         <AnimatePresence mode="wait">
-          <motion.p
+          <m.p
             key={loadingText}
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -37,7 +37,7 @@ export function PaymentPending({
             className="text-slate-500 dark:text-slate-400 text-sm font-medium"
           >
             {loadingText}
-          </motion.p>
+          </m.p>
         </AnimatePresence>
       </div>
 

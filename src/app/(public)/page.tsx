@@ -4,7 +4,7 @@ import HomePage from "@/views/Home";
 export const metadata: Metadata = {
   title: { absolute: "SHERO" },
   description:
-    "Innovative technology solutions that scale to elevate people, businesses, and communities. Premium tech products, consultation, partnerships, and custom software development.",
+    "Purposeful technology solutions that expand possibilities. Premium hardware, custom software, and managed IT to help businesses and communities achieve more.",
 };
 
 export default function Page() {

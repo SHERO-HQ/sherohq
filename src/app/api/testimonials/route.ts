@@ -17,7 +17,11 @@ export async function GET(request: NextRequest) {
     queryText += ' ORDER BY "order" ASC, "createdAt" DESC';
 
     const result = await query(queryText);
-    return apiResponse.success(result.rows);
+    
+    // Only cache public requests
+    const headers = !isAdmin ? { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" } : undefined;
+    
+    return apiResponse.success(result.rows, 200, headers);
   } catch (error) {
     console.error("Fetch testimonials error:", error);
     return apiResponse.error("Failed to fetch testimonials");

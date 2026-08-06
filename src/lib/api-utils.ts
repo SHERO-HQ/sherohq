@@ -5,11 +5,14 @@ import { ZodError, ZodSchema } from "zod";
  * Standard API Response helper to ensure consistent error formats
  */
 export const apiResponse = {
-  success: (data: any, status = 200) => {
+  success: (data: any, status = 200, headers?: Record<string, string>) => {
+    const init: ResponseInit = { status };
+    if (headers) init.headers = headers;
+
     if (Array.isArray(data)) {
-      return NextResponse.json(data, { status });
+      return NextResponse.json(data, init);
     }
-    return NextResponse.json({ success: true, ...data }, { status });
+    return NextResponse.json({ success: true, ...data }, init);
   },
 
   error: (message: string, status = 500, details?: any) => {

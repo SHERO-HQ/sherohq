@@ -2,9 +2,13 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Checkout Flow", () => {
   test.beforeEach(async ({ page }) => {
+    // Log console messages
+    page.on('console', msg => console.log('BROWSER CONSOLE:', msg.text()));
+    page.on('pageerror', error => console.log('BROWSER ERROR:', error.message));
+
     // We need at least one item in the cart to access checkout
     // Let's go to products and add something
-    await page.goto("/products");
+    await page.goto("/shop");
 
     // Add first product to cart
     const buyButton = page
@@ -12,8 +16,8 @@ test.describe("Checkout Flow", () => {
       .first();
     await buyButton.click();
 
-    // Navigate to checkout
-    await page.goto("/checkout");
+    // Wait for the client-side navigation to complete
+    await page.waitForURL("**/shop/checkout");
   });
 
   test("should complete the full checkout flow", async ({ page }) => {

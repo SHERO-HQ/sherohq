@@ -10,7 +10,7 @@ import {
   Shield,
 } from "lucide-react";
 import { useRef } from "react";
-import { motion, useScroll, useTransform, useInView } from "motion/react";
+import { m, useScroll, useTransform, useInView } from "motion/react";
 
 const steps = [
   {
@@ -181,7 +181,7 @@ const Process = () => {
             <div className="absolute inset-0 bg-slate-200/70 dark:bg-slate-800/70" />
             
             {/* Animated Active Line */}
-            <motion.div 
+            <m.div 
               style={{ scaleY, originY: 0 }}
               className="absolute inset-0 bg-brand-secondary-500 shadow-[0_0_12px_rgba(16,185,129,0.8)] z-0" 
             />

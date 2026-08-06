@@ -1,12 +1,12 @@
 "use client";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { ShieldCheck, Lock, Database, Activity, Shield } from "lucide-react";
 
 const securityFeatures = [
   {
     id: 1,
     title: "End-to-End Encryption",
-    desc: "Military-grade encryption protects your data both in transit and at rest.",
+    desc: "Complete protection for your data, both in transit and at rest.",
     icon: Lock,
   },
   {
@@ -23,8 +23,8 @@ const securityFeatures = [
   },
   {
     id: 4,
-    title: "24/7 Threat Monitoring",
-    desc: "Active AI-driven surveillance to detect and neutralize threats instantly.",
+    title: "24/7 Infrastructure Monitoring",
+    desc: "Proactive systems management to identify and resolve issues before they impact your business.",
     icon: Activity,
   },
 ];
@@ -42,7 +42,7 @@ const LandingSecurity = () => {
 
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center mb-16 sm:mb-20">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -50,22 +50,22 @@ const LandingSecurity = () => {
           >
             <ShieldCheck className="size-4" />
             Enterprise-Grade Security
-          </motion.div>
+          </m.div>
           
-          <motion.h2
+          <m.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
             className="text-2xl font-bold tracking-tight text-white sm:text-4xl"
           >
-            Zero-Trust Architecture,{" "}
+            Secure By{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary-400 to-white">
-              Built In.
+              Design.
             </span>
-          </motion.h2>
+          </m.h2>
           
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -73,14 +73,14 @@ const LandingSecurity = () => {
             className="mt-6 text-sm text-slate-400 leading-relaxed max-w-2xl mx-auto"
           >
             We don't just bolt on security as an afterthought. It is woven into the very fabric of our hardware and custom software ecosystem.
-          </motion.p>
+          </m.p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8 max-w-5xl mx-auto">
           {securityFeatures.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <motion.div
+              <m.div
                 key={feature.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -104,7 +104,7 @@ const LandingSecurity = () => {
                     </p>
                   </div>
                 </div>
-              </motion.div>
+              </m.div>
             );
           })}
         </div>

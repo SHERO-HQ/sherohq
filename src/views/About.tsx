@@ -1,4 +1,3 @@
-"use client";
 import AboutManifesto from "@/components/about/AboutManifesto";
 import AboutValues from "@/components/about/AboutValues";
 import AboutFounder from "@/components/about/AboutFounder";

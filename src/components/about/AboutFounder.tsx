@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 
 import type { Variants } from "motion/react";
 import AppImage from "../common/AppImage";
@@ -15,7 +15,7 @@ const AboutFounder = () => {
     <section className="relative overflow-hidden py-20 md:py-28 bg-slate-50 dark:bg-slate-950/50">
       <Particles count={80} color="148, 163, 184" className="opacity-80" />
       <div className="container mx-auto px-4 relative z-10">
-        <motion.div
+        <m.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
@@ -26,7 +26,7 @@ const AboutFounder = () => {
           className="max-w-3xl mx-auto"
         >
           {/* Centered layout */}
-          <motion.div variants={fadeUp} className="text-center">
+          <m.div variants={fadeUp} className="text-center">
             {/* Logo */}
             <div className="inline-flex items-center justify-center size-20 mb-6 bg-white dark:bg-transparent rounded p-2">
               <AppImage
@@ -52,19 +52,19 @@ const AboutFounder = () => {
             </blockquote>
 
             {/* Tagline */}
-            <motion.p
+            <m.p
               variants={fadeUp}
               className="mt-8 text-base md:text-lg font-bold tracking-wide bg-gradient-to-r from-brand-primary-500 to-brand-secondary-500 bg-clip-text text-transparent uppercase"
             >
               Redefine Possible.
-            </motion.p>
+            </m.p>
 
             {/* Attribution */}
-            <motion.p variants={fadeUp} className="mt-4 text-xs text-muted-foreground">
+            <m.p variants={fadeUp} className="mt-4 text-xs text-muted-foreground">
               — Founder, SHERO
-            </motion.p>
-          </motion.div>
-        </motion.div>
+            </m.p>
+          </m.div>
+        </m.div>
       </div>
     </section>
   );

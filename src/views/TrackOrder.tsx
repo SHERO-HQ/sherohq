@@ -1,8 +1,7 @@
 "use client";
-
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import {
   AlertCircle,
   CheckCircle2,
@@ -93,7 +92,7 @@ export default function TrackOrder({
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-8 pb-16 px-4">
       <div className="max-w-3xl mx-auto space-y-6">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded p-6 sm:p-8"
@@ -252,7 +251,7 @@ export default function TrackOrder({
               )}
             </div>
           )}
-        </motion.div>
+        </m.div>
 
         <div className="text-center">
           <Link

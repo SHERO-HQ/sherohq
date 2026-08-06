@@ -1,5 +1,5 @@
 "use client";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { useRouter } from "next/navigation";
 import ProductCard from "./ProductCard";
 import type { Product } from "@/types/product";
@@ -36,7 +36,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
   // Empty State
   if (products.length === 0) {
     return (
-      <motion.div
+      <m.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="w-full py-12 flex flex-col items-center justify-center text-center"
@@ -66,7 +66,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
           />
           Reset Search
         </button>
-      </motion.div>
+      </m.div>
     );
   }
 
@@ -77,7 +77,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
     >
       <AnimatePresence>
         {products.map((product, idx) => (
-          <motion.div
+          <m.div
             key={product.id}
             layout={false}
             initial={{ opacity: 0, y: 20 }}
@@ -90,7 +90,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
             }}
           >
             <ProductCard product={product} onQuickView={onQuickView} />
-          </motion.div>
+          </m.div>
         ))}
       </AnimatePresence>
     </div>

@@ -1,5 +1,5 @@
 "use client";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { useCart } from "@/context/CartContext";
 import { getImageUrl } from "@/services/api";
 import { X, Minus, Plus, ShoppingBag, Trash2, ArrowRight } from "lucide-react";
@@ -37,7 +37,7 @@ const CartDrawer = () => {
       {isCartOpen && (
         <>
           {/* Backdrop */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -46,7 +46,7 @@ const CartDrawer = () => {
           />
 
           {/* Drawer */}
-          <motion.div
+          <m.div
             ref={containerRef as any}
             role="dialog"
             aria-modal="true"
@@ -101,7 +101,7 @@ const CartDrawer = () => {
                 </div>
               ) : (
                 cart.map((item) => (
-                  <motion.div
+                  <m.div
                     layout
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -177,7 +177,7 @@ const CartDrawer = () => {
                         </button>
                       </div>
                     </div>
-                  </motion.div>
+                  </m.div>
                 ))
               )}
             </div>
@@ -209,7 +209,7 @@ const CartDrawer = () => {
                 </Button>
               </div>
             )}
-          </motion.div>
+          </m.div>
         </>
       )}
     </AnimatePresence>

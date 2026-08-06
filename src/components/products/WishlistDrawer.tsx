@@ -1,5 +1,5 @@
 "use client";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useCart } from "@/context/CartContext";
 import { getImageUrl } from "@/services/api";
@@ -61,7 +61,7 @@ const WishlistDrawer = () => {
       {isWishlistOpen && (
         <>
           {/* Backdrop */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -70,7 +70,7 @@ const WishlistDrawer = () => {
           />
 
           {/* Drawer */}
-          <motion.div
+          <m.div
             ref={containerRef as any}
             role="dialog"
             aria-modal="true"
@@ -125,7 +125,7 @@ const WishlistDrawer = () => {
                 </div>
               ) : (
                 wishlist.map((item) => (
-                  <motion.div
+                  <m.div
                     layout
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -185,7 +185,7 @@ const WishlistDrawer = () => {
                         </Button>
                       </div>
                     </div>
-                  </motion.div>
+                  </m.div>
                 ))
               )}
             </div>
@@ -210,7 +210,7 @@ const WishlistDrawer = () => {
                 </Button>
               </div>
             )}
-          </motion.div>
+          </m.div>
         </>
       )}
     </AnimatePresence>

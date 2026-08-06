@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { format } from "date-fns";
 import {
   Calendar as CalendarIcon,
@@ -272,13 +272,13 @@ const Scheduler = () => {
 
     return (
       <div className="max-w-xl mx-auto p-8 md:p-10 bg-white dark:bg-slate-900 rounded shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 text-center">
-        <motion.div
+        <m.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           className="w-20 h-20 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center mx-auto mb-6"
         >
           <CheckCircle2 className="w-10 h-10 text-brand-secondary-600 dark:text-brand-secondary-400" />
-        </motion.div>
+        </m.div>
         <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4">
           Booking Confirmed!
         </h2>
@@ -444,7 +444,7 @@ const Scheduler = () => {
       {/* Main Content Area */}
       <div className="w-full flex-1 justify-center p-3 sm:p-6 md:p-10 relative bg-white dark:bg-slate-900 flex flex-col">
         <AnimatePresence mode="wait" custom={direction}>
-          <motion.div
+          <m.div
             key={step}
             custom={direction}
             initial={{ opacity: 0, x: direction * 10, y: 10 }}
@@ -750,7 +750,7 @@ const Scheduler = () => {
                 </form>
               </div>
             )}
-          </motion.div>
+          </m.div>
         </AnimatePresence>
       </div>
     </div>

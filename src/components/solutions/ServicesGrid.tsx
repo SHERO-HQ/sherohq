@@ -1,5 +1,5 @@
 "use client";
-import { easeOut, motion } from "motion/react";
+import { easeOut, m } from "motion/react";
 import {
  Smartphone,
  Cloud,
@@ -9,6 +9,7 @@ import {
  Briefcase,
  ArrowRight,
 } from "lucide-react";
+import SpotlightCard from "@/components/motion/SpotlightCard";
 
 interface Service {
   icon: React.ReactNode;
@@ -106,7 +107,7 @@ const ServicesGrid = () => {
     <section id="services" className="w-full pb-10 bg-white dark:bg-slate-950">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -123,10 +124,10 @@ const ServicesGrid = () => {
             From custom apps to complete IT management — solutions designed
             to help your business grow
           </p>
-        </motion.div>
+        </m.div>
 
         {/* Services Grid */}
-        <motion.div
+        <m.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -134,68 +135,68 @@ const ServicesGrid = () => {
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
         >
           {services.map((service) => (
-            <motion.div
+            <m.div
               key={service.title}
               variants={cardVariants}
               whileHover={{ y: -8 }}
-              className="group relative bg-white/60 dark:bg-slate-900/40 backdrop-blur-md rounded p-6
-              border border-slate-200/80 dark:border-slate-800/80
-              hover:border-transparent
-              shadow-sm hover:shadow-xl hover:shadow-brand-secondary-500/5
-              transition-all duration-300 overflow-hidden"
+              className="h-full"
             >
-              {/* Gradient border on hover */}
-              <div
-                className={`absolute inset-0 bg-linear-to-br ${service.gradient} 
-                opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10`}
-              />
-              <div className="absolute inset-[1px] bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded -z-10" />
-
-              {/* Icon */}
-              <div
-                className={`inline-flex items-center justify-center w-12 h-12 rounded mb-6
-                bg-linear-to-br ${service.gradient} text-white
-                group-hover:scale-110 transition-transform duration-300`}
+              <SpotlightCard
+                className="group relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300 h-full flex flex-col overflow-hidden"
               >
-                {service.icon}
-              </div>
+                {/* Hover Glow Background */}
+                <div
+                  className={`absolute inset-0 bg-linear-to-br ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none`}
+                />
 
-              {/* Title */}
-              <h3 className="text-lg md:text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-3">
-                {service.title}
-              </h3>
+                <div className="p-6 sm:p-8 flex flex-col h-full relative z-10">
+                  {/* Icon */}
+                <div
+                  className={`inline-flex items-center justify-center w-12 h-12 rounded mb-6
+                  bg-linear-to-br ${service.gradient} text-white
+                  group-hover:scale-110 transition-transform duration-300`}
+                >
+                  {service.icon}
+                </div>
 
-              {/* Description */}
-              <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
-                {service.description}
-              </p>
+                {/* Title */}
+                <h3 className="text-lg md:text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-3">
+                  {service.title}
+                </h3>
 
-              {/* Features List */}
-              <ul className="space-y-3">
-                {service.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3">
-                    <CheckCircle
-                      className={`w-5 h-5 mt-0.5 shrink-0 ${service.textClass}`}
-                    />
-                    <span className="text-sm text-slate-700 dark:text-slate-300">
-                      {feature}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+                {/* Description */}
+                <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed flex-grow">
+                  {service.description}
+                </p>
 
-              {/* Learn More Link */}
-              <a
-                href="/consultation"
-                className={`inline-flex items-center gap-2 mt-6 ${service.textClass} font-medium
-                hover:gap-3 transition group/link`}
-              >
-                <span>Get Started</span>
-                <ArrowRight className="w-4 h-4" />
-              </a>
-            </motion.div>
+                {/* Features List */}
+                <ul className="space-y-3 mt-auto mb-6">
+                  {service.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-3">
+                      <CheckCircle
+                        className={`w-5 h-5 mt-0.5 shrink-0 ${service.textClass}`}
+                      />
+                      <span className="text-sm text-slate-700 dark:text-slate-300">
+                        {feature}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Learn More Link */}
+                <a
+                  href="/consultation"
+                  className={`inline-flex items-center gap-2 ${service.textClass} font-medium
+                  hover:gap-3 transition group/link`}
+                >
+                  <span>Get Started</span>
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+                </div>
+              </SpotlightCard>
+            </m.div>
           ))}
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

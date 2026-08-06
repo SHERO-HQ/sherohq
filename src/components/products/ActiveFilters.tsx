@@ -2,7 +2,7 @@
 import { X, RotateCcw } from "lucide-react";
 import type { FilterState } from "./ProductFilters";
 import type { Category } from "./ProductsCategories";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 
 interface ActiveFiltersProps {
   filters: FilterState;
@@ -100,7 +100,7 @@ export const ActiveFilters = ({
 };
 
 const FilterChip = ({ label, onRemove }: { label: string; onRemove: () => void }) => (
-  <motion.div
+  <m.div
     initial={{ opacity: 0, scale: 0.8 }}
     animate={{ opacity: 1, scale: 1 }}
     exit={{ opacity: 0, scale: 0.8 }}
@@ -115,5 +115,5 @@ const FilterChip = ({ label, onRemove }: { label: string; onRemove: () => void }
     >
       <X size={10} />
     </button>
-  </motion.div>
+  </m.div>
 );

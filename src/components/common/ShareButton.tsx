@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { Share2, Link, Check, X } from "lucide-react";
 import { WhatsAppIcon } from "@/assets/icons/icons";
 
@@ -192,7 +192,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
             {/* Dropdown */}
             <AnimatePresence>
                 {isOpen && (
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
@@ -262,7 +262,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
                                 })}
                             </div>
                         </div>
-                    </motion.div>
+                    </m.div>
                 )}
             </AnimatePresence>
         </div>

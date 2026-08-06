@@ -1,5 +1,5 @@
 "use client";
-import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { m, useMotionValue, useSpring, useTransform } from "motion/react";
 import {
   BadgeCheck,
   Package,
@@ -72,7 +72,7 @@ const ProductHero = () => {
       role="banner"
     >
       {/* KINETIC BACKGROUND LAYERS */}
-      <motion.div
+      <m.div
         style={prefersReducedMotion ? { opacity: 0.9 } : { x: translateX, y: translateY, opacity: 0.9 }}
         className="absolute inset-0 pattern-dots pointer-events-none"
       />
@@ -87,7 +87,7 @@ const ProductHero = () => {
               className={`absolute w-1 h-1 rounded-full ${p.id % 2 === 0 ? "bg-brand-secondary-500" : "bg-blue-500"}`}
             />
           ) : (
-            <motion.div
+            <m.div
               key={p.id}
               initial={{ x: p.x, y: p.y, opacity: p.opacity }}
               animate={{
@@ -112,7 +112,7 @@ const ProductHero = () => {
           {/* LEFT: Content (60%) */}
           <div className="w-full lg:w-[60%] flex flex-col items-start space-y-2">
             {/* Badge */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               className="inline-flex items-center gap-2 px-3 py-1.5 rounded border border-brand-secondary-500/20 bg-brand-secondary-500/5  mb-4"
@@ -121,11 +121,11 @@ const ProductHero = () => {
               <span className="text-[10px] md:text-xs font-mono font-bold tracking-widest uppercase text-primary">
                 Official SHERO Shop
               </span>
-            </motion.div>
+            </m.div>
 
             {/* Main Heading */}
             <div className="relative">
-              <motion.h1
+              <m.h1
                 initial={
                   prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 30 }
                 }
@@ -142,11 +142,11 @@ const ProductHero = () => {
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
                   deploy with confidence
                 </span>
-              </motion.h1>
+              </m.h1>
             </div>
 
             {/* Description */}
-            <motion.p
+            <m.p
               initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.1 }}
@@ -154,10 +154,10 @@ const ProductHero = () => {
             >
               Curated products, reliable warranty coverage, and fast fulfillment
               for teams and individuals who value performance.
-            </motion.p>
+            </m.p>
 
             {/* Trust Indicators */}
-            <motion.div
+            <m.div
               initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.3 }}
@@ -200,12 +200,12 @@ const ProductHero = () => {
                   </span>
                 </div>
               ))}
-            </motion.div>
+            </m.div>
           </div>
 
           {/* RIGHT: Kinetic Visual Hub (40%) */}
           <div className="w-full lg:w-[40%] relative aspect-square md:flex items-center justify-center perspective-distant py-12 lg:py-0 hidden">
-            <motion.div
+            <m.div
               style={prefersReducedMotion ? {} : {
                 rotateX,
                 rotateY,
@@ -214,7 +214,7 @@ const ProductHero = () => {
               className="relative w-full max-w-md h-100 flex items-center justify-center"
             >
               {/* Layer 1: Store Insights Card */}
-              <motion.div
+              <m.div
                 style={{ z: 0 }}
                 className="w-full bg-white/95 dark:bg-slate-900/95  border border-slate-200 dark:border-slate-800 rounded shadow p-6 sm:p-8 relative overflow-hidden z-10 select-none"
               >
@@ -270,10 +270,10 @@ const ProductHero = () => {
                     </div>
                   ))}
                 </div>
-              </motion.div>
+              </m.div>
 
               {/* Layer 2: Floating Payment Success Card */}
-              <motion.div
+              <m.div
                 style={prefersReducedMotion ? { z: 150, rotate: 12 } : {
                   z: 150,
                   x: translateXFloatingCard,
@@ -295,10 +295,10 @@ const ProductHero = () => {
                     </span>
                   </div>
                 </div>
-              </motion.div>
+              </m.div>
 
               {/* Layer 3: Quality Seal */}
-              <motion.div
+              <m.div
                 style={prefersReducedMotion ? { z: 200, rotate: -6 } : {
                   z: 200,
                   x: translateXSeal,
@@ -311,11 +311,11 @@ const ProductHero = () => {
                 <span className="text-[7px] font-bold text-white uppercase tracking-tighter mt-1 whitespace-nowrap">
                   VERIFIED
                 </span>
-              </motion.div>
+              </m.div>
 
               {/* Background Aura */}
               <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/10 to-transparent blur-3xl rounded-full scale-150 pointer-events-none" />
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </div>

@@ -8,7 +8,9 @@ export async function GET() {
     const result = await query(
       `SELECT * FROM site_stats ORDER BY "order" ASC, "createdAt" DESC`
     );
-    return NextResponse.json(result.rows);
+    return NextResponse.json(result.rows, {
+      headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" }
+    });
   } catch (err) {
     console.error("Error fetching site stats:", err);
     return NextResponse.json({ error: "Failed to fetch site stats" }, { status: 500 });

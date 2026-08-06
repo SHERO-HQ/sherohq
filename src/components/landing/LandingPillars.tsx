@@ -15,7 +15,7 @@ import {
   Database,
   RefreshCw,
   AlertTriangle} from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 
 // ============================================================================
 // Custom Mini Interactive Widgets representing real products and capabilities
@@ -128,7 +128,7 @@ const SmartBoutiqueWidget: React.FC = () => {
 
       <div className="relative py-2 flex-1 flex flex-col justify-center gap-1">
         <AnimatePresence mode="wait">
-          <motion.div
+          <m.div
             key={posState}
             initial={{ opacity: 0, y: 4 }}
             animate={{ opacity: 1, y: 0 }}
@@ -147,7 +147,7 @@ const SmartBoutiqueWidget: React.FC = () => {
             <div className="text-[14px] font-bold text-slate-900 dark:text-slate-50 flex items-center gap-1.5">
               {posCycles[posState].price}
             </div>
-          </motion.div>
+          </m.div>
         </AnimatePresence>
       </div>
 

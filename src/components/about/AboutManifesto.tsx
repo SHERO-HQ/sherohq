@@ -1,6 +1,6 @@
 "use client";
-import { motion } from "motion/react";
-import { Shield, Cpu, Headphones, ArrowRight } from "lucide-react";
+import { m } from "motion/react";
+import { Shield, Cpu, Headphones, ArrowRight, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import NavLink from "@/components/common/NavLink";
 import { getAbsoluteUrl } from "@/utils/subdomain";
@@ -53,7 +53,7 @@ const AboutManifesto = () => {
         <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-brand-secondary-500/8 rounded-full blur-[100px] pointer-events-none" />
 
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
+          <m.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-80px" }}
@@ -67,33 +67,30 @@ const AboutManifesto = () => {
             className="max-w-5xl mx-auto"
           >
             {/* Label */}
-            {/* <motion.div variants={fadeUp} className="flex items-center justify-center gap-3 mb-10">
+            {/* <m.div variants={fadeUp} className="flex items-center justify-center gap-3 mb-10">
               <div className="h-px w-12 bg-brand-secondary-500/50" />
               <span className="text-xs md:text-sm font-mono uppercase tracking-[0.25em] text-brand-secondary-400 font-bold">
                 Our Manifesto
               </span>
               <div className="h-px w-12 bg-brand-secondary-500/50" />
-            </motion.div> */}
+            </m.div> */}
 
             {/* Big quote with decorative marks */}
-            <motion.blockquote variants={fadeUp} className="relative text-center pt-4 md:py-16 mx-auto">
+            <m.blockquote variants={fadeUp} className="relative text-center pt-4 md:py-16 mx-auto">
               {/* Huge background watermark quote */}
-              <span
-                className="absolute mt-16 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[240px] md:text-[450px] leading-none font-serif text-brand-primary-400/20 select-none pointer-events-none -z-10"
+              {/* <Quote
+                className="absolute top-0 left-1/2 -translate-x-1/2 size-32 text-brand-primary-400/20 select-none pointer-events-none -z-10"
                 aria-hidden="true"
-              >
-                &ldquo;
-              </span>
-
+              /> */}
               <p className="text-3xl lg:text-5xl font-bold leading-[1.2] tracking-tight text-white relative z-10">
                 We don't just build technology. We build {" "}
                 <span className="bg-gradient-to-r from-brand-secondary-400 via-brand-primary-300 to-brand-secondary-400 bg-clip-text text-transparent">
                   what moves businesses forward.
                 </span>
               </p>
-            </motion.blockquote>
+            </m.blockquote>
 
-            <motion.div variants={fadeUp} className="mt-8 mx-auto max-w-6xl space-y-5">
+            <m.div variants={fadeUp} className="mt-8 mx-auto max-w-6xl space-y-5">
               <p className="text-base md:text-lg text-slate-300/80 leading-relaxed">
                 They said world-class technology required enormous budgets, complex systems,
                 and impossible trade-offs.
@@ -110,10 +107,10 @@ const AboutManifesto = () => {
                   Redefining What's Possible.
                 </span>
               </p>
-            </motion.div>
+            </m.div>
 
             {/* CTA */}
-            <motion.div variants={fadeUp} className="flex justify-center mt-10">
+            <m.div variants={fadeUp} className="flex justify-center mt-10">
               <Button
                 variant="brand"
                 size="lg"
@@ -125,22 +122,22 @@ const AboutManifesto = () => {
                   <ArrowRight className="ml-2 size-4 group-hover:translate-x-1 transition-transform" />
                 </NavLink>
               </Button>
-            </motion.div>
+            </m.div>
 
             {/* Attribution */}
-            <motion.div variants={fadeUp} className="mt-6 flex items-center justify-center gap-3">
+            <m.div variants={fadeUp} className="mt-6 flex items-center justify-center gap-3">
               <span className="text-sm font-bold text-white/60 uppercase tracking-widest">SHERO HQ</span>
               <span className="text-sm text-white/30 font-mono">·</span>
               <span className="text-sm text-white/40 font-mono">Establishing the Standard</span>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         </div>
       </div>
 
       {/* Three Pillars — sits right below the dark block */}
       <div className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-border">
         <div className="container mx-auto px-4 py-20">
-          <motion.div
+          <m.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-60px" }}
@@ -151,7 +148,7 @@ const AboutManifesto = () => {
             className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto"
           >
             {pillars.map((pillar) => (
-              <motion.div
+              <m.div
                 key={pillar.title}
                 variants={fadeUp}
                 className="group text-center p-8 rounded border border-slate-200 dark:border-border bg-slate-50 dark:bg-card/40 hover:border-brand-primary-300 dark:hover:border-brand-primary-700 transition-all duration-300 hover:shadow-lg hover:shadow-brand-primary-500/5"
@@ -161,9 +158,9 @@ const AboutManifesto = () => {
                 </div>
                 <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">{pillar.title}</h3>
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{pillar.description}</p>
-              </motion.div>
+              </m.div>
             ))}
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

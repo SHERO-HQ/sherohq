@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import {
   Handshake,
   Building2,
@@ -59,7 +59,7 @@ const Partners = () => {
       <div className="pt-8 pb-12 bg-slate-50 dark:bg-slate-950 min-h-screen">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Section */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto mb-10"
@@ -87,7 +87,7 @@ const Partners = () => {
                 Co-Marketing Support
               </span>
             </div>
-          </motion.div>
+          </m.div>
 
           {/* Partnership Process */}
           <section className="mb-16 py-10 border-y border-slate-200 dark:border-slate-800/50">
@@ -139,7 +139,7 @@ const Partners = () => {
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-slate-200 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 overflow-hidden rounded">
               {partners.map((partner, idx) => (
-                <motion.div
+                <m.div
                   key={idx}
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
@@ -153,7 +153,7 @@ const Partners = () => {
                   <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-500 text-center">
                     {partner.name}
                   </span>
-                </motion.div>
+                </m.div>
               ))}
             </div>
           </section>

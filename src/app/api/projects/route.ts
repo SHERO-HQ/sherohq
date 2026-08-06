@@ -36,7 +36,9 @@ export async function GET(request: NextRequest) {
     queryText += ' ORDER BY "createdAt" DESC';
 
     const result = await query(queryText, params);
-    return NextResponse.json(result.rows.map(parseProject));
+    return NextResponse.json(result.rows.map(parseProject), {
+      headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" }
+    });
   } catch (error) {
     console.error("Error fetching projects:", error);
     return NextResponse.json({ error: "Failed to fetch projects" }, { status: 500 });

@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "motion/react"
+import { m } from "motion/react"
 import {
   Briefcase,
   MapPin,
@@ -103,7 +103,7 @@ export default function Careers() {
 
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
@@ -132,7 +132,7 @@ export default function Careers() {
                   Our Story
                 </Button>
               </div>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -141,15 +141,15 @@ export default function Careers() {
       <section className="py-20 bg-background">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center mb-16">
-            <motion.h2
+            <m.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               className="text-2xl font-bold text-foreground sm:text-3xl"
             >
               Build With SHERO
-            </motion.h2>
-            <motion.p
+            </m.h2>
+            <m.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -157,7 +157,7 @@ export default function Careers() {
               className="mt-4 text-sm text-muted-foreground"
             >
               Join a team that's redefining what's possible through software and hardware. Together, we're building technology that solves real problems and creates lasting impact.
-            </motion.p>
+            </m.p>
           </div>
 
           <div className="max-w-2xl mx-auto space-y-4">
@@ -187,7 +187,7 @@ export default function Careers() {
                     />
                   </button>
                   {/* We use an animate presence or just motion div for smooth expand */}
-                  <motion.div
+                  <m.div
                     initial={false}
                     animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
                     transition={{ duration: 0.3 }}
@@ -196,7 +196,7 @@ export default function Careers() {
                     <div className="p-6 pt-0 text-muted-foreground leading-relaxed border-t border-border/50 mt-2">
                       {benefit.description}
                     </div>
-                  </motion.div>
+                  </m.div>
                 </div>
               );
             })}
@@ -209,14 +209,14 @@ export default function Careers() {
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <motion.h2
+              <m.h2
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 className="text-2xl font-bold text-foreground sm:text-3xl"
               >
                 Open Positions
-              </motion.h2>
+              </m.h2>
               <p className="mt-4 text-sm text-muted-foreground">
                 Don't see a perfect fit? Send your CV to <a href={`mailto:${COMPANY_EMAILS.CAREERS}`} className="text-brand-primary-500 hover:underline">{COMPANY_EMAILS.CAREERS}</a>
               </p>
@@ -248,7 +248,7 @@ export default function Careers() {
                       >
                         {dept}
                         {filterDept === dept && (
-                          <motion.div
+                          <m.div
                             layoutId="activeTab"
                             className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-primary-500"
                           />
@@ -270,7 +270,7 @@ export default function Careers() {
                     </h3>
                     <div className="grid md:grid-cols-2 gap-6">
                       {roles.map((role: any, index: number) => (
-                        <motion.div
+                        <m.div
                           key={role.id}
                           initial={{ opacity: 0, y: 20 }}
                           whileInView={{ opacity: 1, y: 0 }}
@@ -304,7 +304,7 @@ export default function Careers() {
                               </div>
                             </div>
                           </div>
-                        </motion.div>
+                        </m.div>
                       ))}
                     </div>
                   </div>

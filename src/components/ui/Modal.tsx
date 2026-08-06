@@ -1,5 +1,5 @@
 "use client";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
 
@@ -86,7 +86,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
                     aria-labelledby="modal-title"
                 >
                     {/* Backdrop */}
-                    <motion.div
+                    <m.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
@@ -95,7 +95,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
                     />
 
                     {/* Content Panel */}
-                    <motion.div
+                    <m.div
                         ref={modalRef}
                         initial={{ scale: 0.95, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
@@ -118,7 +118,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
                         <div className="p-6 overflow-y-auto custom-scrollbar">
                             {children}
                         </div>
-                    </motion.div>
+                    </m.div>
                 </div>
             )}
         </AnimatePresence>

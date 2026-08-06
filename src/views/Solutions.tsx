@@ -1,4 +1,3 @@
-"use client";
 import ServicesGrid from "@/components/solutions/ServicesGrid";
 import SolutionsHero from "@/components/solutions/SolutionsHero";
 import Process from "@/components/solutions/Process";

@@ -1,5 +1,5 @@
 "use client";
-import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { m, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useEffect } from "react";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -59,7 +59,7 @@ const HeroBackground: React.FC<HeroBackgroundProps> = ({
  return (
  <div className="absolute inset-0 overflow-hidden pointer-events-none">
  {/* Background kinetic pattern */}
- <motion.div
+ <m.div
  style={motionEnabled ? { x: translateX, y: translateY, opacity: patternOpacity } : { opacity: patternOpacity }}
  className="absolute inset-0 pattern-dots"
  />

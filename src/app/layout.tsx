@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import "@fontsource-variable/sora/index.css";
-import "@fontsource-variable/jetbrains-mono/index.css";
 import { Providers } from "@/components/providers";
 import { ServiceWorkerRegistration } from "@/components/common/ServiceWorkerRegistration";
 import { Analytics } from "@vercel/analytics/next";
@@ -24,13 +22,25 @@ const aubette = localFont({
   preload: false,
 });
 
+const sora = localFont({
+  src: "../assets/font/sora-latin-wght-normal.woff2",
+  variable: "--font-primary-next",
+  display: "swap",
+});
+
+const jetbrains = localFont({
+  src: "../assets/font/jetbrains-mono-latin-wght-normal.woff2",
+  variable: "--font-mono-next",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: {
     default: "SHERO",
     template: "%s | SHERO",
   },
   description:
-    "SHERO - Premium technology solutions, custom software development, and quality hardware technology. Redefine possible with our innovative expertise.",
+    "SHERO - Purposeful technology solutions, custom software development, and enterprise hardware. Redefining what's possible for businesses and communities.",
   keywords: [
     "SHERO",
     "SHERO HQ",
@@ -55,7 +65,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     title: "SHERO",
-    description: "Innovative technology solutions",
+    description: "Purposeful technology solutions",
     url: SITE_URL,
     siteName: "SHERO",
     images: [
@@ -71,7 +81,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "SHERO",
-    description: "Innovative technology solutions",
+    description: "Purposeful technology solutions",
     images: [DEFAULT_PREVIEW_IMAGE],
   },
   robots: { index: true, follow: true },
@@ -106,7 +116,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${aubette.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${aubette.variable} ${sora.variable} ${jetbrains.variable}`}>
       <head>
         <JsonLd />
         {/* Prevent hydration theme flash by synchronously reading/applying active theme before first paint */}
@@ -131,7 +141,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
           h1 { opacity: 1 !important; visibility: visible !important; }
-          .font-primary { font-family: 'Sora Variable', sans-serif; }
+          .font-primary { font-family: var(--font-primary-next); }
           @media (max-width: 640px) {
             div[data-version^="v-refinement-"] {
               position: fixed !important;

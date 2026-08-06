@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import {
   Search,
   LifeBuoy,
@@ -62,14 +62,14 @@ const Support = () => {
         <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center mb-16 relative">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               className="inline-flex items-center gap-2 px-4 py-1 mb-6 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-200 dark:border-brand-secondary-500/20 uppercase transition-colors duration-300"
             >
               <LifeBuoy className="size-4" />
               <span>Customer Support</span>
-            </motion.div>
+            </m.div>
             <h1 className="text-2xl md:text-4xl font-bold text-foreground mb-6 tracking-tight transition-colors duration-300">
               Get Help in <span className="text-brand-secondary-600">Minutes</span>
             </h1>
@@ -135,7 +135,7 @@ const Support = () => {
 
             if (filteredGuides.length === 0) {
               return (
-                <motion.div 
+                <m.div 
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   className="mb-24 max-w-2xl mx-auto bg-card/60 dark:bg-slate-900/60 p-8 rounded border border-border text-center shadow-lg relative overflow-hidden"
@@ -146,7 +146,7 @@ const Support = () => {
                   <p className="text-muted-foreground text-sm max-w-md mx-auto">
                     But our AI Expert can help you with that! Press <strong className="text-foreground">Enter</strong> or click the arrow button in the search bar to ask a question.
                   </p>
-                </motion.div>
+                </m.div>
               );
             }
 
@@ -201,7 +201,7 @@ const Support = () => {
           })()}
 
           {/* Contact Section */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -270,10 +270,10 @@ const Support = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </m.div>
 
           {/* Social / Community Section */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -299,7 +299,7 @@ const Support = () => {
                 </a>
               ))}
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </div>
       <SupportTicketForm

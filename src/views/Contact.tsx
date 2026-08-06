@@ -1,6 +1,6 @@
 "use client";
 import ContactForm from "@/components/common/ContactForm";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import {
   Mail,
   MapPin,
@@ -26,7 +26,7 @@ const Contact = () => {
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           
           {/* Page Header (always at top) */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -54,11 +54,11 @@ const Contact = () => {
                 Consultative Guidance
               </span>
             </div>
-          </motion.div>
+          </m.div>
 
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             {/* Left Column: Info */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
@@ -96,7 +96,7 @@ const Contact = () => {
               </div>
 
               {/* Office Details Card */}
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.5, duration: 0.5 }}
@@ -112,11 +112,11 @@ const Contact = () => {
                     Headquartered in Tamale, we serve the entire West African region with specialized logistics and on-site technical deployment teams.
                   </p>
                 </div>
-              </motion.div>
-            </motion.div>
+              </m.div>
+            </m.div>
 
             {/* Right Column: Glass Form */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -142,11 +142,11 @@ const Contact = () => {
 
               {/* Decorative border glow */}
               <div className="absolute -inset-1 rounded bg-linear-to-br from-brand-secondary-500/5 to-blue-500/5 blur-xl -z-10" />
-            </motion.div>
+            </m.div>
           </div>
 
           {/* Quick FAQ Section */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -165,7 +165,7 @@ const Contact = () => {
 
             <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
               {faqs.map((faq, idx) => (
-                <motion.div
+                <m.div
                   key={idx}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -184,10 +184,10 @@ const Contact = () => {
                       {faq.answer}
                     </p>
                   </div>
-                </motion.div>
+                </m.div>
               ))}
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </>
@@ -239,7 +239,7 @@ const ContactItem = ({
   );
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.5 }}
@@ -256,7 +256,7 @@ const ContactItem = ({
       ) : (
         <div className="flex items-center gap-4 group">{content}</div>
       )}
-    </motion.div>
+    </m.div>
   );
 };
 

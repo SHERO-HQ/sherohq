@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { ChevronLeft, CheckCircle, Smartphone, CreditCard, Wallet, Store, LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PaymentIcons from "@/components/layout/PaymentIcons";
@@ -57,7 +57,7 @@ export default function CheckoutStepPayment({ onSubmit }: { onSubmit: (data: any
   const paymentMethod = watch("paymentMethod");
 
   return (
-    <motion.div
+    <m.div
       key="step3"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
@@ -222,6 +222,6 @@ export default function CheckoutStepPayment({ onSubmit }: { onSubmit: (data: any
           <CheckCircle className="w-5 h-5" />
         </Button>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

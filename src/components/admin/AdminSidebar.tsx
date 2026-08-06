@@ -38,7 +38,7 @@ import {
   fetchActivityLogs,
   fetchRecentOrders,
   fetchAnalytics} from "@/services/api";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import AppImage from "@/components/common/AppImage";
 
 type BeforeInstallPromptEvent = Event & {
@@ -213,7 +213,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
       {/* Mobile Backdrop */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -317,7 +317,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
 
                   <AnimatePresence initial={false}>
                     {(isExpanded || !isOpen) && (
-                      <motion.div
+                      <m.div
                         initial={isOpen ? { height: 0, opacity: 0 } : undefined}
                         animate={isOpen ? { height: "auto", opacity: 1 } : undefined}
                         exit={isOpen ? { height: 0, opacity: 0 } : undefined}
@@ -364,7 +364,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                                   {item.label}
                                 </span>
                                 {isActive && (
-                                  <motion.div
+                                  <m.div
                                     layoutId="sidebar-active-indicator"
                                     className="absolute left-0 w-1 h-6 bg-brand-secondary-500 rounded-r-full"
                                   />
@@ -373,7 +373,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                             )}
                           </NavLink>
                         ))}
-                      </motion.div>
+                      </m.div>
                     )}
                   </AnimatePresence>
                 </div>

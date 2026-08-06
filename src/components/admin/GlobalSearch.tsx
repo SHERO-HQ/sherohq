@@ -12,7 +12,7 @@ import {
   X,
   Command,
 } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { useRouter } from "next/navigation";
 import { globalAdminSearch, GlobalSearchResult } from "@/services/api";
 import { cn } from "@/lib/utils";
@@ -143,7 +143,7 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-100 flex items-start justify-center pt-[10vh] px-4 md:px-0">
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -151,7 +151,7 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
             onClick={onClose}
           />
 
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.95, y: -20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
@@ -374,7 +374,7 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
                 <span className="hidden sm:inline">to close</span>
               </div>
             </div>
-          </motion.div>
+          </m.div>
         </div>
       )}
     </AnimatePresence>

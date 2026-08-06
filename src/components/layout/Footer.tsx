@@ -213,7 +213,7 @@ const Footer = () => {
           {/* Copyright & Legal */}
           <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6 md:text-sm text-xs text-slate-500 order-2 md:order-1">
             <p className="text-center md:text-left" suppressHydrationWarning>
-              &copy;{new Date().getFullYear()} Shero Group.
+              &copy;{new Date().getFullYear()} SHERO.
             </p>
             <div className="flex items-center justify-center gap-3 divide-x-2 divide-slate-200 dark:divide-slate-800">
               <NavLink

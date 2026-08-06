@@ -313,6 +313,8 @@ export const products = pgTable("products", {
 	index("idx_products_created_at").using("btree", table.createdAt.asc().nullsLast().op("timestamp_ops")),
 	index("idx_products_in_stock").using("btree", table.inStock.asc().nullsLast().op("bool_ops")),
 	index("idx_products_name").using("btree", table.name.asc().nullsLast().op("text_ops")),
+	index("idx_products_name_search").using("gin", sql`${table.name} gin_trgm_ops`),
+	index("idx_products_desc_search").using("gin", sql`${table.description} gin_trgm_ops`),
 	uniqueIndex("idx_products_sku").using("btree", table.sku.asc().nullsLast().op("text_ops")).where(sql`(sku IS NOT NULL)`),
 	uniqueIndex("idx_products_slug").using("btree", table.slug.asc().nullsLast().op("text_ops")).where(sql`(slug IS NOT NULL)`),
 	index("idx_products_stock").using("btree", table.stockQuantity.asc().nullsLast().op("int4_ops")),

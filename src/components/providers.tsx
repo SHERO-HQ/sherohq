@@ -2,7 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { MotionConfig } from "motion/react";
+import { MotionConfig, LazyMotion, domAnimation } from "motion/react";
 import { ThemeProvider } from "@/context/Theme";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
@@ -37,24 +37,26 @@ export function Providers({ children }: { children: React.ReactNode }) {
  return (
   <QueryClientProvider client={queryClient}>
    <MotionConfig reducedMotion="user">
-   <ThemeProvider>
-    <CartProvider>
-     <AuthProvider>
-      <NotificationProvider>
-       <WishlistProvider>
-        <AdminProvider>
-         <DialogProvider>
-          <Toaster />
-          <ScrollToTop />
-          <ErrorBoundary>{children}</ErrorBoundary>
-          <AIChatAssistant />
-         </DialogProvider>
-        </AdminProvider>
-       </WishlistProvider>
-      </NotificationProvider>
-     </AuthProvider>
-    </CartProvider>
-   </ThemeProvider>
+    <LazyMotion features={domAnimation} strict>
+    <ThemeProvider>
+     <CartProvider>
+      <AuthProvider>
+       <NotificationProvider>
+        <WishlistProvider>
+         <AdminProvider>
+          <DialogProvider>
+           <Toaster />
+           <ScrollToTop />
+           <ErrorBoundary>{children}</ErrorBoundary>
+           <AIChatAssistant />
+          </DialogProvider>
+         </AdminProvider>
+        </WishlistProvider>
+       </NotificationProvider>
+      </AuthProvider>
+     </CartProvider>
+    </ThemeProvider>
+    </LazyMotion>
    </MotionConfig>
    {process.env.NODE_ENV === "development" && (
     <ReactQueryDevtools initialIsOpen={false} />

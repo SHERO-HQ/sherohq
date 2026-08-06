@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import {
   XCircle,
   RefreshCw,
@@ -306,7 +306,7 @@ const CheckoutSuccess = () => {
       return (
         <div className="py-8 flex flex-col items-center justify-center w-full max-w-sm mx-auto">
           <div className="relative w-24 h-24 mb-6 flex items-center justify-center">
-            <motion.div
+            <m.div
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", bounce: 0.5 }}
@@ -392,19 +392,19 @@ const CheckoutSuccess = () => {
     return (
       <div className="py-8 flex flex-col items-center justify-center w-full max-w-sm mx-auto">
         <div className="relative w-24 h-24 mb-6 flex items-center justify-center">
-          <motion.div
+          <m.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", bounce: 0.5 }}
             className="absolute inset-0 bg-emerald-500 rounded-full"
           />
-          <motion.div
+          <m.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", bounce: 0.5, delay: 0.1 }}
           >
             <Check className="w-12 h-12 dark:text-white z-10 stroke-3" />
-          </motion.div>
+          </m.div>
         </div>
 
         <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-2 text-center tracking-tight">
@@ -493,13 +493,13 @@ const CheckoutSuccess = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-black pt-8 pb-12 px-4 flex items-center justify-center">
       <div className="w-full max-w-lg mx-auto">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           className="w-full"
         >
           {renderContent()}
-        </motion.div>
+        </m.div>
       </div>
 
       {orderId && (

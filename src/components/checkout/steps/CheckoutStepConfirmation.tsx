@@ -1,7 +1,7 @@
 "use client";
 import { toReadableOrderId } from "@/utils/orderId";
 import React from "react";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -16,20 +16,20 @@ export default function CheckoutStepConfirmation() {
   const email = watch("email");
 
   return (
-    <motion.div
+    <m.div
       key="step4"
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6 sm:p-12 text-center"
     >
-      <motion.div
+      <m.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ delay: 0.2, type: "spring" }}
         className="w-24 h-24 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center mx-auto mb-6"
       >
         <CheckCircle className="w-12 h-12 text-brand-secondary-600 dark:text-brand-secondary-400" />
-      </motion.div>
+      </m.div>
 
       <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mb-4">
         Order Confirmed!
@@ -95,6 +95,6 @@ export default function CheckoutStepConfirmation() {
           Back to Home
         </Button>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

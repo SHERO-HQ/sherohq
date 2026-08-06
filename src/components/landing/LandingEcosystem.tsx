@@ -1,6 +1,6 @@
 "use client";
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { m, useScroll, useTransform } from "motion/react";
 import { Cpu, Code, Shield, Network } from "lucide-react";
 
 const nodes = [
@@ -38,7 +38,7 @@ const LandingEcosystem = () => {
 
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center mb-16 sm:mb-24">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -46,8 +46,8 @@ const LandingEcosystem = () => {
           >
             <Network className="size-4" />
             The Ecosystem Advantage
-          </motion.div>
-          <motion.h2
+          </m.div>
+          <m.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -58,16 +58,16 @@ const LandingEcosystem = () => {
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary-600 to-brand-secondary-500 dark:from-brand-primary-400 dark:to-brand-secondary-400">
               one unified system?
             </span>
-          </motion.h2>
-          <motion.p
+          </m.h2>
+          <m.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
             className="mt-6 text-sm text-slate-600 dark:text-slate-300 leading-relaxed"
           >
-            Software engineered for the hardware we supply, maintained and secured by the team that built it. True synergy eliminates friction.
-          </motion.p>
+            Software engineered specifically for the hardware we supply, supported by the team that built it. When every piece works together seamlessly, businesses can move forward faster.
+          </m.p>
         </div>
 
         {/* Interconnected Flow */}
@@ -84,7 +84,7 @@ const LandingEcosystem = () => {
             {/* Background Line */}
             <div className="absolute left-1/2 top-0 bottom-0 w-[3px] -translate-x-1/2 bg-slate-200/70 dark:bg-slate-800/70" />
             {/* Scroll Filling Line */}
-            <motion.div
+            <m.div
               style={{ scaleY: scrollProgress, originY: 0 }}
               className="absolute left-1/2 top-0 bottom-0 w-[3px] -translate-x-1/2 bg-brand-secondary-500 shadow-[0_0_12px_rgba(56,189,248,0.8)] dark:bg-brand-secondary-400"
             />
@@ -101,7 +101,7 @@ const LandingEcosystem = () => {
             {/* Background Line */}
             <div className="absolute top-1/2 left-0 right-0 h-[3px] -translate-y-1/2 bg-slate-200/70 dark:bg-slate-800/70" />
             {/* Scroll Filling Line */}
-            <motion.div
+            <m.div
               style={{ scaleX: scrollProgress, originX: 0 }}
               className="absolute top-1/2 left-0 right-0 h-[3px] -translate-y-1/2 bg-brand-secondary-500 shadow-[0_0_12px_rgba(56,189,248,0.8)] dark:bg-brand-secondary-400"
             />
@@ -113,7 +113,7 @@ const LandingEcosystem = () => {
               const Icon = node.icon;
 
               return (
-                <motion.div
+                <m.div
                   key={node.id}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -136,7 +136,7 @@ const LandingEcosystem = () => {
                       {node.desc}
                     </p>
                   </div>
-                </motion.div>
+                </m.div>
               );
             })}
           </div>

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { CheckCircle, XCircle, AlertTriangle, Info, X } from "lucide-react";
 import { useNotifications } from "@/hooks/useNotifications";
 import { cn } from "@/lib/utils";
@@ -40,7 +40,7 @@ export default function Toaster() {
  if (!notification) return null;
 
  return (
- <motion.div
+ <m.div
  key={id}
  layout
  initial={{ opacity: 0, scale: 0.9, x: 20 }}
@@ -88,7 +88,7 @@ export default function Toaster() {
  >
  <X className="w-4 h-4" />
  </button>
- </motion.div>
+ </m.div>
  );
  })}
  </AnimatePresence>

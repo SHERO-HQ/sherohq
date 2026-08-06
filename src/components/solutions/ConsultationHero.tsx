@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { MessageSquare, ArrowRight, Calendar, Clock, Video } from "lucide-react";
 
 const containerVariants = {
@@ -30,7 +30,7 @@ const ConsultationHero = () => {
 
       {/* Animated Gradient Orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
+        <m.div
           animate={{
             y: [0, -30, 0],
             scale: [1, 1.1, 1],
@@ -39,7 +39,7 @@ const ConsultationHero = () => {
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 dark:bg-blue-500/10 rounded-full blur-3xl"
         />
-        <motion.div
+        <m.div
           animate={{
             y: [0, 40, 0],
             scale: [1, 1.2, 1],
@@ -60,20 +60,20 @@ const ConsultationHero = () => {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
           {/* Left Column: Text Content */}
-          <motion.div
+          <m.div
             variants={containerVariants}
             initial="hidden"
             animate="show"
             className="flex flex-col items-start text-left"
           >
-            <motion.div variants={itemVariants}>
+            <m.div variants={itemVariants}>
               <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-[.65rem] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/40 dark:border-brand-secondary-800/50 rounded uppercase tracking-wider transition-colors duration-300 shadow-sm">
                 <MessageSquare className="size-4" />
                 <span>Expert Guidance</span>
               </div>
-            </motion.div>
+            </m.div>
 
-            <motion.h1
+            <m.h1
               variants={itemVariants}
               className="text-4xl sm:text-5xl md:text-6xl lg:text-[4rem] leading-[1.1] font-semibold text-slate-900 dark:text-slate-100 mb-6 tracking-tight"
             >
@@ -81,18 +81,18 @@ const ConsultationHero = () => {
               <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
                 Technical Vision
               </span>
-            </motion.h1>
+            </m.h1>
 
-            <motion.p
+            <m.p
               variants={itemVariants}
               className="text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-xl mb-10 leading-relaxed"
             >
               Book a focused session to align technology decisions, delivery
               timelines, and growth priorities with your team. Turn complex
               challenges into actionable roadmaps.
-            </motion.p>
+            </m.p>
 
-            <motion.div variants={itemVariants}>
+            <m.div variants={itemVariants}>
               <button
                 onClick={scrollToScheduler}
                 className="group inline-flex items-center justify-center gap-2 px-8 py-3 text-base font-medium text-white bg-slate-900 dark:bg-white dark:text-slate-900 rounded-full shadow hover:shadow-xl hover:bg-slate-800 dark:hover:bg-slate-100 hover:-translate-y-0.5 transition-all duration-300"
@@ -100,11 +100,11 @@ const ConsultationHero = () => {
                 Book a Session
                 <ArrowRight className="size-5 group-hover:translate-x-1 transition-transform" />
               </button>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
 
           {/* Right Column: Visual Component */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
@@ -115,7 +115,7 @@ const ConsultationHero = () => {
               <div className="absolute inset-0 bg-linear-to-tr from-brand-primary-500/20 to-brand-secondary-500/20 rounded-full blur-3xl opacity-50" />
               
               {/* Card 1: Main Session Card */}
-              <motion.div 
+              <m.div 
                 animate={{ y: [-10, 10, -10] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                 className="absolute top-[20%] left-0 right-12 z-20 bg-white dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/60 dark:border-slate-800/60 p-6 rounded shadow flex items-start gap-5"
@@ -130,10 +130,10 @@ const ConsultationHero = () => {
                     <span className="flex items-center gap-1.5"><Video className="size-4" /> Video Call</span>
                   </div>
                 </div>
-              </motion.div>
+              </m.div>
 
               {/* Card 2: Status/Participant Card */}
-              <motion.div 
+              <m.div 
                 animate={{ y: [10, -10, 10] }}
                 transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
                 className="absolute bottom-[25%] left-16 right-0 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/50 dark:border-slate-800/50 p-5 rounded shadow flex items-center justify-between"
@@ -146,13 +146,13 @@ const ConsultationHero = () => {
                     <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Aligning on architecture...</span>
                  </div>
                  <div className="size-2 rounded-full bg-emerald-500 animate-pulse" />
-              </motion.div>
+              </m.div>
               
               {/* Decorative Background Elements */}
               <div className="absolute top-[10%] right-[10%] size-20 rounded-full bg-brand-secondary-400/20 dark:bg-brand-secondary-500/10 blur-xl" />
               <div className="absolute bottom-[10%] left-[10%] size-32 rounded-full bg-blue-400/20 dark:bg-blue-500/10 blur-xl" />
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

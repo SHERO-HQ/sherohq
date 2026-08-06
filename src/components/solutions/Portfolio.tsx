@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useProjects } from "@/hooks/queries/useProjects";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import {
   ExternalLink,
   Code2,
@@ -117,7 +117,7 @@ const Portfolio = () => {
     <section className="relative w-full py-10 bg-slate-50 dark:bg-slate-950">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -135,7 +135,7 @@ const Portfolio = () => {
             Explore our portfolio of successful projects and see how we've
             helped businesses transform digitally
           </p>
-        </motion.div>
+        </m.div>
 
         {/* Category Filters */}
         <div className="flex justify-center mb-8">
@@ -178,7 +178,7 @@ const Portfolio = () => {
 
           {!isLoading &&
             filteredProjects.map((project, idx) => (
-              <motion.div
+              <m.div
                 key={project.id}
                 layoutId={`card-container-${project.id}`}
                 initial={{ opacity: 0, y: 20 }}
@@ -194,7 +194,7 @@ const Portfolio = () => {
                 style={{ borderRadius: 16 }}
               >
                 {/* Project Image Box */}
-                <motion.div
+                <m.div
                   layoutId={`card-image-${project.id}`}
                   className="relative aspect-video bg-linear-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 flex items-center justify-center overflow-hidden shrink-0 border-b border-slate-150 dark:border-slate-800/50"
                 >
@@ -224,19 +224,19 @@ const Portfolio = () => {
                       View Details <Info className="w-3.5 h-3.5" />
                     </span>
                   </div>
-                </motion.div>
+                </m.div>
 
                 {/* Project Info Block */}
                 <div className="p-5 flex flex-col flex-1 gap-3">
                   {/* Category and Client Badge */}
                   <div className="flex flex-wrap items-center gap-2">
-                    <motion.span
+                    <m.span
                       layoutId={`card-category-${project.id}`}
                       className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 text-brand-secondary-700 dark:text-brand-secondary-400 text-[10px] font-bold uppercase rounded-full"
                     >
                       {getCategoryIcon(project.category)}
                       {project.category}
-                    </motion.span>
+                    </m.span>
                     {project.client && (
                       <span className="text-[10px] font-medium text-slate-400 dark:text-slate-500">
                         for {project.client}
@@ -246,12 +246,12 @@ const Portfolio = () => {
 
                   {/* Title & Short Description */}
                   <div className="space-y-1.5 flex-1">
-                    <motion.h3
+                    <m.h3
                       layoutId={`card-title-${project.id}`}
                       className="text-base font-bold text-slate-900 dark:text-white group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors leading-snug font-sora"
                     >
                       {project.title}
-                    </motion.h3>
+                    </m.h3>
                     {project.description && (
                       <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
                         {project.description}
@@ -297,7 +297,7 @@ const Portfolio = () => {
                     )}
                   </div>
                 </div>
-              </motion.div>
+              </m.div>
             ))}
         </div>
 
@@ -305,7 +305,7 @@ const Portfolio = () => {
           {selectedProject && (
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-10 overflow-y-auto">
               {/* Backdrop */}
-              <motion.div
+              <m.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -314,14 +314,14 @@ const Portfolio = () => {
               />
 
               {/* Modal Panel (morphic card container) */}
-              <motion.div
+              <m.div
                 layoutId={`card-container-${selectedProject.id}`}
                 transition={{ layout: { type: "spring", stiffness: 350, damping: 30 } }}
                 className="relative w-full max-w-4xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800  overflow-hidden shadow-2xl z-10 flex flex-col max-h-[90vh] custom-scrollbar"
                 style={{ borderRadius: 16 }}
               >
                 {/* Close Button floating absolute on top right */}
-                <motion.button
+                <m.button
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1, transition: { delay: 0.2 } }}
                   exit={{ opacity: 0, transition: { duration: 0.1 } }}
@@ -330,10 +330,10 @@ const Portfolio = () => {
                   aria-label="Close Case Study"
                 >
                   <X className="w-5 h-5" />
-                </motion.button>
+                </m.button>
 
                 {/* Hero Image Section */}
-                <motion.div
+                <m.div
                   layoutId={`card-image-${selectedProject.id}`}
                   className="relative aspect-video md:aspect-21/9 w-full bg-linear-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 overflow-hidden border-b border-slate-200 dark:border-slate-800 shrink-0"
                 >
@@ -357,41 +357,41 @@ const Portfolio = () => {
                       </div>
                     </div>
                   )}
-                </motion.div>
+                </m.div>
 
                 {/* Scrollable Body */}
                 <div className="p-6 md:p-8 overflow-y-auto space-y-6 flex-1 custom-scrollbar">
                   {/* Header Information */}
                   <div className="space-y-3">
                     <div className="flex flex-wrap items-center gap-3">
-                      <motion.span
+                      <m.span
                         layoutId={`card-category-${selectedProject.id}`}
                         className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 text-brand-secondary-700 dark:text-brand-secondary-400 text-xs font-bold uppercase rounded-full border border-brand-secondary-200/50 dark:border-brand-secondary-800/50"
                       >
                         {getCategoryIcon(selectedProject.category)}
                         {selectedProject.category}
-                      </motion.span>
+                      </m.span>
                       {selectedProject.client && (
-                        <motion.span 
+                        <m.span 
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1, transition: { delay: 0.1 } }}
                           exit={{ opacity: 0, transition: { duration: 0.05 } }}
                           className="text-xs font-medium text-slate-500 dark:text-slate-400"
                         >
                           for {selectedProject.client}
-                        </motion.span>
+                        </m.span>
                       )}
                     </div>
-                    <motion.h3
+                    <m.h3
                       layoutId={`card-title-${selectedProject.id}`}
                       className="text-xl md:text-3xl font-extrabold text-slate-900 dark:text-white leading-tight"
                     >
                       {selectedProject.title}
-                    </motion.h3>
+                    </m.h3>
                   </div>
 
                   {/* Split Pane Details Content */}
-                  <motion.div 
+                  <m.div 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1, transition: { delay: 0.15 } }}
                     exit={{ opacity: 0, transition: { duration: 0.05 } }}
@@ -495,12 +495,12 @@ const Portfolio = () => {
                         </div>
                       )}
                     </div>
-                  </motion.div>
+                  </m.div>
                 </div>
 
                 {/* Bottom Sticky Action Bar */}
                 {selectedProject.link && (
-                  <motion.div 
+                  <m.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}
                     exit={{ opacity: 0, transition: { duration: 0.05 } }}
@@ -515,9 +515,9 @@ const Portfolio = () => {
                       <span>Launch Live Project</span>
                       <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
                     </a>
-                  </motion.div>
+                  </m.div>
                 )}
-              </motion.div>
+              </m.div>
             </div>
           )}
         </AnimatePresence>

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import {
   Quote,
   UserCheck,
@@ -26,11 +26,12 @@ interface LandingTestimonialsProps {
 }
 
 const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
-  const { data: testimonials = [], isLoading } = useTestimonials();
-  
+  const { data, isLoading } = useTestimonials();
+
   const displayTestimonials = useMemo(() => {
-    return limit ? testimonials.slice(0, limit) : testimonials;
-  }, [testimonials, limit]);
+    const t = data || [];
+    return limit ? t.slice(0, limit) : t;
+  }, [data, limit]);
   
   const [cards, setCards] = useState<any[]>([]);
 
@@ -116,7 +117,7 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
                     const isFront = index === 0;
                     
                     return (
-                      <motion.div
+                      <m.div
                         key={item.uniqueId || item.id || `card-${index}`} // absolutely guarantee a non-empty key
                         layout
                         initial={{ opacity: 0, scale: 0.9, y: -40 }}
@@ -158,7 +159,7 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
                             <Quote className="size-8 text-brand-secondary-500/20" />
                           </div>
 
-                          <blockquote className="text-slate-800 dark:text-slate-200 relative z-10 font-medium text-lg leading-relaxed pt-2">
+                          <blockquote className="text-slate-800 dark:text-slate-200 relative z-10 font-medium leading-relaxed pt-2">
                             {item.quote}
                           </blockquote>
 
@@ -223,7 +224,7 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
                             </div>
                           </div>
                         </div>
-                      </motion.div>
+                      </m.div>
                     );
                   })}
                 </AnimatePresence>
@@ -234,13 +235,13 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
             <div className="flex items-center justify-center gap-4 -mt-20">
               <button
                 onClick={handlePrev}
-                className="cursor-pointer p-3 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-secondary-600 dark:hover:text-white hover:border-brand-secondary-500 transition-colors shadow-sm"
+                className="cursor-pointer p-3 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-secondary-600 dark:hover:text-white hover:border-brand-secondary-500 transition-colors shadow-sm"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={handleNext}
-                className="cursor-pointer p-3 rounded-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-secondary-600 dark:hover:text-white hover:border-brand-secondary-500 transition-colors shadow-sm"
+                className="cursor-pointer p-3 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-secondary-600 dark:hover:text-white hover:border-brand-secondary-500 transition-colors shadow-sm"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>

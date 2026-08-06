@@ -24,7 +24,7 @@ import {
   KeyRound,
   Ban,
   CircleCheck} from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { useNotifications } from "@/hooks/useNotifications";
 import {
   useCustomers,
@@ -173,7 +173,7 @@ const UserTableRow = ({
   onResetPassword,
   onToggleActive,
   isTogglingActive}: UserTableRowProps) => (
-  <motion.tr
+  <m.tr
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     className="hover:bg-accent transition-colors"
@@ -276,7 +276,7 @@ const UserTableRow = ({
         </button>
       </div>
     </td>
-  </motion.tr>
+  </m.tr>
 );
 
 interface UserTableProps {
@@ -644,14 +644,14 @@ const UserDetailsModal = ({
   isTogglingActive}: UserDetailsModalProps) => (
   <AnimatePresence>
     {show && (
-      <motion.div
+      <m.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="fixed inset-0 bg-black/70  z-50 flex items-center justify-center p-4"
         onClick={onClose}
       >
-        <motion.div
+        <m.div
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
@@ -792,8 +792,8 @@ const UserDetailsModal = ({
               </div>
             );
           })()}
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
     )}
   </AnimatePresence>
 );
@@ -821,14 +821,14 @@ const ResetPasswordModal = ({
   isPending}: ResetPasswordModalProps) => (
   <AnimatePresence>
     {userId && (
-      <motion.div
+      <m.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="fixed inset-0 bg-black/70  z-50 flex items-center justify-center p-4"
         onClick={onClose}
       >
-        <motion.div
+        <m.div
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
@@ -868,8 +868,8 @@ const ResetPasswordModal = ({
               </button>
             </div>
           </div>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
     )}
   </AnimatePresence>
 );
@@ -881,14 +881,14 @@ const DeleteConfirmationModal = ({
   isPending}: DeleteModalProps) => (
   <AnimatePresence>
     {userId && (
-      <motion.div
+      <m.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="fixed inset-0 bg-black/70  z-50 flex items-center justify-center p-4"
         onClick={onClose}
       >
-        <motion.div
+        <m.div
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
@@ -929,8 +929,8 @@ const DeleteConfirmationModal = ({
               </button>
             </div>
           </div>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
     )}
   </AnimatePresence>
 );

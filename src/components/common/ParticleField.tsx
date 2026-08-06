@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 interface Props {
@@ -57,14 +57,14 @@ export default function ParticleField({
 	}
 
  return (
- <motion.div
+ <m.div
  className="absolute inset-0 pointer-events-none"
  initial={{ opacity: 0 }}
  animate={{ opacity }}
  transition={{ duration: 1.2, ease: "easeIn" }}
  >
  {particles.map((p) => (
- <motion.div
+ <m.div
  key={p.id}
  initial={{ x: p.x, y: p.y, opacity: p.opacity }}
  animate={{ y: [null, "-20%"], opacity: [0, p.opacity, 0] }}
@@ -76,6 +76,6 @@ export default function ParticleField({
  className={`absolute w-1 h-1 rounded-full ${colorClass(p.id)}`}
  />
  ))}
- </motion.div>
+ </m.div>
  );
 }

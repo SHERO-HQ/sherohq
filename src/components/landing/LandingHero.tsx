@@ -1,7 +1,7 @@
 "use client";
 import NavLink from "@/components/common/NavLink";
 import { getAbsoluteUrl } from "@/utils/subdomain";
-import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { m, useMotionValue, useSpring, useTransform, useScroll } from "motion/react";
 import { useRef, useEffect, useState } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useDevicePerformance } from "@/hooks/useDevicePerformance";
@@ -101,6 +101,12 @@ const LandingHero: React.FC = () => {
   const translateX = useTransform(smoothX, [-0.5, 0.5], [-6, 6]);
   const translateY = useTransform(smoothY, [-0.5, 0.5], [-6, 6]);
 
+  // Scroll Parallax
+  const { scrollY } = useScroll();
+  const parallaxY = useTransform(scrollY, [0, 500], [0, 150]);
+  const parallaxOpacity = useTransform(scrollY, [0, 400], [1, 0]);
+  const parallaxScale = useTransform(scrollY, [0, 400], [1, 0.95]);
+
   const prefersReducedMotion = useReducedMotion();
   const { isLowEnd } = useDevicePerformance();
   const [heroReady, setHeroReady] = useState(false);
@@ -166,7 +172,7 @@ const LandingHero: React.FC = () => {
       aria-label="Hero section - Company mission statement"
     >
       {/* Subtle patterned depth */}
-      <motion.div
+      <m.div
         style={
           motionEnabled
             ? { x: translateX, y: translateY, opacity: 0.9 }
@@ -191,27 +197,31 @@ const LandingHero: React.FC = () => {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex flex-col items-center">
 
         {/* TOP SECTION: CENTERED TEXT */}
-        <motion.div
-          variants={heroBlock}
-          initial={prefersReducedMotion ? false : "hidden"}
-          animate={
-            prefersReducedMotion ? undefined : heroReady ? "show" : "hidden"
-          }
-          className="w-full max-w-4xl flex flex-col items-center gap-5 sm:gap-6 text-center"
+        <m.div
+          style={{ y: parallaxY, opacity: parallaxOpacity, scale: parallaxScale }}
+          className="w-full max-w-4xl"
         >
-          <motion.div
-            variants={heroItem}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded text-xs border border-brand-secondary-500/20 bg-brand-secondary-500/5 transition-colors duration-300"
+          <m.div
+            variants={heroBlock}
+            initial={prefersReducedMotion ? false : "hidden"}
+            animate={
+              prefersReducedMotion ? undefined : heroReady ? "show" : "hidden"
+            }
+            className="flex flex-col items-center gap-5 sm:gap-6 text-center"
           >
+            <m.div
+              variants={heroItem}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded text-xs border border-brand-secondary-500/20 bg-brand-secondary-500/5 transition-colors duration-300"
+            >
             <RocketIcon className="size-4 text-brand-secondary-600" />
             <span className="text-[.65rem] font-medium uppercase tracking-wide text-brand-secondary-600 dark:text-brand-secondary-400">
               Trusted Technology Partner
             </span>
-          </motion.div>
+          </m.div>
 
           {/* Headline: Sora Font + Scan line Reveal */}
           <div className="relative overflow-hidden group">
-            <motion.h1
+            <m.h1
               variants={heroItem}
               className="font-bold leading-[1.15] text-3xl sm:text-5xl md:text-6xl px-2 sm:px-0 tracking-tighter text-slate-900 dark:text-white relative z-10"
             >
@@ -220,17 +230,17 @@ const LandingHero: React.FC = () => {
               <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
                 {headlineAccent}
               </span>
-            </motion.h1>
+            </m.h1>
           </div>
 
-          <motion.p
+          <m.p
             variants={heroItem}
             className="sm:text-lg text-base text-slate-600 dark:text-slate-300/95 max-w-2xl leading-relaxed mx-auto"
           >
             {HERO_CONTENT.subHeader}
-          </motion.p>
+          </m.p>
 
-          <motion.div
+          <m.div
             variants={heroItem}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 pt-4 w-full"
           >
@@ -255,13 +265,13 @@ const LandingHero: React.FC = () => {
               <span>Explore Services</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </NavLink>
-          </motion.div>
-
-        </motion.div>
+          </m.div>
+        </m.div>
+        </m.div>
       </div>
 
       {/* Trusted Brands Grid - Fixed at bottom of hero */}
-      <motion.div
+      <m.div
         initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
         animate={prefersReducedMotion ? undefined : heroReady ? { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.5 } } : { opacity: 0, y: 10 }}
         className="absolute bottom-6 sm:bottom-15 left-0 right-0 w-full"
@@ -288,7 +298,7 @@ const LandingHero: React.FC = () => {
             ))}
           </ul>
         </div>
-      </motion.div>
+      </m.div>
     </header>
   );
 };

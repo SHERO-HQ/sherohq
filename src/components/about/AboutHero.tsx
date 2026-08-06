@@ -1,5 +1,5 @@
 "use client";
-import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
+import { m, useMotionValue, useSpring, useTransform } from "motion/react";
 import {
   ShieldCheck,
   SmartphoneCharging,
@@ -69,7 +69,7 @@ const AboutHero = () => {
       role="banner"
     >
       {/* KINETIC BACKGROUND LAYERS */}
-      <motion.div
+      <m.div
         style={prefersReducedMotion ? { opacity: 0.9 } : { x: translateX, y: translateY, opacity: 0.9 }}
         className="absolute inset-0 pattern-dots pointer-events-none"
       />
@@ -84,7 +84,7 @@ const AboutHero = () => {
               className="absolute w-1 h-1 bg-brand-secondary-500 rounded-full"
             />
           ) : (
-            <motion.div
+            <m.div
               key={p.id}
               initial={{ x: p.x, y: p.y, opacity: p.opacity }}
               animate={{
@@ -106,11 +106,11 @@ const AboutHero = () => {
 
       {/* Gradient Orbs */}
       {/* <div className="absolute inset-0 overflow-hidden pointer-events-none">
- <motion.div
+ <m.div
  style={{ x: translateX, y: translateY }}
  className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-brand-secondary-500/5 dark:bg-brand-secondary-600/10 rounded-full blur-[120px]"
  />
- <motion.div
+ <m.div
  style={{
  x: useTransform(smoothX, [-0.5, 0.5], [15, -15]),
  y: useTransform(smoothY, [-0.5, 0.5], [15, -15]),
@@ -124,7 +124,7 @@ const AboutHero = () => {
           {/* LEFT: Vision Content (60%) */}
           <div className="w-full lg:w-[60%] flex flex-col items-start space-y-3">
             {/* Badge */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               className="inline-flex items-center gap-2 px-4 py-1 rounded border border-brand-secondary-500/20 bg-brand-secondary-500/5 transition-colors duration-300 mb-4"
@@ -133,11 +133,11 @@ const AboutHero = () => {
               <span className="text-[10px] font-semibold uppercase text-brand-secondary-600 dark:text-brand-secondary-400">
                 About SHERO
               </span>
-            </motion.div>
+            </m.div>
 
             {/* Main Heading */}
             <div className="relative">
-              <motion.h1
+              <m.h1
                 initial={
                   prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 30 }
                 }
@@ -154,21 +154,21 @@ const AboutHero = () => {
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
                   Possibility is our purpose.
                 </span>
-              </motion.h1>
+              </m.h1>
             </div>
 
             {/* Description */}
-            <motion.p
+            <m.p
               initial={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.1 }}
               className="text-base md:text-lg text-slate-600 dark:text-slate-300 mb-6 leading-relaxed max-w-xl"
             >
               We challenge assumptions, build purposeful solutions, and empower individuals, businesses, and communities to achieve more through technology.
-            </motion.p>
+            </m.p>
 
             {/* Values Preview */}
-            <motion.div
+            <m.div
               initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.3 }}
@@ -209,12 +209,12 @@ const AboutHero = () => {
                   </span>
                 </div>
               ))}
-            </motion.div>
+            </m.div>
           </div>
 
           {/* RIGHT: Vision Hub (40%) */}
           <div className="w-full lg:w-[40%] relative aspect-square md:flex items-center justify-center perspective-distant py-12 lg:py-0 hidden">
-            <motion.div
+            <m.div
               style={prefersReducedMotion ? {} : {
                 rotateX,
                 rotateY,
@@ -223,7 +223,7 @@ const AboutHero = () => {
               className="relative w-full max-w-md h-105 flex items-center justify-center"
             >
               {/* Layer 1: Core Values Card */}
-              <motion.div
+              <m.div
                 style={{ z: 0 }}
                 className="w-full bg-white/95 dark:bg-slate-900/95  border border-slate-200 dark:border-slate-800 rounded shadow p-6 sm:p-8 relative overflow-hidden z-10 select-none"
               >
@@ -272,7 +272,7 @@ const AboutHero = () => {
                         </span>
                       </div>
                       <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                        <motion.div
+                        <m.div
                           initial={prefersReducedMotion ? { width: `${item.progress}%` } : { width: 0 }}
                           animate={{ width: `${item.progress}%` }}
                           transition={prefersReducedMotion ? { duration: 0 } : { duration: 1.5 }}
@@ -282,10 +282,10 @@ const AboutHero = () => {
                     </div>
                   ))}
                 </div>
-              </motion.div>
+              </m.div>
 
               {/* Layer 2: Impact Seal */}
-              <motion.div
+              <m.div
                 style={prefersReducedMotion ? { z: 220 } : {
                   z: 220,
                   x: translateXSeal,
@@ -304,11 +304,11 @@ const AboutHero = () => {
                 <span className="text-[10px] font-bold text-white tracking-wide whitespace-nowrap">
                   Client Satisfaction
                 </span>
-              </motion.div>
+              </m.div>
 
               {/* Background Aura */}
               <div className="absolute inset-0 bg-radial-gradient from-brand-secondary-500/15 to-transparent blur-3xl rounded-full scale-150 pointer-events-none" />
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </div>

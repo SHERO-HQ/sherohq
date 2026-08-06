@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { Plus, Minus, HelpCircle } from "lucide-react";
 import Link from "next/link";
 
@@ -172,7 +172,7 @@ const FAQItem = ({
       </button>
       <AnimatePresence>
         {isOpen && (
-          <motion.div
+          <m.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -183,7 +183,7 @@ const FAQItem = ({
             >
               {answer}
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </div>

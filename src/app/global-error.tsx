@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertTriangle, Home, RefreshCw } from "lucide-react";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 
 export default function GlobalError({
   error,
@@ -14,7 +14,7 @@ export default function GlobalError({
     <html lang="en">
       <body className="antialiased">
         <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-slate-950 text-white">
-          <motion.div
+          <m.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className="max-w-md w-full text-center space-y-8"
@@ -58,7 +58,7 @@ export default function GlobalError({
                     System Debug: {error.digest || 'ROOT_LAYER_EXCEPTION'}
                 </div>
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </body>
     </html>

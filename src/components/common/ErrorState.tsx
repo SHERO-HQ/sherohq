@@ -1,6 +1,6 @@
 "use client";
 import { AlertCircle, RefreshCcw, WifiOff } from "lucide-react";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 
 interface ErrorStateProps {
   message?: string;
@@ -16,7 +16,7 @@ export const ErrorState = ({
   const isOffline = message.toLowerCase().includes("offline");
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       className="flex flex-col items-center justify-center py-16 px-4 text-center max-w-md mx-auto"
@@ -49,6 +49,6 @@ export const ErrorState = ({
           Try Again
         </button>
       )}
-    </motion.div>
+    </m.div>
   );
 };

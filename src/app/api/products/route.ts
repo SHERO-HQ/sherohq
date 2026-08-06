@@ -114,11 +114,10 @@ export async function GET(request: NextRequest) {
     let queryText = `
       SELECT
         p.*,
-        COALESCE(c_by_id.name, c_by_name.name) as category_name,
-        COALESCE(c_by_id.id, c_by_name.id) as resolved_category_id
+        c.name as category_name,
+        c.id as resolved_category_id
       FROM products p
-      LEFT JOIN categories c_by_id ON p.category = c_by_id.id
-      LEFT JOIN categories c_by_name ON p.category = c_by_name.name
+      LEFT JOIN categories c ON p.category = c.id
     `;
 
     const sqlParams: (string | number)[] = [];
@@ -127,7 +126,7 @@ export async function GET(request: NextRequest) {
 
     if (category && category !== "all") {
       conditions.push(
-        `(p.category = $${paramIndex} OR c_by_id.id = $${paramIndex} OR c_by_name.name = $${paramIndex})`,
+        `(p.category = $${paramIndex} OR c.id = $${paramIndex} OR c.name = $${paramIndex})`,
       );
       sqlParams.push(category);
       paramIndex++;
@@ -135,7 +134,7 @@ export async function GET(request: NextRequest) {
 
     if (search) {
       conditions.push(
-        `(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR c_by_id.name ILIKE $${paramIndex} OR c_by_name.name ILIKE $${paramIndex})`,
+        `(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR c.name ILIKE $${paramIndex})`,
       );
       sqlParams.push(`%${search}%`);
       paramIndex++;
