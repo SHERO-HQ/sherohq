@@ -60,3 +60,8 @@ server/.pnp.*
 clean-bad-route.sh
 .vercel
 .env*
+
+Company
+.agents
+log.md
+compiled_errors.txt

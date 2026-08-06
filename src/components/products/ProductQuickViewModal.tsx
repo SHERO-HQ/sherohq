@@ -177,7 +177,7 @@ export default function ProductQuickViewModal({
                       ))}
                     </div>
                     <span className="text-xs text-slate-400 font-medium">
-                      {product.rating || 5.0} ({product.reviews || 0} reviews)
+                      {product.rating || 5} ({product.reviews || 0} reviews)
                     </span>
                   </div>
 

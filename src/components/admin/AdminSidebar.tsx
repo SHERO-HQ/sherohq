@@ -101,8 +101,7 @@ const navGroups: NavGroup[] = [
     title: "Feedback & Trust",
     items: [
       { icon: Star, label: "Reviews", href: "/admin/reviews" },
-      { icon: MessageSquareQuote, label: "Testimonials", href: "/admin/testimonials" },
-      { icon: MessageSquare, label: "Site Feedback", href: "/admin/feedback" },
+      { icon: MessageSquareQuote, label: "Testimonials & Feedback", href: "/admin/testimonials" },
     ],
   },
   {

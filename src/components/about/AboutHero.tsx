@@ -150,9 +150,9 @@ const AboutHero = () => {
                 className=" font-semibold leading-[1.1] text-3xl sm:text-4xl md:text-5xl lg:text-6xl 
   text-slate-900 dark:text-white mb-2"
               >
-                Engineering clarity.{" "}
+                Technology is our craft.{" "}
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
-                  Delivering impact.
+                  Possibility is our purpose.
                 </span>
               </motion.h1>
             </div>
@@ -164,8 +164,7 @@ const AboutHero = () => {
               transition={prefersReducedMotion ? { duration: 0 } : { delay: 0.1 }}
               className="text-base md:text-lg text-slate-600 dark:text-slate-300 mb-6 leading-relaxed max-w-xl"
             >
-              We partner with organizations to design, ship, and support
-              technology that creates measurable business outcomes.
+              We challenge assumptions, build purposeful solutions, and empower individuals, businesses, and communities to achieve more through technology.
             </motion.p>
 
             {/* Values Preview */}

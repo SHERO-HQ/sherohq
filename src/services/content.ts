@@ -117,7 +117,7 @@ export async function fetchTestimonials(): Promise<Testimonial[]> {
 }
 
 export async function fetchAdminTestimonials(): Promise<Testimonial[]> {
-  const response = await authFetch(`${API_BASE}/testimonials/admin`);
+  const response = await authFetch(`${API_BASE}/testimonials?admin=true`);
   return handleResponse<Testimonial[]>(response);
 }
 

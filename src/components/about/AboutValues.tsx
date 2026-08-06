@@ -8,28 +8,28 @@ const values = [
     icon: Target,
     title: "Purpose",
     description:
-      "We build technology that matters. Every solution we create is driven by a commitment to empower people, strengthen businesses, and create lasting impact.",
+      "We build with intention. Everything we create should solve a real problem and make a meaningful difference. Technology is only valuable when it improves lives, empowers businesses, or strengthens communities.",
     color: "primary",
   },
   {
     icon: ShieldCheck,
     title: "Integrity",
     description:
-      "We do what is right, even when no one is watching. Honesty, transparency, and ethical decision-making guide everything we do.",
+      "We earn trust through honesty and accountability. We act ethically, communicate transparently, and stand behind our commitments. Trust is the foundation of every relationship we build.",
     color: "secondary",
   },
   {
     icon: Handshake,
     title: "Ownership",
     description:
-      "We take initiative, embrace responsibility, and see every challenge through. We act like builders, taking pride in our work and the impact it creates.",
+      "We take responsibility and make things happen. We think like owners, take initiative, and see challenges through to completion. We don't wait for change, we create it.",
     color: "primary",
   },
   {
     icon: BadgeCheck,
     title: "Reliability",
     description:
-      "We earn trust through consistency. From our technology to our relationships, we deliver dependable solutions and stand behind our commitments.",
+      "We deliver with consistency and excellence. Our customers depend on us. We build dependable technology, provide reliable support, and strive for quality in everything we do.",
     color: "secondary",
   },
 ];

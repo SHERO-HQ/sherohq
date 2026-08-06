@@ -174,7 +174,7 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
                                     {typeof item.rating === "number" && (
                                       <span className="inline-flex items-center gap-1 rounded border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-amber-700 dark:text-amber-300">
                                         <Star className="h-3 w-3 fill-current" />
-                                        {item.rating.toFixed(1)}/5
+                                        {Number.isInteger(item.rating) ? item.rating : item.rating.toFixed(1)}/5
                                       </span>
                                     )}
                                     {item.externalSource === "trustpilot" && (

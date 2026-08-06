@@ -79,14 +79,17 @@ const AboutStory = () => {
             </div>
             <div className="prose prose-lg dark:prose-invert max-w-none">
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
-                Founded to bridge Africa's digital divide,{" "}
+                The world is shaped by the limits we accept. Some believe those limits are fixed. We don't.{" "}
                 <span className="font-bold text-brand-secondary-700 dark:text-brand-secondary-400">
                   SHERO
                 </span>{" "}
-                makes technology more accessible and reliable. We have grown into a comprehensive technology partner, equipping individuals, businesses, and communities across West Africa with world-class digital solutions.
+                was founded on a simple belief: the greatest opportunities begin when we challenge assumptions and rethink what is possible.
+              </p>
+              <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
+                Technology is how we do that, not because it's the destination, but because it's one of the most powerful tools for creating progress. It helps people solve problems, businesses grow with confidence, and communities build a better future. Everything we create starts with the same question: <strong>What becomes possible?</strong>
               </p>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                We operate at the intersection of hardware excellence and software innovation, from infrastructure to custom development. Our mission remains constant: to equip our community with the transformative tools and knowledge needed to thrive today.
+                That question drives how we think, how we build, and how we serve. We don't exist simply to deliver technology. We exist to help redefine what's possible.
               </p>
             </div>
           </Reveal>
@@ -104,9 +107,7 @@ const AboutStory = () => {
                 Our Mission
               </h3>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">
-                To democratize access to enterprise-grade technology solutions
-                across Africa, empowering businesses of all sizes to compete
-                globally through innovative hardware, software, and IT services.
+                Create purposeful technology that removes barriers, expands opportunities, and enables lasting progress. Through every product, service, and solution we build, we aim to empower individuals, businesses, and communities to achieve more and redefine what's possible.
               </p>
             </div>
           </StaggerItem>
@@ -121,10 +122,7 @@ const AboutStory = () => {
                 Our Vision
               </h3>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">
-                To become West Africa's most trusted technology partner,
-                recognized for our commitment to quality, innovation, and
-                customer success. We envision a future where every business has
-                the technological foundation to innovate and grow.
+                A future where technology removes barriers, expands opportunities, and empowers every individual, business, and community to achieve more than they thought possible. By redefining what's possible, we aim to shape a world where technology is a catalyst for lasting progress and opportunity for all.
               </p>
             </div>
           </StaggerItem>

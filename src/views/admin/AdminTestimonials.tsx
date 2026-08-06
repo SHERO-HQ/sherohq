@@ -10,6 +10,8 @@ import {
   Trash2,
   Edit2,
   GripVertical,
+  Eye,
+  EyeOff,
   CheckCircle2,
   XCircle,
   Star} from "lucide-react";
@@ -63,6 +65,10 @@ const AdminTestimonials = () => {
   const [activeTimer, setActiveTimer] = useState<NodeJS.Timeout | null>(null);
   const [editingTestimonial, setEditingTestimonial] =
     useState<Testimonial | null>(null);
+  const [confirmModalData, setConfirmModalData] = useState<{
+    isOpen: boolean;
+    testimonial: Testimonial | null;
+  }>({ isOpen: false, testimonial: null });
 
   const [formData, setFormData] = useState({
     quote: "",
@@ -184,8 +190,8 @@ const AdminTestimonials = () => {
       await updateMutation.mutateAsync({
         id: t.id,
         data: { active: newStatus }});
-      const statusLabel = newStatus ? "activated" : "deactivated";
-      addNotification("Success", `Testimonial ${statusLabel}`, "success");
+      const statusLabel = newStatus ? "published to the site" : "hidden from the site";
+      addNotification("Success", `Feedback ${statusLabel}`, "success");
     } catch (error) {
       console.error("Failed to toggle testimonial status:", error);
       addNotification("Error", getErrorMessage(error, "Failed to update status"), "error");
@@ -216,10 +222,10 @@ const AdminTestimonials = () => {
         <div>
           <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
             <MessageSquareQuote className="w-7 h-7 text-brand-secondary-400" />
-            Testimonials
+            Testimonials & Feedback
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
-            Manage customer reviews and success stories
+            Manage customer feedback, reviews, and success stories
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -316,8 +322,8 @@ const AdminTestimonials = () => {
                         {t.author}
                       </h3>
                       {!t.active && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground border border-border uppercase">
-                          Inactive
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 uppercase font-bold">
+                          Unpublished
                         </span>
                       )}
                     </div>
@@ -346,27 +352,19 @@ const AdminTestimonials = () => {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => toggleActive(t)}
-                      title={t.active ? "Deactivate" : "Activate"}
+                      onClick={() => setConfirmModalData({ isOpen: true, testimonial: t })}
+                      title={t.active ? "Unpublish from site" : "Publish to site"}
                       className={
                         t.active
                           ? "text-brand-secondary-500 hover:text-brand-secondary-400"
-                          : "text-muted-foreground hover:text-muted-foreground"
+                          : "text-muted-foreground hover:text-foreground"
                       }
                     >
                       {t.active ? (
-                        <CheckCircle2 className="w-4 h-4" />
+                        <EyeOff className="w-4 h-4" />
                       ) : (
-                        <XCircle className="w-4 h-4" />
+                        <Eye className="w-4 h-4" />
                       )}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleOpenEdit(t)}
-                      className="text-muted-foreground hover:text-foreground"
-                    >
-                      <Edit2 className="w-4 h-4" />
                     </Button>
                     <Button
                       variant="ghost"
@@ -533,7 +531,45 @@ const AdminTestimonials = () => {
         </form>
       </Modal>
 
-
+      {/* Confirmation Modal */}
+      <Modal
+        isOpen={confirmModalData.isOpen}
+        onClose={() => setConfirmModalData({ isOpen: false, testimonial: null })}
+        title={confirmModalData.testimonial?.active ? "Unpublish Feedback" : "Publish Feedback"}
+      >
+        <div className="space-y-4">
+          <p className="text-muted-foreground text-sm">
+            Are you sure you want to {confirmModalData.testimonial?.active ? "unpublish" : "publish"} this feedback{" "}
+            {confirmModalData.testimonial?.active ? "from" : "to"} the public site?
+          </p>
+          <div className="flex justify-end gap-3 pt-4 border-t border-border">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setConfirmModalData({ isOpen: false, testimonial: null })}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              disabled={updateMutation.isPending}
+              onClick={async () => {
+                if (confirmModalData.testimonial) {
+                  await toggleActive(confirmModalData.testimonial);
+                  setConfirmModalData({ isOpen: false, testimonial: null });
+                }
+              }}
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+            >
+              {updateMutation.isPending ? (
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+              ) : (
+                "Confirm"
+              )}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
