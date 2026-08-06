@@ -47,7 +47,7 @@ export const ordersNotifications = {
             : item.image || "";
 
         const imgHtml = imgUrl
-          ? `<img src="${imgUrl}" alt="${item.name}" width="40" height="40" style="border-radius: 4px; object-fit: cover; margin-right: 12px; border: 1px solid #e2e8f0; vertical-align: middle;" />`
+          ? `<img src="${imgUrl}" alt="${item.name}" width="60" height="60" style="border-radius: 4px; object-fit: cover; border: 1px solid #e2e8f0; display: block;" />`
           : "";
 
         return `
@@ -55,7 +55,9 @@ export const ordersNotifications = {
             <td style="padding: 16px 0; border-bottom: 1px solid #f1f5f9; color: #1e293b;">
               <table style="border: 0; padding: 0; margin: 0; border-collapse: collapse;">
                 <tr>
-                  <td style="padding: 0;">${imgHtml}</td>
+                  <td style="padding: 0; padding-bottom: 8px;">${imgHtml}</td>
+                </tr>
+                <tr>
                   <td style="padding: 0; vertical-align: middle;">
                     <strong style="display: block; margin-bottom: 4px; font-family: Helvetica, Arial, sans-serif; font-size: 12px; font-weight: bold;">${item.name}</strong>
                     ${item.sku ? `<span style="font-family: 'Courier New', Courier, monospace; font-size: 10px; color: #94a3b8;">SKU: ${item.sku}</span>` : ""}
@@ -90,27 +92,6 @@ export const ordersNotifications = {
     const statusColor = paymentMethod === "cash_on_delivery" || paymentMethod === "store_pickup" ? "#b45309" : "#047857";
 
     const bodyHtml = `
-      <!-- Header Area -->
-      <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 32px;">
-        <tr>
-          <td valign="top" style="width: 50%;">
-            <img src="${baseUrl}/assets/logo/shero.png" alt="SHERO" width="40" style="margin-bottom: 12px; display: block;" />
-            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; color: #1e293b; margin-bottom: 4px;">SHERO TECHNOLOGIES</div>
-            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 11px; color: #64748b; line-height: 1.6;">
-              ${COMPANY_CONTACTS.HQ_LOCATION}<br />
-              ${COMPANY_CONTACTS.PHONE_DISPLAY}<br />
-              <span style="color: #059669;">${COMPANY_CONTACTS.WEBSITE_DISPLAY}</span>
-            </div>
-          </td>
-          <td valign="top" style="width: 50%; text-align: right;">
-            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 28px; font-weight: bold; color: #e2e8f0; margin-bottom: 16px; letter-spacing: 1px;">RECEIPT</div>
-            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; font-weight: bold; color: #334155; margin-bottom: 2px;">Ref: ${readableOrderId}</div>
-            <div style="font-family: Helvetica, Arial, sans-serif; font-size: 11px; color: #64748b; margin-bottom: 8px;">Date: ${orderDate}</div>
-            <div style="display: inline-block; background-color: ${statusBg}; color: ${statusColor}; font-size: 10px; font-weight: bold; padding: 4px 8px; border-radius: 4px;">${statusText}</div>
-          </td>
-        </tr>
-      </table>
-
       <!-- Billed To & Shipping Side-by-Side -->
       <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 32px;">
         <tr>

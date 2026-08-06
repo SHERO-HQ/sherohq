@@ -5,6 +5,7 @@ import { ChevronLeft, CheckCircle, Smartphone, CreditCard, Wallet, Store, Lucide
 import { Button } from "@/components/ui/button";
 import PaymentIcons from "@/components/layout/PaymentIcons";
 import { useCheckout } from "../CheckoutContext";
+import { useNotifications } from "@/hooks/useNotifications";
 
 type PaymentMethodValue = "momo" | "card" | "cod" | "store_pickup";
 
@@ -53,8 +54,16 @@ export const OFFLINE_PAYMENT_OPTIONS: PaymentMethodOption[] = [
 ];
 
 export default function CheckoutStepPayment({ onSubmit }: { onSubmit: (data: any) => Promise<void> }) {
-  const { formMethods: { setValue, watch, handleSubmit, formState: { errors } }, handleBack, isSubmitting } = useCheckout();
+  const { formMethods: { setValue, watch, handleSubmit, formState: { errors } }, handleBack, isSubmitting, setCurrentStep } = useCheckout();
+  const { addNotification } = useNotifications();
   const paymentMethod = watch("paymentMethod");
+
+  const onError = (formErrors: any) => {
+    if (formErrors.shippingAddress || formErrors.email || formErrors.phone) {
+      addNotification("Validation Error", "Please check your delivery details. Some fields are missing.", "error");
+      setCurrentStep(2);
+    }
+  };
 
   return (
     <m.div
@@ -213,7 +222,7 @@ export default function CheckoutStepPayment({ onSubmit }: { onSubmit: (data: any
           Back
         </Button>
         <Button
-          onClick={handleSubmit(onSubmit)}
+          onClick={handleSubmit(onSubmit, onError)}
           disabled={isSubmitting}
           variant="brand"
           className="font-bold gap-2 px-8"

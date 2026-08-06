@@ -25,7 +25,7 @@ export default function CheckoutStepConfirmation() {
       <m.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        transition={{ delay: 0.2, type: "spring" }}
+        transition={{ delay: 0.2, type: "tween", ease: "easeOut", duration: 0.5 }}
         className="w-24 h-24 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center mx-auto mb-6"
       >
         <CheckCircle className="w-12 h-12 text-brand-secondary-600 dark:text-brand-secondary-400" />
