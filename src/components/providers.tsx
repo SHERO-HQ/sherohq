@@ -2,7 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { MotionConfig, LazyMotion, domAnimation } from "motion/react";
+import { MotionConfig, LazyMotion, domMax } from "motion/react";
 import { ThemeProvider } from "@/context/Theme";
 import { CartProvider } from "@/context/CartContext";
 import { AuthProvider } from "@/context/AuthContext";
@@ -37,7 +37,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
  return (
   <QueryClientProvider client={queryClient}>
    <MotionConfig reducedMotion="user">
-    <LazyMotion features={domAnimation} strict>
+    <LazyMotion features={domMax} strict>
     <ThemeProvider>
      <CartProvider>
       <AuthProvider>

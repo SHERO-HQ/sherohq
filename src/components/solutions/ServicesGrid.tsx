@@ -61,8 +61,8 @@ const ServicesGrid = () => {
         "Proactive system maintenance",
         "Secure enterprise infrastructure",
       ],
-      gradient: "from-indigo-500 to-indigo-600",
-      textClass: "text-indigo-600 dark:text-indigo-400",
+      gradient: "from-brand-primary-500 to-brand-primary-600",
+      textClass: "text-brand-primary-600 dark:text-brand-primary-400",
     },
     {
       icon: <Workflow className="w-8 h-8" />,
@@ -75,8 +75,8 @@ const ServicesGrid = () => {
         "Payment gateway setup",
         "Microservices architecture",
       ],
-      gradient: "from-purple-500 to-purple-600",
-      textClass: "text-purple-600 dark:text-purple-400",
+      gradient: "from-brand-secondary-500 to-brand-secondary-600",
+      textClass: "text-brand-secondary-600 dark:text-brand-secondary-400",
     },
   ];
 
@@ -142,7 +142,7 @@ const ServicesGrid = () => {
               className="h-full"
             >
               <SpotlightCard
-                className="group relative bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300 h-full flex flex-col overflow-hidden"
+                className="group relative bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300 h-full flex flex-col overflow-hidden"
               >
                 {/* Hover Glow Background */}
                 <div

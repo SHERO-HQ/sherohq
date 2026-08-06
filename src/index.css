@@ -323,16 +323,19 @@ h6 {
     /* Deep & Vibrant Glassmorphic Surfaces */
     .glass-surface {
         -webkit-backdrop-filter: blur(48px) saturate(200%);
+        backdrop-filter: blur(48px) saturate(200%);
         @apply backdrop-blur-[48px] backdrop-saturate-200 bg-white/70 dark:bg-slate-900/75 border border-black/10 dark:border-white/10 shadow;
     }
 
     .glass-surface-md {
         -webkit-backdrop-filter: blur(64px) saturate(200%);
+        backdrop-filter: blur(64px) saturate(200%);
         @apply backdrop-blur-3xl backdrop-saturate-200 bg-white/80 dark:bg-slate-900/85 border border-black/15 dark:border-white/15 shadow;
     }
 
     .glass-surface-lg {
         -webkit-backdrop-filter: blur(80px) saturate(250%);
+        backdrop-filter: blur(80px) saturate(250%);
         @apply backdrop-blur-[80px] backdrop-saturate-[2.5] bg-white/90 dark:bg-slate-900/90 border border-black/20 dark:border-white/20 shadow;
     }
 

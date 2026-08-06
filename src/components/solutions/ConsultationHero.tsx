@@ -95,7 +95,7 @@ const ConsultationHero = () => {
             <m.div variants={itemVariants}>
               <button
                 onClick={scrollToScheduler}
-                className="group inline-flex items-center justify-center gap-2 px-8 py-3 text-base font-medium text-white bg-slate-900 dark:bg-white dark:text-slate-900 rounded-full shadow hover:shadow-xl hover:bg-slate-800 dark:hover:bg-slate-100 hover:-translate-y-0.5 transition-all duration-300"
+                className="group inline-flex items-center justify-center gap-2 px-8 py-3 text-base font-medium text-white bg-slate-900 dark:bg-white dark:text-slate-900 rounded shadow hover:shadow-xl hover:bg-slate-800 dark:hover:bg-slate-100 hover:-translate-y-0.5 transition-all duration-300"
               >
                 Book a Session
                 <ArrowRight className="size-5 group-hover:translate-x-1 transition-transform" />
