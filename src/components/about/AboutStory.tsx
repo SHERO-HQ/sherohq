@@ -150,7 +150,7 @@ const AboutStory = () => {
               </div>
               <div className="py-8 md:py-0 md:px-10">
                 <h4 className="font-bold text-slate-900 dark:text-white mb-3 flex items-center gap-2">
-                  <Globe2 className="size-5 text-brand-secondary-400" /> Global Standards,
+                  <Globe2 className="size-5 text-brand-secondary-400" /> Global,
                   Local Context
                 </h4>
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
