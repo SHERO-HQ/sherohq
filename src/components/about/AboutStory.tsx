@@ -99,8 +99,8 @@ const AboutStory = () => {
         <StaggerContainer className="grid md:grid-cols-2 gap-8 mb-16 lg:grid-cols-2!">
           {/* Mission */}
           <StaggerItem>
-            <div className="group h-full bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-8 lg:p-10 rounded border border-slate-200/80 dark:border-slate-800/80 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-500/50 transition-all duration-500 shadow-sm hover:shadow-xl hover:-translate-y-1">
-              <div className="w-12 h-12 bg-brand-primary-500 rounded flex items-center justify-center mb-4 shadow shadow-brand-secondary-500/20 group-hover:scale-110 transition-transform">
+            <div className="group h-full bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-8 lg:p-10 rounded border border-slate-200/80 dark:border-slate-800/80 hover:border-brand-primary-500/50 dark:hover:border-brand-primary-500/50 transition-all duration-500 shadow-sm hover:shadow-xl hover:-translate-y-1">
+              <div className="w-12 h-12 bg-brand-primary-500 rounded flex items-center justify-center mb-4 shadow shadow-brand-primary-500/20 group-hover:scale-110 transition-transform">
                 <Target className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-lg lg:text-xl font-bold text-slate-900 dark:text-white mb-4 tracking-tighter">
@@ -114,8 +114,8 @@ const AboutStory = () => {
 
           {/* Vision */}
           <StaggerItem>
-            <div className="group h-full bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-8 lg:p-10 rounded border border-slate-200/80 dark:border-slate-800/80 hover:border-blue-500/50 dark:hover:border-blue-500/50 transition-all duration-500 shadow-sm hover:shadow-xl hover:-translate-y-1">
-              <div className="w-12 h-12 bg-brand-secondary-500 rounded flex items-center justify-center mb-4 shadow shadow-blue-600/20 group-hover:scale-110 transition-transform">
+            <div className="group h-full bg-white/60 dark:bg-slate-900/40 backdrop-blur-md p-8 lg:p-10 rounded border border-slate-200/80 dark:border-slate-800/80 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-500/50 transition-all duration-500 shadow-sm hover:shadow-xl hover:-translate-y-1">
+              <div className="w-12 h-12 bg-brand-secondary-500 rounded flex items-center justify-center mb-4 shadow shadow-brand-secondary-500/20 group-hover:scale-110 transition-transform">
                 <Globe className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-lg lg:text-xl font-bold text-slate-900 dark:text-white mb-4 tracking-tighter">
