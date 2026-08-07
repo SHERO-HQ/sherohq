@@ -55,7 +55,7 @@ const ProcessStep = ({ step, index }: { step: typeof steps[0]; index: number }) 
   const isEven = index % 2 === 0;
   const Icon = step.icon;
   const ref = useRef(null);
-  const isInView = useInView(ref, { margin: "10000px 0px -50% 0px" });
+  const isInView = useInView(ref, { margin: "10000px 0px -50% 0px", once: true });
 
   return (
     <FadeInView direction="up" delay={0.05} threshold={0.1} once={true}>
@@ -76,12 +76,12 @@ const ProcessStep = ({ step, index }: { step: typeof steps[0]; index: number }) 
           >
             {/* Giant Number Watermark */}
             <div
-              className={`absolute -bottom-4 ${
-                isEven ? "md:-left-2 right-0" : "right-1 md:right-1"
-              } text-[100px] font-black text-slate-900/10 dark:text-white/10 select-none pointer-events-none leading-none tracking-tighter transition-colors duration-500 ${
+              className={`absolute -bottom-4 z-0 transform-gpu ${
+                isEven ? "md:-left-2 right-0" : "right-0 md:right-1"
+              } text-[100px] font-black select-none pointer-events-none leading-none tracking-tighter transition-colors duration-500 ${
                 isInView
                   ? "text-brand-secondary-500/10 dark:text-brand-secondary-400/10"
-                  : "group-hover:text-brand-secondary-500/5"
+                  : "text-slate-900/10 dark:text-white/10 group-hover:text-brand-secondary-500/5"
               }`}
             >
               0{index + 1}
