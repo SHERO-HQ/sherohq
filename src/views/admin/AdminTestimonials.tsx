@@ -60,9 +60,10 @@ const AdminTestimonials = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
-  const [secondsLeft, setSecondsLeft] = useState(3);
-  const [activeTimer, setActiveTimer] = useState<NodeJS.Timeout | null>(null);
+  const [deleteModalData, setDeleteModalData] = useState<{
+    isOpen: boolean;
+    testimonialId: string | null;
+  }>({ isOpen: false, testimonialId: null });
   const [editingTestimonial, setEditingTestimonial] =
     useState<Testimonial | null>(null);
   const [confirmModalData, setConfirmModalData] = useState<{
@@ -139,50 +140,7 @@ const AdminTestimonials = () => {
     }
   };
 
-  const startSoftDelete = (id: string) => {
-    if (activeTimer) clearTimeout(activeTimer);
-    setPendingDeleteId(id);
-    setSecondsLeft(3);
 
-    const countdown = (secs: number) => {
-      if (secs <= 0) {
-        setPendingDeleteId(null);
-        deleteMutation.mutate(id, {
-          onSuccess: () => {
-            addNotification("Success", "Testimonial deleted successfully", "success");
-          },
-          onError: (error) => {
-            console.error("Failed to delete testimonial:", error);
-            addNotification("Error", getErrorMessage(error, "Failed to delete testimonial"), "error");
-          }
-        });
-      } else {
-        setSecondsLeft(secs);
-        const timer = setTimeout(() => countdown(secs - 1), 1000);
-        setActiveTimer(timer);
-      }
-    };
-
-    const timer = setTimeout(() => countdown(2), 1000);
-    setActiveTimer(timer);
-  };
-
-  const handleCancelDelete = (id: string) => {
-    if (activeTimer) {
-      clearTimeout(activeTimer);
-      setActiveTimer(null);
-    }
-    setPendingDeleteId(id);
-    setSecondsLeft(3);
-    setPendingDeleteId(null);
-    addNotification("Info", "Deletion cancelled", "info");
-  };
-
-  useEffect(() => {
-    return () => {
-      if (activeTimer) clearTimeout(activeTimer);
-    };
-  }, [activeTimer]);
 
   const toggleActive = async (t: Testimonial) => {
     try {
@@ -274,28 +232,11 @@ const AdminTestimonials = () => {
             </div>
           ) : (
             filteredTestimonials.map((t) => {
-              const isDeleting = pendingDeleteId === t.id;
               return (
                 <div
                   key={t.id}
                   className="bg-muted/30 border border-border rounded p-4 flex items-center gap-4 group hover:border-brand-secondary-500/30 transition relative overflow-hidden"
                 >
-                  {isDeleting && (
-                    <div className="absolute inset-0 bg-card backdrop-blur-xs z-10 flex items-center justify-between px-4 py-2 animate-in fade-in duration-200 select-none">
-                      <span className="text-xs font-bold text-rose-400 animate-pulse">
-                        Removing testimonial in {secondsLeft}s
-                      </span>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        onClick={() => handleCancelDelete(t.id)}
-                        className="h-8 px-4 bg-accent hover:bg-white/20 text-foreground rounded text-[11px] font-bold transition-all shrink-0"
-                      >
-                        Undo Deletion
-                      </Button>
-                    </div>
-                  )}
-
                   <div className="text-slate-600 cursor-move opacity-0 group-hover:opacity-100 transition-opacity">
                     <GripVertical className="w-5 h-5" />
                   </div>
@@ -369,7 +310,7 @@ const AdminTestimonials = () => {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => startSoftDelete(t.id)}
+                      onClick={() => setDeleteModalData({ isOpen: true, testimonialId: t.id })}
                       className="text-muted-foreground hover:text-rose-400"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -565,6 +506,53 @@ const AdminTestimonials = () => {
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />
               ) : (
                 "Confirm"
+              )}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Delete Modal */}
+      <Modal
+        isOpen={deleteModalData.isOpen}
+        onClose={() => setDeleteModalData({ isOpen: false, testimonialId: null })}
+        title="Delete Testimonial"
+      >
+        <div className="space-y-4">
+          <p className="text-muted-foreground text-sm">
+            Are you sure you want to delete this testimonial? This action cannot be undone.
+          </p>
+          <div className="flex justify-end gap-3 pt-4 border-t border-border">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setDeleteModalData({ isOpen: false, testimonialId: null })}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              disabled={deleteMutation.isPending}
+              onClick={() => {
+                if (deleteModalData.testimonialId) {
+                  deleteMutation.mutate(deleteModalData.testimonialId, {
+                    onSuccess: () => {
+                      addNotification("Success", "Testimonial deleted successfully", "success");
+                      setDeleteModalData({ isOpen: false, testimonialId: null });
+                    },
+                    onError: (error) => {
+                      console.error("Failed to delete testimonial:", error);
+                      addNotification("Error", getErrorMessage(error, "Failed to delete testimonial"), "error");
+                    }
+                  });
+                }
+              }}
+              className="bg-rose-600 hover:bg-rose-500 text-white"
+            >
+              {deleteMutation.isPending ? (
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+              ) : (
+                "Delete"
               )}
             </Button>
           </div>
