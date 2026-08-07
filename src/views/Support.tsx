@@ -104,7 +104,7 @@ const Support = () => {
                 <button
                   type="submit"
                   disabled={!searchQuery.trim()}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded bg-gradient-to-r from-brand-secondary-600 to-indigo-600 text-white hover:from-brand-secondary-500 hover:to-indigo-500 transition shadow disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded bg-gradient-to-r from-brand-secondary-600 to-brand-primary-600 text-white hover:from-brand-secondary-500 hover:to-brand-primary-500 transition shadow disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Search or Ask AI"
                 >
                   <ArrowRight className="w-5 h-5" />
@@ -140,7 +140,7 @@ const Support = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   className="mb-24 max-w-2xl mx-auto bg-card/60 dark:bg-slate-900/60 p-8 rounded border border-border text-center shadow-lg relative overflow-hidden"
                 >
-                  <div className="absolute inset-0 bg-linear-to-r from-brand-secondary-500/5 to-indigo-500/5 animate-pulse" />
+                  <div className="absolute inset-0 bg-linear-to-r from-brand-secondary-500/5 to-brand-primary-500/5 animate-pulse" />
                   <Meh className="w-14 h-14 mx-auto mb-4 opacity-80 text-muted-foreground" />
                   <h3 className="text-xl font-bold text-foreground mb-2">No guides found</h3>
                   <p className="text-muted-foreground text-sm max-w-md mx-auto">

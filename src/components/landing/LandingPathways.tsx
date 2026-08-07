@@ -64,7 +64,7 @@ const LandingPathways = () => {
  link: "/solutions",
  pattern: "pattern-dots",
  span: "lg:col-span-4 lg:row-span-1",
- color: "text-indigo-500",
+ color: "text-brand-primary-500",
  },
  ];
 

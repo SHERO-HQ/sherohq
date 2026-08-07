@@ -86,7 +86,7 @@ const Contact = () => {
                 />
                 <ContactItem
                   icon={
-                    <MapPin className="w-5 h-5 text-indigo-700 dark:text-indigo-400 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3" />
+                    <MapPin className="w-5 h-5 text-brand-primary-600 dark:text-brand-primary-400 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3" />
                   }
                   label="Visit Us"
                   value="Tamale, Northern Region, Ghana"

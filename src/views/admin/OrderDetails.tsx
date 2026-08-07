@@ -480,14 +480,14 @@ export default function OrderDetails() {
                 onClick={() => handlePrint("receipt")}
                 className="cursor-pointer hover:bg-accent"
               >
-                <Printer className="w-4 h-4 mr-2 text-blue-400" />
+                <Printer className="w-4 h-4 mr-2 text-brand-primary-400" />
                 Print Receipt (A4)
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => handlePrint("receiptA5")}
                 className="cursor-pointer hover:bg-accent"
               >
-                <Printer className="w-4 h-4 mr-2 text-indigo-400" />
+                <Printer className="w-4 h-4 mr-2 text-brand-primary-400" />
                 Print Receipt (A5)
               </DropdownMenuItem>
               <DropdownMenuItem

@@ -204,9 +204,9 @@ ${formData.message}`;
                       whileTap={{ scale: 0.99 }}
                       type="button"
                       onClick={() => handleSelectType("proposal")}
-                      className="group p-5 text-left rounded border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30 hover:bg-brand-secondary-500/5 dark:hover:bg-brand-secondary-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+                      className="group p-5 text-left rounded border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-primary-500/50 dark:hover:border-brand-primary-400/30 hover:bg-brand-primary-500/5 dark:hover:bg-brand-primary-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                     >
-                      <div className="p-2.5  bg-blue-500/10 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 shrink-0 transition-transform group-hover:scale-105">
+                      <div className="p-2.5  bg-brand-primary-500/10 dark:bg-brand-primary-500/10 text-brand-primary-600 dark:text-brand-primary-400 shrink-0 transition-transform group-hover:scale-105">
                         <Code className="w-5 h-5" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -228,7 +228,7 @@ ${formData.message}`;
                       onClick={() => handleSelectType("general")}
                       className="group p-5 text-left rounded border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30 hover:bg-brand-secondary-500/5 dark:hover:bg-brand-secondary-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                     >
-                      <div className="p-2.5  bg-indigo-500/10 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 shrink-0 transition-transform group-hover:scale-105">
+                      <div className="p-2.5  bg-brand-primary-500/10 dark:bg-brand-primary-500/10 text-brand-primary-600 dark:text-brand-primary-400 shrink-0 transition-transform group-hover:scale-105">
                         <HelpCircle className="w-5 h-5" />
                       </div>
                       <div className="flex-1 min-w-0">

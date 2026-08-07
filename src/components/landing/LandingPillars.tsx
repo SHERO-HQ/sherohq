@@ -404,7 +404,7 @@ const PILLARS: PillarsProps[] = [
       "Custom-engineered digital platforms for businesses, designed to integrate with existing systems and workflows.",
     icon: <Code className="w-6 h-6" />,
     className: "md:col-span-3",
-    gradient: "from-indigo-500/20 to-violet-500/20",
+    gradient: "from-brand-primary-500/20 to-brand-secondary-500/20",
     glowColor: "rgba(16, 185, 129, 0.12)", // Emerald
     widget: <PharmasystWidget />},
 ];
