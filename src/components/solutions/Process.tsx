@@ -55,7 +55,7 @@ const ProcessStep = ({ step, index }: { step: typeof steps[0]; index: number }) 
   const isEven = index % 2 === 0;
   const Icon = step.icon;
   const ref = useRef(null);
-  const isInView = useInView(ref, { margin: "10000px 0px -50% 0px", once: true });
+  const isInView = useInView(ref, { margin: "10000px 0px -50% 0px" });
 
   return (
     <FadeInView direction="up" delay={0.05} threshold={0.1} once={true}>
