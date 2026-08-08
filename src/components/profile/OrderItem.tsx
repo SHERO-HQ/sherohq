@@ -81,7 +81,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
               Total
             </p>
             <p className="text-sm font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
-              GH₵{order.total.toFixed(2)}
+              GHS{order.total.toFixed(2)}
             </p>
           </div>
         </div>
@@ -137,8 +137,8 @@ const OrderItem: React.FC<OrderItemProps> = ({
               >
                 <div className="relative w-12 h-12 bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 flex items-center justify-center overflow-hidden shrink-0">
                   {item.image &&
-                  (item.image.startsWith("/uploads") ||
-                    item.image.startsWith("http")) ? (
+                    (item.image.startsWith("/uploads") ||
+                      item.image.startsWith("http")) ? (
                     <AppImage
                       src={getImageUrl(item.image)}
                       alt={item.name}
@@ -155,11 +155,11 @@ const OrderItem: React.FC<OrderItemProps> = ({
                     {item.name}
                   </h4>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
-                    GH₵{item.price.toFixed(2)} × {item.quantity}
+                    GHS{item.price.toFixed(2)} × {item.quantity}
                   </p>
                 </div>
                 <p className="font-bold text-sm text-slate-900 dark:text-white">
-                  GH₵{(item.price * item.quantity).toFixed(2)}
+                  GHS{(item.price * item.quantity).toFixed(2)}
                 </p>
               </div>
             ))}

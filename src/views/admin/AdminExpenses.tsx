@@ -17,12 +17,14 @@ import {
   FileText,
   Loader2,
   X,
-  Calendar as CalendarIcon} from "lucide-react";
+  Calendar as CalendarIcon
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { useNotifications } from "@/hooks/useNotifications";
 import { authFetch, handleResponse, API_BASE } from "@/services/api";
@@ -31,12 +33,14 @@ import {
   startOfDay,
   endOfDay,
   isWithinInterval,
-  parse} from "date-fns";
+  parse
+} from "date-fns";
 import { cn } from "@/lib/utils";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger} from "@/components/ui/popover";
+  PopoverTrigger
+} from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import type { DateRange } from "react-day-picker";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
@@ -55,10 +59,10 @@ interface Expense {
 // Sub-components used in this file
 const Label = ({
   children,
-  className}: {
-  children: React.ReactNode;
-  className?: string;
-}) => (
+  className }: {
+    children: React.ReactNode;
+    className?: string;
+  }) => (
   <label className={cn("text-sm font-medium", className)}>{children}</label>
 );
 
@@ -130,7 +134,8 @@ export default function AdminExpenses() {
   const [dateFilter, setDateFilter] = useState("all"); // 7d, 30d, all, range
   const [customRange, setCustomRange] = useState<DateRange | undefined>({
     from: new Date(new Date().setDate(new Date().getDate() - 7)),
-    to: new Date()});
+    to: new Date()
+  });
 
   // Form State
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -141,7 +146,8 @@ export default function AdminExpenses() {
     amount: "",
     category: "Other",
     date: format(new Date(), "yyyy-MM-dd"),
-    description: ""});
+    description: ""
+  });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
@@ -219,7 +225,8 @@ export default function AdminExpenses() {
         amount: expense.amount.toString(),
         category: expense.category,
         date: format(new Date(expense.date), "yyyy-MM-dd"),
-        description: expense.description || ""});
+        description: expense.description || ""
+      });
     } else {
       setEditingId(null);
       setFormData({
@@ -227,7 +234,8 @@ export default function AdminExpenses() {
         amount: "",
         category: "Other",
         date: format(new Date(), "yyyy-MM-dd"),
-        description: ""});
+        description: ""
+      });
     }
     setIsFormOpen(true);
   };
@@ -272,7 +280,8 @@ export default function AdminExpenses() {
       const response = await authFetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)});
+        body: JSON.stringify(formData)
+      });
 
       await handleResponse(response);
       addNotification(
@@ -298,7 +307,8 @@ export default function AdminExpenses() {
     setIsDeleting(id);
     try {
       const response = await authFetch(`${API_BASE}/admin/expenses/${id}`, {
-        method: "DELETE"});
+        method: "DELETE"
+      });
       await handleResponse(response);
       addNotification("Success", "Expense deleted", "success");
       setExpenses(expenses.filter((e) => e.id !== id));
@@ -320,7 +330,8 @@ export default function AdminExpenses() {
       Amount: e.amount,
       Category: e.category,
       Date: e.date,
-      Description: e.description || ""}));
+      Description: e.description || ""
+    }));
 
     const fileName = `SHERO-Expenses-${new Date().toISOString().split("T")[0]}`;
     const columns = ["Title", "Amount", "Category", "Date", "Description"];
@@ -367,7 +378,7 @@ export default function AdminExpenses() {
                 Total Expenses
               </p>
               <p className="text-2xl font-bold text-foreground mt-1">
-                GH₵{totalAmount.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                GHS{totalAmount.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
             </div>
           </div>
@@ -597,7 +608,7 @@ export default function AdminExpenses() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <p className="text-foreground font-bold">
-                        GH₵{Number(expense.amount).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        GHS{Number(expense.amount).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </p>
                     </td>
                     <td className="px-6 py-4 text-right">
@@ -676,7 +687,7 @@ export default function AdminExpenses() {
               {/* Amount & Date */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <Label className="text-muted-foreground text-sm font-medium">Amount (GH₵) *</Label>
+                  <Label className="text-muted-foreground text-sm font-medium">Amount (GHS) *</Label>
                   <Input
                     type="number"
                     value={formData.amount}
@@ -724,7 +735,8 @@ export default function AdminExpenses() {
                         onSelect={(date) =>
                           setFormData({
                             ...formData,
-                            date: date ? format(date, "yyyy-MM-dd") : ""})
+                            date: date ? format(date, "yyyy-MM-dd") : ""
+                          })
                         }
                       />
                     </PopoverContent>

@@ -268,7 +268,7 @@ The codebase uses raw `pg` queries across 25 API routes. The orders route does t
 Badge: "Trusted Tech Partner"    ╔══════════════════════════╗
                                  ║ hardware_catalog.dmg     ║ ← floating
 H1: Hardware, Software,          ║ HP EliteBook 1040 ★4.9  ║   window 1
-    and Managed IT Support       ║ GH₵5,500  [-5%]  [+]   ║
+    and Managed IT Support       ║ GHS5,500  [-5%]  [+]   ║
     for Your Business.           ╚══════════════════════════╝
                                       ╔════════════════════╗
 P: We supply premium hardware,        ║ smartboutique_pos  ║ ← floating
@@ -315,7 +315,7 @@ The dual-primary system is consistent and works well:
 ### Typography in Practice
 
 - **Sora Variable** renders cleanly at all sizes — the `tracking-tighter` on the hero H1 is especially effective
-- **JetBrains Mono** used correctly for prices (`GH₵5,500`), version numbers, and terminal widgets
+- **JetBrains Mono** used correctly for prices (`GHS5,500`), version numbers, and terminal widgets
 - **AubetteArchiType** logo font used in the mobile menu footer — subtle and premium
 - Global `h1–h6 { font-weight: 600 !important }` override prevents accidental bold headings — deliberate "gentle" preset
 

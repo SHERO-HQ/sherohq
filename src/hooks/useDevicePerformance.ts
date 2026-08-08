@@ -21,12 +21,14 @@ export const useDevicePerformance = (): DevicePerformance => {
     
     // Determine if the device is a low-end tier
     if (hardwareConcurrency <= 4 && deviceMemory <= 4) {
-      setPerformance({
-        isLowEnd: true,
-        reason: "hardware_constraints",
-      });
+      if (!performance.isLowEnd) {
+        setPerformance({
+          isLowEnd: true,
+          reason: "hardware_constraints",
+        });
+      }
     }
-  }, []);
+  }, [performance.isLowEnd]);
 
   return performance;
 };

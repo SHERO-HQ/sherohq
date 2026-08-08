@@ -176,7 +176,7 @@ export const generateInvoicePdf = async (
       doc.fillColor("#059669").font("Helvetica-Bold").fontSize(16).text(`GHS ${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`, 400, currentY - 2, { align: "right", width: 145 });
 
       // --- Footer ---
-      let footerY = 715; // Moved up to prevent automatic page breaks (A4 height is 841, bottom margin 50 = 791 limit)
+      const footerY = 715; // Moved up to prevent automatic page breaks (A4 height is 841, bottom margin 50 = 791 limit)
       if (currentY > 690) {
         doc.addPage();
       }

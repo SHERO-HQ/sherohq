@@ -125,7 +125,7 @@ export async function POST(request: Request) {
     (async () => {
       try {
         let currentBody = llmResponse.body;
-        let currentContents = [...contents];
+        const currentContents = [...contents];
         let keepLooping = true;
         let finalContent = "";
         let loopCount = 0;

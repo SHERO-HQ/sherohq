@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const walkSync = function(dir, filelist = []) {
+const walkSync = function (dir, filelist = []) {
   const files = fs.readdirSync(dir);
-  files.forEach(function(file) {
+  files.forEach(function (file) {
     const filepath = path.join(dir, file);
     if (fs.statSync(filepath).isDirectory()) {
       filelist = walkSync(filepath, filelist);
@@ -27,12 +27,12 @@ tsFiles.forEach(file => {
 
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i];
-    
+
     // Only replace .toLocaleString() if it doesn't look like a date
     if (line.includes('.toLocaleString()') && !line.includes('Date(') && !line.includes('scheduleAt')) {
-      // Check if it's related to currency (contains GH₵, price, total, amount, value, revenue, expenses, profit, Item)
-      const isCurrency = /(GH₵|price|total|amount|value|revenue|expenses|profit|count)/i.test(line);
-      
+      // Check if it's related to currency (contains GHS, price, total, amount, value, revenue, expenses, profit, Item)
+      const isCurrency = /(GHS|price|total|amount|value|revenue|expenses|profit|count)/i.test(line);
+
       if (isCurrency) {
         lines[i] = line.replace(/\.toLocaleString\(\)/g, REPLACEMENT);
         changed = true;

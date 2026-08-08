@@ -6,19 +6,23 @@ const values = [
   {
     icon: Truck,
     title: "Free Delivery",
-    description: "On orders over GH₵2,000"},
+    description: "On orders over GHS2,000"
+  },
   {
     icon: Verified,
     title: "Verified Products",
-    description: "Authentic hardware"},
+    description: "Authentic hardware"
+  },
   {
     icon: Headset,
     title: "Expert Support",
-    description: "Free tech consultation"},
+    description: "Free tech consultation"
+  },
   {
     icon: CreditCard,
     title: "Flexible Payment",
-    description: "MoMo, Card, Cash on Delivery"},
+    description: "MoMo, Card, Cash on Delivery"
+  },
 ];
 
 const LandingValueProps = () => {

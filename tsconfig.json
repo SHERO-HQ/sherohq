@@ -14,9 +14,7 @@
     "jsx": "react-jsx",
     "incremental": true,
     "paths": {
-      "@/*": ["./src/*"],
-      "react-router-dom": ["./src/lib/router-compat.tsx"],
-      "react-router": ["./src/lib/router-compat.tsx"]
+      "@/*": ["./src/*"]
     },
     "plugins": [
       {

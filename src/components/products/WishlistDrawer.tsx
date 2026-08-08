@@ -135,7 +135,7 @@ const WishlistDrawer = () => {
                   >
                     <div className="relative w-full sm:w-24 h-32 sm:h-24 bg-slate-100 dark:bg-slate-800 rounded shrink-0 overflow-hidden">
                       {item.image.startsWith("http") ||
-                      item.image.startsWith("/uploads") ? (
+                        item.image.startsWith("/uploads") ? (
                         <AppImage
                           src={getImageUrl(item.image)}
                           alt={item.name}
@@ -156,7 +156,7 @@ const WishlistDrawer = () => {
                             {item.name}
                           </h4>
                           <span className="font-bold text-slate-900 dark:text-white shrink-0 text-sm sm:text-base">
-                            GH₵{item.price.toFixed(2)}
+                            GHS{item.price.toFixed(2)}
                           </span>
                         </div>
                         <div className="flex justify-between items-center">

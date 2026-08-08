@@ -2,7 +2,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   StaggerContainer,
-  StaggerItem} from "@/components/motion/AnimateSection";
+  StaggerItem
+} from "@/components/motion/AnimateSection";
 import Reveal from "@/components/motion/Reveal";
 import {
   ShoppingBag,
@@ -14,7 +15,8 @@ import {
   CheckCircle,
   Database,
   RefreshCw,
-  AlertTriangle} from "lucide-react";
+  AlertTriangle
+} from "lucide-react";
 import { m, AnimatePresence } from "motion/react";
 
 // ============================================================================
@@ -36,19 +38,23 @@ const HardwareTerminal: React.FC = () => {
     {
       label: "DEVICE PROVISIONING",
       detail: "Shero Workstation Pro v4",
-      status: "Active"},
+      status: "Active"
+    },
     {
       label: "CPU CORE TEST",
       detail: "16-Core Xeon Processor",
-      status: "[Passed]"},
+      status: "[Passed]"
+    },
     {
       label: "ECC MEMORY CONFIG",
       detail: "64GB DDR5 Secure Storage",
-      status: "[Passed]"},
+      status: "[Passed]"
+    },
     {
       label: "OS SECURE DEPLOYMENT",
       detail: "Fully Provisioned & Encrypted",
-      status: "Ready"},
+      status: "Ready"
+    },
   ];
 
   return (
@@ -71,13 +77,12 @@ const HardwareTerminal: React.FC = () => {
           return (
             <div
               key={step.label}
-              className={`flex items-center justify-between transition-all duration-300 ${
-                isActive
+              className={`flex items-center justify-between transition-all duration-300 ${isActive
                   ? "text-brand-secondary-400 font-bold translate-x-1"
                   : isDone
                     ? "text-slate-600 dark:text-slate-400"
                     : "text-slate-800 dark:text-slate-200"
-              }`}
+                }`}
             >
               <span className="flex items-center gap-1.5">
                 <span
@@ -109,10 +114,10 @@ const SmartBoutiqueWidget: React.FC = () => {
   }, []);
 
   const posCycles = [
-    { desc: "Scanning Silk Dress", price: "GH₵ 450.00", badge: "Add Item" },
-    { desc: "Loyalty Discount (-10%)", price: "-GH₵ 45.00", badge: "Discount" },
+    { desc: "Scanning Silk Dress", price: "GHS 450.00", badge: "Add Item" },
+    { desc: "Loyalty Discount (-10%)", price: "-GHS 45.00", badge: "Discount" },
     { desc: "Processing Paystack API", price: "Syncing...", badge: "Payment" },
-    { desc: "Invoice Printed & Sent", price: "GH₵ 405.00", badge: "Completed" },
+    { desc: "Invoice Printed & Sent", price: "GHS 405.00", badge: "Completed" },
   ];
 
   return (
@@ -178,15 +183,18 @@ const SupportSlaConsole: React.FC = () => {
     {
       msg: "ALERT: Port 443 Latency Spike",
       type: "warning",
-      tag: "MIT_PENDING"},
+      tag: "MIT_PENDING"
+    },
     {
       msg: "SheroAgent auto-failover bridge routing",
       type: "mitigating",
-      tag: "RESOLVING"},
+      tag: "RESOLVING"
+    },
     {
       msg: "System stable. Redundant node synced",
       type: "success",
-      tag: "RESOLVED"},
+      tag: "RESOLVED"
+    },
   ];
 
   return (
@@ -202,30 +210,28 @@ const SupportSlaConsole: React.FC = () => {
 
       <div className="flex-1 flex flex-col justify-center py-1">
         <div
-          className={`p-2 rounded border transition-all duration-300 ${
-            alertState === 0
+          className={`p-2 rounded border transition-all duration-300 ${alertState === 0
               ? "bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-800 text-slate-700 dark:text-slate-400"
               : alertState === 1
                 ? "bg-amber-50 dark:bg-amber-500/10 border-amber-300 dark:border-amber-500/30 text-amber-700 dark:text-amber-400"
                 : alertState === 2
                   ? "bg-purple-50 dark:bg-purple-500/10 border-purple-300 dark:border-purple-500/30 text-purple-700 dark:text-purple-400"
                   : "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-300 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-400"
-          }`}
+            }`}
         >
           <div className="flex items-center justify-between mb-1">
             <span className="text-[7px] uppercase font-bold tracking-wider text-slate-700 dark:text-slate-300">
               {alerts[alertState].tag}
             </span>
             <span
-              className={`w-1.5 h-1.5 rounded-full ${
-                alertState === 0
+              className={`w-1.5 h-1.5 rounded-full ${alertState === 0
                   ? "bg-slate-700 dark:bg-slate-600"
                   : alertState === 1
                     ? "bg-amber-500 animate-ping"
                     : alertState === 2
                       ? "bg-purple-500 animate-pulse"
                       : "bg-emerald-500"
-              }`}
+                }`}
             />
           </div>
           <p className="leading-normal truncate text-[9px] text-slate-700 dark:text-slate-200">
@@ -279,20 +285,21 @@ const PharmasystWidget: React.FC = () => {
             {
               name: "Paracetamol (500mg)",
               qty: stockCycle === 0 ? 210 : 800,
-              alert: stockCycle === 0},
+              alert: stockCycle === 0
+            },
             { name: "Ibuprofen (400mg)", qty: 880, alert: false },
             {
               name: "Ciprofloxacin (500)",
               qty: stockCycle === 0 ? 90 : 450,
-              alert: stockCycle === 0},
+              alert: stockCycle === 0
+            },
           ].map((item) => (
             <div
               key={item.name}
-              className={`grid grid-cols-[2fr_1fr_1fr] items-center py-0.5 border-b border-slate-300/10 dark:border-slate-800/10 transition-colors duration-300 ${
-                item.alert
+              className={`grid grid-cols-[2fr_1fr_1fr] items-center py-0.5 border-b border-slate-300/10 dark:border-slate-800/10 transition-colors duration-300 ${item.alert
                   ? "text-amber-700 dark:text-amber-400 bg-amber-100 dark:bg-amber-500/10 font-semibold"
                   : "text-slate-700 dark:text-slate-400"
-              }`}
+                }`}
             >
               <span className="truncate">{item.name}</span>
               <span className="text-center">{item.qty} units</span>
@@ -376,7 +383,8 @@ const PILLARS: PillarsProps[] = [
     className: "md:col-span-1",
     gradient: "from-blue-500/20 to-cyan-500/20",
     glowColor: "rgba(6, 182, 212, 0.12)", // Cyan
-    widget: <HardwareTerminal />},
+    widget: <HardwareTerminal />
+  },
   {
     header: "Custom Softwares",
     subheader: "Tailored Solutions",
@@ -386,7 +394,8 @@ const PILLARS: PillarsProps[] = [
     className: "md:col-span-1",
     gradient: "from-brand-secondary-500/20 to-green-500/20",
     glowColor: "rgba(59, 130, 246, 0.12)", // Blue
-    widget: <SmartBoutiqueWidget />},
+    widget: <SmartBoutiqueWidget />
+  },
   {
     header: "Managed IT Support",
     subheader: "On-Call Expertise",
@@ -396,7 +405,8 @@ const PILLARS: PillarsProps[] = [
     className: "md:col-span-1",
     gradient: "from-purple-500/20 to-pink-500/20",
     glowColor: "rgba(168, 85, 247, 0.12)", // Purple
-    widget: <SupportSlaConsole />},
+    widget: <SupportSlaConsole />
+  },
   {
     header: "ERP & Custom Systems",
     subheader: "Digital Ecosystem",
@@ -406,7 +416,8 @@ const PILLARS: PillarsProps[] = [
     className: "md:col-span-3",
     gradient: "from-brand-primary-500/20 to-brand-secondary-500/20",
     glowColor: "rgba(16, 185, 129, 0.12)", // Emerald
-    widget: <PharmasystWidget />},
+    widget: <PharmasystWidget />
+  },
 ];
 
 // Tactical, Custom-Engineered Bento Card with Cursor-Tracking Spotlight
@@ -420,7 +431,8 @@ const BentoPillarCard = ({ pillar }: { pillar: PillarsProps }) => {
     const rect = cardRef.current.getBoundingClientRect();
     setCoords({
       x: e.clientX - rect.left,
-      y: e.clientY - rect.top});
+      y: e.clientY - rect.top
+    });
   };
 
   return (
@@ -435,7 +447,8 @@ const BentoPillarCard = ({ pillar }: { pillar: PillarsProps }) => {
       <div
         className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         style={{
-          background: `radial-gradient(200px circle at ${coords.x}px ${coords.y}px, ${pillar.glowColor || "rgba(16, 185, 129, 0.08)"}, transparent 70%)`}}
+          background: `radial-gradient(200px circle at ${coords.x}px ${coords.y}px, ${pillar.glowColor || "rgba(16, 185, 129, 0.08)"}, transparent 70%)`
+        }}
       />
 
       {/* 2. Sleek Top and Left Laser-Cut Glowing Edges on Hover */}

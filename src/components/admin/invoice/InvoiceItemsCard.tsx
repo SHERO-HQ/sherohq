@@ -43,7 +43,7 @@ export default function InvoiceItemsCard({
   isLoadingProducts,
   onAddProduct,
   onAddCustomItem,
-  errors = {}}: InvoiceItemsCardProps) {
+  errors = {} }: InvoiceItemsCardProps) {
   const [deletingIds, setDeletingIds] = useState<Record<string, number>>({});
   const timersRef = useRef<Record<string, NodeJS.Timeout>>({});
 
@@ -148,7 +148,7 @@ export default function InvoiceItemsCard({
                       {product.name}
                     </p>
                     <p className="text-xs text-brand-secondary-400 font-semibold font-mono">
-                      GH₵{product.price.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      GHS{product.price.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
                   <Plus className="w-4 h-4 ml-auto text-brand-secondary-400" />
@@ -227,7 +227,7 @@ export default function InvoiceItemsCard({
                       <div className="flex gap-4">
                         <div className="w-28 space-y-1">
                           <Label className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">
-                            Price (GH₵)
+                            Price (GHS)
                           </Label>
                           <Input
                             type="number"
@@ -265,7 +265,7 @@ export default function InvoiceItemsCard({
 
                     <div className="flex sm:flex-col items-end justify-between sm:justify-start w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border">
                       <p className="text-sm font-bold text-foreground font-mono">
-                        GH₵{(item.price * item.quantity).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        GHS{(item.price * item.quantity).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </p>
                       <Button
                         type="button"

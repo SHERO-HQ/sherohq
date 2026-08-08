@@ -23,7 +23,8 @@ import {
   BadgeX,
   KeyRound,
   Ban,
-  CircleCheck} from "lucide-react";
+  CircleCheck
+} from "lucide-react";
 import { m, AnimatePresence } from "motion/react";
 import { useNotifications } from "@/hooks/useNotifications";
 import {
@@ -31,7 +32,8 @@ import {
   useCustomerDetails,
   useDeleteCustomer,
   useResetUserPassword,
-  useToggleUserActive} from "@/hooks/queries/useUsers";
+  useToggleUserActive
+} from "@/hooks/queries/useUsers";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -39,7 +41,8 @@ import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuItem} from "@/components/ui/dropdown-menu";
+  DropdownMenuItem
+} from "@/components/ui/dropdown-menu";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
 import { displayOrderId } from "@/utils/orderId";
 import AppImage from "@/components/common/AppImage";
@@ -48,17 +51,19 @@ import type {
   AdminUserDetails,
   AdminUserStats,
   AdminUsersPagination,
-  Order} from "@/services/api";
+  Order
+} from "@/services/api";
 
 const formatDate = (date: string | Date) => {
   return new Date(date).toLocaleDateString("en-GB", {
     day: "numeric",
     month: "short",
-    year: "numeric"});
+    year: "numeric"
+  });
 };
 
 const formatCurrency = (amount: number) => {
-  return `GH₵${amount.toLocaleString("en-GH", { minimumFractionDigits: 2 })}`;
+  return `GHS${amount.toLocaleString("en-GH", { minimumFractionDigits: 2 })}`;
 };
 
 const getStatusColor = (status: string) => {
@@ -67,7 +72,8 @@ const getStatusColor = (status: string) => {
     processing: "bg-blue-500/20 text-blue-400",
     intransit: "bg-purple-500/20 text-purple-400",
     delivered: "bg-brand-secondary-500/20 text-brand-secondary-400",
-    cancelled: "bg-red-500/20 text-red-400"};
+    cancelled: "bg-red-500/20 text-red-400"
+  };
   return colors[status.toLowerCase()] || "bg-slate-500/20 text-muted-foreground";
 };
 
@@ -86,7 +92,7 @@ const AdminUsersHeader = ({
   refetchUsers,
   handleExport,
   search,
-  setSearch}: HeaderProps) => (
+  setSearch }: HeaderProps) => (
   <div className="space-y-6">
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
@@ -172,7 +178,7 @@ const UserTableRow = ({
   onDelete,
   onResetPassword,
   onToggleActive,
-  isTogglingActive}: UserTableRowProps) => (
+  isTogglingActive }: UserTableRowProps) => (
   <m.tr
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
@@ -254,11 +260,10 @@ const UserTableRow = ({
         <button
           onClick={() => onToggleActive(user.id, !user.isActive)}
           disabled={isTogglingActive}
-          className={`p-2 rounded transition-colors disabled:opacity-50 ${
-            user.isActive
+          className={`p-2 rounded transition-colors disabled:opacity-50 ${user.isActive
               ? "text-muted-foreground hover:text-orange-400 hover:bg-orange-500/10"
               : "text-muted-foreground hover:text-brand-secondary-400 hover:bg-brand-secondary-500/10"
-          }`}
+            }`}
           title={user.isActive ? "Deactivate Account" : "Reactivate Account"}
         >
           {user.isActive ? (
@@ -409,9 +414,9 @@ const UserDetailsSkeleton = () => (
         <div className="h-6 w-24 bg-accent rounded" />
       </div>
     </div>
-    
+
     <hr className="border-border" />
-    
+
     <div className="grid grid-cols-2 gap-4">
       <div className="bg-muted/20 border border-border rounded p-4 space-y-2">
         <div className="h-4 w-24 bg-accent/50 rounded" />
@@ -422,9 +427,9 @@ const UserDetailsSkeleton = () => (
         <div className="h-6 w-16 bg-accent rounded" />
       </div>
     </div>
-    
+
     <hr className="border-border" />
-    
+
     <div className="space-y-3">
       <div className="h-5 w-32 bg-accent rounded" />
       <div className="space-y-2">
@@ -449,7 +454,7 @@ const UserTable = ({
   setDeleteConfirmId,
   onResetPassword,
   onToggleActive,
-  isTogglingActive}: UserTableProps) => {
+  isTogglingActive }: UserTableProps) => {
   if (loading && !users.length) {
     return <UsersListSkeleton />;
   }
@@ -641,7 +646,7 @@ const UserDetailsModal = ({
   onResetPassword,
   onToggleActive,
   onDelete,
-  isTogglingActive}: UserDetailsModalProps) => (
+  isTogglingActive }: UserDetailsModalProps) => (
   <AnimatePresence>
     {show && (
       <m.div
@@ -711,20 +716,18 @@ const UserDetailsModal = ({
                   </div>
                   <div className="flex flex-col gap-2 items-end">
                     <span
-                      className={`px-3 py-1 rounded text-sm font-medium ${
-                        user.emailVerified
+                      className={`px-3 py-1 rounded text-sm font-medium ${user.emailVerified
                           ? "bg-brand-secondary-500/20 text-brand-secondary-400"
                           : "bg-yellow-500/20 text-yellow-400"
-                      }`}
+                        }`}
                     >
                       {user.emailVerified ? "Verified" : "Unverified"}
                     </span>
                     <span
-                      className={`px-3 py-1 rounded text-sm font-medium ${
-                        user.isActive !== false
+                      className={`px-3 py-1 rounded text-sm font-medium ${user.isActive !== false
                           ? "bg-blue-500/20 text-blue-400"
                           : "bg-red-500/20 text-red-400"
-                      }`}
+                        }`}
                     >
                       {user.isActive !== false ? "Active" : "Deactivated"}
                     </span>
@@ -761,11 +764,10 @@ const UserDetailsModal = ({
                     <button
                       onClick={() => onToggleActive(user.id, !user.isActive)}
                       disabled={isTogglingActive}
-                      className={`flex items-center gap-2 px-4 py-2 border rounded transition-colors text-sm disabled:opacity-50 ${
-                        user.isActive !== false
+                      className={`flex items-center gap-2 px-4 py-2 border rounded transition-colors text-sm disabled:opacity-50 ${user.isActive !== false
                           ? "bg-orange-500/10 text-orange-400 border-orange-500/20 hover:bg-orange-500/20"
                           : "bg-brand-secondary-500/10 text-brand-secondary-400 border-brand-secondary-500/20 hover:bg-brand-secondary-500/20"
-                      }`}
+                        }`}
                     >
                       {user.isActive !== false ? (
                         <>
@@ -818,7 +820,7 @@ const ResetPasswordModal = ({
   userName,
   onClose,
   onConfirm,
-  isPending}: ResetPasswordModalProps) => (
+  isPending }: ResetPasswordModalProps) => (
   <AnimatePresence>
     {userId && (
       <m.div
@@ -878,7 +880,7 @@ const DeleteConfirmationModal = ({
   userId,
   onClose,
   onConfirm,
-  isPending}: DeleteModalProps) => (
+  isPending }: DeleteModalProps) => (
   <AnimatePresence>
     {userId && (
       <m.div
@@ -960,20 +962,22 @@ export default function AdminUsers() {
     isLoading: loading,
     isPlaceholderData,
     refetch: refetchUsers,
-    isFetching} = useCustomers(
-    {
-      page,
-      limit: 20,
-      search: debouncedSearch},
-    ADMIN_POLLING_INTERVAL,
-  );
+    isFetching } = useCustomers(
+      {
+        page,
+        limit: 20,
+        search: debouncedSearch
+      },
+      ADMIN_POLLING_INTERVAL,
+    );
 
   const users = usersData?.users || [];
   const pagination = usersData?.pagination || {
     page: 1,
     limit: 20,
     total: 0,
-    totalPages: 0};
+    totalPages: 0
+  };
 
   // User details query
   const { data: detailsData, isLoading: detailsLoading } = useCustomerDetails(
@@ -1054,7 +1058,8 @@ export default function AdminUsers() {
       Email: user.email,
       Phone: user.phone || "N/A",
       Status: user.emailVerified ? "Verified" : "Unverified",
-      JoinedDate: new Date(user.createdAt).toLocaleDateString()}));
+      JoinedDate: new Date(user.createdAt).toLocaleDateString()
+    }));
 
     const fileName = `customers_export_${new Date().toISOString().split("T")[0]}`;
 

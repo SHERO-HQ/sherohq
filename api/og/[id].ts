@@ -87,7 +87,7 @@ function getPrimaryImage(product: {
 function formatGhsPrice(price: number): string {
   const numericPrice = Number(price);
   if (!Number.isFinite(numericPrice)) return "Price";
-  return `GH₵${numericPrice.toLocaleString("en-GH", {
+  return `GHS${numericPrice.toLocaleString("en-GH", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   })}`;

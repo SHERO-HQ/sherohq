@@ -79,7 +79,9 @@ export default function Careers() {
   const [filterDept, setFilterDept] = useState<string>("All");
   const [openBenefit, setOpenBenefit] = useState<number | null>(0);
 
-  const safeOpenRoles = Array.isArray(openRoles) ? openRoles : (openRoles.data || []);
+  const safeOpenRoles = useMemo(() => {
+    return Array.isArray(openRoles) ? openRoles : ((openRoles as any)?.data || []);
+  }, [openRoles]);
 
   const departments = useMemo(() => {
     const depts = new Set<string>();

@@ -80,8 +80,11 @@ export async function GET(request: NextRequest) {
       ),
       pending_orders AS (
         SELECT COUNT(*) as pending_count FROM orders WHERE status = 'pending'
+      ),
+      abandoned_carts_stats AS (
+        SELECT COUNT(*) as abandoned_count FROM abandoned_carts
       )
-      SELECT * FROM order_stats, expense_stats, product_stats, pending_orders
+      SELECT * FROM order_stats, expense_stats, product_stats, pending_orders, abandoned_carts_stats
     `,
       hasCustomRange ? [startDate, endDate] : []
     );
@@ -141,6 +144,7 @@ export async function GET(request: NextRequest) {
       lowStock: parseInt(ps.low_stock || "0", 10),
       outOfStock: parseInt(ps.out_of_stock || "0", 10),
       pendingOrders: pendingOrdersCount,
+      abandonedCarts: parseInt(combinedResult.rows[0].abandoned_count || "0", 10),
       newProductsCount: parseInt(ps.new_week || "0", 10),
       lifetimeRevenue: parseFloat(s.lifetime_revenue || "0"),
       lifetimeExpenses: parseFloat(e.lifetime_expenses || "0"),

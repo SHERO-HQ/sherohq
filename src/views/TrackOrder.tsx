@@ -166,15 +166,15 @@ export default function TrackOrder({
                     <div className="relative flex items-center justify-between w-full">
                       {/* Connecting line */}
                       <div className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 bg-slate-200 dark:bg-slate-700 rounded-full -z-10"></div>
-                      
+
                       {/* Progress line */}
-                      <div 
+                      <div
                         className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-brand-secondary-500 rounded-full -z-10 transition-all duration-500"
                         style={{
                           width: order.status.toLowerCase() === 'pending' ? '0%' :
-                                 order.status.toLowerCase() === 'processing' ? '33%' :
-                                 order.status.toLowerCase() === 'intransit' ? '66%' :
-                                 order.status.toLowerCase() === 'delivered' ? '100%' : '0%'
+                            order.status.toLowerCase() === 'processing' ? '33%' :
+                              order.status.toLowerCase() === 'intransit' ? '66%' :
+                                order.status.toLowerCase() === 'delivered' ? '100%' : '0%'
                         }}
                       ></div>
 
@@ -188,14 +188,13 @@ export default function TrackOrder({
                         const currentIdx = statuses.indexOf(order.status.toLowerCase() || 'pending');
                         const isCompleted = index <= currentIdx;
                         const isCurrent = index === currentIdx;
-                        
+
                         return (
                           <div key={step.id} className="flex flex-col items-center bg-white dark:bg-slate-900 px-2 sm:px-4">
-                            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors duration-300 ${
-                              isCompleted 
-                                ? 'bg-brand-secondary-500 border-brand-secondary-500 text-white shadow-sm shadow-brand-secondary-500/30' 
+                            <div className={`w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors duration-300 ${isCompleted
+                                ? 'bg-brand-secondary-500 border-brand-secondary-500 text-white shadow-sm shadow-brand-secondary-500/30'
                                 : 'bg-slate-100 dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-slate-400'
-                            }`}>
+                              }`}>
                               <step.icon className={`w-4 h-4 ${isCurrent ? 'animate-pulse' : ''}`} />
                             </div>
                             <span className={`text-[11px] sm:text-xs font-medium mt-2 ${isCompleted ? 'text-slate-900 dark:text-slate-100' : 'text-slate-500 dark:text-slate-500'}`}>
@@ -217,7 +216,7 @@ export default function TrackOrder({
                     </h2>
                     <p className="text-sm text-slate-600 dark:text-slate-300">
                       {order.items.length} item
-                      {order.items.length === 1 ? "" : "s"} • Total GH₵
+                      {order.items.length === 1 ? "" : "s"} • Total GHS
                       {order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </p>
                   </div>
@@ -236,7 +235,7 @@ export default function TrackOrder({
                           </p>
                         </div>
                         <p className="text-sm text-slate-700 dark:text-slate-200">
-                          GH₵{(item.price * item.quantity).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          GHS{(item.price * item.quantity).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </p>
                       </div>
                     ))}

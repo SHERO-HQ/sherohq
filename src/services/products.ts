@@ -12,10 +12,12 @@ export interface ProductsResponse {
 export async function fetchProducts(
   category?: string,
   search?: string,
+  stock?: "low" | "out",
 ): Promise<Product[]> {
   const params = new URLSearchParams();
   if (category && category !== "all") params.append("category", category);
   if (search) params.append("search", search);
+  if (stock) params.append("stock", stock);
 
   const url = `${API_BASE}/products${params.toString() ? "?" + params.toString() : ""}`;
   const response = await fetch(url);

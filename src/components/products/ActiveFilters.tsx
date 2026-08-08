@@ -62,10 +62,10 @@ export const ActiveFilters = ({
           <FilterChip
             label={
               filters.priceRange[1] >= 1000000
-                ? `Above GH₵${filters.priceRange[0]}`
+                ? `Above GHS${filters.priceRange[0]}`
                 : filters.priceRange[0] <= 0
-                  ? `Under GH₵${filters.priceRange[1]}`
-                  : `GH₵${filters.priceRange[0]} - GH₵${filters.priceRange[1]}`
+                  ? `Under GHS${filters.priceRange[1]}`
+                  : `GHS${filters.priceRange[0]} - GHS${filters.priceRange[1]}`
             }
             onRemove={() => onRemoveFilter("priceRange", [0, 1000000])}
           />

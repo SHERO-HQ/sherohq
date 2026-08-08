@@ -4,12 +4,16 @@ import { useState, useMemo } from "react";
 
 import Link from "next/link";
 import { useAdmin } from "@/context/AdminContext";
+import { TopProductsWidget } from "@/components/admin/dashboard/TopProductsWidget";
+import { LowStockAlerts } from "@/components/admin/dashboard/LowStockAlerts";
 import {
   useAdminStats,
   useAnalytics,
   useRecentOrders,
   useActivityLogs,
+  useOrderStatusDistribution,
 } from "@/hooks/queries/useAdmin";
+import { useSupportTickets } from "@/hooks/queries/useSupport";
 import {
   Package,
   ShoppingCart,
@@ -76,40 +80,9 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/utils";
 import ActivityFeed from "@/components/admin/ActivityFeed";
 import { displayOrderId } from "@/utils/orderId";
+import { ChartTooltip } from "@/components/admin/ChartTooltip";
 
-// --- Premium Glassmorphic Recharts Tooltip ---
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-card backdrop-blur-md border border-border p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
-        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider font-mono">
-          {label ? new Date(label).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          }) : ""}
-        </p>
-        <div className="space-y-1">
-          {payload.map((item: any, index: number) => (
-            <div key={index} className="flex items-center gap-2">
-              <div
-                className="w-2 h-2 rounded-full shadow-xs"
-                style={{ backgroundColor: item.stroke || item.color }}
-              />
-              <span className="text-xs text-muted-foreground font-medium capitalize">
-                {item.name === "revenue" ? "Revenue" : item.name === "orders" ? "Orders" : item.name}:
-              </span>
-              <span className="text-xs text-foreground font-bold font-mono">
-                {item.name === "revenue" ? `GH₵${(item.value || 0).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : item.value}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-  return null;
-};
+
 
 // --- Shape-Preserving AreaChart Shimmer Loader ---
 const ChartSkeleton = () => (
@@ -272,7 +245,7 @@ export default function AdminDashboard() {
     data: analytics,
     isLoading: analyticsLoading,
     refetch: refetchAnalytics,
-  } = useAnalytics(period, ADMIN_POLLING_INTERVAL);
+  } = useAnalytics(period, undefined, undefined, ADMIN_POLLING_INTERVAL);
 
   const {
     data: recentOrders,
@@ -285,6 +258,16 @@ export default function AdminDashboard() {
     isLoading: activityLoading,
     refetch: refetchActivity,
   } = useActivityLogs(ADMIN_POLLING_INTERVAL);
+
+  const {
+    data: supportTickets,
+    isLoading: ticketsLoading,
+  } = useSupportTickets(ADMIN_POLLING_INTERVAL);
+
+  const {
+    data: orderStatusDist,
+    isLoading: orderStatusLoading,
+  } = useOrderStatusDistribution(undefined, undefined, ADMIN_POLLING_INTERVAL);
 
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -318,7 +301,7 @@ export default function AdminDashboard() {
     return [
       {
         title: "Total Revenue",
-        value: `GH₵${kpi.revenue.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        value: `GHS${kpi.revenue.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
         icon: DollarSign,
         color: "text-brand-secondary-400",
         bgColor: "bg-brand-secondary-400/10",
@@ -346,20 +329,37 @@ export default function AdminDashboard() {
         subtext: period === "today" ? "added today" : subtextMap[period],
       },
       {
-        title: "Pending Orders",
-        value: stats?.pendingOrders ?? 0,
+        title: "Avg. Order Value",
+        value: `GHS${(kpi.orders > 0 ? kpi.revenue / kpi.orders : 0).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        icon: DollarSign,
+        color: "text-emerald-400",
+        bgColor: "bg-emerald-400/10",
+        trend: "",
+        subtext: `over ${kpi.orders} orders`,
+      },
+      {
+        title: "Abandoned Carts",
+        value: stats?.abandonedCarts ?? 0,
+        icon: ShoppingCart,
+        color: "text-rose-400",
+        bgColor: "bg-rose-400/10",
+        trend: "",
+        subtext: "Total unfinished checkouts",
+      },
+      {
+        title: "Pending Tickets",
+        value: supportTickets ? supportTickets.filter((t: any) => t.status?.toLowerCase() === "open" || t.status?.toLowerCase() === "pending").length : 0,
         icon: Clock,
         color: "text-amber-400",
         bgColor: "bg-amber-400/10",
-        trend: `${(stats?.pendingGrowth ?? 0) >= 0 ? "+" : ""}${stats?.pendingGrowth ?? 0}%`,
-        trendColor: getTrendStyles(stats?.pendingGrowth ?? 0),
-        subtext: "vs yesterday",
+        trend: supportTickets ? `${supportTickets.length} total` : "0 total",
+        subtext: "All support channels",
       },
     ];
-  }, [stats, period]);
+  }, [stats, period, supportTickets]);
 
   const isLoading =
-    statsLoading || analyticsLoading || ordersLoading || activityLoading;
+    statsLoading || analyticsLoading || ordersLoading || activityLoading || ticketsLoading;
   const getErrorMessage = () => {
     if (!statsError) return "";
     return statsError instanceof Error
@@ -469,9 +469,9 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {isLoading
-          ? new Array(4).fill(0).map((_, i) => (
+          ? new Array(6).fill(0).map((_, i) => (
             <div
               key={`skeleton-stat-summary-${i}`}
               className="h-36 rounded bg-card/40  border border-border animate-pulse relative overflow-hidden"
@@ -493,133 +493,298 @@ export default function AdminDashboard() {
           ))}
       </div>
 
-      {/* Row 1: Revenue Trends and Sales Widgets */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Revenue Chart */}
-        <Card className="lg:col-span-2 bg-card/40  border-border p-2">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="text-lg text-foreground">
-                Revenue & Order Trends
-              </CardTitle>
-              <CardDescription className="text-muted-foreground">
-                Last 7 days performance
-              </CardDescription>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded bg-brand-secondary-500" />
-                <span className="text-xs text-muted-foreground">Revenue</span>
+      {/* Main Layout Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        {/* Left Column (Chart + Recent Orders) */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Revenue Chart */}
+          <Card className="bg-card/40 border-border p-2">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle className="text-lg text-foreground">
+                  Revenue & Order Trends
+                </CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  Last 7 days performance
+                </CardDescription>
               </div>
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded bg-blue-500" />
-                <span className="text-xs text-muted-foreground">Orders</span>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-brand-secondary-500" />
+                  <span className="text-xs text-muted-foreground">Revenue</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-blue-500" />
+                  <span className="text-xs text-muted-foreground">Orders</span>
+                </div>
               </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="h-[400px] w-full mt-4">
-              {analyticsLoading ? (
-                <ChartSkeleton />
-              ) : (
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart
-                    data={analytics}
-                    margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
-                  >
-                    <defs>
-                      <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                        <stop
-                          offset="5%"
-                          stopColor="#10b981"
-                          stopOpacity={0.15}
-                        />
-                        <stop
-                          offset="95%"
-                          stopColor="#10b981"
-                          stopOpacity={0}
-                        />
-                      </linearGradient>
-                      <linearGradient id="colorOrd" x1="0" y1="0" x2="0" y2="1">
-                        <stop
-                          offset="5%"
-                          stopColor="#3b82f6"
-                          stopOpacity={0.15}
-                        />
-                        <stop
-                          offset="95%"
-                          stopColor="#3b82f6"
-                          stopOpacity={0}
-                        />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid
-                      strokeDasharray="3 3"
-                      stroke="#1e293b"
-                      vertical={false}
-                    />
-                    <XAxis
-                      dataKey="date"
-                      stroke="#475569"
-                      fontSize={10}
-                      tickLine={false}
-                      axisLine={false}
-                      tickFormatter={(str) => {
-                        const date = new Date(str);
-                        return date.toLocaleDateString("en-US", {
-                          weekday: "short",
-                        });
-                      }}
-                    />
-                    <YAxis
-                      yAxisId="left"
-                      stroke="#475569"
-                      fontSize={10}
-                      tickLine={false}
-                      axisLine={false}
-                      tickFormatter={(val) => `GH₵${val}`}
-                    />
-                    <YAxis
-                      yAxisId="right"
-                      orientation="right"
-                      stroke="#475569"
-                      fontSize={10}
-                      tickLine={false}
-                      axisLine={false}
-                    />
-                    <Tooltip content={<CustomTooltip />} cursor={{ stroke: "rgba(255,255,255,0.05)", strokeWidth: 2 }} />
-                    <Area
-                      yAxisId="left"
-                      type="monotone"
-                      dataKey="revenue"
-                      stroke="#10b981"
-                      strokeWidth={3}
-                      fillOpacity={1}
-                      fill="url(#colorRev)"
-                      animationDuration={1500}
-                      isAnimationActive={!prefersReducedMotion}
-                    />
-                    <Area
-                      yAxisId="right"
-                      type="monotone"
-                      dataKey="orders"
-                      stroke="#3b82f6"
-                      strokeWidth={3}
-                      fillOpacity={1}
-                      fill="url(#colorOrd)"
-                      animationDuration={2000}
-                      isAnimationActive={!prefersReducedMotion}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Side Widgets */}
-        <div className="space-y-6">
+            </CardHeader>
+            <CardContent className="pb-2">
+              <div className="h-[300px] w-full mt-4">
+                {analyticsLoading ? (
+                  <ChartSkeleton />
+                ) : (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart
+                      data={analytics}
+                      margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+                    >
+                      <defs>
+                        <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
+                          <stop
+                            offset="5%"
+                            stopColor="#10b981"
+                            stopOpacity={0.15}
+                          />
+                          <stop
+                            offset="95%"
+                            stopColor="#10b981"
+                            stopOpacity={0}
+                          />
+                        </linearGradient>
+                        <linearGradient id="colorOrd" x1="0" y1="0" x2="0" y2="1">
+                          <stop
+                            offset="5%"
+                            stopColor="#3b82f6"
+                            stopOpacity={0.15}
+                          />
+                          <stop
+                            offset="95%"
+                            stopColor="#3b82f6"
+                            stopOpacity={0}
+                          />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke="#1e293b"
+                        vertical={false}
+                      />
+                      <XAxis
+                        dataKey="date"
+                        stroke="#475569"
+                        fontSize={10}
+                        tickLine={false}
+                        axisLine={false}
+                        tickFormatter={(str: string) => {
+                          const date = new Date(str);
+                          return date.toLocaleDateString("en-US", {
+                            weekday: "short",
+                          });
+                        }}
+                      />
+                      <YAxis
+                        yAxisId="left"
+                        stroke="#475569"
+                        fontSize={10}
+                        tickLine={false}
+                        axisLine={false}
+                        tickFormatter={(val: number) => `GHS${val}`}
+                      />
+                      <YAxis
+                        yAxisId="right"
+                        orientation="right"
+                        stroke="#475569"
+                        fontSize={10}
+                        tickLine={false}
+                        axisLine={false}
+                      />
+                      <Tooltip content={<ChartTooltip />} cursor={{ stroke: "rgba(255,255,255,0.05)", strokeWidth: 2 }} />
+                      <Area
+                        yAxisId="left"
+                        type="monotone"
+                        dataKey="revenue"
+                        stroke="#10b981"
+                        strokeWidth={3}
+                        fillOpacity={1}
+                        fill="url(#colorRev)"
+                        animationDuration={1500}
+                        isAnimationActive={!prefersReducedMotion}
+                      />
+                      <Area
+                        yAxisId="right"
+                        type="monotone"
+                        dataKey="orders"
+                        stroke="#3b82f6"
+                        strokeWidth={3}
+                        fillOpacity={1}
+                        fill="url(#colorOrd)"
+                        animationDuration={2000}
+                        isAnimationActive={!prefersReducedMotion}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+          {/* Recent Orders Table */}
           <Card className="bg-card/40  border-border overflow-hidden">
+            <CardHeader className="flex flex-row items-center justify-between border-b border-border">
+              <div>
+                <CardTitle className="text-lg text-foreground">
+                  Recent Incoming Orders
+                </CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  Real-time order tracking
+                </CardDescription>
+              </div>
+              <Button
+                variant="ghost"
+                className="text-brand-secondary-400 hover:text-brand-secondary-300 hover:bg-brand-secondary-500/10"
+                asChild
+              >
+                <Link href="/admin/orders">
+                  View All Orders <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </CardHeader>
+            <div className="overflow-auto max-h-[480px] custom-scrollbar">
+              <table className="w-full text-left border-collapse">
+                <thead className="sticky top-0 z-10 bg-card">
+                  <tr className="bg-muted/50">
+                    <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                      Order ID
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                      Customer
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                      Date
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                      Amount
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">
+                      Action
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/5">
+                  {(() => {
+                    const hasNoOrders =
+                      !recentOrders ||
+                      !Array.isArray(recentOrders) ||
+                      recentOrders.length === 0;
+
+                    if (ordersLoading) {
+                      return new Array(5).fill(0).map((_, i) => (
+                        <tr
+                          key={`skeleton-recent-order-${i}`}
+                          className="animate-pulse border-b border-border last:border-0"
+                        >
+                          <td className="px-6 py-4">
+                            <div className="h-4 bg-accent/50 rounded w-16" />
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="space-y-2">
+                              <div className="h-4 bg-accent rounded w-32" />
+                              <div className="h-3 bg-accent/50 rounded w-24" />
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="h-4 bg-accent/50 rounded w-20" />
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="h-4 bg-accent rounded w-16" />
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="h-5 bg-accent/50 rounded-full w-20" />
+                          </td>
+                          <td className="px-6 py-4 text-right">
+                            <div className="h-8 bg-accent/50 rounded w-16 ml-auto" />
+                          </td>
+                        </tr>
+                      ));
+                    }
+
+                    if (hasNoOrders) {
+                      return (
+                        <tr>
+                          <td
+                            colSpan={6}
+                            className="px-6 py-8 text-center text-muted-foreground italic"
+                          >
+                            No recent orders found
+                          </td>
+                        </tr>
+                      );
+                    }
+
+                    return recentOrders.map((order) => (
+                      <tr
+                        key={order.id}
+                        className="border-b border-border last:border-0 hover:bg-accent transition-colors"
+                      >
+                        <td className="px-6 py-4">
+                          <Link
+                            href={`/admin/orders/${order.id}`}
+                            className="text-sm font-mono text-muted-foreground group-hover:text-brand-secondary-400 transition-colors"
+                          >
+                            {toReadableOrderId(order.id)}
+                          </Link>
+                        </td>
+                        <td className="px-6 py-4">
+                          <Link
+                            href={`/admin/orders/${order.id}`}
+                            className="flex flex-col"
+                          >
+                            <span className="text-sm font-semibold text-foreground group-hover:text-brand-secondary-400 transition-colors">
+                              {order.customer.firstName} {order.customer.lastName}
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              {order.customer.email}
+                            </span>
+                          </Link>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-muted-foreground">
+                          {new Date(order.createdAt).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-4 text-sm font-bold text-brand-secondary-400">
+                          GHS{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </td>
+                        <td className="px-6 py-4">
+                          <span
+                            className={cn(
+                              "px-2.5 py-1 rounded-full text-[10px] font-bold uppercase",
+                              getStatusStyles(order.status),
+                            )}
+                          >
+                            {order.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-8 px-2 text-muted-foreground hover:text-foreground hover:bg-accent"
+                            asChild
+                          >
+                            <Link href={`/admin/orders/${order.id}`}>
+                              Details
+                            </Link>
+                          </Button>
+                        </td>
+                      </tr>
+                    ));
+                  })()}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <TopProductsWidget />
+            <LowStockAlerts />
+          </div>
+        </div>
+
+        {/* Right Column (Widgets + Activity) */}
+        <div className="space-y-8">
+          <Card className="bg-card/40 border-border overflow-hidden">
             <div className="p-6 bg-linear-to-br from-brand-secondary-600/20 to-transparent border-b border-border">
               <h3 className="text-lg font-bold text-foreground">Quick Launch</h3>
               <p className="text-muted-foreground text-sm mt-1">
@@ -690,26 +855,13 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent className="pt-6">
               <div className="h-[300px] w-full">
-                {statsLoading ? (
+                {orderStatusLoading ? (
                   <PieSkeleton />
                 ) : (
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
-                        data={[
-                          {
-                            name: "Pending",
-                            value: stats?.pendingOrders || 0,
-                            fill: "#f59e0b",
-                          },
-                          {
-                            name: "Delivered",
-                            value:
-                              (stats?.orders || 0) -
-                              (stats?.pendingOrders || 0),
-                            fill: "#10b981",
-                          },
-                        ]}
+                        data={orderStatusDist || []}
                         innerRadius={60}
                         outerRadius={80}
                         paddingAngle={5}
@@ -718,7 +870,7 @@ export default function AdminDashboard() {
                         strokeWidth={2}
                         isAnimationActive={!prefersReducedMotion}
                       />
-                      <Tooltip content={<CustomTooltip />} />
+                      <Tooltip content={<ChartTooltip />} />
                       <Legend verticalAlign="bottom" height={36} />
                     </PieChart>
                   </ResponsiveContainer>
@@ -726,186 +878,24 @@ export default function AdminDashboard() {
               </div>
             </CardContent>
           </Card>
+          {/* Recent Activity Card */}
+          <Card className="bg-card/40  border-border">
+            <CardHeader className="pb-4 border-b border-border">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-sm text-foreground">
+                  Recent Activity
+                </CardTitle>
+                <Clock className="w-4 h-4 text-muted-foreground" />
+              </div>
+            </CardHeader>
+            <CardContent className="pt-6 max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
+              <ActivityFeed
+                logs={activityLogs || []}
+                isLoading={activityLoading}
+              />
+            </CardContent>
+          </Card>
         </div>
-      </div>
-
-      {/* Row 2: Tables & Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Recent Orders Table */}
-        <Card className="lg:col-span-2 bg-card/40  border-border overflow-hidden">
-          <CardHeader className="flex flex-row items-center justify-between border-b border-border">
-            <div>
-              <CardTitle className="text-lg text-foreground">
-                Recent Incoming Orders
-              </CardTitle>
-              <CardDescription className="text-muted-foreground">
-                Real-time order tracking
-              </CardDescription>
-            </div>
-            <Button
-              variant="ghost"
-              className="text-brand-secondary-400 hover:text-brand-secondary-300 hover:bg-brand-secondary-500/10"
-              asChild
-            >
-              <Link href="/admin/orders">
-                View All Orders <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardHeader>
-          <div className="overflow-auto max-h-[480px] custom-scrollbar">
-            <table className="w-full text-left border-collapse">
-              <thead className="sticky top-0 z-10 bg-card">
-                <tr className="bg-muted/50">
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                    Order ID
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                    Customer
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                    Date
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                    Amount
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {(() => {
-                  const hasNoOrders =
-                    !recentOrders ||
-                    !Array.isArray(recentOrders) ||
-                    recentOrders.length === 0;
-
-                  if (ordersLoading) {
-                    return new Array(5).fill(0).map((_, i) => (
-                      <tr
-                        key={`skeleton-recent-order-${i}`}
-                        className="animate-pulse border-b border-border last:border-0"
-                      >
-                        <td className="px-6 py-4">
-                          <div className="h-4 bg-accent/50 rounded w-16" />
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="space-y-2">
-                            <div className="h-4 bg-accent rounded w-32" />
-                            <div className="h-3 bg-accent/50 rounded w-24" />
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="h-4 bg-accent/50 rounded w-20" />
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="h-4 bg-accent rounded w-16" />
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="h-5 bg-accent/50 rounded-full w-20" />
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <div className="h-8 bg-accent/50 rounded w-16 ml-auto" />
-                        </td>
-                      </tr>
-                    ));
-                  }
-
-                  if (hasNoOrders) {
-                    return (
-                      <tr>
-                        <td
-                          colSpan={6}
-                          className="px-6 py-8 text-center text-muted-foreground italic"
-                        >
-                          No recent orders found
-                        </td>
-                      </tr>
-                    );
-                  }
-
-                  return recentOrders.map((order) => (
-                    <tr
-                      key={order.id}
-                      className="border-b border-border last:border-0 hover:bg-accent transition-colors"
-                    >
-                      <td className="px-6 py-4">
-                        <Link
-                          href={`/admin/orders/${order.id}`}
-                          className="text-sm font-mono text-muted-foreground group-hover:text-brand-secondary-400 transition-colors"
-                        >
-                          {toReadableOrderId(order.id)}
-                        </Link>
-                      </td>
-                      <td className="px-6 py-4">
-                        <Link
-                          href={`/admin/orders/${order.id}`}
-                          className="flex flex-col"
-                        >
-                          <span className="text-sm font-semibold text-foreground group-hover:text-brand-secondary-400 transition-colors">
-                            {order.customer.firstName} {order.customer.lastName}
-                          </span>
-                          <span className="text-xs text-muted-foreground">
-                            {order.customer.email}
-                          </span>
-                        </Link>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-muted-foreground">
-                        {new Date(order.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 text-sm font-bold text-brand-secondary-400">
-                        GH₵{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={cn(
-                            "px-2.5 py-1 rounded-full text-[10px] font-bold uppercase",
-                            getStatusStyles(order.status),
-                          )}
-                        >
-                          {order.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-8 px-2 text-muted-foreground hover:text-foreground hover:bg-accent"
-                          asChild
-                        >
-                          <Link href={`/admin/orders/${order.id}`}>
-                            Details
-                          </Link>
-                        </Button>
-                      </td>
-                    </tr>
-                  ));
-                })()}
-              </tbody>
-            </table>
-          </div>
-        </Card>
-
-        {/* Recent Activity Card */}
-        <Card className="bg-card/40  border-border">
-          <CardHeader className="pb-4 border-b border-border">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm text-foreground">
-                Recent Activity
-              </CardTitle>
-              <Clock className="w-4 h-4 text-muted-foreground" />
-            </div>
-          </CardHeader>
-          <CardContent className="pt-6 max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
-            <ActivityFeed
-              logs={activityLogs || []}
-              isLoading={activityLoading}
-            />
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

@@ -14,7 +14,8 @@ import {
   Minus,
   BadgeCheck,
   Maximize2,
-  X} from "lucide-react";
+  X
+} from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/hooks/useWishlist";
 import { getImageUrl } from "@/services/api";
@@ -47,8 +48,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
   const images = product.images || [product.image];
   const discount = product.originalPrice
     ? Math.round(
-        ((product.originalPrice - product.price) / product.originalPrice) * 100,
-      )
+      ((product.originalPrice - product.price) / product.originalPrice) * 100,
+    )
     : 0;
 
   const { data: allCategoryProducts = [], isLoading: relatedLoading } =
@@ -68,7 +69,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         name: product.name,
         price: product.price,
         image: product.image,
-        category: product.category});
+        category: product.category
+      });
     }
     setIsAddedToCart(true);
     setTimeout(() => setIsAddedToCart(false), 2000);
@@ -100,7 +102,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
     sku: product.sku || product.id,
     brand: {
       "@type": "Brand",
-      name: "SHERO"},
+      name: "SHERO"
+    },
     offers: {
       "@type": "Offer",
       url: shareUrl,
@@ -117,14 +120,18 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         : "https://schema.org/OutOfStock",
       seller: {
         "@type": "Organization",
-        name: "SHERO"}},
+        name: "SHERO"
+      }
+    },
     aggregateRating:
       product.reviews > 0
         ? {
-            "@type": "AggregateRating",
-            ratingValue: product.rating,
-            reviewCount: product.reviews}
-        : undefined};
+          "@type": "AggregateRating",
+          ratingValue: product.rating,
+          reviewCount: product.reviews
+        }
+        : undefined
+  };
 
   return (
     <>
@@ -178,8 +185,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     onClick={() => setIsPreviewOpen(true)}
                   >
                     {images[selectedImage] &&
-                    (images[selectedImage].startsWith("/uploads") ||
-                      images[selectedImage].startsWith("http")) ? (
+                      (images[selectedImage].startsWith("/uploads") ||
+                        images[selectedImage].startsWith("http")) ? (
                       <AppImage
                         src={getImageUrl(images[selectedImage])}
                         alt={product.name}
@@ -239,16 +246,15 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     <button
                       key={`detail-thumb-${idx}`}
                       onClick={() => setSelectedImage(idx)}
-                      className={`shrink-0 w-14 h-14 rounded overflow-hidden border-2 transition duration-200 ${
-                        idx === selectedImage
+                      className={`shrink-0 w-14 h-14 rounded overflow-hidden border-2 transition duration-200 ${idx === selectedImage
                           ? "border-brand-secondary-500 scale-105"
                           : "border-transparent bg-white dark:bg-white/5 opacity-50 hover:opacity-100"
-                      }`}
+                        }`}
                     >
                       <div className="relative w-full h-full p-2 flex items-center justify-center">
                         {img &&
-                        (img.startsWith("/uploads") ||
-                          img.startsWith("http")) ? (
+                          (img.startsWith("/uploads") ||
+                            img.startsWith("http")) ? (
                           <AppImage
                             src={getImageUrl(img)}
                             alt="Thumbnail"
@@ -334,11 +340,10 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     </span>
                   </div>
                   <div
-                    className={`text-[10px] font-semibold tracking-tighter w-fit border border-brand-secondary-500/30 p-1 rounded${
-                      product.inStock
+                    className={`text-[10px] font-semibold tracking-tighter w-fit border border-brand-secondary-500/30 p-1 rounded${product.inStock
                         ? " text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-500/10 dark:bg-brand-secondary-500/10"
                         : " text-red-600 dark:text-red-400 bg-red-500/10 dark:bg-red-500/10"
-                    }`}
+                      }`}
                   >
                     {product.inStock ? "In Stock" : "Out of Stock"}
                   </div>
@@ -350,11 +355,10 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     <button
                       onClick={handleAddToCart}
                       disabled={!product.inStock || isAddedToCart}
-                      className={`flex-1 flex items-center justify-center gap-2 h-10 px-4 rounded font-semibold text-sm  tracking-widest transition-colors border-2 ${
-                        isAddedToCart
+                      className={`flex-1 flex items-center justify-center gap-2 h-10 px-4 rounded font-semibold text-sm  tracking-widest transition-colors border-2 ${isAddedToCart
                           ? "bg-brand-secondary-500 border-brand-secondary-500 text-white"
                           : "bg-white dark:bg-white/5 border-brand-secondary-600 text-brand-secondary-600 dark:text-brand-secondary-400 hover:bg-brand-secondary-500 hover:text-white"
-                      }`}
+                        }`}
                     >
                       {isAddedToCart ? (
                         <Check className="w-5 h-5" />
@@ -382,13 +386,13 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                           name: product.name,
                           price: product.price,
                           image: product.image,
-                          category: product.category})
+                          category: product.category
+                        })
                       }
-                      className={`w-10 h-10 rounded flex items-center justify-center border-2 transition-colors shrink-0 ${
-                        isWishlisted
+                      className={`w-10 h-10 rounded flex items-center justify-center border-2 transition-colors shrink-0 ${isWishlisted
                           ? "bg-red-500 border-red-500 text-white"
                           : "border-slate-200 dark:border-white/10 text-slate-500 hover:border-red-500 hover:text-red-500"
-                      }`}
+                        }`}
                     >
                       <Heart
                         size={20}
@@ -398,7 +402,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   </div>
                   <a
                     href={`https://wa.me/${COMPANY_CONTACTS.WHATSAPP}?text=${encodeURIComponent(
-                      `Hello Shero, I'm interested in the ${product.name} (GH₵${product.price}). Here is the link:\n${shareUrl}\n\nCould you please provide more details or assist me with the purchase? Thank you!`,
+                      `Hello Shero, I'm interested in the ${product.name} (GHS${product.price}). Here is the link:\n${shareUrl}\n\nCould you please provide more details or assist me with the purchase? Thank you!`,
                     )}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -511,11 +515,11 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                 {relatedLoading
                   ? [1, 2, 3, 4].map((i) => (
-                      <ProductCardSkeleton key={`related-skeleton-${i}`} />
-                    ))
+                    <ProductCardSkeleton key={`related-skeleton-${i}`} />
+                  ))
                   : relatedProducts.map((p: Product) => (
-                      <ProductCard key={p.id} product={p} />
-                    ))}
+                    <ProductCard key={p.id} product={p} />
+                  ))}
               </div>
             </div>
           )}
@@ -554,13 +558,13 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                   name: product.name,
                   price: product.price,
                   image: product.image,
-                  category: product.category})
+                  category: product.category
+                })
               }
-              className={`w-10 h-10 rounded border flex items-center justify-center ${
-                isWishlisted
+              className={`w-10 h-10 rounded border flex items-center justify-center ${isWishlisted
                   ? "bg-red-500 border-red-500 text-white"
                   : "border-slate-200 dark:border-white/10 text-slate-500"
-              }`}
+                }`}
             >
               <Heart size={20} className={isWishlisted ? "fill-current" : ""} />
             </button>
@@ -586,8 +590,8 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
 
               <div className="relative w-full h-full max-w-6xl mx-auto p-4 sm:p-12 flex items-center justify-center">
                 {images[selectedImage] &&
-                (images[selectedImage].startsWith("/uploads") ||
-                  images[selectedImage].startsWith("http")) ? (
+                  (images[selectedImage].startsWith("/uploads") ||
+                    images[selectedImage].startsWith("http")) ? (
                   <AppImage
                     src={getImageUrl(images[selectedImage])}
                     alt={product.name}

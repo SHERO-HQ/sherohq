@@ -22,10 +22,31 @@ export async function GET() {
       cancelled: "#ef4444",
       quote: "#6b7280"};
 
-    const data = result.rows.map((row) => ({
-      name: row.status.charAt(0).toUpperCase() + row.status.slice(1),
-      value: parseInt(row.count, 10),
-      color: colors[row.status] || "#cbd5e1"}));
+    // Initialize all statuses to 0
+    const statusCounts: Record<string, number> = {
+      pending: 0,
+      processing: 0,
+      intransit: 0,
+      delivered: 0,
+      cancelled: 0,
+      quote: 0,
+    };
+
+    // Update with actual DB counts
+    result.rows.forEach(row => {
+      if (statusCounts[row.status] !== undefined) {
+        statusCounts[row.status] = parseInt(row.count, 10);
+      } else {
+        statusCounts[row.status] = parseInt(row.count, 10); // Capture any unexpected statuses
+      }
+    });
+
+    const data = Object.entries(statusCounts).map(([status, count]) => ({
+      name: status.charAt(0).toUpperCase() + status.slice(1),
+      value: count,
+      color: colors[status] || "#cbd5e1",
+      fill: colors[status] || "#cbd5e1"
+    }));
 
     return apiResponse.success(data);
   } catch (error) {

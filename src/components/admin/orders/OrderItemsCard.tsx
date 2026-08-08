@@ -45,8 +45,8 @@ export function OrderItemsCard({ order }: { order: Order }) {
           >
             <div className="relative w-20 h-20 rounded bg-muted border border-border overflow-hidden flex items-center justify-center shrink-0">
               {item.image &&
-              (item.image.startsWith("/uploads") ||
-                item.image.startsWith("http")) ? (
+                (item.image.startsWith("/uploads") ||
+                  item.image.startsWith("http")) ? (
                 <AppImage
                   src={getImageUrl(item.image)}
                   alt={item.name}
@@ -70,7 +70,7 @@ export function OrderItemsCard({ order }: { order: Order }) {
             </div>
             <div className="text-right">
               <p className="text-foreground font-bold font-mono">
-                GH₵{item.price.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                GHS{item.price.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
               <p className="text-sm text-muted-foreground mt-1">
                 Qty: {item.quantity}
@@ -83,7 +83,7 @@ export function OrderItemsCard({ order }: { order: Order }) {
         <div className="flex justify-between items-center">
           <span className="text-muted-foreground">Total Amount</span>
           <span className="text-2xl font-bold text-brand-secondary-400 font-mono">
-            GH₵{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            GHS{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
         </div>
       </div>

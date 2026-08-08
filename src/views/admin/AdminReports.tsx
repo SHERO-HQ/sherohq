@@ -1,29 +1,22 @@
 "use client";
 import { toReadableOrderId } from "@/utils/orderId";
 import React, { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+
+const PieChart = dynamic(() => import("recharts").then(m => m.PieChart), { ssr: false });
+const Pie = dynamic(() => import("recharts").then(m => m.Pie), { ssr: false });
+const Cell = dynamic(() => import("recharts").then(m => m.Cell), { ssr: false });
+const Legend = dynamic(() => import("recharts").then(m => m.Legend), { ssr: false });
+const Tooltip = dynamic(() => import("recharts").then(m => m.Tooltip), { ssr: false });
+const ResponsiveContainer = dynamic(() => import("recharts").then(m => m.ResponsiveContainer), { ssr: false });
+const LineChart = dynamic(() => import("recharts").then(m => m.LineChart), { ssr: false });
+const Line = dynamic(() => import("recharts").then(m => m.Line), { ssr: false });
+const BarChart = dynamic(() => import("recharts").then(m => m.BarChart), { ssr: false });
+const Bar = dynamic(() => import("recharts").then(m => m.Bar), { ssr: false });
+const XAxis = dynamic(() => import("recharts").then(m => m.XAxis), { ssr: false });
+const YAxis = dynamic(() => import("recharts").then(m => m.YAxis), { ssr: false });
+const CartesianGrid = dynamic(() => import("recharts").then(m => m.CartesianGrid), { ssr: false });
 import {
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-} from "recharts";
-import {
-  fetchDashboardStats,
-  fetchAnalytics,
-  fetchTopProducts,
-  fetchStockDistribution,
-  fetchOrderStatusDistribution,
-  fetchRecentOrders,
-  fetchRegionalReport,
   type AdminStats,
   type AnalyticsData,
   type TopProduct,
@@ -95,50 +88,16 @@ const getOrderStatusStyles = (status: string) => {
 };
 
 
-const parseLabel = (label: any) => {
-  if (!label) return "";
-  const parsed = Date.parse(label);
-  if (!isNaN(parsed) && String(label).includes("-")) {
-    return new Date(parsed).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  }
-  return String(label);
-};
-
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-card backdrop-blur-md border border-border p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
-        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider font-mono">
-          {parseLabel(label)}
-        </p>
-        <div className="space-y-1">
-          {payload.map((item: any, index: number) => (
-            <div key={index} className="flex items-center gap-2">
-              <div
-                className="w-2 h-2 rounded-full shadow-xs"
-                style={{ backgroundColor: item.stroke || item.color }}
-              />
-              <span className="text-xs text-muted-foreground font-medium capitalize">
-                {item.name === "revenue" ? "Revenue" : item.name === "expenses" ? "Expenses" : item.name === "profit" ? "Net Profit" : item.name}:
-              </span>
-              <span className="text-xs text-foreground font-bold font-mono">
-                {String(item.name).toLowerCase().includes("revenue") || String(item.name).toLowerCase().includes("expenses") || String(item.name).toLowerCase().includes("profit")
-                  ? `GH₵${(item.value || 0).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-                  : item.value}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-  return null;
-};
-
+import { ChartTooltip } from "@/components/admin/ChartTooltip";
+import {
+  useDashboardStats,
+  useAnalytics,
+  useTopProducts,
+  useStockDistribution,
+  useOrderStatusDistribution,
+  useRecentOrders,
+  useRegionalReport,
+} from "@/hooks/queries/useAdmin";
 
 const ReportsSkeleton = () => (
   <div className="space-y-8 animate-pulse select-none">
@@ -194,15 +153,7 @@ const ReportsSkeleton = () => (
 );
 
 export default function AdminReports() {
-  const [stats, setStats] = useState<AdminStats | null>(null);
-  const [analytics, setAnalytics] = useState<AnalyticsData[]>([]);
-  const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
   const [range, setRange] = useState("7d");
-  const [isLoading, setIsLoading] = useState(true);
-  const [stockDist, setStockDist] = useState<StockDistribution[]>([]);
-  const [orderStatus, setOrderStatus] = useState<OrderStatusDistribution[]>([]);
-  const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
-  const [regionalData, setRegionalData] = useState<RegionalData[]>([]);
   const [chartType, setChartType] = useState<"line" | "bar">("line");
   const [kpiPeriod, setKpiPeriod] = useState<KpiPeriod>("today");
   const [customRange, setCustomRange] = useState<DateRange | undefined>({
@@ -212,58 +163,35 @@ export default function AdminReports() {
   const { admin: currentAdmin } = useAdmin();
   const canExport = !["clerk", "attendant"].includes(currentAdmin?.role || "");
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        setIsLoading(true);
+  const startDate =
+    range === "custom" && customRange?.from
+      ? format(customRange.from, "yyyy-MM-dd")
+      : undefined;
+  const endDate =
+    range === "custom" && customRange?.to
+      ? format(customRange.to, "yyyy-MM-dd")
+      : undefined;
 
-        const startDate =
-          range === "custom" && customRange?.from
-            ? format(customRange.from, "yyyy-MM-dd")
-            : undefined;
-        const endDate =
-          range === "custom" && customRange?.to
-            ? format(customRange.to, "yyyy-MM-dd")
-            : undefined;
+  const { data: statsData, isLoading: statsLoading } = useDashboardStats(startDate, endDate);
+  const { data: analyticsData, isLoading: analyticsLoading } = useAnalytics(range, startDate, endDate);
+  const { data: topData, isLoading: topLoading } = useTopProducts(startDate, endDate);
+  const { data: stockData, isLoading: stockLoading } = useStockDistribution();
+  const { data: orderStatusData, isLoading: orderStatusLoading } = useOrderStatusDistribution(startDate, endDate);
+  const { data: recentData, isLoading: recentLoading } = useRecentOrders();
+  const { data: regionalDataApi, isLoading: regionalLoading } = useRegionalReport(startDate, endDate);
 
-        const [
-          statsData,
-          analyticsData,
-          topData,
-          stockData,
-          orderStatusData,
-          recentData,
-          regionalData,
-        ] = await Promise.all([
-          fetchDashboardStats(startDate, endDate),
-          fetchAnalytics(range, startDate, endDate),
-          fetchTopProducts(startDate, endDate),
-          fetchStockDistribution(),
-          fetchOrderStatusDistribution(startDate, endDate),
-          fetchRecentOrders(startDate, endDate),
-          fetchRegionalReport(startDate, endDate),
-        ]);
-        setStats(statsData || null);
-        setAnalytics(Array.isArray(analyticsData) ? analyticsData : []);
-        setTopProducts(Array.isArray(topData) ? topData : []);
-        setStockDist(Array.isArray(stockData) ? stockData : []);
-        setOrderStatus(Array.isArray(orderStatusData) ? orderStatusData : []);
-        setRecentOrders(Array.isArray(recentData) ? recentData : []);
-        setRegionalData(Array.isArray(regionalData) ? regionalData : []);
+  const isLoading = statsLoading || analyticsLoading || topLoading || stockLoading || orderStatusLoading || recentLoading || regionalLoading;
 
-        // Automatically set KPI period to custom if a custom range is used
-        if (range === "custom") {
-          setKpiPeriod("custom");
-        }
-      } catch (err: unknown) {
-        console.error("Failed to load reports:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
+  const stats = statsData || null;
+  const analytics = Array.isArray(analyticsData) ? analyticsData : [];
+  const topProducts = Array.isArray(topData) ? topData : [];
+  const stockDist = Array.isArray(stockData) ? stockData : [];
+  const orderStatus = Array.isArray(orderStatusData) ? orderStatusData : [];
+  const recentOrders = Array.isArray(recentData) ? recentData : [];
+  const regionalData = Array.isArray(regionalDataApi) ? regionalDataApi : [];
 
-    loadData();
-  }, [range, customRange]);
+  // Determine the active KPI period derived from state
+  const activeKpiPeriod = range === "custom" ? "custom" : kpiPeriod;
 
   const handleExport = (format: "csv" | "excel" | "pdf") => {
     // Exporting a summary report
@@ -298,8 +226,8 @@ export default function AdminReports() {
   const getSubtext = (period: typeof kpiPeriod) => {
     if (period === "custom" && customRange?.from) {
       return `${format(customRange.from, "MMM d")} - ${customRange.to
-          ? format(customRange.to, "MMM d")
-          : format(customRange.from, "MMM d")
+        ? format(customRange.to, "MMM d")
+        : format(customRange.from, "MMM d")
         }`;
     }
     return `vs prev ${period === "today" ? "day" : period}`;
@@ -429,9 +357,9 @@ export default function AdminReports() {
                   key={opt.value}
                   type="button"
                   onClick={() => setKpiPeriod(opt.value as KpiPeriod)}
-                  className={`px-3 py-1 text-[10px] font-bold rounded transition ${kpiPeriod === opt.value
-                      ? "bg-purple-600 text-foreground shadow"
-                      : "text-muted-foreground hover:text-foreground"
+                  className={`px-3 py-1 text-[10px] font-bold rounded transition ${activeKpiPeriod === opt.value
+                    ? "bg-purple-600 text-foreground shadow"
+                    : "text-muted-foreground hover:text-foreground"
                     }`}
                 >
                   {opt.label}
@@ -448,7 +376,7 @@ export default function AdminReports() {
               {/* Stats Grid */}
               <StatsGrid
                 stats={stats}
-                kpiPeriod={kpiPeriod}
+                kpiPeriod={activeKpiPeriod}
                 getKpiData={getKpiData}
                 getSubtext={getSubtext}
               />
@@ -552,8 +480,8 @@ function RevenueChartSection({
         <button
           onClick={() => setChartType("line")}
           className={`p-1.5 rounded transition-colors ${chartType === "line"
-              ? "bg-accent text-foreground"
-              : "text-muted-foreground hover:text-foreground"
+            ? "bg-accent text-foreground"
+            : "text-muted-foreground hover:text-foreground"
             }`}
           title="Line Chart"
         >
@@ -562,15 +490,15 @@ function RevenueChartSection({
         <button
           onClick={() => setChartType("bar")}
           className={`p-1.5 rounded transition-colors ${chartType === "bar"
-              ? "bg-accent text-foreground"
-              : "text-muted-foreground hover:text-foreground"
+            ? "bg-accent text-foreground"
+            : "text-muted-foreground hover:text-foreground"
             }`}
           title="Bar Chart"
         >
           <BarChart3 className="w-4 h-4" />
         </button>
       </div>
-      <div className="h-82">
+      <div className="h-[320px]">
         <ResponsiveContainer width="100%" height="100%">
           {chartType === "line" ? (
             <LineChart data={analytics} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
@@ -594,9 +522,9 @@ function RevenueChartSection({
                 fontSize={10}
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={(value: number) => `GH₵${value}`}
+                tickFormatter={(value: number) => `GHS${value}`}
               />
-              <Tooltip content={<CustomTooltip />} cursor={{ stroke: "rgba(255,255,255,0.05)", strokeWidth: 2 }} />
+              <Tooltip content={<ChartTooltip />} cursor={{ stroke: "rgba(255,255,255,0.05)", strokeWidth: 2 }} />
               <Legend verticalAlign="top" height={36} />
               <Line
                 type="monotone"
@@ -660,9 +588,9 @@ function RevenueChartSection({
                 fontSize={10}
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={(value: number) => `GH₵${value}`}
+                tickFormatter={(value: number) => `GHS${value}`}
               />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
+              <Tooltip content={<ChartTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
               <Bar dataKey="revenue" fill="url(#colorReportRev)" stroke="#3b82f6" strokeWidth={1} radius={[4, 4, 0, 0]} isAnimationActive={!prefersReducedMotion} animationDuration={1500} />
             </BarChart>
           )}
@@ -708,7 +636,7 @@ function StockDistributionChart({
                 <Cell key={`stock-${entry.name || index}`} fill={entry.color} stroke="rgba(15, 23, 42, 0.5)" strokeWidth={2} />
               ))}
             </Pie>
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<ChartTooltip />} />
             <Legend verticalAlign="bottom" height={36} />
           </PieChart>
         </ResponsiveContainer>
@@ -758,7 +686,7 @@ function OrderStatusChart({
                 />
               ))}
             </Pie>
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<ChartTooltip />} />
             <Legend verticalAlign="bottom" height={36} />
           </PieChart>
         </ResponsiveContainer>
@@ -800,7 +728,7 @@ function RegionalSalesChart({ data }: { readonly data: RegionalData[] }) {
               tickLine={false}
               axisLine={false}
             />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
+            <Tooltip content={<ChartTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
             <Bar
               dataKey="revenue"
               fill="url(#colorRegionRev)"
@@ -855,7 +783,7 @@ function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
                   {order.status}
                 </span>
                 <span className="font-bold text-brand-secondary-400 text-sm font-mono">
-                  GH₵{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  GHS{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
               </div>
             </div>
@@ -896,7 +824,7 @@ function TopProducts({ products }: { readonly products: TopProduct[] }) {
               </div>
             </div>
             <span className="font-bold text-brand-secondary-400 text-sm font-mono">
-              GH₵{product.revenue.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              GHS{product.revenue.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           </div>
         ))}
@@ -932,7 +860,7 @@ function StatsGrid({
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-2">
       <StatCard
         title="Total Revenue"
-        value={`GH₵${(getKpiData(kpiPeriod)?.revenue ?? stats?.revenue ?? 0).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+        value={`GHS${(getKpiData(kpiPeriod)?.revenue ?? stats?.revenue ?? 0).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
         icon={DollarSign}
         color="text-brand-secondary-400"
         bg="bg-brand-secondary-400/10"
@@ -941,7 +869,7 @@ function StatsGrid({
       />
       <StatCard
         title="Total Expenses"
-        value={`GH₵${(getKpiData(kpiPeriod)?.expenses ?? stats?.expenses ?? 0).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+        value={`GHS${(getKpiData(kpiPeriod)?.expenses ?? stats?.expenses ?? 0).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
         icon={BarChart3}
         color="text-rose-400"
         bg="bg-rose-400/10"
@@ -950,7 +878,7 @@ function StatsGrid({
       />
       <StatCard
         title="Net Profit"
-        value={`GH₵${(getKpiData(kpiPeriod)?.profit ?? stats?.profit ?? 0).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+        value={`GHS${(getKpiData(kpiPeriod)?.profit ?? stats?.profit ?? 0).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
         icon={TrendingUp}
         color="text-blue-400"
         bg="bg-blue-400/10"

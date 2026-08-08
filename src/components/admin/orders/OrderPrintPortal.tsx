@@ -203,15 +203,15 @@ export function OrderPrintPortal({
           <div className="text-[9px] space-y-1">
             <div className="flex justify-between">
               <span>Subtotal</span>
-              <span>GH₵{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+              <span>GHS{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </div>
             <div className="flex justify-between">
               <span>Tax</span>
-              <span>GH₵0.00</span>
+              <span>GHS0.00</span>
             </div>
             <div className="flex justify-between text-sm font-bold pt-1 border-t border-black/20">
               <span>TOTAL</span>
-              <span>GH₵{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+              <span>GHS{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </div>
           </div>
 
@@ -337,10 +337,10 @@ export function OrderPrintPortal({
                     </td>
                     <td className="text-center py-4 text-sm text-slate-600">{item.quantity}</td>
                     <td className="text-right py-4 text-sm text-slate-600 font-mono">
-                      GH₵{item.price.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      GHS{item.price.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
                     <td className="text-right py-4 text-sm font-bold text-slate-800 font-mono">
-                      GH₵{(item.price * item.quantity).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      GHS{(item.price * item.quantity).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
                   </tr>
                 ))}
@@ -368,15 +368,15 @@ export function OrderPrintPortal({
               <div className="w-72 space-y-3">
                 <div className="flex justify-between text-sm text-slate-600">
                   <span>Subtotal</span>
-                  <span className="font-mono">GH₵{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span className="font-mono">GHS{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
                 <div className="flex justify-between text-sm text-slate-600">
                   <span>Tax (0%)</span>
-                  <span className="font-mono">GH₵0.00</span>
+                  <span className="font-mono">GHS0.00</span>
                 </div>
                 <div className="flex justify-between items-center text-lg font-bold border-t border-slate-200 pt-3 text-brand-secondary-600 mt-2">
                   <span className="uppercase tracking-tight text-sm">Grand Total</span>
-                  <span className="text-xl">GH₵{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                  <span className="text-xl">GHS{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
               </div>
             </div>
@@ -387,7 +387,7 @@ export function OrderPrintPortal({
                 Thank you for your business!
               </p>
               <p className="text-slate-400 text-[8px] max-w-xl mx-auto leading-relaxed">
-                This document is a computer-generated invoice and requires no signature. Subject to our standard Terms & Conditions of Sale. Returns and exchanges are governed by our return policy available at {COMPANY_CONTACTS.WEBSITE_DISPLAY}/terms. 
+                This document is a computer-generated invoice and requires no signature. Subject to our standard Terms & Conditions of Sale. Returns and exchanges are governed by our return policy available at {COMPANY_CONTACTS.WEBSITE_DISPLAY}/terms.
               </p>
               <p className="text-slate-500 text-[9px] mt-2 font-medium">
                 SHERO TECHNOLOGIES | {COMPANY_CONTACTS.HQ_LOCATION} | {COMPANY_EMAILS.SUPPORT}

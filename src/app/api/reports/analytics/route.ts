@@ -24,9 +24,13 @@ export async function GET(request: NextRequest) {
       dateRangeStart = new Date(startDate + "T00:00:00");
       dateRangeEnd = new Date(endDate + "T23:59:59.999");
     } else {
-      let days = 7;
-      if (range === "30d") days = 30;
+      let days = 7; // Default 7d or week
+      if (range === "today" || range === "1d") days = 1;
+      if (range === "week" || range === "7d") days = 7;
+      if (range === "month" || range === "30d") days = 30;
       if (range === "90d") days = 90;
+      if (range === "year" || range === "365d") days = 365;
+      
       queryConditions = ` AND "createdAt" >= NOW() - INTERVAL '${days} days'`;
       dateRangeStart = new Date();
       dateRangeStart.setDate(dateRangeStart.getDate() - days);

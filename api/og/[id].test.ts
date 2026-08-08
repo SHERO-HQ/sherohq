@@ -49,10 +49,10 @@ describe("OG handler social previews", () => {
 
     const html = String(res.send.mock.calls[0][0]);
     expect(html).toContain(
-      '<meta property="og:title" content="MacBook Pro 14 - GH₵4,500 | SHERO">',
+      '<meta property="og:title" content="MacBook Pro 14 - GHS4,500 | SHERO">',
     );
     expect(html).toContain(
-      '<meta name="twitter:title" content="MacBook Pro 14 - GH₵4,500 | SHERO">',
+      '<meta name="twitter:title" content="MacBook Pro 14 - GHS4,500 | SHERO">',
     );
     expect(html).toContain(
       '<meta property="og:image" content="https://shop.sherohq.com/uploads/primary.jpg">',

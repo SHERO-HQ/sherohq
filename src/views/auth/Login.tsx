@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
@@ -84,17 +85,26 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 dark:bg-slate-950">
+    <div className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 ">
       <div className="w-full max-w-md">
+        {/* Background with glow orbs */}
+                <div className="absolute inset-0 overflow-hidden rounded-3xl -z-10">
+                    {/* Glow orbs */}
+                    <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+                    <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+                    {/* Particles */}
+                    <div className="absolute inset-0 pattern-dots mask-radial-faded" />
+                  
+                </div>
         <div className="bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 p-8">
           <div className="text-center mb-8">
-            <img
+            <Image
               src="/assets/logo/shero.svg"
               alt="Shero"
               width={48}
               height={48}
               className="h-12 w-auto mx-auto mb-4"
-              suppressHydrationWarning
+              priority
             />
             <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
               {mfaChallenge ? "Verify It's You" : "Welcome Back"}

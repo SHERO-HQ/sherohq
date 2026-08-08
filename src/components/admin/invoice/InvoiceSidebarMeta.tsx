@@ -18,7 +18,7 @@ export default function InvoiceSidebarMeta({
   isSaving,
   mode,
   onSubmit,
-  hasItems}: InvoiceSidebarMetaProps) {
+  hasItems }: InvoiceSidebarMetaProps) {
   return (
     <div className="space-y-6">
       <Card className="bg-card border border-border p-6 sticky top-24">
@@ -27,16 +27,16 @@ export default function InvoiceSidebarMeta({
         <div className="space-y-4 mb-6">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Subtotal</span>
-            <span className="text-muted-foreground font-mono">GH₵{totalAmount.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+            <span className="text-muted-foreground font-mono">GHS{totalAmount.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Tax (0%)</span>
-            <span className="text-muted-foreground font-mono">GH₵0.00</span>
+            <span className="text-muted-foreground font-mono">GHS0.00</span>
           </div>
           <div className="border-t border-border pt-4 flex justify-between items-center">
             <span className="font-bold text-foreground text-base">Total Due</span>
             <span className="text-2xl font-bold text-brand-secondary-400 font-mono">
-              GH₵{totalAmount.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              GHS{totalAmount.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           </div>
         </div>

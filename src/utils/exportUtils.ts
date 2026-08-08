@@ -70,7 +70,7 @@ const saveBlob = async (blob: Blob, fileName: string) => {
 };
 
 const normalizePdfText = (value: unknown) => {
-  return String(value ?? "").replaceAll("GH₵", "GHS");
+  return String(value ?? "").replaceAll("GHS", "GHS");
 };
 
 export const exportToCSV = async (
@@ -125,7 +125,7 @@ export const exportToPDF = async (
       columns.map((col) =>
         normalizePdfText(
           col.charAt(0).toUpperCase() +
-            col.slice(1).replaceAll(/([A-Z])/g, " $1"),
+          col.slice(1).replaceAll(/([A-Z])/g, " $1"),
         ),
       ),
     ],

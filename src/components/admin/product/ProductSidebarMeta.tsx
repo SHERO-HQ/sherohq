@@ -24,12 +24,12 @@ export default function ProductSidebarMeta({
 }: ProductSidebarMetaProps) {
   const dialog = useDialog();
   const { register, watch, setValue, formState: { errors } } = useFormContext<ProductFormValues>();
-  
+
   const [discountMode, setDiscountMode] = React.useState<"percentage" | "fixed">("percentage");
 
   const originalPrice = watch("originalPrice");
   const price = watch("price");
-  
+
   const regularPrice = originalPrice || price || 0;
   const salePrice = price || 0;
 
@@ -101,7 +101,7 @@ export default function ProductSidebarMeta({
               className="text-sm font-medium text-muted-foreground flex items-center justify-between"
             >
               <span>Regular Price (MSRP) *</span>
-              <span className="text-xs text-slate-600 font-mono">GH₵</span>
+              <span className="text-xs text-slate-600 font-mono">GHS</span>
             </label>
             <Input
               id="regularPrice"
@@ -124,14 +124,14 @@ export default function ProductSidebarMeta({
                 className="w-full h-10 px-3 py-2 bg-muted/50 border border-border rounded text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 text-sm"
               >
                 <option value="percentage">%</option>
-                <option value="fixed">GH₵</option>
+                <option value="fixed">GHS</option>
               </select>
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-muted-foreground flex items-center justify-between">
                 <span>Discount</span>
                 <span className="text-xs text-slate-600 font-mono">
-                  {discountMode === "percentage" ? "%" : "GH₵"}
+                  {discountMode === "percentage" ? "%" : "GHS"}
                 </span>
               </label>
               <Input
@@ -152,7 +152,7 @@ export default function ProductSidebarMeta({
               className="text-sm font-medium text-muted-foreground flex items-center justify-between"
             >
               <span>Final Sale Price *</span>
-              <span className="text-xs text-slate-600 font-mono">GH₵</span>
+              <span className="text-xs text-slate-600 font-mono">GHS</span>
             </label>
             <Input
               id="price"
@@ -173,7 +173,7 @@ export default function ProductSidebarMeta({
             )}
             {regularPrice > salePrice && (
               <p className="text-[10px] text-emerald-400 italic mt-1 leading-relaxed">
-                Customers will see a strikethrough price of GH₵{regularPrice}.
+                Customers will see a strikethrough price of GHS{regularPrice}.
               </p>
             )}
           </div>
@@ -184,7 +184,7 @@ export default function ProductSidebarMeta({
               className="text-sm font-medium text-muted-foreground flex items-center justify-between"
             >
               <span>Cost Price (Buying Price) *</span>
-              <span className="text-xs text-slate-600 font-mono">GH₵</span>
+              <span className="text-xs text-slate-600 font-mono">GHS</span>
             </label>
             <Input
               id="costPrice"

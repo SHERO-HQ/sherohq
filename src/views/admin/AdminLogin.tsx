@@ -67,6 +67,8 @@ export default function AdminLogin() {
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
                 <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
+                {/* Particles */}
+                <div className="absolute inset-0 pattern-dots mask-radial-faded" />
             </div>
 
             <div className="relative z-10 w-full max-w-md">
@@ -170,14 +172,14 @@ export default function AdminLogin() {
                                     Authentication Code
                                 </label>
                                 <div className="relative">
-                                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                                    {/* <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" /> */}
                                     <input
                                         id="mfaCode"
                                         type="text"
                                         value={mfaCode}
                                         onChange={(e) => setMfaCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))}
                                         placeholder="Enter 6-digit code"
-                                        className="w-full pl-10 pr-4 py-3 bg-muted/50 border border-border rounded text-foreground text-center text-2xl tracking-[0.5em] placeholder:text-sm placeholder:tracking-normal placeholder:font-sans focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                        className="w-full py-3 bg-muted/50 font-black border border-border rounded text-foreground text-center text-3xl tracking-[0.5em] placeholder:text-sm placeholder:tracking-normal placeholder:font-sans focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
                                         required
                                         autoFocus
                                         autoComplete="one-time-code"

@@ -78,7 +78,7 @@ test.describe("Social OG metadata (deployed)", () => {
       ).toBeTruthy();
 
       const html = await res.text();
-      const expectedTitle = `${candidate.name} - GH₵${Number(
+      const expectedTitle = `${candidate.name} - GHS${Number(
         candidate.price,
       ).toLocaleString("en-GH", {
         minimumFractionDigits: 0,

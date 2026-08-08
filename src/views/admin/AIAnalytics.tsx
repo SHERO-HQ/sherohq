@@ -9,20 +9,19 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
+import dynamic from "next/dynamic";
+const BarChart = dynamic(() => import("recharts").then(m => m.BarChart), { ssr: false });
+const Bar = dynamic(() => import("recharts").then(m => m.Bar), { ssr: false });
+const XAxis = dynamic(() => import("recharts").then(m => m.XAxis), { ssr: false });
+const YAxis = dynamic(() => import("recharts").then(m => m.YAxis), { ssr: false });
+const CartesianGrid = dynamic(() => import("recharts").then(m => m.CartesianGrid), { ssr: false });
+const Tooltip = dynamic(() => import("recharts").then(m => m.Tooltip), { ssr: false });
+const ResponsiveContainer = dynamic(() => import("recharts").then(m => m.ResponsiveContainer), { ssr: false });
+const LineChart = dynamic(() => import("recharts").then(m => m.LineChart), { ssr: false });
+const Line = dynamic(() => import("recharts").then(m => m.Line), { ssr: false });
+const PieChart = dynamic(() => import("recharts").then(m => m.PieChart), { ssr: false });
+const Pie = dynamic(() => import("recharts").then(m => m.Pie), { ssr: false });
+const Cell = dynamic(() => import("recharts").then(m => m.Cell), { ssr: false });
 import {
   Brain,
   AlertCircle,
@@ -41,44 +40,7 @@ const EMPTY_TOTALS: AIAnalyticsTotals = {
   openGapRequests: 0,
 };
 
-// --- Premium Glassmorphic Recharts Tooltip ---
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-card backdrop-blur-md border border-border p-3 rounded shadow-[0_10px_25px_rgba(0,0,0,0.5)] space-y-1.5 animate-in fade-in zoom-in-95 duration-100 select-none">
-        {label && (
-          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider font-mono">
-            {label}
-          </p>
-        )}
-        <div className="space-y-1">
-          {payload.map((item: any, index: number) => (
-            <div key={index} className="flex items-center gap-2">
-              <div
-                className="w-2 h-2 rounded-full shadow-xs"
-                style={{
-                  backgroundColor: item.fill || item.stroke || item.color,
-                }}
-              />
-              <span className="text-xs text-muted-foreground font-medium capitalize">
-                {item.name === "count"
-                  ? "Interactions"
-                  : item.name === "queryCount"
-                    ? "Queries"
-                    : item.name}
-                :
-              </span>
-              <span className="text-xs text-foreground font-bold font-mono">
-                {item.value.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-  return null;
-};
+import { ChartTooltip } from "@/components/admin/ChartTooltip";
 
 const AIAnalyticsSkeleton = () => (
   <div className="space-y-8 animate-pulse select-none">
@@ -337,7 +299,7 @@ export default function AIAnalytics() {
                   axisLine={false}
                 />
                 <Tooltip
-                  content={<CustomTooltip />}
+                  content={<ChartTooltip />}
                   cursor={{ fill: "rgba(255,255,255,0.02)" }}
                 />
                 <Bar
@@ -388,7 +350,7 @@ export default function AIAnalytics() {
                   axisLine={false}
                 />
                 <Tooltip
-                  content={<CustomTooltip />}
+                  content={<ChartTooltip />}
                   cursor={{ stroke: "rgba(255,255,255,0.05)", strokeWidth: 2 }}
                 />
                 <Line
@@ -448,7 +410,7 @@ export default function AIAnalytics() {
                         />
                       ))}
                     </Pie>
-                    <Tooltip content={<CustomTooltip />} />
+                    <Tooltip content={<ChartTooltip />} />
                   </PieChart>
                 </ResponsiveContainer>
                 <div className="flex flex-wrap justify-center gap-4 mt-4 text-[10px]">
@@ -533,8 +495,11 @@ export default function AIAnalytics() {
                     }
                   />
                   <Tooltip
-                    content={<CustomTooltip />}
-                    cursor={{ fill: "rgba(255,255,255,0.02)" }}
+                    content={<ChartTooltip />}
+                    cursor={{
+                      stroke: "rgba(255,255,255,0.05)",
+                      strokeWidth: 2,
+                    }}
                   />
                   <Bar
                     dataKey="queryCount"

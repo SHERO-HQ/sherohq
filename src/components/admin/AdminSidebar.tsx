@@ -40,6 +40,8 @@ import {
   fetchAnalytics} from "@/services/api";
 import { m, AnimatePresence } from "motion/react";
 import AppImage from "@/components/common/AppImage";
+import { useSupportTickets } from "@/hooks/queries/useSupport";
+import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -130,6 +132,14 @@ const navGroups: NavGroup[] = [
 
 const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
   const { admin, logout } = useAdmin();
+  
+  const { data: tickets } = useSupportTickets(ADMIN_POLLING_INTERVAL);
+  const unresolvedSupportCount = tickets?.filter((t: any) => t.status?.toLowerCase() === "open" || t.status?.toLowerCase() === "pending").length || 0;
+
+  const badges: Record<string, number | undefined> = {
+    "Support": unresolvedSupportCount > 0 ? unresolvedSupportCount : undefined,
+  };
+
   const [pwaPrompt, setPwaPrompt] = useState<BeforeInstallPromptEvent | null>(
     () => {
       if (typeof window === "undefined") return null;
@@ -355,7 +365,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                                 />
                                 <span
                                   className={cn(
-                                    "font-medium text-sm whitespace-nowrap transition-all duration-200",
+                                    "font-medium text-sm whitespace-nowrap transition-all duration-200 flex-1",
                                     isOpen
                                       ? "opacity-100 translate-x-0 w-auto"
                                       : "opacity-0 -translate-x-4 pointer-events-none w-0 overflow-hidden",
@@ -363,6 +373,16 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                                 >
                                   {item.label}
                                 </span>
+                                {badges[item.label] !== undefined && (
+                                  <span
+                                    className={cn(
+                                      "ml-2 bg-brand-secondary-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full transition-all duration-200",
+                                      isOpen ? "opacity-100 scale-100" : "opacity-0 scale-0 pointer-events-none w-0 overflow-hidden"
+                                    )}
+                                  >
+                                    {badges[item.label]}
+                                  </span>
+                                )}
                                 {isActive && (
                                   <m.div
                                     layoutId="sidebar-active-indicator"

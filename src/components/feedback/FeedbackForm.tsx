@@ -32,7 +32,6 @@ import {
   CardHeader,
   CardTitle} from "@/components/ui/card";
 import {
-  sendContactMessage,
   submitPublicTestimonial,
   publicUploadImage
 } from "@/services/api";
@@ -217,12 +216,6 @@ export default function FeedbackForm({
         image: imageUrl,
         role: data.role || "Verified Customer",
         company: data.company || "Direct Feedback"});
-
-      await sendContactMessage({
-        name: data.anonymous ? "Anonymous" : (data.name || "Guest"),
-        email: data.email || "no-email@provided.com",
-        subject: "feedback_submission",
-        message: `[Rating: ${data.rating}/5 stars]${imageUrl ? `\n[Image: ${imageUrl}]` : ""}${data.role ? `\n[Role: ${data.role}]` : ""}${data.company ? `\n[Company: ${data.company}]` : ""}\n\n${data.message}`});
 
       setIsSuccess(true);
       reset();

@@ -20,19 +20,20 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useDialog } from "@/hooks/useDialog";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  PieChart,
-  Pie,
-  Cell
-} from "recharts";
+import dynamic from "next/dynamic";
+const BarChart = dynamic(() => import("recharts").then(m => m.BarChart), { ssr: false });
+const Bar = dynamic(() => import("recharts").then(m => m.Bar), { ssr: false });
+const XAxis = dynamic(() => import("recharts").then(m => m.XAxis), { ssr: false });
+const YAxis = dynamic(() => import("recharts").then(m => m.YAxis), { ssr: false });
+const CartesianGrid = dynamic(() => import("recharts").then(m => m.CartesianGrid), { ssr: false });
+const Tooltip = dynamic(() => import("recharts").then(m => m.Tooltip), { ssr: false });
+const ResponsiveContainer = dynamic(() => import("recharts").then(m => m.ResponsiveContainer), { ssr: false });
+const Legend = dynamic(() => import("recharts").then(m => m.Legend), { ssr: false });
+const PieChart = dynamic(() => import("recharts").then(m => m.PieChart), { ssr: false });
+const Pie = dynamic(() => import("recharts").then(m => m.Pie), { ssr: false });
+const Cell = dynamic(() => import("recharts").then(m => m.Cell), { ssr: false });
+import { ChartTooltip } from "@/components/admin/ChartTooltip";
+import { useWhatsAppSupportTickets, useWhatsAppRetries, useWhatsAppAnalytics } from "@/hooks/queries/useAdmin";
 
 interface SupportTicket {
   id: string;
@@ -76,17 +77,17 @@ export default function WhatsAppDashboard() {
   const [selectedPhone, setSelectedPhone] = useState<string | null>(null);
 
   // Support Tickets States
-  const [tickets, setTickets] = useState<SupportTicket[]>([]);
-  const [loadingTickets, setLoadingTickets] = useState(false);
+  const { data: ticketsData, isLoading: loadingTickets, refetch: refetchTickets } = useWhatsAppSupportTickets(activeTab === "support" ? undefined : false);
+  const tickets = ticketsData || [];
 
   // Retries Queue States
-  const [retries, setRetries] = useState<RetryRecord[]>([]);
-  const [loadingRetries, setLoadingRetries] = useState(false);
+  const { data: retriesData, isLoading: loadingRetries, refetch: refetchRetries } = useWhatsAppRetries(activeTab === "retries" ? undefined : false);
+  const retries = retriesData || [];
   const [triggeringBulk, setTriggeringBulk] = useState(false);
 
   // Analytics States
-  const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
-  const [loadingAnalytics, setLoadingAnalytics] = useState(false);
+  const { data: analyticsData, isLoading: loadingAnalytics } = useWhatsAppAnalytics(activeTab === "analytics" ? undefined : false);
+  const analytics = analyticsData || null;
 
   // Settings States
   const [settings, setSettings] = useState({
@@ -102,32 +103,6 @@ export default function WhatsAppDashboard() {
   const [testSuccess, setTestSuccess] = useState<boolean | null>(null);
   const [testError, setTestError] = useState("");
 
-  // Load data based on tab active
-  useEffect(() => {
-    if (activeTab === "support") {
-      void fetchTickets();
-    } else if (activeTab === "retries") {
-      void fetchRetries();
-    } else if (activeTab === "analytics") {
-      void fetchAnalytics();
-    }
-  }, [activeTab]);
-
-  // --- Fetch Support Tickets ---
-  const fetchTickets = async () => {
-    setLoadingTickets(true);
-    try {
-      const res = await fetch("/api/admin/whatsapp/support");
-      const data = await res.json();
-      if (data.success) {
-        setTickets(data.tickets || []);
-      }
-    } catch (err) {
-      console.error("Failed to fetch support tickets:", err);
-    } finally {
-      setLoadingTickets(false);
-    }
-  };
 
   const handleUpdateTicketStatus = async (ticketId: string, newStatus: string) => {
     try {
@@ -137,9 +112,7 @@ export default function WhatsAppDashboard() {
         body: JSON.stringify({ ticketId, status: newStatus })});
       const data = await res.json();
       if (data.success) {
-        setTickets((prev) =>
-          prev.map((t) => (t.id === ticketId ? { ...t, status: newStatus as any } : t))
-        );
+        void refetchTickets();
       } else {
         void dialog.alert({ title: "Update Failed", message: data.error || "Failed to update ticket status", type: "error" });
       }
@@ -148,21 +121,6 @@ export default function WhatsAppDashboard() {
     }
   };
 
-  // --- Fetch Retries Queue ---
-  const fetchRetries = async () => {
-    setLoadingRetries(true);
-    try {
-      const res = await fetch("/api/admin/whatsapp/retries");
-      const data = await res.json();
-      if (data.success) {
-        setRetries(data.retries || []);
-      }
-    } catch (err) {
-      console.error("Failed to fetch retry queue:", err);
-    } finally {
-      setLoadingRetries(false);
-    }
-  };
 
   const handleRetryMessage = async (messageId: string) => {
     try {
@@ -173,7 +131,7 @@ export default function WhatsAppDashboard() {
       const data = await res.json();
       if (data.success) {
         void dialog.alert({ title: "Success", message: "Retry triggered successfully!", type: "success" });
-        void fetchRetries();
+        void refetchRetries();
       } else {
         void dialog.alert({ title: "Retry Failed", message: data.error || "Manual retry failed", type: "error" });
       }
@@ -190,9 +148,7 @@ export default function WhatsAppDashboard() {
         body: JSON.stringify({ action: "cancel", messageId })});
       const data = await res.json();
       if (data.success) {
-        setRetries((prev) =>
-          prev.map((r) => (r.message_id === messageId ? { ...r, status: "cancelled" } : r))
-        );
+        void refetchRetries();
       }
     } catch (err) {
       console.error(err);
@@ -209,7 +165,7 @@ export default function WhatsAppDashboard() {
       const data = await res.json();
       if (data.success) {
         void dialog.alert({ title: "Bulk Retry Complete", message: `Bulk retry complete. Processed: ${data.processed}, Successful: ${data.successful}, Failed: ${data.failed}`, type: "success" });
-        void fetchRetries();
+        void refetchRetries();
       } else {
         void dialog.alert({ title: "Bulk Retry Failed", message: data.error || "Failed to trigger bulk retries", type: "error" });
       }
@@ -220,21 +176,6 @@ export default function WhatsAppDashboard() {
     }
   };
 
-  // --- Fetch Analytics ---
-  const fetchAnalytics = async () => {
-    setLoadingAnalytics(true);
-    try {
-      const res = await fetch("/api/admin/whatsapp/analytics");
-      const data = await res.json();
-      if (data.success) {
-        setAnalytics(data);
-      }
-    } catch (err) {
-      console.error("Failed to fetch analytics:", err);
-    } finally {
-      setLoadingAnalytics(false);
-    }
-  };
 
   // --- Send Test Template ---
   const handleSendTest = async (e: React.FormEvent) => {
@@ -378,7 +319,7 @@ export default function WhatsAppDashboard() {
                 <p className="text-xs text-muted-foreground mt-0.5">Tickets created automatically via inbound customer WhatsApp messages.</p>
               </div>
               <button
-                onClick={fetchTickets}
+                onClick={() => refetchTickets()}
                 disabled={loadingTickets}
                 className="text-muted-foreground hover:text-foreground p-2 rounded hover:bg-accent transition-colors disabled:opacity-50 flex items-center gap-1.5 text-xs font-semibold"
               >
@@ -411,7 +352,7 @@ export default function WhatsAppDashboard() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5 text-sm text-muted-foreground">
-                    {tickets.map((t) => (
+                    {tickets.map((t: SupportTicket) => (
                       <tr key={t.id} className="hover:bg-accent transition-all">
                         <td className="px-6 py-4">
                           <p className="font-semibold text-foreground">{t.customer_name || "WhatsApp Customer"}</p>
@@ -477,7 +418,7 @@ export default function WhatsAppDashboard() {
 
               {/* Status breakdown */}
               {["pending", "completed", "cancelled", "failed"].map((status) => {
-                const count = retries.filter((r) => r.status === status).length;
+                const count = retries.filter((r: any) => r.status === status).length;
                 return (
                   <div key={status} className="bg-card/40 border border-border rounded p-6 backdrop-blur-md flex flex-col justify-between">
                     <h4 className="text-xs font-bold text-muted-foreground tracking-wider capitalize">{status} Retries</h4>
@@ -496,7 +437,7 @@ export default function WhatsAppDashboard() {
                   <p className="text-xs text-muted-foreground mt-0.5">Logs of failed broadcast template campaigns and their automated recovery logs.</p>
                 </div>
                 <button
-                  onClick={fetchRetries}
+                  onClick={() => refetchRetries()}
                   disabled={loadingRetries}
                   className="text-muted-foreground hover:text-foreground p-2 rounded hover:bg-accent transition-colors disabled:opacity-50 flex items-center gap-1.5 text-xs font-semibold"
                 >
@@ -530,7 +471,7 @@ export default function WhatsAppDashboard() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5 text-sm text-muted-foreground">
-                      {retries.map((r) => (
+                      {retries.map((r: RetryRecord) => (
                         <tr key={r.id} className="hover:bg-accent transition-all">
                           <td className="px-6 py-4 font-mono text-xs font-semibold text-foreground">
                             {r.recipient_phone}
@@ -609,8 +550,8 @@ export default function WhatsAppDashboard() {
                     <h4 className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Total Traffic</h4>
                     <div className="flex items-baseline justify-between mt-4">
                       <span className="text-4xl font-extrabold text-foreground">
-                        {(analytics.direction.find((d) => d.direction === "inbound")?.count || 0) +
-                          (analytics.direction.find((d) => d.direction === "outbound")?.count || 0)}
+                        {(analytics.direction.find((d: any) => d.direction === "inbound")?.count || 0) +
+                          (analytics.direction.find((d: any) => d.direction === "outbound")?.count || 0)}
                       </span>
                       <span className="text-xs text-muted-foreground">messages</span>
                     </div>
@@ -621,13 +562,13 @@ export default function WhatsAppDashboard() {
                     <h4 className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Inbound Received</h4>
                     <div className="flex items-baseline justify-between mt-4">
                       <span className="text-4xl font-extrabold text-brand-secondary-400">
-                        {analytics.direction.find((d) => d.direction === "inbound")?.count || 0}
+                        {analytics.direction.find((d: any) => d.direction === "inbound")?.count || 0}
                       </span>
                       <span className="text-xs text-muted-foreground">
                         {Math.round(
-                          ((analytics.direction.find((d) => d.direction === "inbound")?.count || 0) /
-                            (Math.max(1, (analytics.direction.find((d) => d.direction === "inbound")?.count || 0) +
-                              (analytics.direction.find((d) => d.direction === "outbound")?.count || 0)))) * 100
+                          ((analytics.direction.find((d: any) => d.direction === "inbound")?.count || 0) /
+                            (Math.max(1, (analytics.direction.find((d: any) => d.direction === "inbound")?.count || 0) +
+                              (analytics.direction.find((d: any) => d.direction === "outbound")?.count || 0)))) * 100
                         )}% of total
                       </span>
                     </div>
@@ -638,13 +579,13 @@ export default function WhatsAppDashboard() {
                     <h4 className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Outbound Dispatched</h4>
                     <div className="flex items-baseline justify-between mt-4">
                       <span className="text-4xl font-extrabold text-blue-400">
-                        {analytics.direction.find((d) => d.direction === "outbound")?.count || 0}
+                        {analytics.direction.find((d: any) => d.direction === "outbound")?.count || 0}
                       </span>
                       <span className="text-xs text-muted-foreground">
                         {Math.round(
-                          ((analytics.direction.find((d) => d.direction === "outbound")?.count || 0) /
-                            (Math.max(1, (analytics.direction.find((d) => d.direction === "inbound")?.count || 0) +
-                              (analytics.direction.find((d) => d.direction === "outbound")?.count || 0)))) * 100
+                          ((analytics.direction.find((d: any) => d.direction === "outbound")?.count || 0) /
+                            (Math.max(1, (analytics.direction.find((d: any) => d.direction === "inbound")?.count || 0) +
+                              (analytics.direction.find((d: any) => d.direction === "outbound")?.count || 0)))) * 100
                         )}% of total
                       </span>
                     </div>
@@ -652,10 +593,10 @@ export default function WhatsAppDashboard() {
 
                   {/* Card 4: Delivery Rate */}
                   {(() => {
-                    const totalOutbound = analytics.direction.find((d) => d.direction === "outbound")?.count || 0;
-                    const delivered = analytics.status.find((s) => s.status === "delivered")?.count || 0;
-                    const read = analytics.status.find((s) => s.status === "read")?.count || 0;
-                    const sent = analytics.status.find((s) => s.status === "sent")?.count || 0;
+                    const totalOutbound = analytics.direction.find((d: any) => d.direction === "outbound")?.count || 0;
+                    const delivered = analytics.status.find((s: any) => s.status === "delivered")?.count || 0;
+                    const read = analytics.status.find((s: any) => s.status === "read")?.count || 0;
+                    const sent = analytics.status.find((s: any) => s.status === "sent")?.count || 0;
                     const successful = delivered + read + sent;
                     const successRate = totalOutbound > 0 ? Math.round((successful / totalOutbound) * 100) : 100;
                     return (
@@ -681,10 +622,7 @@ export default function WhatsAppDashboard() {
                           <CartesianGrid stroke="#1e293b" vertical={false} strokeDasharray="3 3" />
                           <XAxis dataKey="date" stroke="#475569" fontSize={10} tickLine={false} />
                           <YAxis stroke="#475569" fontSize={10} tickLine={false} />
-                          <Tooltip
-                            contentStyle={{ backgroundColor: "#0f172a", borderColor: "rgba(255,255,255,0.1)", color: "#fff" }}
-                            itemStyle={{ color: "#3b82f6" }}
-                          />
+                          <Tooltip content={<ChartTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
                           <Legend verticalAlign="top" height={36} iconType="circle" />
                           <Bar dataKey="inbound" name="Inbound" fill="#10b981" radius={[4, 4, 0, 0]} isAnimationActive={!prefersReducedMotion} />
                           <Bar dataKey="outbound" name="Outbound" fill="#3b82f6" radius={[4, 4, 0, 0]} isAnimationActive={!prefersReducedMotion} />
@@ -703,7 +641,7 @@ export default function WhatsAppDashboard() {
                         <ResponsiveContainer width="100%" height="100%">
                           <PieChart>
                             <Pie
-                              data={analytics.status.map((s) => ({
+                              data={analytics.status.map((s: {status: string, count: number}) => ({
                                 name: s.status,
                                 value: s.count,
                                 fill: s.status === "read" ? "#22d3ee"
@@ -721,11 +659,18 @@ export default function WhatsAppDashboard() {
                               strokeWidth={2}
                               isAnimationActive={!prefersReducedMotion}
                             >
-                              {analytics.status.map((entry, index) => (
-                                <Cell key={`cell-${index}`} />
+                              {analytics.status.map((s: any) => ({
+                                name: s.status,
+                                value: s.count,
+                                fill: s.status === "read" ? "#22d3ee"
+                                  : s.status === "delivered" ? "#10b981"
+                                    : s.status === "sent" ? "#3b82f6"
+                                      : "#ef4444"
+                              })).map((entry: any, index: number) => (
+                                <Cell key={`cell-${index}`} fill={entry.fill} />
                               ))}
                             </Pie>
-                            <Tooltip contentStyle={{ backgroundColor: "#0f172a", borderColor: "rgba(255,255,255,0.1)", color: "#fff" }} />
+                            <Tooltip content={<ChartTooltip />} />
                             <Legend verticalAlign="bottom" height={36} iconSize={8} />
                           </PieChart>
                         </ResponsiveContainer>

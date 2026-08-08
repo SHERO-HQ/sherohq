@@ -294,7 +294,7 @@ export async function fetchRecommendedProducts(
     }
 
     const terms = [...searchTerms].slice(0, 6);
-    let collected: Product[] = [];
+    const collected: Product[] = [];
 
     for (const term of terms) {
       const searchResults = await fetchByParam("search", term);

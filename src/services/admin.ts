@@ -46,6 +46,7 @@ export interface AdminStats {
   lowStock: number;
   outOfStock: number;
   pendingOrders: number;
+  abandonedCarts: number;
   revenueGrowth: number;
   ordersGrowth: number;
   newProductsCount: number;
@@ -418,6 +419,7 @@ export interface OrderStatusDistribution {
   name: string;
   value: number;
   color: string;
+  fill?: string;
 }
 
 export interface RecentOrder {

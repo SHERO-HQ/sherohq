@@ -3,7 +3,7 @@ import FeedbackForm from "@/components/feedback/FeedbackForm";
 import { HatGlasses, ShieldCheck } from "lucide-react";
 
 export const metadata = {
-  title: "Send Feedback — SHERO TECHNOLOGIES",
+  title: "Send Feedback | SHERO TECHNOLOGIES",
   description:
     "We'd love to hear from you. Share your feedback and help us improve.",
 };

@@ -9,6 +9,7 @@ import { logActivity } from "@/lib/activity";
 const ProductQuerySchema = z.object({
   category: z.string().optional(),
   search: z.string().max(200).optional(),
+  stock: z.enum(["low", "out"]).optional(),
   limit: z.coerce.number().int().min(1).max(100).default(50),
   offset: z.coerce.number().int().nonnegative().default(0)});
 
@@ -105,6 +106,7 @@ export async function GET(request: NextRequest) {
     const paramsObj = {
       category: searchParams.get("category") || undefined,
       search: searchParams.get("search") || undefined,
+      stock: searchParams.get("stock") || undefined,
       limit: searchParams.get("limit") || undefined,
       offset: searchParams.get("offset") || undefined};
 
@@ -138,6 +140,12 @@ export async function GET(request: NextRequest) {
       );
       sqlParams.push(`%${search}%`);
       paramIndex++;
+    }
+
+    if (validated.stock === "low") {
+      conditions.push(`p."stockQuantity" <= 10 AND p."stockQuantity" > 0 AND p."inStock" = true`);
+    } else if (validated.stock === "out") {
+      conditions.push(`(p."stockQuantity" = 0 OR p."inStock" = false)`);
     }
 
     if (conditions.length > 0) {

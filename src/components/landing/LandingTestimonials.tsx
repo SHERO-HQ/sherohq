@@ -32,7 +32,7 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
     const t = data || [];
     return limit ? t.slice(0, limit) : t;
   }, [data, limit]);
-  
+
   const [cards, setCards] = useState<any[]>([]);
 
   useEffect(() => {
@@ -84,11 +84,13 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
 
       {/* Soft Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-125 bg-brand-secondary-500/5 rounded-full blur-[100px] pointer-events-none transition-colors duration-300" />
+      {/* Dot particles */}
+      <div className="absolute inset-0 pattern-dots opacity-80 pointer-events-none" />
 
       <div className="container px-4 md:px-6 relative z-10 w-full mx-auto md:w-11/12 max-w-7xl">
         {(isLoading || displayTestimonials.length > 0) && (
           <div className="flex flex-col items-center justify-center gap-12 lg:gap-16">
-            
+
             {/* Header Content */}
             <div className="text-center max-w-3xl mx-auto">
               <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-2 text-[9px] font-bold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100/80 dark:bg-brand-secondary-500/10 border border-brand-secondary-500/30 dark:border-brand-secondary-500/20 rounded uppercase tracking-wider transition-colors duration-300">
@@ -104,7 +106,7 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
             </div>
 
             {/* Stack of Cards UI */}
-            <div 
+            <div
               className="relative w-full max-w-2xl mx-auto h-[450px] sm:h-[400px] flex items-center justify-center perspective-[1000px]"
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
@@ -115,7 +117,7 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
                 <AnimatePresence mode="popLayout">
                   {cards.slice(0, 3).map((item, index) => {
                     const isFront = index === 0;
-                    
+
                     return (
                       <m.div
                         key={item.uniqueId || item.id || `card-${index}`} // absolutely guarantee a non-empty key
@@ -139,9 +141,8 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
                           damping: 25,
                           mass: 0.8,
                         }}
-                        className={`absolute w-full top-0 left-0 right-0 origin-top shadow-xl ${
-                          isFront ? 'cursor-grab active:cursor-grabbing' : 'pointer-events-none'
-                        }`}
+                        className={`absolute w-full top-0 left-0 right-0 origin-top shadow-xl ${isFront ? 'cursor-grab active:cursor-grabbing' : 'pointer-events-none'
+                          }`}
                         drag={isFront ? "x" : false}
                         dragConstraints={{ left: 0, right: 0 }}
                         dragElastic={1}

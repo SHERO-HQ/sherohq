@@ -98,7 +98,7 @@ const LandingProducts = () => {
             </h2>
             <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
               Shop laptops, phones, accessories and more with free delivery on
-              orders over <span className="font-semibold text-brand-secondary-500 dark:text-brand-secondary-400">GH₵2000</span>
+              orders over <span className="font-semibold text-brand-secondary-500 dark:text-brand-secondary-400">GHS2000</span>
             </p>
           </div>
         </FadeInView>

@@ -13,7 +13,7 @@ export const marketingNotifications = {
       <tr>
         <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
           <p style="margin: 0; font-weight: 600; color: #0f172a;">${item.name}</p>
-          <p style="margin: 4px 0 0; font-size: 13px; color: #64748b;">Qty: ${item.quantity} | Price: GH₵${Number(item.price).toFixed(2)}</p>
+          <p style="margin: 4px 0 0; font-size: 13px; color: #64748b;">Qty: ${item.quantity} | Price: GHS${Number(item.price).toFixed(2)}</p>
         </td>
       </tr>
     `,
@@ -41,7 +41,8 @@ export const marketingNotifications = {
     `;
 
     const htmlContent = wrapEmailHtml(bodyHtml, {
-      preheader: "Your SHERO cart is waiting for you."});
+      preheader: "Your SHERO cart is waiting for you."
+    });
 
     await sendEmail(email, "Did you forget something? 🛒", htmlContent);
   },
@@ -62,9 +63,11 @@ export const marketingNotifications = {
       </p>
     `;
     const htmlContent = wrapEmailHtml(bodyHtml, {
-      hideFooterContact: true});
+      hideFooterContact: true
+    });
     await sendEmail(to, subject, htmlContent, {
       throwOnError: true,
-      requestId});
+      requestId
+    });
   }
 };

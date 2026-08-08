@@ -30,12 +30,12 @@ interface AboutTestimonialsProps {
 
 const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
   const { data, isLoading } = useTestimonials();
-  
+
   const displayTestimonials = useMemo(() => {
     const t = data || [];
     return limit ? t.slice(0, limit) : t;
   }, [data, limit]);
-  
+
   const [cards, setCards] = useState<any[]>([]);
 
   useEffect(() => {
@@ -87,11 +87,12 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
 
       {/* Soft Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-125 bg-brand-secondary-500/5 rounded-full blur-[100px] pointer-events-none transition-colors duration-300" />
+      <div className="absolute inset-0 pattern-dots opacity-80 pointer-events-none" />
 
       <div className="container px-4 md:px-6 relative z-10 w-full mx-auto md:w-11/12 max-w-7xl">
         {(isLoading || displayTestimonials.length > 0) && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center mb-16">
-            
+
             {/* Header Content */}
             <div className="text-center lg:text-left max-w-xl mx-auto lg:mx-0">
               <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-2 text-[9px] font-bold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100/80 dark:bg-brand-secondary-500/10 border border-brand-secondary-500/30 dark:border-brand-secondary-500/20 rounded uppercase tracking-wider transition-colors duration-300">
@@ -104,7 +105,7 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
               <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 transition-colors duration-300 leading-relaxed">
                 We believe technology exists to expand what's possible. See how we've partnered with innovators to build enterprise-grade infrastructure that removes barriers and creates opportunities.
               </p>
-              
+
               <div className="flex items-center justify-center lg:justify-start gap-4">
                 <button
                   onClick={handlePrev}
@@ -122,7 +123,7 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
             </div>
 
             {/* Stack of Cards UI */}
-            <div 
+            <div
               className="relative w-full max-w-lg mx-auto h-[450px] sm:h-[400px] flex items-center justify-center perspective-[1000px]"
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
@@ -133,7 +134,7 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
                 <AnimatePresence mode="popLayout">
                   {cards.slice(0, 3).map((item, index) => {
                     const isFront = index === 0;
-                    
+
                     return (
                       <m.div
                         key={item.uniqueId || item.id || `card-${index}`} // absolutely guarantee a non-empty key
@@ -157,9 +158,8 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
                           damping: 25,
                           mass: 0.8,
                         }}
-                        className={`absolute w-full top-0 left-0 right-0 origin-top shadow-xl ${
-                          isFront ? 'cursor-grab active:cursor-grabbing' : 'pointer-events-none'
-                        }`}
+                        className={`absolute w-full top-0 left-0 right-0 origin-top shadow-xl ${isFront ? 'cursor-grab active:cursor-grabbing' : 'pointer-events-none'
+                          }`}
                         drag={isFront ? "x" : false}
                         dragConstraints={{ left: 0, right: 0 }}
                         dragElastic={1}
