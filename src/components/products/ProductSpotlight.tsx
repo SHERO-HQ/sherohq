@@ -169,7 +169,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                               className="fill-amber-400 text-amber-400"
                             />
                             <span className="text-xs font-bold text-slate-900 dark:text-white">
-                              {currentProduct.rating} / 5.0
+                              {currentProduct.rating} / 5
                             </span>
                           </div>
                         )}
