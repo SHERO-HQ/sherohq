@@ -4,11 +4,15 @@ import {
   updateMessageStatus,
   getCampaignDeliveryStatus,
   upsertWhatsAppContact,
+  getWhatsAppContactState,
+  updateWhatsAppContactState,
 } from "@/lib/whatsapp-messages";
 import { updateCampaignDeliveryStats } from "@/lib/newsletter-campaigns";
 import { sendAutoReply, getSmartReply } from "@/lib/whatsapp-auto-reply";
 import { createSupportTicketFromWhatsApp } from "@/lib/whatsapp-support";
 import { scheduleMessageForRetry } from "@/lib/whatsapp-retry";
+import { COMPANY_CONTACTS } from "@/constants/contacts";
+
 const WEBHOOK_VERIFY_TOKEN = process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN!;
 const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID!;
 
@@ -82,6 +86,16 @@ async function handleIncomingMessage(msg: any, contact: any) {
       content = msg.text.body;
     } else if (msg.interactive?.button_reply) {
       content = msg.interactive.button_reply.id;
+    } else if (msg.image) {
+      content = msg.image.caption ? `[Sent an Image] ${msg.image.caption}` : `[Sent an Image]`;
+    } else if (msg.video) {
+      content = msg.video.caption ? `[Sent a Video] ${msg.video.caption}` : `[Sent a Video]`;
+    } else if (msg.document) {
+      content = msg.document.caption ? `[Sent a Document] ${msg.document.caption}` : `[Sent a Document]`;
+    } else if (msg.audio) {
+      content = `[Sent Audio]`;
+    } else if (msg.sticker) {
+      content = `[Sent a Sticker]`;
     }
 
     console.log(
@@ -110,39 +124,144 @@ async function handleIncomingMessage(msg: any, contact: any) {
       console.error("Failed to upsert WhatsApp contact:", e),
     );
 
-    // Send auto-reply if text or interactive message
-    if ((messageType === "text" || messageType === "interactive") && content) {
+    // MULTI-CHANNEL ADMIN ALERTS
+    try {
+      const { query } = await import("@/lib/db");
+      const recentMsgs = await query(`
+        SELECT count(*) FROM whatsapp_messages
+        WHERE sender_wa_id = $1 
+        AND direction = 'inbound'
+        AND created_at > NOW() - INTERVAL '15 minutes'
+      `, [senderWaId]);
+
+      // Only trigger if this is the first message in the last 15 mins (spam prevention)
+      if (parseInt(recentMsgs.rows[0].count) <= 1) {
+        const { notificationService } = await import("@/lib/notifications");
+        await notificationService.sendNewWhatsAppAlert(
+          contactName || "Customer", 
+          senderWaId, 
+          content || `[Sent a ${messageType}]`
+        ).catch(e => console.error("Failed to send WhatsApp Email Alert", e));
+
+        const adminPhone = process.env.ADMIN_PHONE_NUMBER;
+        if (adminPhone) {
+          const { sendWhatsAppMessageDirect } = await import("@/lib/whatsapp-messages");
+          const alertMessage = `💬 *New WhatsApp Message*\n\n*From:* ${contactName || "Customer"} (${senderWaId})\n\n"${content || `[Sent a ${messageType}]`}"\n\nReply here: https://admin.sherohq.com/admin/whatsapp`;
+          await sendWhatsAppMessageDirect(
+            adminPhone,
+            alertMessage,
+            null, null, []
+          ).catch(e => console.error("Failed to send WhatsApp Relay Alert", e));
+        }
+      }
+    } catch (alertError) {
+      console.error("Failed to process multi-channel alerts:", alertError);
+    }
+
+    // Send auto-reply if content exists
+    if (content) {
+      const currentState = await getWhatsAppContactState(senderWaId);
+
+      if (currentState === "WAITING_FOR_ORDER_ID") {
+        const orderId = content.trim();
+        const { query } = await import("@/lib/db");
+        try {
+          const orderRes = await query(`SELECT status, total, payment_status FROM orders WHERE id = $1`, [orderId]);
+          
+          if (orderRes.rows.length > 0) {
+            const order = orderRes.rows[0];
+            await sendAutoReply(senderWaId, PHONE_NUMBER_ID, {
+              enabled: true,
+              message: `✅ *Order Found!*\n\n*Order ID:* ${orderId}\n*Status:* ${order.status.toUpperCase()}\n*Total:* ₵${order.total}\n*Payment:* ${order.payment_status.toUpperCase()}\n\nLet me know if you need anything else!`,
+            });
+          } else {
+            await sendAutoReply(senderWaId, PHONE_NUMBER_ID, {
+              enabled: true,
+              message: `❌ Sorry, I couldn't find an order with the ID "${orderId}". Please check the ID and try again, or ask to speak to a human.`,
+            });
+          }
+        } catch (e) {
+          console.error("Order lookup error:", e);
+        }
+        await updateWhatsAppContactState(senderWaId, null);
+        return; // Stop processing
+      }
+
+      if (currentState === "WAITING_FOR_TICKET_ISSUE") {
+        const ticketResult = await createSupportTicketFromWhatsApp(
+          messageId,
+          senderWaId,
+          contactName,
+          content,
+          "medium",
+        );
+        console.log(`Created support ticket: ${ticketResult.id}`);
+
+        await sendAutoReply(senderWaId, PHONE_NUMBER_ID, {
+          enabled: true,
+          message: `🎫 *Support Ticket Created!*\n\nYour issue has been logged. A human agent will review it and reply to you here shortly. Thank you for your patience!`,
+        });
+        
+        await updateWhatsAppContactState(senderWaId, null);
+        return; // Stop processing
+      }
+
+      // Normal Mode (No State)
       // Try smart reply first
       const smartReply = getSmartReply(content);
       const autoReplyText = smartReply?.message || undefined;
       const interactiveButtons = smartReply?.buttons;
 
-      // Send auto-reply with delay
-      const replyResult = await sendAutoReply(senderWaId, PHONE_NUMBER_ID, {
-        enabled: true,
-        message:
-          autoReplyText ||
-          `Thank you for reaching out! We've received your message and will get back to you as soon as possible. Our support team typically responds within 24 hours.`,
-        interactiveButtons,
-        delay: 2000, // 2 second delay before auto-reply
-      });
-
-      if (replyResult.success) {
-        console.log(`Sent auto-reply: ${replyResult.messageId}`);
-      } else {
-        console.warn(`Failed to send auto-reply: ${replyResult.error}`);
+      // Handle interactive button clicks to update state
+      if (content === "btn_order") {
+        await updateWhatsAppContactState(senderWaId, "WAITING_FOR_ORDER_ID");
+      } else if (content === "btn_support") {
+        await updateWhatsAppContactState(senderWaId, "WAITING_FOR_TICKET_ISSUE");
       }
 
-      // Create support ticket for human follow-up
-      const ticketResult = await createSupportTicketFromWhatsApp(
-        messageId,
-        senderWaId,
-        contactName,
-        content,
-        "medium",
-      );
+      let shouldSendReply = true;
+      let isNewConversation = true;
+      
+      // Only throttle if it's the fallback message (not a smart reply)
+      if (!autoReplyText) {
+        try {
+          const { query } = await import("@/lib/db");
+          const recent24h = await query(`
+            SELECT count(*) FROM whatsapp_messages
+            WHERE sender_wa_id = $1 
+            AND direction = 'inbound'
+            AND created_at > NOW() - INTERVAL '24 hours'
+          `, [senderWaId]);
+          
+          // If count > 1, they've sent other messages in the last 24 hours besides the one we just stored
+          isNewConversation = parseInt(recent24h.rows[0].count) <= 1;
+        } catch (err) {
+          console.error("Failed to check 24h messages for throttle:", err);
+        }
 
-      console.log(`Created support ticket: ${ticketResult.id}`);
+        if (!isNewConversation) {
+          shouldSendReply = false;
+          console.log(`Skipping fallback auto-reply for ${senderWaId} (active conversation)`);
+        }
+      }
+
+      if (shouldSendReply) {
+        // Send auto-reply with delay
+        const replyResult = await sendAutoReply(senderWaId, PHONE_NUMBER_ID, {
+          enabled: true,
+          message:
+            autoReplyText ||
+            `Thank you for reaching out to SHERO! We've received your message. Select an option below, or simply type your question and a human agent will assist you.\n\nFor faster replies, you can text our personal number at ${COMPANY_CONTACTS.PHONE_DISPLAY}.`,
+          interactiveButtons,
+          delay: 2000, // 2 second delay before auto-reply
+        });
+
+        if (replyResult.success) {
+          console.log(`Sent auto-reply: ${replyResult.messageId}`);
+        } else {
+          console.warn(`Failed to send auto-reply: ${replyResult.error}`);
+        }
+      }
     }
   } catch (error) {
     console.error("Error handling incoming message:", error);

@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 export default function AdminCheckoutCRM() {
   const [activeTab, setActiveTab] = useState<"abandoned" | "completed">("abandoned");
   const [searchTerm, setSearchTerm] = useState("");
+  const [filterType, setFilterType] = useState<"all" | "actionable" | "anonymous">("actionable");
 
   const { data: abandonedCarts, isLoading: isLoadingAbandoned } = useAbandonedCarts();
   
@@ -23,7 +24,14 @@ export default function AdminCheckoutCRM() {
 
   const searchedAbandoned = abandonedCarts?.filter(cart => {
     const term = searchTerm.toLowerCase();
-    return (cart.name?.toLowerCase().includes(term) || cart.email?.toLowerCase().includes(term) || cart.phone?.toLowerCase().includes(term));
+    const matchesSearch = (cart.name?.toLowerCase().includes(term) || cart.email?.toLowerCase().includes(term) || cart.phone?.toLowerCase().includes(term));
+    
+    if (!matchesSearch) return false;
+    
+    const hasContact = !!(cart.email || cart.phone);
+    if (filterType === "actionable") return hasContact;
+    if (filterType === "anonymous") return !hasContact;
+    return true;
   });
 
   const searchedCompleted = filteredCompletedOrders.filter(order => {
@@ -79,6 +87,17 @@ export default function AdminCheckoutCRM() {
             className="pl-9"
           />
         </div>
+        {activeTab === "abandoned" && (
+          <select 
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value as any)}
+            className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-md text-sm py-2 px-3 focus:ring-primary focus:border-primary text-slate-700 dark:text-slate-300"
+          >
+            <option value="actionable">Actionable (Has Contact)</option>
+            <option value="all">All Carts</option>
+            <option value="anonymous">Anonymous (No Contact)</option>
+          </select>
+        )}
       </div>
 
       {activeTab === "abandoned" && (
@@ -106,10 +125,18 @@ export default function AdminCheckoutCRM() {
                       </td>
                       <td className="px-6 py-4 font-medium text-primary">GHS{cart.totalValue.toFixed(2)}</td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2 mb-2">
                           <ShoppingCart className="w-4 h-4 text-slate-400" />
-                          <span>{cart.items.reduce((sum, item) => sum + (item.quantity || 1), 0)} items</span>
+                          <span className="font-medium text-slate-900 dark:text-white">{cart.items.reduce((sum, item) => sum + (item.quantity || 1), 0)} items</span>
                         </div>
+                        <ul className="text-xs text-slate-500 dark:text-slate-400 space-y-1">
+                          {cart.items.map((item, idx) => (
+                            <li key={idx} className="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-1.5 rounded">
+                              <span className="truncate max-w-[150px]" title={item.name}>{item.name}</span>
+                              <span className="font-medium whitespace-nowrap ml-2">x{item.quantity}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </td>
                       <td className="px-6 py-4 text-slate-500">
                         {new Date(cart.lastActive).toLocaleString()}

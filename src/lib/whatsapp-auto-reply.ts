@@ -2,21 +2,25 @@
  * Auto-reply service for WhatsApp messages
  * Sends automatic replies to incoming customer messages
  */
+import { COMPANY_CONTACTS } from "@/constants/contacts";
+
 
 export interface AutoReplyConfig {
   enabled: boolean;
   message: string;
   interactiveButtons?: { id: string; title: string }[];
   delay?: number; // ms delay before sending reply
+  mediaUrl?: string; // Optional media URL
+  mediaType?: "image" | "document" | "video" | "audio"; // Optional media type
 }
 
 const DEFAULT_AUTO_REPLY: AutoReplyConfig = {
   enabled: true,
-  message: `Welcome to SHERO! How can we help you today?`,
+  message: `Welcome to SHERO! How can we help you today? Select an option below, or simply type your question and a human agent will assist you.\n\nFor faster replies, you can text our personal number at ${COMPANY_CONTACTS.PHONE_DISPLAY}.`,
   interactiveButtons: [
     { id: "btn_shop", title: "🛒 Shop Products" },
-    { id: "btn_support", title: "🎫 Support Ticket" },
-    { id: "btn_order", title: "📦 Order Status" }
+    { id: "btn_order", title: "📦 Order Status" },
+    { id: "btn_support", title: "🎫 Support Ticket" }
   ],
   delay: 1000, // 1 second delay
 };
@@ -62,6 +66,12 @@ export async function sendAutoReply(
           })),
         },
       };
+    } else if (config.mediaUrl && config.mediaType) {
+      body.type = config.mediaType;
+      body[config.mediaType] = { link: config.mediaUrl };
+      if (config.message && config.message !== "") {
+        body[config.mediaType].caption = config.message;
+      }
     } else {
       body.type = "text";
       body.text = { preview_url: false, body: config.message };
@@ -118,12 +128,12 @@ export function getSmartReply(customerMessage: string): { message: string; butto
   }
   if (msg === "btn_support") {
     return {
-      message: "I'll get a human support agent for you right away. Could you briefly describe the issue?",
+      message: "We're here to help! Please reply to this message with a brief description of the issue you're facing, and I will create a support ticket for you.",
     };
   }
   if (msg === "btn_order") {
     return {
-      message: "I can help you track your order! Please reply with your Order ID.",
+      message: "I can help you track your order! Please reply to this message with your Order ID.",
     };
   }
 
@@ -152,11 +162,11 @@ export function getSmartReply(customerMessage: string): { message: string; butto
   const helloPattern = new RegExp(`\\b(hello|hi|hey|greetings)\\b`);
   if (helloPattern.test(msg)) {
     return {
-      message: "Hi! 👋 Welcome to SHERO. How can we help you today?",
+      message: `Hi! 👋 Welcome to SHERO. How can we help you today? Select an option below, or simply type your question and a human agent will assist you.\n\nFor faster replies, you can text our personal number at ${COMPANY_CONTACTS.PHONE_DISPLAY}.`,
       buttons: [
         { id: "btn_shop", title: "🛒 Shop Products" },
-        { id: "btn_support", title: "🎫 Support Ticket" },
-        { id: "btn_order", title: "📦 Order Status" }
+        { id: "btn_order", title: "📦 Order Status" },
+        { id: "btn_support", title: "🎫 Support Ticket" }
       ]
     };
   }

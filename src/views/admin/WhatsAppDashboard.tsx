@@ -15,14 +15,17 @@ import {
   X,
   Loader2,
   Check,
-  Send
+  Send,
+  TrendingUp,
+  MessageCircle
 } from "lucide-react";
 import AppImage from "@/components/common/AppImage";
-import { getWhatsAppConfigStatus } from "@/app/admin/whatsapp/actions";
+import { getWhatsAppConfigStatus, getWhatsAppAnalytics } from "@/app/admin/whatsapp/actions";
 import { formatDistanceToNow } from "date-fns";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useDialog } from "@/hooks/useDialog";
 import dynamic from "next/dynamic";
+const ComposedChart = dynamic(() => import("recharts").then(m => m.ComposedChart), { ssr: false });
 const BarChart = dynamic(() => import("recharts").then(m => m.BarChart), { ssr: false });
 const Bar = dynamic(() => import("recharts").then(m => m.Bar), { ssr: false });
 const XAxis = dynamic(() => import("recharts").then(m => m.XAxis), { ssr: false });
@@ -30,12 +33,14 @@ const YAxis = dynamic(() => import("recharts").then(m => m.YAxis), { ssr: false 
 const CartesianGrid = dynamic(() => import("recharts").then(m => m.CartesianGrid), { ssr: false });
 const Tooltip = dynamic(() => import("recharts").then(m => m.Tooltip), { ssr: false });
 const ResponsiveContainer = dynamic(() => import("recharts").then(m => m.ResponsiveContainer), { ssr: false });
+const LineChart = dynamic(() => import("recharts").then(m => m.LineChart), { ssr: false });
+const Line = dynamic(() => import("recharts").then(m => m.Line), { ssr: false });
 const Legend = dynamic(() => import("recharts").then(m => m.Legend), { ssr: false });
 const PieChart = dynamic(() => import("recharts").then(m => m.PieChart), { ssr: false });
 const Pie = dynamic(() => import("recharts").then(m => m.Pie), { ssr: false });
 const Cell = dynamic(() => import("recharts").then(m => m.Cell), { ssr: false });
 import { ChartTooltip } from "@/components/admin/ChartTooltip";
-import { useWhatsAppSupportTickets, useWhatsAppRetries, useWhatsAppAnalytics } from "@/hooks/queries/useAdmin";
+import { useWhatsAppSupportTickets, useWhatsAppRetries } from "@/hooks/queries/useAdmin";
 
 interface SupportTicket {
   id: string;
@@ -50,26 +55,21 @@ interface SupportTicket {
   updated_at: string;
 }
 
+interface AnalyticsData {
+  dailyData: { date: string; inbound: number; outbound: number }[];
+  totals: { inbound: number; outbound: number; failedOutbound: number };
+}
+
 interface RetryRecord {
   id: string;
   message_id: string;
-  campaign_id: string;
   recipient_phone: string;
   content: string;
   retry_count: number;
   max_retries: number;
-  status: "pending" | "completed" | "cancelled" | "failed";
   next_retry_at: string;
   last_error?: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface AnalyticsData {
-  direction: { direction: string; count: number }[];
-  status: { status: string; count: number }[];
-  retries: { status: string; count: number }[];
-  dailyVolume: { date: string; inbound: number; outbound: number }[];
+  status: "pending" | "completed" | "cancelled" | "failed";
 }
 
 export default function WhatsAppDashboard() {
@@ -88,8 +88,8 @@ export default function WhatsAppDashboard() {
   const [triggeringBulk, setTriggeringBulk] = useState(false);
 
   // Analytics States
-  const { data: analyticsData, isLoading: loadingAnalytics } = useWhatsAppAnalytics(activeTab === "analytics" ? undefined : false);
-  const analytics = analyticsData || null;
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
+  const [analyticsLoading, setAnalyticsLoading] = useState(false);
 
   // Settings States
   const [settings, setSettings] = useState({
@@ -104,7 +104,6 @@ export default function WhatsAppDashboard() {
   const [sendingTest, setSendingTest] = useState(false);
   const [testSuccess, setTestSuccess] = useState<boolean | null>(null);
   const [testError, setTestError] = useState("");
-
 
   const handleUpdateTicketStatus = async (ticketId: string, newStatus: string) => {
     try {
@@ -122,7 +121,6 @@ export default function WhatsAppDashboard() {
       console.error(err);
     }
   };
-
 
   const handleRetryMessage = async (messageId: string) => {
     try {
@@ -177,7 +175,6 @@ export default function WhatsAppDashboard() {
       setTriggeringBulk(false);
     }
   };
-
 
   // --- Send Test Template ---
   const handleSendTest = async (e: React.FormEvent) => {
@@ -276,6 +273,22 @@ export default function WhatsAppDashboard() {
         .catch((error) => {
           console.error("Failed to fetch WhatsApp config status:", error);
           setConfigStatus((prev) => ({ ...prev, loading: false }));
+        });
+    }
+  }, [activeTab]);
+
+
+  useEffect(() => {
+    if (activeTab === "analytics") {
+      setAnalyticsLoading(true);
+      getWhatsAppAnalytics(14)
+        .then((data) => {
+          setAnalyticsData(data);
+          setAnalyticsLoading(false);
+        })
+        .catch((error) => {
+          console.error("Failed to fetch WhatsApp analytics:", error);
+          setAnalyticsLoading(false);
         });
     }
   }, [activeTab]);
@@ -566,149 +579,97 @@ export default function WhatsAppDashboard() {
           </div>
         )}
 
+
         {activeTab === "analytics" && (
-          <div className="space-y-8">
-            {loadingAnalytics && !analytics ? (
-              <div className="p-12 flex items-center justify-center">
-                <Loader2 className="w-8 h-8 text-brand-secondary-500 animate-spin" />
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {analyticsLoading || !analyticsData ? (
+              <div className="flex items-center justify-center p-20">
+                <Loader2 className="w-8 h-8 animate-spin text-brand-secondary-500" />
               </div>
-            ) : !analytics ? (
-              <div className="p-6 text-center text-muted-foreground">Failed to load statistics.</div>
             ) : (
               <>
-                {/* Visual Cards Row */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                  {/* Card 1: Total Messages */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md">
-                    <h4 className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Total Traffic</h4>
-                    <div className="flex items-baseline justify-between mt-4">
-                      <span className="text-4xl font-extrabold text-foreground">
-                        {(analytics.direction.find((d: any) => d.direction === "inbound")?.count || 0) +
-                          (analytics.direction.find((d: any) => d.direction === "outbound")?.count || 0)}
-                      </span>
-                      <span className="text-xs text-muted-foreground">messages</span>
-                    </div>
-                  </div>
-
-                  {/* Card 2: Sent vs Received */}
-                  <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md">
-                    <h4 className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Inbound Received</h4>
-                    <div className="flex items-baseline justify-between mt-4">
-                      <span className="text-4xl font-extrabold text-brand-secondary-400">
-                        {analytics.direction.find((d: any) => d.direction === "inbound")?.count || 0}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {Math.round(
-                          ((analytics.direction.find((d: any) => d.direction === "inbound")?.count || 0) /
-                            (Math.max(1, (analytics.direction.find((d: any) => d.direction === "inbound")?.count || 0) +
-                              (analytics.direction.find((d: any) => d.direction === "outbound")?.count || 0)))) * 100
-                        )}% of total
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Card 3: Outbound Sent */}
-                  <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md">
-                    <h4 className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Outbound Dispatched</h4>
-                    <div className="flex items-baseline justify-between mt-4">
-                      <span className="text-4xl font-extrabold text-blue-400">
-                        {analytics.direction.find((d: any) => d.direction === "outbound")?.count || 0}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {Math.round(
-                          ((analytics.direction.find((d: any) => d.direction === "outbound")?.count || 0) /
-                            (Math.max(1, (analytics.direction.find((d: any) => d.direction === "inbound")?.count || 0) +
-                              (analytics.direction.find((d: any) => d.direction === "outbound")?.count || 0)))) * 100
-                        )}% of total
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Card 4: Delivery Rate */}
-                  {(() => {
-                    const totalOutbound = analytics.direction.find((d: any) => d.direction === "outbound")?.count || 0;
-                    const delivered = analytics.status.find((s: any) => s.status === "delivered")?.count || 0;
-                    const read = analytics.status.find((s: any) => s.status === "read")?.count || 0;
-                    const sent = analytics.status.find((s: any) => s.status === "sent")?.count || 0;
-                    const successful = delivered + read + sent;
-                    const successRate = totalOutbound > 0 ? Math.round((successful / totalOutbound) * 100) : 100;
-                    return (
-                      <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md">
-                        <h4 className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Delivery Rate</h4>
-                        <div className="flex items-baseline justify-between mt-4">
-                          <span className="text-4xl font-extrabold text-emerald-400">{successRate}%</span>
-                          <span className="text-xs text-muted-foreground">success score</span>
-                        </div>
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-emerald-500/10 rounded-lg">
+                        <MessageSquare className="w-5 h-5 text-emerald-500" />
                       </div>
-                    );
-                  })()}
+                      <h3 className="text-sm font-medium text-muted-foreground">Inbound Messages</h3>
+                    </div>
+                    <div className="text-3xl font-bold text-foreground">{analyticsData.totals.inbound}</div>
+                    <p className="text-xs text-muted-foreground mt-1">Received in last 14 days</p>
+                  </div>
+
+                  <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-blue-500/10 rounded-lg">
+                        <Send className="w-5 h-5 text-blue-500" />
+                      </div>
+                      <h3 className="text-sm font-medium text-muted-foreground">Outbound Messages</h3>
+                    </div>
+                    <div className="text-3xl font-bold text-foreground">{analyticsData.totals.outbound}</div>
+                    <p className="text-xs text-muted-foreground mt-1">Sent in last 14 days</p>
+                  </div>
+
+                  <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-amber-500/10 rounded-lg">
+                        <AlertTriangle className="w-5 h-5 text-amber-500" />
+                      </div>
+                      <h3 className="text-sm font-medium text-muted-foreground">Failed Deliveries</h3>
+                    </div>
+                    <div className="text-3xl font-bold text-foreground">{analyticsData.totals.failedOutbound}</div>
+                    <p className="text-xs text-muted-foreground mt-1">Failed to send in last 14 days</p>
+                  </div>
                 </div>
 
-                {/* Charts Row */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                  {/* Daily Volume Bar Chart */}
-                  <div className="lg:col-span-2 bg-card/40 border border-border rounded p-6 backdrop-blur-md">
-                    <h3 className="text-base font-semibold text-foreground mb-6">Daily Messaging Volume</h3>
-                    <div className="h-80 w-full">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={analytics.dailyVolume} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                          <CartesianGrid stroke="#1e293b" vertical={false} strokeDasharray="3 3" />
-                          <XAxis dataKey="date" stroke="#475569" fontSize={10} tickLine={false} />
-                          <YAxis stroke="#475569" fontSize={10} tickLine={false} />
-                          <Tooltip content={<ChartTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
-                          <Legend verticalAlign="top" height={36} iconType="circle" />
-                          <Bar dataKey="inbound" name="Inbound" fill="#10b981" radius={[4, 4, 0, 0]} isAnimationActive={!prefersReducedMotion} />
-                          <Bar dataKey="outbound" name="Outbound" fill="#3b82f6" radius={[4, 4, 0, 0]} isAnimationActive={!prefersReducedMotion} />
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-
-                  {/* Status Breakdown Pie Chart */}
-                  <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md flex flex-col justify-between">
-                    <h3 className="text-base font-semibold text-foreground mb-6">Outbound Status Distribution</h3>
-                    <div className="h-60 w-full">
-                      {analytics.status.length === 0 ? (
-                        <div className="flex items-center justify-center h-full text-muted-foreground text-xs">No outbound logs.</div>
-                      ) : (
-                        <ResponsiveContainer width="100%" height="100%">
-                          <PieChart>
-                            <Pie
-                              data={analytics.status.map((s: {status: string, count: number}) => ({
-                                name: s.status,
-                                value: s.count,
-                                fill: s.status === "read" ? "#22d3ee"
-                                  : s.status === "delivered" ? "#10b981"
-                                    : s.status === "sent" ? "#3b82f6"
-                                      : "#ef4444"
-                              }))}
-                              cx="50%"
-                              cy="50%"
-                              innerRadius={45}
-                              outerRadius={65}
-                              paddingAngle={4}
-                              dataKey="value"
-                              stroke="#0f172a"
-                              strokeWidth={2}
-                              isAnimationActive={!prefersReducedMotion}
-                            >
-                              {analytics.status.map((s: any) => ({
-                                name: s.status,
-                                value: s.count,
-                                fill: s.status === "read" ? "#22d3ee"
-                                  : s.status === "delivered" ? "#10b981"
-                                    : s.status === "sent" ? "#3b82f6"
-                                      : "#ef4444"
-                              })).map((entry: any, index: number) => (
-                                <Cell key={`cell-${index}`} fill={entry.fill} />
-                              ))}
-                            </Pie>
-                            <Tooltip content={<ChartTooltip />} />
-                            <Legend verticalAlign="bottom" height={36} iconSize={8} />
-                          </PieChart>
-                        </ResponsiveContainer>
-                      )}
-                    </div>
+                <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md">
+                  <h3 className="text-lg font-bold text-foreground mb-6">Message Volume (Last 14 Days)</h3>
+                  <div className="h-[400px] w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <ComposedChart data={analyticsData.dailyData} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                        <XAxis 
+                          dataKey="date" 
+                          stroke="hsl(var(--muted-foreground))" 
+                          fontSize={12}
+                          tickLine={false}
+                          axisLine={false}
+                        />
+                        <YAxis 
+                          stroke="hsl(var(--muted-foreground))" 
+                          fontSize={12}
+                          tickLine={false}
+                          axisLine={false}
+                        />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: "hsl(var(--card))",
+                            border: "1px solid hsl(var(--border))",
+                            borderRadius: "var(--radius)",
+                            color: "hsl(var(--foreground))",
+                          }}
+                          itemStyle={{ fontSize: "12px", fontWeight: "bold" }}
+                          labelStyle={{ color: "hsl(var(--muted-foreground))", fontSize: "12px", marginBottom: "4px" }}
+                        />
+                        <Line 
+                          type="monotone" 
+                          dataKey="inbound" 
+                          name="Inbound" 
+                          stroke="#10b981" 
+                          strokeWidth={3}
+                          dot={{ r: 4, strokeWidth: 2 }}
+                          activeDot={{ r: 6 }}
+                        />
+                        <Bar 
+                          dataKey="outbound" 
+                          name="Outbound" 
+                          fill="#3b82f6" 
+                          radius={[4, 4, 0, 0]}
+                          barSize={20}
+                        />
+                      </ComposedChart>
+                    </ResponsiveContainer>
                   </div>
                 </div>
               </>

@@ -7,6 +7,7 @@ interface ConversationSummary {
   message_count: number;
   last_message: string | null;
   direction: string;
+  unread_count: number;
 }
 
 /**
@@ -26,7 +27,10 @@ export async function GET(request: NextRequest) {
         ORDER BY sender_wa_id, created_at DESC
       ),
       MessageCounts AS (
-        SELECT sender_wa_id, COUNT(*) as message_count
+        SELECT 
+          sender_wa_id, 
+          COUNT(*) as message_count,
+          COUNT(*) FILTER (WHERE direction = 'inbound' AND status = 'received') as unread_count
         FROM whatsapp_messages
         GROUP BY sender_wa_id
       )
@@ -34,6 +38,7 @@ export async function GET(request: NextRequest) {
         l.sender_wa_id,
         l.last_message_at,
         c.message_count,
+        c.unread_count,
         l.last_message,
         l.direction
       FROM LatestMessages l

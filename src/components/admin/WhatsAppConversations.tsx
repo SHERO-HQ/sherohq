@@ -23,13 +23,21 @@ interface ConversationSummary {
   last_message_at: string;
   message_count: number;
   last_message: string | null;
-  direction: string;
+  direction: "inbound" | "outbound";
+  unread_count: number;
 }
 
 interface WhatsAppConversationsProps {
   selectedPhone?: string | null;
   setSelectedPhone?: (phone: string | null) => void;
 }
+
+const parseDateUTC = (dateStr: string) => {
+  if (!dateStr) return new Date();
+  const hasTimezone = /(Z|[+-]\d{2}:\d{2})$/.test(dateStr);
+  const normalized = dateStr.includes('T') ? dateStr : dateStr.replace(' ', 'T');
+  return new Date(hasTimezone ? normalized : `${normalized}Z`);
+};
 
 export default function WhatsAppConversations({
   selectedPhone: propPhone,
@@ -47,6 +55,39 @@ export default function WhatsAppConversations({
   const [searchPhone, setSearchPhone] = useState("");
   const [refreshing, setRefreshing] = useState(false);
 
+  // For notification detection
+  const previousConversationsRef = useRef<ConversationSummary[]>([]);
+  const selectedPhoneRef = useRef<string | null>(null);
+
+  // Keep selectedPhone ref in sync
+  useEffect(() => {
+    selectedPhoneRef.current = selectedPhone || null;
+  }, [selectedPhone]);
+
+  const playNotificationSound = () => {
+    try {
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); 
+      oscillator.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.1); 
+      
+      gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.05);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+      
+      oscillator.start(audioCtx.currentTime);
+      oscillator.stop(audioCtx.currentTime + 0.3);
+    } catch (e) {
+      console.warn("Audio notification blocked or unsupported", e);
+    }
+  };
+
   // Composer states
   const [sendType, setSendType] = useState<"text" | "template">("text");
   const [messageText, setMessageText] = useState("");
@@ -57,9 +98,16 @@ export default function WhatsAppConversations({
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  // Fetch all conversations
+  // Fetch all conversations on mount & start polling
   useEffect(() => {
     void fetchConversations();
+    
+    // Poll every 15 seconds for new messages
+    const interval = setInterval(() => {
+      void fetchConversations(true);
+    }, 15000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   // Scroll to bottom when messages load
@@ -67,18 +115,37 @@ export default function WhatsAppConversations({
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const fetchConversations = async () => {
-    setRefreshing(true);
+  const fetchConversations = async (silent = false) => {
+    if (!silent) setRefreshing(true);
     try {
       const response = await fetch("/api/admin/whatsapp/conversations-list");
       const data = await response.json();
       if (data.success) {
-        setConversations(data.conversations || []);
+        const newConvs = data.conversations || [];
+        
+        // Notification Logic
+        if (previousConversationsRef.current.length > 0) {
+          const oldMap = new Map(previousConversationsRef.current.map(c => [c.sender_wa_id, c]));
+          for (const conv of newConvs) {
+            const old = oldMap.get(conv.sender_wa_id);
+            // If the message count increased and the latest message is inbound
+            if ((!old || old.message_count < conv.message_count) && conv.direction === "inbound") {
+              playNotificationSound();
+              // If the admin is actively viewing this conversation, sync messages immediately
+              if (selectedPhoneRef.current === conv.sender_wa_id) {
+                void syncMessages(conv.sender_wa_id, true);
+              }
+            }
+          }
+        }
+        
+        previousConversationsRef.current = newConvs;
+        setConversations(newConvs);
       }
     } catch (error) {
       console.error("Failed to fetch conversations:", error);
     } finally {
-      setRefreshing(false);
+      if (!silent) setRefreshing(false);
     }
   };
 
@@ -89,8 +156,8 @@ export default function WhatsAppConversations({
     }
   }, [selectedPhone]);
 
-  const syncMessages = async (phone: string) => {
-    setLoading(true);
+  const syncMessages = async (phone: string, silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const response = await fetch(
         `/api/admin/whatsapp/conversations?phone=${encodeURIComponent(phone)}`,
@@ -104,12 +171,31 @@ export default function WhatsAppConversations({
     } catch (error) {
       console.error("Failed to fetch messages:", error);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
+    }
+  };
+
+  const markAsRead = async (phone: string) => {
+    try {
+      await fetch("/api/admin/whatsapp/mark-read", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone }),
+      });
+      // Optimistically update the UI to clear the badge
+      setConversations((prev) =>
+        prev.map((c) =>
+          c.sender_wa_id === phone ? { ...c, unread_count: 0 } : c
+        )
+      );
+    } catch (err) {
+      console.error("Failed to mark as read:", err);
     }
   };
 
   const fetchMessages = async (phone: string) => {
     setSelectedPhone(phone);
+    void markAsRead(phone);
   };
 
   const handleSend = async (e: React.FormEvent) => {
@@ -207,7 +293,7 @@ export default function WhatsAppConversations({
               Active Chats
             </h2>
             <button
-              onClick={fetchConversations}
+              onClick={() => fetchConversations()}
               disabled={refreshing}
               className="text-muted-foreground hover:text-foreground p-1 rounded hover:bg-accent transition-colors disabled:opacity-50"
               title="Refresh conversations"
@@ -243,25 +329,31 @@ export default function WhatsAppConversations({
                     <div className="w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center shrink-0">
                       <User className="w-5 h-5 text-muted-foreground" />
                     </div>
-                    <div className="flex-1 min-w-0 flex flex-col gap-1">
-                      <div className="flex items-center justify-between w-full">
+                    <div className="flex-1 min-w-0 flex flex-col">
+                      <div className="flex items-center justify-between w-full mb-1">
                         <p className={`text-sm font-semibold truncate pr-2 ${selectedPhone === conv.sender_wa_id ? "text-brand-secondary-400" : "text-foreground"}`}>
                           {conv.sender_wa_id}
                         </p>
-                        <span className="text-[10px] text-muted-foreground whitespace-nowrap shrink-0">
-                          {formatDistanceToNow(new Date(conv.last_message_at), {
+                        <span className={`text-[10px] whitespace-nowrap shrink-0 ${conv.unread_count > 0 ? "text-emerald-500 font-bold" : "text-muted-foreground"}`}>
+                          {formatDistanceToNow(parseDateUTC(conv.last_message_at), {
                             addSuffix: true,
                           })}
                         </span>
                       </div>
-                      <p className="text-xs text-muted-foreground truncate w-full">
-                        {conv.direction === "outbound" && <span className="text-brand-secondary-400 mr-1">You:</span>}
-                        {conv.last_message || "(no text content)"}
-                      </p>
-                      <div className="flex items-center justify-between mt-0.5">
-                        <span className="text-[10px] font-medium text-slate-500">
-                          {conv.message_count} messages
-                        </span>
+                      <div className="flex items-center justify-between w-full gap-2">
+                        <p className={`text-xs truncate w-full ${conv.unread_count > 0 ? "text-foreground font-medium" : "text-muted-foreground"}`}>
+                          {conv.direction === "outbound" && <span className="text-brand-secondary-400 mr-1 font-normal">You:</span>}
+                          {conv.last_message || "(no text content)"}
+                        </p>
+                        {conv.unread_count > 0 ? (
+                          <span className="bg-emerald-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center justify-center shrink-0 min-w-[20px] h-5">
+                            {conv.unread_count}
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-medium text-slate-500 shrink-0">
+                            {conv.message_count} msgs
+                          </span>
+                        )}
                       </div>
                     </div>
                   </button>
@@ -321,7 +413,7 @@ export default function WhatsAppConversations({
                       }`}
                   >
                     <div
-                      className={`max-w-md px-4 py-2.5 shadow-sm relative ${msg.direction === "inbound"
+                      className={`max-w-md min-w-[80px] px-4 py-2.5 shadow-sm relative ${msg.direction === "inbound"
                         ? "bg-slate-800/80 border border-border text-slate-100 rounded-2xl rounded-tl-sm"
                         : "bg-brand-secondary-600 text-white rounded-2xl rounded-tr-sm shadow-black/20"
                         }`}
@@ -370,7 +462,7 @@ export default function WhatsAppConversations({
                           }`}
                       >
                         <span>
-                          {new Date(msg.created_at).toLocaleTimeString([], {
+                          {parseDateUTC(msg.created_at).toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",
                           })}

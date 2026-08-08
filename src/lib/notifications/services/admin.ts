@@ -24,5 +24,29 @@ export const adminNotifications = {
       `${isOutOfStock ? "🚨 OUT OF STOCK" : "⚠️ LOW STOCK"}: ${productName}`,
       htmlContent,
     );
+  },
+  
+  async sendNewWhatsAppAlert(customerName: string, customerPhone: string, messageContent: string) {
+    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.HELLO;
+
+    const bodyHtml = `
+      <h2 style="color: #25D366; margin: 0 0 16px;">💬 New WhatsApp Message</h2>
+      <p><strong>From:</strong> ${customerName} (${customerPhone})</p>
+      <div style="background-color: #f3f4f6; padding: 12px; border-radius: 8px; margin: 16px 0; font-style: italic;">
+        "${messageContent}"
+      </div>
+      <p>Please log into the admin dashboard to reply to this message.</p>
+      <a href="https://admin.sherohq.com/admin/whatsapp" style="display: inline-block; background-color: #25D366; color: white; padding: 10px 20px; text-decoration: none; border-radius: 6px; font-weight: bold; margin-top: 10px;">Open Dashboard</a>
+    `;
+
+    const htmlContent = wrapEmailHtml(bodyHtml, {
+      preheader: `New WhatsApp message from ${customerName}`,
+    });
+
+    await sendEmail(
+      adminEmail,
+      `New WhatsApp Message from ${customerName}`,
+      htmlContent,
+    );
   }
 };

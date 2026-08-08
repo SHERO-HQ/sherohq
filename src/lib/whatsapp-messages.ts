@@ -142,7 +142,9 @@ export async function sendWhatsAppMessageDirect(
   content: string,
   templateName?: string | null,
   templateLanguage?: string | null,
-  templateParams?: string[]
+  templateParams?: string[],
+  mediaUrl?: string | null,
+  mediaType?: "image" | "document" | "video" | "audio" | null
 ): Promise<{ success: boolean; messageId?: string; error?: string }> {
   const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
   const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
@@ -161,35 +163,40 @@ export async function sendWhatsAppMessageDirect(
     return { success: true, messageId: mockMsgId };
   }
 
-  const body = templateName
-    ? {
-        messaging_product: "whatsapp",
-        to: recipient,
-        type: "template",
-        template: {
-          name: templateName,
-          language: { code: templateLanguage || "en" },
-          ...(templateParams && templateParams.length > 0
-            ? {
-                components: [
-                  {
-                    type: "body",
-                    parameters: templateParams.map((text) => ({
-                      type: "text",
-                      text,
-                    })),
-                  },
-                ],
-              }
-            : {}),
-        },
-      }
-    : {
-        messaging_product: "whatsapp",
-        to: recipient,
-        type: "text",
-        text: { body: content },
-      };
+  let body: any = {
+    messaging_product: "whatsapp",
+    to: recipient,
+  };
+
+  if (templateName) {
+    body.type = "template";
+    body.template = {
+      name: templateName,
+      language: { code: templateLanguage || "en" },
+      ...(templateParams && templateParams.length > 0
+        ? {
+            components: [
+              {
+                type: "body",
+                parameters: templateParams.map((text) => ({
+                  type: "text",
+                  text,
+                })),
+              },
+            ],
+          }
+        : {}),
+    };
+  } else if (mediaUrl && mediaType) {
+    body.type = mediaType;
+    body[mediaType] = { link: mediaUrl };
+    if (content && content !== "") {
+      body[mediaType].caption = content;
+    }
+  } else {
+    body.type = "text";
+    body.text = { body: content };
+  }
 
   try {
     const response = await fetch(
@@ -318,3 +325,46 @@ export async function upsertWhatsAppContact(
     [normalizedPhone, name || null],
   );
 }
+
+/**
+ * Get a WhatsApp contact's conversation state from metadata
+ */
+export async function getWhatsAppContactState(phone: string): Promise<string | null> {
+  const normalizedPhone = phone.replace(/[^\d+]/g, "");
+  const result = await query(
+    `SELECT metadata FROM whatsapp_contacts WHERE phone = $1`,
+    [normalizedPhone]
+  );
+  
+  if (result.rows.length === 0 || !result.rows[0].metadata) return null;
+  return result.rows[0].metadata.conversationState || null;
+}
+
+/**
+ * Update a WhatsApp contact's conversation state in metadata
+ */
+export async function updateWhatsAppContactState(phone: string, state: string | null): Promise<void> {
+  const normalizedPhone = phone.replace(/[^\d+]/g, "");
+  
+  if (state === null) {
+    await query(
+      `
+      UPDATE whatsapp_contacts 
+      SET metadata = metadata - 'conversationState', updated_at = NOW()
+      WHERE phone = $1 AND metadata IS NOT NULL
+      `,
+      [normalizedPhone]
+    );
+  } else {
+    await query(
+      `
+      UPDATE whatsapp_contacts 
+      SET metadata = COALESCE(metadata, '{}'::jsonb) || jsonb_build_object('conversationState', $2::text),
+          updated_at = NOW()
+      WHERE phone = $1
+      `,
+      [normalizedPhone, state]
+    );
+  }
+}
+

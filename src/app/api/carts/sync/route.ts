@@ -22,9 +22,10 @@ export async function POST(request: NextRequest) {
 
     const { guestId, guestEmail, guestPhone, items } = result.data;
     
-    // Do not sync completely empty carts if they were never created
-    if (!user && !guestId) {
-       return apiResponse.success({ message: "No identifiers provided" });
+    // Do not sync anonymous carts to the database (if no user and no contact info)
+    // This prevents the abandoned carts list from filling up with untrackable visitors
+    if (!user && !guestEmail && !guestPhone) {
+       return apiResponse.success({ message: "Anonymous cart ignored" });
     }
 
     const resolvedGuestId = guestId || "unknown-guest";

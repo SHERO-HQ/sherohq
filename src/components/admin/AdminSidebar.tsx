@@ -366,10 +366,10 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                                 />
                                 <span
                                   className={cn(
-                                    "font-medium text-sm whitespace-nowrap transition-all duration-200 flex-1",
+                                    "font-medium text-sm whitespace-nowrap transition-all duration-200",
                                     isOpen
-                                      ? "opacity-100 translate-x-0 w-auto"
-                                      : "opacity-0 -translate-x-4 pointer-events-none w-0 overflow-hidden",
+                                      ? "opacity-100 translate-x-0 w-auto flex-1"
+                                      : "opacity-0 -translate-x-4 pointer-events-none w-0 overflow-hidden flex-none",
                                   )}
                                 >
                                   {item.label}
@@ -377,8 +377,8 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                                 {badges[item.label] !== undefined && (
                                   <span
                                     className={cn(
-                                      "ml-2 bg-brand-secondary-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full transition-all duration-200",
-                                      isOpen ? "opacity-100 scale-100" : "opacity-0 scale-0 pointer-events-none w-0 overflow-hidden"
+                                      "bg-brand-secondary-500 text-white text-[10px] font-bold rounded-full transition-all duration-200",
+                                      isOpen ? "opacity-100 scale-100 ml-2 px-1.5 py-0.5" : "opacity-0 scale-0 pointer-events-none w-0 overflow-hidden m-0 p-0"
                                     )}
                                   >
                                     {badges[item.label]}
@@ -566,7 +566,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                 isOpen ? "gap-3" : "gap-0 justify-center px-0",
               )}
             >
-              <div className="relative w-8 h-8 flex items-center justify-center shrink-0 overflow-hidden border-r border-border p-1">
+              <div className={cn("relative w-8 h-8 flex items-center justify-center shrink-0 overflow-hidden p-1 transition-all", isOpen ? "border-r border-border" : "border-r-0")}>
                 {admin?.avatar ? (
                   <AppImage
                     src={admin.avatar}
