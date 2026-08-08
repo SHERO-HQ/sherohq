@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { m, AnimatePresence } from "motion/react";
 import { useRouter } from "next/navigation";
 import {
@@ -14,10 +15,12 @@ import {
   Minus,
   BadgeCheck,
   Maximize2,
-  X
+  X,
+  Share2
 } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/hooks/useWishlist";
+import { useNotifications } from "@/hooks/useNotifications";
 import { getImageUrl } from "@/services/api";
 import type { Product } from "@/types/product";
 import { useProducts } from "@/hooks/queries/useProducts";
@@ -39,11 +42,18 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
   const router = useRouter();
   const { addItem } = useCart();
   const { toggleWishlist: globalToggleWishlist, isInWishlist } = useWishlist();
+  const { addNotification } = useNotifications();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const isWishlisted = isInWishlist(product.id);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
 
   const images = product.images || [product.image];
   const discount = product.originalPrice
@@ -133,6 +143,28 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         : undefined
   };
 
+
+
+  const handleShare = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (navigator.share) {
+      navigator.share({
+        title: product.name,
+        url: shareUrl,
+      }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(shareUrl);
+      addNotification("Link Copied", "Product link copied to clipboard!", "success");
+    }
+  };
+
+  const handleMaximize = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsPreviewOpen(true);
+  };
+
   return (
     <>
       <script
@@ -167,13 +199,24 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
             {/* STICKY Gallery Section (7 columns) */}
             <div className="lg:col-span-7 space-y-6 lg:sticky lg:top-28">
               <div className="group relative aspect-4/5 max-h-110 sm:max-h-135 lg:max-h-170 bg-white dark:bg-white/5 sm:rounded overflow-hidden sm:border border-y sm:border-x border-slate-200 dark:border-white/10 flex items-center justify-center -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full">
-                <button
-                  onClick={() => setIsPreviewOpen(true)}
-                  className="absolute top-6 right-6 lg:opacity-0 group-hover:opacity-100 transition-opacity p-2.5 bg-white/90 dark:bg-slate-900/90 rounded border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-brand-secondary-600 hover:border-brand-secondary-500 z-20"
-                  aria-label="View Fullscreen"
-                >
-                  <Maximize2 size={20} />
-                </button>
+                <div className="absolute top-6 right-6 lg:opacity-0 group-hover:opacity-100 transition-opacity flex flex-col gap-2 z-20">
+                  <button
+                    onClick={handleShare}
+                    className="p-2.5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-brand-secondary-600 hover:border-brand-secondary-500 shadow-sm transition-all"
+                    aria-label="Share product"
+                    title="Share product"
+                  >
+                    <Share2 size={20} />
+                  </button>
+                  <button
+                    onClick={handleMaximize}
+                    className="p-2.5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm rounded border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-brand-secondary-600 hover:border-brand-secondary-500 shadow-sm transition-all"
+                    aria-label="View Fullscreen"
+                    title="View Fullscreen"
+                  >
+                    <Maximize2 size={20} />
+                  </button>
+                </div>
                 <AnimatePresence mode="wait">
                   <m.div
                     key={selectedImage}
@@ -182,7 +225,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                     exit={{ opacity: 0, scale: 1.05 }}
                     transition={{ duration: 0.4 }}
                     className="relative w-full h-full py-4 sm:py-6 px-6 sm:px-12 lg:px-16 flex items-center justify-center cursor-zoom-in"
-                    onClick={() => setIsPreviewOpen(true)}
+                    onClick={handleMaximize}
                   >
                     {images[selectedImage] &&
                       (images[selectedImage].startsWith("/uploads") ||
@@ -572,64 +615,69 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
         </div>
 
         {/* Fullscreen Image Preview */}
-        <AnimatePresence>
-          {isPreviewOpen && (
-            <m.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-100 bg-black/95 flex items-center justify-center"
-              onClick={() => setIsPreviewOpen(false)}
-            >
-              <button
-                className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded transition-colors z-110"
+        {mounted && createPortal(
+          <AnimatePresence>
+            {isPreviewOpen && (
+              <m.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[100] bg-black/95"
                 onClick={() => setIsPreviewOpen(false)}
               >
-                <X size={24} />
-              </button>
+                <button
+                  className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded transition-colors z-[110]"
+                  onClick={(e) => { e.stopPropagation(); setIsPreviewOpen(false); }}
+                >
+                  <X size={24} />
+                </button>
 
-              <div className="relative w-full h-full max-w-6xl mx-auto p-4 sm:p-12 flex items-center justify-center">
-                {images[selectedImage] &&
-                  (images[selectedImage].startsWith("/uploads") ||
-                    images[selectedImage].startsWith("http")) ? (
-                  <AppImage
-                    src={getImageUrl(images[selectedImage])}
-                    alt={product.name}
-                    fill
-                    className="w-full h-full object-contain mx-auto"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-9xl select-none opacity-20 text-white">
-                    {images[selectedImage]}
+                <div className="absolute inset-0 p-4 sm:p-12 pointer-events-none flex items-center justify-center">
+                  <div className="pointer-events-auto flex items-center justify-center w-full h-full relative">
+                    {images[selectedImage] &&
+                      (images[selectedImage].startsWith("/uploads") ||
+                        images[selectedImage].startsWith("http")) ? (
+                      <AppImage
+                        src={getImageUrl(images[selectedImage])}
+                        alt={product.name}
+                        fill
+                        className="object-contain"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-9xl select-none opacity-20 text-white">
+                        {images[selectedImage]}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {images.length > 1 && (
+                  <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-between px-2 sm:px-8 pointer-events-none z-[110]">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        prevImage();
+                      }}
+                      className="pointer-events-auto p-2 bg-white/10 text-white rounded hover:bg-brand-secondary-500 hover:text-white transition-colors border border-white/10"
+                    >
+                      <ChevronLeft size={24} />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        nextImage();
+                      }}
+                      className="pointer-events-auto p-2 bg-white/10 text-white rounded hover:bg-brand-secondary-500 hover:text-white transition-colors border border-white/10"
+                    >
+                      <ChevronRight size={24} />
+                    </button>
                   </div>
                 )}
-              </div>
-
-              {images.length > 1 && (
-                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-between px-2 sm:px-8 pointer-events-none">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      prevImage();
-                    }}
-                    className="pointer-events-auto p-2 bg-white/10 text-white rounded hover:bg-brand-secondary-500 hover:text-white transition-colors border border-white/10"
-                  >
-                    <ChevronLeft size={24} />
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      nextImage();
-                    }}
-                    className="pointer-events-auto p-2 bg-white/10 text-white rounded hover:bg-brand-secondary-500 hover:text-white transition-colors border border-white/10"
-                  >
-                    <ChevronRight size={24} />
-                  </button>
-                </div>
-              )}
-            </m.div>
-          )}
-        </AnimatePresence>
+              </m.div>
+            )}
+          </AnimatePresence>,
+          document.body
+        )}
       </div>
     </>
   );

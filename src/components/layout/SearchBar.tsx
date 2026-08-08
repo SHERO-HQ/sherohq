@@ -6,6 +6,7 @@ import { m, AnimatePresence } from "motion/react";
 import { useProducts } from "@/hooks/queries/useProducts";
 import { getImageUrl } from "@/services/api";
 import AppImage from "@/components/common/AppImage";
+import { formatCurrency } from "@/utils/format";
 
 interface SearchBarProps {
     className?: string;
@@ -125,7 +126,7 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                                                     {product.name}
                                                 </div>
                                                 <div className="text-brand-secondary-600 dark:text-brand-secondary-400 text-sm font-bold">
-                                                    GHS{product.price}
+                                                    {formatCurrency(product.price)}
                                                 </div>
                                             </div>
                                         </button>
@@ -250,9 +251,9 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                                                                 {product.category}
                                                             </div>
                                                         </div>
-                                                        <div className="text-brand-secondary-600 dark:text-brand-secondary-400 font-bold">
-                                                            GHS{product.price}
-                                                        </div>
+                                                            <div className="text-brand-secondary-600 dark:text-brand-secondary-400 text-sm font-bold">
+                                                                {formatCurrency(product.price)}
+                                                            </div>
                                                     </button>
                                                 ))}
 

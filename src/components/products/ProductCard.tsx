@@ -81,6 +81,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
   const shareLink = getAbsoluteUrl(
     `/shop/${product.slug || product.sku || product.id}`,
   );
+  
   const whatsappMessage = encodeURIComponent(
     `Hello Shero, I'm interested in the ${product.name} (${formatCurrency(product.price)}). Here is the link:\n${shareLink}\n\nCould you please provide more details or assist me with the purchase? Thank you!`,
   );
@@ -122,23 +123,30 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
           </div>
         )}
 
-        {/* Floating Quick Actions (Top) */}
+        {/* Floating Quick Actions (Top Right) */}
         <div className="absolute top-3 right-3 z-20 flex flex-col gap-2">
+          {/* Primary Action - Always Visible */}
           <button
             onClick={toggleWishlist}
-            className="w-9 h-9 rounded-full bg-white/80 dark:bg-black/40 border border-white/20 flex items-center justify-center hover:bg-red-500 hover:text-white transition duration-300"
+            className="w-9 h-9 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm"
+            title="Add to wishlist"
           >
             <Heart
               size={16}
               className={isWishlisted ? "fill-current text-red-500" : ""}
             />
           </button>
-          <button
-            onClick={handleQuickView}
-            className="w-9 h-9 rounded-full bg-white/80 dark:bg-black/40 border border-white/20 flex items-center justify-center hover:bg-brand-secondary-500 hover:text-white transition duration-300"
-          >
-            <Eye size={16} />
-          </button>
+          
+          {/* Secondary Actions - Slide in on Hover */}
+          <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
+            <button
+              onClick={handleQuickView}
+              className="w-9 h-9 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-brand-secondary-500 hover:text-white transition-all duration-300 shadow-sm"
+              title="Quick view"
+            >
+              <Eye size={16} />
+            </button>
+          </div>
         </div>
 
         {/* Badges (Bottom Left) */}

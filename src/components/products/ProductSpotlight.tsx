@@ -7,6 +7,8 @@ import {
   ArrowRight,
   Star,
   Package,
+  Share2,
+  Maximize2,
 } from "lucide-react";
 import Link from "next/link";
 import { getImageUrl } from "@/services/api";
@@ -288,6 +290,42 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                       className="object-contain drop-shadow-2xl rounded transition-transform duration-1000 group-hover/image:scale-110"
                     />
                   </m.div>
+
+                  {/* Desktop Action Overlay: Share & Maximize */}
+                  <div className="absolute top-4 right-4 z-20 flex flex-col gap-3 opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        const url = getAbsoluteUrl(
+                          `/shop/${currentProduct.slug || currentProduct.sku || currentProduct.id}`,
+                        );
+                        if (navigator.share) {
+                          navigator.share({
+                            title: currentProduct.name,
+                            url: url,
+                          }).catch(() => {});
+                        } else {
+                          navigator.clipboard.writeText(url);
+                        }
+                      }}
+                      className="p-2.5 rounded-full bg-white/70 dark:bg-slate-900/70 backdrop-blur border border-white/50 dark:border-white/10 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-lg transition-all hover:scale-110 active:scale-95 pointer-events-auto group/action"
+                      title="Share product"
+                    >
+                      <Share2 className="size-4.5 group-hover/action:text-brand-secondary-600 dark:group-hover/action:text-brand-secondary-400 transition-colors" />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        window.open(getImageUrl(currentProduct.image), "_blank");
+                      }}
+                      className="p-2.5 rounded-full bg-white/70 dark:bg-slate-900/70 backdrop-blur border border-white/50 dark:border-white/10 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-lg transition-all hover:scale-110 active:scale-95 pointer-events-auto group/action"
+                      title="View full image"
+                    >
+                      <Maximize2 className="size-4.5 group-hover/action:text-brand-secondary-600 dark:group-hover/action:text-brand-secondary-400 transition-colors" />
+                    </button>
+                  </div>
 
                   {/* Mobile Controls */}
                   <div className="lg:hidden absolute inset-0 z-30 pointer-events-none flex items-center justify-between px-2 sm:px-4">

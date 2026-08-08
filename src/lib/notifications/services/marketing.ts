@@ -69,5 +69,35 @@ export const marketingNotifications = {
       throwOnError: true,
       requestId
     });
+  },
+
+  async sendNewsletterWelcomeEmail(
+    to: string,
+    unsubscribeUrl: string,
+  ) {
+    const bodyHtml = `
+      <h2 style="color: #0f172a; margin: 0 0 16px;">Welcome to SHERO!</h2>
+      <p style="font-size: 14px; color: #334155; line-height: 1.6;">
+        Thank you for subscribing to our newsletter! We're excited to have you on board.
+      </p>
+      <p style="font-size: 14px; color: #334155; line-height: 1.6;">
+        You'll be the first to know about our latest news, exclusive offers, and technological insights.
+      </p>
+      <p style="font-size: 14px; color: #334155; line-height: 1.6;">
+        Stay tuned!
+      </p>
+      <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;" />
+      <p style="font-size: 12px; color: #94a3b8; text-align: center;">
+        You are receiving this because you subscribed to SHERO TECHNOLOGIES updates.<br />
+        <a href="${unsubscribeUrl}" style="color: #059669;">Unsubscribe</a>
+      </p>
+    `;
+    
+    const htmlContent = wrapEmailHtml(bodyHtml, {
+      preheader: "Welcome to the SHERO Newsletter",
+      hideFooterContact: true
+    });
+
+    await sendEmail(to, "Welcome to the SHERO Newsletter!", htmlContent);
   }
 };

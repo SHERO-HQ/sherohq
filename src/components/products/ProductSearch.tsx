@@ -6,6 +6,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import Link from "next/link";
 import Image from "next/image";
 import type { Product } from "@/types/product";
+import { formatCurrency } from "@/utils/format";
 
 interface ProductSearchProps {
   initialQuery?: string;
@@ -124,7 +125,7 @@ const ProductSearch: React.FC<ProductSearchProps> = ({
                       </p>
                     </div>
                     <div className="text-sm font-semibold text-brand-secondary-600 dark:text-brand-secondary-400">
-                      ${Number(product.price).toFixed(2)}
+                      {formatCurrency(product.price)}
                     </div>
                   </Link>
                 </li>
