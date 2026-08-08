@@ -26,6 +26,8 @@ export const abandonedCarts = pgTable("abandoned_carts", {
 	id: uuid().defaultRandom().primaryKey().notNull(),
 	userId: text(),
 	guestId: varchar({ length: 255 }),
+	guestEmail: varchar({ length: 255 }),
+	guestPhone: varchar({ length: 50 }),
 	items: jsonb().default([]).notNull(),
 	lastActive: timestamp({ withTimezone: true, mode: 'string' }).defaultNow(),
 	emailSent: boolean().default(false),

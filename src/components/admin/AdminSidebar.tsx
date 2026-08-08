@@ -88,6 +88,7 @@ const navGroups: NavGroup[] = [
       { icon: Tag, label: "Categories", href: "/admin/categories" },
       { icon: DollarSign, label: "Expenses", href: "/admin/expenses" },
       { icon: Briefcase, label: "Projects", href: "/admin/projects" },
+      { icon: ShoppingCart, label: "Checkout CRM", href: "/admin/checkout-crm" },
     ],
   },
   {

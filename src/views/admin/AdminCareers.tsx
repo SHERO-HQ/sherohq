@@ -435,7 +435,7 @@ export default function AdminCareers() {
             <div>
               <h4 className="text-sm font-medium text-muted-foreground mb-2">Cover Letter / Message</h4>
               {selectedApplication.coverLetter ? (
-                <div className="p-4 bg-muted/30 rounded-lg text-sm whitespace-pre-wrap border border-border">
+                <div className="p-4 bg-muted/30 rounded text-sm whitespace-pre-wrap border border-border">
                   {selectedApplication.coverLetter}
                 </div>
               ) : (

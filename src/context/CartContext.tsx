@@ -28,6 +28,10 @@ interface CartContextType {
  totalPrice: number;
  isCartOpen: boolean;
  setIsCartOpen: (open: boolean) => void;
+ guestEmail: string;
+ setGuestEmail: (email: string) => void;
+ guestPhone: string;
+ setGuestPhone: (phone: string) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -38,6 +42,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
  const [cart, setCart] = useState<CartItem[]>([]);
  const [isCartOpen, setIsCartOpen] = useState(false);
  const [isLoaded, setIsLoaded] = useState(false);
+ const [guestEmail, setGuestEmail] = useState("");
+ const [guestPhone, setGuestPhone] = useState("");
 
  // Load cart from localStorage on client side only
  useEffect(() => {
@@ -68,12 +74,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
    fetch("/api/carts/sync", {
      method: "POST",
      headers: { "Content-Type": "application/json" },
-     body: JSON.stringify({ items: cart, guestId })
+     body: JSON.stringify({ items: cart, guestId, guestEmail, guestPhone })
    }).catch(console.error);
  }, 3000);
 
  return () => clearTimeout(timeoutId);
- }, [cart, isLoaded]);
+ }, [cart, isLoaded, guestEmail, guestPhone]);
 
  const addItem = useCallback((newItem: Omit<CartItem, "quantity">) => {
  setCart((prev) => {
@@ -138,6 +144,10 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
  totalPrice,
  isCartOpen,
  setIsCartOpen,
+ guestEmail,
+ setGuestEmail,
+ guestPhone,
+ setGuestPhone,
  }),
  [
  cart,
@@ -148,6 +158,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
  isCartOpen,
  totalQuantity,
  totalPrice,
+ guestEmail,
+ guestPhone,
  ],
  );
 

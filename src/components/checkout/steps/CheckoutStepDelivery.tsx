@@ -6,10 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { useCheckout } from "../CheckoutContext";
+import { useCart } from "@/context/CartContext";
 import { GHANA_REGIONS, getCitiesForRegion, getDeliveryEstimate } from "@/lib/ghana-locations";
 
 export default function CheckoutStepDelivery() {
   const { formMethods: { register, watch, setValue, formState: { errors } }, handleNext, handleBack } = useCheckout();
+  const { setGuestEmail, setGuestPhone } = useCart();
 
   const selectedRegion = watch("shippingAddress.region");
   const cities = getCitiesForRegion(selectedRegion || "");
@@ -24,6 +26,15 @@ export default function CheckoutStepDelivery() {
       setIsOtherCity(false);
     }
   }, [selectedRegion, cities, setValue, watch]);
+
+  // Sync email and phone to CartContext for abandoned cart recovery
+  const emailVal = watch("email");
+  const phoneVal = watch("phone");
+
+  React.useEffect(() => {
+    if (emailVal) setGuestEmail(emailVal);
+    if (phoneVal) setGuestPhone(phoneVal);
+  }, [emailVal, phoneVal, setGuestEmail, setGuestPhone]);
 
   return (
     <m.div

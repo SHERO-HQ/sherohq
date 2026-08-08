@@ -19,6 +19,8 @@ import {
   type StockDistribution,
   type OrderStatusDistribution,
   type RegionalData,
+  fetchAbandonedCarts,
+  type AbandonedCart,
 } from "@/services/api";
 
 export const ADMIN_KEYS = {
@@ -37,6 +39,7 @@ export const ADMIN_KEYS = {
   whatsappSupport: () => [...ADMIN_KEYS.all, "whatsapp-support"] as const,
   whatsappRetries: () => [...ADMIN_KEYS.all, "whatsapp-retries"] as const,
   whatsappAnalytics: () => [...ADMIN_KEYS.all, "whatsapp-analytics"] as const,
+  abandonedCarts: () => [...ADMIN_KEYS.all, "abandoned-carts"] as const,
 };
 
 export const useAdminStats = (refetchInterval?: number | false) => {
@@ -173,5 +176,14 @@ export const useWhatsAppAnalytics = (refetchInterval?: number | false) => {
     },
     refetchInterval,
     enabled: refetchInterval !== false,
+  });
+};
+
+export const useAbandonedCarts = (refetchInterval?: number | false) => {
+  return useQuery({
+    queryKey: ADMIN_KEYS.abandonedCarts(),
+    queryFn: fetchAbandonedCarts,
+    refetchInterval,
+    staleTime: 60000,
   });
 };

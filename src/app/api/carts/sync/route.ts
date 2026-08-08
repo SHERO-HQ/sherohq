@@ -6,6 +6,8 @@ import { z } from "zod";
 
 const SyncCartSchema = z.object({
   guestId: z.string().optional(),
+  guestEmail: z.string().email().optional().or(z.literal("")),
+  guestPhone: z.string().optional().or(z.literal("")),
   items: z.array(z.any())});
 
 export async function POST(request: NextRequest) {
@@ -18,7 +20,7 @@ export async function POST(request: NextRequest) {
       return apiResponse.error("Invalid cart data", 400);
     }
 
-    const { guestId, items } = result.data;
+    const { guestId, guestEmail, guestPhone, items } = result.data;
     
     // Do not sync completely empty carts if they were never created
     if (!user && !guestId) {
@@ -41,12 +43,14 @@ export async function POST(request: NextRequest) {
     } else {
       // Upsert cart for guest
       await query(
-        `INSERT INTO abandoned_carts ("guestId", items, "lastActive")
-         VALUES ($1, $2, NOW())
+        `INSERT INTO abandoned_carts ("guestId", items, "lastActive", "guestEmail", "guestPhone")
+         VALUES ($1, $2, NOW(), $3, $4)
          ON CONFLICT ("guestId") DO UPDATE SET
          items = EXCLUDED.items,
-         "lastActive" = NOW()`,
-        [resolvedGuestId, JSON.stringify(items)]
+         "lastActive" = NOW(),
+         "guestEmail" = COALESCE($3, abandoned_carts."guestEmail"),
+         "guestPhone" = COALESCE($4, abandoned_carts."guestPhone")`,
+        [resolvedGuestId, JSON.stringify(items), guestEmail || null, guestPhone || null]
       );
     }
 

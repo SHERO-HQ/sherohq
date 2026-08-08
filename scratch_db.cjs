@@ -19,8 +19,10 @@ async function test() {
   const pool = new Pool(poolConfig);
 
   try {
-    const res = await pool.query("SELECT * FROM categories ORDER BY name ASC");
-    console.log("Categories:", res.rows);
+    console.log("Adding guestEmail and guestPhone to abandoned_carts...");
+    await pool.query(`ALTER TABLE abandoned_carts ADD COLUMN IF NOT EXISTS "guestEmail" VARCHAR(255);`);
+    await pool.query(`ALTER TABLE abandoned_carts ADD COLUMN IF NOT EXISTS "guestPhone" VARCHAR(50);`);
+    console.log("Columns added successfully.");
   } catch (err) {
     console.error("Query Failed:", err);
   } finally {

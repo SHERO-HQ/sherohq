@@ -47,15 +47,29 @@ export interface CreateOrderResponse {
 export interface Order {
   id: string;
   guestId: string;
+  userId: string | null;
   items: OrderItem[];
   total: number;
   shippingInfo: ShippingInfo;
   paymentMethod: string;
   status: string;
-  createdAt: Date;
-  referralCode?: string;
+  createdAt: string;
+  referralCode?: string | null;
+  cogs?: number | string;
   paymentMessage?: string;
   paymentStatus?: "confirmed" | "failed" | "pending";
+}
+
+export interface AbandonedCart {
+  id: string;
+  userId: string | null;
+  guestId: string | null;
+  email: string | null;
+  name: string | null;
+  phone: string | null;
+  items: OrderItem[];
+  totalValue: number;
+  lastActive: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -169,6 +183,11 @@ export async function fetchAllOrders(
 
   const response = await authFetch(`${API_BASE}/orders?${params.toString()}`);
   return handleResponse<Order[]>(response);
+}
+
+export async function fetchAbandonedCarts(): Promise<AbandonedCart[]> {
+  const response = await authFetch(`${API_BASE}/admin/abandoned-carts`);
+  return handleResponse<AbandonedCart[]>(response);
 }
 
 export async function fetchOrderById(id: string): Promise<Order> {

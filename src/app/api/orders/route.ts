@@ -178,6 +178,27 @@ export async function POST(request: NextRequest) {
 
     await client.query("COMMIT");
 
+    // Capture contact for campaigns
+    const contactEmail = body.email || shippingInfo?.email;
+    const contactPhone = body.phone || shippingInfo?.phone;
+    const contactName = [shippingInfo?.firstName, shippingInfo?.lastName].filter(Boolean).join(" ");
+    
+    if (contactEmail) {
+      try {
+        await client.query(
+          `INSERT INTO newsletter_subscribers (id, email, name, phone, source, status, "unsubscribeToken")
+           VALUES ($1, $2, $3, $4, $5, $6, $7)
+           ON CONFLICT (email) DO UPDATE SET
+             name = COALESCE(EXCLUDED.name, newsletter_subscribers.name),
+             phone = COALESCE(EXCLUDED.phone, newsletter_subscribers.phone),
+             "updatedAt" = CURRENT_TIMESTAMP`,
+          [uuidv4(), contactEmail, contactName || null, contactPhone || null, 'checkout', 'active', uuidv4()]
+        );
+      } catch (err) {
+        console.error("Failed to capture newsletter subscriber from checkout:", err);
+      }
+    }
+
     // Notifications (Async) - Delay sending email unless Cash on Delivery
     if (normalizedPaymentMethod === "cash_on_delivery") {
       try {

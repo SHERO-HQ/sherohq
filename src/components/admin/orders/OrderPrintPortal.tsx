@@ -278,7 +278,7 @@ export function OrderPrintPortal({
             </div>
 
             {/* Billed To */}
-            <div className="grid grid-cols-2 gap-12 mb-10 p-6 bg-slate-50 rounded-lg border border-slate-100">
+            <div className="grid grid-cols-2 gap-12 mb-10 p-6 bg-slate-50 rounded border border-slate-100">
               <div>
                 <h3 className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-3">
                   Billed To
