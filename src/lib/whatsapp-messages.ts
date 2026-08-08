@@ -163,7 +163,7 @@ export async function sendWhatsAppMessageDirect(
     return { success: true, messageId: mockMsgId };
   }
 
-  let body: any = {
+  const body: any = {
     messaging_product: "whatsapp",
     to: recipient,
   };

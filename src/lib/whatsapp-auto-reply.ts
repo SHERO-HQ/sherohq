@@ -16,7 +16,7 @@ export interface AutoReplyConfig {
 
 const DEFAULT_AUTO_REPLY: AutoReplyConfig = {
   enabled: true,
-  message: `Welcome to SHERO! How can we help you today? Select an option below, or simply type your question and a human agent will assist you.\n\nFor faster replies, you can text our personal number at ${COMPANY_CONTACTS.PHONE_DISPLAY}.`,
+  message: `Hi, SHERO 👋. How can we help you today? Select an option below, or simply type your question and a human agent will assist you.\n\nFor faster replies, you can text our personal number at ${COMPANY_CONTACTS.PHONE_DISPLAY}.`,
   interactiveButtons: [
     { id: "btn_shop", title: "🛒 Shop Products" },
     { id: "btn_order", title: "📦 Order Status" },
@@ -140,7 +140,7 @@ export function getSmartReply(customerMessage: string): { message: string; butto
   // Map of keywords to replies
   const replies: Record<string, string> = {
     "hours|open|timing|when":
-      "We are available Monday-Friday, 9am-6pm EST. How can we assist?",
+      "We are available Monday-Friday, 8am-6pm GMT. How can we assist?",
     "order|purchase|buy":
       "Great! I'd love to help with your order. Could you provide more details about what you're interested in?",
     "price|cost|how much":
@@ -162,7 +162,7 @@ export function getSmartReply(customerMessage: string): { message: string; butto
   const helloPattern = new RegExp(`\\b(hello|hi|hey|greetings)\\b`);
   if (helloPattern.test(msg)) {
     return {
-      message: `Hi! 👋 Welcome to SHERO. How can we help you today? Select an option below, or simply type your question and a human agent will assist you.\n\nFor faster replies, you can text our personal number at ${COMPANY_CONTACTS.PHONE_DISPLAY}.`,
+      message: `Hi, SHERO 👋! How can we help you today? Select an option below, or simply type your question and a human agent will assist you.\n\nFor faster replies, you can text our personal number at ${COMPANY_CONTACTS.PHONE_DISPLAY}.`,
       buttons: [
         { id: "btn_shop", title: "🛒 Shop Products" },
         { id: "btn_order", title: "📦 Order Status" },
@@ -174,17 +174,3 @@ export function getSmartReply(customerMessage: string): { message: string; butto
   return null;
 }
 
-/**
- * Compose auto-reply configuration
- */
-export function createAutoReplyConfig(
-  message: string,
-  enabled: boolean = true,
-  delay: number = 1000,
-): AutoReplyConfig {
-  return {
-    enabled,
-    message,
-    delay,
-  };
-}

@@ -29,11 +29,6 @@ export default function ProductQuickViewModal({
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const { addItem } = useCart();
   const { addNotification } = useNotifications();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (isOpen) {

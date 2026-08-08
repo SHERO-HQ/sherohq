@@ -138,33 +138,3 @@ export async function updateSupportTicketStatus(
   console.log(`Updated support ticket ${ticketId} status to ${status}`);
 }
 
-/**
- * Get customer's support history
- */
-export async function getCustomerSupportHistory(
-  senderWaId: string,
-): Promise<SupportTicket[]> {
-  const result = await query(
-    `
-    SELECT *
-    FROM consultations
-    WHERE phone = $1 OR email LIKE $2
-    ORDER BY created_at DESC;
-    `,
-    [senderWaId, `whatsapp_${senderWaId}%`],
-  );
-
-  return result.rows.map((row) => ({
-    id: row.id,
-    source: "whatsapp",
-    whatsapp_id: row.whatsapp_message_id,
-    customer_phone: row.phone,
-    customer_name: row.name,
-    message: row.message,
-    status: row.status,
-    priority: row.priority,
-    category: "whatsapp_support",
-    created_at: new Date(row.created_at),
-    updated_at: new Date(row.updated_at),
-  }));
-}

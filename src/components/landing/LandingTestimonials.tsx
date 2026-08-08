@@ -34,21 +34,28 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
     return limit ? t.slice(0, limit) : t;
   }, [data, limit]);
 
-  const [cards, setCards] = useState<any[]>([]);
-
-  useEffect(() => {
-    // If we have few testimonials, duplicate them so the stack always has enough depth
+  const [prevTestimonials, setPrevTestimonials] = useState(displayTestimonials);
+  const [cards, setCards] = useState<any[]>(() => {
     if (displayTestimonials.length > 0 && displayTestimonials.length < 4) {
-      const duplicated = [...displayTestimonials, ...displayTestimonials, ...displayTestimonials].map((item, i) => ({
+      return [...displayTestimonials, ...displayTestimonials, ...displayTestimonials].map((item, i) => ({
         ...item,
         uniqueId: `${item.id}-${i}`
       }));
-      setCards(duplicated);
-    } else {
-      const mapped = displayTestimonials.map((item, i) => ({ ...item, uniqueId: item.id ? item.id.toString() : `fallback-${i}` }));
-      setCards(mapped);
     }
-  }, [displayTestimonials]);
+    return displayTestimonials.map((item, i) => ({ ...item, uniqueId: item.id ? item.id.toString() : `fallback-${i}` }));
+  });
+
+  if (displayTestimonials !== prevTestimonials) {
+    setPrevTestimonials(displayTestimonials);
+    if (displayTestimonials.length > 0 && displayTestimonials.length < 4) {
+      setCards([...displayTestimonials, ...displayTestimonials, ...displayTestimonials].map((item, i) => ({
+        ...item,
+        uniqueId: `${item.id}-${i}`
+      })));
+    } else {
+      setCards(displayTestimonials.map((item, i) => ({ ...item, uniqueId: item.id ? item.id.toString() : `fallback-${i}` })));
+    }
+  }
 
   const [isHovered, setIsHovered] = useState(false);
 
