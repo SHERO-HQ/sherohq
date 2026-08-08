@@ -31,6 +31,7 @@ export const abandonedCarts = pgTable("abandoned_carts", {
 	items: jsonb().default([]).notNull(),
 	lastActive: timestamp({ withTimezone: true, mode: 'string' }).defaultNow(),
 	emailSent: boolean().default(false),
+	whatsappSent: boolean().default(false),
 	createdAt: timestamp({ withTimezone: true, mode: 'string' }).defaultNow(),
 }, (table) => [
 	uniqueIndex("idx_abandoned_carts_guest_id").using("btree", table.guestId.asc().nullsLast().op("text_ops")),

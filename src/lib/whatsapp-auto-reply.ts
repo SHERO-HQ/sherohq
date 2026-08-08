@@ -48,6 +48,25 @@ export async function sendAutoReply(
       return { success: false, error: "WhatsApp API token not configured" };
     }
 
+    // Check if after 9pm (21:00 GMT) or before 8am (08:00 GMT)
+    const hour = new Date().getUTCHours();
+    if (hour >= 21 || hour < 8) {
+      const awayAlert = `🌙 *After Hours Notice*\nThank you for reaching out! Please note it is currently past 9 PM. We'll still receive and redirect your request, but we cannot guarantee a reply after 10 PM. We will get back to you as soon as possible during business hours.\n\n---\n\n`;
+      config.message = awayAlert + config.message;
+      
+      // Ensure the "Shop Products" button is available so they can place orders anytime
+      if (!config.interactiveButtons) {
+        config.interactiveButtons = [];
+      }
+      if (!config.interactiveButtons.find(b => b.id === "btn_shop")) {
+        // If we already have 3 buttons, we have to replace one to make room for shop, or just prepend
+        config.interactiveButtons.unshift({ id: "btn_shop", title: "🛒 Shop Products" });
+        if (config.interactiveButtons.length > 3) {
+          config.interactiveButtons.pop(); // Max 3 buttons allowed by WhatsApp
+        }
+      }
+    }
+
     const body: any = {
       messaging_product: "whatsapp",
       recipient_type: "individual",
