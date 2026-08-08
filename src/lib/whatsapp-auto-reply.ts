@@ -6,12 +6,18 @@
 export interface AutoReplyConfig {
   enabled: boolean;
   message: string;
+  interactiveButtons?: { id: string; title: string }[];
   delay?: number; // ms delay before sending reply
 }
 
 const DEFAULT_AUTO_REPLY: AutoReplyConfig = {
   enabled: true,
-  message: `Thank you for reaching out! We've received your message and will get back to you as soon as possible. Our support team typically responds within 24 hours.`,
+  message: `Welcome to SHERO! How can we help you today?`,
+  interactiveButtons: [
+    { id: "btn_shop", title: "🛒 Shop Products" },
+    { id: "btn_support", title: "🎫 Support Ticket" },
+    { id: "btn_order", title: "📦 Order Status" }
+  ],
   delay: 1000, // 1 second delay
 };
 
@@ -38,6 +44,29 @@ export async function sendAutoReply(
       return { success: false, error: "WhatsApp API token not configured" };
     }
 
+    const body: any = {
+      messaging_product: "whatsapp",
+      recipient_type: "individual",
+      to: senderWaId,
+    };
+
+    if (config.interactiveButtons && config.interactiveButtons.length > 0) {
+      body.type = "interactive";
+      body.interactive = {
+        type: "button",
+        body: { text: config.message },
+        action: {
+          buttons: config.interactiveButtons.slice(0, 3).map((btn) => ({
+            type: "reply",
+            reply: { id: btn.id, title: btn.title },
+          })),
+        },
+      };
+    } else {
+      body.type = "text";
+      body.text = { preview_url: false, body: config.message };
+    }
+
     // Send via WhatsApp API directly
     const response = await fetch(
       `https://graph.facebook.com/v21.0/${phoneNumberId}/messages`,
@@ -47,13 +76,7 @@ export async function sendAutoReply(
           Authorization: `Bearer ${WHATSAPP_ACCESS_TOKEN}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          messaging_product: "whatsapp",
-          recipient_type: "individual",
-          to: senderWaId,
-          type: "text",
-          text: { preview_url: false, body: config.message },
-        }),
+        body: JSON.stringify(body),
       },
     );
 
@@ -82,16 +105,30 @@ export async function sendAutoReply(
 }
 
 /**
- * Custom auto-reply for specific keywords
- * Returns null if no match
+ * Custom auto-reply for specific keywords or interactive button clicks
  */
-export function getSmartReply(customerMessage: string): string | null {
+export function getSmartReply(customerMessage: string): { message: string; buttons?: { id: string; title: string }[] } | null {
   const msg = customerMessage.toLowerCase().trim();
+
+  // Handle interactive button IDs explicitly
+  if (msg === "btn_shop") {
+    return {
+      message: "Awesome! You can browse all our premium tech products right here on our store: https://sherohq.com/shop",
+    };
+  }
+  if (msg === "btn_support") {
+    return {
+      message: "I'll get a human support agent for you right away. Could you briefly describe the issue?",
+    };
+  }
+  if (msg === "btn_order") {
+    return {
+      message: "I can help you track your order! Please reply with your Order ID.",
+    };
+  }
 
   // Map of keywords to replies
   const replies: Record<string, string> = {
-    "hello|hi|hey|greetings":
-      "Hi! 👋 Thank you for contacting us. How can we help you today?",
     "hours|open|timing|when":
       "We are available Monday-Friday, 9am-6pm EST. How can we assist?",
     "order|purchase|buy":
@@ -107,8 +144,21 @@ export function getSmartReply(customerMessage: string): string | null {
   for (const [keywords, reply] of Object.entries(replies)) {
     const pattern = new RegExp(`\\b(${keywords})\\b`);
     if (pattern.test(msg)) {
-      return reply;
+      return { message: reply };
     }
+  }
+
+  // If they say hello, return the main interactive menu
+  const helloPattern = new RegExp(`\\b(hello|hi|hey|greetings)\\b`);
+  if (helloPattern.test(msg)) {
+    return {
+      message: "Hi! 👋 Welcome to SHERO. How can we help you today?",
+      buttons: [
+        { id: "btn_shop", title: "🛒 Shop Products" },
+        { id: "btn_support", title: "🎫 Support Ticket" },
+        { id: "btn_order", title: "📦 Order Status" }
+      ]
+    };
   }
 
   return null;

@@ -49,6 +49,7 @@ import { getErrorMessage } from "@/utils/error";
 import { NewsletterStats } from "@/components/admin/newsletter/NewsletterStats";
 import { NewsletterHistoryTab } from "@/components/admin/newsletter/NewsletterHistoryTab";
 import { NewsletterSubscribersTab } from "@/components/admin/newsletter/NewsletterSubscribersTab";
+import { WhatsAppAudienceList } from "@/components/admin/newsletter/WhatsAppAudienceList";
 
 
 type SubscriberFilter = "all" | "active" | "unsubscribed";
@@ -658,7 +659,7 @@ export default function AdminNewsletter() {
       />
 
       <Tabs defaultValue="compose" className="w-full">
-        <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded border border-border bg-card p-1 text-muted-foreground sm:grid-cols-3 lg:inline-grid lg:w-auto">
+        <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded border border-border bg-card p-1 text-muted-foreground sm:grid-cols-4 lg:inline-grid lg:w-auto">
           <TabsTrigger
             value="compose"
             className="gap-2 rounded data-[state=active]:bg-brand-secondary-500/15 data-[state=active]:text-brand-secondary-200"
@@ -679,6 +680,13 @@ export default function AdminNewsletter() {
           >
             <Users className="h-4 w-4" />
             Subscribers
+          </TabsTrigger>
+          <TabsTrigger
+            value="whatsapp"
+            className="gap-2 rounded data-[state=active]:bg-brand-secondary-500/15 data-[state=active]:text-brand-secondary-200"
+          >
+            <MessageCircle className="h-4 w-4" />
+            WhatsApp
           </TabsTrigger>
         </TabsList>
 
@@ -1022,6 +1030,8 @@ export default function AdminNewsletter() {
           onStartEditSubscriber={handleStartEditSubscriber}
           onStatusChange={handleStatusChange}
         />
+
+        <WhatsAppAudienceList />
       </Tabs>
     </div>
   );

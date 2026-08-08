@@ -3,6 +3,7 @@ import {
   storeIncomingMessage,
   updateMessageStatus,
   getCampaignDeliveryStatus,
+  upsertWhatsAppContact,
 } from "@/lib/whatsapp-messages";
 import { updateCampaignDeliveryStats } from "@/lib/newsletter-campaigns";
 import { sendAutoReply, getSmartReply } from "@/lib/whatsapp-auto-reply";
@@ -79,6 +80,8 @@ async function handleIncomingMessage(msg: any, contact: any) {
     // Extract content based on message type
     if (msg.text?.body) {
       content = msg.text.body;
+    } else if (msg.interactive?.button_reply) {
+      content = msg.interactive.button_reply.id;
     }
 
     console.log(
@@ -101,11 +104,18 @@ async function handleIncomingMessage(msg: any, contact: any) {
 
     console.log(`Stored incoming message: ${storedMsg.id}`);
 
-    // Send auto-reply if text message
-    if (messageType === "text" && content) {
+    // Extract and upsert contact info
+    const contactName = contact?.profile?.name || contact?.name || null;
+    await upsertWhatsAppContact(senderWaId, contactName).catch((e) =>
+      console.error("Failed to upsert WhatsApp contact:", e),
+    );
+
+    // Send auto-reply if text or interactive message
+    if ((messageType === "text" || messageType === "interactive") && content) {
       // Try smart reply first
-      const smartReplyText = getSmartReply(content);
-      const autoReplyText = smartReplyText || undefined;
+      const smartReply = getSmartReply(content);
+      const autoReplyText = smartReply?.message || undefined;
+      const interactiveButtons = smartReply?.buttons;
 
       // Send auto-reply with delay
       const replyResult = await sendAutoReply(senderWaId, PHONE_NUMBER_ID, {
@@ -113,6 +123,7 @@ async function handleIncomingMessage(msg: any, contact: any) {
         message:
           autoReplyText ||
           `Thank you for reaching out! We've received your message and will get back to you as soon as possible. Our support team typically responds within 24 hours.`,
+        interactiveButtons,
         delay: 2000, // 2 second delay before auto-reply
       });
 
@@ -123,7 +134,6 @@ async function handleIncomingMessage(msg: any, contact: any) {
       }
 
       // Create support ticket for human follow-up
-      const contactName = contact?.name || null;
       const ticketResult = await createSupportTicketFromWhatsApp(
         messageId,
         senderWaId,

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { Send, Check, CheckCheck, AlertTriangle, RefreshCw, MessageSquare, Code, Loader2 } from "lucide-react";
+import { Send, Check, CheckCheck, AlertTriangle, RefreshCw, MessageSquare, Code, Loader2, User, ExternalLink } from "lucide-react";
 import { useDialog } from "@/hooks/useDialog";
 
 interface ConversationMessage {
@@ -14,6 +14,7 @@ interface ConversationMessage {
   direction: "inbound" | "outbound";
   error_code?: string | null;
   error_message?: string | null;
+  metadata?: any;
   created_at: string;
 }
 
@@ -196,9 +197,9 @@ export default function WhatsAppConversations({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
       {/* Conversations List */}
-      <div className="lg:col-span-1 bg-card/40 backdrop-blur-md rounded border border-border flex flex-col h-[700px]">
+      <div className="lg:col-span-1 bg-card/40 backdrop-blur-md rounded border border-border flex flex-col h-[calc(100vh-18rem)] min-h-[500px] sticky top-[220px]">
         <div className="p-6 border-b border-border">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
@@ -234,29 +235,34 @@ export default function WhatsAppConversations({
                 <li key={conv.sender_wa_id}>
                   <button
                     onClick={() => void fetchMessages(conv.sender_wa_id)}
-                    className={`w-full text-left px-6 py-4 hover:bg-accent transition-all flex flex-col gap-1 relative ${selectedPhone === conv.sender_wa_id
-                      ? "bg-brand-secondary-500/10 border-r-2 border-brand-secondary-500"
-                      : ""
+                    className={`w-full text-left px-4 py-4 hover:bg-accent transition-all flex items-start gap-3 relative border-l-4 ${selectedPhone === conv.sender_wa_id
+                      ? "bg-brand-secondary-500/10 border-brand-secondary-500"
+                      : "border-transparent"
                       }`}
                   >
-                    <div className="flex items-center justify-between w-full">
-                      <p className="text-sm font-semibold text-foreground">
-                        {conv.sender_wa_id}
-                      </p>
-                      <span className="text-[10px] text-muted-foreground whitespace-nowrap">
-                        {formatDistanceToNow(new Date(conv.last_message_at), {
-                          addSuffix: true,
-                        })}
-                      </span>
+                    <div className="w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center shrink-0">
+                      <User className="w-5 h-5 text-muted-foreground" />
                     </div>
-                    <p className="text-xs text-muted-foreground truncate w-full pr-4">
-                      {conv.direction === "outbound" && <span className="text-brand-secondary-400 mr-1">You:</span>}
-                      {conv.last_message || "(no text content)"}
-                    </p>
-                    <div className="flex items-center justify-between mt-1">
-                      <span className="text-[10px] text-muted-foreground">
-                        {conv.message_count} messages
-                      </span>
+                    <div className="flex-1 min-w-0 flex flex-col gap-1">
+                      <div className="flex items-center justify-between w-full">
+                        <p className={`text-sm font-semibold truncate pr-2 ${selectedPhone === conv.sender_wa_id ? "text-brand-secondary-400" : "text-foreground"}`}>
+                          {conv.sender_wa_id}
+                        </p>
+                        <span className="text-[10px] text-muted-foreground whitespace-nowrap shrink-0">
+                          {formatDistanceToNow(new Date(conv.last_message_at), {
+                            addSuffix: true,
+                          })}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground truncate w-full">
+                        {conv.direction === "outbound" && <span className="text-brand-secondary-400 mr-1">You:</span>}
+                        {conv.last_message || "(no text content)"}
+                      </p>
+                      <div className="flex items-center justify-between mt-0.5">
+                        <span className="text-[10px] font-medium text-slate-500">
+                          {conv.message_count} messages
+                        </span>
+                      </div>
                     </div>
                   </button>
                 </li>
@@ -267,18 +273,25 @@ export default function WhatsAppConversations({
       </div>
 
       {/* Message Thread */}
-      <div className="lg:col-span-2 bg-card/40 backdrop-blur-md rounded border border-border flex flex-col h-[700px]">
+      <div className="lg:col-span-2 bg-card/40 backdrop-blur-md rounded border border-border flex flex-col h-[calc(100vh-18rem)] min-h-[500px] sticky top-[220px]">
         {selectedPhone ? (
           <>
             {/* Conversation Header */}
             <div className="p-6 border-b border-border flex items-center justify-between shrink-0">
-              <div>
-                <h3 className="text-lg font-semibold text-foreground">
-                  {selectedPhone}
-                </h3>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Active connection via Meta WhatsApp Business API
-                </p>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-card border border-border flex items-center justify-center relative shrink-0">
+                  <User className="w-6 h-6 text-muted-foreground" />
+                  <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-card rounded-full" title="Online"></span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {selectedPhone}
+                  </h3>
+                  <p className="text-xs text-emerald-400/80 font-medium mt-0.5 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
+                    Active WhatsApp Connection
+                  </p>
+                </div>
               </div>
               <button
                 onClick={() => void fetchMessages(selectedPhone)}
@@ -291,7 +304,7 @@ export default function WhatsAppConversations({
             </div>
 
             {/* Chat Thread */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-card custom-scrollbar">
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-brand-secondary-900/10 custom-scrollbar relative">
               {loading && messages.length === 0 ? (
                 <div className="flex items-center justify-center h-full">
                   <Loader2 className="w-8 h-8 text-brand-secondary-500 animate-spin" />
@@ -308,24 +321,52 @@ export default function WhatsAppConversations({
                       }`}
                   >
                     <div
-                      className={`max-w-md px-4 py-2.5 rounded ${msg.direction === "inbound"
-                        ? "bg-muted border border-border text-slate-100 rounded-tl-none"
-                        : "bg-brand-secondary-600 text-white rounded-tr-none shadow-[0_4px_12px_rgba(16,185,129,0.15)]"
+                      className={`max-w-md px-4 py-2.5 shadow-sm relative ${msg.direction === "inbound"
+                        ? "bg-slate-800/80 border border-border text-slate-100 rounded-2xl rounded-tl-sm"
+                        : "bg-brand-secondary-600 text-white rounded-2xl rounded-tr-sm shadow-black/20"
                         }`}
                     >
-                      <p className="text-sm whitespace-pre-wrap leading-relaxed break-words">
+                      {msg.metadata?.rawMessage?.referral && (
+                        <a
+                          href={msg.metadata.rawMessage.referral.source_url || "#"}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block bg-black/20 rounded p-2.5 mb-2 border border-white/5 hover:bg-black/30 transition-colors group cursor-pointer"
+                        >
+                          <div className="flex items-center justify-between mb-1">
+                            <p className="text-[10px] font-bold text-brand-secondary-400 uppercase tracking-wider flex items-center gap-1.5">
+                              <span className="w-1.5 h-1.5 bg-brand-secondary-500 rounded-full inline-block"></span>
+                              Via Facebook Ad
+                            </p>
+                            {msg.metadata.rawMessage.referral.source_url && (
+                              <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-brand-secondary-400 transition-colors" />
+                            )}
+                          </div>
+                          {msg.metadata.rawMessage.referral.headline && (
+                            <p className="text-xs text-slate-200 font-semibold group-hover:text-white transition-colors">
+                              {msg.metadata.rawMessage.referral.headline}
+                            </p>
+                          )}
+                          {msg.metadata.rawMessage.referral.body && (
+                            <p className="text-[10px] text-slate-400 mt-0.5 line-clamp-2">
+                              {msg.metadata.rawMessage.referral.body}
+                            </p>
+                          )}
+                        </a>
+                      )}
+                      <p className="text-[15px] whitespace-pre-wrap leading-relaxed break-words pb-3">
                         {msg.content || `[${msg.message_type}]`}
                       </p>
 
                       {msg.error_message && (
-                        <p className="text-xs text-rose-300 mt-1.5 flex items-center gap-1 border-t border-rose-500/20 pt-1">
+                        <p className="text-xs text-rose-300 mt-1.5 flex items-center gap-1 border-t border-rose-500/20 pt-1 pb-3">
                           <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
                           {msg.error_message} (Code: {msg.error_code})
                         </p>
                       )}
 
                       <div
-                        className={`flex items-center justify-end gap-1 text-[10px] mt-1.5 ${msg.direction === "inbound" ? "text-muted-foreground" : "text-emerald-100"
+                        className={`absolute bottom-1 right-3 flex items-center justify-end gap-1 text-[10px] font-medium tracking-wide ${msg.direction === "inbound" ? "text-slate-400" : "text-emerald-100"
                           }`}
                       >
                         <span>
@@ -344,13 +385,13 @@ export default function WhatsAppConversations({
             </div>
 
             {/* Message Composer Panel */}
-            <div className="p-4 border-t border-border bg-card/60 shrink-0">
-              <div className="flex gap-2 mb-3">
+            <div className="p-4 border-t border-border bg-card shrink-0">
+              <div className="flex bg-accent/50 p-1 rounded-lg w-fit mb-4">
                 <button
                   type="button"
                   onClick={() => setSendType("text")}
-                  className={`px-3 py-1 text-xs font-semibold rounded transition-colors flex items-center gap-1 ${sendType === "text"
-                    ? "bg-brand-secondary-600 text-white"
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 ${sendType === "text"
+                    ? "bg-card text-foreground shadow-sm border border-border/50"
                     : "text-muted-foreground hover:text-foreground hover:bg-accent"
                     }`}
                 >
@@ -360,8 +401,8 @@ export default function WhatsAppConversations({
                 <button
                   type="button"
                   onClick={() => setSendType("template")}
-                  className={`px-3 py-1 text-xs font-semibold rounded transition-colors flex items-center gap-1 ${sendType === "template"
-                    ? "bg-brand-secondary-600 text-white"
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 ${sendType === "template"
+                    ? "bg-card text-foreground shadow-sm border border-border/50"
                     : "text-muted-foreground hover:text-foreground hover:bg-accent"
                     }`}
                 >
@@ -372,29 +413,39 @@ export default function WhatsAppConversations({
 
               <form onSubmit={handleSend} className="space-y-3">
                 {sendType === "text" ? (
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
+                  <div className="flex items-end gap-2 bg-accent/30 p-2 rounded-3xl border border-border/60">
+                    <textarea
                       value={messageText}
-                      onChange={(e) => setMessageText(e.target.value)}
+                      onChange={(e) => {
+                        setMessageText(e.target.value);
+                        e.target.style.height = 'auto';
+                        e.target.style.height = `${Math.min(e.target.scrollHeight, 120)}px`;
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && !e.shiftKey) {
+                          e.preventDefault();
+                          void handleSend(e as unknown as React.FormEvent);
+                        }
+                      }}
                       placeholder="Type a message..."
                       disabled={sending}
-                      className="flex-1 px-4 py-2 bg-card border border-border rounded text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 focus:border-transparent disabled:opacity-50 transition-all"
+                      rows={1}
+                      className="flex-1 px-4 py-3 bg-transparent text-sm text-foreground focus:outline-none disabled:opacity-50 placeholder:text-muted-foreground resize-none overflow-y-auto custom-scrollbar"
+                      style={{ minHeight: "44px", maxHeight: "120px" }}
                     />
                     <button
                       type="submit"
                       disabled={sending || !messageText.trim()}
-                      className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white px-4 py-2 rounded font-semibold text-sm transition-colors flex items-center gap-1.5 disabled:opacity-50 shrink-0"
+                      className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white w-10 h-10 rounded-full flex items-center justify-center transition-transform active:scale-95 disabled:opacity-50 disabled:active:scale-100 shrink-0 mb-0.5"
                     >
-                      {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                      Send
+                      {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4 ml-0.5" />}
                     </button>
                   </div>
                 ) : (
-                  <div className="space-y-3 bg-card p-4 rounded border border-border">
-                    <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-4 bg-accent/20 p-5 rounded-xl border border-border">
+                    <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[10px] uppercase font-bold text-muted-foreground mb-1" htmlFor="composer-template-name">
+                        <label className="block text-[11px] font-semibold text-muted-foreground mb-1.5" htmlFor="composer-template-name">
                           Template Name
                         </label>
                         <input
@@ -404,11 +455,11 @@ export default function WhatsAppConversations({
                           onChange={(e) => setTemplateName(e.target.value)}
                           placeholder="verification_code"
                           disabled={sending}
-                          className="w-full px-3 py-1.5 bg-card border border-border rounded text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500"
+                          className="w-full px-3 py-2 bg-card border border-border rounded-md text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500 transition-shadow"
                         />
                       </div>
                       <div>
-                        <label className="block text-[10px] uppercase font-bold text-muted-foreground mb-1" htmlFor="composer-template-lang">
+                        <label className="block text-[11px] font-semibold text-muted-foreground mb-1.5" htmlFor="composer-template-lang">
                           Language Code
                         </label>
                         <input
@@ -418,12 +469,12 @@ export default function WhatsAppConversations({
                           onChange={(e) => setTemplateLang(e.target.value)}
                           placeholder="en"
                           disabled={sending}
-                          className="w-full px-3 py-1.5 bg-card border border-border rounded text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500"
+                          className="w-full px-3 py-2 bg-card border border-border rounded-md text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500 transition-shadow"
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-[10px] uppercase font-bold text-muted-foreground mb-1" htmlFor="composer-template-params">
+                      <label className="block text-[11px] font-semibold text-muted-foreground mb-1.5" htmlFor="composer-template-params">
                         Parameters (comma-separated variables, e.g. "123456")
                       </label>
                       <input
@@ -433,16 +484,16 @@ export default function WhatsAppConversations({
                         onChange={(e) => setTemplateParamsText(e.target.value)}
                         placeholder="e.g. 123456, GHS 50.00"
                         disabled={sending}
-                        className="w-full px-3 py-1.5 bg-card border border-border rounded text-xs text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500"
+                        className="w-full px-3 py-2 bg-card border border-border rounded-md text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500 transition-shadow"
                       />
                     </div>
-                    <div className="flex justify-end pt-1">
+                    <div className="flex justify-end pt-2">
                       <button
                         type="submit"
                         disabled={sending || !templateName.trim()}
-                        className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white px-4 py-1.5 rounded font-semibold text-xs transition-colors flex items-center gap-1.5 disabled:opacity-50"
+                        className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white px-5 py-2 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 disabled:opacity-50 active:scale-95 disabled:active:scale-100"
                       >
-                        {sending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
+                        {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                         Send Template
                       </button>
                     </div>

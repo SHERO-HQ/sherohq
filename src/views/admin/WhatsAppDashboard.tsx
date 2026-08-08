@@ -17,6 +17,8 @@ import {
   Check,
   Send
 } from "lucide-react";
+import AppImage from "@/components/common/AppImage";
+import { getWhatsAppConfigStatus } from "@/app/admin/whatsapp/actions";
 import { formatDistanceToNow } from "date-fns";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useDialog } from "@/hooks/useDialog";
@@ -250,55 +252,86 @@ export default function WhatsAppDashboard() {
     { id: "settings", label: "Automation Settings", icon: Settings },
   ];
 
+  const [configStatus, setConfigStatus] = useState<{
+    hasAccessToken: boolean;
+    hasPhoneNumberId: boolean;
+    loading: boolean;
+  }>({
+    hasAccessToken: false,
+    hasPhoneNumberId: false,
+    loading: true,
+  });
+
+  useEffect(() => {
+    if (activeTab === "settings") {
+      setConfigStatus((prev) => ({ ...prev, loading: true }));
+      getWhatsAppConfigStatus()
+        .then((status) => {
+          setConfigStatus({
+            hasAccessToken: status.hasAccessToken,
+            hasPhoneNumberId: status.hasPhoneNumberId,
+            loading: false,
+          });
+        })
+        .catch((error) => {
+          console.error("Failed to fetch WhatsApp config status:", error);
+          setConfigStatus((prev) => ({ ...prev, loading: false }));
+        });
+    }
+  }, [activeTab]);
+
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-3">
-            WhatsApp Automation
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Manage live conversations, track automated delivery retries, resolve customer tickets, and review statistics.
-          </p>
+      {/* Sticky Header and Tab Bar */}
+      <div className="sticky top-20 z-30 bg-background/95 backdrop-blur-md pt-4 pb-4 border-b border-border shadow-sm mb-6 -mx-3 px-3 md:-mx-6 md:px-6">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-3">
+              WhatsApp Automation
+            </h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              Manage live conversations, track automated delivery retries, resolve customer tickets, and review statistics.
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* Tabs Menu (Mobile Dropdown & Desktop Buttons) */}
-      <div className="mb-2">
-        {/* Mobile Dropdown */}
-        <div className="sm:hidden">
-          <label htmlFor="mobile-tabs" className="sr-only">Select a tab</label>
-          <select
-            id="mobile-tabs"
-            name="mobile-tabs"
-            className="block w-full bg-card border border-border rounded-md text-foreground focus:ring-brand-secondary-500 focus:border-brand-secondary-500 py-3 px-4 text-sm shadow-sm"
-            value={activeTab}
-            onChange={(e) => setActiveTab(e.target.value)}
-          >
-            {tabs.map((tab) => (
-              <option key={tab.id} value={tab.id}>
-                {tab.label}
-              </option>
-            ))}
-          </select>
-        </div>
-        
-        {/* Desktop Tabs */}
-        <div className="hidden sm:flex bg-card/50 p-1 rounded border border-border w-fit">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2 text-xs font-semibold rounded transition-all flex items-center gap-2 ${activeTab === tab.id
-                ? "bg-brand-secondary-600 text-white shadow-md shadow-brand-secondary-600/10"
-                : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                }`}
+        {/* Tabs Menu (Mobile Dropdown & Desktop Buttons) */}
+        <div>
+          {/* Mobile Dropdown */}
+          <div className="sm:hidden">
+            <label htmlFor="mobile-tabs" className="sr-only">Select a tab</label>
+            <select
+              id="mobile-tabs"
+              name="mobile-tabs"
+              className="block w-full bg-card border border-border rounded-md text-foreground focus:ring-brand-secondary-500 focus:border-brand-secondary-500 py-3 px-4 text-sm shadow-sm"
+              value={activeTab}
+              onChange={(e) => setActiveTab(e.target.value)}
             >
-              <tab.icon className="w-4 h-4" />
-              {tab.label}
-            </button>
-          ))}
+              {tabs.map((tab) => (
+                <option key={tab.id} value={tab.id}>
+                  {tab.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          {/* Desktop Tabs */}
+          <div className="hidden sm:flex bg-card/50 p-1 rounded border border-border w-fit">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-4 py-2 text-xs font-semibold rounded transition-all flex items-center gap-2 ${activeTab === tab.id
+                  ? "bg-brand-secondary-600 text-white shadow-md shadow-brand-secondary-600/10"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  }`}
+              >
+                <tab.icon className="w-4 h-4" />
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -698,7 +731,11 @@ export default function WhatsAppDashboard() {
                     <h5 className="text-xs font-bold text-foreground">Meta API Token</h5>
                     <p className="text-[10px] text-muted-foreground font-mono mt-0.5">WHATSAPP_ACCESS_TOKEN</p>
                   </div>
-                  {process.env.WHATSAPP_ACCESS_TOKEN ? (
+                  {configStatus.loading ? (
+                    <span className="flex items-center gap-1 text-xs text-muted-foreground bg-accent px-2.5 py-0.5 rounded border border-border">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" /> Checking...
+                    </span>
+                  ) : configStatus.hasAccessToken ? (
                     <span className="flex items-center gap-1 text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
                       <CheckCircle className="w-3.5 h-3.5" /> Configured
                     </span>
@@ -714,13 +751,17 @@ export default function WhatsAppDashboard() {
                     <h5 className="text-xs font-bold text-foreground">Meta Phone Number ID</h5>
                     <p className="text-[10px] text-muted-foreground font-mono mt-0.5">WHATSAPP_PHONE_NUMBER_ID</p>
                   </div>
-                  {process.env.WHATSAPP_PHONE_NUMBER_ID ? (
+                  {configStatus.loading ? (
+                    <span className="flex items-center gap-1 text-xs text-muted-foreground bg-accent px-2.5 py-0.5 rounded border border-border">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" /> Checking...
+                    </span>
+                  ) : configStatus.hasPhoneNumberId ? (
                     <span className="flex items-center gap-1 text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
                       <CheckCircle className="w-3.5 h-3.5" /> Configured
                     </span>
                   ) : (
-                    <span className="flex items-center gap-1 text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
-                      <CheckCircle className="w-3.5 h-3.5" /> Configured
+                    <span className="flex items-center gap-1 text-xs text-amber-400 font-semibold bg-amber-500/10 px-2.5 py-0.5 rounded border border-amber-500/20">
+                      <AlertTriangle className="w-3.5 h-3.5" /> Missing
                     </span>
                   )}
                 </div>

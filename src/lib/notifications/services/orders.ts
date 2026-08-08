@@ -2,6 +2,7 @@ import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { COMPANY_EMAILS } from "@/constants/emails";
 import { sendEmail, wrapEmailHtml } from "../core/email";
 import { sendWhatsAppNotification, formatToInternationalPhone } from "../core/whatsapp";
+import { sendWhatsAppMessageDirect, storeOutgoingMessage } from "@/lib/whatsapp-messages";
 import { generateInvoicePdf } from "../../pdfInvoice";
 import { toReadableOrderId } from "@/utils/orderId";
 import { OrderItem, ShippingInfo } from "../types";
@@ -256,7 +257,27 @@ export const ordersNotifications = {
         `🔗 *Live Track:* ${trackUrl}/track/${orderId}\n\n` +
         `If you need immediate support, reply directly to this chat. Thank you for choosing SHERO!`;
 
-      sendWhatsAppNotification(customerPhone, customerMsg).catch((err) =>
+      sendWhatsAppMessageDirect(
+        customerPhone,
+        customerMsg,
+        "order_confirmation",
+        "en",
+        [shippingInfo.firstName, readableOrderId, total.toFixed(2)]
+      ).then((res) => {
+        if (res.success && res.messageId) {
+          const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID || "system";
+          storeOutgoingMessage(
+            res.messageId,
+            null,
+            customerPhone,
+            phoneNumberId,
+            customerMsg,
+            { template: "order_confirmation", orderId }
+          ).catch(e => console.error("Failed to store WhatsApp order confirmation", e));
+        } else if (!res.success) {
+           console.error("WhatsApp template delivery failed:", res.error);
+        }
+      }).catch((err) =>
         console.error("Customer WhatsApp notification failed:", err),
       );
     }
@@ -317,14 +338,37 @@ export const ordersNotifications = {
     const customerPhone = formatToInternationalPhone(shippingInfo.phone);
     if (customerPhone) {
       let waMessage = `Hi ${shippingInfo.firstName},\n\nThere is an update on your order *${readableOrderId}* at *SHERO TECHNOLOGIES*.\n\n`;
-      if (newStatus === "intransit")
+      let statusDesc = "updated";
+      if (newStatus === "intransit") {
         waMessage = `Hi ${shippingInfo.firstName} 🚚\n\nYour order *${readableOrderId}* from *SHERO TECHNOLOGIES* has been dispatched and is in transit to you!\n\n`;
-      if (newStatus === "delivered")
+        statusDesc = "in transit";
+      }
+      if (newStatus === "delivered") {
         waMessage = `Hi ${shippingInfo.firstName} 🎉\n\nYour order *${readableOrderId}* from *SHERO TECHNOLOGIES* has been delivered!\n\nWe hope you love it.\n\n`;
+        statusDesc = "delivered";
+      }
 
       waMessage += `🔗 *Track your order:* ${trackUrl}/track/${orderId}`;
 
-      sendWhatsAppNotification(customerPhone, waMessage).catch((err) =>
+      sendWhatsAppMessageDirect(
+        customerPhone,
+        waMessage,
+        "order_update",
+        "en",
+        [shippingInfo.firstName, readableOrderId, statusDesc]
+      ).then((res) => {
+        if (res.success && res.messageId) {
+          const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID || "system";
+          storeOutgoingMessage(
+            res.messageId,
+            null,
+            customerPhone,
+            phoneNumberId,
+            waMessage,
+            { template: "order_update", orderId, newStatus }
+          ).catch(e => console.error("Failed to store WhatsApp order update", e));
+        }
+      }).catch((err) =>
         console.error(
           "Customer WhatsApp status update notification failed:",
           err,
@@ -394,7 +438,25 @@ export const ordersNotifications = {
         `You can try again or contact us for help.\n\n` +
         `🔗 *View Order:* ${trackUrl}/track/${orderId}`;
 
-      sendWhatsAppNotification(customerPhone, customerMsg).catch((err) =>
+      sendWhatsAppMessageDirect(
+        customerPhone,
+        customerMsg,
+        "payment_failed",
+        "en",
+        [shippingInfo.firstName, readableOrderId]
+      ).then((res) => {
+        if (res.success && res.messageId) {
+          const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID || "system";
+          storeOutgoingMessage(
+            res.messageId,
+            null,
+            customerPhone,
+            phoneNumberId,
+            customerMsg,
+            { template: "payment_failed", orderId }
+          ).catch(e => console.error("Failed to store WhatsApp payment failure", e));
+        }
+      }).catch((err) =>
         console.error("Customer WhatsApp failure notification failed:", err),
       );
     }

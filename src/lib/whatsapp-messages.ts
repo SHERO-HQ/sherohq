@@ -73,9 +73,15 @@ export async function updateMessageStatus(
     `
     UPDATE whatsapp_messages
     SET
-      status = $2,
-      error_code = $3,
-      error_message = $4,
+      status = CASE
+        WHEN $2 = 'failed' THEN $2
+        WHEN $2 = 'read' AND status IN ('sent', 'delivered', 'received') THEN $2
+        WHEN $2 = 'delivered' AND status IN ('sent', 'received') THEN $2
+        WHEN $2 = 'sent' AND status IN ('received') THEN $2
+        ELSE status
+      END,
+      error_code = COALESCE($3, error_code),
+      error_message = COALESCE($4, error_message),
       updated_at = NOW()
     WHERE id = $1
     RETURNING *;
@@ -284,4 +290,31 @@ export async function getCampaignFailedMessages(
   );
 
   return result.rows as WhatsAppMessage[];
+}
+/**
+ * Upsert a WhatsApp contact's profile info
+ */
+export async function upsertWhatsAppContact(
+  phone: string,
+  name?: string | null,
+): Promise<void> {
+  const normalizedPhone = phone.replace(/[^\d+]/g, "");
+  
+  await query(
+    `
+    INSERT INTO whatsapp_contacts (
+      phone,
+      name,
+      status,
+      last_interaction,
+      created_at,
+      updated_at
+    ) VALUES ($1, $2, 'active', NOW(), NOW(), NOW())
+    ON CONFLICT (phone) DO UPDATE SET
+      name = COALESCE($2, whatsapp_contacts.name),
+      last_interaction = NOW(),
+      updated_at = NOW()
+    `,
+    [normalizedPhone, name || null],
+  );
 }

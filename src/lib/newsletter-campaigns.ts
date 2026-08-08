@@ -316,24 +316,27 @@ function audienceWhere(input: NewsletterCampaignInput) {
   const clauses: string[] = [];
   const values: string[] = [];
 
+  const isWhatsApp = input.channel === "whatsapp";
+  const dateColumn = isWhatsApp ? '"created_at"' : '"subscribedAt"';
+
   if (input.audienceStatus !== "all") {
     values.push(input.audienceStatus);
     clauses.push(`status = $${values.length}`);
   }
 
-  if (input.audienceSource) {
+  if (input.audienceSource && !isWhatsApp) {
     values.push(input.audienceSource);
     clauses.push(`source = $${values.length}`);
   }
 
   if (input.audienceSubscribedAfter) {
     values.push(input.audienceSubscribedAfter.toISOString());
-    clauses.push(`"subscribedAt" >= $${values.length}`);
+    clauses.push(`${dateColumn} >= $${values.length}`);
   }
 
   if (input.audienceSubscribedBefore) {
     values.push(input.audienceSubscribedBefore.toISOString());
-    clauses.push(`"subscribedAt" <= $${values.length}`);
+    clauses.push(`${dateColumn} <= $${values.length}`);
   }
 
   if (input.channel === "email") {
@@ -345,13 +348,15 @@ function audienceWhere(input: NewsletterCampaignInput) {
   return {
     whereSql: clauses.length > 0 ? `WHERE ${clauses.join(" AND ")}` : "",
     values,
+    tableName: isWhatsApp ? "whatsapp_contacts" : "newsletter_subscribers",
+    isWhatsApp
   };
 }
 
 async function countAudience(input: NewsletterCampaignInput): Promise<number> {
-  const { whereSql, values } = audienceWhere(input);
+  const { whereSql, values, tableName } = audienceWhere(input);
   const result = await query(
-    `SELECT COUNT(*)::int AS count FROM newsletter_subscribers ${whereSql}`,
+    `SELECT COUNT(*)::int AS count FROM ${tableName} ${whereSql}`,
     values,
   );
   const count = Number(result.rows[0]?.count || 0);
@@ -362,18 +367,23 @@ async function fetchAudience(
   input: NewsletterCampaignInput,
   options: { limit?: number | null; offset?: number } = {},
 ): Promise<NewsletterRecipient[]> {
-  const { whereSql, values } = audienceWhere(input);
+  const { whereSql, values, tableName, isWhatsApp } = audienceWhere(input);
   const params: Array<string | number> = [...values];
   const limit = options.limit ?? input.recipientLimit;
   const offset = options.offset || 0;
   const limitSql = limit ? `LIMIT $${params.push(limit)}` : "";
   const offsetSql = offset > 0 ? `OFFSET $${params.push(offset)}` : "";
 
+  const selectCols = isWhatsApp
+    ? `phone as id, NULL as email, phone, name, NULL as "unsubscribeToken"`
+    : `id, email, phone, name, "unsubscribeToken"`;
+  const orderCol = isWhatsApp ? `"created_at"` : `"subscribedAt"`;
+
   const result = await query(
-    `SELECT id, email, phone, name, "unsubscribeToken"
-     FROM newsletter_subscribers
+    `SELECT ${selectCols}
+     FROM ${tableName}
      ${whereSql}
-     ORDER BY "subscribedAt" ASC
+     ORDER BY ${orderCol} ASC
      ${limitSql}
      ${offsetSql}`,
     params,

@@ -229,6 +229,17 @@ export interface NewsletterSubscriber {
   updatedAt: string;
 }
 
+export interface WhatsAppContact {
+  phone: string;
+  name: string | null;
+  status: string;
+  lastInteraction: string | null;
+  metadata: Record<string, any> | null;
+  hasOptedOut: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface NewsletterCampaign {
   id: string;
   channel: "email" | "sms" | "whatsapp";
@@ -321,6 +332,11 @@ export async function updateNewsletterSubscriberContact(
       body: JSON.stringify(data),
     },
   );
+  return handleResponse(response);
+}
+
+export async function fetchWhatsAppContacts(): Promise<WhatsAppContact[]> {
+  const response = await authFetch(`${API_BASE}/whatsapp/contacts`);
   return handleResponse(response);
 }
 

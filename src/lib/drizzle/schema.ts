@@ -595,3 +595,17 @@ export const whatsappMessageRetries = pgTable("whatsapp_message_retries", {
 	pgPolicy("service_role_only", { as: "permissive", for: "all", to: ["service_role"], using: sql`true`, withCheck: sql`true`  }),
 ]).enableRLS();
 
+export const whatsappContacts = pgTable("whatsapp_contacts", {
+	phone: text().primaryKey().notNull(), // using phone as primary key since WABAs index heavily on phone
+	name: text(),
+	status: text().default('active'),
+	lastInteraction: timestamp("last_interaction", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+	metadata: jsonb(),
+	hasOptedOut: boolean("has_opted_out").default(false),
+	createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+	updatedAt: timestamp("updated_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+	index("idx_whatsapp_contacts_status").using("btree", table.status.asc().nullsLast().op("text_ops")),
+	index("idx_whatsapp_contacts_last_interaction").using("btree", table.lastInteraction.desc().nullsFirst().op("timestamp_ops")),
+	pgPolicy("service_role_only", { as: "permissive", for: "all", to: ["service_role"], using: sql`true`, withCheck: sql`true`  }),
+]).enableRLS();
