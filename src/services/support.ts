@@ -336,7 +336,7 @@ export async function updateNewsletterSubscriberContact(
 }
 
 export async function fetchWhatsAppContacts(): Promise<WhatsAppContact[]> {
-  const response = await authFetch(`${API_BASE}/whatsapp/contacts`);
+  const response = await authFetch(`${API_BASE}/admin/whatsapp/contacts`);
   return handleResponse(response);
 }
 

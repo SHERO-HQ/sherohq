@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { campaignTemplates } from "@/lib/drizzle/schema";
+import { eq, and } from "drizzle-orm";
 import { sendWhatsAppMessageDirect, storeOutgoingMessage } from "@/lib/whatsapp-messages";
 
 // Standard security check for cron endpoints
@@ -52,16 +55,38 @@ export async function GET(request: NextRequest) {
 
       if (items.length === 0) continue;
 
-      // Construct reminder text (since there might not be an approved template yet)
+      // Find the template in the database
+      let templateName = null;
+      let templateLanguage = null;
+      let templateParams: string[] = [];
+
+      try {
+        const templateRecord = await db.query.campaignTemplates.findFirst({
+          where: and(
+            eq(campaignTemplates.name, "abandoned_cart_reminder"),
+            eq(campaignTemplates.channel, "whatsapp")
+          )
+        });
+
+        if (templateRecord) {
+          templateName = templateRecord.name;
+          templateLanguage = templateRecord.whatsappTemplateLanguage || "en";
+          templateParams = [name.split(' ')[0]]; // E.g. pass the user's first name
+        }
+      } catch (e) {
+        console.error("Failed to fetch template:", e);
+      }
+
+      // Fallback text if template isn't found/configured properly yet
       const content = `Hi ${name.split(' ')[0]}! We noticed you left some great items in your cart at SHERO Technologies. Complete your order today before they run out! Reply to this message if you need any help with checkout.`;
 
       try {
         const sendResult = await sendWhatsAppMessageDirect(
           phone,
           content,
-          null, // Template name (if approved template is created, replace this null)
-          null,
-          []
+          templateName,
+          templateLanguage,
+          templateParams
         );
 
         if (sendResult.success && sendResult.messageId) {

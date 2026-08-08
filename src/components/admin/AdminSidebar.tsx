@@ -27,7 +27,8 @@ import {
   BriefcaseBusiness,
   ShieldCheck,
   ChevronDown,
-  MessageCircle
+  MessageCircle,
+  LayoutTemplate
 } from "lucide-react";
 import { useAdmin } from "@/context/AdminContext";
 import { cn } from "@/lib/utils";
@@ -98,6 +99,7 @@ const navGroups: NavGroup[] = [
       { icon: Headset, label: "Support", href: "/admin/support" },
       { icon: MessageCircle, label: "WhatsApp", href: "/admin/whatsapp" },
       { icon: Megaphone, label: "Campaigns", href: "/admin/newsletter" },
+      { icon: LayoutTemplate, label: "Templates", href: "/admin/templates" },
     ],
   },
   {

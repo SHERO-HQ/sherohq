@@ -100,7 +100,20 @@ export default function WhatsAppDashboard() {
   // Settings & Test States
   const [testPhone, setTestPhone] = useState("");
   const [testTemplate, setTestTemplate] = useState("verification_code");
+  const [testTemplateLang, setTestTemplateLang] = useState("en");
   const [testParams, setTestParams] = useState("");
+  const [dbTemplates, setDbTemplates] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch("/api/admin/templates")
+      .then(res => res.json())
+      .then(data => {
+        const t = data.templates || [];
+        setDbTemplates(t.filter((x: any) => x.channel === "whatsapp"));
+      })
+      .catch(err => console.error("Failed to fetch templates:", err));
+  }, []);
+
   const [sendingTest, setSendingTest] = useState(false);
   const [testSuccess, setTestSuccess] = useState<boolean | null>(null);
   const [testError, setTestError] = useState("");
@@ -192,7 +205,7 @@ export default function WhatsAppDashboard() {
         body: JSON.stringify({
           phone: testPhone,
           templateName: testTemplate,
-          templateLanguage: "en",
+          templateLanguage: testTemplateLang,
           templateParams: testParams
             ? testParams.split(",").map((p) => p.trim())
             : []
@@ -776,15 +789,31 @@ export default function WhatsAppDashboard() {
                     <label className="block text-xs font-semibold text-muted-foreground mb-1" htmlFor="test-template-name">
                       Template Name
                     </label>
-                    <input
+                    <select
                       id="test-template-name"
-                      type="text"
                       value={testTemplate}
-                      onChange={(e) => setTestTemplate(e.target.value)}
-                      placeholder="verification_code"
+                      onChange={(e) => {
+                        const t = dbTemplates.find((x) => x.name === e.target.value);
+                        if (t) {
+                          setTestTemplate(t.name);
+                          setTestTemplateLang(t.whatsappTemplateLanguage || "en");
+                          if (t.expectedParams && t.expectedParams.length > 0) {
+                            setTestParams(t.expectedParams.map((p: string) => `[${p}]`).join(","));
+                          } else {
+                            setTestParams("");
+                          }
+                        } else {
+                          setTestTemplate(e.target.value);
+                        }
+                      }}
                       required
-                      className="w-full px-4 py-2.5 bg-card border border-border rounded text-sm text-foreground focus:outline-none"
-                    />
+                      className="w-full px-4 py-2.5 bg-card border border-border rounded text-sm text-foreground focus:outline-none appearance-none"
+                    >
+                      <option value="">-- Select --</option>
+                      {dbTemplates.map((t) => (
+                        <option key={t.id} value={t.name}>{t.name} {t.category ? `(${t.category})` : ""}</option>
+                      ))}
+                    </select>
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-muted-foreground mb-1" htmlFor="test-template-params">

@@ -20,7 +20,8 @@ import {
   SlidersHorizontal,
   XCircle,
   Megaphone,
-  Users
+  Users,
+  LayoutTemplate
 } from "lucide-react";
 import Link from "next/link";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
@@ -50,6 +51,8 @@ import { NewsletterStats } from "@/components/admin/newsletter/NewsletterStats";
 import { NewsletterHistoryTab } from "@/components/admin/newsletter/NewsletterHistoryTab";
 import { NewsletterSubscribersTab } from "@/components/admin/newsletter/NewsletterSubscribersTab";
 import { WhatsAppAudienceList } from "@/components/admin/newsletter/WhatsAppAudienceList";
+import { NewsletterTemplatesTab } from "@/components/admin/newsletter/NewsletterTemplatesTab";
+import { TemplatePreview } from "@/components/admin/newsletter/TemplatePreview";
 
 
 type SubscriberFilter = "all" | "active" | "unsubscribed";
@@ -659,7 +662,14 @@ export default function AdminNewsletter() {
       />
 
       <Tabs defaultValue="compose" className="w-full">
-        <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded border border-border bg-card p-1 text-muted-foreground sm:grid-cols-4 lg:inline-grid lg:w-auto">
+        <TabsList className="grid h-auto w-full grid-cols-1 gap-1 rounded border border-border bg-card p-1 text-muted-foreground sm:grid-cols-5 lg:inline-grid lg:w-auto">
+          <TabsTrigger
+            value="templates"
+            className="gap-2 rounded data-[state=active]:bg-brand-secondary-500/15 data-[state=active]:text-brand-secondary-200"
+          >
+            <LayoutTemplate className="h-4 w-4" />
+            Templates
+          </TabsTrigger>
           <TabsTrigger
             value="compose"
             className="gap-2 rounded data-[state=active]:bg-brand-secondary-500/15 data-[state=active]:text-brand-secondary-200"
@@ -808,8 +818,27 @@ export default function AdminNewsletter() {
                       className={inputClass}
                     />
                   </Field>
+
                 </div>
               ) : null}
+
+              {/* Dynamic Preview */}
+              {(channel === "whatsapp" || channel === "email") && content.trim().length > 0 && (
+                <div className="mt-6 mb-2">
+                  <Label className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mb-3 block">
+                    Live Preview
+                  </Label>
+                  <TemplatePreview 
+                    channel={channel}
+                    content={content}
+                    params={
+                      channel === "whatsapp" && whatsAppTemplateParamsText
+                        ? whatsAppTemplateParamsText.split(",").map(p => p.trim())
+                        : []
+                    }
+                  />
+                </div>
+              )}
 
               <Field
                 label="Message"
@@ -1032,6 +1061,34 @@ export default function AdminNewsletter() {
         />
 
         <WhatsAppAudienceList />
+
+        <TabsContent value="templates" className="mt-5">
+          <NewsletterTemplatesTab 
+            onSelectTemplate={(selectedChannel, template) => {
+              setChannel(selectedChannel);
+              if (selectedChannel === "email") {
+                setSubject(template.subject || "");
+                setContent(template.html || "");
+              } else if (selectedChannel === "sms") {
+                setSubject(template.name || "");
+                setContent(template.content || "");
+              } else if (selectedChannel === "whatsapp") {
+                setWhatsAppTemplateName(template.name || "");
+                setSubject(template.name || "");
+                setWhatsAppTemplateLanguage(template.language || "en");
+                setContent(template.description || "");
+                if (template.expectedParams && template.expectedParams.length > 0) {
+                  setWhatsAppTemplateParamsText(template.expectedParams.map((p: string) => `[${p}]`).join(", "));
+                } else {
+                  setWhatsAppTemplateParamsText("");
+                }
+              }
+              // Switch tab to compose using native click
+              const composeTab = document.querySelector<HTMLButtonElement>('[role="tab"][value="compose"]');
+              if (composeTab) composeTab.click();
+            }} 
+          />
+        </TabsContent>
       </Tabs>
     </div>
   );

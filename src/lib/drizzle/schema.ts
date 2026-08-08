@@ -174,6 +174,27 @@ export const newsletterCampaigns = pgTable("newsletter_campaigns", {
 	pgPolicy("public_newsletter_campaigns_readable", { as: "permissive", for: "select", to: ["public"], using: sql`true` }),
 ]);
 
+export const campaignTemplates = pgTable("campaign_templates", {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	name: text().notNull(),
+	description: text(),
+	channel: text().notNull(), // 'whatsapp', 'email', 'sms'
+	content: text(), // HTML or simple text
+	whatsappTemplateLanguage: text(),
+	expectedParams: jsonb(),
+	category: text(), // 'MARKETING', 'UTILITY', etc.
+  status: text().default('APPROVED'), // 'APPROVED', 'REJECTED', 'PENDING'
+  isSync: boolean().default(false), // true if it was auto-synced from Meta
+	createdAt: timestamp({ mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+	updatedAt: timestamp({ mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+	index("idx_campaign_templates_channel").using("btree", table.channel.asc().nullsLast().op("text_ops")),
+	index("idx_campaign_templates_name").using("btree", table.name.asc().nullsLast().op("text_ops")),
+  unique("campaign_templates_name_channel_lang_key").on(table.name, table.channel, table.whatsappTemplateLanguage),
+	pgPolicy("public_campaign_templates_readable", { as: "permissive", for: "select", to: ["public"], using: sql`true` }),
+	pgPolicy("admin_campaign_templates_all", { as: "permissive", for: "all", to: ["authenticated", "service_role"] }),
+]);
+
 export const activityLogs = pgTable("activity_logs", {
 	id: text().primaryKey().notNull(),
 	adminId: text(),

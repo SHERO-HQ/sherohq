@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { Send, Check, CheckCheck, AlertTriangle, RefreshCw, MessageSquare, Code, Loader2, User, ExternalLink } from "lucide-react";
+import { Send, Check, CheckCheck, AlertTriangle, RefreshCw, MessageSquare, Code, Loader2, User, ExternalLink, MessageCircle } from "lucide-react";
 import { useDialog } from "@/hooks/useDialog";
+import { TemplatePreview } from "./newsletter/TemplatePreview";
 
 interface ConversationMessage {
   id: string;
@@ -108,6 +109,17 @@ export default function WhatsAppConversations({
     }, 15000);
     
     return () => clearInterval(interval);
+  }, []);
+
+  const [dbTemplates, setDbTemplates] = useState<any[]>([]);
+  useEffect(() => {
+    fetch("/api/admin/templates")
+      .then(res => res.json())
+      .then(data => {
+        const t = data.templates || [];
+        setDbTemplates(t.filter((x: any) => x.channel === "whatsapp"));
+      })
+      .catch(err => console.error("Failed to fetch templates:", err));
   }, []);
 
   // Scroll to bottom when messages load
@@ -289,7 +301,7 @@ export default function WhatsAppConversations({
         <div className="p-6 border-b border-border">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
-              <MessageSquare className="w-5 h-5 text-brand-secondary-400" />
+              <MessageCircle className="w-5 h-5 text-brand-secondary-400" />
               Active Chats
             </h2>
             <button
@@ -535,6 +547,44 @@ export default function WhatsAppConversations({
                   </div>
                 ) : (
                   <div className="space-y-4 bg-accent/20 p-5 rounded-xl border border-border">
+                    {/* Live Preview Section */}
+                    {templateName && dbTemplates.find(t => t.name === templateName) && (
+                      <div className="mb-4">
+                        <label className="block text-[11px] font-semibold text-muted-foreground mb-2">Live Preview</label>
+                        <TemplatePreview 
+                          channel="whatsapp" 
+                          content={dbTemplates.find(t => t.name === templateName)?.content || ""} 
+                          params={templateParamsText ? templateParamsText.split(",").map(p => p.trim()) : []} 
+                        />
+                      </div>
+                    )}
+                    
+                    <div className="mb-4 pb-4 border-b border-border/50">
+                      <label className="block text-[11px] font-semibold text-muted-foreground mb-1.5" htmlFor="composer-template-preset">
+                        Load Predefined Template
+                      </label>
+                      <select
+                        id="composer-template-preset"
+                        onChange={(e) => {
+                          const t = dbTemplates.find((x) => x.name === e.target.value);
+                          if (t) {
+                            setTemplateName(t.name);
+                            setTemplateLang(t.whatsappTemplateLanguage || "en");
+                            if (t.expectedParams && t.expectedParams.length > 0) {
+                              setTemplateParamsText(t.expectedParams.map((p: string) => `[${p}]`).join(", "));
+                            } else {
+                              setTemplateParamsText("");
+                            }
+                          }
+                        }}
+                        className="w-full px-3 py-2 bg-card border border-border rounded-md text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500 transition-shadow appearance-none"
+                      >
+                        <option value="">-- Select a Template --</option>
+                        {dbTemplates.map((t) => (
+                          <option key={t.id} value={t.name}>{t.name} {t.category ? `(${t.category})` : ""}</option>
+                        ))}
+                      </select>
+                    </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-[11px] font-semibold text-muted-foreground mb-1.5" htmlFor="composer-template-name">
@@ -597,7 +647,7 @@ export default function WhatsAppConversations({
         ) : (
           <div className="flex flex-col items-center justify-center flex-1 text-center p-8">
             <div className="w-16 h-16 rounded-full bg-card flex items-center justify-center mb-4 border border-border">
-              <MessageSquare className="w-8 h-8 text-muted-foreground" />
+              <MessageCircle className="w-8 h-8 text-muted-foreground" />
             </div>
             <h4 className="text-lg font-bold text-foreground mb-1">Select a Conversation</h4>
             <p className="text-sm text-muted-foreground max-w-sm">

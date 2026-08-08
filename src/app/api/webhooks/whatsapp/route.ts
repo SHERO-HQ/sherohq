@@ -61,6 +61,10 @@ export async function POST(request: NextRequest) {
           await handleStatusUpdate(status);
         }
       }
+
+      if (changes.field === "message_template_status_update") {
+        await handleTemplateStatusUpdate(value);
+      }
     }
 
     return NextResponse.json({ success: true });
@@ -323,6 +327,35 @@ async function handleStatusUpdate(status: any) {
       }
     }
   } catch (error) {
-    console.error("Error handling status update:", error);
+    console.error("Failed to update message status:", error);
+  }
+}
+
+import { db } from "@/lib/db";
+import { campaignTemplates } from "@/lib/drizzle/schema";
+import { eq, and } from "drizzle-orm";
+
+async function handleTemplateStatusUpdate(value: any) {
+  try {
+    const { message_template_name, message_template_language, event } = value;
+    
+    if (!message_template_name || !event) return;
+
+    await db.update(campaignTemplates)
+      .set({
+        status: event, // APPROVED, REJECTED, PENDING
+        updatedAt: new Date().toISOString()
+      })
+      .where(
+        and(
+          eq(campaignTemplates.name, message_template_name),
+          eq(campaignTemplates.whatsappTemplateLanguage, message_template_language || "en"),
+          eq(campaignTemplates.channel, "whatsapp")
+        )
+      );
+      
+    console.log(`WhatsApp Template ${message_template_name} status updated to ${event}`);
+  } catch (error) {
+    console.error("Failed to update template status from webhook:", error);
   }
 }
