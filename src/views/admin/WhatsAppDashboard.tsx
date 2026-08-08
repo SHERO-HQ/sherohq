@@ -17,7 +17,8 @@ import {
   Check,
   Send,
   TrendingUp,
-  MessageCircle
+  MessageCircle,
+  LineChart as LineChartIcon
 } from "lucide-react";
 import AppImage from "@/components/common/AppImage";
 import { getWhatsAppConfigStatus, getWhatsAppAnalytics } from "@/app/admin/whatsapp/actions";
@@ -90,6 +91,7 @@ export default function WhatsAppDashboard() {
   // Analytics States
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
+  const [chartType, setChartType] = useState<"composed" | "line" | "bar">("composed");
 
   // Settings States
   const [settings, setSettings] = useState({
@@ -642,50 +644,124 @@ export default function WhatsAppDashboard() {
                 </div>
 
                 <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md">
-                  <h3 className="text-lg font-bold text-foreground mb-6">Message Volume (Last 14 Days)</h3>
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-lg font-bold text-foreground">Message Volume (Last 14 Days)</h3>
+                    <div className="flex items-center gap-1 bg-background/50 border border-border p-1 rounded-md">
+                      <button
+                        onClick={() => setChartType("composed")}
+                        className={`p-1.5 rounded transition-colors ${chartType === "composed"
+                          ? "bg-accent text-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                          }`}
+                        title="Mixed Chart"
+                      >
+                        <BarChart3 className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => setChartType("line")}
+                        className={`p-1.5 rounded transition-colors ${chartType === "line"
+                          ? "bg-accent text-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                          }`}
+                        title="Line Chart"
+                      >
+                        <LineChartIcon className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => setChartType("bar")}
+                        className={`p-1.5 rounded transition-colors ${chartType === "bar"
+                          ? "bg-accent text-foreground"
+                          : "text-muted-foreground hover:text-foreground"
+                          }`}
+                        title="Bar Chart"
+                      >
+                        <BarChart3 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
                   <div className="h-[400px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
-                      <ComposedChart data={analyticsData.dailyData} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
-                        <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+                      <ComposedChart data={analyticsData.dailyData} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+                        <defs>
+                          <linearGradient id="colorWaOutbound" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4} />
+                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.0} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
                         <XAxis
                           dataKey="date"
-                          stroke="hsl(var(--muted-foreground))"
-                          fontSize={12}
+                          stroke="#94a3b8"
+                          fontSize={10}
                           tickLine={false}
                           axisLine={false}
+                          tickFormatter={(value: string) => {
+                            try {
+                              // If value is a date string like '2023-10-01'
+                              const d = new Date(value);
+                              return isNaN(d.getTime()) ? value : new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(d);
+                            } catch {
+                              return value;
+                            }
+                          }}
                         />
                         <YAxis
-                          stroke="hsl(var(--muted-foreground))"
-                          fontSize={12}
+                          stroke="#94a3b8"
+                          fontSize={10}
                           tickLine={false}
                           axisLine={false}
                         />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: "hsl(var(--card))",
-                            border: "1px solid hsl(var(--border))",
-                            borderRadius: "var(--radius)",
-                            color: "hsl(var(--foreground))",
-                          }}
-                          itemStyle={{ fontSize: "12px", fontWeight: "bold" }}
-                          labelStyle={{ color: "hsl(var(--muted-foreground))", fontSize: "12px", marginBottom: "4px" }}
-                        />
-                        <Line
-                          type="monotone"
-                          dataKey="inbound"
-                          name="Inbound"
-                          stroke="#10b981"
-                          strokeWidth={3}
-                          dot={{ r: 4, strokeWidth: 2 }}
-                          activeDot={{ r: 6 }}
-                        />
-                        <Bar
-                          dataKey="outbound"
-                          name="Outbound"
-                          fill="#3b82f6"
-                          radius={[4, 4, 0, 0]}
-                          barSize={20}
-                        />
+                        <Tooltip content={<ChartTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
+                        <Legend verticalAlign="top" height={36} />
+                        {chartType === "bar" || chartType === "composed" ? (
+                          <Bar
+                            dataKey="outbound"
+                            name="Outbound"
+                            fill="url(#colorWaOutbound)"
+                            stroke="#3b82f6"
+                            strokeWidth={1}
+                            radius={[4, 4, 0, 0]}
+                            isAnimationActive={!prefersReducedMotion}
+                            animationDuration={1500}
+                          />
+                        ) : (
+                          <Line
+                            type="monotone"
+                            dataKey="outbound"
+                            name="Outbound"
+                            stroke="#3b82f6"
+                            strokeWidth={2.5}
+                            dot={false}
+                            activeDot={{ r: 4, stroke: "#3b82f6", strokeWidth: 2, fill: "#fff" }}
+                            isAnimationActive={!prefersReducedMotion}
+                            animationDuration={1500}
+                          />
+                        )}
+
+                        {chartType === "bar" ? (
+                          <Bar
+                            dataKey="inbound"
+                            name="Inbound"
+                            fill="#10b981"
+                            stroke="#10b981"
+                            strokeWidth={1}
+                            radius={[4, 4, 0, 0]}
+                            isAnimationActive={!prefersReducedMotion}
+                            animationDuration={1500}
+                          />
+                        ) : (
+                          <Line
+                            type="monotone"
+                            dataKey="inbound"
+                            name="Inbound"
+                            stroke="#10b981"
+                            strokeWidth={2.5}
+                            dot={false}
+                            activeDot={{ r: 4, stroke: "#10b981", strokeWidth: 2, fill: "#fff" }}
+                            isAnimationActive={!prefersReducedMotion}
+                            animationDuration={1500}
+                          />
+                        )}
                       </ComposedChart>
                     </ResponsiveContainer>
                   </div>
