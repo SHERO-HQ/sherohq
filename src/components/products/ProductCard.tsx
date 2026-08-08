@@ -137,8 +137,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             />
           </button>
           
-          {/* Secondary Actions - Slide in on Hover */}
-          <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
+          {/* Secondary Actions - Slide in on Hover (Always visible on mobile) */}
+          <div className="flex flex-col gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 translate-x-0 lg:translate-x-4 lg:group-hover:translate-x-0 transition-all duration-300 pointer-events-auto lg:pointer-events-none lg:group-hover:pointer-events-auto">
             <button
               onClick={handleQuickView}
               className="w-9 h-9 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-brand-secondary-500 hover:text-white transition-all duration-300 shadow-sm"
