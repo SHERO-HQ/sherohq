@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
+import { useVisibleInterval } from "@/hooks/useVisibleInterval";
 import {
   StaggerContainer,
   StaggerItem
@@ -26,13 +27,13 @@ import { m, AnimatePresence } from "motion/react";
 // 1. Hardware & Accessories: Provisioning Terminal Simulation
 const HardwareTerminal: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveStep((prev) => (prev + 1) % 4);
-    }, 2000);
-    return () => clearInterval(timer);
-  }, []);
+  useVisibleInterval(
+    () => setActiveStep((prev) => (prev + 1) % 4),
+    2000,
+    ref,
+  );
 
   const steps = [
     {
@@ -58,7 +59,7 @@ const HardwareTerminal: React.FC = () => {
   ];
 
   return (
-    <div className="w-full h-36 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 p-3 font-mono text-[9px] relative overflow-hidden select-none z-10">
+    <div ref={ref} className="w-full h-36 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 p-3 font-mono text-[9px] relative overflow-hidden select-none z-10">
       {/* Scanning laser line */}
       <div className="absolute inset-x-0 h-[2px] bg-brand-secondary-500/20 top-0 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-[bounce_3s_infinite_ease-in-out]" />
 
@@ -105,13 +106,13 @@ const HardwareTerminal: React.FC = () => {
 // 2. IT Infrastructure: SmartBoutique POS Sync Simulation
 const SmartBoutiqueWidget: React.FC = () => {
   const [posState, setPosState] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setPosState((prev) => (prev + 1) % 4);
-    }, 2800);
-    return () => clearInterval(timer);
-  }, []);
+  useVisibleInterval(
+    () => setPosState((prev) => (prev + 1) % 4),
+    2800,
+    ref,
+  );
 
   const posCycles = [
     { desc: "Scanning Silk Dress", price: "GHS 450.00", badge: "Add Item" },
@@ -121,7 +122,7 @@ const SmartBoutiqueWidget: React.FC = () => {
   ];
 
   return (
-    <div className="w-full h-36 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 p-3 font-mono text-[9px] flex flex-col justify-between select-none z-10">
+    <div ref={ref} className="w-full h-36 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 p-3 font-mono text-[9px] flex flex-col justify-between select-none z-10">
       <div className="flex items-center justify-between pb-1 border-b border-slate-200 dark:border-slate-800">
         <span className="text-blue-600 dark:text-blue-400 font-bold flex items-center gap-1">
           SmartBoutique POS
@@ -170,13 +171,13 @@ const SmartBoutiqueWidget: React.FC = () => {
 // 3. Managed Support: Proactive SLA Incident Console
 const SupportSlaConsole: React.FC = () => {
   const [alertState, setAlertState] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setAlertState((prev) => (prev + 1) % 4);
-    }, 3200);
-    return () => clearInterval(timer);
-  }, []);
+  useVisibleInterval(
+    () => setAlertState((prev) => (prev + 1) % 4),
+    3200,
+    ref,
+  );
 
   const alerts = [
     { msg: "System running smoothly", type: "info", tag: "SYS_OK" },
@@ -198,7 +199,7 @@ const SupportSlaConsole: React.FC = () => {
   ];
 
   return (
-    <div className="w-full h-36 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 p-3 font-mono text-[9px] select-none z-10 flex flex-col justify-between">
+    <div ref={ref} className="w-full h-36 rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 p-3 font-mono text-[9px] select-none z-10 flex flex-col justify-between">
       <div className="flex items-center justify-between pb-1 border-b border-slate-200 dark:border-slate-800">
         <span className="text-purple-600 dark:text-purple-400 font-bold flex items-center gap-1">
           Shero-SLA Active
@@ -251,16 +252,16 @@ const SupportSlaConsole: React.FC = () => {
 // 4. Software Engineering: Pharmasyst ERP Landscape Dashboard (wide card)
 const PharmasystWidget: React.FC = () => {
   const [stockCycle, setStockCycle] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setStockCycle((prev) => (prev + 1) % 2);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, []);
+  useVisibleInterval(
+    () => setStockCycle((prev) => (prev + 1) % 2),
+    4000,
+    ref,
+  );
 
   return (
-    <div className="w-full rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 p-4 font-mono text-[9px] flex flex-col md:flex-row gap-4 select-none z-10">
+    <div ref={ref} className="w-full rounded bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 p-4 font-mono text-[9px] flex flex-col md:flex-row gap-4 select-none z-10">
       {/* Left side: Drug database table */}
       <div className="flex-1 flex flex-col justify-between">
         <div className="flex items-center justify-between pb-1.5 border-b border-slate-200 dark:border-slate-800 mb-2">
@@ -500,19 +501,10 @@ const BentoPillarCard = ({ pillar }: { pillar: PillarsProps }) => {
       <div className="relative z-10 w-full">{pillar.widget}</div>
 
       {/* Decorative noise/texture (only in dark mode for more punch) */}
-      <div className="absolute inset-0 opacity-10 dark:opacity-20 pointer-events-none mix-blend-overlay">
-        <svg className="w-full h-full">
-          <filter id="noise">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.60"
-              numOctaves="3"
-              stitchTiles="stitch"
-            />
-          </filter>
-          <rect width="100%" height="100%" filter="url(#noise)" />
-        </svg>
-      </div>
+      <div
+        className="absolute inset-0 opacity-10 dark:opacity-20 pointer-events-none mix-blend-overlay"
+        style={{ filter: "url(#pillar-noise)" }}
+      />
     </div>
   );
 };
@@ -520,6 +512,19 @@ const BentoPillarCard = ({ pillar }: { pillar: PillarsProps }) => {
 const LandingPillars = () => {
   return (
     <section className="relative w-full py-12 lg:py-16 bg-white dark:bg-slate-950 overflow-hidden transition-colors duration-300">
+      {/* Shared SVG noise filter — single definition instead of 4 duplicates */}
+      <svg className="absolute w-0 h-0" aria-hidden="true">
+        <defs>
+          <filter id="pillar-noise">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.60"
+              numOctaves="3"
+              stitchTiles="stitch"
+            />
+          </filter>
+        </defs>
+      </svg>
       {/* Background Ambience */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-55 via-white to-slate-100 dark:from-slate-900 dark:via-slate-950 dark:to-black transition duration-500 opacity-50 dark:opacity-100" />
       <div className="absolute inset-0 hero-grid-pattern transition-opacity duration-300" />

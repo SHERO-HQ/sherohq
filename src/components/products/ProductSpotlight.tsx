@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { m, AnimatePresence } from "motion/react";
 import {
   ChevronLeft,
@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import { getImageUrl } from "@/services/api";
 import type { Product } from "@/types/product";
+import { useVisibleInterval } from "@/hooks/useVisibleInterval";
 import AppImage from "@/components/common/AppImage";
 import { formatCurrency } from "@/utils/format";
 import { getAbsoluteUrl } from "@/utils/subdomain";
@@ -89,11 +90,13 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
     );
   }, [spotlightItems.length]);
 
-  useEffect(() => {
-    if (!isAutoPlaying || spotlightItems.length <= 1) return;
-    const interval = setInterval(nextSlide, 8000);
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, nextSlide, spotlightItems.length]);
+  // Autoplay — only when visible in viewport
+  const sectionRef = useRef<HTMLElement>(null);
+  useVisibleInterval(
+    nextSlide,
+    !isAutoPlaying || spotlightItems.length <= 1 ? null : 8000,
+    sectionRef,
+  );
 
   if (isLoading || !spotlightItems.length) {
     return (
@@ -109,8 +112,8 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
   const currentProduct = spotlightItems[safeCurrentIndex];
 
   return (
-    <section className="relative w-full h-full lg:min-h-[calc(90vh-5rem)] overflow-hidden group/spotlight flex flex-col justify-center pt-5 lg:pt-0">
-      
+    <section ref={sectionRef} className="relative w-full h-full lg:min-h-[calc(90vh-5rem)] overflow-hidden group/spotlight flex flex-col justify-center pt-5 lg:pt-0">
+
       {/* Immersive Background: Animates based on current product */}
       <AnimatePresence mode="wait">
         <m.div
@@ -121,18 +124,19 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
           transition={{ duration: 1.5, ease: "easeInOut" }}
           className="absolute inset-0 z-0 overflow-hidden pointer-events-none"
         >
-           <AppImage 
-             src={getImageUrl(currentProduct.image)}
-             alt=""
-             fill
-             className="object-cover opacity-30 dark:opacity-20 blur-[100px] scale-150 transform-gpu"
-           />
-           <div className="absolute inset-0 bg-slate-50/70 dark:bg-slate-950/70 backdrop-blur-3xl" />
+          <AppImage
+            src={getImageUrl(currentProduct.image)}
+            alt=""
+            fill
+            className="object-cover opacity-30 dark:opacity-20 blur-[60px] scale-150 transform-gpu"
+          />
+          <div className="absolute inset-0 bg-slate-50/70 dark:bg-slate-950/70 backdrop-blur-3xl" />
         </m.div>
       </AnimatePresence>
-      
+
       {/* Kinetic pattern overlay */}
       <div className="absolute inset-0 pattern-dots opacity-40 mix-blend-overlay pointer-events-none z-0" />
+      <div className="absolute inset-0 pattern-dots opacity-80 pointer-events-none" />
 
       <AnimatePresence mode="wait">
         <m.div
@@ -145,19 +149,33 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
         >
           <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col items-center w-full max-w-6xl mx-auto">
-              
+
               <div className="flex flex-col-reverse lg:flex-row lg:items-stretch gap-8 lg:gap-12 relative w-full">
-                
+
                 {/* Left Side: Glassmorphic Info Card */}
                 <div className="w-full lg:w-[55%] flex flex-col justify-between p-6 sm:p-10 lg:p-12 bg-white/70 dark:bg-slate-900/60 backdrop-blur-2xl border border-white/40 dark:border-white/10 rounded shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
                   <div className="max-w-xl flex flex-col justify-between h-full">
                     <div>
-                      <m.div variants={staggerItem} className="inline-flex items-center gap-2 px-3 py-1 mb-6 text-[10px] font-bold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/40 border border-brand-secondary-200 dark:border-brand-secondary-700/50 rounded uppercase tracking-widest shadow-sm">
-                        <Star className="size-3 fill-brand-secondary-500 text-brand-secondary-500" />
-                        <span>Featured Product</span>
+                      <m.div variants={staggerItem} className="flex items-center justify-between mb-6">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 text-[10px] font-bold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/40 border border-brand-secondary-200 dark:border-brand-secondary-700/50 rounded uppercase tracking-widest shadow-sm">
+                          <Star className="size-3 fill-brand-secondary-500 text-brand-secondary-500" />
+                          <span>Featured Product</span>
+                        </div>
+
+                        {currentProduct.rating > 0 && (
+                          <div className="flex items-center gap-1.5 bg-white/50 dark:bg-slate-900/50 px-3 py-1.5 rounded border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-sm">
+                            <Star
+                              size={14}
+                              className="fill-amber-400 text-amber-400"
+                            />
+                            <span className="text-xs font-bold text-slate-900 dark:text-white">
+                              {currentProduct.rating} / 5.0
+                            </span>
+                          </div>
+                        )}
                       </m.div>
 
-                      <m.h2 
+                      <m.h2
                         variants={staggerItem}
                         className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white leading-[1.1] tracking-tight mb-6"
                       >
@@ -171,7 +189,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                         ))}
                       </m.h2>
 
-                      <m.p 
+                      <m.p
                         variants={staggerItem}
                         className="text-sm lg:text-lg text-slate-600 dark:text-slate-300 mb-8 line-clamp-3 lg:line-clamp-none leading-relaxed"
                       >
@@ -181,43 +199,28 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                     </div>
 
                     <m.div variants={staggerItem}>
-                      <div className="flex flex-wrap items-center gap-6 sm:gap-8 bg-slate-50/50 dark:bg-slate-950/50 p-6 rounded border border-slate-200/50 dark:border-slate-800/50">
+                      <div className="flex flex-wrap items-center justify-between gap-6 sm:gap-8 bg-slate-50/50 dark:bg-slate-950/50 p-6 rounded border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-sm shadow-sm">
                         <div className="flex flex-col">
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
+                          <span className="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
                             Price
                           </span>
-                          <span className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+                          <span className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
                             {formatCurrency(currentProduct.price)}
                           </span>
                         </div>
 
-                        {currentProduct.rating > 0 && (
-                          <div className="flex flex-col">
-                            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
-                              Satisfaction
-                            </span>
-                            <div className="flex items-center gap-1.5">
-                              <Star
-                                size={15}
-                                className="fill-amber-400 text-amber-400"
-                              />
-                              <span className="font-bold text-slate-900 dark:text-white">
-                                {currentProduct.rating} / 5.0
-                              </span>
-                            </div>
-                          </div>
-                        )}
 
-                        <div className="ml-auto pointer-events-auto">
+
+                        <div className="w-full sm:w-auto pointer-events-auto mt-2 sm:mt-0">
                           <Link
                             href={getAbsoluteUrl(
                               `/shop/${currentProduct.slug || currentProduct.sku || currentProduct.id}`,
                             )}
-                            className="group flex items-center justify-center gap-3 px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded font-bold uppercase tracking-widest text-[11px] shadow-lg shadow-slate-900/20 dark:shadow-white/10 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                            className="group flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-3 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded font-semibold transition duration-300 shadow shadow-brand-secondary-500/25 hover:scale-[1.02] active:scale-95"
                           >
                             Details
                             <ArrowRight
-                              size={16}
+                              size={18}
                               className="group-hover:translate-x-1.5 transition-transform"
                             />
                           </Link>
@@ -236,11 +239,10 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                                 setCurrentIndex(i);
                                 setIsAutoPlaying(false);
                               }}
-                              className={`h-1.5 transition-all duration-500 rounded ${
-                                i === safeCurrentIndex
+                              className={`h-1.5 transition-all duration-500 rounded ${i === safeCurrentIndex
                                   ? "w-10 bg-brand-secondary-500 shadow-[0_0_10px_rgba(var(--color-brand-secondary-500),0.5)]"
                                   : "w-3 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600"
-                              }`}
+                                }`}
                             />
                           ))}
                         </div>
@@ -275,7 +277,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
 
                 {/* Right Side: Product Image Card */}
                 <div className="relative w-full lg:w-[45%] h-[35vh] sm:h-[45vh] lg:h-auto min-h-[300px] lg:min-h-[500px] overflow-hidden group/image flex items-center justify-center">
-                  <m.div 
+                  <m.div
                     className="relative w-full h-full p-8 flex items-center justify-center"
                   >
                     <AppImage
@@ -324,11 +326,10 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           setCurrentIndex(i);
                           setIsAutoPlaying(false);
                         }}
-                        className={`h-1.5 transition-all duration-500 rounded ${
-                          i === safeCurrentIndex
+                        className={`h-1.5 transition-all duration-500 rounded ${i === safeCurrentIndex
                             ? "w-6 bg-brand-secondary-500"
                             : "w-2 bg-slate-900/20 dark:bg-white/40 hover:bg-slate-900/40 dark:hover:bg-white/60"
-                        }`}
+                          }`}
                       />
                     ))}
                   </div>

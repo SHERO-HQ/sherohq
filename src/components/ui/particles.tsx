@@ -34,6 +34,7 @@ export const Particles = ({
 
     let particles: Particle[] = [];
     let animationFrameId: number;
+    let isVisible = true;
 
     const resize = () => {
       canvas.width = canvas.offsetWidth;
@@ -58,6 +59,8 @@ export const Particles = ({
     };
 
     const drawParticles = () => {
+      if (!isVisible) return; // Skip when off-screen
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach((p) => {
         // Handle opacity pulsing
@@ -90,9 +93,27 @@ export const Particles = ({
     window.addEventListener("resize", resize);
     drawParticles();
 
+    // Pause the render loop when the canvas is off-screen
+    let observer: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver !== "undefined") {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          isVisible = entry.isIntersecting;
+          if (isVisible) {
+            // Resume the loop
+            cancelAnimationFrame(animationFrameId);
+            drawParticles();
+          }
+        },
+        { threshold: 0 },
+      );
+      observer.observe(canvas);
+    }
+
     return () => {
       window.removeEventListener("resize", resize);
       cancelAnimationFrame(animationFrameId);
+      observer?.disconnect();
     };
   }, [count, color]);
 

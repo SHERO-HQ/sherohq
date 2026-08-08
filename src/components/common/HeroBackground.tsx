@@ -66,14 +66,14 @@ const HeroBackground: React.FC<HeroBackgroundProps> = ({
 
  {/* Particle Field */}
  {motionEnabled && particleCount > 0 && (
- <ParticleField count={particleCount} colorVariant="dual" opacity={0.15} animate />
+ <ParticleField count={particleCount} colorVariant="dual" opacity={0.8} animate />
  )}
 
  {/* Gradient Orbs */}
  {showOrbs && (
  <div className="absolute inset-0">
- <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-brand-secondary-500/5 dark:bg-brand-secondary-500/5 blur-[100px] rounded-full" />
- <div className="absolute top-1/2 left-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-blue-500/5 dark:bg-blue-500/5 blur-[80px] rounded-full translate-x-10" />
+ <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-brand-secondary-500/5 dark:bg-brand-secondary-500/5 blur-[60px] rounded-full" />
+ <div className="absolute top-1/2 left-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-blue-500/5 dark:bg-blue-500/5 blur-[50px] rounded-full translate-x-10" />
  </div>
  )}
 

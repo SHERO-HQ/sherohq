@@ -120,9 +120,11 @@ export default function AIChatAssistant() {
 
   useEffect(() => {
     if (!isInitialized.current) return;
+    // Strip heavy base64 data (images/audio) before persisting — they've already been sent to the API
+    const lightweight = messages.slice(-15).map(({ imageData, audioData, ...rest }) => rest);
     localStorage.setItem(
       "shoro_chat_history",
-      JSON.stringify(messages.slice(-15)),
+      JSON.stringify(lightweight),
     );
   }, [messages]);
 

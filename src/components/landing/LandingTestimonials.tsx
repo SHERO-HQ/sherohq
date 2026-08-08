@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { m, AnimatePresence } from "motion/react";
 import {
   Quote,
@@ -9,6 +9,7 @@ import {
   ChevronLeft
 } from "lucide-react";
 import { useTestimonials } from "@/hooks/queries/useTestimonials";
+import { useVisibleInterval } from "@/hooks/useVisibleInterval";
 import AppImage from "@/components/common/AppImage";
 
 // Helper to get initials
@@ -68,24 +69,25 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
     });
   }, [cards.length]);
 
-  // Smooth Auto-rotate
-  useEffect(() => {
-    if (cards.length <= 1 || isHovered) return;
-    const timer = setInterval(() => {
-      handleNext();
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [handleNext, cards.length, isHovered]);
+  // Smooth Auto-rotate — only when visible in viewport
+  const sectionRef = useRef<HTMLElement>(null);
+  useVisibleInterval(
+    handleNext,
+    cards.length <= 1 || isHovered ? null : 5000,
+    sectionRef,
+  );
 
   return (
-    <section className="py-16 md:py-24 bg-white dark:bg-slate-950 overflow-hidden relative border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
+    <section ref={sectionRef} className="py-16 md:py-24 bg-white dark:bg-slate-950 overflow-hidden relative border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
       {/* Background decoration */}
       <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-brand-secondary-500/20 to-transparent" />
 
       {/* Soft Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-125 bg-brand-secondary-500/5 rounded-full blur-[100px] pointer-events-none transition-colors duration-300" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-125 bg-brand-secondary-500/5 rounded-full blur-[60px] pointer-events-none transition-colors duration-300" />
       {/* Dot particles */}
       <div className="absolute inset-0 pattern-dots opacity-80 pointer-events-none" />
+      {/* Bottom Fade */}
+      {/* <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-white dark:to-slate-950" /> */}
 
       <div className="container px-4 md:px-6 relative z-10 w-full mx-auto md:w-11/12 max-w-7xl">
         {(isLoading || displayTestimonials.length > 0) && (

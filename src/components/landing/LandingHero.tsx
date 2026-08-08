@@ -112,6 +112,8 @@ const LandingHero: React.FC = () => {
   const [heroReady, setHeroReady] = useState(false);
 
   // Disable heavy motion if the user prefers reduced motion or is on a low-end device
+  // Additionally, disable scroll parallax on mobile entirely
+  const [isMobile, setIsMobile] = useState(false);
   const motionEnabled = heroReady && !prefersReducedMotion && !isLowEnd;
 
   const [headlineLead = "", headlineAccent = ""] = HERO_CONTENT.mainHeader
@@ -120,6 +122,7 @@ const LandingHero: React.FC = () => {
     .filter(Boolean);
 
   useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
     const frame = requestAnimationFrame(() => setHeroReady(true));
     return () => cancelAnimationFrame(frame);
   }, [prefersReducedMotion]);
@@ -198,8 +201,8 @@ const LandingHero: React.FC = () => {
 
         {/* TOP SECTION: CENTERED TEXT */}
         <m.div
-          style={{ y: parallaxY, opacity: parallaxOpacity, scale: parallaxScale }}
-          className="w-full max-w-4xl"
+          style={isMobile ? undefined : { y: parallaxY, opacity: parallaxOpacity, scale: parallaxScale }}
+          className="w-full max-w-4xl will-change-transform"
         >
           <m.div
             variants={heroBlock}
