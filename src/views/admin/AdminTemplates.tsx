@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useDialog } from "@/hooks/useDialog";
 import { cn } from "@/lib/utils";
+import { TemplatePreview } from "@/components/admin/newsletter/TemplatePreview";
 
 interface CampaignTemplate {
   id: string;
@@ -19,6 +20,7 @@ interface CampaignTemplate {
   expectedParams: string[] | null;
   category: string | null;
   isSync: boolean;
+  status?: string | null;
   createdAt: string;
 }
 
@@ -47,7 +49,7 @@ export default function AdminTemplates() {
       if (!res.ok) throw new Error("Failed to load templates");
       const data = await res.json();
       setTemplates(data.templates || []);
-      
+
       if (sync) addNotification("Success", "Templates synced with Meta", "success");
     } catch (error: any) {
       addNotification("Error", error.message || "Failed to fetch templates", "error");
@@ -85,7 +87,7 @@ export default function AdminTemplates() {
       addNotification("Error", "Name and channel are required", "error");
       return;
     }
-    
+
     try {
       const res = await fetch("/api/admin/templates", {
         method: "POST",
@@ -96,7 +98,7 @@ export default function AdminTemplates() {
         const d = await res.json();
         throw new Error(d.error || "Failed to save template");
       }
-      
+
       await fetchTemplates();
       setIsCreating(false);
       setFormData({ channel: "email", name: "", description: "", content: "", whatsappTemplateLanguage: "en" });
@@ -121,129 +123,168 @@ export default function AdminTemplates() {
         </div>
       </AdminPageHeader>
 
+      {/* Glassmorphic Modal for Creating Template */}
       {isCreating && (
-        <div className="bg-card border border-border p-5 rounded-lg space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="font-semibold text-lg text-foreground">Create Template</h3>
-            <Button variant="ghost" size="sm" onClick={() => setIsCreating(false)}><X className="h-4 w-4" /></Button>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-muted-foreground">Channel</label>
-              <select 
-                value={formData.channel} 
-                onChange={e => setFormData({ ...formData, channel: e.target.value })}
-                className="w-full h-10 px-3 bg-accent/50 border border-border rounded text-sm text-foreground"
-              >
-                <option value="email">Email</option>
-                <option value="whatsapp">WhatsApp</option>
-                <option value="sms">SMS</option>
-              </select>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-card border border-border p-6 rounded w-full max-w-2xl shadow-2xl animate-in zoom-in-95 duration-300">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="font-bold text-xl text-foreground flex items-center gap-2">
+                <LayoutTemplate className="w-5 h-5 text-brand-secondary-500" />
+                Create New Template
+              </h3>
+              <Button variant="ghost" size="icon" onClick={() => setIsCreating(false)} className="rounded-full hover:bg-accent">
+                <X className="h-5 w-5" />
+              </Button>
             </div>
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-muted-foreground">Template Name</label>
-              <Input 
-                value={formData.name || ""} 
-                onChange={e => setFormData({ ...formData, name: e.target.value })}
-                placeholder="promo_launch_v1"
-              />
-            </div>
-          </div>
-          
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-muted-foreground">Description</label>
-            <Input 
-              value={formData.description || ""} 
-              onChange={e => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Internal description of what this is for"
-            />
-          </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-muted-foreground">Content (Text or HTML)</label>
-            <textarea
-              value={formData.content || ""}
-              onChange={e => setFormData({ ...formData, content: e.target.value })}
-              className="w-full min-h-[120px] p-3 bg-accent/50 border border-border rounded text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500"
-              placeholder="Hi {{1}}, here is your code: {{2}}"
-            />
-          </div>
+            <div className="space-y-5">
+              <div className="grid grid-cols-2 gap-5">
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Channel</label>
+                  <select
+                    value={formData.channel}
+                    onChange={e => setFormData({ ...formData, channel: e.target.value })}
+                    className="w-full h-11 px-4 bg-accent/30 border border-border/60 rounded text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/30 transition-all appearance-none"
+                  >
+                    <option value="email">Email</option>
+                    <option value="whatsapp">WhatsApp</option>
+                    <option value="sms">SMS</option>
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Template Name</label>
+                  <Input
+                    value={formData.name || ""}
+                    onChange={e => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="promo_launch_v1"
+                    className="h-11 rounded bg-accent/30 border-border/60"
+                  />
+                </div>
+              </div>
 
-          {formData.channel === "whatsapp" && (
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-muted-foreground">Language Code</label>
-                <Input 
-                  value={formData.whatsappTemplateLanguage || ""} 
-                  onChange={e => setFormData({ ...formData, whatsappTemplateLanguage: e.target.value })}
-                  placeholder="en"
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Description / Category</label>
+                <Input
+                  value={formData.description || ""}
+                  onChange={e => setFormData({ ...formData, description: e.target.value })}
+                  placeholder="Internal description of what this is for"
+                  className="h-11 rounded bg-accent/30 border-border/60"
                 />
               </div>
-            </div>
-          )}
 
-          <div className="flex justify-end pt-2">
-            <Button onClick={handleSave} className="bg-brand-secondary-600 text-white hover:bg-brand-secondary-500">
-              <Save className="h-4 w-4 mr-2" /> Save Template
-            </Button>
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Content (Text or HTML)</label>
+                <textarea
+                  value={formData.content || ""}
+                  onChange={e => setFormData({ ...formData, content: e.target.value })}
+                  className="w-full min-h-[140px] p-4 bg-accent/30 border border-border/60 rounded text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/30 transition-all resize-y custom-scrollbar"
+                  placeholder="Hi {{1}}, here is your code: {{2}}"
+                />
+              </div>
+
+              {formData.channel === "whatsapp" && (
+                <div className="grid grid-cols-2 gap-5 animate-in slide-in-from-top-2">
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Language Code</label>
+                    <Input
+                      value={formData.whatsappTemplateLanguage || ""}
+                      onChange={e => setFormData({ ...formData, whatsappTemplateLanguage: e.target.value })}
+                      placeholder="en"
+                      className="h-11 rounded bg-accent/30 border-border/60"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="flex justify-end pt-8 gap-3">
+              <Button variant="ghost" onClick={() => setIsCreating(false)} className="rounded px-6">
+                Cancel
+              </Button>
+              <Button onClick={handleSave} className="bg-brand-secondary-600 text-white hover:bg-brand-secondary-500 rounded px-6 shadow-md shadow-brand-secondary-500/20">
+                <Save className="h-4 w-4 mr-2" /> Save Template
+              </Button>
+            </div>
           </div>
         </div>
       )}
 
-      <div className="bg-card border border-border rounded-lg overflow-hidden shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left text-muted-foreground">
-            <thead className="text-xs uppercase bg-accent/50 text-muted-foreground">
-              <tr>
-                <th className="px-6 py-4 font-medium">Name</th>
-                <th className="px-6 py-4 font-medium">Channel</th>
-                <th className="px-6 py-4 font-medium">Category / Desc</th>
-                <th className="px-6 py-4 font-medium">Source</th>
-                <th className="px-6 py-4 font-medium text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/50">
-              {templates.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-6 py-10 text-center text-muted-foreground">
-                    {isLoading ? "Loading..." : "No templates found. Click 'New Template' or 'Sync WhatsApp'."}
-                  </td>
-                </tr>
-              ) : (
-                templates.map((t) => (
-                  <tr key={t.id} className="hover:bg-accent/20 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="font-semibold text-foreground">{t.name}</div>
-                      {t.whatsappTemplateLanguage && <div className="text-[10px] text-muted-foreground uppercase">{t.whatsappTemplateLanguage}</div>}
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        {t.channel === 'email' ? <Mail className="h-4 w-4" /> : <MessageCircle className="h-4 w-4" />}
-                        <span className="capitalize">{t.channel}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-foreground text-xs">{t.description || t.category || "None"}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      {t.isSync ? (
-                        <span className="bg-blue-500/10 text-blue-400 text-[10px] px-2 py-1 rounded-full border border-blue-500/20 font-bold">Meta Graph</span>
-                      ) : (
-                        <span className="bg-emerald-500/10 text-emerald-400 text-[10px] px-2 py-1 rounded-full border border-emerald-500/20 font-bold">Local</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <Button variant="ghost" size="icon" onClick={() => handleDelete(t.id)} className="text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 h-8 w-8">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+      {/* Grid of Templates */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {templates.length === 0 && !isLoading && (
+          <div className="col-span-full py-16 text-center border border-dashed border-border rounded bg-card text-muted-foreground flex flex-col items-center justify-center gap-3">
+            <LayoutTemplate className="w-10 h-10 opacity-20" />
+            <p>No templates found. Click 'New Template' or 'Sync WhatsApp'.</p>
+          </div>
+        )}
+
+        {isLoading && templates.length === 0 && (
+          <div className="col-span-full py-16 text-center text-muted-foreground">Loading templates...</div>
+        )}
+
+        {templates.map((t) => (
+          <div
+            key={t.id}
+            className="group flex flex-col bg-card border border-border/80 rounded overflow-hidden shadow-sm hover:shadow-xl hover:shadow-black/5 hover:-translate-y-1 transition-all duration-300"
+          >
+            {/* Card Header */}
+            <div className="p-5 border-b border-border/50 flex justify-between items-start bg-accent/10">
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center gap-2">
+                  {t.channel === 'email' ? <Mail className="h-4 w-4 text-brand-secondary-500" /> : <MessageCircle className="h-4 w-4 text-[#25D366]" />}
+                  <h4 className="font-bold text-foreground truncate max-w-[180px]" title={t.name}>{t.name}</h4>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {t.whatsappTemplateLanguage && (
+                    <span className="text-[10px] bg-accent text-muted-foreground px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider border border-border/50">
+                      {t.whatsappTemplateLanguage}
+                    </span>
+                  )}
+                  {t.isSync ? (
+                    <span className="text-[10px] bg-sky-500/10 text-sky-500 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider border border-sky-500/20">
+                      Meta Sync
+                    </span>
+                  ) : (
+                    <span className="text-[10px] bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider border border-emerald-500/20">
+                      Local
+                    </span>
+                  )}
+                  {/* Status Badge */}
+                  {t.status === 'APPROVED' ? (
+                    <span className="text-[10px] bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider border border-emerald-500/20">APPROVED</span>
+                  ) : t.status === 'REJECTED' ? (
+                    <span className="text-[10px] bg-rose-500/10 text-rose-500 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider border border-rose-500/20">REJECTED</span>
+                  ) : t.status === 'PENDING' ? (
+                    <span className="text-[10px] bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider border border-amber-500/20">PENDING</span>
+                  ) : null}
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => handleDelete(t.id)}
+                className="text-muted-foreground hover:text-rose-500 hover:bg-rose-500/10 h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
+
+            {/* Card Body - Preview */}
+            <div className="p-4 flex-1 flex flex-col bg-accent/5">
+              <div className="text-xs text-muted-foreground mb-4 line-clamp-2 min-h-[32px]">
+                {t.description || t.category || "No description provided."}
+              </div>
+
+              <div className="relative rounded overflow-hidden border border-border/50 bg-card flex-1 min-h-[160px] pointer-events-none transform scale-[0.85] origin-top">
+                <TemplatePreview
+                  channel={t.channel as any}
+                  content={t.content || ""}
+                  params={Array(5).fill("___")} // dummy params for preview
+                />
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

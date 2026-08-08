@@ -95,7 +95,8 @@ export default function WhatsAppDashboard() {
   const [settings, setSettings] = useState({
     autoRetryEnabled: true,
     maxRetryAttempts: 3,
-    retryIntervalMinutes: 15});
+    retryIntervalMinutes: 15
+  });
 
   // Settings & Test States
   const [testPhone, setTestPhone] = useState("");
@@ -123,7 +124,8 @@ export default function WhatsAppDashboard() {
       const res = await fetch("/api/admin/whatsapp/support", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ticketId, status: newStatus })});
+        body: JSON.stringify({ ticketId, status: newStatus })
+      });
       const data = await res.json();
       if (data.success) {
         void refetchTickets();
@@ -140,7 +142,8 @@ export default function WhatsAppDashboard() {
       const res = await fetch("/api/admin/whatsapp/retries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "retry", messageId })});
+        body: JSON.stringify({ action: "retry", messageId })
+      });
       const data = await res.json();
       if (data.success) {
         void dialog.alert({ title: "Success", message: "Retry triggered successfully!", type: "success" });
@@ -158,7 +161,8 @@ export default function WhatsAppDashboard() {
       const res = await fetch("/api/admin/whatsapp/retries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "cancel", messageId })});
+        body: JSON.stringify({ action: "cancel", messageId })
+      });
       const data = await res.json();
       if (data.success) {
         void refetchRetries();
@@ -174,7 +178,8 @@ export default function WhatsAppDashboard() {
       const res = await fetch("/api/admin/whatsapp/retries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "retry_all" })});
+        body: JSON.stringify({ action: "retry_all" })
+      });
       const data = await res.json();
       if (data.success) {
         void dialog.alert({ title: "Bulk Retry Complete", message: `Bulk retry complete. Processed: ${data.processed}, Successful: ${data.successful}, Failed: ${data.failed}`, type: "success" });
@@ -341,7 +346,7 @@ export default function WhatsAppDashboard() {
               ))}
             </select>
           </div>
-          
+
           {/* Desktop Tabs */}
           <div className="hidden sm:flex bg-card/50 p-1 rounded border border-border w-fit">
             {tabs.map((tab) => (
@@ -604,7 +609,7 @@ export default function WhatsAppDashboard() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md">
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="p-2 bg-emerald-500/10 rounded-lg">
+                      <div className="p-2 bg-emerald-500/10 rounded">
                         <MessageSquare className="w-5 h-5 text-emerald-500" />
                       </div>
                       <h3 className="text-sm font-medium text-muted-foreground">Inbound Messages</h3>
@@ -615,7 +620,7 @@ export default function WhatsAppDashboard() {
 
                   <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md">
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="p-2 bg-blue-500/10 rounded-lg">
+                      <div className="p-2 bg-blue-500/10 rounded">
                         <Send className="w-5 h-5 text-blue-500" />
                       </div>
                       <h3 className="text-sm font-medium text-muted-foreground">Outbound Messages</h3>
@@ -626,7 +631,7 @@ export default function WhatsAppDashboard() {
 
                   <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md">
                     <div className="flex items-center gap-3 mb-2">
-                      <div className="p-2 bg-amber-500/10 rounded-lg">
+                      <div className="p-2 bg-amber-500/10 rounded">
                         <AlertTriangle className="w-5 h-5 text-amber-500" />
                       </div>
                       <h3 className="text-sm font-medium text-muted-foreground">Failed Deliveries</h3>
@@ -642,15 +647,15 @@ export default function WhatsAppDashboard() {
                     <ResponsiveContainer width="100%" height="100%">
                       <ComposedChart data={analyticsData.dailyData} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
-                        <XAxis 
-                          dataKey="date" 
-                          stroke="hsl(var(--muted-foreground))" 
+                        <XAxis
+                          dataKey="date"
+                          stroke="hsl(var(--muted-foreground))"
                           fontSize={12}
                           tickLine={false}
                           axisLine={false}
                         />
-                        <YAxis 
-                          stroke="hsl(var(--muted-foreground))" 
+                        <YAxis
+                          stroke="hsl(var(--muted-foreground))"
                           fontSize={12}
                           tickLine={false}
                           axisLine={false}
@@ -665,19 +670,19 @@ export default function WhatsAppDashboard() {
                           itemStyle={{ fontSize: "12px", fontWeight: "bold" }}
                           labelStyle={{ color: "hsl(var(--muted-foreground))", fontSize: "12px", marginBottom: "4px" }}
                         />
-                        <Line 
-                          type="monotone" 
-                          dataKey="inbound" 
-                          name="Inbound" 
-                          stroke="#10b981" 
+                        <Line
+                          type="monotone"
+                          dataKey="inbound"
+                          name="Inbound"
+                          stroke="#10b981"
                           strokeWidth={3}
                           dot={{ r: 4, strokeWidth: 2 }}
                           activeDot={{ r: 6 }}
                         />
-                        <Bar 
-                          dataKey="outbound" 
-                          name="Outbound" 
-                          fill="#3b82f6" 
+                        <Bar
+                          dataKey="outbound"
+                          name="Outbound"
+                          fill="#3b82f6"
                           radius={[4, 4, 0, 0]}
                           barSize={20}
                         />

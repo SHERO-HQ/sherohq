@@ -28,7 +28,7 @@ export function ChatMarkdown({ content }: ChatMarkdownProps) {
                 {children}
               </code>
             ) : (
-              <pre className="bg-slate-900 text-slate-50 p-3 rounded-lg overflow-x-auto text-[12px] font-mono mb-2 mt-1">
+              <pre className="bg-slate-900 text-slate-50 p-3 rounded overflow-x-auto text-[12px] font-mono mb-2 mt-1">
                 <code className={className} {...props}>
                   {children}
                 </code>

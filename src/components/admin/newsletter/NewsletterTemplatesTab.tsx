@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
+import { TemplatePreview } from "@/components/admin/newsletter/TemplatePreview";
 
 type TemplateType = "email" | "whatsapp" | "sms";
 
@@ -86,63 +87,88 @@ export function NewsletterTemplatesTab({ onSelectTemplate }: NewsletterTemplates
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {templates.map((template: any) => (
-          <div key={template.id} className="rounded border border-border bg-card p-5 flex flex-col justify-between">
-            <div>
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="font-semibold text-foreground text-lg">{template.name}</h3>
-                {template.category && (
-                  <Badge variant="outline" className="text-xs uppercase bg-accent text-muted-foreground border-border">
-                    {template.category}
-                  </Badge>
+          <div
+            key={template.id}
+            className="group rounded border border-border/80 bg-card flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 hover:shadow-black/5 transition-all duration-300"
+          >
+            {/* Card Header & Preview */}
+            <div className="flex flex-col flex-1">
+              <div className="p-5 border-b border-border/50 bg-accent/10 flex justify-between items-start">
+                <div>
+                  <h3 className="font-bold text-foreground text-lg mb-1 truncate max-w-[200px]" title={template.name}>
+                    {template.name}
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {template.category && (
+                      <Badge variant="outline" className="text-[10px] uppercase bg-accent text-muted-foreground border-border">
+                        {template.category}
+                      </Badge>
+                    )}
+                    {template.status === 'APPROVED' && (
+                      <Badge className="text-[10px] uppercase bg-emerald-500/10 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500/10 shadow-none">APPROVED</Badge>
+                    )}
+                  </div>
+                </div>
+                {activeType === "whatsapp" ? (
+                  <MessageCircle className="h-5 w-5 text-[#25D366] opacity-80" />
+                ) : (
+                  <Mail className="h-5 w-5 text-brand-secondary-500 opacity-80" />
                 )}
               </div>
-              
-              {template.subject && (
-                <div className="mb-2 text-sm">
-                  <span className="text-muted-foreground font-medium">Subject:</span> <span className="text-foreground">{template.subject}</span>
-                </div>
-              )}
-              
-              <p className="text-muted-foreground text-sm mb-4">
-                {template.description}
-              </p>
 
-              <div className="mb-4 text-xs font-mono bg-accent/50 p-2 rounded border border-border/50 text-muted-foreground flex flex-wrap gap-1">
-                <span className="font-semibold">Params:</span> 
-                {template.expectedParams && template.expectedParams.length > 0 
-                  ? template.expectedParams.join(", ") 
-                  : "None"}
+              {/* Template Mini-Preview */}
+              <div className="flex-1 bg-accent/5 p-4 border-b border-border/50 flex flex-col">
+                <p className="text-muted-foreground text-xs mb-3 line-clamp-2 min-h-[32px]">
+                  {template.description || "No description provided."}
+                </p>
+                <div className="relative rounded overflow-hidden border border-border/50 bg-card flex-1 min-h-[160px] pointer-events-none transform scale-[0.9] origin-top">
+                  <TemplatePreview
+                    channel={activeType as any}
+                    content={template.content || ""}
+                    params={Array(5).fill("___")}
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="flex gap-2 mt-4 pt-4 border-t border-border/50">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="w-full text-brand-secondary-400 border-brand-secondary-500/20 hover:bg-brand-secondary-500/10"
-                onClick={() => onSelectTemplate(activeType, template)}
-              >
-                Use Template
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="w-full text-muted-foreground"
-                onClick={() => {
-                  const copyText = activeType === "email" ? (template.content || "") : 
-                                   activeType === "sms" ? (template.content || "") :
-                                   JSON.stringify(template, null, 2);
-                  handleCopy(template.id, copyText);
-                }}
-              >
-                {copiedId === template.id ? (
-                  <><CheckCircle2 className="mr-2 h-4 w-4 text-green-500" /> Copied</>
-                ) : (
-                  <><Copy className="mr-2 h-4 w-4" /> Copy Content</>
-                )}
-              </Button>
+            {/* Actions Footer */}
+            <div className="p-4 bg-card flex flex-col gap-3">
+              <div className="text-[11px] font-mono bg-accent/40 px-3 py-2 rounded border border-border/50 text-muted-foreground flex flex-wrap gap-1.5 items-center">
+                <span className="font-bold uppercase tracking-wider">Params:</span>
+                {template.expectedParams && template.expectedParams.length > 0
+                  ? template.expectedParams.map((p: string, i: number) => (
+                    <span key={i} className="bg-card border border-border/50 px-1.5 py-0.5 rounded text-foreground shadow-sm">{p}</span>
+                  ))
+                  : "None"}
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 mt-1">
+                <Button
+                  variant="outline"
+                  className="w-full text-brand-secondary-600 border-brand-secondary-500/30 hover:bg-brand-secondary-500 hover:text-white rounded shadow-sm transition-all"
+                  onClick={() => onSelectTemplate(activeType, template)}
+                >
+                  Use Template
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full text-muted-foreground rounded"
+                  onClick={() => {
+                    const copyText = activeType === "email" ? (template.content || "") :
+                      activeType === "sms" ? (template.content || "") :
+                        JSON.stringify(template, null, 2);
+                    handleCopy(template.id, copyText);
+                  }}
+                >
+                  {copiedId === template.id ? (
+                    <><CheckCircle2 className="mr-2 h-4 w-4 text-green-500" /> Copied</>
+                  ) : (
+                    <><Copy className="mr-2 h-4 w-4" /> Copy Text</>
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
         ))}

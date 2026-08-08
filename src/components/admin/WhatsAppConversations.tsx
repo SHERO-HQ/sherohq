@@ -70,18 +70,18 @@ export default function WhatsAppConversations({
       const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
       const oscillator = audioCtx.createOscillator();
       const gainNode = audioCtx.createGain();
-      
+
       oscillator.connect(gainNode);
       gainNode.connect(audioCtx.destination);
-      
+
       oscillator.type = 'sine';
-      oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); 
-      oscillator.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.1); 
-      
+      oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
+      oscillator.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.1);
+
       gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
       gainNode.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.05);
       gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-      
+
       oscillator.start(audioCtx.currentTime);
       oscillator.stop(audioCtx.currentTime + 0.3);
     } catch (e) {
@@ -102,12 +102,12 @@ export default function WhatsAppConversations({
   // Fetch all conversations on mount & start polling
   useEffect(() => {
     void fetchConversations();
-    
+
     // Poll every 15 seconds for new messages
     const interval = setInterval(() => {
       void fetchConversations(true);
     }, 15000);
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -134,7 +134,7 @@ export default function WhatsAppConversations({
       const data = await response.json();
       if (data.success) {
         const newConvs = data.conversations || [];
-        
+
         // Notification Logic
         if (previousConversationsRef.current.length > 0) {
           const oldMap = new Map(previousConversationsRef.current.map(c => [c.sender_wa_id, c]));
@@ -150,7 +150,7 @@ export default function WhatsAppConversations({
             }
           }
         }
-        
+
         previousConversationsRef.current = newConvs;
         setConversations(newConvs);
       }
@@ -426,8 +426,8 @@ export default function WhatsAppConversations({
                   >
                     <div
                       className={`max-w-md min-w-[80px] px-4 py-2.5 shadow-sm relative ${msg.direction === "inbound"
-                        ? "bg-slate-800/80 border border-border text-slate-100 rounded-2xl rounded-tl-sm"
-                        : "bg-brand-secondary-600 text-white rounded-2xl rounded-tr-sm shadow-black/20"
+                        ? "bg-slate-800/80 border border-border text-slate-100 rounded rounded-tl-sm"
+                        : "bg-brand-secondary-600 text-white rounded rounded-tr-sm shadow-black/20"
                         }`}
                     >
                       {msg.metadata?.rawMessage?.referral && (
@@ -490,7 +490,7 @@ export default function WhatsAppConversations({
 
             {/* Message Composer Panel */}
             <div className="p-4 border-t border-border bg-card shrink-0">
-              <div className="flex bg-accent/50 p-1 rounded-lg w-fit mb-4">
+              <div className="flex bg-accent/50 p-1 rounded w-fit mb-4">
                 <button
                   type="button"
                   onClick={() => setSendType("text")}
@@ -517,7 +517,7 @@ export default function WhatsAppConversations({
 
               <form onSubmit={handleSend} className="space-y-3">
                 {sendType === "text" ? (
-                  <div className="flex items-end gap-2 bg-accent/30 p-2 rounded-3xl border border-border/60">
+                  <div className="flex items-end gap-2 bg-accent/30 p-2 rounded border border-border/60">
                     <textarea
                       value={messageText}
                       onChange={(e) => {
@@ -546,19 +546,19 @@ export default function WhatsAppConversations({
                     </button>
                   </div>
                 ) : (
-                  <div className="space-y-4 bg-accent/20 p-5 rounded-xl border border-border">
+                  <div className="space-y-4 bg-accent/20 p-5 rounded border border-border">
                     {/* Live Preview Section */}
                     {templateName && dbTemplates.find(t => t.name === templateName) && (
                       <div className="mb-4">
                         <label className="block text-[11px] font-semibold text-muted-foreground mb-2">Live Preview</label>
-                        <TemplatePreview 
-                          channel="whatsapp" 
-                          content={dbTemplates.find(t => t.name === templateName)?.content || ""} 
-                          params={templateParamsText ? templateParamsText.split(",").map(p => p.trim()) : []} 
+                        <TemplatePreview
+                          channel="whatsapp"
+                          content={dbTemplates.find(t => t.name === templateName)?.content || ""}
+                          params={templateParamsText ? templateParamsText.split(",").map(p => p.trim()) : []}
                         />
                       </div>
                     )}
-                    
+
                     <div className="mb-4 pb-4 border-b border-border/50">
                       <label className="block text-[11px] font-semibold text-muted-foreground mb-1.5" htmlFor="composer-template-preset">
                         Load Predefined Template
@@ -633,7 +633,7 @@ export default function WhatsAppConversations({
                       <button
                         type="submit"
                         disabled={sending || !templateName.trim()}
-                        className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white px-5 py-2 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 disabled:opacity-50 active:scale-95 disabled:active:scale-100"
+                        className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white px-5 py-2 rounded font-semibold text-sm transition-all flex items-center gap-2 disabled:opacity-50 active:scale-95 disabled:active:scale-100"
                       >
                         {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                         Send Template

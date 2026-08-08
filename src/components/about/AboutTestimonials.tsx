@@ -136,7 +136,7 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
               onMouseLeave={() => setIsHovered(false)}
             >
               {isLoading ? (
-                <div className="w-full h-full bg-slate-50/50 dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-white/5 animate-pulse" />
+                <div className="w-full h-full bg-slate-50/50 dark:bg-slate-900/40 rounded border border-slate-200 dark:border-white/5 animate-pulse" />
               ) : (
                 <AnimatePresence mode="popLayout">
                   {cards.slice(0, 3).map((item, index) => {
