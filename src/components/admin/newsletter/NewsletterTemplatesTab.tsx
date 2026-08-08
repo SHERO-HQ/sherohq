@@ -62,7 +62,7 @@ export function NewsletterTemplatesTab({ onSelectTemplate }: NewsletterTemplates
             activeType === "email" ? "bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white border-transparent" : "text-muted-foreground"
           )}
         >
-          <Mail className="h-4 w-4" /> Email Templates
+          <Mail className="h-4 w-4" /> Email
         </Button>
         <Button
           variant={activeType === "whatsapp" ? "default" : "outline"}
@@ -72,7 +72,7 @@ export function NewsletterTemplatesTab({ onSelectTemplate }: NewsletterTemplates
             activeType === "whatsapp" ? "bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white border-transparent" : "text-muted-foreground"
           )}
         >
-          <MessageCircle className="h-4 w-4" /> WhatsApp Templates
+          <MessageCircle className="h-4 w-4" /> WhatsApp
         </Button>
         <Button
           variant={activeType === "sms" ? "default" : "outline"}
@@ -82,7 +82,7 @@ export function NewsletterTemplatesTab({ onSelectTemplate }: NewsletterTemplates
             activeType === "sms" ? "bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white border-transparent" : "text-muted-foreground"
           )}
         >
-          <MessageCircle className="h-4 w-4" /> SMS Templates
+          <MessageCircle className="h-4 w-4" /> SMS
         </Button>
       </div>
 
