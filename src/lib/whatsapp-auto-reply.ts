@@ -50,19 +50,25 @@ export async function sendAutoReply(
 
     // Check if after 9pm (21:00 GMT) or before 8am (08:00 GMT)
     const hour = new Date().getUTCHours();
+    let currentConfig = { ...config };
+    
     if (hour >= 21 || hour < 8) {
       const awayAlert = `🌙 *After Hours Notice*\nThank you for reaching out! Please note it is currently past 9 PM. We'll still receive and redirect your request, but we cannot guarantee a reply after 10 PM. We will get back to you as soon as possible during business hours.\n\n---\n\n`;
-      config.message = awayAlert + config.message;
+      currentConfig.message = awayAlert + currentConfig.message;
       
       // Ensure the "Shop Products" button is available so they can place orders anytime
-      if (!config.interactiveButtons) {
-        config.interactiveButtons = [];
+      if (!currentConfig.interactiveButtons) {
+        currentConfig.interactiveButtons = [];
+      } else {
+        // Clone array to avoid mutating
+        currentConfig.interactiveButtons = [...currentConfig.interactiveButtons];
       }
-      if (!config.interactiveButtons.find(b => b.id === "btn_shop")) {
+      
+      if (!currentConfig.interactiveButtons.find(b => b.id === "btn_shop")) {
         // If we already have 3 buttons, we have to replace one to make room for shop, or just prepend
-        config.interactiveButtons.unshift({ id: "btn_shop", title: "🛒 Shop Products" });
-        if (config.interactiveButtons.length > 3) {
-          config.interactiveButtons.pop(); // Max 3 buttons allowed by WhatsApp
+        currentConfig.interactiveButtons.unshift({ id: "btn_shop", title: "🛒 Shop Products" });
+        if (currentConfig.interactiveButtons.length > 3) {
+          currentConfig.interactiveButtons.pop(); // Max 3 buttons allowed by WhatsApp
         }
       }
     }
@@ -73,27 +79,27 @@ export async function sendAutoReply(
       to: senderWaId,
     };
 
-    if (config.interactiveButtons && config.interactiveButtons.length > 0) {
+    if (currentConfig.interactiveButtons && currentConfig.interactiveButtons.length > 0) {
       body.type = "interactive";
       body.interactive = {
         type: "button",
-        body: { text: config.message },
+        body: { text: currentConfig.message },
         action: {
-          buttons: config.interactiveButtons.slice(0, 3).map((btn) => ({
+          buttons: currentConfig.interactiveButtons.slice(0, 3).map((btn) => ({
             type: "reply",
             reply: { id: btn.id, title: btn.title },
           })),
         },
       };
-    } else if (config.mediaUrl && config.mediaType) {
-      body.type = config.mediaType;
-      body[config.mediaType] = { link: config.mediaUrl };
-      if (config.message && config.message !== "") {
-        body[config.mediaType].caption = config.message;
+    } else if (currentConfig.mediaUrl && currentConfig.mediaType) {
+      body.type = currentConfig.mediaType;
+      body[currentConfig.mediaType] = { link: currentConfig.mediaUrl };
+      if (currentConfig.message && currentConfig.message !== "") {
+        body[currentConfig.mediaType].caption = currentConfig.message;
       }
     } else {
       body.type = "text";
-      body.text = { preview_url: false, body: config.message };
+      body.text = { preview_url: false, body: currentConfig.message };
     }
 
     // Send via WhatsApp API directly

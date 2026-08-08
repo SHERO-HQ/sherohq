@@ -228,6 +228,7 @@ async function handleIncomingMessage(msg: any, contact: any) {
       
       // Only throttle if it's the fallback message (not a smart reply)
       if (!autoReplyText) {
+        let isNewThisHour = false;
         try {
           const { query } = await import("@/lib/db");
           const recent24h = await query(`
@@ -237,13 +238,24 @@ async function handleIncomingMessage(msg: any, contact: any) {
             AND created_at > NOW() - INTERVAL '24 hours'
           `, [senderWaId]);
           
+          const recent1h = await query(`
+            SELECT count(*) FROM whatsapp_messages
+            WHERE sender_wa_id = $1 
+            AND direction = 'inbound'
+            AND created_at > NOW() - INTERVAL '1 hour'
+          `, [senderWaId]);
+          
           // If count > 1, they've sent other messages in the last 24 hours besides the one we just stored
           isNewConversation = parseInt(recent24h.rows[0].count) <= 1;
+          isNewThisHour = parseInt(recent1h.rows[0].count) <= 1;
         } catch (err) {
           console.error("Failed to check 24h messages for throttle:", err);
         }
 
-        if (!isNewConversation) {
+        const hour = new Date().getUTCHours();
+        const isAfterHours = hour >= 21 || hour < 8;
+
+        if (!isNewConversation && !(isAfterHours && isNewThisHour)) {
           shouldSendReply = false;
           console.log(`Skipping fallback auto-reply for ${senderWaId} (active conversation)`);
         }
