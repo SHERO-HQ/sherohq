@@ -267,8 +267,12 @@ async function handleIncomingMessage(msg: any, contact: any) {
           enabled: true,
           message:
             autoReplyText ||
-            `Thank you for reaching out to SHERO! We've received your message. Select an option below, or simply type your question and a human agent will assist you.\n\nFor faster replies, you can text our personal number at ${COMPANY_CONTACTS.PHONE_DISPLAY}.`,
-          interactiveButtons,
+            `Thank you for reaching out, SHERO! We've received your message. Select an option below, or simply type your question and a human agent will assist you.\n\nFor faster replies, you can text our personal number at ${COMPANY_CONTACTS.PHONE_DISPLAY}.`,
+          interactiveButtons: interactiveButtons || [
+            { id: "btn_shop", title: "🛒 Shop Products" },
+            { id: "btn_order", title: "📦 Order Status" },
+            { id: "btn_support", title: "🎫 Support Ticket" }
+          ],
           delay: 2000, // 2 second delay before auto-reply
         });
 
