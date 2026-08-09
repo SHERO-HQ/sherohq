@@ -113,7 +113,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.95, opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            style={{ maxHeight: 'calc(100dvh - 2rem)' }}
+            style={{ maxHeight: "calc(100dvh - 2rem)" }}
             className="relative glass-surface-lg text-foreground w-full max-w-2xl flex flex-col overflow-hidden shadow-xl rounded"
           >
             <div className="flex items-center justify-between p-4 border-b border-black/10 dark:border-white/10 shrink-0">
@@ -139,6 +139,6 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
         </div>
       )}
     </AnimatePresence>,
-    document.body
+    document.body,
   );
 };
