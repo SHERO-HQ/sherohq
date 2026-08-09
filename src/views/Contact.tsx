@@ -21,10 +21,9 @@ const Contact = () => {
         <Particles count={40} color="100, 116, 139" className="opacity-40" />
 
         {/* Single Subtle Background Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-brand-secondary-500/5 dark:bg-brand-secondary-500/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-125 h-125 bg-brand-secondary-500/5 dark:bg-brand-secondary-500/10 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          
           {/* Page Header (always at top) */}
           <m.div
             initial={{ opacity: 0, y: -20 }}
@@ -41,9 +40,8 @@ const Contact = () => {
               <span className="text-brand-secondary-600">Our Experts</span>
             </h1>
             <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed">
-              Tell us your goals and constraints. We will recommend the
-              right mix of products, software, and support for your stage of
-              growth.
+              Tell us your goals and constraints. We will recommend the right
+              mix of products, software, and support for your stage of growth.
             </p>
 
             <div className="flex flex-wrap justify-center gap-3 mt-8">
@@ -107,9 +105,13 @@ const Contact = () => {
                   <Globe2 className="w-16 h-16 text-brand-secondary-500" />
                 </div>
                 <div className="relative z-10">
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-2">Global Presence</h4>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-2">
+                    Global Presence
+                  </h4>
                   <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Headquartered in Tamale, we serve the entire West African region with specialized logistics and on-site technical deployment teams.
+                    Headquartered in Tamale, we serve the entire West African
+                    region with specialized logistics and on-site technical
+                    deployment teams.
                   </p>
                 </div>
               </m.div>
@@ -157,7 +159,9 @@ const Contact = () => {
                 <MessagesSquare className="size-4" />
                 Quick Answers
               </span>
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">Frequently Asked</h2>
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
+                Frequently Asked
+              </h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
                 Common questions before starting a conversation with our team.
               </p>
@@ -197,16 +201,19 @@ const Contact = () => {
 const faqs = [
   {
     question: "How quickly do you ship hardware?",
-    answer: "In-stock enterprise gear typically dispatches within 24-48hrs. Custom configurations or bulk orders may take 5-7 business days."
+    answer:
+      "In-stock enterprise gear typically dispatches within 24-48hrs. Custom configurations or bulk orders may take 5-7 business days.",
   },
   {
     question: "Do you provide on-site support?",
-    answer: "Yes, we offer on-site deployment and maintenance services across various regions in Ghana. Remote support is available globally."
+    answer:
+      "Yes, we offer on-site deployment and maintenance services across various regions in Ghana. Remote support is available globally.",
   },
   {
     question: "Do you offer wholesale pricing?",
-    answer: "Absolutely. Our Solution Partners and bulk purchasers access tiered wholesale rates that scale with volume."
-  }
+    answer:
+      "Absolutely. Our Solution Partners and bulk purchasers access tiered wholesale rates that scale with volume.",
+  },
 ];
 
 const ContactItem = ({

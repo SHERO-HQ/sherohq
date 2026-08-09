@@ -14,8 +14,7 @@ const ParticleField = dynamic(
 import { RocketIcon } from "@/assets/icons/icons";
 import {
   ArrowRight,
-  ShoppingCart,
-  Server
+  ShoppingCart
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -122,6 +121,7 @@ const LandingHero: React.FC = () => {
     .filter(Boolean);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMobile(window.innerWidth < 768);
     const frame = requestAnimationFrame(() => setHeroReady(true));
     return () => cancelAnimationFrame(frame);

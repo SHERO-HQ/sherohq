@@ -4,7 +4,6 @@
  */
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 
-
 export interface AutoReplyConfig {
   enabled: boolean;
   message: string;
@@ -20,7 +19,7 @@ const DEFAULT_AUTO_REPLY: AutoReplyConfig = {
   interactiveButtons: [
     { id: "btn_shop", title: "🛒 Shop Products" },
     { id: "btn_order", title: "📦 Order Status" },
-    { id: "btn_support", title: "🎫 Support Ticket" }
+    { id: "btn_support", title: "🎫 Support Ticket" },
   ],
   delay: 1000, // 1 second delay
 };
@@ -50,23 +49,28 @@ export async function sendAutoReply(
 
     // Check if after 9pm (21:00 GMT) or before 8am (08:00 GMT)
     const hour = new Date().getUTCHours();
-    let currentConfig = { ...config };
-    
+    const currentConfig = { ...config };
+
     if (hour >= 21 || hour < 8) {
       const awayAlert = `🌙 *After Hours Notice*\nThank you for reaching out! Please note it is currently past 9 PM. We'll still receive and redirect your request, but we cannot guarantee a reply after 10 PM. We will get back to you as soon as possible during business hours.\n\n---\n\n`;
       currentConfig.message = awayAlert + currentConfig.message;
-      
+
       // Ensure the "Shop Products" button is available so they can place orders anytime
       if (!currentConfig.interactiveButtons) {
         currentConfig.interactiveButtons = [];
       } else {
         // Clone array to avoid mutating
-        currentConfig.interactiveButtons = [...currentConfig.interactiveButtons];
+        currentConfig.interactiveButtons = [
+          ...currentConfig.interactiveButtons,
+        ];
       }
-      
-      if (!currentConfig.interactiveButtons.find(b => b.id === "btn_shop")) {
+
+      if (!currentConfig.interactiveButtons.find((b) => b.id === "btn_shop")) {
         // If we already have 3 buttons, we have to replace one to make room for shop, or just prepend
-        currentConfig.interactiveButtons.unshift({ id: "btn_shop", title: "🛒 Shop Products" });
+        currentConfig.interactiveButtons.unshift({
+          id: "btn_shop",
+          title: "🛒 Shop Products",
+        });
         if (currentConfig.interactiveButtons.length > 3) {
           currentConfig.interactiveButtons.pop(); // Max 3 buttons allowed by WhatsApp
         }
@@ -79,7 +83,10 @@ export async function sendAutoReply(
       to: senderWaId,
     };
 
-    if (currentConfig.interactiveButtons && currentConfig.interactiveButtons.length > 0) {
+    if (
+      currentConfig.interactiveButtons &&
+      currentConfig.interactiveButtons.length > 0
+    ) {
       body.type = "interactive";
       body.interactive = {
         type: "button",
@@ -142,23 +149,28 @@ export async function sendAutoReply(
 /**
  * Custom auto-reply for specific keywords or interactive button clicks
  */
-export function getSmartReply(customerMessage: string): { message: string; buttons?: { id: string; title: string }[] } | null {
+export function getSmartReply(
+  customerMessage: string,
+): { message: string; buttons?: { id: string; title: string }[] } | null {
   const msg = customerMessage.toLowerCase().trim();
 
   // Handle interactive button IDs explicitly
   if (msg === "btn_shop") {
     return {
-      message: "Awesome! You can browse all our premium tech products right here on our store: https://sherohq.com/shop",
+      message:
+        "Awesome! You can browse all our premium tech products right here on our store: https://sherohq.com/shop",
     };
   }
   if (msg === "btn_support") {
     return {
-      message: "We're here to help! Please reply to this message with a brief description of the issue you're facing, and I will create a support ticket for you.",
+      message:
+        "We're here to help! Please reply to this message with a brief description of the issue you're facing, and I will create a support ticket for you.",
     };
   }
   if (msg === "btn_order") {
     return {
-      message: "I can help you track your order! Please reply to this message with your Order ID.",
+      message:
+        "I can help you track your order! Please reply to this message with your Order ID.",
     };
   }
 
@@ -191,11 +203,10 @@ export function getSmartReply(customerMessage: string): { message: string; butto
       buttons: [
         { id: "btn_shop", title: "🛒 Shop Products" },
         { id: "btn_order", title: "📦 Order Status" },
-        { id: "btn_support", title: "🎫 Support Ticket" }
-      ]
+        { id: "btn_support", title: "🎫 Support Ticket" },
+      ],
     };
   }
 
   return null;
 }
-

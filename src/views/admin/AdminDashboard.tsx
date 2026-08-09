@@ -79,7 +79,6 @@ import { m, useMotionValue, useSpring, useTransform } from "motion/react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { cn } from "@/lib/utils";
 import ActivityFeed from "@/components/admin/ActivityFeed";
-import { displayOrderId } from "@/utils/orderId";
 import { ChartTooltip } from "@/components/admin/ChartTooltip";
 
 
@@ -520,7 +519,7 @@ export default function AdminDashboard() {
               </div>
             </CardHeader>
             <CardContent className="pb-2">
-              <div className="h-[300px] w-full mt-4">
+              <div className="h-75 w-full mt-4">
                 {analyticsLoading ? (
                   <ChartSkeleton />
                 ) : (
@@ -639,7 +638,7 @@ export default function AdminDashboard() {
                 </Link>
               </Button>
             </CardHeader>
-            <div className="overflow-auto max-h-[480px] custom-scrollbar">
+            <div className="overflow-auto max-h-120 custom-scrollbar">
               <table className="w-full text-left border-collapse">
                 <thead className="sticky top-0 z-10 bg-card">
                   <tr className="bg-muted/50">
@@ -854,7 +853,7 @@ export default function AdminDashboard() {
               </div>
             </CardHeader>
             <CardContent className="pt-6">
-              <div className="h-[300px] w-full">
+              <div className="h-75 w-full">
                 {orderStatusLoading ? (
                   <PieSkeleton />
                 ) : (
@@ -888,7 +887,7 @@ export default function AdminDashboard() {
                 <Clock className="w-4 h-4 text-muted-foreground" />
               </div>
             </CardHeader>
-            <CardContent className="pt-6 max-h-[500px] overflow-y-auto custom-scrollbar pr-2">
+            <CardContent className="pt-6 max-h-125 overflow-y-auto custom-scrollbar pr-2">
               <ActivityFeed
                 logs={activityLogs || []}
                 isLoading={activityLoading}

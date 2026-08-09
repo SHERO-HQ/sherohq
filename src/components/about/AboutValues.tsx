@@ -1,6 +1,6 @@
 "use client";
 import { StaggerContainer, StaggerItem } from "@/components/motion/AnimateSection";
-import { Lightbulb, ShieldCheck, Handshake, Rocket, Target, BadgeCheck } from "lucide-react";
+import { Lightbulb, ShieldCheck, Handshake, Target, BadgeCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const values = [

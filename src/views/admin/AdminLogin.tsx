@@ -11,7 +11,6 @@ import {
     Eye,
     EyeOff} from "lucide-react";
 import { getSubdomain } from "@/utils/subdomain";
-import AppImage from "@/components/common/AppImage";
 
 export default function AdminLogin() {
     const { login, isAuthenticated, isLoading: isChecking } = useAdmin();

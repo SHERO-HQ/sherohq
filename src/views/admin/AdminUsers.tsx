@@ -44,7 +44,6 @@ import {
   DropdownMenuItem
 } from "@/components/ui/dropdown-menu";
 import { exportToCSV, exportToExcel, exportToPDF } from "@/utils/exportUtils";
-import { displayOrderId } from "@/utils/orderId";
 import AppImage from "@/components/common/AppImage";
 import type {
   AdminUserListItem,
@@ -593,7 +592,7 @@ const OrderHistoryList = ({ orders }: OrderHistoryListProps) => {
   }
 
   return (
-    <div className="space-y-3 max-h-[350px] overflow-y-auto custom-scrollbar pr-2">
+    <div className="space-y-3 max-h-87.5 overflow-y-auto custom-scrollbar pr-2">
       {orders.slice(0, 5).map((order) => (
         <div
           key={order.id}

@@ -1,21 +1,49 @@
 "use client";
 import { toReadableOrderId } from "@/utils/orderId";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
 
-const PieChart = dynamic(() => import("recharts").then(m => m.PieChart), { ssr: false });
-const Pie = dynamic(() => import("recharts").then(m => m.Pie), { ssr: false });
-const Cell = dynamic(() => import("recharts").then(m => m.Cell), { ssr: false });
-const Legend = dynamic(() => import("recharts").then(m => m.Legend), { ssr: false });
-const Tooltip = dynamic(() => import("recharts").then(m => m.Tooltip), { ssr: false });
-const ResponsiveContainer = dynamic(() => import("recharts").then(m => m.ResponsiveContainer), { ssr: false });
-const LineChart = dynamic(() => import("recharts").then(m => m.LineChart), { ssr: false });
-const Line = dynamic(() => import("recharts").then(m => m.Line), { ssr: false });
-const BarChart = dynamic(() => import("recharts").then(m => m.BarChart), { ssr: false });
-const Bar = dynamic(() => import("recharts").then(m => m.Bar), { ssr: false });
-const XAxis = dynamic(() => import("recharts").then(m => m.XAxis), { ssr: false });
-const YAxis = dynamic(() => import("recharts").then(m => m.YAxis), { ssr: false });
-const CartesianGrid = dynamic(() => import("recharts").then(m => m.CartesianGrid), { ssr: false });
+const PieChart = dynamic(() => import("recharts").then((m) => m.PieChart), {
+  ssr: false,
+});
+const Pie = dynamic(() => import("recharts").then((m) => m.Pie), {
+  ssr: false,
+});
+const Cell = dynamic(() => import("recharts").then((m) => m.Cell), {
+  ssr: false,
+});
+const Legend = dynamic(() => import("recharts").then((m) => m.Legend), {
+  ssr: false,
+});
+const Tooltip = dynamic(() => import("recharts").then((m) => m.Tooltip), {
+  ssr: false,
+});
+const ResponsiveContainer = dynamic(
+  () => import("recharts").then((m) => m.ResponsiveContainer),
+  { ssr: false },
+);
+const LineChart = dynamic(() => import("recharts").then((m) => m.LineChart), {
+  ssr: false,
+});
+const Line = dynamic(() => import("recharts").then((m) => m.Line), {
+  ssr: false,
+});
+const BarChart = dynamic(() => import("recharts").then((m) => m.BarChart), {
+  ssr: false,
+});
+const Bar = dynamic(() => import("recharts").then((m) => m.Bar), {
+  ssr: false,
+});
+const XAxis = dynamic(() => import("recharts").then((m) => m.XAxis), {
+  ssr: false,
+});
+const YAxis = dynamic(() => import("recharts").then((m) => m.YAxis), {
+  ssr: false,
+});
+const CartesianGrid = dynamic(
+  () => import("recharts").then((m) => m.CartesianGrid),
+  { ssr: false },
+);
 import {
   type AdminStats,
   type AnalyticsData,
@@ -48,7 +76,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { displayOrderId } from "@/utils/orderId";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 
 interface StatCardProps {
@@ -87,7 +114,6 @@ const getOrderStatusStyles = (status: string) => {
   }
 };
 
-
 import { ChartTooltip } from "@/components/admin/ChartTooltip";
 import {
   useDashboardStats,
@@ -104,7 +130,10 @@ const ReportsSkeleton = () => (
     {/* Stats Grid */}
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {new Array(3).fill(0).map((_, i) => (
-        <div key={i} className="bg-card/50 border border-border rounded p-6 flex flex-col gap-3">
+        <div
+          key={i}
+          className="bg-card/50 border border-border rounded p-6 flex flex-col gap-3"
+        >
           <div className="flex items-center gap-4">
             <div className="p-3 rounded bg-accent/50 h-12 w-12" />
             <div className="space-y-2">
@@ -125,7 +154,11 @@ const ReportsSkeleton = () => (
       </div>
       <div className="h-80 bg-accent/50 rounded w-full flex items-end p-4 gap-3">
         {[30, 45, 60, 40, 75, 50, 90, 65, 80, 55].map((h, index) => (
-          <div key={index} className="flex-1 bg-accent/50 rounded-t" style={{ height: `${h}%` }} />
+          <div
+            key={index}
+            className="flex-1 bg-accent/50 rounded-t"
+            style={{ height: `${h}%` }}
+          />
         ))}
       </div>
     </div>
@@ -133,7 +166,10 @@ const ReportsSkeleton = () => (
     {/* Three Pie/Bar columns */}
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {new Array(3).fill(0).map((_, i) => (
-        <div key={i} className="bg-card/50 border border-border rounded p-6 space-y-6">
+        <div
+          key={i}
+          className="bg-card/50 border border-border rounded p-6 space-y-6"
+        >
           <div className="h-5 w-36 bg-accent/50 rounded" />
           <div className="h-48 bg-accent/50 rounded flex items-center justify-center">
             {i < 2 ? (
@@ -141,7 +177,11 @@ const ReportsSkeleton = () => (
             ) : (
               <div className="w-full h-full flex items-end p-4 gap-2">
                 {[40, 70, 50, 90].map((h, idx) => (
-                  <div key={idx} className="flex-1 bg-accent/50 rounded-t" style={{ height: `${h}%` }} />
+                  <div
+                    key={idx}
+                    className="flex-1 bg-accent/50 rounded-t"
+                    style={{ height: `${h}%` }}
+                  />
                 ))}
               </div>
             )}
@@ -172,15 +212,34 @@ export default function AdminReports() {
       ? format(customRange.to, "yyyy-MM-dd")
       : undefined;
 
-  const { data: statsData, isLoading: statsLoading } = useDashboardStats(startDate, endDate);
-  const { data: analyticsData, isLoading: analyticsLoading } = useAnalytics(range, startDate, endDate);
-  const { data: topData, isLoading: topLoading } = useTopProducts(startDate, endDate);
+  const { data: statsData, isLoading: statsLoading } = useDashboardStats(
+    startDate,
+    endDate,
+  );
+  const { data: analyticsData, isLoading: analyticsLoading } = useAnalytics(
+    range,
+    startDate,
+    endDate,
+  );
+  const { data: topData, isLoading: topLoading } = useTopProducts(
+    startDate,
+    endDate,
+  );
   const { data: stockData, isLoading: stockLoading } = useStockDistribution();
-  const { data: orderStatusData, isLoading: orderStatusLoading } = useOrderStatusDistribution(startDate, endDate);
+  const { data: orderStatusData, isLoading: orderStatusLoading } =
+    useOrderStatusDistribution(startDate, endDate);
   const { data: recentData, isLoading: recentLoading } = useRecentOrders();
-  const { data: regionalDataApi, isLoading: regionalLoading } = useRegionalReport(startDate, endDate);
+  const { data: regionalDataApi, isLoading: regionalLoading } =
+    useRegionalReport(startDate, endDate);
 
-  const isLoading = statsLoading || analyticsLoading || topLoading || stockLoading || orderStatusLoading || recentLoading || regionalLoading;
+  const isLoading =
+    statsLoading ||
+    analyticsLoading ||
+    topLoading ||
+    stockLoading ||
+    orderStatusLoading ||
+    recentLoading ||
+    regionalLoading;
 
   const stats = statsData || null;
   const analytics = Array.isArray(analyticsData) ? analyticsData : [];
@@ -225,10 +284,11 @@ export default function AdminReports() {
 
   const getSubtext = (period: typeof kpiPeriod) => {
     if (period === "custom" && customRange?.from) {
-      return `${format(customRange.from, "MMM d")} - ${customRange.to
-        ? format(customRange.to, "MMM d")
-        : format(customRange.from, "MMM d")
-        }`;
+      return `${format(customRange.from, "MMM d")} - ${
+        customRange.to
+          ? format(customRange.to, "MMM d")
+          : format(customRange.from, "MMM d")
+      }`;
     }
     return `vs prev ${period === "today" ? "day" : period}`;
   };
@@ -283,7 +343,7 @@ export default function AdminReports() {
                     className={cn(
                       "bg-muted/50 border-border text-muted-foreground hover:text-foreground h-9",
                       range === "custom" &&
-                      "bg-accent text-foreground border-brand-secondary-500/50",
+                        "bg-accent text-foreground border-brand-secondary-500/50",
                     )}
                     onClick={() => setRange("custom")}
                   >
@@ -357,10 +417,11 @@ export default function AdminReports() {
                   key={opt.value}
                   type="button"
                   onClick={() => setKpiPeriod(opt.value as KpiPeriod)}
-                  className={`px-3 py-1 text-[10px] font-bold rounded transition ${activeKpiPeriod === opt.value
-                    ? "bg-purple-600 text-foreground shadow"
-                    : "text-muted-foreground hover:text-foreground"
-                    }`}
+                  className={`px-3 py-1 text-[10px] font-bold rounded transition ${
+                    activeKpiPeriod === opt.value
+                      ? "bg-purple-600 text-foreground shadow"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
                 >
                   {opt.label}
                 </button>
@@ -441,8 +502,12 @@ function StatCard({
           <Icon className="w-5 h-5" />
         </div>
         <div>
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{title}</p>
-          <p className="text-xl font-bold text-foreground mt-0.5 tracking-tight">{value}</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            {title}
+          </p>
+          <p className="text-xl font-bold text-foreground mt-0.5 tracking-tight">
+            {value}
+          </p>
         </div>
       </div>
       {trend !== undefined && (
@@ -452,7 +517,9 @@ function StatCard({
           >
             {renderTrendValue()}
           </span>
-          {subtext && <span className="text-xs text-muted-foreground">{subtext}</span>}
+          {subtext && (
+            <span className="text-xs text-muted-foreground">{subtext}</span>
+          )}
         </div>
       )}
     </div>
@@ -479,30 +546,39 @@ function RevenueChartSection({
       <div className="absolute top-6 right-6 bg-muted/80 backdrop-blur-md rounded border border-border p-0.5 flex">
         <button
           onClick={() => setChartType("line")}
-          className={`p-1.5 rounded transition-colors ${chartType === "line"
-            ? "bg-accent text-foreground"
-            : "text-muted-foreground hover:text-foreground"
-            }`}
+          className={`p-1.5 rounded transition-colors ${
+            chartType === "line"
+              ? "bg-accent text-foreground"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
           title="Line Chart"
         >
           <LineChartIcon className="w-4 h-4" />
         </button>
         <button
           onClick={() => setChartType("bar")}
-          className={`p-1.5 rounded transition-colors ${chartType === "bar"
-            ? "bg-accent text-foreground"
-            : "text-muted-foreground hover:text-foreground"
-            }`}
+          className={`p-1.5 rounded transition-colors ${
+            chartType === "bar"
+              ? "bg-accent text-foreground"
+              : "text-muted-foreground hover:text-foreground"
+          }`}
           title="Bar Chart"
         >
           <BarChart3 className="w-4 h-4" />
         </button>
       </div>
-      <div className="h-[320px]">
+      <div className="h-80">
         <ResponsiveContainer width="100%" height="100%">
           {chartType === "line" ? (
-            <LineChart data={analytics} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
+            <LineChart
+              data={analytics}
+              margin={{ top: 10, right: 10, left: -15, bottom: 0 }}
+            >
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="#1e293b"
+                vertical={false}
+              />
               <XAxis
                 dataKey="date"
                 stroke="#94a3b8"
@@ -524,7 +600,10 @@ function RevenueChartSection({
                 axisLine={false}
                 tickFormatter={(value: number) => `GHS${value}`}
               />
-              <Tooltip content={<ChartTooltip />} cursor={{ stroke: "rgba(255,255,255,0.05)", strokeWidth: 2 }} />
+              <Tooltip
+                content={<ChartTooltip />}
+                cursor={{ stroke: "rgba(255,255,255,0.05)", strokeWidth: 2 }}
+              />
               <Legend verticalAlign="top" height={36} />
               <Line
                 type="monotone"
@@ -533,7 +612,12 @@ function RevenueChartSection({
                 stroke="#10b981"
                 strokeWidth={2.5}
                 dot={false}
-                activeDot={{ r: 4, stroke: "#10b981", strokeWidth: 2, fill: "#fff" }}
+                activeDot={{
+                  r: 4,
+                  stroke: "#10b981",
+                  strokeWidth: 2,
+                  fill: "#fff",
+                }}
                 isAnimationActive={!prefersReducedMotion}
                 animationDuration={1500}
               />
@@ -544,7 +628,12 @@ function RevenueChartSection({
                 stroke="#ef4444"
                 strokeWidth={2}
                 dot={false}
-                activeDot={{ r: 4, stroke: "#ef4444", strokeWidth: 2, fill: "#fff" }}
+                activeDot={{
+                  r: 4,
+                  stroke: "#ef4444",
+                  strokeWidth: 2,
+                  fill: "#fff",
+                }}
                 isAnimationActive={!prefersReducedMotion}
                 animationDuration={1500}
               />
@@ -555,20 +644,32 @@ function RevenueChartSection({
                 stroke="#3b82f6"
                 strokeWidth={3}
                 dot={false}
-                activeDot={{ r: 5, stroke: "#3b82f6", strokeWidth: 2, fill: "#fff" }}
+                activeDot={{
+                  r: 5,
+                  stroke: "#3b82f6",
+                  strokeWidth: 2,
+                  fill: "#fff",
+                }}
                 isAnimationActive={!prefersReducedMotion}
                 animationDuration={2000}
               />
             </LineChart>
           ) : (
-            <BarChart data={analytics} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+            <BarChart
+              data={analytics}
+              margin={{ top: 10, right: 10, left: -15, bottom: 0 }}
+            >
               <defs>
                 <linearGradient id="colorReportRev" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4} />
                   <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="#1e293b"
+                vertical={false}
+              />
               <XAxis
                 dataKey="date"
                 stroke="#94a3b8"
@@ -590,8 +691,19 @@ function RevenueChartSection({
                 axisLine={false}
                 tickFormatter={(value: number) => `GHS${value}`}
               />
-              <Tooltip content={<ChartTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
-              <Bar dataKey="revenue" fill="url(#colorReportRev)" stroke="#3b82f6" strokeWidth={1} radius={[4, 4, 0, 0]} isAnimationActive={!prefersReducedMotion} animationDuration={1500} />
+              <Tooltip
+                content={<ChartTooltip />}
+                cursor={{ fill: "rgba(255,255,255,0.02)" }}
+              />
+              <Bar
+                dataKey="revenue"
+                fill="url(#colorReportRev)"
+                stroke="#3b82f6"
+                strokeWidth={1}
+                radius={[4, 4, 0, 0]}
+                isAnimationActive={!prefersReducedMotion}
+                animationDuration={1500}
+              />
             </BarChart>
           )}
         </ResponsiveContainer>
@@ -633,7 +745,12 @@ function StockDistributionChart({
                 ? data
                 : [{ name: "No Data", value: 1, color: "#334155" }]
               ).map((entry, index) => (
-                <Cell key={`stock-${entry.name || index}`} fill={entry.color} stroke="rgba(15, 23, 42, 0.5)" strokeWidth={2} />
+                <Cell
+                  key={`stock-${entry.name || index}`}
+                  fill={entry.color}
+                  stroke="rgba(15, 23, 42, 0.5)"
+                  strokeWidth={2}
+                />
               ))}
             </Pie>
             <Tooltip content={<ChartTooltip />} />
@@ -705,7 +822,11 @@ function RegionalSalesChart({ data }: { readonly data: RegionalData[] }) {
       </h3>
       <div className="h-62">
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} layout="vertical" margin={{ top: 0, right: 10, left: -20, bottom: 0 }}>
+          <BarChart
+            data={data}
+            layout="vertical"
+            margin={{ top: 0, right: 10, left: -20, bottom: 0 }}
+          >
             <defs>
               <linearGradient id="colorRegionRev" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
@@ -728,7 +849,10 @@ function RegionalSalesChart({ data }: { readonly data: RegionalData[] }) {
               tickLine={false}
               axisLine={false}
             />
-            <Tooltip content={<ChartTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
+            <Tooltip
+              content={<ChartTooltip />}
+              cursor={{ fill: "rgba(255,255,255,0.02)" }}
+            />
             <Bar
               dataKey="revenue"
               fill="url(#colorRegionRev)"
@@ -754,7 +878,7 @@ function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
         <ShoppingCart className="w-5 h-5 text-blue-400" />
         Recent Orders
       </h3>
-      <div className="space-y-3 max-h-[400px] overflow-y-auto custom-scrollbar pr-2">
+      <div className="space-y-3 max-h-100 overflow-y-auto custom-scrollbar pr-2">
         {orders.length > 0 ? (
           orders.map((order) => (
             <div
@@ -783,13 +907,19 @@ function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
                   {order.status}
                 </span>
                 <span className="font-bold text-brand-secondary-400 text-sm font-mono">
-                  GHS{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  GHS
+                  {order.total.toLocaleString("en-GH", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </span>
               </div>
             </div>
           ))
         ) : (
-          <p className="text-muted-foreground text-center py-4 italic">No orders yet</p>
+          <p className="text-muted-foreground text-center py-4 italic">
+            No orders yet
+          </p>
         )}
       </div>
     </div>
@@ -824,12 +954,18 @@ function TopProducts({ products }: { readonly products: TopProduct[] }) {
               </div>
             </div>
             <span className="font-bold text-brand-secondary-400 text-sm font-mono">
-              GHS{product.revenue.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              GHS
+              {product.revenue.toLocaleString("en-GH", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
             </span>
           </div>
         ))}
         {products.length === 0 && (
-          <p className="text-muted-foreground text-center py-4 italic">No sales data yet</p>
+          <p className="text-muted-foreground text-center py-4 italic">
+            No sales data yet
+          </p>
         )}
       </div>
     </div>

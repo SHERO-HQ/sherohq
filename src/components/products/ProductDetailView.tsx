@@ -28,7 +28,6 @@ import { COMPANY_CONTACTS } from "@/constants/contacts";
 import ProductCard from "./ProductCard";
 import ProductReviews from "./ProductReviews";
 import { WhatsAppIcon } from "@/assets/icons/icons";
-import ShareButton from "@/components/common/ShareButton";
 import AppImage from "@/components/common/AppImage";
 import { formatCurrency } from "@/utils/format";
 import { getAbsoluteUrl } from "@/utils/subdomain";
@@ -51,6 +50,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -622,11 +622,11 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[100] bg-black/95"
+                className="fixed inset-0 z-100 bg-black/95"
                 onClick={() => setIsPreviewOpen(false)}
               >
                 <button
-                  className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded transition-colors z-[110]"
+                  className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded transition-colors z-110"
                   onClick={(e) => { e.stopPropagation(); setIsPreviewOpen(false); }}
                 >
                   <X size={24} />
@@ -652,7 +652,7 @@ const ProductDetailView: React.FC<ProductDetailViewProps> = ({ product }) => {
                 </div>
 
                 {images.length > 1 && (
-                  <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-between px-2 sm:px-8 pointer-events-none z-[110]">
+                  <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-between px-2 sm:px-8 pointer-events-none z-110">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();

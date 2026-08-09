@@ -13,7 +13,7 @@ import {
   Volume2,
   Trash2,
   User,
-  Laptop
+  Laptop,
 } from "lucide-react";
 import { type ChatMessage, sendChatMessageStreaming } from "@/services/ai/chat";
 import Link from "next/link";
@@ -24,8 +24,7 @@ import { Package, Ticket, Calendar, Brain } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDialog } from "@/hooks/useDialog";
 import type { Product } from "@/types/product";
-import AppImage from "@/components/common/AppImage";
-import { } from "@/services/api";
+import {} from "@/services/api";
 import { ChatProductCard } from "./chat/ChatProductCard";
 import { LiveTrackingCard } from "./chat/LiveTrackingCard";
 import { ChatMarkdown } from "./chat/ChatMarkdown";
@@ -41,16 +40,12 @@ type TriggerDetail = {
   open?: boolean;
 };
 
-
-
 const INITIAL_ASSISTANT_MESSAGE: ChatMessage = {
   id: "initial",
   role: "assistant",
   content:
-    "Hi! I'm your Shero Expert. How can I help you with IT solutions or products today?"
+    "Hi! I'm your Shero Expert. How can I help you with IT solutions or products today?",
 };
-
-
 
 export default function AIChatAssistant() {
   const pathname = usePathname();
@@ -123,11 +118,10 @@ export default function AIChatAssistant() {
   useEffect(() => {
     if (!isInitialized.current) return;
     // Strip heavy base64 data (images/audio) before persisting — they've already been sent to the API
-    const lightweight = messages.slice(-15).map(({ imageData, audioData, ...rest }) => rest);
-    localStorage.setItem(
-      "shoro_chat_history",
-      JSON.stringify(lightweight),
-    );
+    const lightweight = messages
+      .slice(-15)
+      .map(({ imageData, audioData, ...rest }) => rest);
+    localStorage.setItem("shoro_chat_history", JSON.stringify(lightweight));
   }, [messages]);
 
   useEffect(() => {
@@ -156,8 +150,6 @@ export default function AIChatAssistant() {
       window.removeEventListener("keydown", handleKeyboardShortcuts);
     };
   }, [isOpen]);
-
-
 
   const speak = useCallback(
     (text: string) => {
@@ -207,28 +199,28 @@ export default function AIChatAssistant() {
             imageData: imageData,
             context: {
               currentPath: pathname || "",
-              cartItemIds: cart.map(item => item.id),
+              cartItemIds: cart.map((item) => item.id),
               sessionId: user?.id || guestId,
-              user: user ? { id: user.id, name: user.name, email: user.email } : null
-            }
+              user: user
+                ? { id: user.id, name: user.name, email: user.email }
+                : null,
+            },
           },
           (chunk) => {
             fullText += chunk;
             setMessages((prev) =>
               prev.map((msg) =>
-                msg.id === assistantMsgId
-                  ? { ...msg, content: fullText }
-                  : msg
-              )
+                msg.id === assistantMsgId ? { ...msg, content: fullText } : msg,
+              ),
             );
-          }
+          },
         );
 
         // Update the final message with metadata (products, actions)
         setMessages((prev) =>
           prev.map((msg) =>
-            msg.id === assistantMsgId ? { ...msg, ...responseMetadata } : msg
-          )
+            msg.id === assistantMsgId ? { ...msg, ...responseMetadata } : msg,
+          ),
         );
 
         if (isSpeaking && fullText) speak(fullText);
@@ -236,7 +228,9 @@ export default function AIChatAssistant() {
         // ELITE: Automatic Cart Addition
         if (responseMetadata.cartProduct) {
           let productToAdd = responseMetadata.recommendedProducts?.find((p) =>
-            p.name.toLowerCase().includes(responseMetadata.cartProduct!.toLowerCase()),
+            p.name
+              .toLowerCase()
+              .includes(responseMetadata.cartProduct!.toLowerCase()),
           );
 
           if (!productToAdd) {
@@ -246,11 +240,16 @@ export default function AIChatAssistant() {
               if (res.ok) {
                 const products: Product[] = await res.json();
                 productToAdd = products.find((p) =>
-                  p.name.toLowerCase().includes(responseMetadata.cartProduct!.toLowerCase())
+                  p.name
+                    .toLowerCase()
+                    .includes(responseMetadata.cartProduct!.toLowerCase()),
                 );
               }
             } catch (e) {
-              console.error("Failed to fetch full catalog for cart addition:", e);
+              console.error(
+                "Failed to fetch full catalog for cart addition:",
+                e,
+              );
             }
           }
 
@@ -261,7 +260,7 @@ export default function AIChatAssistant() {
               price: productToAdd.price,
               image: productToAdd.image,
               category: productToAdd.category,
-              sku: productToAdd.sku
+              sku: productToAdd.sku,
             });
             setIsCartOpen(true);
           }
@@ -274,13 +273,14 @@ export default function AIChatAssistant() {
             id: crypto.randomUUID(),
             role: "assistant",
             content:
-              "I hit a temporary issue while processing that. Please retry in a moment."
+              "I hit a temporary issue while processing that. Please retry in a moment.",
           },
         ]);
       } finally {
         setIsTyping(false);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [addItem, isSpeaking, setIsCartOpen, speak],
   );
 
@@ -412,7 +412,7 @@ export default function AIChatAssistant() {
       recorder.onstop = async () => {
         const duration = Date.now() - recordingStartTimeRef.current;
         const audioBlob = new Blob(audioChunksRef.current, {
-          type: "audio/webm"
+          type: "audio/webm",
         });
 
         /* Recording stopped */
@@ -423,7 +423,9 @@ export default function AIChatAssistant() {
           audioBlob.size < 1000
         ) {
           stream.getTracks().forEach((track) => track.stop());
-          dialog.alert("Audio recording was too short or empty. Please speak a bit longer.");
+          dialog.alert(
+            "Audio recording was too short or empty. Please speak a bit longer.",
+          );
           return;
         }
 
@@ -462,7 +464,7 @@ export default function AIChatAssistant() {
       id: crypto.randomUUID(),
       role: "user",
       content: "[Audio Message]",
-      audioData: audioData
+      audioData: audioData,
     };
 
     // `message` carries the current user turn, so history should include prior turns only.
@@ -484,24 +486,22 @@ export default function AIChatAssistant() {
         {
           message: userMessage.content,
           history: historyForRequest,
-          audioData: audioData
+          audioData: audioData,
         },
         (chunk) => {
           fullText += chunk;
           setMessages((prev) =>
             prev.map((msg) =>
-              msg.id === assistantMsgId
-                ? { ...msg, content: fullText }
-                : msg
-            )
+              msg.id === assistantMsgId ? { ...msg, content: fullText } : msg,
+            ),
           );
-        }
+        },
       );
 
       setMessages((prev) =>
         prev.map((msg) =>
-          msg.id === assistantMsgId ? { ...msg, ...responseMetadata } : msg
-        )
+          msg.id === assistantMsgId ? { ...msg, ...responseMetadata } : msg,
+        ),
       );
 
       if (isSpeaking && fullText) speak(fullText);
@@ -545,11 +545,12 @@ export default function AIChatAssistant() {
             animate={{
               y: 0,
               opacity: 1,
-              scale: 1
+              scale: 1,
             }}
             exit={{ y: 20, opacity: 0, scale: 0.95 }}
-            className={`fixed inset-x-0 bottom-0 sm:inset-auto sm:bottom-6 sm:right-6 z-60 w-full sm:w-100 border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950 flex flex-col overflow-hidden transition-all duration-300 ${isMinimized ? "h-16" : "h-150 sm:h-137.5 sm:rounded"
-              }`}
+            className={`fixed inset-x-0 bottom-0 sm:inset-auto sm:bottom-6 sm:right-6 z-60 w-full sm:w-100 border border-slate-200 dark:border-white/10 bg-white dark:bg-slate-950 flex flex-col overflow-hidden transition-all duration-300 ${
+              isMinimized ? "h-16" : "h-150 sm:h-137.5 sm:rounded"
+            }`}
           >
             {/* Header */}
             <div className="p-4 bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-white/10 flex items-center justify-between shrink-0">
@@ -598,23 +599,22 @@ export default function AIChatAssistant() {
             {/* Quick Actions (Sticky at Top) */}
             {!isMinimized && messages.length <= 1 && (
               <div className="px-4 py-2 flex flex-wrap gap-2 bg-white/50 dark:bg-black/20 border-b border-slate-200 dark:border-white/10 shrink-0">
-                {(
-                  pathname?.includes("/product/")
-                    ? [
+                {(pathname?.includes("/product/")
+                  ? [
                       { label: "Compare with similar products", icon: Brain },
                       { label: "Is this compatible with...", icon: Sparkles },
                     ]
-                    : pathname?.includes("/checkout") || cart.length > 0
-                      ? [
+                  : pathname?.includes("/checkout") || cart.length > 0
+                    ? [
                         { label: "Apply a discount code", icon: Package },
                         { label: "Estimate shipping", icon: Package },
                       ]
-                      : pathname?.includes("/support")
-                        ? [
+                    : pathname?.includes("/support")
+                      ? [
                           { label: "Open a support ticket", icon: Ticket },
                           { label: "Troubleshooting guide", icon: Brain },
                         ]
-                        : [
+                      : [
                           { label: "Track my order", icon: Package },
                           { label: "Book consultation", icon: Calendar },
                           { label: "Fix slow laptop", icon: Laptop },
@@ -628,7 +628,10 @@ export default function AIChatAssistant() {
                     disabled={isTyping}
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-[10px] font-medium text-slate-600 dark:text-slate-400 hover:border-brand-secondary-500 hover:text-brand-secondary-600 transition-all"
                   >
-                    <action.icon size={12} className="text-brand-secondary-500" />
+                    <action.icon
+                      size={12}
+                      className="text-brand-secondary-500"
+                    />
                     {action.label}
                   </button>
                 ))}
@@ -658,9 +661,11 @@ export default function AIChatAssistant() {
                       </div>
 
                       {/* Message Content Container */}
-                      <div className={`flex flex-col gap-2 min-w-0 flex-1 ${msg.role === "user" ? "items-end" : "items-start"}`}>
+                      <div
+                        className={`flex flex-col gap-2 min-w-0 flex-1 ${msg.role === "user" ? "items-end" : "items-start"}`}
+                      >
                         {msg.imageData && (
-                          <div className="relative max-w-[200px] rounded overflow-hidden shadow-sm border border-slate-200/50 dark:border-slate-700/50">
+                          <div className="relative max-w-50 rounded overflow-hidden shadow-sm border border-slate-200/50 dark:border-slate-700/50">
                             <img
                               src={msg.imageData}
                               alt="User uploaded"
@@ -670,15 +675,20 @@ export default function AIChatAssistant() {
                         )}
                         {msg.audioData && (
                           <div className="rounded-full overflow-hidden shadow-sm border border-slate-200/50 dark:border-slate-700/50 bg-slate-100 dark:bg-slate-800 p-1">
-                            <audio controls src={msg.audioData} className="h-9 max-w-[220px]" />
+                            <audio
+                              controls
+                              src={msg.audioData}
+                              className="h-9 max-w-55"
+                            />
                           </div>
                         )}
                         {msg.content && msg.content !== "[Audio Message]" ? (
                           <div
-                            className={`px-4 py-2.5 text-[13px] leading-relaxed shadow-sm ${msg.role === "user"
-                              ? "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-2xl rounded-br-[4px]"
-                              : "bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700/50 text-slate-800 dark:text-slate-200 rounded-2xl rounded-bl-[4px]"
-                              }`}
+                            className={`px-4 py-2.5 text-[13px] leading-relaxed shadow-sm ${
+                              msg.role === "user"
+                                ? "bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-2xl rounded-br-lg"
+                                : "bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700/50 text-slate-800 dark:text-slate-200 rounded-2xl rounded-bl-lg"
+                            }`}
                           >
                             {msg.role === "user" ? (
                               msg.content
@@ -721,8 +731,13 @@ export default function AIChatAssistant() {
                             {msg.supportAction === "ticket" && (
                               <button
                                 onClick={() => {
-                                  setInput("Create ticket - Name: , Email: , Subject: , Message: ");
-                                  setTimeout(() => textInputRef.current?.focus(), 50);
+                                  setInput(
+                                    "Create ticket - Name: , Email: , Subject: , Message: ",
+                                  );
+                                  setTimeout(
+                                    () => textInputRef.current?.focus(),
+                                    50,
+                                  );
                                 }}
                                 className="w-full py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded text-center text-xs font-medium transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
                               >
@@ -780,7 +795,7 @@ export default function AIChatAssistant() {
                                       id: crypto.randomUUID(),
                                       role: "assistant",
                                       content:
-                                        "Glad I could help! Is there anything else you need?"
+                                        "Glad I could help! Is there anything else you need?",
                                     },
                                   ]);
                                 }}
@@ -809,7 +824,10 @@ export default function AIChatAssistant() {
 
                         {/* ELITE: Ticket Tracking Card */}
                         {msg.role === "assistant" && msg.trackTicket && (
-                          <LiveTrackingCard id={msg.trackTicket} type="ticket" />
+                          <LiveTrackingCard
+                            id={msg.trackTicket}
+                            type="ticket"
+                          />
                         )}
 
                         {/* ELITE: Booking Trigger */}
@@ -855,7 +873,9 @@ export default function AIChatAssistant() {
                             <div className="bg-white dark:bg-slate-900/60 p-2.5 rounded border border-emerald-100/50 dark:border-emerald-900/20 text-left flex flex-col gap-1.5 shadow-2xs">
                               <div className="flex justify-between items-start gap-2 border-b border-slate-100 dark:border-slate-800 pb-1.5 mb-0.5">
                                 <div>
-                                  <p className="text-[8px] font-mono text-slate-400 uppercase">Consultation ID</p>
+                                  <p className="text-[8px] font-mono text-slate-400 uppercase">
+                                    Consultation ID
+                                  </p>
                                   <p className="text-[10px] font-bold text-slate-800 dark:text-slate-200 tracking-tighter">
                                     #{msg.bookDirect.id?.slice(0, 8)}
                                   </p>
@@ -866,25 +886,33 @@ export default function AIChatAssistant() {
                               </div>
                               <div className="grid grid-cols-2 gap-2 text-xs">
                                 <div>
-                                  <p className="text-[8px] text-slate-400 uppercase">Service</p>
+                                  <p className="text-[8px] text-slate-400 uppercase">
+                                    Service
+                                  </p>
                                   <p className="font-bold text-slate-800 dark:text-slate-200 leading-tight">
                                     {msg.bookDirect.service}
                                   </p>
                                 </div>
                                 <div>
-                                  <p className="text-[8px] text-slate-400 uppercase">Client</p>
+                                  <p className="text-[8px] text-slate-400 uppercase">
+                                    Client
+                                  </p>
                                   <p className="font-bold text-slate-800 dark:text-slate-200 leading-tight">
                                     {msg.bookDirect.name}
                                   </p>
                                 </div>
                                 <div>
-                                  <p className="text-[8px] text-slate-400 uppercase">Date</p>
+                                  <p className="text-[8px] text-slate-400 uppercase">
+                                    Date
+                                  </p>
                                   <p className="font-semibold text-slate-700 dark:text-slate-300 leading-tight">
                                     {msg.bookDirect.date}
                                   </p>
                                 </div>
                                 <div>
-                                  <p className="text-[8px] text-slate-400 uppercase">Time</p>
+                                  <p className="text-[8px] text-slate-400 uppercase">
+                                    Time
+                                  </p>
                                   <p className="font-semibold text-slate-700 dark:text-slate-300 leading-tight">
                                     {msg.bookDirect.time}
                                   </p>
@@ -908,7 +936,9 @@ export default function AIChatAssistant() {
                             <div className="bg-white dark:bg-slate-900/60 p-2.5 rounded border border-blue-100/50 dark:border-blue-900/20 text-left flex flex-col gap-1.5 shadow-2xs">
                               <div className="flex justify-between items-start gap-2 border-b border-slate-100 dark:border-slate-800 pb-1.5 mb-0.5">
                                 <div>
-                                  <p className="text-[8px] font-mono text-slate-400 uppercase">Ticket Number</p>
+                                  <p className="text-[8px] font-mono text-slate-400 uppercase">
+                                    Ticket Number
+                                  </p>
                                   <p className="text-[10px] font-bold text-slate-800 dark:text-slate-200 tracking-tighter">
                                     #{msg.ticketDirect.ticket_no}
                                   </p>
@@ -919,25 +949,33 @@ export default function AIChatAssistant() {
                               </div>
                               <div className="grid grid-cols-2 gap-2 text-xs">
                                 <div>
-                                  <p className="text-[8px] text-slate-400 uppercase">Subject</p>
+                                  <p className="text-[8px] text-slate-400 uppercase">
+                                    Subject
+                                  </p>
                                   <p className="font-bold text-slate-800 dark:text-slate-200 leading-tight truncate">
                                     {msg.ticketDirect.subject}
                                   </p>
                                 </div>
                                 <div>
-                                  <p className="text-[8px] text-slate-400 uppercase">Category</p>
+                                  <p className="text-[8px] text-slate-400 uppercase">
+                                    Category
+                                  </p>
                                   <p className="font-bold text-slate-800 dark:text-slate-200 leading-tight">
                                     {msg.ticketDirect.category}
                                   </p>
                                 </div>
                                 <div>
-                                  <p className="text-[8px] text-slate-400 uppercase">Created For</p>
+                                  <p className="text-[8px] text-slate-400 uppercase">
+                                    Created For
+                                  </p>
                                   <p className="font-semibold text-slate-700 dark:text-slate-300 leading-tight truncate">
                                     {msg.ticketDirect.name}
                                   </p>
                                 </div>
                                 <div>
-                                  <p className="text-[8px] text-slate-400 uppercase">Priority</p>
+                                  <p className="text-[8px] text-slate-400 uppercase">
+                                    Priority
+                                  </p>
                                   <p className="font-semibold text-slate-700 dark:text-slate-300 leading-tight uppercase">
                                     {msg.ticketDirect.priority}
                                   </p>
@@ -1001,11 +1039,26 @@ export default function AIChatAssistant() {
                             Listening... Speak now
                           </span>
                           <div className="flex items-center gap-0.5 h-4">
-                            <span className="w-0.5 bg-red-550 dark:bg-red-400 rounded-full animate-[pulse_0.8s_infinite]" style={{ height: '50%' }} />
-                            <span className="w-0.5 bg-red-550 dark:bg-red-400 rounded-full animate-[pulse_0.6s_infinite_0.1s]" style={{ height: '90%' }} />
-                            <span className="w-0.5 bg-red-550 dark:bg-red-400 rounded-full animate-[pulse_0.7s_infinite_0.2s]" style={{ height: '30%' }} />
-                            <span className="w-0.5 bg-red-550 dark:bg-red-400 rounded-full animate-[pulse_0.9s_infinite_0.3s]" style={{ height: '70%' }} />
-                            <span className="w-0.5 bg-red-550 dark:bg-red-400 rounded-full animate-[pulse_0.5s_infinite_0.4s]" style={{ height: '40%' }} />
+                            <span
+                              className="w-0.5 bg-red-550 dark:bg-red-400 rounded-full animate-[pulse_0.8s_infinite]"
+                              style={{ height: "50%" }}
+                            />
+                            <span
+                              className="w-0.5 bg-red-550 dark:bg-red-400 rounded-full animate-[pulse_0.6s_infinite_0.1s]"
+                              style={{ height: "90%" }}
+                            />
+                            <span
+                              className="w-0.5 bg-red-550 dark:bg-red-400 rounded-full animate-[pulse_0.7s_infinite_0.2s]"
+                              style={{ height: "30%" }}
+                            />
+                            <span
+                              className="w-0.5 bg-red-550 dark:bg-red-400 rounded-full animate-[pulse_0.9s_infinite_0.3s]"
+                              style={{ height: "70%" }}
+                            />
+                            <span
+                              className="w-0.5 bg-red-550 dark:bg-red-400 rounded-full animate-[pulse_0.5s_infinite_0.4s]"
+                              style={{ height: "40%" }}
+                            />
                           </div>
                         </div>
                       ) : (
@@ -1079,7 +1132,11 @@ export default function AIChatAssistant() {
                       AI can make mistakes. Verify critical specifications.
                     </p>
                     <p className="text-[9px] font-semibold text-slate-400 flex items-center gap-1">
-                      Powered by Gemini <Sparkles size={10} className="text-brand-secondary-400" />
+                      Powered by Gemini{" "}
+                      <Sparkles
+                        size={10}
+                        className="text-brand-secondary-400"
+                      />
                     </p>
                   </div>
                 </div>

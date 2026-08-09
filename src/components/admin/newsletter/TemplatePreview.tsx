@@ -7,7 +7,11 @@ interface TemplatePreviewProps {
   params: string[];
 }
 
-export function TemplatePreview({ channel, content, params }: TemplatePreviewProps) {
+export function TemplatePreview({
+  channel,
+  content,
+  params,
+}: TemplatePreviewProps) {
   // Replace {{1}}, {{2}} with actual params
   let previewContent = content || "";
 
@@ -22,9 +26,16 @@ export function TemplatePreview({ channel, content, params }: TemplatePreviewPro
 
   if (channel === "whatsapp") {
     return (
-      <div className="bg-[#efeae2] p-4 rounded max-w-sm w-full mx-auto shadow-[inset_0_2px_10px_rgba(0,0,0,0.05)] relative overflow-hidden flex flex-col h-[400px] border border-border animate-in fade-in zoom-in-95 duration-300">
+      <div className="bg-[#efeae2] p-4 rounded max-w-sm w-full mx-auto shadow-[inset_0_2px_10px_rgba(0,0,0,0.05)] relative overflow-hidden flex flex-col h-100 border border-border animate-in fade-in zoom-in-95 duration-300">
         {/* WhatsApp Background Pattern */}
-        <div className="absolute inset-0 opacity-[0.06] mix-blend-multiply pointer-events-none" style={{ backgroundImage: 'url("https://w0.peakpx.com/wallpaper/744/545/HD-wallpaper-whatsapp-dark-texture-pattern.jpg")', backgroundSize: 'cover' }}></div>
+        <div
+          className="absolute inset-0 opacity-[0.06] mix-blend-multiply pointer-events-none"
+          style={{
+            backgroundImage:
+              'url("https://w0.peakpx.com/wallpaper/744/545/HD-wallpaper-whatsapp-dark-texture-pattern.jpg")',
+            backgroundSize: "cover",
+          }}
+        ></div>
         {/* Fake WhatsApp Header */}
         <div className="absolute top-0 left-0 right-0 bg-[#005c4b] text-white px-4 py-2 flex items-center gap-3 shadow-md z-10">
           <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
@@ -47,9 +58,11 @@ export function TemplatePreview({ channel, content, params }: TemplatePreviewPro
           {/* Message Bubble */}
           <div className="bg-white rounded rounded-tl-none p-2.5 shadow-sm text-[14px] text-[#111b21] relative max-w-[90%] self-start animate-in slide-in-from-bottom-2 duration-300">
             {/* Bubble Tail */}
-            <div className="absolute top-0 -left-[8px] w-0 h-0 border-[8px] border-transparent border-t-white border-r-white"></div>
+            <div className="absolute top-0 -left-2 w-0 h-0 border-8 border-transparent border-t-white border-r-white"></div>
 
-            <p className="whitespace-pre-wrap leading-snug tracking-tight">{previewContent}</p>
+            <p className="whitespace-pre-wrap leading-snug tracking-tight">
+              {previewContent}
+            </p>
             <div className="text-right mt-1">
               <span className="text-[10px] text-slate-400">
                 {format(new Date(), "HH:mm")}
@@ -65,7 +78,7 @@ export function TemplatePreview({ channel, content, params }: TemplatePreviewPro
     // For email, we might have basic variable replacement if we use {{}} instead of standard EJS or liquid.
     // If the content is HTML, we should render it safely in an iframe or a sanitized div.
     return (
-      <div className="bg-white border border-border rounded shadow-lg overflow-hidden flex flex-col h-[500px] max-w-2xl mx-auto w-full animate-in fade-in zoom-in-95 duration-300">
+      <div className="bg-white border border-border rounded shadow-lg overflow-hidden flex flex-col h-125 max-w-2xl mx-auto w-full animate-in fade-in zoom-in-95 duration-300">
         {/* Fake Email Header */}
         <div className="bg-accent/50 px-4 py-3 border-b border-border flex flex-col gap-2">
           <div className="flex justify-between items-center">
@@ -74,14 +87,21 @@ export function TemplatePreview({ channel, content, params }: TemplatePreviewPro
                 ST
               </div>
               <div className="flex flex-col">
-                <span className="text-sm font-bold text-foreground">SHERO Tech</span>
-                <span className="text-[11px] text-muted-foreground">hello@sherotech.com</span>
+                <span className="text-sm font-bold text-foreground">
+                  SHERO Tech
+                </span>
+                <span className="text-[11px] text-muted-foreground">
+                  hello@sherotech.com
+                </span>
               </div>
             </div>
-            <span className="text-xs text-muted-foreground">{format(new Date(), "MMM d, h:mm a")}</span>
+            <span className="text-xs text-muted-foreground">
+              {format(new Date(), "MMM d, h:mm a")}
+            </span>
           </div>
           <div className="text-sm text-foreground">
-            <span className="text-muted-foreground mr-2">To:</span> customer@example.com
+            <span className="text-muted-foreground mr-2">To:</span>{" "}
+            customer@example.com
           </div>
         </div>
 

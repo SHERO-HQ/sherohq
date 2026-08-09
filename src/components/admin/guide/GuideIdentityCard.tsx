@@ -11,7 +11,7 @@ import dynamic from "next/dynamic";
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), {
   ssr: false,
   loading: () => (
-    <div className="h-[400px] w-full bg-card/50 rounded animate-pulse" />
+    <div className="h-100 w-full bg-card/50 rounded animate-pulse" />
   ),
 });
 
@@ -35,10 +35,12 @@ export default function GuideIdentityCard({
   errors = {},
 }: GuideIdentityCardProps) {
   return (
-    <Card className={cn(
-      "bg-card border border-border p-6 md:p-8 space-y-6 transition-all duration-300",
-      (errors.title || errors.content) && "border-rose-500/30 bg-rose-500/2"
-    )}>
+    <Card
+      className={cn(
+        "bg-card border border-border p-6 md:p-8 space-y-6 transition-all duration-300",
+        (errors.title || errors.content) && "border-rose-500/30 bg-rose-500/2",
+      )}
+    >
       <div className="flex items-center gap-2 pb-2 border-b border-border">
         <FileText className="w-5 h-5 text-brand-secondary-400" />
         <h3 className="text-lg font-bold text-foreground">Guide Content</h3>
@@ -47,7 +49,10 @@ export default function GuideIdentityCard({
       <div className="space-y-6">
         {/* Title */}
         <div className="space-y-2">
-          <Label htmlFor="title" className="text-muted-foreground text-sm font-medium">
+          <Label
+            htmlFor="title"
+            className="text-muted-foreground text-sm font-medium"
+          >
             Guide Title *
           </Label>
           <Input
@@ -57,7 +62,8 @@ export default function GuideIdentityCard({
             placeholder="e.g. How to Install RAM on Enterprise Servers"
             className={cn(
               "bg-muted/50 border-border text-foreground placeholder:text-slate-600 focus-visible:ring-brand-secondary-500",
-              errors.title && "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500"
+              errors.title &&
+                "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500",
             )}
             required
           />
@@ -70,7 +76,10 @@ export default function GuideIdentityCard({
 
         {/* Summary */}
         <div className="space-y-2">
-          <Label htmlFor="summary" className="text-muted-foreground text-sm font-medium">
+          <Label
+            htmlFor="summary"
+            className="text-muted-foreground text-sm font-medium"
+          >
             Summary (Optional)
           </Label>
           <Textarea
@@ -85,13 +94,18 @@ export default function GuideIdentityCard({
 
         {/* Content (Markdown Editor) */}
         <div className="space-y-2" data-color-mode="dark">
-          <Label htmlFor="content" className="text-muted-foreground text-sm font-medium">
+          <Label
+            htmlFor="content"
+            className="text-muted-foreground text-sm font-medium"
+          >
             Detailed Content * (Markdown Supported)
           </Label>
-          <div className={cn(
-            "rounded border border-border overflow-hidden",
-            errors.content && "border-rose-500"
-          )}>
+          <div
+            className={cn(
+              "rounded border border-border overflow-hidden",
+              errors.content && "border-rose-500",
+            )}
+          >
             <MDEditor
               value={content}
               onChange={(val) => onContentChange(val || "")}
@@ -107,7 +121,8 @@ export default function GuideIdentityCard({
           )}
           <p className="text-[11px] text-muted-foreground flex items-center gap-1.5 mt-1">
             <Info className="w-3.5 h-3.5 shrink-0 text-brand-secondary-400" />
-            Markdown layout is active. Use standard markdown symbols like # for titles, ** for bold text.
+            Markdown layout is active. Use standard markdown symbols like # for
+            titles, ** for bold text.
           </p>
         </div>
       </div>

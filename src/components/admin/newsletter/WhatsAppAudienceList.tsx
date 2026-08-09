@@ -65,7 +65,7 @@ export function WhatsAppAudienceList() {
               {filteredContacts.length} total captured contacts
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:max-w-[280px]">
+          <div className="grid grid-cols-1 sm:max-w-70">
             <Input
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
@@ -83,7 +83,7 @@ export function WhatsAppAudienceList() {
             <EmptyState title="No contacts found." />
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[220px] text-sm">
+              <table className="w-full min-w-55 text-sm">
                 <thead>
                   <tr className="border-b border-border text-left text-[11px] uppercase tracking-wide text-muted-foreground">
                     <th className="px-3 py-3 font-semibold">Name</th>

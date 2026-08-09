@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { } from "@/context/AdminContext";
 import { getErrorMessage } from "@/utils/error";
 import {
@@ -8,12 +8,9 @@ import {
   Search,
   Loader2,
   Trash2,
-  Edit2,
   GripVertical,
   Eye,
   EyeOff,
-  CheckCircle2,
-  XCircle,
   Star} from "lucide-react";
 import {
   useAdminTestimonials,
@@ -382,7 +379,7 @@ const AdminTestimonials = () => {
                 setFormData({ ...formData, quote: e.target.value })
               }
               required
-              className="bg-muted border-border min-h-[120px]"
+              className="bg-muted border-border min-h-30"
             />
           </div>
 

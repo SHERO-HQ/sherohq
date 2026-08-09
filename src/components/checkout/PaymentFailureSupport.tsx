@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { WhatsAppIcon } from "@/assets/icons/icons";
-import { displayOrderId } from "@/utils/orderId";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 
 interface PaymentFailureSupportProps {

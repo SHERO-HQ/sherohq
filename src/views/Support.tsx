@@ -9,8 +9,6 @@ import {
   ArrowRight,
   Ticket,
   HeadsetIcon,
-  Sparkles,
-  Frown,
   Meh,
 } from "lucide-react";
 import {
@@ -104,7 +102,7 @@ const Support = () => {
                 <button
                   type="submit"
                   disabled={!searchQuery.trim()}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded bg-gradient-to-r from-brand-secondary-600 to-brand-primary-600 text-white hover:from-brand-secondary-500 hover:to-brand-primary-500 transition shadow disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded bg-linear-to-r from-brand-secondary-600 to-brand-primary-600 text-white hover:from-brand-secondary-500 hover:to-brand-primary-500 transition shadow disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Search or Ask AI"
                 >
                   <ArrowRight className="w-5 h-5" />

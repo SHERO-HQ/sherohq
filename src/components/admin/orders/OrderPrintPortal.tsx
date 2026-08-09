@@ -1,4 +1,3 @@
-import { toReadableOrderId } from "@/utils/orderId";
 import { createPortal } from "react-dom";
 import { type Order } from "@/services/api";
 import { cn } from "@/lib/utils";
@@ -184,7 +183,7 @@ export function OrderPrintPortal({
               {order.items.map((item) => (
                 <tr key={item.id || item.name} className="align-top">
                   <td className="pr-2">
-                    <div className="font-bold truncate max-w-[120px]">
+                    <div className="font-bold truncate max-w-30">
                       {item.name}
                     </div>
                     {item.sku && <div className="text-[9px]">SKU:{item.sku}</div>}

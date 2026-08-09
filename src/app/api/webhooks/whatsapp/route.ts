@@ -39,8 +39,11 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Log webhook event (keep for debugging)
-    console.log("WhatsApp webhook received:", JSON.stringify(body, null, 2));
+    if (process.env.NODE_ENV !== "production") {
+      console.log("WhatsApp webhook received:", {
+        entryCount: Array.isArray(body.entry) ? body.entry.length : 0,
+      });
+    }
 
     // Process messages and status updates
     const { entry } = body;
@@ -91,22 +94,30 @@ async function handleIncomingMessage(msg: any, contact: any) {
     } else if (msg.interactive?.button_reply) {
       content = msg.interactive.button_reply.id;
     } else if (msg.image) {
-      content = msg.image.caption ? `[Sent an Image] ${msg.image.caption}` : `[Sent an Image]`;
+      content = msg.image.caption
+        ? `[Sent an Image] ${msg.image.caption}`
+        : `[Sent an Image]`;
     } else if (msg.video) {
-      content = msg.video.caption ? `[Sent a Video] ${msg.video.caption}` : `[Sent a Video]`;
+      content = msg.video.caption
+        ? `[Sent a Video] ${msg.video.caption}`
+        : `[Sent a Video]`;
     } else if (msg.document) {
-      content = msg.document.caption ? `[Sent a Document] ${msg.document.caption}` : `[Sent a Document]`;
+      content = msg.document.caption
+        ? `[Sent a Document] ${msg.document.caption}`
+        : `[Sent a Document]`;
     } else if (msg.audio) {
       content = `[Sent Audio]`;
     } else if (msg.sticker) {
       content = `[Sent a Sticker]`;
     }
 
-    console.log(
-      `Incoming message from ${senderWaId}: [${messageType}] ${
-        content || "(no text)"
-      }`,
-    );
+    if (process.env.NODE_ENV !== "production") {
+      console.log(
+        `Incoming message from ${senderWaId}: [${messageType}] ${
+          content || "(no text)"
+        }`,
+      );
+    }
 
     // Store message in database
     const storedMsg = await storeIncomingMessage(
@@ -120,7 +131,9 @@ async function handleIncomingMessage(msg: any, contact: any) {
       },
     );
 
-    console.log(`Stored incoming message: ${storedMsg.id}`);
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`Stored incoming message: ${storedMsg.id}`);
+    }
 
     // Extract and upsert contact info
     const contactName = contact?.profile?.name || contact?.name || null;
@@ -131,31 +144,43 @@ async function handleIncomingMessage(msg: any, contact: any) {
     // MULTI-CHANNEL ADMIN ALERTS
     try {
       const { query } = await import("@/lib/db");
-      const recentMsgs = await query(`
+      const recentMsgs = await query(
+        `
         SELECT count(*) FROM whatsapp_messages
         WHERE sender_wa_id = $1 
         AND direction = 'inbound'
         AND created_at > NOW() - INTERVAL '15 minutes'
-      `, [senderWaId]);
+      `,
+        [senderWaId],
+      );
 
       // Only trigger if this is the first message in the last 15 mins (spam prevention)
       if (parseInt(recentMsgs.rows[0].count) <= 1) {
         const { notificationService } = await import("@/lib/notifications");
-        await notificationService.sendNewWhatsAppAlert(
-          contactName || "Customer", 
-          senderWaId, 
-          content || `[Sent a ${messageType}]`
-        ).catch(e => console.error("Failed to send WhatsApp Email Alert", e));
+        await notificationService
+          .sendNewWhatsAppAlert(
+            contactName || "Customer",
+            senderWaId,
+            content || `[Sent a ${messageType}]`,
+          )
+          .catch((e) =>
+            console.error("Failed to send WhatsApp Email Alert", e),
+          );
 
         const adminPhone = process.env.ADMIN_PHONE_NUMBER;
         if (adminPhone) {
-          const { sendWhatsAppMessageDirect } = await import("@/lib/whatsapp-messages");
+          const { sendWhatsAppMessageDirect } =
+            await import("@/lib/whatsapp-messages");
           const alertMessage = `💬 *New WhatsApp Message*\n\n*From:* ${contactName || "Customer"} (https://wa.me/${senderWaId})\n\n"${content || `[Sent a ${messageType}]`}"\n\nReply here: https://admin.sherohq.com/admin/whatsapp`;
           await sendWhatsAppMessageDirect(
             adminPhone,
             alertMessage,
-            null, null, []
-          ).catch(e => console.error("Failed to send WhatsApp Relay Alert", e));
+            null,
+            null,
+            [],
+          ).catch((e) =>
+            console.error("Failed to send WhatsApp Relay Alert", e),
+          );
         }
       }
     } catch (alertError) {
@@ -170,8 +195,11 @@ async function handleIncomingMessage(msg: any, contact: any) {
         const orderId = content.trim();
         const { query } = await import("@/lib/db");
         try {
-          const orderRes = await query(`SELECT status, total, payment_status FROM orders WHERE id = $1`, [orderId]);
-          
+          const orderRes = await query(
+            `SELECT status, total, payment_status FROM orders WHERE id = $1`,
+            [orderId],
+          );
+
           if (orderRes.rows.length > 0) {
             const order = orderRes.rows[0];
             await sendAutoReply(senderWaId, PHONE_NUMBER_ID, {
@@ -205,7 +233,7 @@ async function handleIncomingMessage(msg: any, contact: any) {
           enabled: true,
           message: `🎫 *Support Ticket Created!*\n\nYour issue has been logged. A human agent will review it and reply to you here shortly. Thank you for your patience!`,
         });
-        
+
         await updateWhatsAppContactState(senderWaId, null);
         return; // Stop processing
       }
@@ -220,31 +248,40 @@ async function handleIncomingMessage(msg: any, contact: any) {
       if (content === "btn_order") {
         await updateWhatsAppContactState(senderWaId, "WAITING_FOR_ORDER_ID");
       } else if (content === "btn_support") {
-        await updateWhatsAppContactState(senderWaId, "WAITING_FOR_TICKET_ISSUE");
+        await updateWhatsAppContactState(
+          senderWaId,
+          "WAITING_FOR_TICKET_ISSUE",
+        );
       }
 
       let shouldSendReply = true;
       let isNewConversation = true;
-      
+
       // Only throttle if it's the fallback message (not a smart reply)
       if (!autoReplyText) {
         let isNewThisHour = false;
         try {
           const { query } = await import("@/lib/db");
-          const recent24h = await query(`
+          const recent24h = await query(
+            `
             SELECT count(*) FROM whatsapp_messages
             WHERE sender_wa_id = $1 
             AND direction = 'inbound'
             AND created_at > NOW() - INTERVAL '24 hours'
-          `, [senderWaId]);
-          
-          const recent1h = await query(`
+          `,
+            [senderWaId],
+          );
+
+          const recent1h = await query(
+            `
             SELECT count(*) FROM whatsapp_messages
             WHERE sender_wa_id = $1 
             AND direction = 'inbound'
             AND created_at > NOW() - INTERVAL '1 hour'
-          `, [senderWaId]);
-          
+          `,
+            [senderWaId],
+          );
+
           // If count > 1, they've sent other messages in the last 24 hours besides the one we just stored
           isNewConversation = parseInt(recent24h.rows[0].count) <= 1;
           isNewThisHour = parseInt(recent1h.rows[0].count) <= 1;
@@ -257,7 +294,9 @@ async function handleIncomingMessage(msg: any, contact: any) {
 
         if (!isNewConversation && !(isAfterHours && isNewThisHour)) {
           shouldSendReply = false;
-          console.log(`Skipping fallback auto-reply for ${senderWaId} (active conversation)`);
+          console.log(
+            `Skipping fallback auto-reply for ${senderWaId} (active conversation)`,
+          );
         }
       }
 
@@ -271,7 +310,7 @@ async function handleIncomingMessage(msg: any, contact: any) {
           interactiveButtons: interactiveButtons || [
             { id: "btn_shop", title: "🛒 Shop Products" },
             { id: "btn_order", title: "📦 Order Status" },
-            { id: "btn_support", title: "🎫 Support Ticket" }
+            { id: "btn_support", title: "🎫 Support Ticket" },
           ],
           delay: 2000, // 2 second delay before auto-reply
         });
@@ -354,23 +393,29 @@ import { eq, and } from "drizzle-orm";
 async function handleTemplateStatusUpdate(value: any) {
   try {
     const { message_template_name, message_template_language, event } = value;
-    
+
     if (!message_template_name || !event) return;
 
-    await db.update(campaignTemplates)
+    await db
+      .update(campaignTemplates)
       .set({
         status: event, // APPROVED, REJECTED, PENDING
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       })
       .where(
         and(
           eq(campaignTemplates.name, message_template_name),
-          eq(campaignTemplates.whatsappTemplateLanguage, message_template_language || "en"),
-          eq(campaignTemplates.channel, "whatsapp")
-        )
+          eq(
+            campaignTemplates.whatsappTemplateLanguage,
+            message_template_language || "en",
+          ),
+          eq(campaignTemplates.channel, "whatsapp"),
+        ),
       );
-      
-    console.log(`WhatsApp Template ${message_template_name} status updated to ${event}`);
+
+    console.log(
+      `WhatsApp Template ${message_template_name} status updated to ${event}`,
+    );
   } catch (error) {
     console.error("Failed to update template status from webhook:", error);
   }

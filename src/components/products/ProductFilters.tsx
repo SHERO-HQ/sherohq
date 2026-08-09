@@ -8,7 +8,6 @@ import {
   ArrowRight,
   Star} from "lucide-react";
 import { useState} from "react";
-import type { Category } from "./ProductsCategories";
 import { } from "@/components/ui/button";
 
 export interface FilterState {

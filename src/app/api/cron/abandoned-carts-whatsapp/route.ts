@@ -51,7 +51,9 @@ export async function GET(request: NextRequest) {
       let items = [];
       try {
         items = typeof cart.items === 'string' ? JSON.parse(cart.items) : cart.items;
-      } catch (e) {}
+      } catch (_e) {
+        /* ignore error */
+      }
 
       if (items.length === 0) continue;
 

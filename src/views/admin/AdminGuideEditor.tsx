@@ -38,25 +38,29 @@ const AdminGuideEditor = () => {
   const [coverImage, setCoverImage] = useState("");
   const [published, setPublished] = useState(false);
 
-  const guideDraft = useMemo(() => ({
-    title,
-    summary,
-    content,
-    category,
-    coverImage,
-    published,
-  }), [title, summary, content, category, coverImage, published]);
+  const guideDraft = useMemo(
+    () => ({
+      title,
+      summary,
+      content,
+      category,
+      coverImage,
+      published,
+    }),
+    [title, summary, content, category, coverImage, published],
+  );
 
   const draftKey = `sherotech:admin:guide-editor:v1:${id || "new"}`;
   const { hasDraft, draftSavedAt, persistDraft, clearDraft } = useFormDraft({
     storageKey: draftKey,
     currentData: guideDraft,
-    isMeaningful: (data) => Boolean(
-      data.title.trim() ||
-      data.summary.trim() ||
-      data.content.trim() ||
-      data.coverImage.trim()
-    ),
+    isMeaningful: (data) =>
+      Boolean(
+        data.title.trim() ||
+        data.summary.trim() ||
+        data.content.trim() ||
+        data.coverImage.trim(),
+      ),
     serialize: (data) => JSON.stringify(data),
     deserialize: (text) => JSON.parse(text),
     isLoading,
@@ -70,7 +74,11 @@ const AdminGuideEditor = () => {
     },
   });
 
-  const { isUploading: isUploadingImage, uploadFiles, handleFileChangeEvent: handleImageUpload } = useImageUpload({
+  const {
+    isUploading: isUploadingImage,
+    uploadFiles,
+    handleFileChangeEvent: handleImageUpload,
+  } = useImageUpload({
     maxImages: 1,
     currentImagesCount: coverImage ? 1 : 0,
     onSuccess: (urls) => {
@@ -82,7 +90,11 @@ const AdminGuideEditor = () => {
 
   const handleSaveDraft = () => {
     persistDraft(guideDraft);
-    addNotification("Draft saved", "Your changes were saved locally.", "success");
+    addNotification(
+      "Draft saved",
+      "Your changes were saved locally.",
+      "success",
+    );
   };
 
   const loadGuide = useCallback(
@@ -104,7 +116,11 @@ const AdminGuideEditor = () => {
         }
       } catch (error) {
         console.error("Failed to load guide:", error);
-        addNotification("Error", getErrorMessage(error, "Failed to load guide"), "error");
+        addNotification(
+          "Error",
+          getErrorMessage(error, "Failed to load guide"),
+          "error",
+        );
       } finally {
         setIsLoading(false);
       }
@@ -135,7 +151,7 @@ const AdminGuideEditor = () => {
       addNotification(
         "Validation Error",
         "Please check the highlighted fields on the form",
-        "error"
+        "error",
       );
 
       // Smoothly scroll to the first element with an error
@@ -179,7 +195,11 @@ const AdminGuideEditor = () => {
       router.push("/admin/guides");
     } catch (error) {
       console.error("Failed to save guide:", error);
-      addNotification("Error", getErrorMessage(error, "Failed to save guide"), "error");
+      addNotification(
+        "Error",
+        getErrorMessage(error, "Failed to save guide"),
+        "error",
+      );
     } finally {
       setIsSaving(false);
     }
@@ -191,10 +211,12 @@ const AdminGuideEditor = () => {
 
   if (isLoading)
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center min-h-100">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-brand-secondary-500 border-t-transparent rounded-full animate-spin" />
-          <p className="text-muted-foreground font-medium">Loading guide editor...</p>
+          <p className="text-muted-foreground font-medium">
+            Loading guide editor...
+          </p>
         </div>
       </div>
     );

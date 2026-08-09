@@ -81,7 +81,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
   const shareLink = getAbsoluteUrl(
     `/shop/${product.slug || product.sku || product.id}`,
   );
-  
+
   const whatsappMessage = encodeURIComponent(
     `Hello Shero, I'm interested in the ${product.name} (${formatCurrency(product.price)}). Here is the link:\n${shareLink}\n\nCould you please provide more details or assist me with the purchase? Thank you!`,
   );
@@ -94,7 +94,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
  dark:bg-white/5 bg-white
  border border-slate-200 dark:border-white/10
  hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30
- hover:-translate-y-[3px] hover:shadow-sm dark:hover:shadow-black/20
+ hover:-translate-y-0.75 hover:shadow-sm dark:hover:shadow-black/20
  transition-all duration-300 ease-out cursor-pointer
  flex flex-col h-full will-change-transform"
       style={{
@@ -136,7 +136,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
               className={isWishlisted ? "fill-current text-red-500" : ""}
             />
           </button>
-          
+
           {/* Secondary Actions - Slide in on Hover (Always visible on mobile) */}
           <div className="flex flex-col gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 translate-x-0 lg:translate-x-4 lg:group-hover:translate-x-0 transition-all duration-300 pointer-events-auto lg:pointer-events-none lg:group-hover:pointer-events-auto">
             <button
@@ -161,12 +161,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
               -{discount}%
             </span>
           )}
-          {product.inStock && typeof product.quantity === "number" && product.quantity > 0 && product.quantity <= 5 && (
-            <span className="px-2.5 py-1 rounded text-[9px] font-bold uppercase tracking-tight bg-amber-500 text-slate-950 flex items-center gap-1 animate-pulse">
-              <Flame size={10} className="fill-current" />
-              Only {product.quantity} left!
-            </span>
-          )}
+          {product.inStock &&
+            typeof product.quantity === "number" &&
+            product.quantity > 0 &&
+            product.quantity <= 5 && (
+              <span className="px-2.5 py-1 rounded text-[9px] font-bold uppercase tracking-tight bg-amber-500 text-slate-950 flex items-center gap-1 animate-pulse">
+                <Flame size={10} className="fill-current" />
+                Only {product.quantity} left!
+              </span>
+            )}
           {!product.inStock && (
             <span className="px-2.5 py-1 rounded text-[9px] font-semibold uppercase tracking-tight bg-slate-900/80 text-white ">
               Sold Out

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import {
   Search,
   Package,
@@ -78,7 +78,7 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
   }, [query]);
 
   // Flatten results for keyboard navigation
-  const flatResults = normalizedResults
+  const flatResults = useMemo(() => normalizedResults
     ? [
         ...normalizedResults.products.map((p: any) => ({
           ...p,
@@ -101,7 +101,7 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
           url: `/admin/inquiries?id=${i.id}`,
         })),
       ]
-    : [];
+    : [], [normalizedResults]);
 
   const handleSelect = useCallback(
     (item: any) => {
@@ -136,6 +136,7 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
     };
 
     window.addEventListener("keydown", handleKeyDown);
+
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, flatResults, selectedIndex, handleSelect, onClose]);
 

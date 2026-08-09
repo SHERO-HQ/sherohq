@@ -108,7 +108,7 @@ export function NewsletterSubscribersTab({
             <EmptyState title="No subscribers found for this filter." />
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[220px] text-sm">
+              <table className="w-full min-w-55 text-sm">
                 <thead>
                   <tr className="border-b border-border text-left text-[11px] uppercase tracking-wide text-muted-foreground">
                     <th className="px-3 py-3 font-semibold">Subscriber</th>

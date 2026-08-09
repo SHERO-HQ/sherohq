@@ -1,6 +1,6 @@
 "use client";
 import { m } from "motion/react";
-import { Shield, Cpu, Headphones, ArrowRight, Quote } from "lucide-react";
+import { Shield, Cpu, Headphones, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import NavLink from "@/components/common/NavLink";
 import { getAbsoluteUrl } from "@/utils/subdomain";
@@ -17,17 +17,20 @@ const pillars = [
   {
     icon: Cpu,
     title: "Hardware",
-    description: "Enterprise-grade laptops, servers, and networking equipment sourced from trusted global partners.",
+    description:
+      "Enterprise-grade laptops, servers, and networking equipment sourced from trusted global partners.",
   },
   {
     icon: Shield,
     title: "Software",
-    description: "Custom-engineered solutions built for your exact workflow, no off-the-shelf compromises.",
+    description:
+      "Custom-engineered solutions built for your exact workflow, no off-the-shelf compromises.",
   },
   {
     icon: Headphones,
     title: "Managed IT",
-    description: "24/7 infrastructure management so your team focuses on growth, not troubleshooting.",
+    description:
+      "24/7 infrastructure management so your team focuses on growth, not troubleshooting.",
   },
 ] as const;
 
@@ -35,7 +38,7 @@ const AboutManifesto = () => {
   return (
     <section className="relative overflow-hidden">
       {/* Dark gradient hero block */}
-      <div className="relative bg-gradient-to-br from-slate-950 via-brand-primary-900 to-slate-950 py-14 sm:pt-28i">
+      <div className="relative bg-linear-to-br from-slate-950 via-brand-primary-900 to-slate-950 py-14 sm:pt-28i">
         {/* Particles */}
         <Particles count={80} color="255, 255, 255" className="opacity-60" />
 
@@ -49,8 +52,8 @@ const AboutManifesto = () => {
         />
 
         {/* Glow orbs */}
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-brand-primary-500/10 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-brand-secondary-500/8 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute top-1/4 left-1/4 w-125 h-125 bg-brand-primary-500/10 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-100 h-100 bg-brand-secondary-500/8 rounded-full blur-[100px] pointer-events-none" />
 
         <div className="container mx-auto px-4 relative z-10">
           <m.div
@@ -76,34 +79,41 @@ const AboutManifesto = () => {
             </m.div> */}
 
             {/* Big quote with decorative marks */}
-            <m.blockquote variants={fadeUp} className="relative text-center pt-4 md:py-16 mx-auto">
+            <m.blockquote
+              variants={fadeUp}
+              className="relative text-center pt-4 md:py-16 mx-auto"
+            >
               {/* Huge background watermark quote */}
               {/* <Quote
                 className="absolute top-0 left-1/2 -translate-x-1/2 size-32 text-brand-primary-400/20 select-none pointer-events-none -z-10"
                 aria-hidden="true"
               /> */}
               <p className="text-3xl lg:text-5xl font-bold leading-[1.2] tracking-tight text-white relative z-10">
-                We don't just build technology. We build {" "}
-                <span className="bg-gradient-to-r from-brand-secondary-400 via-brand-primary-300 to-brand-secondary-400 bg-clip-text text-transparent">
+                We don't just build technology. We build{" "}
+                <span className="bg-linear-to-r from-brand-secondary-400 via-brand-primary-300 to-brand-secondary-400 bg-clip-text text-transparent">
                   what moves businesses forward.
                 </span>
               </p>
             </m.blockquote>
 
-            <m.div variants={fadeUp} className="mt-8 mx-auto max-w-6xl space-y-5">
+            <m.div
+              variants={fadeUp}
+              className="mt-8 mx-auto max-w-6xl space-y-5"
+            >
               <p className="text-base md:text-lg text-slate-300/80 leading-relaxed">
-                They said world-class technology required enormous budgets, complex systems,
-                and impossible trade-offs.
+                They said world-class technology required enormous budgets,
+                complex systems, and impossible trade-offs.
               </p>
 
               <p className="text-base md:text-lg text-slate-300/80 leading-relaxed">
-                We believed there was a better way. So we built SHERO to engineer software,
-                deliver reliable hardware, and provide technology solutions that help
-                businesses innovate, operate efficiently, and grow with confidence.
+                We believed there was a better way. So we built SHERO to
+                engineer software, deliver reliable hardware, and provide
+                technology solutions that help businesses innovate, operate
+                efficiently, and grow with confidence.
               </p>
 
               <p className="text-base text-center md:text-lg text-slate-300/80 leading-relaxed">
-                <span className="bg-gradient-to-r from-brand-secondary-400 to-brand-primary-300 bg-clip-text text-transparent font-bold">
+                <span className="bg-linear-to-r from-brand-secondary-400 to-brand-primary-300 bg-clip-text text-transparent font-bold">
                   Redefining What's Possible.
                 </span>
               </p>
@@ -125,10 +135,17 @@ const AboutManifesto = () => {
             </m.div>
 
             {/* Attribution */}
-            <m.div variants={fadeUp} className="mt-6 flex items-center justify-center gap-3">
-              <span className="text-sm font-bold text-white/60 uppercase tracking-widest">SHERO HQ</span>
+            <m.div
+              variants={fadeUp}
+              className="mt-6 flex items-center justify-center gap-3"
+            >
+              <span className="text-sm font-bold text-white/60 uppercase tracking-widest">
+                SHERO HQ
+              </span>
               <span className="text-sm text-white/30 font-mono">·</span>
-              <span className="text-sm text-white/40 font-mono">Establishing the Standard</span>
+              <span className="text-sm text-white/40 font-mono">
+                Establishing the Standard
+              </span>
             </m.div>
           </m.div>
         </div>
@@ -156,8 +173,12 @@ const AboutManifesto = () => {
                 <div className="inline-flex items-center justify-center size-14 rounded bg-brand-primary-50 dark:bg-brand-primary-900/20 border border-brand-primary-100 dark:border-brand-primary-800 mb-5 group-hover:scale-110 transition-transform duration-300">
                   <pillar.icon className="size-6 text-brand-primary-600 dark:text-brand-primary-400" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">{pillar.title}</h3>
-                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{pillar.description}</p>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">
+                  {pillar.title}
+                </h3>
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                  {pillar.description}
+                </p>
               </m.div>
             ))}
           </m.div>

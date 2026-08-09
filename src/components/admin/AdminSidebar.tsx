@@ -23,7 +23,6 @@ import {
   Brain,
   Download,
   Megaphone,
-  MessageSquare,
   BriefcaseBusiness,
   ShieldCheck,
   ChevronDown,
@@ -324,7 +323,7 @@ const AdminSidebar = memo(({ isOpen, setIsOpen }: Readonly<SidebarProps>) => {
                     </button>
                   ) : (
                     <div className="w-full flex justify-center py-2 mb-1">
-                      <div className="h-[1px] w-8 bg-border" />
+                      <div className="h-px w-8 bg-border" />
                     </div>
                   )}
 

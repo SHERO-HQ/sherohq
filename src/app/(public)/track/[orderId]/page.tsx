@@ -23,7 +23,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { displayOrderId } from "@/utils/orderId";
 
 type Props = {
   params: Promise<{ orderId: string }>;
@@ -66,6 +65,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
     };
 
     fetchOrder();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId, token]);
 
   const getStatusStep = (status: string) => {

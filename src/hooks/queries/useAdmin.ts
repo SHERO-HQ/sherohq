@@ -15,12 +15,7 @@ import {
   type ActivityLog,
   type RecentOrder,
   type AnalyticsData,
-  type TopProduct,
-  type StockDistribution,
-  type OrderStatusDistribution,
-  type RegionalData,
   fetchAbandonedCarts,
-  type AbandonedCart,
 } from "@/services/api";
 
 export const ADMIN_KEYS = {

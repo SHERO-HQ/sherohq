@@ -25,8 +25,7 @@ import {
   ShoppingBag,
   Printer,
   Loader2,
-  FileText,
-  ChevronLeft} from "lucide-react";
+  FileText} from "lucide-react";
 import { formatCurrency } from "@/utils/format";
 import { Button } from "@/components/ui/button";
 import { } from "@/components/ui/badge";
@@ -34,7 +33,6 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import AppImage from "@/components/common/AppImage";
 import { exportToPDF } from "@/utils/exportUtils";
-import { displayOrderId } from "@/utils/orderId";
 import {
   DropdownMenu,
   DropdownMenuContent,

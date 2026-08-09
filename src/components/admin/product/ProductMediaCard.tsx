@@ -108,8 +108,9 @@ export default function ProductMediaCard({
   };
 
   useEffect(() => {
+    const currentTimers = timersRef.current;
     return () => {
-      Object.values(timersRef.current).forEach(clearTimeout);
+      Object.values(currentTimers).forEach(clearTimeout);
     };
   }, []);
 

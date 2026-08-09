@@ -34,7 +34,7 @@ const LandingEcosystem = () => {
 
   return (
     <section className="relative w-full overflow-hidden bg-slate-50 py-24 dark:bg-slate-950 border-y border-slate-200/50 dark:border-white/10">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-brand-secondary-500/5 via-transparent to-transparent opacity-50 dark:from-brand-secondary-500/10" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-brand-secondary-500/5 via-transparent to-transparent opacity-50 dark:from-brand-secondary-500/10" />
 
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center mb-16 sm:mb-24">
@@ -54,8 +54,8 @@ const LandingEcosystem = () => {
             transition={{ delay: 0.1 }}
             className="text-2xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white"
           >
-            Why split vendors when you can have{" "} <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary-600 to-brand-secondary-500 dark:from-brand-primary-400 dark:to-brand-secondary-400">
+            Why split vendors when you can have <br />
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-600 to-brand-secondary-500 dark:from-brand-primary-400 dark:to-brand-secondary-400">
               one unified system?
             </span>
           </m.h2>
@@ -66,44 +66,52 @@ const LandingEcosystem = () => {
             transition={{ delay: 0.2 }}
             className="mt-6 text-sm text-slate-600 dark:text-slate-300 leading-relaxed"
           >
-            Software engineered specifically for the hardware we supply, supported by the team that built it. When every piece works together seamlessly, businesses can move forward faster.
+            Software engineered specifically for the hardware we supply,
+            supported by the team that built it. When every piece works together
+            seamlessly, businesses can move forward faster.
           </m.p>
         </div>
 
         {/* Interconnected Flow */}
-        <div className="relative mx-auto max-w-5xl mt-16 sm:mt-24" ref={containerRef}>
-          
+        <div
+          className="relative mx-auto max-w-5xl mt-16 sm:mt-24"
+          ref={containerRef}
+        >
           {/* Main Line Track (Mobile - Vertical) */}
-          <div 
-            className="md:hidden absolute left-[24px] top-6 bottom-6 w-8 -translate-x-1/2 z-0 pointer-events-none"
+          <div
+            className="md:hidden absolute left-7 top-6 bottom-6 w-8 -translate-x-1/2 z-0 pointer-events-none"
             style={{
-              maskImage: "linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)",
-              WebkitMaskImage: "linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)"
+              maskImage:
+                "linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)",
+              WebkitMaskImage:
+                "linear-gradient(to bottom, transparent, black 10%, black 90%, transparent)",
             }}
           >
             {/* Background Line */}
-            <div className="absolute left-1/2 top-0 bottom-0 w-[3px] -translate-x-1/2 bg-slate-200/70 dark:bg-slate-800/70" />
+            <div className="absolute left-1/2 top-0 bottom-0 w-0.75 -translate-x-1/2 bg-slate-200/70 dark:bg-slate-800/70" />
             {/* Scroll Filling Line */}
             <m.div
               style={{ scaleY: scrollProgress, originY: 0 }}
-              className="absolute left-1/2 top-0 bottom-0 w-[3px] -translate-x-1/2 bg-brand-secondary-500 shadow-[0_0_12px_rgba(56,189,248,0.8)] dark:bg-brand-secondary-400"
+              className="absolute left-1/2 top-0 bottom-0 w-0.75 -translate-x-1/2 bg-brand-secondary-500 shadow-[0_0_12px_rgba(56,189,248,0.8)] dark:bg-brand-secondary-400"
             />
           </div>
 
           {/* Main Line Track (Desktop - Horizontal) */}
-          <div 
-            className="hidden md:block absolute top-[24px] left-[16.66%] right-[16.66%] h-8 -translate-y-1/2 z-0 pointer-events-none"
+          <div
+            className="hidden md:block absolute top-6 left-[16.66%] right-[16.66%] h-8 -translate-y-1/2 z-0 pointer-events-none"
             style={{
-              maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
-              WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)"
+              maskImage:
+                "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+              WebkitMaskImage:
+                "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
             }}
           >
             {/* Background Line */}
-            <div className="absolute top-1/2 left-0 right-0 h-[3px] -translate-y-1/2 bg-slate-200/70 dark:bg-slate-800/70" />
+            <div className="absolute top-1/2 left-0 right-0 h-0.75 -translate-y-1/2 bg-slate-200/70 dark:bg-slate-800/70" />
             {/* Scroll Filling Line */}
             <m.div
               style={{ scaleX: scrollProgress, originX: 0 }}
-              className="absolute top-1/2 left-0 right-0 h-[3px] -translate-y-1/2 bg-brand-secondary-500 shadow-[0_0_12px_rgba(56,189,248,0.8)] dark:bg-brand-secondary-400"
+              className="absolute top-1/2 left-0 right-0 h-0.75 -translate-y-1/2 bg-brand-secondary-500 shadow-[0_0_12px_rgba(56,189,248,0.8)] dark:bg-brand-secondary-400"
             />
           </div>
 
@@ -118,7 +126,11 @@ const LandingEcosystem = () => {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: 0.1 * index, type: "spring", stiffness: 100 }}
+                  transition={{
+                    delay: 0.1 * index,
+                    type: "spring",
+                    stiffness: 100,
+                  }}
                   className="relative flex flex-row md:flex-col items-start md:items-center gap-6"
                 >
                   {/* Icon Node */}

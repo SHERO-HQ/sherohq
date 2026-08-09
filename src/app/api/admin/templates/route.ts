@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { campaignTemplates } from "@/lib/drizzle/schema";
 import { eq, and } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 
 export async function GET(req: NextRequest) {
   try {

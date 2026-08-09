@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useState, useCallback, useMemo, useRef } from "react";
 import { m, AnimatePresence } from "motion/react";
 import { FadeInView } from "@/components/motion/AnimateSection";
 import {
@@ -131,7 +131,7 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
 
             {/* Stack of Cards UI */}
             <div
-              className="relative w-full max-w-lg mx-auto h-[450px] sm:h-[400px] flex items-center justify-center perspective-[1000px]"
+              className="relative w-full max-w-lg mx-auto h-112.5 sm:h-112.4 flex items-center justify-center perspective-[1000px]"
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
@@ -179,7 +179,7 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
                         }}
                         onClick={isFront ? handleNext : undefined}
                       >
-                        <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded border border-slate-200/80 dark:border-slate-800 flex flex-col relative group h-full min-h-[320px]">
+                        <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded border border-slate-200/80 dark:border-slate-800 flex flex-col relative group h-full min-h-80">
                           <div className="absolute top-6 right-6 transition-transform duration-300">
                             <Quote className="size-8 text-brand-secondary-500/20" />
                           </div>

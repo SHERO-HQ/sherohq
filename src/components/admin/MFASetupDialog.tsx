@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Shield, Loader2, CheckCircle2, AlertCircle, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { setupAdminMFA, verifyAdminMFASetup } from "@/services/admin";
-import AppImage from "@/components/common/AppImage";
 
 interface MFASetupDialogProps {
   onSuccess: () => void;

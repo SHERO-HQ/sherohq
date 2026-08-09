@@ -16,32 +16,66 @@ import {
   Loader2,
   Check,
   Send,
-  TrendingUp,
-  MessageCircle,
-  LineChart as LineChartIcon
+  LineChart as LineChartIcon,
 } from "lucide-react";
-import AppImage from "@/components/common/AppImage";
-import { getWhatsAppConfigStatus, getWhatsAppAnalytics } from "@/app/admin/whatsapp/actions";
+import {
+  getWhatsAppConfigStatus,
+  getWhatsAppAnalytics,
+} from "@/app/admin/whatsapp/actions";
 import { formatDistanceToNow } from "date-fns";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useDialog } from "@/hooks/useDialog";
 import dynamic from "next/dynamic";
-const ComposedChart = dynamic(() => import("recharts").then(m => m.ComposedChart), { ssr: false });
-const BarChart = dynamic(() => import("recharts").then(m => m.BarChart), { ssr: false });
-const Bar = dynamic(() => import("recharts").then(m => m.Bar), { ssr: false });
-const XAxis = dynamic(() => import("recharts").then(m => m.XAxis), { ssr: false });
-const YAxis = dynamic(() => import("recharts").then(m => m.YAxis), { ssr: false });
-const CartesianGrid = dynamic(() => import("recharts").then(m => m.CartesianGrid), { ssr: false });
-const Tooltip = dynamic(() => import("recharts").then(m => m.Tooltip), { ssr: false });
-const ResponsiveContainer = dynamic(() => import("recharts").then(m => m.ResponsiveContainer), { ssr: false });
-const LineChart = dynamic(() => import("recharts").then(m => m.LineChart), { ssr: false });
-const Line = dynamic(() => import("recharts").then(m => m.Line), { ssr: false });
-const Legend = dynamic(() => import("recharts").then(m => m.Legend), { ssr: false });
-const PieChart = dynamic(() => import("recharts").then(m => m.PieChart), { ssr: false });
-const Pie = dynamic(() => import("recharts").then(m => m.Pie), { ssr: false });
-const Cell = dynamic(() => import("recharts").then(m => m.Cell), { ssr: false });
+const ComposedChart = dynamic(
+  () => import("recharts").then((m) => m.ComposedChart),
+  { ssr: false },
+);
+const BarChart = dynamic(() => import("recharts").then((m) => m.BarChart), {
+  ssr: false,
+});
+const Bar = dynamic(() => import("recharts").then((m) => m.Bar), {
+  ssr: false,
+});
+const XAxis = dynamic(() => import("recharts").then((m) => m.XAxis), {
+  ssr: false,
+});
+const YAxis = dynamic(() => import("recharts").then((m) => m.YAxis), {
+  ssr: false,
+});
+const CartesianGrid = dynamic(
+  () => import("recharts").then((m) => m.CartesianGrid),
+  { ssr: false },
+);
+const Tooltip = dynamic(() => import("recharts").then((m) => m.Tooltip), {
+  ssr: false,
+});
+const ResponsiveContainer = dynamic(
+  () => import("recharts").then((m) => m.ResponsiveContainer),
+  { ssr: false },
+);
+const LineChart = dynamic(() => import("recharts").then((m) => m.LineChart), {
+  ssr: false,
+});
+const Line = dynamic(() => import("recharts").then((m) => m.Line), {
+  ssr: false,
+});
+const Legend = dynamic(() => import("recharts").then((m) => m.Legend), {
+  ssr: false,
+});
+const PieChart = dynamic(() => import("recharts").then((m) => m.PieChart), {
+  ssr: false,
+});
+const Pie = dynamic(() => import("recharts").then((m) => m.Pie), {
+  ssr: false,
+});
+const Cell = dynamic(() => import("recharts").then((m) => m.Cell), {
+  ssr: false,
+});
 import { ChartTooltip } from "@/components/admin/ChartTooltip";
-import { useWhatsAppSupportTickets, useWhatsAppRetries } from "@/hooks/queries/useAdmin";
+import {
+  useWhatsAppSupportTickets,
+  useWhatsAppRetries,
+} from "@/hooks/queries/useAdmin";
 
 interface SupportTicket {
   id: string;
@@ -80,24 +114,36 @@ export default function WhatsAppDashboard() {
   const [selectedPhone, setSelectedPhone] = useState<string | null>(null);
 
   // Support Tickets States
-  const { data: ticketsData, isLoading: loadingTickets, refetch: refetchTickets } = useWhatsAppSupportTickets(activeTab === "support" ? undefined : false);
+  const {
+    data: ticketsData,
+    isLoading: loadingTickets,
+    refetch: refetchTickets,
+  } = useWhatsAppSupportTickets(activeTab === "support" ? undefined : false);
   const tickets = ticketsData || [];
 
   // Retries Queue States
-  const { data: retriesData, isLoading: loadingRetries, refetch: refetchRetries } = useWhatsAppRetries(activeTab === "retries" ? undefined : false);
+  const {
+    data: retriesData,
+    isLoading: loadingRetries,
+    refetch: refetchRetries,
+  } = useWhatsAppRetries(activeTab === "retries" ? undefined : false);
   const retries = retriesData || [];
   const [triggeringBulk, setTriggeringBulk] = useState(false);
 
   // Analytics States
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(
+    null,
+  );
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
-  const [chartType, setChartType] = useState<"composed" | "line" | "bar">("composed");
+  const [chartType, setChartType] = useState<"composed" | "line" | "bar">(
+    "composed",
+  );
 
   // Settings States
   const [settings, setSettings] = useState({
     autoRetryEnabled: true,
     maxRetryAttempts: 3,
-    retryIntervalMinutes: 15
+    retryIntervalMinutes: 15,
   });
 
   // Settings & Test States
@@ -109,30 +155,37 @@ export default function WhatsAppDashboard() {
 
   useEffect(() => {
     fetch("/api/admin/templates")
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         const t = data.templates || [];
         setDbTemplates(t.filter((x: any) => x.channel === "whatsapp"));
       })
-      .catch(err => console.error("Failed to fetch templates:", err));
+      .catch((err) => console.error("Failed to fetch templates:", err));
   }, []);
 
   const [sendingTest, setSendingTest] = useState(false);
   const [testSuccess, setTestSuccess] = useState<boolean | null>(null);
   const [testError, setTestError] = useState("");
 
-  const handleUpdateTicketStatus = async (ticketId: string, newStatus: string) => {
+  const handleUpdateTicketStatus = async (
+    ticketId: string,
+    newStatus: string,
+  ) => {
     try {
       const res = await fetch("/api/admin/whatsapp/support", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ticketId, status: newStatus })
+        body: JSON.stringify({ ticketId, status: newStatus }),
       });
       const data = await res.json();
       if (data.success) {
         void refetchTickets();
       } else {
-        void dialog.alert({ title: "Update Failed", message: data.error || "Failed to update ticket status", type: "error" });
+        void dialog.alert({
+          title: "Update Failed",
+          message: data.error || "Failed to update ticket status",
+          type: "error",
+        });
       }
     } catch (err) {
       console.error(err);
@@ -144,14 +197,22 @@ export default function WhatsAppDashboard() {
       const res = await fetch("/api/admin/whatsapp/retries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "retry", messageId })
+        body: JSON.stringify({ action: "retry", messageId }),
       });
       const data = await res.json();
       if (data.success) {
-        void dialog.alert({ title: "Success", message: "Retry triggered successfully!", type: "success" });
+        void dialog.alert({
+          title: "Success",
+          message: "Retry triggered successfully!",
+          type: "success",
+        });
         void refetchRetries();
       } else {
-        void dialog.alert({ title: "Retry Failed", message: data.error || "Manual retry failed", type: "error" });
+        void dialog.alert({
+          title: "Retry Failed",
+          message: data.error || "Manual retry failed",
+          type: "error",
+        });
       }
     } catch (err) {
       console.error(err);
@@ -163,7 +224,7 @@ export default function WhatsAppDashboard() {
       const res = await fetch("/api/admin/whatsapp/retries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "cancel", messageId })
+        body: JSON.stringify({ action: "cancel", messageId }),
       });
       const data = await res.json();
       if (data.success) {
@@ -180,14 +241,22 @@ export default function WhatsAppDashboard() {
       const res = await fetch("/api/admin/whatsapp/retries", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "retry_all" })
+        body: JSON.stringify({ action: "retry_all" }),
       });
       const data = await res.json();
       if (data.success) {
-        void dialog.alert({ title: "Bulk Retry Complete", message: `Bulk retry complete. Processed: ${data.processed}, Successful: ${data.successful}, Failed: ${data.failed}`, type: "success" });
+        void dialog.alert({
+          title: "Bulk Retry Complete",
+          message: `Bulk retry complete. Processed: ${data.processed}, Successful: ${data.successful}, Failed: ${data.failed}`,
+          type: "success",
+        });
         void refetchRetries();
       } else {
-        void dialog.alert({ title: "Bulk Retry Failed", message: data.error || "Failed to trigger bulk retries", type: "error" });
+        void dialog.alert({
+          title: "Bulk Retry Failed",
+          message: data.error || "Failed to trigger bulk retries",
+          type: "error",
+        });
       }
     } catch (err) {
       console.error(err);
@@ -215,8 +284,8 @@ export default function WhatsAppDashboard() {
           templateLanguage: testTemplateLang,
           templateParams: testParams
             ? testParams.split(",").map((p) => p.trim())
-            : []
-        })
+            : [],
+        }),
       });
       const data = await res.json();
       if (data.success) {
@@ -239,13 +308,29 @@ export default function WhatsAppDashboard() {
   const renderPriority = (prio: string) => {
     switch (prio) {
       case "urgent":
-        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">Urgent</span>;
+        return (
+          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">
+            Urgent
+          </span>
+        );
       case "high":
-        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">High</span>;
+        return (
+          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+            High
+          </span>
+        );
       case "medium":
-        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">Medium</span>;
+        return (
+          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
+            Medium
+          </span>
+        );
       default:
-        return <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-muted text-muted-foreground border border-border">Low</span>;
+        return (
+          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-muted text-muted-foreground border border-border">
+            Low
+          </span>
+        );
     }
   };
 
@@ -253,11 +338,23 @@ export default function WhatsAppDashboard() {
   const renderStatusBadge = (status: string) => {
     switch (status) {
       case "open":
-        return <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">Open</span>;
+        return (
+          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-rose-500/10 text-rose-400 border border-rose-500/20">
+            Open
+          </span>
+        );
       case "in_progress":
-        return <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">In Progress</span>;
+        return (
+          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            In Progress
+          </span>
+        );
       default:
-        return <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Closed</span>;
+        return (
+          <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            Closed
+          </span>
+        );
     }
   };
 
@@ -297,7 +394,6 @@ export default function WhatsAppDashboard() {
     }
   }, [activeTab]);
 
-
   useEffect(() => {
     if (activeTab === "analytics") {
       setAnalyticsLoading(true);
@@ -324,7 +420,8 @@ export default function WhatsAppDashboard() {
               WhatsApp Automation
             </h1>
             <p className="text-muted-foreground text-sm mt-1">
-              Manage live conversations, track automated delivery retries, resolve customer tickets, and review statistics.
+              Manage live conversations, track automated delivery retries,
+              resolve customer tickets, and review statistics.
             </p>
           </div>
         </div>
@@ -333,7 +430,9 @@ export default function WhatsAppDashboard() {
         <div>
           {/* Mobile Dropdown */}
           <div className="sm:hidden">
-            <label htmlFor="mobile-tabs" className="sr-only">Select a tab</label>
+            <label htmlFor="mobile-tabs" className="sr-only">
+              Select a tab
+            </label>
             <select
               id="mobile-tabs"
               name="mobile-tabs"
@@ -355,10 +454,11 @@ export default function WhatsAppDashboard() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-2 text-xs font-semibold rounded transition-all flex items-center gap-2 ${activeTab === tab.id
-                  ? "bg-brand-secondary-600 text-white shadow-md shadow-brand-secondary-600/10"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                  }`}
+                className={`px-4 py-2 text-xs font-semibold rounded transition-all flex items-center gap-2 ${
+                  activeTab === tab.id
+                    ? "bg-brand-secondary-600 text-white shadow-md shadow-brand-secondary-600/10"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                }`}
               >
                 <tab.icon className="w-4 h-4" />
                 {tab.label}
@@ -381,15 +481,22 @@ export default function WhatsAppDashboard() {
           <div className="bg-card/40 border border-border rounded overflow-hidden backdrop-blur-md">
             <div className="p-6 border-b border-border flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-bold text-foreground">Consultations & Support Tickets</h3>
-                <p className="text-xs text-muted-foreground mt-0.5">Tickets created automatically via inbound customer WhatsApp messages.</p>
+                <h3 className="text-lg font-bold text-foreground">
+                  Consultations & Support Tickets
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Tickets created automatically via inbound customer WhatsApp
+                  messages.
+                </p>
               </div>
               <button
                 onClick={() => refetchTickets()}
                 disabled={loadingTickets}
                 className="text-muted-foreground hover:text-foreground p-2 rounded hover:bg-accent transition-colors disabled:opacity-50 flex items-center gap-1.5 text-xs font-semibold"
               >
-                <RefreshCw className={`w-3.5 h-3.5 ${loadingTickets ? "animate-spin" : ""}`} />
+                <RefreshCw
+                  className={`w-3.5 h-3.5 ${loadingTickets ? "animate-spin" : ""}`}
+                />
                 Refresh
               </button>
             </div>
@@ -401,8 +508,12 @@ export default function WhatsAppDashboard() {
             ) : tickets.length === 0 ? (
               <div className="p-12 text-center text-muted-foreground">
                 <Ticket className="w-12 h-12 mx-auto text-slate-600 mb-3" />
-                <p className="text-sm font-semibold text-foreground mb-1">No Support Tickets Found</p>
-                <p className="text-xs">No active WhatsApp customer inquiries logged currently.</p>
+                <p className="text-sm font-semibold text-foreground mb-1">
+                  No Support Tickets Found
+                </p>
+                <p className="text-xs">
+                  No active WhatsApp customer inquiries logged currently.
+                </p>
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -421,11 +532,20 @@ export default function WhatsAppDashboard() {
                     {tickets.map((t: SupportTicket) => (
                       <tr key={t.id} className="hover:bg-accent transition-all">
                         <td className="px-6 py-4">
-                          <p className="font-semibold text-foreground">{t.customer_name || "WhatsApp Customer"}</p>
-                          <p className="text-xs text-muted-foreground font-mono mt-0.5">{t.customer_phone}</p>
+                          <p className="font-semibold text-foreground">
+                            {t.customer_name || "WhatsApp Customer"}
+                          </p>
+                          <p className="text-xs text-muted-foreground font-mono mt-0.5">
+                            {t.customer_phone}
+                          </p>
                         </td>
                         <td className="px-6 py-4 max-w-xs">
-                          <p className="truncate text-muted-foreground" title={t.message}>{t.message}</p>
+                          <p
+                            className="truncate text-muted-foreground"
+                            title={t.message}
+                          >
+                            {t.message}
+                          </p>
                         </td>
                         <td className="px-6 py-4">
                           {renderPriority(t.priority)}
@@ -434,12 +554,19 @@ export default function WhatsAppDashboard() {
                           {renderStatusBadge(t.status)}
                         </td>
                         <td className="px-6 py-4 text-xs text-muted-foreground">
-                          {formatDistanceToNow(new Date(t.created_at), { addSuffix: true })}
+                          {formatDistanceToNow(new Date(t.created_at), {
+                            addSuffix: true,
+                          })}
                         </td>
                         <td className="px-6 py-4 text-right space-x-2">
                           <select
                             value={t.status}
-                            onChange={(e) => void handleUpdateTicketStatus(t.id, e.target.value)}
+                            onChange={(e) =>
+                              void handleUpdateTicketStatus(
+                                t.id,
+                                e.target.value,
+                              )
+                            }
                             className="bg-card border border-border rounded px-2 py-1 text-xs text-muted-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500"
                           >
                             <option value="open">Open</option>
@@ -470,26 +597,45 @@ export default function WhatsAppDashboard() {
             {/* Quick Actions & Bulk Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md">
-                <h4 className="text-xs font-bold uppercase text-muted-foreground tracking-wider">Bulk Recovery</h4>
-                <p className="text-xs text-muted-foreground mt-1 mb-4">Run the background worker scheduler manually.</p>
+                <h4 className="text-xs font-bold uppercase text-muted-foreground tracking-wider">
+                  Bulk Recovery
+                </h4>
+                <p className="text-xs text-muted-foreground mt-1 mb-4">
+                  Run the background worker scheduler manually.
+                </p>
                 <button
                   onClick={handleRunBulkRetry}
                   disabled={triggeringBulk}
                   className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white py-2 rounded font-semibold text-xs transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  {triggeringBulk ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Play className="w-3.5 h-3.5" />}
+                  {triggeringBulk ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <Play className="w-3.5 h-3.5" />
+                  )}
                   Run Retry Worker
                 </button>
               </div>
 
               {/* Status breakdown */}
               {["pending", "completed", "cancelled", "failed"].map((status) => {
-                const count = retries.filter((r: any) => r.status === status).length;
+                const count = retries.filter(
+                  (r: any) => r.status === status,
+                ).length;
                 return (
-                  <div key={status} className="bg-card/40 border border-border rounded p-6 backdrop-blur-md flex flex-col justify-between">
-                    <h4 className="text-xs font-bold text-muted-foreground tracking-wider capitalize">{status} Retries</h4>
-                    <span className="text-3xl font-extrabold text-foreground mt-4">{count}</span>
-                    <span className="text-[10px] text-muted-foreground mt-1">records in queue</span>
+                  <div
+                    key={status}
+                    className="bg-card/40 border border-border rounded p-6 backdrop-blur-md flex flex-col justify-between"
+                  >
+                    <h4 className="text-xs font-bold text-muted-foreground tracking-wider capitalize">
+                      {status} Retries
+                    </h4>
+                    <span className="text-3xl font-extrabold text-foreground mt-4">
+                      {count}
+                    </span>
+                    <span className="text-[10px] text-muted-foreground mt-1">
+                      records in queue
+                    </span>
                   </div>
                 );
               })}
@@ -499,15 +645,22 @@ export default function WhatsAppDashboard() {
             <div className="bg-card/40 border border-border rounded overflow-hidden backdrop-blur-md">
               <div className="p-6 border-b border-border flex flex-col sm:flex-row items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-bold text-foreground">Message Retry Queue</h3>
-                  <p className="text-xs text-muted-foreground mt-0.5">Logs of failed broadcast template campaigns and their automated recovery logs.</p>
+                  <h3 className="text-lg font-bold text-foreground">
+                    Message Retry Queue
+                  </h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Logs of failed broadcast template campaigns and their
+                    automated recovery logs.
+                  </p>
                 </div>
                 <button
                   onClick={() => refetchRetries()}
                   disabled={loadingRetries}
                   className="text-muted-foreground hover:text-foreground p-2 rounded hover:bg-accent transition-colors disabled:opacity-50 flex items-center gap-1.5 text-xs font-semibold"
                 >
-                  <RefreshCw className={`w-3.5 h-3.5 ${loadingRetries ? "animate-spin" : ""}`} />
+                  <RefreshCw
+                    className={`w-3.5 h-3.5 ${loadingRetries ? "animate-spin" : ""}`}
+                  />
                   Refresh Queue
                 </button>
               </div>
@@ -519,8 +672,12 @@ export default function WhatsAppDashboard() {
               ) : retries.length === 0 ? (
                 <div className="p-12 text-center text-muted-foreground">
                   <Clock className="w-12 h-12 mx-auto text-slate-600 mb-3" />
-                  <p className="text-sm font-semibold text-foreground mb-1">Queue is Empty</p>
-                  <p className="text-xs">No failed campaign messages require retrying currently.</p>
+                  <p className="text-sm font-semibold text-foreground mb-1">
+                    Queue is Empty
+                  </p>
+                  <p className="text-xs">
+                    No failed campaign messages require retrying currently.
+                  </p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -538,12 +695,20 @@ export default function WhatsAppDashboard() {
                     </thead>
                     <tbody className="divide-y divide-white/5 text-sm text-muted-foreground">
                       {retries.map((r: RetryRecord) => (
-                        <tr key={r.id} className="hover:bg-accent transition-all">
+                        <tr
+                          key={r.id}
+                          className="hover:bg-accent transition-all"
+                        >
                           <td className="px-6 py-4 font-mono text-xs font-semibold text-foreground">
                             {r.recipient_phone}
                           </td>
                           <td className="px-6 py-4 max-w-xs">
-                            <p className="truncate text-muted-foreground text-xs" title={r.content}>{r.content || "(no message text)"}</p>
+                            <p
+                              className="truncate text-muted-foreground text-xs"
+                              title={r.content}
+                            >
+                              {r.content || "(no message text)"}
+                            </p>
                           </td>
                           <td className="px-6 py-4 text-xs">
                             {r.retry_count} / {r.max_retries}
@@ -551,21 +716,23 @@ export default function WhatsAppDashboard() {
                           <td className="px-6 py-4 text-xs text-muted-foreground font-mono">
                             {r.status === "pending"
                               ? new Date(r.next_retry_at).toLocaleString()
-                              : "N/A"
-                            }
+                              : "N/A"}
                           </td>
                           <td className="px-6 py-4 max-w-xs text-xs text-rose-300/80 font-mono truncate">
                             {r.last_error || "none"}
                           </td>
                           <td className="px-6 py-4">
-                            <span className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${r.status === "completed"
-                              ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
-                              : r.status === "pending"
-                                ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
-                                : r.status === "cancelled"
-                                  ? "bg-muted text-muted-foreground border-border"
-                                  : "bg-rose-500/10 text-rose-400 border-rose-500/20"
-                              }`}>
+                            <span
+                              className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${
+                                r.status === "completed"
+                                  ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                                  : r.status === "pending"
+                                    ? "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                                    : r.status === "cancelled"
+                                      ? "bg-muted text-muted-foreground border-border"
+                                      : "bg-rose-500/10 text-rose-400 border-rose-500/20"
+                              }`}
+                            >
                               {r.status}
                             </span>
                           </td>
@@ -573,14 +740,18 @@ export default function WhatsAppDashboard() {
                             {r.status === "pending" && (
                               <>
                                 <button
-                                  onClick={() => void handleRetryMessage(r.message_id)}
+                                  onClick={() =>
+                                    void handleRetryMessage(r.message_id)
+                                  }
                                   className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white px-2.5 py-1 rounded text-xs font-semibold transition-colors"
                                   title="Retry right now"
                                 >
                                   Retry Now
                                 </button>
                                 <button
-                                  onClick={() => void handleCancelRetry(r.message_id)}
+                                  onClick={() =>
+                                    void handleCancelRetry(r.message_id)
+                                  }
                                   className="bg-card hover:bg-card border border-border text-muted-foreground hover:text-foreground px-2 py-1 rounded text-xs transition-colors"
                                   title="Cancel future attempts"
                                 >
@@ -599,7 +770,6 @@ export default function WhatsAppDashboard() {
           </div>
         )}
 
-
         {activeTab === "analytics" && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {analyticsLoading || !analyticsData ? (
@@ -614,10 +784,16 @@ export default function WhatsAppDashboard() {
                       <div className="p-2 bg-emerald-500/10 rounded">
                         <MessageSquare className="w-5 h-5 text-emerald-500" />
                       </div>
-                      <h3 className="text-sm font-medium text-muted-foreground">Inbound Messages</h3>
+                      <h3 className="text-sm font-medium text-muted-foreground">
+                        Inbound Messages
+                      </h3>
                     </div>
-                    <div className="text-3xl font-bold text-foreground">{analyticsData.totals.inbound}</div>
-                    <p className="text-xs text-muted-foreground mt-1">Received in last 14 days</p>
+                    <div className="text-3xl font-bold text-foreground">
+                      {analyticsData.totals.inbound}
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Received in last 14 days
+                    </p>
                   </div>
 
                   <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md">
@@ -625,10 +801,16 @@ export default function WhatsAppDashboard() {
                       <div className="p-2 bg-blue-500/10 rounded">
                         <Send className="w-5 h-5 text-blue-500" />
                       </div>
-                      <h3 className="text-sm font-medium text-muted-foreground">Outbound Messages</h3>
+                      <h3 className="text-sm font-medium text-muted-foreground">
+                        Outbound Messages
+                      </h3>
                     </div>
-                    <div className="text-3xl font-bold text-foreground">{analyticsData.totals.outbound}</div>
-                    <p className="text-xs text-muted-foreground mt-1">Sent in last 14 days</p>
+                    <div className="text-3xl font-bold text-foreground">
+                      {analyticsData.totals.outbound}
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Sent in last 14 days
+                    </p>
                   </div>
 
                   <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md">
@@ -636,59 +818,91 @@ export default function WhatsAppDashboard() {
                       <div className="p-2 bg-amber-500/10 rounded">
                         <AlertTriangle className="w-5 h-5 text-amber-500" />
                       </div>
-                      <h3 className="text-sm font-medium text-muted-foreground">Failed Deliveries</h3>
+                      <h3 className="text-sm font-medium text-muted-foreground">
+                        Failed Deliveries
+                      </h3>
                     </div>
-                    <div className="text-3xl font-bold text-foreground">{analyticsData.totals.failedOutbound}</div>
-                    <p className="text-xs text-muted-foreground mt-1">Failed to send in last 14 days</p>
+                    <div className="text-3xl font-bold text-foreground">
+                      {analyticsData.totals.failedOutbound}
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Failed to send in last 14 days
+                    </p>
                   </div>
                 </div>
 
                 <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md">
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="text-lg font-bold text-foreground">Message Volume (Last 14 Days)</h3>
+                    <h3 className="text-lg font-bold text-foreground">
+                      Message Volume (Last 14 Days)
+                    </h3>
                     <div className="flex items-center gap-1 bg-background/50 border border-border p-1 rounded-md">
                       <button
                         onClick={() => setChartType("composed")}
-                        className={`p-1.5 rounded transition-colors ${chartType === "composed"
-                          ? "bg-accent text-foreground"
-                          : "text-muted-foreground hover:text-foreground"
-                          }`}
+                        className={`p-1.5 rounded transition-colors ${
+                          chartType === "composed"
+                            ? "bg-accent text-foreground"
+                            : "text-muted-foreground hover:text-foreground"
+                        }`}
                         title="Mixed Chart"
                       >
                         <BarChart3 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setChartType("line")}
-                        className={`p-1.5 rounded transition-colors ${chartType === "line"
-                          ? "bg-accent text-foreground"
-                          : "text-muted-foreground hover:text-foreground"
-                          }`}
+                        className={`p-1.5 rounded transition-colors ${
+                          chartType === "line"
+                            ? "bg-accent text-foreground"
+                            : "text-muted-foreground hover:text-foreground"
+                        }`}
                         title="Line Chart"
                       >
                         <LineChartIcon className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => setChartType("bar")}
-                        className={`p-1.5 rounded transition-colors ${chartType === "bar"
-                          ? "bg-accent text-foreground"
-                          : "text-muted-foreground hover:text-foreground"
-                          }`}
+                        className={`p-1.5 rounded transition-colors ${
+                          chartType === "bar"
+                            ? "bg-accent text-foreground"
+                            : "text-muted-foreground hover:text-foreground"
+                        }`}
                         title="Bar Chart"
                       >
                         <BarChart3 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
-                  <div className="h-[400px] w-full">
+                  <div className="h-100 w-full">
                     <ResponsiveContainer width="100%" height="100%">
-                      <ComposedChart data={analyticsData.dailyData} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
+                      <ComposedChart
+                        data={analyticsData.dailyData}
+                        margin={{ top: 10, right: 10, left: -15, bottom: 0 }}
+                      >
                         <defs>
-                          <linearGradient id="colorWaOutbound" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4} />
-                            <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.0} />
+                          <linearGradient
+                            id="colorWaOutbound"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                          >
+                            <stop
+                              offset="5%"
+                              stopColor="#3b82f6"
+                              stopOpacity={0.4}
+                            />
+                            <stop
+                              offset="95%"
+                              stopColor="#3b82f6"
+                              stopOpacity={0.0}
+                            />
                           </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
+                        <CartesianGrid
+                          strokeDasharray="3 3"
+                          stroke="#1e293b"
+                          vertical={false}
+                        />
                         <XAxis
                           dataKey="date"
                           stroke="#94a3b8"
@@ -699,7 +913,12 @@ export default function WhatsAppDashboard() {
                             try {
                               // If value is a date string like '2023-10-01'
                               const d = new Date(value);
-                              return isNaN(d.getTime()) ? value : new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(d);
+                              return isNaN(d.getTime())
+                                ? value
+                                : new Intl.DateTimeFormat("en-US", {
+                                    month: "short",
+                                    day: "numeric",
+                                  }).format(d);
                             } catch {
                               return value;
                             }
@@ -711,7 +930,10 @@ export default function WhatsAppDashboard() {
                           tickLine={false}
                           axisLine={false}
                         />
-                        <Tooltip content={<ChartTooltip />} cursor={{ fill: "rgba(255,255,255,0.02)" }} />
+                        <Tooltip
+                          content={<ChartTooltip />}
+                          cursor={{ fill: "rgba(255,255,255,0.02)" }}
+                        />
                         <Legend verticalAlign="top" height={36} />
                         {chartType === "bar" || chartType === "composed" ? (
                           <Bar
@@ -732,7 +954,12 @@ export default function WhatsAppDashboard() {
                             stroke="#3b82f6"
                             strokeWidth={2.5}
                             dot={false}
-                            activeDot={{ r: 4, stroke: "#3b82f6", strokeWidth: 2, fill: "#fff" }}
+                            activeDot={{
+                              r: 4,
+                              stroke: "#3b82f6",
+                              strokeWidth: 2,
+                              fill: "#fff",
+                            }}
                             isAnimationActive={!prefersReducedMotion}
                             animationDuration={1500}
                           />
@@ -757,7 +984,12 @@ export default function WhatsAppDashboard() {
                             stroke="#10b981"
                             strokeWidth={2.5}
                             dot={false}
-                            activeDot={{ r: 4, stroke: "#10b981", strokeWidth: 2, fill: "#fff" }}
+                            activeDot={{
+                              r: 4,
+                              stroke: "#10b981",
+                              strokeWidth: 2,
+                              fill: "#fff",
+                            }}
                             isAnimationActive={!prefersReducedMotion}
                             animationDuration={1500}
                           />
@@ -776,19 +1008,29 @@ export default function WhatsAppDashboard() {
             {/* System Status Credentials */}
             <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md space-y-6">
               <div>
-                <h3 className="text-lg font-bold text-foreground">System Configuration Status</h3>
-                <p className="text-xs text-muted-foreground mt-0.5">Verification of Meta credentials defined in the environment parameters.</p>
+                <h3 className="text-lg font-bold text-foreground">
+                  System Configuration Status
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Verification of Meta credentials defined in the environment
+                  parameters.
+                </p>
               </div>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-3.5 bg-card rounded border border-border">
                   <div>
-                    <h5 className="text-xs font-bold text-foreground">Meta API Token</h5>
-                    <p className="text-[10px] text-muted-foreground font-mono mt-0.5">WHATSAPP_ACCESS_TOKEN</p>
+                    <h5 className="text-xs font-bold text-foreground">
+                      Meta API Token
+                    </h5>
+                    <p className="text-[10px] text-muted-foreground font-mono mt-0.5">
+                      WHATSAPP_ACCESS_TOKEN
+                    </p>
                   </div>
                   {configStatus.loading ? (
                     <span className="flex items-center gap-1 text-xs text-muted-foreground bg-accent px-2.5 py-0.5 rounded border border-border">
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" /> Checking...
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />{" "}
+                      Checking...
                     </span>
                   ) : configStatus.hasAccessToken ? (
                     <span className="flex items-center gap-1 text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
@@ -803,12 +1045,17 @@ export default function WhatsAppDashboard() {
 
                 <div className="flex items-center justify-between p-3.5 bg-card rounded border border-border">
                   <div>
-                    <h5 className="text-xs font-bold text-foreground">Meta Phone Number ID</h5>
-                    <p className="text-[10px] text-muted-foreground font-mono mt-0.5">WHATSAPP_PHONE_NUMBER_ID</p>
+                    <h5 className="text-xs font-bold text-foreground">
+                      Meta Phone Number ID
+                    </h5>
+                    <p className="text-[10px] text-muted-foreground font-mono mt-0.5">
+                      WHATSAPP_PHONE_NUMBER_ID
+                    </p>
                   </div>
                   {configStatus.loading ? (
                     <span className="flex items-center gap-1 text-xs text-muted-foreground bg-accent px-2.5 py-0.5 rounded border border-border">
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" /> Checking...
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />{" "}
+                      Checking...
                     </span>
                   ) : configStatus.hasPhoneNumberId ? (
                     <span className="flex items-center gap-1 text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
@@ -823,8 +1070,12 @@ export default function WhatsAppDashboard() {
 
                 <div className="flex items-center justify-between p-3.5 bg-card rounded border border-border">
                   <div>
-                    <h5 className="text-xs font-bold text-foreground">Incoming Messages Webhook</h5>
-                    <p className="text-[10px] text-muted-foreground font-mono mt-0.5">GET/POST /api/webhooks/whatsapp</p>
+                    <h5 className="text-xs font-bold text-foreground">
+                      Incoming Messages Webhook
+                    </h5>
+                    <p className="text-[10px] text-muted-foreground font-mono mt-0.5">
+                      GET/POST /api/webhooks/whatsapp
+                    </p>
                   </div>
                   <span className="flex items-center gap-1 text-xs text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
                     <CheckCircle className="w-3.5 h-3.5" /> Active
@@ -833,7 +1084,9 @@ export default function WhatsAppDashboard() {
               </div>
 
               <div className="border-t border-border pt-6">
-                <h5 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Meta Webhook Target URL</h5>
+                <h5 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">
+                  Meta Webhook Target URL
+                </h5>
                 <code className="block bg-card p-3 rounded border border-border text-xs text-brand-secondary-400 break-all select-all font-mono">
                   {typeof window !== "undefined"
                     ? `${window.location.origin}/api/webhooks/whatsapp`
@@ -845,14 +1098,23 @@ export default function WhatsAppDashboard() {
             {/* Manual Template Test Form */}
             <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md flex flex-col justify-between">
               <div>
-                <h3 className="text-lg font-bold text-foreground">Dispatch Test Template</h3>
-                <p className="text-xs text-muted-foreground mt-0.5">Send an approved transactional message template to verify API connectivity.</p>
+                <h3 className="text-lg font-bold text-foreground">
+                  Dispatch Test Template
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Send an approved transactional message template to verify API
+                  connectivity.
+                </p>
               </div>
 
               <form onSubmit={handleSendTest} className="space-y-4 my-6">
                 <div>
-                  <label className="block text-xs font-semibold text-muted-foreground mb-1" htmlFor="test-phone-number">
-                    Recipient Phone Number (with country code, e.g. +23354XXXXXXX)
+                  <label
+                    className="block text-xs font-semibold text-muted-foreground mb-1"
+                    htmlFor="test-phone-number"
+                  >
+                    Recipient Phone Number (with country code, e.g.
+                    +23354XXXXXXX)
                   </label>
                   <input
                     id="test-phone-number"
@@ -867,19 +1129,30 @@ export default function WhatsAppDashboard() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-muted-foreground mb-1" htmlFor="test-template-name">
+                    <label
+                      className="block text-xs font-semibold text-muted-foreground mb-1"
+                      htmlFor="test-template-name"
+                    >
                       Template Name
                     </label>
                     <select
                       id="test-template-name"
                       value={testTemplate}
                       onChange={(e) => {
-                        const t = dbTemplates.find((x) => x.name === e.target.value);
+                        const t = dbTemplates.find(
+                          (x) => x.name === e.target.value,
+                        );
                         if (t) {
                           setTestTemplate(t.name);
-                          setTestTemplateLang(t.whatsappTemplateLanguage || "en");
+                          setTestTemplateLang(
+                            t.whatsappTemplateLanguage || "en",
+                          );
                           if (t.expectedParams && t.expectedParams.length > 0) {
-                            setTestParams(t.expectedParams.map((p: string) => `[${p}]`).join(","));
+                            setTestParams(
+                              t.expectedParams
+                                .map((p: string) => `[${p}]`)
+                                .join(","),
+                            );
                           } else {
                             setTestParams("");
                           }
@@ -892,12 +1165,17 @@ export default function WhatsAppDashboard() {
                     >
                       <option value="">-- Select --</option>
                       {dbTemplates.map((t) => (
-                        <option key={t.id} value={t.name}>{t.name} {t.category ? `(${t.category})` : ""}</option>
+                        <option key={t.id} value={t.name}>
+                          {t.name} {t.category ? `(${t.category})` : ""}
+                        </option>
                       ))}
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-muted-foreground mb-1" htmlFor="test-template-params">
+                    <label
+                      className="block text-xs font-semibold text-muted-foreground mb-1"
+                      htmlFor="test-template-params"
+                    >
                       Parameters (CSV)
                     </label>
                     <input
@@ -916,7 +1194,11 @@ export default function WhatsAppDashboard() {
                   disabled={sendingTest}
                   className="w-full bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white py-2.5 rounded font-semibold text-sm transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                 >
-                  {sendingTest ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                  {sendingTest ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Send className="w-4 h-4" />
+                  )}
                   Send Test Template
                 </button>
               </form>
@@ -933,7 +1215,9 @@ export default function WhatsAppDashboard() {
                   <X className="w-4 h-4 shrink-0 mt-0.5" />
                   <div>
                     <p className="font-semibold">Dispatch failed</p>
-                    <p className="mt-0.5 text-rose-300 font-mono text-[10px] break-all">{testError}</p>
+                    <p className="mt-0.5 text-rose-300 font-mono text-[10px] break-all">
+                      {testError}
+                    </p>
                   </div>
                 </div>
               )}

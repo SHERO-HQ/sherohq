@@ -24,9 +24,12 @@ export async function POST(request: NextRequest) {
   try {
     const rawBody = await request.text();
 
-    console.log("[payment:webhook] incoming", {
-      contentLength: rawBody.length,
-      contentType: request.headers.get("content-type")});
+    if (process.env.NODE_ENV !== "production") {
+      console.log("[payment:webhook] incoming", {
+        contentLength: rawBody.length,
+        contentType: request.headers.get("content-type"),
+      });
+    }
 
     const data = JSON.parse(rawBody);
     let status = "";
@@ -56,13 +59,14 @@ export async function POST(request: NextRequest) {
           event: data.event,
           provider: "paystack",
           orderId,
-          paystackStatus: data.data?.status});
+          paystackStatus: data.data?.status,
+        });
       } else {
         // Other Paystack events (e.g. transfer.success) — not relevant
         return new NextResponse("Event ignored", { status: 200 });
       }
 
-    // ── Hubtel webhook ────────────────────────────────────────────────────────
+      // ── Hubtel webhook ────────────────────────────────────────────────────────
     } else if (
       (data.Data?.ClientReference && (data.Status || data.Data?.Status)) ||
       (data.ClientReference && data.Status && !data.event)
@@ -78,23 +82,38 @@ export async function POST(request: NextRequest) {
       const rawStatus = nested?.Status || data.Status;
       status = normalizeHubtelStatus(rawStatus);
 
-      // Log the exact raw payload from Hubtel for UAT verification purposes
-      console.log("[payment:webhook:raw_payload]\n", JSON.stringify(data, null, 2));
+      if (process.env.NODE_ENV !== "production") {
+        console.log("[payment:webhook]", {
+          provider: "hubtel",
+          clientReference: orderId,
+          rawStatus,
+          normalizedStatus: status,
+          checkoutId: nested?.CheckoutId ?? "N/A",
+          salesInvoiceId: nested?.SalesInvoiceId ?? "N/A",
+          amount: nested?.Amount ?? data.Amount ?? "N/A",
+          customerPhone:
+            nested?.CustomerPhoneNumber ?? data.CustomerMsisdn ?? "N/A",
+          paymentType:
+            nested?.PaymentDetails?.PaymentType ?? data.PaymentMethod ?? "N/A",
+          channel: nested?.PaymentDetails?.Channel ?? "N/A",
+          topLevelResponseCode: data.ResponseCode ?? "N/A",
+        });
+      }
 
-      console.log("[payment:webhook]", {
-        provider: "hubtel",
-        clientReference: orderId,
-        rawStatus,
-        normalizedStatus: status,
-        checkoutId: nested?.CheckoutId ?? "N/A",
-        salesInvoiceId: nested?.SalesInvoiceId ?? "N/A",
-        amount: nested?.Amount ?? data.Amount ?? "N/A",
-        customerPhone:
-          nested?.CustomerPhoneNumber ?? data.CustomerMsisdn ?? "N/A",
-        paymentType:
-          nested?.PaymentDetails?.PaymentType ?? data.PaymentMethod ?? "N/A",
-        channel: nested?.PaymentDetails?.Channel ?? "N/A",
-        topLevelResponseCode: data.ResponseCode ?? "N/A"});
+      // console.log("[payment:webhook]", {
+      //   provider: "hubtel",
+      //   clientReference: orderId,
+      //   rawStatus,
+      //   normalizedStatus: status,
+      //   checkoutId: nested?.CheckoutId ?? "N/A",
+      //   salesInvoiceId: nested?.SalesInvoiceId ?? "N/A",
+      //   amount: nested?.Amount ?? data.Amount ?? "N/A",
+      //   customerPhone:
+      //     nested?.CustomerPhoneNumber ?? data.CustomerMsisdn ?? "N/A",
+      //   paymentType:
+      //     nested?.PaymentDetails?.PaymentType ?? data.PaymentMethod ?? "N/A",
+      //   channel: nested?.PaymentDetails?.Channel ?? "N/A",
+      //   topLevelResponseCode: data.ResponseCode ?? "N/A"});
 
       // Server-side verification: confirm with Hubtel's API before trusting the webhook
       if (status === "Success") {
@@ -102,19 +121,27 @@ export async function POST(request: NextRequest) {
         const {
           verified,
           status: confirmedStatus,
-          amount: confirmedAmount} = await verifyHubtelTransaction(orderId, checkoutId);
+          amount: confirmedAmount,
+        } = await verifyHubtelTransaction(orderId, checkoutId);
 
         verifiedAmount = confirmedAmount;
 
-        const hasValidHubtelTokens = Boolean(nested?.CheckoutId || nested?.SalesInvoiceId);
+        const hasValidHubtelTokens = Boolean(
+          nested?.CheckoutId || nested?.SalesInvoiceId,
+        );
 
-        if (!verified && !hasValidHubtelTokens && process.env.NODE_ENV === "production") {
+        if (
+          !verified &&
+          !hasValidHubtelTokens &&
+          process.env.NODE_ENV === "production"
+        ) {
           console.warn("[payment:webhook]", {
             provider: "hubtel",
             orderId,
             event: "verification_mismatch",
             webhookClaimed: "Success",
-            hubtelApiReturned: confirmedStatus});
+            hubtelApiReturned: confirmedStatus,
+          });
           return NextResponse.json(
             { success: false, message: "Transaction verification failed" },
             { status: 200 },
@@ -123,7 +150,8 @@ export async function POST(request: NextRequest) {
       }
     } else {
       console.warn("[payment:webhook] Unknown webhook format received", {
-        keys: Object.keys(data)});
+        keys: Object.keys(data),
+      });
       return new NextResponse("Unknown webhook format", { status: 400 });
     }
 
@@ -132,7 +160,10 @@ export async function POST(request: NextRequest) {
     await client.query("BEGIN");
 
     // Extract UUID if orderId is a UUID, otherwise it's a clientReference
-    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId);
+    const isUUID =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        orderId,
+      );
     const queryCondition = isUUID ? `id = $1` : `"clientReference" = $1`;
 
     const orderRes = await client.query(
@@ -148,7 +179,8 @@ export async function POST(request: NextRequest) {
       console.error("[payment:webhook]", {
         event: "order_not_found",
         provider,
-        clientReference: orderId});
+        clientReference: orderId,
+      });
       return new NextResponse("Order not found", { status: 404 });
     }
 
@@ -164,7 +196,8 @@ export async function POST(request: NextRequest) {
           provider,
           orderId: actualOrderId,
           expected: orderTotal,
-          received: verifiedAmount});
+          received: verifiedAmount,
+        });
         await client.query(
           `INSERT INTO activity_logs (id, action, type, details, "createdAt")
            VALUES ($1, $2, $3, $4, NOW())`,
@@ -207,7 +240,8 @@ export async function POST(request: NextRequest) {
           event: "order_confirmed",
           provider,
           orderId: actualOrderId,
-          newStatus: "processing"});
+          newStatus: "processing",
+        });
 
         // Trigger order confirmation notification
         try {
@@ -230,21 +264,30 @@ export async function POST(request: NextRequest) {
               order.paymentMethod,
             )
             .catch((err) =>
-              console.error("[payment:webhook] Confirmation notification failed:", {
-                orderId: actualOrderId,
-                error: err instanceof Error ? err.message : err}),
+              console.error(
+                "[payment:webhook] Confirmation notification failed:",
+                {
+                  orderId: actualOrderId,
+                  error: err instanceof Error ? err.message : err,
+                },
+              ),
             );
         } catch (err) {
-          console.error("[payment:webhook] Failed to import notificationService:", {
-            orderId: actualOrderId,
-            error: err instanceof Error ? err.message : err});
+          console.error(
+            "[payment:webhook] Failed to import notificationService:",
+            {
+              orderId: actualOrderId,
+              error: err instanceof Error ? err.message : err,
+            },
+          );
         }
       } else {
         console.log("[payment:webhook]", {
           event: "order_already_processed",
           provider,
           orderId: actualOrderId,
-          currentStatus: order.status});
+          currentStatus: order.status,
+        });
       }
     } else {
       // Payment failed / cancelled
@@ -255,7 +298,8 @@ export async function POST(request: NextRequest) {
           event: "failure_skipped_not_pending",
           provider,
           orderId: actualOrderId,
-          currentStatus: order.status});
+          currentStatus: order.status,
+        });
         return new NextResponse("OK", { status: 200 });
       }
 
@@ -281,7 +325,8 @@ export async function POST(request: NextRequest) {
       console.log("[payment:webhook]", {
         event: "payment_failed",
         provider,
-        orderId: actualOrderId});
+        orderId: actualOrderId,
+      });
 
       // Trigger failure notification
       try {
@@ -296,12 +341,17 @@ export async function POST(request: NextRequest) {
           .catch((err) =>
             console.error("[payment:webhook] Failure notification failed:", {
               orderId: actualOrderId,
-              error: err instanceof Error ? err.message : err}),
+              error: err instanceof Error ? err.message : err,
+            }),
           );
       } catch (err) {
-        console.error("[payment:webhook] Failed to import notificationService for failure:", {
-          orderId: actualOrderId,
-          error: err instanceof Error ? err.message : err});
+        console.error(
+          "[payment:webhook] Failed to import notificationService for failure:",
+          {
+            orderId: actualOrderId,
+            error: err instanceof Error ? err.message : err,
+          },
+        );
       }
     }
 
@@ -313,7 +363,8 @@ export async function POST(request: NextRequest) {
       event: "unhandled_error",
       provider,
       orderId,
-      error: error instanceof Error ? error.message : error});
+      error: error instanceof Error ? error.message : error,
+    });
     return new NextResponse("Internal Error", { status: 500 });
   } finally {
     if (client) client.release();

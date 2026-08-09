@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useState, useCallback, useMemo, useRef } from "react";
 import { m, AnimatePresence } from "motion/react";
 import {
   ChevronLeft,
@@ -42,13 +42,21 @@ const staggerContainer = {
   exit: {
     opacity: 0,
     transition: { staggerChildren: 0.05, staggerDirection: -1 as const },
-  }
+  },
 };
 
 const staggerItem = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" as const } },
-  exit: { opacity: 0, y: -20, transition: { duration: 0.4, ease: "easeIn" as const } }
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" as const },
+  },
+  exit: {
+    opacity: 0,
+    y: -20,
+    transition: { duration: 0.4, ease: "easeIn" as const },
+  },
 };
 
 const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
@@ -114,8 +122,10 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
   const currentProduct = spotlightItems[safeCurrentIndex];
 
   return (
-    <section ref={sectionRef} className="relative w-full h-full lg:min-h-[calc(90vh-5rem)] overflow-hidden group/spotlight flex flex-col justify-center pt-5 lg:pt-0">
-
+    <section
+      ref={sectionRef}
+      className="relative w-full h-full lg:min-h-[calc(90vh-5rem)] overflow-hidden group/spotlight flex flex-col justify-center pt-5 lg:pt-0"
+    >
       {/* Immersive Background: Animates based on current product */}
       <AnimatePresence mode="wait">
         <m.div
@@ -151,14 +161,15 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
         >
           <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col items-center w-full max-w-6xl mx-auto">
-
               <div className="flex flex-col-reverse lg:flex-row lg:items-stretch gap-8 lg:gap-12 relative w-full">
-
                 {/* Left Side: Glassmorphic Info Card */}
                 <div className="w-full lg:w-[55%] flex flex-col justify-between p-6 sm:p-10 lg:p-12 bg-white/70 dark:bg-slate-900/60 backdrop-blur-2xl border border-white/40 dark:border-white/10 rounded shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
                   <div className="max-w-xl flex flex-col justify-between h-full">
                     <div>
-                      <m.div variants={staggerItem} className="flex items-center justify-between mb-6">
+                      <m.div
+                        variants={staggerItem}
+                        className="flex items-center justify-between mb-6"
+                      >
                         <div className="inline-flex items-center gap-2 px-3 py-1 text-[10px] font-bold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-900/40 border border-brand-secondary-200 dark:border-brand-secondary-700/50 rounded uppercase tracking-widest shadow-sm">
                           <Star className="size-3 fill-brand-secondary-500 text-brand-secondary-500" />
                           <span>Featured Product</span>
@@ -184,7 +195,11 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                         {currentProduct.name.split(" ").map((word, i) => (
                           <span
                             key={i}
-                            className={i === 0 ? "text-transparent bg-clip-text bg-linear-to-r from-brand-secondary-600 to-brand-primary-600 dark:from-brand-secondary-400 dark:to-brand-primary-400" : ""}
+                            className={
+                              i === 0
+                                ? "text-transparent bg-clip-text bg-linear-to-r from-brand-secondary-600 to-brand-primary-600 dark:from-brand-secondary-400 dark:to-brand-primary-400"
+                                : ""
+                            }
                           >
                             {word}{" "}
                           </span>
@@ -210,8 +225,6 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                             {formatCurrency(currentProduct.price)}
                           </span>
                         </div>
-
-
 
                         <div className="w-full sm:w-auto pointer-events-auto mt-2 sm:mt-0">
                           <Link
@@ -241,10 +254,11 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                                 setCurrentIndex(i);
                                 setIsAutoPlaying(false);
                               }}
-                              className={`h-1.5 transition-all duration-500 rounded ${i === safeCurrentIndex
+                              className={`h-1.5 transition-all duration-500 rounded ${
+                                i === safeCurrentIndex
                                   ? "w-10 bg-brand-secondary-500 shadow-[0_0_10px_rgba(var(--color-brand-secondary-500),0.5)]"
                                   : "w-3 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600"
-                                }`}
+                              }`}
                             />
                           ))}
                         </div>
@@ -278,10 +292,8 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                 </div>
 
                 {/* Right Side: Product Image Card */}
-                <div className="relative w-full lg:w-[45%] h-[35vh] sm:h-[45vh] lg:h-auto min-h-[300px] lg:min-h-[500px] overflow-hidden group/image flex items-center justify-center">
-                  <m.div
-                    className="relative w-full h-full p-8 flex items-center justify-center"
-                  >
+                <div className="relative w-full lg:w-[45%] h-[35vh] sm:h-[45vh] lg:h-auto min-h-75 lg:min-h-125 overflow-hidden group/image flex items-center justify-center">
+                  <m.div className="relative w-full h-full p-8 flex items-center justify-center">
                     <AppImage
                       src={getImageUrl(currentProduct.image)}
                       alt={currentProduct.name}
@@ -301,10 +313,12 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           `/shop/${currentProduct.slug || currentProduct.sku || currentProduct.id}`,
                         );
                         if (navigator.share) {
-                          navigator.share({
-                            title: currentProduct.name,
-                            url: url,
-                          }).catch(() => {});
+                          navigator
+                            .share({
+                              title: currentProduct.name,
+                              url: url,
+                            })
+                            .catch(() => {});
                         } else {
                           navigator.clipboard.writeText(url);
                         }
@@ -318,7 +332,10 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                       onClick={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
-                        window.open(getImageUrl(currentProduct.image), "_blank");
+                        window.open(
+                          getImageUrl(currentProduct.image),
+                          "_blank",
+                        );
                       }}
                       className="p-2.5 rounded-full bg-white/70 dark:bg-slate-900/70 backdrop-blur border border-white/50 dark:border-white/10 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 shadow-lg transition-all hover:scale-110 active:scale-95 pointer-events-auto group/action"
                       title="View full image"
@@ -364,15 +381,15 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                           setCurrentIndex(i);
                           setIsAutoPlaying(false);
                         }}
-                        className={`h-1.5 transition-all duration-500 rounded ${i === safeCurrentIndex
+                        className={`h-1.5 transition-all duration-500 rounded ${
+                          i === safeCurrentIndex
                             ? "w-6 bg-brand-secondary-500"
                             : "w-2 bg-slate-900/20 dark:bg-white/40 hover:bg-slate-900/40 dark:hover:bg-white/60"
-                          }`}
+                        }`}
                       />
                     ))}
                   </div>
                 </div>
-
               </div>
             </div>
           </div>

@@ -1,24 +1,20 @@
 "use client";
 import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { m, AnimatePresence } from "motion/react";
+import { m } from "motion/react";
 import {
   XCircle,
   RefreshCw,
   ArrowRight,
-  ShieldCheck,
   Check,
   TruckElectric,
   ShoppingBag,
-  Loader,
 } from "lucide-react";
 import { trackOrder, type Order } from "@/services/api";
 import { useCart } from "@/context/CartContext";
 import OrderRatingModal from "@/components/checkout/OrderRatingModal";
 import { getOrderAccessToken } from "@/utils/orderAccess";
 import { displayOrderId } from "@/utils/orderId";
-import { WhatsAppIcon } from "@/assets/icons/icons";
-import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { supabase } from "@/lib/supabase";
 import { getPaymentVerificationState } from "@/lib/paymentStatus";
 import { cn } from "@/lib/utils";

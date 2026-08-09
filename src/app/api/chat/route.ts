@@ -13,7 +13,6 @@ import { fetchDynamicCatalogSummary, fetchRecommendedProducts } from "./products
 import {
   type ChatHistoryMessage,
   resolveBudgetFromConversation,
-  formatGhs,
   shouldEscalateToSupport,
   hasTroubleshootingIntent,
   buildFallbackReply,
@@ -275,7 +274,9 @@ function logAnalytics(message: string, finalContent: string, metadata: any, hasI
         intent,
         recommendedProducts: metadata.recommendedProducts?.map((p: any) => p.id) || [],
         hasImage})}).catch(() => {});
-  } catch (e) {}
+  } catch (_e) {
+    /* ignore error */
+  }
 }
 
 function handleFallback(message: string, safeHistory: ChatHistoryMessage[]) {

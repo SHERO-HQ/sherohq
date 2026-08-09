@@ -287,6 +287,7 @@ export const CheckoutProvider = ({ children }: { children: ReactNode }) => {
 
     void restoreRetryOrder();
     return () => { isCancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [retryOrderId, setValue]);
 
   return (

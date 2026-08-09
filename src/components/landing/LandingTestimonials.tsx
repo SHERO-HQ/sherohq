@@ -1,12 +1,12 @@
 "use client";
-import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import { useState, useCallback, useMemo, useRef } from "react";
 import { m, AnimatePresence } from "motion/react";
 import {
   Quote,
   UserCheck,
   Star,
   ChevronRight,
-  ChevronLeft
+  ChevronLeft,
 } from "lucide-react";
 import { useTestimonials } from "@/hooks/queries/useTestimonials";
 import { useVisibleInterval } from "@/hooks/useVisibleInterval";
@@ -37,23 +37,41 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
   const [prevTestimonials, setPrevTestimonials] = useState(displayTestimonials);
   const [cards, setCards] = useState<any[]>(() => {
     if (displayTestimonials.length > 0 && displayTestimonials.length < 4) {
-      return [...displayTestimonials, ...displayTestimonials, ...displayTestimonials].map((item, i) => ({
+      return [
+        ...displayTestimonials,
+        ...displayTestimonials,
+        ...displayTestimonials,
+      ].map((item, i) => ({
         ...item,
-        uniqueId: `${item.id}-${i}`
+        uniqueId: `${item.id}-${i}`,
       }));
     }
-    return displayTestimonials.map((item, i) => ({ ...item, uniqueId: item.id ? item.id.toString() : `fallback-${i}` }));
+    return displayTestimonials.map((item, i) => ({
+      ...item,
+      uniqueId: item.id ? item.id.toString() : `fallback-${i}`,
+    }));
   });
 
   if (displayTestimonials !== prevTestimonials) {
     setPrevTestimonials(displayTestimonials);
     if (displayTestimonials.length > 0 && displayTestimonials.length < 4) {
-      setCards([...displayTestimonials, ...displayTestimonials, ...displayTestimonials].map((item, i) => ({
-        ...item,
-        uniqueId: `${item.id}-${i}`
-      })));
+      setCards(
+        [
+          ...displayTestimonials,
+          ...displayTestimonials,
+          ...displayTestimonials,
+        ].map((item, i) => ({
+          ...item,
+          uniqueId: `${item.id}-${i}`,
+        })),
+      );
     } else {
-      setCards(displayTestimonials.map((item, i) => ({ ...item, uniqueId: item.id ? item.id.toString() : `fallback-${i}` })));
+      setCards(
+        displayTestimonials.map((item, i) => ({
+          ...item,
+          uniqueId: item.id ? item.id.toString() : `fallback-${i}`,
+        })),
+      );
     }
   }
 
@@ -85,7 +103,10 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
   );
 
   return (
-    <section ref={sectionRef} className="py-16 md:py-24 bg-white dark:bg-slate-950 overflow-hidden relative border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
+    <section
+      ref={sectionRef}
+      className="py-16 md:py-24 bg-white dark:bg-slate-950 overflow-hidden relative border-t border-slate-200 dark:border-white/5 transition-colors duration-300"
+    >
       {/* Background decoration */}
       <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-brand-secondary-500/20 to-transparent" />
 
@@ -99,7 +120,6 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
       <div className="container px-4 md:px-6 relative z-10 w-full mx-auto md:w-11/12 max-w-7xl">
         {(isLoading || displayTestimonials.length > 0) && (
           <div className="flex flex-col items-center justify-center gap-12 lg:gap-16">
-
             {/* Header Content */}
             <div className="text-center max-w-3xl mx-auto">
               <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-2 text-[9px] font-bold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100/80 dark:bg-brand-secondary-500/10 border border-brand-secondary-500/30 dark:border-brand-secondary-500/20 rounded uppercase tracking-wider transition-colors duration-300">
@@ -110,13 +130,15 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
                 Trusted by Leaders across Africa.
               </h2>
               <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 transition-colors duration-300 leading-relaxed">
-                We believe technology exists to expand what's possible. See how we've partnered with innovators to build enterprise-grade infrastructure that removes barriers and creates opportunities.
+                We believe technology exists to expand what's possible. See how
+                we've partnered with innovators to build enterprise-grade
+                infrastructure that removes barriers and creates opportunities.
               </p>
             </div>
 
             {/* Stack of Cards UI */}
             <div
-              className="relative w-full max-w-2xl mx-auto h-[450px] sm:h-[400px] flex items-center justify-center perspective-[1000px]"
+              className="relative w-full max-w-2xl mx-auto h-112.5 sm:h-100 flex items-center justify-center perspective-[1000px]"
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
@@ -150,8 +172,11 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
                           damping: 25,
                           mass: 0.8,
                         }}
-                        className={`absolute w-full top-0 left-0 right-0 origin-top shadow-xl ${isFront ? 'cursor-grab active:cursor-grabbing' : 'pointer-events-none'
-                          }`}
+                        className={`absolute w-full top-0 left-0 right-0 origin-top shadow-xl ${
+                          isFront
+                            ? "cursor-grab active:cursor-grabbing"
+                            : "pointer-events-none"
+                        }`}
                         drag={isFront ? "x" : false}
                         dragConstraints={{ left: 0, right: 0 }}
                         dragElastic={1}
@@ -164,7 +189,7 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
                         }}
                         onClick={isFront ? handleNext : undefined}
                       >
-                        <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded border border-slate-200/80 dark:border-slate-800 flex flex-col relative group h-full min-h-[320px] -mt-6 lg:-mt-8">
+                        <div className="bg-white dark:bg-slate-900 p-8 sm:p-10 rounded border border-slate-200/80 dark:border-slate-800 flex flex-col relative group h-full min-h-80 -mt-6 lg:-mt-8">
                           <div className="absolute top-6 right-6 transition-transform duration-300">
                             <Quote className="size-8 text-brand-secondary-500/20" />
                           </div>
@@ -204,24 +229,33 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
                                 {item.author}
                               </h4>
                               <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
-                                {item.author === "Anonymous" ? "Verified Feedback" : (
+                                {item.author === "Anonymous" ? (
+                                  "Verified Feedback"
+                                ) : (
                                   <>
                                     {item.role}
                                     {item.company ? `, ${item.company}` : ""}
                                   </>
                                 )}
                               </p>
-                              {(item.externalSource === "trustpilot" || typeof item.rating === "number") && (
+                              {(item.externalSource === "trustpilot" ||
+                                typeof item.rating === "number") && (
                                 <div className="mt-1.5 flex items-center gap-2 text-[10px] text-slate-500 dark:text-slate-400">
                                   {typeof item.rating === "number" && (
                                     <span className="inline-flex items-center gap-1 rounded bg-amber-100 dark:bg-amber-500/10 px-1.5 py-0.5 text-amber-700 dark:text-amber-400 font-semibold">
                                       <Star className="h-3 w-3 fill-current" />
-                                      {Number.isInteger(item.rating) ? item.rating : item.rating.toFixed(1)}/5
+                                      {Number.isInteger(item.rating)
+                                        ? item.rating
+                                        : item.rating.toFixed(1)}
+                                      /5
                                     </span>
                                   )}
                                   {item.externalSource === "trustpilot" && (
                                     <a
-                                      href={item.reviewUrl || "https://www.trustpilot.com"}
+                                      href={
+                                        item.reviewUrl ||
+                                        "https://www.trustpilot.com"
+                                      }
                                       target="_blank"
                                       rel="noopener noreferrer"
                                       className="inline-flex items-center gap-1 rounded bg-blue-100 dark:bg-blue-500/10 px-1.5 py-0.5 text-blue-700 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-semibold transition-colors"

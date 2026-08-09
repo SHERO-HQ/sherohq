@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { LayoutTemplate, Plus, RefreshCw, Trash2, Edit, Save, X, Mail, MessageCircle } from "lucide-react";
+import { LayoutTemplate, Plus, RefreshCw, Trash2, Save, X, Mail, MessageCircle } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -61,6 +61,7 @@ export default function AdminTemplates() {
 
   useEffect(() => {
     fetchTemplates();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDelete = async (id: string) => {
@@ -177,7 +178,7 @@ export default function AdminTemplates() {
                 <textarea
                   value={formData.content || ""}
                   onChange={e => setFormData({ ...formData, content: e.target.value })}
-                  className="w-full min-h-[140px] p-4 bg-accent/30 border border-border/60 rounded text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/30 transition-all resize-y custom-scrollbar"
+                  className="w-full min-h-35 p-4 bg-accent/30 border border-border/60 rounded text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/30 transition-all resize-y custom-scrollbar"
                   placeholder="Hi {{1}}, here is your code: {{2}}"
                 />
               </div>
@@ -232,7 +233,7 @@ export default function AdminTemplates() {
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-2">
                   {t.channel === 'email' ? <Mail className="h-4 w-4 text-brand-secondary-500" /> : <MessageCircle className="h-4 w-4 text-[#25D366]" />}
-                  <h4 className="font-bold text-foreground truncate max-w-[180px]" title={t.name}>{t.name}</h4>
+                  <h4 className="font-bold text-foreground truncate max-w-45" title={t.name}>{t.name}</h4>
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
                   {t.whatsappTemplateLanguage && (
@@ -271,11 +272,11 @@ export default function AdminTemplates() {
 
             {/* Card Body - Preview */}
             <div className="p-4 flex-1 flex flex-col bg-accent/5">
-              <div className="text-xs text-muted-foreground mb-4 line-clamp-2 min-h-[32px]">
+              <div className="text-xs text-muted-foreground mb-4 line-clamp-2 min-h-8">
                 {t.description || t.category || "No description provided."}
               </div>
 
-              <div className="relative rounded overflow-hidden border border-border/50 bg-card flex-1 min-h-[160px] pointer-events-none transform scale-[0.85] origin-top">
+              <div className="relative rounded overflow-hidden border border-border/50 bg-card flex-1 min-h-40 pointer-events-none transform scale-[0.85] origin-top">
                 <TemplatePreview
                   channel={t.channel as any}
                   content={t.content || ""}

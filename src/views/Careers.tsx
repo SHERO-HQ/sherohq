@@ -1,7 +1,6 @@
 "use client";
 import { m } from "motion/react"
 import {
-  Briefcase,
   MapPin,
   Users,
   ArrowRight,
@@ -101,7 +100,7 @@ export default function Careers() {
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 overflow-hidden lg:pt-48 lg:pb-32">
         <div className="absolute inset-0 bg-muted/30 -z-10" />
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-muted to-transparent opacity-50 -z-10" />
+        <div className="absolute inset-x-0 top-0 h-40 bg-linear-to-b from-muted to-transparent opacity-50 -z-10" />
 
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto text-center">
