@@ -809,6 +809,7 @@ const UserDetailsModal = ({
   </AnimatePresence>,
   document.body
 );
+};
 
 interface DeleteModalProps {
   userId: string | null;
@@ -895,6 +896,7 @@ const ResetPasswordModal = ({
   </AnimatePresence>,
   document.body
 );
+};
 
 const DeleteConfirmationModal = ({
   userId,
@@ -966,6 +968,7 @@ const DeleteConfirmationModal = ({
   </AnimatePresence>,
   document.body
 );
+};
 
 export default function AdminUsers() {
   const [search, setSearch] = useState("");
