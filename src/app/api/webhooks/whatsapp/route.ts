@@ -150,7 +150,7 @@ async function handleIncomingMessage(msg: any, contact: any) {
         const adminPhone = process.env.ADMIN_PHONE_NUMBER;
         if (adminPhone) {
           const { sendWhatsAppMessageDirect } = await import("@/lib/whatsapp-messages");
-          const alertMessage = `💬 *New WhatsApp Message*\n\n*From:* ${contactName || "Customer"} (${senderWaId})\n\n"${content || `[Sent a ${messageType}]`}"\n\nReply here: https://admin.sherohq.com/admin/whatsapp`;
+          const alertMessage = `💬 *New WhatsApp Message*\n\n*From:* ${contactName || "Customer"} (https://wa.me/${senderWaId})\n\n"${content || `[Sent a ${messageType}]`}"\n\nReply here: https://admin.sherohq.com/admin/whatsapp`;
           await sendWhatsAppMessageDirect(
             adminPhone,
             alertMessage,

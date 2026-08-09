@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { formatDistanceToNow } from "date-fns";
-import { Send, Check, CheckCheck, AlertTriangle, RefreshCw, MessageSquare, Code, Loader2, User, ExternalLink, MessageCircle } from "lucide-react";
+import { Send, Check, CheckCheck, AlertTriangle, RefreshCw, MessageSquare, Code, Loader2, User, ExternalLink, MessageCircle, X } from "lucide-react";
 import { useDialog } from "@/hooks/useDialog";
 import { TemplatePreview } from "./newsletter/TemplatePreview";
 
@@ -55,6 +55,9 @@ export default function WhatsAppConversations({
   const [loading, setLoading] = useState(false);
   const [searchPhone, setSearchPhone] = useState("");
   const [refreshing, setRefreshing] = useState(false);
+  const [isMessageSearchOpen, setIsMessageSearchOpen] = useState(false);
+  const [messageSearchQuery, setMessageSearchQuery] = useState("");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // For notification detection
   const previousConversationsRef = useRef<ConversationSummary[]>([]);
@@ -210,6 +213,46 @@ export default function WhatsAppConversations({
     void markAsRead(phone);
   };
 
+  const handleDeleteChat = async (action: "clear" | "delete") => {
+    if (!selectedPhone) return;
+    
+    const confirmed = await dialog.confirm({
+      title: action === "delete" ? "Delete Chat" : "Clear Chat",
+      message: action === "delete" 
+        ? "Are you sure you want to delete this chat entirely? This cannot be undone and will remove the contact from the database."
+        : "Are you sure you want to clear all messages? This cannot be undone.",
+      confirmText: action === "delete" ? "Delete" : "Clear",
+      type: action === "delete" ? "error" : "warning"
+    });
+    
+    if (!confirmed) return;
+
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/admin/whatsapp/conversations?phone=${encodeURIComponent(selectedPhone)}&action=${action}`, {
+        method: 'DELETE'
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        setIsMenuOpen(false);
+        if (action === "delete") {
+          setSelectedPhone(null);
+          void fetchConversations();
+        } else {
+          void fetchMessages(selectedPhone);
+        }
+      } else {
+        void dialog.alert({ title: "Error", message: data.error || "Failed to perform action", type: "error" });
+      }
+    } catch (error) {
+      console.error(`Failed to ${action} chat:`, error);
+      void dialog.alert({ title: "Error", message: `Failed to ${action} chat.`, type: "error" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedPhone || sending) return;
@@ -267,31 +310,57 @@ export default function WhatsAppConversations({
     switch (status) {
       case "read":
         return (
-          <span title="Read" className="inline-flex">
-            <CheckCheck className="w-4 h-4 text-cyan-400 shrink-0" />
+          <span title="Read" className="inline-flex ml-0.5">
+            <CheckCheck className="w-[15px] h-[15px] text-[#53bdeb] shrink-0" />
           </span>
         );
       case "delivered":
         return (
-          <span title="Delivered" className="inline-flex">
-            <CheckCheck className="w-4 h-4 text-muted-foreground shrink-0" />
+          <span title="Delivered" className="inline-flex ml-0.5">
+            <CheckCheck className="w-[15px] h-[15px] text-[#8696a0] shrink-0" />
           </span>
         );
       case "sent":
         return (
-          <span title="Sent" className="inline-flex">
-            <Check className="w-4 h-4 text-muted-foreground shrink-0" />
+          <span title="Sent" className="inline-flex ml-0.5">
+            <Check className="w-[15px] h-[15px] text-[#8696a0] shrink-0" />
           </span>
         );
       case "failed":
         return (
-          <span title="Failed" className="inline-flex">
-            <AlertTriangle className="w-4 h-4 text-rose-500 shrink-0" />
+          <span title="Failed" className="inline-flex ml-0.5">
+            <AlertTriangle className="w-[13px] h-[13px] text-rose-500 shrink-0" />
           </span>
         );
       default:
-        return null;
+        return (
+          <span title="Pending" className="inline-flex ml-0.5">
+            <Check className="w-[15px] h-[15px] text-[#8696a0]/50 shrink-0" />
+          </span>
+        );
     }
+  };
+
+  const renderHeaderStatus = () => {
+    const selectedConversation = conversations.find((c) => c.sender_wa_id === selectedPhone);
+    if (!selectedConversation) return "online";
+    const lastMessageDate = parseDateUTC(selectedConversation.last_message_at);
+    const diffMs = Date.now() - lastMessageDate.getTime();
+    
+    // If the last message was less than 5 minutes ago, they are "online"
+    if (diffMs < 300000) {
+      return "online";
+    }
+    
+    const isToday = lastMessageDate.toDateString() === new Date().toDateString();
+    const timeStr = lastMessageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    
+    if (isToday) {
+      return `last seen today at ${timeStr}`;
+    }
+    
+    const dateStr = lastMessageDate.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    return `last seen ${dateStr} at ${timeStr}`;
   };
 
   return (
@@ -381,109 +450,189 @@ export default function WhatsAppConversations({
         {selectedPhone ? (
           <>
             {/* Conversation Header */}
-            <div className="p-6 border-b border-border flex items-center justify-between shrink-0">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-card border border-border flex items-center justify-center relative shrink-0">
-                  <User className="w-6 h-6 text-muted-foreground" />
-                  <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-card rounded-full" title="Online"></span>
+            <div className="px-4 py-2.5 bg-[#202c33] flex items-center justify-between shrink-0 relative z-10 border-b border-black/20">
+              <div className="flex items-center gap-3.5 cursor-pointer">
+                <div className="w-10 h-10 rounded-full bg-[#dfe5e7] overflow-hidden flex items-center justify-center relative shrink-0">
+                  <User className="w-6 h-6 text-[#8696a0] mt-1.5" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-foreground">
+                <div className="flex flex-col justify-center">
+                  <h3 className="text-[16px] font-normal text-[#e9edef] leading-tight mb-0.5">
                     {selectedPhone}
                   </h3>
-                  <p className="text-xs text-emerald-400/80 font-medium mt-0.5 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
-                    Active WhatsApp Connection
+                  <p className="text-[13px] text-[#8696a0] leading-tight">
+                    {renderHeaderStatus()}
                   </p>
                 </div>
               </div>
-              <button
-                onClick={() => void fetchMessages(selectedPhone)}
-                disabled={loading}
-                className="text-muted-foreground hover:text-foreground p-2 rounded hover:bg-accent transition-colors disabled:opacity-50 flex items-center gap-1.5 text-xs font-semibold"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
-                Sync
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => void fetchMessages(selectedPhone)}
+                  disabled={loading}
+                  className="text-[#aebac1] hover:text-[#e9edef] p-2 rounded-full transition-colors disabled:opacity-50 flex items-center"
+                  title="Sync Messages"
+                >
+                  <RefreshCw className={`w-5 h-5 ${loading ? "animate-spin" : ""}`} />
+                </button>
+                <button 
+                  onClick={() => {
+                    setIsMessageSearchOpen(!isMessageSearchOpen);
+                    if (isMessageSearchOpen) setMessageSearchQuery("");
+                  }}
+                  className={`p-2 rounded-full transition-colors hidden sm:block ${isMessageSearchOpen ? "text-[#e9edef] bg-white/10" : "text-[#aebac1] hover:text-[#e9edef]"}`}
+                >
+                  <svg viewBox="0 0 24 24" height="24" width="24" preserveAspectRatio="xMidYMid meet" className="" fill="currentColor" enableBackground="new 0 0 24 24">
+                    <path d="M15.9,14.3H15L14.7,14c1-1.1,1.6-2.7,1.6-4.3c0-3.7-3-6.7-6.7-6.7S3,6,3,9.7 s3,6.7,6.7,6.7c1.6,0,3.2-0.6,4.3-1.6l0.3,0.3v0.8l5.1,5.1l1.5-1.5L15.9,14.3z M9.7,14.3c-2.6,0-4.6-2.1-4.6-4.6s2.1-4.6,4.6-4.6 s4.6,2.1,4.6,4.6S12.3,14.3,9.7,14.3z"></path>
+                  </svg>
+                </button>
+                <div className="relative">
+                  <button 
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    className={`p-2 rounded-full transition-colors ${isMenuOpen ? "text-[#e9edef] bg-white/10" : "text-[#aebac1] hover:text-[#e9edef]"}`}
+                  >
+                     <svg viewBox="0 0 24 24" height="24" width="24" preserveAspectRatio="xMidYMid meet" className="" fill="currentColor" enableBackground="new 0 0 24 24">
+                       <path d="M12,7a2,2,0,1,0-2-2A2,2,0,0,0,12,7Zm0,3a2,2,0,1,0,2,2A2,2,0,0,0,12,10Zm0,7a2,2,0,1,0,2,2A2,2,0,0,0,12,17Z"></path>
+                     </svg>
+                  </button>
+                  {isMenuOpen && (
+                    <>
+                      <div className="fixed inset-0 z-40" onClick={() => setIsMenuOpen(false)}></div>
+                      <div className="absolute right-0 top-full mt-2 w-48 bg-[#233138] border border-white/10 rounded-md shadow-lg py-2 z-50 transform origin-top-right transition-all">
+                        <button className="w-full text-left px-4 py-2 text-sm text-[#d1d7db] hover:bg-[#111b21] transition-colors" onClick={() => setIsMenuOpen(false)}>Contact info</button>
+                        <button className="w-full text-left px-4 py-2 text-sm text-[#d1d7db] hover:bg-[#111b21] transition-colors" onClick={() => setIsMenuOpen(false)}>Select messages</button>
+                        <button className="w-full text-left px-4 py-2 text-sm text-[#d1d7db] hover:bg-[#111b21] transition-colors" onClick={() => void handleDeleteChat("clear")}>Clear chat</button>
+                        <button className="w-full text-left px-4 py-2 text-sm text-rose-400 hover:bg-[#111b21] transition-colors" onClick={() => void handleDeleteChat("delete")}>Delete chat</button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
 
+            {/* Search Bar */}
+            {isMessageSearchOpen && (
+              <div className="px-4 py-2 bg-[#202c33] border-b border-black/20 flex items-center shrink-0 z-10 transition-all">
+                <div className="flex-1 bg-[#2a3942] rounded-md flex items-center px-3 py-1.5 border border-white/5">
+                  <input 
+                    type="text" 
+                    placeholder="Search messages..." 
+                    value={messageSearchQuery}
+                    onChange={(e) => setMessageSearchQuery(e.target.value)}
+                    className="bg-transparent text-[#e9edef] text-sm w-full focus:outline-none placeholder-[#8696a0]"
+                    autoFocus
+                  />
+                  {messageSearchQuery && (
+                    <button onClick={() => setMessageSearchQuery("")} className="text-[#8696a0] hover:text-[#e9edef] ml-2">
+                       <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Chat Thread */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-brand-secondary-900/10 custom-scrollbar relative">
+            <div 
+              className="flex-1 overflow-y-auto p-4 sm:p-6 bg-[#0b141a] custom-scrollbar relative"
+              style={{
+                backgroundImage: 'url("https://static.whatsapp.net/rsrc.php/v3/yl/r/r2qT9Z4Z4-x.png")',
+                backgroundSize: '400px',
+                backgroundBlendMode: 'overlay',
+                backgroundColor: '#0b141a',
+                opacity: 0.98
+              }}
+            >
               {loading && messages.length === 0 ? (
                 <div className="flex items-center justify-center h-full">
-                  <Loader2 className="w-8 h-8 text-brand-secondary-500 animate-spin" />
+                  <Loader2 className="w-8 h-8 text-[#00a884] animate-spin" />
                 </div>
               ) : messages.length === 0 ? (
-                <div className="text-center text-muted-foreground text-sm py-8">
-                  No messages in this conversation.
+                <div className="flex justify-center py-4">
+                  <div className="bg-[#182229] text-[#8696a0] text-xs px-4 py-1.5 rounded-lg shadow-sm">
+                    No messages in this conversation.
+                  </div>
                 </div>
               ) : (
-                messages.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className={`flex ${msg.direction === "inbound" ? "justify-start" : "justify-end"
-                      }`}
-                  >
+                messages.filter(msg => {
+                  if (!messageSearchQuery.trim()) return true;
+                  return msg.content?.toLowerCase().includes(messageSearchQuery.toLowerCase());
+                }).map((msg, index, filteredArray) => {
+                  const isFirstInSequence = index === 0 || filteredArray[index - 1].direction !== msg.direction;
+                  return (
                     <div
-                      className={`max-w-md min-w-[80px] px-4 py-2.5 shadow-sm relative ${msg.direction === "inbound"
-                        ? "bg-slate-800/80 border border-border text-slate-100 rounded rounded-tl-sm"
-                        : "bg-brand-secondary-600 text-white rounded rounded-tr-sm shadow-black/20"
-                        }`}
+                      key={msg.id}
+                      className={`flex mb-[2px] ${msg.direction === "inbound" ? "justify-start" : "justify-end"} ${isFirstInSequence ? "mt-3" : ""}`}
                     >
-                      {msg.metadata?.rawMessage?.referral && (
-                        <a
-                          href={msg.metadata.rawMessage.referral.source_url || "#"}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block bg-black/20 rounded p-2.5 mb-2 border border-white/5 hover:bg-black/30 transition-colors group cursor-pointer"
-                        >
-                          <div className="flex items-center justify-between mb-1">
-                            <p className="text-[10px] font-bold text-brand-secondary-400 uppercase tracking-wider flex items-center gap-1.5">
-                              <span className="w-1.5 h-1.5 bg-brand-secondary-500 rounded-full inline-block"></span>
-                              Via Facebook Ad
-                            </p>
-                            {msg.metadata.rawMessage.referral.source_url && (
-                              <ExternalLink className="w-3 h-3 text-slate-400 group-hover:text-brand-secondary-400 transition-colors" />
-                            )}
-                          </div>
-                          {msg.metadata.rawMessage.referral.headline && (
-                            <p className="text-xs text-slate-200 font-semibold group-hover:text-white transition-colors">
-                              {msg.metadata.rawMessage.referral.headline}
-                            </p>
-                          )}
-                          {msg.metadata.rawMessage.referral.body && (
-                            <p className="text-[10px] text-slate-400 mt-0.5 line-clamp-2">
-                              {msg.metadata.rawMessage.referral.body}
-                            </p>
-                          )}
-                        </a>
-                      )}
-                      <p className="text-[15px] whitespace-pre-wrap leading-relaxed break-words pb-3">
-                        {msg.content || `[${msg.message_type}]`}
-                      </p>
-
-                      {msg.error_message && (
-                        <p className="text-xs text-rose-300 mt-1.5 flex items-center gap-1 border-t border-rose-500/20 pt-1 pb-3">
-                          <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
-                          {msg.error_message} (Code: {msg.error_code})
-                        </p>
-                      )}
-
                       <div
-                        className={`absolute bottom-1 right-3 flex items-center justify-end gap-1 text-[10px] font-medium tracking-wide ${msg.direction === "inbound" ? "text-slate-400" : "text-emerald-100"
+                        className={`max-w-[85%] md:max-w-[75%] px-2.5 py-1.5 shadow-sm relative text-[14.2px] leading-5 ${msg.direction === "inbound"
+                          ? `bg-[#202c33] text-[#e9edef] rounded-lg ${isFirstInSequence ? "rounded-tl-none" : ""}`
+                          : `bg-[#005c4b] text-[#e9edef] rounded-lg ${isFirstInSequence ? "rounded-tr-none" : ""}`
                           }`}
                       >
-                        <span>
-                          {parseDateUTC(msg.created_at).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </span>
-                        {msg.direction === "outbound" && renderStatus(msg.status)}
+                        {isFirstInSequence && msg.direction === "inbound" && (
+                          <svg viewBox="0 0 8 13" width="8" height="13" className="absolute top-0 -left-[8px] text-[#202c33]">
+                            <path opacity="1" fill="currentColor" d="M1.533 3.568L8 12.193V0H2.812C1.042 0 .474 1.156 1.533 2.568z"></path>
+                          </svg>
+                        )}
+                        {isFirstInSequence && msg.direction === "outbound" && (
+                          <svg viewBox="0 0 8 13" width="8" height="13" className="absolute top-0 -right-[8px] text-[#005c4b]">
+                            <path opacity="1" fill="currentColor" d="M5.188 0H0v12.193l6.467-8.625C7.526 1.156 6.958 0 5.188 0z"></path>
+                          </svg>
+                        )}
+
+                        {msg.metadata?.rawMessage?.referral && (
+                          <a
+                            href={msg.metadata.rawMessage.referral.source_url || "#"}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block bg-black/20 rounded p-2 mb-1.5 border-l-4 border-[#00a884] hover:bg-black/30 transition-colors group cursor-pointer"
+                          >
+                            <div className="flex items-center justify-between mb-0.5">
+                              <p className="text-[11px] font-medium text-[#00a884] flex items-center gap-1.5">
+                                Via Facebook Ad
+                              </p>
+                              {msg.metadata.rawMessage.referral.source_url && (
+                                <ExternalLink className="w-3 h-3 text-[#8696a0] group-hover:text-[#00a884] transition-colors" />
+                              )}
+                            </div>
+                            {msg.metadata.rawMessage.referral.headline && (
+                              <p className="text-[13px] text-[#e9edef] font-medium group-hover:text-white transition-colors">
+                                {msg.metadata.rawMessage.referral.headline}
+                              </p>
+                            )}
+                            {msg.metadata.rawMessage.referral.body && (
+                              <p className="text-[11px] text-[#8696a0] mt-0.5 line-clamp-2">
+                                {msg.metadata.rawMessage.referral.body}
+                              </p>
+                            )}
+                          </a>
+                        )}
+
+                        <div className="relative">
+                          <span className="whitespace-pre-wrap break-words inline-block">
+                            {msg.content || `[${msg.message_type}]`}
+                            <span className="inline-block w-[68px]"></span>
+                          </span>
+
+                          <div className="absolute bottom-0 right-0 flex items-center gap-[3px] text-[11px] font-medium text-[#8696a0]">
+                            <span className="leading-none pt-[1px]">
+                              {parseDateUTC(msg.created_at).toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </span>
+                            {msg.direction === "outbound" && renderStatus(msg.status)}
+                          </div>
+                        </div>
+
+                        {msg.error_message && (
+                          <p className="text-[11px] text-rose-400 mt-1 flex items-center gap-1 border-t border-white/5 pt-1">
+                            <AlertTriangle className="w-3 h-3 shrink-0" />
+                            {msg.error_message} {msg.error_code ? `(${msg.error_code})` : ""}
+                          </p>
+                        )}
                       </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
               <div ref={messagesEndRef} />
             </div>

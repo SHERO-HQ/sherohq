@@ -248,6 +248,43 @@ export async function getConversationHistory(
 }
 
 /**
+ * Clear all messages in a conversation with a customer
+ */
+export async function clearConversationHistory(
+  senderWaId: string,
+): Promise<void> {
+  await query(
+    `
+    DELETE FROM whatsapp_messages
+    WHERE sender_wa_id = $1;
+    `,
+    [senderWaId],
+  );
+}
+
+/**
+ * Delete a conversation entirely, including the contact
+ */
+export async function deleteConversation(
+  senderWaId: string,
+): Promise<void> {
+  const normalizedPhone = senderWaId.replace(/[^\d+]/g, "");
+  
+  // First clear all messages
+  await clearConversationHistory(senderWaId);
+  
+  // Then delete the contact
+  await query(
+    `
+    DELETE FROM whatsapp_contacts
+    WHERE phone = $1;
+    `,
+    [normalizedPhone],
+  );
+}
+
+
+/**
  * Get campaign delivery status summary
  */
 export async function getCampaignDeliveryStatus(campaignId: string): Promise<{
