@@ -305,8 +305,8 @@ export default function ProductSidebarMeta({
             <select
               id="category"
               className={cn(
-                "w-full bg-muted border border-border text-foreground rounded px-4 py-2 outline-none focus:ring-2 focus:ring-brand-secondary-500/50",
-                errors.category && "border-rose-500 focus:ring-rose-500/50 bg-rose-500/5"
+                "w-full bg-transparent border border-border text-foreground rounded px-4 py-2 outline-none focus:ring-2 focus:ring-brand-secondary-500/50",
+                errors.category && "border-rose-500 focus:ring-rose-500/50 bg-transparent "
               )}
               {...register("category")}
             >
@@ -333,7 +333,7 @@ export default function ProductSidebarMeta({
             </label>
             <select
               id="condition"
-              className="w-full bg-muted border border-border text-foreground rounded px-4 py-2 outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
+              className="w-full bg-transparent border border-border text-foreground rounded px-4 py-2 outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
               {...register("condition")}
             >
               <option value="New">New</option>

@@ -332,7 +332,7 @@ export default function AdminCareers() {
                       </td>
                       <td className="px-6 py-4">
                         <select
-                          className="bg-background border border-border rounded text-xs p-1 focus:ring-brand-primary-500"
+                          className="bg-transparent border border-border rounded text-xs p-1 focus:ring-brand-primary-500"
                           value={app.status}
                           onChange={(e) => updateAppStatus.mutate({ id: app.id, status: e.target.value })}
                         >

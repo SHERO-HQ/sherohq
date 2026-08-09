@@ -64,7 +64,7 @@ export default function ProductSEOCard() {
               placeholder="Leave blank to use the start of your product description"
               {...register("metaDescription")}
               maxLength={160}
-              className="w-full h-24 bg-muted/50 border border-border rounded p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 resize-none text-sm transition-all"
+              className="w-full h-24 bg-transparent border border-border rounded p-3 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 resize-none text-sm transition-all"
             />
           </div>
         </div>

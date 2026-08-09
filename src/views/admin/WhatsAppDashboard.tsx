@@ -436,7 +436,7 @@ export default function WhatsAppDashboard() {
             <select
               id="mobile-tabs"
               name="mobile-tabs"
-              className="block w-full bg-card border border-border rounded-md text-foreground focus:ring-brand-secondary-500 focus:border-brand-secondary-500 py-3 px-4 text-sm shadow-sm"
+              className="block w-full bg-transparent border border-border rounded-md text-foreground focus:ring-brand-secondary-500 focus:border-brand-secondary-500 py-3 px-4 text-sm shadow-sm"
               value={activeTab}
               onChange={(e) => setActiveTab(e.target.value)}
             >

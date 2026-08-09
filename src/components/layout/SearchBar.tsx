@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { m, AnimatePresence } from "motion/react";
@@ -16,6 +17,12 @@ interface SearchBarProps {
 const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
     const [query, setQuery] = useState("");
     const [isOpen, setIsOpen] = useState(alwaysOpen);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     const inputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
 
@@ -157,7 +164,8 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
             </button>
 
             {/* Search Overlay Modal */}
-            <AnimatePresence>
+            {mounted && createPortal(
+                <AnimatePresence>
                 {isOpen && (
                     <>
                         {/* Backdrop */}
@@ -299,7 +307,9 @@ const SearchBar = ({ className = "", alwaysOpen = false }: SearchBarProps) => {
                         </m.div>
                     </>
                 )}
-            </AnimatePresence>
+                </AnimatePresence>,
+                document.body
+            )}
         </div>
     );
 };

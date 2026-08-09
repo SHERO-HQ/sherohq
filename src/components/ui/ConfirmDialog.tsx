@@ -1,4 +1,6 @@
 "use client";
+import { createPortal } from "react-dom";
+import { useState, useEffect } from "react";
 import { m, AnimatePresence } from "motion/react";
 import { AlertTriangle, Info, CheckCircle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -76,7 +78,15 @@ export function ConfirmDialog({
     }
   }
 
-  return (
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-9999 flex items-center justify-center p-4">
@@ -166,6 +176,7 @@ export function ConfirmDialog({
           </m.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
-}
+};

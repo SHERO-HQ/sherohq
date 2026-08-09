@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { } from "@/context/AdminContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,7 +71,7 @@ const Textarea = (props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) => (
   <textarea
     {...props}
     className={cn(
-      "flex min-h-20 w-full rounded border border-border bg-muted px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 disabled:cursor-not-allowed disabled:opacity-50",
+      "flex min-h-20 w-full rounded border border-border bg-transparent px-3 py-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 disabled:cursor-not-allowed disabled:opacity-50",
       props.className,
     )}
   />
@@ -127,6 +128,11 @@ export default function AdminExpenses() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Filters
   const [search, setSearch] = useState("");
@@ -644,7 +650,7 @@ export default function AdminExpenses() {
       </Card>
 
       {/* Form Modal (Simple Overlay) */}
-      {isFormOpen && (
+      {isFormOpen && mounted && createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
           <Card className={cn(
             "w-full max-w-lg bg-card border shadow-2xl p-6 md:p-8 relative transition-all duration-300",
@@ -812,11 +818,12 @@ export default function AdminExpenses() {
               </div>
             </form>
           </Card>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Modern Custom Delete Confirmation Overlay Modal */}
-      {deleteConfirmId && (
+      {deleteConfirmId && mounted && createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-200 select-none">
           <Card className="w-full max-w-sm bg-card border border-rose-500/20 shadow-2xl p-6 text-center space-y-4 animate-in zoom-in-95 duration-200">
             <div className="w-12 h-12 rounded-full bg-rose-500/10 flex items-center justify-center mx-auto text-rose-500">
@@ -850,7 +857,8 @@ export default function AdminExpenses() {
               </Button>
             </div>
           </Card>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

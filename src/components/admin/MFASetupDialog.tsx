@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { createPortal } from "react-dom";
+import { useState, useEffect } from "react";
 import { Shield, Loader2, CheckCircle2, AlertCircle, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { setupAdminMFA, verifyAdminMFASetup } from "@/services/admin";
@@ -53,7 +54,15 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  return (
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-card backdrop-blur-sm">
       <div className="w-full max-w-md bg-card border border-border rounded shadow-2xl overflow-hidden">
         <div className="p-6 border-b border-border flex items-center justify-between">
@@ -181,6 +190,7 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

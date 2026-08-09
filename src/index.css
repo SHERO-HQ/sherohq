@@ -235,6 +235,23 @@ body {
     --border: oklch(0.32 0.02 240);
     --input: oklch(0.32 0.02 240);
     --ring: var(--brand-primary-400);
+    --chart-4: oklch(0.627 0.265 303.9);
+    --chart-5: oklch(0.645 0.246 16.439);
+}
+
+@layer base {
+  /* Standardize all input, textarea, and select backgrounds to be transparent, per user design requirements. */
+  input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]),
+  textarea,
+  select {
+    background-color: transparent !important;
+  }
+
+  /* Ensure dropdown options have a solid background so they are readable */
+  select option {
+    background-color: var(--color-card) !important;
+    color: var(--color-foreground) !important;
+  }
 }
 
 @layer base {

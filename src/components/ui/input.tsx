@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { Label } from "./label";
 
 const inputVariants = cva(
- "flex w-full rounded border-2 border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900/50 shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-400 dark:placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary disabled:cursor-not-allowed disabled:opacity-50",
+ "flex w-full rounded border border-input bg-transparent text-foreground shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:border-brand-primary-500 focus-visible:ring-2 focus-visible:ring-brand-primary-500/20 disabled:cursor-not-allowed disabled:opacity-50",
  {
  variants: {
  size: {

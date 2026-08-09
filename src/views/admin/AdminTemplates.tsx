@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { LayoutTemplate, Plus, RefreshCw, Trash2, Save, X, Mail, MessageCircle } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { Button } from "@/components/ui/button";
@@ -30,6 +31,11 @@ export default function AdminTemplates() {
   const [isSyncing, setIsSyncing] = useState(false);
   const { addNotification } = useNotifications();
   const dialog = useDialog();
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const [isCreating, setIsCreating] = useState(false);
   const [formData, setFormData] = useState<Partial<CampaignTemplate>>({
@@ -125,7 +131,7 @@ export default function AdminTemplates() {
       </AdminPageHeader>
 
       {/* Glassmorphic Modal for Creating Template */}
-      {isCreating && (
+      {isCreating && mounted && createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-card border border-border p-6 rounded w-full max-w-2xl shadow-2xl animate-in zoom-in-95 duration-300">
             <div className="flex justify-between items-center mb-6">
@@ -207,7 +213,8 @@ export default function AdminTemplates() {
               </Button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Grid of Templates */}

@@ -2,8 +2,9 @@
 import { m, AnimatePresence } from "motion/react";
 import { useCart } from "@/context/CartContext";
 import { getImageUrl } from "@/services/api";
+import { createPortal } from "react-dom";
 import { X, Minus, Plus, ShoppingBag, Trash2, ArrowRight } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import AppImage from "@/components/common/AppImage";
@@ -32,7 +33,15 @@ const CartDrawer = () => {
     }
   }, [isCartOpen]);
 
-  return (
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isCartOpen && (
         <>
@@ -212,7 +221,8 @@ const CartDrawer = () => {
           </m.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
 

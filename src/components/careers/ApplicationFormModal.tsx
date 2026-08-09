@@ -117,18 +117,18 @@ export function ApplicationFormModal({ isOpen, onClose, job }: ApplicationFormMo
         </div>
       ) : viewMode === "details" ? (
         <div className="space-y-6 text-left">
-          <div className="sticky -top-6 z-10 -mt-6 -mx-6 px-6 py-3 bg-background/95 backdrop-blur-md flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 border-b border-border shadow-sm">
-            <div className="flex flex-wrap gap-3 text-sm text-muted-foreground">
+          <div className="sticky -top-6 z-10 -mt-6 -mx-4 px-4 sm:-mx-6 sm:px-6 py-3 bg-background/95 backdrop-blur-md flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 border-b border-border shadow-sm">
+            <div className="flex flex-wrap gap-3 text-xs text-muted-foreground mt-2 sm:mt-0">
               <span className="flex items-center gap-1.5 bg-secondary px-2.5 py-1 rounded">
-                <Building className="w-4 h-4 text-brand-primary-500" />
+                <Building className="w-3.5 h-3.5 text-brand-primary-500" />
                 {job?.department}
               </span>
               <span className="flex items-center gap-1.5 bg-secondary px-2.5 py-1 rounded">
-                <MapPin className="w-4 h-4 text-brand-primary-500" />
+                <MapPin className="w-3.5 h-3.5 text-brand-primary-500" />
                 {job?.location}
               </span>
               <span className="flex items-center gap-1.5 bg-secondary px-2.5 py-1 rounded">
-                <Clock className="w-4 h-4 text-brand-primary-500" />
+                <Clock className="w-3.5 h-3.5 text-brand-primary-500" />
                 {job?.type}
               </span>
             </div>
@@ -214,7 +214,7 @@ export function ApplicationFormModal({ isOpen, onClose, job }: ApplicationFormMo
           <div className="space-y-2 text-left">
             <Label htmlFor="resume">Resume (PDF, DOCX) <span className="text-red-500">*</span></Label>
             {resumeFile ? (
-              <div className="flex items-center justify-between p-3 border border-border rounded-md bg-secondary/30">
+              <div className="flex items-center justify-between p-3 border border-border rounded bg-secondary/30">
                 <div className="flex items-center gap-2 overflow-hidden">
                   <UploadCloud className="w-4 h-4 text-brand-primary-500 shrink-0" />
                   <span className="text-sm font-medium truncate">{resumeFile.name}</span>

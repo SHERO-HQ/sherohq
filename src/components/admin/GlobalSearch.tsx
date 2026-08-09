@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import { createPortal } from "react-dom";
 import {
   Search,
   Package,
@@ -140,7 +141,15 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, flatResults, selectedIndex, handleSelect, onClose]);
 
-  return (
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-100 flex items-start justify-center pt-[10vh] px-4 md:px-0">
@@ -378,7 +387,8 @@ const GlobalSearch = ({ isOpen, onClose }: GlobalSearchProps) => {
           </m.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
 

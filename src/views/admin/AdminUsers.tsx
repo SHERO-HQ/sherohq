@@ -25,6 +25,7 @@ import {
   Ban,
   CircleCheck
 } from "lucide-react";
+import { createPortal } from "react-dom";
 import { m, AnimatePresence } from "motion/react";
 import { useNotifications } from "@/hooks/useNotifications";
 import {
@@ -645,8 +646,17 @@ const UserDetailsModal = ({
   onResetPassword,
   onToggleActive,
   onDelete,
-  isTogglingActive }: UserDetailsModalProps) => (
-  <AnimatePresence>
+  isTogglingActive }: UserDetailsModalProps) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
+    <AnimatePresence>
     {show && (
       <m.div
         initial={{ opacity: 0 }}
@@ -796,7 +806,8 @@ const UserDetailsModal = ({
         </m.div>
       </m.div>
     )}
-  </AnimatePresence>
+  </AnimatePresence>,
+  document.body
 );
 
 interface DeleteModalProps {
@@ -819,8 +830,17 @@ const ResetPasswordModal = ({
   userName,
   onClose,
   onConfirm,
-  isPending }: ResetPasswordModalProps) => (
-  <AnimatePresence>
+  isPending }: ResetPasswordModalProps) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
+    <AnimatePresence>
     {userId && (
       <m.div
         initial={{ opacity: 0 }}
@@ -872,15 +892,25 @@ const ResetPasswordModal = ({
         </m.div>
       </m.div>
     )}
-  </AnimatePresence>
+  </AnimatePresence>,
+  document.body
 );
 
 const DeleteConfirmationModal = ({
   userId,
   onClose,
   onConfirm,
-  isPending }: DeleteModalProps) => (
-  <AnimatePresence>
+  isPending }: DeleteModalProps) => {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
+    <AnimatePresence>
     {userId && (
       <m.div
         initial={{ opacity: 0 }}
@@ -933,7 +963,8 @@ const DeleteConfirmationModal = ({
         </m.div>
       </m.div>
     )}
-  </AnimatePresence>
+  </AnimatePresence>,
+  document.body
 );
 
 export default function AdminUsers() {

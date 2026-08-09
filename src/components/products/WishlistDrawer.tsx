@@ -3,8 +3,9 @@ import { m, AnimatePresence } from "motion/react";
 import { useWishlist } from "@/hooks/useWishlist";
 import { useCart } from "@/context/CartContext";
 import { getImageUrl } from "@/services/api";
+import { createPortal } from "react-dom";
 import { X, Heart, Trash2, ShoppingCart } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { type WishlistItem } from "@/context/WishlistContextType";
 import AppImage from "@/components/common/AppImage";
@@ -56,7 +57,15 @@ const WishlistDrawer = () => {
     setIsWishlistOpen(false);
   };
 
-  return (
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isWishlistOpen && (
         <>
@@ -213,7 +222,8 @@ const WishlistDrawer = () => {
           </m.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
 

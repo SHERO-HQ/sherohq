@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Lock, ShieldCheck, AlertCircle, Loader2 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -47,7 +48,15 @@ export function UserChangePasswordModal() {
     }
   };
 
-  return (
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
     <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/80  animate-in fade-in duration-300">
       <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 shadow overflow-hidden animate-in zoom-in-95 duration-300 rounded">
         <div className="p-6 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5">
@@ -158,6 +167,7 @@ export function UserChangePasswordModal() {
           </button>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

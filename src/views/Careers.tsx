@@ -110,17 +110,29 @@ export default function Careers() {
               transition={{ duration: 0.5 }}
             >
               <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-7xl">
-                <span className="text-brand-primary-500">Redefine</span> What's <span className="text-brand-secondary-500">Possible.</span> Together.
+                <span className="dark:text-brand-primary-500 text-brand-primary-700">
+                  Redefine
+                </span>{" "}
+                What's{" "}
+                <span className="dark:text-brand-secondary-500 text-brand-secondary-800">
+                  Possible.
+                </span>{" "}
+                Together.
               </h1>
               <p className="mt-6 max-w-2xl mx-auto text-sm text-muted-foreground">
-                Join a team that's creating software and hardware solutions to solve real-world problems. Grow your skills, own your work, and help redefine what's possible.              </p>
+                Join a team that's creating software and hardware solutions to
+                solve real-world problems. Grow your skills, own your work, and
+                help redefine what's possible.{" "}
+              </p>
 
               <div className="mt-10 flex justify-center gap-4">
                 <Button
                   variant="default"
                   size="lg"
                   onClick={() => {
-                    document.getElementById('open-roles')?.scrollIntoView({ behavior: 'smooth' });
+                    document
+                      .getElementById("open-roles")
+                      ?.scrollIntoView({ behavior: "smooth" });
                   }}
                 >
                   View Open Roles
@@ -128,7 +140,7 @@ export default function Careers() {
                 <Button
                   variant="secondary"
                   size="lg"
-                  onClick={() => router.push('/about-us')}
+                  onClick={() => router.push("/about-us")}
                 >
                   Our Story
                 </Button>
@@ -148,7 +160,7 @@ export default function Careers() {
               viewport={{ once: true }}
               className="text-2xl font-bold text-foreground sm:text-3xl"
             >
-              Build With SHERO
+              Build With <span className="text-transparent bg-linear-to-r from-brand-primary-700 to-brand-secondary-700 dark:from-brand-primary-500 dark:to-brand-secondary-500 bg-clip-text font-black">SHERO</span>
             </m.h2>
             <m.p
               initial={{ opacity: 0, y: 20 }}
@@ -157,7 +169,9 @@ export default function Careers() {
               transition={{ delay: 0.1 }}
               className="mt-4 text-sm text-muted-foreground"
             >
-              Join a team that's redefining what's possible through software and hardware. Together, we're building technology that solves real problems and creates lasting impact.
+              Join a team that's redefining what's possible through software and
+              hardware. Together, we're building technology that solves real
+              problems and creates lasting impact.
             </m.p>
           </div>
 
@@ -190,7 +204,10 @@ export default function Careers() {
                   {/* We use an animate presence or just motion div for smooth expand */}
                   <m.div
                     initial={false}
-                    animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
+                    animate={{
+                      height: isOpen ? "auto" : 0,
+                      opacity: isOpen ? 1 : 0,
+                    }}
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden"
                   >
@@ -206,7 +223,10 @@ export default function Careers() {
       </section>
 
       {/* Open Roles Section */}
-      <section id="open-roles" className="py-20 bg-muted/20 border-t border-border">
+      <section
+        id="open-roles"
+        className="py-20 bg-muted/20 border-t border-border"
+      >
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
@@ -219,7 +239,13 @@ export default function Careers() {
                 Open Positions
               </m.h2>
               <p className="mt-4 text-sm text-muted-foreground">
-                Don't see a perfect fit? Send your CV to <a href={`mailto:${COMPANY_EMAILS.CAREERS}`} className="text-brand-primary-500 hover:underline">{COMPANY_EMAILS.CAREERS}</a>
+                Don't see a perfect fit? Send your CV to{" "}
+                <a
+                  href={`mailto:${COMPANY_EMAILS.CAREERS}`}
+                  className="dark:text-brand-primary-500 text-brand-primary-800 hover:underline"
+                >
+                  {COMPANY_EMAILS.CAREERS}
+                </a>
               </p>
             </div>
 
@@ -231,7 +257,9 @@ export default function Careers() {
               ) : openRoles.length === 0 ? (
                 <div className="text-center py-10 text-muted-foreground">
                   <Meh className="w-12 h-12 mx-auto text-muted-foreground" />
-                  <p className="mt-4 text-lg">No open positions at the moment.</p>
+                  <p className="mt-4 text-lg">
+                    No open positions at the moment.
+                  </p>
                   <p>Please check back later.</p>
                 </div>
               ) : (
@@ -243,7 +271,7 @@ export default function Careers() {
                         onClick={() => setFilterDept(dept)}
                         className={`px-6 py-3 text-sm font-medium transition-colors relative ${
                           filterDept === dept
-                            ? "text-brand-primary-500"
+                            ? "dark:text-brand-primary-500 text-brand-primary-800"
                             : "text-muted-foreground hover:text-foreground"
                         }`}
                       >
@@ -251,7 +279,7 @@ export default function Careers() {
                         {filterDept === dept && (
                           <m.div
                             layoutId="activeTab"
-                            className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-primary-500"
+                            className="absolute bottom-0 left-0 right-0 h-0.5 dark:bg-brand-primary-500 bg-brand-primary-800"
                           />
                         )}
                       </button>
@@ -262,54 +290,54 @@ export default function Careers() {
                       if (!acc[role.department]) acc[role.department] = [];
                       acc[role.department].push(role);
                       return acc;
-                    }, {})
+                    }, {}),
                   ).map(([department, roles]: [string, any], deptIndex) => (
-                  <div key={department} className="mb-10 last:mb-0">
-                    <h3 className="text-xl font-bold text-foreground mb-6 pb-2 border-b border-border flex items-center gap-2">
-                      <Building className="w-5 h-5 text-brand-primary-500" />
-                      {department}
-                    </h3>
-                    <div className="grid md:grid-cols-2 gap-6">
-                      {roles.map((role: any, index: number) => (
-                        <m.div
-                          key={role.id}
-                          initial={{ opacity: 0, y: 20 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: index * 0.1 }}
-                          className="h-full"
-                        >
-                          <div
-                            onClick={() => setSelectedJob(role)}
-                            className="group flex flex-col h-full bg-card p-6 sm:p-8 rounded border border-border hover:border-brand-primary-500 hover:shadow-md transition-all duration-300 cursor-pointer"
+                    <div key={department} className="mb-10 last:mb-0">
+                      <h3 className="text-xl font-bold text-foreground mb-6 pb-2 border-b border-border flex items-center gap-2">
+                        <Building className="w-5 h-5 dark:text-brand-primary-500 text-brand-primary-800" />
+                        {department}
+                      </h3>
+                      <div className="grid md:grid-cols-2 gap-6">
+                        {roles.map((role: any, index: number) => (
+                          <m.div
+                            key={role.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: index * 0.1 }}
+                            className="h-full"
                           >
-                            <div className="flex-1">
-                              <h3 className="text-xl font-semibold text-card-foreground group-hover:text-brand-primary-500 transition-colors">
-                                {role.title}
-                              </h3>
-                              <div className="mt-4 flex flex-col gap-3 text-sm text-muted-foreground">
-                                <span className="flex items-center gap-2">
-                                  <MapPin className="w-4 h-4 text-brand-primary-500" />
-                                  {role.location}
-                                </span>
+                            <div
+                              onClick={() => setSelectedJob(role)}
+                              className="group flex flex-col h-full bg-card p-6 sm:p-8 rounded border border-border dark:hover:border-brand-primary-500 hover:border-brand-primary-800 hover:shadow-md transition-all duration-300 cursor-pointer"
+                            >
+                              <div className="flex-1">
+                                <h3 className="text-xl font-semibold text-card-foreground dark:group-hover:text-brand-primary-500 group-hover:text-brand-primary-800 transition-colors">
+                                  {role.title}
+                                </h3>
+                                <div className="mt-4 flex flex-col gap-3 text-sm text-muted-foreground">
+                                  <span className="flex items-center gap-2">
+                                    <MapPin className="w-4 h-4 dark:text-brand-primary-500 text-brand-primary-800" />
+                                    {role.location}
+                                  </span>
+                                </div>
                               </div>
-                            </div>
 
-                            <div className="mt-8 pt-4 border-t border-border flex items-center justify-between">
-                              <span className="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-emerald-500/10 text-emerald-500">
-                                {role.type}
-                              </span>
-                              <div className="flex items-center gap-2 text-brand-primary-500 font-semibold">
-                                View Details
-                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                              <div className="mt-8 pt-4 border-t border-border flex items-center justify-between">
+                                <span className="inline-flex items-center px-2.5 py-1 rounded text-xs font-semibold bg-emerald-500/10 dark:text-emerald-500 text-brand-secondary-700">
+                                  {role.type}
+                                </span>
+                                <div className="flex items-center gap-2 dark:text-brand-primary-500 text-brand-primary-800 font-semibold">
+                                  View Details
+                                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </m.div>
-                      ))}
+                          </m.div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
                 </>
               )}
             </div>

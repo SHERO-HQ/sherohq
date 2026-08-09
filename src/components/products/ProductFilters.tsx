@@ -1,4 +1,5 @@
 "use client";
+import { createPortal } from "react-dom";
 import { m, AnimatePresence } from "motion/react";
 import {
   X,
@@ -7,7 +8,7 @@ import {
   Trash2,
   ArrowRight,
   Star} from "lucide-react";
-import { useState} from "react";
+import { useState, useEffect } from "react";
 import { } from "@/components/ui/button";
 
 export interface FilterState {
@@ -109,7 +110,15 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
     //   { id: "stock" as const, label: "Availability" },
   ];
 
-  return (
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <>
@@ -360,7 +369,8 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
           </m.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
 

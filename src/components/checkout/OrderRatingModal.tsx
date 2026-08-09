@@ -1,5 +1,6 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { m, AnimatePresence } from "motion/react";
 import { X, Star, Send, Loader2, CheckCircle2 } from "lucide-react";
 import { sendContactMessage } from "@/services/api";
@@ -67,7 +68,15 @@ export default function OrderRatingModal({
  }
  };
 
- return (
+ const [mounted, setMounted] = useState(false);
+
+ useEffect(() => {
+   setMounted(true);
+ }, []);
+
+ if (!mounted) return null;
+
+ return createPortal(
  <AnimatePresence>
  {isOpen && (
  <m.div
@@ -187,8 +196,9 @@ export default function OrderRatingModal({
  )}
  </div>
  </m.div>
- </m.div>
- )}
- </AnimatePresence>
+  </m.div>
+  )}
+  </AnimatePresence>,
+ document.body
  );
 }
