@@ -4,7 +4,6 @@ import Link from "next/link";
 import {
   ArrowLeft,
   History,
-  Megaphone,
   MessageCircle,
   RefreshCw,
   Send,

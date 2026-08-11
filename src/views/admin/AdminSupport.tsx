@@ -6,7 +6,6 @@ import {
   Headset,
   Search,
   Filter,
-  ArrowLeft,
   HelpCircle,
 } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
@@ -20,7 +19,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Link from "next/link";
 import { SupportTicketsTab } from "@/components/admin/support/SupportTicketsTab";
 import { ConsultationsTab } from "@/components/admin/support/ConsultationsTab";
 import { InquiriesTab } from "@/components/admin/support/InquiriesTab";
