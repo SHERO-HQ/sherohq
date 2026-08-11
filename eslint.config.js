@@ -18,6 +18,8 @@ export default defineConfig([
     "**/*.test.ts",
     "**/*.test.tsx",
     "tests/**/*",
+    "*.config.ts",
+    "*.config.js",
   ]),
   {
     files: ["**/*.{ts,tsx}"],
@@ -56,12 +58,13 @@ export default defineConfig([
     },
   },
   // Next.js App Router layouts/pages export metadata + viewport alongside components
-  // and the router-compat shim exports both components and hooks by design
+  // and context files export providers + hooks by design
   {
     files: [
       "src/app/**/layout.tsx",
       "src/app/**/page.tsx",
       "src/lib/router-compat.tsx",
+      "src/context/**/*.tsx",
     ],
     rules: {
       "react-refresh/only-export-components": "off",

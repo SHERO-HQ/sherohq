@@ -16,7 +16,7 @@ export function useUser() {
       try {
         const result = await getUserMe();
         return result; // returns { user, mustReset }
-      } catch (error) {
+      } catch (_error) {
         return null;
       }
     },
