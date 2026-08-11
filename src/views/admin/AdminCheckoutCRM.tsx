@@ -12,22 +12,22 @@ export default function AdminCheckoutCRM() {
   const [filterType, setFilterType] = useState<"all" | "actionable" | "anonymous">("actionable");
 
   const { data: abandonedCarts, isLoading: isLoadingAbandoned } = useAbandonedCarts();
-  
+
   const { data: completedOrders, isLoading: isLoadingCompleted } = useQuery({
     queryKey: ["admin-completed-orders"],
     queryFn: () => fetchAllOrders(),
   });
 
-  const filteredCompletedOrders = completedOrders?.filter(o => 
+  const filteredCompletedOrders = completedOrders?.filter(o =>
     o.status === "completed" || o.paymentStatus === "confirmed" || o.status === "delivered" || o.status === "processing"
   ) || [];
 
   const searchedAbandoned = abandonedCarts?.filter(cart => {
     const term = searchTerm.toLowerCase();
     const matchesSearch = (cart.name?.toLowerCase().includes(term) || cart.email?.toLowerCase().includes(term) || cart.phone?.toLowerCase().includes(term));
-    
+
     if (!matchesSearch) return false;
-    
+
     const hasContact = !!(cart.email || cart.phone);
     if (filterType === "actionable") return hasContact;
     if (filterType === "anonymous") return !hasContact;
@@ -54,22 +54,20 @@ export default function AdminCheckoutCRM() {
 
       <div className="flex border-b border-border">
         <button
-          className={`px-4 py-2 border-b-2 font-medium text-sm flex items-center gap-2 transition-colors ${
-            activeTab === "abandoned"
+          className={`px-4 py-2 border-b-2 font-medium text-sm flex items-center gap-2 transition-colors ${activeTab === "abandoned"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground"
-          }`}
+            }`}
           onClick={() => setActiveTab("abandoned")}
         >
           <XCircle className="w-4 h-4" />
           Abandoned Carts ({abandonedCarts?.length || 0})
         </button>
         <button
-          className={`px-4 py-2 border-b-2 font-medium text-sm flex items-center gap-2 transition-colors ${
-            activeTab === "completed"
+          className={`px-4 py-2 border-b-2 font-medium text-sm flex items-center gap-2 transition-colors ${activeTab === "completed"
               ? "border-primary text-primary"
               : "border-transparent text-muted-foreground hover:text-foreground"
-          }`}
+            }`}
           onClick={() => setActiveTab("completed")}
         >
           <CheckCircle2 className="w-4 h-4" />
@@ -80,18 +78,18 @@ export default function AdminCheckoutCRM() {
       <div className="flex items-center gap-4">
         <div className="relative w-full max-w-sm">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input 
-            placeholder="Search by name, email, phone..." 
+          <Input
+            placeholder="Search by name, email, phone..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-9"
           />
         </div>
         {activeTab === "abandoned" && (
-          <select 
+          <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value as any)}
-            className="border border-border bg-card rounded-md text-sm py-2 px-3 focus:ring-2 focus:ring-primary text-foreground"
+            className="border border-border bg-card rounded text-sm py-2 px-3 focus:ring-2 focus:ring-primary text-foreground"
           >
             <option value="actionable" className="bg-card text-foreground">Actionable (Has Contact)</option>
             <option value="all" className="bg-card text-foreground">All Carts</option>

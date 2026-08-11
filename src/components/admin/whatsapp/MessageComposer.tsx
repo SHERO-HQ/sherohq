@@ -43,11 +43,10 @@ export function MessageComposer({
         <button
           type="button"
           onClick={() => setSendType("text")}
-          className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 ${
-            sendType === "text"
+          className={`px-4 py-1.5 text-xs font-semibold rounded transition-all flex items-center gap-1.5 ${sendType === "text"
               ? "bg-card text-foreground shadow-sm border border-border/50"
               : "text-muted-foreground hover:text-foreground hover:bg-accent"
-          }`}
+            }`}
         >
           <MessageSquare className="w-3.5 h-3.5" />
           Custom Text
@@ -55,11 +54,10 @@ export function MessageComposer({
         <button
           type="button"
           onClick={() => setSendType("template")}
-          className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all flex items-center gap-1.5 ${
-            sendType === "template"
+          className={`px-4 py-1.5 text-xs font-semibold rounded transition-all flex items-center gap-1.5 ${sendType === "template"
               ? "bg-card text-foreground shadow-sm border border-border/50"
               : "text-muted-foreground hover:text-foreground hover:bg-accent"
-          }`}
+            }`}
         >
           <Code className="w-3.5 h-3.5" />
           Meta Template
@@ -138,7 +136,7 @@ export function MessageComposer({
                     }
                   }
                 }}
-                className="w-full px-3 py-2 bg-card border border-border rounded-md text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500 transition-shadow appearance-none"
+                className="w-full px-3 py-2 bg-card border border-border rounded text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500 transition-shadow appearance-none"
               >
                 <option value="">-- Select a Template --</option>
                 {dbTemplates.map((t) => (
@@ -163,7 +161,7 @@ export function MessageComposer({
                   onChange={(e) => setTemplateName(e.target.value)}
                   placeholder="verification_code"
                   disabled={sending}
-                  className="w-full px-3 py-2 bg-card border border-border rounded-md text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500 transition-shadow"
+                  className="w-full px-3 py-2 bg-card border border-border rounded text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500 transition-shadow"
                 />
               </div>
               <div>
@@ -180,7 +178,7 @@ export function MessageComposer({
                   onChange={(e) => setTemplateLang(e.target.value)}
                   placeholder="en"
                   disabled={sending}
-                  className="w-full px-3 py-2 bg-card border border-border rounded-md text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500 transition-shadow"
+                  className="w-full px-3 py-2 bg-card border border-border rounded text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500 transition-shadow"
                 />
               </div>
             </div>
@@ -198,7 +196,7 @@ export function MessageComposer({
                 onChange={(e) => setTemplateParamsText(e.target.value)}
                 placeholder="e.g. 123456, GHS 50.00"
                 disabled={sending}
-                className="w-full px-3 py-2 bg-card border border-border rounded-md text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500 transition-shadow"
+                className="w-full px-3 py-2 bg-card border border-border rounded text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500 transition-shadow"
               />
             </div>
             <div className="flex justify-end pt-2">

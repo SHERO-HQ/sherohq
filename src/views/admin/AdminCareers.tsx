@@ -32,7 +32,7 @@ export default function AdminCareers() {
   const dialog = useDialog();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("jobs");
-  
+
   // Job Form State
   const [isJobModalOpen, setIsJobModalOpen] = useState(false);
   const [editingJob, setEditingJob] = useState<any>(null);
@@ -126,8 +126,8 @@ export default function AdminCareers() {
     setIsJobModalOpen(true);
   };
   const filteredJobs = jobs.filter((job: any) => {
-    const searchMatch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                        job.department.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchMatch = job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      job.department.toLowerCase().includes(searchTerm.toLowerCase());
     const deptMatch = deptFilter === "all" || job.department === deptFilter;
     const typeMatch = typeFilter === "all" || job.type === typeFilter;
     return searchMatch && deptMatch && typeMatch;
@@ -135,8 +135,8 @@ export default function AdminCareers() {
 
   const filteredApps = applications.filter((app: any) => {
     const searchMatch = app.applicantName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        app.applicantEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        app.jobTitle.toLowerCase().includes(searchTerm.toLowerCase());
+      app.applicantEmail.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      app.jobTitle.toLowerCase().includes(searchTerm.toLowerCase());
     const jobMatch = jobFilter === "all" || app.jobId === jobFilter;
     const statusMatch = statusFilter === "all" || app.status === statusFilter;
     return searchMatch && jobMatch && statusMatch;
@@ -161,7 +161,7 @@ export default function AdminCareers() {
           </div>
           {activeTab === "jobs" && (
             <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full">
-              <Select 
+              <Select
                 options={[
                   { label: "All Depts", value: "all" },
                   ...Array.from(new Set(jobs.map((j: any) => j.department))).map(d => ({ label: String(d), value: String(d) }))
@@ -169,7 +169,7 @@ export default function AdminCareers() {
                 value={deptFilter}
                 onChange={(e) => setDeptFilter(e.target.value)}
               />
-              <Select 
+              <Select
                 options={[
                   { label: "All Types", value: "all" },
                   { label: "Full-time", value: "Full-time" },
@@ -187,7 +187,7 @@ export default function AdminCareers() {
           )}
           {activeTab === "apps" && (
             <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 w-full">
-              <Select 
+              <Select
                 options={[
                   { label: "All Jobs", value: "all" },
                   ...jobs.map((j: any) => ({ label: j.title, value: j.id }))
@@ -195,7 +195,7 @@ export default function AdminCareers() {
                 value={jobFilter}
                 onChange={(e) => setJobFilter(e.target.value)}
               />
-              <Select 
+              <Select
                 options={[
                   { label: "All Statuses", value: "all" },
                   { label: "Pending", value: "pending" },
@@ -297,7 +297,7 @@ export default function AdminCareers() {
                   ) : filteredApps.map((app: any) => (
                     <tr key={app.id} className="hover:bg-muted/30">
                       <td className="px-6 py-4">
-                        <button 
+                        <button
                           onClick={() => {
                             setSelectedApplication(app);
                             setIsAppModalOpen(true);
@@ -319,7 +319,7 @@ export default function AdminCareers() {
                           ) : (
                             <span className="text-muted-foreground">No Resume</span>
                           )}
-                          
+
                           {app.portfolioUrl && (
                             <a href={app.portfolioUrl} target="_blank" rel="noreferrer" className="text-brand-secondary-600 hover:underline flex items-center gap-1 text-sm">
                               Portfolio/GitHub <ExternalLink className="w-3 h-3" />
@@ -356,18 +356,18 @@ export default function AdminCareers() {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2 text-left">
               <Label htmlFor="title">Job Title</Label>
-              <Input id="title" value={jobFormData.title} onChange={(e) => setJobFormData({...jobFormData, title: e.target.value})} required />
+              <Input id="title" value={jobFormData.title} onChange={(e) => setJobFormData({ ...jobFormData, title: e.target.value })} required />
             </div>
             <div className="space-y-2 text-left">
               <Label htmlFor="department">Department</Label>
-              <Input id="department" value={jobFormData.department} onChange={(e) => setJobFormData({...jobFormData, department: e.target.value})} required />
+              <Input id="department" value={jobFormData.department} onChange={(e) => setJobFormData({ ...jobFormData, department: e.target.value })} required />
             </div>
             <div className="space-y-2 text-left">
               <Label htmlFor="location">Location</Label>
-              <Input id="location" value={jobFormData.location} onChange={(e) => setJobFormData({...jobFormData, location: e.target.value})} required />
+              <Input id="location" value={jobFormData.location} onChange={(e) => setJobFormData({ ...jobFormData, location: e.target.value })} required />
             </div>
             <div className="space-y-2 text-left">
-              <Select 
+              <Select
                 label="Type"
                 options={[
                   { label: "Full-time", value: "Full-time" },
@@ -375,17 +375,17 @@ export default function AdminCareers() {
                   { label: "Contract", value: "Contract" },
                   { label: "Internship", value: "Internship" }
                 ]}
-                value={jobFormData.type} 
-                onChange={(e) => setJobFormData({...jobFormData, type: e.target.value})}
+                value={jobFormData.type}
+                onChange={(e) => setJobFormData({ ...jobFormData, type: e.target.value })}
               />
             </div>
           </div>
           <div className="space-y-2 text-left">
             <Label htmlFor="description">Description</Label>
-            <Textarea id="description" value={jobFormData.description} onChange={(e) => setJobFormData({...jobFormData, description: e.target.value})} rows={15} />
+            <Textarea id="description" value={jobFormData.description} onChange={(e) => setJobFormData({ ...jobFormData, description: e.target.value })} rows={15} />
           </div>
           <div className="flex items-center gap-2">
-            <input type="checkbox" id="isActive" checked={jobFormData.isActive} onChange={(e) => setJobFormData({...jobFormData, isActive: e.target.checked})} className="rounded border-border text-brand-primary-500 focus:ring-brand-primary-500" />
+            <input type="checkbox" id="isActive" checked={jobFormData.isActive} onChange={(e) => setJobFormData({ ...jobFormData, isActive: e.target.checked })} className="rounded border-border text-brand-primary-500 focus:ring-brand-primary-500" />
             <Label htmlFor="isActive" className="cursor-pointer">Active / Published</Label>
           </div>
           <div className="flex justify-end gap-2 pt-4">
@@ -413,25 +413,25 @@ export default function AdminCareers() {
                 <p className="text-sm text-muted-foreground">Applied: {new Date(selectedApplication.createdAt).toLocaleDateString()}</p>
               </div>
             </div>
-            
+
             {(selectedApplication.resumeUrl || selectedApplication.portfolioUrl) && (
               <div>
                 <h4 className="text-sm font-medium text-muted-foreground mb-2">Links & Documents</h4>
                 <div className="flex gap-4">
                   {selectedApplication.resumeUrl && (
-                    <a href={`/api/admin/resume-url?path=${encodeURIComponent(selectedApplication.resumeUrl)}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-primary-50 text-brand-primary-700 rounded-md text-sm font-medium hover:bg-brand-primary-100 transition-colors">
+                    <a href={`/api/admin/resume-url?path=${encodeURIComponent(selectedApplication.resumeUrl)}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-primary-50 text-brand-primary-700 rounded text-sm font-medium hover:bg-brand-primary-100 transition-colors">
                       <ExternalLink className="w-4 h-4" /> View Resume
                     </a>
                   )}
                   {selectedApplication.portfolioUrl && (
-                    <a href={selectedApplication.portfolioUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-secondary-50 text-brand-secondary-700 rounded-md text-sm font-medium hover:bg-brand-secondary-100 transition-colors">
+                    <a href={selectedApplication.portfolioUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-secondary-50 text-brand-secondary-700 rounded text-sm font-medium hover:bg-brand-secondary-100 transition-colors">
                       <ExternalLink className="w-4 h-4" /> Portfolio / GitHub
                     </a>
                   )}
                 </div>
               </div>
             )}
-            
+
             <div>
               <h4 className="text-sm font-medium text-muted-foreground mb-2">Cover Letter / Message</h4>
               {selectedApplication.coverLetter ? (

@@ -95,7 +95,7 @@ export function ConversationHeader({
                   className="fixed inset-0 z-40"
                   onClick={() => setIsMenuOpen(false)}
                 ></div>
-                <div className="absolute right-0 top-full mt-2 w-48 bg-[#233138] border border-border rounded-md shadow-lg py-2 z-50 transform origin-top-right transition-all">
+                <div className="absolute right-0 top-full mt-2 w-48 bg-[#233138] border border-border rounded shadow-lg py-2 z-50 transform origin-top-right transition-all">
                   <button
                     className="w-full text-left px-4 py-2 text-sm text-[#d1d7db] hover:bg-[#111b21] transition-colors"
                     onClick={() => setIsMenuOpen(false)}
@@ -129,7 +129,7 @@ export function ConversationHeader({
 
       {isMessageSearchOpen && (
         <div className="px-4 py-2 bg-[#202c33] border-b border-black/20 flex items-center shrink-0 z-10 transition-all">
-          <div className="flex-1 bg-[#2a3942] rounded-md flex items-center px-3 py-1.5 border border-border">
+          <div className="flex-1 bg-[#2a3942] rounded flex items-center px-3 py-1.5 border border-border">
             <input
               type="text"
               placeholder="Search messages..."

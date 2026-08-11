@@ -138,7 +138,7 @@ export default function WhatsAppDashboard() {
             <select
               id="mobile-tabs"
               name="mobile-tabs"
-              className="block w-full bg-transparent border border-border rounded-md text-foreground focus:ring-brand-secondary-500 focus:border-brand-secondary-500 py-3 px-4 text-sm shadow-sm"
+              className="block w-full bg-transparent border border-border rounded text-foreground focus:ring-brand-secondary-500 focus:border-brand-secondary-500 py-3 px-4 text-sm shadow-sm"
               value={activeTab}
               onChange={(e) => setActiveTab(e.target.value)}
             >
@@ -156,11 +156,10 @@ export default function WhatsAppDashboard() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-2 text-xs font-semibold rounded transition-all flex items-center gap-2 ${
-                  activeTab === tab.id
+                className={`px-4 py-2 text-xs font-semibold rounded transition-all flex items-center gap-2 ${activeTab === tab.id
                     ? "bg-brand-secondary-600 text-foreground shadow-md shadow-brand-secondary-600/10"
                     : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                }`}
+                  }`}
               >
                 <tab.icon className="w-4 h-4" />
                 {tab.label}

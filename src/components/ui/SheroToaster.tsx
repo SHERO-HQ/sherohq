@@ -23,13 +23,13 @@ export function SheroToaster() {
       toastOptions={{
         classNames: {
           toast:
-            "group toast glass-surface border border-border/60 shadow-xl rounded-xl font-sora p-4 text-foreground text-sm flex gap-3 items-start transition-all duration-300",
+            "group toast glass-surface border border-border/60 shadow-xl rounded font-sora p-4 text-foreground text-sm flex gap-3 items-start transition-all duration-300",
           title: "font-semibold text-sm text-foreground leading-tight",
           description: "text-xs text-muted-foreground leading-relaxed mt-1",
           actionButton:
-            "bg-brand-primary-700 hover:bg-brand-primary-800 text-white font-medium rounded-md px-3 py-1.5 text-xs transition-colors shadow-sm",
+            "bg-brand-primary-700 hover:bg-brand-primary-800 text-white font-medium rounded px-3 py-1.5 text-xs transition-colors shadow-sm",
           cancelButton:
-            "bg-muted hover:bg-muted/80 text-muted-foreground font-medium rounded-md px-3 py-1.5 text-xs transition-colors",
+            "bg-muted hover:bg-muted/80 text-muted-foreground font-medium rounded px-3 py-1.5 text-xs transition-colors",
           closeButton:
             "text-muted-foreground hover:text-foreground bg-transparent border-none hover:bg-muted/50 rounded-full transition-colors",
           success:

@@ -96,36 +96,33 @@ export function WhatsAppAnalyticsTab({
       <div className="bg-card/40 border border-border rounded p-6 backdrop-blur-md">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-bold text-foreground">Message Volume (Last 14 Days)</h3>
-          <div className="flex items-center gap-1 bg-background/50 border border-border p-1 rounded-md">
+          <div className="flex items-center gap-1 bg-background/50 border border-border p-1 rounded">
             <button
               onClick={() => setChartType("composed")}
-              className={`p-1.5 rounded transition-colors ${
-                chartType === "composed"
+              className={`p-1.5 rounded transition-colors ${chartType === "composed"
                   ? "bg-accent text-foreground"
                   : "text-muted-foreground hover:text-foreground"
-              }`}
+                }`}
               title="Mixed Chart"
             >
               <BarChart3 className="w-4 h-4" />
             </button>
             <button
               onClick={() => setChartType("line")}
-              className={`p-1.5 rounded transition-colors ${
-                chartType === "line"
+              className={`p-1.5 rounded transition-colors ${chartType === "line"
                   ? "bg-accent text-foreground"
                   : "text-muted-foreground hover:text-foreground"
-              }`}
+                }`}
               title="Line Chart"
             >
               <LineChartIcon className="w-4 h-4" />
             </button>
             <button
               onClick={() => setChartType("bar")}
-              className={`p-1.5 rounded transition-colors ${
-                chartType === "bar"
+              className={`p-1.5 rounded transition-colors ${chartType === "bar"
                   ? "bg-accent text-foreground"
                   : "text-muted-foreground hover:text-foreground"
-              }`}
+                }`}
               title="Bar Chart"
             >
               <BarChart3 className="w-4 h-4" />
@@ -157,9 +154,9 @@ export function WhatsAppAnalyticsTab({
                     return isNaN(d.getTime())
                       ? value
                       : new Intl.DateTimeFormat("en-US", {
-                          month: "short",
-                          day: "numeric",
-                        }).format(d);
+                        month: "short",
+                        day: "numeric",
+                      }).format(d);
                   } catch {
                     return value;
                   }

@@ -244,26 +244,26 @@ export default function AdminTemplates() {
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
                   {t.whatsappTemplateLanguage && (
-                    <span className="text-[10px] bg-accent text-muted-foreground px-2 py-0.5 rounded-md font-semibold uppercase tracking-wider border border-border/50">
+                    <span className="text-[10px] bg-accent text-muted-foreground px-2 py-0.5 rounded font-semibold uppercase tracking-wider border border-border/50">
                       {t.whatsappTemplateLanguage}
                     </span>
                   )}
                   {t.isSync ? (
-                    <span className="text-[10px] bg-sky-500/10 text-sky-500 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider border border-sky-500/20">
+                    <span className="text-[10px] bg-sky-500/10 text-sky-500 px-2 py-0.5 rounded font-bold uppercase tracking-wider border border-sky-500/20">
                       Meta Sync
                     </span>
                   ) : (
-                    <span className="text-[10px] bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider border border-emerald-500/20">
+                    <span className="text-[10px] bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded font-bold uppercase tracking-wider border border-emerald-500/20">
                       Local
                     </span>
                   )}
                   {/* Status Badge */}
                   {t.status === 'APPROVED' ? (
-                    <span className="text-[10px] bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider border border-emerald-500/20">APPROVED</span>
+                    <span className="text-[10px] bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded font-bold uppercase tracking-wider border border-emerald-500/20">APPROVED</span>
                   ) : t.status === 'REJECTED' ? (
-                    <span className="text-[10px] bg-rose-500/10 text-rose-500 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider border border-rose-500/20">REJECTED</span>
+                    <span className="text-[10px] bg-rose-500/10 text-rose-500 px-2 py-0.5 rounded font-bold uppercase tracking-wider border border-rose-500/20">REJECTED</span>
                   ) : t.status === 'PENDING' ? (
-                    <span className="text-[10px] bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider border border-amber-500/20">PENDING</span>
+                    <span className="text-[10px] bg-amber-500/10 text-amber-500 px-2 py-0.5 rounded font-bold uppercase tracking-wider border border-amber-500/20">PENDING</span>
                   ) : null}
                 </div>
               </div>
