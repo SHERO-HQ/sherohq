@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
-import { User, Save, Loader2, Shield, Camera, AlertCircle } from "lucide-react";
+import { User, Save, Loader2, Shield, Camera, AlertCircle, UserCog } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAdminUser } from "@/hooks/queries/useAdminQuery";
 import { updateAdminProfile, uploadImage, getImageUrl } from "@/services/api";
@@ -10,8 +10,8 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import AppImage from "@/components/common/AppImage";
 import { MFASetupDialog } from "@/components/admin/MFASetupDialog";
-import { } from "@/services/admin";
 import { useDialog } from "@/hooks/useDialog";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 
 export default function AdminProfile() {
   const queryClient = useQueryClient();
@@ -115,12 +115,11 @@ export default function AdminProfile() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-12">
-      <div className="space-y-1">
-        <h1 className="text-3xl font-bold text-foreground">Account Settings</h1>
-        <p className="text-muted-foreground text-sm">
-          Manage your administrative profile and security preferences.
-        </p>
-      </div>
+      <AdminPageHeader
+        icon={UserCog}
+        title="Account Settings"
+        description="Manage your administrative profile and security preferences."
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1 space-y-6">

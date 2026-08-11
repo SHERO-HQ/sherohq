@@ -11,8 +11,10 @@ import {
   BarChart3,
   Clock,
   Settings,
+  MessageSquareCode,
 } from "lucide-react";
 import { useWhatsAppDashboardState } from "@/components/admin/whatsapp/useWhatsAppDashboardState";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 
 export default function WhatsAppDashboard() {
   const {
@@ -115,18 +117,12 @@ export default function WhatsAppDashboard() {
     <div className="space-y-8">
       {/* Sticky Header and Tab Bar */}
       <div className="sticky top-20 z-30 bg-background/95 backdrop-blur-md pt-4 pb-4 border-b border-border shadow-sm mb-6 -mx-3 px-3 md:-mx-6 md:px-6">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-3">
-              WhatsApp Automation
-            </h1>
-            <p className="text-muted-foreground text-sm mt-1">
-              Manage live conversations, track automated delivery retries,
-              resolve customer tickets, and review statistics.
-            </p>
-          </div>
-        </div>
+        <AdminPageHeader
+          icon={MessageSquareCode}
+          title="WhatsApp Automation"
+          description="Manage live conversations, track automated delivery retries, resolve customer tickets, and review statistics."
+          sticky={false}
+        />
 
         {/* Tabs Menu */}
         <div>

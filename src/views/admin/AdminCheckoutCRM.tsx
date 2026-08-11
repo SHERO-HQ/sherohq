@@ -6,6 +6,8 @@ import { fetchAllOrders } from "@/services/api";
 import { ShoppingCart, CheckCircle2, XCircle, Loader2, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+
 export default function AdminCheckoutCRM() {
   const [activeTab, setActiveTab] = useState<"abandoned" | "completed">("abandoned");
   const [searchTerm, setSearchTerm] = useState("");
@@ -24,19 +26,16 @@ export default function AdminCheckoutCRM() {
 
   const searchedAbandoned = abandonedCarts?.filter(cart => {
     const term = searchTerm.toLowerCase();
-    const matchesSearch = (cart.name?.toLowerCase().includes(term) || cart.email?.toLowerCase().includes(term) || cart.phone?.toLowerCase().includes(term));
-
-    if (!matchesSearch) return false;
-
-    const hasContact = !!(cart.email || cart.phone);
-    if (filterType === "actionable") return hasContact;
-    if (filterType === "anonymous") return !hasContact;
-    return true;
-  });
+    const name = cart.name?.toLowerCase() || "";
+    const email = cart.email?.toLowerCase() || "";
+    const phone = cart.phone?.toLowerCase() || "";
+    const id = cart.id.toLowerCase();
+    return name.includes(term) || email.includes(term) || phone.includes(term) || id.includes(term);
+  }) || [];
 
   const searchedCompleted = filteredCompletedOrders.filter(order => {
     const term = searchTerm.toLowerCase();
-    const name = [order.shippingInfo?.firstName, order.shippingInfo?.lastName].filter(Boolean).join(" ").toLowerCase();
+    const name = `${order.shippingInfo?.firstName || ""} ${order.shippingInfo?.lastName || ""}`.toLowerCase();
     const email = order.shippingInfo?.email?.toLowerCase() || "";
     const phone = order.shippingInfo?.phone?.toLowerCase() || "";
     const id = order.id.toLowerCase();
@@ -45,12 +44,34 @@ export default function AdminCheckoutCRM() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold text-foreground">Checkout CRM</h1>
-        <p className="text-muted-foreground">
-          Track and manage your abandoned carts and successful checkouts for marketing campaigns.
-        </p>
-      </div>
+      <AdminPageHeader
+        icon={ShoppingCart}
+        title="Checkout & Recovery CRM"
+        description="Track and manage your abandoned carts and successful checkouts for marketing campaigns."
+      >
+        <div className="flex items-center gap-3">
+          <div className="relative w-full max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by name, email, phone..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-9"
+            />
+          </div>
+          {activeTab === "abandoned" && (
+            <select
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value as any)}
+              className="bg-card border border-border rounded text-sm p-2 text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+              <option value="actionable">Actionable (Email or Phone)</option>
+              <option value="all">All Carts</option>
+              <option value="anonymous">Anonymous Only</option>
+            </select>
+          )}
+        </div>
+      </AdminPageHeader>
 
       <div className="flex border-b border-border">
         <button
@@ -75,42 +96,19 @@ export default function AdminCheckoutCRM() {
         </button>
       </div>
 
-      <div className="flex items-center gap-4">
-        <div className="relative w-full max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="Search by name, email, phone..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-        {activeTab === "abandoned" && (
-          <select
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value as any)}
-            className="border border-border bg-card rounded text-sm py-2 px-3 focus:ring-2 focus:ring-primary text-foreground"
-          >
-            <option value="actionable" className="bg-card text-foreground">Actionable (Has Contact)</option>
-            <option value="all" className="bg-card text-foreground">All Carts</option>
-            <option value="anonymous" className="bg-card text-foreground">Anonymous (No Contact)</option>
-          </select>
-        )}
-      </div>
-
       {activeTab === "abandoned" && (
         <div className="bg-card rounded shadow-sm border border-border overflow-hidden">
           {isLoadingAbandoned ? (
             <div className="p-8 flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
           ) : searchedAbandoned && searchedAbandoned.length > 0 ? (
             <div className="max-h-[600px] overflow-y-auto overflow-x-auto relative">
-              <table className="w-full text-left text-sm">
-                <thead className="bg-muted text-muted-foreground sticky top-0 z-10 shadow-sm">
+              <table className="w-full text-left text-sm border-separate border-spacing-0">
+                <thead>
                   <tr>
-                    <th className="px-6 py-3 font-medium">Contact</th>
-                    <th className="px-6 py-3 font-medium">Cart Value</th>
-                    <th className="px-6 py-3 font-medium">Items</th>
-                    <th className="px-6 py-3 font-medium">Last Active</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-3 font-medium text-muted-foreground">Contact</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-3 font-medium text-muted-foreground">Cart Value</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-3 font-medium text-muted-foreground">Items</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-3 font-medium text-muted-foreground">Last Active</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -156,14 +154,14 @@ export default function AdminCheckoutCRM() {
             <div className="p-8 flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
           ) : searchedCompleted && searchedCompleted.length > 0 ? (
             <div className="max-h-[600px] overflow-y-auto overflow-x-auto relative">
-              <table className="w-full text-left text-sm">
-                <thead className="bg-muted text-muted-foreground sticky top-0 z-10 shadow-sm">
+              <table className="w-full text-left text-sm border-separate border-spacing-0">
+                <thead>
                   <tr>
-                    <th className="px-6 py-3 font-medium">Order ID</th>
-                    <th className="px-6 py-3 font-medium">Contact</th>
-                    <th className="px-6 py-3 font-medium">Total</th>
-                    <th className="px-6 py-3 font-medium">Method / Status</th>
-                    <th className="px-6 py-3 font-medium">Date</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-3 font-medium text-muted-foreground">Order ID</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-3 font-medium text-muted-foreground">Contact</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-3 font-medium text-muted-foreground">Total</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-3 font-medium text-muted-foreground">Method / Status</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-3 font-medium text-muted-foreground">Date</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">

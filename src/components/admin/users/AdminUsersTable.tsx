@@ -147,9 +147,9 @@ const UserTableRow = ({
 );
 
 const UsersListSkeleton = () => (
-  <div className="overflow-x-auto select-none animate-pulse">
+  <div className="overflow-auto max-h-[calc(100vh-18rem)] select-none animate-pulse">
     <table className="w-full">
-      <thead className="bg-card/50">
+      <thead className="bg-card/95 backdrop-blur-xs sticky top-0 z-10 border-b border-border shadow-xs">
         <tr>
           <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">
             Customer
@@ -242,23 +242,23 @@ export function AdminUsersTable({
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full">
-        <thead className="bg-card/50">
+    <div className="overflow-auto max-h-[calc(100vh-18rem)]">
+      <table className="w-full border-separate border-spacing-0">
+        <thead>
           <tr>
-            <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">
+            <th className="sticky top-0 z-10 bg-card border-b border-border text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">
               Customer
             </th>
-            <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">
+            <th className="sticky top-0 z-10 bg-card border-b border-border text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">
               Contact
             </th>
-            <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">
+            <th className="sticky top-0 z-10 bg-card border-b border-border text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">
               Status
             </th>
-            <th className="text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">
+            <th className="sticky top-0 z-10 bg-card border-b border-border text-left text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">
               Joined
             </th>
-            <th className="text-right text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">
+            <th className="sticky top-0 z-10 bg-card border-b border-border text-right text-xs font-medium text-muted-foreground uppercase tracking-wider px-6 py-4">
               Actions
             </th>
           </tr>

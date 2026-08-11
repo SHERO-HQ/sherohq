@@ -35,23 +35,23 @@ export function ExpensesTable({
 }: ExpensesTableProps) {
   return (
     <Card className="bg-card/40 border-border overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-left">
+      <div className="overflow-auto max-h-[calc(100vh-18rem)]">
+        <table className="w-full text-left border-separate border-spacing-0">
           <thead>
-            <tr className="bg-muted/50 border-b border-border">
-              <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase">
+            <tr>
+              <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase">
                 Expense
               </th>
-              <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase">
+              <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase">
                 Category
               </th>
-              <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase">
+              <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase">
                 Date
               </th>
-              <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase text-right">
+              <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase text-right">
                 Amount
               </th>
-              <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase text-right">
+              <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase text-right">
                 Actions
               </th>
             </tr>

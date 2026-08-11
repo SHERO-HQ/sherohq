@@ -39,47 +39,49 @@ export default function AdminProducts() {
         <div className="absolute inset-0 bg-card/10 z-10 pointer-events-none transition-opacity" />
       )}
 
-      {/* Header */}
-      <ProductHeaderActions
-        onRefetch={() => refetchProducts()}
-        isFetching={isFetching}
-        onExport={handleExport}
-      />
+      {/* Header & Filters Sticky Bar */}
+      <div className="sticky top-20 z-20 bg-background/95 backdrop-blur-md py-3 pb-4 -mx-3 px-3 md:-mx-6 md:px-6 border-b border-border/50 space-y-4 shadow-xs rounded-b">
+        <ProductHeaderActions
+          onRefetch={() => refetchProducts()}
+          isFetching={isFetching}
+          onExport={handleExport}
+        />
 
-      {/* Filters */}
-      <ProductFiltersBar
-        search={search}
-        setSearch={setSearch}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        stockFilter={stockFilter}
-        setStockFilter={setStockFilter}
-        categories={categories}
-        setCurrentPage={setCurrentPage}
-      />
+        {/* Filters */}
+        <ProductFiltersBar
+          search={search}
+          setSearch={setSearch}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          stockFilter={stockFilter}
+          setStockFilter={setStockFilter}
+          categories={categories}
+          setCurrentPage={setCurrentPage}
+        />
+      </div>
 
       {/* Products Table */}
-      <div className="bg-card/40 border border-border rounded overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
+      <div className="bg-card/40 border border-border rounded overflow-hidden max-h-[calc(100vh-16rem)] flex flex-col">
+        <div className="overflow-auto flex-1">
+          <table className="w-full text-left border-separate border-spacing-0">
             <thead>
-              <tr className="bg-muted/50 border-b border-border">
-                <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              <tr>
+                <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   Product
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   SKU
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   Category
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   Price
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                   Stock
                 </th>
-                <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">
+                <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">
                   Actions
                 </th>
               </tr>

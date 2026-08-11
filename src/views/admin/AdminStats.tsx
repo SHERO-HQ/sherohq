@@ -22,6 +22,7 @@ import {
  useDeleteStat} from "@/hooks/queries/useStats";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
 import { useNotifications } from "@/hooks/useNotifications";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { type SiteStat } from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -144,35 +145,30 @@ const AdminStats = () => {
 
  return (
  <div className="space-y-8 animate-in fade-in duration-500 pb-12">
- <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
- <div>
- <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
- <BarChart className="w-7 h-7 text-brand-secondary-400" />
- Site Statistics
- </h1>
- <p className="text-muted-foreground text-sm mt-1">
- Manage marketing stats displayed on the landing page
- </p>
- </div>
- <Button
- onClick={handleOpenCreate}
- className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
- >
- <Plus className="w-4 h-4 mr-2" />
- Add Stat
- </Button>
- </div>
+  <AdminPageHeader
+    icon={BarChart}
+    title="Site Statistics"
+    description="Manage marketing stats displayed on the landing page"
+  >
+    <Button
+      onClick={handleOpenCreate}
+      className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
+    >
+      <Plus className="w-4 h-4 mr-2" />
+      Add Stat
+    </Button>
+  </AdminPageHeader>
 
- {/* Search */}
- <div className="relative max-w-md">
- <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
- <Input
- placeholder="Search stats..."
- value={searchQuery}
- onChange={(e) => setSearchQuery(e.target.value)}
- className="pl-10 bg-card/50 border-border text-foreground placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
- />
- </div>
+    {/* Search */}
+    <div className="relative max-w-md">
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+      <Input
+        placeholder="Search stats..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="pl-10 bg-card/50 border-border text-foreground placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
+      />
+    </div>
 
  {/* List */}
  {isLoading ? (

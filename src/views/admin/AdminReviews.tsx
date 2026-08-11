@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Modal } from "@/components/ui/Modal";
 import { getErrorMessage } from "@/utils/error";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 
 const ReviewsTableSkeleton = () => (
   <div className="grid gap-4 animate-pulse select-none">
@@ -202,35 +203,28 @@ const AdminReviews = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-            <Star className="w-7 h-7 text-yellow-400" />
-            Product Reviews
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Manage and moderate customer reviews
-          </p>
+      <AdminPageHeader
+        icon={Star}
+        title="Product Reviews"
+        description="Manage and moderate customer reviews"
+      >
+        <div className="relative w-64">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Search reviews..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 bg-card/50 border-border text-foreground placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
+          />
         </div>
-        <div className="flex items-center gap-2">
-          <div className="relative w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Search reviews..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-card/50 border-border text-foreground placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
-            />
-          </div>
-          <Button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground shrink-0"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Review
-          </Button>
-        </div>
-      </div>
+        <Button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground shrink-0"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Add Review
+        </Button>
+      </AdminPageHeader>
 
       {renderContent()}
 

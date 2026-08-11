@@ -98,24 +98,24 @@ const AdminGuides = () => {
  );
  } else {
  renderContent = (
- <div className="bg-card/40 rounded border border-border overflow-hidden">
- <div className="overflow-x-auto">
- <table className="w-full text-left min-w-[700px]">
- <thead className="bg-accent/50 border-b border-border">
+ <div className="bg-card/40 rounded border border-border overflow-hidden max-h-[calc(100vh-18rem)] flex flex-col">
+ <div className="overflow-auto flex-1">
+ <table className="w-full text-left min-w-[700px] border-separate border-spacing-0">
+ <thead>
  <tr>
- <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
+ <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
  Guide
  </th>
- <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
+ <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
  Category
  </th>
- <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
+ <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
  Status
  </th>
- <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
+ <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground">
  Date
  </th>
- <th className="px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground text-right">
+ <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-mono font-bold uppercase tracking-widest text-muted-foreground text-right">
  Actions
  </th>
  </tr>

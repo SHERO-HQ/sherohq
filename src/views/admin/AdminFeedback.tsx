@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getErrorMessage } from "@/utils/error";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 
 const FeedbackTableSkeleton = () => (
   <div className="grid gap-4 animate-pulse select-none">
@@ -211,28 +212,21 @@ const AdminFeedback = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-            <MessageSquare className="w-7 h-7 text-blue-400" />
-            Site Feedback
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Manage general feedback submitted by users
-          </p>
+      <AdminPageHeader
+        icon={MessageSquare}
+        title="Site Feedback"
+        description="Manage general feedback submitted by users"
+      >
+        <div className="relative w-64">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Search feedback..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 bg-card/50 border-border text-foreground placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
+          />
         </div>
-        <div className="flex items-center gap-2">
-          <div className="relative w-64">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Search feedback..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 bg-card/50 border-border text-foreground placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
-            />
-          </div>
-        </div>
-      </div>
+      </AdminPageHeader>
 
       {renderContent()}
     </div>

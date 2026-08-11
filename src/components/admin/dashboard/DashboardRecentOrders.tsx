@@ -56,25 +56,25 @@ export function DashboardRecentOrders({
         </Button>
       </CardHeader>
       <div className="overflow-auto max-h-120 custom-scrollbar">
-        <table className="w-full text-left border-collapse">
-          <thead className="sticky top-0 z-10 bg-card">
+        <table className="w-full text-left border-separate border-spacing-0">
+          <thead>
             <tr className="bg-muted/50">
-              <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Order ID
               </th>
-              <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Customer
               </th>
-              <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Date
               </th>
-              <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Amount
               </th>
-              <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Status
               </th>
-              <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">
+              <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">
                 Action
               </th>
             </tr>

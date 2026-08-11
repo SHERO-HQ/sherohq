@@ -18,6 +18,7 @@ import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { AdminUserCard } from "@/components/admin/users/AdminUserCard";
 import { RegisterAdminModal } from "@/components/admin/users/RegisterAdminModal";
 import { useAdminUserManagement } from "@/components/admin/users/useAdminUserManagement";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 
 const roleConfig: Record<
   string,
@@ -114,17 +115,13 @@ export default function AdminUserManagement() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
-            Admin Management
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Manage system access and roles for your team.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-3">
+      {/* Header & Filters Sticky Bar */}
+      <div className="sticky top-20 z-20 bg-background/95 backdrop-blur-md py-3 pb-4 -mx-3 px-3 md:-mx-6 md:px-6 border-b border-border/50 shadow-xs rounded-b mb-6">
+        <AdminPageHeader
+          icon={ShieldCheck}
+          title="Staff & Role Management"
+          description="Manage system access and roles for your team."
+        >
           {canManageRoles && (
             <Button
               onClick={() => setIsRegisterModalOpen(true)}
@@ -134,32 +131,32 @@ export default function AdminUserManagement() {
               Add Admin User
             </Button>
           )}
-        </div>
-      </div>
+        </AdminPageHeader>
 
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="Search by name, email or role..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-card/40 border-border text-foreground placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
-          />
+        {/* Filters */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by name, email or role..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 bg-card/40 border-border text-foreground placeholder:text-slate-600 focus:ring-brand-secondary-500/20"
+            />
+          </div>
+          <select
+            value={roleFilter}
+            onChange={(e) => setRoleFilter(e.target.value)}
+            className="bg-card border border-border rounded px-3 py-2 text-sm text-muted-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500/20 appearance-none min-w-35"
+          >
+            <option value="all">All Roles</option>
+            {Object.entries(roleConfig).map(([role, cfg]) => (
+              <option key={role} value={role}>
+                {cfg.label}
+              </option>
+            ))}
+          </select>
         </div>
-        <select
-          value={roleFilter}
-          onChange={(e) => setRoleFilter(e.target.value)}
-          className="bg-card border border-border rounded px-3 py-2 text-sm text-muted-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500/20 appearance-none min-w-35"
-        >
-          <option value="all">All Roles</option>
-          {Object.entries(roleConfig).map(([role, cfg]) => (
-            <option key={role} value={role}>
-              {cfg.label}
-            </option>
-          ))}
-        </select>
       </div>
 
       {/* Users List */}

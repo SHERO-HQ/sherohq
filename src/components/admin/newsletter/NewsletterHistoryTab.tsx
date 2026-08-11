@@ -76,18 +76,18 @@ export function NewsletterHistoryTab({
           ) : campaigns.length === 0 ? (
             <EmptyState title="No campaigns yet." />
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[225px] text-sm">
+            <div className="overflow-auto max-h-[calc(100vh-22rem)]">
+              <table className="w-full min-w-[225px] text-sm border-separate border-spacing-0">
                 <thead>
-                  <tr className="border-b border-border text-left text-[11px] uppercase tracking-wide text-muted-foreground">
-                    <th className="px-3 py-3 font-semibold">Campaign</th>
-                    <th className="px-3 py-3 font-semibold">Channel</th>
-                    <th className="px-3 py-3 font-semibold">Status</th>
-                    <th className="px-3 py-3 font-semibold">Audience</th>
-                    <th className="px-3 py-3 font-semibold">Delivery</th>
-                    <th className="px-3 py-3 font-semibold">Scheduled</th>
-                    <th className="px-3 py-3 font-semibold">Sent</th>
-                    <th className="px-3 py-3 text-right font-semibold">
+                  <tr className="text-left text-[11px] uppercase tracking-wide text-muted-foreground bg-card">
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">Campaign</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">Channel</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">Status</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">Audience</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">Delivery</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">Scheduled</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">Sent</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 text-right font-semibold">
                       Actions
                     </th>
                   </tr>

@@ -320,13 +320,15 @@ export default function AdminUsers() {
         <div className="absolute inset-0 bg-card/10 z-10 pointer-events-none transition-opacity" />
       )}
 
-      <AdminUsersHeader
-        isFetching={isFetching}
-        refetchUsers={refetchUsers}
-        handleExport={handleExport}
-        search={search}
-        setSearch={setSearch}
-      />
+      <div className="sticky top-20 z-20 bg-background/95 backdrop-blur-md py-3 pb-4 -mx-3 px-3 md:-mx-6 md:px-6 border-b border-border/50 shadow-xs rounded-b">
+        <AdminUsersHeader
+          isFetching={isFetching}
+          refetchUsers={refetchUsers}
+          handleExport={handleExport}
+          search={search}
+          setSearch={setSearch}
+        />
+      </div>
 
       <AdminUsersStats total={pagination.total} users={users} />
 

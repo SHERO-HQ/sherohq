@@ -13,6 +13,7 @@ import { Modal } from "@/components/ui/Modal";
 import { TestimonialCard } from "@/components/admin/testimonials/TestimonialCard";
 import { TestimonialFormModal } from "@/components/admin/testimonials/TestimonialFormModal";
 import { useAdminTestimonialsState } from "@/components/admin/testimonials/useAdminTestimonialsState";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 
 const TestimonialsGridSkeleton = () => (
   <div className="grid grid-cols-1 gap-4 animate-pulse select-none">
@@ -61,16 +62,11 @@ const AdminTestimonials = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-            <MessageSquareQuote className="w-7 h-7 text-brand-secondary-400" />
-            Testimonials & Feedback
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Manage customer feedback, reviews, and success stories
-          </p>
-        </div>
+      <AdminPageHeader
+        icon={MessageSquareQuote}
+        title="Testimonials & Success Stories"
+        description="Manage customer feedback, reviews, and Trustpilot integrations"
+      >
         <div className="flex items-center gap-2">
           <Button
             onClick={handleSyncTrustpilot}
@@ -92,7 +88,7 @@ const AdminTestimonials = () => {
             Add Testimonial
           </Button>
         </div>
-      </div>
+      </AdminPageHeader>
 
       {/* Search */}
       <div className="relative max-w-md">

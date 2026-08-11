@@ -36,20 +36,20 @@ export function AIAnalyticsGapTable({ topGaps }: AIAnalyticsGapTableProps) {
           </div>
         </div>
       </CardHeader>
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+      <div className="overflow-auto max-h-[calc(100vh-20rem)]">
+        <table className="w-full text-left border-separate border-spacing-0">
           <thead>
             <tr className="bg-muted/40">
-              <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Unmet Need (Keyword)
               </th>
-              <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Requests
               </th>
-              <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
                 Last Request
               </th>
-              <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">
+              <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">
                 Status
               </th>
             </tr>

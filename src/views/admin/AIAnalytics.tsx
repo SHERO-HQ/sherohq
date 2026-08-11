@@ -8,6 +8,7 @@ import { type AIAnalyticsTotals } from "@/services/api";
 import { AIAnalyticsStatsGrid } from "@/components/admin/analytics/AIAnalyticsStatsGrid";
 import { AIAnalyticsCharts } from "@/components/admin/analytics/AIAnalyticsCharts";
 import { AIAnalyticsGapTable } from "@/components/admin/analytics/AIAnalyticsGapTable";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 
 const EMPTY_TOTALS: AIAnalyticsTotals = {
   totalInteractions: 0,
@@ -152,17 +153,11 @@ export default function AIAnalytics() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="space-y-1">
-          <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-3">
-            <Brain className="text-brand-secondary-500" /> AI Intelligence Hub
-          </h1>
-          <p className="text-muted-foreground text-sm">
-            Real-time insights into user queries, intent patterns, and catalog
-            gaps.
-          </p>
-        </div>
-      </div>
+      <AdminPageHeader
+        icon={Brain}
+        title="AI Intelligence Hub"
+        description="Real-time insights into user queries, intent patterns, and catalog gaps."
+      />
 
       {/* Stats Summary */}
       <AIAnalyticsStatsGrid

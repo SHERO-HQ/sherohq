@@ -27,6 +27,7 @@ import { Label } from "@/components/ui/label";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Textarea } from "@/components/ui/textarea";
 import AppImage from "@/components/common/AppImage";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 
 const TeamGridSkeleton = () => (
   <div className="space-y-4 animate-pulse select-none">
@@ -194,16 +195,11 @@ const AdminTeam = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-            <Users className="w-7 h-7 text-brand-secondary-400" />
-            Team Members
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Manage your team profiles and roles
-          </p>
-        </div>
+      <AdminPageHeader
+        icon={Users}
+        title="Team Directory"
+        description="Manage public team member profiles, bios, and roles"
+      >
         {canAddMember && (
           <Button
             onClick={handleOpenCreate}
@@ -213,7 +209,7 @@ const AdminTeam = () => {
             Add Member
           </Button>
         )}
-      </div>
+      </AdminPageHeader>
 
       {/* Search */}
       <div className="relative max-w-md">

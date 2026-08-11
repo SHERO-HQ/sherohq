@@ -11,6 +11,8 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+
 interface AdminUsersHeaderProps {
   isFetching: boolean;
   refetchUsers: () => void;
@@ -27,59 +29,53 @@ export function AdminUsersHeader({
   setSearch,
 }: AdminUsersHeaderProps) {
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-            <Users className="w-7 h-7 text-brand-secondary-400" />
-            Customers
-          </h1>
-          <p className="text-muted-foreground text-sm">
-            Manage your customer database and view their activity
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => refetchUsers()}
-            disabled={isFetching}
-            className="bg-muted/50 border-border"
+    <div className="space-y-4">
+      <AdminPageHeader
+        icon={Users}
+        title="Customer Directory"
+        description="Manage your customer database and view their activity"
+        sticky={false}
+      >
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => refetchUsers()}
+          disabled={isFetching}
+          className="bg-muted/50 border-border"
+        >
+          <RefreshCw className={cn("w-4 h-4", isFetching && "animate-spin")} />
+        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-medium px-6">
+              <Printer className="mr-2 h-4 w-4" /> Export
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            className="bg-card border-border text-foreground"
           >
-            <RefreshCw className={cn("w-4 h-4", isFetching && "animate-spin")} />
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-medium px-6">
-                <Printer className="mr-2 h-4 w-4" /> Export
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="bg-card border-border text-foreground"
+            <DropdownMenuItem
+              onClick={() => handleExport("csv")}
+              className="cursor-pointer hover:bg-accent"
             >
-              <DropdownMenuItem
-                onClick={() => handleExport("csv")}
-                className="cursor-pointer hover:bg-accent"
-              >
-                Export as CSV
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => handleExport("excel")}
-                className="cursor-pointer hover:bg-accent"
-              >
-                Export as Excel
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => handleExport("pdf")}
-                className="cursor-pointer hover:bg-accent"
-              >
-                Export as PDF
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
+              Export as CSV
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleExport("excel")}
+              className="cursor-pointer hover:bg-accent"
+            >
+              Export as Excel
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleExport("pdf")}
+              className="cursor-pointer hover:bg-accent"
+            >
+              Export as PDF
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </AdminPageHeader>
 
       {/* Search Input */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">

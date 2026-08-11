@@ -107,17 +107,17 @@ export function NewsletterSubscribersTab({
           ) : subscribers.length === 0 ? (
             <EmptyState title="No subscribers found for this filter." />
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-55 text-sm">
+            <div className="overflow-auto max-h-[calc(100vh-22rem)]">
+              <table className="w-full min-w-55 text-sm border-separate border-spacing-0">
                 <thead>
-                  <tr className="border-b border-border text-left text-[11px] uppercase tracking-wide text-muted-foreground">
-                    <th className="px-3 py-3 font-semibold">Subscriber</th>
-                    <th className="px-3 py-3 font-semibold">Phone</th>
-                    <th className="px-3 py-3 font-semibold">Source</th>
-                    <th className="px-3 py-3 font-semibold">Subscribed</th>
-                    <th className="px-3 py-3 font-semibold">Last campaign</th>
-                    <th className="px-3 py-3 font-semibold">Status</th>
-                    <th className="px-3 py-3 text-right font-semibold">Actions</th>
+                  <tr className="text-left text-[11px] uppercase tracking-wide text-muted-foreground bg-card">
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">Subscriber</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">Phone</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">Source</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">Subscribed</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">Last campaign</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">Status</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 text-right font-semibold">Actions</th>
                   </tr>
                 </thead>
                 <tbody>

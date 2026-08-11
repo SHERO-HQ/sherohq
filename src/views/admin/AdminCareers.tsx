@@ -4,6 +4,7 @@ import { useNotifications } from "@/hooks/useNotifications";
 import { useDialog } from "@/hooks/useDialog";
 import { getErrorMessage } from "@/utils/error";
 import { Plus, Edit2, Trash2, Briefcase, FileText, ExternalLink } from "lucide-react";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -144,11 +145,11 @@ export default function AdminCareers() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Careers Management</h1>
-          <p className="text-muted-foreground text-sm">Manage job postings and review applications</p>
-        </div>
+      <AdminPageHeader
+        icon={Briefcase}
+        title="Careers & Applications"
+        description="Manage job postings and review applicant submissions"
+      >
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="relative w-full sm:w-64 shrink-0">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -209,7 +210,7 @@ export default function AdminCareers() {
             </div>
           )}
         </div>
-      </div>
+      </AdminPageHeader>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="w-full justify-start border-b border-border rounded-none bg-transparent p-0 mb-6 h-auto">
@@ -230,15 +231,15 @@ export default function AdminCareers() {
 
         <TabsContent value="jobs" className="space-y-4 m-0">
           <Card className="overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left">
-                <thead className="text-xs text-muted-foreground uppercase bg-muted/50">
+            <div className="overflow-auto max-h-[calc(100vh-20rem)]">
+              <table className="w-full text-sm text-left border-separate border-spacing-0">
+                <thead>
                   <tr>
-                    <th className="px-6 py-4 font-medium">Role</th>
-                    <th className="px-6 py-4 font-medium">Department</th>
-                    <th className="px-6 py-4 font-medium">Type & Location</th>
-                    <th className="px-6 py-4 font-medium">Status</th>
-                    <th className="px-6 py-4 font-medium text-right">Actions</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 font-medium text-xs text-muted-foreground uppercase">Role</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 font-medium text-xs text-muted-foreground uppercase">Department</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 font-medium text-xs text-muted-foreground uppercase">Type & Location</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 font-medium text-xs text-muted-foreground uppercase">Status</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 font-medium text-xs text-muted-foreground uppercase text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
@@ -278,15 +279,15 @@ export default function AdminCareers() {
 
         <TabsContent value="apps" className="space-y-4 m-0">
           <Card className="overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left">
-                <thead className="text-xs text-muted-foreground uppercase bg-muted/50">
+            <div className="overflow-auto max-h-[calc(100vh-20rem)]">
+              <table className="w-full text-sm text-left border-separate border-spacing-0">
+                <thead>
                   <tr>
-                    <th className="px-6 py-4 font-medium">Applicant</th>
-                    <th className="px-6 py-4 font-medium">Job Applied</th>
-                    <th className="px-6 py-4 font-medium">Resume</th>
-                    <th className="px-6 py-4 font-medium">Date</th>
-                    <th className="px-6 py-4 font-medium">Status</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 font-medium text-xs text-muted-foreground uppercase">Applicant</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 font-medium text-xs text-muted-foreground uppercase">Job Applied</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 font-medium text-xs text-muted-foreground uppercase">Resume</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 font-medium text-xs text-muted-foreground uppercase">Date</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 font-medium text-xs text-muted-foreground uppercase">Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">

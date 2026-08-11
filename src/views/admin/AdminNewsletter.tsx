@@ -10,6 +10,7 @@ import {
   Send,
   Users,
   LayoutTemplate,
+  Mail,
 } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { Badge } from "@/components/ui/badge";
@@ -104,9 +105,10 @@ export default function AdminNewsletter() {
         </Link>
 
         <AdminPageHeader
+          icon={Mail}
           title={
             <>
-              Newsletter
+              Newsletter & Broadcasts
               {scheduledCampaigns.length > 0 ? (
                 <Badge className="border-sky-500/20 bg-sky-500/10 text-sky-300 ml-3">
                   {scheduledCampaigns.length} scheduled
@@ -114,7 +116,7 @@ export default function AdminNewsletter() {
               ) : null}
             </>
           }
-          icon={Megaphone}
+          description="Manage newsletter audiences and email broadcasts"
         >
           <Button
             onClick={() => void refreshWorkspace()}

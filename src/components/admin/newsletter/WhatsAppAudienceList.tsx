@@ -82,15 +82,15 @@ export function WhatsAppAudienceList() {
           ) : filteredContacts.length === 0 ? (
             <EmptyState title="No contacts found." />
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-55 text-sm">
+            <div className="overflow-auto max-h-[calc(100vh-22rem)]">
+              <table className="w-full min-w-55 text-sm border-separate border-spacing-0">
                 <thead>
-                  <tr className="border-b border-border text-left text-[11px] uppercase tracking-wide text-muted-foreground">
-                    <th className="px-3 py-3 font-semibold">Name</th>
-                    <th className="px-3 py-3 font-semibold">Phone</th>
-                    <th className="px-3 py-3 font-semibold">Last Active</th>
-                    <th className="px-3 py-3 font-semibold">Status</th>
-                    <th className="px-3 py-3 font-semibold">First Captured</th>
+                  <tr className="text-left text-[11px] uppercase tracking-wide text-muted-foreground bg-card">
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">Name</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">Phone</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">Last Active</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">Status</th>
+                    <th className="sticky top-0 z-10 bg-card border-b border-border px-3 py-3 font-semibold">First Captured</th>
                   </tr>
                 </thead>
                 <tbody>

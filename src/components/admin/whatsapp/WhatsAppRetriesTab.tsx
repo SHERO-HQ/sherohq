@@ -111,17 +111,17 @@ export function WhatsAppRetriesTab({
             <p className="text-xs">No failed campaign messages require retrying currently.</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+          <div className="overflow-auto max-h-[calc(100vh-20rem)]">
+            <table className="w-full text-left border-separate border-spacing-0">
               <thead>
-                <tr className="bg-card text-muted-foreground text-xs font-bold border-b border-border">
-                  <th className="px-6 py-4">Recipient</th>
-                  <th className="px-6 py-4">Message Content</th>
-                  <th className="px-6 py-4">Attempts</th>
-                  <th className="px-6 py-4">Next Retry Scheduled</th>
-                  <th className="px-6 py-4">Last Error Detail</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
+                <tr className="bg-card text-muted-foreground text-xs font-bold">
+                  <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4">Recipient</th>
+                  <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4">Message Content</th>
+                  <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4">Attempts</th>
+                  <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4">Next Retry Scheduled</th>
+                  <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4">Last Error Detail</th>
+                  <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4">Status</th>
+                  <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border text-sm text-muted-foreground">

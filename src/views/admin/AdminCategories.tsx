@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 import { Tag, Plus, Search, Loader2, Trash2, Edit2 } from "lucide-react";
 import { getErrorMessage } from "@/utils/error";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import {
   useCategories,
   useCreateCategory,
@@ -191,16 +192,11 @@ const AdminCategories = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-            <Tag className="w-7 h-7 text-brand-secondary-400" />
-            Categories
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Manage product categories and icons
-          </p>
-        </div>
+      <AdminPageHeader
+        icon={Tag}
+        title="Product Categories"
+        description="Manage product categories and icons"
+      >
         <Button
           onClick={handleOpenCreate}
           className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
@@ -208,7 +204,7 @@ const AdminCategories = () => {
           <Plus className="w-4 h-4 mr-2" />
           Add Category
         </Button>
-      </div>
+      </AdminPageHeader>
 
       {/* Search */}
       <div className="relative max-w-md">

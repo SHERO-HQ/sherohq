@@ -39,6 +39,7 @@ import {
   RecentOrders,
   TopProducts,
 } from "@/components/admin/reports/ReportsChartsSection";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 
 type KpiPeriod = "today" | "week" | "month" | "year" | "custom";
 
@@ -213,21 +214,11 @@ export default function AdminReports() {
     <div className="space-y-8 pb-12">
       <ErrorBoundary>
         <div className="space-y-8">
-          {/* Header */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded bg-linear-to-br from-purple-500 bg-primary">
-                <TrendingUp className="w-6 h-6 text-foreground" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">
-                  Reports & Analytics
-                </h1>
-                <p className="text-muted-foreground text-sm">
-                  Overview of your store performance
-                </p>
-              </div>
-            </div>
+          <AdminPageHeader
+            icon={TrendingUp}
+            title="Reports & Analytics"
+            description="Overview of your store performance and financial summary"
+          >
             <div className="flex flex-col lg:flex-row gap-2 lg:items-center lg:justify-end">
               <div className="flex bg-muted rounded p-1">
                 {[
@@ -254,39 +245,41 @@ export default function AdminReports() {
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
-                    type="button"
                     variant="outline"
                     className={cn(
-                      "bg-muted/50 border-border text-muted-foreground hover:text-foreground h-9",
-                      range === "custom" &&
-                        "bg-accent text-foreground border-brand-secondary-500/50",
+                      "bg-muted border-none text-muted-foreground text-xs h-8 hover:text-foreground",
+                      range === "custom" && "bg-accent text-foreground",
                     )}
-                    onClick={() => setRange("custom")}
                   >
-                    Range
+                    {range === "custom" && customRange?.from
+                      ? `${format(customRange.from, "MMM d")} - ${
+                          customRange.to ? format(customRange.to, "MMM d") : ""
+                        }`
+                      : "Custom Range"}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent
-                  className="w-auto p-0 dark border-border bg-card"
+                  className="w-auto p-0 bg-card border-border"
                   align="end"
                 >
                   <Calendar
                     mode="range"
-                    defaultMonth={customRange?.from}
                     selected={customRange}
-                    onSelect={setCustomRange}
-                    numberOfMonths={1}
+                    onSelect={(val) => {
+                      setCustomRange(val);
+                      if (val?.from) setRange("custom");
+                    }}
+                    numberOfMonths={2}
+                    className="bg-card text-foreground"
                   />
                 </PopoverContent>
               </Popover>
+
               {canExport && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="border-border text-foreground hover:bg-accent"
-                    >
-                      <Printer className="mr-2 h-4 w-4" /> Export Summary
+                    <Button className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-medium px-4 h-8 text-xs">
+                      <Printer className="mr-1.5 h-3.5 w-3.5" /> Export
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
@@ -294,28 +287,28 @@ export default function AdminReports() {
                     className="bg-card border-border text-foreground"
                   >
                     <DropdownMenuItem
-                      onSelect={() => handleExport("csv")}
+                      onClick={() => handleExport("csv")}
                       className="cursor-pointer hover:bg-accent"
                     >
-                      Export as CSV
+                      Export Summary (CSV)
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onSelect={() => handleExport("excel")}
+                      onClick={() => handleExport("excel")}
                       className="cursor-pointer hover:bg-accent"
                     >
-                      Export as Excel
+                      Export Summary (Excel)
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onSelect={() => handleExport("pdf")}
+                      onClick={() => handleExport("pdf")}
                       className="cursor-pointer hover:bg-accent"
                     >
-                      Export as PDF
+                      Export Summary (PDF)
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               )}
             </div>
-          </div>
+          </AdminPageHeader>
           {/* KPI Period Selector */}
           <div className="flex items-center gap-2 mb-4">
             <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">

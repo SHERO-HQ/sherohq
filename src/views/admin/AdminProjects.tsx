@@ -14,6 +14,7 @@ import {
  RefreshCw,
  MoreVertical,
  Briefcase} from "lucide-react";
+import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -90,87 +91,84 @@ export default function AdminProjects() {
 
  return (
  <div className="space-y-6">
- {/* Header */}
- <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
- <div>
- <h1 className="text-2xl font-bold text-foreground">
- Projects
- </h1>
- <p className="text-muted-foreground text-sm">
- Showcase your successful solutions and portfolios
- </p>
- </div>
- <div className="flex items-center gap-3">
- <Button
- variant="outline"
- size="icon"
- onClick={() => refetch()}
- disabled={isFetching}
- className="bg-muted/50 border-border"
- >
- <RefreshCw
- className={cn("w-4 h-4", isFetching && "animate-spin")}
- />
- </Button>
+  {/* Header & Filters Sticky Bar */}
+  <div className="sticky top-20 z-20 bg-background/95 backdrop-blur-md py-3 pb-4 -mx-3 px-3 md:-mx-6 md:px-6 border-b border-border/50 space-y-4 shadow-xs rounded-b">
+    <AdminPageHeader
+      icon={Briefcase}
+      title="Projects & Portfolio"
+      description="Showcase your successful solutions and portfolios"
+      sticky={false}
+    >
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => refetch()}
+        disabled={isFetching}
+        className="bg-muted/50 border-border"
+      >
+        <RefreshCw
+          className={cn("w-4 h-4", isFetching && "animate-spin")}
+        />
+      </Button>
 
- <Button
- className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-medium px-4"
- asChild
- >
- <Link href="/admin/projects/new">
- <Plus className="w-4 h-4 mr-2" />
- Add Project
- </Link>
- </Button>
- </div>
- </div>
+      <Button
+        className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-medium px-4"
+        asChild
+      >
+        <Link href="/admin/projects/new">
+          <Plus className="w-4 h-4 mr-2" />
+          Add Project
+        </Link>
+      </Button>
+    </AdminPageHeader>
 
- {/* Filters */}
- <Card className="bg-card/40  border-border p-4">
- <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
- <div className="relative col-span-2">
- <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
- <Input
- placeholder="Search projects..."
- value={search}
- onChange={(e) => setSearch(e.target.value)}
- className="pl-9 bg-muted/50 border-border text-foreground"
- />
- </div>
- <select
- value={selectedCategory}
- onChange={(e) => {
- setSelectedCategory(e.target.value);
- setCurrentPage(1);
- }}
- className="bg-muted/50 border border-border rounded text-sm text-foreground p-2 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
- >
- <option value="all">All Categories</option>
- {categories.map((cat) => (
- <option key={cat} value={cat}>
- {cat}
- </option>
- ))}
- </select>
- </div>
- </Card>
+    {/* Filters */}
+    <Card className="bg-card/40 border-border p-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="relative col-span-2">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Search projects..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-9 bg-muted/50 border-border text-foreground"
+          />
+        </div>
+        <select
+          value={selectedCategory}
+          onChange={(e) => {
+            setSelectedCategory(e.target.value);
+            setCurrentPage(1);
+          }}
+          className="bg-muted/50 border border-border rounded text-sm text-foreground p-2 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50"
+        >
+          <option value="all">All Categories</option>
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+      </div>
+    </Card>
+  </div>
 
- {/* Projects Table */}
- <div className="bg-card/40  border border-border rounded overflow-hidden">
- <div className="overflow-x-auto">
- <table className="w-full text-left">
- <thead>
- <tr className="bg-muted/50 border-b border-border">
- <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+  {/* Projects Table */}
+  <div className="bg-card/40 border border-border rounded overflow-hidden max-h-[calc(100vh-16rem)] flex flex-col">
+  <div className="overflow-auto flex-1">
+  <table className="w-full text-left border-separate border-spacing-0">
+  <thead>
+  <tr>
+ <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
  Project
  </th>
- <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+ <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
  Category
  </th>
- <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
+ <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider">
  Client
  </th>
- <th className="px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">
+ <th className="sticky top-0 z-10 bg-card border-b border-border px-6 py-4 text-xs font-bold text-muted-foreground uppercase tracking-wider text-right">
  Actions
  </th>
  </tr>
