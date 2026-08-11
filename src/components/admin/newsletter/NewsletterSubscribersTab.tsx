@@ -124,7 +124,7 @@ export function NewsletterSubscribersTab({
                   {subscribers.map((subscriber) => (
                     <tr
                       key={subscriber.id}
-                      className="border-b border-border text-muted-foreground transition hover:bg-white/5"
+                      className="border-b border-border text-muted-foreground transition hover:bg-muted/50"
                     >
                       <td className="px-3 py-4">
                         <div className="font-medium text-foreground">
@@ -176,7 +176,7 @@ export function NewsletterSubscribersTab({
                             <>
                               <Button
                                 size="sm"
-                                className="h-8 bg-brand-secondary-600 text-white hover:bg-brand-secondary-500"
+                                className="h-8 bg-brand-secondary-600 text-foreground hover:bg-brand-secondary-500"
                                 disabled={isSavingContact}
                                 onClick={() => onSaveSubscriberContact(subscriber.id)}
                               >

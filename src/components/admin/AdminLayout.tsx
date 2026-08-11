@@ -4,7 +4,7 @@ import AdminHeader from "./AdminHeader";
 import { ChangePasswordModal } from "./ChangePasswordModal";
 import { cn } from "@/lib/utils";
 import { } from "motion/react";
-import { useAdmin } from "@/context/AdminContext";
+import { useAdminSidebar } from "@/hooks/queries/useAdminQuery";
 import { PageTransition } from "@/components/common/PageTransition";
 
 interface AdminLayoutProps {
@@ -12,7 +12,7 @@ interface AdminLayoutProps {
 }
 
 const AdminLayout = memo(({ children }: Readonly<AdminLayoutProps>) => {
- const { isSidebarOpen, setIsSidebarOpen } = useAdmin();
+ const { isSidebarOpen, setIsSidebarOpen } = useAdminSidebar();
 
  // Global Keyboard Shortcuts
  useEffect(() => {

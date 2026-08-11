@@ -193,7 +193,7 @@ export default function ProductMediaCard({
                       type="button"
                       variant="ghost"
                       onClick={() => cancelDelete(url)}
-                      className="mt-2 h-7 px-3 bg-accent hover:bg-white/20 text-foreground rounded text-[10px] flex items-center gap-1.5 transition-all"
+                      className="mt-2 h-7 px-3 bg-accent hover:bg-muted/50 text-foreground rounded text-[10px] flex items-center gap-1.5 transition-all"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
                       Undo
@@ -223,8 +223,8 @@ export default function ProductMediaCard({
                         className={cn(
                           "w-full py-1.5 px-2 rounded text-[9px] font-semibold tracking-wider transition-all shadow",
                           primaryImage === url
-                            ? "bg-brand-secondary-500 text-white cursor-default shadow-brand-secondary-500/25"
-                            : "bg-white/20 hover:bg-white/30 text-foreground"
+                            ? "bg-brand-secondary-500 text-foreground cursor-default shadow-brand-secondary-500/25"
+                            : "bg-muted/50 hover:bg-muted/50 text-foreground"
                         )}
                         disabled={primaryImage === url}
                       >

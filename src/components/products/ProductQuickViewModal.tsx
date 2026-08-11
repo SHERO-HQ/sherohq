@@ -4,7 +4,7 @@ import { createPortal } from "react-dom";
 import { m, AnimatePresence } from "motion/react";
 import { X, ShoppingCart, Star, ArrowRight, Flame, Share2 } from "lucide-react";
 import type { Product } from "@/types/product";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/hooks/queries/useCartQuery";
 import { useNotifications } from "@/hooks/useNotifications";
 import { formatCurrency } from "@/utils/format";
 import AppImage from "@/components/common/AppImage";

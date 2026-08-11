@@ -12,7 +12,7 @@ describe("validateUploadedFile", () => {
     );
 
     expect(result.ok).toBe(false);
-    expect(result.error).toMatch(/jpg|png|gif|webp/i);
+    if (!result.ok) expect(result.error).toMatch(/jpg|png|gif|webp/i);
   });
 
   it("rejects oversized files", () => {
@@ -21,7 +21,7 @@ describe("validateUploadedFile", () => {
     );
 
     expect(result.ok).toBe(false);
-    expect(result.error).toMatch(/5mb|maximum size/i);
+    if (!result.ok) expect(result.error).toMatch(/5mb|maximum size/i);
   });
 
   it("accepts valid images", () => {
@@ -30,6 +30,6 @@ describe("validateUploadedFile", () => {
     );
 
     expect(result.ok).toBe(true);
-    expect(result.error).toBeUndefined();
+    if (!result.ok) expect(result.error).toBeUndefined();
   });
 });

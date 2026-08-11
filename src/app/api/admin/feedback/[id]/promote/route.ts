@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 import { logActivity } from "@/lib/activity";
@@ -23,12 +24,12 @@ export async function POST(
     }
 
     // 1. Fetch the feedback
-    const feedbackResult = await query(
-      "SELECT * FROM customer_feedback WHERE id = $1",
-      [feedbackId]
-    );
+    const feedbackResult = await db.execute(sql`
+      SELECT * FROM customer_feedback WHERE id = ${feedbackId}
+    `);
 
-    const feedback = feedbackResult.rows[0];
+    const rows = (feedbackResult.rows || feedbackResult) as Record<string, unknown>[];
+    const feedback = rows[0];
     if (!feedback) {
       return apiResponse.error("Feedback not found", 404);
     }
@@ -39,11 +40,10 @@ export async function POST(
     const quote = feedback.message;
     const rating = feedback.rating || 5;
 
-    await query(
-      `INSERT INTO testimonials (id, quote, author, active, rating, "order")
-       VALUES ($1, $2, $3, $4, $5, $6)`,
-      [testimonialId, quote, author, false, rating, 0]
-    );
+    await db.execute(sql`
+      INSERT INTO testimonials (id, quote, author, active, rating, "order")
+      VALUES (${testimonialId}, ${quote}, ${author}, false, ${rating}, 0)
+    `);
 
     // 3. Log it
     await logActivity(

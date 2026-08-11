@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { ZodError, ZodSchema } from "zod";
+import { verifyCsrfToken } from "./csrf";
 
 /**
  * Standard API Response helper to ensure consistent error formats
@@ -68,4 +69,32 @@ export async function validateBody<T>(request: Request, schema: ZodSchema<T>): P
     }
     return { error: apiResponse.error("Invalid JSON body", 400) };
   }
+}
+
+/**
+ * Validates the CSRF token for mutating requests.
+ * Returns an error response if validation fails, or null if successful.
+ */
+export async function validateCsrf(request: Request): Promise<NextResponse | null> {
+  const isValid = await verifyCsrfToken(request);
+  if (!isValid) {
+    return apiResponse.forbidden("Invalid or missing CSRF token");
+  }
+  return null;
+}
+
+/**
+ * Validates the CRON secret header for cron endpoint execution.
+ */
+export function validateCronAuth(request: Request): NextResponse | null {
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret && process.env.NODE_ENV === "production") {
+    console.error("CRON_SECRET is missing in production environment variables");
+    return apiResponse.error("Server misconfiguration", 500);
+  }
+  const authHeader = request.headers.get("authorization");
+  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+    return apiResponse.unauthorized("Invalid CRON authorization token");
+  }
+  return null;
 }

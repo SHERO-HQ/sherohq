@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { } from "@/context/AdminContext";
+
 import { MessageSquare, Trash2, Search, Star, Plus, Loader2 } from "lucide-react";
 import { useAdminReviews, useDeleteReview, useSubmitReview } from "@/hooks/queries/useReviews";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";
@@ -156,7 +156,7 @@ const AdminReviews = () => {
                     type="button"
                     variant="ghost"
                     onClick={() => handleCancelDelete(review.id)}
-                    className="h-8 px-4 bg-accent hover:bg-white/20 text-foreground rounded text-[11px] font-bold transition-all shrink-0"
+                    className="h-8 px-4 bg-accent hover:bg-muted/50 text-foreground rounded text-[11px] font-bold transition-all shrink-0"
                   >
                     Undo Deletion
                   </Button>
@@ -224,7 +224,7 @@ const AdminReviews = () => {
           </div>
           <Button
             onClick={() => setIsModalOpen(true)}
-            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white shrink-0"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground shrink-0"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add Review
@@ -301,7 +301,7 @@ const AdminReviews = () => {
             <Button
               type="submit"
               disabled={submitMutation.isPending}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
             >
               {submitMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : "Save"}
             </Button>

@@ -1,4 +1,6 @@
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { sessions } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 import { getAdminFromSession, ADMIN_SESSION_COOKIE } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
@@ -11,7 +13,7 @@ export async function POST() {
     const token = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
 
     if (token) {
-      await query("DELETE FROM sessions WHERE token = $1", [token]);
+      await db.delete(sessions).where(eq(sessions.token, token));
     }
 
     cookieStore.set(ADMIN_SESSION_COOKIE, "", { maxAge: 0, path: "/" });

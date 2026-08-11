@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
-import { useAuth } from "@/context/AuthContext";
+import { useLogin } from "@/hooks/queries/useAuthQuery";
 import type { User } from "@/services/auth";
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 
@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const { login } = useAuth();
+  const { mutateAsync: login } = useLogin();
   const router = useRouter();
 
   const {

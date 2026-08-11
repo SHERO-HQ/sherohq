@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { apiResponse } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
 
 interface ConversationSummary {
   sender_wa_id: string;
@@ -16,7 +18,7 @@ interface ConversationSummary {
  */
 export async function GET(request: NextRequest) {
   try {
-    const result = await query(`
+    const result = await db.execute(sql`
       WITH LatestMessages AS (
         SELECT DISTINCT ON (sender_wa_id)
           sender_wa_id,
@@ -46,17 +48,14 @@ export async function GET(request: NextRequest) {
       ORDER BY l.last_message_at DESC;
     `);
 
-    const conversations = result.rows as ConversationSummary[];
+    const conversations = ((result.rows || result) as unknown) as ConversationSummary[];
 
-    return NextResponse.json({
+    return apiResponse.success({
       success: true,
       count: conversations.length,
       conversations});
   } catch (error: any) {
     console.error("Error fetching conversations list:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch conversations", details: error.message || String(error) },
-      { status: 500 },
-    );
+    return apiResponse.error("Failed to fetch conversations", 500, error.message || String(error));
   }
 }

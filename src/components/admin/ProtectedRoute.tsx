@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAdmin } from "@/context/AdminContext";
+import { useAdminUser } from "@/hooks/queries/useAdminQuery";
 import { getSubdomain } from "@/utils/subdomain";
 
 interface ProtectedRouteProps {
@@ -13,7 +13,9 @@ export default function ProtectedRoute({
  children,
  allowedRoles,
 }: ProtectedRouteProps) {
- const { isAuthenticated, isLoading, admin } = useAdmin();
+ const { data: adminData, isLoading } = useAdminUser();
+ const admin = adminData?.admin;
+ const isAuthenticated = !!admin;
  const router = useRouter();
 
  const needsLogin = !isLoading && !isAuthenticated;
@@ -38,7 +40,7 @@ export default function ProtectedRoute({
  // If the user just logged in, isAuthenticated is already true and we skip this.
  if (isLoading && !isAuthenticated) {
  return (
- <div className="min-h-screen flex items-center justify-center dark:bg-card bg-slate-50">
+ <div className="min-h-screen flex items-center justify-center bg-background">
  <div className="w-10 h-10 border-4 border-brand-secondary-500 border-t-transparent rounded-full animate-spin" />
  </div>
  );

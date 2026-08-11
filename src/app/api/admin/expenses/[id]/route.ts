@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
@@ -15,19 +16,19 @@ export async function PATCH(
     const { id } = await params;
     const { title, amount, category, date, description } = await request.json();
 
-    const result = await query(
-      `UPDATE expenses
-       SET title = $1,
-           amount = $2,
-           category = $3,
-           date = $4,
-           description = $5
-       WHERE id = $6
-       RETURNING *`,
-      [title, amount, category, date, description || null, id],
-    );
-
-    if (result.rows.length === 0) {
+    const result = await db.execute(sql`
+      UPDATE expenses
+      SET title = ${title},
+          amount = ${amount},
+          category = ${category},
+          date = ${date},
+          description = ${description || null}
+      WHERE id = ${id}
+      RETURNING *
+    `);
+    
+    const rows = (result.rows || result) as Record<string, unknown>[];
+    if (rows.length === 0) {
       return apiResponse.error("Expense not found", 404);
     }
 
@@ -38,7 +39,7 @@ export async function PATCH(
       `Updated expense: ${title}`,
     );
 
-    return apiResponse.success(result.rows[0]);
+    return apiResponse.success(rows[0]);
   } catch (error) {
     console.error("Update expense error:", error);
     return apiResponse.error("Failed to update expense");
@@ -55,18 +56,18 @@ export async function DELETE(
 
     const { id } = await params;
 
-    const result = await query(
-      `DELETE FROM expenses
-       WHERE id = $1
-       RETURNING title, amount`,
-      [id],
-    );
+    const result = await db.execute(sql`
+      DELETE FROM expenses
+      WHERE id = ${id}
+      RETURNING title, amount
+    `);
 
-    if (result.rows.length === 0) {
+    const rows = (result.rows || result) as Record<string, unknown>[];
+    if (rows.length === 0) {
       return apiResponse.error("Expense not found", 404);
     }
 
-    const expense = result.rows[0];
+    const expense = rows[0];
     await logActivity(
       admin.id,
       "expense_delete",

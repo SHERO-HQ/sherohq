@@ -8,7 +8,7 @@ import { Save, Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNotifications } from "@/hooks/useNotifications";
-import { useBreadcrumb } from "@/context/BreadcrumbContext";
+
 import {
   useUpdateProject,
   useCreateProject,
@@ -24,7 +24,6 @@ export default function ProjectForm() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const { addNotification } = useNotifications();
-  const { setLabel, clearLabel } = useBreadcrumb();
   const isEdit = Boolean(id);
 
   const [isLoading, setIsLoading] = useState(isEdit);
@@ -89,7 +88,6 @@ export default function ProjectForm() {
           const project = await fetchProjectById(id);
           if (project) {
             setProjectData(project);
-            setLabel(`/admin/projects/${id}`, project.title || id);
           }
         }
       } catch (err) {
@@ -100,13 +98,7 @@ export default function ProjectForm() {
       }
     }
     loadData();
-
-    return () => {
-      if (id) {
-        clearLabel(`/admin/projects/${id}`);
-      }
-    };
-  }, [id, isEdit, addNotification, setLabel, clearLabel]);
+  }, [id, isEdit, addNotification]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -233,7 +225,7 @@ export default function ProjectForm() {
             type="button"
             onClick={handleSubmit}
             disabled={isSaving}
-            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-30"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground min-w-30"
           >
             {isSaving ? (
               <>
@@ -322,7 +314,7 @@ export default function ProjectForm() {
               type="button"
               onClick={handleSubmit}
               disabled={isSaving}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-30"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground min-w-30"
             >
               {isSaving ? (
                 <>
@@ -365,7 +357,7 @@ export default function ProjectForm() {
           type="button"
           onClick={handleSubmit}
           disabled={isSaving}
-          className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white w-2/3"
+          className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground w-2/3"
         >
           {isSaving ? (
             <>

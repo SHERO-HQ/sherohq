@@ -3,7 +3,8 @@
  * Automatically retries failed messages with exponential backoff
  */
 
-import { query } from "./db";
+import { db } from "./db";
+import { sql } from "drizzle-orm";
 
 export interface RetryConfig {
   maxRetries: number; // Maximum number of retry attempts
@@ -31,14 +32,13 @@ export async function scheduleMessageForRetry(
 ): Promise<void> {
   // Create retry record with attempt tracking
   try {
-    const existingResult = await query(
-      `SELECT retry_count, max_retries FROM whatsapp_message_retries WHERE message_id = $1;`,
-      [messageId],
-    );
+    const existingResult = await db.execute(sql`
+      SELECT retry_count, max_retries FROM whatsapp_message_retries WHERE message_id = ${messageId};
+    `);
 
     const existing = existingResult.rows[0];
 
-    if (existing && existing.retry_count >= existing.max_retries) {
+    if (existing && (existing.retry_count as any) >= (existing.max_retries as any)) {
       console.log(
         `Message ${messageId} already at max retries (${existing.retry_count}/${existing.max_retries})`,
       );
@@ -47,22 +47,18 @@ export async function scheduleMessageForRetry(
 
     if (existing) {
       // Update existing retry record
-      await query(
-        `
+      await db.execute(sql`
         UPDATE whatsapp_message_retries
         SET
           retry_count = retry_count + 1,
           next_retry_at = NOW() + INTERVAL '1 minute',
           status = 'pending',
           updated_at = NOW()
-        WHERE message_id = $1;
-        `,
-        [messageId],
-      );
+        WHERE message_id = ${messageId};
+      `);
     } else {
       // Insert new retry record
-      await query(
-        `
+      await db.execute(sql`
         INSERT INTO whatsapp_message_retries (
           message_id,
           campaign_id,
@@ -74,16 +70,10 @@ export async function scheduleMessageForRetry(
           next_retry_at,
           created_at,
           updated_at
-        ) VALUES ($1, $2, $3, $4, 0, $5, 'pending', NOW() + INTERVAL '1 minute', NOW(), NOW());
-        `,
-        [
-          messageId,
-          campaignId,
-          recipientPhone,
-          messageContent,
-          config.maxRetries,
-        ],
-      );
+        ) VALUES (
+          ${messageId}, ${campaignId}, ${recipientPhone}, ${messageContent}, 0, ${config.maxRetries}, 'pending', NOW() + INTERVAL '1 minute', NOW(), NOW()
+        );
+      `);
     }
 
     console.log(`Scheduled message ${messageId} for retry`);
@@ -104,8 +94,7 @@ export async function processPendingRetries(
   failed: number;
 }> {
   // Get messages due for retry
-  const result = await query(
-    `
+  const result = await db.execute(sql`
     SELECT
       message_id,
       campaign_id,
@@ -119,8 +108,7 @@ export async function processPendingRetries(
       AND status = 'pending'
     ORDER BY next_retry_at ASC
     LIMIT 100;
-    `,
-  );
+  `);
 
   const retries = result.rows as any[];
 
@@ -166,39 +154,33 @@ export async function processPendingRetries(
 
       if (apiResponse.ok && data.messages?.[0]?.id) {
         // Mark retry as successful
-        await query(
-          `
+        await db.execute(sql`
           UPDATE whatsapp_message_retries
           SET status = 'completed', updated_at = NOW()
-          WHERE message_id = $1;
-          `,
-          [retry.message_id],
-        );
+          WHERE message_id = ${retry.message_id};
+        `);
 
         successful++;
       } else {
         // Calculate next retry time with exponential backoff
         const nextRetryDelay = Math.min(
           config.initialDelayMs *
-            Math.pow(config.backoffMultiplier, retry.retry_count),
+            Math.pow(config.backoffMultiplier, (retry.retry_count as any)),
           config.maxDelayMs,
         );
 
         const nextRetryAt = new Date(Date.now() + nextRetryDelay);
 
         // Update retry record
-        await query(
-          `
+        await db.execute(sql`
           UPDATE whatsapp_message_retries
           SET
             retry_count = retry_count + 1,
-            next_retry_at = $2,
-            last_error = $3,
+            next_retry_at = ${nextRetryAt},
+            last_error = ${data.error?.message || "API error"},
             updated_at = NOW()
-          WHERE message_id = $1;
-          `,
-          [retry.message_id, nextRetryAt, data.error?.message || "API error"],
-        );
+          WHERE message_id = ${retry.message_id};
+        `);
 
         failed++;
       }
@@ -221,21 +203,18 @@ export async function processPendingRetries(
 export async function getCampaignRetryStats(
   campaignId: string,
 ): Promise<{ pending: number; completed: number; failed: number }> {
-  const result = await query(
-    `
+  const result = await db.execute(sql`
     SELECT
       status,
       COUNT(*) as count
     FROM whatsapp_message_retries
-    WHERE campaign_id = $1
+    WHERE campaign_id = ${campaignId}
     GROUP BY status;
-    `,
-    [campaignId],
-  );
+  `);
 
   const stats = { pending: 0, completed: 0, failed: 0 };
   for (const row of result.rows) {
-    stats[row.status as keyof typeof stats] = parseInt(row.count) || 0;
+    stats[row.status as keyof typeof stats] = parseInt(row.count as any) || 0;
   }
 
   return stats;
@@ -247,15 +226,12 @@ export async function getCampaignRetryStats(
 export async function cancelCampaignRetries(
   campaignId: string,
 ): Promise<number> {
-  const result = await query(
-    `
+  const result = await db.execute(sql`
     UPDATE whatsapp_message_retries
     SET status = 'cancelled', updated_at = NOW()
-    WHERE campaign_id = $1 AND status = 'pending'
+    WHERE campaign_id = ${campaignId} AND status = 'pending'
     RETURNING id;
-    `,
-    [campaignId],
-  );
+  `);
 
   console.log(
     `Cancelled ${result.rowCount} retries for campaign ${campaignId}`,
@@ -271,8 +247,7 @@ export async function retryMessageImmediately(
   config: RetryConfig = DEFAULT_RETRY_CONFIG
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const result = await query(
-      `
+    const result = await db.execute(sql`
       SELECT
         message_id,
         campaign_id,
@@ -281,10 +256,8 @@ export async function retryMessageImmediately(
         retry_count,
         max_retries
       FROM whatsapp_message_retries
-      WHERE message_id = $1;
-      `,
-      [messageId]
-    );
+      WHERE message_id = ${messageId};
+    `);
 
     const retry = result.rows[0];
     if (!retry) {
@@ -321,46 +294,37 @@ export async function retryMessageImmediately(
 
     if (apiResponse.ok && data.messages?.[0]?.id) {
       // Mark retry as completed
-      await query(
-        `
+      await db.execute(sql`
         UPDATE whatsapp_message_retries
         SET status = 'completed', updated_at = NOW()
-        WHERE message_id = $1;
-        `,
-        [messageId]
-      );
+        WHERE message_id = ${messageId};
+      `);
       
       // Update original message status
-      await query(
-        `
+      await db.execute(sql`
         UPDATE whatsapp_messages
         SET status = 'sent', error_code = null, error_message = null, updated_at = NOW()
-        WHERE id = $1;
-        `,
-        [messageId]
-      );
+        WHERE id = ${messageId};
+      `);
 
       return { success: true };
     } else {
       const errorMsg = data.error?.message || "Meta API error";
       const nextRetryDelay = Math.min(
-        config.initialDelayMs * Math.pow(config.backoffMultiplier, retry.retry_count),
+        config.initialDelayMs * Math.pow(config.backoffMultiplier, retry.retry_count as number),
         config.maxDelayMs
       );
       const nextRetryAt = new Date(Date.now() + nextRetryDelay);
 
-      await query(
-        `
+      await db.execute(sql`
         UPDATE whatsapp_message_retries
         SET
           retry_count = retry_count + 1,
-          next_retry_at = $2,
-          last_error = $3,
+          next_retry_at = ${nextRetryAt},
+          last_error = ${errorMsg},
           updated_at = NOW()
-        WHERE message_id = $1;
-        `,
-        [messageId, nextRetryAt, errorMsg]
-      );
+        WHERE message_id = ${messageId};
+      `);
 
       return { success: false, error: errorMsg };
     }

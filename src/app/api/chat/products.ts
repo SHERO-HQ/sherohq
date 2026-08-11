@@ -6,7 +6,8 @@
  */
 
 import type { Product } from "@/types/product";
-import { query as dbQuery } from "@/lib/db";
+import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
 import { CATALOG_SUMMARY } from "./knowledge";
 import { getVariantTokens } from "./utils";
 
@@ -39,7 +40,7 @@ export async function dbFetchProducts(
 ): Promise<Product[]> {
   const runSearch = async (joinType: "AND" | "OR" = "AND"): Promise<Product[]> => {
     try {
-      let queryText = `
+      let finalSql = sql`
         SELECT
           p.*,
           COALESCE(c_by_id.name, c_by_name.name) as category_name,
@@ -49,16 +50,13 @@ export async function dbFetchProducts(
         LEFT JOIN categories c_by_name ON p.category = c_by_name.name
       `;
 
-      const sqlParams: (string | number)[] = [];
-      const conditions: string[] = [];
-      let paramIndex = 1;
+      const conditions: ReturnType<typeof sql>[] = [];
 
       if (category && category !== "all") {
+        const catPattern = `%${category}%`;
         conditions.push(
-          `(p.category = $${paramIndex} OR c_by_id.id = $${paramIndex} OR c_by_name.name ILIKE $${paramIndex})`,
+          sql`(p.category = ${category} OR c_by_id.id = ${category} OR c_by_name.name ILIKE ${catPattern})`
         );
-        sqlParams.push(`%${category}%`);
-        paramIndex++;
       }
 
       if (search) {
@@ -68,39 +66,40 @@ export async function dbFetchProducts(
           .filter((t) => t.length >= 2 && !STOP_WORDS.has(t));
 
         if (tokens.length > 0) {
-          const tokenConditions: string[] = [];
+          const tokenConditions: ReturnType<typeof sql>[] = [];
           tokens.forEach((token) => {
             const variants = getVariantTokens(token);
-            const orParts: string[] = [];
+            const orParts: ReturnType<typeof sql>[] = [];
             
             variants.forEach((v) => {
-              orParts.push(`(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR p.specifications::text ILIKE $${paramIndex} OR p.features::text ILIKE $${paramIndex} OR c_by_id.name ILIKE $${paramIndex} OR c_by_name.name ILIKE $${paramIndex})`);
-              sqlParams.push(`%${v}%`);
-              paramIndex++;
+              const vPattern = `%${v}%`;
+              orParts.push(sql`(p.name ILIKE ${vPattern} OR p.description ILIKE ${vPattern} OR p.specifications::text ILIKE ${vPattern} OR p.features::text ILIKE ${vPattern} OR c_by_id.name ILIKE ${vPattern} OR c_by_name.name ILIKE ${vPattern})`);
             });
             
-            tokenConditions.push(`(${orParts.join(" OR ")})`);
+            tokenConditions.push(sql`(${sql.join(orParts, sql` OR `)})`);
           });
           
-          conditions.push(`(${tokenConditions.join(` ${joinType} `)})`);
+          if (joinType === "AND") {
+             conditions.push(sql`(${sql.join(tokenConditions, sql` AND `)})`);
+          } else {
+             conditions.push(sql`(${sql.join(tokenConditions, sql` OR `)})`);
+          }
         } else {
+          const searchPattern = `%${search}%`;
           conditions.push(
-            `(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR p.specifications::text ILIKE $${paramIndex} OR p.features::text ILIKE $${paramIndex} OR c_by_id.name ILIKE $${paramIndex} OR c_by_name.name ILIKE $${paramIndex})`,
+            sql`(p.name ILIKE ${searchPattern} OR p.description ILIKE ${searchPattern} OR p.specifications::text ILIKE ${searchPattern} OR p.features::text ILIKE ${searchPattern} OR c_by_id.name ILIKE ${searchPattern} OR c_by_name.name ILIKE ${searchPattern})`
           );
-          sqlParams.push(`%${search}%`);
-          paramIndex++;
         }
       }
 
       if (conditions.length > 0) {
-        queryText += " WHERE " + conditions.join(" AND ");
+        finalSql = sql`${finalSql} WHERE ${sql.join(conditions, sql` AND `)}`;
       }
 
-      queryText += ` ORDER BY p."inStock" DESC, p."createdAt" DESC LIMIT $${paramIndex}`;
-      sqlParams.push(limit);
+      finalSql = sql`${finalSql} ORDER BY p."inStock" DESC, p."createdAt" DESC LIMIT ${limit}`;
 
-      const result = await dbQuery(queryText, sqlParams);
-      
+      const result = await db.execute(finalSql);
+        
       return result.rows.map((row: any) => {
         const safeParse = (val: unknown): unknown => {
           if (!val) return null;

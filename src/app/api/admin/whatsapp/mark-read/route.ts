@@ -1,35 +1,37 @@
-import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { apiResponse } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { whatsappMessages } from "@/lib/drizzle/schema";
+import { sql, and, eq } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
     const admin = await getAdminFromSession();
     if (!admin) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return apiResponse.unauthorized();
     }
 
     const { phone } = await request.json();
 
     if (!phone) {
-      return NextResponse.json({ error: "Phone number required" }, { status: 400 });
+      return apiResponse.error("Phone number required", 400);
     }
 
     // Mark all received inbound messages from this phone as 'read'
-    await query(`
-      UPDATE whatsapp_messages 
-      SET status = 'read', updated_at = NOW() 
-      WHERE sender_wa_id = $1 
-        AND direction = 'inbound' 
-        AND status = 'received'
-    `, [phone]);
+    await db.update(whatsappMessages)
+      .set({ status: 'read', updatedAt: sql`NOW()` })
+      .where(
+        and(
+          eq(whatsappMessages.senderWaId, phone),
+          eq(whatsappMessages.direction, 'inbound'),
+          eq(whatsappMessages.status, 'received')
+        )
+      );
 
-    return NextResponse.json({ success: true });
+    return apiResponse.success({ success: true });
   } catch (error: any) {
     console.error("Error marking messages as read:", error);
-    return NextResponse.json(
-      { error: "Failed to mark messages as read", details: error.message || String(error) },
-      { status: 500 },
-    );
+    return apiResponse.error("Failed to mark messages as read", 500, error.message || String(error));
   }
 }

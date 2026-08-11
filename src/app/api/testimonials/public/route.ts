@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { testimonials } from "@/lib/drizzle/schema";
 import { v4 as uuidv4 } from "uuid";
 import { apiResponse } from "@/lib/api-utils";
 import { rateLimit } from "@/lib/rate-limit";
@@ -23,26 +24,21 @@ export async function POST(request: NextRequest) {
     const id = uuidv4();
     
     // Public submissions are marked inactive by default (pending approval)
-    await query(
-      `INSERT INTO testimonials (id, quote, author, role, company, image, "order", active, rating, "reviewUrl")
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
-      [
-        id, 
-        quote, 
-        author, 
-        role || null, 
-        company || null, 
-        null, // No image uploads for public for now
-        99, // default low priority order
-        false, // inactive pending admin approval
-        rating || null, 
-        null
-      ]
-    );
+    const result = await db.insert(testimonials).values({
+      id,
+      quote,
+      author,
+      role: role || null,
+      company: company || null,
+      image: null,
+      order: 99,
+      active: false,
+      rating: rating || null,
+      reviewUrl: null
+    }).returning();
 
-    const result = await query("SELECT * FROM testimonials WHERE id = $1", [id]);
     return apiResponse.success(
-      { message: "Testimonial submitted successfully and is pending review.", testimonial: result.rows[0] },
+      { message: "Testimonial submitted successfully and is pending review.", testimonial: result[0] },
       201
     );
   } catch (error) {

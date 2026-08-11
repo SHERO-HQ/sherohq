@@ -1,3 +1,6 @@
+/**
+ * @vitest-environment jsdom
+ */
 import { afterEach, describe, expect, it } from "vitest";
 import {
   getOrderAccessToken,
@@ -5,6 +8,29 @@ import {
 } from "./orderAccess";
 
 const ORDER_ACCESS_KEY = "sherotech_order_access_tokens";
+
+// Mock localStorage
+const localStorageMock = (() => {
+  let store: Record<string, string> = {};
+  return {
+    getItem(key: string) {
+      return store[key] || null;
+    },
+    setItem(key: string, value: string) {
+      store[key] = value.toString();
+    },
+    removeItem(key: string) {
+      delete store[key];
+    },
+    clear() {
+      store = {};
+    }
+  };
+})();
+
+Object.defineProperty(global, 'localStorage', {
+  value: localStorageMock
+});
 
 afterEach(() => {
   localStorage.removeItem(ORDER_ACCESS_KEY);

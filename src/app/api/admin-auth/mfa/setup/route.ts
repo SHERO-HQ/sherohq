@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { adminUsers } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 import speakeasy from "speakeasy";
@@ -19,10 +21,9 @@ export async function POST(request: NextRequest) {
     const qrCodeUrl = await QRCode.toDataURL(secret.otpauth_url || "");
 
     // Store the base32 secret in the database (unverified state)
-    await query(
-      `UPDATE admin_users SET "mfaSecret" = $1, "mfaEnabled" = false WHERE id = $2`,
-      [secret.base32, admin.id]
-    );
+    await db.update(adminUsers)
+      .set({ mfaSecret: secret.base32, mfaEnabled: false })
+      .where(eq(adminUsers.id, admin.id));
 
     return apiResponse.success({
       secret: secret.base32,

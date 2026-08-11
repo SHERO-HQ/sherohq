@@ -256,7 +256,7 @@ const AdminGuideEditor = () => {
             type="button"
             onClick={handleSubmit}
             disabled={isSaving}
-            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-30"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground min-w-30"
           >
             {isSaving ? (
               <>
@@ -350,7 +350,7 @@ const AdminGuideEditor = () => {
               type="button"
               onClick={handleSubmit}
               disabled={isSaving}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-30"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground min-w-30"
             >
               {isSaving ? (
                 <>
@@ -390,7 +390,7 @@ const AdminGuideEditor = () => {
           type="button"
           onClick={handleSubmit}
           disabled={isSaving}
-          className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white w-2/3"
+          className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground w-2/3"
         >
           {isSaving ? (
             <>

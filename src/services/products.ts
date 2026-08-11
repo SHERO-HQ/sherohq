@@ -21,7 +21,8 @@ export async function fetchProducts(
 
   const url = `${API_BASE}/products${params.toString() ? "?" + params.toString() : ""}`;
   const response = await fetch(url);
-  return handleResponse<Product[]>(response);
+  const data = await handleResponse<any>(response);
+  return Array.isArray(data) ? data : data?.products || [];
 }
 
 export async function fetchProduct(id: string): Promise<Product> {

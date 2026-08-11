@@ -1,4 +1,5 @@
-import { query } from "./db";
+import { db } from "./db";
+import { sql } from "drizzle-orm";
 
 export interface WhatsAppMessage {
   id: string;
@@ -28,36 +29,17 @@ export async function storeIncomingMessage(
   content: string | null,
   metadata: Record<string, any> | null = null,
 ): Promise<WhatsAppMessage> {
-  const result = await query(
-    `
+  const result = await db.execute(sql`
     INSERT INTO whatsapp_messages (
-      id,
-      phone_number_id,
-      sender_wa_id,
-      message_type,
-      content,
-      status,
-      direction,
-      metadata,
-      processed_at,
-      created_at,
-      updated_at
-    ) VALUES ($1, $2, $3, $4, $5, 'received', 'inbound', $6, NOW(), NOW(), NOW())
-    ON CONFLICT (id) DO UPDATE SET
-      updated_at = NOW()
+      id, phone_number_id, sender_wa_id, message_type, content, status, direction, metadata, processed_at, created_at, updated_at
+    ) VALUES (
+      ${messageId}, ${phoneNumberId}, ${senderWaId}, ${messageType}, ${content}, 'received', 'inbound', ${metadata ? JSON.stringify(metadata) : null}, NOW(), NOW(), NOW()
+    )
+    ON CONFLICT (id) DO UPDATE SET updated_at = NOW()
     RETURNING *;
-    `,
-    [
-      messageId,
-      phoneNumberId,
-      senderWaId,
-      messageType,
-      content,
-      metadata ? JSON.stringify(metadata) : null,
-    ],
-  );
+  `);
 
-  return result.rows[0] as WhatsAppMessage;
+  return result.rows[0] as any as WhatsAppMessage;
 }
 
 /**
@@ -69,27 +51,24 @@ export async function updateMessageStatus(
   errorCode?: string | null,
   errorMessage?: string | null,
 ): Promise<WhatsAppMessage | null> {
-  const result = await query(
-    `
+  const result = await db.execute(sql`
     UPDATE whatsapp_messages
     SET
       status = CASE
-        WHEN $2 = 'failed' THEN $2
-        WHEN $2 = 'read' AND status IN ('sent', 'delivered', 'received') THEN $2
-        WHEN $2 = 'delivered' AND status IN ('sent', 'received') THEN $2
-        WHEN $2 = 'sent' AND status IN ('received') THEN $2
+        WHEN ${status} = 'failed' THEN ${status}
+        WHEN ${status} = 'read' AND status IN ('sent', 'delivered', 'received') THEN ${status}
+        WHEN ${status} = 'delivered' AND status IN ('sent', 'received') THEN ${status}
+        WHEN ${status} = 'sent' AND status IN ('received') THEN ${status}
         ELSE status
       END,
-      error_code = COALESCE($3, error_code),
-      error_message = COALESCE($4, error_message),
+      error_code = COALESCE(${errorCode || null}, error_code),
+      error_message = COALESCE(${errorMessage || null}, error_message),
       updated_at = NOW()
-    WHERE id = $1
+    WHERE id = ${messageId}
     RETURNING *;
-    `,
-    [messageId, status, errorCode || null, errorMessage || null],
-  );
+  `);
 
-  return result.rows[0] || null;
+  return (result.rows[0] as any as WhatsAppMessage) || null;
 }
 
 /**
@@ -103,35 +82,16 @@ export async function storeOutgoingMessage(
   content: string,
   metadata: Record<string, any> | null = null,
 ): Promise<WhatsAppMessage> {
-  const result = await query(
-    `
+  const result = await db.execute(sql`
     INSERT INTO whatsapp_messages (
-      id,
-      campaign_id,
-      phone_number_id,
-      sender_wa_id,
-      message_type,
-      content,
-      status,
-      direction,
-      metadata,
-      processed_at,
-      created_at,
-      updated_at
-    ) VALUES ($1, $2, $3, $4, 'text', $5, 'sent', 'outbound', $6, NOW(), NOW(), NOW())
+      id, campaign_id, phone_number_id, sender_wa_id, message_type, content, status, direction, metadata, processed_at, created_at, updated_at
+    ) VALUES (
+      ${messageId}, ${campaignId}, ${phoneNumberId}, ${senderWaId}, 'text', ${content}, 'sent', 'outbound', ${metadata ? JSON.stringify(metadata) : null}, NOW(), NOW(), NOW()
+    )
     RETURNING *;
-    `,
-    [
-      messageId,
-      campaignId,
-      phoneNumberId,
-      senderWaId,
-      content,
-      metadata ? JSON.stringify(metadata) : null,
-    ],
-  );
+  `);
 
-  return result.rows[0] as WhatsAppMessage;
+  return result.rows[0] as any as WhatsAppMessage;
 }
 
 /**
@@ -234,17 +194,14 @@ export async function getConversationHistory(
   senderWaId: string,
   limit: number = 50,
 ): Promise<WhatsAppMessage[]> {
-  const result = await query(
-    `
+  const result = await db.execute(sql`
     SELECT * FROM whatsapp_messages
-    WHERE sender_wa_id = $1
+    WHERE sender_wa_id = ${senderWaId}
     ORDER BY created_at DESC
-    LIMIT $2;
-    `,
-    [senderWaId, limit],
-  );
+    LIMIT ${limit};
+  `);
 
-  return result.rows as WhatsAppMessage[];
+  return result.rows as any as WhatsAppMessage[];
 }
 
 /**
@@ -253,13 +210,7 @@ export async function getConversationHistory(
 export async function clearConversationHistory(
   senderWaId: string,
 ): Promise<void> {
-  await query(
-    `
-    DELETE FROM whatsapp_messages
-    WHERE sender_wa_id = $1;
-    `,
-    [senderWaId],
-  );
+  await db.execute(sql`DELETE FROM whatsapp_messages WHERE sender_wa_id = ${senderWaId};`);
 }
 
 /**
@@ -274,13 +225,7 @@ export async function deleteConversation(
   await clearConversationHistory(senderWaId);
   
   // Then delete the contact
-  await query(
-    `
-    DELETE FROM whatsapp_contacts
-    WHERE phone = $1;
-    `,
-    [normalizedPhone],
-  );
+  await db.execute(sql`DELETE FROM whatsapp_contacts WHERE phone = ${normalizedPhone};`);
 }
 
 
@@ -294,8 +239,7 @@ export async function getCampaignDeliveryStatus(campaignId: string): Promise<{
   read: number;
   failed: number;
 }> {
-  const result = await query(
-    `
+  const result = await db.execute(sql`
     SELECT
       COUNT(*) as total,
       COUNT(CASE WHEN status = 'sent' THEN 1 END) as sent,
@@ -303,18 +247,16 @@ export async function getCampaignDeliveryStatus(campaignId: string): Promise<{
       COUNT(CASE WHEN status = 'read' THEN 1 END) as read,
       COUNT(CASE WHEN status = 'failed' THEN 1 END) as failed
     FROM whatsapp_messages
-    WHERE campaign_id = $1 AND direction = 'outbound';
-    `,
-    [campaignId],
-  );
+    WHERE campaign_id = ${campaignId} AND direction = 'outbound';
+  `);
 
   const row = result.rows[0];
   return {
-    total: parseInt(row.total) || 0,
-    sent: parseInt(row.sent) || 0,
-    delivered: parseInt(row.delivered) || 0,
-    read: parseInt(row.read) || 0,
-    failed: parseInt(row.failed) || 0,
+    total: parseInt(row.total as string) || 0,
+    sent: parseInt(row.sent as string) || 0,
+    delivered: parseInt(row.delivered as string) || 0,
+    read: parseInt(row.read as string) || 0,
+    failed: parseInt(row.failed as string) || 0,
   };
 }
 
@@ -324,16 +266,13 @@ export async function getCampaignDeliveryStatus(campaignId: string): Promise<{
 export async function getCampaignFailedMessages(
   campaignId: string,
 ): Promise<WhatsAppMessage[]> {
-  const result = await query(
-    `
+  const result = await db.execute(sql`
     SELECT * FROM whatsapp_messages
-    WHERE campaign_id = $1 AND status = 'failed'
+    WHERE campaign_id = ${campaignId} AND status = 'failed'
     ORDER BY created_at DESC;
-    `,
-    [campaignId],
-  );
+  `);
 
-  return result.rows as WhatsAppMessage[];
+  return result.rows as any as WhatsAppMessage[];
 }
 /**
  * Upsert a WhatsApp contact's profile info
@@ -344,23 +283,15 @@ export async function upsertWhatsAppContact(
 ): Promise<void> {
   const normalizedPhone = phone.replace(/[^\d+]/g, "");
   
-  await query(
-    `
+  await db.execute(sql`
     INSERT INTO whatsapp_contacts (
-      phone,
-      name,
-      status,
-      last_interaction,
-      created_at,
-      updated_at
-    ) VALUES ($1, $2, 'active', NOW(), NOW(), NOW())
+      phone, name, status, last_interaction, created_at, updated_at
+    ) VALUES (${normalizedPhone}, ${name || null}, 'active', NOW(), NOW(), NOW())
     ON CONFLICT (phone) DO UPDATE SET
-      name = COALESCE($2, whatsapp_contacts.name),
+      name = COALESCE(${name || null}, whatsapp_contacts.name),
       last_interaction = NOW(),
       updated_at = NOW()
-    `,
-    [normalizedPhone, name || null],
-  );
+  `);
 }
 
 /**
@@ -368,13 +299,10 @@ export async function upsertWhatsAppContact(
  */
 export async function getWhatsAppContactState(phone: string): Promise<string | null> {
   const normalizedPhone = phone.replace(/[^\d+]/g, "");
-  const result = await query(
-    `SELECT metadata FROM whatsapp_contacts WHERE phone = $1`,
-    [normalizedPhone]
-  );
+  const result = await db.execute(sql`SELECT metadata FROM whatsapp_contacts WHERE phone = ${normalizedPhone}`);
   
   if (result.rows.length === 0 || !result.rows[0].metadata) return null;
-  return result.rows[0].metadata.conversationState || null;
+  return (result.rows[0].metadata as any).conversationState || null;
 }
 
 /**
@@ -384,24 +312,18 @@ export async function updateWhatsAppContactState(phone: string, state: string | 
   const normalizedPhone = phone.replace(/[^\d+]/g, "");
   
   if (state === null) {
-    await query(
-      `
+    await db.execute(sql`
       UPDATE whatsapp_contacts 
       SET metadata = metadata - 'conversationState', updated_at = NOW()
-      WHERE phone = $1 AND metadata IS NOT NULL
-      `,
-      [normalizedPhone]
-    );
+      WHERE phone = ${normalizedPhone} AND metadata IS NOT NULL
+    `);
   } else {
-    await query(
-      `
+    await db.execute(sql`
       UPDATE whatsapp_contacts 
-      SET metadata = COALESCE(metadata, '{}'::jsonb) || jsonb_build_object('conversationState', $2::text),
+      SET metadata = COALESCE(metadata, '{}'::jsonb) || jsonb_build_object('conversationState', ${state}::text),
           updated_at = NOW()
-      WHERE phone = $1
-      `,
-      [normalizedPhone, state]
-    );
+      WHERE phone = ${normalizedPhone}
+    `);
   }
 }
 

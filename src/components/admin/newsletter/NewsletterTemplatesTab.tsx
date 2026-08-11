@@ -63,7 +63,7 @@ export function NewsletterTemplatesTab({
           className={cn(
             "gap-2",
             activeType === "email"
-              ? "bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white border-transparent"
+              ? "bg-brand-secondary-500 hover:bg-brand-secondary-600 text-foreground border-transparent"
               : "text-muted-foreground",
           )}
         >
@@ -75,7 +75,7 @@ export function NewsletterTemplatesTab({
           className={cn(
             "gap-2",
             activeType === "whatsapp"
-              ? "bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white border-transparent"
+              ? "bg-brand-secondary-500 hover:bg-brand-secondary-600 text-foreground border-transparent"
               : "text-muted-foreground",
           )}
         >
@@ -87,7 +87,7 @@ export function NewsletterTemplatesTab({
           className={cn(
             "gap-2",
             activeType === "sms"
-              ? "bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white border-transparent"
+              ? "bg-brand-secondary-500 hover:bg-brand-secondary-600 text-foreground border-transparent"
               : "text-muted-foreground",
           )}
         >
@@ -170,7 +170,7 @@ export function NewsletterTemplatesTab({
               <div className="grid grid-cols-2 gap-3 mt-1">
                 <Button
                   variant="outline"
-                  className="w-full text-brand-secondary-600 border-brand-secondary-500/30 hover:bg-brand-secondary-500 hover:text-white rounded shadow-sm transition-all"
+                  className="w-full text-brand-secondary-600 border-brand-secondary-500/30 hover:bg-brand-secondary-500 hover:text-foreground rounded shadow-sm transition-all"
                   onClick={() => onSelectTemplate(activeType, template)}
                 >
                   Use Template

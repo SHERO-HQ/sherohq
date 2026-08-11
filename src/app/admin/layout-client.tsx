@@ -1,14 +1,14 @@
 "use client";
 
 import React, { Suspense } from "react";
-import { BreadcrumbProvider } from "@/context/BreadcrumbContext";
+
 import { usePathname } from "next/navigation";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { useAdmin } from "@/context/AdminContext";
+import { useAdminUser } from "@/hooks/queries/useAdminQuery";
 
 function AdminLoading() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-card relative overflow-hidden">
       {/* Background Decor */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-125 h-125 bg-brand-secondary-500/10 blur-[120px] rounded-full animate-pulse" />
 
@@ -32,7 +32,7 @@ function AdminLoading() {
       </div>
 
       <div className="mt-8 flex flex-col items-center gap-2">
-        <h2 className="text-white font-bold tracking-widest text-xs uppercase opacity-50 animate-pulse">
+        <h2 className="text-foreground font-bold tracking-widest text-xs uppercase opacity-50 animate-pulse">
           SHERO TECHNOLOGIES
         </h2>
         <div className="h-px w-24 bg-linear-to-r from-transparent via-brand-secondary-500/50 to-transparent" />
@@ -47,7 +47,8 @@ export default function AdminLayoutClient({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const { isAuthenticated, isLoading } = useAdmin();
+  const { data: adminData, isLoading } = useAdminUser();
+  const isAuthenticated = !!adminData?.admin;
 
   // Cover both path structures:
   //   - sherohq.com/admin/login  (main domain)
@@ -64,7 +65,6 @@ export default function AdminLayoutClient({
 
   return (
     <Suspense fallback={<AdminLoading />}>
-      <BreadcrumbProvider>
         <main id="main-content" className="min-h-screen">
           {isLoginPage || !isAuthenticated ? (
             children
@@ -72,7 +72,6 @@ export default function AdminLayoutClient({
             <AdminLayout>{children}</AdminLayout>
           )}
         </main>
-      </BreadcrumbProvider>
     </Suspense>
   );
 }

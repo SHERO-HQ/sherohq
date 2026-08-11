@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
 import { apiResponse } from "@/lib/api-utils";
@@ -10,14 +11,14 @@ export async function GET(request: NextRequest) {
     const admin = await getAdminFromSession();
     if (!admin) return apiResponse.unauthorized();
 
-    const result = await query(`
+    const result = await db.execute(sql`
       SELECT e.*, au.username as "adminName"
       FROM expenses e
       LEFT JOIN admin_users au ON e."adminId" = au.id
       ORDER BY e.date DESC
     `);
 
-    return apiResponse.success(result.rows);
+    return apiResponse.success((result.rows || result) as Record<string, unknown>[]);
   } catch (error) {
     console.error("Fetch expenses error:", error);
     return apiResponse.error("Failed to fetch expenses");
@@ -35,11 +36,10 @@ export async function POST(request: NextRequest) {
     }
 
     const id = uuidv4();
-    await query(
-      `INSERT INTO expenses (id, title, amount, category, date, description, "adminId")
-       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [id, title, amount, category, date, description || null, admin.id],
-    );
+    await db.execute(sql`
+      INSERT INTO expenses (id, title, amount, category, date, description, "adminId")
+      VALUES (${id}, ${title}, ${amount}, ${category}, ${date}, ${description || null}, ${admin.id})
+    `);
 
     await logActivity(
       admin.id,

@@ -1,13 +1,18 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
-import { apiResponse } from "@/lib/api-utils";
+import { db } from "@/lib/db";
+import { orders } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
+import { apiResponse, validateCsrf } from "@/lib/api-utils";
 import { getUserFromSession, getAdminFromSession } from "@/lib/auth";
 import { hashOrderAccessToken } from "@/lib/orderUtils";
 import { toReadableOrderId } from "@/utils/orderId";
 import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
-  let orderId: string = "";
+  
+    const csrfError = await validateCsrf(request);
+    if (csrfError) return csrfError;
+let orderId: string = "";
   let normalizedProvider: "hubtel" | "paystack" | undefined;
   let description: string | undefined;
 
@@ -39,14 +44,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const orderRes = await query(
-      `SELECT "shippingInfo", total, status, "userId", "orderAccessTokenHash" FROM orders WHERE id = $1`,
-      [orderId],
-    );
+    const orderRes = await db.select({
+      shippingInfo: orders.shippingInfo,
+      total: orders.total,
+      status: orders.status,
+      userId: orders.userId,
+      orderAccessTokenHash: orders.orderAccessTokenHash
+    })
+    .from(orders)
+    .where(eq(orders.id, orderId));
 
-    if (orderRes.rowCount === 0) return apiResponse.notFound("Order not found");
+    if (orderRes.length === 0) return apiResponse.notFound("Order not found");
 
-    const order = orderRes.rows[0];
+    const order = orderRes[0];
     const user = await getUserFromSession();
     const admin = await getAdminFromSession();
 
@@ -70,8 +80,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Use host header to get the exact domain the user is accessing (e.g. sherohq.com or shop.sherohq.com)
-    // This avoids Vercel's internal localhost/0.0.0.0 origins leaking into webhooks
+    // Use host header to get the exact domain the user is accessing
     const host = request.headers.get("host") || "localhost:3000";
     const protocol =
       request.headers.get("x-forwarded-proto") ||
@@ -102,11 +111,10 @@ export async function POST(request: NextRequest) {
       const readableId = toReadableOrderId(orderId);
       const callbackUrl = `${publicUrl.replace(/\/$/, "")}/api/payments/webhook`;
       const returnUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}`;
-      // Separate cancellation URL with status param so frontend shows failure instantly
       const cancelUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}&status=Cancelled`;
 
       const payload = {
-        totalAmount: Math.round((order.total ?? 0) * 100) / 100,
+        totalAmount: Math.round(Number(order.total || 0) * 100) / 100,
         description: description || `Order ${toReadableOrderId(orderId)}`,
         callbackUrl,
         returnUrl,
@@ -191,13 +199,12 @@ async function initializePaystackTransaction(
     return apiResponse.error("Paystack not configured on server", 500);
   }
 
-  const shipping = order.shippingInfo || {};
+  // Handle parsing stringified JSON safely since we bypassed the parser wrapper here
+  const shipping = typeof order.shippingInfo === 'string' ? JSON.parse(order.shippingInfo) : (order.shippingInfo || {});
   const email = shipping.email || "customers@unknown.local";
 
-  // Paystack expects amount in the smallest currency unit (e.g., kobo/pesewa)
-  const amount = Math.round((order.total ?? 0) * 100);
+  const amount = Math.round(Number(order.total || 0) * 100);
 
-  // Redirect customer to confirmation page after payment
   const readableId = toReadableOrderId(orderId);
   const callback_url = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}`;
 

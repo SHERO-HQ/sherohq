@@ -1,7 +1,7 @@
 import React from "react";
 import AppImage from "@/components/common/AppImage";
 import { getImageUrl } from "@/services/api";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/hooks/queries/useCartQuery";
 import { Product } from "@/types/product";
 import Link from "next/link";
 import { Plus } from "lucide-react";

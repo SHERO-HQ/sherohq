@@ -1,5 +1,7 @@
-import { NextRequest} from "next/server";
-import { query } from "@/lib/db";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { categories } from "@/lib/drizzle/schema";
+import { ilike } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
 import { logActivity } from "@/lib/activity";
@@ -16,17 +18,20 @@ export async function POST(request: NextRequest) {
     if (!name) return apiResponse.error("Category name is required", 400);
 
     // Check if category already exists (case-insensitive)
-    const existing = await query("SELECT id, name, icon FROM categories WHERE name ILIKE $1", [name]);
-    if ((existing.rowCount ?? 0) > 0) {
+    const existing = await db.select({ id: categories.id })
+      .from(categories)
+      .where(ilike(categories.name, name));
+      
+    if (existing.length > 0) {
       return apiResponse.error("A category with this name already exists", 409);
     }
 
     const id = uuidv4();
-    await query("INSERT INTO categories (id, name, icon) VALUES ($1, $2, $3)", [
+    await db.insert(categories).values({
       id,
       name,
-      icon || "Package",
-    ]);
+      icon: icon || "Package",
+    });
 
     await logActivity(admin.id, "category_create", "success", `Created category: ${name}`);
 

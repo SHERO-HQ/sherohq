@@ -175,7 +175,7 @@ ${formData.message}`;
       )}
 
       {status !== "success" && (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="relative">
           <AnimatePresence mode="wait" custom={direction}>
             <m.div
               key={step}
@@ -444,7 +444,7 @@ ${formData.message}`;
                       className="flex-1 md:flex-none px-8 h-10 text-sm font-bold bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white shadow-md shadow-brand-secondary-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                     >
                       {status === "submitting" ? (
-                        <span aria-hidden="true">Encrypting & Sending...</span>
+                        <span aria-hidden="true">Sending...</span>
                       ) : (
                         <span className="flex items-center gap-2">
                           Submit Inquiry <Send className="w-4 h-4" aria-hidden="true" />

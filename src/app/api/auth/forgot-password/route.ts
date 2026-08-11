@@ -1,6 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
-import { randomBytes } from "node:crypto";
+import { apiResponse } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { users } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
+import { createHash, randomBytes } from "node:crypto";
 import { z } from "zod";
 import { notificationService } from "@/lib/notifications";
 import { rateLimit } from "@/lib/rate-limit";
@@ -15,10 +18,7 @@ export async function POST(request: NextRequest) {
     const limiter = await rateLimit(`forgot_password_${ip}`, 3, 60 * 1000);
 
     if (!limiter.success) {
-      return NextResponse.json(
-        { error: "Too many password reset requests. Please try again in a minute." },
-        { status: 429 },
-      );
+      return apiResponse.error("Too many password reset requests. Please try again in a minute.", 429);
     }
 
     const body = await request.json();
@@ -26,29 +26,31 @@ export async function POST(request: NextRequest) {
     const { email } = validated;
 
     // 1. Check if user exists
-    const result = await query("SELECT id, name FROM users WHERE email = $1", [email]);
-    const user = result.rows[0];
+    const user = await db.query.users.findFirst({
+      where: eq(users.email, email),
+      columns: { id: true, name: true },
+    });
 
     // Note: To prevent account enumeration, always return success even if user doesn't exist
     if (!user) {
       if (process.env.NODE_ENV !== "production") {
         console.log(`Password reset requested for non-existent email: ${email}`);
       }
-      return NextResponse.json({
+      return apiResponse.success({
         success: true,
         message: "If an account with that email exists, we have sent a reset link.",
       });
     }
 
-    // 2. Generate reset token
+    // 2. Generate reset token and hash it for storage
     const token = randomBytes(32).toString("hex");
+    const hashedToken = createHash("sha256").update(token).digest("hex");
     const expiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 
-    // 3. Save to DB
-    await query(
-      'UPDATE users SET "resetToken" = $1, "resetTokenExpiry" = $2 WHERE id = $3',
-      [token, expiry.toISOString(), user.id]
-    );
+    // 3. Save hashed token to DB
+    await db.update(users)
+      .set({ resetToken: hashedToken, resetTokenExpiry: expiry.toISOString() })
+      .where(eq(users.id, user.id));
 
     // 4. Send Email (Simulated for now, logging to console)
     const origin = request.nextUrl.origin;
@@ -71,7 +73,7 @@ export async function POST(request: NextRequest) {
       console.error("Failed to send password reset email:", e);
     }
 
-    return NextResponse.json({
+    return apiResponse.success({
       success: true,
       message: "Password reset link sent successfully.",
     });
@@ -80,8 +82,8 @@ export async function POST(request: NextRequest) {
       console.error("Forgot password error:", error);
     }
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
+      return apiResponse.error("Invalid email address", 400);
     }
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return apiResponse.error("Internal server error", 500);
   }
 }

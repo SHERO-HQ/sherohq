@@ -3,12 +3,18 @@ import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Lock, ShieldCheck, AlertCircle, Loader2 } from "lucide-react";
 import { adminChangePassword } from "@/services/api";
-import { useAdmin } from "@/context/AdminContext";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAdminUser } from "@/hooks/queries/useAdminQuery";
 import { useNotifications } from "@/hooks/useNotifications";
 import { cn } from "@/lib/utils";
 
 export function ChangePasswordModal() {
-  const { mustReset, setMustReset } = useAdmin();
+  const queryClient = useQueryClient();
+  const { data: adminData } = useAdminUser();
+  const mustReset = (adminData as any)?.mustReset;
+  const setMustReset = (val: boolean) => {
+    queryClient.setQueryData(["admin"], (old: any) => ({ ...old, mustReset: val }));
+  };
   const { addNotification } = useNotifications();
   const [currentPassword, setCurrentPassword] = useState("");
   const [password, setPassword] = useState("");
@@ -16,7 +22,11 @@ export function ChangePasswordModal() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (!mustReset) return null;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,18 +60,12 @@ export function ChangePasswordModal() {
     }
   };
 
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
+  if (!mustReset || !mounted) return null;
 
   return createPortal(
     <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-card/80  animate-in fade-in duration-300">
       <div className="w-full max-w-md bg-white dark:bg-card border border-border dark:border-border shadow overflow-hidden animate-in zoom-in-95 duration-300">
-        <div className="p-6 border-b border-border dark:border-border bg-slate-50 dark:bg-accent/50">
+        <div className="p-6 border-b border-border bg-accent/50">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-amber-500/10 rounded">
               <ShieldCheck className="w-6 h-6 text-amber-500" />
@@ -100,7 +104,7 @@ export function ChangePasswordModal() {
                   type="password"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 dark:bg-accent/50 border border-border dark:border-border focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 transition text-slate-900 dark:text-foreground"
+                  className="w-full pl-10 pr-4 py-2 text-sm bg-background border border-border focus:outline-none focus:ring-2 focus:ring-ring transition text-foreground"
                   placeholder="Enter current password"
                   required
                 />
@@ -121,7 +125,7 @@ export function ChangePasswordModal() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 dark:bg-accent/50 border border-border dark:border-border focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 transition text-slate-900 dark:text-foreground"
+                  className="w-full pl-10 pr-4 py-2 text-sm bg-background border border-border focus:outline-none focus:ring-2 focus:ring-ring transition text-foreground"
                   placeholder="At least 6 characters"
                   required
                 />
@@ -142,7 +146,7 @@ export function ChangePasswordModal() {
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 dark:bg-accent/50 border border-border dark:border-border focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/50 transition text-slate-900 dark:text-foreground"
+                  className="w-full pl-10 pr-4 py-2 text-sm bg-background border border-border focus:outline-none focus:ring-2 focus:ring-ring transition text-foreground"
                   placeholder="Confirm your new password"
                   required
                 />
@@ -154,7 +158,7 @@ export function ChangePasswordModal() {
             type="submit"
             disabled={isSubmitting}
             className={cn(
-              "w-full py-2.5 px-4 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-semibold text-sm transition flex items-center justify-center gap-2",
+              "w-full py-2.5 px-4 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-semibold text-sm transition flex items-center justify-center gap-2",
               isSubmitting && "opacity-70 cursor-not-allowed",
             )}
           >

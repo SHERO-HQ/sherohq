@@ -13,7 +13,8 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test": "vitest run",
-    "db:migrate": "node scripts/apply-migrations.js"
+    "db:migrate": "node scripts/apply-migrations.js",
+    "prepare": "husky"
   },
   "dependencies": {
     "@fontsource-variable/jetbrains-mono": "^5.2.8",
@@ -48,7 +49,7 @@
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.45.2",
     "file-saver": "^2.0.5",
-    "jspdf": "^4.0.0",
+    "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.7",
     "lucide-react": "^0.561.0",
     "motion": "^12.23.26",
@@ -69,6 +70,7 @@
     "recharts": "^3.7.0",
     "remark-gfm": "^4.0.1",
     "resend": "^4.1.2",
+    "sonner": "^2.0.8",
     "speakeasy": "^2.0.0",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.18",
@@ -76,7 +78,7 @@
     "tw-animate-css": "^1.4.0",
     "typescript": "^5.9.3",
     "uuid": "^14.0.1",
-    "xlsx": "^0.18.5",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
     "zod": "^4.3.6"
   },
   "devDependencies": {
@@ -99,13 +101,12 @@
     "jsdom": "^27.4.0",
     "knip": "^6.32.0",
     "typescript-eslint": "^8.46.4",
-    "vite": "npm:rolldown-vite@latest",
+    "vite": "^6.2.0",
     "vitest": "^4.0.18"
   },
   "resolutions": {
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "react-is": "19.2.3",
-    "vite": "npm:rolldown-vite@latest"
+    "react-is": "19.2.3"
   }
 }

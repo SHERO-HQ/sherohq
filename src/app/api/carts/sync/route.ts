@@ -1,5 +1,6 @@
 import { NextRequest} from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
 import { getUserFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 import { z } from "zod";
@@ -32,27 +33,25 @@ export async function POST(request: NextRequest) {
 
     if (user) {
       // Upsert cart for logged in user
-      await query(
-        `INSERT INTO abandoned_carts ("userId", items, "lastActive")
-         VALUES ($1, $2, NOW())
-         ON CONFLICT ("userId") DO UPDATE SET
-         items = EXCLUDED.items,
-         "lastActive" = NOW(),
-         "emailSent" = false`,
-        [user.id, JSON.stringify(items)]
-      );
+      await db.execute(sql`
+        INSERT INTO abandoned_carts ("userId", items, "lastActive")
+        VALUES (${user.id}, ${JSON.stringify(items)}, NOW())
+        ON CONFLICT ("userId") DO UPDATE SET
+        items = EXCLUDED.items,
+        "lastActive" = NOW(),
+        "emailSent" = false
+      `);
     } else {
       // Upsert cart for guest
-      await query(
-        `INSERT INTO abandoned_carts ("guestId", items, "lastActive", "guestEmail", "guestPhone")
-         VALUES ($1, $2, NOW(), $3, $4)
-         ON CONFLICT ("guestId") DO UPDATE SET
-         items = EXCLUDED.items,
-         "lastActive" = NOW(),
-         "guestEmail" = COALESCE($3, abandoned_carts."guestEmail"),
-         "guestPhone" = COALESCE($4, abandoned_carts."guestPhone")`,
-        [resolvedGuestId, JSON.stringify(items), guestEmail || null, guestPhone || null]
-      );
+      await db.execute(sql`
+        INSERT INTO abandoned_carts ("guestId", items, "lastActive", "guestEmail", "guestPhone")
+        VALUES (${resolvedGuestId}, ${JSON.stringify(items)}, NOW(), ${guestEmail || null}, ${guestPhone || null})
+        ON CONFLICT ("guestId") DO UPDATE SET
+        items = EXCLUDED.items,
+        "lastActive" = NOW(),
+        "guestEmail" = COALESCE(${guestEmail || null}, abandoned_carts."guestEmail"),
+        "guestPhone" = COALESCE(${guestPhone || null}, abandoned_carts."guestPhone")
+      `);
     }
 
     return apiResponse.success({ synced: true });

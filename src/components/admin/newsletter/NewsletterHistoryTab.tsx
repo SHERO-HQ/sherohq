@@ -108,7 +108,7 @@ export function NewsletterHistoryTab({
                     return (
                       <tr
                         key={campaign.id}
-                        className="border-b border-border text-muted-foreground transition hover:bg-white/5"
+                        className="border-b border-border text-muted-foreground transition hover:bg-muted/50"
                       >
                         <td className="px-3 py-4">
                           <div className="font-medium text-foreground">

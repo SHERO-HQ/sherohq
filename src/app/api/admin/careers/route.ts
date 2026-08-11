@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
 import { logActivity } from "@/lib/activity";
@@ -10,12 +11,12 @@ export async function GET() {
     const admin = await getAdminFromSession();
     if (!admin) return apiResponse.unauthorized();
 
-    const result = await query(`
+    const result = await db.execute(sql`
       SELECT *
       FROM careers
       ORDER BY "createdAt" DESC
     `);
-    return apiResponse.success(result.rows);
+    return apiResponse.success((result.rows || result) as Record<string, unknown>[]);
   } catch (error) {
     console.error("Fetch careers error:", error);
     return apiResponse.error("Failed to fetch careers");
@@ -33,11 +34,10 @@ export async function POST(request: NextRequest) {
     }
 
     const id = uuidv4();
-    await query(
-      `INSERT INTO careers (id, title, department, location, type, description, requirements, "isActive")
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-      [id, title, department, location, type, description || null, requirements ? JSON.stringify(requirements) : null, isActive ?? true]
-    );
+    await db.execute(sql`
+      INSERT INTO careers (id, title, department, location, type, description, requirements, "isActive")
+      VALUES (${id}, ${title}, ${department}, ${location}, ${type}, ${description || null}, ${requirements ? JSON.stringify(requirements) : null}, ${isActive ?? true})
+    `);
 
     await logActivity(admin.id, "career_create", "success", `Created job posting: ${title}`);
 
@@ -58,12 +58,11 @@ export async function PUT(request: NextRequest) {
       return apiResponse.error("ID, title, department, location, and type are required", 400);
     }
 
-    await query(
-      `UPDATE careers 
-       SET title = $1, department = $2, location = $3, type = $4, description = $5, requirements = $6, "isActive" = $7, "updatedAt" = CURRENT_TIMESTAMP
-       WHERE id = $8`,
-      [title, department, location, type, description || null, requirements ? JSON.stringify(requirements) : null, isActive, id]
-    );
+    await db.execute(sql`
+      UPDATE careers 
+      SET title = ${title}, department = ${department}, location = ${location}, type = ${type}, description = ${description || null}, requirements = ${requirements ? JSON.stringify(requirements) : null}, "isActive" = ${isActive}, "updatedAt" = CURRENT_TIMESTAMP
+      WHERE id = ${id}
+    `);
 
     await logActivity(admin.id, "career_update", "success", `Updated job posting: ${title}`);
 
@@ -83,7 +82,7 @@ export async function DELETE(request: NextRequest) {
     const id = url.searchParams.get("id");
     if (!id) return apiResponse.error("ID is required", 400);
 
-    await query(`DELETE FROM careers WHERE id = $1`, [id]);
+    await db.execute(sql`DELETE FROM careers WHERE id = ${id}`);
     await logActivity(admin.id, "career_delete", "success", `Deleted job posting: ${id}`);
 
     return apiResponse.success({ success: true });

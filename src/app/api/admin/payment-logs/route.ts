@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 
@@ -17,21 +18,21 @@ export async function GET(request: NextRequest) {
     const format = searchParams.get("format");
     const limit = Math.min(Number(searchParams.get("limit") || 500), 1000);
 
-    const result = await query(
-      `SELECT id, action, type, details, "adminId", "createdAt"
-       FROM activity_logs
-       WHERE action LIKE '%payment%' OR action LIKE 'order_%'
-       ORDER BY "createdAt" DESC
-       LIMIT $1`,
-      [limit]
-    );
+    const result = await db.execute(sql`
+      SELECT id, action, type, details, "adminId", "createdAt"
+      FROM activity_logs
+      WHERE action LIKE '%payment%' OR action LIKE 'order_%'
+      ORDER BY "createdAt" DESC
+      LIMIT ${limit}
+    `);
+
+    const rows = (result.rows || result) as Record<string, unknown>[];
 
     if (format === "csv") {
-      const rows = result.rows;
       const headers = ["ID", "Action", "Type", "Details", "Timestamp"];
       const csvRows = [
         headers.join(","),
-        ...rows.map((r) =>
+        ...rows.map((r: any) =>
           [
             `"${r.id}"`,
             `"${r.action}"`,
@@ -51,8 +52,8 @@ export async function GET(request: NextRequest) {
     }
 
     return apiResponse.success({
-      count: result.rowCount,
-      logs: result.rows,
+      count: rows.length,
+      logs: rows,
     });
   } catch (error) {
     console.error("Fetch payment logs error:", error);

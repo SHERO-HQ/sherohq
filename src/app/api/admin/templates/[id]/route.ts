@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { apiResponse } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
 import { campaignTemplates } from "@/lib/drizzle/schema";
 import { eq } from "drizzle-orm";
@@ -20,13 +21,13 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     }).where(eq(campaignTemplates.id, id)).returning();
 
     if (updated.length === 0) {
-      return NextResponse.json({ error: "Template not found" }, { status: 404 });
+      return apiResponse.notFound("Template not found");
     }
 
-    return NextResponse.json({ template: updated[0] });
+    return apiResponse.success({ template: updated[0] });
   } catch (error: any) {
     console.error("Failed to update template:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return apiResponse.error(error.message, 500);
   }
 }
 
@@ -37,12 +38,12 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     const deleted = await db.delete(campaignTemplates).where(eq(campaignTemplates.id, id)).returning();
     
     if (deleted.length === 0) {
-      return NextResponse.json({ error: "Template not found" }, { status: 404 });
+      return apiResponse.notFound("Template not found");
     }
 
-    return NextResponse.json({ success: true });
+    return apiResponse.success({ success: true });
   } catch (error: any) {
     console.error("Failed to delete template:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return apiResponse.error(error.message, 500);
   }
 }

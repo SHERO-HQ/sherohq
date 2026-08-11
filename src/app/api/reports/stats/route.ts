@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 
@@ -13,8 +14,16 @@ export async function GET(request: NextRequest) {
     const endDate = searchParams.get("endDate");
     const hasCustomRange = !!(startDate && endDate);
 
-    const combinedResult = await query(
-      `
+    const customFilter = hasCustomRange 
+      ? sql`SUM(total) FILTER (WHERE "createdAt"::date >= ${startDate}::date AND "createdAt"::date <= ${endDate}::date) as rev_custom, SUM(cogs) FILTER (WHERE "createdAt"::date >= ${startDate}::date AND "createdAt"::date <= ${endDate}::date) as cogs_custom, COUNT(*) FILTER (WHERE "createdAt"::date >= ${startDate}::date AND "createdAt"::date <= ${endDate}::date) as ord_custom,` 
+      : sql``;
+
+    const expCustomFilter = hasCustomRange
+      ? sql`SUM(amount) FILTER (WHERE date::date >= ${startDate}::date AND date::date <= ${endDate}::date) as exp_custom,`
+      : sql``;
+
+    const combinedResult = await db.execute(
+      sql`
       WITH order_stats AS (
         SELECT 
           SUM(total) FILTER (WHERE "createdAt" >= CURRENT_DATE) as rev_today,
@@ -45,7 +54,7 @@ export async function GET(request: NextRequest) {
           SUM(cogs) FILTER (WHERE "createdAt" < NOW() - INTERVAL '365 days' AND "createdAt" >= NOW() - INTERVAL '730 days') as prev_cogs_year,
           COUNT(*) FILTER (WHERE "createdAt" < NOW() - INTERVAL '365 days' AND "createdAt" >= NOW() - INTERVAL '730 days') as prev_ord_year,
           
-          ${hasCustomRange ? `SUM(total) FILTER (WHERE "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date) as rev_custom, SUM(cogs) FILTER (WHERE "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date) as cogs_custom, COUNT(*) FILTER (WHERE "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date) as ord_custom,` : ""}
+          ${customFilter}
           
           SUM(total) as lifetime_revenue,
           COUNT(*) as lifetime_orders,
@@ -63,7 +72,7 @@ export async function GET(request: NextRequest) {
           SUM(amount) FILTER (WHERE date < NOW() - INTERVAL '30 days' AND date >= NOW() - INTERVAL '60 days') as prev_exp_month,
           SUM(amount) FILTER (WHERE date >= NOW() - INTERVAL '365 days') as exp_year,
           SUM(amount) FILTER (WHERE date < NOW() - INTERVAL '365 days' AND date >= NOW() - INTERVAL '730 days') as prev_exp_year,
-          ${hasCustomRange ? `SUM(amount) FILTER (WHERE date::date >= $1::date AND date::date <= $2::date) as exp_custom,` : ""}
+          ${expCustomFilter}
           SUM(amount) as lifetime_expenses
         FROM expenses
       ),
@@ -85,14 +94,13 @@ export async function GET(request: NextRequest) {
         SELECT COUNT(*) as abandoned_count FROM abandoned_carts
       )
       SELECT * FROM order_stats, expense_stats, product_stats, pending_orders, abandoned_carts_stats
-    `,
-      hasCustomRange ? [startDate, endDate] : []
+    `
     );
 
-    const s = combinedResult.rows[0];
-    const e = combinedResult.rows[0]; // Both are in the same row
-    const ps = combinedResult.rows[0];
-    const pendingOrdersCount = parseInt(combinedResult.rows[0].pending_count || "0", 10);
+    const s = combinedResult.rows[0] as any;
+    const e = combinedResult.rows[0] as any;
+    const ps = combinedResult.rows[0] as any;
+    const pendingOrdersCount = parseInt(s.pending_count || "0", 10);
 
     const calculateGrowth = (current: number, prev: number) => {
       if (!prev || prev === 0) return current > 0 ? 100 : 0;
@@ -131,7 +139,7 @@ export async function GET(request: NextRequest) {
       custom: hasCustomRange ? formatStats(s.rev_custom, s.cogs_custom, s.ord_custom, null, null, null, "0", e.exp_custom, null) : null,
     };
 
-    return NextResponse.json({
+    return apiResponse.success({
       success: true,
       kpis,
       revenue: kpis.month.revenue,
@@ -144,7 +152,7 @@ export async function GET(request: NextRequest) {
       lowStock: parseInt(ps.low_stock || "0", 10),
       outOfStock: parseInt(ps.out_of_stock || "0", 10),
       pendingOrders: pendingOrdersCount,
-      abandonedCarts: parseInt(combinedResult.rows[0].abandoned_count || "0", 10),
+      abandonedCarts: parseInt(s.abandoned_count || "0", 10),
       newProductsCount: parseInt(ps.new_week || "0", 10),
       lifetimeRevenue: parseFloat(s.lifetime_revenue || "0"),
       lifetimeExpenses: parseFloat(e.lifetime_expenses || "0"),

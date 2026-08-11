@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { apiResponse } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { v4 as uuidv4 } from "uuid";
 
@@ -8,12 +9,12 @@ export async function POST(request: NextRequest) {
     const file = formData.get("image") as File;
 
     if (!file) {
-      return NextResponse.json({ error: "No image file provided" }, { status: 400 });
+      return apiResponse.error("No image file provided", 400);
     }
 
     // Stricter size limit for public uploads (2MB)
     if (file.size > 2 * 1024 * 1024) {
-      return NextResponse.json({ error: "Image too large (max 2MB)" }, { status: 400 });
+      return apiResponse.error("Image too large (max 2MB)", 400);
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
@@ -34,13 +35,13 @@ export async function POST(request: NextRequest) {
       .from("products")
       .getPublicUrl(filePath);
 
-    return NextResponse.json({
+    return apiResponse.success({
       success: true,
       imageUrl: publicData.publicUrl,
     });
 
   } catch (error) {
     console.error("Public upload error:", error);
-    return NextResponse.json({ error: "Failed to upload image" }, { status: 500 });
+    return apiResponse.error("Failed to upload image", 500);
   }
 }

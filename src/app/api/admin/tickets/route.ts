@@ -1,7 +1,9 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { tickets } from "@/lib/drizzle/schema";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
+import { eq, desc } from "drizzle-orm";
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,18 +13,17 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const status = searchParams.get("status");
 
-    let queryText = "SELECT * FROM tickets";
-    const params: any[] = [];
-
+    let condition = undefined;
     if (status && status !== "all") {
-      queryText += " WHERE status = $1";
-      params.push(status);
+      condition = eq(tickets.status, status);
     }
 
-    queryText += ' ORDER BY "createdAt" DESC';
+    const rows = await db.query.tickets.findMany({
+      where: condition,
+      orderBy: [desc(tickets.createdAt)]
+    });
 
-    const result = await query(queryText, params);
-    return apiResponse.success(result.rows);
+    return apiResponse.success(rows);
   } catch (error) {
     console.error("Fetch tickets error:", error);
     return apiResponse.error("Failed to fetch support tickets");

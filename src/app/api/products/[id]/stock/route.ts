@@ -1,5 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { apiResponse } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { products } from "@/lib/drizzle/schema";
+import { eq, or } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 
 export async function PATCH(
@@ -9,7 +12,7 @@ export async function PATCH(
   try {
     const admin = await getAdminFromSession();
     if (!admin || !["admin", "superadmin", "manager"].includes(admin.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return apiResponse.unauthorized();
     }
 
     const id = (await params).id;
@@ -17,31 +20,33 @@ export async function PATCH(
     const { stockQuantity } = body;
 
     if (stockQuantity === undefined || typeof stockQuantity !== "number") {
-      return NextResponse.json(
-        { error: "Valid stockQuantity number is required" },
-        { status: 400 }
-      );
+      return apiResponse.error("Valid stockQuantity number is required", 400);
     }
 
-    const check = await query(
-      "SELECT id, name FROM products WHERE id = $1 OR sku = $1 OR slug = $1",
-      [id]
-    );
-    if (check.rowCount === 0) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    const check = await db.select({ id: products.id, name: products.name })
+      .from(products)
+      .where(or(
+        eq(products.id, id),
+        eq(products.sku, id),
+        eq(products.slug, id)
+      ))
+      .limit(1);
+
+    if (check.length === 0) {
+      return apiResponse.notFound("Product not found");
     }
 
-    const existing = check.rows[0];
+    const existing = check[0];
     const productId = existing.id;
     const inStock = stockQuantity > 0;
 
-    const result = await query(
-      `UPDATE products 
-       SET "stockQuantity" = $1, "inStock" = $2 
-       WHERE id = $3 
-       RETURNING *`,
-      [stockQuantity, inStock, productId]
-    );
+    const result = await db.update(products)
+      .set({
+        stockQuantity: stockQuantity,
+        inStock: inStock
+      })
+      .where(eq(products.id, productId))
+      .returning();
 
     const { logActivity } = await import("@/lib/activity");
     await logActivity(
@@ -51,7 +56,7 @@ export async function PATCH(
       `Updated stock for product "${existing.name}": quantity=${stockQuantity}, inStock=${inStock}`
     );
 
-    const product = result.rows[0];
+    const product = result[0];
     
     // Transform to standard product format
     const parsedProduct = {
@@ -68,12 +73,9 @@ export async function PATCH(
       isFeatured: Boolean(product.isFeatured),
     };
 
-    return NextResponse.json({ success: true, product: parsedProduct });
+    return apiResponse.success({ success: true, product: parsedProduct });
   } catch (error) {
     console.error("Error updating product stock:", error);
-    return NextResponse.json(
-      { error: "Failed to update product stock" },
-      { status: 500 }
-    );
+    return apiResponse.error("Failed to update product stock", 500);
   }
 }

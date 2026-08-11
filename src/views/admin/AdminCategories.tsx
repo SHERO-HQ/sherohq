@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { } from "@/context/AdminContext";
+
 import { Tag, Plus, Search, Loader2, Trash2, Edit2 } from "lucide-react";
 import { getErrorMessage } from "@/utils/error";
 import {
@@ -56,7 +56,7 @@ const IconSelector = ({
               key={name}
               type="button"
               onClick={() => onChange(name)}
-              className={`p-2 rounded flex items-center justify-center transition-colors ${value === name ? "bg-brand-secondary-500 text-white" : "hover:bg-accent text-muted-foreground"}`}
+              className={`p-2 rounded flex items-center justify-center transition-colors ${value === name ? "bg-brand-secondary-500 text-foreground" : "hover:bg-accent text-muted-foreground"}`}
               title={name}
             >
               <Icon className="w-5 h-5" />
@@ -203,7 +203,7 @@ const AdminCategories = () => {
         </div>
         <Button
           onClick={handleOpenCreate}
-          className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+          className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
         >
           <Plus className="w-4 h-4 mr-2" />
           Add Category
@@ -246,7 +246,7 @@ const AdminCategories = () => {
                     <button
                       type="button"
                       onClick={() => handleCancelDelete(cat.id)}
-                      className="px-2 py-1 bg-accent hover:bg-white/20 text-foreground rounded text-[9px] font-bold transition-all shrink-0"
+                      className="px-2 py-1 bg-accent hover:bg-muted/50 text-foreground rounded text-[9px] font-bold transition-all shrink-0"
                     >
                       Undo
                     </button>
@@ -319,7 +319,7 @@ const AdminCategories = () => {
             <Button
               type="submit"
               disabled={createMutation.isPending || updateMutation.isPending}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
             >
               {createMutation.isPending || updateMutation.isPending ? (
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />

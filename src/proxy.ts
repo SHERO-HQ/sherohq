@@ -29,30 +29,54 @@ function getRequestOrigin(request: NextRequest) {
 
 function isAllowedOrigin(request: NextRequest) {
   const requestOrigin = getRequestOrigin(request);
-  // If the request has no Origin (e.g., internal server-side fetches),
-  // treat it as allowed. Browsers will include Origin for cross-site requests.
-  // This avoids rejecting valid internal requests while still validating
-  // browser-originated requests.
+  // If the request has no Origin (e.g., internal server-side fetches), treat it as allowed.
   if (!requestOrigin) return true;
 
   // Allow exact origin match first
   if (requestOrigin === request.nextUrl.origin) return true;
 
-  // Allow same-root subdomains (helpful in local dev where admin.localhost:3000
-  // may call the API hosted at localhost:3000). This accepts origins whose
-  // host ends with the server host (including port), e.g. "admin.localhost:3000" endsWith "localhost:3000".
   try {
-    const originHost = new URL(requestOrigin).host; // host includes port
-    const serverHost = request.nextUrl.host; // includes port
-    if (originHost.endsWith(serverHost.replace(/^www\./, ""))) return true;
+    const originUrl = new URL(requestOrigin);
+    const serverUrl = new URL(request.nextUrl.origin);
+
+    // Explicitly allow configured external origins if provided
+    const customOrigins = (process.env.ALLOWED_ORIGINS || "")
+      .split(",")
+      .map((o) => o.trim())
+      .filter(Boolean);
+    if (customOrigins.includes(requestOrigin)) return true;
+
+    // Localhost subdomain matching in development (e.g. admin.localhost:3000)
+    const isLocalhost =
+      originUrl.hostname === "localhost" ||
+      originUrl.hostname.endsWith(".localhost");
+    const isServerLocalhost =
+      serverUrl.hostname === "localhost" ||
+      serverUrl.hostname.endsWith(".localhost");
+    if (isLocalhost && isServerLocalhost && originUrl.port === serverUrl.port) {
+      return true;
+    }
+
+    // Strict production subdomain matching (*.sherohq.com or *.sherotech.com)
+    const allowedRootDomains = ["sherohq.com", "sherotech.com"];
+    const originHostParts = originUrl.hostname.split(".");
+    if (originHostParts.length >= 2) {
+      const rootDomain = originHostParts.slice(-2).join(".");
+      if (
+        allowedRootDomains.includes(rootDomain) &&
+        originUrl.protocol === serverUrl.protocol
+      ) {
+        return true;
+      }
+    }
   } catch {
-    // if URL parsing fails, fall through to rejection
+    // If URL parsing fails, fall through to rejection
   }
 
   return false;
 }
 
-export default function proxy(request: NextRequest) {
+function handleProxy(request: NextRequest) {
   const url = request.nextUrl.clone();
   const hostname = request.headers.get("host") || "";
   const host = hostname.toLowerCase();
@@ -218,6 +242,29 @@ export default function proxy(request: NextRequest) {
   }
 
   return NextResponse.next();
+}
+
+export default function proxy(request: NextRequest) {
+  const response = handleProxy(request);
+  const csrfCookieName = 'shero_csrf';
+  
+  if (!request.cookies.has(csrfCookieName)) {
+    // Generate a 32-byte hex string using Web Crypto API available in Edge Runtime
+    const array = new Uint8Array(32);
+    crypto.getRandomValues(array);
+    const token = Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    
+    response.cookies.set({
+      name: csrfCookieName,
+      value: token,
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+    });
+  }
+
+  return response;
 }
 
 export const config = {

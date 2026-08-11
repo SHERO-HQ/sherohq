@@ -129,6 +129,12 @@ export async function handleResponse<T>(response: Response): Promise<T> {
   }
 }
 
+function getCsrfTokenFromCookie(): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(/(?:^|;\s*)shero_csrf=([^;]*)/);
+  return match ? match[1] : null;
+}
+
 export async function authFetch(url: string, options: RequestInit = {}) {
   const headers: HeadersInit = {
     ...options.headers,
@@ -139,6 +145,10 @@ export async function authFetch(url: string, options: RequestInit = {}) {
   }
 
   (headers as Record<string, string>)["X-CSRF-Protection"] = "1";
+  const csrfToken = getCsrfTokenFromCookie();
+  if (csrfToken) {
+    (headers as Record<string, string>)["x-csrf-token"] = csrfToken;
+  }
 
   const response = await fetch(url, {
     ...options,
@@ -157,6 +167,11 @@ export async function userAuthFetch(url: string, options: RequestInit = {}) {
     "X-CSRF-Protection": "1",
     ...options.headers,
   };
+
+  const csrfToken = getCsrfTokenFromCookie();
+  if (csrfToken) {
+    (headers as Record<string, string>)["x-csrf-token"] = csrfToken;
+  }
 
   return fetch(url, { ...options, headers, credentials: "include" });
 }

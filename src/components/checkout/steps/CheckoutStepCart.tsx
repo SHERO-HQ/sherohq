@@ -5,7 +5,7 @@ import { Minus, Plus, Trash2, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AppImage from "@/components/common/AppImage";
 import { getImageUrl } from "@/services/api";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/hooks/queries/useCartQuery";
 import { useCheckout } from "../CheckoutContext";
 
 export default function CheckoutStepCart() {

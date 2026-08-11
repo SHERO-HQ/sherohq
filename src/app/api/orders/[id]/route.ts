@@ -1,5 +1,7 @@
 import { NextRequest} from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { orders, activityLogs, products } from "@/lib/drizzle/schema";
+import { eq, like, desc, inArray, and } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 import { safeParse } from "@/lib/orderUtils";
@@ -14,28 +16,42 @@ export async function GET(
     if (!admin) return apiResponse.unauthorized();
 
     const id = (await params).id;
-    const result = await query("SELECT * FROM orders WHERE id = $1", [id]);
-    const order = result.rows[0];
+    const result = await db.select().from(orders).where(eq(orders.id, id));
+    const order = result[0];
 
     if (!order) return apiResponse.notFound("Order not found");
 
-    const logsResult = await query(
-      `SELECT details FROM activity_logs WHERE action = 'order_payment' AND details LIKE $1 ORDER BY "createdAt" DESC LIMIT 1`,
-      [`%${id}%`]
-    );
-    const paymentMessage = logsResult.rows[0]?.details || null;
+    const logsResult = await db
+      .select({ details: activityLogs.details })
+      .from(activityLogs)
+      .where(
+        and(
+          eq(activityLogs.action, 'order_payment'),
+          like(activityLogs.details, `%${id}%`)
+        )
+      )
+      .orderBy(desc(activityLogs.createdAt))
+      .limit(1);
+    
+    const paymentMessage = logsResult[0]?.details || null;
 
     let parsedItems = safeParse(order.items) as any[];
     if (!Array.isArray(parsedItems)) parsedItems = [];
     const productIds = parsedItems.map((i: any) => i.id).filter(Boolean);
+    
     if (productIds.length > 0) {
-      const productsRes = await query(`SELECT id, sku, images FROM products WHERE id = ANY($1)`, [productIds]);
-      const productMap = new Map(productsRes.rows.map((r: any) => [r.id, r]));
+      const productsRes = await db
+        .select({ id: products.id, sku: products.sku, images: products.images })
+        .from(products)
+        .where(inArray(products.id, productIds));
+        
+      const productMap = new Map(productsRes.map(r => [r.id, r]));
       for (const item of parsedItems) {
         const p = productMap.get(item.id);
         if (p) {
           if (!item.sku && p.sku) item.sku = p.sku;
-          if (!item.image && p.images && p.images.length > 0) item.image = p.images[0];
+          const imgArray = p.images as string[] | null;
+          if (!item.image && imgArray && imgArray.length > 0) item.image = imgArray[0];
         }
       }
     }
@@ -44,8 +60,9 @@ export async function GET(
       ...order,
       items: parsedItems,
       shippingInfo: safeParse(order.shippingInfo),
-      total: parseFloat(order.total),
-      paymentMessage});
+      total: Number(order.total),
+      paymentMessage
+    });
   } catch (error) {
     console.error("Fetch order error:", error);
     return apiResponse.error("Failed to fetch order");
@@ -63,31 +80,21 @@ export async function PATCH(
     const id = (await params).id;
     const { status, paymentMethod } = await request.json();
 
-    const updates: string[] = [];
-    const values: any[] = [];
-    let paramIndex = 1;
+    const updateData: Partial<typeof orders.$inferInsert> = {};
+    if (status) updateData.status = status;
+    if (paymentMethod) updateData.paymentMethod = paymentMethod;
 
-    if (status) {
-      updates.push(`status = $${paramIndex++}`);
-      values.push(status);
-    }
+    if (Object.keys(updateData).length === 0) return apiResponse.error("No fields to update", 400);
 
-    if (paymentMethod) {
-      updates.push(`"paymentMethod" = $${paramIndex++}`);
-      values.push(paymentMethod);
-    }
+    const result = await db
+      .update(orders)
+      .set(updateData)
+      .where(eq(orders.id, id))
+      .returning();
 
-    if (updates.length === 0) return apiResponse.error("No fields to update", 400);
+    if (result.length === 0) return apiResponse.notFound("Order not found");
 
-    values.push(id);
-    const result = await query(
-      `UPDATE orders SET ${updates.join(", ")} WHERE id = $${paramIndex} RETURNING *`,
-      values
-    );
-
-    if (result.rowCount === 0) return apiResponse.notFound("Order not found");
-
-    const updatedOrder = result.rows[0];
+    const updatedOrder = result[0];
 
     if (status === "intransit" || status === "delivered") {
       notificationService.sendOrderStatusUpdateNotification(
@@ -101,10 +108,11 @@ export async function PATCH(
     await logActivity(admin.id, "order_update", "info", `Updated order ${id}: status=${status || 'N/A'}`);
 
     return apiResponse.success({
-      ...result.rows[0],
-      items: safeParse(result.rows[0].items),
-      shippingInfo: safeParse(result.rows[0].shippingInfo),
-      total: parseFloat(result.rows[0].total)});
+      ...updatedOrder,
+      items: safeParse(updatedOrder.items),
+      shippingInfo: safeParse(updatedOrder.shippingInfo),
+      total: Number(updatedOrder.total)
+    });
   } catch (error) {
     console.error("Update order error:", error);
     return apiResponse.error("Failed to update order");

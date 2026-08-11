@@ -201,7 +201,7 @@ export default function InvoiceItemsCard({
                         type="button"
                         variant="ghost"
                         onClick={() => cancelDelete(item.id)}
-                        className="h-8 px-4 bg-accent hover:bg-white/20 text-foreground rounded text-[11px] flex items-center gap-1.5 transition-all"
+                        className="h-8 px-4 bg-accent hover:bg-muted/50 text-foreground rounded text-[11px] flex items-center gap-1.5 transition-all"
                       >
                         <RotateCcw className="w-3.5 h-3.5" />
                         Undo Deletion

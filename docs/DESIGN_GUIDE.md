@@ -49,6 +49,22 @@ SheroTech represents **premium, modern tech retail** designed for the Ghanaian m
 
 SheroTech uses **oklch color space** for superior perceptual uniformity across light and dark modes. All colors are defined as CSS variables in `src/index.css`.
 
+### The Dual-Primary System
+
+SheroTech intentionally uses TWO primary colors for different semantic roles:
+
+| Color | CSS Token | Hex | Role |
+|-------|-----------|-----|------|
+| **Navy Blue** | `--primary` / `--brand-primary-700` | `#043284` | UI primary: buttons, links, focus rings, headings |
+| **Emerald Green** | `--brand-secondary` / emerald-500 | `#10b981` | Active states, success, progress, growth indicators |
+
+**Why two?** Navy conveys authority and trust (the SHERO brand). Emerald conveys
+growth and success (the technology promise). Together they create a visual language
+that says "trustworthy AND innovative."
+
+**When to use Navy**: CTAs, navigation active states, form focus, headings
+**When to use Emerald**: Success badges, active status indicators, progress bars, hover accents
+
 #### Primary Colors
 
 | Role                   | Light Mode                    | Dark Mode                 | Hex Equivalent |

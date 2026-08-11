@@ -15,7 +15,7 @@ function MetricTile({
   tone?: "slate" | "green" | "amber" | "blue";
 }) {
   const toneClass = {
-    slate: "text-muted-foreground bg-slate-500/10 border-slate-500/15",
+    slate: "text-muted-foreground bg-muted/50 border-border",
     green:
       "text-brand-secondary-300 bg-brand-secondary-500/10 border-brand-secondary-500/20",
     amber: "text-amber-300 bg-amber-500/10 border-amber-500/20",

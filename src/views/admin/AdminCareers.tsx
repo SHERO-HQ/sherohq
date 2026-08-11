@@ -221,7 +221,7 @@ export default function AdminCareers() {
             <FileText className="w-4 h-4 mr-2" />
             Applications
             {applications.filter((a: any) => a.status === 'pending').length > 0 && (
-              <Badge className="ml-2 bg-brand-primary-500 text-white">
+              <Badge className="ml-2 bg-brand-primary-500 text-foreground">
                 {applications.filter((a: any) => a.status === 'pending').length}
               </Badge>
             )}

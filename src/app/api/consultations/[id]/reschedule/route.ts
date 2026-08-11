@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { consultations } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
@@ -20,14 +22,22 @@ export async function PATCH(
       return apiResponse.error("Date and time are required", 400);
     }
 
-    const result = await query(
-      `UPDATE consultations SET date = $1, time = $2, status = 'Rescheduled' WHERE id = $3 RETURNING *`,
-      [date, time, id]
-    );
+    const rows = await db.update(consultations)
+      .set({ date, time, status: 'Rescheduled' })
+      .where(eq(consultations.id, id))
+      .returning();
 
-    if (result.rowCount === 0) return apiResponse.notFound("Consultation not found");
+    if (rows.length === 0) return apiResponse.notFound("Consultation not found");
 
-    const updated = result.rows[0];
+    const updated = rows[0] as {
+      id: string;
+      name: string;
+      email: string;
+      service: string;
+      date: string;
+      time: string;
+      status: string;
+    };
 
     await logActivity(
       admin.id,

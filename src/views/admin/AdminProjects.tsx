@@ -14,7 +14,7 @@ import {
  RefreshCw,
  MoreVertical,
  Briefcase} from "lucide-react";
-import { } from "@/context/AdminContext";
+
 import { Button } from "@/components/ui/button";
 import {
  DropdownMenu,
@@ -114,7 +114,7 @@ export default function AdminProjects() {
  </Button>
 
  <Button
- className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-medium px-4"
+ className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground font-medium px-4"
  asChild
  >
  <Link href="/admin/projects/new">

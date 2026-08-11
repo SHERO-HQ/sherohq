@@ -74,7 +74,7 @@ export default function ProductSEOCard() {
           <label className="text-sm font-medium text-muted-foreground">Search Engine Preview</label>
           <div className="bg-white rounded p-5 shadow-sm space-y-1 font-sans">
             <p className="text-[12px] text-[#202124] flex items-center gap-2 overflow-hidden">
-              <span className="bg-slate-200 rounded-full w-4 h-4 shrink-0 inline-block"></span>
+              <span className="bg-muted rounded-full w-4 h-4 shrink-0 inline-block"></span>
               <span className="shrink-0">Sherotech</span>
               <span className="text-[#5f6368] truncate">
                 {' › products › '}{previewSlug}

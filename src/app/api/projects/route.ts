@@ -1,5 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { apiResponse } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { projects } from "@/lib/drizzle/schema";
+import { desc, eq } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
 import { logActivity } from "@/lib/activity";
@@ -25,58 +28,56 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams;
     const category = searchParams.get("category");
     
-    let queryText = "SELECT * FROM projects";
-    const params: string[] = [];
-
+    let dbQuery = db.select().from(projects);
+    
     if (category && category !== "All") {
-      queryText += " WHERE category = $1";
-      params.push(category);
+      dbQuery = dbQuery.where(eq(projects.category, category)) as any;
     }
 
-    queryText += ' ORDER BY "createdAt" DESC';
+    dbQuery = dbQuery.orderBy(desc(projects.createdAt)) as any;
 
-    const result = await query(queryText, params);
-    return NextResponse.json(result.rows.map(parseProject), {
-      headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" }
+    const result = await dbQuery;
+    return apiResponse.success(result.map(parseProject), 200, {
+      "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300"
     });
   } catch (error) {
     console.error("Error fetching projects:", error);
-    return NextResponse.json({ error: "Failed to fetch projects" }, { status: 500 });
+    return apiResponse.error("Failed to fetch projects", 500);
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
     const admin = await getAdminFromSession();
-    if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!admin) return apiResponse.unauthorized();
 
     const body = await request.json();
     const { title, category, client, description, useCase, technologies, image, link } = body;
 
     const projectId = uuidv4();
 
-    await query(
-      `INSERT INTO projects (id, title, category, client, description, "useCase", technologies, image, link)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
-      [
-        projectId,
-        title,
-        category,
-        client || null,
-        description || null,
-        useCase || null,
-        technologies ? JSON.stringify(technologies) : JSON.stringify([]),
-        image || null,
-        link || null,
-      ]
-    );
+    await db.insert(projects).values({
+      id: projectId,
+      title,
+      category,
+      client,
+      description,
+      useCase,
+      technologies: JSON.stringify(technologies),
+      image,
+      link,
+    });
 
-    await logActivity(admin.id, "project_create", "success", `Created project: ${title}`);
+    logActivity(
+      admin.id,
+      "project_create",
+      "success",
+      `Admin ${admin.username} added project: ${title}`
+    ).catch(console.error);
 
-    const result = await query("SELECT * FROM projects WHERE id = $1", [projectId]);
-    return NextResponse.json({ success: true, project: parseProject(result.rows[0]) }, { status: 201 });
+    return apiResponse.success({ id: projectId }, 201);
   } catch (error) {
     console.error("Error creating project:", error);
-    return NextResponse.json({ error: "Failed to create project" }, { status: 500 });
+    return apiResponse.error("Failed to create project", 500);
   }
 }

@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getClient } from "@/lib/db";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { products, orders } from "@/lib/drizzle/schema";
+import { eq, sql } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { 
   roundCurrency,
@@ -16,8 +18,6 @@ export async function POST(request: NextRequest) {
   if (!admin || !["admin", "superadmin", "manager"].includes(admin.role)) {
     return apiResponse.unauthorized();
   }
-
-  const client = await getClient();
 
   try {
     const body = await request.json();
@@ -36,99 +36,102 @@ export async function POST(request: NextRequest) {
     const orderAccessToken = randomBytes(32).toString("hex");
     const orderAccessTokenHash = hashOrderAccessToken(orderAccessToken);
 
-    await client.query("BEGIN");
+    const finalResult = await db.transaction(async (tx) => {
+      // Gather catalog product IDs to check stock
+      const productIds = items.filter((i: any) => i.id).map((i: any) => i.id);
+      let productMap = new Map();
 
-    // Gather catalog product IDs to check stock
-    const productIds = items.filter((i: any) => i.id).map((i: any) => i.id);
-    let productMap = new Map();
-
-    if (productIds.length > 0) {
-      const productsRes = await client.query(
-        `SELECT id, name, price, "costPrice", "stockQuantity", "inStock" FROM products WHERE id = ANY($1) FOR UPDATE`,
-        [productIds]
-      );
-      productMap = new Map(productsRes.rows.map(r => [r.id, r]));
-    }
-
-    const normalizedItems = [];
-    let serverTotal = 0;
-    let serverCogs = 0;
-
-    for (const item of items) {
-      if (item.id && productMap.has(item.id)) {
-        // catalog product
-        const product = productMap.get(item.id);
-        if (!product || !product.inStock || product.stockQuantity < item.quantity) {
-          throw new Error(`Insufficient stock for ${product?.name || "unknown product"}`);
-        }
-
-        const unitPrice = roundCurrency(Number(product.price));
-        const costPrice = roundCurrency(Number(product.costPrice || 0));
-        serverTotal += unitPrice * item.quantity;
-        serverCogs += costPrice * item.quantity;
-
-        normalizedItems.push({
-          id: product.id,
-          name: product.name,
-          price: unitPrice,
-          costPrice: costPrice,
-          quantity: item.quantity,
-          image: item.image || product.image || null,
-        });
-
-        // Decrement stock
-        const newQuantity = product.stockQuantity - item.quantity;
-        await client.query(
-          `UPDATE products SET "stockQuantity" = $1, "inStock" = $2 WHERE id = $3`,
-          [newQuantity, newQuantity > 0, product.id]
+      if (productIds.length > 0) {
+        // Use FOR UPDATE to lock rows during transaction
+        const productsRes = await tx.execute(
+          sql`SELECT id, name, price, "costPrice", "stockQuantity", "inStock" FROM products WHERE id = ANY(${productIds}) FOR UPDATE`
         );
-
-        if (newQuantity <= 5) {
-          notificationService.sendLowStockAlert(product.name, newQuantity).catch(console.error);
-        }
-      } else {
-        // Custom item or service
-        const unitPrice = roundCurrency(Number(item.price));
-        // For custom items, assume cost is 0 or equal to price? Let's assume 0.
-        serverTotal += unitPrice * item.quantity;
-
-        normalizedItems.push({
-          id: item.id || null,
-          name: item.name,
-          price: unitPrice,
-          costPrice: 0,
-          quantity: item.quantity,
-          image: item.image || null,
-        });
+        productMap = new Map(productsRes.rows.map(r => [r.id, r]));
       }
+
+      const normalizedItems = [];
+      let serverTotal = 0;
+      let serverCogs = 0;
+      const lowStockAlerts = [];
+
+      for (const item of items) {
+        if (item.id && productMap.has(item.id)) {
+          // catalog product
+          const product = productMap.get(item.id);
+          if (!product || !product.inStock || product.stockQuantity < item.quantity) {
+            throw new Error(`Insufficient stock for ${product?.name || "unknown product"}`);
+          }
+
+          const unitPrice = roundCurrency(Number(product.price));
+          const costPrice = roundCurrency(Number(product.costPrice || 0));
+          serverTotal += unitPrice * item.quantity;
+          serverCogs += costPrice * item.quantity;
+
+          normalizedItems.push({
+            id: product.id,
+            name: product.name,
+            price: unitPrice,
+            costPrice: costPrice,
+            quantity: item.quantity,
+            image: item.image || product.image || null,
+          });
+
+          // Decrement stock
+          const newQuantity = product.stockQuantity - item.quantity;
+          await tx.update(products)
+            .set({ 
+              stockQuantity: newQuantity, 
+              inStock: newQuantity > 0 
+            })
+            .where(eq(products.id, product.id));
+
+          if (newQuantity <= 5) {
+            lowStockAlerts.push({ name: product.name, quantity: newQuantity });
+          }
+        } else {
+          // Custom item or service
+          const unitPrice = roundCurrency(Number(item.price));
+          serverTotal += unitPrice * item.quantity;
+
+          normalizedItems.push({
+            id: item.id || null,
+            name: item.name,
+            price: unitPrice,
+            costPrice: 0,
+            quantity: item.quantity,
+            image: item.image || null,
+          });
+        }
+      }
+
+      const finalTotal = roundCurrency(serverTotal);
+      const finalCogs = roundCurrency(serverCogs);
+
+      await tx.insert(orders).values({
+        id: orderId,
+        guestId: resolvedGuestId,
+        userId: null,
+        items: normalizedItems,
+        total: finalTotal.toString(),
+        cogs: finalCogs.toString(),
+        shippingInfo: shippingInfo,
+        paymentMethod: "invoice_payment",
+        status: status,
+        referralCode: null,
+        orderAccessTokenHash: orderAccessTokenHash,
+      });
+
+      return { finalTotal, normalizedItems, lowStockAlerts };
+    });
+
+    // Send low stock alerts (outside transaction)
+    for (const alert of finalResult.lowStockAlerts) {
+      notificationService.sendLowStockAlert(alert.name, alert.quantity).catch(console.error);
     }
-
-    const finalTotal = roundCurrency(serverTotal);
-    const finalCogs = roundCurrency(serverCogs);
-
-    await client.query(
-      `INSERT INTO orders (id, "guestId", "userId", items, total, cogs, "shippingInfo", "paymentMethod", status, "referralCode", "orderAccessTokenHash")
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
-      [
-        orderId,
-        resolvedGuestId,
-        null,
-        JSON.stringify(normalizedItems),
-        finalTotal,
-        finalCogs,
-        JSON.stringify(shippingInfo),
-        "invoice_payment",
-        status,
-        null,
-        orderAccessTokenHash,
-      ]
-    );
-
-    await client.query("COMMIT");
 
     // Send order confirmation via email if status is pending (invoice)
     if (status === "pending") {
-      notificationService.sendOrderConfirmation(orderId, shippingInfo, normalizedItems, finalTotal, "cash_on_delivery")
+      notificationService.sendOrderConfirmation(orderId, shippingInfo, finalResult.normalizedItems, finalResult.finalTotal, "cash_on_delivery")
         .catch(err => console.error("Notification failed:", err));
     }
 
@@ -139,23 +142,21 @@ export async function POST(request: NextRequest) {
       `Admin ${admin.username} manually created ${status === "quote" ? "quote" : "invoice"} ${orderId.substring(0, 8)} for ${shippingInfo.firstName} ${shippingInfo.lastName}`
     ).catch(err => console.error("Log failed:", err));
 
-    return NextResponse.json({
+    return apiResponse.success({
       success: true,
       order: {
         id: orderId,
-        total: finalTotal,
+        total: finalResult.finalTotal,
         status,
       },
       message: `${status === "quote" ? "Quote" : "Invoice"} created successfully`,
-    }, { status: 201 });
+    }, 201);
 
   } catch (error: any) {
-    await client.query("ROLLBACK");
     console.error("Manual order creation error:", error);
     return apiResponse.error(
-      error instanceof Error ? error.message : "Failed to create manual order"
+      error instanceof Error ? error.message : "Failed to create manual order",
+      500
     );
-  } finally {
-    client.release();
   }
 }

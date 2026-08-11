@@ -1,17 +1,22 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { adminUsers, sessions } from "@/lib/drizzle/schema";
+import { eq, or } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 import { randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import { logActivity } from "@/lib/activity";
-import { apiResponse } from "@/lib/api-utils";
+import { apiResponse, validateCsrf } from "@/lib/api-utils";
 import { ADMIN_SESSION_COOKIE } from "@/lib/auth";
 
 import { rateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   try {
+    const csrfError = await validateCsrf(request);
+    if (csrfError) return csrfError;
+
     // 1. Rate Limiting (5 attempts per 1 minute)
     const ip = request.headers.get("x-forwarded-for") || "anonymous";
     const limiter = await rateLimit(`login_${ip}`, 5, 60 * 1000);
@@ -26,13 +31,17 @@ export async function POST(request: NextRequest) {
       return apiResponse.error("Username and password are required", 400);
     }
 
-    // Find admin by username or email
-    const result = await query(
-      `SELECT * FROM admin_users WHERE username = $1 OR email = $2`,
-      [username, username]
-    );
+    // Per-account rate limiting
+    const accountLimiter = await rateLimit(`account_login_${username.toLowerCase()}`, 5, 15 * 60_000);
+    if (!accountLimiter.success) {
+      return apiResponse.error("This account is temporarily locked due to too many failed attempts. Please try again in 15 minutes.", 429);
+    }
 
-    const admin = result.rows[0];
+    // Find admin by username or email
+    const admin = await db.query.adminUsers.findFirst({
+      where: or(eq(adminUsers.username, username), eq(adminUsers.email, username))
+    });
+
     const fakeHash = "$2a$10$fakeHashForTimingConsistencyPreventionXXXXXXXXXXXXXXXXXXXXXXXX";
     const isValid = await bcrypt.compare(password, admin?.passwordHash || fakeHash);
 
@@ -47,16 +56,15 @@ export async function POST(request: NextRequest) {
     // Check for password expiration (6 months)
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-    const passwordExpired = new Date(admin.passwordUpdatedAt) < sixMonthsAgo;
+    const passwordExpired = new Date(admin.passwordUpdatedAt!) < sixMonthsAgo;
     const mustReset = admin.passwordResetRequired || passwordExpired;
 
     // 2. Handle Multi-Factor Authentication (MFA)
     if (admin.mfaEnabled) {
-      // In a real production app, we would generate a temporary 'mfaToken'
-      // For this implementation, we return a flag so the frontend can show the MFA prompt
+      const { generateMfaChallengeToken } = await import("@/lib/mfa-utils");
       return apiResponse.success({
         requiresMFA: true,
-        mfaToken: Buffer.from(admin.id).toString("base64"), // Demo token
+        mfaToken: generateMfaChallengeToken(admin.id, "admin"),
         admin: {
           id: admin.id,
           username: admin.username,
@@ -69,10 +77,15 @@ export async function POST(request: NextRequest) {
     const token = randomBytes(32).toString("hex");
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
-    await query(
-      `INSERT INTO sessions (id, "adminId", token, "expiresAt") VALUES ($1, $2, $3, $4)`,
-      [uuidv4(), admin.id, token, expiresAt.toISOString()]
-    );
+    // Invalidate old sessions for rotation
+    await db.delete(sessions).where(eq(sessions.adminId, admin.id));
+
+    await db.insert(sessions).values({
+      id: uuidv4(),
+      adminId: admin.id,
+      token,
+      expiresAt: expiresAt.toISOString(),
+    });
 
     const cookieStore = await cookies();
     cookieStore.set(ADMIN_SESSION_COOKIE, token, {

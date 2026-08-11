@@ -1,16 +1,18 @@
-import { NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { apiResponse } from "@/lib/api-utils";
+import { db } from "@/lib/db";
+import { categories } from "@/lib/drizzle/schema";
+import { asc } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const result = await query("SELECT * FROM categories ORDER BY name ASC");
-    return NextResponse.json(result.rows, {
-      headers: { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" }
+    const result = await db.select().from(categories).orderBy(asc(categories.name));
+    return apiResponse.success(result, 200, {
+      "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300"
     });
   } catch (error) {
     console.error("Error fetching categories:", error);
-    return NextResponse.json({ error: "Failed to fetch categories" }, { status: 500 });
+    return apiResponse.error("Failed to fetch categories", 500);
   }
 }

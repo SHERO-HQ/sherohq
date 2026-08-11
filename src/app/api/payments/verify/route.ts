@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
-import { query, getClient } from "@/lib/db";
+import { db } from "@/lib/db";
+import { orders, activityLogs } from "@/lib/drizzle/schema";
+import { eq, sql } from "drizzle-orm";
 import { apiResponse } from "@/lib/api-utils";
 import { toReadableOrderId } from "@/utils/orderId";
 import { getAdminFromSession, getUserFromSession } from "@/lib/auth";
@@ -37,7 +39,7 @@ export async function POST(request: NextRequest) {
       return apiResponse.error("Payment provider is required", 400);
     }
 
-    // Rate limit: 15 verify calls per minute per order (generous for 12-attempt polling + retries)
+    // Rate limit: 15 verify calls per minute per order
     const ip =
       request.headers.get("x-forwarded-for")?.split(",")[0].trim() || "unknown";
     const rateLimitResult = await rateLimit(
@@ -54,17 +56,19 @@ export async function POST(request: NextRequest) {
     }
 
     const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId);
-    const queryCondition = isUUID ? `id = $1` : `"clientReference" = $1`;
+    
+    let orderRes;
+    if (isUUID) {
+      orderRes = await db.select().from(orders).where(eq(orders.id, orderId)).limit(1);
+    } else {
+      orderRes = await db.select().from(orders).where(eq(orders.clientReference, orderId)).limit(1);
+    }
 
-    const orderRes = await query(`SELECT * FROM orders WHERE ${queryCondition}`, [
-      orderId,
-    ]);
-
-    if (orderRes.rowCount === 0) {
+    if (orderRes.length === 0) {
       return apiResponse.notFound("Order not found");
     }
 
-    const order = orderRes.rows[0];
+    const order = orderRes[0];
     const [user, admin] = await Promise.all([
       getUserFromSession(),
       getAdminFromSession(),
@@ -81,11 +85,10 @@ export async function POST(request: NextRequest) {
 
     if (!isAuthorized) return apiResponse.unauthorized();
 
-    // If order is already processed, no need to verify again
     if (order.status !== "pending") {
       return apiResponse.success({
         status: order.status,
-        paymentStatus: getPaymentStatusFromOrderStatus(order.status),
+        paymentStatus: getPaymentStatusFromOrderStatus(order.status || ""),
       });
     }
 
@@ -114,7 +117,6 @@ export async function POST(request: NextRequest) {
           providerStatus,
         });
         return apiResponse.success({
-          // Keep order pending so this declined payment can be retried.
           status: order.status,
           paymentStatus: "failed",
           hubtelStatus: result.status,
@@ -152,7 +154,6 @@ export async function POST(request: NextRequest) {
               providerStatus,
             });
             return apiResponse.success({
-              // Keep order pending so this declined payment can be retried.
               status: order.status,
               paymentStatus: "failed",
               paystackStatus: providerStatus,
@@ -190,98 +191,88 @@ export async function POST(request: NextRequest) {
         return apiResponse.error("Payment amount mismatch detected", 400);
       }
 
-      const client = await getClient();
       try {
-        await client.query("BEGIN");
-
-        const checkRes = await client.query(
-          `SELECT status FROM orders WHERE id = $1 FOR UPDATE`,
-          [orderId],
-        );
-        if (checkRes.rows[0].status === "pending") {
-          await client.query(
-            `UPDATE orders
-             SET status = $1, "paymentStatus" = $2, "paymentMessage" = $3
-             WHERE id = $4`,
-            [
-              "processing",
-              "confirmed",
-              `Payment verified via ${provider}`,
-              orderId,
-            ],
+        await db.transaction(async (tx) => {
+          const checkRes = await tx.execute(
+            sql`SELECT status FROM orders WHERE id = ${order.id} FOR UPDATE`
           );
 
-          await client.query(
-            `INSERT INTO activity_logs (id, action, type, details, "createdAt")
-             VALUES ($1, $2, $3, $4, NOW())`,
-            [
-              randomUUID(),
-              "order_payment",
-              "success",
-              `Payment manually verified via ${provider}. Reference: ${orderId}`,
-            ],
-          );
+          if (checkRes.rows[0].status === "pending") {
+            await tx.update(orders)
+              .set({
+                status: "processing",
+                paymentStatus: "confirmed",
+                paymentMessage: `Payment verified via ${provider}`
+              })
+              .where(eq(orders.id, order.id));
 
-          console.log("[payment:verify]", {
-            event: "order_confirmed",
-            provider,
-            orderId,
-            newStatus: "processing",
-          });
+            await tx.insert(activityLogs).values({
+              id: randomUUID(),
+              action: "order_payment",
+              type: "success",
+              details: `Payment manually verified via ${provider}. Reference: ${order.id}`,
+              adminId: null,
+              createdAt: new Date().toISOString(),
+            });
 
-          // Trigger confirmation notification
-          try {
-            const { notificationService } = await import("@/lib/notifications");
-            const parsedItems =
-              typeof order.items === "string"
-                ? JSON.parse(order.items)
-                : order.items;
-            const parsedShipping =
-              typeof order.shippingInfo === "string"
-                ? JSON.parse(order.shippingInfo)
-                : order.shippingInfo;
+            console.log("[payment:verify]", {
+              event: "order_confirmed",
+              provider,
+              orderId: order.id,
+              newStatus: "processing",
+            });
 
-            notificationService
-              .sendOrderConfirmation(
-                orderId,
-                parsedShipping,
-                parsedItems,
-                Number(order.total),
-                order.paymentMethod,
-              )
-              .catch((err) =>
-                console.error("[payment:verify] Confirmation notification failed:", {
-                  orderId,
+            // Trigger confirmation notification
+            try {
+              const { notificationService } = await import("@/lib/notifications");
+              const parsedItems =
+                typeof order.items === "string"
+                  ? JSON.parse(order.items)
+                  : order.items;
+              const parsedShipping =
+                typeof order.shippingInfo === "string"
+                  ? JSON.parse(order.shippingInfo)
+                  : order.shippingInfo;
+
+              notificationService
+                .sendOrderConfirmation(
+                  order.id,
+                  parsedShipping,
+                  parsedItems,
+                  Number(order.total),
+                  order.paymentMethod || undefined,
+                )
+                .catch((err) =>
+                  console.error("[payment:verify] Confirmation notification failed:", {
+                    orderId: order.id,
+                    error: err instanceof Error ? err.message : err,
+                  }),
+                );
+            } catch (err) {
+              console.error(
+                "[payment:verify] Failed to import/call notificationService:",
+                {
+                  orderId: order.id,
                   error: err instanceof Error ? err.message : err,
-                }),
+                },
               );
-          } catch (err) {
-            console.error(
-              "[payment:verify] Failed to import/call notificationService:",
-              {
-                orderId,
-                error: err instanceof Error ? err.message : err,
-              },
-            );
+            }
           }
-        }
-        await client.query("COMMIT");
+        });
+        
         return apiResponse.success({
           status: "processing",
           paymentStatus: "confirmed",
           verified: true,
         });
       } catch (err) {
-        await client.query("ROLLBACK");
         console.error("[payment:verify]", {
           event: "db_error",
           provider,
-          orderId,
+          orderId: order.id,
           error: err instanceof Error ? err.message : err,
         });
         return apiResponse.error("Database error during verification", 500);
-      } finally {
-        client.release();
       }
     }
 

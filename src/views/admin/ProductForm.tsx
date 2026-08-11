@@ -12,7 +12,7 @@ import { Save, Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNotifications } from "@/hooks/useNotifications";
-import { useBreadcrumb } from "@/context/BreadcrumbContext";
+
 import {
   useUpdateProduct,
   useCreateProduct,
@@ -63,7 +63,6 @@ export default function ProductForm() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const { addNotification } = useNotifications();
-  const { setLabel, clearLabel } = useBreadcrumb();
   const isEdit = Boolean(id);
   const draftKey = getProductDraftKey(id);
 
@@ -145,9 +144,6 @@ export default function ProductForm() {
               category: product.categoryId || product.category || "",
               specsList,
             } as unknown as ProductFormValues);
-            
-            const label = product.name || id;
-            setLabel(`/admin/products/${id}`, label);
           }
         }
       } catch (err) {
@@ -162,13 +158,7 @@ export default function ProductForm() {
       }
     }
     loadData();
-
-    return () => {
-      if (id) {
-        clearLabel(`/admin/products/${id}`);
-      }
-    };
-  }, [id, isEdit, addNotification, setLabel, clearLabel, reset]);
+  }, [id, isEdit, addNotification, reset]);
 
   const onSubmit = async (data: ProductFormValues) => {
     try {
@@ -283,7 +273,7 @@ export default function ProductForm() {
               type="button"
               onClick={handleSubmit(onSubmit, onInvalid)}
               disabled={isSubmitting}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-30"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground min-w-30"
             >
               {isSubmitting ? (
                 <>
@@ -392,7 +382,7 @@ export default function ProductForm() {
                 type="button"
                 onClick={handleSubmit(onSubmit, onInvalid)}
                 disabled={isSubmitting}
-                className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white min-w-30"
+                className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground min-w-30"
               >
                 {isSubmitting ? (
                   <>
@@ -432,7 +422,7 @@ export default function ProductForm() {
             type="button"
             onClick={handleSubmit(onSubmit, onInvalid)}
             disabled={isSubmitting}
-            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white w-2/3"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground w-2/3"
           >
             {isSubmitting ? (
               <>

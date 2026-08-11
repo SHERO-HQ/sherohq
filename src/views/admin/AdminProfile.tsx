@@ -1,7 +1,8 @@
 "use client";
 import { useState, useRef } from "react";
 import { User, Save, Loader2, Shield, Camera, AlertCircle } from "lucide-react";
-import { useAdmin } from "@/context/AdminContext";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAdminUser } from "@/hooks/queries/useAdminQuery";
 import { updateAdminProfile, uploadImage, getImageUrl } from "@/services/api";
 import { useNotifications } from "@/hooks/useNotifications";
 import { Button } from "@/components/ui/button";
@@ -13,7 +14,12 @@ import { } from "@/services/admin";
 import { useDialog } from "@/hooks/useDialog";
 
 export default function AdminProfile() {
-  const { admin, setAdmin } = useAdmin();
+  const queryClient = useQueryClient();
+  const { data: adminData } = useAdminUser();
+  const admin = adminData?.admin;
+  const setAdmin = (newAdmin: any) => {
+    queryClient.setQueryData(["admin"], (old: any) => ({ ...old, admin: newAdmin }));
+  };
   const { addNotification } = useNotifications();
   const dialog = useDialog();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -119,7 +125,7 @@ export default function AdminProfile() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1 space-y-6">
           <Card className="bg-card border-border overflow-hidden">
-            <div className="h-24 bg-linear-to-br from-brand-secondary-600 to-blue-600" />
+            <div className="h-24 bg-linear-to-br from-brand-secondary-600 bg-primary" />
             <div className="px-6 pb-6 relative">
               <div className="flex justify-center -mt-12 mb-4">
                 <div className="relative group">
@@ -141,7 +147,7 @@ export default function AdminProfile() {
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="absolute bottom-1 right-1 p-1.5 bg-brand-secondary-500 rounded text-white hover:bg-brand-secondary-400 transition-colors shadow"
+                    className="absolute bottom-1 right-1 p-1.5 bg-brand-secondary-500 rounded text-foreground hover:bg-brand-secondary-400 transition-colors shadow"
                     disabled={isUpdating}
                   >
                     {isUpdating ? (

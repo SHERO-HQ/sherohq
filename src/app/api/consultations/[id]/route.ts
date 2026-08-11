@@ -1,5 +1,7 @@
 import { NextRequest} from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { consultations } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
@@ -15,16 +17,16 @@ export async function PUT(
     const id = (await params).id;
     const { status } = await request.json();
 
-    const result = await query(
-      `UPDATE consultations SET status = $1 WHERE id = $2 RETURNING *`,
-      [status, id]
-    );
+    const rows = await db.update(consultations)
+      .set({ status })
+      .where(eq(consultations.id, id))
+      .returning();
 
-    if (result.rowCount === 0) return apiResponse.notFound("Consultation not found");
+    if (rows.length === 0) return apiResponse.notFound("Consultation not found");
 
     await logActivity(admin.id, "consultation_update", "info", `Updated consultation status to ${status} for ${id}`);
 
-    return apiResponse.success(result.rows[0]);
+    return apiResponse.success(rows[0]);
   } catch (error) {
     console.error("Update consultation error:", error);
     return apiResponse.error("Failed to update consultation");
@@ -40,11 +42,12 @@ export async function DELETE(
     if (!admin) return apiResponse.unauthorized();
 
     const id = (await params).id;
-    const result = await query("DELETE FROM consultations WHERE id = $1 RETURNING name", [id]);
+    const rows = await db.delete(consultations)
+      .where(eq(consultations.id, id))
+      .returning({ name: consultations.name });
+    if (rows.length === 0) return apiResponse.notFound("Consultation not found");
 
-    if (result.rowCount === 0) return apiResponse.notFound("Consultation not found");
-
-    await logActivity(admin.id, "consultation_delete", "warning", `Deleted consultation for ${result.rows[0].name}`);
+    await logActivity(admin.id, "consultation_delete", "warning", `Deleted consultation for ${rows[0].name}`);
 
     return apiResponse.success({ message: "Consultation deleted successfully" });
   } catch (error) {

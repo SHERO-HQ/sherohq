@@ -1,36 +1,28 @@
 "use client";
-import { useRouter } from "next/navigation";
-import { useState, useRef, useEffect } from "react";
+
+import React from "react";
 import { m, AnimatePresence } from "motion/react";
 import { format } from "date-fns";
 import {
   Calendar as CalendarIcon,
   Clock,
   CheckCircle2,
-  ChevronRight,
-  ChevronLeft,
   Briefcase,
   Code2,
   BarChart,
   User,
-  Mail,
   MessageSquare,
-  Phone,
   HelpCircle,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { scheduleConsultation } from "@/services/api";
-
-// --- Types ---
-
-type ServiceType = {
-  id: string;
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-};
+import { SchedulerSuccess } from "./scheduler/SchedulerSuccess";
+import {
+  SchedulerStep1Service,
+  type ServiceType,
+} from "./scheduler/SchedulerStep1Service";
+import { SchedulerStep2DateTime } from "./scheduler/SchedulerStep2DateTime";
+import { SchedulerStep3Info } from "./scheduler/SchedulerStep3Info";
+import { useSchedulerState } from "./scheduler/useSchedulerState";
 
 const services: ServiceType[] = [
   {
@@ -68,270 +60,32 @@ const services: ServiceType[] = [
   },
 ];
 
-const timeSlots = [
-  "09:00 AM",
-  "10:00 AM",
-  "11:00 AM",
-  "01:00 PM",
-  "02:00 PM",
-  "03:00 PM",
-  "04:00 PM",
-];
-
-// Helper to check if a time slot has passed for today
-const isTimeSlotPassed = (timeSlot: string, forDate: Date): boolean => {
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const selectedDate = new Date(
-    forDate.getFullYear(),
-    forDate.getMonth(),
-    forDate.getDate(),
-  );
-
-  // Only filter if selected date is today
-  if (selectedDate.getTime() !== today.getTime()) {
-    return false;
-  }
-
-  // Parse the time slot
-  const [time, period] = timeSlot.split(" ");
-  const [hours, minutes] = time.split(":").map(Number);
-  let slotHour = hours;
-
-  // Convert to 24-hour format
-  if (period === "PM" && hours !== 12) {
-    slotHour = hours + 12;
-  } else if (period === "AM" && hours === 12) {
-    slotHour = 0;
-  }
-
-  // Create a date object for the slot time
-  const slotTime = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    slotHour,
-    minutes,
-  );
-
-  // Return true if slot time has passed
-  return slotTime <= now;
-};
-
-// Helper to generate Google Calendar URL
-function getGoogleCalendarUrl(title: string, description: string, date?: Date, timeStr?: string) {
-  if (!date) return "#";
-  const [time, period] = (timeStr || "09:00 AM").split(" ");
-  const [hoursStr, minsStr] = time.split(":");
-  let hours = parseInt(hoursStr, 10);
-  if (period === "PM" && hours !== 12) hours += 12;
-  if (period === "AM" && hours === 12) hours = 0;
-
-  const startDate = new Date(date);
-  startDate.setHours(hours, parseInt(minsStr || "0", 10), 0);
-  const endDate = new Date(startDate.getTime() + 30 * 60 * 1000);
-
-  const formatIso = (d: Date) => d.toISOString().replace(/-|:|\.\d+/g, "");
-
-  const params = new URLSearchParams({
-    action: "TEMPLATE",
-    text: `SHERO Consultation: ${title}`,
-    details: description,
-    location: "Online / SHERO Technologies Headquarters, Accra",
-    dates: `${formatIso(startDate)}/${formatIso(endDate)}`,
-  });
-
-  return `https://calendar.google.com/calendar/render?${params.toString()}`;
-}
-
-// Helper to generate and download .ics iCal file
-function downloadIcsFile(title: string, description: string, date?: Date, timeStr?: string) {
-  if (!date) return;
-  const [time, period] = (timeStr || "09:00 AM").split(" ");
-  const [hoursStr, minsStr] = time.split(":");
-  let hours = parseInt(hoursStr, 10);
-  if (period === "PM" && hours !== 12) hours += 12;
-  if (period === "AM" && hours === 12) hours = 0;
-
-  const startDate = new Date(date);
-  startDate.setHours(hours, parseInt(minsStr || "0", 10), 0);
-  const endDate = new Date(startDate.getTime() + 30 * 60 * 1000);
-
-  const formatIso = (d: Date) => d.toISOString().replace(/-|:|\.\d+/g, "");
-
-  const icsContent = [
-    "BEGIN:VCALENDAR",
-    "VERSION:2.0",
-    "PRODID:-//SHERO Technologies//EN",
-    "BEGIN:VEVENT",
-    `SUMMARY:SHERO Consultation: ${title}`,
-    `DESCRIPTION:${description}`,
-    "LOCATION:Online / SHERO Technologies Headquarters",
-    `DTSTART:${formatIso(startDate)}`,
-    `DTEND:${formatIso(endDate)}`,
-    "END:VEVENT",
-    "END:VCALENDAR",
-  ].join("\r\n");
-
-  const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
-  const link = document.createElement("a");
-  link.href = window.URL.createObjectURL(blob);
-  link.setAttribute("download", `shero-consultation-${startDate.toISOString().split("T")[0]}.ics`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
-// --- Scheduler Component ---
-
 const Scheduler = () => {
-  const router = useRouter();
-  const [step, setStep] = useState(1);
-  const [direction, setDirection] = useState(0);
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const [formData, setFormData] = useState({
-    service: "",
-    date: undefined as Date | undefined,
-    time: "",
-    firstName: "",
-    lastName: "",
-    phone: "",
-    email: "",
-    message: "",
-  });
-
-  const [status, setStatus] = useState<"idle" | "submitting" | "success">(
-    "idle",
-  );
-
-  // Auto-scroll to top on step change for mobile
-  const isInitialMount = useRef(true);
-  useEffect(() => {
-    // Skip scrolling on initial mount to avoid jumping when navigating to the page
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
-      return;
-    }
-
-    if (window.innerWidth < 768 && scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [step]);
-
-  const nextStep = () => {
-    setDirection(1);
-    setStep((p) => Math.min(p + 1, 3));
-  };
-
-  const prevStep = () => {
-    setDirection(-1);
-    setStep((p) => Math.max(p - 1, 1));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus("submitting");
-
-    try {
-      if (!formData.date) {
-        throw new Error("Date is required");
-      }
-
-      await scheduleConsultation({
-        service: formData.service,
-        date: formData.date,
-        time: formData.time,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        message: formData.message,
-      });
-
-      setStatus("success");
-    } catch (error) {
-      console.error("Booking error:", error);
-      setStatus("success"); // Still show success for better UX, or handle error state
-      // For now, let's just proceed to success screen as if fallback worked
-      // Ideally we would setStatus("error") and show a message
-    }
-  };
-
-  const isStep1Valid = !!formData.service;
-  const isStep2Valid = !!formData.date && !!formData.time;
+  const {
+    router,
+    step,
+    direction,
+    scrollRef,
+    formData,
+    setFormData,
+    status,
+    nextStep,
+    prevStep,
+    handleSubmit,
+    isStep1Valid,
+    isStep2Valid,
+  } = useSchedulerState();
 
   if (status === "success") {
-    const serviceTitle = services.find((s) => s.id === formData.service)?.title || "Consultation";
-    const googleCalUrl = getGoogleCalendarUrl(
-      serviceTitle,
-      `Consultation with SHERO Technologies for ${formData.firstName} ${formData.lastName}. Contact: ${formData.email}`,
-      formData.date,
-      formData.time
-    );
+    const serviceTitle =
+      services.find((s) => s.id === formData.service)?.title || "Consultation";
 
     return (
-      <div className="max-w-xl mx-auto p-8 md:p-10 bg-white dark:bg-slate-900 rounded shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 text-center">
-        <m.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          className="w-20 h-20 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center mx-auto mb-6"
-        >
-          <CheckCircle2 className="w-10 h-10 text-brand-secondary-600 dark:text-brand-secondary-400" />
-        </m.div>
-        <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4">
-          Booking Confirmed!
-        </h2>
-        <p className="text-slate-600 dark:text-slate-400 mb-6 mx-auto leading-relaxed">
-          Your{" "}
-          <strong className="text-brand-secondary-600 dark:text-brand-secondary-400 font-bold">
-            {serviceTitle}
-          </strong>
-          <br />
-          is scheduled for <br />
-          <span className="font-semibold text-emerald-500 block text-lg mt-1">
-            {formData.date && format(formData.date, "MMMM do, yyyy")} at{" "}
-            {formData.time} GMT
-          </span>
-        </p>
-
-        {/* Add to Calendar Actions */}
-        <div className="flex flex-col items-center justify-center gap-3 mb-8 p-4 bg-slate-50 dark:bg-slate-950 rounded border border-slate-200 dark:border-slate-800">
-          <a
-            href={googleCalUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded shadow transition-all"
-          >
-            <CalendarIcon className="w-4 h-4" />
-            Add to Google Calendar
-          </a>
-          <button
-            onClick={() =>
-              downloadIcsFile(
-                serviceTitle,
-                `Consultation with SHERO Technologies for ${formData.firstName} ${formData.lastName}`,
-                formData.date,
-                formData.time
-              )
-            }
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold text-xs rounded transition-colors cursor-pointer"
-          >
-            Download .ics (Apple / Outlook)
-          </button>
-        </div>
-
-        <p className="text-xs text-slate-500 mb-6">
-          A confirmation email has been sent to {formData.email}
-        </p>
-        <Button
-          onClick={() => router.refresh()}
-          variant="outline"
-          className="rounded px-6"
-        >
-          Book Another Session
-        </Button>
-      </div>
+      <SchedulerSuccess
+        serviceTitle={serviceTitle}
+        formData={formData}
+        onReset={() => router.refresh()}
+      />
     );
   }
 
@@ -453,302 +207,39 @@ const Scheduler = () => {
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="flex-1 flex flex-col"
           >
-            {/* STEP 1: SERVICE */}
             {step === 1 && (
-              <div className="flex flex-col h-full">
-                <h2 className="text-lg md:text-xl font-bold text-slate-900 dark:text-slate-100 mb-6">
-                  Select a Service
-                </h2>
-                <div className="grid grid-cols-1 gap-4">
-                  {services.map((service) => (
-                    <button
-                      key={service.id}
-                      onClick={() =>
-                        setFormData({ ...formData, service: service.id })
-                      }
-                      className={cn(
-                        "flex items-start md:items-center p-4 rounded border-2 transition duration-200 text-left hover:border-brand-secondary-500/50 hover:bg-brand-secondary-50 dark:hover:bg-brand-secondary-900/10 group relative overflow-hidden cursor-pointer",
-                        formData.service === service.id
-                          ? "border-brand-secondary-500 bg-brand-secondary-50/50 dark:bg-brand-secondary-900/10 shadow-sm"
-                          : "border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900",
-                      )}
-                    >
-                      <div
-                        className={cn(
-                          "w-10 h-10 md:w-12 md:h-12 rounded flex items-center justify-center mr-4 transition-colors shrink-0",
-                          formData.service === service.id
-                            ? "bg-brand-secondary-100 dark:bg-brand-secondary-900/30 text-brand-secondary-600 dark:text-brand-secondary-400"
-                            : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 group-hover:text-brand-secondary-500",
-                        )}
-                      >
-                        {service.icon}
-                      </div>
-                      <div className="cursor-pointer flex-1">
-                        <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm md:text-base">
-                          {service.title}
-                        </h3>
-                        <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-                          {service.description}
-                        </p>
-                      </div>
-                      <div
-                        className={cn(
-                          "ml-3 w-5 h-5 rounded border-2 flex items-center justify-center shrink-0 mt-1 md:mt-0",
-                          formData.service === service.id
-                            ? "border-brand-secondary-500 bg-brand-secondary-500 text-white"
-                            : "border-slate-200 dark:border-slate-700",
-                        )}
-                      >
-                        {formData.service === service.id && (
-                          <CheckCircle2 className="w-3 h-3" />
-                        )}
-                      </div>
-                    </button>
-                  ))}
-                </div>
-                <div className="mt-8 md:mt-auto pt-4 flex justify-end">
-                  <Button
-                    onClick={nextStep}
-                    disabled={!isStep1Valid}
-                    size="lg"
-                    className="w-full md:w-auto rounded px-8 dark:text-slate-200"
-                  >
-                    Continue <ChevronRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </div>
-              </div>
+              <SchedulerStep1Service
+                services={services}
+                selectedService={formData.service}
+                onSelectService={(serviceId) =>
+                  setFormData({ ...formData, service: serviceId })
+                }
+                nextStep={nextStep}
+                isValid={isStep1Valid}
+              />
             )}
 
-            {/* STEP 2: DATE & TIME */}
             {step === 2 && (
-              <div className="flex flex-col h-full">
-                <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6">
-                  Choose Date & Time
-                </h2>
-
-                <div className="flex flex-col xl:flex-row gap-8">
-                  <div className="flex-1 mx-auto max-w-87.5 xl:max-w-none">
-                    <div className="border border-slate-200 dark:border-slate-800 rounded p-1 sm:p-3 bg-slate-50/50 dark:bg-slate-900/50">
-                      <Calendar
-                        mode="single"
-                        selected={formData.date}
-                        onSelect={(date) =>
-                          setFormData({ ...formData, date, time: "" })
-                        }
-                        disabled={
-                          (date) =>
-                            date.getDay() === 0 || // Disable Sundays
-                            date < new Date(new Date().setHours(0, 0, 0, 0)) // Disable past days
-                        }
-                        className="rounded mx-auto"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-3 xl:block">
-                      Available Times
-                    </label>
-                    {!formData.date ? (
-                      <div className="h-32 xl:h-64 flex items-center justify-center border border-dashed border-slate-200 dark:border-slate-800 rounded text-slate-400 text-sm bg-slate-50/50 dark:bg-slate-900/50">
-                        Select a date to see times
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-3 animate-in fade-in slide-in-from-top-4 duration-300">
-                        {(formData.date.getDay() === 6
-                          ? timeSlots.filter((t) => t !== "04:00 PM")
-                          : timeSlots
-                        ).map((time) => {
-                          const isPassed = isTimeSlotPassed(
-                            time,
-                            formData.date!,
-                          );
-
-                          let slotClass =
-                            "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-secondary-500 hover:text-brand-secondary-500";
-
-                          if (isPassed) {
-                            slotClass =
-                              "bg-slate-100 dark:bg-slate-800/50 text-slate-400 dark:text-slate-600 border-slate-200 dark:border-slate-700 opacity-50 !cursor-not-allowed";
-                          } else if (formData.time === time) {
-                            slotClass =
-                              "bg-brand-secondary-600 text-white border-brand-secondary-600 shadow shadow-brand-secondary-500/20 scale-105";
-                          }
-
-                          return (
-                            <button
-                              key={time}
-                              onClick={() => setFormData({ ...formData, time })}
-                              disabled={isPassed}
-                              className={cn(
-                                "px-3 py-2 rounded text-sm font-medium transition text-center border cursor-pointer",
-                                slotClass,
-                              )}
-                            >
-                              {time}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="cursor-pointer mt-8 md:mt-auto pt-8 flex justify-between items-center gap-4">
-                  <Button
-                    onClick={prevStep}
-                    variant="ghost"
-                    size="lg"
-                    className="rounded px-6"
-                  >
-                    <ChevronLeft className="w-4 h-4 mr-2" /> Back
-                  </Button>
-                  <Button
-                    onClick={nextStep}
-                    disabled={!isStep2Valid}
-                    size="lg"
-                    className="flex-1 md:flex-none rounded dark:text-slate-100 px-8"
-                  >
-                    Continue <ChevronRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </div>
-              </div>
+              <SchedulerStep2DateTime
+                date={formData.date}
+                time={formData.time}
+                onSelectDate={(date) => setFormData({ ...formData, date })}
+                onSelectTime={(time) => setFormData({ ...formData, time })}
+                nextStep={nextStep}
+                prevStep={prevStep}
+                isValid={isStep2Valid}
+              />
             )}
 
-            {/* STEP 3: DETAILS */}
             {step === 3 && (
-              <div className="flex flex-col h-full">
-                <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mb-6">
-                  Your Information
-                </h2>
-
-                {/* Mobile Summary in Step 3 */}
-                <div className="md:hidden mb-6 p-4 rounded bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 text-sm">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Briefcase className="w-4 h-4 text-brand-secondary-500" />
-                    <span className="font-semibold">
-                      {services.find((s) => s.id === formData.service)?.title}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CalendarIcon className="w-4 h-4 text-brand-secondary-500" />
-                    <span>
-                      {formData.date && format(formData.date, "MMM do")} at{" "}
-                      {formData.time} GMT
-                    </span>
-                  </div>
-                </div>
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <User className="w-4 h-4" /> First Name
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.firstName}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            firstName: e.target.value,
-                          })
-                        }
-                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500 transition"
-                        placeholder="John"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <User className="w-4 h-4" /> Last Name
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.lastName}
-                        onChange={(e) =>
-                          setFormData({ ...formData, lastName: e.target.value })
-                        }
-                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500 transition"
-                        placeholder="Doe"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <Mail className="w-4 h-4" /> Email Address
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) =>
-                          setFormData({ ...formData, email: e.target.value })
-                        }
-                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500 transition"
-                        placeholder="john@company.com"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                        <Phone className="w-4 h-4" /> Phone Number
-                      </label>
-                      <input
-                        type="tel"
-                        required
-                        value={formData.phone}
-                        onChange={(e) =>
-                          setFormData({ ...formData, phone: e.target.value })
-                        }
-                        className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500 transition"
-                        placeholder="+233 123 456 7890"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                      <MessageSquare className="w-4 h-4" /> Note (Optional)
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={formData.message}
-                      onChange={(e) =>
-                        setFormData({ ...formData, message: e.target.value })
-                      }
-                      className="w-full px-4 py-2 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-brand-secondary-500 transition resize-none"
-                      placeholder="Anything specific to discuss?"
-                    />
-                  </div>
-
-                  <div className="mt-auto pt-6 flex justify-between items-center gap-4">
-                    <Button
-                      type="button"
-                      onClick={prevStep}
-                      variant="ghost"
-                      size="lg"
-                      className="rounded px-6"
-                    >
-                      <ChevronLeft className="w-4 h-4 mr-2" /> Back
-                    </Button>
-                    <Button
-                      type="submit"
-                      disabled={status === "submitting"}
-                      size="lg"
-                      className="flex-1 md:flex-none rounded px-8 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white shadow shadow-brand-secondary-500/30"
-                    >
-                      {status === "submitting"
-                        ? "Confirming..."
-                        : "Confirm Booking"}
-                    </Button>
-                  </div>
-                </form>
-              </div>
+              <SchedulerStep3Info
+                services={services}
+                formData={formData}
+                setFormData={setFormData}
+                handleSubmit={handleSubmit}
+                prevStep={prevStep}
+                status={status}
+              />
             )}
           </m.div>
         </AnimatePresence>

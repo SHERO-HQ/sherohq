@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
@@ -14,15 +15,15 @@ export async function GET(request: NextRequest) {
 
     let result;
     if (jobId) {
-      result = await query(`
+      result = await db.execute(sql`
         SELECT a.*, c.title as "jobTitle"
         FROM job_applications a
         JOIN careers c ON a."jobId" = c.id
-        WHERE a."jobId" = $1
+        WHERE a."jobId" = ${jobId}
         ORDER BY a."createdAt" DESC
-      `, [jobId]);
+      `);
     } else {
-      result = await query(`
+      result = await db.execute(sql`
         SELECT a.*, c.title as "jobTitle"
         FROM job_applications a
         JOIN careers c ON a."jobId" = c.id
@@ -30,7 +31,7 @@ export async function GET(request: NextRequest) {
       `);
     }
 
-    return apiResponse.success(result.rows);
+    return apiResponse.success((result.rows || result) as Record<string, unknown>[]);
   } catch (error) {
     console.error("Fetch applications error:", error);
     return apiResponse.error("Failed to fetch applications");
@@ -46,20 +47,21 @@ export async function PATCH(request: NextRequest) {
     if (!id || !status) return apiResponse.error("ID and status required", 400);
 
     // Fetch application details before updating
-    const appResult = await query(`
+    const appResult = await db.execute(sql`
       SELECT a."applicantEmail", a."applicantName", c.title as "jobTitle"
       FROM job_applications a
       JOIN careers c ON a."jobId" = c.id
-      WHERE a.id = $1
-    `, [id]);
+      WHERE a.id = ${id}
+    `);
 
-    await query(`UPDATE job_applications SET status = $1 WHERE id = $2`, [status, id]);
+    await db.execute(sql`UPDATE job_applications SET status = ${status} WHERE id = ${id}`);
     await logActivity(admin.id, "application_status_update", "success", `Updated application ${id} status to ${status}`);
 
-    if (appResult.rows.length > 0) {
-      const { applicantEmail, applicantName, jobTitle } = appResult.rows[0];
+    const rows = (appResult.rows || appResult) as Record<string, unknown>[];
+    if (rows.length > 0) {
+      const { applicantEmail, applicantName, jobTitle } = rows[0];
       import("@/lib/notifications/services/careers").then(({ sendApplicationStatusEmail }) => {
-        sendApplicationStatusEmail(applicantEmail, applicantName, jobTitle, status)
+        sendApplicationStatusEmail(applicantEmail as string, applicantName as string, jobTitle as string, status)
           .catch((err) => console.error("Error sending status email:", err));
       });
     }

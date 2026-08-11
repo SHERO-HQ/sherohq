@@ -1,7 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { orders } from "@/lib/drizzle/schema";
+import { sql, and, notInArray } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
+import { safeParse } from "@/lib/orderUtils";
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,22 +15,20 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get("startDate");
     const endDate = searchParams.get("endDate");
 
-    let sql = "SELECT items FROM orders WHERE status NOT IN ('cancelled', 'pending', 'quote')";
-    const params = [];
+    let condition = notInArray(orders.status, ['cancelled', 'pending', 'quote']);
 
     if (startDate && endDate) {
-      sql += ' AND "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date';
-      params.push(startDate, endDate);
+      condition = and(
+        condition,
+        sql`"createdAt"::date >= ${startDate}::date AND "createdAt"::date <= ${endDate}::date`
+      ) as any;
     }
 
-    const ordersResult = await query(sql, params);
+    const ordersResult = await db.select({ items: orders.items }).from(orders).where(condition);
     const productSales: Record<string, { name: string; quantity: number; revenue: number }> = {};
 
-    ordersResult.rows.forEach((order) => {
-      let items = order.items;
-      if (typeof items === "string") {
-        try { items = JSON.parse(items); } catch { return; }
-      }
+    ordersResult.forEach((order) => {
+      const items = safeParse(order.items) as any;
       
       if (Array.isArray(items)) {
         items.forEach((item: any) => {
@@ -44,7 +45,7 @@ export async function GET(request: NextRequest) {
       .sort((a, b) => b.revenue - a.revenue)
       .slice(0, 5);
 
-    return NextResponse.json(topProducts);
+    return apiResponse.success(topProducts);
   } catch (error) {
     console.error("Top Products API Error:", error);
     return apiResponse.error("Failed to fetch top products");

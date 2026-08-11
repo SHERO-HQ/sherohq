@@ -1,5 +1,7 @@
-import { NextRequest} from "next/server";
-import { query } from "@/lib/db";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { tickets } from "@/lib/drizzle/schema";
+import { eq, or } from "drizzle-orm";
 import { getAdminFromSession, getUserFromSession } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
@@ -15,16 +17,18 @@ export async function GET(
       getUserFromSession(),
     ]);
 
-    const result = await query(
-      `SELECT * FROM tickets WHERE id = $1 OR ticket_no::text = $1 LIMIT 1`,
-      [ticketId]
-    );
+    const isNumeric = /^\d+$/.test(ticketId);
+    const condition = isNumeric 
+      ? or(eq(tickets.id, ticketId), eq(tickets.ticketNo, parseInt(ticketId, 10))) 
+      : eq(tickets.id, ticketId);
 
-    if (result.rowCount === 0) {
+    const result = await db.select().from(tickets).where(condition).limit(1);
+
+    if (result.length === 0) {
       return apiResponse.notFound("Ticket not found");
     }
 
-    const ticket = result.rows[0];
+    const ticket = result[0];
 
     // Access control: admin or the ticket owner
     if (!admin && (!user || (user.id !== ticket.userId && user.email !== ticket.email))) {
@@ -47,12 +51,14 @@ export async function DELETE(
     if (!admin) return apiResponse.unauthorized();
 
     const { ticketId } = await params;
-    const result = await query(
-      `DELETE FROM tickets WHERE id = $1 OR ticket_no::text = $1 RETURNING ticket_no`,
-      [ticketId]
-    );
+    const isNumeric = /^\d+$/.test(ticketId);
+    const condition = isNumeric 
+      ? or(eq(tickets.id, ticketId), eq(tickets.ticketNo, parseInt(ticketId, 10))) 
+      : eq(tickets.id, ticketId);
 
-    if (result.rowCount === 0) {
+    const result = await db.delete(tickets).where(condition).returning({ ticket_no: tickets.ticketNo });
+
+    if (result.length === 0) {
       return apiResponse.notFound("Ticket not found");
     }
 
@@ -60,7 +66,7 @@ export async function DELETE(
       admin.id,
       "ticket_delete",
       "warning",
-      `Deleted support ticket #${result.rows[0].ticket_no}`
+      `Deleted support ticket #${result[0].ticket_no}`
     );
 
     return apiResponse.success({ message: "Ticket deleted successfully" });

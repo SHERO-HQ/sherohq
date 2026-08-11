@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { newsletterCampaigns } from "@/lib/drizzle/schema";
+import { desc } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
 import { logActivity } from "@/lib/activity";
@@ -19,22 +21,25 @@ export async function GET(request: NextRequest) {
         ? Math.min(requestedLimit, 100)
         : 25;
 
-    const result = await query(
-      `SELECT *,
-              COALESCE(channel, 'email') AS channel,
-              COALESCE("audienceStatus", 'active') AS "audienceStatus",
-              COALESCE("batchSize", 100) AS "batchSize",
-              COALESCE("sendDelayMs", 0) AS "sendDelayMs",
-              COALESCE("isTest", false) AS "isTest",
-              COALESCE("totalTargets", 0) AS "totalTargets",
-              COALESCE("sentCount", 0) AS "sentCount",
-              COALESCE("failedCount", 0) AS "failedCount"
-       FROM newsletter_campaigns
-       ORDER BY "createdAt" DESC
-       LIMIT $1`,
-      [limit],
-    );
-    return apiResponse.success({ campaigns: result.rows });
+    const result = await db
+      .select()
+      .from(newsletterCampaigns)
+      .orderBy(desc(newsletterCampaigns.createdAt))
+      .limit(limit);
+      
+    const campaigns = result.map(c => ({
+      ...c,
+      channel: c.channel || 'email',
+      audienceStatus: c.audienceStatus || 'active',
+      batchSize: c.batchSize ?? 100,
+      sendDelayMs: c.sendDelayMs ?? 0,
+      isTest: c.isTest ?? false,
+      totalTargets: c.totalTargets ?? 0,
+      sentCount: c.sentCount ?? 0,
+      failedCount: c.failedCount ?? 0
+    }));
+
+    return apiResponse.success({ campaigns });
   } catch (error) {
     console.error("Fetch campaigns error:", error);
     return apiResponse.error("Failed to fetch campaigns");
@@ -51,17 +56,13 @@ export async function POST(request: NextRequest) {
       return apiResponse.error("Subject and content required", 400);
 
     const id = uuidv4();
-    await query(
-      `INSERT INTO newsletter_campaigns (id, subject, content, status, "scheduledAt", "createdAt")
-       VALUES ($1, $2, $3, $4, $5, NOW())`,
-      [
-        id,
-        subject,
-        content,
-        scheduledAt ? "scheduled" : "draft",
-        scheduledAt || null,
-      ],
-    );
+    await db.insert(newsletterCampaigns).values({
+      id,
+      subject,
+      content,
+      status: scheduledAt ? "scheduled" : "draft",
+      scheduledAt: scheduledAt ? new Date(scheduledAt).toISOString() : null,
+    });
 
     await logActivity(
       admin.id,

@@ -1,8 +1,11 @@
-import { NextRequest} from "next/server";
-import { query } from "@/lib/db";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { teamMembers } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
+import { safeParse } from "@/lib/orderUtils";
 
 export async function PUT(
   request: NextRequest,
@@ -16,9 +19,7 @@ export async function PUT(
     const body = await request.json();
 
     const allowedFields = ["name", "role", "bio", "image", "social", "order"];
-    const updates: string[] = [];
-    const values: any[] = [];
-    let paramIndex = 1;
+    const updates: Record<string, any> = {};
 
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
@@ -26,24 +27,26 @@ export async function PUT(
         if (field === "social" && typeof value !== "string") {
           value = JSON.stringify(value);
         }
-        updates.push(`"${field}" = $${paramIndex++}`);
-        values.push(value);
+        updates[field] = value;
       }
     }
 
-    if (updates.length === 0) return apiResponse.error("No fields to update", 400);
+    if (Object.keys(updates).length === 0) return apiResponse.error("No fields to update", 400);
 
-    values.push(id);
-    const result = await query(
-      `UPDATE team_members SET ${updates.join(", ")} WHERE id = $${paramIndex} RETURNING *`,
-      values
-    );
+    const result = await db.update(teamMembers)
+      .set(updates)
+      .where(eq(teamMembers.id, id))
+      .returning();
 
-    if (result.rowCount === 0) return apiResponse.notFound("Team member not found");
+    if (result.length === 0) return apiResponse.notFound("Team member not found");
 
     await logActivity(admin.id, "team_member_update", "info", `Updated team member: ${body.name || id}`);
 
-    return apiResponse.success(result.rows[0]);
+    const member = result[0];
+    return apiResponse.success({
+      ...member,
+      social: safeParse(member.social)
+    });
   } catch (error) {
     console.error("Update team member error:", error);
     return apiResponse.error("Failed to update team member");
@@ -59,11 +62,13 @@ export async function DELETE(
     if (!admin) return apiResponse.unauthorized();
 
     const id = (await params).id;
-    const result = await query("DELETE FROM team_members WHERE id = $1 RETURNING name", [id]);
+    const result = await db.delete(teamMembers)
+      .where(eq(teamMembers.id, id))
+      .returning({ name: teamMembers.name });
 
-    if (result.rowCount === 0) return apiResponse.notFound("Team member not found");
+    if (result.length === 0) return apiResponse.notFound("Team member not found");
 
-    await logActivity(admin.id, "team_member_delete", "warning", `Deleted team member: ${result.rows[0].name}`);
+    await logActivity(admin.id, "team_member_delete", "warning", `Deleted team member: ${result[0].name}`);
 
     return apiResponse.success({ message: "Team member deleted successfully" });
   } catch (error) {

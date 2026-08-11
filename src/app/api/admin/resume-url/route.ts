@@ -1,3 +1,4 @@
+import { apiResponse } from "@/lib/api-utils";
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { getAdminFromSession } from "@/lib/auth";
@@ -6,14 +7,14 @@ export async function GET(request: NextRequest) {
   try {
     const admin = await getAdminFromSession();
     if (!admin) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return apiResponse.unauthorized();
     }
 
     const { searchParams } = new URL(request.url);
     const path = searchParams.get("path");
     
     if (!path) {
-      return NextResponse.json({ error: "Missing path parameter" }, { status: 400 });
+      return apiResponse.error("Missing path parameter", 400);
     }
 
     let filePath = path;
@@ -49,12 +50,12 @@ export async function GET(request: NextRequest) {
       console.error("Failed to create signed URL:", error);
       // Fallback: if we can't sign it, perhaps it's an invalid path or still public. 
       // We can just error out.
-      return NextResponse.json({ error: "Failed to generate secure URL" }, { status: 500 });
+      return apiResponse.error("Failed to generate secure URL", 500);
     }
 
     return NextResponse.redirect(data.signedUrl);
   } catch (error) {
     console.error("Resume secure download error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return apiResponse.error("Internal Server Error", 500);
   }
 }

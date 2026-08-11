@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
-import { campaignTemplates } from "@/lib/drizzle/schema";
-import { eq, and } from "drizzle-orm";
+import { campaignTemplates, abandonedCarts, users } from "@/lib/drizzle/schema";
+import { eq, and, sql } from "drizzle-orm";
 import { sendWhatsAppMessageDirect, storeOutgoingMessage } from "@/lib/whatsapp-messages";
+import { apiResponse } from "@/lib/api-utils";
 
 // Standard security check for cron endpoints
 export async function GET(request: NextRequest) {
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     process.env.CRON_SECRET &&
     authHeader !== `Bearer ${process.env.CRON_SECRET}`
   ) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return apiResponse.unauthorized("Unauthorized");
   }
 
   try {
@@ -21,32 +21,35 @@ export async function GET(request: NextRequest) {
     // 2. Have been inactive for > 2 hours
     // 3. Have a valid phone number (guest or user)
     // 4. Have items in them
-    const result = await query(`
-      SELECT 
-        ac.id, 
-        ac."userId", 
-        ac."guestId", 
-        ac.items, 
-        COALESCE(u.phone, ac."guestPhone") as phone,
-        COALESCE(u.name, 'there') as name
-      FROM abandoned_carts ac
-      LEFT JOIN users u ON ac."userId" = u.id
-      WHERE ac."whatsappSent" = false
-        AND ac."lastActive" < NOW() - INTERVAL '2 hours'
-        AND COALESCE(u.phone, ac."guestPhone") IS NOT NULL
-        AND COALESCE(u.phone, ac."guestPhone") <> ''
-        AND ac.items IS NOT NULL
-        AND ac.items::text <> '[]'
-      LIMIT 100
-    `);
+    const carts = await db
+      .select({
+        id: abandonedCarts.id,
+        userId: abandonedCarts.userId,
+        guestId: abandonedCarts.guestId,
+        items: abandonedCarts.items,
+        phone: sql<string>`COALESCE(${users.phone}, ${abandonedCarts.guestPhone})`,
+        name: sql<string>`COALESCE(${users.name}, 'there')`,
+      })
+      .from(abandonedCarts)
+      .leftJoin(users, eq(abandonedCarts.userId, users.id))
+      .where(
+        and(
+          eq(abandonedCarts.whatsappSent, false),
+          sql`${abandonedCarts.lastActive} < NOW() - INTERVAL '2 hours'`,
+          sql`COALESCE(${users.phone}, ${abandonedCarts.guestPhone}) IS NOT NULL`,
+          sql`COALESCE(${users.phone}, ${abandonedCarts.guestPhone}) <> ''`,
+          sql`${abandonedCarts.items} IS NOT NULL`,
+          sql`${abandonedCarts.items}::text <> '[]'`
+        )
+      )
+      .limit(100);
 
-    const carts = result.rows;
     let sentCount = 0;
     let errorCount = 0;
 
     for (const cart of carts) {
-      const phone = cart.phone as string;
-      const name = cart.name as string;
+      const phone = cart.phone;
+      const name = cart.name;
       
       let items = [];
       try {
@@ -102,10 +105,10 @@ export async function GET(request: NextRequest) {
           );
 
           // Mark as sent
-          await query(
-            `UPDATE abandoned_carts SET "whatsappSent" = true WHERE id = $1`,
-            [cart.id]
-          );
+          await db.update(abandonedCarts)
+            .set({ whatsappSent: true })
+            .where(eq(abandonedCarts.id, cart.id));
+          
           sentCount++;
         } else {
           console.error(`Failed to send WhatsApp reminder to ${phone}:`, sendResult.error);
@@ -117,17 +120,17 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({
-      success: true,
+    return apiResponse.success({
       processed: carts.length,
       sent: sentCount,
       failed: errorCount
     });
   } catch (error) {
     console.error("Error in abandoned carts WhatsApp cron:", error);
-    return NextResponse.json(
-      { error: "Internal server error", details: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : undefined },
-      { status: 500 }
+    return apiResponse.error(
+      "Internal server error",
+      500,
+      { details: error instanceof Error ? error.message : String(error) }
     );
   }
 }

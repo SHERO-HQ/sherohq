@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema, type SignupInput } from "@/lib/validations/auth";
-import { useAuth } from "@/context/AuthContext";
+import { useRegister } from "@/hooks/queries/useAuthQuery";
 import { Mail, Lock, User, Phone, ArrowRight, Eye, EyeOff } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 const Signup = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
-    const { register: signupUser } = useAuth();
+    const { mutateAsync: signupUser } = useRegister();
     const router = useRouter();
 
     const {

@@ -1,5 +1,7 @@
 import { NextRequest} from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { reviews, products } from "@/lib/drizzle/schema";
+import { eq, desc, sql } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 import { apiResponse } from "@/lib/api-utils";
 
@@ -9,11 +11,11 @@ export async function GET(
 ) {
   try {
     const productId = (await params).id;
-    const result = await query(
-      'SELECT * FROM reviews WHERE "productId" = $1 ORDER BY "createdAt" DESC',
-      [productId]
-    );
-    return apiResponse.success(result.rows);
+    const result = await db.select()
+      .from(reviews)
+      .where(eq(reviews.productId, productId))
+      .orderBy(desc(reviews.createdAt));
+    return apiResponse.success(result);
   } catch (error) {
     console.error("Fetch product reviews error:", error);
     return apiResponse.error("Failed to fetch reviews");
@@ -31,27 +33,29 @@ export async function POST(
     if (!userName || !rating) return apiResponse.error("Username and rating required", 400);
 
     const reviewId = uuidv4();
-    await query(
-      `INSERT INTO reviews (id, "productId", "userName", rating, comment, "createdAt")
-       VALUES ($1, $2, $3, $4, $5, NOW())`,
-      [reviewId, productId, userName, rating, comment || ""]
-    );
+    await db.insert(reviews).values({
+      id: reviewId,
+      productId: productId,
+      userName: userName,
+      rating: rating,
+      comment: comment || "",
+      createdAt: new Date().toISOString(),
+    });
 
     // Update product rating and reviews count
-    const statsRes = await query(
-      'SELECT AVG(rating) as "avgRating", COUNT(*) as count FROM reviews WHERE "productId" = $1',
-      [productId]
-    );
-    const stats = statsRes.rows[0];
+    const statsRes = await db.select({
+      avgRating: sql`AVG(rating)`,
+      count: sql`COUNT(*)`
+    })
+    .from(reviews)
+    .where(eq(reviews.productId, productId));
+    
+    const stats = statsRes[0];
 
-    await query(
-      "UPDATE products SET rating = $1, reviews = $2 WHERE id = $3",
-      [
-        Math.round((Number(stats.avgRating) || 0) * 10) / 10,
-        Number(stats.count),
-        productId
-      ]
-    );
+    await db.update(products).set({
+      rating: (Math.round((Number(stats.avgRating) || 0) * 10) / 10).toString(),
+      reviews: Number(stats.count)
+    }).where(eq(products.id, productId));
 
     return apiResponse.success({ id: reviewId, success: true }, 201);
   } catch (error) {

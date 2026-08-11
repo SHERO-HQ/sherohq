@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { adminUsers } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 import speakeasy from "speakeasy";
@@ -13,8 +15,11 @@ export async function POST(request: NextRequest) {
     const { code } = await request.json();
     
     // Fetch the secret from DB
-    const res = await query('SELECT "mfaSecret" FROM admin_users WHERE id = $1', [admin.id]);
-    const secret = res.rows[0]?.mfaSecret;
+    const adminRecord = await db.query.adminUsers.findFirst({
+      where: eq(adminUsers.id, admin.id),
+      columns: { mfaSecret: true },
+    });
+    const secret = adminRecord?.mfaSecret as string | undefined;
 
     if (!secret) {
       return apiResponse.error("MFA not initialized", 400);
@@ -22,7 +27,7 @@ export async function POST(request: NextRequest) {
 
     // Verify the TOTP code
     const verified = speakeasy.totp.verify({
-      secret: secret,
+      secret: secret as string,
       encoding: "base32",
       token: code,
       window: 1, // Allow 30s clock drift
@@ -36,10 +41,9 @@ export async function POST(request: NextRequest) {
     const recoveryCodes = generateRecoveryCodes();
     const hashedCodes = recoveryCodes.map(hashRecoveryCode);
 
-    await query(
-      `UPDATE admin_users SET "mfaEnabled" = true, "mfaRecoveryCodes" = $1 WHERE id = $2`,
-      [JSON.stringify(hashedCodes), admin.id]
-    );
+    await db.update(adminUsers)
+      .set({ mfaEnabled: true, mfaRecoveryCodes: JSON.stringify(hashedCodes) })
+      .where(eq(adminUsers.id, admin.id));
 
     return apiResponse.success({ 
       message: "MFA enabled successfully",

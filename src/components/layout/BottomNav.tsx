@@ -1,8 +1,8 @@
 "use client";
 import { Home, ShoppingBag, ShoppingCart, Heart } from "lucide-react";
 import NavLink from "@/components/common/NavLink";
-import { useCart } from "@/context/CartContext";
-import { useWishlist } from "@/hooks/useWishlist";
+import { useCart } from "@/hooks/queries/useCartQuery";
+import { useWishlist } from "@/hooks/queries/useWishlistQuery";
 import { useIsMounted } from "@/hooks/useIsMounted";
 import { getAbsoluteUrl } from "@/utils/subdomain";
 

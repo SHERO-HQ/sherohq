@@ -11,7 +11,7 @@ import {
   ShoppingBag,
 } from "lucide-react";
 import { trackOrder, type Order } from "@/services/api";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/hooks/queries/useCartQuery";
 import OrderRatingModal from "@/components/checkout/OrderRatingModal";
 import { getOrderAccessToken } from "@/utils/orderAccess";
 import { displayOrderId } from "@/utils/orderId";

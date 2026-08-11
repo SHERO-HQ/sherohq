@@ -1,7 +1,9 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { users } from "@/lib/drizzle/schema";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
+import { ilike, or, desc, sql } from "drizzle-orm";
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,31 +24,42 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get("search") || "";
     const offset = (page - 1) * limit;
 
-    let whereClause = "";
-    const params: any[] = [];
-
+    let condition = undefined;
     if (search) {
-      whereClause = "WHERE name ILIKE $1 OR email ILIKE $1 OR phone ILIKE $1";
-      params.push(`%${search}%`);
+      const searchPattern = `%${search}%`;
+      condition = or(
+        ilike(users.name, searchPattern),
+        ilike(users.email, searchPattern),
+        ilike(users.phone, searchPattern)
+      );
     }
 
-    const countRes = await query(
-      `SELECT COUNT(*) FROM users ${whereClause}`,
-      params,
-    );
-    const total = parseInt(countRes.rows[0].count, 10);
+    const countRes = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(users)
+      .where(condition);
+    
+    const total = Number(countRes[0].count);
 
-    const usersRes = await query(
-      `SELECT id, name, email, phone, avatar, "emailVerified", "isActive", "createdAt" 
-       FROM users 
-       ${whereClause} 
-       ORDER BY "createdAt" DESC 
-       LIMIT $${params.length + 1} OFFSET $${params.length + 2}`,
-      [...params, limit, offset],
-    );
+    const usersRes = await db
+      .select({
+        id: users.id,
+        name: users.name,
+        email: users.email,
+        phone: users.phone,
+        avatar: users.avatar,
+        emailVerified: users.emailVerified,
+        isActive: users.isActive,
+        createdAt: users.createdAt,
+      })
+      .from(users)
+      .where(condition)
+      .orderBy(desc(users.createdAt))
+      .limit(limit)
+      .offset(offset);
 
     return apiResponse.success({
-      users: usersRes.rows,
+      users: usersRes,
       pagination: {
         total,
         page,

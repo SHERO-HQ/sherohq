@@ -1,5 +1,5 @@
+import { apiResponse } from "@/lib/api-utils";
 // src/app/api/cron/whatsapp-retry/route.ts
-import { NextResponse } from "next/server";
 import { processPendingRetries } from "../../../../../lib/whatsapp-retry";
 
 export async function GET(req: Request) {
@@ -8,11 +8,8 @@ export async function GET(req: Request) {
 
   try {
     const result = await processPendingRetries();
-    return NextResponse.json(result);
+    return apiResponse.success(result);
   } catch (err: any) {
-    return NextResponse.json(
-      { error: err?.message ?? String(err) },
-      { status: 500 },
-    );
+    return apiResponse.error(err?.message ?? String(err), 500);
   }
 }

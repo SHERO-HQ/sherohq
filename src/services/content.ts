@@ -113,12 +113,14 @@ export async function deleteProject(
 
 export async function fetchTestimonials(): Promise<Testimonial[]> {
   const response = await fetch(`${API_BASE}/testimonials`);
-  return handleResponse<Testimonial[]>(response);
+  const data = await handleResponse<any>(response);
+  return Array.isArray(data) ? data : data?.testimonials || [];
 }
 
 export async function fetchAdminTestimonials(): Promise<Testimonial[]> {
   const response = await authFetch(`${API_BASE}/testimonials?admin=true`);
-  return handleResponse<Testimonial[]>(response);
+  const data = await handleResponse<any>(response);
+  return Array.isArray(data) ? data : data?.testimonials || [];
 }
 
 export async function createTestimonial(

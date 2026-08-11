@@ -1,23 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
+import { apiResponse, validateCronAuth } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
 import { processNewsletterCron } from "@/lib/newsletter";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
-  // 1. Verify Cron Secret (Security)
-  const authHeader = request.headers.get("authorization");
-  if (
-    process.env.NODE_ENV === "production" &&
-    authHeader !== `Bearer ${process.env.CRON_SECRET}`
-  ) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const cronError = validateCronAuth(request);
+  if (cronError) return cronError;
 
   try {
     const result = await processNewsletterCron();
-    return NextResponse.json(result);
+    return apiResponse.success(result);
   } catch (error) {
     console.error("Cron handler error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return apiResponse.error("Internal server error", 500);
   }
 }

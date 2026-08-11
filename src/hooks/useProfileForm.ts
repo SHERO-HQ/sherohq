@@ -9,8 +9,8 @@ export const useProfileForm = (
     name?: string;
     phone?: string;
     shippingAddress?: import("@/services/api").ShippingAddress | null;
-  }) => Promise<void>,
-  refreshUser: () => Promise<void>,
+  }) => Promise<any>,
+  refreshUser: () => Promise<any>,
 ) => {
   const [saving, setSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");

@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { apiResponse } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
 import { campaignTemplates } from "@/lib/drizzle/schema";
 import { eq, and } from "drizzle-orm";
@@ -14,10 +15,10 @@ export async function GET(req: NextRequest) {
 
     const templates = await db.select().from(campaignTemplates).orderBy(campaignTemplates.createdAt);
     
-    return NextResponse.json({ templates });
+    return apiResponse.success({ templates });
   } catch (error: any) {
     console.error("Failed to fetch templates:", error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return apiResponse.error(error.message, 500);
   }
 }
 
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
     const { name, description, channel, content, whatsappTemplateLanguage, expectedParams, category } = body;
 
     if (!name || !channel) {
-      return NextResponse.json({ error: "Name and channel are required" }, { status: 400 });
+      return apiResponse.error("Name and channel are required", 400);
     }
 
     const inserted = await db.insert(campaignTemplates).values({
@@ -41,13 +42,13 @@ export async function POST(req: NextRequest) {
       isSync: false,
     }).returning();
 
-    return NextResponse.json({ template: inserted[0] });
+    return apiResponse.success({ template: inserted[0] });
   } catch (error: any) {
     console.error("Failed to create template:", error);
     if (error.code === '23505') {
-      return NextResponse.json({ error: "Template with this name and language already exists for this channel" }, { status: 409 });
+      return apiResponse.error("Template with this name and language already exists for this channel", 409);
     }
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return apiResponse.error(error.message, 500);
   }
 }
 

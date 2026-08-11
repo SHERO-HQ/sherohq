@@ -14,7 +14,7 @@ import {
  useAdminGuides,
  useUpdateGuide,
  useDeleteGuide} from "@/hooks/queries/useGuides";
-import { } from "@/context/AdminContext";
+
 import { ArrowLeft, BookOpen } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 
@@ -234,7 +234,7 @@ const AdminGuides = () => {
  onChange={(e) => setSearchQuery(e.target.value)}
  />
  <Button
- className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+ className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
  asChild
  >
  <Link href="/admin/guides/new">New Guide</Link>

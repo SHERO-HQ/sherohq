@@ -1,5 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { apiResponse, validateCsrf } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { users, userSessions } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { v4 as uuidv4 } from "uuid";
 import { randomBytes } from "node:crypto";
@@ -16,22 +19,29 @@ const USER_SESSION_COOKIE = "user_session_token";
 
 export async function POST(request: NextRequest) {
   try {
+    const csrfError = await validateCsrf(request);
+    if (csrfError) return csrfError;
+
     const ip = request.headers.get("x-forwarded-for") || "anonymous";
     const limiter = await rateLimit(`user_login_${ip}`, 5, 60 * 1000);
 
     if (!limiter.success) {
-      return NextResponse.json(
-        { error: "Too many login attempts. Please try again in a minute." },
-        { status: 429 },
-      );
+      return apiResponse.error("Too many login attempts. Please try again in a minute.", 429);
     }
 
     const body = await request.json();
     const validated = LoginSchema.parse(body);
     const { email, password } = validated;
 
-    const result = await query("SELECT * FROM users WHERE email = $1", [email]);
-    const user = result.rows[0];
+    // Per-account rate limiting
+    const accountLimiter = await rateLimit(`account_login_${email.toLowerCase()}`, 5, 15 * 60_000);
+    if (!accountLimiter.success) {
+      return apiResponse.error("This account is temporarily locked due to too many failed attempts. Please try again in 15 minutes.", 429);
+    }
+
+    const user = await db.query.users.findFirst({
+      where: eq(users.email, email)
+    });
 
     const fakeHash =
       "$2a$10$fakeHashForTimingConsistencyPreventionXXXXXXXXXXXXXXXXXXXXXXXX";
@@ -41,24 +51,19 @@ export async function POST(request: NextRequest) {
     );
 
     if (!user || !isMatch) {
-      return NextResponse.json(
-        { error: "Invalid credentials" },
-        { status: 401 },
-      );
+      return apiResponse.unauthorized("Invalid credentials");
     }
 
     if (user.isActive === false) {
-      return NextResponse.json(
-        { error: "Your account has been deactivated." },
-        { status: 403 },
-      );
+      return apiResponse.error("Your account has been deactivated.", 403);
     }
 
     // 2. Handle Multi-Factor Authentication (MFA)
     if (user.mfaEnabled) {
-      return NextResponse.json({
+      const { generateMfaChallengeToken } = await import("@/lib/mfa-utils");
+      return apiResponse.success({
         requiresMFA: true,
-        mfaToken: Buffer.from(user.id).toString("base64"), // Temporary token for the second step
+        mfaToken: generateMfaChallengeToken(user.id, "user"), // Temporary short-lived signed token
         user: {
           id: user.id,
           email: user.email,
@@ -71,10 +76,15 @@ export async function POST(request: NextRequest) {
     const sessionId = uuidv4();
     const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
 
-    await query(
-      'INSERT INTO user_sessions (id, "userId", token, "expiresAt") VALUES ($1, $2, $3, $4)',
-      [sessionId, user.id, token, expiresAt.toISOString()],
-    );
+    // Invalidate old sessions for rotation
+    await db.delete(userSessions).where(eq(userSessions.userId, user.id));
+
+    await db.insert(userSessions).values({
+      id: sessionId,
+      userId: user.id,
+      token,
+      expiresAt: expiresAt.toISOString(),
+    });
 
     const cookieStore = await cookies();
     cookieStore.set(USER_SESSION_COOKIE, token, {
@@ -85,7 +95,7 @@ export async function POST(request: NextRequest) {
       path: "/",
     });
 
-    return NextResponse.json({
+    return apiResponse.success({
       success: true,
       token,
       user: {
@@ -98,9 +108,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Login error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    return apiResponse.error("Internal server error", 500);
   }
 }

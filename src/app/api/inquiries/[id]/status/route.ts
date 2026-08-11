@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { inquiries } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
@@ -19,14 +21,11 @@ export async function PATCH(
       return apiResponse.error("Status is required", 400);
     }
 
-    const result = await query(
-      `UPDATE inquiries SET status = $1 WHERE id = $2 RETURNING *`,
-      [status, id]
-    );
+    const result = await db.update(inquiries).set({ status }).where(eq(inquiries.id, id)).returning();
 
-    if (result.rowCount === 0) return apiResponse.notFound("Inquiry not found");
+    if (result.length === 0) return apiResponse.notFound("Inquiry not found");
 
-    const updated = result.rows[0];
+    const updated = result[0];
 
     await logActivity(
       admin.id,

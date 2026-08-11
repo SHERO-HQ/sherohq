@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { apiResponse } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
 import { processPendingRetries } from "@/lib/whatsapp-retry";
 
 /**
@@ -23,7 +24,7 @@ export async function POST(request: NextRequest) {
       .get("authorization")
       ?.replace("Bearer ", "");
     if (cronSecret && cronSecret !== process.env.CRON_SECRET) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return apiResponse.unauthorized();
     }
 
     console.log("Processing WhatsApp message retries...");
@@ -32,7 +33,7 @@ export async function POST(request: NextRequest) {
 
     console.log("WhatsApp retry processing complete:", result);
 
-    return NextResponse.json({
+    return apiResponse.success({
       success: true,
       processed: result.processed,
       successful: result.successful,
@@ -41,13 +42,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error processing retries:", error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
-      },
-      { status: 500 },
-    );
+    return apiResponse.error(error instanceof Error ? error.message : "Unknown error", 500);
   }
 }
 
@@ -67,7 +62,7 @@ export async function GET(request: NextRequest) {
 
     const result = await processPendingRetries();
 
-    return NextResponse.json({
+    return apiResponse.success({
       success: true,
       message: "Manual retry trigger executed",
       processed: result.processed,
@@ -77,12 +72,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error in retry health check:", error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
-      },
-      { status: 500 },
-    );
+    return apiResponse.error(error instanceof Error ? error.message : "Unknown error", 500);
   }
 }

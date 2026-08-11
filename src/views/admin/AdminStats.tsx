@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { } from "@/context/AdminContext";
+
 import { getErrorMessage } from "@/utils/error";
 import {
  BarChart,
@@ -156,7 +156,7 @@ const AdminStats = () => {
  </div>
  <Button
  onClick={handleOpenCreate}
- className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+ className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
  >
  <Plus className="w-4 h-4 mr-2" />
  Add Stat
@@ -350,7 +350,7 @@ const AdminStats = () => {
  <Button
  type="submit"
  disabled={createMutation.isPending || updateMutation.isPending}
- className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+ className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
  >
  {createMutation.isPending || updateMutation.isPending ? (
  <Loader2 className="w-4 h-4 animate-spin mr-2" />

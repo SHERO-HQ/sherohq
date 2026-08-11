@@ -2,7 +2,9 @@ import { NextRequest } from "next/server";
 import { getAdminFromSession } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { newsletterCampaigns } from "@/lib/drizzle/schema";
+import { eq, sql, and } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
 
@@ -15,15 +17,11 @@ export async function PATCH(
     if (!admin) return apiResponse.unauthorized();
 
     const { id } = await params;
-    const result = await query(
-      `UPDATE newsletter_campaigns
-       SET status = 'failed', "updatedAt" = NOW()
-       WHERE id = $1 AND status = 'scheduled'
-       RETURNING subject`,
-      [id],
-    );
-
-    if (result.rowCount === 0) {
+    const rows = await db.update(newsletterCampaigns)
+      .set({ status: 'failed', updatedAt: sql`NOW()` })
+      .where(and(eq(newsletterCampaigns.id, id), eq(newsletterCampaigns.status, 'scheduled')))
+      .returning({ subject: newsletterCampaigns.subject });
+    if (rows.length === 0) {
       return apiResponse.notFound("Scheduled campaign not found");
     }
 
@@ -31,7 +29,7 @@ export async function PATCH(
       admin.id,
       "newsletter_campaign_cancel",
       "warning",
-      `Cancelled campaign: ${result.rows[0].subject}`,
+      `Cancelled campaign: ${rows[0].subject}`,
     );
 
     return apiResponse.success({ message: "Campaign cancelled successfully" });

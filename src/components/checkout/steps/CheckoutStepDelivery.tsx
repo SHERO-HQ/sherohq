@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { useCheckout } from "../CheckoutContext";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/hooks/queries/useCartQuery";
 import { GHANA_REGIONS, getCitiesForRegion, getDeliveryEstimate } from "@/lib/ghana-locations";
 
 export default function CheckoutStepDelivery() {

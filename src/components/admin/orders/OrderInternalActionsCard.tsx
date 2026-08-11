@@ -1,18 +1,21 @@
+"use client";
+
+import React from "react";
 import { Mail, Hash, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface OrderInternalActionsCardProps {
-  isStorePickupOrder: boolean;
   onResendConfirmation: () => void;
   onCopyTrackingLink: () => void;
   onCopyPaymentLink: () => void;
+  isStorePickupOrder: boolean;
 }
 
 export function OrderInternalActionsCard({
-  isStorePickupOrder,
   onResendConfirmation,
   onCopyTrackingLink,
   onCopyPaymentLink,
+  isStorePickupOrder,
 }: OrderInternalActionsCardProps) {
   return (
     <div className="bg-card rounded p-5 border border-border relative group overflow-hidden">

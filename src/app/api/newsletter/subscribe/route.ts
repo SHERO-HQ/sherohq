@@ -1,9 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { apiResponse, validateCsrf } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { newsletterSubscribers } from "@/lib/drizzle/schema";
+import { eq, sql } from "drizzle-orm";
 import { randomBytes } from "node:crypto";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 import { marketingNotifications } from "@/lib/notifications/services/marketing";
+import { canonicalizeEmail } from "@/lib/sanitize";
 
 const NewsletterSubscribeSchema = z.object({
   email: z.string().email(),
@@ -14,34 +18,52 @@ const NewsletterSubscribeSchema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    const csrfError = await validateCsrf(request);
+    if (csrfError) return csrfError;
+
     const body = await request.json();
     const validated = NewsletterSubscribeSchema.parse(body);
     const { email, name, phone, source = "footer" } = validated;
 
-    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedEmail = canonicalizeEmail(email);
     const unsubscribeToken = randomBytes(24).toString("hex");
 
-    const existing = await query(`SELECT status FROM newsletter_subscribers WHERE email = $1`, [normalizedEmail]);
-    const isNewSubscription = existing.rows.length === 0 || existing.rows[0].status !== 'active';
+    const existing = await db
+      .select({ 
+        status: newsletterSubscribers.status, 
+        unsubscribeToken: newsletterSubscribers.unsubscribeToken 
+      })
+      .from(newsletterSubscribers)
+      .where(eq(newsletterSubscribers.email, normalizedEmail));
+      
+    const isNewSubscription = existing.length === 0 || existing[0].status !== 'active';
 
-    await query(
-      `INSERT INTO newsletter_subscribers (id, email, phone, name, source, status, "unsubscribeToken", "subscribedAt", "updatedAt")
-       VALUES ($1, $2, $3, $4, $5, 'active', $6, NOW(), NOW())
-       ON CONFLICT (email)
-       DO UPDATE SET
-         phone = COALESCE(EXCLUDED.phone, newsletter_subscribers.phone),
-         name = COALESCE(EXCLUDED.name, newsletter_subscribers.name),
-         source = EXCLUDED.source,
-         status = 'active',
-         "unsubscribeToken" = COALESCE(newsletter_subscribers."unsubscribeToken", EXCLUDED."unsubscribeToken"),
-         "unsubscribedAt" = NULL,
-         "updatedAt" = NOW()`,
-      [uuidv4(), normalizedEmail, phone || null, name || null, source, unsubscribeToken]
-    );
+    await db.insert(newsletterSubscribers).values({
+      id: uuidv4(),
+      email: normalizedEmail,
+      phone: phone || null,
+      name: name || null,
+      source: source,
+      status: 'active',
+      unsubscribeToken: unsubscribeToken,
+      subscribedAt: sql`CURRENT_TIMESTAMP`,
+      updatedAt: sql`CURRENT_TIMESTAMP`
+    }).onConflictDoUpdate({
+      target: newsletterSubscribers.email,
+      set: {
+        phone: sql`COALESCE(EXCLUDED.phone, ${newsletterSubscribers.phone})`,
+        name: sql`COALESCE(EXCLUDED.name, ${newsletterSubscribers.name})`,
+        source: sql`EXCLUDED.source`,
+        status: 'active',
+        unsubscribeToken: sql`COALESCE(${newsletterSubscribers.unsubscribeToken}, EXCLUDED."unsubscribeToken")`,
+        unsubscribedAt: null,
+        updatedAt: sql`CURRENT_TIMESTAMP`
+      }
+    });
 
     if (isNewSubscription) {
-      const actualToken = existing.rows.length > 0 && existing.rows[0].unsubscribeToken
-        ? existing.rows[0].unsubscribeToken
+      const actualToken = existing.length > 0 && existing[0].unsubscribeToken
+        ? existing[0].unsubscribeToken
         : unsubscribeToken;
         
       const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
@@ -53,9 +75,9 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    return NextResponse.json({ success: true, message: "Subscription successful" });
+    return apiResponse.success({ success: true, message: "Subscription successful" });
   } catch (error) {
     console.error("Newsletter subscribe error:", error);
-    return NextResponse.json({ error: "Failed to subscribe" }, { status: 500 });
+    return apiResponse.error("Failed to subscribe", 500);
   }
 }

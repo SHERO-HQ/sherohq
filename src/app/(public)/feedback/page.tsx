@@ -1,6 +1,6 @@
 import React from "react";
 import FeedbackForm from "@/components/feedback/FeedbackForm";
-import { HatGlasses, ShieldCheck } from "lucide-react";
+import { Glasses, ShieldCheck } from "lucide-react";
 
 export const metadata = {
   title: "Send Feedback | SHERO TECHNOLOGIES",
@@ -41,7 +41,7 @@ export default function FeedbackPage() {
           </div>
           <div className="rounded dark:bg-slate-800 bg-white p-4 ring-1 ring-slate-200 dark:ring-slate-800 transition-all duration-300 hover:ring-slate-300">
             <div className="mb-3 flex items-center gap-2">
-              <HatGlasses className="h-4 w-4 text-slate-900 dark:text-slate-200" />
+              <Glasses className="h-4 w-4 text-slate-900 dark:text-slate-200" />
               <h3 className="font-semibold text-sm text-slate-900 dark:text-slate-200">Stay Anonymous</h3>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">

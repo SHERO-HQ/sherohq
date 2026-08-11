@@ -1,5 +1,7 @@
 import { NextRequest} from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { orders } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 import { getUserFromSession, getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 import { 
@@ -27,16 +29,20 @@ export async function PATCH(
     }
 
     // Retrieve order to check authorization and status
-    const orderRes = await query(
-      `SELECT status, "userId", "orderAccessTokenHash" FROM orders WHERE id = $1`,
-      [id]
-    );
+    const orderRes = await db
+      .select({
+        status: orders.status,
+        userId: orders.userId,
+        orderAccessTokenHash: orders.orderAccessTokenHash
+      })
+      .from(orders)
+      .where(eq(orders.id, id));
 
-    if (orderRes.rowCount === 0) {
+    if (orderRes.length === 0) {
       return apiResponse.notFound("Order not found");
     }
 
-    const order = orderRes.rows[0];
+    const order = orderRes[0];
 
     // Authorization checks
     const user = await getUserFromSession();
@@ -66,12 +72,13 @@ export async function PATCH(
     }
 
     // Update payment method in the database
-    const updateRes = await query(
-      `UPDATE orders SET "paymentMethod" = $1 WHERE id = $2 RETURNING *`,
-      [normalizedMethod, id]
-    );
+    const updateRes = await db
+      .update(orders)
+      .set({ paymentMethod: normalizedMethod })
+      .where(eq(orders.id, id))
+      .returning();
 
-    if (updateRes.rowCount === 0) {
+    if (updateRes.length === 0) {
       return apiResponse.error("Failed to update payment method", 500);
     }
 
@@ -87,7 +94,8 @@ export async function PATCH(
 
     return apiResponse.success({
       success: true,
-      message: "Payment method updated successfully"});
+      message: "Payment method updated successfully"
+    });
   } catch (error) {
     console.error("Failed to update order payment method:", error);
     return apiResponse.error("Failed to update payment method");

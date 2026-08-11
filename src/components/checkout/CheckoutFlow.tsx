@@ -17,7 +17,7 @@ import { getGuestId } from "@/utils/guestSession";
 import { saveOrderAccessToken } from "@/utils/orderAccess";
 import { useNotifications } from "@/hooks/useNotifications";
 import type { CheckoutInput } from "@/lib/validations/checkout";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/hooks/queries/useCartQuery";
 
 const CHECKOUT_STEPS = [
   { num: 1, title: "Cart Review" },

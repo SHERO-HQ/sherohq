@@ -1,16 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { apiResponse } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   try {
     const admin = await getAdminFromSession();
     if (!admin || !["admin", "superadmin", "manager"].includes(admin.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return apiResponse.unauthorized();
     }
 
-    const result = await query(
-      `SELECT 
+    const result = await db.execute(sql`
+      SELECT 
         ac.id, 
         ac."userId", 
         ac."guestId", 
@@ -23,10 +25,11 @@ export async function GET(request: NextRequest) {
         u.phone as "userPhone"
        FROM abandoned_carts ac
        LEFT JOIN users u ON ac."userId" = u.id
-       ORDER BY ac."lastActive" DESC`
-    );
+       ORDER BY ac."lastActive" DESC
+    `);
 
-    const carts = result.rows.map(row => {
+    const rows = (result.rows || result) as Record<string, unknown>[];
+    const carts = rows.map((row: any) => {
       let items = [];
       try {
         items = typeof row.items === 'string' ? JSON.parse(row.items) : row.items;
@@ -49,9 +52,9 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    return NextResponse.json(carts);
+    return apiResponse.success(carts);
   } catch (error) {
     console.error("Error fetching abandoned carts:", error);
-    return NextResponse.json({ error: "Failed to fetch abandoned carts" }, { status: 500 });
+    return apiResponse.error("Failed to fetch abandoned carts", 500);
   }
 }

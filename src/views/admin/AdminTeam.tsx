@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useAdmin } from "@/context/AdminContext";
+import { useAdminUser } from "@/hooks/queries/useAdminQuery";
 import { getErrorMessage } from "@/utils/error";
 import {
   Users,
@@ -56,7 +56,8 @@ const AdminTeam = () => {
   const updateMutation = useUpdateTeamMember();
   const deleteMutation = useDeleteTeamMember();
   const { addNotification } = useNotifications();
-  const { admin: currentAdmin } = useAdmin();
+  const { data: adminData } = useAdminUser();
+  const currentAdmin = adminData?.admin;
   const canAddMember =
     currentAdmin?.role === "superadmin" || currentAdmin?.role === "admin";
 
@@ -206,7 +207,7 @@ const AdminTeam = () => {
         {canAddMember && (
           <Button
             onClick={handleOpenCreate}
-            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add Member
@@ -349,7 +350,7 @@ const AdminTeam = () => {
                       onClick={() =>
                         setFormData((prev) => ({ ...prev, image: "" }))
                       }
-                      className="text-white hover:bg-white/20 hover:text-white"
+                      className="text-foreground hover:bg-muted/50 hover:text-foreground"
                     >
                       <Trash2 className="w-5 h-5" />
                     </Button>
@@ -458,7 +459,7 @@ const AdminTeam = () => {
             <Button
               type="submit"
               disabled={createMutation.isPending || updateMutation.isPending}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
             >
               {createMutation.isPending || updateMutation.isPending ? (
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />

@@ -62,72 +62,19 @@ function getPool(): Pool {
   // Singleton for Next.js hot-reloading
   const globalForDb = global as unknown as { pool: Pool };
   
-  // Force recreate the pool to fix AggregateError from stale connections
-  if (globalForDb.pool) {
-    try {
-      globalForDb.pool.end();
-    } catch {
-      // ignore
-    }
+  if (!globalForDb.pool) {
+    console.log(`[DB] Creating new pool connected to host: ${poolConfig.host}:${poolConfig.port}`);
+    globalForDb.pool = new Pool(poolConfig);
   }
   
-  console.log(`[DB] Creating new pool connected to host: ${poolConfig.host}:${poolConfig.port}`);
-  globalForDb.pool = new Pool(poolConfig);
   pool = globalForDb.pool;
 
   return pool;
 }
 
-export const getClient = async () => getPool().connect();
-
-/**
- * Executes a query with automatic timing, error logging, and retry for transient errors
- */
-export async function query(text: string, params?: any[], retries = 2) {
-  let attempt = 0;
-  const start = Date.now();
-
-  while (attempt <= retries) {
-    try {
-      const res = await getPool().query(text, params);
-      const duration = Date.now() - start;
-      if (duration > 1000) {
-        console.warn(`🐢 [DB Slow Query] ${duration}ms (Attempt ${attempt + 1}): ${text.substring(0, 100)}...`);
-      }
-      return res;
-    } catch (err: any) {
-      const duration = Date.now() - start;
-      attempt++;
-
-      // Retry on transient connection errors
-      const isTransient = 
-        err.code === "ETIMEDOUT" || 
-        err.code === "ECONNRESET" || 
-        err.message?.includes("terminated") || 
-        err.message?.includes("timeout");
-
-      if (isTransient && attempt <= retries) {
-        const delay = attempt * 1000;
-        console.warn(`⚠️ [DB Retry] Attempt ${attempt} failed: ${err.message}. Retrying in ${delay}ms...`);
-        await new Promise(resolve => setTimeout(resolve, delay));
-        continue;
-      }
-
-      console.error(`❌ [DB Error] ${duration}ms (Final Attempt):`, {
-        text: text.substring(0, 500),
-        message: err.message || String(err),
-      });
-      throw err;
-    }
-  }
-  throw new Error("DB Query failed after retries");
-}
-
 export const db = drizzle(getPool(), { schema });
 
 export default {
-  query,
   getPool,
-  getClient,
   db,
 };

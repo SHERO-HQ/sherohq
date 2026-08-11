@@ -1,6 +1,9 @@
-import { NextResponse } from "next/server";
-import { query as dbQuery } from "../../../lib/db";
-import { notificationService } from "../../../lib/notifications";
+import { apiResponse, validateCsrf } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { customerFeedback } from "@/lib/drizzle/schema";
+import { notificationService } from "@/lib/notifications";
+import { sanitizeText, canonicalizeEmail } from "@/lib/sanitize";
 
 type Body = {
   name?: string;
@@ -10,46 +13,41 @@ type Body = {
   message: string;
 };
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    const csrfError = await validateCsrf(req);
+    if (csrfError) return csrfError;
+
     const body: Body = await req.json();
 
     if (!body || !body.message || String(body.message).trim().length < 3) {
-      return NextResponse.json(
-        { error: "Message is required" },
-        { status: 400 },
-      );
+      return apiResponse.error("Message is required", 400);
     }
 
     const anonymous = Boolean(body.anonymous);
-    const name = anonymous ? null : ((body.name || null) as string | null);
-    const email = anonymous ? null : ((body.email || null) as string | null);
+    const name = anonymous ? null : (body.name ? sanitizeText(body.name as string) : null);
+    const email = anonymous ? null : (body.email ? canonicalizeEmail(body.email as string) : null);
     const rating = Number(body.rating || null) || null;
-    const message = String(body.message).trim();
+    const message = sanitizeText(body.message as string);
 
     // Try to persist to DB if available
     if (process.env.POSTGRES_URL || process.env.DATABASE_URL) {
       try {
-        const insertSql = `
-          INSERT INTO customer_feedback (name, email, rating, message, page, created_at)
-          VALUES ($1, $2, $3, $4, $5, NOW()) RETURNING id
-        `;
-
         const page = null;
-        const res = await dbQuery(insertSql, [
+        const res = await db.insert(customerFeedback).values({
           name,
           email,
           rating,
           message,
-          page,
-        ]);
-        const insertedId = res?.rows?.[0]?.id;
+          page
+        }).returning({ id: customerFeedback.id });
+        const insertedId = res[0]?.id;
 
         // Optionally notify admin about new feedback
         const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL;
         if (adminEmail) {
           const base =
-            process.env.NEXT_PUBLIC_SITE_URL || "https://your-site.com";
+            process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
           const content = `
               <h3>New customer feedback</h3>
               <p><strong>Submitter:</strong> ${anonymous ? "Anonymous" : name || "—"}</p>
@@ -66,7 +64,7 @@ export async function POST(req: Request) {
           );
         }
 
-        return NextResponse.json({ ok: true, id: insertedId }, { status: 201 });
+        return apiResponse.success({ ok: true, id: insertedId }, 201);
       } catch (err: any) {
         if (process.env.NODE_ENV !== "production") {
           console.error("[Feedback API] DB insert failed:", err?.message || err);
@@ -109,14 +107,11 @@ export async function POST(req: Request) {
       }
     }
 
-    return NextResponse.json({ ok: true }, { status: 201 });
+    return apiResponse.success({ ok: true }, 201);
   } catch (err) {
     if (process.env.NODE_ENV !== "production") {
       console.error("[Feedback API] Unexpected error:", err);
     }
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    return apiResponse.error("Internal server error", 500);
   }
 }

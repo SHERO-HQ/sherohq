@@ -13,17 +13,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const protocol = host.includes("localhost") ? "http" : "https";
 
   try {
-    const { query } = await import("@/lib/db");
-    const res = await query(
-      `SELECT id, name, price, "originalPrice", image, images, description FROM products WHERE id = $1 OR slug = $1 OR sku = $1`,
-      [id],
-    );
+    const { db } = await import("@/lib/db");
+    const { sql } = await import("drizzle-orm");
+    const res = await db.execute(sql`
+      SELECT id, name, price, "originalPrice", image, images, description FROM products WHERE id = ${id} OR slug = ${id} OR sku = ${id}
+    `);
 
     if (!res.rows || res.rows.length === 0) {
       throw new Error(`Product not found in DB`);
     }
 
-    const product = res.rows[0];
+    const product = res.rows[0] as any as Product;
 
     // Parse price to number if it comes back as a string from numeric column
     if (typeof product.price === "string")

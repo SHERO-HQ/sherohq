@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 
@@ -14,39 +15,38 @@ export async function GET(
     const { id } = await params;
 
     // Fetch user details
-    const userRes = await query(
-      'SELECT id, name, email, phone, avatar, "emailVerified", "isActive", "createdAt", "shippingAddress" FROM users WHERE id = $1',
-      [id],
-    );
+    const userRes = await db.execute(sql`
+      SELECT id, name, email, phone, avatar, "emailVerified", "isActive", "createdAt", "shippingAddress" FROM users WHERE id = ${id}
+    `);
 
-    if (userRes.rows.length === 0) {
+    const userRows = (userRes.rows || userRes) as Record<string, unknown>[];
+    if (userRows.length === 0) {
       return apiResponse.error("Customer not found", 404);
     }
 
-    const user = userRes.rows[0];
+    const user = userRows[0];
 
     // Fetch user stats (total orders, total spent)
-    const statsRes = await query(
-      `SELECT 
+    const statsRes = await db.execute(sql`
+      SELECT 
         COUNT(*) as "totalOrders", 
         COALESCE(SUM(total), 0) as "totalSpent",
         MAX("createdAt") as "lastOrderDate"
        FROM orders 
-       WHERE "userId" = $1 AND status != 'cancelled'`,
-      [id],
-    );
-    const stats = statsRes.rows[0];
+       WHERE "userId" = ${id} AND status != 'cancelled'
+    `);
+    const statsRows = (statsRes.rows || statsRes) as Record<string, unknown>[];
+    const stats = statsRows[0];
 
     // Fetch recent orders
-    const ordersRes = await query(
-      'SELECT id, total, status, "createdAt" FROM orders WHERE "userId" = $1 ORDER BY "createdAt" DESC LIMIT 10',
-      [id],
-    );
+    const ordersRes = await db.execute(sql`
+      SELECT id, total, status, "createdAt" FROM orders WHERE "userId" = ${id} ORDER BY "createdAt" DESC LIMIT 10
+    `);
 
     return apiResponse.success({
       user,
       stats,
-      orders: ordersRes.rows,
+      orders: (ordersRes.rows || ordersRes) as Record<string, unknown>[],
     });
   } catch (error) {
     console.error("Fetch customer details error:", error);
@@ -65,10 +65,7 @@ export async function PATCH(
     const { id } = await params;
     const { isActive } = await request.json();
 
-    await query('UPDATE users SET "isActive" = $1 WHERE id = $2', [
-      isActive,
-      id,
-    ]);
+    await db.execute(sql`UPDATE users SET "isActive" = ${isActive} WHERE id = ${id}`);
 
     return apiResponse.success({ message: "Customer updated successfully" });
   } catch (error) {
@@ -90,7 +87,7 @@ export async function DELETE(
     const { id } = await params;
 
     // We might want to use a transaction if we delete related data
-    await query("DELETE FROM users WHERE id = $1", [id]);
+    await db.execute(sql`DELETE FROM users WHERE id = ${id}`);
 
     return apiResponse.success({ message: "Customer deleted successfully" });
   } catch (error) {

@@ -1,10 +1,10 @@
 "use client";
 import { ShoppingCart, Heart, Eye, Star, Flame } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/hooks/queries/useCartQuery";
 import { useNotifications } from "@/hooks/useNotifications";
 import { getImageUrl } from "@/services/api";
-import { useWishlist } from "@/hooks/useWishlist";
+import { useWishlist } from "@/hooks/queries/useWishlistQuery";
 import AppImage from "@/components/common/AppImage";
 import type { Product } from "@/types/product";
 import { COMPANY_CONTACTS } from "@/constants/contacts";

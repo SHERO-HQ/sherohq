@@ -228,6 +228,7 @@ export const adminUsers = pgTable("admin_users", {
 	isActive: boolean().default(true),
 	mfaEnabled: boolean().default(false),
 	mfaSecret: text(),
+	mfaRecoveryCodes: jsonb("mfaRecoveryCodes"),
 }, (table) => [
 	index("idx_admin_users_id").using("btree", table.id.asc().nullsLast().op("text_ops")),
 	unique("admin_users_username_key").on(table.username),
@@ -426,6 +427,9 @@ export const users = pgTable("users", {
 	passwordUpdatedAt: timestamp({ mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
 	resetToken: text(),
 	resetTokenExpiry: timestamp({ mode: 'string' }),
+	mfaEnabled: boolean().default(false),
+	mfaSecret: text(),
+	mfaRecoveryCodes: jsonb(),
 }, (table) => [
 	unique("users_email_key").on(table.email),
 	pgPolicy("service_role_only", { as: "permissive", for: "all", to: ["service_role"], using: sql`true`, withCheck: sql`true`  }),

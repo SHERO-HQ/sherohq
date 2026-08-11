@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { useAdmin } from "@/context/AdminContext";
+import { useAdminUser, useAdminLogin } from "@/hooks/queries/useAdminQuery";
 import {
     Lock,
     User,
@@ -13,7 +13,9 @@ import {
 import { getSubdomain } from "@/utils/subdomain";
 
 export default function AdminLogin() {
-    const { login, isAuthenticated, isLoading: isChecking } = useAdmin();
+    const { data: adminData, isLoading: isChecking } = useAdminUser();
+    const isAuthenticated = !!adminData?.admin;
+    const { login, requiresMFA, verifyMFA } = useAdminLogin();
     const router = useRouter();
 
     const [username, setUsername] = useState("");
@@ -22,7 +24,7 @@ export default function AdminLogin() {
     const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const { requiresMFA, verifyMFA } = useAdmin();
+
 
     // Already authenticated on arrival (e.g. back button) — redirect silently
     useEffect(() => {
@@ -42,7 +44,7 @@ export default function AdminLogin() {
             if (requiresMFA) {
                 await verifyMFA(mfaCode);
             } else {
-                await login(username, password);
+                await login({ username, password });
                 // If login response has requiresMFA, AdminContext will set requiresMFA to true
                 // and we will just stop here (isLoading false) to let user enter code
             }
@@ -120,7 +122,7 @@ export default function AdminLogin() {
                                             value={username}
                                             onChange={(e) => setUsername(e.target.value)}
                                             placeholder="Enter your username"
-                                            className="w-full pl-10 pr-4 py-2 bg-muted/50 border border-border rounded text-foreground placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                            className="w-full pl-10 pr-4 py-2 bg-muted/50 border border-border rounded text-foreground placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
                                             required
                                             autoComplete="username"
                                         />
@@ -142,7 +144,7 @@ export default function AdminLogin() {
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                             placeholder="Enter your password"
-                                            className="w-full pl-10 pr-12 py-2 bg-muted/50 border border-border rounded text-foreground placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                            className="w-full pl-10 pr-12 py-2 bg-muted/50 border border-border rounded text-foreground placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
                                             required
                                             autoComplete="current-password"
                                         />
@@ -177,8 +179,8 @@ export default function AdminLogin() {
                                         type="text"
                                         value={mfaCode}
                                         onChange={(e) => setMfaCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))}
-                                        placeholder="Enter 6-digit code"
-                                        className="w-full py-3 bg-muted/50 font-black border border-border rounded text-foreground text-center text-3xl tracking-[0.5em] placeholder:text-sm placeholder:tracking-normal placeholder:font-sans focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                                        placeholder="000000"
+                                        className="w-full py-3 bg-muted/50 font-black border border-border rounded text-foreground text-center text-3xl tracking-[0.5em] placeholder:text-sm placeholder:tracking-normal placeholder:font-sans focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
                                         required
                                         autoFocus
                                         autoComplete="one-time-code"
@@ -194,7 +196,7 @@ export default function AdminLogin() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full mx-auto py-2 px-12 bg-linear-to-r from-purple-600 to-blue-600 text-foreground font-medium rounded hover:from-purple-500 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
+                            className="w-full mx-auto py-2 px-12 bg-linear-to-r bg-primary text-foreground font-medium rounded hover:from-purple-500 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
                         >
                             {isLoading ? (
                                 <>

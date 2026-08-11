@@ -1,4 +1,5 @@
-import { query } from "./db";
+import { db } from "./db";
+import { sql } from "drizzle-orm";
 
 /**
  * Generates a Stock Keeping Unit (SKU) for a product.
@@ -25,12 +26,9 @@ export async function generateUniqueSlug(baseSlug: string, productId?: string): 
   let currentSlug = slug;
 
   while (!isUnique) {
-    const queryText = productId 
-      ? "SELECT id FROM products WHERE slug = $1 AND id <> $2"
-      : "SELECT id FROM products WHERE slug = $1";
-    
-    const params = productId ? [currentSlug, productId] : [currentSlug];
-    const result = await query(queryText, params);
+    const result = productId 
+      ? await db.execute(sql`SELECT id FROM products WHERE slug = ${currentSlug} AND id <> ${productId}`)
+      : await db.execute(sql`SELECT id FROM products WHERE slug = ${currentSlug}`);
 
     if (result.rowCount === 0) {
       isUnique = true;

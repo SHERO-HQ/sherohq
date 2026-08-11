@@ -1,7 +1,9 @@
 import { NextRequest } from "next/server";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { newsletterSubscribers } from "@/lib/drizzle/schema";
+import { eq, sql } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
 
@@ -20,22 +22,20 @@ export async function PATCH(
     const normalizedName =
       typeof name === "string" && name.trim() ? name.trim() : null;
 
-    const result = await query(
-      `UPDATE newsletter_subscribers
-       SET phone = $1,
-           name = COALESCE($2, name),
-           "updatedAt" = NOW()
-       WHERE id = $3
-       RETURNING id, email, phone, name, source, status, "subscribedAt",
-                 "unsubscribedAt", "lastCampaignAt", "createdAt", "updatedAt"`,
-      [normalizedPhone, normalizedName, id],
-    );
+    const rows = await db.update(newsletterSubscribers)
+      .set({
+        phone: normalizedPhone,
+        name: normalizedName ?? undefined,
+        updatedAt: sql`NOW()`,
+      })
+      .where(eq(newsletterSubscribers.id, id))
+      .returning();
 
-    if (result.rowCount === 0) {
+    if (rows.length === 0) {
       return apiResponse.notFound("Subscriber not found");
     }
 
-    return apiResponse.success({ subscriber: result.rows[0] });
+    return apiResponse.success({ subscriber: rows[0] });
   } catch (error) {
     console.error("Newsletter subscriber contact error:", error);
     return apiResponse.error("Failed to update subscriber contact");

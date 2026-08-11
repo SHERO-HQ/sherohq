@@ -1,13 +1,13 @@
 "use client";
 import { m, AnimatePresence } from "motion/react";
-import { useWishlist } from "@/hooks/useWishlist";
-import { useCart } from "@/context/CartContext";
+import { useWishlist } from "@/hooks/queries/useWishlistQuery";
+import { useCart } from "@/hooks/queries/useCartQuery";
 import { getImageUrl } from "@/services/api";
 import { createPortal } from "react-dom";
 import { X, Heart, Trash2, ShoppingCart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { type WishlistItem } from "@/context/WishlistContextType";
+import { type WishlistItem } from "@/hooks/queries/useWishlistQuery";
 import AppImage from "@/components/common/AppImage";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
 

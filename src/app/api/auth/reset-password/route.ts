@@ -1,51 +1,59 @@
-import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { apiResponse, validateCsrf } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { users } from "@/lib/drizzle/schema";
+import { eq, gt, and } from "drizzle-orm";
+import { createHash } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
+import { PasswordSchema } from "@/lib/validations/auth";
 
 const ResetPasswordSchema = z.object({
   token: z.string().min(1),
-  password: z.string().min(8),
+  password: PasswordSchema,
 });
 
 export async function POST(request: NextRequest) {
   try {
+    const csrfError = await validateCsrf(request);
+    if (csrfError) return csrfError;
+
     const body = await request.json();
     const validated = ResetPasswordSchema.parse(body);
     const { token, password } = validated;
 
-    // 1. Find user by token and check expiry
-    const result = await query(
-      'SELECT id FROM users WHERE "resetToken" = $1 AND "resetTokenExpiry" > NOW()',
-      [token]
-    );
-    const user = result.rows[0];
+    const hashedToken = createHash("sha256").update(token).digest("hex");
+
+    // 1. Find user by hashed token and check expiry
+    const user = await db.query.users.findFirst({
+      where: and(
+        eq(users.resetToken, hashedToken),
+        gt(users.resetTokenExpiry, new Date().toISOString())
+      ),
+      columns: { id: true },
+    });
 
     if (!user) {
-      return NextResponse.json(
-        { error: "Invalid or expired reset token" },
-        { status: 400 }
-      );
+      return apiResponse.error("Invalid or expired reset token", 400);
     }
 
     // 2. Hash new password
     const passwordHash = await bcrypt.hash(password, 10);
 
     // 3. Update user and clear token
-    await query(
-      'UPDATE users SET "passwordHash" = $1, "resetToken" = NULL, "resetTokenExpiry" = NULL WHERE id = $2',
-      [passwordHash, user.id]
-    );
+    await db.update(users)
+      .set({ passwordHash, resetToken: null, resetTokenExpiry: null })
+      .where(eq(users.id, user.id));
 
-    return NextResponse.json({
+    return apiResponse.success({
       success: true,
       message: "Password has been reset successfully.",
     });
   } catch (error) {
     console.error("Reset password error:", error);
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: "Invalid input data" }, { status: 400 });
+      return apiResponse.error("Invalid input data", 400);
     }
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return apiResponse.error("Internal server error", 500);
   }
 }

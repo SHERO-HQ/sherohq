@@ -19,7 +19,9 @@ import {
   buildInlineTroubleshootingSteps} from "./intent";
 import { handleBookDirect, handleTicketDirect, handleTrackOrder, handleTrackTicket } from "./actions";
 import { getSystemPrompt, callLLMStreaming, buildGeminiContents, summarizeChatHistory, categorizeIntent } from "./llm";
-import { query as dbQuery } from "@/lib/db";
+import { db } from "@/lib/db";
+import { aiChatSessions } from "@/lib/drizzle/schema";
+import { eq, sql } from "drizzle-orm";
 import { rateLimit } from "@/lib/rate-limit";
 
 const BACKEND_URL = (
@@ -53,9 +55,12 @@ export async function POST(request: Request) {
     let dbSummary = "";
     if (context?.sessionId) {
       try {
-        const res = await dbQuery("SELECT summary FROM ai_chat_sessions WHERE session_id = $1", [context.sessionId]);
-        if (res.rows[0]?.summary) {
-          dbSummary = res.rows[0].summary;
+        const res = await db.query.aiChatSessions.findFirst({
+          where: eq(aiChatSessions.sessionId, context.sessionId),
+          columns: { summary: true }
+        });
+        if (res?.summary) {
+          dbSummary = res.summary as string;
         }
       } catch (e) {
         console.error("Failed to fetch DB summary:", e);
@@ -83,13 +88,16 @@ export async function POST(request: Request) {
     // Save back to DB if updated
     if (shouldUpdateDb && context?.sessionId) {
       try {
-        await dbQuery(
-          `INSERT INTO ai_chat_sessions (session_id, user_id, summary) 
-           VALUES ($1, $2, $3) 
-           ON CONFLICT (session_id) 
-           DO UPDATE SET summary = EXCLUDED.summary, last_updated = CURRENT_TIMESTAMP`,
-          [context.sessionId, context.user?.id || null, summarizedContext]
-        );
+        await db.insert(aiChatSessions)
+          .values({
+            sessionId: context.sessionId,
+            userId: context.user?.id || null,
+            summary: summarizedContext,
+          })
+          .onConflictDoUpdate({
+            target: aiChatSessions.sessionId,
+            set: { summary: summarizedContext, lastUpdated: sql`CURRENT_TIMESTAMP` },
+          });
       } catch (e) {
         console.error("Failed to save DB summary:", e);
       }

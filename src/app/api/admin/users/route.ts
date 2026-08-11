@@ -1,4 +1,5 @@
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 
@@ -14,11 +15,11 @@ export async function GET() {
       );
     }
 
-    const result = await query(
-      'SELECT id, username, email, role, phone, avatar, "isActive", "createdAt" FROM admin_users ORDER BY "createdAt" DESC',
-    );
+    const result = await db.execute(sql`
+      SELECT id, username, email, role, phone, avatar, "isActive", "createdAt" FROM admin_users ORDER BY "createdAt" DESC
+    `);
 
-    return apiResponse.success({ users: result.rows });
+    return apiResponse.success({ users: (result.rows || result) as Record<string, unknown>[] });
   } catch (error) {
     console.error("Fetch admins error:", error);
     return apiResponse.error("Failed to fetch admin users");

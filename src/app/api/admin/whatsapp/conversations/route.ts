@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { apiResponse } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
 import { getConversationHistory, clearConversationHistory, deleteConversation } from "@/lib/whatsapp-messages";
 
 /**
@@ -12,15 +13,12 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "100", 10);
 
     if (!phone) {
-      return NextResponse.json(
-        { error: "Missing phone parameter" },
-        { status: 400 },
-      );
+      return apiResponse.error("Missing phone parameter", 400);
     }
 
     const messages = await getConversationHistory(phone, Math.min(limit, 500));
 
-    return NextResponse.json({
+    return apiResponse.success({
       success: true,
       phone,
       messageCount: messages.length,
@@ -28,10 +26,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("Error fetching conversation history:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch conversation history" },
-      { status: 500 },
-    );
+    return apiResponse.error("Failed to fetch conversation history", 500);
   }
 }
 
@@ -46,10 +41,7 @@ export async function DELETE(request: NextRequest) {
     const action = searchParams.get("action") || "clear";
 
     if (!phone) {
-      return NextResponse.json(
-        { error: "Missing phone parameter" },
-        { status: 400 },
-      );
+      return apiResponse.error("Missing phone parameter", 400);
     }
 
     if (action === "delete") {
@@ -58,16 +50,13 @@ export async function DELETE(request: NextRequest) {
       await clearConversationHistory(phone);
     }
 
-    return NextResponse.json({
+    return apiResponse.success({
       success: true,
       phone,
       action
     });
   } catch (error) {
     console.error(`Error performing ${request.url}:`, error);
-    return NextResponse.json(
-      { error: "Failed to perform action on conversation" },
-      { status: 500 },
-    );
+    return apiResponse.error("Failed to perform action on conversation", 500);
   }
 }

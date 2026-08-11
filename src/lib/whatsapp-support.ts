@@ -3,7 +3,8 @@
  * Routes WhatsApp messages to the support system
  */
 
-import { query } from "./db";
+import { db } from "./db";
+import { sql } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 
 export interface SupportTicket {
@@ -33,36 +34,16 @@ export async function createSupportTicketFromWhatsApp(
 ): Promise<SupportTicket> {
   const ticketId = uuidv4();
 
-  const result = await query(
-    `
+  const result = await db.execute(sql`
     INSERT INTO consultations (
-      id,
-      name,
-      email,
-      phone,
-      service,
-      message,
-      status,
-      priority,
-      whatsapp_message_id,
-      created_at,
-      updated_at
-    ) VALUES ($1, $2, $3, $4, $5, $6, 'open', $7, $8, NOW(), NOW())
+      id, name, email, phone, service, message, status, priority, whatsapp_message_id, created_at, updated_at
+    ) VALUES (
+      ${ticketId}, ${customerName || "WhatsApp Customer"}, ${`whatsapp_${senderWaId}@sherotech.local`}, ${senderWaId}, 'whatsapp_support', ${messageContent}, 'open', ${priority}, ${whatsappMessageId}, NOW(), NOW()
+    )
     RETURNING *;
-    `,
-    [
-      ticketId,
-      customerName || "WhatsApp Customer",
-      `whatsapp_${senderWaId}@sherotech.local`, // Virtual email from WhatsApp ID
-      senderWaId,
-      "whatsapp_support",
-      messageContent,
-      priority,
-      whatsappMessageId,
-    ],
-  );
+  `);
 
-  const ticket = result.rows[0];
+  const ticket = result.rows[0] as any;
 
   console.log(
     `Created support ticket ${ticketId} from WhatsApp message ${whatsappMessageId}`,
@@ -71,15 +52,15 @@ export async function createSupportTicketFromWhatsApp(
   return {
     id: ticket.id,
     source: "whatsapp",
-    whatsapp_id: whatsappMessageId,
-    customer_phone: senderWaId,
-    customer_name: customerName || undefined,
-    message: messageContent,
-    status: ticket.status,
-    priority: ticket.priority,
-    category: "whatsapp_support",
-    created_at: new Date(ticket.created_at),
-    updated_at: new Date(ticket.updated_at),
+    whatsapp_id: ticket.whatsapp_message_id,
+    customer_phone: ticket.phone,
+    customer_name: ticket.name,
+    message: ticket.message,
+    status: ticket.status as "open" | "in_progress" | "closed",
+    priority: ticket.priority as "medium" | "low" | "high" | "urgent",
+    category: "general", // WhatsApp tickets are general category initially
+    created_at: new Date(ticket.created_at as string | number | Date),
+    updated_at: new Date(ticket.updated_at as string | number | Date),
   };
 }
 
@@ -89,33 +70,31 @@ export async function createSupportTicketFromWhatsApp(
 export async function getWhatsAppSupportTickets(
   status?: "open" | "in_progress" | "closed",
 ): Promise<SupportTicket[]> {
-  let sql = `
+  let queryText = sql`
     SELECT *
     FROM consultations
     WHERE phone LIKE 'whatsapp_%' OR service = 'whatsapp_support'
   `;
 
   if (status) {
-    sql += ` AND status = $1`;
+    queryText = sql`${queryText} AND status = ${status}`;
   }
 
-  sql += ` ORDER BY created_at DESC;`;
+  queryText = sql`${queryText} ORDER BY created_at DESC;`;
+  const result = await db.execute(queryText);
 
-  const params = status ? [status] : [];
-  const result = await query(sql, params);
-
-  return result.rows.map((row) => ({
+  return result.rows.map((row: any) => ({
     id: row.id,
     source: "whatsapp",
     whatsapp_id: row.whatsapp_message_id,
     customer_phone: row.phone,
     customer_name: row.name,
     message: row.message,
-    status: row.status,
-    priority: row.priority,
-    category: "whatsapp_support",
-    created_at: new Date(row.created_at),
-    updated_at: new Date(row.updated_at),
+    status: row.status as "open" | "in_progress" | "closed",
+    priority: row.priority as "medium" | "low" | "high" | "urgent",
+    category: "general",
+    created_at: new Date(row.created_at as string | number | Date),
+    updated_at: new Date(row.updated_at as string | number | Date),
   }));
 }
 
@@ -126,14 +105,11 @@ export async function updateSupportTicketStatus(
   ticketId: string,
   status: "open" | "in_progress" | "closed",
 ): Promise<void> {
-  await query(
-    `
+  await db.execute(sql`
     UPDATE consultations
-    SET status = $1, updated_at = NOW()
-    WHERE id = $2;
-    `,
-    [status, ticketId],
-  );
+    SET status = ${status}, updated_at = NOW()
+    WHERE id = ${ticketId};
+  `);
 
   console.log(`Updated support ticket ${ticketId} status to ${status}`);
 }

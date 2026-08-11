@@ -4,13 +4,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { MotionConfig, LazyMotion, domMax } from "motion/react";
 import { ThemeProvider } from "@/context/Theme";
-import { CartProvider } from "@/context/CartContext";
-import { AuthProvider } from "@/context/AuthContext";
-import { NotificationProvider } from "@/context/NotificationProvider";
-import { WishlistProvider } from "@/context/WishlistContext";
-import { AdminProvider } from "@/context/AdminContext";
+
+import { Toaster } from "sonner";
+
 import { DialogProvider } from "@/components/ui/DialogProvider";
-import Toaster from "@/components/admin/Toaster";
+
 import ScrollToTop from "@/components/common/ScrollToTop";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import { useState } from "react";
@@ -39,22 +37,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
    <MotionConfig reducedMotion="user">
     <LazyMotion features={domMax} strict>
     <ThemeProvider>
-     <CartProvider>
-      <AuthProvider>
-       <NotificationProvider>
-        <WishlistProvider>
-         <AdminProvider>
           <DialogProvider>
-           <Toaster />
+           <Toaster richColors position="top-right" expand={true} />
            <ScrollToTop />
            <ErrorBoundary>{children}</ErrorBoundary>
            <AIChatAssistant />
           </DialogProvider>
-         </AdminProvider>
-        </WishlistProvider>
-       </NotificationProvider>
-      </AuthProvider>
-     </CartProvider>
     </ThemeProvider>
     </LazyMotion>
    </MotionConfig>

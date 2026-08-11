@@ -9,10 +9,10 @@ import {
  Menu,
 } from "lucide-react";
 import React, { useEffect, memo, useState } from "react";
-import { useAdmin } from "@/context/AdminContext";
+import { useAdminUser, useAdminLogout } from "@/hooks/queries/useAdminQuery";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { useBreadcrumb } from "@/context/BreadcrumbContext";
+
 import { getAbsoluteUrl } from "@/utils/subdomain";
 import {
  DropdownMenu,
@@ -42,21 +42,18 @@ const AdminHeader = memo(({
  onMenuClick,
  isSidebarOpen,
 }: Readonly<HeaderProps>) => {
- const { admin, logout } = useAdmin();
+ const { data: adminData } = useAdminUser();
+ const admin = adminData?.admin;
+ const { mutateAsync: logout } = useAdminLogout();
  const [isSearchOpen, setIsSearchOpen] = useState(false);
  const pathname = usePathname() ?? "";
- const { customLabels } = useBreadcrumb();
  const pathnames = pathname
   .split("/")
   .filter((x) => x && x !== "admin" && x !== "dashboard");
 
  // Get display label for a path segment
  const getDisplayLabel = (segment: string, fullPath: string) => {
-  // Check for custom label first
-  const customLabel = customLabels.get(fullPath);
-  if (customLabel) return customLabel;
-
-  // If it's a UUID without custom label, truncate it
+  // If it's a UUID, truncate it
   if (isUUID(segment)) return segment.slice(0, 8) + "...";
 
   // Otherwise, format the segment nicely

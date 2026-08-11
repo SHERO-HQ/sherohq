@@ -1,4 +1,6 @@
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { userSessions } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 import { apiResponse } from "@/lib/api-utils";
 import { USER_SESSION_COOKIE } from "@/lib/auth";
@@ -9,7 +11,7 @@ export async function POST() {
     const token = cookieStore.get(USER_SESSION_COOKIE)?.value;
 
     if (token) {
-      await query("DELETE FROM user_sessions WHERE token = $1", [token]);
+      await db.delete(userSessions).where(eq(userSessions.token, token));
     }
 
     cookieStore.set(USER_SESSION_COOKIE, "", { maxAge: 0, path: "/" });

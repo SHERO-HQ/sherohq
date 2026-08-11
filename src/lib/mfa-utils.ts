@@ -1,4 +1,4 @@
-import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { createHmac, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 
 /**
  * Generates 10 secure, random 10-character recovery codes.
@@ -34,3 +34,65 @@ export function verifyRecoveryCode(code: string, hashedCode: string): boolean {
     return false;
   }
 }
+
+const MFA_TOKEN_SECRET =
+  process.env.JWT_SECRET || process.env.CRON_SECRET || "shero_mfa_token_secret_fallback_key";
+
+/**
+ * Generates a signed, short-lived (5-minute) MFA challenge token.
+ */
+export function generateMfaChallengeToken(
+  subjectId: string,
+  type: "user" | "admin"
+): string {
+  const payload = {
+    id: subjectId,
+    type,
+    exp: Date.now() + 5 * 60 * 1000,
+    nonce: randomBytes(16).toString("hex"),
+  };
+  const payloadB64 = Buffer.from(JSON.stringify(payload)).toString("base64url");
+  const sig = createHmac("sha256", MFA_TOKEN_SECRET)
+    .update(payloadB64)
+    .digest("base64url");
+  return `${payloadB64}.${sig}`;
+}
+
+/**
+ * Verifies a signed MFA challenge token and returns the subject ID if valid.
+ */
+export function verifyMfaChallengeToken(
+  token: string,
+  expectedType: "user" | "admin"
+): string | null {
+  try {
+    const parts = token.split(".");
+    if (parts.length !== 2) return null;
+    const [payloadB64, sig] = parts;
+
+    const expectedSig = createHmac("sha256", MFA_TOKEN_SECRET)
+      .update(payloadB64)
+      .digest("base64url");
+
+    if (
+      !timingSafeEqual(
+        Buffer.from(sig, "utf-8"),
+        Buffer.from(expectedSig, "utf-8")
+      )
+    ) {
+      return null;
+    }
+
+    const payload = JSON.parse(
+      Buffer.from(payloadB64, "base64url").toString("utf-8")
+    );
+
+    if (payload.type !== expectedType) return null;
+    if (typeof payload.exp !== "number" || Date.now() > payload.exp) return null;
+
+    return payload.id || null;
+  } catch {
+    return null;
+  }
+}
+

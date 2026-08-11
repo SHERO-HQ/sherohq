@@ -1,5 +1,6 @@
-import { } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { orders } from "@/lib/drizzle/schema";
+import { sql } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 
@@ -8,11 +9,12 @@ export async function GET() {
     const admin = await getAdminFromSession();
     if (!admin) return apiResponse.unauthorized();
 
-    const result = await query(`
-      SELECT status, COUNT(*) as count 
-      FROM orders 
-      GROUP BY status
-    `);
+    const result = await db.select({
+      status: orders.status,
+      count: sql`COUNT(*)`
+    })
+    .from(orders)
+    .groupBy(orders.status);
 
     const colors: Record<string, string> = {
       pending: "#f59e0b",
@@ -20,7 +22,8 @@ export async function GET() {
       intransit: "#8b5cf6",
       delivered: "#10b981",
       cancelled: "#ef4444",
-      quote: "#6b7280"};
+      quote: "#6b7280"
+    };
 
     // Initialize all statuses to 0
     const statusCounts: Record<string, number> = {
@@ -33,7 +36,7 @@ export async function GET() {
     };
 
     // Update with actual DB counts
-    result.rows.forEach(row => {
+    result.forEach((row: any) => {
       if (statusCounts[row.status] !== undefined) {
         statusCounts[row.status] = parseInt(row.count, 10);
       } else {

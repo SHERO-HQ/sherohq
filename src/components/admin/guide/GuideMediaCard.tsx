@@ -139,7 +139,7 @@ export default function GuideMediaCard({
                   type="button"
                   variant="ghost"
                   onClick={cancelDelete}
-                  className="mt-2 h-7 px-3 bg-accent hover:bg-white/20 text-foreground rounded text-[10px] flex items-center gap-1.5 transition-all"
+                  className="mt-2 h-7 px-3 bg-accent hover:bg-muted/50 text-foreground rounded text-[10px] flex items-center gap-1.5 transition-all"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   Undo

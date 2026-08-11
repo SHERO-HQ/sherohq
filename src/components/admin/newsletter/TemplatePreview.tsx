@@ -1,5 +1,6 @@
 import React from "react";
 import { format } from "date-fns";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 interface TemplatePreviewProps {
   channel: "email" | "whatsapp" | "sms";
@@ -37,8 +38,8 @@ export function TemplatePreview({
           }}
         ></div>
         {/* Fake WhatsApp Header */}
-        <div className="absolute top-0 left-0 right-0 bg-[#005c4b] text-white px-4 py-2 flex items-center gap-3 shadow-md z-10">
-          <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shrink-0">
+        <div className="absolute top-0 left-0 right-0 bg-[#005c4b] text-foreground px-4 py-2 flex items-center gap-3 shadow-md z-10">
+          <div className="w-8 h-8 rounded-full bg-muted/50 flex items-center justify-center shrink-0">
             <span className="text-sm font-bold">ST</span>
           </div>
           <div>
@@ -64,7 +65,7 @@ export function TemplatePreview({
               {previewContent}
             </p>
             <div className="text-right mt-1">
-              <span className="text-[10px] text-slate-400">
+              <span className="text-[10px] text-muted-foreground">
                 {format(new Date(), "HH:mm")}
               </span>
             </div>
@@ -83,7 +84,7 @@ export function TemplatePreview({
         <div className="bg-accent/50 px-4 py-3 border-b border-border flex flex-col gap-2">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-brand-secondary-500 text-white flex items-center justify-center font-bold">
+              <div className="w-8 h-8 rounded-full bg-brand-secondary-500 text-foreground flex items-center justify-center font-bold">
                 ST
               </div>
               <div className="flex flex-col">
@@ -109,7 +110,7 @@ export function TemplatePreview({
         <div className="p-6 bg-white overflow-y-auto custom-scrollbar flex-1">
           <div
             className="prose prose-sm max-w-none text-slate-800"
-            dangerouslySetInnerHTML={{ __html: previewContent }}
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(previewContent) }}
           />
         </div>
       </div>

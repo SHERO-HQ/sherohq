@@ -1,5 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getClient, query } from "@/lib/db";
+import { apiResponse, validateCsrf } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { orders, products, newsletterSubscribers } from "@/lib/drizzle/schema";
+import { desc, eq, and, gte, lte, inArray, sql, SQL } from "drizzle-orm";
 
 import { getUserFromSession, getAdminFromSession } from "@/lib/auth";
 import { 
@@ -10,6 +13,7 @@ import {
   roundCurrency,
   hashOrderAccessToken
 } from "@/lib/orderUtils";
+
 import { v4 as uuidv4 } from "uuid";
 import { randomBytes } from "node:crypto";
 import { notificationService } from "@/lib/notifications";
@@ -21,7 +25,7 @@ export async function GET(request: NextRequest) {
   try {
     const admin = await getAdminFromSession();
     if (!admin || !["admin", "superadmin", "manager"].includes(admin.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return apiResponse.unauthorized();
     }
 
     const searchParams = request.nextUrl.searchParams;
@@ -30,59 +34,49 @@ export async function GET(request: NextRequest) {
     const startDate = searchParams.get("startDate");
     const endDate = searchParams.get("endDate");
 
-    let queryText = `
-      SELECT o.*
-      FROM orders o
-    `;
-    const sqlParams: (string | number)[] = [];
-    const conditions: string[] = [];
-    let paramIndex = 1;
+    const conditions: SQL[] = [];
 
     if (status && ORDER_STATUSES.has(status)) {
-      conditions.push(`status = $${paramIndex}`);
-      sqlParams.push(status);
-      paramIndex++;
+      conditions.push(eq(orders.status, status));
     }
 
     if (startDate) {
-      conditions.push(`"createdAt" >= $${paramIndex}`);
-      sqlParams.push(startDate);
-      paramIndex++;
+      conditions.push(gte(orders.createdAt, new Date(startDate).toISOString()));
     }
 
     if (endDate) {
-      conditions.push(`"createdAt" <= $${paramIndex}`);
-      sqlParams.push(endDate);
-      paramIndex++;
+      conditions.push(lte(orders.createdAt, new Date(endDate).toISOString()));
     }
 
-    if (conditions.length > 0) {
-      queryText += " WHERE " + conditions.join(" AND ");
-    }
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-    queryText += ` ORDER BY "createdAt" DESC LIMIT $${paramIndex}`;
-    sqlParams.push(limit);
+    const result = await db
+      .select()
+      .from(orders)
+      .where(whereClause)
+      .orderBy(desc(orders.createdAt))
+      .limit(limit);
 
-    const result = await query(queryText, sqlParams);
-    const orders = result.rows.map((order) => ({
+    const ordersData = result.map((order) => ({
       ...order,
       items: safeParse(order.items),
       shippingInfo: safeParse(order.shippingInfo),
       total: Number(order.total),
     }));
 
-    return NextResponse.json(orders);
+    return apiResponse.success(ordersData);
   } catch (error) {
     console.error("Error fetching admin orders:", error);
-    return NextResponse.json({ error: "Failed to fetch orders" }, { status: 500 });
+    return apiResponse.error("Failed to fetch orders", 500);
   }
 }
 
 // POST handler for creating orders
 export async function POST(request: NextRequest) {
-  const client = await getClient();
-
   try {
+    const csrfError = await validateCsrf(request);
+    if (csrfError) return csrfError;
+
     const body = await request.json();
     const { items, shippingInfo, paymentMethod, guestId, referralCode } = body;
 
@@ -90,12 +84,12 @@ export async function POST(request: NextRequest) {
     const requesterUserId = user?.id || null;
 
     if (!items || !shippingInfo) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+      return apiResponse.error("Missing required fields", 400);
     }
 
     const normalizedPaymentMethod = normalizePaymentMethod(paymentMethod);
     if (!ORDER_PAYMENT_METHODS.has(normalizedPaymentMethod)) {
-      return NextResponse.json({ error: "Invalid payment method" }, { status: 400 });
+      return apiResponse.error("Invalid payment method", 400);
     }
 
     const productIds = items.map((i: any) => i.id);
@@ -104,105 +98,124 @@ export async function POST(request: NextRequest) {
     const orderAccessToken = randomBytes(32).toString("hex");
     const orderAccessTokenHash = hashOrderAccessToken(orderAccessToken);
 
-    await client.query("BEGIN");
+    const txResult = await db.transaction(async (tx) => {
+      const productsRes = await tx
+        .select({
+          id: products.id,
+          name: products.name,
+          price: products.price,
+          costPrice: products.costPrice,
+          stockQuantity: products.stockQuantity,
+          inStock: products.inStock,
+          sku: products.sku,
+          images: products.images
+        })
+        .from(products)
+        .where(inArray(products.id, productIds))
+        .for("update");
 
-    const productsRes = await client.query(
-      `SELECT id, name, price, "costPrice", "stockQuantity", "inStock", sku, images FROM products WHERE id = ANY($1) FOR UPDATE`,
-      [productIds]
-    );
+      const productMap = new Map(productsRes.map(r => [r.id, r]));
+      const normalizedItems = [];
+      let serverTotal = 0;
+      let serverCogs = 0;
 
-    const productMap = new Map(productsRes.rows.map(r => [r.id, r]));
-    const normalizedItems = [];
-    let serverTotal = 0;
-    let serverCogs = 0;
+      for (const item of items) {
+        const product = productMap.get(item.id);
+        if (!product || !product.inStock || (product.stockQuantity ?? 0) < item.quantity) {
+          throw new Error(`Insufficient stock for ${product?.name || 'unknown product'}. Only ${product?.stockQuantity || 0} left.`);
+        }
 
-    for (const item of items) {
-      const product = productMap.get(item.id);
-      if (!product || !product.inStock || product.stockQuantity < item.quantity) {
-        await client.query("ROLLBACK");
-        return NextResponse.json(
-          { error: `Insufficient stock for ${product?.name || 'unknown product'}. Only ${product?.stockQuantity || 0} left.` }, 
-          { status: 400 }
-        );
+        const unitPrice = roundCurrency(Number(product.price));
+        const costPrice = roundCurrency(Number(product.costPrice || 0));
+        serverTotal += unitPrice * item.quantity;
+        serverCogs += costPrice * item.quantity;
+
+        const imagesArr = product.images as string[] | null;
+        normalizedItems.push({
+          id: product.id,
+          name: product.name,
+          price: unitPrice,
+          costPrice: costPrice,
+          quantity: item.quantity,
+          sku: product.sku || undefined,
+          image: item.image || (imagesArr && imagesArr.length > 0 ? imagesArr[0] : undefined),
+        });
+
+        // Update stock
+        const newQuantity = (product.stockQuantity ?? 0) - item.quantity;
+        await tx
+          .update(products)
+          .set({ 
+            stockQuantity: newQuantity, 
+            inStock: newQuantity > 0 
+          })
+          .where(eq(products.id, product.id));
+
+        if (newQuantity <= 5) {
+          notificationService.sendLowStockAlert(product.name, newQuantity).catch(console.error);
+        }
       }
 
-      const unitPrice = roundCurrency(Number(product.price));
-      const costPrice = roundCurrency(Number(product.costPrice || 0));
-      serverTotal += unitPrice * item.quantity;
-      serverCogs += costPrice * item.quantity;
+      const finalTotal = roundCurrency(serverTotal);
+      const finalCogs = roundCurrency(serverCogs);
+      const resolvedGuestId = guestId || uuidv4();
 
-      normalizedItems.push({
-        id: product.id,
-        name: product.name,
-        price: unitPrice,
-        costPrice: costPrice,
-        quantity: item.quantity,
-        sku: product.sku || null,
-        image: item.image || product.images?.[0] || null,
-      });
-
-      // Update stock
-      const newQuantity = product.stockQuantity - item.quantity;
-      await client.query(
-        `UPDATE products SET "stockQuantity" = $1, "inStock" = $2 WHERE id = $3`,
-        [newQuantity, newQuantity > 0, product.id]
-      );
-
-      if (newQuantity <= 5) {
-        notificationService.sendLowStockAlert(product.name, newQuantity).catch(console.error);
-      }
-    }
-
-    const finalTotal = roundCurrency(serverTotal);
-    const finalCogs = roundCurrency(serverCogs);
-    const resolvedGuestId = guestId || uuidv4();
-
-    await client.query(
-      `INSERT INTO orders (id, "guestId", "userId", items, total, cogs, "shippingInfo", "paymentMethod", status, "referralCode", "orderAccessTokenHash", "clientReference")
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
-      [
-        orderId,
-        resolvedGuestId,
-        requesterUserId,
-        JSON.stringify(normalizedItems),
-        finalTotal,
-        finalCogs,
-        JSON.stringify(shippingInfo),
-        normalizedPaymentMethod,
-        "pending",
-        referralCode || null,
+      await tx.insert(orders).values({
+        id: orderId,
+        guestId: resolvedGuestId,
+        userId: requesterUserId,
+        items: normalizedItems,
+        total: finalTotal.toString(),
+        cogs: finalCogs.toString(),
+        shippingInfo: shippingInfo,
+        paymentMethod: normalizedPaymentMethod,
+        status: "pending",
+        referralCode: referralCode || null,
         orderAccessTokenHash,
         clientReference,
-      ]
-    );
+      });
 
-    await client.query("COMMIT");
-
-    // Capture contact for campaigns
-    const contactEmail = body.email || shippingInfo?.email;
-    const contactPhone = body.phone || shippingInfo?.phone;
-    const contactName = [shippingInfo?.firstName, shippingInfo?.lastName].filter(Boolean).join(" ");
-    
-    if (contactEmail) {
-      try {
-        await client.query(
-          `INSERT INTO newsletter_subscribers (id, email, name, phone, source, status, "unsubscribeToken")
-           VALUES ($1, $2, $3, $4, $5, $6, $7)
-           ON CONFLICT (email) DO UPDATE SET
-             name = COALESCE(EXCLUDED.name, newsletter_subscribers.name),
-             phone = COALESCE(EXCLUDED.phone, newsletter_subscribers.phone),
-             "updatedAt" = CURRENT_TIMESTAMP`,
-          [uuidv4(), contactEmail, contactName || null, contactPhone || null, 'checkout', 'active', uuidv4()]
-        );
-      } catch (err) {
-        console.error("Failed to capture newsletter subscriber from checkout:", err);
+      // Capture contact for campaigns
+      const contactEmail = body.email || shippingInfo?.email;
+      const contactPhone = body.phone || shippingInfo?.phone;
+      const contactName = [shippingInfo?.firstName, shippingInfo?.lastName].filter(Boolean).join(" ");
+      
+      if (contactEmail) {
+        try {
+          await tx.insert(newsletterSubscribers).values({
+            id: uuidv4(),
+            email: contactEmail,
+            name: contactName || null,
+            phone: contactPhone || null,
+            source: 'checkout',
+            status: 'active',
+            unsubscribeToken: uuidv4()
+          }).onConflictDoUpdate({
+            target: newsletterSubscribers.email,
+            set: {
+              name: sql`COALESCE(EXCLUDED.name, ${newsletterSubscribers.name})`,
+              phone: sql`COALESCE(EXCLUDED.phone, ${newsletterSubscribers.phone})`,
+              updatedAt: sql`CURRENT_TIMESTAMP`
+            }
+          });
+        } catch (err) {
+          console.error("Failed to capture newsletter subscriber from checkout:", err);
+        }
       }
-    }
+
+      return { finalTotal, normalizedItems };
+    });
 
     // Notifications (Async) - Delay sending email unless Cash on Delivery
     if (normalizedPaymentMethod === "cash_on_delivery") {
       try {
-        await notificationService.sendOrderConfirmation(orderId, shippingInfo, normalizedItems, finalTotal, normalizedPaymentMethod);
+        await notificationService.sendOrderConfirmation(
+          orderId, 
+          shippingInfo, 
+          txResult.normalizedItems, 
+          txResult.finalTotal, 
+          normalizedPaymentMethod
+        );
       } catch (err) {
         console.error("Notification failed:", err);
       }
@@ -211,21 +224,16 @@ export async function POST(request: NextRequest) {
     logActivity(null, "New Order Received", "success", `Order ${orderId.substring(0,8)} placed by ${shippingInfo.firstName}`)
       .catch(err => console.error("Log failed:", err));
 
-    return NextResponse.json({
+    return apiResponse.success({
       success: true,
       orderId,
-      total: finalTotal,
+      total: txResult.finalTotal,
       orderAccessToken,
       message: "Order created successfully",
-    }, { status: 201 });
+    }, 201);
 
   } catch (error) {
-    await client.query("ROLLBACK");
     console.error("Order creation error:", error);
-    return NextResponse.json({ 
-      error: error instanceof Error ? error.message : "Failed to create order" 
-    }, { status: 500 });
-  } finally {
-    client.release();
+    return apiResponse.error(error instanceof Error ? error.message : "Failed to create order", 500);
   }
 }

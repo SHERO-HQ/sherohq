@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getClient } from "@/lib/db";
+import { db } from "@/lib/db";
+import { orders, activityLogs } from "@/lib/drizzle/schema";
+import { eq, sql } from "drizzle-orm";
+import { apiResponse } from "@/lib/api-utils";
 import { createHmac, timingSafeEqual, randomUUID } from "node:crypto";
 
 function isValidPaystackSignature(rawBody: string, signature: string | null) {
@@ -17,7 +20,6 @@ function isValidPaystackSignature(rawBody: string, signature: string | null) {
 }
 
 export async function POST(request: NextRequest) {
-  let client: any = null;
   let provider = "";
   let orderId = "";
 
@@ -156,217 +158,97 @@ export async function POST(request: NextRequest) {
     }
 
     // ── Database update ───────────────────────────────────────────────────────
-    client = await getClient();
-    await client.query("BEGIN");
+    await db.transaction(async (tx) => {
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId);
+      const queryCondition = isUUID ? eq(orders.id, orderId) : eq(orders.clientReference, orderId);
 
-    // Extract UUID if orderId is a UUID, otherwise it's a clientReference
-    const isUUID =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-        orderId,
+      const orderRes = await tx.execute(
+        sql`SELECT id, status, "shippingInfo", items, total, "paymentMethod", "paymentStatus"
+         FROM orders
+         WHERE ${queryCondition}
+         FOR UPDATE`
       );
-    const queryCondition = isUUID ? `id = $1` : `"clientReference" = $1`;
 
-    const orderRes = await client.query(
-      `SELECT id, status, "shippingInfo", items, total, "paymentMethod", "paymentStatus"
-       FROM orders
-       WHERE ${queryCondition}
-       FOR UPDATE`,
-      [orderId],
-    );
-
-    if (orderRes.rowCount === 0) {
-      await client.query("ROLLBACK");
-      console.error("[payment:webhook]", {
-        event: "order_not_found",
-        provider,
-        clientReference: orderId,
-      });
-      return new NextResponse("Order not found", { status: 404 });
-    }
-
-    const order = orderRes.rows[0];
-    const actualOrderId = order.id;
-
-    if (status === "Success") {
-      const orderTotal = Number(order.total);
-
-      if (verifiedAmount !== null && verifiedAmount < orderTotal) {
-        console.error("[payment:webhook]", {
-          event: "amount_mismatch",
-          provider,
-          orderId: actualOrderId,
-          expected: orderTotal,
-          received: verifiedAmount,
-        });
-        await client.query(
-          `INSERT INTO activity_logs (id, action, type, details, "createdAt")
-           VALUES ($1, $2, $3, $4, NOW())`,
-          [
-            randomUUID(),
-            "order_payment",
-            "failed",
-            `Amount mismatch via ${provider}. Expected: GHS ${orderTotal}, Received: GHS ${verifiedAmount}`,
-          ],
-        );
-        await client.query("COMMIT");
-        return new NextResponse("Amount mismatch", { status: 400 });
+      if (orderRes.rowCount === 0) {
+        console.error("[payment:webhook]", { event: "order_not_found", provider, clientReference: orderId });
+        throw new Error("ORDER_NOT_FOUND");
       }
 
-      if (order.status === "pending") {
-        await client.query(
-          `UPDATE orders
-           SET status = $1, "paymentStatus" = $2, "paymentMessage" = $3
-           WHERE id = $4`,
-          [
-            "processing",
-            "confirmed",
-            `Payment confirmed via ${provider}`,
-            actualOrderId,
-          ],
-        );
+      const order = orderRes.rows[0] as any;
+      const actualOrderId = order.id as string;
 
-        await client.query(
-          `INSERT INTO activity_logs (id, action, type, details, "createdAt")
-           VALUES ($1, $2, $3, $4, NOW())`,
-          [
-            randomUUID(),
-            "order_payment",
-            "success",
-            `Payment confirmed via ${provider}. Reference: ${actualOrderId}`,
-          ],
-        );
+      if (status === "Success") {
+        const orderTotal = Number(order.total);
 
-        console.log("[payment:webhook]", {
-          event: "order_confirmed",
-          provider,
-          orderId: actualOrderId,
-          newStatus: "processing",
-        });
+        if (verifiedAmount !== null && verifiedAmount < orderTotal) {
+          console.error("[payment:webhook]", { event: "amount_mismatch", provider, orderId: actualOrderId, expected: orderTotal, received: verifiedAmount });
+          await tx.insert(activityLogs).values({
+            id: randomUUID(), action: "order_payment", type: "failed",
+            details: `Amount mismatch via ${provider}. Expected: GHS ${orderTotal}, Received: GHS ${verifiedAmount}`
+          });
+          throw new Error("AMOUNT_MISMATCH");
+        }
 
-        // Trigger order confirmation notification
-        try {
-          const { notificationService } = await import("@/lib/notifications");
-          const parsedItems =
-            typeof order.items === "string"
-              ? JSON.parse(order.items)
-              : order.items;
-          const parsedShipping =
-            typeof order.shippingInfo === "string"
-              ? JSON.parse(order.shippingInfo)
-              : order.shippingInfo;
+        if (order.status === "pending") {
+          await tx.update(orders)
+            .set({ status: "processing", paymentStatus: "confirmed", paymentMessage: `Payment confirmed via ${provider}` })
+            .where(eq(orders.id, actualOrderId));
 
-          notificationService
-            .sendOrderConfirmation(
-              actualOrderId,
-              parsedShipping,
-              parsedItems,
-              Number(order.total),
-              order.paymentMethod,
-            )
-            .catch((err) =>
-              console.error(
-                "[payment:webhook] Confirmation notification failed:",
-                {
-                  orderId: actualOrderId,
-                  error: err instanceof Error ? err.message : err,
-                },
-              ),
-            );
-        } catch (err) {
-          console.error(
-            "[payment:webhook] Failed to import notificationService:",
-            {
-              orderId: actualOrderId,
-              error: err instanceof Error ? err.message : err,
-            },
-          );
+          await tx.insert(activityLogs).values({
+            id: randomUUID(), action: "order_payment", type: "success",
+            details: `Payment confirmed via ${provider}. Reference: ${actualOrderId}`
+          });
+
+          console.log("[payment:webhook]", { event: "order_confirmed", provider, orderId: actualOrderId, newStatus: "processing" });
+
+          try {
+            const { notificationService } = await import("@/lib/notifications");
+            const parsedItems = typeof order.items === "string" ? JSON.parse(order.items) : order.items;
+            const parsedShipping = typeof order.shippingInfo === "string" ? JSON.parse(order.shippingInfo) : order.shippingInfo;
+
+            notificationService.sendOrderConfirmation(actualOrderId, parsedShipping, parsedItems, Number(order.total), order.paymentMethod)
+              .catch((err) => console.error("[payment:webhook] Confirmation notification failed:", { orderId: actualOrderId, error: err instanceof Error ? err.message : err }));
+          } catch (err) {
+            console.error("[payment:webhook] Failed to import notificationService:", { orderId: actualOrderId, error: err instanceof Error ? err.message : err });
+          }
+        } else {
+          console.log("[payment:webhook]", { event: "order_already_processed", provider, orderId: actualOrderId, currentStatus: order.status });
         }
       } else {
-        console.log("[payment:webhook]", {
-          event: "order_already_processed",
-          provider,
-          orderId: actualOrderId,
-          currentStatus: order.status,
+        if (order.status !== "pending") {
+          console.log("[payment:webhook]", { event: "failure_skipped_not_pending", provider, orderId: actualOrderId, currentStatus: order.status });
+          return;
+        }
+
+        await tx.update(orders)
+          .set({ paymentStatus: "failed", paymentMessage: `Payment failed via ${provider}` })
+          .where(eq(orders.id, actualOrderId));
+
+        await tx.insert(activityLogs).values({
+          id: randomUUID(), action: "order_payment", type: "failed",
+          details: `Payment failed via ${provider}. Reference: ${actualOrderId}`
         });
+
+        console.log("[payment:webhook]", { event: "payment_failed", provider, orderId: actualOrderId });
+
+        try {
+          const { notificationService } = await import("@/lib/notifications");
+          const parsedShipping = typeof order.shippingInfo === "string" ? JSON.parse(order.shippingInfo) : order.shippingInfo;
+
+          notificationService.sendPaymentFailureNotification(actualOrderId, parsedShipping)
+            .catch((err) => console.error("[payment:webhook] Failure notification failed:", { orderId: actualOrderId, error: err instanceof Error ? err.message : err }));
+        } catch (err) {
+          console.error("[payment:webhook] Failed to import notificationService for failure:", { orderId: actualOrderId, error: err instanceof Error ? err.message : err });
+        }
       }
-    } else {
-      // Payment failed / cancelled
-      // Idempotency: only act on still-pending orders
-      if (order.status !== "pending") {
-        await client.query("COMMIT");
-        console.log("[payment:webhook]", {
-          event: "failure_skipped_not_pending",
-          provider,
-          orderId: actualOrderId,
-          currentStatus: order.status,
-        });
-        return new NextResponse("OK", { status: 200 });
-      }
-
-      // Write failure outcome — keep order pending so customer can retry
-      await client.query(
-        `UPDATE orders
-         SET "paymentStatus" = $1, "paymentMessage" = $2
-         WHERE id = $3`,
-        ["failed", `Payment failed via ${provider}`, actualOrderId],
-      );
-
-      await client.query(
-        `INSERT INTO activity_logs (id, action, type, details, "createdAt")
-         VALUES ($1, $2, $3, $4, NOW())`,
-        [
-          randomUUID(),
-          "order_payment",
-          "failed",
-          `Payment failed via ${provider}. Reference: ${actualOrderId}`,
-        ],
-      );
-
-      console.log("[payment:webhook]", {
-        event: "payment_failed",
-        provider,
-        orderId: actualOrderId,
-      });
-
-      // Trigger failure notification
-      try {
-        const { notificationService } = await import("@/lib/notifications");
-        const parsedShipping =
-          typeof order.shippingInfo === "string"
-            ? JSON.parse(order.shippingInfo)
-            : order.shippingInfo;
-
-        notificationService
-          .sendPaymentFailureNotification(actualOrderId, parsedShipping)
-          .catch((err) =>
-            console.error("[payment:webhook] Failure notification failed:", {
-              orderId: actualOrderId,
-              error: err instanceof Error ? err.message : err,
-            }),
-          );
-      } catch (err) {
-        console.error(
-          "[payment:webhook] Failed to import notificationService for failure:",
-          {
-            orderId: actualOrderId,
-            error: err instanceof Error ? err.message : err,
-          },
-        );
-      }
-    }
-
-    await client.query("COMMIT");
-    return new NextResponse("OK", { status: 200 });
-  } catch (error) {
-    if (client) await client.query("ROLLBACK");
-    console.error("[payment:webhook]", {
-      event: "unhandled_error",
-      provider,
-      orderId,
-      error: error instanceof Error ? error.message : error,
     });
-    return new NextResponse("Internal Error", { status: 500 });
-  } finally {
-    if (client) client.release();
+    
+    return apiResponse.success({ received: true });
+  } catch (error: any) {
+    if (error.message === "ORDER_NOT_FOUND") return apiResponse.error("Order not found", 404);
+    if (error.message === "AMOUNT_MISMATCH") return apiResponse.error("Amount mismatch", 400);
+    
+    console.error("[payment:webhook]", { event: "unhandled_error", provider, orderId, error: error instanceof Error ? error.message : error });
+    return apiResponse.error("Internal Error", 500);
   }
 }

@@ -1,32 +1,18 @@
 "use client";
-import { useState } from "react";
-import { } from "@/context/AdminContext";
+
 import { getErrorMessage } from "@/utils/error";
 import {
   MessageSquareQuote,
   Plus,
   Search,
   Loader2,
-  Trash2,
-  GripVertical,
-  Eye,
-  EyeOff,
-  Star} from "lucide-react";
-import {
-  useAdminTestimonials,
-  useCreateTestimonial,
-  useUpdateTestimonial,
-  useDeleteTestimonial,
-  useSyncTrustpilotTestimonials} from "@/hooks/queries/useTestimonials";
-import { useNotifications } from "@/hooks/useNotifications";
-import { type Testimonial } from "@/services/api";
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/Modal";
-import { Label } from "@/components/ui/label";
-
-import { Textarea } from "@/components/ui/textarea";
-import AppImage from "@/components/common/AppImage";
+import { TestimonialCard } from "@/components/admin/testimonials/TestimonialCard";
+import { TestimonialFormModal } from "@/components/admin/testimonials/TestimonialFormModal";
+import { useAdminTestimonialsState } from "@/components/admin/testimonials/useAdminTestimonialsState";
 
 const TestimonialsGridSkeleton = () => (
   <div className="grid grid-cols-1 gap-4 animate-pulse select-none">
@@ -48,128 +34,30 @@ const TestimonialsGridSkeleton = () => (
 );
 
 const AdminTestimonials = () => {
-  const { data: testimonials = [], isLoading } = useAdminTestimonials();
-  const createMutation = useCreateTestimonial();
-  const updateMutation = useUpdateTestimonial();
-  const deleteMutation = useDeleteTestimonial();
-  const syncTrustpilotMutation = useSyncTrustpilotTestimonials();
-  const { addNotification } = useNotifications();
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [deleteModalData, setDeleteModalData] = useState<{
-    isOpen: boolean;
-    testimonialId: string | null;
-  }>({ isOpen: false, testimonialId: null });
-  const [editingTestimonial, setEditingTestimonial] =
-    useState<Testimonial | null>(null);
-  const [confirmModalData, setConfirmModalData] = useState<{
-    isOpen: boolean;
-    testimonial: Testimonial | null;
-  }>({ isOpen: false, testimonial: null });
-
-  const [formData, setFormData] = useState({
-    quote: "",
-    author: "",
-    role: "",
-    company: "",
-    image: "",
-    order: 0,
-    active: true,
-    rating: 5});
-
-  const filteredTestimonials = testimonials
-    .filter(
-      (t) =>
-        t.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        t.quote.toLowerCase().includes(searchQuery.toLowerCase()),
-    )
-    .sort((a, b) => (a.order || 0) - (b.order || 0));
-
-  const handleOpenCreate = () => {
-    setEditingTestimonial(null);
-    setFormData({
-      quote: "",
-      author: "",
-      role: "",
-      company: "",
-      image: "",
-      order: testimonials.length,
-      active: true,
-      rating: 5});
-    setIsModalOpen(true);
-  };
-
-  const handleOpenEdit = (t: Testimonial) => {
-    setEditingTestimonial(t);
-    setFormData({
-      quote: t.quote,
-      author: t.author,
-      role: t.role || "",
-      company: t.company || "",
-      image: t.image || "",
-      order: t.order || 0,
-      active: t.active ?? true,
-      rating: t.rating || 5});
-    setIsModalOpen(true);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      if (editingTestimonial) {
-        await updateMutation.mutateAsync({
-          id: editingTestimonial.id,
-          data: formData});
-        addNotification(
-          "Success",
-          "Testimonial updated successfully",
-          "success",
-        );
-      } else {
-        await createMutation.mutateAsync(formData);
-        addNotification("Success", "Testimonial added successfully", "success");
-      }
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error("Failed to save testimonial:", error);
-      addNotification("Error", getErrorMessage(error, "Failed to save testimonial"), "error");
-    }
-  };
-
-
-
-  const toggleActive = async (t: Testimonial) => {
-    try {
-      const newStatus = !t.active;
-      await updateMutation.mutateAsync({
-        id: t.id,
-        data: { active: newStatus }});
-      const statusLabel = newStatus ? "published to the site" : "hidden from the site";
-      addNotification("Success", `Feedback ${statusLabel}`, "success");
-    } catch (error) {
-      console.error("Failed to toggle testimonial status:", error);
-      addNotification("Error", getErrorMessage(error, "Failed to update status"), "error");
-    }
-  };
-
-  const handleSyncTrustpilot = async () => {
-    try {
-      const result = await syncTrustpilotMutation.mutateAsync(20);
-      addNotification(
-        "Success",
-        `Trustpilot sync complete: fetched ${result.fetched}, inserted ${result.inserted}, updated ${result.updated}`,
-        "success",
-      );
-    } catch (error) {
-      console.error("Failed to sync Trustpilot testimonials:", error);
-      addNotification(
-        "Error",
-        "Failed to sync Trustpilot testimonials",
-        "error",
-      );
-    }
-  };
+  const {
+    isLoading,
+    searchQuery,
+    setSearchQuery,
+    isModalOpen,
+    setIsModalOpen,
+    deleteModalData,
+    setDeleteModalData,
+    editingTestimonial,
+    confirmModalData,
+    setConfirmModalData,
+    formData,
+    setFormData,
+    filteredTestimonials,
+    handleOpenCreate,
+    handleSubmit,
+    toggleActive,
+    handleSyncTrustpilot,
+    createMutation,
+    updateMutation,
+    deleteMutation,
+    syncTrustpilotMutation,
+    addNotification,
+  } = useAdminTestimonialsState();
 
   return (
     <div className="space-y-6">
@@ -198,7 +86,7 @@ const AdminTestimonials = () => {
           </Button>
           <Button
             onClick={handleOpenCreate}
-            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+            className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add Testimonial
@@ -228,263 +116,57 @@ const AdminTestimonials = () => {
               <p className="text-muted-foreground">No testimonials found</p>
             </div>
           ) : (
-            filteredTestimonials.map((t) => {
-              return (
-                <div
-                  key={t.id}
-                  className="bg-muted/30 border border-border rounded p-4 flex items-center gap-4 group hover:border-brand-secondary-500/30 transition relative overflow-hidden"
-                >
-                  <div className="text-slate-600 cursor-move opacity-0 group-hover:opacity-100 transition-opacity">
-                    <GripVertical className="w-5 h-5" />
-                  </div>
-
-                  <div className="relative w-12 h-12 rounded bg-accent overflow-hidden shrink-0 flex items-center justify-center">
-                    {t.image ? (
-                      <AppImage
-                        src={t.image}
-                        alt={t.author}
-                        fill
-                        sizes="48px"
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-muted-foreground font-bold bg-brand-secondary-500/10">
-                        {t.author.charAt(0)}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-medium text-foreground truncate">
-                        {t.author}
-                      </h3>
-                      {!t.active && (
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20 uppercase font-bold">
-                          Unpublished
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-muted-foreground truncate italic">
-                      "{t.quote}"
-                    </p>
-                    {typeof t.rating === "number" && (
-                      <div className="flex gap-0.5 mt-1">
-                        {(() => {
-                          const rating = t.rating;
-                          return [...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-3 h-3 ${i < rating
-                                  ? "text-amber-400 fill-amber-400"
-                                  : "text-slate-600"
-                                }`}
-                            />
-                          ));
-                        })()}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex gap-2 relative z-5">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setConfirmModalData({ isOpen: true, testimonial: t })}
-                      title={t.active ? "Unpublish from site" : "Publish to site"}
-                      className={
-                        t.active
-                          ? "text-brand-secondary-500 hover:text-brand-secondary-400"
-                          : "text-muted-foreground hover:text-foreground"
-                      }
-                    >
-                      {t.active ? (
-                        <EyeOff className="w-4 h-4" />
-                      ) : (
-                        <Eye className="w-4 h-4" />
-                      )}
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setDeleteModalData({ isOpen: true, testimonialId: t.id })}
-                      className="text-muted-foreground hover:text-rose-400"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              );
-            })
+            filteredTestimonials.map((t) => (
+              <TestimonialCard
+                key={t.id}
+                t={t}
+                onConfirmPublish={(testimonial) =>
+                  setConfirmModalData({ isOpen: true, testimonial })
+                }
+                onConfirmDelete={(testimonialId) =>
+                  setDeleteModalData({ isOpen: true, testimonialId })
+                }
+              />
+            ))
           )}
         </div>
       )}
 
       {/* Create/Edit Modal */}
-      <Modal
+      <TestimonialFormModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title={editingTestimonial ? "Edit Testimonial" : "Add Testimonial"}
-      >
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar"
-        >
-          <div className="space-y-2">
-            <Label htmlFor="author">Author Name</Label>
-            <Input
-              id="author"
-              value={formData.author}
-              onChange={(e) =>
-                setFormData({ ...formData, author: e.target.value })
-              }
-              required
-              className="bg-muted border-border"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="role">Role</Label>
-              <Input
-                id="role"
-                value={formData.role}
-                onChange={(e) =>
-                  setFormData({ ...formData, role: e.target.value })
-                }
-                placeholder="e.g. CEO"
-                className="bg-muted border-border"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="company">Company</Label>
-              <Input
-                id="company"
-                value={formData.company}
-                onChange={(e) =>
-                  setFormData({ ...formData, company: e.target.value })
-                }
-                placeholder="e.g. Acme Inc"
-                className="bg-muted border-border"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="quote">Quote</Label>
-            <Textarea
-              id="quote"
-              value={formData.quote}
-              onChange={(e) =>
-                setFormData({ ...formData, quote: e.target.value })
-              }
-              required
-              className="bg-muted border-border min-h-30"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="image">Image URL</Label>
-              <Input
-                id="image"
-                value={formData.image}
-                onChange={(e) =>
-                  setFormData({ ...formData, image: e.target.value })
-                }
-                placeholder="https://..."
-                className="bg-muted border-border"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="order">Order</Label>
-              <Input
-                id="order"
-                type="number"
-                value={formData.order}
-                onChange={(e) =>
-                  setFormData({ ...formData, order: Number(e.target.value) })
-                }
-                className="bg-muted border-border"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-3 py-2 border-t border-border">
-            <Label>Rating</Label>
-            <div className="flex gap-2">
-              {[1, 2, 3, 4, 5].map((val) => (
-                <button
-                  key={val}
-                  type="button"
-                  onClick={() => setFormData({ ...formData, rating: val })}
-                  className="p-1 transition-transform hover:scale-110"
-                >
-                  <Star
-                    className={`w-8 h-8 transition-colors ${val <= formData.rating
-                        ? "fill-amber-400 text-amber-400"
-                        : "text-slate-600"
-                      }`}
-                  />
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2 py-2">
-            <input
-              id="active"
-              type="checkbox"
-              checked={formData.active}
-              onChange={(e) =>
-                setFormData({ ...formData, active: e.target.checked })
-              }
-              className="w-4 h-4 rounded border-border bg-muted"
-            />
-            <Label htmlFor="active" className="cursor-pointer">
-              Active
-            </Label>
-          </div>
-
-          <div className="flex justify-end gap-3 pt-4 border-t border-border">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => setIsModalOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={createMutation.isPending || updateMutation.isPending}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
-            >
-              {createMutation.isPending || updateMutation.isPending ? (
-                <Loader2 className="w-4 h-4 animate-spin mr-2" />
-              ) : (
-                "Save"
-              )}
-            </Button>
-          </div>
-        </form>
-      </Modal>
+        editingTestimonial={editingTestimonial}
+        formData={formData}
+        setFormData={setFormData}
+        handleSubmit={handleSubmit}
+        isPending={createMutation.isPending || updateMutation.isPending}
+      />
 
       {/* Confirmation Modal */}
       <Modal
         isOpen={confirmModalData.isOpen}
         onClose={() => setConfirmModalData({ isOpen: false, testimonial: null })}
-        title={confirmModalData.testimonial?.active ? "Unpublish Feedback" : "Publish Feedback"}
+        title={
+          confirmModalData.testimonial?.active
+            ? "Unpublish Feedback"
+            : "Publish Feedback"
+        }
       >
         <div className="space-y-4">
           <p className="text-muted-foreground text-sm">
-            Are you sure you want to {confirmModalData.testimonial?.active ? "unpublish" : "publish"} this feedback{" "}
-            {confirmModalData.testimonial?.active ? "from" : "to"} the public site?
+            Are you sure you want to{" "}
+            {confirmModalData.testimonial?.active ? "unpublish" : "publish"} this
+            feedback {confirmModalData.testimonial?.active ? "from" : "to"} the
+            public site?
           </p>
           <div className="flex justify-end gap-3 pt-4 border-t border-border">
             <Button
               type="button"
               variant="ghost"
-              onClick={() => setConfirmModalData({ isOpen: false, testimonial: null })}
+              onClick={() =>
+                setConfirmModalData({ isOpen: false, testimonial: null })
+              }
             >
               Cancel
             </Button>
@@ -497,7 +179,7 @@ const AdminTestimonials = () => {
                   setConfirmModalData({ isOpen: false, testimonial: null });
                 }
               }}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground"
             >
               {updateMutation.isPending ? (
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -512,18 +194,23 @@ const AdminTestimonials = () => {
       {/* Delete Modal */}
       <Modal
         isOpen={deleteModalData.isOpen}
-        onClose={() => setDeleteModalData({ isOpen: false, testimonialId: null })}
+        onClose={() =>
+          setDeleteModalData({ isOpen: false, testimonialId: null })
+        }
         title="Delete Testimonial"
       >
         <div className="space-y-4">
           <p className="text-muted-foreground text-sm">
-            Are you sure you want to delete this testimonial? This action cannot be undone.
+            Are you sure you want to delete this testimonial? This action cannot
+            be undone.
           </p>
           <div className="flex justify-end gap-3 pt-4 border-t border-border">
             <Button
               type="button"
               variant="ghost"
-              onClick={() => setDeleteModalData({ isOpen: false, testimonialId: null })}
+              onClick={() =>
+                setDeleteModalData({ isOpen: false, testimonialId: null })
+              }
             >
               Cancel
             </Button>
@@ -534,17 +221,28 @@ const AdminTestimonials = () => {
                 if (deleteModalData.testimonialId) {
                   deleteMutation.mutate(deleteModalData.testimonialId, {
                     onSuccess: () => {
-                      addNotification("Success", "Testimonial deleted successfully", "success");
-                      setDeleteModalData({ isOpen: false, testimonialId: null });
+                      addNotification(
+                        "Success",
+                        "Testimonial deleted successfully",
+                        "success",
+                      );
+                      setDeleteModalData({
+                        isOpen: false,
+                        testimonialId: null,
+                      });
                     },
                     onError: (error) => {
                       console.error("Failed to delete testimonial:", error);
-                      addNotification("Error", getErrorMessage(error, "Failed to delete testimonial"), "error");
-                    }
+                      addNotification(
+                        "Error",
+                        getErrorMessage(error, "Failed to delete testimonial"),
+                        "error",
+                      );
+                    },
                   });
                 }
               }}
-              className="bg-rose-600 hover:bg-rose-500 text-white"
+              className="bg-rose-600 hover:bg-rose-500 text-foreground"
             >
               {deleteMutation.isPending ? (
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />

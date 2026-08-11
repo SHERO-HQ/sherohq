@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { adminUsers, sessions } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 import { v4 as uuidv4 } from "uuid";
 import { randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
@@ -7,7 +9,7 @@ import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
 import { ADMIN_SESSION_COOKIE } from "@/lib/auth";
 import speakeasy from "speakeasy";
-import { verifyRecoveryCode } from "@/lib/mfa-utils";
+import { verifyRecoveryCode, verifyMfaChallengeToken } from "@/lib/mfa-utils";
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,12 +19,16 @@ export async function POST(request: NextRequest) {
       return apiResponse.error("MFA token and code are required", 400);
     }
 
-    // Decode adminId from demo token
-    const adminId = Buffer.from(mfaToken, "base64").toString("utf-8");
+    // Verify signed MFA token and retrieve adminId
+    const adminId = verifyMfaChallengeToken(mfaToken, "admin");
+    if (!adminId) {
+      return apiResponse.error("Invalid or expired MFA session token", 401);
+    }
 
     // Fetch admin
-    const res = await query('SELECT * FROM admin_users WHERE id = $1', [adminId]);
-    const admin = res.rows[0];
+    const admin = await db.query.adminUsers.findFirst({
+      where: eq(adminUsers.id, adminId)
+    });
 
     if (!admin || !admin.mfaEnabled) {
       return apiResponse.error("Invalid session", 401);
@@ -33,20 +39,22 @@ export async function POST(request: NextRequest) {
 
     if (code.length === 10) {
       // Check recovery codes
-      const hashedRecoveryCodes: string[] = admin.mfaRecoveryCodes || [];
+      const hashedRecoveryCodes: string[] = (admin.mfaRecoveryCodes as string[]) || [];
       const codeIndex = hashedRecoveryCodes.findIndex(hashed => verifyRecoveryCode(code.toUpperCase(), hashed));
       
       if (codeIndex !== -1) {
         verified = true;
         // Remove the used recovery code
         hashedRecoveryCodes.splice(codeIndex, 1);
-        await query('UPDATE admin_users SET "mfaRecoveryCodes" = $1 WHERE id = $2', [JSON.stringify(hashedRecoveryCodes), admin.id]);
+        await db.update(adminUsers)
+          .set({ mfaRecoveryCodes: JSON.stringify(hashedRecoveryCodes) })
+          .where(eq(adminUsers.id, admin.id));
         await logActivity(admin.id, "admin_mfa_recovery_used", "info", `Admin used a recovery code to log in: ${admin.username}`);
       }
     } else {
       // Standard TOTP verification
       verified = speakeasy.totp.verify({
-        secret: admin.mfaSecret,
+        secret: admin.mfaSecret!,
         encoding: "base32",
         token: code,
         window: 1,
@@ -61,10 +69,12 @@ export async function POST(request: NextRequest) {
     const token = randomBytes(32).toString("hex");
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
-    await query(
-      `INSERT INTO sessions (id, "adminId", token, "expiresAt") VALUES ($1, $2, $3, $4)`,
-      [uuidv4(), admin.id, token, expiresAt.toISOString()]
-    );
+    await db.insert(sessions).values({
+      id: uuidv4(),
+      adminId: admin.id,
+      token,
+      expiresAt: expiresAt.toISOString(),
+    });
 
     const cookieStore = await cookies();
     cookieStore.set(ADMIN_SESSION_COOKIE, token, {

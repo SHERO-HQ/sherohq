@@ -1,5 +1,7 @@
-import { NextRequest} from "next/server";
-import { query } from "@/lib/db";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { categories } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
@@ -17,14 +19,12 @@ export async function PUT(
     const id = (await params).id;
     const { name, icon } = await request.json();
 
-    const check = await query("SELECT * FROM categories WHERE id = $1", [id]);
-    if (check.rowCount === 0) return apiResponse.notFound("Category not found");
+    const check = await db.select({ id: categories.id }).from(categories).where(eq(categories.id, id));
+    if (check.length === 0) return apiResponse.notFound("Category not found");
 
-    await query("UPDATE categories SET name = $1, icon = $2 WHERE id = $3", [
-      name,
-      icon,
-      id,
-    ]);
+    await db.update(categories)
+      .set({ name, icon })
+      .where(eq(categories.id, id));
 
     await logActivity(admin.id, "category_update", "info", `Updated category: ${name}`);
 
@@ -46,11 +46,11 @@ export async function DELETE(
     }
 
     const id = (await params).id;
-    const check = await query("SELECT name FROM categories WHERE id = $1", [id]);
-    if (check.rowCount === 0) return apiResponse.notFound("Category not found");
+    const check = await db.select({ name: categories.name }).from(categories).where(eq(categories.id, id));
+    if (check.length === 0) return apiResponse.notFound("Category not found");
 
-    const categoryName = check.rows[0].name;
-    await query("DELETE FROM categories WHERE id = $1", [id]);
+    const categoryName = check[0].name;
+    await db.delete(categories).where(eq(categories.id, id));
 
     await logActivity(admin.id, "category_delete", "warning", `Deleted category: ${categoryName}`);
 

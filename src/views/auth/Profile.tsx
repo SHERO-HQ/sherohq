@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useUser, useLogout, useUpdateProfile } from "@/hooks/queries/useAuthQuery";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
@@ -21,14 +21,11 @@ type Tab = "orders" | "settings";
 
 const Profile = () => {
  const router = useRouter();
- const {
- user,
- logout,
- isAuthenticated,
- isLoading: authLoading,
- updateProfile,
- refreshUser,
- } = useAuth();
+ const { data: userData, isLoading: authLoading, refetch: refreshUser } = useUser();
+ const { mutateAsync: logout } = useLogout();
+ const { mutateAsync: updateProfile } = useUpdateProfile();
+ const user = userData?.user;
+ const isAuthenticated = !!user;
 
  const [activeTab, setActiveTab] = useState<Tab>("orders");
  useMe(isAuthenticated);
@@ -46,7 +43,7 @@ const Profile = () => {
  const { resendingEmail, resendMessage, handleResendVerification } =
  useVerification();
  const { saving, saveMessage, handleSaveProfile } = useProfileForm(
- user,
+ user || null,
  updateProfile,
  refreshUser,
  );

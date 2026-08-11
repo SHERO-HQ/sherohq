@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { users } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 import { getUserFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 import speakeasy from "speakeasy";
@@ -14,8 +16,11 @@ export async function POST(request: NextRequest) {
     if (!code) return apiResponse.error("Verification code is required", 400);
 
     // Fetch the secret we just stored
-    const res = await query('SELECT "mfaSecret" FROM users WHERE id = $1', [user.id]);
-    const secret = res.rows[0]?.mfaSecret;
+    const userRecord = await db.query.users.findFirst({
+      where: eq(users.id, user.id),
+      columns: { mfaSecret: true },
+    });
+    const secret = userRecord?.mfaSecret as string | undefined;
 
     if (!secret) {
       return apiResponse.error("MFA setup not initialized", 400);
@@ -37,10 +42,9 @@ export async function POST(request: NextRequest) {
     const recoveryCodes = generateRecoveryCodes();
     const hashedCodes = recoveryCodes.map(hashRecoveryCode);
 
-    await query(
-      'UPDATE users SET "mfaEnabled" = true, "mfaRecoveryCodes" = $1 WHERE id = $2',
-      [JSON.stringify(hashedCodes), user.id]
-    );
+    await db.update(users)
+      .set({ mfaEnabled: true, mfaRecoveryCodes: JSON.stringify(hashedCodes) })
+      .where(eq(users.id, user.id));
 
     return apiResponse.success({ 
       message: "MFA enabled successfully",

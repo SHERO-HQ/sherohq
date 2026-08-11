@@ -136,7 +136,7 @@ const AdminFeedback = () => {
                     type="button"
                     variant="ghost"
                     onClick={() => handleCancelDelete()}
-                    className="h-8 px-4 bg-accent hover:bg-white/20 text-foreground rounded text-[11px] font-bold transition-all shrink-0"
+                    className="h-8 px-4 bg-accent hover:bg-muted/50 text-foreground rounded text-[11px] font-bold transition-all shrink-0"
                   >
                     Undo Deletion
                   </Button>

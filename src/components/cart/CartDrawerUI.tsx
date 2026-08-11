@@ -1,6 +1,6 @@
 "use client";
 import { m, AnimatePresence } from "motion/react";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/hooks/queries/useCartQuery";
 import { getImageUrl } from "@/services/api";
 import { createPortal } from "react-dom";
 import { X, Minus, Plus, ShoppingBag, Trash2, ArrowRight } from "lucide-react";

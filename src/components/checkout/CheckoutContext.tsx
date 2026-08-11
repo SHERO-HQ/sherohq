@@ -3,8 +3,8 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { checkoutSchema, type CheckoutInput } from "@/lib/validations/checkout";
-import { useAuth } from "@/context/AuthContext";
-import { useCart } from "@/context/CartContext";
+import { useUser } from "@/hooks/queries/useAuthQuery";
+import { useCart } from "@/hooks/queries/useCartQuery";
 import { useSearchParams } from "next/navigation";
 import { getRetryOrderId } from "@/lib/checkoutRetry";
 import { trackOrder, initializePayment, updateOrderPaymentMethod} from "@/services/api";
@@ -59,7 +59,9 @@ export const CheckoutProvider = ({ children }: { children: ReactNode }) => {
   const searchParams = useSearchParams();
   const retryOrderId = getRetryOrderId(searchParams);
   const { cart, totalPrice, clearCart } = useCart();
-  const { user, isAuthenticated } = useAuth();
+  const { data: userData } = useUser();
+  const user = userData?.user;
+  const isAuthenticated = !!user;
   const { addNotification } = useNotifications();
 
   const [currentStep, setCurrentStep] = useState(1);

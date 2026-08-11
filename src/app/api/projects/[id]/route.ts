@@ -1,23 +1,17 @@
-import { NextRequest} from "next/server";
-import { query } from "@/lib/db";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { projects } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
+import { safeParse } from "@/lib/orderUtils";
 
 function parseProject(row: any) {
-  const safeParse = (val: unknown): unknown => {
-    if (!val) return [];
-    if (typeof val !== "string") return val;
-    try {
-      return JSON.parse(val);
-    } catch (e) {
-      return [];
-    }
-  };
-
   return {
     ...row,
-    technologies: safeParse(row.technologies)};
+    technologies: safeParse(row.technologies)
+  };
 }
 
 export async function GET(
@@ -26,12 +20,11 @@ export async function GET(
 ) {
   try {
     const id = (await params).id;
-    const result = await query("SELECT * FROM projects WHERE id = $1", [id]);
-    const project = result.rows[0];
+    const result = await db.select().from(projects).where(eq(projects.id, id)).limit(1);
 
-    if (!project) return apiResponse.notFound("Project not found");
+    if (result.length === 0) return apiResponse.notFound("Project not found");
 
-    return apiResponse.success(parseProject(project));
+    return apiResponse.success(parseProject(result[0]));
   } catch (error) {
     console.error("Fetch project error:", error);
     return apiResponse.error("Failed to fetch project");
@@ -50,9 +43,7 @@ export async function PUT(
     const body = await request.json();
 
     const allowedFields = ["title", "category", "client", "description", "useCase", "technologies", "image", "link"];
-    const updates: string[] = [];
-    const values: any[] = [];
-    let paramIndex = 1;
+    const updates: Record<string, any> = {};
 
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
@@ -60,24 +51,19 @@ export async function PUT(
         if (field === "technologies" && typeof value !== "string") {
           value = JSON.stringify(value);
         }
-        updates.push(`"${field}" = $${paramIndex++}`);
-        values.push(value);
+        updates[field] = value;
       }
     }
 
-    if (updates.length === 0) return apiResponse.error("No fields to update", 400);
+    if (Object.keys(updates).length === 0) return apiResponse.error("No fields to update", 400);
 
-    values.push(id);
-    const result = await query(
-      `UPDATE projects SET ${updates.join(", ")} WHERE id = $${paramIndex} RETURNING *`,
-      values
-    );
+    const result = await db.update(projects).set(updates).where(eq(projects.id, id)).returning();
 
-    if (result.rowCount === 0) return apiResponse.notFound("Project not found");
+    if (result.length === 0) return apiResponse.notFound("Project not found");
 
     await logActivity(admin.id, "project_update", "info", `Updated project: ${body.title || id}`);
 
-    return apiResponse.success({ success: true, project: parseProject(result.rows[0]) });
+    return apiResponse.success({ success: true, project: parseProject(result[0]) });
   } catch (error) {
     console.error("Update project error:", error);
     return apiResponse.error("Failed to update project");
@@ -93,11 +79,11 @@ export async function DELETE(
     if (!admin) return apiResponse.unauthorized();
 
     const id = (await params).id;
-    const result = await query("DELETE FROM projects WHERE id = $1 RETURNING title", [id]);
+    const result = await db.delete(projects).where(eq(projects.id, id)).returning({ title: projects.title });
 
-    if (result.rowCount === 0) return apiResponse.notFound("Project not found");
+    if (result.length === 0) return apiResponse.notFound("Project not found");
 
-    await logActivity(admin.id, "project_delete", "warning", `Deleted project: ${result.rows[0].title}`);
+    await logActivity(admin.id, "project_delete", "warning", `Deleted project: ${result[0].title}`);
 
     return apiResponse.success({ message: "Project deleted successfully" });
   } catch (error) {

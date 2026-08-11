@@ -1,9 +1,11 @@
 import { NextRequest} from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { inquiries } from "@/lib/drizzle/schema";
+import { desc } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
 import { } from "@/lib/activity";
-import { apiResponse } from "@/lib/api-utils";
+import { apiResponse, validateCsrf } from "@/lib/api-utils";
 import { notificationService } from "@/lib/notifications";
 
 export async function GET() {
@@ -11,8 +13,8 @@ export async function GET() {
     const admin = await getAdminFromSession();
     if (!admin) return apiResponse.unauthorized();
 
-    const result = await query(`SELECT * FROM inquiries ORDER BY "createdAt" DESC`);
-    return apiResponse.success(result.rows);
+    const result = await db.select().from(inquiries).orderBy(desc(inquiries.createdAt));
+    return apiResponse.success(result);
   } catch (error) {
     console.error("Fetch inquiries error:", error);
     return apiResponse.error("Failed to fetch inquiries");
@@ -21,6 +23,9 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const csrfError = await validateCsrf(request);
+    if (csrfError) return csrfError;
+
     const body = await request.json();
     const { name, email, subject, message } = body;
 
@@ -30,11 +35,15 @@ export async function POST(request: NextRequest) {
 
     const id = uuidv4();
     const finalSubject = subject || "General Inquiry";
-    await query(
-      `INSERT INTO inquiries (id, name, email, subject, message, status)
-       VALUES ($1, $2, $3, $4, $5, 'pending')`,
-      [id, name, email, finalSubject, message]
-    );
+    
+    await db.insert(inquiries).values({
+      id,
+      name,
+      email,
+      subject: finalSubject,
+      message,
+      status: 'pending'
+    });
 
     const inquiryObj = {
       id,
@@ -43,12 +52,13 @@ export async function POST(request: NextRequest) {
       subject: finalSubject,
       message,
       status: "pending",
-      createdAt: new Date().toISOString()};
+      createdAt: new Date().toISOString()
+    };
 
     try {
       await Promise.all([
-        notificationService.sendInquiryConfirmationEmail(inquiryObj),
-        notificationService.sendNewInquiryAdminAlert(inquiryObj),
+        notificationService.sendInquiryConfirmationEmail(inquiryObj as any),
+        notificationService.sendNewInquiryAdminAlert(inquiryObj as any),
       ]);
     } catch (emailErr) {
       console.error("Failed to send inquiry emails:", emailErr);

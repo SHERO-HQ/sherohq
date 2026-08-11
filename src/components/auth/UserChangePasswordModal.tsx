@@ -2,12 +2,14 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Lock, ShieldCheck, AlertCircle, Loader2 } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { useUser, useChangePassword } from "@/hooks/queries/useAuthQuery";
 import { useNotifications } from "@/hooks/useNotifications";
 import { cn } from "@/lib/utils";
 
 export function UserChangePasswordModal() {
-  const { mustReset, changePassword } = useAuth();
+  const { data: userData } = useUser();
+  const { mutateAsync: changePassword } = useChangePassword();
+  const mustReset = userData?.mustReset;
   const { addNotification } = useNotifications();
   const [currentPassword, setCurrentPassword] = useState("");
   const [password, setPassword] = useState("");
@@ -15,7 +17,11 @@ export function UserChangePasswordModal() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  if (!mustReset) return null;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,7 +39,7 @@ export function UserChangePasswordModal() {
 
     setIsSubmitting(true);
     try {
-      await changePassword(currentPassword, password);
+      await changePassword({ currentPassword, password });
       addNotification(
         "Password Updated",
         "Your password has been changed successfully.",
@@ -48,13 +54,7 @@ export function UserChangePasswordModal() {
     }
   };
 
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
+  if (!mustReset || !mounted) return null;
 
   return createPortal(
     <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/80  animate-in fade-in duration-300">

@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { sql, and, notInArray, asc } from "drizzle-orm";
+import { orders, expenses } from "@/lib/drizzle/schema";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 
@@ -15,14 +17,16 @@ export async function GET(request: NextRequest) {
 
     let dateRangeStart: Date;
     let dateRangeEnd: Date = new Date();
-    let queryConditions = "";
-    const params: any[] = [];
+    
+    // We will build dynamic SQL strings using drizzle's sql helper
+    let orderCondition = sql`1=1`;
+    let expenseCondition = sql`1=1`;
 
     if (startDate && endDate) {
-      queryConditions = ` AND "createdAt"::date >= $1::date AND "createdAt"::date <= $2::date`;
-      params.push(startDate, endDate);
       dateRangeStart = new Date(startDate + "T00:00:00");
       dateRangeEnd = new Date(endDate + "T23:59:59.999");
+      orderCondition = sql`${orders.createdAt}::date >= ${startDate}::date AND ${orders.createdAt}::date <= ${endDate}::date`;
+      expenseCondition = sql`${expenses.date}::date >= ${startDate}::date AND ${expenses.date}::date <= ${endDate}::date`;
     } else {
       let days = 7; // Default 7d or week
       if (range === "today" || range === "1d") days = 1;
@@ -31,26 +35,35 @@ export async function GET(request: NextRequest) {
       if (range === "90d") days = 90;
       if (range === "year" || range === "365d") days = 365;
       
-      queryConditions = ` AND "createdAt" >= NOW() - INTERVAL '${days} days'`;
       dateRangeStart = new Date();
       dateRangeStart.setDate(dateRangeStart.getDate() - days);
+      
+      orderCondition = sql`${orders.createdAt} >= NOW() - INTERVAL '${sql.raw(days.toString())} days'`;
+      expenseCondition = sql`${expenses.date} >= NOW() - INTERVAL '${sql.raw(days.toString())} days'`;
     }
 
-    const ordersResult = await query(
-      `SELECT TO_CHAR("createdAt", 'YYYY-MM-DD') as date, total, cogs 
-       FROM orders 
-       WHERE status NOT IN ('cancelled', 'pending', 'quote')
-       ${queryConditions}
-       ORDER BY "createdAt" ASC`,
-      params
-    );
+    const ordersResult = await db
+      .select({
+        date: sql<string>`TO_CHAR(${orders.createdAt}, 'YYYY-MM-DD')`.as('date'),
+        total: orders.total,
+        cogs: orders.cogs,
+      })
+      .from(orders)
+      .where(
+        and(
+          notInArray(orders.status, ['cancelled', 'pending', 'quote']),
+          orderCondition
+        )
+      )
+      .orderBy(asc(orders.createdAt));
 
-    const expQueryConditions = queryConditions.replace(/"createdAt"/g, "date");
-    const expensesResult = await query(
-      `SELECT TO_CHAR(date, 'YYYY-MM-DD') as date, amount FROM expenses
-       WHERE 1=1 ${expQueryConditions}`,
-      params
-    );
+    const expensesResult = await db
+      .select({
+        date: sql<string>`TO_CHAR(${expenses.date}, 'YYYY-MM-DD')`.as('date'),
+        amount: expenses.amount,
+      })
+      .from(expenses)
+      .where(expenseCondition);
 
     const groupedData: Record<string, { revenue: number; cogs: number; orders: number; expenses: number }> = {};
     const currentDate = new Date(dateRangeStart);
@@ -60,7 +73,7 @@ export async function GET(request: NextRequest) {
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
-    ordersResult.rows.forEach((order) => {
+    ordersResult.forEach((order) => {
       if (groupedData[order.date]) {
         groupedData[order.date].revenue += parseFloat(order.total || "0");
         groupedData[order.date].cogs += parseFloat(order.cogs || "0");
@@ -68,9 +81,9 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    expensesResult.rows.forEach((expense) => {
+    expensesResult.forEach((expense) => {
       if (groupedData[expense.date]) {
-        groupedData[expense.date].expenses += parseFloat(expense.amount);
+        groupedData[expense.date].expenses += parseFloat(expense.amount || "0");
       }
     });
 
@@ -82,7 +95,7 @@ export async function GET(request: NextRequest) {
       }))
       .sort((a, b) => a.date.localeCompare(b.date));
 
-    return NextResponse.json(analyticsData);
+    return apiResponse.success(analyticsData);
   } catch (error) {
     console.error("Analytics API Error:", error);
     return apiResponse.error("Failed to fetch analytics data");

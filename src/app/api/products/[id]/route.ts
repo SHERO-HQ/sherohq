@@ -1,5 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { apiResponse } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { products, categories } from "@/lib/drizzle/schema";
+import { eq, or } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 
 interface ProductRow {
@@ -30,7 +33,7 @@ interface ProductRow {
   metaDescription: string | null;
 }
 
-function parseProduct(row: ProductRow) {
+function parseProduct(row: any) {
   const safeParse = (val: unknown): unknown => {
     if (!val) return null;
     if (typeof val !== "string") return val;
@@ -60,7 +63,8 @@ function parseProduct(row: ProductRow) {
     isSpotlight: Boolean(row.isSpotlight),
     isFeatured: Boolean(row.isFeatured),
     metaTitle: row.metaTitle || null,
-    metaDescription: row.metaDescription || null};
+    metaDescription: row.metaDescription || null
+  };
 }
 
 export async function GET(
@@ -70,30 +74,42 @@ export async function GET(
   try {
     const id = (await params).id;
 
-    const queryText = `
-      SELECT
-        p.*,
-        COALESCE(c_by_id.name, c_by_name.name) as category_name,
-        COALESCE(c_by_id.id, c_by_name.id) as resolved_category_id
-      FROM products p
-      LEFT JOIN categories c_by_id ON p.category = c_by_id.id
-      LEFT JOIN categories c_by_name ON p.category = c_by_name.name
-      WHERE p.id = $1 OR p.sku = $1 OR p.slug = $1
-    `;
+    // Use Drizzle left join
+    const result = await db.select({
+      product: products,
+      categoryName: categories.name,
+      categoryId: categories.id,
+    })
+    .from(products)
+    .leftJoin(categories, or(
+      eq(products.category, categories.id),
+      eq(products.category, categories.name)
+    ))
+    .where(or(
+      eq(products.id, id),
+      eq(products.sku, id),
+      eq(products.slug, id)
+    ))
+    .limit(1);
 
-    const result = await query(queryText, [id]);
-    const product = result.rows[0] as ProductRow | undefined;
+    const match = result[0];
 
-    if (!product) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    if (!match) {
+      return apiResponse.notFound("Product not found");
     }
 
-    return NextResponse.json(parseProduct(product), {
-      headers: {
-        "Cache-Control": "public, s-maxage=120, stale-while-revalidate=600"}});
+    const formattedRow = {
+      ...match.product,
+      category_name: match.categoryName,
+      resolved_category_id: match.categoryId,
+    };
+
+    return apiResponse.success(parseProduct(formattedRow), 200, {
+      "Cache-Control": "public, s-maxage=120, stale-while-revalidate=600"
+    });
   } catch (error) {
     console.error("Error fetching product:", error);
-    return NextResponse.json({ error: "Failed to fetch product" }, { status: 500 });
+    return apiResponse.error("Failed to fetch product", 500);
   }
 }
 
@@ -104,21 +120,25 @@ export async function PUT(
   try {
     const admin = await getAdminFromSession();
     if (!admin || !["admin", "superadmin", "manager"].includes(admin.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return apiResponse.unauthorized();
     }
 
     const id = (await params).id;
     const body = await request.json();
 
-    const check = await query(
-      "SELECT id FROM products WHERE id = $1 OR sku = $1 OR slug = $1",
-      [id]
-    );
-    if (check.rowCount === 0) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    const check = await db.select({ id: products.id }).from(products)
+      .where(or(
+        eq(products.id, id),
+        eq(products.sku, id),
+        eq(products.slug, id)
+      ))
+      .limit(1);
+
+    if (check.length === 0) {
+      return apiResponse.notFound("Product not found");
     }
 
-    const productId = check.rows[0].id;
+    const productId = check[0].id;
 
     if (body.name || body.slug) {
       const { generateUniqueSlug } = await import("@/lib/productUtils");
@@ -133,9 +153,7 @@ export async function PUT(
       "metaTitle", "metaDescription"
     ];
 
-    const updates: string[] = [];
-    const values: any[] = [];
-    let paramIndex = 1;
+    const updates: any = {};
 
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
@@ -143,26 +161,24 @@ export async function PUT(
         if (["images", "features", "specifications"].includes(field) && typeof value !== "string") {
           value = JSON.stringify(value);
         }
-        updates.push(`"${field}" = $${paramIndex++}`);
-        values.push(value);
+        updates[field] = value;
       }
     }
 
-    if (updates.length === 0) {
-      return NextResponse.json({ error: "No fields to update" }, { status: 400 });
+    if (Object.keys(updates).length === 0) {
+      return apiResponse.error("No fields to update", 400);
     }
 
-    values.push(productId);
-    await query(`UPDATE products SET ${updates.join(", ")} WHERE id = $${paramIndex}`, values);
+    await db.update(products).set(updates).where(eq(products.id, productId));
     
     const { logActivity } = await import("@/lib/activity");
     await logActivity(admin.id, "product_update", "info", `Updated product: ${productId}`);
 
-    const result = await query("SELECT * FROM products WHERE id = $1", [productId]);
-    return NextResponse.json({ success: true, product: parseProduct(result.rows[0]) });
+    const result = await db.select().from(products).where(eq(products.id, productId)).limit(1);
+    return apiResponse.success({ success: true, product: parseProduct(result[0]) });
   } catch (error) {
     console.error("Error updating product:", error);
-    return NextResponse.json({ error: "Failed to update product" }, { status: 500 });
+    return apiResponse.error("Failed to update product", 500);
   }
 }
 
@@ -173,25 +189,31 @@ export async function DELETE(
   try {
     const admin = await getAdminFromSession();
     if (!admin || !["admin", "superadmin", "manager"].includes(admin.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return apiResponse.unauthorized();
     }
 
     const id = (await params).id;
-    const result = await query("SELECT id, name FROM products WHERE id = $1 OR sku = $1 OR slug = $1", [id]);
-    const existing = result.rows[0];
+    const existing = await db.select({ id: products.id, name: products.name })
+      .from(products)
+      .where(or(
+        eq(products.id, id),
+        eq(products.sku, id),
+        eq(products.slug, id)
+      ))
+      .limit(1);
 
-    if (!existing) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    if (existing.length === 0) {
+      return apiResponse.notFound("Product not found");
     }
 
-    await query("DELETE FROM products WHERE id = $1", [existing.id]);
+    await db.delete(products).where(eq(products.id, existing[0].id));
     
     const { logActivity } = await import("@/lib/activity");
-    await logActivity(admin.id, "product_delete", "warning", `Deleted product: ${existing.name}`);
+    await logActivity(admin.id, "product_delete", "warning", `Deleted product: ${existing[0].name}`);
 
-    return NextResponse.json({ success: true, message: `Product "${existing.name}" deleted` });
+    return apiResponse.success({ success: true, message: `Product "${existing[0].name}" deleted` });
   } catch (error) {
     console.error("Error deleting product:", error);
-    return NextResponse.json({ error: "Failed to delete product" }, { status: 500 });
+    return apiResponse.error("Failed to delete product", 500);
   }
 }

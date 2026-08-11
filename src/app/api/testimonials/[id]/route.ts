@@ -1,5 +1,7 @@
-import { NextRequest} from "next/server";
-import { query } from "@/lib/db";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { testimonials } from "@/lib/drizzle/schema";
+import { eq } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
@@ -16,30 +18,26 @@ export async function PUT(
     const body = await request.json();
 
     const allowedFields = ["quote", "author", "role", "company", "image", "order", "active", "rating", "reviewUrl"];
-    const updates: string[] = [];
-    const values: any[] = [];
-    let paramIndex = 1;
+    const updates: Record<string, any> = {};
 
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
-        updates.push(`"${field}" = $${paramIndex++}`);
-        values.push(body[field]);
+        updates[field] = body[field];
       }
     }
 
-    if (updates.length === 0) return apiResponse.error("No fields to update", 400);
+    if (Object.keys(updates).length === 0) return apiResponse.error("No fields to update", 400);
 
-    values.push(id);
-    const result = await query(
-      `UPDATE testimonials SET ${updates.join(", ")} WHERE id = $${paramIndex} RETURNING *`,
-      values
-    );
+    const result = await db.update(testimonials)
+      .set(updates)
+      .where(eq(testimonials.id, id))
+      .returning();
 
-    if (result.rowCount === 0) return apiResponse.notFound("Testimonial not found");
+    if (result.length === 0) return apiResponse.notFound("Testimonial not found");
 
     await logActivity(admin.id, "testimonial_update", "info", `Updated testimonial by: ${body.author || id}`);
 
-    return apiResponse.success(result.rows[0]);
+    return apiResponse.success(result[0]);
   } catch (error) {
     console.error("Update testimonial error:", error);
     return apiResponse.error("Failed to update testimonial");
@@ -55,11 +53,13 @@ export async function DELETE(
     if (!admin) return apiResponse.unauthorized();
 
     const id = (await params).id;
-    const result = await query("DELETE FROM testimonials WHERE id = $1 RETURNING author", [id]);
+    const result = await db.delete(testimonials)
+      .where(eq(testimonials.id, id))
+      .returning({ author: testimonials.author });
 
-    if (result.rowCount === 0) return apiResponse.notFound("Testimonial not found");
+    if (result.length === 0) return apiResponse.notFound("Testimonial not found");
 
-    await logActivity(admin.id, "testimonial_delete", "warning", `Deleted testimonial by: ${result.rows[0].author}`);
+    await logActivity(admin.id, "testimonial_delete", "warning", `Deleted testimonial by: ${result[0].author}`);
 
     return apiResponse.success({ message: "Testimonial deleted successfully" });
   } catch (error) {

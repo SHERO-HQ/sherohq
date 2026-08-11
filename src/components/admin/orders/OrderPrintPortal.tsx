@@ -277,9 +277,9 @@ export function OrderPrintPortal({
             </div>
 
             {/* Billed To */}
-            <div className="grid grid-cols-2 gap-12 mb-10 p-6 bg-slate-50 rounded border border-slate-100">
+            <div className="grid grid-cols-2 gap-12 mb-10 p-6 bg-muted/50 rounded border border-border">
               <div>
-                <h3 className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-3">
+                <h3 className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-3">
                   Billed To
                 </h3>
                 <p className="font-bold text-sm text-slate-800 mb-1">
@@ -293,7 +293,7 @@ export function OrderPrintPortal({
                 </p>
               </div>
               <div>
-                <h3 className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-3">
+                <h3 className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest mb-3">
                   Shipping Address
                 </h3>
                 <p className="text-xs text-slate-600 mb-0.5">
@@ -308,17 +308,17 @@ export function OrderPrintPortal({
             {/* Items Table */}
             <table className="w-full mb-8">
               <thead>
-                <tr className="border-b border-slate-200">
-                  <th className="text-left py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                <tr className="border-b border-border">
+                  <th className="text-left py-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                     Description
                   </th>
-                  <th className="text-center py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  <th className="text-center py-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                     Qty
                   </th>
-                  <th className="text-right py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  <th className="text-right py-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                     Unit Price
                   </th>
-                  <th className="text-right py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                  <th className="text-right py-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                     Amount
                   </th>
                 </tr>
@@ -329,7 +329,7 @@ export function OrderPrintPortal({
                     <td className="py-4 pr-4">
                       <p className="font-semibold text-sm text-slate-800">{item.name}</p>
                       {item.sku && (
-                        <p className="text-[10px] text-slate-400 font-mono mt-0.5">
+                        <p className="text-[10px] text-muted-foreground font-mono mt-0.5">
                           SKU: {item.sku}
                         </p>
                       )}
@@ -348,7 +348,7 @@ export function OrderPrintPortal({
 
             {/* Totals & Footer */}
 
-            <div className="flex justify-between items-end border-t border-slate-200 pt-6 mt-8">
+            <div className="flex justify-between items-end border-t border-border pt-6 mt-8">
               {receiptQrUrl ? (
                 <div className="text-left">
                   <img
@@ -356,7 +356,7 @@ export function OrderPrintPortal({
                     alt="Invoice verification QR"
                     className="w-20 h-20 mb-2 opacity-80"
                   />
-                  <p className="text-[9px] text-slate-400 uppercase tracking-widest">
+                  <p className="text-[9px] text-muted-foreground uppercase tracking-widest">
                     Scan to verify
                   </p>
                 </div>
@@ -373,7 +373,7 @@ export function OrderPrintPortal({
                   <span>Tax (0%)</span>
                   <span className="font-mono">GHS0.00</span>
                 </div>
-                <div className="flex justify-between items-center text-lg font-bold border-t border-slate-200 pt-3 text-brand-secondary-600 mt-2">
+                <div className="flex justify-between items-center text-lg font-bold border-t border-border pt-3 text-brand-secondary-600 mt-2">
                   <span className="uppercase tracking-tight text-sm">Grand Total</span>
                   <span className="text-xl">GHS{order.total.toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
@@ -381,11 +381,11 @@ export function OrderPrintPortal({
             </div>
 
             {/* Legal Footers */}
-            <div className="mt-12 pt-6 border-t border-slate-100 text-center space-y-2">
-              <p className="text-slate-400 text-[9px] uppercase tracking-widest font-bold">
+            <div className="mt-12 pt-6 border-t border-border text-center space-y-2">
+              <p className="text-muted-foreground text-[9px] uppercase tracking-widest font-bold">
                 Thank you for your business!
               </p>
-              <p className="text-slate-400 text-[8px] max-w-xl mx-auto leading-relaxed">
+              <p className="text-muted-foreground text-[8px] max-w-xl mx-auto leading-relaxed">
                 This document is a computer-generated invoice and requires no signature. Subject to our standard Terms & Conditions of Sale. Returns and exchanges are governed by our return policy available at {COMPANY_CONTACTS.WEBSITE_DISPLAY}/terms.
               </p>
               <p className="text-slate-500 text-[9px] mt-2 font-medium">

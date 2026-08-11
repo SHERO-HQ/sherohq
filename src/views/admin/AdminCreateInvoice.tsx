@@ -261,7 +261,7 @@ export default function AdminCreateInvoice() {
               className={cn(
                 "px-3.5 py-1.5 rounded text-xs font-bold transition flex items-center gap-1.5 select-none",
                 mode === "invoice"
-                  ? "bg-brand-secondary-600 text-white shadow shadow-brand-secondary-500/25"
+                  ? "bg-brand-secondary-600 text-foreground shadow shadow-brand-secondary-500/25"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >

@@ -102,7 +102,7 @@ export default function ActivityFeed({ logs, isLoading }: ActivityFeedProps) {
  className={cn(
  "absolute left-0 w-8 h-8 rounded-full flex items-center justify-center z-10",
  typeColor,
- "border border-slate-900",
+ "border border-border",
  )}
  >
  {icon}

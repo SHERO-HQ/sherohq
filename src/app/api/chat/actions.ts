@@ -6,7 +6,9 @@
  * tracking orders/tickets in the database.
  */
 
-import { query as dbQuery } from "@/lib/db";
+import { db } from "@/lib/db";
+import { sql, eq, or } from "drizzle-orm";
+import { consultations, tickets } from "@/lib/drizzle/schema";
 import { v4 as uuidv4 } from "uuid";
 import { logActivity } from "@/lib/activity";
 import { getUserFromSession } from "@/lib/auth";
@@ -20,11 +22,18 @@ export async function handleBookDirect(bookData: any): Promise<any> {
     const { name, email, phone, service, date, time, message: bookMsg } = bookData;
     if (name && email && service && date && time) {
       const id = uuidv4();
-      await dbQuery(
-        `INSERT INTO consultations (id, name, email, phone, service, date, time, message, status)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'pending')`,
-        [id, name, email, phone || null, service, date, time, bookMsg || "Booked via AI Chat Assistant"],
-      );
+      
+      await db.insert(consultations).values({
+        id,
+        name,
+        email,
+        phone: phone || null,
+        service,
+        date,
+        time,
+        message: bookMsg || "Booked via AI Chat Assistant",
+        status: 'pending'
+      });
 
       await logActivity(
         null,
@@ -62,10 +71,9 @@ export async function handleTicketDirect(ticketData: any): Promise<any> {
     if (name && email && subject && ticketMsg) {
       const id = uuidv4();
 
-      const numResult = await dbQuery(
-        "SELECT COALESCE(MAX(ticket_no), 1000) + 1 AS next_no FROM tickets",
-      );
-      const nextTicketNo = numResult.rows[0]?.next_no || 1001;
+      const numResult = await db.execute(sql`SELECT COALESCE(MAX(ticket_no), 1000) + 1 AS next_no FROM tickets`);
+      const rows = (numResult.rows || numResult) as Record<string, unknown>[];
+      const nextTicketNo = (rows[0]?.next_no as number) || 1001;
 
       let finalUserId = null;
       const userSession = await getUserFromSession();
@@ -73,23 +81,20 @@ export async function handleTicketDirect(ticketData: any): Promise<any> {
         finalUserId = userSession.id;
       }
 
-      await dbQuery(
-        `INSERT INTO tickets (
-          id, ticket_no, name, email, phone, subject, message, category, priority, status, "userId", "createdAt"
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, 'open', $10, NOW())`,
-        [
-          id,
-          nextTicketNo,
-          name,
-          email,
-          phone || null,
-          subject,
-          ticketMsg,
-          category || "General",
-          priority || "medium",
-          finalUserId,
-        ],
-      );
+      await db.insert(tickets).values({
+        id,
+        ticketNo: nextTicketNo,
+        name,
+        email,
+        phone: phone || null,
+        subject,
+        message: ticketMsg,
+        category: category || "General",
+        priority: priority || "medium",
+        status: 'open',
+        userId: finalUserId,
+        createdAt: sql`NOW()`
+      });
 
       await logActivity(
         null,
@@ -134,13 +139,13 @@ export async function handleTicketDirect(ticketData: any): Promise<any> {
 
 export async function handleTrackOrder(orderId: string): Promise<any> {
   try {
-    const orderResult = await dbQuery(
-      `SELECT status, total, "createdAt" FROM orders WHERE id = $1 OR replace(lower(id), '-', '') LIKE $1 || '%' LIMIT 1`,
-      [orderId.toLowerCase()],
-    );
-    const order = orderResult.rows[0];
-    if (order) {
-      return { success: true, order };
+    const orderResult = await db.query.orders.findFirst({
+      where: sql`id = ${orderId.toLowerCase()} OR replace(lower(id), '-', '') LIKE ${orderId.toLowerCase() + '%'}`,
+      columns: { status: true, total: true, createdAt: true }
+    });
+    
+    if (orderResult) {
+      return { success: true, order: orderResult };
     }
     return { success: false, error: "Order not found" };
   } catch (error) {
@@ -154,13 +159,16 @@ export async function handleTrackOrder(orderId: string): Promise<any> {
 
 export async function handleTrackTicket(ticketId: string): Promise<any> {
   try {
-    const ticketResult = await dbQuery(
-      `SELECT status, subject, "createdAt" FROM tickets WHERE id = $1 OR ticket_no = $2 LIMIT 1`,
-      [ticketId, /^\d+$/.test(ticketId) ? parseInt(ticketId, 10) : -1],
-    );
-    const ticket = ticketResult.rows[0];
-    if (ticket) {
-      return { success: true, ticket };
+    const isNum = /^\\d+$/.test(ticketId);
+    const parsedTicketNo = isNum ? parseInt(ticketId, 10) : -1;
+    
+    const ticketResult = await db.query.tickets.findFirst({
+      where: or(eq(tickets.id, ticketId), eq(tickets.ticketNo, parsedTicketNo)),
+      columns: { status: true, subject: true, createdAt: true }
+    });
+
+    if (ticketResult) {
+      return { success: true, ticket: ticketResult };
     }
     return { success: false, error: "Ticket not found" };
   } catch (error) {

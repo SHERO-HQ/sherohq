@@ -1,5 +1,6 @@
-import { } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { sql, count, desc, notInArray } from "drizzle-orm";
+import { orders } from "@/lib/drizzle/schema";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 
@@ -8,22 +9,23 @@ export async function GET() {
     const admin = await getAdminFromSession();
     if (!admin) return apiResponse.unauthorized();
 
-    const result = await query(`
-      SELECT 
-        COALESCE(JSONB_EXTRACT_PATH_TEXT("shippingInfo", 'region'), 'Unknown') as region,
-        COUNT(*) as orders,
-        SUM(total) as revenue
-      FROM orders
-      WHERE status NOT IN ('cancelled', 'pending', 'quote')
-      GROUP BY region
-      ORDER BY revenue DESC
-      LIMIT 10
-    `);
+    const result = await db
+      .select({
+        region: sql<string>`COALESCE(JSONB_EXTRACT_PATH_TEXT(${orders.shippingInfo}, 'region'), 'Unknown')`.as("region"),
+        orders: count(),
+        revenue: sql<number>`SUM(${orders.total})`.as("revenue"),
+      })
+      .from(orders)
+      .where(notInArray(orders.status, ['cancelled', 'pending', 'quote']))
+      .groupBy(sql`region`)
+      .orderBy(desc(sql`revenue`))
+      .limit(10);
 
-    const data = result.rows.map((row) => ({
+    const data = result.map((row) => ({
       name: row.region,
-      orders: parseInt(row.orders, 10),
-      revenue: parseFloat(row.revenue || "0")}));
+      orders: Number(row.orders),
+      revenue: Number(row.revenue || 0)
+    }));
 
     return apiResponse.success(data);
   } catch (error) {

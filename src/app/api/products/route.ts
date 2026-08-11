@@ -1,9 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { apiResponse } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { products, categories } from "@/lib/drizzle/schema";
+import { sql, eq, like, desc, or, and } from "drizzle-orm";
 import { z } from "zod";
 import { getAdminFromSession } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
-import { generateSku, generateUniqueSlug } from "@/lib/productUtils";
+import { generateUniqueSlug } from "@/lib/productUtils";
 import { logActivity } from "@/lib/activity";
 
 const ProductQuerySchema = z.object({
@@ -27,46 +30,14 @@ const CreateProductSchema = z.object({
   images: z.array(z.string()).optional(),
   features: z.array(z.string()).optional(),
   specifications: z.record(z.string(), z.string()).optional(),
-  originalPrice: z.number().optional().nullable(),
-  badge: z.string().optional().nullable(),
-  rating: z.number().optional(),
-  reviews: z.number().int().optional(),
-  condition: z.enum(["New", "Used", "Refurbished"]).optional(),
-  isSpotlight: z.boolean().optional().default(false),
-  isFeatured: z.boolean().optional().default(false),
-  metaTitle: z.string().max(60).optional().nullable(),
-  metaDescription: z.string().max(160).optional().nullable()});
+  condition: z.enum(["New", "Used", "Refurbished"]).default("New"),
+  isSpotlight: z.boolean().default(false),
+  isFeatured: z.boolean().default(false),
+  metaTitle: z.string().max(100).optional().nullable(),
+  metaDescription: z.string().max(200).optional().nullable(),
+});
 
-interface ProductRow {
-  id: string;
-  name: string;
-  sku: string | null;
-  slug: string | null;
-  category: string;
-  category_name?: string;
-  price: string;
-  originalPrice: string | null;
-  costPrice: string | null;
-  image: string | null;
-  images: string | null;
-  rating: string;
-  reviews: number;
-  badge: string | null;
-  inStock: boolean;
-  stockQuantity: number;
-  description: string | null;
-  features: string | null;
-  specifications: string | null;
-  condition: "New" | "Used" | "Refurbished" | null;
-  isSpotlight: boolean;
-  isFeatured: boolean;
-  createdAt: Date;
-  resolved_category_id?: string | null;
-  metaTitle: string | null;
-  metaDescription: string | null;
-}
-
-function parseProduct(row: ProductRow) {
+function parseProduct(row: any) {
   const safeParse = (val: unknown): unknown => {
     if (!val) return null;
     if (typeof val !== "string") return val;
@@ -83,7 +54,6 @@ function parseProduct(row: ProductRow) {
     categoryId: row.resolved_category_id || row.category,
     price: Number(row.price),
     originalPrice: row.originalPrice ? Number(row.originalPrice) : null,
-    costPrice: row.costPrice ? Number(row.costPrice) : null,
     rating: Number(row.rating),
     images: safeParse(row.images),
     features: safeParse(row.features),
@@ -97,74 +67,80 @@ function parseProduct(row: ProductRow) {
     isSpotlight: Boolean(row.isSpotlight),
     isFeatured: Boolean(row.isFeatured),
     metaTitle: row.metaTitle || null,
-    metaDescription: row.metaDescription || null};
+    metaDescription: row.metaDescription || null
+  };
 }
 
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const paramsObj = {
-      category: searchParams.get("category") || undefined,
-      search: searchParams.get("search") || undefined,
-      stock: searchParams.get("stock") || undefined,
-      limit: searchParams.get("limit") || undefined,
-      offset: searchParams.get("offset") || undefined};
+    const parsed = ProductQuerySchema.safeParse(Object.fromEntries(searchParams));
+    
+    if (!parsed.success) {
+      return apiResponse.error("Invalid query parameters", 400);
+    }
 
-    const validated = ProductQuerySchema.parse(paramsObj);
-    const { category, search, limit, offset } = validated;
+    const { category, search, stock, limit, offset } = parsed.data;
 
-    let queryText = `
-      SELECT
-        p.*,
-        c.name as category_name,
-        c.id as resolved_category_id
-      FROM products p
-      LEFT JOIN categories c ON p.category = c.id
-    `;
+    const conditions = [];
 
-    const sqlParams: (string | number)[] = [];
-    const conditions: string[] = [];
-    let paramIndex = 1;
-
-    if (category && category !== "all") {
-      conditions.push(
-        `(p.category = $${paramIndex} OR c.id = $${paramIndex} OR c.name = $${paramIndex})`,
-      );
-      sqlParams.push(category);
-      paramIndex++;
+    if (category && category !== "All") {
+      conditions.push(or(eq(products.category, category), eq(categories.name, category)));
     }
 
     if (search) {
-      conditions.push(
-        `(p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR c.name ILIKE $${paramIndex})`,
-      );
-      sqlParams.push(`%${search}%`);
-      paramIndex++;
+      const searchTerm = `%${search}%`;
+      conditions.push(or(
+        like(products.name, searchTerm),
+        like(products.description, searchTerm),
+        like(products.sku, searchTerm),
+        like(products.slug, searchTerm)
+      ));
     }
 
-    if (validated.stock === "low") {
-      conditions.push(`p."stockQuantity" <= 10 AND p."stockQuantity" > 0 AND p."inStock" = true`);
-    } else if (validated.stock === "out") {
-      conditions.push(`(p."stockQuantity" = 0 OR p."inStock" = false)`);
+    if (stock === "low") {
+      conditions.push(sql`${products.stockQuantity} > 0 AND ${products.stockQuantity} <= 5`);
+    } else if (stock === "out") {
+      conditions.push(or(eq(products.stockQuantity, 0), eq(products.inStock, false)));
     }
 
-    if (conditions.length > 0) {
-      queryText += " WHERE " + conditions.join(" AND ");
-    }
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-    queryText += ` ORDER BY p."createdAt" DESC LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
-    sqlParams.push(limit, offset);
+    const result = await db.select({
+      product: products,
+      categoryName: categories.name,
+      categoryId: categories.id,
+      total_count: sql`count(*) over()`
+    })
+    .from(products)
+    .leftJoin(categories, or(
+      eq(products.category, categories.id),
+      eq(products.category, categories.name)
+    ))
+    .where(whereClause)
+    .orderBy(desc(products.createdAt))
+    .limit(limit)
+    .offset(offset);
 
-    const result = await query(queryText, sqlParams);
-    return NextResponse.json(result.rows.map(parseProduct), {
-      headers: {
-        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300"}});
+    let total = 0;
+    const parsedProducts = result.map(row => {
+      total = Number(row.total_count);
+      const formattedRow = {
+        ...row.product,
+        category_name: row.categoryName,
+        resolved_category_id: row.categoryId,
+      };
+      return parseProduct(formattedRow);
+    });
+
+    return apiResponse.success(
+      { products: parsedProducts, total },
+      200,
+      { "Cache-Control": "public, s-maxage=120, stale-while-revalidate=300" }
+    );
   } catch (error) {
     console.error("Error fetching products:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch products" },
-      { status: 500 },
-    );
+    return apiResponse.error("Failed to fetch products", 500);
   }
 }
 
@@ -172,100 +148,54 @@ export async function POST(request: NextRequest) {
   try {
     const admin = await getAdminFromSession();
     if (!admin || !["admin", "superadmin", "manager"].includes(admin.role)) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return apiResponse.unauthorized();
     }
 
     const body = await request.json();
     const validated = CreateProductSchema.parse(body);
-    const {
-      name,
-      price,
-      costPrice,
-      category,
-      description,
-      stockQuantity,
-      inStock,
-      sku,
-      slug,
-      image,
-      images,
-      features,
-      specifications,
-      originalPrice,
-      badge,
-      rating,
-      reviews,
-      condition,
-      isSpotlight,
-      isFeatured,
-      metaTitle,
-      metaDescription} = validated;
 
     const productId = uuidv4();
-    const finalSku = generateSku(productId, sku);
-    const finalSlug = await generateUniqueSlug(slug || name);
+    
+    let finalSlug = validated.slug;
+    if (!finalSlug) {
+      finalSlug = await generateUniqueSlug(validated.name, productId);
+    }
 
-    // Prepare JSON fields
-    const imagesJson =
-      images && images.length > 0 ? JSON.stringify(images) : null;
-    const featuresJson =
-      features && features.length > 0 ? JSON.stringify(features) : null;
-    const specificationsJson =
-      specifications && Object.keys(specifications).length > 0
-        ? JSON.stringify(specifications)
-        : null;
+    await db.insert(products).values({
+      id: productId,
+      name: validated.name,
+      price: validated.price.toString(),
+      costPrice: validated.costPrice?.toString(),
+      category: validated.category,
+      description: validated.description,
+      stockQuantity: validated.stockQuantity,
+      inStock: validated.inStock,
+      sku: validated.sku,
+      slug: finalSlug,
+      image: validated.image,
+      images: validated.images ? JSON.stringify(validated.images) : null,
+      features: validated.features ? JSON.stringify(validated.features) : null,
+      specifications: validated.specifications ? JSON.stringify(validated.specifications) : null,
+      condition: validated.condition,
+      isSpotlight: validated.isSpotlight,
+      isFeatured: validated.isFeatured,
+      metaTitle: validated.metaTitle,
+      metaDescription: validated.metaDescription,
+    });
 
-    await query(
-      `INSERT INTO products (id, name, sku, category, price, "costPrice", "originalPrice", "stockQuantity", "inStock", description, slug, image, images, features, specifications, badge, rating, reviews, condition, "isSpotlight", "isFeatured", "metaTitle", "metaDescription")
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)`,
-      [
-        productId,
-        name,
-        finalSku,
-        category,
-        price,
-        costPrice || 0,
-        originalPrice || null,
-        stockQuantity || 0,
-        inStock,
-        description || null,
-        finalSlug,
-        image || null,
-        imagesJson,
-        featuresJson,
-        specificationsJson,
-        badge || null,
-        rating || 0,
-        reviews || 0,
-        condition || "New",
-        isSpotlight || false,
-        isFeatured || false,
-        metaTitle || null,
-        metaDescription || null,
-      ],
-    );
-
-    await logActivity(
+    logActivity(
       admin.id,
       "product_create",
       "success",
-      `Created product: ${name} (SKU: ${finalSku})`,
-    );
+      `Admin ${admin.username} added product: ${validated.name}`
+    ).catch(console.error);
 
-    const result = await query("SELECT * FROM products WHERE id = $1", [
-      productId,
-    ]);
-    return NextResponse.json(
-      { success: true, product: parseProduct(result.rows[0]) },
-      { status: 201 },
-    );
-  } catch (error) {
+    return apiResponse.success({ id: productId }, 201);
+  } catch (error: any) {
     console.error("Error creating product:", error);
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error ? error.message : "Failed to create product"},
-      { status: 500 },
-    );
+    if (error.name === "ZodError") {
+      return apiResponse.validationError(error);
+    }
+    return apiResponse.error(error instanceof Error ? error.message : "Failed to create product", 500);
   }
 }

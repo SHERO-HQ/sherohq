@@ -46,18 +46,18 @@ export default function AdminCheckoutCRM() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Checkout CRM</h1>
-        <p className="text-slate-500 dark:text-slate-400">
+        <h1 className="text-3xl font-bold text-foreground">Checkout CRM</h1>
+        <p className="text-muted-foreground">
           Track and manage your abandoned carts and successful checkouts for marketing campaigns.
         </p>
       </div>
 
-      <div className="flex border-b border-slate-200 dark:border-slate-800">
+      <div className="flex border-b border-border">
         <button
-          className={`px-4 py-2 border-b-2 font-medium text-sm flex items-center gap-2 ${
+          className={`px-4 py-2 border-b-2 font-medium text-sm flex items-center gap-2 transition-colors ${
             activeTab === "abandoned"
               ? "border-primary text-primary"
-              : "border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+              : "border-transparent text-muted-foreground hover:text-foreground"
           }`}
           onClick={() => setActiveTab("abandoned")}
         >
@@ -65,10 +65,10 @@ export default function AdminCheckoutCRM() {
           Abandoned Carts ({abandonedCarts?.length || 0})
         </button>
         <button
-          className={`px-4 py-2 border-b-2 font-medium text-sm flex items-center gap-2 ${
+          className={`px-4 py-2 border-b-2 font-medium text-sm flex items-center gap-2 transition-colors ${
             activeTab === "completed"
               ? "border-primary text-primary"
-              : "border-transparent text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+              : "border-transparent text-muted-foreground hover:text-foreground"
           }`}
           onClick={() => setActiveTab("completed")}
         >
@@ -79,7 +79,7 @@ export default function AdminCheckoutCRM() {
 
       <div className="flex items-center gap-4">
         <div className="relative w-full max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input 
             placeholder="Search by name, email, phone..." 
             value={searchTerm}
@@ -91,23 +91,23 @@ export default function AdminCheckoutCRM() {
           <select 
             value={filterType}
             onChange={(e) => setFilterType(e.target.value as any)}
-            className="border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 rounded-md text-sm py-2 px-3 focus:ring-primary focus:border-primary text-slate-700 dark:text-slate-300"
+            className="border border-border bg-card rounded-md text-sm py-2 px-3 focus:ring-2 focus:ring-primary text-foreground"
           >
-            <option value="actionable">Actionable (Has Contact)</option>
-            <option value="all">All Carts</option>
-            <option value="anonymous">Anonymous (No Contact)</option>
+            <option value="actionable" className="bg-card text-foreground">Actionable (Has Contact)</option>
+            <option value="all" className="bg-card text-foreground">All Carts</option>
+            <option value="anonymous" className="bg-card text-foreground">Anonymous (No Contact)</option>
           </select>
         )}
       </div>
 
       {activeTab === "abandoned" && (
-        <div className="bg-white dark:bg-slate-900 rounded shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+        <div className="bg-card rounded shadow-sm border border-border overflow-hidden">
           {isLoadingAbandoned ? (
             <div className="p-8 flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
           ) : searchedAbandoned && searchedAbandoned.length > 0 ? (
             <div className="max-h-[600px] overflow-y-auto overflow-x-auto relative">
               <table className="w-full text-left text-sm">
-                <thead className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 sticky top-0 z-10 shadow-sm">
+                <thead className="bg-muted text-muted-foreground sticky top-0 z-10 shadow-sm">
                   <tr>
                     <th className="px-6 py-3 font-medium">Contact</th>
                     <th className="px-6 py-3 font-medium">Cart Value</th>
@@ -115,30 +115,30 @@ export default function AdminCheckoutCRM() {
                     <th className="px-6 py-3 font-medium">Last Active</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+                <tbody className="divide-y divide-border">
                   {searchedAbandoned.map((cart) => (
-                    <tr key={cart.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                    <tr key={cart.id} className="hover:bg-accent/50 transition-colors">
                       <td className="px-6 py-4">
-                        <div className="font-medium text-slate-900 dark:text-white">{cart.name || "Guest"}</div>
-                        <div className="text-slate-500 text-xs">{cart.email || "No Email"}</div>
-                        {cart.phone && <div className="text-slate-500 text-xs">{cart.phone}</div>}
+                        <div className="font-medium text-foreground">{cart.name || "Guest"}</div>
+                        <div className="text-muted-foreground text-xs">{cart.email || "No Email"}</div>
+                        {cart.phone && <div className="text-muted-foreground text-xs">{cart.phone}</div>}
                       </td>
                       <td className="px-6 py-4 font-medium text-primary">GHS{cart.totalValue.toFixed(2)}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2 mb-2">
-                          <ShoppingCart className="w-4 h-4 text-slate-400" />
-                          <span className="font-medium text-slate-900 dark:text-white">{cart.items.reduce((sum, item) => sum + (item.quantity || 1), 0)} items</span>
+                          <ShoppingCart className="w-4 h-4 text-muted-foreground" />
+                          <span className="font-medium text-foreground">{cart.items.reduce((sum, item) => sum + (item.quantity || 1), 0)} items</span>
                         </div>
-                        <ul className="text-xs text-slate-500 dark:text-slate-400 space-y-1">
+                        <ul className="text-xs text-muted-foreground space-y-1">
                           {cart.items.map((item, idx) => (
-                            <li key={idx} className="flex justify-between items-center bg-slate-100 dark:bg-slate-800 p-1.5 rounded">
+                            <li key={idx} className="flex justify-between items-center bg-muted p-1.5 rounded">
                               <span className="truncate max-w-[150px]" title={item.name}>{item.name}</span>
                               <span className="font-medium whitespace-nowrap ml-2">x{item.quantity}</span>
                             </li>
                           ))}
                         </ul>
                       </td>
-                      <td className="px-6 py-4 text-slate-500">
+                      <td className="px-6 py-4 text-muted-foreground">
                         {new Date(cart.lastActive).toLocaleString()}
                       </td>
                     </tr>
@@ -147,19 +147,19 @@ export default function AdminCheckoutCRM() {
               </table>
             </div>
           ) : (
-            <div className="p-8 text-center text-slate-500">No abandoned carts found.</div>
+            <div className="p-8 text-center text-muted-foreground">No abandoned carts found.</div>
           )}
         </div>
       )}
 
       {activeTab === "completed" && (
-        <div className="bg-white dark:bg-slate-900 rounded shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
+        <div className="bg-card rounded shadow-sm border border-border overflow-hidden">
           {isLoadingCompleted ? (
             <div className="p-8 flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
           ) : searchedCompleted && searchedCompleted.length > 0 ? (
             <div className="max-h-[600px] overflow-y-auto overflow-x-auto relative">
               <table className="w-full text-left text-sm">
-                <thead className="bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 sticky top-0 z-10 shadow-sm">
+                <thead className="bg-muted text-muted-foreground sticky top-0 z-10 shadow-sm">
                   <tr>
                     <th className="px-6 py-3 font-medium">Order ID</th>
                     <th className="px-6 py-3 font-medium">Contact</th>
@@ -168,25 +168,25 @@ export default function AdminCheckoutCRM() {
                     <th className="px-6 py-3 font-medium">Date</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+                <tbody className="divide-y divide-border">
                   {searchedCompleted.map((order) => (
-                    <tr key={order.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-                      <td className="px-6 py-4 font-medium text-slate-900 dark:text-white">
+                    <tr key={order.id} className="hover:bg-accent/50 transition-colors">
+                      <td className="px-6 py-4 font-medium text-foreground">
                         {order.id.substring(0, 8).toUpperCase()}
                       </td>
                       <td className="px-6 py-4">
-                        <div className="font-medium text-slate-900 dark:text-white">
+                        <div className="font-medium text-foreground">
                           {[order.shippingInfo?.firstName, order.shippingInfo?.lastName].filter(Boolean).join(" ") || "Customer"}
                         </div>
-                        <div className="text-slate-500 text-xs">{order.shippingInfo?.email || "No Email"}</div>
-                        {order.shippingInfo?.phone && <div className="text-slate-500 text-xs">{order.shippingInfo?.phone}</div>}
+                        <div className="text-muted-foreground text-xs">{order.shippingInfo?.email || "No Email"}</div>
+                        {order.shippingInfo?.phone && <div className="text-muted-foreground text-xs">{order.shippingInfo?.phone}</div>}
                       </td>
                       <td className="px-6 py-4 font-medium text-primary">GHS{Number(order.total).toFixed(2)}</td>
                       <td className="px-6 py-4">
-                        <div className="capitalize">{order.paymentMethod.replace(/_/g, " ")}</div>
-                        <div className="text-xs text-slate-500">{order.status}</div>
+                        <div className="capitalize text-foreground">{order.paymentMethod.replace(/_/g, " ")}</div>
+                        <div className="text-xs text-muted-foreground">{order.status}</div>
                       </td>
-                      <td className="px-6 py-4 text-slate-500">
+                      <td className="px-6 py-4 text-muted-foreground">
                         {new Date(order.createdAt).toLocaleString()}
                       </td>
                     </tr>
@@ -195,7 +195,7 @@ export default function AdminCheckoutCRM() {
               </table>
             </div>
           ) : (
-            <div className="p-8 text-center text-slate-500">No successful checkouts found.</div>
+            <div className="p-8 text-center text-muted-foreground">No successful checkouts found.</div>
           )}
         </div>
       )}

@@ -1,7 +1,9 @@
 import { NextRequest } from "next/server";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { whatsappMessageRetries } from "@/lib/drizzle/schema";
+import { eq, desc, sql } from "drizzle-orm";
 import { retryMessageImmediately, processPendingRetries } from "@/lib/whatsapp-retry";
 
 export async function GET(request: NextRequest) {
@@ -14,21 +16,18 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
 
-    let sql = "SELECT * FROM whatsapp_message_retries";
-    const params: string[] = [];
-
+    let condition = undefined;
     if (status) {
-      sql += " WHERE status = $1";
-      params.push(status);
+      condition = eq(whatsappMessageRetries.status, status);
     }
 
-    sql += " ORDER BY created_at DESC LIMIT 100";
-
-    const result = await query(sql, params);
-
-    return apiResponse.success({
-      retries: result.rows,
+    const retries = await db.query.whatsappMessageRetries.findMany({
+      where: condition,
+      orderBy: [desc(whatsappMessageRetries.createdAt)],
+      limit: 100
     });
+
+    return apiResponse.success({ retries });
   } catch (error: any) {
     console.error("Error in WhatsApp retries GET API:", error);
     return apiResponse.error(error.message || "Internal server error");
@@ -61,10 +60,9 @@ export async function POST(request: NextRequest) {
       if (!messageId) {
         return apiResponse.error("Missing messageId parameter", 400);
       }
-      await query(
-        `UPDATE whatsapp_message_retries SET status = 'cancelled', updated_at = NOW() WHERE message_id = $1`,
-        [messageId]
-      );
+      await db.update(whatsappMessageRetries)
+        .set({ status: 'cancelled', updatedAt: sql`NOW()` })
+        .where(eq(whatsappMessageRetries.messageId, messageId));
       return apiResponse.success({ message: "Message retry cancelled successfully" });
     }
 

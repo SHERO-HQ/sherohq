@@ -34,10 +34,45 @@ export async function GET(request: NextRequest) {
   });
 }
 
+import { createHmac, timingSafeEqual } from "node:crypto";
+
 // POST: Incoming messages & status updates
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const rawBody = await request.text();
+    const signature = request.headers.get("x-hub-signature-256");
+    const appSecret = process.env.WHATSAPP_APP_SECRET;
+
+    if (appSecret) {
+      if (!signature) {
+        return NextResponse.json(
+          { error: "Missing signature header" },
+          { status: 401 }
+        );
+      }
+
+      const expectedSig =
+        "sha256=" +
+        createHmac("sha256", appSecret).update(rawBody).digest("hex");
+
+      const sigBuffer = Buffer.from(signature);
+      const expectedBuffer = Buffer.from(expectedSig);
+
+      if (
+        sigBuffer.length !== expectedBuffer.length ||
+        !timingSafeEqual(sigBuffer, expectedBuffer)
+      ) {
+        console.error("WhatsApp webhook signature mismatch");
+        return NextResponse.json(
+          { error: "Invalid signature" },
+          { status: 401 }
+        );
+      }
+    } else if (process.env.NODE_ENV === "production") {
+      console.warn("WHATSAPP_APP_SECRET is not configured in production!");
+    }
+
+    const body = JSON.parse(rawBody);
 
     if (process.env.NODE_ENV !== "production") {
       console.log("WhatsApp webhook received:", {
@@ -143,19 +178,19 @@ async function handleIncomingMessage(msg: any, contact: any) {
 
     // MULTI-CHANNEL ADMIN ALERTS
     try {
-      const { query } = await import("@/lib/db");
-      const recentMsgs = await query(
-        `
+      const { db } = await import("@/lib/db");
+      const { sql } = await import("drizzle-orm");
+      const recentMsgs = await db.execute(
+        sql`
         SELECT count(*) FROM whatsapp_messages
-        WHERE sender_wa_id = $1 
+        WHERE sender_wa_id = ${senderWaId} 
         AND direction = 'inbound'
         AND created_at > NOW() - INTERVAL '15 minutes'
-      `,
-        [senderWaId],
+      `
       );
 
       // Only trigger if this is the first message in the last 15 mins (spam prevention)
-      if (parseInt(recentMsgs.rows[0].count) <= 1) {
+      if (parseInt(String(recentMsgs.rows[0]?.count ?? "0")) <= 1) {
         const { notificationService } = await import("@/lib/notifications");
         await notificationService
           .sendNewWhatsAppAlert(
@@ -193,15 +228,15 @@ async function handleIncomingMessage(msg: any, contact: any) {
 
       if (currentState === "WAITING_FOR_ORDER_ID") {
         const orderId = content.trim();
-        const { query } = await import("@/lib/db");
+        const { db } = await import("@/lib/db");
+        const { sql } = await import("drizzle-orm");
         try {
-          const orderRes = await query(
-            `SELECT status, total, payment_status FROM orders WHERE id = $1`,
-            [orderId],
+          const orderRes = await db.execute(
+            sql`SELECT status, total, payment_status FROM orders WHERE id = ${orderId}`
           );
 
           if (orderRes.rows.length > 0) {
-            const order = orderRes.rows[0];
+            const order: any = orderRes.rows[0];
             await sendAutoReply(senderWaId, PHONE_NUMBER_ID, {
               enabled: true,
               message: `✅ *Order Found!*\n\n*Order ID:* ${orderId}\n*Status:* ${order.status.toUpperCase()}\n*Total:* ₵${order.total}\n*Payment:* ${order.payment_status.toUpperCase()}\n\nLet me know if you need anything else!`,
@@ -261,30 +296,29 @@ async function handleIncomingMessage(msg: any, contact: any) {
       if (!autoReplyText) {
         let isNewThisHour = false;
         try {
-          const { query } = await import("@/lib/db");
-          const recent24h = await query(
-            `
+          const { db } = await import("@/lib/db");
+          const { sql } = await import("drizzle-orm");
+          const recent24h = await db.execute(
+            sql`
             SELECT count(*) FROM whatsapp_messages
-            WHERE sender_wa_id = $1 
+            WHERE sender_wa_id = ${senderWaId} 
             AND direction = 'inbound'
             AND created_at > NOW() - INTERVAL '24 hours'
-          `,
-            [senderWaId],
+          `
           );
 
-          const recent1h = await query(
-            `
+          const recent1h = await db.execute(
+            sql`
             SELECT count(*) FROM whatsapp_messages
-            WHERE sender_wa_id = $1 
+            WHERE sender_wa_id = ${senderWaId} 
             AND direction = 'inbound'
             AND created_at > NOW() - INTERVAL '1 hour'
-          `,
-            [senderWaId],
+          `
           );
 
           // If count > 1, they've sent other messages in the last 24 hours besides the one we just stored
-          isNewConversation = parseInt(recent24h.rows[0].count) <= 1;
-          isNewThisHour = parseInt(recent1h.rows[0].count) <= 1;
+          isNewConversation = parseInt(String(recent24h.rows[0]?.count ?? "0")) <= 1;
+          isNewThisHour = parseInt(String(recent1h.rows[0]?.count ?? "0")) <= 1;
         } catch (err) {
           console.error("Failed to check 24h messages for throttle:", err);
         }

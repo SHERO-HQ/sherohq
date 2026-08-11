@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
-import { query } from "@/lib/db";
+import { db } from "@/lib/db";
+import { sql } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 import { logActivity } from "@/lib/activity";
@@ -21,10 +22,9 @@ export async function DELETE(
        return apiResponse.error("Invalid ID format", 400);
     }
 
-    const result = await query(
-      "DELETE FROM customer_feedback WHERE id = $1 RETURNING *",
-      [feedbackId]
-    );
+    const result = await db.execute(sql`
+      DELETE FROM customer_feedback WHERE id = ${feedbackId}
+    `);
 
     if (result.rowCount === 0) {
       return apiResponse.error("Feedback not found", 404);

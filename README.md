@@ -2,35 +2,54 @@
 
 A modern, responsive platform built for **SHERO HQ Technologies**. This website showcases premium hardware, custom systems configuration, managed software solutions, and expert consultation services, all backed by a high-performance Next.js Native Architecture.
 
+---
+
+## 📚 System Documentation Suite
+
+For detailed technical guides, architectural specifications, and API references, please consult our documentation suite in `docs/`:
+
+- 🏗️ **[System Architecture & Overview](docs/ARCHITECTURE.md)**: Next.js native architecture, Drizzle ORM data layer, security controls, state management, and design tokens.
+- 📡 **[API Reference & Integration Guide](docs/API_DOCUMENTATION.md)**: Endpoint documentation, request/response models, Zod validation schemas, CSRF protection, and rate limiting.
+- 🛠️ **[Developer & Operations Handbook](docs/DEVELOPER_GUIDE.md)**: Setup runbook, coding constraints (strict 300-line file limit), testing playbook, Drizzle migrations, and production deployment.
+- 🎨 **[Design System Guide](docs/DESIGN_GUIDE.md)**: OKLCH dual-primary color system, typography rules, accessibility standards, and visual guidelines.
+- 🔒 **[Security Assessment](docs/SECURITY_ASSESSMENT.md)**: Comprehensive OWASP & STRIDE threat model, session rotation, CSRF double-submit protection, and TOTP MFA controls.
+
+---
+
 ## 🚀 Key Features
 
 - **Next.js 16+ Native Architecture**: Unified full-stack codebase utilizing modern App Router API routes.
+- **Unified Drizzle ORM Data Layer**: Strongly typed, parameterized PostgreSQL queries across all 24+ API endpoints.
+- **Security Hardening**: Session rotation on login, per-account brute-force lockout, double-submit cookie CSRF tokens, and security headers.
 - **Premium Solutions Showcase**: Immersive displays for managed IT support, server infrastructure, custom software engineering, and procurement services.
-- **Hardware & Products Showcase**: Elegant catalog featuring business-grade laptops, networking systems, accessories, and configured hardware solutions.
-- **Direct Lead Generation**: Seamless client engagement with dynamic WhatsApp inquiry workflows and custom quote triggers on all products.
-- **High-Fidelity Consultation Scheduler**: Integrated scheduler enabling clients to discover strategies and book discovery sessions directly.
+- **Direct Lead Generation**: Seamless client engagement with dynamic WhatsApp inquiry workflows and custom quote triggers.
 - **Multi-Factor Authentication (MFA)**: Production-grade TOTP-based security for administrative accounts.
-- **Modern User Interface**: Built with React 19, Tailwind CSS v4, and Framer Motion for premium visual depth.
+- **React Query State Management**: Client-server state decoupling for ultra-fast UI rendering and real-time query invalidation.
 - **Admin Command Center**: Comprehensive dashboard with real-time analytics, user audits, and activity logging.
+
+---
 
 ## 🛠️ Tech Stack
 
 ### Full Stack
 
-- **Framework**: [Next.js](https://nextjs.org/) (App Router, Turbopack)
+- **Framework**: [Next.js 16+](https://nextjs.org/) (App Router, Turbopack)
 - **UI Library**: [React 19](https://react.dev/)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Language**: [TypeScript 5.9](https://www.typescriptlang.org/)
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
-- **Database**: [PostgreSQL](https://www.postgresql.org/) (via [Supabase](https://supabase.com/))
-- **Animations**: [Framer Motion / Motion](https://www.framer.com/motion/)
-- **Icons**: [Lucide React](https://lucide.dev/)
+- **Database & ORM**: [PostgreSQL](https://www.postgresql.org/) via [Drizzle ORM](https://orm.drizzle.team/)
+- **State Management**: [TanStack React Query v5](https://tanstack.com/query)
+- **Animations**: [Motion](https://motion.dev/)
+- **Testing**: [Vitest](https://vitest.dev/) (Unit) & [Playwright](https://playwright.dev/) (E2E)
+
+---
 
 ## 🏁 Getting Started
 
 ### Prerequisites
 
 - Node.js (v20+ recommended)
-- Yarn 4.x package manager
+- Yarn 4.x package manager (`yarn@4.12.0`)
 
 ### Installation
 
@@ -49,64 +68,34 @@ A modern, responsive platform built for **SHERO HQ Technologies**. This website 
 
 ### Environment Setup
 
-Create a `.env.local` file in the root directory:
+Create a `.env.local` file in the root directory (see [docs/DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md) for full template):
 
 ```env
-# Database
-DATABASE_URL=your_postgresql_connection_string
-
-# Supabase (Storage/Auth)
-SUPABASE_URL=your_supabase_url
-SUPABASE_KEY=your_supabase_anon_key
-
-# Email (Resend)
-RESEND_API_KEY=your_resend_key
+DATABASE_URL=postgresql://user:pass@host:5432/dbname
+SESSION_SECRET=your_32_byte_session_secret
+UPSTASH_REDIS_REST_URL=https://your-redis.upstash.io
+UPSTASH_REDIS_REST_TOKEN=your_upstash_token
 ```
 
-## 🏃‍♂️ Running the Project
+---
 
-### Development
+## 🏃‍♂️ Development & Testing
 
 ```bash
+# Start local dev server
 yarn dev
+
+# Run Vitest unit tests
+yarn test
+
+# Run Playwright E2E tests
+yarn test:e2e
+
+# Run TypeScript type check
+npx tsc --noEmit
 ```
 
-- Frontend & API: [http://localhost:3000](http://localhost:3000)
-
-### Production Build
-
-```bash
-yarn build
-yarn start
-```
-
-## 🧪 Testing
-
-- **Unit/Integration**: `yarn test` (Vitest)
-- **End-to-End**: `yarn test:e2e` (Playwright)
-
-## 📂 Project Structure
-
-```text
-sherotech/
-├── src/
-│   ├── app/             # App Router (Pages & API Routes)
-│   ├── components/      # UI Components (Atomic Design)
-│   ├── context/         # Auth, Admin, and Global Contexts
-│   ├── hooks/           # Custom React Hooks
-│   ├── lib/             # Server-side utilities (DB, Auth, Utils)
-│   ├── services/        # Client-side API service layers
-│   ├── utils/           # Shared utility functions
-│   └── views/           # Page-level view compositions
-├── public/              # Static assets
-├── tests/               # E2E and Integration tests
-├── next.config.ts       # Framework configuration
-└── package.json         # Dependencies and scripts
-```
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+---
 
 ## 📄 License
 

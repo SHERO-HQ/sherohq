@@ -1,5 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
-import { query } from "@/lib/db";
+import { apiResponse } from "@/lib/api-utils";
+import { NextRequest } from "next/server";
+import { db } from "@/lib/db";
+import { orders } from "@/lib/drizzle/schema";
+import { eq, desc } from "drizzle-orm";
 import { getUserFromSession } from "@/lib/auth";
 import { safeParse } from "@/lib/orderUtils";
 
@@ -12,32 +15,28 @@ export async function GET(
     const currentUser = await getUserFromSession();
 
     if (!currentUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return apiResponse.unauthorized();
     }
 
     if (currentUser.id !== userId) {
-      return NextResponse.json({ error: "Unauthorized to access these orders" }, { status: 403 });
+      return apiResponse.error("Unauthorized to access these orders", 403);
     }
 
-    const result = await query(
-      `
-      SELECT * FROM orders
-      WHERE "userId" = $1
-      ORDER BY "createdAt" DESC
-    `,
-      [userId]
-    );
+    const result = await db.select()
+      .from(orders)
+      .where(eq(orders.userId, userId))
+      .orderBy(desc(orders.createdAt));
 
-    const orders = result.rows.map((order) => ({
+    const formattedOrders = result.map((order) => ({
       ...order,
       items: safeParse(order.items),
       shippingInfo: safeParse(order.shippingInfo),
       total: Number(order.total),
     }));
 
-    return NextResponse.json(orders);
+    return apiResponse.success(formattedOrders);
   } catch (error) {
     console.error("Error fetching user orders:", error);
-    return NextResponse.json({ error: "Failed to fetch orders" }, { status: 500 });
+    return apiResponse.error("Failed to fetch orders", 500);
   }
 }
