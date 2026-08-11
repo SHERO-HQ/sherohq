@@ -3,7 +3,8 @@
 import React, { Suspense } from "react";
 
 import { usePathname } from "next/navigation";
-import { useAdminUser, AdminProvider } from "@/hooks/queries/useAdminQuery";
+import { useAdminUser } from "@/hooks/queries/useAdminQuery";
+import { AdminProvider } from "@/context/AdminContext";
 import AdminLayout from "@/components/admin/AdminLayout";
 
 function AdminLoading() {
