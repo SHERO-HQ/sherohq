@@ -51,7 +51,7 @@ export function AdminOrdersFilters({
               className={cn(
                 "px-4 py-1 rounded text-sm font-medium transition whitespace-nowrap",
                 statusFilter === status.id
-                  ? "bg-brand-secondary-600 text-foreground shadow shadow-brand-secondary-500/20"
+                  ? "bg-brand-secondary-600 text-white shadow shadow-brand-secondary-500/20"
                   : "text-muted-foreground hover:text-foreground hover:bg-accent",
               )}
             >

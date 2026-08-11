@@ -63,7 +63,7 @@ export function NewsletterTemplatesTab({
           className={cn(
             "gap-2",
             activeType === "email"
-              ? "bg-brand-secondary-500 hover:bg-brand-secondary-600 text-foreground border-transparent"
+              ? "bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white border-transparent"
               : "text-muted-foreground",
           )}
         >
@@ -75,7 +75,7 @@ export function NewsletterTemplatesTab({
           className={cn(
             "gap-2",
             activeType === "whatsapp"
-              ? "bg-brand-secondary-500 hover:bg-brand-secondary-600 text-foreground border-transparent"
+              ? "bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white border-transparent"
               : "text-muted-foreground",
           )}
         >
@@ -87,7 +87,7 @@ export function NewsletterTemplatesTab({
           className={cn(
             "gap-2",
             activeType === "sms"
-              ? "bg-brand-secondary-500 hover:bg-brand-secondary-600 text-foreground border-transparent"
+              ? "bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white border-transparent"
               : "text-muted-foreground",
           )}
         >

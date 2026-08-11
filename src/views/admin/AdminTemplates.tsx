@@ -123,7 +123,7 @@ export default function AdminTemplates() {
             <RefreshCw className={cn("h-4 w-4 mr-2", isSyncing && "animate-spin")} />
             Sync WhatsApp
           </Button>
-          <Button onClick={() => setIsCreating(true)} className="bg-brand-secondary-600 text-foreground hover:bg-brand-secondary-500">
+          <Button onClick={() => setIsCreating(true)} className="bg-brand-secondary-600 text-white hover:bg-brand-secondary-500">
             <Plus className="h-4 w-4 mr-2" />
             New Template
           </Button>
@@ -208,7 +208,7 @@ export default function AdminTemplates() {
               <Button variant="ghost" onClick={() => setIsCreating(false)} className="rounded px-6">
                 Cancel
               </Button>
-              <Button onClick={handleSave} className="bg-brand-secondary-600 text-foreground hover:bg-brand-secondary-500 rounded px-6 shadow-md shadow-brand-secondary-500/20">
+              <Button onClick={handleSave} className="bg-brand-secondary-600 text-white hover:bg-brand-secondary-500 rounded px-6 shadow-md shadow-brand-secondary-500/20">
                 <Save className="h-4 w-4 mr-2" /> Save Template
               </Button>
             </div>

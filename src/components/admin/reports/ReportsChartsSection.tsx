@@ -251,45 +251,48 @@ export function StockDistributionChart({
   readonly data: StockDistribution[];
 }) {
   const prefersReducedMotion = useReducedMotion();
+  const hasData = data && data.length > 0 && data.some((item) => item.value > 0);
+
   return (
     <div className="bg-card/40 border border-border rounded p-6 hover:border-blue-500/20 transition-colors duration-300">
       <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
         <PieChartIcon className="w-5 h-5 text-blue-400" />
         Stock Distribution
       </h3>
-      <div className="h-62">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={
-                data.length > 0
-                  ? data
-                  : [{ name: "No Data", value: 1, color: "#334155" }]
-              }
-              cx="50%"
-              cy="50%"
-              innerRadius={60}
-              outerRadius={80}
-              paddingAngle={5}
-              dataKey="value"
-              isAnimationActive={!prefersReducedMotion}
-            >
-              {(data.length > 0
-                ? data
-                : [{ name: "No Data", value: 1, color: "#334155" }]
-              ).map((entry, index) => (
-                <Cell
-                  key={`stock-${entry.name || index}`}
-                  fill={entry.color}
-                  stroke="rgba(15, 23, 42, 0.5)"
-                  strokeWidth={2}
-                />
-              ))}
-            </Pie>
-            <Tooltip content={<ChartTooltip />} />
-            <Legend verticalAlign="bottom" height={36} />
-          </PieChart>
-        </ResponsiveContainer>
+      <div className="h-62 flex items-center justify-center">
+        {hasData ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={80}
+                paddingAngle={5}
+                dataKey="value"
+                isAnimationActive={!prefersReducedMotion}
+              >
+                {data.map((entry, index) => (
+                  <Cell
+                    key={`stock-${entry.name || index}`}
+                    fill={entry.color}
+                    stroke="rgba(15, 23, 42, 0.5)"
+                    strokeWidth={2}
+                  />
+                ))}
+              </Pie>
+              <Tooltip content={<ChartTooltip />} />
+              <Legend verticalAlign="bottom" height={36} />
+            </PieChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="flex flex-col items-center justify-center text-center p-6 text-muted-foreground">
+            <PieChartIcon className="w-10 h-10 stroke-1 text-muted-foreground/40 mb-2" />
+            <p className="text-sm font-medium">No stock data recorded</p>
+            <p className="text-xs text-muted-foreground/70 mt-1">Stock levels will appear here once added.</p>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -301,45 +304,48 @@ export function OrderStatusChart({
   readonly data: OrderStatusDistribution[];
 }) {
   const prefersReducedMotion = useReducedMotion();
+  const hasData = data && data.length > 0 && data.some((item) => item.value > 0);
+
   return (
     <div className="bg-card/40 border border-border rounded p-6 hover:border-amber-500/20 transition-colors duration-300">
       <h3 className="text-lg font-bold text-foreground mb-6 flex items-center gap-2">
         <ShoppingCart className="w-5 h-5 text-amber-400" />
-        OrderStatus Chart
+        Order Status Chart
       </h3>
-      <div className="h-62">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={
-                data.length > 0
-                  ? data
-                  : [{ name: "No Data", value: 1, color: "#334155" }]
-              }
-              cx="50%"
-              cy="50%"
-              innerRadius={60}
-              outerRadius={80}
-              paddingAngle={5}
-              dataKey="value"
-              isAnimationActive={!prefersReducedMotion}
-            >
-              {(data.length > 0
-                ? data
-                : [{ name: "No Data", value: 1, color: "#334155" }]
-              ).map((entry, index) => (
-                <Cell
-                  key={`status-${entry.name || index}`}
-                  fill={entry.color}
-                  stroke="rgba(15, 23, 42, 0.5)"
-                  strokeWidth={2}
-                />
-              ))}
-            </Pie>
-            <Tooltip content={<ChartTooltip />} />
-            <Legend verticalAlign="bottom" height={36} />
-          </PieChart>
-        </ResponsiveContainer>
+      <div className="h-62 flex items-center justify-center">
+        {hasData ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={80}
+                paddingAngle={5}
+                dataKey="value"
+                isAnimationActive={!prefersReducedMotion}
+              >
+                {data.map((entry, index) => (
+                  <Cell
+                    key={`status-${entry.name || index}`}
+                    fill={entry.color}
+                    stroke="rgba(15, 23, 42, 0.5)"
+                    strokeWidth={2}
+                  />
+                ))}
+              </Pie>
+              <Tooltip content={<ChartTooltip />} />
+              <Legend verticalAlign="bottom" height={36} />
+            </PieChart>
+          </ResponsiveContainer>
+        ) : (
+          <div className="flex flex-col items-center justify-center text-center p-6 text-muted-foreground">
+            <ShoppingCart className="w-10 h-10 stroke-1 text-muted-foreground/40 mb-2" />
+            <p className="text-sm font-medium">No order status data recorded</p>
+            <p className="text-xs text-muted-foreground/70 mt-1">Order statuses will appear here once available.</p>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -421,7 +421,7 @@ export function NewsletterComposerTab({
 
           <Button
             disabled={isSending}
-            className="mt-4 w-full bg-brand-secondary-600 text-foreground hover:bg-brand-secondary-500"
+            className="mt-4 w-full bg-brand-secondary-600 text-white hover:bg-brand-secondary-500"
             onClick={() => void handleSendCampaign("live")}
           >
             <Send className="h-4 w-4" />

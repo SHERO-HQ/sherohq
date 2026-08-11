@@ -139,7 +139,7 @@ export function RescheduleConsultationModal({
           <Button
             type="submit"
             disabled={isRescheduling}
-            className="bg-brand-secondary-500 hover:bg-brand-secondary-600 text-foreground"
+            className="bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white"
           >
             {isRescheduling ? "Rescheduling..." : "Reschedule"}
           </Button>

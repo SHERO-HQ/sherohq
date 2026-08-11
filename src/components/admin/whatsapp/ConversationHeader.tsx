@@ -30,16 +30,16 @@ export function ConversationHeader({
 }: ConversationHeaderProps) {
   return (
     <>
-      <div className="px-4 py-2.5 bg-[#202c33] flex items-center justify-between shrink-0 relative z-10 border-b border-black/20">
+      <div className="px-4 py-2.5 bg-card dark:bg-[#202c33] flex items-center justify-between shrink-0 relative z-10 border-b border-border">
         <div className="flex items-center gap-3.5 cursor-pointer">
-          <div className="w-10 h-10 rounded-full bg-[#dfe5e7] overflow-hidden flex items-center justify-center relative shrink-0">
-            <User className="w-6 h-6 text-[#8696a0] mt-1.5" />
+          <div className="w-10 h-10 rounded-full bg-muted dark:bg-[#dfe5e7] overflow-hidden flex items-center justify-center relative shrink-0">
+            <User className="w-6 h-6 text-muted-foreground dark:text-[#8696a0] mt-1.5" />
           </div>
           <div className="flex flex-col justify-center">
-            <h3 className="text-[16px] font-normal text-[#e9edef] leading-tight mb-0.5">
+            <h3 className="text-[16px] font-normal text-foreground dark:text-[#e9edef] leading-tight mb-0.5">
               {selectedPhone}
             </h3>
-            <p className="text-[13px] text-[#8696a0] leading-tight">
+            <p className="text-[13px] text-muted-foreground dark:text-[#8696a0] leading-tight">
               {headerStatus}
             </p>
           </div>
@@ -48,7 +48,7 @@ export function ConversationHeader({
           <button
             onClick={() => void fetchMessages(selectedPhone)}
             disabled={loading}
-            className="text-[#aebac1] hover:text-[#e9edef] p-2 rounded-full transition-colors disabled:opacity-50 flex items-center"
+            className="text-muted-foreground hover:text-foreground dark:text-[#aebac1] dark:hover:text-[#e9edef] p-2 rounded-full transition-colors disabled:opacity-50 flex items-center"
             title="Sync Messages"
           >
             <RefreshCw className={`w-5 h-5 ${loading ? "animate-spin" : ""}`} />
@@ -58,7 +58,7 @@ export function ConversationHeader({
               setIsMessageSearchOpen(!isMessageSearchOpen);
               if (isMessageSearchOpen) setMessageSearchQuery("");
             }}
-            className={`p-2 rounded-full transition-colors hidden sm:block ${isMessageSearchOpen ? "text-[#e9edef] bg-muted/50" : "text-[#aebac1] hover:text-[#e9edef]"}`}
+            className={`p-2 rounded-full transition-colors hidden sm:block ${isMessageSearchOpen ? "text-foreground bg-accent dark:text-[#e9edef] dark:bg-muted/50" : "text-muted-foreground hover:text-foreground dark:text-[#aebac1] dark:hover:text-[#e9edef]"}`}
           >
             <svg
               viewBox="0 0 24 24"
@@ -75,7 +75,7 @@ export function ConversationHeader({
           <div className="relative">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`p-2 rounded-full transition-colors ${isMenuOpen ? "text-[#e9edef] bg-muted/50" : "text-[#aebac1] hover:text-[#e9edef]"}`}
+              className={`p-2 rounded-full transition-colors ${isMenuOpen ? "text-foreground bg-accent dark:text-[#e9edef] dark:bg-muted/50" : "text-muted-foreground hover:text-foreground dark:text-[#aebac1] dark:hover:text-[#e9edef]"}`}
             >
               <svg
                 viewBox="0 0 24 24"
@@ -95,27 +95,27 @@ export function ConversationHeader({
                   className="fixed inset-0 z-40"
                   onClick={() => setIsMenuOpen(false)}
                 ></div>
-                <div className="absolute right-0 top-full mt-2 w-48 bg-[#233138] border border-border rounded shadow-lg py-2 z-50 transform origin-top-right transition-all">
+                <div className="absolute right-0 top-full mt-2 w-48 bg-card dark:bg-[#233138] border border-border rounded shadow-lg py-2 z-50 transform origin-top-right transition-all">
                   <button
-                    className="w-full text-left px-4 py-2 text-sm text-[#d1d7db] hover:bg-[#111b21] transition-colors"
+                    className="w-full text-left px-4 py-2 text-sm text-foreground dark:text-[#d1d7db] hover:bg-accent dark:hover:bg-[#111b21] transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Contact info
                   </button>
                   <button
-                    className="w-full text-left px-4 py-2 text-sm text-[#d1d7db] hover:bg-[#111b21] transition-colors"
+                    className="w-full text-left px-4 py-2 text-sm text-foreground dark:text-[#d1d7db] hover:bg-accent dark:hover:bg-[#111b21] transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Select messages
                   </button>
                   <button
-                    className="w-full text-left px-4 py-2 text-sm text-[#d1d7db] hover:bg-[#111b21] transition-colors"
+                    className="w-full text-left px-4 py-2 text-sm text-foreground dark:text-[#d1d7db] hover:bg-accent dark:hover:bg-[#111b21] transition-colors"
                     onClick={() => void handleDeleteChat("clear")}
                   >
                     Clear chat
                   </button>
                   <button
-                    className="w-full text-left px-4 py-2 text-sm text-rose-400 hover:bg-[#111b21] transition-colors"
+                    className="w-full text-left px-4 py-2 text-sm text-rose-500 dark:text-rose-400 hover:bg-accent dark:hover:bg-[#111b21] transition-colors"
                     onClick={() => void handleDeleteChat("delete")}
                   >
                     Delete chat
@@ -128,20 +128,20 @@ export function ConversationHeader({
       </div>
 
       {isMessageSearchOpen && (
-        <div className="px-4 py-2 bg-[#202c33] border-b border-black/20 flex items-center shrink-0 z-10 transition-all">
-          <div className="flex-1 bg-[#2a3942] rounded flex items-center px-3 py-1.5 border border-border">
+        <div className="px-4 py-2 bg-card dark:bg-[#202c33] border-b border-border flex items-center shrink-0 z-10 transition-all">
+          <div className="flex-1 bg-muted/50 dark:bg-[#2a3942] rounded flex items-center px-3 py-1.5 border border-border">
             <input
               type="text"
               placeholder="Search messages..."
               value={messageSearchQuery}
               onChange={(e) => setMessageSearchQuery(e.target.value)}
-              className="bg-transparent text-[#e9edef] text-sm w-full focus:outline-none placeholder-[#8696a0]"
+              className="bg-transparent text-foreground dark:text-[#e9edef] text-sm w-full focus:outline-none placeholder:text-muted-foreground dark:placeholder-[#8696a0]"
               autoFocus
             />
             {messageSearchQuery && (
               <button
                 onClick={() => setMessageSearchQuery("")}
-                className="text-[#8696a0] hover:text-[#e9edef] ml-2"
+                className="text-muted-foreground hover:text-foreground dark:text-[#8696a0] dark:hover:text-[#e9edef] ml-2"
               >
                 <X className="w-4 h-4" />
               </button>

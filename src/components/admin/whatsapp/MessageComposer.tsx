@@ -89,7 +89,7 @@ export function MessageComposer({
             <button
               type="submit"
               disabled={sending || !messageText.trim()}
-              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-foreground w-10 h-10 rounded-full flex items-center justify-center transition-transform active:scale-95 disabled:opacity-50 disabled:active:scale-100 shrink-0 mb-0.5"
+              className="bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white w-10 h-10 rounded-full flex items-center justify-center transition-transform active:scale-95 disabled:opacity-50 disabled:active:scale-100 shrink-0 mb-0.5"
             >
               {sending ? (
                 <Loader2 className="w-4 h-4 animate-spin" />

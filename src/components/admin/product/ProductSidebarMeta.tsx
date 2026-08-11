@@ -376,7 +376,7 @@ export default function ProductSidebarMeta({
             <div className={cn(
               "w-5 h-5 rounded flex items-center justify-center border transition-all duration-200",
               isSpotlight
-                ? "border-brand-secondary-500 bg-brand-secondary-600 text-foreground"
+                ? "border-brand-secondary-500 bg-brand-secondary-600 text-white"
                 : "border-border bg-card group-hover:border-border"
             )}>
               {isSpotlight && (
@@ -411,7 +411,7 @@ export default function ProductSidebarMeta({
             <div className={cn(
               "w-5 h-5 rounded flex items-center justify-center border transition-all duration-200",
               isFeatured
-                ? "border-brand-secondary-500 bg-brand-secondary-600 text-foreground"
+                ? "border-brand-secondary-500 bg-brand-secondary-600 text-white"
                 : "border-border bg-card group-hover:border-border"
             )}>
               {isFeatured && (

@@ -2,7 +2,7 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, PieChart as PieChartIcon } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -201,6 +201,11 @@ export function DashboardOrderStatusPieChart({
   isLoading: boolean;
 }) {
   const prefersReducedMotion = useReducedMotion();
+  const hasData =
+    orderStatusDist &&
+    orderStatusDist.length > 0 &&
+    orderStatusDist.some((item) => item.value > 0);
+
   return (
     <Card className="bg-card/40 border-border overflow-hidden relative group">
       <div className="absolute inset-0 bg-radial-gradient from-blue-500/2 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
@@ -213,14 +218,14 @@ export function DashboardOrderStatusPieChart({
         </div>
       </CardHeader>
       <CardContent className="pt-6">
-        <div className="h-75 w-full">
+        <div className="h-75 w-full flex items-center justify-center">
           {isLoading ? (
             <PieSkeleton />
-          ) : (
+          ) : hasData ? (
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={orderStatusDist || []}
+                  data={orderStatusDist}
                   innerRadius={60}
                   outerRadius={80}
                   paddingAngle={5}
@@ -233,6 +238,12 @@ export function DashboardOrderStatusPieChart({
                 <Legend verticalAlign="bottom" height={36} />
               </PieChart>
             </ResponsiveContainer>
+          ) : (
+            <div className="flex flex-col items-center justify-center text-center p-6 text-muted-foreground">
+              <PieChartIcon className="w-10 h-10 stroke-1 text-muted-foreground/40 mb-2" />
+              <p className="text-sm font-medium">No order status data available</p>
+              <p className="text-xs text-muted-foreground/70 mt-1">Orders will appear here once recorded.</p>
+            </div>
           )}
         </div>
       </CardContent>

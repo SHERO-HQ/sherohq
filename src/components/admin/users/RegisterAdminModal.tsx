@@ -62,7 +62,7 @@ export function RegisterAdminModal({
             }
             required
             placeholder="e.g. john_doe"
-            className="bg-card border-border text-foreground placeholder:text-slate-700 focus:ring-brand-secondary-500/20"
+            className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:ring-brand-secondary-500/20"
           />
         </div>
 
@@ -79,7 +79,7 @@ export function RegisterAdminModal({
             }
             required
             placeholder="john@example.com"
-            className="bg-card border-border text-foreground placeholder:text-slate-700 focus:ring-brand-secondary-500/20"
+            className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:ring-brand-secondary-500/20"
           />
         </div>
 
@@ -95,7 +95,7 @@ export function RegisterAdminModal({
               setFormData({ ...formData, phone: e.target.value })
             }
             placeholder="02XXXXXXXX or 05XXXXXXXX"
-            className="bg-card border-border text-foreground placeholder:text-slate-700 focus:ring-brand-secondary-500/20"
+            className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:ring-brand-secondary-500/20"
           />
         </div>
 
@@ -112,7 +112,7 @@ export function RegisterAdminModal({
             }
             required
             placeholder="••••••••"
-            className="bg-card border-border text-foreground placeholder:text-slate-700 focus:ring-brand-secondary-500/20"
+            className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:ring-brand-secondary-500/20"
           />
           <p className="text-[10px] text-muted-foreground">
             Min 8 characters — requires uppercase, lowercase, and a number.

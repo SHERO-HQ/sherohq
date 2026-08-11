@@ -176,7 +176,7 @@ export function NewsletterSubscribersTab({
                             <>
                               <Button
                                 size="sm"
-                                className="h-8 bg-brand-secondary-600 text-foreground hover:bg-brand-secondary-500"
+                                className="h-8 bg-brand-secondary-600 text-white hover:bg-brand-secondary-500"
                                 disabled={isSavingContact}
                                 onClick={() => onSaveSubscriberContact(subscriber.id)}
                               >

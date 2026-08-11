@@ -206,8 +206,8 @@ export function AIAnalyticsCharts({
             Why users are talking to SHERO
           </CardDescription>
         </CardHeader>
-        <CardContent className="h-75 min-h-50">
-          {intentData.length > 0 ? (
+        <CardContent className="h-75 min-h-50 flex flex-col justify-center">
+          {intentData && intentData.length > 0 && intentData.some(entry => entry.count > 0) ? (
             <>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>

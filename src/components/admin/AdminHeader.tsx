@@ -86,7 +86,7 @@ const AdminHeader = memo(({
   <>
    <header
     className={cn(
-     "fixed top-0 right-0 z-30 flex h-20 items-center justify-between glass-surface px-4 md:px-6 lg:px-8 transition-all duration-200 ease-in-out border-x-0 border-t-0",
+     "fixed top-0 right-0 z-40 flex h-20 items-center justify-between glass-surface px-4 md:px-6 lg:px-8 transition-all duration-200 ease-in-out border-x-0 border-t-0",
      isSidebarOpen ? "lg:left-64" : "lg:left-20",
      "left-0",
     )}

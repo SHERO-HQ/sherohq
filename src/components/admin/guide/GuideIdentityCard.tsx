@@ -61,7 +61,7 @@ export default function GuideIdentityCard({
             onChange={(e) => onTitleChange(e.target.value)}
             placeholder="e.g. How to Install RAM on Enterprise Servers"
             className={cn(
-              "bg-muted/50 border-border text-foreground placeholder:text-slate-600 focus-visible:ring-brand-secondary-500",
+              "bg-muted/50 border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-brand-secondary-500",
               errors.title &&
                 "border-rose-500 bg-rose-500/5 focus-visible:ring-rose-500",
             )}
@@ -87,7 +87,7 @@ export default function GuideIdentityCard({
             value={summary}
             onChange={(e) => onSummaryChange(e.target.value)}
             placeholder="A brief explanation of this guide displayed on listings..."
-            className="bg-muted/50 border-border text-foreground placeholder:text-slate-600 min-h-20 focus-visible:ring-brand-secondary-500"
+            className="bg-muted/50 border-border text-foreground placeholder:text-muted-foreground min-h-20 focus-visible:ring-brand-secondary-500"
             rows={3}
           />
         </div>

@@ -52,7 +52,7 @@ export function DashboardHeader({
               className={cn(
                 "px-3 py-1 text-xs font-semibold rounded transition",
                 period === opt.value
-                  ? "bg-brand-secondary-600 text-foreground shadow"
+                  ? "bg-brand-secondary-600 text-white shadow"
                   : "text-muted-foreground hover:text-foreground hover:bg-accent",
               )}
             >

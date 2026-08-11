@@ -206,7 +206,7 @@ export default function GuideMediaCard({
             value={coverImage}
             onChange={(e) => onCoverImageChange(e.target.value)}
             placeholder="https://example.com/banner-image.jpg"
-            className="bg-muted/50 border-border text-foreground placeholder:text-slate-600 focus-visible:ring-brand-secondary-500 text-xs h-9"
+            className="bg-muted/50 border-border text-foreground placeholder:text-muted-foreground focus-visible:ring-brand-secondary-500 text-xs h-9"
           />
         </div>
 

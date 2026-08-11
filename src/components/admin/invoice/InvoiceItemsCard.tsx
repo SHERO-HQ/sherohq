@@ -218,7 +218,7 @@ export default function InvoiceItemsCard({
                           onUpdateItem(item.id, "name", e.target.value)
                         }
                         className={cn(
-                          "bg-transparent border-transparent text-foreground font-bold h-auto focus-visible:ring-0 focus-visible:border-border text-sm placeholder:text-slate-600 truncate",
+                          "bg-transparent border-transparent text-foreground font-bold h-auto focus-visible:ring-0 focus-visible:border-border text-sm placeholder:text-muted-foreground truncate",
                           item.type === "product" ? "pointer-events-none select-none text-muted-foreground" : "hover:border-border"
                         )}
                         placeholder="Item Name"

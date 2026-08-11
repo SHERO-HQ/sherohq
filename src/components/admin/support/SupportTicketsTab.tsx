@@ -248,7 +248,7 @@ export function SupportTicketsTab({
                 {ticket.status !== "Resolved" && (
                   <Button
                     onClick={() => void handleResolveTicket(ticket.id)}
-                    className="bg-brand-secondary-500 hover:bg-brand-secondary-600 text-foreground rounded px-6"
+                    className="bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white rounded px-6"
                   >
                     Resolve
                   </Button>

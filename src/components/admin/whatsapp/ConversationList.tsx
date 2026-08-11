@@ -59,7 +59,7 @@ export function ConversationList({
           placeholder="Search phone number..."
           value={searchPhone}
           onChange={(e) => setSearchPhone(e.target.value)}
-          className="w-full px-3 py-2 bg-card border border-border rounded text-sm text-foreground placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 focus:border-transparent transition-all"
+          className="w-full px-3 py-2 bg-card border border-border rounded text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 focus:border-transparent transition-all"
         />
       </div>
 
@@ -69,7 +69,7 @@ export function ConversationList({
             {refreshing ? "Loading conversations..." : "No active chats found"}
           </div>
         ) : (
-          <ul className="divide-y divide-white/5">
+          <ul className="divide-y divide-border/40">
             {filteredConversations.map((conv) => (
               <li key={conv.sender_wa_id}>
                 <button
@@ -111,11 +111,11 @@ export function ConversationList({
                         {conv.last_message || "(no text content)"}
                       </p>
                       {conv.unread_count > 0 ? (
-                        <span className="bg-emerald-500 text-foreground text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center justify-center shrink-0 min-w-5 h-5">
+                        <span className="bg-emerald-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center justify-center shrink-0 min-w-5 h-5">
                           {conv.unread_count}
                         </span>
                       ) : (
-                        <span className="text-[10px] font-medium text-slate-500 shrink-0">
+                        <span className="text-[10px] font-medium text-muted-foreground shrink-0">
                           {conv.message_count} msgs
                         </span>
                       )}
