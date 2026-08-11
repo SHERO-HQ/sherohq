@@ -73,9 +73,11 @@ export default function NotificationCenter() {
             >
                 <Bell className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
                 {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center">
+                    <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-brand-secondary-500 text-slate-950 text-[10px] font-bold ring-2 ring-background shadow-sm select-none">
                         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-secondary-400 opacity-75" />
-                        <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-brand-secondary-500 ring-2 ring-background" />
+                        <span className="relative z-10 font-mono leading-none">
+                            {unreadCount > 99 ? "99+" : unreadCount}
+                        </span>
                     </span>
                 )}
             </button>

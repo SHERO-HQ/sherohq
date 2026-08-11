@@ -5,7 +5,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { MotionConfig, LazyMotion, domMax } from "motion/react";
 import { ThemeProvider } from "@/context/Theme";
 
-import { Toaster } from "sonner";
+import { SheroToaster } from "@/components/ui/SheroToaster";
 
 import { DialogProvider } from "@/components/ui/DialogProvider";
 
@@ -38,7 +38,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <LazyMotion features={domMax} strict>
     <ThemeProvider>
           <DialogProvider>
-           <Toaster richColors position="top-right" expand={true} />
+           <SheroToaster />
            <ScrollToTop />
            <ErrorBoundary>{children}</ErrorBoundary>
            <AIChatAssistant />

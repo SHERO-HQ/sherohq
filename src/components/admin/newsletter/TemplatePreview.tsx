@@ -43,7 +43,7 @@ export function TemplatePreview({
             <span className="text-sm font-bold">ST</span>
           </div>
           <div>
-            <h4 className="font-semibold text-sm">SHERO Tech</h4>
+            <h4 className="font-semibold text-sm">SHERO</h4>
             <p className="text-[10px] opacity-80">Official Business Account</p>
           </div>
         </div>
