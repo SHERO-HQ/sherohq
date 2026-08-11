@@ -3,8 +3,8 @@
 import React, { Suspense } from "react";
 
 import { usePathname } from "next/navigation";
+import { useAdminUser, AdminProvider } from "@/hooks/queries/useAdminQuery";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { useAdminUser } from "@/hooks/queries/useAdminQuery";
 
 function AdminLoading() {
   return (
@@ -65,6 +65,7 @@ export default function AdminLayoutClient({
 
   return (
     <Suspense fallback={<AdminLoading />}>
+      <AdminProvider>
         <main id="main-content" className="min-h-screen">
           {isLoginPage || !isAuthenticated ? (
             children
@@ -72,6 +73,7 @@ export default function AdminLayoutClient({
             <AdminLayout>{children}</AdminLayout>
           )}
         </main>
+      </AdminProvider>
     </Suspense>
   );
 }

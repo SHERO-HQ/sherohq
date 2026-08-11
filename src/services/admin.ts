@@ -181,6 +181,7 @@ export async function adminLogout(): Promise<void> {
 export async function getAdminMe(): Promise<{
   success: boolean;
   admin: AdminUser;
+  mustReset?: boolean;
 }> {
   const response = await authFetch(`${API_BASE}/admin-auth/me`);
   return handleResponse(response);

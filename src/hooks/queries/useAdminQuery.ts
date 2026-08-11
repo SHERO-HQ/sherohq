@@ -6,6 +6,8 @@ import {
 } from "@/services/api";
 import { formatAuthError } from "@/utils/authErrors";
 import { useState, useEffect } from "react";
+export { AdminProvider, useAdmin } from "@/context/AdminContext";
+
 
 export function useAdminSidebar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(() => {

@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { MotionConfig, LazyMotion, domMax } from "motion/react";
 import { ThemeProvider } from "@/context/Theme";
+import { AdminProvider } from "@/context/AdminContext";
 
 import { SheroToaster } from "@/components/ui/SheroToaster";
 
@@ -37,12 +38,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
    <MotionConfig reducedMotion="user">
     <LazyMotion features={domMax} strict>
     <ThemeProvider>
-          <DialogProvider>
-           <SheroToaster />
-           <ScrollToTop />
-           <ErrorBoundary>{children}</ErrorBoundary>
-           <AIChatAssistant />
-          </DialogProvider>
+      <AdminProvider>
+        <DialogProvider>
+         <SheroToaster />
+         <ScrollToTop />
+         <ErrorBoundary>{children}</ErrorBoundary>
+         <AIChatAssistant />
+        </DialogProvider>
+      </AdminProvider>
     </ThemeProvider>
     </LazyMotion>
    </MotionConfig>
