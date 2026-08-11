@@ -21,7 +21,7 @@ export default function AppImage({
   height,
   priority = false,
   className = "",
-  placeholderText = "No Image",
+  placeholderText = "SHERO",
   sizes,
 }: AppImageProps) {
   const [failedSrc, setFailedSrc] = useState<string | null>(null);
