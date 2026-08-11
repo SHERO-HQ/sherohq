@@ -40,6 +40,10 @@
     "postcss.config.js",
     "tailwind.config.ts",
     "test_*.ts",
-    "drizzle.config.ts"
+    "drizzle.config.ts",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "tests"
   ]
 }
