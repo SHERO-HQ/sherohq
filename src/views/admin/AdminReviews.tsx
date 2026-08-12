@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Modal } from "@/components/ui/Modal";
 import { getErrorMessage } from "@/utils/error";
+import { useDialog } from "@/hooks/useDialog";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 
 const ReviewsTableSkeleton = () => (
@@ -40,12 +41,9 @@ const AdminReviews = () => {
   const { data: reviews = [], isLoading } = useAdminReviews(ADMIN_POLLING_INTERVAL);
   const deleteMutation = useDeleteReview();
   const { addNotification } = useNotifications();
+  const dialog = useDialog();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
-  const [secondsLeft, setSecondsLeft] = useState(3);
-  const [activeTimer, setActiveTimer] = useState<NodeJS.Timeout | null>(null);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     productId: "",
@@ -62,48 +60,25 @@ const AdminReviews = () => {
       review.productId.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  const startSoftDelete = (id: string) => {
-    if (activeTimer) clearTimeout(activeTimer);
-    setPendingDeleteId(id);
-    setSecondsLeft(3);
+  const handleDeleteReview = async (id: string) => {
+    const confirmed = await dialog.confirm({
+      title: "Delete Review",
+      message: "Are you sure you want to delete this customer review? This action cannot be undone.",
+      type: "error",
+      confirmText: "Delete",
+    });
+    if (!confirmed) return;
 
-    const countdown = (secs: number) => {
-      if (secs <= 0) {
-        setPendingDeleteId(null);
-        deleteMutation.mutate(id, {
-          onSuccess: () => {
-            addNotification("Success", "Review deleted successfully", "success");
-          },
-          onError: (error) => {
-            console.error("Failed to delete review:", error);
-            addNotification("Error", getErrorMessage(error, "Failed to delete review"), "error");
-          }
-        });
-      } else {
-        setSecondsLeft(secs);
-        const timer = setTimeout(() => countdown(secs - 1), 1000);
-        setActiveTimer(timer);
-      }
-    };
-
-    const timer = setTimeout(() => countdown(2), 1000);
-    setActiveTimer(timer);
+    deleteMutation.mutate(id, {
+      onSuccess: () => {
+        addNotification("Success", "Review deleted successfully", "success");
+      },
+      onError: (error) => {
+        console.error("Failed to delete review:", error);
+        addNotification("Error", getErrorMessage(error, "Failed to delete review"), "error");
+      },
+    });
   };
-
-  const handleCancelDelete = (id: string) => {
-    if (activeTimer) {
-      clearTimeout(activeTimer);
-      setActiveTimer(null);
-    }
-    setPendingDeleteId(null);
-    addNotification("Info", "Deletion cancelled", "info");
-  };
-
-  useEffect(() => {
-    return () => {
-      if (activeTimer) clearTimeout(activeTimer);
-    };
-  }, [activeTimer]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -142,28 +117,11 @@ const AdminReviews = () => {
     return (
       <div className="grid gap-4">
         {filteredReviews.map((review) => {
-          const isDeleting = pendingDeleteId === review.id;
           return (
             <div
               key={review.id}
               className="bg-muted/30 border border-border rounded p-6 flex flex-col md:flex-row gap-6 hover:bg-muted/50 transition-colors relative overflow-hidden"
             >
-              {isDeleting && (
-                <div className="absolute inset-0 bg-card backdrop-blur-xs z-10 flex items-center justify-between px-6 py-4 animate-in fade-in duration-200 select-none">
-                  <span className="text-xs font-bold text-rose-400 animate-pulse">
-                    Removing review in {secondsLeft}s
-                  </span>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => handleCancelDelete(review.id)}
-                    className="h-8 px-4 bg-accent hover:bg-muted/50 text-foreground rounded text-[11px] font-bold transition-all shrink-0"
-                  >
-                    Undo Deletion
-                  </Button>
-                </div>
-              )}
-
               <div className="flex-1 space-y-2">
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-1 text-yellow-400">
@@ -187,7 +145,7 @@ const AdminReviews = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => startSoftDelete(review.id)}
+                  onClick={() => handleDeleteReview(review.id)}
                   className="text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10 h-9 px-3 rounded"
                 >
                   <Trash2 className="w-4 h-4 mr-2" />

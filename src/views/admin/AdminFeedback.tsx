@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getErrorMessage } from "@/utils/error";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { useDialog } from "@/hooks/useDialog";
 
 const FeedbackTableSkeleton = () => (
   <div className="grid gap-4 animate-pulse select-none">
@@ -39,11 +40,9 @@ const AdminFeedback = () => {
   const deleteMutation = useDeleteFeedback();
   const promoteMutation = usePromoteFeedback();
   const { addNotification } = useNotifications();
+  const dialog = useDialog();
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
-  const [secondsLeft, setSecondsLeft] = useState(3);
-  const [activeTimer, setActiveTimer] = useState<NodeJS.Timeout | null>(null);
 
   const filteredFeedback = feedback.filter(
     (item) =>
@@ -52,48 +51,25 @@ const AdminFeedback = () => {
       item.message.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const startSoftDelete = (id: number) => {
-    if (activeTimer) clearTimeout(activeTimer);
-    setPendingDeleteId(id);
-    setSecondsLeft(3);
+  const handleDeleteFeedback = async (id: number) => {
+    const confirmed = await dialog.confirm({
+      title: "Delete Feedback",
+      message: "Are you sure you want to delete this feedback item? This action cannot be undone.",
+      type: "error",
+      confirmText: "Delete",
+    });
+    if (!confirmed) return;
 
-    const countdown = (secs: number) => {
-      if (secs <= 0) {
-        setPendingDeleteId(null);
-        deleteMutation.mutate(id, {
-          onSuccess: () => {
-            addNotification("Success", "Feedback deleted successfully", "success");
-          },
-          onError: (error) => {
-            console.error("Failed to delete feedback:", error);
-            addNotification("Error", getErrorMessage(error, "Failed to delete feedback"), "error");
-          }
-        });
-      } else {
-        setSecondsLeft(secs);
-        const timer = setTimeout(() => countdown(secs - 1), 1000);
-        setActiveTimer(timer);
-      }
-    };
-
-    const timer = setTimeout(() => countdown(2), 1000);
-    setActiveTimer(timer);
+    deleteMutation.mutate(id, {
+      onSuccess: () => {
+        addNotification("Success", "Feedback deleted successfully", "success");
+      },
+      onError: (error) => {
+        console.error("Failed to delete feedback:", error);
+        addNotification("Error", getErrorMessage(error, "Failed to delete feedback"), "error");
+      },
+    });
   };
-
-  const handleCancelDelete = () => {
-    if (activeTimer) {
-      clearTimeout(activeTimer);
-      setActiveTimer(null);
-    }
-    setPendingDeleteId(null);
-    addNotification("Info", "Deletion cancelled", "info");
-  };
-
-  useEffect(() => {
-    return () => {
-      if (activeTimer) clearTimeout(activeTimer);
-    };
-  }, [activeTimer]);
 
   const handlePromote = async (id: number) => {
     try {
@@ -122,28 +98,11 @@ const AdminFeedback = () => {
     return (
       <div className="grid gap-4">
         {filteredFeedback.map((item) => {
-          const isDeleting = pendingDeleteId === item.id;
           return (
             <div
               key={item.id}
               className="bg-muted/30 border border-border rounded p-6 flex flex-col md:flex-row gap-6 hover:bg-muted/50 transition-colors relative overflow-hidden"
             >
-              {isDeleting && (
-                <div className="absolute inset-0 bg-card backdrop-blur-xs z-10 flex items-center justify-between px-6 py-4 animate-in fade-in duration-200 select-none">
-                  <span className="text-xs font-bold text-rose-400 animate-pulse">
-                    Removing feedback in {secondsLeft}s
-                  </span>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => handleCancelDelete()}
-                    className="h-8 px-4 bg-accent hover:bg-muted/50 text-foreground rounded text-[11px] font-bold transition-all shrink-0"
-                  >
-                    Undo Deletion
-                  </Button>
-                </div>
-              )}
-
               <div className="flex-1 space-y-2">
                 <div className="flex items-center gap-3">
                   {item.rating && (
@@ -153,7 +112,7 @@ const AdminFeedback = () => {
                     </div>
                   )}
                   {item.rating && <span className="text-muted-foreground">•</span>}
-                  <span className="font-medium text-foreground">
+                  <span className="font-bold text-foreground">
                     {item.name || "Anonymous"}
                   </span>
                   {item.email && (
@@ -167,13 +126,13 @@ const AdminFeedback = () => {
                 </div>
                 <p className="text-muted-foreground leading-relaxed italic">"{item.message}"</p>
                 <div className="flex items-center gap-2">
-                   <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground">
                     Submitted on {format(new Date(item.createdAt), "PPP")}
                   </p>
                   {item.page && (
                     <>
-                       <span className="text-muted-foreground text-xs">•</span>
-                       <p className="text-xs text-muted-foreground">From page: {item.page}</p>
+                      <span className="text-muted-foreground text-xs">•</span>
+                      <p className="text-xs text-muted-foreground">From page: {item.page}</p>
                     </>
                   )}
                 </div>
@@ -196,7 +155,7 @@ const AdminFeedback = () => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => startSoftDelete(item.id)}
+                  onClick={() => handleDeleteFeedback(item.id)}
                   className="text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10 h-9 px-3 rounded"
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
