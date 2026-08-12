@@ -22,12 +22,12 @@ export const ErrorState = ({
       className="flex flex-col items-center justify-center py-16 px-4 text-center max-w-md mx-auto"
     >
       <div className="relative mb-6">
-        <div className="absolute inset-0 bg-brand-secondary-500/20 blur-3xl rounded-full" />
+        <div className="absolute inset-0 bg-red-500/20 blur-3xl rounded-full" />
         <div className="relative p-4 bg-white dark:bg-slate-900 rounded border border-white/10 shadow shadow-brand-secondary-500/20">
           {isOffline ? (
             <WifiOff className="w-12 h-12 text-brand-secondary-500" />
           ) : (
-            <AlertCircle className="w-12 h-12 text-brand-secondary-500" />
+            <AlertCircle className="w-12 h-12 text-red-500" />
           )}
         </div>
       </div>

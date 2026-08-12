@@ -50,7 +50,7 @@ const PaymentFailureSupport = ({
           <div className="w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4 text-red-600 dark:text-red-400">
             <AlertCircle className="w-8 h-8" />
           </div>
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+          <h2 className="text-2xl font-bold text-red-600 mb-2">
             Payment Connection Issue
           </h2>
           <p className="text-slate-600 dark:text-slate-400 max-w-md mx-auto">

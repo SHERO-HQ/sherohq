@@ -42,11 +42,9 @@ export function getPool(): Pool {
   currentConnectionString = connectionString;
 
   if (!connectionString) {
-    if (process.env.NODE_ENV === "production") {
-      console.error("❌ [DB] DATABASE_URL or POSTGRES_URL is not defined in production!");
-    } else {
-      console.warn("⚠️ [DB] DATABASE_URL or POSTGRES_URL is not defined. Check your .env.local file.");
-    }
+    const errorMsg = "Database connection string is missing. Please set DATABASE_URL or POSTGRES_URL in Vercel Project Settings -> Environment Variables.";
+    console.error(`❌ [DB] ${errorMsg}`);
+    throw new Error(errorMsg);
   }
 
   let dbConfig: Record<string, any> = {};
