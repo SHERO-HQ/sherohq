@@ -3,8 +3,10 @@ import path from "path";
 import pg from "pg";
 import dotenv from "dotenv";
 
-// Load environment variables from .env.local
-dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
+// Load environment variables from .env.local in development, use process.env in production
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
+}
 
 const { Client } = pg;
 const databaseUrl = process.env.DATABASE_URL;

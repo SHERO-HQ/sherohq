@@ -1,3 +1,5 @@
+ this erro
+
 # SheroTech — System & Security Architecture
 
 > **Purpose**: A comprehensive reference detailing the technical architecture, data layer, security parameters, state management model, and design system of the SheroTech showcase platform.
@@ -6,9 +8,10 @@
 
 ## 1. Executive Summary & Core Philosophy
 
-SheroTech is built around a unified full-stack architecture powered by Next.js 16+ App Router, React 19, Tailwind CSS v4, and PostgreSQL via Drizzle ORM. 
+SheroTech is built around a unified full-stack architecture powered by Next.js 16+ App Router, React 19, Tailwind CSS v4, and PostgreSQL via Drizzle ORM.
 
 Our architectural choices are driven by four core principles:
+
 * **Purpose & Intent**: Every technical layer exists to provide reliable performance, accessibility, and high developer velocity without unnecessary overhead.
 * **Security by Design**: Native defense-in-depth mechanisms, including session rotation, account lockouts, double-submit cookie CSRF protection, and TOTP-based Multi-Factor Authentication.
 * **Data Integrity**: Unified database operations exclusively managed via Drizzle ORM to eliminate raw SQL vulnerabilities and maintain strict type safety across the application.
@@ -40,17 +43,17 @@ graph TD
 
 ## 3. Technology Stack Breakdown
 
-| Layer | Technology | Primary Role |
-|-------|------------|--------------|
-| **Framework** | Next.js 16+ (App Router) | Full-stack server and client rendering, native API routes |
-| **Language** | TypeScript 5.9 | End-to-end static typing across UI components and API handlers |
-| **UI Library** | React 19 | Server & Client Components, modern hooks, form handling |
-| **Styling** | Tailwind CSS v4 + Vanilla CSS | Utility-first design tokens, OKLCH dual-primary system |
-| **Animations** | `motion` (Framer Motion) | Hardware-accelerated UI transitions and micro-interactions |
-| **Data Layer** | Drizzle ORM 0.45+ | Strongly typed database queries, transactions, schema migrations |
-| **Database** | PostgreSQL | Relational data persistence hosted on Supabase |
-| **Cache & Rate Limit** | Upstash Redis | Per-IP and per-account distributed rate limiting |
-| **Testing** | Vitest & Playwright | Unit testing for utilities/APIs and end-to-end user flow specs |
+| Layer                        | Technology                    | Primary Role                                                     |
+| ---------------------------- | ----------------------------- | ---------------------------------------------------------------- |
+| **Framework**          | Next.js 16+ (App Router)      | Full-stack server and client rendering, native API routes        |
+| **Language**           | TypeScript 5.9                | End-to-end static typing across UI components and API handlers   |
+| **UI Library**         | React 19                      | Server & Client Components, modern hooks, form handling          |
+| **Styling**            | Tailwind CSS v4 + Vanilla CSS | Utility-first design tokens, OKLCH dual-primary system           |
+| **Animations**         | `motion` (Framer Motion)    | Hardware-accelerated UI transitions and micro-interactions       |
+| **Data Layer**         | Drizzle ORM 0.45+             | Strongly typed database queries, transactions, schema migrations |
+| **Database**           | PostgreSQL                    | Relational data persistence hosted on Supabase                   |
+| **Cache & Rate Limit** | Upstash Redis                 | Per-IP and per-account distributed rate limiting                 |
+| **Testing**            | Vitest & Playwright           | Unit testing for utilities/APIs and end-to-end user flow specs   |
 
 ---
 
@@ -59,6 +62,7 @@ graph TD
 All database interactions flow through Drizzle ORM (`src/lib/db.ts` and `src/lib/drizzle/schema.ts`). Raw SQL queries (`query()`) are decommissioned across all server routes.
 
 ### Key Schema Entities (`src/lib/drizzle/schema.ts`)
+
 * **`users` / `adminUsers`**: Core account identities for public users and system administrators.
 * **`userSessions` / `sessions`**: Active session records with support for session rotation on login.
 * **`products`**: Tech solutions, hardware catalog items, category attributes, and inventory levels.
@@ -68,6 +72,7 @@ All database interactions flow through Drizzle ORM (`src/lib/db.ts` and `src/lib
 * **`whatsappMessages` / `whatsappConversations`**: Automated and agent-driven WhatsApp client engagement.
 
 ### Database Query Pattern
+
 ```typescript
 import { db } from "@/lib/db";
 import { products } from "@/lib/drizzle/schema";
@@ -140,12 +145,14 @@ SheroTech decouples client state from server state to minimize unnecessary compo
 Our design philosophy communicates confidence, clarity, and innovation.
 
 ### Dual-Primary Color System
+
 SheroTech intentionally combines two primary color accents to balance trustworthiness with dynamic growth:
 
 * **Navy Blue (`--primary` / `#043284`)**: Reflects authority, enterprise stability, and brand foundation. Used for primary CTAs, active navigation items, structural headers, and focus states.
 * **Emerald Green (`--brand-secondary` / `#10b981`)**: Reflects innovation, successful outcomes, and system health. Used for active badges, progress bars, success state indicators, and dynamic accents.
 
 ### UI Tokens & Dark Mode
+
 * All colors reference CSS variables defined in `src/index.css`.
 * Raw hardcoded colors (e.g., `bg-slate-900`, `text-white`) in component logic are replaced with semantic CSS variables (`bg-card`, `text-foreground`, `border-border`, `bg-muted`).
 * Dark mode flash prevention is implemented inline within `ThemeContext` before DOM paint.
