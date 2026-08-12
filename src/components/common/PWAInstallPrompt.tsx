@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import { X, Download } from "lucide-react";
 import { m, AnimatePresence } from "motion/react";
 import Image from "next/image";
-import sheroIcon from "@/assets/logo/shero.svg";
+
+const sheroIcon = "/assets/logo/shero.svg";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;

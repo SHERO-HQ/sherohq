@@ -2,7 +2,6 @@
 import { easeOut, m } from "motion/react";
 import {
   Smartphone,
-  Cloud,
   Workflow,
   Settings,
   CheckCircle,
