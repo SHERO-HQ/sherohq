@@ -18,7 +18,6 @@ import {
   Star,
   MessageSquareQuote,
   BarChart,
-  FileText,
   DollarSign,
   Brain,
   Megaphone,
