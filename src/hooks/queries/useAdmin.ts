@@ -13,10 +13,12 @@ import {
   fetchAIAnalyticsSummary,
   type AdminStats,
   type ActivityLog,
-  type RecentOrder,
   type AnalyticsData,
+  type RecentOrder,
   fetchAbandonedCarts,
 } from "@/services/api";
+
+export { useAdmin } from "@/context/AdminContext";
 
 export const ADMIN_KEYS = {
   all: ["admin"] as const,

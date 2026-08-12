@@ -6,6 +6,7 @@ import {
 } from "@/services/api";
 import { useState, useEffect } from "react";
 import { formatAuthError } from "@/utils/authErrors";
+export { useAdmin } from "@/context/AdminContext";
 
 
 export function useAdminSidebar() {
