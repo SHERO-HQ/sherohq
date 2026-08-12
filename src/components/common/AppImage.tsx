@@ -53,6 +53,7 @@ export default function AppImage({
       height={!fill ? height : undefined}
       fill={fill}
       priority={priority}
+      loading={priority ? "eager" : undefined}
       sizes={
         sizes ||
         (fill

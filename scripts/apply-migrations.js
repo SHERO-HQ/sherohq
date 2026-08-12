@@ -1,11 +1,32 @@
 import fs from "fs";
 import path from "path";
 import pg from "pg";
-import dotenv from "dotenv";
 
-// Load environment variables
-dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
-dotenv.config({ path: path.resolve(process.cwd(), ".env") });
+// Native env loader without external package dependency
+function loadEnv(filePath) {
+  try {
+    if (!fs.existsSync(filePath)) return;
+    const content = fs.readFileSync(filePath, "utf8");
+    for (const line of content.split("\n")) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("#")) continue;
+      const eqIdx = trimmed.indexOf("=");
+      if (eqIdx !== -1) {
+        const key = trimmed.slice(0, eqIdx).trim();
+        let val = trimmed.slice(eqIdx + 1).trim();
+        if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+          val = val.slice(1, -1);
+        }
+        if (!process.env[key]) {
+          process.env[key] = val;
+        }
+      }
+    }
+  } catch (_) {}
+}
+
+loadEnv(path.resolve(process.cwd(), ".env.local"));
+loadEnv(path.resolve(process.cwd(), ".env"));
 
 const { Client } = pg;
 
