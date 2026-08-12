@@ -58,9 +58,9 @@ const routeTitleMap: Record<string, string> = {
   "/admin/login": "Admin Login",
 };
 
-function AdminLoading() {
+function AdminSplashLoading() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background dark:bg-slate-950 relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground relative overflow-hidden">
       {/* Background Decor */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-125 h-125 bg-brand-secondary-500/10 blur-[120px] rounded-full animate-pulse" />
 
@@ -93,6 +93,14 @@ function AdminLoading() {
   );
 }
 
+function PageSectionLoading() {
+  return (
+    <div className="w-full h-96 flex items-center justify-center p-8">
+      <div className="w-8 h-8 border-2 border-brand-secondary-500 border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
+
 export default function AdminLayoutClient({
   children,
 }: {
@@ -106,36 +114,34 @@ export default function AdminLayoutClient({
     if (typeof document !== "undefined" && pathname) {
       const cleanPath = pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
       const matchedTitle = routeTitleMap[cleanPath] || "Dashboard";
-      document.title = `${matchedTitle} | SHERO Admin`;
+      document.title = `${matchedTitle} | SHERO`;
     }
   }, [pathname]);
 
-  // Cover both path structures:
-  //   - sherohq.com/admin/login  (main domain)
-  //   - admin.sherohq.com/login  (admin subdomain)
   const isLoginPage =
     pathname === "/admin/login" ||
     pathname.startsWith("/admin/login/") ||
     pathname === "/login" ||
     pathname.startsWith("/login/");
 
-  // Only show full page spinner on initial cold auth check if user is not yet known
+  // Full screen splash ONLY during initial boot before authentication status is known
   if (isLoading && !adminData && !isLoginPage) {
-    return <AdminLoading />;
+    return <AdminSplashLoading />;
   }
 
   return (
-    <Suspense fallback={<AdminLoading />}>
-      <AdminProvider>
-        <main id="main-content" className="min-h-screen">
-          {isLoginPage || !isAuthenticated ? (
-            children
-          ) : (
-            <AdminLayout>{children}</AdminLayout>
-          )}
-        </main>
-      </AdminProvider>
-    </Suspense>
+    <AdminProvider>
+      <main id="main-content" className="min-h-screen">
+        {isLoginPage || !isAuthenticated ? (
+          children
+        ) : (
+          <AdminLayout>
+            <Suspense fallback={<PageSectionLoading />}>
+              {children}
+            </Suspense>
+          </AdminLayout>
+        )}
+      </main>
+    </AdminProvider>
   );
 }
-

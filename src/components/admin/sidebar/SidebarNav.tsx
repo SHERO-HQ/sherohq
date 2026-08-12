@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import NavLink from "@/components/common/NavLink";
 import { usePathname } from "next/navigation";
@@ -39,7 +40,7 @@ import {
 import { m, AnimatePresence } from "motion/react";
 
 type NavItem = {
-  icon: React.ElementType;
+  icon: any;
   label: string;
   href: string;
 };
@@ -124,7 +125,7 @@ export function SidebarNav({ isOpen, setIsOpen, admin, badges }: SidebarNavProps
     "Commerce": true,
   });
 
-  // Automatically expand the nav group that contains the active page link
+  // Automatically expand the nav group that contains the active page link without re-triggering animation if already open
   useEffect(() => {
     if (!pathname) return;
 
@@ -143,7 +144,10 @@ export function SidebarNav({ isOpen, setIsOpen, admin, badges }: SidebarNavProps
       });
 
       if (hasActiveChild) {
-        setExpandedGroups((prev) => ({ ...prev, [group.title]: true }));
+        setExpandedGroups((prev) => {
+          if (prev[group.title]) return prev;
+          return { ...prev, [group.title]: true };
+        });
       }
     });
   }, [pathname]);
@@ -208,7 +212,7 @@ export function SidebarNav({ isOpen, setIsOpen, admin, badges }: SidebarNavProps
                   initial={isOpen ? { height: 0, opacity: 0 } : undefined}
                   animate={isOpen ? { height: "auto", opacity: 1 } : undefined}
                   exit={isOpen ? { height: 0, opacity: 0 } : undefined}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: 0.15, ease: "easeInOut" }}
                   className="space-y-1 overflow-hidden"
                 >
                   {filteredItems.map((item) => (
@@ -261,10 +265,7 @@ export function SidebarNav({ isOpen, setIsOpen, admin, badges }: SidebarNavProps
                             </span>
                           )}
                           {isActive && (
-                            <m.div
-                              layoutId="sidebar-active-indicator"
-                              className="absolute left-0 w-1 h-6 bg-brand-secondary-500 rounded-r-full"
-                            />
+                            <div className="absolute left-0 w-1 h-6 bg-brand-secondary-500 rounded-r-full" />
                           )}
                         </>
                       )}
@@ -278,116 +279,22 @@ export function SidebarNav({ isOpen, setIsOpen, admin, badges }: SidebarNavProps
       })}
 
       {/* Quick Actions Section */}
-      <div className="mt-8 pt-8 border-t border-border space-y-4 px-2">
-        <p
-          className={cn(
-            "text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-2 transition-all duration-200",
-            isOpen
-              ? "opacity-100 translate-x-0"
-              : "opacity-0 -translate-x-4 pointer-events-none",
-          )}
-        >
-          Quick Actions
-        </p>
-        <div className="space-y-1">
-          <NavLink
-            href="/admin/products/new"
-            className={({ isActive }) =>
-              cn(
-                "flex items-center px-3 py-2 rounded transition-all duration-200 group relative",
-                isOpen ? "gap-2" : "gap-0 justify-center px-0",
-                isActive
-                  ? "bg-brand-secondary-500/10 text-brand-secondary-400"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent",
-              )
-            }
-          >
-            <Plus className="w-4 h-4 shrink-0" />
-            <span
-              className={cn(
-                "text-xs font-medium transition-all duration-200",
-                isOpen
-                  ? "opacity-100 translate-x-0 w-auto"
-                  : "opacity-0 -translate-x-4 pointer-events-none w-0 overflow-hidden",
-              )}
+      {isOpen && (
+        <div className="pt-4 px-3 border-t border-border/50">
+          <p className="px-3 text-[0.6rem] font-semibold text-muted-foreground uppercase tracking-widest mb-2">
+            Quick Actions
+          </p>
+          <div className="space-y-1">
+            <NavLink
+              href="/admin/products?action=new"
+              className="flex items-center gap-3 px-3 py-2 text-xs text-muted-foreground hover:text-foreground hover:bg-accent rounded group transition-all"
             >
-              New Product
-            </span>
-          </NavLink>
-          <NavLink
-            href="/admin/orders?status=pending"
-            className={({ isActive }) =>
-              cn(
-                "flex items-center px-3 py-2 rounded transition-all duration-200 group relative",
-                isOpen ? "gap-2" : "gap-0 justify-center px-0",
-                isActive
-                  ? "bg-amber-500/10 text-amber-400"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent",
-              )
-            }
-          >
-            <ShoppingCart className="w-4 h-4 shrink-0" />
-            <span
-              className={cn(
-                "text-xs font-medium transition-all duration-200",
-                isOpen
-                  ? "opacity-100 translate-x-0 w-auto"
-                  : "opacity-0 -translate-x-4 pointer-events-none w-0 overflow-hidden",
-              )}
-            >
-              Review Orders
-            </span>
-          </NavLink>
-          <NavLink
-            href="/admin/orders/new"
-            className={({ isActive }) =>
-              cn(
-                "flex items-center px-3 py-2 rounded transition-all duration-200 group relative",
-                isOpen ? "gap-2" : "gap-0 justify-center px-0",
-                isActive
-                  ? "bg-blue-500/10 text-blue-400"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent",
-              )
-            }
-          >
-            <FileText className="w-4 h-4 shrink-0" />
-            <span
-              className={cn(
-                "text-xs font-medium transition-all duration-200",
-                isOpen
-                  ? "opacity-100 translate-x-0 w-auto"
-                  : "opacity-0 -translate-x-4 pointer-events-none w-0 overflow-hidden",
-              )}
-            >
-              Create Invoice
-            </span>
-          </NavLink>
-          <NavLink
-            href="/admin/expenses?action=new"
-            className={({ isActive }) =>
-              cn(
-                "flex items-center px-3 py-2 rounded transition-all duration-200 group relative",
-                isOpen ? "gap-2" : "gap-0 justify-center px-0",
-                isActive
-                  ? "bg-rose-500/10 text-rose-400"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent",
-              )
-            }
-          >
-            <DollarSign className="w-4 h-4 shrink-0" />
-            <span
-              className={cn(
-                "text-xs font-medium transition-all duration-200",
-                isOpen
-                  ? "opacity-100 translate-x-0 w-auto"
-                  : "opacity-0 -translate-x-4 pointer-events-none w-0 overflow-hidden",
-              )}
-            >
-              New Expense
-            </span>
-          </NavLink>
+              <Plus className="w-4 h-4 text-brand-secondary-400 group-hover:scale-110 transition-transform" />
+              <span>Add Product</span>
+            </NavLink>
+          </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 }
