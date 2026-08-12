@@ -38,63 +38,70 @@ const VerifyEmail = () => {
  }, [token]);
 
  return (
- <div className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 bg-slate-50 dark:bg-slate-950">
- <div className="w-full max-w-md">
- <div className="bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 p-8 text-center">
- {status === "loading" && (
- <>
- <Loader2 className="w-16 h-16 mx-auto text-brand-secondary-600 animate-spin mb-6" />
- <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
- Verifying Email...
- </h1>
- <p className="text-slate-500 dark:text-slate-400">
- Please wait while we verify your email address.
- </p>
- </>
- )}
+    <div className="py-6 sm:py-10 flex justify-center px-4">
+      <div className="w-full max-w-md">
+        {/* Ambient background glow */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-primary-500/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-secondary-500/10 rounded-full blur-3xl" />
+          <div className="absolute inset-0 pattern-dots mask-radial-faded" />
+        </div>
 
- {status === "success" && (
- <>
- <div className="w-20 h-20 mx-auto bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center mb-6">
- <CheckCircle className="w-10 h-10 text-brand-secondary-600 dark:text-brand-secondary-400" />
- </div>
- <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
- Email Verified!
- </h1>
- <p className="text-slate-500 dark:text-slate-400 mb-8">
- {message}
- </p>
- <Link
- href="/profile"
- className="inline-block px-6 py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white font-bold rounded transition-colors"
- >
- Go to Profile
- </Link>
- </>
- )}
+        <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded shadow-xl border border-slate-200/80 dark:border-slate-800 p-6 sm:p-8 text-center transition-all">
+          {status === "loading" && (
+            <>
+              <Loader2 className="w-12 h-12 mx-auto text-brand-secondary-600 animate-spin mb-5" />
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
+                Verifying Email...
+              </h1>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Please wait while we verify your email address.
+              </p>
+            </>
+          )}
 
- {status === "error" && (
- <>
- <div className="w-20 h-20 mx-auto bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mb-6">
- <XCircle className="w-10 h-10 text-red-600 dark:text-red-400" />
- </div>
- <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
- Verification Failed
- </h1>
- <p className="text-slate-500 dark:text-slate-400 mb-8">
- {message}
- </p>
- <Link
- href="/login"
- className="inline-block px-6 py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white font-bold rounded transition-colors"
- >
- Go to Login
- </Link>
- </>
- )}
- </div>
- </div>
- </div>
+          {status === "success" && (
+            <>
+              <div className="w-16 h-16 mx-auto bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center mb-5">
+                <CheckCircle className="w-8 h-8 text-brand-secondary-600 dark:text-brand-secondary-400" />
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
+                Email Verified!
+              </h1>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
+                {message}
+              </p>
+              <Link
+                href="/profile"
+                className="inline-block px-6 py-2.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white font-semibold rounded shadow-sm transition-colors text-sm"
+              >
+                Go to Profile
+              </Link>
+            </>
+          )}
+
+          {status === "error" && (
+            <>
+              <div className="w-16 h-16 mx-auto bg-red-100 dark:bg-red-950/40 rounded-full flex items-center justify-center mb-5">
+                <XCircle className="w-8 h-8 text-red-600 dark:text-red-400" />
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
+                Verification Failed
+              </h1>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
+                {message}
+              </p>
+              <Link
+                href="/login"
+                className="inline-block px-6 py-2.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white font-semibold rounded shadow-sm transition-colors text-sm"
+              >
+                Back to Login
+              </Link>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
  );
 };
 

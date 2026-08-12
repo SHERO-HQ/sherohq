@@ -8,7 +8,7 @@ import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { useLogin } from "@/hooks/queries/useAuthQuery";
 import type { User } from "@/services/auth";
 import { authFetch } from "@/services/api";
-import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, ArrowRight, Eye, EyeOff, Loader2, AlertCircle, KeyRound } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -84,34 +84,33 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen pt-32 pb-16 flex items-center justify-center px-4 ">
+    <div className="py-6 sm:py-10 flex justify-center px-4">
       <div className="w-full max-w-md">
-        {/* Background with glow orbs */}
-        <div className="absolute inset-0 overflow-hidden rounded -z-10">
-          {/* Glow orbs */}
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
-          {/* Particles */}
+        {/* Ambient background glow */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-primary-500/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-secondary-500/10 rounded-full blur-3xl" />
           <div className="absolute inset-0 pattern-dots mask-radial-faded" />
-
         </div>
-        <div className="bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
-              {mfaChallenge ? "Verify It's You" : "Welcome Back"}
+
+        <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded shadow-xl border border-slate-200/80 dark:border-slate-800 p-6 sm:p-8 transition-all">
+          <div className="text-center mb-6">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+              {mfaChallenge ? "Verify Your Identity" : "Welcome Back"}
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 mt-2">
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1.5">
               {mfaChallenge
                 ? "Enter the 6-digit code from your authenticator app"
-                : "Sign in to your account"}
+                : "Sign in to access your account and orders"}
             </p>
           </div>
 
           {mfaChallenge ? (
-            <form onSubmit={onVerifyMFA} className="space-y-6">
+            <form onSubmit={onVerifyMFA} className="space-y-5">
               {error && (
-                <div className="p-3 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-sm rounded text-center">
-                  {error}
+                <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 text-sm rounded flex items-center gap-2 animate-in fade-in slide-in-from-top-1">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                  <span>{error}</span>
                 </div>
               )}
 
@@ -121,37 +120,45 @@ const Login = () => {
                   label="Verification Code"
                   placeholder="000000"
                   maxLength={6}
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
                   value={mfaCode}
+                  leftIcon={<KeyRound className="w-5 h-5" />}
                   onChange={(e) =>
                     setMfaCode(e.target.value.replace(/\D/g, ""))
                   }
                   autoFocus
-                  className="text-center text-2xl tracking-[0.5em] font-mono"
-                  size="xl"
+                  className="text-center text-xl tracking-[0.4em] font-mono font-semibold"
+                  size="lg"
                 />
 
                 <Button
                   type="submit"
                   variant="brand"
                   disabled={verifyingMFA || mfaCode.length !== 6}
-                  className="w-full font-bold"
-                  size="xl"
+                  className="w-full font-semibold shadow-sm"
+                  size="lg"
                 >
                   {verifyingMFA ? (
-                    <span className="flex items-center gap-2">
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
                       Verifying...
                     </span>
                   ) : (
-                    <>
-                      Verify & Sign In <ArrowRight className="w-5 h-5" />
-                    </>
+                    <span className="flex items-center justify-center gap-2">
+                      Verify & Sign In <ArrowRight className="w-4 h-4" />
+                    </span>
                   )}
                 </Button>
 
                 <button
                   type="button"
-                  onClick={() => setMfaChallenge(null)}
-                  className="w-full py-2 text-sm text-slate-500 hover:text-slate-700 font-medium transition-colors"
+                  onClick={() => {
+                    setMfaChallenge(null);
+                    setMfaCode("");
+                    setError("");
+                  }}
+                  className="w-full py-2 text-sm text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 font-medium transition-colors"
                 >
                   Cancel and use different account
                 </button>
@@ -159,10 +166,11 @@ const Login = () => {
             </form>
           ) : (
             <>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 {error && (
-                  <div className="p-3 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-sm rounded text-center">
-                    {error}
+                  <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 text-red-600 dark:text-red-400 text-sm rounded flex items-center gap-2 animate-in fade-in slide-in-from-top-1">
+                    <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                    <span>{error}</span>
                   </div>
                 )}
 
@@ -171,40 +179,43 @@ const Login = () => {
                   type="email"
                   label="Email Address"
                   placeholder="john@example.com"
+                  autoComplete="email"
                   leftIcon={<Mail className="w-5 h-5" />}
                   error={errors.email?.message}
                   {...register("email")}
-                  size="xl"
+                  size="lg"
                 />
 
-                <div className="space-y-1">
+                <div className="space-y-1.5">
                   <Input
                     id="login-password"
                     type={showPassword ? "text" : "password"}
                     label="Password"
                     placeholder="••••••••"
+                    autoComplete="current-password"
                     leftIcon={<Lock className="w-5 h-5" />}
                     error={errors.password?.message}
                     {...register("password")}
-                    size="xl"
+                    size="lg"
                     rightIcon={
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="focus:outline-none transition-colors flex items-center"
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        className="focus:outline-none text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors flex items-center p-1"
                       >
                         {showPassword ? (
-                          <EyeOff className="w-5 h-5" />
+                          <EyeOff className="w-4 h-4" />
                         ) : (
-                          <Eye className="w-5 h-5" />
+                          <Eye className="w-4 h-4" />
                         )}
                       </button>
                     }
                   />
-                  <div className="flex justify-end">
+                  <div className="flex justify-end pt-0.5">
                     <Link
                       href="/forgot-password"
-                      className="text-xs text-brand-secondary-600 hover:text-brand-secondary-700 dark:text-brand-secondary-400 font-medium hover:underline"
+                      className="text-xs text-brand-secondary-600 hover:text-brand-secondary-700 dark:text-brand-secondary-400 font-medium hover:underline transition-colors"
                     >
                       Forgot password?
                     </Link>
@@ -215,28 +226,29 @@ const Login = () => {
                   type="submit"
                   variant="brand"
                   disabled={isSubmitting}
-                  className="w-full font-bold"
+                  className="w-full font-semibold shadow-sm mt-1"
                   size="lg"
                 >
                   {isSubmitting ? (
-                    <span className="flex items-center gap-2">
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="w-4 h-4 animate-spin" />
                       Signing In...
                     </span>
                   ) : (
-                    <>
-                      Sign In <ArrowRight className="w-5 h-5" />
-                    </>
+                    <span className="flex items-center justify-center gap-2">
+                      Sign In <ArrowRight className="w-4 h-4" />
+                    </span>
                   )}
                 </Button>
               </form>
 
-              <div className="mt-6 text-center text-sm text-slate-500 dark:text-slate-400">
-                Don't have an account?{" "}
+              <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 text-center text-sm text-slate-500 dark:text-slate-400">
+                Don&apos;t have an account?{" "}
                 <Link
                   href="/signup"
-                  className="text-brand-secondary-600! dark:text-brand-secondary-400 font-semibold hover:underline"
+                  className="text-brand-secondary-600 hover:text-brand-secondary-700 dark:text-brand-secondary-400 font-semibold hover:underline transition-colors"
                 >
-                  Sign up
+                  Create one
                 </Link>
               </div>
             </>
