@@ -79,13 +79,8 @@ export interface AbandonedCart {
 export async function createOrder(
   payload: CreateOrderPayload,
 ): Promise<CreateOrderResponse> {
-  const response = await fetch(`${API_BASE}/orders`, {
+  const response = await authFetch(`${API_BASE}/orders`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Protection": "1",
-    },
-    credentials: "include",
     body: JSON.stringify(payload),
   });
   return handleResponse<CreateOrderResponse>(response);
@@ -121,19 +116,15 @@ export async function updateOrderPaymentMethod(
   payload: { paymentMethod: string; orderAccessToken?: string },
 ): Promise<{ success: boolean }> {
   const resolvedToken = payload.orderAccessToken || getOrderAccessToken(id);
-  const headers: HeadersInit = {
-    "Content-Type": "application/json",
-    "X-CSRF-Protection": "1",
-  };
+  const headers: HeadersInit = {};
 
   if (resolvedToken) {
     (headers as Record<string, string>)["X-Order-Access-Token"] = resolvedToken;
   }
 
-  const response = await fetch(`${API_BASE}/orders/${id}/payment-method`, {
+  const response = await authFetch(`${API_BASE}/orders/${id}/payment-method`, {
     method: "PATCH",
     headers,
-    credentials: "include",
     body: JSON.stringify(payload),
   });
   return handleResponse(response);
@@ -239,20 +230,16 @@ export async function initializePayment(
   provider?: "hubtel" | "paystack",
 ): Promise<{ success: boolean; checkoutUrl: string }> {
   const orderAccessToken = getOrderAccessToken(orderId);
-  const headers: HeadersInit = {
-    "Content-Type": "application/json",
-    "X-CSRF-Protection": "1",
-  };
+  const headers: HeadersInit = {};
 
   if (orderAccessToken) {
     (headers as Record<string, string>)["X-Order-Access-Token"] =
       orderAccessToken;
   }
 
-  const response = await fetch(`${API_BASE}/payments/initialize`, {
+  const response = await authFetch(`${API_BASE}/payments/initialize`, {
     method: "POST",
     headers,
-    credentials: "include",
     body: JSON.stringify({ orderId, totalAmount, description, provider }),
   });
   return handleResponse(response);
@@ -269,13 +256,8 @@ export async function verifyPayment(
   hubtelStatus?: string;
   paystackStatus?: string;
 }> {
-  const response = await fetch(`${API_BASE}/payments/verify`, {
+  const response = await authFetch(`${API_BASE}/payments/verify`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Protection": "1",
-    },
-    credentials: "include",
     body: JSON.stringify({ orderId, provider }),
   });
   return handleResponse<{

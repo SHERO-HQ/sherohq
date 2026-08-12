@@ -22,10 +22,9 @@ export interface SupportTicket {
 export async function createTicket(data: {
   name: string;
   email: string;
-  phone?: string;
   subject: string;
   message: string;
-  category: string;
+  category?: string;
   priority?: string;
   productId?: string;
   userId?: string;
@@ -35,12 +34,8 @@ export async function createTicket(data: {
   ticketId: string;
   ticketNo: number;
 }> {
-  const response = await fetch(`${API_BASE}/tickets`, {
+  const response = await authFetch(`${API_BASE}/tickets`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Protection": "1",
-    },
     body: JSON.stringify(data),
   });
   return handleResponse(response);
@@ -99,12 +94,8 @@ export async function scheduleConsultation(data: {
     message: data.message,
   };
 
-  const response = await fetch(`${API_BASE}/consultations`, {
+  const response = await authFetch(`${API_BASE}/consultations`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Protection": "1",
-    },
     body: JSON.stringify(payload),
   });
   return handleResponse(response);
@@ -173,12 +164,8 @@ export async function sendContactMessage(data: {
   subject: string;
   message: string;
 }): Promise<{ success: boolean; message: string }> {
-  const response = await fetch(`${API_BASE}/inquiries`, {
+  const response = await authFetch(`${API_BASE}/inquiries`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Protection": "1",
-    },
     body: JSON.stringify(data),
   });
   return handleResponse(response);
@@ -273,12 +260,8 @@ export async function subscribeToNewsletter(data: {
   phone?: string;
   source?: string;
 }): Promise<{ success: boolean; message: string }> {
-  const response = await fetch(`${API_BASE}/newsletter/subscribe`, {
+  const response = await authFetch(`${API_BASE}/newsletter/subscribe`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Protection": "1",
-    },
     body: JSON.stringify(data),
   });
   return handleResponse(response);

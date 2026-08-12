@@ -30,7 +30,13 @@ export function useLogin() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: userLogin,
+    mutationFn: async (data: Parameters<typeof userLogin>[0]) => {
+      try {
+        return await userLogin(data);
+      } catch (error) {
+        throw new Error(formatAuthError(error));
+      }
+    },
     onSuccess: (response) => {
       if (!response.requiresMFA) {
         queryClient.setQueryData(["user"], {
@@ -39,9 +45,6 @@ export function useLogin() {
         });
       }
     },
-    onError: (error) => {
-      throw new Error(formatAuthError(error));
-    },
   });
 }
 
@@ -49,15 +52,18 @@ export function useRegister() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: userRegister,
+    mutationFn: async (data: Parameters<typeof userRegister>[0]) => {
+      try {
+        return await userRegister(data);
+      } catch (error) {
+        throw new Error(formatAuthError(error));
+      }
+    },
     onSuccess: (response) => {
       queryClient.setQueryData(["user"], {
         user: response.user,
         mustReset: false,
       });
-    },
-    onError: (error) => {
-      throw new Error(formatAuthError(error));
     },
   });
 }

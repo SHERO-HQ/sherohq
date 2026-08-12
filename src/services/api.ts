@@ -11,6 +11,7 @@ export {
   handleResponse,
   authFetch,
   userAuthFetch,
+  getCsrfToken,
 } from "./client";
 
 // Products, categories, reviews, uploads

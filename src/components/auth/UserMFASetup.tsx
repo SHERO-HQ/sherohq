@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Shield, CheckCircle2, AlertCircle, Copy, Loader2 } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
+import { authFetch } from "@/services/api";
 
 interface UserMFASetupProps {
   isOpen: boolean;
@@ -23,7 +24,7 @@ export default function UserMFASetup({ isOpen, onClose, onSuccess }: UserMFASetu
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/auth/mfa/setup", { method: "POST" });
+      const res = await authFetch("/api/auth/mfa/setup", { method: "POST" });
       const data = await res.json();
       if (data.success) {
         setSetupData(data.data);
@@ -43,10 +44,10 @@ export default function UserMFASetup({ isOpen, onClose, onSuccess }: UserMFASetu
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/auth/mfa/verify", {
+      const res = await authFetch("/api/auth/mfa/verify", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code })});
+        body: JSON.stringify({ code }),
+      });
       const data = await res.json();
       if (data.success) {
         setRecoveryCodes(data.data.recoveryCodes);

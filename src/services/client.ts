@@ -129,10 +129,30 @@ export async function handleResponse<T>(response: Response): Promise<T> {
   }
 }
 
-function getCsrfTokenFromCookie(): string | null {
+export function getCsrfToken(): string | null {
   if (typeof document === "undefined") return null;
   const match = document.cookie.match(/(?:^|;\s*)shero_csrf=([^;]*)/);
-  return match ? match[1] : null;
+  if (match && match[1]) {
+    return match[1];
+  }
+
+  // If no CSRF cookie exists in the client browser yet, initialize one
+  try {
+    if (typeof window !== "undefined" && window.crypto) {
+      const array = new Uint8Array(32);
+      window.crypto.getRandomValues(array);
+      const token = Array.from(array, (byte) =>
+        byte.toString(16).padStart(2, "0")
+      ).join("");
+      const isSecure = window.location.protocol === "https:";
+      document.cookie = `shero_csrf=${token}; path=/; SameSite=Lax${isSecure ? "; Secure" : ""}`;
+      return token;
+    }
+  } catch (e) {
+    console.error("Failed to generate client CSRF token", e);
+  }
+
+  return null;
 }
 
 export async function authFetch(url: string, options: RequestInit = {}) {
@@ -140,12 +160,12 @@ export async function authFetch(url: string, options: RequestInit = {}) {
     ...options.headers,
   };
 
-  if (!(options.body instanceof FormData)) {
+  if (!(options.body instanceof FormData) && !(headers as Record<string, string>)["Content-Type"]) {
     (headers as Record<string, string>)["Content-Type"] = "application/json";
   }
 
   (headers as Record<string, string>)["X-CSRF-Protection"] = "1";
-  const csrfToken = getCsrfTokenFromCookie();
+  const csrfToken = getCsrfToken();
   if (csrfToken) {
     (headers as Record<string, string>)["x-csrf-token"] = csrfToken;
   }
@@ -168,7 +188,7 @@ export async function userAuthFetch(url: string, options: RequestInit = {}) {
     ...options.headers,
   };
 
-  const csrfToken = getCsrfTokenFromCookie();
+  const csrfToken = getCsrfToken();
   if (csrfToken) {
     (headers as Record<string, string>)["x-csrf-token"] = csrfToken;
   }

@@ -1,4 +1,4 @@
-import { API_BASE, handleResponse } from "./client";
+import { API_BASE, handleResponse, authFetch } from "./client";
 import type { Order } from "./orders";
 
 // ---------------------------------------------------------------------------
@@ -44,13 +44,8 @@ export async function userRegister(data: {
   name: string;
   phone?: string;
 }): Promise<UserLoginResponse> {
-  const response = await fetch(`${API_BASE}/auth/register`, {
+  const response = await authFetch(`${API_BASE}/auth/register`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Protection": "1",
-    },
-    credentials: "include",
     body: JSON.stringify(data),
   });
 
@@ -61,13 +56,8 @@ export async function userLogin(data: {
   email: string;
   password: string;
 }): Promise<UserLoginResponse> {
-  const response = await fetch(`${API_BASE}/auth/login`, {
+  const response = await authFetch(`${API_BASE}/auth/login`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Protection": "1",
-    },
-    credentials: "include",
     body: JSON.stringify(data),
   });
 
@@ -75,35 +65,21 @@ export async function userLogin(data: {
 }
 
 export async function userLogout(): Promise<void> {
-  await fetch(`${API_BASE}/auth/logout`, {
+  await authFetch(`${API_BASE}/auth/logout`, {
     method: "POST",
-    headers: {
-      "X-CSRF-Protection": "1",
-    },
-    credentials: "include",
-  });
+  }).catch(() => {});
 }
 
 export async function getUserMe(): Promise<{
   user: User;
   mustReset?: boolean;
 }> {
-  const response = await fetch(`${API_BASE}/auth/me`, {
-    headers: {
-      "X-CSRF-Protection": "1",
-    },
-    credentials: "include",
-  });
+  const response = await authFetch(`${API_BASE}/auth/me`);
   return handleResponse<{ user: User; mustReset?: boolean }>(response);
 }
 
 export async function getUserOrders(userId: string): Promise<Order[]> {
-  const response = await fetch(`${API_BASE}/orders/user/${userId}`, {
-    headers: {
-      "X-CSRF-Protection": "1",
-    },
-    credentials: "include",
-  });
+  const response = await authFetch(`${API_BASE}/orders/user/${userId}`);
   return handleResponse<Order[]>(response);
 }
 
@@ -114,13 +90,8 @@ export async function getUserOrders(userId: string): Promise<Order[]> {
 export async function verifyEmail(
   token: string,
 ): Promise<{ success: boolean; message: string }> {
-  const response = await fetch(`${API_BASE}/auth/verify-email`, {
+  const response = await authFetch(`${API_BASE}/auth/verify-email`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Protection": "1",
-    },
-    credentials: "include",
     body: JSON.stringify({ token }),
   });
   return handleResponse(response);
@@ -129,13 +100,8 @@ export async function verifyEmail(
 export async function resendVerificationEmail(
   email: string,
 ): Promise<{ success: boolean; message: string }> {
-  const response = await fetch(`${API_BASE}/auth/resend-verification`, {
+  const response = await authFetch(`${API_BASE}/auth/resend-verification`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Protection": "1",
-    },
-    credentials: "include",
     body: JSON.stringify({ email }),
   });
   return handleResponse(response);
@@ -150,15 +116,8 @@ export async function updateUserProfile(data: {
   phone?: string;
   shippingAddress?: ShippingAddress | null;
 }): Promise<{ success: boolean; user: User }> {
-  const headers: HeadersInit = {
-    "Content-Type": "application/json",
-    "X-CSRF-Protection": "1",
-  };
-
-  const response = await fetch(`${API_BASE}/auth/profile`, {
+  const response = await authFetch(`${API_BASE}/auth/profile`, {
     method: "PUT",
-    headers,
-    credentials: "include",
     body: JSON.stringify(data),
   });
   return handleResponse(response);
@@ -168,15 +127,8 @@ export async function userChangePassword(
   currentPassword: string,
   password: string,
 ): Promise<{ success: boolean }> {
-  const headers: HeadersInit = {
-    "Content-Type": "application/json",
-    "X-CSRF-Protection": "1",
-  };
-
-  const response = await fetch(`${API_BASE}/auth/change-password`, {
+  const response = await authFetch(`${API_BASE}/auth/change-password`, {
     method: "POST",
-    headers,
-    credentials: "include",
     body: JSON.stringify({ currentPassword, password }),
   });
   return handleResponse(response);
@@ -189,12 +141,8 @@ export async function userChangePassword(
 export async function requestPasswordReset(
   email: string,
 ): Promise<{ success: boolean; message: string }> {
-  const response = await fetch(`${API_BASE}/auth/forgot-password`, {
+  const response = await authFetch(`${API_BASE}/auth/forgot-password`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Protection": "1",
-    },
     body: JSON.stringify({ email }),
   });
   return handleResponse(response);
@@ -204,12 +152,8 @@ export async function resetPassword(
   token: string,
   password: string,
 ): Promise<{ success: boolean; message: string }> {
-  const response = await fetch(`${API_BASE}/auth/reset-password`, {
+  const response = await authFetch(`${API_BASE}/auth/reset-password`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Protection": "1",
-    },
     body: JSON.stringify({ token, password }),
   });
   return handleResponse(response);

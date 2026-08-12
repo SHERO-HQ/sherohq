@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { UploadCloud, CheckCircle2, MapPin, Clock, X, Building } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { authFetch } from "@/services/api";
 
 interface ApplicationFormModalProps {
   isOpen: boolean;
@@ -33,18 +34,17 @@ export function ApplicationFormModal({ isOpen, onClose, job }: ApplicationFormMo
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!job) return;
-
     setIsSubmitting(true);
+
     try {
       let resumeUrl = "";
 
-      // 1. Upload Resume if provided
+      // 1. Upload Resume if exists
       if (resumeFile) {
         const uploadData = new FormData();
         uploadData.append("resume", resumeFile);
 
-        const uploadRes = await fetch("/api/upload/resume", {
+        const uploadRes = await authFetch("/api/upload/resume", {
           method: "POST",
           body: uploadData,
         });
@@ -65,9 +65,8 @@ export function ApplicationFormModal({ isOpen, onClose, job }: ApplicationFormMo
         resumeUrl,
       };
 
-      const res = await fetch("/api/public/applications", {
+      const res = await authFetch("/api/public/applications", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(applicationData),
       });
 

@@ -2,12 +2,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
 import { useLogin } from "@/hooks/queries/useAuthQuery";
 import type { User } from "@/services/auth";
+import { authFetch } from "@/services/api";
 import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -65,9 +65,8 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await fetch("/api/auth/login/mfa", {
+      const res = await authFetch("/api/auth/login/mfa", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mfaToken: mfaChallenge?.token, code: mfaCode }),
       });
 
@@ -98,14 +97,6 @@ const Login = () => {
         </div>
         <div className="bg-white dark:bg-slate-900 rounded shadow border border-slate-200 dark:border-slate-800 p-8">
           <div className="text-center mb-8">
-            <Image
-              src="/assets/logo/shero.svg"
-              alt="Shero"
-              width={48}
-              height={48}
-              className="h-12 w-auto mx-auto mb-4"
-              priority
-            />
             <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
               {mfaChallenge ? "Verify It's You" : "Welcome Back"}
             </h1>

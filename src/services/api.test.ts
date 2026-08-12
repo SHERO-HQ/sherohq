@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { getImageUrl } from "./api";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { getImageUrl, getCsrfToken, authFetch } from "./api";
 
 describe("getImageUrl", () => {
   it("should return an empty string for undefined path", () => {
@@ -35,3 +35,46 @@ describe("getImageUrl", () => {
     expect(result).toContain(uploadPath);
   });
 });
+
+describe("CSRF and authFetch", () => {
+  beforeEach(() => {
+    // Clear document.cookie in jsdom environment
+    if (typeof document !== "undefined") {
+      document.cookie = "shero_csrf=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
+    vi.restoreAllMocks();
+  });
+
+  it("should retrieve existing CSRF token from document.cookie", () => {
+    document.cookie = "shero_csrf=test-existing-token; path=/";
+    const token = getCsrfToken();
+    expect(token).toBe("test-existing-token");
+  });
+
+  it("should auto-generate a CSRF token if cookie is missing", () => {
+    const token = getCsrfToken();
+    expect(token).toBeDefined();
+    expect(token?.length).toBe(64); // 32 bytes in hex
+    expect(document.cookie).toContain(`shero_csrf=${token}`);
+  });
+
+  it("should include x-csrf-token and credentials in authFetch", async () => {
+    document.cookie = "shero_csrf=auth-fetch-csrf-token; path=/";
+    const fetchMock = vi.fn().mockResolvedValue(new Response(JSON.stringify({ success: true })));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await authFetch("/api/test-endpoint", {
+      method: "POST",
+      body: JSON.stringify({ key: "val" }),
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const [calledUrl, calledOptions] = fetchMock.mock.calls[0];
+    expect(calledUrl).toBe("/api/test-endpoint");
+    expect(calledOptions.credentials).toBe("include");
+    expect(calledOptions.headers["x-csrf-token"]).toBe("auth-fetch-csrf-token");
+    expect(calledOptions.headers["X-CSRF-Protection"]).toBe("1");
+    expect(calledOptions.headers["Content-Type"]).toBe("application/json");
+  });
+});
+

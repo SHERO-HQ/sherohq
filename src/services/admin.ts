@@ -150,13 +150,8 @@ export async function adminLogin(
   username: string,
   password: string,
 ): Promise<LoginResponse> {
-  const response = await fetch(`${API_BASE}/admin-auth/login`, {
+  const response = await authFetch(`${API_BASE}/admin-auth/login`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Protection": "1",
-    },
-    credentials: "include",
     body: JSON.stringify({ username, password }),
   });
 
@@ -233,11 +228,8 @@ export async function loginWithMFA(
   mfaToken: string,
   code: string,
 ): Promise<LoginResponse> {
-  const response = await fetch(`${API_BASE}/admin-auth/login/mfa`, {
+  const response = await authFetch(`${API_BASE}/admin-auth/login/mfa`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({ mfaToken, code }),
   });
   return handleResponse<LoginResponse>(response);

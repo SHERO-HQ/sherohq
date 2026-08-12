@@ -162,9 +162,8 @@ export async function submitProductReview(
   productId: string,
   data: { userName: string; rating: number; comment: string },
 ): Promise<{ success: boolean; review: Review }> {
-  const response = await fetch(`${API_BASE}/products/${productId}/reviews`, {
+  const response = await authFetch(`${API_BASE}/products/${productId}/reviews`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
   return handleResponse(response);
@@ -218,7 +217,7 @@ export async function publicUploadImage(
   const formData = new FormData();
   formData.append("image", file);
 
-  const response = await fetch(`${API_BASE}/upload/public`, {
+  const response = await authFetch(`${API_BASE}/upload/public`, {
     method: "POST",
     body: formData,
   });
