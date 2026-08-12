@@ -138,9 +138,13 @@ export async function GET(request: NextRequest) {
       200,
       { "Cache-Control": "public, s-maxage=120, stale-while-revalidate=300" }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching products:", error);
-    return apiResponse.error("Failed to fetch products", 500);
+    return apiResponse.error(
+      "Failed to fetch products",
+      500,
+      error?.message || error
+    );
   }
 }
 

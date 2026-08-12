@@ -1,4 +1,5 @@
 import { Pool, PoolConfig } from "pg";
+import { parse } from "pg-connection-string";
 import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "./drizzle/schema";
 
@@ -13,9 +14,9 @@ function getPool(): Pool {
   if (pool) return pool;
 
   const candidates = [
+    process.env.DATABASE_URL,
     process.env.POSTGRES_URL,
     process.env.POSTGRES_URL_NON_POOLING,
-    process.env.DATABASE_URL,
   ];
 
   const validUrl = candidates.find(
@@ -28,22 +29,38 @@ function getPool(): Pool {
 
   if (!connectionString) {
     if (process.env.NODE_ENV === "production") {
-      throw new Error("DATABASE_URL or POSTGRES_URL is not defined");
+      console.error("❌ [DB] DATABASE_URL or POSTGRES_URL is not defined in production!");
     } else {
       console.warn("⚠️ [DB] DATABASE_URL or POSTGRES_URL is not defined. Check your .env.local file.");
     }
   }
 
-  const isLocalhost = connectionString.includes("localhost") || connectionString.includes("127.0.0.1") || connectionString.includes("::1");
+  let dbConfig: Record<string, any> = {};
+  if (connectionString) {
+    try {
+      dbConfig = parse(connectionString);
+    } catch (e) {
+      console.error("❌ [DB] Failed to parse connection string:", e);
+    }
+  }
+
+  delete dbConfig.ssl;
+
+  const host = String(dbConfig.host || "");
+  const isLocalhost = !host || host === "localhost" || host === "127.0.0.1" || host === "::1";
 
   const poolConfig: PoolConfig = {
-    connectionString,
+    user: dbConfig.user,
+    password: dbConfig.password,
+    host: dbConfig.host,
+    port: dbConfig.port ? parseInt(String(dbConfig.port), 10) : 5432,
+    database: dbConfig.database,
     // Serverless optimization: keep max low per container to avoid pool exhaustion
     max: process.env.NODE_ENV === "production" ? 10 : 5,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 10000,
     statement_timeout: 30000, // 30s timeout
-    ssl: !isLocalhost ? { rejectUnauthorized: false } : false,
+    ssl: isLocalhost ? false : { rejectUnauthorized: false },
   };
 
   // Singleton for Next.js hot-reloading

@@ -15,8 +15,12 @@ export async function GET() {
       200,
       { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Public fetch careers error:", error);
-    return apiResponse.error("Failed to fetch active job postings", 500);
+    return apiResponse.error(
+      "Failed to fetch active job postings",
+      500,
+      error?.message || error
+    );
   }
 }
