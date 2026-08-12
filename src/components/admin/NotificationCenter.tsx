@@ -83,7 +83,7 @@ export default function NotificationCenter() {
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 mt-2 w-80 sm:w-96 glass-surface rounded shadow z-50 overflow-hidden">
+                <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] max-w-sm sm:w-96 glass-surface rounded shadow z-50 overflow-hidden">
                     {/* Header */}
                     <div className="p-4 border-b border-border flex items-center justify-between">
                         <h3 className="font-semibold text-foreground">
@@ -110,7 +110,7 @@ export default function NotificationCenter() {
                     </div>
 
                     {/* List */}
-                    <div className="max-h-96 overflow-y-auto">
+                    <div className="max-h-[min(24rem,calc(100vh-8rem))] overflow-y-auto">
                         {notifications.length === 0 ? (
                             <div className="p-8 text-center text-muted-foreground">
                                 <Bell className="w-8 h-8 mx-auto mb-2 opacity-20" />
@@ -124,20 +124,20 @@ export default function NotificationCenter() {
                                         className={`p-4 flex gap-3 hover:bg-muted/50 transition-colors ${!notification.read ? "bg-muted/20" : ""
                                             }`}
                                     >
-                                        <div className="mt-1">{getIcon(notification.type)}</div>
+                                        <div className="mt-1 shrink-0">{getIcon(notification.type)}</div>
                                         <div className="flex-1 min-w-0">
-                                            <div className="flex justify-between items-start mb-1">
+                                            <div className="flex justify-between items-start mb-1 gap-2">
                                                 <h4
-                                                    className={`text-sm font-medium ${notification.read ? "text-muted-foreground" : "text-foreground"
+                                                    className={`text-sm font-medium break-words ${notification.read ? "text-muted-foreground" : "text-foreground"
                                                         }`}
                                                 >
                                                     {notification.title}
                                                 </h4>
-                                                <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
+                                                <span className="text-xs text-muted-foreground whitespace-nowrap shrink-0 ml-2">
                                                     {formatTime(notification.createdAt)}
                                                 </span>
                                             </div>
-                                            <p className="text-xs text-muted-foreground leading-relaxed mb-2">
+                                            <p className="text-xs text-muted-foreground leading-relaxed mb-2 break-words">
                                                 {notification.message}
                                             </p>
                                             {notification.link && (
