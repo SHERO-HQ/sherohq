@@ -74,7 +74,7 @@ const ResetPasswordContent = () => {
         <div className="w-14 h-14 mx-auto bg-red-100 dark:bg-red-950/40 rounded-full flex items-center justify-center mb-4 text-red-600 dark:text-red-400">
           <Lock className="w-7 h-7" />
         </div>
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
+        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
           Invalid Link
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
@@ -97,7 +97,7 @@ const ResetPasswordContent = () => {
           <div className="w-16 h-16 mx-auto bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center mb-5">
             <CheckCircle className="w-8 h-8 text-brand-secondary-600 dark:text-brand-secondary-400" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
             Password Reset Successful!
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
@@ -113,10 +113,10 @@ const ResetPasswordContent = () => {
       ) : (
         <>
           <div className="text-center mb-6">
-            <div className="w-12 h-12 mx-auto bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-3">
-              <Lock className="w-6 h-6 text-slate-600 dark:text-slate-400" />
+            <div className="flex items-center justify-center mb-3">
+              <Lock className="w-10 h-10 text-slate-600 dark:text-slate-400" />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
               Reset Your Password
             </h1>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-1.5">

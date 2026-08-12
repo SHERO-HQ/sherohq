@@ -66,7 +66,7 @@ const Signup = () => {
 
                 <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md rounded shadow-xl border border-slate-200/80 dark:border-slate-800 p-6 sm:p-8 transition-all">
                     <div className="text-center mb-6">
-                        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+                        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
                             Create Account
                         </h1>
                         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1.5">
