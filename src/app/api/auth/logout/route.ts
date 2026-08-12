@@ -3,7 +3,7 @@ import { userSessions } from "@/lib/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 import { apiResponse } from "@/lib/api-utils";
-import { USER_SESSION_COOKIE } from "@/lib/auth";
+import { USER_SESSION_COOKIE, clearAuthCookie } from "@/lib/auth";
 
 export async function POST() {
   try {
@@ -14,7 +14,7 @@ export async function POST() {
       await db.delete(userSessions).where(eq(userSessions.token, token));
     }
 
-    cookieStore.set(USER_SESSION_COOKIE, "", { maxAge: 0, path: "/" });
+    await clearAuthCookie(USER_SESSION_COOKIE);
 
     return apiResponse.success({ message: "Logged out successfully" });
   } catch (error) {

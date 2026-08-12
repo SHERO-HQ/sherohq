@@ -1,11 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginInput } from "@/lib/validations/auth";
-import { useLogin } from "@/hooks/queries/useAuthQuery";
+import { useUser, useLogin } from "@/hooks/queries/useAuthQuery";
 import type { User } from "@/services/auth";
 import { authFetch } from "@/services/api";
 import { Mail, Lock, ArrowRight, Eye, EyeOff, Loader2, AlertCircle, KeyRound } from "lucide-react";
@@ -18,6 +18,16 @@ const Login = () => {
   const [error, setError] = useState("");
   const { mutateAsync: login } = useLogin();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirect") || "/profile";
+  const { data: userData, isLoading: authLoading } = useUser();
+  const isAuthenticated = !!userData?.user;
+
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      router.replace(redirectUrl);
+    }
+  }, [authLoading, isAuthenticated, redirectUrl, router]);
 
   const {
     register,
@@ -83,6 +93,14 @@ const Login = () => {
       setVerifyingMFA(false);
     }
   };
+
+  if (authLoading || isAuthenticated) {
+    return (
+      <div className="py-20 flex justify-center items-center">
+        <Loader2 className="w-8 h-8 animate-spin text-brand-secondary-500" />
+      </div>
+    );
+  }
 
   return (
     <div className="py-6 sm:py-10 flex justify-center px-4">

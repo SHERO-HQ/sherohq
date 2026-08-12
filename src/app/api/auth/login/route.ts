@@ -10,12 +10,12 @@ import { cookies } from "next/headers";
 import { z } from "zod";
 import { rateLimit } from "@/lib/rate-limit";
 
+import { USER_SESSION_COOKIE, getAuthCookieOptions } from "@/lib/auth";
+
 const LoginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
 });
-
-const USER_SESSION_COOKIE = "user_session_token";
 
 export async function POST(request: NextRequest) {
   try {
@@ -93,14 +93,9 @@ export async function POST(request: NextRequest) {
       expiresAt: expiresAt.toISOString(),
     });
 
+    const cookieOptions = await getAuthCookieOptions(expiresAt);
     const cookieStore = await cookies();
-    cookieStore.set(USER_SESSION_COOKIE, token, {
-      expires: expiresAt,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-    });
+    cookieStore.set(USER_SESSION_COOKIE, token, cookieOptions);
 
     return apiResponse.success({
       success: true,

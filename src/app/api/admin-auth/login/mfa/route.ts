@@ -7,7 +7,7 @@ import { randomBytes } from "node:crypto";
 import { cookies } from "next/headers";
 import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
-import { ADMIN_SESSION_COOKIE } from "@/lib/auth";
+import { ADMIN_SESSION_COOKIE, getAuthCookieOptions } from "@/lib/auth";
 import speakeasy from "speakeasy";
 import { verifyRecoveryCode, verifyMfaChallengeToken } from "@/lib/mfa-utils";
 
@@ -76,14 +76,9 @@ export async function POST(request: NextRequest) {
       expiresAt: expiresAt.toISOString(),
     });
 
+    const cookieOptions = await getAuthCookieOptions(7 * 24 * 60 * 60);
     const cookieStore = await cookies();
-    cookieStore.set(ADMIN_SESSION_COOKIE, token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 7 * 24 * 60 * 60, // 7 days
-    });
+    cookieStore.set(ADMIN_SESSION_COOKIE, token, cookieOptions);
 
     await logActivity(admin.id, "admin_login_mfa", "success", `Admin logged in with MFA: ${admin.username}`);
 

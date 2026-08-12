@@ -11,6 +11,7 @@ import { z } from "zod";
 import { notificationService } from "@/lib/notifications";
 
 import { PasswordSchema } from "@/lib/validations/auth";
+import { USER_SESSION_COOKIE, getAuthCookieOptions } from "@/lib/auth";
 
 const RegisterSchema = z.object({
   email: z.string().email(),
@@ -18,8 +19,6 @@ const RegisterSchema = z.object({
   name: z.string().min(1),
   phone: z.string().optional(),
 });
-
-const USER_SESSION_COOKIE = "user_session_token";
 
 export async function POST(request: NextRequest) {
   try {
@@ -68,14 +67,9 @@ export async function POST(request: NextRequest) {
       expiresAt: expiresAt.toISOString(),
     });
 
+    const cookieOptions = await getAuthCookieOptions(expiresAt);
     const cookieStore = await cookies();
-    cookieStore.set(USER_SESSION_COOKIE, token, {
-      expires: expiresAt,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-    });
+    cookieStore.set(USER_SESSION_COOKIE, token, cookieOptions);
 
     // Send verification and welcome emails (async)
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";

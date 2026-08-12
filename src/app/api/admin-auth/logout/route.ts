@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import { sessions } from "@/lib/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
-import { getAdminFromSession, ADMIN_SESSION_COOKIE } from "@/lib/auth";
+import { getAdminFromSession, ADMIN_SESSION_COOKIE, clearAuthCookie } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 import { apiResponse } from "@/lib/api-utils";
 
@@ -16,7 +16,7 @@ export async function POST() {
       await db.delete(sessions).where(eq(sessions.token, token));
     }
 
-    cookieStore.set(ADMIN_SESSION_COOKIE, "", { maxAge: 0, path: "/" });
+    await clearAuthCookie(ADMIN_SESSION_COOKIE);
 
     if (admin) {
       await logActivity(

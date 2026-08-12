@@ -1,11 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema, type SignupInput } from "@/lib/validations/auth";
-import { useRegister } from "@/hooks/queries/useAuthQuery";
+import { useUser, useRegister } from "@/hooks/queries/useAuthQuery";
 import { Mail, Lock, User, Phone, ArrowRight, Eye, EyeOff, Loader2, AlertCircle, Check, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,14 @@ const Signup = () => {
     const [error, setError] = useState("");
     const { mutateAsync: signupUser } = useRegister();
     const router = useRouter();
+    const { data: userData, isLoading: authLoading } = useUser();
+    const isAuthenticated = !!userData?.user;
+
+    useEffect(() => {
+        if (!authLoading && isAuthenticated) {
+            router.replace("/profile");
+        }
+    }, [authLoading, isAuthenticated, router]);
 
     const {
         register,
@@ -56,6 +64,14 @@ const Signup = () => {
             setError(err instanceof Error ? err.message : "Failed to create account");
         }
     };
+
+    if (authLoading || isAuthenticated) {
+        return (
+            <div className="py-20 flex justify-center items-center">
+                <Loader2 className="w-8 h-8 animate-spin text-brand-secondary-500" />
+            </div>
+        );
+    }
 
     return (
         <div className="py-6 sm:py-10 flex justify-center px-4">
