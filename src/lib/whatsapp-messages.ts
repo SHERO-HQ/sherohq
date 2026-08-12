@@ -123,42 +123,7 @@ export async function sendWhatsAppMessageDirect(
     return { success: true, messageId: mockMsgId };
   }
 
-  const body: any = {
-    messaging_product: "whatsapp",
-    to: recipient,
-  };
-
-  if (templateName) {
-    body.type = "template";
-    body.template = {
-      name: templateName,
-      language: { code: templateLanguage || "en" },
-      ...(templateParams && templateParams.length > 0
-        ? {
-            components: [
-              {
-                type: "body",
-                parameters: templateParams.map((text) => ({
-                  type: "text",
-                  text,
-                })),
-              },
-            ],
-          }
-        : {}),
-    };
-  } else if (mediaUrl && mediaType) {
-    body.type = mediaType;
-    body[mediaType] = { link: mediaUrl };
-    if (content && content !== "") {
-      body[mediaType].caption = content;
-    }
-  } else {
-    body.type = "text";
-    body.text = { body: content };
-  }
-
-  try {
+  const sendPayload = async (payload: any) => {
     const response = await fetch(
       `https://graph.facebook.com/v21.0/${phoneNumberId}/messages`,
       {
@@ -167,21 +132,110 @@ export async function sendWhatsAppMessageDirect(
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(body),
+        body: JSON.stringify(payload),
       }
     );
+    const data = (await response.json()) as any;
+    return { ok: response.ok, status: response.status, data };
+  };
 
-    const data = await response.json() as any;
+  try {
+    if (templateName) {
+      // Meta WhatsApp templates typically use en_US for English
+      const langCode = templateLanguage && templateLanguage !== "en" ? templateLanguage : "en_US";
+      const templateBody: any = {
+        messaging_product: "whatsapp",
+        to: recipient,
+        type: "template",
+        template: {
+          name: templateName,
+          language: { code: langCode },
+          ...(templateParams && templateParams.length > 0
+            ? {
+                components: [
+                  {
+                    type: "body",
+                    parameters: templateParams.map((text) => ({
+                      type: "text",
+                      text,
+                    })),
+                  },
+                ],
+              }
+            : {}),
+        },
+      };
 
-    if (!response.ok) {
+      let result = await sendPayload(templateBody);
+
+      // If template not found in en_US (error 132001), try with "en"
+      if (!result.ok && result.data?.error?.code === 132001 && langCode === "en_US") {
+        templateBody.template.language.code = "en";
+        result = await sendPayload(templateBody);
+      }
+
+      if (result.ok && result.data.messages?.[0]?.id) {
+        return { success: true, messageId: result.data.messages[0].id };
+      }
+
+      // If template fails (e.g. template not created/approved on Meta yet),
+      // gracefully fall back to direct text delivery so the customer still gets their alert
+      if (content && content.trim()) {
+        console.warn(`[WhatsApp] Template '${templateName}' failed (${result.data?.error?.message}). Falling back to text message.`);
+        const textResult = await sendPayload({
+          messaging_product: "whatsapp",
+          to: recipient,
+          type: "text",
+          text: { body: content },
+        });
+
+        if (textResult.ok && textResult.data.messages?.[0]?.id) {
+          return { success: true, messageId: textResult.data.messages[0].id };
+        }
+      }
+
       return {
         success: false,
-        error: data.error?.message || `HTTP ${response.status}`,
+        error: result.data?.error?.message || `HTTP ${result.status}`,
       };
     }
 
-    const messageId = data.messages?.[0]?.id;
-    return { success: true, messageId };
+    if (mediaUrl && mediaType) {
+      const mediaBody: any = {
+        messaging_product: "whatsapp",
+        to: recipient,
+        type: mediaType,
+        [mediaType]: { link: mediaUrl },
+      };
+      if (content && content !== "") {
+        mediaBody[mediaType].caption = content;
+      }
+      const result = await sendPayload(mediaBody);
+      if (!result.ok) {
+        return {
+          success: false,
+          error: result.data?.error?.message || `HTTP ${result.status}`,
+        };
+      }
+      return { success: true, messageId: result.data.messages?.[0]?.id };
+    }
+
+    // Standard text message
+    const textResult = await sendPayload({
+      messaging_product: "whatsapp",
+      to: recipient,
+      type: "text",
+      text: { body: content },
+    });
+
+    if (!textResult.ok) {
+      return {
+        success: false,
+        error: textResult.data?.error?.message || `HTTP ${textResult.status}`,
+      };
+    }
+
+    return { success: true, messageId: textResult.data.messages?.[0]?.id };
   } catch (error: any) {
     return { success: false, error: error.message || String(error) };
   }

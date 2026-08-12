@@ -1,5 +1,5 @@
 import { m, AnimatePresence } from "motion/react";
-import { ShieldCheck, ArrowRight } from "lucide-react";
+import { ArrowRight, Info } from "lucide-react";
 import { WhatsAppIcon } from "@/assets/icons/icons";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import type { Order } from "@/services/api";
@@ -20,7 +20,7 @@ export function PaymentPending({
   return (
     <div className="py-8 flex flex-col items-center justify-center w-full max-w-sm mx-auto">
       <div className="w-14 h-14 bg-slate-100 dark:bg-slate-800/50 rounded flex items-center justify-center mb-6 shadow-inner">
-        <ShieldCheck className="w-7 h-7 text-slate-400 dark:text-slate-500" />
+        <Info className="w-7 h-7 text-slate-400 dark:text-slate-500 " />
       </div>
 
       <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-2 text-center tracking-tight">

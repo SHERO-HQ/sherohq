@@ -389,17 +389,18 @@ const CheckoutSuccess = () => {
       <div className="py-8 flex flex-col items-center justify-center w-full max-w-sm mx-auto">
         <div className="relative w-24 h-24 mb-6 flex items-center justify-center">
           <m.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
             transition={{ type: "spring", bounce: 0.5 }}
-            className="absolute inset-0 bg-emerald-500 rounded-full"
+            className="absolute inset-0 bg-emerald-500 rounded-full shadow-lg shadow-emerald-500/25"
           />
           <m.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
             transition={{ type: "spring", bounce: 0.5, delay: 0.1 }}
+            className="relative z-10 flex items-center justify-center"
           >
-            <Check className="w-12 h-12 dark:text-white z-10 stroke-3" />
+            <Check className="w-12 h-12 text-white dark:text-slate-900 stroke-[3.5]" />
           </m.div>
         </div>
 

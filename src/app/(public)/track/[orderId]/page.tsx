@@ -1,28 +1,20 @@
 "use client";
-import { toReadableOrderId } from "@/utils/orderId";
 
 import { useEffect, useState, use, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  Package,
-  Copy,
-  Check,
-  Truck,
-  CheckCircle2,
-  Clock,
-  MapPin,
-  ShoppingBag,
-  Mail,
-  Phone,
-  AlertCircle,
-  PackageCheck,
-} from "lucide-react";
+import { Package, Copy, Check, AlertCircle } from "lucide-react";
 import { trackOrder, type Order } from "@/services/orders";
+import { useUser } from "@/hooks/queries/useAuthQuery";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { toReadableOrderId } from "@/utils/orderId";
+import { TrackTimeline } from "@/components/track/TrackTimeline";
+import { TrackOrderItems } from "@/components/track/TrackOrderItems";
+import { TrackShippingInfo } from "@/components/track/TrackShippingInfo";
+import { TrackActivityLogs } from "@/components/track/TrackActivityLogs";
+import { TrackSecurityRecommendation } from "@/components/track/TrackSecurityRecommendation";
 
 type Props = {
   params: Promise<{ orderId: string }>;
@@ -38,6 +30,8 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const router = useRouter();
+  const { data: userData } = useUser();
+  const isAuthenticated = !!userData?.user;
 
   useEffect(() => {
     if (!orderId) return;
@@ -65,27 +59,8 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
     };
 
     fetchOrder();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [orderId, token]);
+  }, [orderId, token, router]);
 
-  const getStatusStep = (status: string) => {
-    const s = status.toLowerCase();
-    if (s === "pending" || s === "quote") return 1;
-    if (s === "processing") return 2;
-    if (s === "intransit") return 3;
-    if (s === "delivered") return 4;
-    if (s === "cancelled") return -1;
-    return 1;
-  };
-
-  const steps = [
-    { label: "Ordered", icon: ShoppingBag },
-    { label: "Processing", icon: Clock },
-    { label: "In Transit", icon: Truck },
-    { label: "Delivered", icon: PackageCheck },
-  ];
-
-  const currentStep = order ? getStatusStep(order.status) : 0;
   const readableId = useMemo(() => toReadableOrderId(orderId), [orderId]);
   const isStorePickupOrder =
     (order?.paymentMethod || "").toLowerCase() === "store_pickup";
@@ -112,7 +87,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
       <div className="min-h-screen bg-slate-50 dark:bg-slate-950">
         <div className="flex flex-col items-center justify-center h-[70vh] space-y-4">
           <div className="relative">
-            <div className="w-16 h-16 border-4 border-brand-secondary-500/20 border-t-brand-secondary-500 rounded-full animate-spin"></div>
+            <div className="w-16 h-16 border-4 border-brand-secondary-500/20 border-t-brand-secondary-500 rounded-full animate-spin" />
             <Package className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-brand-secondary-500" />
           </div>
           <p className="text-slate-500 font-medium animate-pulse">
@@ -130,9 +105,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
           <div className="w-20 h-20 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto">
             <AlertCircle className="w-10 h-10 text-rose-500" />
           </div>
-          <h1 className="text-2xl font-bold dark:text-white">
-            Order Not Found
-          </h1>
+          <h1 className="text-2xl font-bold dark:text-white">Order Not Found</h1>
           <p className="text-slate-500 dark:text-slate-400">
             {error || "The link might be broken or the order doesn't exist."}
           </p>
@@ -193,306 +166,31 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
         </div>
 
         {/* Tracking Timeline */}
-        {order.status !== "cancelled" && !isStorePickupOrder ? (
-          <Card className="py-6 dark:bg-slate-900 border-none shadow-sm overflow-hidden border">
-            <div className="relative">
-              {/* Progress Line Background */}
-              <div className="absolute top-4 left-[12.5%] right-[12.5%] h-1 bg-slate-100 dark:bg-slate-800 z-0"></div>
-              {/* Active Progress Line */}
-              <div className="absolute top-4 left-[12.5%] right-[12.5%] h-1 z-0">
-                <div
-                  className="absolute top-0 left-0 h-1 bg-brand-secondary-500 transition-all duration-1000 ease-out"
-                  style={{
-                    width: `${Math.max(0, (currentStep - 1) / (steps.length - 1)) * 100}%`,
-                  }}
-                ></div>
-              </div>
-
-              <div className="relative z-10 grid grid-cols-4 gap-2">
-                {steps.map((step, idx) => {
-                  const stepNum = idx + 1;
-                  const isCompleted = currentStep > stepNum;
-                  const isActive = currentStep === stepNum;
-
-                  return (
-                    <div
-                      key={step.label}
-                      className="flex flex-col items-center text-center"
-                    >
-                      <div
-                        className={cn(
-                          "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 mx-auto",
-                          isCompleted
-                            ? "bg-brand-secondary-500 text-white"
-                            : isActive
-                              ? "bg-brand-secondary-500 text-white scale-110 shadow shadow-brand-secondary-500/20"
-                              : "bg-white dark:bg-slate-800 text-slate-400 border-2 border-slate-100 dark:border-slate-800",
-                        )}
-                      >
-                        {isCompleted ? (
-                          <CheckCircle2 className="w-6 h-6" />
-                        ) : (
-                          <step.icon className="w-4.5 h-4.5" />
-                        )}
-                      </div>
-                      <span
-                        className={cn(
-                          "mt-2 text-[10px] md:text-xs font-bold tracking-wider",
-                          isActive
-                            ? "text-brand-secondary-500"
-                            : "text-slate-400 dark:text-slate-500",
-                        )}
-                      >
-                        {step.label}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </Card>
-        ) : order.status === "cancelled" ? (
-          <Card className="p-8 bg-rose-500/5 border-rose-500/10 flex flex-col md:flex-row items-center gap-4">
-            <div className="w-12 h-12 bg-rose-500 text-white rounded-full flex items-center justify-center">
-              <AlertCircle className="w-6 h-6" />
-            </div>
-            <div>
-              <h3 className="font-bold text-rose-600">Order Cancelled</h3>
-              <p className="text-sm text-rose-500/80">
-                This order has been cancelled and is no longer being processed.
-              </p>
-            </div>
-          </Card>
-        ) : (
-          <Card className="p-8 bg-brand-secondary-500/5 border-brand-secondary-500/10 flex flex-col md:flex-row items-center gap-4">
-            <div className="w-12 h-12 bg-brand-secondary-500 text-white rounded-full flex items-center justify-center">
-              <Package className="w-6 h-6" />
-            </div>
-            <div>
-              <h3 className="font-bold text-brand-secondary-600">Store Pickup Order</h3>
-              <p className="text-sm text-brand-secondary-600/80">
-                This order will be collected in store, so delivery tracking is
-                not available.
-              </p>
-            </div>
-          </Card>
-        )}
+        <TrackTimeline
+          order={order}
+          isStorePickupOrder={isStorePickupOrder}
+        />
 
         {/* Content Grid */}
         <div className="grid md:grid-cols-3 gap-8">
-          {/* Order Details */}
           <div className="md:col-span-2 space-y-6">
-            <Card className="dark:bg-slate-900 border-none shadow-sm overflow-hidden border">
-              <div className="p-6 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-white/5">
-                <h3 className="font-bold flex items-center gap-2 dark:text-white">
-                  <ShoppingBag className="w-4 h-4 text-brand-secondary-500" />
-                  Package Contents
-                </h3>
-              </div>
-              <div className="divide-y divide-slate-100 dark:divide-white/5">
-                {hasOrderItems ? (
-                  orderItems.map((item) => (
-                    <div
-                      key={item.id}
-                      className="p-6 flex items-center justify-between"
-                    >
-                      <div className="flex items-center gap-4">
-                        {item.image ? (
-                          <div className="w-12 h-12 rounded bg-slate-100 dark:bg-slate-800 overflow-hidden flex items-center justify-center">
-                            <img
-                              src={item.image}
-                              alt={item.name}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                        ) : (
-                          <div className="w-12 h-12 rounded bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
-                            <Package className="w-6 h-6" />
-                          </div>
-                        )}
-                        <div>
-                          <p className="font-bold text-sm dark:text-white">
-                            {item.name}
-                          </p>
-                          <p className="text-xs text-slate-500">
-                            Quantity: {item.quantity}
-                          </p>
-                        </div>
-                      </div>
-                      <p className="font-bold text-sm dark:text-white">
-                        GHS{(item.price * item.quantity).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <div className="p-6 text-sm text-slate-500 dark:text-slate-400">
-                    Item details are hidden for this tracking link. Open the
-                    original checkout confirmation link or sign in to view full
-                    order contents.
-                  </div>
-                )}
-              </div>
-              {hasOrderTotal && (
-                <div className="p-6 bg-brand-secondary-500/5 border-t border-brand-secondary-500/10">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                      Total Payable
-                    </span>
-                    <span className="text-xl font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
-                      GHS{Number(order.total).toLocaleString("en-GH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </span>
-                  </div>
-                </div>
-              )}
-            </Card>
-
-            <Card className="p-5 border-amber-200/70 bg-amber-50/60 dark:bg-amber-500/5 dark:border-amber-500/20">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                  <AlertCircle className="w-4 h-4" />
-                </div>
-                <div className="space-y-2">
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                    Security Recommendation
-                  </h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    For safer access to your order history and easier tracking
-                    across devices, create an account and place future orders
-                    while signed in.
-                  </p>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-amber-300 text-amber-700 hover:bg-amber-100 dark:border-amber-500/30 dark:text-amber-300 dark:hover:bg-amber-500/10"
-                    asChild
-                  >
-                    <Link href="/signup">Create Account</Link>
-                  </Button>
-                </div>
-              </div>
-            </Card>
+            <TrackOrderItems
+              order={order}
+              hasOrderItems={hasOrderItems}
+              hasOrderTotal={hasOrderTotal}
+              orderItems={orderItems}
+            />
+            <TrackSecurityRecommendation isAuthenticated={isAuthenticated} />
           </div>
 
-          {/* Side Info */}
-          <div className="space-y-6">
-            <Card className="p-6 dark:bg-slate-900 border-none shadow-sm space-y-6 border">
-              <div>
-                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                  <MapPin className="w-3 h-3" />{" "}
-                  {isStorePickupOrder ? "Pickup Contact" : "Delivery Address"}
-                </h4>
-                <div className="space-y-1">
-                  {shippingInfo ? (
-                    <>
-                      <p className="text-sm font-bold dark:text-white">
-                        {shippingInfo.firstName} {shippingInfo.lastName}
-                      </p>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                        {isStorePickupOrder ? (
-                          <>
-                            In-store Pickup
-                            <br />
-                            {shippingInfo.city}, {shippingInfo.region}
-                          </>
-                        ) : (
-                          <>
-                            {shippingInfo.address}
-                            <br />
-                            {shippingInfo.city}, {shippingInfo.region}
-                          </>
-                        )}
-                      </p>
-                    </>
-                  ) : (
-                    <p className="text-sm text-slate-600 dark:text-slate-400">
-                      Address details are hidden for this tracking link.
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div>
-                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                  <Phone className="w-3 h-3" /> Contact Details
-                </h4>
-                <div className="space-y-2">
-                  {shippingInfo ? (
-                    <>
-                      <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                        <Mail className="w-3.5 h-3.5 text-brand-secondary-500" />
-                        {shippingInfo.email}
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
-                        <Phone className="w-3.5 h-3.5 text-brand-secondary-500" />
-                        {shippingInfo.phone}
-                      </div>
-                    </>
-                  ) : (
-                    <p className="text-sm text-slate-600 dark:text-slate-400">
-                      Contact details are hidden for this tracking link.
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-slate-100 dark:border-white/5">
-                <Button
-                  variant="outline"
-                  className="w-full border-slate-200 dark:border-white/10"
-                  asChild
-                >
-                  <Link href="/support">Need Help?</Link>
-                </Button>
-              </div>
-            </Card>            <div className="text-center">
-              <p className="text-[10px] text-slate-400 uppercase tracking-widest leading-loose">
-                Thank you for choosing
-                <br />
-                <span className="text-brand-secondary-500 font-bold">
-                  SHERO TECHNOLOGIES
-                </span>
-              </p>
-            </div>
-          </div>
+          <TrackShippingInfo
+            shippingInfo={shippingInfo}
+            isStorePickupOrder={isStorePickupOrder}
+          />
         </div>
 
         {/* Detailed Timeline */}
-        {(order as any).activityLogs && (order as any).activityLogs.length > 0 && (
-          <Card className="p-6 mt-8 dark:bg-slate-900 border shadow-sm">
-            <h3 className="font-bold text-lg mb-6 text-slate-800 dark:text-slate-200">Detailed Timeline</h3>
-            <div className="space-y-0">
-              {(order as any).activityLogs.map((log: any, idx: number) => {
-                let actionText = log.action.replace("order_", "").replace(/_/g, " ").toUpperCase();
-
-                if (log.action === "order_update" && log.details) {
-                  const match = log.details.match(/status=([\w]+)/i);
-                  if (match) {
-                    actionText = `UPDATE: ${match[1].toUpperCase()}`;
-                  }
-                }
-
-                return (
-                  <div key={idx} className="flex gap-4">
-                    <div className="flex flex-col items-center">
-                      <div className="w-3 h-3 rounded-full bg-brand-secondary-500 mt-1.5 z-10 shadow shadow-brand-secondary-500/20"></div>
-                      {idx < (order as any).activityLogs.length - 1 && (
-                        <div className="w-0.5 h-full bg-slate-200 dark:bg-slate-800 -mt-2 min-h-12"></div>
-                      )}
-                    </div>
-                    <div className="pb-6">
-                      <p className="font-semibold text-sm text-slate-800 dark:text-slate-200 uppercase tracking-wide">
-                        {actionText}
-                      </p>
-                      <p className="text-xs text-slate-500 mt-1 font-mono">
-                        {new Date(log.createdAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </Card>
-        )}
+        <TrackActivityLogs activityLogs={(order as any).activityLogs} />
       </div>
     </div>
   );
