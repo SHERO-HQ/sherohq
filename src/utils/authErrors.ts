@@ -23,8 +23,26 @@ const ERROR_MAP: Record<string, string> = {
 };
 
 function getSubstringError(lowerMessage: string): string | null {
-  if (lowerMessage.includes("credentials")) {
-    return ERROR_MAP.invalid_credentials;
+  if (
+    lowerMessage.includes("credential") ||
+    lowerMessage.includes("invalid username") ||
+    lowerMessage.includes("invalid password") ||
+    lowerMessage.includes("incorrect password") ||
+    lowerMessage.includes("user not found") ||
+    lowerMessage.includes("admin not found") ||
+    lowerMessage.includes("invalid email")
+  ) {
+    return "Invalid email/username or password. Please try again.";
+  }
+  if (
+    lowerMessage.includes("locked") ||
+    lowerMessage.includes("too many failed") ||
+    lowerMessage.includes("rate limit")
+  ) {
+    return "Too many failed attempts. Please wait a few minutes before trying again.";
+  }
+  if (lowerMessage.includes("deactivated") || lowerMessage.includes("disabled")) {
+    return "Your account has been disabled. Please contact support.";
   }
   if (
     lowerMessage.includes("already registered") ||

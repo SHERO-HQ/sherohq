@@ -38,7 +38,16 @@ export async function getUserFromSession() {
   try {
     const sessionRes = await db.execute(sql`
       SELECT 
-        u.id, u.name, u.email, u.phone, u.avatar
+        u.id, 
+        u.name, 
+        u.email, 
+        u.phone, 
+        u.avatar,
+        u."emailVerified",
+        u."mfaEnabled",
+        u."shippingAddress",
+        u."createdAt",
+        u."updatedAt"
        FROM user_sessions us
        JOIN users u ON us."userId" = u.id
        WHERE us.token = ${token} AND us."expiresAt" > NOW()

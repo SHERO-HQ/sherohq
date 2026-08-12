@@ -15,7 +15,7 @@ const VerificationBanner: React.FC<VerificationBannerProps> = ({
  resendMessage,
  onResend,
 }) => {
- if (emailVerified !== false) return null;
+ if (emailVerified === true) return null;
 
  return (
  <div className="mb-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded p-4 flex flex-wrap items-center justify-between gap-4">
@@ -40,7 +40,7 @@ const VerificationBanner: React.FC<VerificationBannerProps> = ({
  ) : (
  <Send className="w-4 h-4" />
  )}
- Resend Email
+ Resend
  </button>
  {resendMessage && (
  <p className="w-full text-sm text-amber-700 dark:text-amber-300 mt-2">

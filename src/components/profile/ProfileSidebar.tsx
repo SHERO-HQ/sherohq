@@ -84,18 +84,27 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
  <div className="w-16 h-16 rounded font-bold bg-linear-to-br from-brand-secondary-500 to-brand-secondary-600 flex items-center justify-center text-3xl text-white shrink-0 shadow">
  {user.name.charAt(0)}
  </div>
- <div>
- <h2 className="font-bold text-slate-900 dark:text-white line-clamp-1">
- {user.name}
- </h2>
- <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-1 flex items-center gap-1">
- {user.email}
- {user.emailVerified && (
- <BadgeCheck className="w-4 h-4 text-brand-secondary-700 dark:text-brand-secondary-300 fill-brand-secondary-500/40" />
- )}
- </p>
- </div>
- </div>
+        <div className="min-w-0">
+          <h2 className="font-bold text-slate-900 dark:text-white line-clamp-1">
+            {user.name}
+          </h2>
+          <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
+            <span className="text-sm text-slate-500 dark:text-slate-400 truncate max-w-[180px]">
+              {user.email}
+            </span>
+            {user.emailVerified ? (
+              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-900/40 px-1.5 py-0.5 rounded">
+                <BadgeCheck className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+                Verified
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-900/40 px-1.5 py-0.5 rounded">
+                Unverified
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
 
  <div className="space-y-1">
  <button

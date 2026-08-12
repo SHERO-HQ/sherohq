@@ -53,10 +53,11 @@ export default function AdminLogin() {
             // Only redirect if authenticated
             // If requiresMFA became true, isAuthenticated is still false
         } catch (err: any) {
-            if (err.message?.includes("Failed to fetch") || !err.status) {
+            const message = err instanceof Error ? err.message : String(err || "Login failed");
+            if (message.toLowerCase().includes("failed to fetch") || message.toLowerCase().includes("networkerror")) {
                 setError("Server unreachable. Please check your internet connection.");
             } else {
-                setError(err instanceof Error ? err.message : "Login failed");
+                setError(message);
             }
         } finally {
             setIsLoading(false);
