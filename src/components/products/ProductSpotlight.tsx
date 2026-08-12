@@ -231,7 +231,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                             href={getAbsoluteUrl(
                               `/shop/${currentProduct.slug || currentProduct.sku || currentProduct.id}`,
                             )}
-                            className="group flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-3 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded font-semibold transition duration-300 shadow shadow-brand-secondary-500/25 hover:scale-[1.02] active:scale-95"
+                            className="group flex items-center justify-center gap-3 w-full sm:w-auto px-8 py-2 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded font-semibold transition duration-300 shadow shadow-brand-secondary-500/25 hover:scale-[1.02] active:scale-95"
                           >
                             Details
                             <ArrowRight
