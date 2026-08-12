@@ -31,11 +31,11 @@ const LandingTestimonials = ({ limit }: LandingTestimonialsProps = {}) => {
                 Client Voices
               </span>
               <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-6 transition-colors duration-300 leading-tight">
-                Trusted by Leaders across Africa.
+                Empowering Businesses, Innovators & Communities.
               </h2>
               <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 transition-colors duration-300 leading-relaxed">
                 We believe technology exists to expand what's possible. See how
-                we've partnered with innovators to build enterprise-grade
+                we've partnered with forward-thinking organizations to build reliable
                 infrastructure that removes barriers and creates opportunities.
               </p>
             </div>

@@ -63,29 +63,44 @@ export function PortfolioDrawer({
             }}
             className="relative w-full sm:w-125 md:w-150 bg-background border-l border-border shadow-2xl flex flex-col h-full overflow-hidden"
           >
-            {/* Floating Header */}
-            <div className="absolute top-0 inset-x-0 p-4 md:p-6 flex items-start justify-between z-20 pointer-events-none">
-              <div className="pointer-events-auto">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-background/90 backdrop-blur-md text-brand-secondary-700 dark:text-brand-secondary-400 text-xs font-bold uppercase rounded-full shadow-sm border border-border">
-                  {getCategoryIcon(selectedProject.category)}
-                  {selectedProject.category}
-                </span>
-              </div>
-              <button
-                onClick={onClose}
-                className="p-2.5 rounded-full bg-background/90 hover:bg-background backdrop-blur-md text-foreground shadow-sm border border-border transition-all duration-200 cursor-pointer active:scale-95 pointer-events-auto"
-                aria-label="Close Case Study"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
             {/* Scrollable Body */}
-            <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10">
+            <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10 flex flex-col">
+              {/* Sticky Top Header Bar (Category, Title, Client & Close Button) */}
+              <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-md border-b border-border p-4 md:p-6 space-y-3 shrink-0 shadow-xs">
+                <div className="flex items-center justify-between gap-4">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-secondary-100 dark:bg-brand-secondary-900/40 text-brand-secondary-700 dark:text-brand-secondary-400 text-xs font-bold uppercase rounded-full border border-brand-secondary-500/20">
+                    {getCategoryIcon(selectedProject.category)}
+                    {selectedProject.category}
+                  </span>
+                  <button
+                    onClick={onClose}
+                    className="p-2 rounded-full hover:bg-muted text-foreground transition-colors cursor-pointer active:scale-95"
+                    aria-label="Close Case Study"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Title & Client Sticky Header */}
+                <div className="space-y-1.5">
+                  <h3 className="text-xl md:text-2xl font-extrabold text-foreground leading-snug font-sora">
+                    {selectedProject.title}
+                  </h3>
+                  {selectedProject.client && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest bg-brand-secondary-50 dark:bg-brand-secondary-900/30 px-2 py-0.5 rounded border border-brand-secondary-500/20">
+                        Client
+                      </span>
+                      <span className="text-sm font-semibold text-foreground">
+                        {selectedProject.client}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
               {/* Full Bleed Hero Image */}
               <div className="relative aspect-video w-full bg-muted flex items-center justify-center overflow-hidden shrink-0">
-                <div className="absolute top-0 inset-x-0 h-32 bg-linear-to-b from-black/40 to-transparent z-10 pointer-events-none" />
-
                 {selectedProject.image &&
                 (selectedProject.image.startsWith("http") ||
                   selectedProject.image.startsWith("/") ||
@@ -120,35 +135,8 @@ export function PortfolioDrawer({
                     },
                   },
                 }}
-                className="p-6 md:p-8 space-y-10 pb-10"
+                className="p-6 md:p-8 space-y-10 pb-10 flex-1"
               >
-                {/* Title & Client */}
-                <m.div
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    show: {
-                      opacity: 1,
-                      y: 0,
-                      transition: { type: "spring", damping: 20 },
-                    },
-                  }}
-                  className="space-y-4"
-                >
-                  <h3 className="text-3xl md:text-4xl font-extrabold text-foreground leading-tight font-sora">
-                    {selectedProject.title}
-                  </h3>
-                  {selectedProject.client && (
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest bg-brand-secondary-50 dark:bg-brand-secondary-900/30 px-2.5 py-1 rounded">
-                        Client
-                      </span>
-                      <span className="text-base font-semibold text-foreground">
-                        {selectedProject.client}
-                      </span>
-                    </div>
-                  )}
-                </m.div>
-
                 {/* Overview */}
                 {selectedProject.description && (
                   <m.div
@@ -232,49 +220,59 @@ export function PortfolioDrawer({
               </m.div>
             </div>
 
-            {/* Docked Action Bar */}
-            {selectedProject.link && (
-              <div className="p-4 sm:p-6 bg-background/80 backdrop-blur-md border-t border-border shrink-0 z-20">
-                <m.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    delay: 0.4,
-                    type: "spring",
-                    damping: 20,
-                  }}
-                  className="flex flex-col sm:flex-row items-center gap-3 w-full"
-                >
-                  <div className="flex items-center gap-3 w-full sm:w-auto flex-1 bg-background/60 p-3 rounded border border-border">
-                    <Link className="size-4 text-brand-secondary-600 dark:text-brand-secondary-400 shrink-0" />
-                    <code className="text-xs text-muted-foreground truncate flex-1 font-mono select-all">
-                      {selectedProject.link}
-                    </code>
-                    <button
-                      onClick={() => copyToClipboard(selectedProject.link!)}
-                      className="p-1.5 bg-background shadow-sm rounded transition-colors text-muted-foreground hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 cursor-pointer active:scale-90 border border-border shrink-0"
-                      title="Copy link to clipboard"
-                    >
-                      {copied ? (
-                        <Check className="size-4 text-emerald-600" />
-                      ) : (
-                        <Copy className="size-4" />
-                      )}
-                    </button>
-                  </div>
+            {/* Docked Action Bar (Always visible) */}
+            <div className="p-4 sm:p-6 bg-background/95 backdrop-blur-md border-t border-border shrink-0 z-20">
+              <m.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  delay: 0.2,
+                  type: "spring",
+                  damping: 20,
+                }}
+                className="flex flex-col sm:flex-row items-center gap-3 w-full"
+              >
+                {selectedProject.link ? (
+                  <>
+                    <div className="flex items-center gap-3 w-full sm:w-auto flex-1 bg-background/60 p-3 rounded border border-border">
+                      <Link className="size-4 text-brand-secondary-600 dark:text-brand-secondary-400 shrink-0" />
+                      <code className="text-xs text-muted-foreground truncate flex-1 font-mono select-all">
+                        {selectedProject.link}
+                      </code>
+                      <button
+                        onClick={() => copyToClipboard(selectedProject.link!)}
+                        className="p-1.5 bg-background shadow-sm rounded transition-colors text-muted-foreground hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 cursor-pointer active:scale-90 border border-border shrink-0"
+                        title="Copy link to clipboard"
+                      >
+                        {copied ? (
+                          <Check className="size-4 text-emerald-600" />
+                        ) : (
+                          <Copy className="size-4" />
+                        )}
+                      </button>
+                    </div>
 
+                    <a
+                      href={selectedProject.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white text-sm font-bold rounded shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer group/btn shrink-0"
+                    >
+                      <span>Launch Project</span>
+                      <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                    </a>
+                  </>
+                ) : (
                   <a
-                    href={selectedProject.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white text-sm font-bold rounded shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer group/btn shrink-0"
+                    href="/contact-us?inquiry=solution"
+                    className="inline-flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white text-sm font-bold rounded shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer group/btn"
                   >
-                    <span>Launch Project</span>
+                    <span>Inquire About This Solution</span>
                     <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
                   </a>
-                </m.div>
-              </div>
-            )}
+                )}
+              </m.div>
+            </div>
           </m.div>
         </div>
       )}

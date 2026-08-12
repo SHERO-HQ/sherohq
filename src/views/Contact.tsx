@@ -106,12 +106,10 @@ const Contact = () => {
                 </div>
                 <div className="relative z-10">
                   <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-2">
-                    Global Presence
+                    Regional Operations & Support
                   </h4>
                   <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                    Headquartered in Tamale, we serve the entire West African
-                    region with specialized logistics and on-site technical
-                    deployment teams.
+                    Headquartered in Tamale, Ghana, we serve local businesses and regional hubs with specialized logistics and on-site technical deployment teams.
                   </p>
                 </div>
               </m.div>
@@ -202,12 +200,12 @@ const faqs = [
   {
     question: "How quickly do you ship hardware?",
     answer:
-      "In-stock enterprise gear typically dispatches within 24-48hrs. Custom configurations or bulk orders may take 5-7 business days.",
+      "In-stock hardware typically dispatches within 24-48hrs. Custom configurations or bulk orders may take 5-7 business days.",
   },
   {
     question: "Do you provide on-site support?",
     answer:
-      "Yes, we offer on-site deployment and maintenance services across various regions in Ghana. Remote support is available globally.",
+      "Yes, we offer on-site deployment and maintenance services across various regions in Ghana. Remote support is available for digital solutions and software.",
   },
   {
     question: "Do you offer wholesale pricing?",

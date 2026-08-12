@@ -221,3 +221,57 @@ export async function deleteStat(id: string): Promise<{ message: string }> {
   });
   return handleResponse<{ message: string }>(response);
 }
+
+// ---------------------------------------------------------------------------
+// Client Partners
+// ---------------------------------------------------------------------------
+
+export interface ClientPartner {
+  id: string;
+  name: string;
+  tagline?: string | null;
+  logo: string;
+  logoDark?: string | null;
+  website?: string | null;
+  category?: string;
+  order?: number;
+  active?: boolean;
+  createdAt?: string;
+}
+
+export async function fetchClients(includeAll: boolean = false): Promise<ClientPartner[]> {
+  const url = includeAll ? `${API_BASE}/clients?all=true` : `${API_BASE}/clients`;
+  const response = await fetch(url);
+  const data = await handleResponse<any>(response);
+  return Array.isArray(data) ? data : data?.data || [];
+}
+
+export async function createClient(
+  data: Omit<ClientPartner, "id" | "createdAt">,
+): Promise<ClientPartner> {
+  const response = await authFetch(`${API_BASE}/clients`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return handleResponse<ClientPartner>(response);
+}
+
+export async function updateClient(
+  id: string,
+  data: Partial<ClientPartner>,
+): Promise<ClientPartner> {
+  const response = await authFetch(`${API_BASE}/clients/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return handleResponse<ClientPartner>(response);
+}
+
+export async function deleteClient(id: string): Promise<{ message: string }> {
+  const response = await authFetch(`${API_BASE}/clients/${id}`, {
+    method: "DELETE",
+  });
+  return handleResponse<{ message: string }>(response);
+}

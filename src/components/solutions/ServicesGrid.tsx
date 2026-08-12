@@ -1,13 +1,14 @@
 "use client";
 import { easeOut, m } from "motion/react";
 import {
- Smartphone,
- Cloud,
- Workflow,
- Settings,
- CheckCircle,
- Briefcase,
- ArrowRight,
+  Smartphone,
+  Cloud,
+  Workflow,
+  Settings,
+  CheckCircle,
+  Briefcase,
+  ArrowRight,
+  ShoppingBag,
 } from "lucide-react";
 import SpotlightCard from "@/components/motion/SpotlightCard";
 
@@ -23,57 +24,57 @@ interface Service {
 const ServicesGrid = () => {
   const services: Service[] = [
     {
-      icon: <Smartphone className="w-8 h-8" />,
-      title: "Custom Apps",
+      icon: <ShoppingBag className="w-8 h-8" />,
+      title: "Hardware Supply & Support",
       description:
-        "From customer-facing mobile apps to internal tools — we design, build, and maintain software that works for you.",
+        "We supply, configure, and maintain reliable computers, servers, networking gear, and workstations tailored for business operations.",
       features: [
-        "Responsive web applications",
-        "iOS & Android mobile apps",
-        "Progressive Web Apps (PWA)",
-        "Cross-platform development",
+        "Business laptops & workstations",
+        "Office hardware procurement & setup",
+        "Servers & networking gear",
+        "Hardware support & warranty guidance",
       ],
       gradient: "from-blue-500 to-blue-600",
       textClass: "text-blue-600 dark:text-blue-400",
     },
     {
-      icon: <Cloud className="w-8 h-8" />,
-      title: "Cloud Platforms",
+      icon: <Smartphone className="w-8 h-8" />,
+      title: "Custom Software & Apps",
       description:
-        "Launch your own cloud product with built-in subscriptions, user management, and analytics — ready from day one.",
+        "We design, build, and support custom web applications, mobile apps, and internal digital tools engineered for your exact business workflows.",
       features: [
-        "Multi-tenant architecture",
-        "Subscription & billing integration",
-        "User management & authentication",
-        "Analytics & reporting dashboards",
+        "Responsive web applications",
+        "Internal business management software & dashboards",
+        "Mobile & web application development",
+        "Custom cloud product development",
       ],
       gradient: "from-brand-secondary-500 to-brand-secondary-600",
       textClass: "text-brand-secondary-600 dark:text-brand-secondary-400",
     },
     {
       icon: <Settings className="w-8 h-8" />,
-      title: "IT Management",
+      title: "Managed IT & Infrastructure",
       description:
-        "Complete IT setup and ongoing support — from server configuration to workstation deployment. We keep your tech running smoothly.",
+        "Complete IT setup and proactive system maintenance — from server management to network security. We keep your tech running smoothly.",
       features: [
-        "Server & network configurations",
-        "Hardware setup",
-        "Proactive system maintenance",
-        "Secure enterprise infrastructure",
+        "Office workstation setup & IT onboarding",
+        "Server & local office network configuration",
+        "Technical support & IT troubleshooting",
+        "Data backups & system maintenance",
       ],
       gradient: "from-brand-primary-500 to-brand-primary-600",
       textClass: "text-brand-primary-600 dark:text-brand-primary-400",
     },
     {
       icon: <Workflow className="w-8 h-8" />,
-      title: "Connect Seamlessly",
+      title: "Systems & API Integration",
       description:
-        "Link your payment systems, inventory, CRM, and more into one smooth workflow. No more switching between disconnected tools.",
+        "Link your payment gateways, inventory, POS, CRM, and business software into one smooth workflow with zero manual friction.",
       features: [
-        "RESTful & GraphQL APIs",
-        "Third-party integrations",
-        "Payment gateway setup",
-        "Microservices architecture",
+        "Payment gateway setup & integration",
+        "POS & inventory software synchronization",
+        "RESTful API & third-party software integration",
+        "Business workflow automation",
       ],
       gradient: "from-brand-secondary-500 to-brand-secondary-600",
       textClass: "text-brand-secondary-600 dark:text-brand-secondary-400",

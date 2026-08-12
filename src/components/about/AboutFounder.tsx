@@ -40,14 +40,13 @@ const AboutFounder = () => {
 
             {/* Label */}
             <h2 className="text-xs font-mono uppercase tracking-[0.2em] text-brand-secondary-500 dark:text-brand-secondary-400 font-bold mb-4">
-              Founder's Message
+              The SHERO Promise
             </h2>
 
             {/* Quote */}
             <blockquote className="relative text-xl md:text-2xl text-slate-700 dark:text-slate-300 leading-relaxed italic max-w-2xl mx-auto pb-6">
               <span className="absolute -top-4 -left-2 text-6xl text-brand-primary-300/20 font-serif select-none" aria-hidden="true">&ldquo;</span>
-              The best technology shouldn't be hard to find, hard to afford, or hard to trust.
-              We built SHERO so that every individual, business or community, no matter the size, gets access to reliable, enterprise-quality technology.
+              Every interaction with SHERO should leave you with more possibilities than you had before. We deliver technology with purpose and create solutions that help you move forward with confidence.
               <span className="absolute -bottom-4 -right-2 text-6xl text-brand-primary-300/20 font-serif select-none" aria-hidden="true">&rdquo;</span>
             </blockquote>
 
@@ -61,7 +60,7 @@ const AboutFounder = () => {
 
             {/* Attribution */}
             <m.p variants={fadeUp} className="mt-4 text-xs text-muted-foreground">
-              — Founder, SHERO
+              — SHERO Technologies
             </m.p>
           </m.div>
         </m.div>

@@ -70,7 +70,7 @@ const Consultation = () => {
 const expertTopics = [
   {
     title: "Procurement Strategy",
-    desc: "Optimizing supply chains for enterprise hardware and specialized technical equipment sourcing.",
+    desc: "Optimizing supply chains for business hardware and specialized technical equipment sourcing.",
     icon: Target,
   },
   {

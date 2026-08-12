@@ -23,7 +23,9 @@ const migrationFiles = [
   "006-create-product-reviews-and-carts.sql",
   "007-add-cost-price-and-cogs.sql",
   "008-add-seo-columns.sql",
-  "009-add-payment-columns.sql"
+  "009-add-payment-columns.sql",
+  "010-create-client-partners.sql",
+  "011-add-logo-dark-to-client-partners.sql"
 ];
 
 async function runMigrations() {

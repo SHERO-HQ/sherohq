@@ -107,10 +107,10 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
                 Client Voices
               </span>
               <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-3 transition-colors duration-300 leading-tight">
-                Trusted by Leaders across Africa.
+                Empowering Businesses, Innovators & Communities.
               </h2>
               <p className="text-slate-600 dark:text-slate-400 text-sm mb-3 transition-colors duration-300 leading-relaxed">
-                We believe technology exists to expand what's possible. See how we've partnered with innovators to build enterprise-grade infrastructure that removes barriers and creates opportunities.
+                We believe technology exists to expand what's possible. See how we've partnered with forward-thinking organizations to build reliable infrastructure that removes barriers and creates opportunities.
               </p>
 
               <div className="flex items-center justify-center lg:justify-start gap-4">
@@ -272,7 +272,7 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
                   Ready to Redefine Possible?
                 </h3>
                 <p className="text-slate-600 dark:text-slate-400 text-base sm:text-lg mb-8 transition-colors duration-300 max-w-lg mx-auto">
-                  Partner with us to build enterprise-grade infrastructure that scales with your ambition.
+                  Partner with us to build reliable infrastructure that scales with your ambition.
                 </p>
                 <Link
                   href="/contact-us"

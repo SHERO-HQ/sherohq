@@ -265,8 +265,22 @@ export const testimonials = pgTable("testimonials", {
 	publishedAt: timestamp({ mode: 'string' }),
 }, (table) => [
 	uniqueIndex("idx_testimonials_external_unique").using("btree", table.externalSource.asc().nullsLast().op("text_ops"), table.externalId.asc().nullsLast().op("text_ops")).where(sql`(("externalSource" IS NOT NULL) AND ("externalId" IS NOT NULL))`),
-	index("idx_testimonials_order_created").using("btree", table.order.asc().nullsLast().op("int4_ops"), table.createdAt.desc().nullsFirst().op("int4_ops")),
-	pgPolicy("public_testimonials_readable", { as: "permissive", for: "select", to: ["public"], using: sql`true` }),
+]);
+
+export const clientPartners = pgTable("client_partners", {
+	id: text().primaryKey().notNull(),
+	name: text().notNull(),
+	tagline: text(),
+	logo: text().notNull(),
+	logoDark: text("logo_dark"),
+	website: text(),
+	category: text().default('Client'),
+	order: integer().default(0),
+	active: boolean().default(true),
+	createdAt: timestamp("created_at", { mode: 'string' }).default(sql`CURRENT_TIMESTAMP`),
+}, (table) => [
+	index("idx_client_partners_active_order").using("btree", table.active.asc().nullsLast().op("bool_ops"), table.order.asc().nullsLast().op("int4_ops")),
+	pgPolicy("public_client_partners_readable", { as: "permissive", for: "select", to: ["public"], using: sql`true` }),
 ]);
 
 export const catalogGaps = pgTable("catalog_gaps", {

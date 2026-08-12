@@ -28,24 +28,23 @@ const LandingHero: React.FC = () => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const springConfig = { damping: 25, stiffness: 150 };
+  const springConfig = { damping: 30, stiffness: 120 };
   const smoothX = useSpring(mouseX, springConfig);
   const smoothY = useSpring(mouseY, springConfig);
 
-  const translateX = useTransform(smoothX, [-0.5, 0.5], [-6, 6]);
-  const translateY = useTransform(smoothY, [-0.5, 0.5], [-6, 6]);
+  const translateX = useTransform(smoothX, [-0.5, 0.5], [-8, 8]);
+  const translateY = useTransform(smoothY, [-0.5, 0.5], [-8, 8]);
 
   const { scrollY } = useScroll();
-  const parallaxY = useTransform(scrollY, [0, 500], [0, 150]);
-  const parallaxOpacity = useTransform(scrollY, [0, 400], [1, 0]);
-  const parallaxScale = useTransform(scrollY, [0, 400], [1, 0.95]);
+  const parallaxY = useTransform(scrollY, [0, 350], [0, -35]);
+  const parallaxOpacity = useTransform(scrollY, [0, 300], [1, 0.1]);
+  const parallaxScale = useTransform(scrollY, [0, 350], [1, 0.98]);
 
   const prefersReducedMotion = useReducedMotion();
   const { isLowEnd } = useDevicePerformance();
-  const [heroReady, setHeroReady] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  const motionEnabled = heroReady && !prefersReducedMotion && !isLowEnd;
+  const motionEnabled = !prefersReducedMotion && !isLowEnd;
 
   const [headlineLead = "", headlineAccent = ""] = HERO_CONTENT.mainHeader
     .split("\n")
@@ -54,9 +53,7 @@ const LandingHero: React.FC = () => {
 
   useEffect(() => {
     setIsMobile(window.innerWidth < 768);
-    const frame = requestAnimationFrame(() => setHeroReady(true));
-    return () => cancelAnimationFrame(frame);
-  }, [prefersReducedMotion]);
+  }, []);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -65,6 +62,7 @@ const LandingHero: React.FC = () => {
     const handleResize = () => {
       if (containerRef.current) {
         rectRef.current = containerRef.current.getBoundingClientRect();
+        setIsMobile(window.innerWidth < 768);
       }
     };
 
@@ -109,7 +107,6 @@ const LandingHero: React.FC = () => {
         motionEnabled={motionEnabled} 
         translateX={translateX} 
         translateY={translateY} 
-        heroReady={heroReady} 
       />
 
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex flex-col items-center">
@@ -119,17 +116,13 @@ const LandingHero: React.FC = () => {
           parallaxOpacity={parallaxOpacity}
           parallaxScale={parallaxScale}
           prefersReducedMotion={prefersReducedMotion}
-          heroReady={heroReady}
           headlineLead={headlineLead}
           headlineAccent={headlineAccent}
           subHeader={HERO_CONTENT.subHeader}
         />
       </div>
 
-      <PartnerGrid 
-        prefersReducedMotion={prefersReducedMotion} 
-        heroReady={heroReady} 
-      />
+      <PartnerGrid prefersReducedMotion={prefersReducedMotion} />
     </header>
   );
 };

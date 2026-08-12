@@ -50,15 +50,55 @@ const Portfolio = () => {
     "Custom Software",
   ];
 
+  const FEATURED_FALLBACK_PROJECTS: Project[] = [
+    {
+      id: "dajrim",
+      title: "Dajrim Platform",
+      category: "Custom Software",
+      client: "SHERO Ecosystem",
+      description: "Digital management and operational platform built to streamline business workflows and digital service delivery.",
+      useCase: "Digital Business Management & Operations",
+      technologies: ["Next.js", "TypeScript", "TailwindCSS", "Node.js"],
+      image: null,
+      link: null,
+      createdAt: new Date().toISOString(),
+    },
+    {
+      id: "samakose-trustcircle",
+      title: "Samakose / TrustCircle",
+      category: "Web Development",
+      client: "Community & Financial Growth",
+      description: "Trusted collaborative ecosystem enabling secure community circles, transparent financial tracking, and shared resource growth.",
+      useCase: "Community Trust & Shared Resource Management",
+      technologies: ["React", "TypeScript", "PostgreSQL", "TailwindCSS"],
+      image: null,
+      link: null,
+      createdAt: new Date().toISOString(),
+    },
+    {
+      id: "hardware-it-infrastructure",
+      title: "Managed IT & Hardware Deployment",
+      category: "Infrastructure",
+      client: "Regional Enterprise Hub",
+      description: "Full-scale hardware supply, workstation setup, and high-availability IT infrastructure for business operations.",
+      useCase: "Managed Hardware & Infrastructure Setup",
+      technologies: ["HP & Dell Hardware", "Network Routing", "Systems IT Support"],
+      image: null,
+      link: null,
+      createdAt: new Date().toISOString(),
+    },
+  ];
+
   const { data: projects = [], isLoading } = useProjects(
     activeCategory === "All" ? undefined : activeCategory,
   );
 
-  const filteredProjects = projects;
+  const activeProjects = projects.length > 0 ? projects : FEATURED_FALLBACK_PROJECTS;
 
-  if (!isLoading && projects.length === 0 && activeCategory === "All") {
-    return null;
-  }
+  const filteredProjects = activeProjects.filter((p) => {
+    if (activeCategory === "All") return true;
+    return p.category === activeCategory;
+  });
 
   return (
     <section className="relative w-full py-10 bg-slate-50 dark:bg-slate-950">

@@ -38,6 +38,8 @@ const routeTitleMap: Record<string, string> = {
   "/admin/reviews": "Reviews",
   "/testimonials": "Testimonials & Feedback",
   "/admin/testimonials": "Testimonials & Feedback",
+  "/clients": "Partners & Clients",
+  "/admin/clients": "Partners & Clients",
   "/guides": "Guides",
   "/admin/guides": "Guides",
   "/careers": "Careers & Applications",

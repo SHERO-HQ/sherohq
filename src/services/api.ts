@@ -187,6 +187,11 @@ export {
   createStat,
   updateStat,
   deleteStat,
+  type ClientPartner,
+  fetchClients,
+  createClient,
+  updateClient,
+  deleteClient,
 } from "./content";
 
 export * from './feedback';

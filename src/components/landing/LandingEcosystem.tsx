@@ -7,7 +7,7 @@ const nodes = [
   {
     id: 1,
     title: "Premium Hardware",
-    desc: "We supply the enterprise-grade physical foundation.",
+    desc: "We supply reliable, high-performance hardware foundations.",
     icon: Cpu,
   },
   {
@@ -42,7 +42,7 @@ const LandingEcosystem = () => {
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 rounded border border-brand-secondary-500/30 bg-brand-secondary-100 px-4 py-1.5 text-[.8rem] font-medium uppercase tracking-wide text-brand-secondary-600 dark:border-brand-secondary-800/50 dark:bg-brand-secondary-900/30 dark:text-brand-secondary-400 mb-6"
+            className="inline-flex items-center gap-2 rounded border border-brand-secondary-500/30 bg-brand-secondary-100 px-4 py-1 text-[.8rem] font-medium uppercase tracking-wide text-brand-secondary-600 dark:border-brand-secondary-800/50 dark:bg-brand-secondary-900/30 dark:text-brand-secondary-400 mb-6"
           >
             <Network className="size-4" />
             The Ecosystem Advantage

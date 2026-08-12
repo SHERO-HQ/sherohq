@@ -11,7 +11,7 @@ const FAQ = () => {
       items: [
         {
           q: "Do you ship internationally?",
-          a: "Currently, we focus on serving the West African market (Ghana, Nigeria, Ivory Coast). However, for large enterprise orders, we can discuss international logistics arrangements.",
+          a: "Currently, we focus on serving businesses across Ghana and the regional market. For large custom or commercial orders, we can discuss specialized logistics arrangements.",
         },
         {
           q: "What payment methods do you accept?",
@@ -78,7 +78,7 @@ const FAQ = () => {
       ],
     },
     {
-      category: "Support & Enterprise",
+      category: "Support & Managed Services",
       items: [
         {
           q: "How do I contact technical support?",

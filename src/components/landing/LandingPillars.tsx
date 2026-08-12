@@ -12,10 +12,10 @@ import { PillarCard, PillarProps } from "./pillars/PillarCard";
 
 const PILLARS: PillarProps[] = [
   {
-    header: "Hardware & Accessories",
-    subheader: "Curated Shop",
+    header: "Hardware Supply & Support",
+    subheader: "Laptops, Servers & Gear",
     content:
-      "We supply a wide range of high-quality hardware and accessories for your business needs. From Computers to Servers, we have everything you need to get the job done.",
+      "We supply and support reliable laptops, desktop workstations, servers, and networking equipment tailored for business operations.",
     icon: <ShoppingBag className="w-6 h-6" />,
     className: "md:col-span-1",
     gradient: "from-blue-500/20 to-cyan-500/20",
@@ -23,10 +23,10 @@ const PILLARS: PillarProps[] = [
     widget: <TerminalWidget />
   },
   {
-    header: "Custom Softwares",
-    subheader: "Tailored Solutions",
+    header: "Custom Software & Apps",
+    subheader: "Web Apps & Dashboards",
     content:
-      "Custom software solutions for your business needs. Get one made for your business that integrates seamlessly with your existing systems and workflows.",
+      "Custom software solutions engineered for your exact business needs, integrating seamlessly into your existing workflows.",
     icon: <Server className="w-6 h-6" />,
     className: "md:col-span-1",
     gradient: "from-brand-secondary-500/20 to-green-500/20",
@@ -34,10 +34,10 @@ const PILLARS: PillarProps[] = [
     widget: <POSWidget />
   },
   {
-    header: "Managed IT Support",
-    subheader: "On-Call Expertise",
+    header: "Managed IT & Infrastructure",
+    subheader: "Technical Setup & Support",
     content:
-      "Proactive infrastructure maintenance, monitoring and support services to keep your business running smoothly.",
+      "Office workstation setup, local network configuration, data backups, and ongoing IT support to keep operations running smoothly.",
     icon: <MessageSquare className="w-6 h-6" />,
     className: "md:col-span-1",
     gradient: "from-purple-500/20 to-pink-500/20",
@@ -45,10 +45,10 @@ const PILLARS: PillarProps[] = [
     widget: <SLAWidget />
   },
   {
-    header: "ERP & Custom Systems",
-    subheader: "Digital Ecosystem",
+    header: "Systems & API Integration",
+    subheader: "Digital Enablement",
     content:
-      "Custom-engineered digital platforms for businesses, designed to integrate with existing systems and workflows.",
+      "Custom digital integrations designed to connect payment gateways, inventory software, POS, and third-party tools into one smooth workflow.",
     icon: <Code className="w-6 h-6" />,
     className: "md:col-span-3",
     gradient: "from-brand-primary-500/20 to-brand-secondary-500/20",
@@ -88,9 +88,8 @@ const LandingPillars = () => {
           </Reveal>
           <Reveal direction="up" distance={40} delay={0.2}>
             <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed transition-colors duration-300">
-              A tactile look at the actual custom platforms, enterprise hardware
-              systems, and managed support frameworks we build to keep
-              operations clear.
+              A practical showcase of the actual custom software, hardware solutions,
+              and managed IT support frameworks we build to keep business operations clear.
             </p>
           </Reveal>
         </div>

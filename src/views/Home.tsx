@@ -19,11 +19,14 @@ const LandingSecurity = dynamic(
 const LandingProducts = dynamic(
   () => import("@/components/landing/LandingProducts"),
 );
-const LandingFinalCTA = dynamic(
-  () => import("@/components/landing/LandingFinalCTA"),
+const ClientLogoBar = dynamic(
+  () => import("@/components/landing/ClientLogoBar"),
 );
 const LandingTestimonials = dynamic(
   () => import("@/components/landing/LandingTestimonials"),
+);
+const LandingFinalCTA = dynamic(
+  () => import("@/components/landing/LandingFinalCTA"),
 );
 
 const Home = () => {
@@ -32,6 +35,7 @@ const Home = () => {
       <LandingHero />
       <LandingValueProps />
       <LandingAbout />
+      <ClientLogoBar />
       <LandingPillars />
       <LandingEcosystem />
       <LandingSecurity />

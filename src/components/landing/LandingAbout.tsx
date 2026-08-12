@@ -14,7 +14,7 @@ const LandingAbout = () => {
   const features = [
     "Purpose-Built Ecosystems",
     "Technology that Solves Real Problems",
-    "Trusted Global Partners",
+    "Trusted Hardware & Solution Partners",
   ];
 
   return (

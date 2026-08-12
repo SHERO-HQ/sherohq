@@ -25,7 +25,7 @@ const Partners = () => {
 
   const partners: Array<{ name: string; icon: LucideIcon }> = [
     { name: "Tech Companies", icon: Building2 },
-    { name: "Global Systems", icon: Globe2 },
+    { name: "Regional Systems", icon: Globe2 },
     { name: "EduTech Solutions", icon: GraduationCap },
     { name: "FinTechs", icon: Landmark },
     { name: "Health Industries", icon: HeartPulse },
@@ -48,7 +48,7 @@ const Partners = () => {
   ];
 
   const benefits = [
-    "Access to premium enterprise hardware at wholesale rates",
+    "Access to premium commercial hardware at wholesale rates",
     "Priority technical support and dedicated account management",
     "Co-marketing opportunities and brand visibility",
     "Early access to new product launches and innovations",
@@ -72,7 +72,7 @@ const Partners = () => {
               Grow with <span className="text-brand-secondary-600">SHERO</span>
             </h1>
             <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-              Collaborate on enterprise projects, unlock distribution
+              Collaborate on technology projects, unlock distribution
               opportunities, and deliver measurable value across markets.
             </p>
 
@@ -133,7 +133,7 @@ const Partners = () => {
                 Expanding Reach
               </h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-xl mx-auto">
-                We empower industries that require high-availability enterprise
+                We empower industries that require high-availability business
                 infrastructure and specialized technical support.
               </p>
             </div>

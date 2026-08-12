@@ -5,26 +5,26 @@ import { ShieldCheck, Lock, Database, Activity, Shield } from "lucide-react";
 const securityFeatures = [
   {
     id: 1,
-    title: "End-to-End Encryption",
-    desc: "Complete protection for your data, both in transit and at rest.",
+    title: "Data & Privacy Protection",
+    desc: "Built-in encryption protecting user data and digital records both in transit and at rest.",
     icon: Lock,
   },
   {
     id: 2,
-    title: "Compliance Ready",
-    desc: "Architecture built to support ISO 27001, SOC2, and HIPAA standards.",
+    title: "Secure System Architecture",
+    desc: "Systems built on industry-standard privacy, data isolation, and secure design practices.",
     icon: ShieldCheck,
   },
   {
     id: 3,
-    title: "Secure Supply Chain",
-    desc: "Hardware sourced exclusively from verified, tamper-proof global channels.",
+    title: "Verified Hardware Sourcing",
+    desc: "Hardware procured exclusively through authorized, verified supplier channels.",
     icon: Database,
   },
   {
     id: 4,
-    title: "24/7 Infrastructure Monitoring",
-    desc: "Proactive systems management to identify and resolve issues before they impact your business.",
+    title: "Proactive Systems Monitoring",
+    desc: "Continuous systems management to identify and resolve issues before they impact your business.",
     icon: Activity,
   },
 ];
@@ -49,7 +49,7 @@ const LandingSecurity = () => {
             className="inline-flex items-center gap-2 rounded border border-brand-primary-500/30 bg-brand-primary-500/10 px-4 py-1.5 text-[.8rem] font-medium uppercase tracking-wide text-brand-primary-400 mb-6"
           >
             <ShieldCheck className="size-4" />
-            Enterprise-Grade Security
+            Built-In System Security
           </m.div>
           
           <m.h2

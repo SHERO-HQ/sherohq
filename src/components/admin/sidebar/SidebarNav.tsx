@@ -25,7 +25,8 @@ import {
   ShieldCheck,
   ChevronDown,
   MessageCircle,
-  LayoutTemplate
+  LayoutTemplate,
+  Handshake
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
@@ -83,6 +84,7 @@ const navGroups: NavGroup[] = [
     items: [
       { icon: Star, label: "Reviews", href: "/admin/reviews" },
       { icon: MessageSquareQuote, label: "Testimonials & Feedback", href: "/admin/testimonials" },
+      { icon: Handshake, label: "Partners & Clients", href: "/admin/clients" },
     ],
   },
   {

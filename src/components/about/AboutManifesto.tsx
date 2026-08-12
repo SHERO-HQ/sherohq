@@ -18,7 +18,7 @@ const pillars = [
     icon: Cpu,
     title: "Hardware",
     description:
-      "Enterprise-grade laptops, servers, and networking equipment sourced from trusted global partners.",
+      "High-performance laptops, servers, and networking equipment sourced from trusted hardware partners.",
   },
   {
     icon: Shield,
