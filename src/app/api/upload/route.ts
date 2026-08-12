@@ -1,13 +1,11 @@
 import { NextRequest } from "next/server";
-import { supabase } from "@/lib/supabase";
 import { getAdminFromSession } from "@/lib/auth";
-import { v4 as uuidv4 } from "uuid";
 import { apiResponse } from "@/lib/api-utils";
 import { validateUploadedFile } from "@/lib/upload-validation";
+import { uploadFileToStorage } from "@/lib/storage";
 
 export async function POST(request: NextRequest) {
   try {
-    // Check auth (allow both admin and public if needed, but here we mirror legacy)
     const admin = await getAdminFromSession();
 
     const formData = await request.formData();
@@ -26,32 +24,18 @@ export async function POST(request: NextRequest) {
       return apiResponse.unauthorized();
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const safeFileName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const fileExt = safeFileName.split(".").pop() || "bin";
-    const fileName = `${uuidv4()}.${fileExt}`;
-    const filePath = `uploads/${fileName}`;
-
-    const { error } = await supabase.storage
-      .from("products")
-      .upload(filePath, buffer, {
-        contentType: file.type,
-        upsert: false,
-        cacheControl: "31536000",
-      });
-
-    if (error) throw error;
-
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from("products").getPublicUrl(filePath);
+    const result = await uploadFileToStorage(file, {
+      bucket: "products",
+      folder: "uploads",
+    });
 
     return apiResponse.success({
-      imageUrl: publicUrl,
-      filename: fileName,
+      imageUrl: result.publicUrl,
+      filename: result.filename,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Upload error:", error);
-    return apiResponse.error("Failed to upload image");
+    return apiResponse.error(error?.message || "Failed to upload image");
   }
 }
+

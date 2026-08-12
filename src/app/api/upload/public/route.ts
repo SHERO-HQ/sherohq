@@ -1,7 +1,6 @@
 import { apiResponse } from "@/lib/api-utils";
 import { NextRequest } from "next/server";
-import { supabase } from "@/lib/supabase";
-import { v4 as uuidv4 } from "uuid";
+import { uploadFileToStorage } from "@/lib/storage";
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,31 +16,16 @@ export async function POST(request: NextRequest) {
       return apiResponse.error("Image too large (max 2MB)", 400);
     }
 
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const fileExt = file.name.split(".").pop();
-    const fileName = `${uuidv4()}.${fileExt}`;
-    const filePath = `${fileName}`;
-
-    const { error } = await supabase.storage
-      .from("products")
-      .upload(filePath, buffer, {
-        contentType: file.type,
-        upsert: false,
-      });
-
-    if (error) throw error;
-
-    const { data: publicData } = supabase.storage
-      .from("products")
-      .getPublicUrl(filePath);
+    const result = await uploadFileToStorage(file, {
+      bucket: "products",
+    });
 
     return apiResponse.success({
       success: true,
-      imageUrl: publicData.publicUrl,
+      imageUrl: result.publicUrl,
     });
-
-  } catch (error) {
+  } catch (error: any) {
     console.error("Public upload error:", error);
-    return apiResponse.error("Failed to upload image", 500);
+    return apiResponse.error(error?.message || "Failed to upload image", 500);
   }
 }
