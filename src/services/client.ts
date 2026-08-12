@@ -101,11 +101,27 @@ export async function handleResponse<T>(response: Response): Promise<T> {
     const error = new Error(`${errorMessage} (Status: ${response.status})`);
     (error as any).status = response.status;
     
-    // Automatically redirect on 401 Unauthorized
+    // Automatically redirect on 401 Unauthorized for expired protected sessions
     if (response.status === 401 && typeof window !== "undefined") {
-      const isApiAuthRoute = response.url.includes("/api/auth/") || response.url.includes("/api/admin/auth/");
-      if (!isApiAuthRoute) {
-        if (window.location.pathname.startsWith("/admin")) {
+      const url = response.url || "";
+      const isAuthApiRoute =
+        url.includes("/api/auth/") ||
+        url.includes("/api/admin-auth/") ||
+        url.includes("/api/admin/auth/");
+
+      const pathname = window.location.pathname || "";
+      const isAuthPage =
+        pathname === "/login" ||
+        pathname === "/signup" ||
+        pathname === "/admin/login" ||
+        pathname.startsWith("/admin/login") ||
+        pathname.startsWith("/login") ||
+        pathname.startsWith("/signup") ||
+        pathname.startsWith("/forgot-password") ||
+        pathname.startsWith("/reset-password");
+
+      if (!isAuthApiRoute && !isAuthPage) {
+        if (pathname.startsWith("/admin")) {
           window.location.href = "/admin/login?expired=1";
         } else {
           window.location.href = "/login?expired=1";

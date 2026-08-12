@@ -57,9 +57,10 @@ const Login = () => {
     }
   };
 
-  const onVerifyMFA = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (mfaCode.length !== 6) return;
+  const onVerifyMFA = async (e?: React.FormEvent, codeOverride?: string) => {
+    if (e) e.preventDefault();
+    const targetCode = (typeof codeOverride === "string" ? codeOverride : mfaCode).trim();
+    if (targetCode.length !== 6 || verifyingMFA) return;
 
     setVerifyingMFA(true);
     setError("");
@@ -67,7 +68,7 @@ const Login = () => {
     try {
       const res = await authFetch("/api/auth/login/mfa", {
         method: "POST",
-        body: JSON.stringify({ mfaToken: mfaChallenge?.token, code: mfaCode }),
+        body: JSON.stringify({ mfaToken: mfaChallenge?.token, code: targetCode }),
       });
 
       const data = await res.json();
@@ -124,11 +125,15 @@ const Login = () => {
                   autoComplete="one-time-code"
                   value={mfaCode}
                   leftIcon={<KeyRound className="w-5 h-5" />}
-                  onChange={(e) =>
-                    setMfaCode(e.target.value.replace(/\D/g, ""))
-                  }
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, "").slice(0, 6);
+                    setMfaCode(val);
+                    if (val.length === 6) {
+                      onVerifyMFA(undefined, val);
+                    }
+                  }}
                   autoFocus
-                  className="text-center text-xl tracking-[0.4em] font-mono font-semibold"
+                  className="text-center text-2xl tracking-[0.4em] font-mono font-semibold placeholder:text-2xl placeholder:tracking-[0.4em] placeholder:font-mono placeholder:text-slate-300 dark:placeholder:text-slate-600"
                   size="lg"
                 />
 

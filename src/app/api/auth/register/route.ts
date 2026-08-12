@@ -77,7 +77,14 @@ export async function POST(request: NextRequest) {
       path: "/",
     });
 
-    // Send welcome email (async)
+    // Send verification and welcome emails (async)
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
+    const verificationLink = `${siteUrl.replace(/\/$/, "")}/verify-email?token=${verificationToken}`;
+
+    notificationService.sendVerificationEmail(email, name, verificationLink).catch((err) => {
+      console.error("Failed to send verification email:", err);
+    });
+
     notificationService.sendWelcomeEmail(email, name).catch((err) => {
       console.error("Failed to send welcome email:", err);
     });

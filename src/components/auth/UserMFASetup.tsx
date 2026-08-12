@@ -27,7 +27,11 @@ export default function UserMFASetup({ isOpen, onClose, onSuccess }: UserMFASetu
       const res = await authFetch("/api/auth/mfa/setup", { method: "POST" });
       const data = await res.json();
       if (data.success) {
-        setSetupData(data.data);
+        const payload = data.data || data;
+        setSetupData({
+          secret: payload.secret,
+          qrCode: payload.qrCode,
+        });
         setStep("scan");
       } else {
         setError(data.error || "Failed to initialize MFA setup");
@@ -39,18 +43,20 @@ export default function UserMFASetup({ isOpen, onClose, onSuccess }: UserMFASetu
     }
   };
 
-  const verifySetup = async () => {
-    if (code.length !== 6) return;
+  const verifySetup = async (codeToVerify?: string) => {
+    const targetCode = (typeof codeToVerify === "string" ? codeToVerify : code).trim();
+    if (targetCode.length !== 6 || loading) return;
     setLoading(true);
     setError(null);
     try {
       const res = await authFetch("/api/auth/mfa/verify", {
         method: "POST",
-        body: JSON.stringify({ code }),
+        body: JSON.stringify({ code: targetCode }),
       });
       const data = await res.json();
       if (data.success) {
-        setRecoveryCodes(data.data.recoveryCodes);
+        const payload = data.data || data;
+        setRecoveryCodes(payload.recoveryCodes || []);
         setStep("verify"); // We stay on verify step but show success view
       } else {
         setError(data.error || "Invalid verification code");
@@ -146,11 +152,20 @@ export default function UserMFASetup({ isOpen, onClose, onSuccess }: UserMFASetu
                 <div className="space-y-4">
                   <input
                     type="text"
-                    placeholder="000 000"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    placeholder="000000"
                     maxLength={6}
                     value={code}
-                    onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
-                    className="w-full text-center text-3xl tracking-[0.5em] font-mono py-4 bg-gray-50 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded focus:border-blue-500 outline-none transition-colors"
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/\D/g, "").slice(0, 6);
+                      setCode(val);
+                      if (val.length === 6) {
+                        verifySetup(val);
+                      }
+                    }}
+                    autoFocus
+                    className="w-full text-center text-3xl tracking-[0.5em] font-mono py-4 bg-gray-50 dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 rounded placeholder:text-3xl placeholder:tracking-[0.5em] placeholder:font-mono placeholder:text-gray-300 dark:placeholder:text-gray-600 focus:border-blue-500 outline-none transition-all"
                   />
 
                   {error && (
@@ -161,7 +176,7 @@ export default function UserMFASetup({ isOpen, onClose, onSuccess }: UserMFASetu
                   )}
 
                   <button
-                    onClick={verifySetup}
+                    onClick={() => verifySetup()}
                     disabled={loading || code.length !== 6}
                     className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded font-medium transition-colors flex items-center justify-center gap-2"
                   >

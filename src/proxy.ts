@@ -209,14 +209,38 @@ function handleProxy(request: NextRequest) {
       return NextResponse.rewrite(url);
     }
 
-    if (!path.startsWith("/shop")) {
-      // /checkout/* routes (pay, mock-payment) exist at their own
-      // (public)/checkout/ path and should NOT be prefixed with /shop
-      if (path.startsWith("/checkout")) {
-        console.log(`[Proxy] Bypassing shop rewrite for checkout path: ${path}`);
-        return NextResponse.next();
-      }
+    // List of public pages that should not be prefixed with /shop on shop subdomain
+    const SHOP_BYPASS_PREFIXES = [
+      "/checkout",
+      "/profile",
+      "/login",
+      "/signup",
+      "/verify-email",
+      "/forgot-password",
+      "/reset-password",
+      "/track",
+      "/about-us",
+      "/contact-us",
+      "/faq",
+      "/feedback",
+      "/privacy",
+      "/terms",
+      "/cookies",
+      "/careers",
+      "/consultation",
+      "/solutions",
+    ];
 
+    const isBypassPath = SHOP_BYPASS_PREFIXES.some(
+      (prefix) => path === prefix || path.startsWith(`${prefix}/`)
+    );
+
+    if (isBypassPath) {
+      console.log(`[Proxy] Bypassing shop rewrite for route: ${path}`);
+      return NextResponse.next();
+    }
+
+    if (!path.startsWith("/shop")) {
       url.pathname = `/shop${path}`;
       console.log(`[Proxy] Rewriting shop subdomain path to: ${url.pathname}`);
       return NextResponse.rewrite(url);

@@ -35,14 +35,15 @@ export default function AdminLogin() {
         }
     }, [isChecking, isAuthenticated, router]);
 
-    async function handleSubmit(e: FormEvent) {
-        e.preventDefault();
+    async function handleSubmit(e?: FormEvent, codeOverride?: string) {
+        if (e) e.preventDefault();
         setError("");
         setIsLoading(true);
 
         try {
             if (requiresMFA) {
-                await verifyMFA(mfaCode);
+                const targetCode = (typeof codeOverride === "string" ? codeOverride : mfaCode).trim();
+                await verifyMFA(targetCode);
             } else {
                 await login({ username, password });
                 // If login response has requiresMFA, AdminContext will set requiresMFA to true
@@ -177,10 +178,17 @@ export default function AdminLogin() {
                                     <input
                                         id="mfaCode"
                                         type="text"
+                                        inputMode="numeric"
                                         value={mfaCode}
-                                        onChange={(e) => setMfaCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))}
+                                        onChange={(e) => {
+                                            const val = e.target.value.replace(/[^0-9]/g, "").slice(0, 6);
+                                            setMfaCode(val);
+                                            if (val.length === 6) {
+                                                handleSubmit(undefined, val);
+                                            }
+                                        }}
                                         placeholder="000000"
-                                        className="w-full py-3 bg-muted/50 font-black border border-border rounded text-foreground text-center text-3xl tracking-[0.5em] placeholder:text-sm placeholder:tracking-normal placeholder:font-sans focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
+                                        className="w-full py-3 bg-muted/50 font-black font-mono border border-border rounded text-foreground text-center text-3xl tracking-[0.5em] placeholder:text-3xl placeholder:tracking-[0.5em] placeholder:font-mono placeholder:text-muted-foreground/30 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition"
                                         required
                                         autoFocus
                                         autoComplete="one-time-code"

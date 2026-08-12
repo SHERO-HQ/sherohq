@@ -18,6 +18,22 @@ export const authNotifications = {
     await sendEmail(email, "Welcome to SHERO TECHNOLOGIES!", htmlContent);
   },
 
+  async sendVerificationEmail(email: string, name: string, verificationLink: string) {
+    const bodyHtml = `
+      <h1 style="color: #059669; text-align: center; margin: 0 0 20px; font-size: 18px;">Verify Your Email Address</h1>
+      <p>Hi ${name},</p>
+      <p>Thank you for creating an account with SHERO TECHNOLOGIES! Please confirm your email address by clicking the button below to verify your account.</p>
+      <p style="text-align: center; margin-top: 24px;">
+        <a href="${verificationLink}" style="display: inline-block; padding: 12px 32px; background: #059669; color: #fff; text-decoration: none; border-radius: 6px; font-weight: bold;">Verify Email Address</a>
+      </p>
+      <p style="margin-top: 24px; font-size: 13px; color: #64748b;">This verification link will expire in 30 minutes. If you did not create an account, you can safely ignore this email.</p>
+    `;
+    const htmlContent = wrapEmailHtml(bodyHtml, {
+      preheader: "Action required: Verify your SHERO email address.",
+    });
+    await sendEmail(email, "Verify Your Email - SHERO TECHNOLOGIES", htmlContent);
+  },
+
   async sendPasswordResetEmail(email: string, name: string, resetLink: string) {
     const bodyHtml = `
       <h1 style="text-align: center; margin: 0 0 20px; font-size: 18px;">Reset Your Password</h1>

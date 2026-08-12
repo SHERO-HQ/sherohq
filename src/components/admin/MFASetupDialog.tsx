@@ -32,12 +32,13 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
     }
   }
 
-  async function handleVerify() {
-    if (code.length !== 6) return;
+  async function handleVerify(codeToVerify?: string) {
+    const targetCode = (typeof codeToVerify === "string" ? codeToVerify : code).trim();
+    if (targetCode.length !== 6 || loading) return;
     setLoading(true);
     setError("");
     try {
-      await verifyAdminMFASetup(code);
+      await verifyAdminMFASetup(targetCode);
       setStep("success");
       setTimeout(onSuccess, 2000);
     } catch (err: any) {
@@ -142,10 +143,18 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
 
               <input
                 type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
                 value={code}
-                onChange={(e) => setCode(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))}
+                onChange={(e) => {
+                  const val = e.target.value.replace(/[^0-9]/g, "").slice(0, 6);
+                  setCode(val);
+                  if (val.length === 6) {
+                    handleVerify(val);
+                  }
+                }}
                 placeholder="000000"
-                className="w-full bg-card border border-border rounded py-4 text-center text-3xl tracking-[0.5em] font-mono text-foreground focus:outline-none focus:ring-2 focus:ring-brand-secondary-500"
+                className="w-full bg-card border border-border rounded py-4 text-center text-3xl tracking-[0.5em] font-mono text-foreground placeholder:text-3xl placeholder:tracking-[0.5em] placeholder:font-mono placeholder:text-muted-foreground/30 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 transition-all"
                 autoFocus
               />
 
@@ -165,7 +174,7 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
                   Back
                 </Button>
                 <Button 
-                  onClick={handleVerify} 
+                  onClick={() => handleVerify()} 
                   disabled={loading || code.length !== 6}
                   className="flex-2 bg-brand-secondary-500 hover:bg-brand-secondary-600 text-white font-bold"
                 >
