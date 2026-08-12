@@ -3,7 +3,7 @@ import AdminLayoutClient from "./layout-client";
 
 export const metadata: Metadata = {
   title: {
-    default: "Admin Dashboard",
+    default: "Dashboard",
     template: "%s | SHERO Admin",
   },
   robots: { index: false, follow: false },

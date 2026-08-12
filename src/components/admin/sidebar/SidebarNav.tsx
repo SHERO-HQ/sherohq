@@ -1,6 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NavLink from "@/components/common/NavLink";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
@@ -116,11 +117,36 @@ interface SidebarNavProps {
 }
 
 export function SidebarNav({ isOpen, setIsOpen, admin, badges }: SidebarNavProps) {
+  const pathname = usePathname();
   const queryClient = useQueryClient();
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
     "Overview": true,
     "Commerce": true,
   });
+
+  // Automatically expand the nav group that contains the active page link
+  useEffect(() => {
+    if (!pathname) return;
+
+    navGroups.forEach((group) => {
+      const hasActiveChild = group.items.some((item) => {
+        const targetPath = item.href;
+        const cleanPath = pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+        const cleanTarget = targetPath.length > 1 && targetPath.endsWith("/") ? targetPath.slice(0, -1) : targetPath;
+
+        return (
+          cleanPath === cleanTarget ||
+          cleanPath === `/admin${cleanTarget}` ||
+          cleanPath.replace("/admin", "") === cleanTarget ||
+          cleanPath.startsWith(cleanTarget + "/")
+        );
+      });
+
+      if (hasActiveChild) {
+        setExpandedGroups((prev) => ({ ...prev, [group.title]: true }));
+      }
+    });
+  }, [pathname]);
 
   const toggleGroup = (title: string) => {
     if (!isOpen) {

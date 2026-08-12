@@ -1,5 +1,4 @@
-"use client";
-
+import { Metadata } from "next";
 import dynamic from "next/dynamic";
 import ProtectedRoute from "@/components/admin/ProtectedRoute";
 
@@ -10,6 +9,10 @@ const AIAnalytics = dynamic(() => import("@/views/admin/AIAnalytics"), {
     </div>
   ),
 });
+
+export const metadata: Metadata = {
+  title: "AI Intelligence",
+};
 
 export default function AIAnalyticsPage() {
   return (

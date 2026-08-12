@@ -16,47 +16,41 @@ export function ThemeProvider({
  storageKey = "shero-ui-theme",
  ...props
 }: ThemeProviderProps) {
- const [theme, setTheme] = useState<Theme>(defaultTheme);
- const [isLoaded, setIsLoaded] = useState(false);
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(storageKey) as Theme;
+      if (saved) return saved;
+    }
+    return defaultTheme;
+  });
 
- // Load theme from localStorage on client side only
- useEffect(() => {
- const savedTheme = localStorage.getItem(storageKey) as Theme;
- if (savedTheme) {
- queueMicrotask(() => setTheme(savedTheme));
- }
- queueMicrotask(() => setIsLoaded(true));
- }, [storageKey]);
+  useEffect(() => {
+    const root = window.document.documentElement;
 
- useEffect(() => {
- if (!isLoaded) return;
+    const applyTheme = (resolvedTheme: "light" | "dark") => {
+      if (resolvedTheme === "dark") {
+        root.classList.add("dark");
+        root.classList.remove("light");
+      } else {
+        root.classList.add("light");
+        root.classList.remove("dark");
+      }
+    };
 
- const root = window.document.documentElement;
+    if (theme === "system") {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      applyTheme(mediaQuery.matches ? "dark" : "light");
 
- const applyTheme = (resolvedTheme: "light" | "dark") => {
- root.classList.remove("light", "dark");
- root.classList.add(resolvedTheme);
- };
+      const handleChange = (e: MediaQueryListEvent) => {
+        applyTheme(e.matches ? "dark" : "light");
+      };
 
- if (theme === "system") {
- const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      mediaQuery.addEventListener("change", handleChange);
+      return () => mediaQuery.removeEventListener("change", handleChange);
+    }
 
- // Apply the current system theme
- applyTheme(mediaQuery.matches ? "dark" : "light");
-
- // Listen for system theme changes
- const handleChange = (e: MediaQueryListEvent) => {
- applyTheme(e.matches ? "dark" : "light");
- };
-
- mediaQuery.addEventListener("change", handleChange);
-
- // Cleanup listener on unmount or theme change
- return () => mediaQuery.removeEventListener("change", handleChange);
- }
-
- applyTheme(theme);
- }, [theme, isLoaded]);
+    applyTheme(theme);
+  }, [theme, storageKey]);
 
   const value = {
     theme,

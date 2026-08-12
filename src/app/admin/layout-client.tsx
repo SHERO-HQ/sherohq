@@ -1,15 +1,66 @@
 "use client";
 
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 
 import { usePathname } from "next/navigation";
 import { useAdminUser } from "@/hooks/queries/useAdminQuery";
 import { AdminProvider } from "@/context/AdminContext";
 import AdminLayout from "@/components/admin/AdminLayout";
 
+const routeTitleMap: Record<string, string> = {
+  "/": "Dashboard",
+  "/dashboard": "Dashboard",
+  "/admin": "Dashboard",
+  "/admin/dashboard": "Dashboard",
+  "/orders": "Orders",
+  "/admin/orders": "Orders",
+  "/products": "Products",
+  "/admin/products": "Products",
+  "/categories": "Product Categories",
+  "/admin/categories": "Product Categories",
+  "/expenses": "Expenses",
+  "/admin/expenses": "Expenses",
+  "/projects": "Projects",
+  "/admin/projects": "Projects",
+  "/checkout-crm": "Checkout CRM",
+  "/admin/checkout-crm": "Checkout CRM",
+  "/users": "Customers & Users",
+  "/admin/users": "Customers & Users",
+  "/support": "Support Tickets",
+  "/admin/support": "Support Tickets",
+  "/whatsapp": "WhatsApp CRM",
+  "/admin/whatsapp": "WhatsApp CRM",
+  "/newsletter": "Newsletter & Campaigns",
+  "/admin/newsletter": "Newsletter & Campaigns",
+  "/templates": "Templates",
+  "/admin/templates": "Templates",
+  "/reviews": "Reviews",
+  "/admin/reviews": "Reviews",
+  "/testimonials": "Testimonials & Feedback",
+  "/admin/testimonials": "Testimonials & Feedback",
+  "/guides": "Guides",
+  "/admin/guides": "Guides",
+  "/careers": "Careers & Applications",
+  "/admin/careers": "Careers & Applications",
+  "/reports": "Analytics & Reports",
+  "/admin/reports": "Analytics & Reports",
+  "/ai-analytics": "AI Intelligence",
+  "/admin/ai-analytics": "AI Intelligence",
+  "/stats": "Site Stats",
+  "/admin/stats": "Site Stats",
+  "/team": "Team",
+  "/admin/team": "Team",
+  "/staff": "Staff & Roles",
+  "/admin/staff": "Staff & Roles",
+  "/profile": "Admin Profile",
+  "/admin/profile": "Admin Profile",
+  "/login": "Admin Login",
+  "/admin/login": "Admin Login",
+};
+
 function AdminLoading() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-card relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background dark:bg-slate-950 relative overflow-hidden">
       {/* Background Decor */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-125 h-125 bg-brand-secondary-500/10 blur-[120px] rounded-full animate-pulse" />
 
@@ -51,6 +102,14 @@ export default function AdminLayoutClient({
   const { data: adminData, isLoading } = useAdminUser();
   const isAuthenticated = !!adminData?.admin;
 
+  useEffect(() => {
+    if (typeof document !== "undefined" && pathname) {
+      const cleanPath = pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
+      const matchedTitle = routeTitleMap[cleanPath] || "Dashboard";
+      document.title = `${matchedTitle} | SHERO Admin`;
+    }
+  }, [pathname]);
+
   // Cover both path structures:
   //   - sherohq.com/admin/login  (main domain)
   //   - admin.sherohq.com/login  (admin subdomain)
@@ -60,7 +119,8 @@ export default function AdminLayoutClient({
     pathname === "/login" ||
     pathname.startsWith("/login/");
 
-  if (isLoading && !isLoginPage) {
+  // Only show full page spinner on initial cold auth check if user is not yet known
+  if (isLoading && !adminData && !isLoginPage) {
     return <AdminLoading />;
   }
 
@@ -78,3 +138,4 @@ export default function AdminLayoutClient({
     </Suspense>
   );
 }
+
