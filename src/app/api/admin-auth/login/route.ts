@@ -56,8 +56,10 @@ export async function POST(request: NextRequest) {
     // Check for password expiration (6 months)
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-    const passwordExpired = new Date(admin.passwordUpdatedAt!) < sixMonthsAgo;
-    const mustReset = admin.passwordResetRequired || passwordExpired;
+    const passwordExpired = admin.passwordUpdatedAt
+      ? new Date(admin.passwordUpdatedAt) < sixMonthsAgo
+      : false;
+    const mustReset = Boolean(admin.passwordResetRequired || passwordExpired);
 
     // 2. Handle Multi-Factor Authentication (MFA)
     if (admin.mfaEnabled) {
@@ -109,8 +111,12 @@ export async function POST(request: NextRequest) {
         avatar: admin.avatar,
       },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Admin login error:", error);
-    return apiResponse.error("An unexpected error occurred during login. Please try again.");
+    return apiResponse.error(
+      "An unexpected error occurred during login. Please try again.",
+      500,
+      error?.message || error
+    );
   }
 }

@@ -60,7 +60,11 @@ export function useAdminLogin() {
     mutationFn: async ({ username, password }: any) => {
       setRequiresMFA(false);
       setMfaToken(null);
-      return apiLogin(username, password);
+      try {
+        return await apiLogin(username, password);
+      } catch (error) {
+        throw new Error(formatAuthError(error));
+      }
     },
     onSuccess: (response) => {
       if (response.requiresMFA) {
@@ -73,16 +77,17 @@ export function useAdminLogin() {
         });
       }
     },
-    onError: (error) => {
-      throw new Error(formatAuthError(error));
-    },
   });
 
   const verifyMFAMutation = useMutation({
     mutationFn: async (code: string) => {
       if (!mfaToken) throw new Error("MFA session expired. Please login again.");
       const { loginWithMFA } = await import("@/services/admin");
-      return loginWithMFA(mfaToken, code);
+      try {
+        return await loginWithMFA(mfaToken, code);
+      } catch (error) {
+        throw new Error(formatAuthError(error));
+      }
     },
     onSuccess: (response) => {
       queryClient.setQueryData(["admin"], {
@@ -91,9 +96,6 @@ export function useAdminLogin() {
       });
       setRequiresMFA(false);
       setMfaToken(null);
-    },
-    onError: (error) => {
-      throw new Error(formatAuthError(error));
     },
   });
 

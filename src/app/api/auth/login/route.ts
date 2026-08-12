@@ -29,9 +29,16 @@ export async function POST(request: NextRequest) {
       return apiResponse.error("Too many login attempts. Please try again in a minute.", 429);
     }
 
-    const body = await request.json();
-    const validated = LoginSchema.parse(body);
-    const { email, password } = validated;
+    const body = await request.json().catch(() => null);
+    if (!body) {
+      return apiResponse.error("Invalid request body", 400);
+    }
+
+    const validated = LoginSchema.safeParse(body);
+    if (!validated.success) {
+      return apiResponse.validationError(validated.error);
+    }
+    const { email, password } = validated.data;
 
     // Per-account rate limiting
     const accountLimiter = await rateLimit(`account_login_${email.toLowerCase()}`, 5, 15 * 60_000);
@@ -106,8 +113,12 @@ export async function POST(request: NextRequest) {
         emailVerified: !!user.emailVerified,
       },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Login error:", error);
-    return apiResponse.error("Internal server error", 500);
+    return apiResponse.error(
+      "An unexpected error occurred during login. Please try again.",
+      500,
+      error?.message || error
+    );
   }
 }
