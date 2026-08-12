@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 2. Handle Multi-Factor Authentication (MFA)
-    if (user.mfaEnabled) {
+    if ((user as any).mfaEnabled) {
       const { generateMfaChallengeToken } = await import("@/lib/mfa-utils");
       return apiResponse.success({
         requiresMFA: true,
