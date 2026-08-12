@@ -216,7 +216,7 @@ const Login = () => {
                   variant="brand"
                   disabled={isSubmitting}
                   className="w-full font-bold"
-                  size="xl"
+                  size="lg"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center gap-2">
