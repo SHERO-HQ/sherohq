@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { MessageSquare, Trash2, Search, Star, Loader2, Share } from "lucide-react";
 import { useAdminFeedback, useDeleteFeedback, usePromoteFeedback } from "@/hooks/queries/useFeedback";
 import { ADMIN_POLLING_INTERVAL } from "@/constants/admin";

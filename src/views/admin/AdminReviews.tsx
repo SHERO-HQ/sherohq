@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { MessageSquare, Trash2, Search, Star, Plus, Loader2 } from "lucide-react";
 import { useAdminReviews, useDeleteReview, useSubmitReview } from "@/hooks/queries/useReviews";
