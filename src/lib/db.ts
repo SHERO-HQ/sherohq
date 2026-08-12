@@ -9,10 +9,10 @@ import * as schema from "./drizzle/schema";
  */
 
 let pool: Pool | null = null;
+let currentConnectionString = "";
+let drizzleInstance: ReturnType<typeof drizzle<typeof schema>> | null = null;
 
-function getPool(): Pool {
-  if (pool) return pool;
-
+export function getPool(): Pool {
   const candidates = [
     process.env.DATABASE_URL,
     process.env.POSTGRES_URL,
@@ -26,6 +26,20 @@ function getPool(): Pool {
   );
 
   const connectionString = validUrl || "";
+
+  if (pool && currentConnectionString === connectionString && connectionString !== "") {
+    return pool;
+  }
+
+  if (pool) {
+    try {
+      pool.end().catch(() => {});
+    } catch (_) {}
+    pool = null;
+    drizzleInstance = null;
+  }
+
+  currentConnectionString = connectionString;
 
   if (!connectionString) {
     if (process.env.NODE_ENV === "production") {
@@ -55,32 +69,42 @@ function getPool(): Pool {
     host: dbConfig.host,
     port: dbConfig.port ? parseInt(String(dbConfig.port), 10) : 5432,
     database: dbConfig.database,
-    // Serverless optimization: keep max low per container to avoid pool exhaustion
     max: process.env.NODE_ENV === "production" ? 10 : 5,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 10000,
-    statement_timeout: 30000, // 30s timeout
+    statement_timeout: 30000,
     ssl: isLocalhost ? false : { rejectUnauthorized: false },
   };
 
-  // Singleton for Next.js hot-reloading
-  const globalForDb = global as unknown as { pool: Pool };
-  
-  if (!globalForDb.pool) {
-    globalForDb.pool = new Pool(poolConfig);
-    globalForDb.pool.on("error", (err) => {
-      console.error("❌ [DB Pool Error]:", err.message);
-    });
-  }
-  
-  pool = globalForDb.pool;
+  pool = new Pool(poolConfig);
+  pool.on("error", (err) => {
+    console.error("❌ [DB Pool Error]:", err.message);
+  });
 
   return pool;
 }
 
-export const db = drizzle(getPool(), { schema });
+export function getDb(): ReturnType<typeof drizzle<typeof schema>> {
+  const currentPool = getPool();
+  if (!drizzleInstance) {
+    drizzleInstance = drizzle(currentPool, { schema });
+  }
+  return drizzleInstance;
+}
+
+export const db = new Proxy({} as ReturnType<typeof drizzle<typeof schema>>, {
+  get(_target, prop, receiver) {
+    const activeDb = getDb();
+    const value = Reflect.get(activeDb, prop, receiver);
+    if (typeof value === "function") {
+      return value.bind(activeDb);
+    }
+    return value;
+  },
+});
 
 export default {
   getPool,
+  getDb,
   db,
 };
