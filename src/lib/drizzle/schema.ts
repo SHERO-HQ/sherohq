@@ -191,9 +191,11 @@ export const campaignTemplates = pgTable("campaign_templates", {
 }, (table) => [
 	index("idx_campaign_templates_channel").using("btree", table.channel.asc().nullsLast().op("text_ops")),
 	index("idx_campaign_templates_name").using("btree", table.name.asc().nullsLast().op("text_ops")),
-  unique("campaign_templates_name_channel_lang_key").on(table.name, table.channel, table.whatsappTemplateLanguage),
 	pgPolicy("public_campaign_templates_readable", { as: "permissive", for: "select", to: ["public"], using: sql`true` }),
-	pgPolicy("admin_campaign_templates_all", { as: "permissive", for: "all", to: ["authenticated", "service_role"] }),
+	pgPolicy("service_role_campaign_templates_all", { as: "permissive", for: "all", to: ["service_role"], using: sql`true`, withCheck: sql`true` }),
+	pgPolicy("admin_campaign_templates_insert", { as: "permissive", for: "insert", to: ["authenticated"], withCheck: sql`(select auth.role()) = 'authenticated'` }),
+	pgPolicy("admin_campaign_templates_update", { as: "permissive", for: "update", to: ["authenticated"], using: sql`(select auth.role()) = 'authenticated'`, withCheck: sql`(select auth.role()) = 'authenticated'` }),
+	pgPolicy("admin_campaign_templates_delete", { as: "permissive", for: "delete", to: ["authenticated"], using: sql`(select auth.role()) = 'authenticated'` }),
 ]);
 
 export const activityLogs = pgTable("activity_logs", {
