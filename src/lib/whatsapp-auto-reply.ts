@@ -156,9 +156,10 @@ export function getSmartReply(
 
   // Handle interactive button IDs explicitly
   if (msg === "btn_shop") {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
     return {
       message:
-        "Awesome! You can browse all our premium tech products right here on our store: https://sherohq.com/shop",
+        `Awesome! You can browse all our premium tech products right here on our store: ${siteUrl}/shop`,
     };
   }
   if (msg === "btn_support") {

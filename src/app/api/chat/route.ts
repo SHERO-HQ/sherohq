@@ -24,14 +24,6 @@ import { aiChatSessions } from "@/lib/drizzle/schema";
 import { eq, sql } from "drizzle-orm";
 import { rateLimit } from "@/lib/rate-limit";
 
-const BACKEND_URL = (
-  process.env.API_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  (process.env.NODE_ENV === "production"
-    ? "https://api.sherohq.com"
-    : "http://127.0.0.1:5000")
-).replace(/\/$/, "");
-
 export async function POST(request: Request) {
   try {
     const ip = request.headers.get("x-forwarded-for") || "127.0.0.1";
@@ -257,6 +249,7 @@ export async function POST(request: Request) {
 
 function logAnalytics(message: string, finalContent: string, metadata: any, hasImage: boolean) {
   try {
+    const baseUrl = process.env.API_URL || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
     const intent = metadata.cartProduct
       ? "cart_add"
       : metadata.trackOrder
@@ -271,17 +264,20 @@ function logAnalytics(message: string, finalContent: string, metadata: any, hasI
                 ? "product_recommend"
                 : "casual";
 
-    fetch(`${BACKEND_URL}/api/analytics/chat`, {
+    fetch(`${baseUrl}/api/analytics/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-CSRF-Protection": "1"},
+        "X-CSRF-Protection": "1",
+      },
       body: JSON.stringify({
         query: message,
         response: finalContent || "Action executed",
         intent,
         recommendedProducts: metadata.recommendedProducts?.map((p: any) => p.id) || [],
-        hasImage})}).catch(() => {});
+        hasImage,
+      }),
+    }).catch(() => {});
   } catch (_e) {
     /* ignore error */
   }

@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema, type SignupInput } from "@/lib/validations/auth";
 import { useRegister } from "@/hooks/queries/useAuthQuery";
-import { Mail, Lock, User, Phone, ArrowRight, Eye, EyeOff, Loader2, AlertCircle, Check } from "lucide-react";
+import { Mail, Lock, User, Phone, ArrowRight, Eye, EyeOff, Loader2, AlertCircle, Check, X } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -35,6 +35,9 @@ const Signup = () => {
     });
 
     const passwordValue = watch("password") || "";
+    const confirmPasswordValue = watch("confirmPassword") || "";
+    const doPasswordsMatch = confirmPasswordValue.length > 0 && passwordValue.length > 0 && passwordValue === confirmPasswordValue;
+    const passwordsMismatch = confirmPasswordValue.length > 0 && passwordValue !== confirmPasswordValue;
 
     const passwordRequirements = [
         { label: "8+ characters", met: passwordValue.length >= 8 },
@@ -151,7 +154,7 @@ const Signup = () => {
                                     <p className="font-medium text-slate-600 dark:text-slate-300 mb-1">
                                         Password requirements:
                                     </p>
-                                    <div className="grid grid-cols-2 gap-1.5">
+                                    <div className="grid grid-cols-2 gap-1.5 text-[.7rem]">
                                         {passwordRequirements.map((req) => (
                                             <div
                                                 key={req.label}
@@ -178,31 +181,48 @@ const Signup = () => {
                             )}
                         </div>
 
-                        <Input
-                            id="signup-confirm-password"
-                            type={showConfirmPassword ? "text" : "password"}
-                            label="Confirm Password"
-                            placeholder="••••••••"
-                            autoComplete="new-password"
-                            leftIcon={<Lock className="w-5 h-5" />}
-                            error={errors.confirmPassword?.message}
-                            {...register("confirmPassword")}
-                            size="lg"
-                            rightIcon={
-                                <button
-                                    type="button"
-                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
-                                    className="focus:outline-none text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors flex items-center p-1"
-                                >
-                                    {showConfirmPassword ? (
-                                        <EyeOff className="w-4 h-4" />
-                                    ) : (
-                                        <Eye className="w-4 h-4" />
-                                    )}
-                                </button>
-                            }
-                        />
+                        <div className="space-y-1.5">
+                            <Input
+                                id="signup-confirm-password"
+                                type={showConfirmPassword ? "text" : "password"}
+                                label="Confirm Password"
+                                placeholder="••••••••"
+                                autoComplete="new-password"
+                                leftIcon={<Lock className="w-5 h-5" />}
+                                error={errors.confirmPassword?.message}
+                                {...register("confirmPassword")}
+                                size="lg"
+                                rightIcon={
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+                                        className="focus:outline-none text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors flex items-center p-1"
+                                    >
+                                        {showConfirmPassword ? (
+                                            <EyeOff className="w-4 h-4" />
+                                        ) : (
+                                            <Eye className="w-4 h-4" />
+                                        )}
+                                    </button>
+                                }
+                            />
+
+                            {/* Password match check */}
+                            {confirmPasswordValue.length > 0 && !errors.confirmPassword && (
+                                <div className="flex items-center gap-1.5 text-xs animate-in fade-in duration-200 px-0.5">
+                                    {doPasswordsMatch ? (
+                                        <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-medium">
+                                            <Check className="w-3.5 h-3.5" /> Passwords match
+                                        </span>
+                                    ) : passwordsMismatch ? (
+                                        <span className="text-red-500 dark:text-red-400 flex items-center gap-1">
+                                            <X className="w-3.5 h-3.5" /> Passwords do not match
+                                        </span>
+                                    ) : null}
+                                </div>
+                            )}
+                        </div>
 
                         <Button
                             type="submit"

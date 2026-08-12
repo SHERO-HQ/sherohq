@@ -6,6 +6,8 @@
  */
 
 import { SUPPORT_KNOWLEDGE } from "./knowledge";
+import { COMPANY_CONTACTS } from "@/constants/contacts";
+import { COMPANY_EMAILS } from "@/constants/emails";
 
 // ---------------------------------------------------------------------------
 // Model configuration
@@ -93,12 +95,12 @@ SUPPORT GUIDES
 ${SUPPORT_KNOWLEDGE}
 
 COMPANY INFO
-- SHERO Technologies — Based in Accra, Ghana
-- Business hours: Mon-Fri 9AM-6PM, Sat 10AM-3PM (GMT)
-- Delivery: Accra same-day/next-day, other regions 2-5 business days
-- Warranty: All products come with minimum 3-month warranty
+- SHERO Technologies — Based in ${COMPANY_CONTACTS.HQ_LOCATION}
+- Business hours: ${COMPANY_CONTACTS.WORKING_HOURS}
+- Delivery: Same-day / next-day in major cities, other regions 2-5 business days
+- Warranty: All products come with standard manufacturer warranty
 - Returns: 7-day return policy for defective items
-- Contact: support@sherohq.com | WhatsApp: available on the website${contextSection}`;
+- Contact: ${COMPANY_EMAILS.SUPPORT} | WhatsApp: ${COMPANY_CONTACTS.PHONE_DISPLAY}${contextSection}`;
 }
 
 export async function categorizeIntent(message: string, history: Array<{ role: string; content: string }> = []): Promise<"tech_support" | "sales" | "general"> {

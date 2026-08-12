@@ -80,15 +80,13 @@ function generateProductMetadata(
   const siteUrl = `${protocol}://${host}`;
   const pageUrl = `${siteUrl}/shop/${id}`;
 
-  const apiHost = "https://api.sherohq.com";
-
   const primaryImage =
     (Array.isArray(product.images) && product.images[0]) || product.image;
   let imageUrl = `${siteUrl}/shero.png`; // Fallback image
   if (primaryImage) {
     imageUrl = primaryImage.startsWith("http")
       ? primaryImage
-      : `${apiHost}${primaryImage.startsWith("/") ? "" : "/"}${primaryImage}`;
+      : `${siteUrl}${primaryImage.startsWith("/") ? "" : "/"}${primaryImage}`;
   }
 
   const isDiscounted =

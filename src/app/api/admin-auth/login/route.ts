@@ -25,7 +25,12 @@ export async function POST(request: NextRequest) {
       return apiResponse.error("Too many login attempts. Please try again in a minute.", 429);
     }
 
-    const { username, password } = await request.json();
+    const body = await request.json().catch(() => null);
+    if (!body || typeof body !== "object") {
+      return apiResponse.error("Invalid request body", 400);
+    }
+
+    const { username, password } = body;
     
     if (!username || !password) {
       return apiResponse.error("Username and password are required", 400);

@@ -1,5 +1,4 @@
 import { Pool, PoolConfig } from "pg";
-import { parse } from "pg-connection-string";
 import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "./drizzle/schema";
 
@@ -35,26 +34,14 @@ function getPool(): Pool {
     }
   }
 
-  // Optimization: Use port 6543 (Transaction Mode) if the URL is Supabase and port 5432 is found
-  const optimizedConnectionString = connectionString?.includes("pooler.supabase.com:5432")
-    ? connectionString.replace(":5432", ":6543")
-    : connectionString;
-
-  // Manually parse to ensure all fields are correctly typed
-  const dbConfig: Record<string, unknown> = optimizedConnectionString ? parse(optimizedConnectionString) : {};
-  // Remove any parsed ssl/sslmode to avoid pg v8 deprecation warning —
-  // we set ssl explicitly below based on the host.
-  delete dbConfig.ssl;
-
-  const host = String(dbConfig.host || "");
-  const isLocalhost = host === "localhost" || host === "127.0.0.1" || host === "::1";
+  const isLocalhost = connectionString.includes("localhost") || connectionString.includes("127.0.0.1") || connectionString.includes("::1");
 
   const poolConfig: PoolConfig = {
-    ...dbConfig,
+    connectionString,
     // Serverless optimization: keep max low per container to avoid pool exhaustion
-    max: process.env.NODE_ENV === "production" ? 5 : 10,
+    max: process.env.NODE_ENV === "production" ? 10 : 5,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 8000,
+    connectionTimeoutMillis: 10000,
     statement_timeout: 30000, // 30s timeout
     ssl: !isLocalhost ? { rejectUnauthorized: false } : false,
   };
@@ -63,8 +50,10 @@ function getPool(): Pool {
   const globalForDb = global as unknown as { pool: Pool };
   
   if (!globalForDb.pool) {
-    console.log(`[DB] Creating new pool connected to host: ${poolConfig.host}:${poolConfig.port}`);
     globalForDb.pool = new Pool(poolConfig);
+    globalForDb.pool.on("error", (err) => {
+      console.error("❌ [DB Pool Error]:", err.message);
+    });
   }
   
   pool = globalForDb.pool;

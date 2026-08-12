@@ -4,12 +4,12 @@ import { m } from "motion/react";
 import {
   Mail,
   MapPin,
-  MessageSquareLock,
   MessagesSquare,
   Phone,
   Globe2,
 } from "lucide-react";
 import { COMPANY_EMAILS } from "@/constants/emails";
+import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { Particles } from "@/components/ui/particles";
 
 const Contact = () => {
@@ -28,45 +28,33 @@ const Contact = () => {
           <m.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col items-center text-center mb-12 lg:mb-20 max-w-2xl mx-auto"
+            transition={{ duration: 0.5 }}
+            className="text-center max-w-3xl mx-auto mb-10 lg:mb-14"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/40 dark:border-brand-secondary-800/50 rounded uppercase tracking-wider transition-colors duration-300 shadow-sm">
-              <MessageSquareLock className="size-4" />
-              <span>Contact SHERO</span>
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-secondary-500/10 dark:bg-brand-secondary-500/20 text-brand-secondary-600 dark:text-brand-secondary-400 text-xs font-semibold uppercase tracking-wider mb-4 border border-brand-secondary-500/20">
+              <MessagesSquare className="w-3.5 h-3.5" />
+              Get In Touch
             </div>
-            <h1 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-slate-100 mb-6 leading-[1.1] transition-colors duration-300 tracking-tight">
-              Connect with{" "}
-              <span className="text-brand-secondary-600">Our Experts</span>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+              Let&apos;s Build Something Extraordinary
             </h1>
-            <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed">
-              Tell us your goals and constraints. We will recommend the right
-              mix of products, software, and support for your stage of growth.
+            <p className="mt-3 text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              Have a question, a project in mind, or need specialized enterprise tech support? Reach out and our team will get back to you promptly.
             </p>
-
-            <div className="flex flex-wrap justify-center gap-3 mt-8">
-              <span className="text-xs font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 shadow-sm">
-                2hr Response SLA
-              </span>
-              <span className="text-xs font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 shadow-sm">
-                Consultative Guidance
-              </span>
-            </div>
           </m.div>
 
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
-            {/* Left Column: Info */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+            {/* Left Column: Contact Channels & Context */}
             <m.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
-              className="space-y-8 order-2 lg:order-1"
+              className="lg:col-span-5 space-y-6"
             >
-              {/* Contact Details */}
-              <div className="space-y-6">
+              <div className="space-y-3">
                 <ContactItem
                   icon={
-                    <Mail className="w-5 h-5 text-teal-700 dark:text-brand-secondary-400 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" />
+                    <Mail className="w-5 h-5 text-brand-secondary-600 dark:text-brand-secondary-400 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" />
                   }
                   label="Email Us"
                   value={COMPANY_EMAILS.HELLO}
@@ -78,8 +66,8 @@ const Contact = () => {
                     <Phone className="w-5 h-5 text-blue-700 dark:text-blue-400 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6" />
                   }
                   label="Call Us"
-                  value="+233 (54) 871-1582"
-                  href="tel:+233548711582"
+                  value={COMPANY_CONTACTS.PHONE_DISPLAY}
+                  href={`tel:+${COMPANY_CONTACTS.WHATSAPP}`}
                   delay={0.3}
                 />
                 <ContactItem
@@ -88,7 +76,7 @@ const Contact = () => {
                   }
                   label="Visit Us"
                   value="Tamale, Northern Region, Ghana"
-                  href="https://maps.app.goo.gl/7JaqnYf5twcrpfDZ6"
+                  href={COMPANY_CONTACTS.MAP_LINK}
                   delay={0.4}
                 />
               </div>
