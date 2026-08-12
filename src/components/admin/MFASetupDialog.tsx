@@ -116,7 +116,7 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
               <div className="space-y-2">
                 <p className="text-xs text-muted-foreground">Or enter this secret key manually:</p>
                 <div className="flex items-center gap-2 bg-card p-2 rounded border border-border">
-                  <code className="text-xs text-brand-secondary-400 font-mono flex-1">{mfaData.secret}</code>
+                  <code className="text-xs text-brand-secondary-400 flex-1">{mfaData.secret}</code>
                   <button onClick={copySecret} className="text-muted-foreground hover:text-foreground transition-colors">
                     {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
                   </button>
@@ -154,7 +154,7 @@ export function MFASetupDialog({ onSuccess, onCancel }: MFASetupDialogProps) {
                   }
                 }}
                 placeholder="000000"
-                className="w-full bg-card border border-border rounded py-4 text-center text-3xl tracking-[0.5em] font-mono text-foreground placeholder:text-3xl placeholder:tracking-[0.5em] placeholder:font-mono placeholder:text-muted-foreground/30 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 transition-all"
+                className="w-full bg-card border border-border rounded py-4 text-center text-3xl tracking-[0.5em] text-foreground placeholder:text-3xl placeholder:tracking-[0.5em] placeholder:text-muted-foreground/30 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500 transition-all"
                 autoFocus
               />
 

@@ -115,7 +115,7 @@ export default function UserMFASetup({ isOpen, onClose, onSuccess }: UserMFASetu
             <div className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded space-y-2">
               <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">Manual Entry Code</p>
               <div className="flex items-center justify-between gap-4">
-                <code className="text-lg font-mono text-blue-600 dark:text-blue-400 break-all">
+                <code className="text-3xl text-blue-600 dark:text-blue-400 break-all">
                   {setupData.secret}
                 </code>
                 <button

@@ -46,8 +46,7 @@ export async function getUserFromSession() {
         u."emailVerified",
         u."mfaEnabled",
         u."shippingAddress",
-        u."createdAt",
-        u."updatedAt"
+        u."createdAt"
        FROM user_sessions us
        JOIN users u ON us."userId" = u.id
        WHERE us.token = ${token} AND us."expiresAt" > NOW()
