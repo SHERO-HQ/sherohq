@@ -147,6 +147,8 @@ const PWAInstallBanner = () => {
                   <Image
                     src={sheroIcon}
                     alt="SHERO"
+                    width={24}
+                    height={24}
                     className="w-6 h-6 object-contain"
                   />
                 </div>
@@ -193,7 +195,7 @@ const PWAInstallBanner = () => {
             <div className="glass-surface-md p-4 rounded shadow transition-colors duration-300">
               <div className="flex items-start gap-4">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-brand-secondary-50 dark:bg-brand-secondary-900/20 text-brand-secondary-600 dark:text-brand-secondary-400 border border-brand-secondary-100/50 dark:border-brand-secondary-800/30">
-                    <Image src={sheroIcon} alt="SHERO" className="w-6 h-6 object-contain" />
+                    <Image src={sheroIcon} alt="SHERO" width={24} height={24} className="w-6 h-6 object-contain" />
                 </div>
                 <div className="min-w-0 flex-1 pt-0.5">
                   <p className="text-[11px] font-medium text-brand-secondary-600 dark:text-brand-secondary-400">

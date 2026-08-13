@@ -27,7 +27,7 @@ export function ChatFloatingTrigger({
         setIsOpen(true);
         setIsMinimized(false);
       }}
-      className="fixed bottom-6 right-6 z-50 flex items-center p-3.5 bg-foreground text-background rounded-full shadow-xl hover:shadow-2xl border border-border/80 transition-all duration-300 group cursor-pointer"
+      className="fixed bottom-15 right-6 z-50 flex items-center p-3.5 bg-foreground text-background rounded-full shadow-xl hover:shadow-2xl border border-border/80 transition-all duration-300 group cursor-pointer"
       aria-label="Ask Shero AI Assistant"
       title="Ask Shero AI (⌘K)"
     >

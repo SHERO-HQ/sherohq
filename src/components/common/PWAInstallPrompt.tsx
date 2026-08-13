@@ -104,6 +104,8 @@ const PWAInstallPrompt = () => {
                 <Image
                   src={sheroIcon}
                   alt="SHERO"
+                  width={32}
+                  height={32}
                   className="w-full h-full object-contain"
                 />
               </div>

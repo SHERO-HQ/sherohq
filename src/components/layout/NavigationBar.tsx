@@ -142,10 +142,10 @@ const Nav = () => {
               <div className="flex items-center gap-0.5 sm:gap-1 bg-slate-50 dark:bg-slate-800/80 rounded transition-colors">
                 <SearchBar className="hidden lg:flex h-9 items-center justify-center text-slate-600 dark:text-slate-400" />
 
-                {/* Wishlist Button */}
+                {/* Wishlist Button - Hidden on mobile (< md) where BottomNav handles it */}
                 <button
                   onClick={() => setIsWishlistOpen(true)}
-                  className="cursor-pointer relative p-2 h-9 w-9 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/70 hover:text-red-500 dark:hover:text-red-400 transition-colors rounded border-none"
+                  className="hidden md:flex cursor-pointer relative p-2 h-9 w-9 items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/70 hover:text-red-500 dark:hover:text-red-400 transition-colors rounded border-none"
                   aria-label="Open Wishlist"
                 >
                   <Heart
@@ -161,10 +161,10 @@ const Nav = () => {
                   )}
                 </button>
 
-                {/* Cart Button */}
+                {/* Cart Button - Hidden on mobile (< md) where BottomNav handles it */}
                 <button
                   onClick={() => setIsCartOpen(true)}
-                  className="cursor-pointer relative p-2 h-9 w-9 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/70 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors rounded border-none"
+                  className="hidden md:flex cursor-pointer relative p-2 h-9 w-9 items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-slate-200/70 dark:hover:bg-slate-700/70 hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 transition-colors rounded border-none"
                   aria-label="Open Cart"
                 >
                   <ShoppingCart className="w-5 h-5" />

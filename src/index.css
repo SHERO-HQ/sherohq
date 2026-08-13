@@ -192,6 +192,7 @@ body {
 
 /* Accessibility: Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {
@@ -240,18 +241,19 @@ body {
 }
 
 @layer base {
-  /* Standardize all input, textarea, and select backgrounds to be transparent, per user design requirements. */
-  input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]),
-  textarea,
-  select {
-    background-color: transparent !important;
-  }
 
-  /* Ensure dropdown options have a solid background so they are readable */
-  select option {
-    background-color: var(--color-card) !important;
-    color: var(--color-foreground) !important;
-  }
+    /* Standardize all input, textarea, and select backgrounds to be transparent, per user design requirements. */
+    input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="file"]),
+    textarea,
+    select {
+        background-color: transparent !important;
+    }
+
+    /* Ensure dropdown options have a solid background so they are readable */
+    select option {
+        background-color: var(--color-card) !important;
+        color: var(--color-foreground) !important;
+    }
 }
 
 @layer base {
@@ -474,14 +476,12 @@ html.theme-transitioning :where(header,
     left: -150%;
     width: 300%;
     height: 200%;
-    background: linear-gradient(
-        115deg,
-        rgba(255, 255, 255, 0) 30%,
-        rgba(255, 255, 255, 0.08) 45%,
-        rgba(255, 255, 255, 0.18) 50%,
-        rgba(255, 255, 255, 0.08) 55%,
-        rgba(255, 255, 255, 0) 70%
-    );
+    background: linear-gradient(115deg,
+            rgba(255, 255, 255, 0) 30%,
+            rgba(255, 255, 255, 0.08) 45%,
+            rgba(255, 255, 255, 0.18) 50%,
+            rgba(255, 255, 255, 0.08) 55%,
+            rgba(255, 255, 255, 0) 70%);
     transition: all 0.9s cubic-bezier(0.19, 1, 0.22, 1);
     pointer-events: none;
     transform: rotate(-15deg);

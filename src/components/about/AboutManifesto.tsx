@@ -1,130 +1,95 @@
 "use client";
-import { m } from "motion/react";
-import { Shield, Cpu, Headphones, ArrowRight } from "lucide-react";
+import React from "react";
+import { Cpu, Shield, Headphones, ArrowRight, Sparkles, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import NavLink from "@/components/common/NavLink";
 import { getAbsoluteUrl } from "@/utils/subdomain";
-import { Particles } from "@/components/ui/particles";
-
-import type { Variants } from "motion/react";
-
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } },
-};
+import { FadeInView, StaggerContainer, StaggerItem } from "@/components/motion/AnimateSection";
 
 const pillars = [
   {
     icon: Cpu,
     title: "Hardware",
+    badge: "Infrastructure",
     description:
-      "High-performance laptops, servers, and networking equipment sourced from trusted hardware partners.",
+      "High-performance laptops, enterprise servers, and networking equipment sourced from trusted global partners.",
+    color: "secondary",
+    href: "/products",
+    linkText: "Explore Hardware",
   },
   {
     icon: Shield,
     title: "Software",
+    badge: "Custom Solutions",
     description:
-      "Custom-engineered solutions built for your exact workflow, no off-the-shelf compromises.",
+      "Custom-engineered digital solutions built for your workflow, with zero off-the-shelf compromises.",
+    color: "primary",
+    href: "/solutions",
+    linkText: "Explore Solutions",
   },
   {
     icon: Headphones,
     title: "Managed IT",
+    badge: "Operations",
     description:
-      "24/7 infrastructure management so your team focuses on growth, not troubleshooting.",
+      "Reliable IT management and proactive infrastructure support so your team focuses on growth.",
+    color: "secondary",
+    href: "/solutions",
+    linkText: "Learn More",
   },
 ] as const;
 
 const AboutManifesto = () => {
   return (
-    <section className="relative overflow-hidden">
-      {/* Dark gradient hero block */}
-      <div className="relative bg-linear-to-br from-slate-950 via-brand-primary-900 to-slate-950 py-14 sm:pt-28i">
-        {/* Particles */}
-        <Particles count={80} color="255, 255, 255" className="opacity-60" />
+    <section className="py-16 md:py-24 bg-white dark:bg-slate-950 overflow-hidden relative border-t border-slate-200 dark:border-slate-800/80 transition-colors duration-300">
+      {/* High-performance CSS ambient glow overlay (No canvas JS loops or expensive CSS filter blurs) */}
+      <div 
+        aria-hidden="true"
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-125 pointer-events-none opacity-60 dark:opacity-30"
+        style={{
+          background: "radial-gradient(ellipse 65% 50% at 50% 0%, rgba(16, 185, 129, 0.12), rgba(4, 50, 132, 0.06) 60%, transparent 100%)",
+        }}
+      />
+      
+      {/* Decorative dot pattern */}
+      <div className="absolute inset-0 pattern-dots opacity-60 dark:opacity-40 pointer-events-none" />
 
-        {/* Decorative grid pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-            backgroundSize: "64px 64px",
-          }}
-        />
+      <div className="container px-4 md:px-6 relative z-10 mx-auto max-w-7xl">
+        <FadeInView direction="up" delay={0}>
+          <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
+            {/* Section Badge */}
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-[9px] font-bold uppercase tracking-wider text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100/80 dark:bg-brand-secondary-500/10 border border-brand-secondary-500/30 dark:border-brand-secondary-500/20 rounded transition-colors duration-300">
+              <Trophy className="size-3.5" />
+              Our Manifesto
+            </span>
 
-        {/* Glow orbs */}
-        <div className="absolute top-1/4 left-1/4 w-125 h-125 bg-brand-primary-500/10 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-100 h-100 bg-brand-secondary-500/8 rounded-full blur-[100px] pointer-events-none" />
-
-        <div className="container mx-auto px-4 relative z-10">
-          <m.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-80px" }}
-            variants={{
-              hidden: { opacity: 0 },
-              visible: {
-                opacity: 1,
-                transition: { staggerChildren: 0.15 },
-              },
-            }}
-            className="max-w-5xl mx-auto"
-          >
-            {/* Label */}
-            {/* <m.div variants={fadeUp} className="flex items-center justify-center gap-3 mb-10">
-              <div className="h-px w-12 bg-brand-secondary-500/50" />
-              <span className="text-xs md:text-sm font-mono uppercase tracking-[0.25em] text-brand-secondary-400 font-bold">
-                Our Manifesto
+            {/* Main Headline Statement */}
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-6 transition-colors duration-300 leading-tight">
+              We don't just build technology. We build{" "}
+              <span className="font-bold bg-linear-to-r from-brand-secondary-600 via-brand-primary-600 to-brand-secondary-600 dark:from-brand-secondary-400 dark:via-brand-primary-300 dark:to-brand-secondary-400 bg-clip-text text-transparent">
+                what moves businesses forward.
               </span>
-              <div className="h-px w-12 bg-brand-secondary-500/50" />
-            </m.div> */}
+            </h2>
 
-            {/* Big quote with decorative marks */}
-            <m.blockquote
-              variants={fadeUp}
-              className="relative text-center pt-4 md:py-16 mx-auto"
-            >
-              {/* Huge background watermark quote */}
-              {/* <Quote
-                className="absolute top-0 left-1/2 -translate-x-1/2 size-32 text-brand-primary-400/20 select-none pointer-events-none -z-10"
-                aria-hidden="true"
-              /> */}
-              <p className="text-3xl lg:text-5xl font-bold leading-[1.2] tracking-tight text-white relative z-10">
-                We don't just build technology. We build{" "}
-                <span className="bg-linear-to-r from-brand-secondary-400 via-brand-primary-300 to-brand-secondary-400 bg-clip-text text-transparent">
-                  what moves businesses forward.
-                </span>
+            {/* Narrative Paragraphs */}
+            <div className="space-y-3 text-slate-600 dark:text-slate-300/90 text-base md:text-lg leading-relaxed max-w-2xl">
+              <p>
+                Technology should expand what's possible, remove operational barriers, and unlock new opportunities for growth.
               </p>
-            </m.blockquote>
-
-            <m.div
-              variants={fadeUp}
-              className="mt-8 mx-auto max-w-6xl space-y-5"
-            >
-              <p className="text-base md:text-lg text-slate-300/80 leading-relaxed">
-                They said world-class technology required enormous budgets,
-                complex systems, and impossible trade-offs.
+              <p>
+                We engineer software, deliver reliable hardware, and manage IT infrastructure so your organization can innovate with total confidence.
               </p>
-
-              <p className="text-base md:text-lg text-slate-300/80 leading-relaxed">
-                We believed there was a better way. So we built SHERO to
-                engineer software, deliver reliable hardware, and provide
-                technology solutions that help businesses innovate, operate
-                efficiently, and grow with confidence.
+              <p className="text-base md:text-lg font-bold bg-linear-to-r from-brand-secondary-600 to-brand-primary-600 dark:from-brand-secondary-400 dark:to-brand-primary-300 bg-clip-text text-transparent pt-2">
+                Redefine Possible
               </p>
+            </div>
 
-              <p className="text-base text-center md:text-lg text-slate-300/80 leading-relaxed">
-                <span className="bg-linear-to-r from-brand-secondary-400 to-brand-primary-300 bg-clip-text text-transparent font-bold">
-                  Redefining What's Possible.
-                </span>
-              </p>
-            </m.div>
-
-            {/* CTA */}
-            <m.div variants={fadeUp} className="flex justify-center mt-10">
+            {/* Primary Action CTA */}
+            <div className="mt-8">
               <Button
                 variant="brand"
                 size="lg"
-                className="group text-base px-8"
+                className="group text-base px-8 py-3 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white rounded font-bold transition-all shadow shadow-brand-secondary-500/20 hover:-translate-y-0.5 hover:shadow-brand-secondary-500/40 cursor-pointer"
                 asChild
               >
                 <NavLink href={getAbsoluteUrl("/contact-us")}>
@@ -132,56 +97,57 @@ const AboutManifesto = () => {
                   <ArrowRight className="ml-2 size-4 group-hover:translate-x-1 transition-transform" />
                 </NavLink>
               </Button>
-            </m.div>
+            </div>
+          </div>
+        </FadeInView>
 
-            {/* Attribution */}
-            <m.div
-              variants={fadeUp}
-              className="mt-6 flex items-center justify-center gap-3"
-            >
-              <span className="text-sm font-bold text-white/60 uppercase tracking-widest">
-                SHERO HQ
-              </span>
-              <span className="text-sm text-white/30 font-mono">·</span>
-              <span className="text-sm text-white/40 font-mono">
-                Establishing the Standard
-              </span>
-            </m.div>
-          </m.div>
-        </div>
-      </div>
-
-      {/* Three Pillars — sits right below the dark block */}
-      <div className="bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-border">
-        <div className="container mx-auto px-4 py-20">
-          <m.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
-            variants={{
-              hidden: { opacity: 0 },
-              visible: { opacity: 1, transition: { staggerChildren: 0.12 } },
-            }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto"
-          >
+        {/* 3 Pillars Grid Section (Signal Block Pattern) */}
+        <div className="mt-16 md:mt-20">
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6" staggerDelay={0.1}>
             {pillars.map((pillar) => (
-              <m.div
-                key={pillar.title}
-                variants={fadeUp}
-                className="group text-center p-8 rounded border border-slate-200 dark:border-border bg-slate-50 dark:bg-card/40 hover:border-brand-primary-300 dark:hover:border-brand-primary-700 transition-all duration-300 hover:shadow-lg hover:shadow-brand-primary-500/5"
-              >
-                <div className="inline-flex items-center justify-center size-14 rounded bg-brand-primary-50 dark:bg-brand-primary-900/20 border border-brand-primary-100 dark:border-brand-primary-800 mb-5 group-hover:scale-110 transition-transform duration-300">
-                  <pillar.icon className="size-6 text-brand-primary-600 dark:text-brand-primary-400" />
+              <StaggerItem key={pillar.title} yOffset={20} scale={0.98}>
+                <div className="group h-full p-8 rounded bg-slate-50 dark:bg-slate-900/40 border border-slate-200/90 dark:border-slate-800 hover:border-brand-secondary-500/40 dark:hover:border-brand-secondary-500/40 shadow-xs hover:shadow-lg hover:shadow-brand-secondary-500/5 transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="w-12 h-12 rounded flex items-center justify-center bg-brand-secondary-500/10 dark:bg-brand-secondary-500/15 border border-brand-secondary-500/20 text-brand-secondary-600 dark:text-brand-secondary-400 group-hover:scale-105 transition-transform duration-300">
+                        <pillar.icon className="w-6 h-6" />
+                      </div>
+                      <span className="text-[10px] font-mono uppercase tracking-wider font-semibold text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-800/80 px-2.5 py-1 rounded border border-slate-200 dark:border-slate-700/60">
+                        {pillar.badge}
+                      </span>
+                    </div>
+
+                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2.5 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors">
+                      {pillar.title}
+                    </h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                      {pillar.description}
+                    </p>
+                  </div>
+
+                  <div className="mt-6 pt-4 border-t border-slate-200/60 dark:border-slate-800/60">
+                    <NavLink
+                      href={getAbsoluteUrl(pillar.href)}
+                      className="inline-flex items-center text-xs font-bold text-brand-secondary-600 dark:text-brand-secondary-400 hover:text-brand-secondary-700 dark:hover:text-brand-secondary-300 group/link transition-colors"
+                    >
+                      {pillar.linkText}
+                      <ArrowRight className="ml-1 size-3.5 group-hover/link:translate-x-1 transition-transform" />
+                    </NavLink>
+                  </div>
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">
-                  {pillar.title}
-                </h3>
-                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                  {pillar.description}
-                </p>
-              </m.div>
+              </StaggerItem>
             ))}
-          </m.div>
+          </StaggerContainer>
+        </div>
+
+        {/* Attribution Footer */}
+        <div className="mt-12 text-center space-y-2">
+          <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 italic max-w-xl mx-auto">
+            &ldquo;Every interaction with SHERO should leave you with more possibilities than you had before.&rdquo;
+          </p>
+          <span className="inline-block text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase tracking-widest font-semibold">
+            SHERO HQ · ESTABLISHING THE STANDARD
+          </span>
         </div>
       </div>
     </section>

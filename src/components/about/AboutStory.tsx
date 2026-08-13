@@ -1,13 +1,13 @@
 "use client";
 import {
   Target,
-  Heart,
   Lightbulb,
   Globe,
   Clover,
   SearchCheck,
   Users,
   Globe2,
+  Star,
 } from "lucide-react";
 
 import Reveal from "@/components/motion/Reveal";
@@ -79,17 +79,14 @@ const AboutStory = () => {
             </div>
             <div className="prose prose-lg dark:prose-invert max-w-none">
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
-                The world is shaped by the limits we accept. Some believe those limits are fixed. We don't.{" "}
+                The world is shaped by the limits we accept.{" "}
                 <span className="font-bold text-brand-secondary-700 dark:text-brand-secondary-400">
                   SHERO
                 </span>{" "}
-                was founded on a simple belief: the greatest opportunities begin when we challenge assumptions and rethink what is possible.
-              </p>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
-                Technology is how we do that, not because it's the destination, but because it's one of the most powerful tools for creating progress. It helps people solve problems, businesses grow with confidence, and communities build a better future. Everything we create starts with the same question: <strong>What becomes possible?</strong>
+                was founded on a simple belief: real progress begins when we challenge assumptions, remove operational friction, and expand what's possible for businesses.
               </p>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                That question drives how we think, how we build, and how we serve. We don't exist simply to deliver technology. We exist to help redefine what's possible.
+                Technology is our medium for creating value. Whether supplying enterprise-grade hardware, engineering custom software, or managing critical IT infrastructure, everything we build is focused on solving real problems and driving sustainable growth.
               </p>
             </div>
           </Reveal>
@@ -107,7 +104,7 @@ const AboutStory = () => {
                 Our Mission
               </h3>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">
-                Create purposeful technology that removes barriers, expands opportunities, and enables lasting progress. Through every product, service, and solution we build, we aim to empower individuals, businesses, and communities to achieve more and redefine what's possible.
+                Engineering reliable hardware infrastructure and custom digital solutions that solve real operational challenges, remove friction, and empower organizations to grow with total confidence.
               </p>
             </div>
           </StaggerItem>
@@ -122,7 +119,7 @@ const AboutStory = () => {
                 Our Vision
               </h3>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">
-                A future where technology removes barriers, expands opportunities, and empowers every individual, business, and community to achieve more than they thought possible. By redefining what's possible, we aim to shape a world where technology is a catalyst for lasting progress and opportunity for all.
+                To be the premier technology partner across our markets, setting the global standard for engineering integrity, system reliability, and human-centric innovation.
               </p>
             </div>
           </StaggerItem>
@@ -132,7 +129,7 @@ const AboutStory = () => {
         <Reveal direction="up" distance={40}>
           <div className="bg-white/60 dark:bg-slate-900/40 backdrop-blur-md rounded p-8 md:p-12 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
             <div className="flex items-center gap-3 mb-6 justify-center">
-              <Lightbulb className="size-5 text-brand-secondary-600" />
+              <Star className="size-6 text-brand-secondary-600" />
               <h3 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
                 What Sets Us Apart
               </h3>
@@ -168,25 +165,6 @@ const AboutStory = () => {
                 </p>
               </div>
             </div>
-          </div>
-        </Reveal>
-
-        {/* Commitment Statement */}
-        <Reveal direction="up" distance={30} delay={0.4} blur>
-          <div className="mt-16 text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] uppercase font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded transition-colors duration-300">
-              <Heart className="size-4" />
-              Our Commitment
-            </div>
-            <h3 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
-              Building the Digital Future, Together
-            </h3>
-            <p className="text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">
-              Every product we deliver, every line of code we write, and every
-              service we provide is backed by our unwavering commitment to your
-              success. We measure our achievements not just in revenue, but in
-              the growth and transformation of the businesses we serve.
-            </p>
           </div>
         </Reveal>
       </div>

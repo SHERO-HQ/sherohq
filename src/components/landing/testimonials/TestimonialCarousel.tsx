@@ -107,7 +107,7 @@ export const TestimonialCarousel = ({ isLoading, displayTestimonials }: Testimon
                     opacity: 0,
                     scale: 1.05,
                     filter: "blur(8px)",
-                    zIndex: 50,
+                    zIndex: 10,
                   }}
                   transition={{
                     type: "spring",
@@ -140,15 +140,17 @@ export const TestimonialCarousel = ({ isLoading, displayTestimonials }: Testimon
         )}
       </div>
 
-      <div className="flex items-center justify-center gap-4 -mt-20">
+      <div className="flex items-center justify-center gap-4 -mt-20 relative z-30">
         <button
           onClick={handlePrev}
+          aria-label="Previous testimonial"
           className="cursor-pointer p-3 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-secondary-600 dark:hover:text-white hover:border-brand-secondary-500 transition-colors shadow-sm"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
         <button
           onClick={handleNext}
+          aria-label="Next testimonial"
           className="cursor-pointer p-3 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-secondary-600 dark:hover:text-white hover:border-brand-secondary-500 transition-colors shadow-sm"
         >
           <ChevronRight className="w-5 h-5" />
