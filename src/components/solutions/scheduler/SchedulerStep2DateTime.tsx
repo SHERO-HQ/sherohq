@@ -10,7 +10,6 @@ import {
   Sun,
   Sunset,
   Moon,
-  Sparkles,
   CheckCircle2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
