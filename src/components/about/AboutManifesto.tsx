@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Cpu, Shield, Headphones, ArrowRight, Sparkles, Trophy } from "lucide-react";
+import { Cpu, Shield, Headphones, ArrowRight, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import NavLink from "@/components/common/NavLink";
 import { getAbsoluteUrl } from "@/utils/subdomain";
