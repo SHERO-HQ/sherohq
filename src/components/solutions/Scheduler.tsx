@@ -68,9 +68,13 @@ const Scheduler = () => {
     scrollRef,
     formData,
     setFormData,
+    selectService,
+    selectDate,
+    selectTime,
     status,
     nextStep,
     prevStep,
+    resetForm,
     handleSubmit,
     isStep1Valid,
     isStep2Valid,
@@ -84,7 +88,7 @@ const Scheduler = () => {
       <SchedulerSuccess
         serviceTitle={serviceTitle}
         formData={formData}
-        onReset={() => router.refresh()}
+        onReset={resetForm}
       />
     );
   }
@@ -211,9 +215,7 @@ const Scheduler = () => {
               <SchedulerStep1Service
                 services={services}
                 selectedService={formData.service}
-                onSelectService={(serviceId) =>
-                  setFormData({ ...formData, service: serviceId })
-                }
+                onSelectService={selectService}
                 nextStep={nextStep}
                 isValid={isStep1Valid}
               />
@@ -223,8 +225,8 @@ const Scheduler = () => {
               <SchedulerStep2DateTime
                 date={formData.date}
                 time={formData.time}
-                onSelectDate={(date) => setFormData({ ...formData, date })}
-                onSelectTime={(time) => setFormData({ ...formData, time })}
+                onSelectDate={selectDate}
+                onSelectTime={selectTime}
                 nextStep={nextStep}
                 prevStep={prevStep}
                 isValid={isStep2Valid}

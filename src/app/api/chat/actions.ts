@@ -13,6 +13,8 @@ import { v4 as uuidv4 } from "uuid";
 import { logActivity } from "@/lib/activity";
 import { getUserFromSession } from "@/lib/auth";
 
+import { notificationService } from "@/lib/notifications";
+
 // ---------------------------------------------------------------------------
 // Direct Booking (BOOK_DIRECT)
 // ---------------------------------------------------------------------------
@@ -41,6 +43,29 @@ export async function handleBookDirect(bookData: any): Promise<any> {
         "info",
         `New consultation for ${service} from ${name} (via AI Chat)`,
       );
+
+      const consultationObj = {
+        id,
+        name,
+        email,
+        phone: phone || undefined,
+        service,
+        date,
+        time,
+        message: bookMsg || "Booked via AI Chat Assistant",
+        status: "pending",
+        createdAt: new Date().toISOString(),
+      };
+
+      try {
+        await Promise.allSettled([
+          notificationService.sendConsultationScheduledEmail(consultationObj),
+          notificationService.sendConsultationScheduledWhatsApp(consultationObj),
+          notificationService.sendNewConsultationAdminAlert(consultationObj),
+        ]);
+      } catch (err) {
+        console.error("Chat booking notification error:", err);
+      }
 
       return {
         success: true,

@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { scheduleConsultation } from "@/services/api";
 
 export function useSchedulerState() {
@@ -10,15 +11,19 @@ export function useSchedulerState() {
   const [direction, setDirection] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  const [formData, setFormData] = useState({
-    service: "",
-    date: undefined as Date | undefined,
-    time: "",
-    firstName: "",
-    lastName: "",
-    phone: "",
-    email: "",
-    message: "",
+  const [formData, setFormData] = useState(() => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return {
+      service: "",
+      date: today as Date | undefined,
+      time: "",
+      firstName: "",
+      lastName: "",
+      phone: "",
+      email: "",
+      message: "",
+    };
   });
 
   const [status, setStatus] = useState<"idle" | "submitting" | "success">(
@@ -70,8 +75,37 @@ export function useSchedulerState() {
       setStatus("success");
     } catch (error) {
       console.error("Booking error:", error);
-      setStatus("success");
+      toast.error("Failed to schedule consultation. Please check your connection and try again.");
+      setStatus("idle");
     }
+  };
+
+  const resetForm = () => {
+    setStep(1);
+    setDirection(0);
+    setStatus("idle");
+    setFormData({
+      service: "",
+      date: undefined,
+      time: "",
+      firstName: "",
+      lastName: "",
+      phone: "",
+      email: "",
+      message: "",
+    });
+  };
+
+  const selectService = (service: string) => {
+    setFormData((prev) => ({ ...prev, service }));
+  };
+
+  const selectDate = (date: Date | undefined) => {
+    setFormData((prev) => ({ ...prev, date, time: "" }));
+  };
+
+  const selectTime = (time: string) => {
+    setFormData((prev) => ({ ...prev, time }));
   };
 
   const isStep1Valid = !!formData.service;
@@ -84,9 +118,13 @@ export function useSchedulerState() {
     scrollRef,
     formData,
     setFormData,
+    selectService,
+    selectDate,
+    selectTime,
     status,
     nextStep,
     prevStep,
+    resetForm,
     handleSubmit,
     isStep1Valid,
     isStep2Valid,

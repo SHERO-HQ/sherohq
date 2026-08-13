@@ -23,6 +23,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import type { Consultation } from "@/services/api";
 
+const formatSafeDate = (d: string) => {
+  try {
+    const localIso = d.includes("T") ? d : `${d}T00:00:00`;
+    return format(new Date(localIso), "PPP");
+  } catch {
+    return d;
+  }
+};
+
 const getStatusBadge = (status: string) => {
   const s = status.toLowerCase();
   if (s === "pending") {
@@ -196,7 +205,7 @@ export function ConsultationsTab({
                   Date
                 </span>
                 <span className="text-xs font-bold text-foreground">
-                  {format(new Date(c.date), "PPP")}
+                  {formatSafeDate(c.date)}
                 </span>
               </div>
               <div className="flex items-center justify-between">

@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { API_BASE, handleResponse, authFetch } from "./client";
 
 // ---------------------------------------------------------------------------
@@ -89,7 +90,10 @@ export async function scheduleConsultation(data: {
     email: data.email,
     phone: data.phone,
     service: data.service,
-    date: data.date instanceof Date ? data.date.toISOString().split("T")[0] : String(data.date),
+    date:
+      data.date instanceof Date
+        ? format(data.date, "yyyy-MM-dd")
+        : String(data.date),
     time: data.time,
     message: data.message,
   };

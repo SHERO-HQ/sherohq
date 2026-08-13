@@ -62,12 +62,13 @@ export async function POST(request: NextRequest) {
       createdAt: new Date().toISOString()};
 
     try {
-      await Promise.all([
+      await Promise.allSettled([
         notificationService.sendConsultationScheduledEmail(consultationObj),
+        notificationService.sendConsultationScheduledWhatsApp(consultationObj),
         notificationService.sendNewConsultationAdminAlert(consultationObj),
       ]);
-    } catch (emailErr) {
-      console.error("Failed to send consultation emails:", emailErr);
+    } catch (notifyErr) {
+      console.error("Failed to send consultation notifications:", notifyErr);
     }
 
     return apiResponse.success({ success: true, message: "Consultation scheduled" }, 201);
