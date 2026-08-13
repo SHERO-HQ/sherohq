@@ -83,8 +83,8 @@ export async function POST(request: NextRequest) {
     const user = await getUserFromSession();
     const requesterUserId = user?.id || null;
 
-    if (!items || !shippingInfo) {
-      return apiResponse.error("Missing required fields", 400);
+    if (!items || !Array.isArray(items) || items.length === 0 || !shippingInfo) {
+      return apiResponse.error("Your cart is empty or required fields are missing", 400);
     }
 
     const normalizedPaymentMethod = normalizePaymentMethod(paymentMethod);

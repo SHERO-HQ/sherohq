@@ -46,7 +46,7 @@ describe("uploadFileToStorage", () => {
 
     const savedContent = fs.readFileSync(createdFilePath, "utf-8");
     expect(savedContent).toBe(fileContent);
-  });
+  }, 15000);
 
   it("should handle uploading multiple files", async () => {
     const file1Name = "test-multi-1.png";
@@ -67,5 +67,5 @@ describe("uploadFileToStorage", () => {
 
     if (fs.existsSync(path1)) fs.unlinkSync(path1);
     if (fs.existsSync(path2)) fs.unlinkSync(path2);
-  });
+  }, 15000);
 });

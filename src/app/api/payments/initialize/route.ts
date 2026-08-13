@@ -4,7 +4,7 @@ import { orders } from "@/lib/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { apiResponse, validateCsrf } from "@/lib/api-utils";
 import { getUserFromSession, getAdminFromSession } from "@/lib/auth";
-import { hashOrderAccessToken } from "@/lib/orderUtils";
+import { verifyOrderAccessToken } from "@/lib/orderUtils";
 import { toReadableOrderId } from "@/utils/orderId";
 import { rateLimit } from "@/lib/rate-limit";
 
@@ -45,11 +45,13 @@ let orderId: string = "";
     }
 
     const orderRes = await db.select({
+      id: orders.id,
       shippingInfo: orders.shippingInfo,
       total: orders.total,
       status: orders.status,
       userId: orders.userId,
-      orderAccessTokenHash: orders.orderAccessTokenHash
+      orderAccessTokenHash: orders.orderAccessTokenHash,
+      createdAt: orders.createdAt,
     })
     .from(orders)
     .where(eq(orders.id, orderId));
@@ -61,10 +63,7 @@ let orderId: string = "";
     const admin = await getAdminFromSession();
 
     const tokenHeader = request.headers.get("x-order-access-token");
-    const hasValidOrderAccessToken =
-      tokenHeader &&
-      order.orderAccessTokenHash &&
-      hashOrderAccessToken(tokenHeader.trim()) === order.orderAccessTokenHash;
+    const hasValidOrderAccessToken = verifyOrderAccessToken(tokenHeader, order);
 
     const isAuthorized =
       !!admin ||
@@ -113,9 +112,15 @@ let orderId: string = "";
       const returnUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}`;
       const cancelUrl = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}&status=Cancelled`;
 
+      const cleanDescription = (
+        description || `Order ${readableId}`
+      )
+        .replace(/#/g, "")
+        .trim();
+
       const payload = {
         totalAmount: Math.round(Number(order.total || 0) * 100) / 100,
-        description: description || `Order ${toReadableOrderId(orderId)}`,
+        description: cleanDescription,
         callbackUrl,
         returnUrl,
         cancellationUrl: cancelUrl,
@@ -123,12 +128,19 @@ let orderId: string = "";
         clientReference: readableId,
       };
 
-      console.log("[payment:initialize:request]", {
-        provider: "hubtel",
-        orderId,
-        readableOrderId: readableId,
-        payload,
-      });
+      console.log(
+        "[payment:initialize:request]",
+        JSON.stringify(
+          {
+            provider: "hubtel",
+            orderId,
+            readableOrderId: readableId,
+            payload,
+          },
+          null,
+          2,
+        ),
+      );
 
       try {
         const resp = await fetch(`${HUBTEL_API_BASE}/items/initiate`, {
@@ -143,23 +155,56 @@ let orderId: string = "";
 
         const data = await resp.json();
 
-        console.log("[payment:initialize:response]", {
-          provider: "hubtel",
-          orderId,
-          status: resp.status,
-          statusText: resp.statusText,
-          hubtelResponse: data,
-        });
+        console.log(
+          "[payment:initialize:response]",
+          JSON.stringify(
+            {
+              provider: "hubtel",
+              orderId,
+              status: resp.status,
+              statusText: resp.statusText,
+              hubtelResponse: data,
+            },
+            null,
+            2,
+          ),
+        );
 
-        if (!resp.ok || !data?.data?.checkoutUrl) {
-          console.error("[payment:initialize:failed]", {
-            provider: "hubtel",
-            orderId,
-            event: "init_failed",
-            response: data,
-          });
+        const checkoutUrl =
+          data?.data && typeof data.data === "object" && !Array.isArray(data.data)
+            ? data.data.checkoutUrl
+            : undefined;
+
+        if (!resp.ok || !checkoutUrl) {
+          const extractedErrors = Array.isArray(data?.data)
+            ? data.data
+                .map(
+                  (item: any) =>
+                    item.message ||
+                    item.error ||
+                    `${item.field || item.name || "error"}: ${item.error || item.message || JSON.stringify(item)}`,
+                )
+                .join("; ")
+            : data?.message || "Payment initialization failed";
+
+          console.error(
+            "[payment:initialize:failed]",
+            JSON.stringify(
+              {
+                provider: "hubtel",
+                orderId,
+                event: "init_failed",
+                response: data,
+                extractedErrors,
+              },
+              null,
+              2,
+            ),
+          );
           return apiResponse.error(
-            "We couldn't start the Hubtel payment flow. Please try again or contact support.",
+            process.env.NODE_ENV === "development" && extractedErrors
+              ? `Hubtel Error: ${extractedErrors}`
+              : "We couldn't start the Hubtel payment flow. Please try again or contact support.",
             502,
           );
         }
@@ -173,12 +218,19 @@ let orderId: string = "";
           hubtelResponse: data,
         });
       } catch (err) {
-        console.error("[payment:initialize]", {
-          provider: "hubtel",
-          orderId,
-          event: "network_error",
-          error: err instanceof Error ? err.message : err,
-        });
+        console.error(
+          "[payment:initialize]",
+          JSON.stringify(
+            {
+              provider: "hubtel",
+              orderId,
+              event: "network_error",
+              error: err instanceof Error ? err.message : err,
+            },
+            null,
+            2,
+          ),
+        );
         return apiResponse.error(
           "We couldn't reach the Hubtel payment service. Please try again or contact support.",
           502,
@@ -218,13 +270,20 @@ async function initializePaystackTransaction(
   const readableId = toReadableOrderId(orderId);
   const callback_url = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}`;
 
-  console.log("[payment:initialize:request]", {
-    provider: "paystack",
-    orderId,
-    email,
-    amount,
-    callback_url,
-  });
+  console.log(
+    "[payment:initialize:request]",
+    JSON.stringify(
+      {
+        provider: "paystack",
+        orderId,
+        email,
+        amount,
+        callback_url,
+      },
+      null,
+      2,
+    ),
+  );
 
   const resp = await fetch("https://api.paystack.co/transaction/initialize", {
     method: "POST",
@@ -244,20 +303,34 @@ async function initializePaystackTransaction(
 
   const data = await resp.json();
 
-  console.log("[payment:initialize:response]", {
-    provider: "paystack",
-    orderId,
-    status: resp.status,
-    paystackResponse: data,
-  });
+  console.log(
+    "[payment:initialize:response]",
+    JSON.stringify(
+      {
+        provider: "paystack",
+        orderId,
+        status: resp.status,
+        paystackResponse: data,
+      },
+      null,
+      2,
+    ),
+  );
 
   if (!data || !data.status) {
-    console.error("[payment:initialize:failed]", {
-      provider: "paystack",
-      orderId,
-      event: "init_failed",
-      response: data,
-    });
+    console.error(
+      "[payment:initialize:failed]",
+      JSON.stringify(
+        {
+          provider: "paystack",
+          orderId,
+          event: "init_failed",
+          response: data,
+        },
+        null,
+        2,
+      ),
+    );
     return apiResponse.error("Failed to initialize Paystack payment", 502);
   }
 

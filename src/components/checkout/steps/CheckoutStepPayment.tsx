@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
 import { m } from "motion/react";
-import { ChevronLeft, CheckCircle, Smartphone, CreditCard, Wallet, Store, LucideIcon } from "lucide-react";
+import { ChevronLeft, CheckCircle, Smartphone, CreditCard, Wallet, Store, ShoppingBag, LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PaymentIcons from "@/components/layout/PaymentIcons";
 import { useCheckout } from "../CheckoutContext";
+import { useCart } from "@/hooks/queries/useCartQuery";
 import { useNotifications } from "@/hooks/useNotifications";
 
 type PaymentMethodValue = "momo" | "card" | "cod" | "store_pickup";
@@ -54,9 +55,36 @@ export const OFFLINE_PAYMENT_OPTIONS: PaymentMethodOption[] = [
 ];
 
 export default function CheckoutStepPayment({ onSubmit }: { onSubmit: (data: any) => Promise<void> }) {
-  const { formMethods: { setValue, watch, handleSubmit, formState: { errors } }, handleBack, isSubmitting, setCurrentStep } = useCheckout();
+  const { cart } = useCart();
+  const {
+    formMethods: {
+      setValue,
+      watch,
+      handleSubmit,
+      formState: { errors },
+    },
+    handleBack,
+    isSubmitting,
+    setCurrentStep,
+    isRetryOrder,
+  } = useCheckout();
   const { addNotification } = useNotifications();
   const paymentMethod = watch("paymentMethod");
+
+  const isCartEmpty = cart.length === 0 && !isRetryOrder;
+
+  const handleFormSubmit = async (data: any) => {
+    if (isCartEmpty) {
+      addNotification(
+        "Empty Cart",
+        "Your cart is empty. Please add at least one item before completing payment.",
+        "warning",
+      );
+      setCurrentStep(1);
+      return;
+    }
+    await onSubmit(data);
+  };
 
   const onError = (formErrors: any) => {
     if (formErrors.shippingAddress || formErrors.email || formErrors.phone) {
@@ -84,6 +112,32 @@ export default function CheckoutStepPayment({ onSubmit }: { onSubmit: (data: any
           </p>
         </div>
       </div>
+
+      {isCartEmpty && (
+        <div className="mb-6 p-4 rounded border border-amber-200 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-950/20 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+              <ShoppingBag className="w-4 h-4" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-amber-900 dark:text-amber-200">
+                Your cart is empty
+              </p>
+              <p className="text-xs text-amber-700 dark:text-amber-300">
+                Please add at least one item to proceed with payment.
+              </p>
+            </div>
+          </div>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setCurrentStep(1)}
+            className="border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-100 text-xs shrink-0"
+          >
+            Review Cart
+          </Button>
+        </div>
+      )}
 
       <div className="space-y-5">
         <div className="space-y-3">
@@ -222,8 +276,8 @@ export default function CheckoutStepPayment({ onSubmit }: { onSubmit: (data: any
           Back
         </Button>
         <Button
-          onClick={handleSubmit(onSubmit, onError)}
-          disabled={isSubmitting}
+          onClick={handleSubmit(handleFormSubmit, onError)}
+          disabled={isSubmitting || isCartEmpty}
           variant="brand"
           className="font-bold gap-2 px-8"
         >

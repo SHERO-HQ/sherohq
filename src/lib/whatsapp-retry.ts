@@ -162,6 +162,15 @@ export async function processPendingRetries(
 
         successful++;
       } else {
+        const errorCode = data.error?.code;
+        const isWindowExpired = errorCode === 131047;
+        const errorMsg = isWindowExpired
+          ? "24-hour service window expired (Error 131047). Plain text cannot be sent; template required."
+          : (data.error?.message || "API error");
+
+        // If window is expired, do not keep retrying text indefinitely as it will never succeed
+        const retryStatus = isWindowExpired ? "failed" : "pending";
+
         // Calculate next retry time with exponential backoff
         const nextRetryDelay = Math.min(
           config.initialDelayMs *
@@ -177,7 +186,8 @@ export async function processPendingRetries(
           SET
             retry_count = retry_count + 1,
             next_retry_at = ${nextRetryAt},
-            last_error = ${data.error?.message || "API error"},
+            status = ${retryStatus},
+            last_error = ${errorMsg},
             updated_at = NOW()
           WHERE message_id = ${retry.message_id};
         `);
@@ -309,7 +319,13 @@ export async function retryMessageImmediately(
 
       return { success: true };
     } else {
-      const errorMsg = data.error?.message || "Meta API error";
+      const errorCode = data.error?.code;
+      const isWindowExpired = errorCode === 131047;
+      const errorMsg = isWindowExpired
+        ? "24-hour service window expired (Error 131047). Plain text cannot be sent; template required."
+        : (data.error?.message || "Meta API error");
+
+      const retryStatus = isWindowExpired ? "failed" : "pending";
       const nextRetryDelay = Math.min(
         config.initialDelayMs * Math.pow(config.backoffMultiplier, retry.retry_count as number),
         config.maxDelayMs
@@ -321,6 +337,7 @@ export async function retryMessageImmediately(
         SET
           retry_count = retry_count + 1,
           next_retry_at = ${nextRetryAt},
+          status = ${retryStatus},
           last_error = ${errorMsg},
           updated_at = NOW()
         WHERE message_id = ${messageId};

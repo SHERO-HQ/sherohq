@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { fetchOrderById, updateOrderStatus, type Order } from "@/services/api";
+import { fetchOrderById, updateOrderStatus, resendOrderNotification, type Order } from "@/services/api";
 import { useNotifications } from "@/hooks/useNotifications";
 import { toReadableOrderId } from "@/utils/orderId";
 import { formatCurrency } from "@/utils/format";
@@ -245,8 +245,12 @@ export function useOrderDetails() {
     }
   };
 
-  const handleResendConfirmation = () => {
-    if (!order) return;
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+
+  const handleResendConfirmation = async (
+    type?: "auto" | "confirmation" | "reminder" | "status"
+  ) => {
+    if (!order || isSendingEmail) return;
 
     const recipient = order.shippingInfo.email?.trim();
     if (!recipient) {
@@ -254,29 +258,23 @@ export function useOrderDetails() {
       return;
     }
 
-    const shortOrderId = toReadableOrderId(order.id);
-    const subject = `Order Confirmation ${shortOrderId}`;
-    const trackingLine = isStorePickupOrder
-      ? "Pickup note: This order is marked for in-store pickup."
-      : `Track your order: ${getTrackingUrl(order.id)}`;
-    const body = [
-      `Hello ${order.shippingInfo.firstName},`,
-      "",
-      `Your order ${shortOrderId} has been confirmed.`,
-      `Current status: ${order.status.toUpperCase()}`,
-      "",
-      trackingLine,
-      "",
-      "Thank you for choosing SHERO.",
-    ].join("\n");
-
-    const mailtoUrl = `mailto:${encodeURIComponent(recipient)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.open(mailtoUrl, "_blank", "noopener,noreferrer");
-    addNotification(
-      "Success",
-      "Email draft opened for confirmation resend",
-      "success",
-    );
+    try {
+      setIsSendingEmail(true);
+      const result = await resendOrderNotification(order.id, type);
+      addNotification(
+        "Success",
+        result.message || `Email sent successfully to ${recipient}`,
+        "success",
+      );
+    } catch (err) {
+      addNotification(
+        "Error",
+        err instanceof Error ? err.message : "Failed to send email",
+        "error",
+      );
+    } finally {
+      setIsSendingEmail(false);
+    }
   };
 
   const handleCopyOrderId = async () => {
@@ -296,6 +294,7 @@ export function useOrderDetails() {
     isLoading,
     error,
     isUpdating,
+    isSendingEmail,
     printMode,
     receiptQrUrl,
     isStorePickupOrder,

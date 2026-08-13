@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { toReadableOrderId } from "@/utils/orderId";
+import { displayOrderId } from "@/utils/orderId";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -135,7 +135,7 @@ export function DashboardRecentOrders({
                       href={`/admin/orders/${order.id}`}
                       className="text-sm font-mono text-muted-foreground group-hover:text-brand-secondary-400 transition-colors"
                     >
-                      {toReadableOrderId(order.id)}
+                      {displayOrderId(order.id)}
                     </Link>
                   </td>
                   <td className="px-6 py-4">

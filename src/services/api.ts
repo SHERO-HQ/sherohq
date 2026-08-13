@@ -58,6 +58,7 @@ export {
   initializePayment,
   verifyPayment,
   cancelOrder,
+  resendOrderNotification,
 } from "./orders";
 
 // User auth, verification, profile

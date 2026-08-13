@@ -10,9 +10,20 @@ import { useCart } from "@/hooks/queries/useCartQuery";
 import { GHANA_REGIONS, getCitiesForRegion, getDeliveryEstimate } from "@/lib/ghana-locations";
 
 export default function CheckoutStepDelivery() {
-  const { formMethods: { register, watch, setValue, formState: { errors } }, handleNext, handleBack } = useCheckout();
-  const { setGuestEmail, setGuestPhone } = useCart();
+  const {
+    formMethods: {
+      register,
+      watch,
+      setValue,
+      formState: { errors },
+    },
+    handleNext,
+    handleBack,
+    isRetryOrder,
+  } = useCheckout();
+  const { cart, setGuestEmail, setGuestPhone } = useCart();
 
+  const isCartEmpty = cart.length === 0 && !isRetryOrder;
   const selectedRegion = watch("shippingAddress.region");
   const cities = getCitiesForRegion(selectedRegion || "");
   const deliveryEstimate = getDeliveryEstimate(selectedRegion || "");
@@ -86,8 +97,6 @@ export default function CheckoutStepDelivery() {
             {...register("phone")}
           />
         </div>
-
-
 
         <Input
           id="referralCode"
@@ -193,6 +202,7 @@ export default function CheckoutStepDelivery() {
         </Button>
         <Button
           onClick={handleNext}
+          disabled={isCartEmpty}
           variant="brand"
           className="font-bold gap-2 px-8"
         >

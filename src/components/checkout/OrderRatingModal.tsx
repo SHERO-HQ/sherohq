@@ -5,6 +5,7 @@ import { m, AnimatePresence } from "motion/react";
 import { X, Star, Send, Loader2, CheckCircle2 } from "lucide-react";
 import { sendContactMessage } from "@/services/api";
 import { COMPANY_EMAILS } from "@/constants/emails";
+import { displayOrderId } from "@/utils/orderId";
 
 interface OrderRatingModalProps {
  isOpen: boolean;
@@ -52,13 +53,14 @@ export default function OrderRatingModal({
 
  setStatus("submitting");
  try {
+ const readableId = displayOrderId(orderId);
  // Reusing the contact message API as requested by user plan
  // Ideally this would be a dedicated review API but this works for now
  await sendContactMessage({
  name: "Verified Customer",
  email: COMPANY_EMAILS.NOREPLY, // Or fetch from context if available
- subject: `Order Rating: #${orderId}`,
- message: `Order ID: ${orderId}\nRating: ${rating}/5 (${getRatingLabel(rating)})\nComment: ${comment}`,
+ subject: `Order Rating: ${readableId}`,
+ message: `Order: ${readableId}\nOrder UUID: ${orderId}\nRating: ${rating}/5 (${getRatingLabel(rating)})\nComment: ${comment}`,
  });
  setStatus("success");
  // Auto close after success? Maybe let user close manually to see confirmation

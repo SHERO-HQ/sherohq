@@ -1,16 +1,48 @@
 "use client";
 import React from "react";
 import { m } from "motion/react";
-import { Minus, Plus, Trash2, ChevronRight } from "lucide-react";
+import { Minus, Plus, Trash2, ChevronRight, ShoppingBag, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AppImage from "@/components/common/AppImage";
 import { getImageUrl } from "@/services/api";
 import { useCart } from "@/hooks/queries/useCartQuery";
 import { useCheckout } from "../CheckoutContext";
+import { useRouter } from "next/navigation";
 
 export default function CheckoutStepCart() {
+  const router = useRouter();
   const { cart, updateQuantity, removeItem } = useCart();
   const { handleNext } = useCheckout();
+
+  if (cart.length === 0) {
+    return (
+      <m.div
+        key="step1-empty"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-8 sm:p-12 text-center"
+      >
+        <div className="w-20 h-20 bg-brand-secondary-50 dark:bg-brand-secondary-900/20 text-brand-secondary-600 dark:text-brand-secondary-400 rounded-full flex items-center justify-center mx-auto mb-5">
+          <ShoppingBag className="w-10 h-10" />
+        </div>
+        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+          Your Cart is Empty
+        </h2>
+        <p className="text-slate-600 dark:text-slate-400 max-w-md mx-auto mb-8 text-sm sm:text-base leading-relaxed">
+          You don&apos;t have any items in your cart. Please add at least one product to continue with your checkout.
+        </p>
+        <Button
+          onClick={() => router.push("/products")}
+          variant="brand"
+          className="font-bold gap-2 px-8 h-12 shadow-sm hover:shadow transition-all"
+        >
+          Browse Products
+          <ArrowRight className="w-4 h-4" />
+        </Button>
+      </m.div>
+    );
+  }
 
   return (
     <m.div
@@ -89,6 +121,7 @@ export default function CheckoutStepCart() {
       <div className="flex justify-end mt-8">
         <Button
           onClick={handleNext}
+          disabled={cart.length === 0}
           variant="brand"
           className="font-bold gap-2 px-8"
         >

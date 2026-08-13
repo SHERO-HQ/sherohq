@@ -12,6 +12,8 @@ import {
   Phone,
   Mail,
   Truck,
+  Clock,
+  ArrowRight,
 } from "lucide-react";
 import type { Order, User } from "@/services/api";
 import { getImageUrl } from "@/services/api";
@@ -31,6 +33,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
   onToggle,
 }) => {
   const [copied, setCopied] = React.useState(false);
+  const isPending = order.status.toLowerCase() === "pending";
 
   const getStatusBadgeColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -56,7 +59,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
   const readableOrderId = toReadableOrderId(order.id);
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 overflow-hidden">
+    <div className={`bg-white dark:bg-slate-900 rounded border ${isPending ? 'border-amber-300/60 dark:border-amber-700/50 shadow-sm' : 'border-slate-200 dark:border-slate-800'} overflow-hidden`}>
       {/* Order Header (Clickable row) */}
       <div
         role="button"
@@ -106,6 +109,18 @@ const OrderItem: React.FC<OrderItemProps> = ({
             {order.status}
           </div>
 
+          {isPending && (
+            <Link
+              href={`/checkout/pay?id=${order.id}`}
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white text-xs font-semibold rounded shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500"
+              title="Complete payment for this order"
+            >
+              <CreditCard className="w-3.5 h-3.5 shrink-0" />
+              <span>Complete Payment</span>
+            </Link>
+          )}
+
           <Link
             href={`/track/${readableOrderId}`}
             onClick={(e) => e.stopPropagation()}
@@ -128,6 +143,33 @@ const OrderItem: React.FC<OrderItemProps> = ({
       {/* Expandable Content */}
       {isExpanded && (
         <div className="p-6 border-t border-slate-100 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
+          {/* Pending Order Notice Banner */}
+          {isPending && (
+            <div className="mb-6 p-4 rounded-lg bg-amber-500/10 border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-full shrink-0 mt-0.5">
+                  <Clock className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-amber-900 dark:text-amber-200">
+                    Payment Pending Confirmation
+                  </h4>
+                  <p className="text-xs text-amber-800/80 dark:text-amber-300/80 mt-0.5">
+                    This order is waiting for payment. Complete payment now to secure your items before the reservation expires.
+                  </p>
+                </div>
+              </div>
+              <Link
+                href={`/checkout/pay?id=${order.id}`}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white text-xs font-bold rounded shadow-sm transition-colors shrink-0"
+              >
+                <CreditCard className="w-3.5 h-3.5" />
+                <span>Pay GHS {order.total.toFixed(2)}</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          )}
+
           <div className="mb-4 flex items-center justify-between gap-4 flex-wrap">
             <button
               type="button"
@@ -152,7 +194,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
               className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-secondary-600 hover:text-brand-secondary-700 dark:text-brand-secondary-400 dark:hover:text-brand-secondary-300 transition-colors"
             >
               <Truck className="w-3.5 h-3.5" />
-              <span>View Full Tracking Timeline →</span>
+              <span>View Full Tracking Timeline</span>
             </Link>
           </div>
 
@@ -229,9 +271,23 @@ const OrderItem: React.FC<OrderItemProps> = ({
                   <Mail className="w-3.5 h-3.5 text-slate-400" />
                   <span>{user?.email}</span>
                 </div>
-                <div className="mt-2 p-2 bg-brand-secondary-50 dark:bg-brand-secondary-900/10 rounded text-brand-secondary-700 dark:text-brand-secondary-400 text-xs font-medium inline-block">
-                  Paid via Mobile Money / Card
-                </div>
+                {isPending ? (
+                  <div className="mt-2 p-2.5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded flex items-center justify-between gap-3">
+                    <span className="text-amber-800 dark:text-amber-300 text-xs font-medium">
+                      Awaiting Payment Confirmation
+                    </span>
+                    <Link
+                      href={`/checkout/pay?id=${order.id}`}
+                      className="text-xs font-bold text-amber-700 dark:text-amber-400 hover:underline inline-flex items-center gap-1 shrink-0"
+                    >
+                      Pay Now <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="mt-2 p-2 bg-brand-secondary-50 dark:bg-brand-secondary-900/10 rounded text-brand-secondary-700 dark:text-brand-secondary-400 text-xs font-medium inline-block">
+                    Paid via Mobile Money / Card
+                  </div>
+                )}
               </div>
             </div>
           </div>

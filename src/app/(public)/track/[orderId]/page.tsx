@@ -3,13 +3,13 @@
 import { useEffect, useState, use, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Package, Copy, Check, AlertCircle } from "lucide-react";
+import { Package, Copy, Check, AlertCircle, CreditCard, ArrowRight, Clock } from "lucide-react";
 import { trackOrder, type Order } from "@/services/orders";
 import { useUser } from "@/hooks/queries/useAuthQuery";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { toReadableOrderId } from "@/utils/orderId";
+import { toReadableOrderId, displayOrderId } from "@/utils/orderId";
 import { TrackTimeline } from "@/components/track/TrackTimeline";
 import { TrackOrderItems } from "@/components/track/TrackOrderItems";
 import { TrackShippingInfo } from "@/components/track/TrackShippingInfo";
@@ -61,7 +61,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
     fetchOrder();
   }, [orderId, token, router]);
 
-  const readableId = useMemo(() => toReadableOrderId(orderId), [orderId]);
+  const readableId = useMemo(() => displayOrderId(orderId), [orderId]);
   const isStorePickupOrder =
     (order?.paymentMethod || "").toLowerCase() === "store_pickup";
   const hasOrderItems = Array.isArray((order as Partial<Order>)?.items);
@@ -74,7 +74,7 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
 
   const handleCopyOrderId = async () => {
     try {
-      await navigator.clipboard.writeText(readableId);
+      await navigator.clipboard.writeText(toReadableOrderId(orderId));
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch (err) {
@@ -119,9 +119,39 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
     );
   }
 
+  const isPending = order.status.toLowerCase() === "pending";
+  const payUrl = `/checkout/pay?id=${order.id}${token ? `&token=${encodeURIComponent(token)}` : ""}`;
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-20">
       <div className="max-w-4xl mx-auto px-6 pt-26 space-y-8">
+        {/* Pending Order Recovery Callout */}
+        {isPending && (
+          <div className="p-4 sm:p-5 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/60 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2">
+            <div className="flex items-start gap-3">
+              <div className="p-2 bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-full shrink-0 mt-0.5">
+                <Clock className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-amber-900 dark:text-amber-200">
+                  Payment Awaiting Confirmation
+                </h3>
+                <p className="text-xs text-amber-800/80 dark:text-amber-300/80 mt-0.5">
+                  Your order has been created. Complete payment to secure your stock and begin processing.
+                </p>
+              </div>
+            </div>
+            <Link
+              href={payUrl}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white text-xs font-bold rounded shadow-sm transition-colors shrink-0"
+            >
+              <CreditCard className="w-4 h-4" />
+              <span>Complete Payment Now</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        )}
+
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
@@ -153,16 +183,29 @@ export default function TrackOrderPage({ params, searchParams }: Props) {
               })}
             </p>
           </div>
-          <Badge
-            className={cn(
-              "text-xs px-4 py-1 w-fit capitalize font-medium tracking-wider",
-              order.status === "cancelled"
-                ? "bg-rose-500 text-white"
-                : "bg-brand-secondary-500 text-white",
+          <div className="flex items-center gap-3">
+            {isPending && (
+              <Link
+                href={payUrl}
+                className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded shadow-sm transition-colors"
+              >
+                <CreditCard className="w-3.5 h-3.5" />
+                <span>Pay Now</span>
+              </Link>
             )}
-          >
-            {order.status}
-          </Badge>
+            <Badge
+              className={cn(
+                "text-xs px-4 py-1 w-fit capitalize font-medium tracking-wider",
+                order.status === "cancelled"
+                  ? "bg-rose-500 text-white"
+                  : isPending
+                    ? "bg-amber-500 text-white"
+                    : "bg-brand-secondary-500 text-white",
+              )}
+            >
+              {order.status}
+            </Badge>
+          </div>
         </div>
 
         {/* Tracking Timeline */}

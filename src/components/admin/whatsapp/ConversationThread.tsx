@@ -7,6 +7,7 @@ interface ConversationThreadProps {
   messages: ConversationMessage[];
   messageSearchQuery: string;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
+  onSelectTemplate?: () => void;
 }
 
 const parseDateUTC = (dateStr: string) => {
@@ -23,6 +24,7 @@ export function ConversationThread({
   messages,
   messageSearchQuery,
   messagesEndRef,
+  onSelectTemplate,
 }: ConversationThreadProps) {
   const renderStatus = (status: string) => {
     switch (status) {
@@ -174,11 +176,25 @@ export function ConversationThread({
                   </div>
 
                   {msg.error_message && (
-                    <p className="text-[11px] text-rose-400 mt-1 flex items-center gap-1 border-t border-border pt-1">
-                      <AlertTriangle className="w-3 h-3 shrink-0" />
-                      {msg.error_message}{" "}
-                      {msg.error_code ? `(${msg.error_code})` : ""}
-                    </p>
+                    <div className="text-[11px] text-rose-400 mt-1.5 flex flex-col gap-1 border-t border-border/50 pt-1.5">
+                      <div className="flex items-center gap-1">
+                        <AlertTriangle className="w-3 h-3 shrink-0" />
+                        <span>
+                          {msg.error_code === "131047" || msg.error_message.includes("131047") || msg.error_message.includes("Re-engagement")
+                            ? "24h Window Expired (Error 131047). A Meta Template is required."
+                            : `${msg.error_message} ${msg.error_code ? `(${msg.error_code})` : ""}`}
+                        </span>
+                      </div>
+                      {(msg.error_code === "131047" || msg.error_message.includes("131047") || msg.error_message.includes("Re-engagement")) && onSelectTemplate && (
+                        <button
+                          type="button"
+                          onClick={onSelectTemplate}
+                          className="text-[10px] text-amber-400 hover:text-amber-300 underline font-medium text-left mt-0.5 cursor-pointer flex items-center gap-1"
+                        >
+                          Use a pre-approved Meta Template to re-engage →
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>

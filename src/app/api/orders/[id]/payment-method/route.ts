@@ -6,8 +6,8 @@ import { getUserFromSession, getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 import { 
   normalizePaymentMethod, 
-  ORDER_PAYMENT_METHODS, 
-  hashOrderAccessToken 
+  ORDER_PAYMENT_METHODS,
+  verifyOrderAccessToken
 } from "@/lib/orderUtils";
 
 export async function PATCH(
@@ -23,17 +23,20 @@ export async function PATCH(
       return apiResponse.error("Payment method is required", 400);
     }
 
-    const normalizedMethod = normalizePaymentMethod(paymentMethod);
-    if (!ORDER_PAYMENT_METHODS.has(normalizedMethod)) {
+    const normalizedPaymentMethod = normalizePaymentMethod(paymentMethod);
+    if (!ORDER_PAYMENT_METHODS.has(normalizedPaymentMethod)) {
       return apiResponse.error("Invalid payment method", 400);
     }
 
     // Retrieve order to check authorization and status
     const orderRes = await db
       .select({
+        id: orders.id,
         status: orders.status,
         userId: orders.userId,
-        orderAccessTokenHash: orders.orderAccessTokenHash
+        orderAccessTokenHash: orders.orderAccessTokenHash,
+        createdAt: orders.createdAt,
+        total: orders.total,
       })
       .from(orders)
       .where(eq(orders.id, id));
@@ -49,10 +52,7 @@ export async function PATCH(
     const admin = await getAdminFromSession();
 
     const tokenHeader = request.headers.get("x-order-access-token");
-    const hasValidOrderAccessToken =
-      tokenHeader &&
-      order.orderAccessTokenHash &&
-      hashOrderAccessToken(tokenHeader.trim()) === order.orderAccessTokenHash;
+    const hasValidOrderAccessToken = verifyOrderAccessToken(tokenHeader, order);
 
     const isAuthorized =
       !!admin ||
@@ -74,7 +74,7 @@ export async function PATCH(
     // Update payment method in the database
     const updateRes = await db
       .update(orders)
-      .set({ paymentMethod: normalizedMethod })
+      .set({ paymentMethod: normalizedPaymentMethod })
       .where(eq(orders.id, id))
       .returning();
 
@@ -89,7 +89,7 @@ export async function PATCH(
       actorId,
       "order_update",
       "info",
-      `Updated order ${id} payment method to ${normalizedMethod}`
+      `Updated order ${id} payment method to ${normalizedPaymentMethod}`
     );
 
     return apiResponse.success({

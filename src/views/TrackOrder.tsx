@@ -8,6 +8,8 @@ import {
   Clock,
   RefreshCw,
   Truck,
+  CreditCard,
+  ArrowRight,
 } from "lucide-react";
 import { trackOrder, type Order, type OrderItem } from "@/services/api";
 import { getOrderAccessToken, saveOrderAccessToken } from "@/utils/orderAccess";
@@ -25,28 +27,15 @@ type TrackedOrder = Partial<Order> & {
   items?: OrderItem[];
 };
 
-const hasFullDetails = (order: TrackedOrder | null): order is Order => {
-  return Boolean(
-    order &&
-    Array.isArray(order.items) &&
-    order.shippingInfo &&
-    typeof order.total === "number",
-  );
-};
-
 const getStatusBadge = (status: string) => {
   const s = status.toLowerCase();
-  if (s === "pending")
-    return "bg-amber-500/15 text-amber-600 dark:text-amber-400";
-  if (s === "processing")
-    return "bg-blue-500/15 text-blue-600 dark:text-blue-400";
-  if (s === "intransit")
-    return "bg-purple-500/15 text-purple-600 dark:text-purple-400";
   if (s === "delivered")
-    return "bg-brand-secondary-500/15 text-brand-secondary-600 dark:text-brand-secondary-400";
+    return "bg-brand-secondary-500/20 text-brand-secondary-400 border border-brand-secondary-500/30";
+  if (s === "pending")
+    return "bg-amber-500/20 text-amber-400 border border-amber-500/30";
   if (s === "cancelled")
-    return "bg-rose-500/15 text-rose-600 dark:text-rose-400";
-  return "bg-slate-500/15 text-slate-600 dark:text-slate-400";
+    return "bg-rose-500/20 text-rose-400 border border-rose-500/30";
+  return "bg-blue-500/20 text-blue-400 border border-blue-500/30";
 };
 
 export default function TrackOrder({
@@ -55,11 +44,7 @@ export default function TrackOrder({
 }: TrackOrderProps) {
   const [order, setOrder] = useState<TrackedOrder | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const shortId = useMemo(() => displayOrderId(orderId), [orderId]);
-  const isStorePickupOrder =
-    (order?.paymentMethod || "").toLowerCase() === "store_pickup";
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (orderAccessToken) {
@@ -67,56 +52,63 @@ export default function TrackOrder({
     }
   }, [orderAccessToken, orderId]);
 
-  const load = useCallback(async () => {
+  const loadOrder = useCallback(async () => {
     setIsLoading(true);
-    setError("");
+    setError(null);
     try {
       const token =
         orderAccessToken || getOrderAccessToken(orderId) || undefined;
       const data = await trackOrder(orderId, token);
       setOrder(data as TrackedOrder);
-    } catch (err) {
+    } catch (err: unknown) {
       setError(
-        err instanceof Error ? err.message : "Unable to track order right now.",
+        err instanceof Error
+          ? err.message
+          : "Failed to load order. Please verify your order number and try again.",
       );
-      setOrder(null);
     } finally {
       setIsLoading(false);
     }
   }, [orderAccessToken, orderId]);
 
   useEffect(() => {
-    void load();
-  }, [load]);
+    void loadOrder();
+  }, [loadOrder]);
+
+  const isStorePickupOrder = useMemo(() => {
+    return (order?.paymentMethod || "").toLowerCase() === "store_pickup";
+  }, [order?.paymentMethod]);
+
+  const readableId = displayOrderId(orderId);
+  const hasFullDetails = (orderData: TrackedOrder): orderData is Order => {
+    return Array.isArray(orderData.items) && typeof orderData.total === "number";
+  };
+
+  const isPending = order?.status?.toLowerCase() === "pending";
+  const resolvedToken = orderAccessToken || getOrderAccessToken(orderId);
+  const payUrl = `/checkout/pay?id=${order?.id || orderId}${resolvedToken ? `&token=${encodeURIComponent(resolvedToken)}` : ""}`;
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pt-8 pb-16 px-4">
-      <div className="max-w-3xl mx-auto space-y-6">
+    <div className="min-h-screen pt-24 pb-16 bg-slate-50 dark:bg-slate-950">
+      <div className="container max-w-2xl mx-auto px-4 space-y-6">
         <m.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded p-6 sm:p-8"
+          transition={{ duration: 0.4 }}
+          className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 p-6 sm:p-8 space-y-6"
         >
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
-                Track Your Order
-              </h1>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                Reference: {shortId}
-              </p>
-            </div>
-            <button
-              onClick={() => void load()}
-              className="inline-flex items-center gap-2 text-sm px-3 py-2 rounded border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200"
-            >
-              <RefreshCw className="w-4 h-4" /> Refresh
-            </button>
+          <div>
+            <p className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              Order Tracking
+            </p>
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
+              Order {readableId}
+            </h1>
           </div>
 
           {isLoading && (
-            <div className="py-14 text-center">
-              <div className="w-10 h-10 rounded-full border-2 border-brand-secondary-500 border-t-transparent animate-spin mx-auto" />
+            <div className="text-center py-10">
+              <RefreshCw className="w-6 h-6 animate-spin mx-auto text-brand-secondary-500" />
               <p className="text-sm text-slate-500 dark:text-slate-400 mt-3">
                 Checking latest order status...
               </p>
@@ -132,6 +124,33 @@ export default function TrackOrder({
 
           {!isLoading && !error && order && (
             <div className="space-y-6">
+              {/* Pending Order Notice */}
+              {isPending && (
+                <div className="p-4 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/60 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-amber-500/20 text-amber-600 dark:text-amber-400 rounded-full shrink-0 mt-0.5">
+                      <Clock className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-amber-900 dark:text-amber-200">
+                        Payment Pending Confirmation
+                      </h3>
+                      <p className="text-xs text-amber-800/80 dark:text-amber-300/80 mt-0.5">
+                        Your order is reserved. Complete payment to begin dispatch.
+                      </p>
+                    </div>
+                  </div>
+                  <Link
+                    href={payUrl}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white text-xs font-bold rounded shadow-sm transition-colors shrink-0"
+                  >
+                    <CreditCard className="w-3.5 h-3.5" />
+                    <span>Complete Payment</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+              )}
+
               <div className="rounded border border-slate-200 dark:border-slate-700 p-4">
                 <div className="flex items-center justify-between gap-3 flex-wrap">
                   <div>
@@ -144,9 +163,20 @@ export default function TrackOrder({
                       {order.status}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Placed on {new Date(order.createdAt).toLocaleString()}
-                  </p>
+                  <div className="flex items-center gap-3">
+                    {isPending && (
+                      <Link
+                        href={payUrl}
+                        className="inline-flex items-center gap-1 px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded shadow-sm transition-colors"
+                      >
+                        <CreditCard className="w-3.5 h-3.5" />
+                        <span>Pay Now</span>
+                      </Link>
+                    )}
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      Placed on {new Date(order.createdAt).toLocaleString()}
+                    </p>
+                  </div>
                 </div>
               </div>
 

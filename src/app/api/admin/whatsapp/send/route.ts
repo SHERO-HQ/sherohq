@@ -31,7 +31,9 @@ export async function POST(request: NextRequest) {
     );
 
     if (!result.success || !result.messageId) {
-      return apiResponse.error(result.error || "Failed to send WhatsApp message", 500);
+      return apiResponse.error(result.error || "Failed to send WhatsApp message", 400, {
+        errorCode: result.errorCode,
+      });
     }
 
     // Log the sent message to database (campaign_id is null for manual admin chats)

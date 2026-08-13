@@ -1,5 +1,5 @@
 import React from "react";
-import { User, RefreshCw, X } from "lucide-react";
+import { User, RefreshCw, X, ShieldAlert } from "lucide-react";
 
 interface ConversationHeaderProps {
   selectedPhone: string;
@@ -13,6 +13,8 @@ interface ConversationHeaderProps {
   setIsMenuOpen: (open: boolean) => void;
   handleDeleteChat: (action: "clear" | "delete") => Promise<void>;
   messageSearchQuery: string;
+  isWindowOpen?: boolean;
+  windowExpiresAt?: string | null;
 }
 
 export function ConversationHeader({
@@ -27,7 +29,21 @@ export function ConversationHeader({
   setIsMenuOpen,
   handleDeleteChat,
   messageSearchQuery,
+  isWindowOpen = false,
+  windowExpiresAt,
 }: ConversationHeaderProps) {
+  const [windowTimeRemaining, setWindowTimeRemaining] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (!windowExpiresAt) {
+      setWindowTimeRemaining(null);
+      return;
+    }
+    const expires = new Date(windowExpiresAt).getTime();
+    const diffHours = Math.max(0, Math.round((expires - Date.now()) / (1000 * 60 * 60)));
+    setWindowTimeRemaining(diffHours > 0 ? `${diffHours}h remaining` : "expiring soon");
+  }, [windowExpiresAt]);
+
   return (
     <>
       <div className="px-4 py-2.5 bg-card dark:bg-[#202c33] flex items-center justify-between shrink-0 relative z-10 border-b border-border">
@@ -36,9 +52,28 @@ export function ConversationHeader({
             <User className="w-6 h-6 text-muted-foreground dark:text-[#8696a0] mt-1.5" />
           </div>
           <div className="flex flex-col justify-center">
-            <h3 className="text-[16px] font-normal text-foreground dark:text-[#e9edef] leading-tight mb-0.5">
-              {selectedPhone}
-            </h3>
+            <div className="flex items-center gap-2">
+              <h3 className="text-[16px] font-medium text-foreground dark:text-[#e9edef] leading-tight mb-0.5">
+                {selectedPhone}
+              </h3>
+              {isWindowOpen ? (
+                <span
+                  title={`24-hour customer window is active (${windowTimeRemaining || "Free text allowed"})`}
+                  className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  24h Window Open {windowTimeRemaining ? `(${windowTimeRemaining})` : ""}
+                </span>
+              ) : (
+                <span
+                  title="More than 24 hours have passed since customer's last reply. WhatsApp requires a pre-approved template message to re-engage."
+                  className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-500 border border-amber-500/20"
+                >
+                  <ShieldAlert className="w-3 h-3" />
+                  24h Window Expired (Template Required)
+                </span>
+              )}
+            </div>
             <p className="text-[13px] text-muted-foreground dark:text-[#8696a0] leading-tight">
               {headerStatus}
             </p>

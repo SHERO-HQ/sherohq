@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { orders, activityLogs, products } from "@/lib/drizzle/schema";
 import { eq, sql, inArray, desc, asc } from "drizzle-orm";
 import { getUserFromSession, getAdminFromSession } from "@/lib/auth";
-import { safeParse, hashOrderAccessToken } from "@/lib/orderUtils";
+import { safeParse, verifyOrderAccessToken } from "@/lib/orderUtils";
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -45,8 +45,11 @@ export async function GET(
 
     // Auth logic
     const [user, admin] = await Promise.all([getUserFromSession(), getAdminFromSession()]);
-    const providedToken = request.headers.get("x-order-access-token")?.trim() || null;
-    const hasValidToken = providedToken && order.orderAccessTokenHash && hashOrderAccessToken(providedToken) === order.orderAccessTokenHash;
+    const providedToken =
+      request.headers.get("x-order-access-token")?.trim() ||
+      request.nextUrl.searchParams.get("token")?.trim() ||
+      null;
+    const hasValidToken = verifyOrderAccessToken(providedToken, order);
 
     const activityLogsRows = await db.select({
       action: activityLogs.action,

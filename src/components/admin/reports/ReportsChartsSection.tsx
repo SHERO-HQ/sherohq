@@ -12,7 +12,7 @@ import {
   BarChart3,
   LineChart as LineChartIcon,
 } from "lucide-react";
-import { toReadableOrderId } from "@/utils/orderId";
+import { displayOrderId } from "@/utils/orderId";
 import { ChartTooltip } from "@/components/admin/ChartTooltip";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import type {
@@ -427,7 +427,7 @@ export function RecentOrders({ orders }: { readonly orders: RecentOrder[] }) {
               <div className="flex items-center gap-3">
                 <div className="flex flex-col">
                   <span className="font-mono text-sm text-muted-foreground font-bold">
-                    {toReadableOrderId(order.id)}
+                    {displayOrderId(order.id)}
                   </span>
                   <span className="text-xs text-foreground font-semibold mt-0.5">
                     {order.customer.firstName} {order.customer.lastName}

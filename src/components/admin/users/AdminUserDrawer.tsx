@@ -14,7 +14,7 @@ import {
   Trash2,
 } from "lucide-react";
 import AppImage from "@/components/common/AppImage";
-import { toReadableOrderId } from "@/utils/orderId";
+import { displayOrderId } from "@/utils/orderId";
 import type { AdminUserDetails, AdminUserStats, Order } from "@/services/api";
 
 const formatDate = (date: string | Date) => {
@@ -138,7 +138,7 @@ const OrderHistoryList = ({ orders }: OrderHistoryListProps) => {
         >
           <div>
             <p className="text-foreground font-medium">
-              Order {toReadableOrderId(order.id)}
+              Order {displayOrderId(order.id)}
             </p>
             <p className="text-sm text-muted-foreground">
               {order.items?.length || 0} item(s) • {formatDate(order.createdAt)}

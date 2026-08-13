@@ -3,6 +3,8 @@ import {
   roundCurrency,
   normalizePaymentMethod,
   hashOrderAccessToken,
+  generateOrderSecurityToken,
+  verifyOrderAccessToken,
   safeParse,
   ORDER_PAYMENT_METHODS,
   ORDER_STATUSES,
@@ -87,6 +89,54 @@ describe("orderUtils", () => {
       expect(safeParse("")).toBe(null);
       expect(safeParse(null)).toBe(null);
       expect(safeParse(undefined)).toBe(null);
+    });
+  });
+
+  describe("generateOrderSecurityToken and verifyOrderAccessToken", () => {
+    const sampleOrder = {
+      id: "ord-test-1234",
+      createdAt: "2026-08-13T10:00:00.000Z",
+      total: "150.00",
+      orderAccessTokenHash: hashOrderAccessToken("raw-secret-token-xyz"),
+    };
+
+    it("generates deterministic HMAC token for an order", () => {
+      const token1 = generateOrderSecurityToken(
+        sampleOrder.id,
+        sampleOrder.createdAt,
+        sampleOrder.total,
+      );
+      const token2 = generateOrderSecurityToken(
+        sampleOrder.id,
+        sampleOrder.createdAt,
+        sampleOrder.total,
+      );
+
+      expect(token1).toBe(token2);
+      expect(typeof token1).toBe("string");
+      expect(token1.length).toBe(64);
+    });
+
+    it("verifies matching HMAC token", () => {
+      const hmacToken = generateOrderSecurityToken(
+        sampleOrder.id,
+        sampleOrder.createdAt,
+        sampleOrder.total,
+      );
+      expect(verifyOrderAccessToken(hmacToken, sampleOrder)).toBe(true);
+    });
+
+    it("verifies matching random order access token via stored hash", () => {
+      expect(verifyOrderAccessToken("raw-secret-token-xyz", sampleOrder)).toBe(
+        true,
+      );
+    });
+
+    it("rejects invalid tokens", () => {
+      expect(verifyOrderAccessToken("invalid-token", sampleOrder)).toBe(false);
+      expect(verifyOrderAccessToken("", sampleOrder)).toBe(false);
+      expect(verifyOrderAccessToken(null, sampleOrder)).toBe(false);
+      expect(verifyOrderAccessToken(undefined, sampleOrder)).toBe(false);
     });
   });
 

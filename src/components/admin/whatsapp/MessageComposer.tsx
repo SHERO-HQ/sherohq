@@ -1,6 +1,7 @@
 import React from "react";
-import { MessageSquare, Code, Send, Loader2 } from "lucide-react";
+import { MessageSquare, Code, Send, Loader2, AlertCircle, Sparkles } from "lucide-react";
 import { TemplatePreview } from "../newsletter/TemplatePreview";
+import { BUILTIN_WHATSAPP_TEMPLATES } from "./types";
 
 interface MessageComposerProps {
   selectedPhone: string | null;
@@ -17,6 +18,7 @@ interface MessageComposerProps {
   setTemplateParamsText: (text: string) => void;
   sending: boolean;
   dbTemplates: any[];
+  isWindowOpen?: boolean;
 }
 
 export function MessageComposer({
@@ -34,11 +36,50 @@ export function MessageComposer({
   setTemplateParamsText,
   sending,
   dbTemplates,
+  isWindowOpen = false,
 }: MessageComposerProps) {
   if (!selectedPhone) return null;
 
+  // Merge DB templates and builtin templates so presets are always available
+  const allTemplates = [...dbTemplates];
+  for (const builtin of BUILTIN_WHATSAPP_TEMPLATES) {
+    if (!allTemplates.some((t) => t.name === builtin.name)) {
+      allTemplates.push(builtin);
+    }
+  }
+
   return (
     <div className="p-4 border-t border-border bg-card shrink-0">
+      {/* 24-Hour Window Closed Warning for Custom Text */}
+      {!isWindowOpen && sendType === "text" && (
+        <div className="mb-3 p-3 rounded bg-amber-500/10 border border-amber-500/30 flex items-start justify-between gap-3 text-amber-500 dark:text-amber-400">
+          <div className="flex items-start gap-2 text-xs">
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-medium text-foreground">24-Hour Customer Window Expired</p>
+              <p className="mt-0.5 text-muted-foreground text-[11px] leading-relaxed">
+                WhatsApp blocks custom text messages outside the 24h window (<strong>Error 131047</strong>). You must send a pre-approved Meta Template to re-engage.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setSendType("template");
+              if (!templateName || templateName === "verification_code") {
+                setTemplateName("customer_followup");
+                setTemplateLang("en");
+                setTemplateParamsText("there, Support Team");
+              }
+            }}
+            className="px-3 py-1 text-xs font-semibold bg-amber-500 hover:bg-amber-600 text-black rounded transition-colors shrink-0 flex items-center gap-1 shadow-sm"
+          >
+            <Sparkles className="w-3 h-3" />
+            Use Follow-Up Template
+          </button>
+        </div>
+      )}
+
       <div className="flex bg-accent/50 p-1 rounded w-fit mb-4">
         <button
           type="button"
@@ -60,7 +101,7 @@ export function MessageComposer({
             }`}
         >
           <Code className="w-3.5 h-3.5" />
-          Meta Template
+          Meta Template {!isWindowOpen && "(Required)"}
         </button>
       </div>
 
@@ -100,14 +141,14 @@ export function MessageComposer({
           </div>
         ) : (
           <div className="space-y-4 bg-accent/20 p-5 rounded border border-border">
-            {templateName && dbTemplates.find((t) => t.name === templateName) && (
+            {templateName && allTemplates.find((t) => t.name === templateName) && (
               <div className="mb-4">
                 <label className="block text-[11px] font-semibold text-muted-foreground mb-2">
                   Live Preview
                 </label>
                 <TemplatePreview
                   channel="whatsapp"
-                  content={dbTemplates.find((t) => t.name === templateName)?.content || ""}
+                  content={allTemplates.find((t) => t.name === templateName)?.content || ""}
                   params={templateParamsText ? templateParamsText.split(",").map((p) => p.trim()) : []}
                 />
               </div>
@@ -122,8 +163,9 @@ export function MessageComposer({
               </label>
               <select
                 id="composer-template-preset"
+                value={templateName}
                 onChange={(e) => {
-                  const t = dbTemplates.find((x) => x.name === e.target.value);
+                  const t = allTemplates.find((x) => x.name === e.target.value);
                   if (t) {
                     setTemplateName(t.name);
                     setTemplateLang(t.whatsappTemplateLanguage || "en");
@@ -139,8 +181,8 @@ export function MessageComposer({
                 className="w-full px-3 py-2 bg-card border border-border rounded text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-brand-secondary-500 transition-shadow appearance-none"
               >
                 <option value="">-- Select a Template --</option>
-                {dbTemplates.map((t) => (
-                  <option key={t.id} value={t.name}>
+                {allTemplates.map((t) => (
+                  <option key={t.id || t.name} value={t.name}>
                     {t.name} {t.category ? `(${t.category})` : ""}
                   </option>
                 ))}

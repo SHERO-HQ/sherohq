@@ -21,6 +21,7 @@ export default function OrderDetails() {
     isLoading,
     error,
     isUpdating,
+    isSendingEmail,
     printMode,
     receiptQrUrl,
     isStorePickupOrder,
@@ -74,9 +75,11 @@ export default function OrderDetails() {
           isUpdating={isUpdating}
         />
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Main Content: Items & Summary */}
+        {/* 2-Column Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Info */}
           <div className="lg:col-span-2 space-y-6">
+            {/* Items List */}
             <OrderItemsCard
               items={order.items}
               status={order.status}
@@ -102,6 +105,8 @@ export default function OrderDetails() {
               onCopyTrackingLink={handleCopyTrackingLink}
               onCopyPaymentLink={handleCopyPaymentLink}
               isStorePickupOrder={isStorePickupOrder}
+              isSendingEmail={isSendingEmail}
+              orderStatus={order.status}
             />
           </div>
         </div>

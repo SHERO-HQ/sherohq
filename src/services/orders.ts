@@ -218,23 +218,36 @@ export async function cancelOrder(
   return handleResponse(response);
 }
 
+export async function resendOrderNotification(
+  id: string,
+  type?: "auto" | "confirmation" | "reminder" | "status",
+): Promise<{ success: boolean; message: string; type?: string }> {
+  const response = await authFetch(`${API_BASE}/orders/${id}/resend-notification`, {
+    method: "POST",
+    body: JSON.stringify({ type }),
+  });
+  return handleResponse(response);
+}
 
 // ---------------------------------------------------------------------------
 // Payment
 // ---------------------------------------------------------------------------
+
+export { saveOrderAccessToken, getOrderAccessToken, clearOrderAccessToken } from "@/utils/orderAccess";
 
 export async function initializePayment(
   orderId: string,
   totalAmount: number,
   description?: string,
   provider?: "hubtel" | "paystack",
+  orderAccessToken?: string,
 ): Promise<{ success: boolean; checkoutUrl: string }> {
-  const orderAccessToken = getOrderAccessToken(orderId);
+  const resolvedToken = orderAccessToken || getOrderAccessToken(orderId);
   const headers: HeadersInit = {};
 
-  if (orderAccessToken) {
+  if (resolvedToken) {
     (headers as Record<string, string>)["X-Order-Access-Token"] =
-      orderAccessToken;
+      resolvedToken;
   }
 
   const response = await authFetch(`${API_BASE}/payments/initialize`, {

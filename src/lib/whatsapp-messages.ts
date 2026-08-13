@@ -94,6 +94,30 @@ export async function storeOutgoingMessage(
   return result.rows[0] as any as WhatsAppMessage;
 }
 
+function formatWhatsAppError(errorData: any, fallbackMessage: string = "WhatsApp API error"): string {
+  if (!errorData) return fallbackMessage;
+  const code = errorData.code;
+  const details = errorData.error_data?.details || errorData.message || "";
+
+  if (code === 131047) {
+    return `24-hour service window closed (Error 131047). A pre-approved Meta Template is required to reach this customer.`;
+  }
+  if (code === 132001) {
+    return `Template not found or not approved in this language on Meta (Error 132001). Please check Meta WhatsApp Manager.`;
+  }
+  if (code === 132000) {
+    return `Template parameter mismatch (Error 132000). The number of parameters provided does not match the Meta template definition.`;
+  }
+  if (code === 131026) {
+    return `Message undeliverable (Error 131026). The recipient phone number may not be active on WhatsApp.`;
+  }
+  if (code === 130429) {
+    return `Rate limit exceeded (Error 130429). Too many messages sent in a short time.`;
+  }
+
+  return details || errorData.message || fallbackMessage;
+}
+
 /**
  * Send a WhatsApp message or template directly via Meta Graph API
  */
@@ -105,7 +129,7 @@ export async function sendWhatsAppMessageDirect(
   templateParams?: string[],
   mediaUrl?: string | null,
   mediaType?: "image" | "document" | "video" | "audio" | null
-): Promise<{ success: boolean; messageId?: string; error?: string }> {
+): Promise<{ success: boolean; messageId?: string; error?: string; errorCode?: number }> {
   const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
   const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
@@ -141,7 +165,7 @@ export async function sendWhatsAppMessageDirect(
 
   try {
     if (templateName) {
-      // Meta WhatsApp templates typically use en_US for English
+      // Meta WhatsApp templates typically use en_US or en for English
       const langCode = templateLanguage && templateLanguage !== "en" ? templateLanguage : "en_US";
       const templateBody: any = {
         messaging_product: "whatsapp",
@@ -178,10 +202,12 @@ export async function sendWhatsAppMessageDirect(
         return { success: true, messageId: result.data.messages[0].id };
       }
 
+      const templateError = formatWhatsAppError(result.data?.error, `Template '${templateName}' rejected by Meta`);
+
       // If template fails (e.g. template not created/approved on Meta yet),
-      // gracefully fall back to direct text delivery so the customer still gets their alert
+      // attempt fallback to direct text delivery (only works if 24h window is open)
       if (content && content.trim()) {
-        console.warn(`[WhatsApp] Template '${templateName}' failed (${result.data?.error?.message}). Falling back to text message.`);
+        console.warn(`[WhatsApp] Template '${templateName}' failed (${templateError}). Attempting fallback to text message.`);
         const textResult = await sendPayload({
           messaging_product: "whatsapp",
           to: recipient,
@@ -192,11 +218,19 @@ export async function sendWhatsAppMessageDirect(
         if (textResult.ok && textResult.data.messages?.[0]?.id) {
           return { success: true, messageId: textResult.data.messages[0].id };
         }
+
+        const textError = formatWhatsAppError(textResult.data?.error, `HTTP ${textResult.status}`);
+        return {
+          success: false,
+          errorCode: textResult.data?.error?.code || result.data?.error?.code,
+          error: `Template '${templateName}' failed (${templateError}). Fallback text also failed: ${textError}`,
+        };
       }
 
       return {
         success: false,
-        error: result.data?.error?.message || `HTTP ${result.status}`,
+        errorCode: result.data?.error?.code,
+        error: templateError,
       };
     }
 
@@ -214,7 +248,8 @@ export async function sendWhatsAppMessageDirect(
       if (!result.ok) {
         return {
           success: false,
-          error: result.data?.error?.message || `HTTP ${result.status}`,
+          errorCode: result.data?.error?.code,
+          error: formatWhatsAppError(result.data?.error, `HTTP ${result.status}`),
         };
       }
       return { success: true, messageId: result.data.messages?.[0]?.id };
@@ -231,7 +266,8 @@ export async function sendWhatsAppMessageDirect(
     if (!textResult.ok) {
       return {
         success: false,
-        error: textResult.data?.error?.message || `HTTP ${textResult.status}`,
+        errorCode: textResult.data?.error?.code,
+        error: formatWhatsAppError(textResult.data?.error, `HTTP ${textResult.status}`),
       };
     }
 

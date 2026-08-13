@@ -12,7 +12,7 @@ import CheckoutStepCart from "./steps/CheckoutStepCart";
 import CheckoutStepDelivery from "./steps/CheckoutStepDelivery";
 import CheckoutStepPayment from "./steps/CheckoutStepPayment";
 import CheckoutStepConfirmation from "./steps/CheckoutStepConfirmation";
-import { createOrder, cancelOrder } from "@/services/api";
+import { createOrder, updateOrderPaymentMethod } from "@/services/api";
 import { getGuestId } from "@/utils/guestSession";
 import { saveOrderAccessToken } from "@/utils/orderAccess";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -28,11 +28,12 @@ const CHECKOUT_STEPS = [
 
 function CheckoutContent() {
   const router = useRouter();
-  const { cart, totalQuantity } = useCart();
+  const { cart, totalQuantity, clearCart } = useCart();
   const { addNotification } = useNotifications();
   const {
     currentStep, setCurrentStep,
     orderId, setOrderId,
+    setOrderCartFingerprint,
     setConfirmedTotal,
     isSubmitting, setIsSubmitting,
     showMobileSummary, setShowMobileSummary,
@@ -42,13 +43,6 @@ function CheckoutContent() {
     processPayment, handleRetryPayment, handleSwitchToOffline,
     subtotal, shipping, tax, total
   } = useCheckout();
-
-  useEffect(() => {
-    if (cart.length === 0 && !orderId && !isRetryOrder && !isRestoringRetry && currentStep < 4) {
-      addNotification("Empty Cart", "Your cart is empty. Please add items to checkout.", "warning");
-      router.push("/products");
-    }
-  }, [cart.length, orderId, isRetryOrder, isRestoringRetry, currentStep, router, addNotification]);
 
   useEffect(() => {
     if (currentStep >= 4) return;
@@ -63,60 +57,87 @@ function CheckoutContent() {
   }, [currentStep]);
 
   const onSubmit = async (data: CheckoutInput) => {
+    if (cart.length === 0 && !isRetryOrder) {
+      addNotification(
+        "Empty Cart",
+        "Your cart is empty. Please add at least one item before completing your order.",
+        "warning",
+      );
+      setCurrentStep(1);
+      return;
+    }
+
     setIsSubmitting(true);
     setPaymentError(false);
 
     try {
       const isOnline = data.paymentMethod === "card" || data.paymentMethod === "momo";
+      let activeOrderId = orderId;
 
-      const orderData = {
-        guestId: getGuestId(),
-        items: cart.map((item) => ({
-          id: item.id,
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price,
-          image: item.image})),
-        total: total,
-        shippingInfo: {
-          firstName: data.shippingAddress.firstName,
-          lastName: data.shippingAddress.lastName,
-          email: data.email,
-          phone: data.phone,
-          address: data.shippingAddress.address,
-          city: data.shippingAddress.city,
-          region: data.shippingAddress.region,
-          postalCode: data.shippingAddress.postalCode,
-          gpsAddress: data.shippingAddress.gpsAddress,
-          wantsWhatsAppUpdates: data.wantsWhatsAppUpdates},
-        paymentMethod: data.paymentMethod,
-        referralCode: data.referralCode};
+      if (activeOrderId) {
+        // Reuse existing pending order and update payment method (prevents duplicates and double stock deduction)
+        const paymentMethodValue =
+          data.paymentMethod === "cod"
+            ? "cash_on_delivery"
+            : data.paymentMethod === "store_pickup"
+              ? "store_pickup"
+              : data.paymentMethod;
 
-      const result = await createOrder(orderData);
-      
-      setOrderId(result.orderId);
-      setConfirmedTotal(result.total ?? 0);
-      
-      if (result.orderAccessToken) {
-        saveOrderAccessToken(result.orderId, result.orderAccessToken);
+        await updateOrderPaymentMethod(activeOrderId, {
+          paymentMethod: paymentMethodValue,
+        });
+      } else {
+        const orderData = {
+          guestId: getGuestId(),
+          items: cart.map((item) => ({
+            id: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+            image: item.image})),
+          total: total,
+          shippingInfo: {
+            firstName: data.shippingAddress.firstName,
+            lastName: data.shippingAddress.lastName,
+            email: data.email,
+            phone: data.phone,
+            address: data.shippingAddress.address,
+            city: data.shippingAddress.city,
+            region: data.shippingAddress.region,
+            postalCode: data.shippingAddress.postalCode,
+            gpsAddress: data.shippingAddress.gpsAddress,
+            wantsWhatsAppUpdates: data.wantsWhatsAppUpdates},
+          paymentMethod: data.paymentMethod,
+          referralCode: data.referralCode};
+
+        const result = await createOrder(orderData);
+        activeOrderId = result.orderId;
+        setOrderId(result.orderId);
+        setConfirmedTotal(result.total ?? 0);
+        setOrderCartFingerprint(
+          JSON.stringify(
+            cart.map((i) => ({ id: i.id, q: i.quantity, p: i.price })),
+          ),
+        );
+        
+        if (result.orderAccessToken) {
+          saveOrderAccessToken(result.orderId, result.orderAccessToken);
+        }
       }
 
       if (isOnline) {
-        await processPayment(result.orderId);
+        await processPayment(activeOrderId, undefined, data.paymentMethod);
       } else {
+        clearCart();
         setCurrentStep(4);
       }
     } catch (error: any) {
-      console.error("Order creation failed:", error);
-      addNotification("Checkout Failed", error.message || "Failed to create order", "error");
+      console.error("Order processing failed:", error);
+      addNotification("Checkout Failed", error.message || "Failed to process order", "error");
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  if (cart.length === 0 && !orderId && !isRetryOrder && !isRestoringRetry && currentStep < 4) {
-    return null;
-  }
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 py-12">
@@ -185,16 +206,8 @@ function CheckoutContent() {
                     onRetry={handleRetryPayment}
                     onSwitchToOffline={handleSwitchToOffline}
                     isUpdatingOffline={isUpdatingOffline}
-                    onBack={async () => {
-                      if (!isRetryOrder && orderId) {
-                        try {
-                          await cancelOrder(orderId);
-                          addNotification("Order Cancelled", "Your pending order has been cancelled and stock restored.", "info");
-                        } catch (error) {
-                          console.error("Failed to cancel order on back:", error);
-                        }
-                      }
-                      setOrderId(null);
+                    onBack={() => {
+                      // Preserve orderId so changing payment methods updates the existing order instead of creating duplicates
                       setPaymentError(false);
                       setCurrentStep(3);
                     }}

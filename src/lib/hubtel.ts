@@ -56,16 +56,20 @@ export interface HubtelCheckoutRequest {
   clientReference: string;
 }
 
-/** Shape of a successful Hubtel API response. */
+/** Shape of a Hubtel API response (success or validation error). */
 export interface HubtelCheckoutResponse {
   responseCode: string;
+  status?: string;
   message?: string;
-  data?: {
-    checkoutUrl: string;
-    checkoutId?: string;
-    clientReference?: string;
-    transactionId?: string;
-  };
+  data?:
+    | {
+        checkoutUrl?: string;
+        checkoutId?: string;
+        clientReference?: string;
+        transactionId?: string;
+      }
+    | Array<Record<string, any>>
+    | Record<string, any>;
 }
 
 /** Hubtel payment details nested inside the callback Data object. */

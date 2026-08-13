@@ -17,6 +17,8 @@ interface CheckoutContextValue {
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
   orderId: string | null;
   setOrderId: React.Dispatch<React.SetStateAction<string | null>>;
+  orderCartFingerprint: string | null;
+  setOrderCartFingerprint: React.Dispatch<React.SetStateAction<string | null>>;
   confirmedTotal: number;
   setConfirmedTotal: React.Dispatch<React.SetStateAction<number>>;
   isSubmitting: boolean;
@@ -66,6 +68,7 @@ export const CheckoutProvider = ({ children }: { children: ReactNode }) => {
 
   const [currentStep, setCurrentStep] = useState(1);
   const [orderId, setOrderId] = useState<string | null>(null);
+  const [orderCartFingerprint, setOrderCartFingerprint] = useState<string | null>(null);
   const [confirmedTotal, setConfirmedTotal] = useState<number>(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showMobileSummary, setShowMobileSummary] = useState(false);
@@ -74,6 +77,38 @@ export const CheckoutProvider = ({ children }: { children: ReactNode }) => {
   const [isUpdatingOffline, setIsUpdatingOffline] = useState(false);
   const [isRestoringRetry, setIsRestoringRetry] = useState(false);
   const [isRetryOrder, setIsRetryOrder] = useState(false);
+
+  const currentCartFingerprint = JSON.stringify(
+    cart.map((i) => ({ id: i.id, q: i.quantity, p: i.price })),
+  );
+
+  // If cart items change while an unconfirmed pending order is attached, cancel the old order to restore stock
+  useEffect(() => {
+    if (!orderId || isRetryOrder || currentStep >= 4) return;
+
+    if (
+      orderCartFingerprint &&
+      orderCartFingerprint !== currentCartFingerprint
+    ) {
+      import("@/services/api").then(({ cancelOrder }) => {
+        cancelOrder(orderId).catch(console.error);
+      });
+      setOrderId(null);
+      setOrderCartFingerprint(null);
+      addNotification(
+        "Order Updated",
+        "Your cart contents changed. Please review and place your order.",
+        "info",
+      );
+    }
+  }, [
+    currentCartFingerprint,
+    orderId,
+    isRetryOrder,
+    currentStep,
+    orderCartFingerprint,
+    addNotification,
+  ]);
 
   const formMethods = useForm<CheckoutInput>({
     resolver: zodResolver(checkoutSchema),
@@ -189,8 +224,47 @@ export const CheckoutProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Guard against progressing through steps with an empty cart
+  useEffect(() => {
+    if (
+      cart.length === 0 &&
+      !orderId &&
+      !isRetryOrder &&
+      !isRestoringRetry &&
+      currentStep > 1 &&
+      currentStep < 4
+    ) {
+      setCurrentStep(1);
+      addNotification(
+        "Cart Emptied",
+        "All items were removed from your cart. Please add at least one product to continue.",
+        "info",
+      );
+    }
+  }, [cart.length, orderId, isRetryOrder, isRestoringRetry, currentStep, addNotification]);
+
   const validateStep = async (step: number) => {
+    if (step === 1) {
+      if (cart.length === 0 && !isRetryOrder && !orderId) {
+        addNotification(
+          "Empty Cart",
+          "Your cart is empty. Please add at least one product to proceed.",
+          "warning",
+        );
+        return false;
+      }
+      return true;
+    }
     if (step === 2) {
+      if (cart.length === 0 && !isRetryOrder && !orderId) {
+        addNotification(
+          "Empty Cart",
+          "Your cart is empty. Please add at least one product to proceed.",
+          "warning",
+        );
+        setCurrentStep(1);
+        return false;
+      }
       return await trigger([
         "email",
         "phone",
@@ -202,6 +276,15 @@ export const CheckoutProvider = ({ children }: { children: ReactNode }) => {
       ]);
     }
     if (step === 3) {
+      if (cart.length === 0 && !isRetryOrder && !orderId) {
+        addNotification(
+          "Empty Cart",
+          "Your cart is empty. Please add at least one product before payment.",
+          "warning",
+        );
+        setCurrentStep(1);
+        return false;
+      }
       return await trigger("paymentMethod");
     }
     return true;
@@ -297,6 +380,7 @@ export const CheckoutProvider = ({ children }: { children: ReactNode }) => {
       value={{
         currentStep, setCurrentStep,
         orderId, setOrderId,
+        orderCartFingerprint, setOrderCartFingerprint,
         confirmedTotal, setConfirmedTotal,
         isSubmitting, setIsSubmitting,
         showMobileSummary, setShowMobileSummary,

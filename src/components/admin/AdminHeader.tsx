@@ -28,6 +28,7 @@ import { cn } from "@/lib/utils";
 import AppImage from "@/components/common/AppImage";
 import GlobalSearch from "./GlobalSearch";
 import { ToggleTheme } from "@/components/layout/toggle-theme";
+import { displayOrderId } from "@/utils/orderId";
 
 interface HeaderProps {
  onMenuClick: () => void;
@@ -53,8 +54,13 @@ const AdminHeader = memo(({
 
  // Get display label for a path segment
  const getDisplayLabel = (segment: string, fullPath: string) => {
-  // If it's a UUID, truncate it
-  if (isUUID(segment)) return segment.slice(0, 8) + "...";
+  // If it's a UUID, format cleanly
+  if (isUUID(segment)) {
+   if (fullPath.includes("/orders")) {
+    return displayOrderId(segment);
+   }
+   return `#${segment.slice(0, 8).toUpperCase()}`;
+  }
 
   // Otherwise, format the segment nicely
   return segment.replaceAll("-", " ");

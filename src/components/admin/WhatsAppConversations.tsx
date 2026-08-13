@@ -342,6 +342,12 @@ export default function WhatsAppConversations({
     return `last seen ${dateStr} at ${timeStr}`;
   };
 
+  const selectedConversation = conversations.find(
+    (c) => c.sender_wa_id === selectedPhone,
+  );
+  const isWindowOpen = selectedConversation?.is_window_open ?? false;
+  const windowExpiresAt = selectedConversation?.window_expires_at ?? null;
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
       <ConversationList
@@ -369,6 +375,8 @@ export default function WhatsAppConversations({
               setIsMenuOpen={setIsMenuOpen}
               handleDeleteChat={handleDeleteChat}
               messageSearchQuery={messageSearchQuery}
+              isWindowOpen={isWindowOpen}
+              windowExpiresAt={windowExpiresAt}
             />
 
             <ConversationThread
@@ -376,6 +384,12 @@ export default function WhatsAppConversations({
               messages={messages}
               messageSearchQuery={messageSearchQuery}
               messagesEndRef={messagesEndRef}
+              onSelectTemplate={() => {
+                setSendType("template");
+                setTemplateName("customer_followup");
+                setTemplateLang("en");
+                setTemplateParamsText("there, Support Team");
+              }}
             />
 
             <MessageComposer
@@ -393,6 +407,7 @@ export default function WhatsAppConversations({
               setTemplateParamsText={setTemplateParamsText}
               sending={sending}
               dbTemplates={dbTemplates}
+              isWindowOpen={isWindowOpen}
             />
           </>
         ) : (

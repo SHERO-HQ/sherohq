@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AppImage from "@/components/common/AppImage";
+import { displayOrderId } from "@/utils/orderId";
 
 interface ResultItemProps {
   icon: React.ReactNode;
@@ -155,7 +156,7 @@ export function SearchResults({
                     key={item.id}
                     icon={<Package className="w-4 h-4" />}
                     title={item.name}
-                    subtitle={`SKU: ${item.sku} • $${item.price}`}
+                    subtitle={`SKU: ${item.sku} • GHS${item.price}`}
                     image={item.image}
                     isSelected={flatResults[selectedIndex]?.id === item.id}
                     onClick={() => handleSelect({ ...item, url: `/admin/products?edit=${item.id}` })}
@@ -177,8 +178,8 @@ export function SearchResults({
                   <ResultItem
                     key={item.id}
                     icon={<ShoppingCart className="w-4 h-4" />}
-                    title={`Order #${item.id.slice(0, 8)}`}
-                    subtitle={`${item.shippingInfo?.firstName} ${item.shippingInfo?.lastName} • $${item.total} • ${item.status}`}
+                    title={`Order ${displayOrderId(item.id)}`}
+                    subtitle={`${item.shippingInfo?.firstName} ${item.shippingInfo?.lastName} • GHS${Number(item.total).toFixed(2)} • ${item.status}`}
                     isSelected={flatResults[selectedIndex]?.id === item.id}
                     onClick={() => handleSelect({ ...item, url: `/admin/orders/${item.id}` })}
                   />

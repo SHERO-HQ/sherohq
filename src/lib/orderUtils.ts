@@ -1,4 +1,61 @@
-import { createHash } from "node:crypto";
+import { createHash, createHmac } from "node:crypto";
+
+export const generateOrderSecurityToken = (
+  orderId: string,
+  createdAt: string | Date | null | undefined,
+  total: number | string,
+): string => {
+  const secret =
+    process.env.ORDER_TOKEN_SECRET ||
+    process.env.JWT_SECRET ||
+    process.env.SESSION_SECRET ||
+    "sherotech-order-sec-key";
+  const dateStr =
+    createdAt instanceof Date
+      ? createdAt.toISOString()
+      : typeof createdAt === "string"
+        ? createdAt
+        : "";
+  const normalizedTotal = Number(total || 0).toFixed(2);
+  return createHmac("sha256", secret)
+    .update(`${orderId}:${dateStr}:${normalizedTotal}`)
+    .digest("hex");
+};
+
+export const verifyOrderAccessToken = (
+  providedToken: string | null | undefined,
+  order: {
+    id: string;
+    createdAt?: string | Date | null;
+    total?: number | string | null;
+    orderAccessTokenHash?: string | null;
+  },
+): boolean => {
+  if (!providedToken) return false;
+  const cleanToken = providedToken.trim();
+
+  // 1. Direct hash match with original random orderAccessToken
+  if (
+    order.orderAccessTokenHash &&
+    hashOrderAccessToken(cleanToken) === order.orderAccessTokenHash
+  ) {
+    return true;
+  }
+
+  // 2. HMAC deterministic signature match
+  if (order.id && order.createdAt !== undefined && order.total !== undefined && order.total !== null) {
+    const expectedHmac = generateOrderSecurityToken(
+      order.id,
+      order.createdAt,
+      order.total,
+    );
+    if (cleanToken === expectedHmac) {
+      return true;
+    }
+  }
+
+  return false;
+};
 
 export const ORDER_PAYMENT_METHODS = new Set([
   "card",

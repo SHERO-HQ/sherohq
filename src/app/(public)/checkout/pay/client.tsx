@@ -12,7 +12,7 @@ import {
   ChevronDown,
   ChevronUp,
   Package} from "lucide-react";
-import { trackOrder, initializePayment, type Order } from "@/services/orders";
+import { trackOrder, initializePayment, saveOrderAccessToken, type Order } from "@/services/orders";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { displayOrderId } from "@/utils/orderId";
@@ -38,6 +38,10 @@ export default function DynamicPaymentPortal() {
       setError("No order identifier provided in the URL.");
       setLoading(false);
       return;
+    }
+
+    if (token) {
+      saveOrderAccessToken(orderId, token);
     }
 
     const fetchOrderDetails = async () => {
@@ -76,7 +80,8 @@ export default function DynamicPaymentPortal() {
           order.id,
           order.total,
           `Service Payment for Order ${displayOrderId(order.id)}`,
-          provider
+          provider,
+          token
         );
 
         if (paymentResponse.success && paymentResponse.checkoutUrl) {

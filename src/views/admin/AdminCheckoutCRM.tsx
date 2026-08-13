@@ -7,6 +7,7 @@ import { ShoppingCart, CheckCircle2, XCircle, Loader2, Search } from "lucide-rea
 import { Input } from "@/components/ui/input";
 
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
+import { displayOrderId } from "@/utils/orderId";
 
 export default function AdminCheckoutCRM() {
   const [activeTab, setActiveTab] = useState<"abandoned" | "completed">("abandoned");
@@ -168,7 +169,7 @@ export default function AdminCheckoutCRM() {
                   {searchedCompleted.map((order) => (
                     <tr key={order.id} className="hover:bg-accent/50 transition-colors">
                       <td className="px-6 py-4 font-medium text-foreground">
-                        {order.id.substring(0, 8).toUpperCase()}
+                        {displayOrderId(order.id)}
                       </td>
                       <td className="px-6 py-4">
                         <div className="font-medium text-foreground">
