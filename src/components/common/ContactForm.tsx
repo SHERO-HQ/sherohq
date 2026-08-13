@@ -116,7 +116,7 @@ ${formData.message}`;
   const currentDisplayStep = step;
 
   return (
-    <div className="w-full max-w-2xl mx-auto glass-surface-md border border-slate-200/80 dark:border-slate-800/80 p-6 md:p-8 rounded shadow-xl relative overflow-hidden bg-white/70 dark:bg-slate-900/60 backdrop-blur-md">
+    <div className="w-full glass-surface-md border border-slate-200/80 dark:border-slate-800/80 p-6 md:p-8 rounded shadow-xl relative overflow-hidden bg-white/70 dark:bg-slate-900/60 backdrop-blur-md">
       {/* Background ambient glow */}
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-brand-secondary-500/5 rounded-full blur-3xl pointer-events-none" />
 
@@ -198,7 +198,7 @@ ${formData.message}`;
                   </div>
 
                   <div className="grid grid-cols-1 gap-4">
-                    {/* Option 1: Proposal */}
+                    {/* Option 1: Proposal (Primary Green) */}
                     <m.button
                       whileHover={{ scale: 1.01, y: -2 }}
                       whileTap={{ scale: 0.99 }}
@@ -206,13 +206,13 @@ ${formData.message}`;
                       onClick={() => handleSelectType("proposal")}
                       className="group p-5 text-left rounded border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-primary-500/50 dark:hover:border-brand-primary-400/30 hover:bg-brand-primary-500/5 dark:hover:bg-brand-primary-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                     >
-                      <div className="p-2.5  bg-brand-primary-500/10 dark:bg-brand-primary-500/10 text-brand-primary-600 dark:text-brand-primary-400 shrink-0 transition-transform group-hover:scale-105">
+                      <div className="p-2.5 rounded bg-brand-primary-500/10 dark:bg-brand-primary-500/10 text-brand-primary-600 dark:text-brand-primary-400 shrink-0 transition-transform group-hover:scale-105">
                         <Code className="w-5 h-5" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors flex items-center justify-between gap-2">
+                        <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-brand-primary-600 dark:group-hover:text-brand-primary-400 transition-colors flex items-center justify-between gap-2">
                           <span>Request Proposal</span>
-                          <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-brand-secondary-500 dark:group-hover:text-brand-secondary-400 transition-all group-hover:translate-x-1 shrink-0" />
+                          <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-brand-primary-600 dark:group-hover:text-brand-primary-400 transition-all group-hover:translate-x-1 shrink-0" />
                         </h4>
                         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
                           Get a custom quote for software dev, cloud migration, or managed IT SLAs.
@@ -220,7 +220,7 @@ ${formData.message}`;
                       </div>
                     </m.button>
 
-                    {/* Option 2: General */}
+                    {/* Option 2: General (Secondary Blue) */}
                     <m.button
                       whileHover={{ scale: 1.01, y: -2 }}
                       whileTap={{ scale: 0.99 }}
@@ -228,7 +228,7 @@ ${formData.message}`;
                       onClick={() => handleSelectType("general")}
                       className="group p-5 text-left rounded border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30 hover:bg-brand-secondary-500/5 dark:hover:bg-brand-secondary-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                     >
-                      <div className="p-2.5  bg-brand-primary-500/10 dark:bg-brand-primary-500/10 text-brand-primary-600 dark:text-brand-primary-400 shrink-0 transition-transform group-hover:scale-105">
+                      <div className="p-2.5 rounded bg-brand-secondary-500/10 dark:bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 shrink-0 transition-transform group-hover:scale-105">
                         <HelpCircle className="w-5 h-5" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -242,21 +242,21 @@ ${formData.message}`;
                       </div>
                     </m.button>
 
-                    {/* Option 3: Support */}
+                    {/* Option 3: Support (Emerald) */}
                     <m.button
                       whileHover={{ scale: 1.01, y: -2 }}
                       whileTap={{ scale: 0.99 }}
                       type="button"
                       onClick={() => handleSelectType("order")}
-                      className="group p-5 text-left rounded border border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30 hover:bg-brand-secondary-500/5 dark:hover:bg-brand-secondary-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+                      className="group p-5 text-left rounded border border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-emerald-500/50 dark:hover:border-emerald-400/30 hover:bg-emerald-500/5 dark:hover:bg-emerald-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                     >
-                      <div className="p-2.5  bg-emerald-500/10 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0 transition-transform group-hover:scale-105">
+                      <div className="p-2.5 rounded bg-emerald-500/10 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0 transition-transform group-hover:scale-105">
                         <ShoppingBag className="w-5 h-5" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors flex items-center justify-between gap-2">
+                        <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors flex items-center justify-between gap-2">
                           <span>Order & Support</span>
-                          <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-brand-secondary-500 dark:group-hover:text-brand-secondary-400 transition-all group-hover:translate-x-1 shrink-0" />
+                          <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-all group-hover:translate-x-1 shrink-0" />
                         </h4>
                         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
                           Troubleshoot current online order statuses or ask for product setup help.
@@ -264,21 +264,21 @@ ${formData.message}`;
                       </div>
                     </m.button>
 
-                    {/* Option 4: Partnerships */}
+                    {/* Option 4: Partnerships (Amber) */}
                     <m.button
                       whileHover={{ scale: 1.01, y: -2 }}
                       whileTap={{ scale: 0.99 }}
                       type="button"
                       onClick={() => handleSelectType("partnership")}
-                      className="group p-5 text-left rounded border border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30 hover:bg-brand-secondary-500/5 dark:hover:bg-brand-secondary-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+                      className="group p-5 text-left rounded border border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-amber-500/50 dark:hover:border-amber-400/30 hover:bg-amber-500/5 dark:hover:bg-amber-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
                     >
-                      <div className="p-2.5  bg-amber-500/10 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0 transition-transform group-hover:scale-105">
+                      <div className="p-2.5 rounded bg-amber-500/10 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0 transition-transform group-hover:scale-105">
                         <Verified className="w-5 h-5" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors flex items-center justify-between gap-2">
+                        <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors flex items-center justify-between gap-2">
                           <span>Collabs & Careers</span>
-                          <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-brand-secondary-500 dark:group-hover:text-brand-secondary-400 transition-all group-hover:translate-x-1 shrink-0" />
+                          <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-all group-hover:translate-x-1 shrink-0" />
                         </h4>
                         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
                           Inquire about joint venture collaborations, hardware vendor contracts, or careers.
@@ -361,7 +361,7 @@ ${formData.message}`;
                           type="text"
                           value={formData.orderId}
                           onChange={(e) => setFormData({ ...formData, orderId: e.target.value })}
-                          className="w-full px-4 py-2.5  border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/10 focus:border-brand-secondary-500 transition"
+                          className="w-full px-4 py-2.5 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/10 focus:border-brand-secondary-500 transition"
                           placeholder="e.g. #E4G432901"
                         />
                       </div>

@@ -50,7 +50,7 @@ export const PharmasystWidget: React.FC = () => {
             <div
               key={item.name}
               className={`grid grid-cols-[2fr_1fr_1fr] items-center py-0.5 border-b border-slate-300/10 dark:border-slate-800/10 transition-colors duration-300 ${item.alert
-                  ? "text-amber-700 dark:text-amber-400 bg-amber-100 dark:bg-amber-500/10 font-semibold"
+                  ? "text-yellow-500 dark:text-amber-400 bg-amber-100 dark:bg-amber-500/10 font-semibold"
                   : "text-slate-700 dark:text-slate-400"
                 }`}
             >

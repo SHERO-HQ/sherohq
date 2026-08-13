@@ -69,7 +69,13 @@ const AboutValues = () => {
           {values.map((item, index) => (
             <StaggerItem key={item.title} yOffset={20} scale={0.98}>
               <div
-                className="group p-7 rounded bg-white dark:bg-slate-950/60 border border-slate-200/90 dark:border-slate-800 hover:border-brand-secondary-500/40 dark:hover:border-brand-secondary-500/40 shadow-xs hover:shadow-lg hover:shadow-brand-secondary-500/5 transition-all duration-300 hover:-translate-y-1 h-full flex flex-col justify-between"
+                className={cn(
+                  "group p-7 rounded bg-white dark:bg-slate-950/60 border border-slate-200/90 dark:border-slate-800 shadow-xs hover:shadow-lg transition-all duration-300 hover:-translate-y-1 h-full flex flex-col justify-between",
+                  item.color === "primary" &&
+                    "hover:border-brand-primary-500/40 dark:hover:border-brand-primary-500/40 hover:shadow-brand-primary-500/5",
+                  item.color === "secondary" &&
+                    "hover:border-brand-secondary-500/40 dark:hover:border-brand-secondary-500/40 hover:shadow-brand-secondary-500/5"
+                )}
               >
                 <div>
                   <div className="flex items-center justify-between mb-5">
@@ -88,7 +94,15 @@ const AboutValues = () => {
                       0{index + 1}
                     </span>
                   </div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2.5 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors">
+                  <h3
+                    className={cn(
+                      "text-lg font-bold text-slate-900 dark:text-white mb-2.5 transition-colors",
+                      item.color === "primary" &&
+                        "group-hover:text-brand-primary-600 dark:group-hover:text-brand-primary-400",
+                      item.color === "secondary" &&
+                        "group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400"
+                    )}
+                  >
                     {item.title}
                   </h3>
                   <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">

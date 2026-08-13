@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { getAdminFromSession } from "@/lib/auth";
 import { apiResponse } from "@/lib/api-utils";
 import { sendWhatsAppMessageDirect, storeOutgoingMessage } from "@/lib/whatsapp-messages";
+import { resolveWhatsAppTemplateBody } from "@/lib/whatsapp-templates-server";
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,13 +37,29 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Determine human-readable message content to store in chat history
+    let finalContent = message;
+    if (!finalContent && templateName) {
+      finalContent = await resolveWhatsAppTemplateBody(
+        templateName,
+        Array.isArray(templateParams) ? templateParams : []
+      );
+    }
+
     // Log the sent message to database (campaign_id is null for manual admin chats)
     const storedMessage = await storeOutgoingMessage(
       result.messageId,
       null, // campaignId
       phone.replace(/[^\d]/g, ""), // senderWaId (recipient normalized)
       process.env.WHATSAPP_PHONE_NUMBER_ID || "unknown",
-      message || `[Template: ${templateName}]`
+      finalContent || `[Template: ${templateName}]`,
+      templateName
+        ? {
+            template: templateName,
+            templateLanguage: templateLanguage || "en",
+            templateParams: templateParams || [],
+          }
+        : null
     );
 
     return apiResponse.success({

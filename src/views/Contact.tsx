@@ -31,7 +31,7 @@ const Contact = () => {
             transition={{ duration: 0.5 }}
             className="text-center max-w-3xl mx-auto mb-10 lg:mb-14"
           >
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-secondary-500/10 dark:bg-brand-secondary-500/20 text-brand-secondary-600 dark:text-brand-secondary-400 text-xs font-semibold uppercase tracking-wider mb-4 border border-brand-secondary-500/20">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded bg-brand-secondary-500/10 dark:bg-brand-secondary-500/20 text-brand-secondary-600 dark:text-brand-secondary-400 text-xs font-semibold uppercase tracking-wider mb-4 border border-brand-secondary-500/20">
               <MessagesSquare className="w-3.5 h-3.5" />
               Get In Touch
             </div>
@@ -54,7 +54,7 @@ const Contact = () => {
               <div className="space-y-3">
                 <ContactItem
                   icon={
-                    <Mail className="w-5 h-5 text-brand-secondary-600 dark:text-brand-secondary-400 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" />
+                    <Mail className="w-5 h-5 text-emerald-600 dark:text-emerald-400 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" />
                   }
                   label="Email Us"
                   value={COMPANY_EMAILS.HELLO}
@@ -63,7 +63,7 @@ const Contact = () => {
                 />
                 <ContactItem
                   icon={
-                    <Phone className="w-5 h-5 text-blue-700 dark:text-blue-400 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6" />
+                    <Phone className="w-5 h-5 text-emerald-600 dark:text-emerald-400 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-6" />
                   }
                   label="Call Us"
                   value={COMPANY_CONTACTS.PHONE_DISPLAY}
@@ -72,7 +72,7 @@ const Contact = () => {
                 />
                 <ContactItem
                   icon={
-                    <MapPin className="w-5 h-5 text-brand-primary-600 dark:text-brand-primary-400 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3" />
+                    <MapPin className="w-5 h-5 text-emerald-600 dark:text-emerald-400 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3" />
                   }
                   label="Visit Us"
                   value="Tamale, Northern Region, Ghana"
@@ -86,14 +86,14 @@ const Contact = () => {
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.5, duration: 0.5 }}
-                className="p-6 bg-slate-900/5 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded relative overflow-hidden group hover:border-brand-secondary-500/30 transition-colors duration-500"
+                className="p-6 bg-slate-900/5 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded relative overflow-hidden group hover:border-emerald-500/30 transition-colors duration-500"
               >
                 <div className="absolute inset-0 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity duration-700 pattern-isometric pointer-events-none" />
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform duration-700">
-                  <Globe2 className="w-16 h-16 text-brand-secondary-500" />
+                  <Globe2 className="w-16 h-16 text-emerald-500" />
                 </div>
                 <div className="relative z-10">
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-2">
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                     Regional Operations & Support
                   </h4>
                   <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -108,28 +108,9 @@ const Contact = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative order-1 lg:order-2"
+              className="lg:col-span-7 relative"
             >
-              {/* Form Container */}
-              <div className="relative bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 rounded p-6 shadow">
-                <div className="absolute top-0 right-0 p-6 opacity-20">
-                  <MessagesSquare className="w-12 h-12" />
-                </div>
-
-                <div className="mb-8">
-                  <h3 className="text-xl font-bold dark:text-white text-slate-900 mb-2">
-                    Send Message
-                  </h3>
-                  <p className="text-sm dark:text-slate-400 text-slate-900">
-                    We typically reply within 2hrs.
-                  </p>
-                </div>
-
-                <ContactForm />
-              </div>
-
-              {/* Decorative border glow */}
-              <div className="absolute -inset-1 rounded bg-linear-to-br from-brand-secondary-500/5 to-blue-500/5 blur-xl -z-10" />
+              <ContactForm />
             </m.div>
           </div>
 
@@ -141,7 +122,7 @@ const Contact = () => {
             className="mt-16 pt-10 border-t border-slate-200 dark:border-slate-800"
           >
             <div className="text-center mb-10">
-              <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
+              <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-500/10 border border-emerald-500/30 dark:border-emerald-500/20 rounded uppercase transition-colors duration-300">
                 <MessagesSquare className="size-4" />
                 Quick Answers
               </span>
@@ -161,13 +142,13 @@ const Contact = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1, duration: 0.5 }}
-                  className="relative p-6 rounded bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:-translate-y-1 hover:shadow-lg hover:shadow-brand-secondary-500/5 transition-all duration-300 overflow-hidden group"
+                  className="relative p-6 rounded bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-emerald-500/30 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300 overflow-hidden group"
                 >
                   <span className="absolute -bottom-4 -right-4 text-[120px] font-black text-slate-900/5 dark:text-white/5 pointer-events-none select-none transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-12">
                     {idx + 1}
                   </span>
                   <div className="relative z-10 space-y-3">
-                    <h4 className="font-bold text-slate-900 dark:text-white">
+                    <h4 className="font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                       {faq.question}
                     </h4>
                     <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -217,14 +198,14 @@ const ContactItem = ({
 }) => {
   const content = (
     <>
-      <div className="w-12 h-12 rounded text-slate-900 dark:text-white bg-white/40 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center group-hover:bg-white/80 dark:group-hover:bg-white/10 group-hover:shadow-[0_0_15px_rgba(var(--brand-secondary-500),0.1)] transition-all duration-300">
+      <div className="w-12 h-12 rounded text-slate-900 dark:text-white bg-white/40 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center group-hover:bg-white/80 dark:group-hover:bg-white/10 group-hover:border-emerald-500/40 group-hover:shadow-[0_0_15px_rgba(16,185,129,0.15)] transition-all duration-300">
         {icon}
       </div>
       <div>
-        <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">
+        <p className="text-xs text-slate-500 uppercase tracking-wider mb-1 group-hover:text-emerald-600/80 dark:group-hover:text-emerald-400/80 transition-colors">
           {label}
         </p>
-        <p className="dark:text-slate-200 text-slate-900/90 font-medium group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors">
+        <p className="dark:text-slate-200 text-slate-900/90 font-medium group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
           {value}
         </p>
       </div>

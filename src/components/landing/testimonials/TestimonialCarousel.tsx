@@ -115,7 +115,7 @@ export const TestimonialCarousel = ({ isLoading, displayTestimonials }: Testimon
                     damping: 25,
                     mass: 0.8,
                   }}
-                  className={`absolute w-full top-0 left-0 right-0 origin-top shadow-xl ${
+                  className={`absolute w-full top-0 left-0 right-0 origin-top shadow-sm ${
                     isFront
                       ? "cursor-grab active:cursor-grabbing"
                       : "pointer-events-none"

@@ -127,8 +127,8 @@ const OrderHistory: React.FC<OrderHistoryProps> = ({
             <span
               className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
                 filter === "pending"
-                  ? "bg-white text-amber-700"
-                  : "bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300"
+                  ? "bg-white text-yellow-500"
+                  : "bg-yellow-100 text-yellow-500 dark:bg-yellow-900/40 dark:text-yellow-300"
               }`}
             >
               {pendingOrders.length}

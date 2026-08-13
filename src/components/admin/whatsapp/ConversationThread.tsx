@@ -1,6 +1,6 @@
 import React from "react";
-import { Loader2, ExternalLink, Check, CheckCheck, AlertTriangle } from "lucide-react";
-import { ConversationMessage } from "./types";
+import { Loader2, ExternalLink, Check, CheckCheck, AlertTriangle, Sparkles } from "lucide-react";
+import { ConversationMessage, BUILTIN_WHATSAPP_TEMPLATES } from "./types";
 
 interface ConversationThreadProps {
   loading: boolean;
@@ -156,24 +156,59 @@ export function ConversationThread({
                     </a>
                   )}
 
-                  <div className="relative">
-                    <span className="whitespace-pre-wrap wrap-break-word inline">
-                      {msg.content || `[${msg.message_type}]`}
-                    </span>
-                    <span
-                      className={`inline-block align-bottom ${msg.direction === "outbound" ? "w-19.5" : "w-13"}`}
-                    ></span>
+                  {(() => {
+                    const isTemplate =
+                      Boolean(msg.metadata?.template) ||
+                      Boolean(msg.content?.startsWith("[Template:"));
+                    const templateName =
+                      msg.metadata?.template ||
+                      (msg.content?.startsWith("[Template:")
+                        ? msg.content.match(/\[Template:\s*([^\]]+)\]/)?.[1]
+                        : null);
 
-                    <span className="float-right relative -mb-0.75 ml-1 flex items-center gap-0.75 text-[11px] font-medium text-[#8696a0] mt-0.75 leading-none whitespace-nowrap">
-                      <span className="leading-none">
-                        {parseDateUTC(msg.created_at).toLocaleTimeString([], {
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                      </span>
-                      {msg.direction === "outbound" && renderStatus(msg.status)}
-                    </span>
-                  </div>
+                    let displayContent = msg.content || `[${msg.message_type}]`;
+                    if (
+                      templateName &&
+                      displayContent.trim() === `[Template: ${templateName}]`
+                    ) {
+                      const matched = BUILTIN_WHATSAPP_TEMPLATES.find(
+                        (t) => t.name === templateName
+                      );
+                      if (matched) {
+                        displayContent = matched.content;
+                      }
+                    }
+
+                    return (
+                      <>
+                        {templateName && (
+                          <div className="flex items-center gap-1 text-[10px] font-semibold tracking-wide text-amber-200 dark:text-amber-300 bg-black/25 px-1.5 py-0.5 rounded w-fit mb-1.5 border border-white/10">
+                            <Sparkles className="w-2.5 h-2.5 shrink-0" />
+                            <span>Meta Template: {templateName}</span>
+                          </div>
+                        )}
+
+                        <div className="relative">
+                          <span className="whitespace-pre-wrap wrap-break-word inline">
+                            {displayContent}
+                          </span>
+                          <span
+                            className={`inline-block align-bottom ${msg.direction === "outbound" ? "w-19.5" : "w-13"}`}
+                          ></span>
+
+                          <span className="float-right relative -mb-0.75 ml-1 flex items-center gap-0.75 text-[11px] font-medium text-[#8696a0] mt-0.75 leading-none whitespace-nowrap">
+                            <span className="leading-none">
+                              {parseDateUTC(msg.created_at).toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </span>
+                            {msg.direction === "outbound" && renderStatus(msg.status)}
+                          </span>
+                        </div>
+                      </>
+                    );
+                  })()}
 
                   {msg.error_message && (
                     <div className="text-[11px] text-rose-400 mt-1.5 flex flex-col gap-1 border-t border-border/50 pt-1.5">
