@@ -56,7 +56,15 @@ export default function AdminTemplates() {
       const data = await res.json();
       setTemplates(data.templates || []);
 
-      if (sync) addNotification("Success", "Templates synced with Meta", "success");
+      if (sync) {
+        if (data.syncResult?.error) {
+          addNotification("Sync Warning", data.syncResult.error, "error");
+        } else if (data.syncResult?.count !== undefined) {
+          addNotification("Success", `Synced ${data.syncResult.count} template(s) from Meta`, "success");
+        } else {
+          addNotification("Success", "Templates synced with Meta", "success");
+        }
+      }
     } catch (error: any) {
       addNotification("Error", error.message || "Failed to fetch templates", "error");
     } finally {
