@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Cpu, Shield, Headphones, ArrowRight, Trophy } from "lucide-react";
+import { Cpu, Shield, ArrowRight, Trophy, Headset } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import NavLink from "@/components/common/NavLink";
 import { getAbsoluteUrl } from "@/utils/subdomain";
@@ -28,7 +28,7 @@ const pillars = [
     linkText: "Explore Solutions",
   },
   {
-    icon: Headphones,
+    icon: Headset,
     title: "Managed IT",
     badge: "Operations",
     description:
