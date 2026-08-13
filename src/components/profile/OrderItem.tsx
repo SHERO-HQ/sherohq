@@ -1,6 +1,7 @@
 "use client";
 import { toReadableOrderId } from "@/utils/orderId";
 import React from "react";
+import Link from "next/link";
 import {
   ChevronDown,
   ChevronUp,
@@ -10,6 +11,7 @@ import {
   CreditCard,
   Phone,
   Mail,
+  Truck,
 } from "lucide-react";
 import type { Order, User } from "@/services/api";
 import { getImageUrl } from "@/services/api";
@@ -51,12 +53,22 @@ const OrderItem: React.FC<OrderItemProps> = ({
     }
   };
 
+  const readableOrderId = toReadableOrderId(order.id);
+
   return (
     <div className="bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-800 overflow-hidden">
-      {/* Order Header (Clickable) */}
-      <button
+      {/* Order Header (Clickable row) */}
+      <div
+        role="button"
+        tabIndex={0}
         onClick={onToggle}
-        className="w-full text-left p-6 flex flex-wrap items-center justify-between gap-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onToggle();
+          }
+        }}
+        className="w-full text-left p-6 flex flex-wrap items-center justify-between gap-4 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer select-none"
       >
         <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
           <div>
@@ -64,7 +76,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
               Order ID
             </p>
             <p className="font-mono text-sm font-bold text-slate-900 dark:text-white">
-              {toReadableOrderId(order.id)}
+              {readableOrderId}
             </p>
           </div>
           <div>
@@ -85,7 +97,7 @@ const OrderItem: React.FC<OrderItemProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <div
             className={`px-3 py-1 rounded text-xs font-bold capitalize ${getStatusBadgeColor(
               order.status,
@@ -93,18 +105,30 @@ const OrderItem: React.FC<OrderItemProps> = ({
           >
             {order.status}
           </div>
+
+          <Link
+            href={`/track/${readableOrderId}`}
+            onClick={(e) => e.stopPropagation()}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 active:bg-brand-secondary-800 text-white text-xs font-semibold rounded shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-brand-secondary-500"
+            title={`Track order ${readableOrderId}`}
+          >
+            <Truck className="w-3.5 h-3.5 shrink-0" />
+            <span className="hidden sm:inline">Track Order</span>
+            <span className="sm:hidden">Track</span>
+          </Link>
+
           {isExpanded ? (
             <ChevronUp className="w-5 h-5 text-slate-400" />
           ) : (
             <ChevronDown className="w-5 h-5 text-slate-400" />
           )}
         </div>
-      </button>
+      </div>
 
       {/* Expandable Content */}
       {isExpanded && (
         <div className="p-6 border-t border-slate-100 dark:border-slate-800 animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="mb-4">
+          <div className="mb-4 flex items-center justify-between gap-4 flex-wrap">
             <button
               type="button"
               onClick={() => void handleCopyOrderId()}
@@ -122,6 +146,14 @@ const OrderItem: React.FC<OrderItemProps> = ({
                 </>
               )}
             </button>
+
+            <Link
+              href={`/track/${readableOrderId}`}
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-secondary-600 hover:text-brand-secondary-700 dark:text-brand-secondary-400 dark:hover:text-brand-secondary-300 transition-colors"
+            >
+              <Truck className="w-3.5 h-3.5" />
+              <span>View Full Tracking Timeline →</span>
+            </Link>
           </div>
 
           {/* Items List */}

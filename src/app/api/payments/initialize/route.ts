@@ -123,12 +123,11 @@ let orderId: string = "";
         clientReference: readableId,
       };
 
-      console.log("[payment:initialize]", {
+      console.log("[payment:initialize:request]", {
         provider: "hubtel",
         orderId,
-        callbackUrl,
-        returnUrl,
-        amount: payload.totalAmount,
+        readableOrderId: readableId,
+        payload,
       });
 
       try {
@@ -144,8 +143,16 @@ let orderId: string = "";
 
         const data = await resp.json();
 
+        console.log("[payment:initialize:response]", {
+          provider: "hubtel",
+          orderId,
+          status: resp.status,
+          statusText: resp.statusText,
+          hubtelResponse: data,
+        });
+
         if (!resp.ok || !data?.data?.checkoutUrl) {
-          console.error("[payment:initialize]", {
+          console.error("[payment:initialize:failed]", {
             provider: "hubtel",
             orderId,
             event: "init_failed",
@@ -159,8 +166,11 @@ let orderId: string = "";
 
         return apiResponse.success({
           checkoutUrl: data.data.checkoutUrl,
+          checkoutId: data.data.checkoutId,
+          clientReference: readableId,
           provider: "hubtel",
-          readableOrderId: toReadableOrderId(orderId),
+          readableOrderId: readableId,
+          hubtelResponse: data,
         });
       } catch (err) {
         console.error("[payment:initialize]", {
@@ -208,6 +218,14 @@ async function initializePaystackTransaction(
   const readableId = toReadableOrderId(orderId);
   const callback_url = `${publicUrl.replace(/\/$/, "")}/shop/checkout/success?orderId=${readableId}`;
 
+  console.log("[payment:initialize:request]", {
+    provider: "paystack",
+    orderId,
+    email,
+    amount,
+    callback_url,
+  });
+
   const resp = await fetch("https://api.paystack.co/transaction/initialize", {
     method: "POST",
     headers: {
@@ -225,8 +243,16 @@ async function initializePaystackTransaction(
   });
 
   const data = await resp.json();
+
+  console.log("[payment:initialize:response]", {
+    provider: "paystack",
+    orderId,
+    status: resp.status,
+    paystackResponse: data,
+  });
+
   if (!data || !data.status) {
-    console.error("[payment:initialize]", {
+    console.error("[payment:initialize:failed]", {
       provider: "paystack",
       orderId,
       event: "init_failed",

@@ -47,31 +47,29 @@ export async function sendOrderConfirmation(
           : item.image || "";
 
       const imgHtml = imgUrl
-        ? `<img src="${imgUrl}" alt="${item.name}" width="60" height="60" style="border-radius: 4px; object-fit: cover; border: 1px solid #e2e8f0; display: block;" />`
+        ? `<img src="${imgUrl}" alt="${item.name}" width="40" height="40" style="border-radius: 6px; object-fit: cover; border: 1px solid #e2e8f0; display: block;" />`
         : "";
 
       return `
         <tr>
-          <td style="padding: 16px 0; border-bottom: 1px solid #f1f5f9; color: #1e293b;">
-            <table style="border: 0; padding: 0; margin: 0; border-collapse: collapse;">
+          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; color: #1e293b;">
+            <table cellpadding="0" cellspacing="0" border="0" style="border-collapse: collapse;">
               <tr>
-                <td style="padding: 0; padding-bottom: 8px;">${imgHtml}</td>
-              </tr>
-              <tr>
-                <td style="padding: 0; vertical-align: middle;">
-                  <strong style="display: block; margin-bottom: 4px; font-family: Helvetica, Arial, sans-serif; font-size: 12px; font-weight: bold;">${item.name}</strong>
-                  ${item.sku ? `<span style="font-family: 'Courier New', Courier, monospace; font-size: 10px; color: #94a3b8;">SKU: ${item.sku}</span>` : ""}
+                ${imgHtml ? `<td style="padding-right: 12px; vertical-align: middle; width: 40px;">${imgHtml}</td>` : ""}
+                <td style="vertical-align: middle;">
+                  <strong style="display: block; font-family: Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; color: #0f172a; margin-bottom: 2px;">${item.name}</strong>
+                  ${item.sku ? `<span style="font-family: 'Courier New', Courier, monospace; font-size: 10px; color: #64748b;">SKU: ${item.sku}</span>` : ""}
                 </td>
               </tr>
             </table>
           </td>
-          <td style="padding: 16px 0; border-bottom: 1px solid #f1f5f9; text-align: center; color: #475569; font-family: Helvetica, Arial, sans-serif; font-size: 12px;">
+          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #475569; font-family: Helvetica, Arial, sans-serif; font-size: 12px; width: 45px;">
             ${item.quantity}
           </td>
-          <td style="padding: 16px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #475569; font-family: 'Courier New', Courier, monospace; font-size: 12px;">
+          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #475569; font-family: 'Courier New', Courier, monospace; font-size: 12px; width: 85px;">
             GHS${item.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </td>
-          <td style="padding: 16px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #1e293b; font-family: Helvetica, Arial, sans-serif; font-weight: bold; font-size: 12px;">
+          <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; text-align: right; color: #1e293b; font-family: Helvetica, Arial, sans-serif; font-weight: bold; font-size: 12px; width: 90px;">
             GHS${(item.price * item.quantity).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </td>
         </tr>`;
@@ -79,20 +77,14 @@ export async function sendOrderConfirmation(
     .join("");
 
   const bodyHtml = `
-    <!-- Billed To & Shipping Side-by-Side -->
-    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 32px;">
+    <!-- Top Summary Banner -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 24px;">
       <tr>
-        <td valign="top" style="width: 50%; padding: 20px;">
-          <div style="font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; margin-bottom: 12px;">BILLED TO</div>
-          <div style="font-family: Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; color: #1e293b; margin-bottom: 4px;">${shippingInfo.firstName} ${shippingInfo.lastName}</div>
-          <div style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569; margin-bottom: 2px;">${shippingInfo.email || "N/A"}</div>
-          <div style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569;">${shippingInfo.phone || "N/A"}</div>
-        </td>
-        <td valign="top" style="width: 50%; padding: 20px;">
-          <div style="font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; margin-bottom: 12px;">SHIPPING ADDRESS</div>
-          <div style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569; margin-bottom: 2px;">${shippingInfo.address || "N/A"}</div>
-          <div style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569; margin-bottom: 8px;">${shippingInfo.city || ""}, ${shippingInfo.region || ""}</div>
-          <div style="font-family: Helvetica, Arial, sans-serif; font-size: 11px; font-weight: bold; color: #059669;">Est. Delivery: ${deliveryRange}</div>
+        <td style="padding: 16px 20px;">
+          <div style="font-family: Helvetica, Arial, sans-serif; font-size: 14px; font-weight: bold; color: #0f172a; margin-bottom: 4px;">Order Confirmed! 🎉</div>
+          <div style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #475569;">
+            Hi <strong>${shippingInfo.firstName}</strong>, we've received order <strong>${readableOrderId}</strong>. Estimated delivery: <span style="color: #059669; font-weight: bold;">${deliveryRange}</span>
+          </div>
         </td>
       </tr>
     </table>
@@ -101,10 +93,10 @@ export async function sendOrderConfirmation(
     <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 24px;">
       <thead>
         <tr>
-          <th style="padding: 0 0 12px 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0;">DESCRIPTION</th>
-          <th style="padding: 0 0 12px 0; text-align: center; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 60px;">QTY</th>
-          <th style="padding: 0 0 12px 0; text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 100px;">UNIT PRICE</th>
-          <th style="padding: 0 0 12px 0; text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 100px;">AMOUNT</th>
+          <th style="padding: 0 0 12px 0; text-align: left; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0;">ITEM</th>
+          <th style="padding: 0 0 12px 0; text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 45px;">QTY</th>
+          <th style="padding: 0 0 12px 0; text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 85px;">PRICE</th>
+          <th style="padding: 0 0 12px 0; text-align: right; font-family: Helvetica, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #94a3b8; letter-spacing: 1px; border-bottom: 1px solid #e2e8f0; width: 90px;">TOTAL</th>
         </tr>
       </thead>
       <tbody>
