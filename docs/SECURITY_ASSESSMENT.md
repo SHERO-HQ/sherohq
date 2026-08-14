@@ -1,7 +1,7 @@
 # Security Assessment Report
 
 ## Overview
-This report summarizes the initial security findings for the `sherotech` project. Findings were derived from:
+This report summarizes the initial security findings for the `sherohq` project. Findings were derived from:
 - static code review of security-critical routes and middleware
 - OWASP/STRIDE-oriented threat analysis
 - dependency auditing via `yarn npm audit --json`

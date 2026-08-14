@@ -162,7 +162,7 @@ SheroTech intentionally combines two primary color accents to balance trustworth
 ## 8. Directory Organization
 
 ```
-sherotech/
+sherohq/
 ├── docs/                      # Architectural, UI, and security documentation
 ├── src/
 │   ├── app/                   # Next.js App Router routes & API endpoints

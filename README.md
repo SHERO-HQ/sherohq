@@ -57,7 +57,7 @@ For detailed technical guides, architectural specifications, and API references,
 
    ```bash
    git clone <repository-url>
-   cd sherotech
+   cd sherohq
    ```
 
 2. **Install Dependencies**

@@ -54,7 +54,7 @@ The following variables must be configured in your production environment settin
 
 Vercel is the recommended hosting platform for Sherotech as it provides native support for Next.js features, including Turbopack and Middleware.
 
-1. **Connect Repository**: Import the `sherotech` repository into Vercel.
+1. **Connect Repository**: Import the `sherohq` repository into Vercel.
 2. **Framework Preset**: Ensure "Next.js" is selected.
 3. **Environment Variables**: Add all variables listed above in the "Environment Variables" section of the project settings.
 4. **Deploy**: Trigger the initial build. Vercel will automatically run `yarn build`.
