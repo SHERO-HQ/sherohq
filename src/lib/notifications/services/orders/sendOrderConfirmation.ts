@@ -188,7 +188,7 @@ export async function sendOrderConfirmation(
 
   // Admin alert
   const adminEmail =
-    process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.HELLO;
+    process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.INFO;
   await sendEmail(
     adminEmail,
     `🚨 NEW ORDER: ${readableOrderId}`,

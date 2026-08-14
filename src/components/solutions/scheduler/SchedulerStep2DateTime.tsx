@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { format, addDays, isSameDay } from "date-fns";
 import {
   ChevronRight,
@@ -11,6 +11,8 @@ import {
   Sunset,
   Moon,
   CheckCircle2,
+  AlertCircle,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -41,6 +43,40 @@ export function SchedulerStep2DateTime({
 }: SchedulerStep2DateTimeProps) {
   const [customTimeInput, setCustomTimeInput] = useState("");
   const [isCustomMode, setIsCustomMode] = useState(false);
+  const [bookedTimes, setBookedTimes] = useState<string[]>([]);
+  const [isLoadingAvailability, setIsLoadingAvailability] = useState(false);
+
+  // Fetch already booked slots for the selected date
+  useEffect(() => {
+    if (!date) {
+      setBookedTimes([]);
+      return;
+    }
+    let isMounted = true;
+    setIsLoadingAvailability(true);
+
+    const dateStr = format(date, "yyyy-MM-dd");
+    fetch(`/api/consultations/availability?date=${dateStr}`)
+      .then((res) => res.json())
+      .then((resData) => {
+        const times = resData?.bookedTimes || resData?.data?.bookedTimes;
+        if (isMounted && resData?.success && Array.isArray(times)) {
+          setBookedTimes(times);
+        } else if (isMounted) {
+          setBookedTimes([]);
+        }
+      })
+      .catch(() => {
+        if (isMounted) setBookedTimes([]);
+      })
+      .finally(() => {
+        if (isMounted) setIsLoadingAvailability(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [date]);
 
   const isPastDate = (d: Date) => {
     const now = new Date();
@@ -56,6 +92,60 @@ export function SchedulerStep2DateTime({
     ).getTime();
     return targetMidnight < todayMidnight;
   };
+
+  const isTimeSlotPassed = (timeSlot: string, forDate?: Date): boolean => {
+    if (!forDate) return false;
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const selectedDate = new Date(
+      forDate.getFullYear(),
+      forDate.getMonth(),
+      forDate.getDate(),
+    );
+
+    // If selected date is in the past
+    if (selectedDate.getTime() < today.getTime()) {
+      return true;
+    }
+    // If selected date is in the future, slot is available
+    if (selectedDate.getTime() > today.getTime()) {
+      return false;
+    }
+
+    // Selected date is TODAY: parse the slot's hours and minutes
+    const [timeStr, period] = timeSlot.split(" ");
+    if (!timeStr || !period) return false;
+    const [hoursStr, minsStr] = timeStr.split(":");
+    let slotHour = parseInt(hoursStr, 10);
+    const slotMinutes = parseInt(minsStr || "0", 10);
+
+    if (period === "PM" && slotHour !== 12) {
+      slotHour += 12;
+    } else if (period === "AM" && slotHour === 12) {
+      slotHour = 0;
+    }
+
+    const slotDateTime = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      slotHour,
+      slotMinutes,
+      0,
+    );
+
+    return slotDateTime.getTime() <= now.getTime();
+  };
+
+  const allStandardSlots = [
+    ...morningSlots,
+    ...afternoonSlots,
+    ...eveningSlots,
+  ];
+  const isTodaySelected = date ? isSameDay(date, new Date()) : false;
+  const allSlotsPassedToday =
+    isTodaySelected &&
+    allStandardSlots.every((slot) => isTimeSlotPassed(slot, date));
 
   const quickPresets = [
     {
@@ -84,6 +174,45 @@ export function SchedulerStep2DateTime({
       onSelectTime(customTimeInput.trim());
       setIsCustomMode(false);
     }
+  };
+
+  const renderSlotButton = (slot: string) => {
+    const isPassed = isTimeSlotPassed(slot, date);
+    const isBooked = bookedTimes.includes(slot);
+    const isDisabled = isPassed || isBooked;
+    const isSelected = time === slot;
+
+    return (
+      <button
+        key={slot}
+        type="button"
+        disabled={isDisabled}
+        onClick={() => {
+          if (!isDisabled) {
+            onSelectTime(slot);
+            setIsCustomMode(false);
+          }
+        }}
+        className={cn(
+          "px-2.5 py-2 rounded text-xs font-semibold transition text-center border flex items-center justify-center gap-1 relative",
+          isDisabled
+            ? "bg-slate-100 dark:bg-slate-800/40 text-slate-400 dark:text-slate-600 border-slate-200 dark:border-slate-800 opacity-40 !cursor-not-allowed line-through"
+            : isSelected
+              ? "bg-brand-secondary-600 text-white border-brand-secondary-600 shadow shadow-brand-secondary-500/20 scale-[1.02] cursor-pointer"
+              : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-secondary-500 hover:text-brand-secondary-500 cursor-pointer",
+        )}
+      >
+        {isSelected && !isDisabled && (
+          <CheckCircle2 className="w-3 h-3 shrink-0" />
+        )}
+        <span>{slot}</span>
+        {isBooked && !isPassed && (
+          <span className="text-[9px] uppercase tracking-wider text-rose-500 dark:text-rose-400 font-bold ml-1">
+            Booked
+          </span>
+        )}
+      </button>
+    );
   };
 
   return (
@@ -167,8 +296,11 @@ export function SchedulerStep2DateTime({
         {/* Right Column: Time Slots & Custom Time */}
         <div className="flex-1 flex flex-col">
           <div className="flex items-center justify-between mb-3">
-            <label className="block text-sm font-bold text-slate-800 dark:text-slate-200">
-              Available Times
+            <label className="block text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
+              <span>Available Times</span>
+              {isLoadingAvailability && (
+                <Loader2 className="w-3 h-3 animate-spin text-brand-secondary-500" />
+              )}
             </label>
             <span className="text-xs text-brand-secondary-600 dark:text-brand-secondary-400 font-medium">
               {date ? format(date, "EEEE, MMMM d") : "Select a date"}
@@ -187,34 +319,28 @@ export function SchedulerStep2DateTime({
             </div>
           ) : (
             <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300 flex-1 flex flex-col">
+              {/* Notice if all slots for today have passed */}
+              {allSlotsPassedToday && (
+                <div className="p-3 rounded bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 text-amber-900 dark:text-amber-300 text-xs flex items-start gap-2">
+                  <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-semibold">
+                      All scheduled slots for today have concluded.
+                    </p>
+                    <p className="text-[11px] text-amber-700 dark:text-amber-400 mt-0.5">
+                      Please select <strong>Tomorrow</strong> or an upcoming date above.
+                    </p>
+                  </div>
+                </div>
+              )}
+
               {/* Morning Slots */}
               <div>
                 <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mb-2">
                   <Sun className="w-3.5 h-3.5 text-amber-500" /> Morning
                 </span>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {morningSlots.map((slot) => {
-                    const isSelected = time === slot;
-                    return (
-                      <button
-                        key={slot}
-                        type="button"
-                        onClick={() => {
-                          onSelectTime(slot);
-                          setIsCustomMode(false);
-                        }}
-                        className={cn(
-                          "px-2.5 py-2 rounded text-xs font-semibold transition text-center border cursor-pointer flex items-center justify-center",
-                          isSelected
-                            ? "bg-brand-secondary-600 text-white border-brand-secondary-600 shadow shadow-brand-secondary-500/20 scale-[1.02]"
-                            : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-secondary-500 hover:text-brand-secondary-500",
-                        )}
-                      >
-                        {isSelected}
-                        {slot}
-                      </button>
-                    );
-                  })}
+                  {morningSlots.map((slot) => renderSlotButton(slot))}
                 </div>
               </div>
 
@@ -224,28 +350,7 @@ export function SchedulerStep2DateTime({
                   <Sunset className="w-3.5 h-3.5 text-orange-500" /> Afternoon
                 </span>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {afternoonSlots.map((slot) => {
-                    const isSelected = time === slot;
-                    return (
-                      <button
-                        key={slot}
-                        type="button"
-                        onClick={() => {
-                          onSelectTime(slot);
-                          setIsCustomMode(false);
-                        }}
-                        className={cn(
-                          "px-2.5 py-2 rounded text-xs font-semibold transition text-center border cursor-pointer flex items-center justify-center gap-1",
-                          isSelected
-                            ? "bg-brand-secondary-600 text-white border-brand-secondary-600 shadow shadow-brand-secondary-500/20 scale-[1.02]"
-                            : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-secondary-500 hover:text-brand-secondary-500",
-                        )}
-                      >
-                        {isSelected}
-                        {slot}
-                      </button>
-                    );
-                  })}
+                  {afternoonSlots.map((slot) => renderSlotButton(slot))}
                 </div>
               </div>
 
@@ -256,28 +361,7 @@ export function SchedulerStep2DateTime({
                   Hours
                 </span>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {eveningSlots.map((slot) => {
-                    const isSelected = time === slot;
-                    return (
-                      <button
-                        key={slot}
-                        type="button"
-                        onClick={() => {
-                          onSelectTime(slot);
-                          setIsCustomMode(false);
-                        }}
-                        className={cn(
-                          "px-2.5 py-2 rounded text-xs font-semibold transition text-center border cursor-pointer flex items-center justify-center gap-1",
-                          isSelected
-                            ? "bg-brand-secondary-600 text-white border-brand-secondary-600 shadow shadow-brand-secondary-500/20 scale-[1.02]"
-                            : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-secondary-500 hover:text-brand-secondary-500",
-                        )}
-                      >
-                        {isSelected}
-                        {slot}
-                      </button>
-                    );
-                  })}
+                  {eveningSlots.map((slot) => renderSlotButton(slot))}
                 </div>
               </div>
 

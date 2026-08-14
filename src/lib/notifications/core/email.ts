@@ -78,15 +78,19 @@ export async function sendEmail(
     throwOnError?: boolean;
     requestId?: string;
     attachments?: { filename: string; content: Buffer }[];
+    replyTo?: string;
+    from?: string;
   } = {},
 ) {
   initEmailProvider();
   
-  const logPrefix = options.requestId ? `[Newsletter ${options.requestId}]` : "[Newsletter]";
+  const logPrefix = options.requestId ? `[Newsletter ${options.requestId}]` : "[Email]";
+  const replyTo = options.replyTo || COMPANY_EMAILS.INFO;
 
   try {
     if (resend) {
-      const from = process.env.RESEND_FROM?.trim();
+      const defaultFrom = process.env.RESEND_FROM?.trim() || `SHERO Technologies <${COMPANY_EMAILS.INFO}>`;
+      const from = options.from || defaultFrom;
       if (!from) {
         throw new Error("RESEND_FROM is required for Resend email delivery.");
       }
@@ -94,6 +98,7 @@ export async function sendEmail(
       const result = await resend.emails.send({
         from,
         to,
+        replyTo: replyTo,
         subject,
         html,
         attachments: options.attachments,
@@ -104,8 +109,9 @@ export async function sendEmail(
       }
     } else if (transporter) {
       await transporter.sendMail({
-        from: process.env.SMTP_USER,
+        from: options.from || process.env.SMTP_USER || `SHERO Technologies <${COMPANY_EMAILS.INFO}>`,
         to,
+        replyTo,
         subject,
         html,
         attachments: options.attachments,

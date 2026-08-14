@@ -1,4 +1,5 @@
 import { COMPANY_EMAILS } from "@/constants/emails";
+import { getServiceDisplayTitle } from "@/constants/services";
 import { sendEmail, wrapEmailHtml } from "../core/email";
 import { sendWhatsAppNotification } from "../core/whatsapp";
 
@@ -13,6 +14,7 @@ export const consultationsNotifications = {
     time: string;
     message?: string;
   }) {
+    const serviceTitle = getServiceDisplayTitle(consultation.service);
     const meetUrl =
       process.env.NEXT_PUBLIC_CONSULTATION_MEET_URL ||
       "https://meet.google.com/kps-huth-jfd";
@@ -25,7 +27,7 @@ export const consultationsNotifications = {
       <p>Hi ${consultation.name},</p>
       <p>Thank you for scheduling a consultation with <strong>SHERO TECHNOLOGIES</strong>. Here are the details of your session:</p>
       <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin: 20px 0;">
-        <p style="margin: 0 0 6px;"><strong>Service:</strong> ${consultation.service}</p>
+        <p style="margin: 0 0 6px;"><strong>Service:</strong> ${serviceTitle}</p>
         <p style="margin: 0 0 6px;"><strong>Date:</strong> ${consultation.date}</p>
         <p style="margin: 0 0 6px;"><strong>Time:</strong> ${consultation.time} GMT</p>
         ${consultation.phone ? `<p style="margin: 0 0 6px;"><strong>Contact Phone:</strong> ${consultation.phone}</p>` : ""}
@@ -40,15 +42,19 @@ export const consultationsNotifications = {
         <p style="margin: 4px 0 0; font-size: 11px; color: #94a3b8;">Phone Dial-in: ${meetDialIn}</p>
       </div>
 
-      <p>Our specialists look forward to speaking with you. If you need to make any changes prior to the call, please reply directly to this email or reach out on WhatsApp.</p>
+      <p>Our specialists look forward to speaking with you. If you have any questions or need to reschedule, simply reply directly to this email (<a href="mailto:${COMPANY_EMAILS.INFO}" style="color: #059669;">${COMPANY_EMAILS.INFO}</a>) or reach out via WhatsApp.</p>
     `;
     const htmlContent = wrapEmailHtml(bodyHtml, {
-      preheader: `Consultation confirmed: ${consultation.service} on ${consultation.date}`,
+      preheader: `Consultation confirmed: ${serviceTitle} on ${consultation.date}`,
     });
     await sendEmail(
       consultation.email,
-      `Consultation Confirmed: ${consultation.service}`,
+      `Consultation Confirmed: ${serviceTitle}`,
       htmlContent,
+      {
+        from: process.env.RESEND_FROM || `SHERO Technologies <${COMPANY_EMAILS.INFO}>`,
+        replyTo: COMPANY_EMAILS.INFO,
+      },
     );
   },
 
@@ -61,6 +67,7 @@ export const consultationsNotifications = {
   }) {
     if (!consultation.phone) return;
 
+    const serviceTitle = getServiceDisplayTitle(consultation.service);
     const meetUrl =
       process.env.NEXT_PUBLIC_CONSULTATION_MEET_URL ||
       "https://meet.google.com/kps-huth-jfd";
@@ -73,7 +80,7 @@ export const consultationsNotifications = {
       ``,
       `Your consultation with *SHERO TECHNOLOGIES* has been confirmed!`,
       ``,
-      `🛠 *Service*: ${consultation.service}`,
+      `🛠 *Service*: ${serviceTitle}`,
       `📅 *Date*: ${consultation.date}`,
       `⏰ *Time*: ${consultation.time} GMT`,
       ``,
@@ -102,7 +109,8 @@ export const consultationsNotifications = {
     time: string;
     message?: string;
   }) {
-    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.HELLO;
+    const serviceTitle = getServiceDisplayTitle(consultation.service);
+    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.INFO;
     const adminPhone =
       process.env.ADMIN_NOTIFICATION_PHONE ||
       process.env.ADMIN_PHONE_NUMBER ||
@@ -117,7 +125,7 @@ export const consultationsNotifications = {
       <p><strong>Client Name:</strong> ${consultation.name}</p>
       <p><strong>Email:</strong> ${consultation.email}</p>
       <p><strong>Phone:</strong> ${consultation.phone || "N/A"}</p>
-      <p><strong>Service:</strong> ${consultation.service}</p>
+      <p><strong>Service:</strong> ${serviceTitle}</p>
       <p><strong>Date & Time:</strong> ${consultation.date} at ${consultation.time} GMT</p>
       <p><strong>Google Meet Room:</strong> <a href="${meetUrl}">${meetUrl}</a></p>
       ${consultation.message ? `<p><strong>Notes:</strong> ${consultation.message}</p>` : ""}
@@ -133,14 +141,21 @@ export const consultationsNotifications = {
       `👤 *Client*: ${consultation.name}`,
       `📧 *Email*: ${consultation.email}`,
       `📱 *Phone*: ${consultation.phone || "N/A"}`,
-      `🛠 *Service*: ${consultation.service}`,
+      `🛠 *Service*: ${serviceTitle}`,
       `📅 *Date & Time*: ${consultation.date} at ${consultation.time} GMT`,
       `📹 *Meet*: ${meetUrl}`,
       consultation.message ? `📝 *Notes*: "${consultation.message}"` : "",
     ].filter(Boolean).join("\n");
 
     await Promise.allSettled([
-      sendEmail(adminEmail, `🚨 NEW CONSULTATION: ${consultation.service} - ${consultation.name}`, htmlContent),
+      sendEmail(
+        adminEmail,
+        `🚨 NEW CONSULTATION: ${serviceTitle} - ${consultation.name}`,
+        htmlContent,
+        {
+          replyTo: consultation.email,
+        },
+      ),
       adminPhone ? sendWhatsAppNotification(adminPhone, waAdminText) : Promise.resolve(),
     ]);
   },
@@ -154,6 +169,7 @@ export const consultationsNotifications = {
     time: string;
     status: string;
   }) {
+    const serviceTitle = getServiceDisplayTitle(consultation.service);
     const formattedStatus = consultation.status.replace(/_/g, " ").toUpperCase();
     const meetUrl =
       process.env.NEXT_PUBLIC_CONSULTATION_MEET_URL ||
@@ -162,11 +178,19 @@ export const consultationsNotifications = {
     const bodyHtml = `
       <h1 style="color: #059669; text-align: center; margin: 0 0 16px; font-size: 18px;">Consultation Update: ${formattedStatus}</h1>
       <p>Hi ${consultation.name},</p>
-      <p>Your consultation for <strong>${consultation.service}</strong> scheduled for <strong>${consultation.date} (${consultation.time})</strong> is now <strong>${formattedStatus}</strong>.</p>
+      <p>Your consultation for <strong>${serviceTitle}</strong> scheduled for <strong>${consultation.date} (${consultation.time})</strong> is now <strong>${formattedStatus}</strong>.</p>
       <p>Google Meet link: <a href="${meetUrl}" style="color: #059669;">${meetUrl}</a></p>
-      <p>If you have any questions or need to reschedule, please feel free to reach out to us via email or WhatsApp.</p>
+      <p>If you have any questions or need to reschedule, please reply directly to this email (<a href="mailto:${COMPANY_EMAILS.INFO}" style="color: #059669;">${COMPANY_EMAILS.INFO}</a>) or reach out via WhatsApp.</p>
     `;
     const htmlContent = wrapEmailHtml(bodyHtml);
-    await sendEmail(consultation.email, `Consultation Update: ${consultation.service}`, htmlContent);
+    await sendEmail(
+      consultation.email,
+      `Consultation Update: ${serviceTitle}`,
+      htmlContent,
+      {
+        from: process.env.RESEND_FROM || `SHERO Technologies <${COMPANY_EMAILS.INFO}>`,
+        replyTo: COMPANY_EMAILS.INFO,
+      },
+    );
   }
 };

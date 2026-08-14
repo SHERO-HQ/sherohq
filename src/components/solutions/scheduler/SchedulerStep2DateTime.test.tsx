@@ -3,7 +3,10 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { SchedulerStep2DateTime } from "./SchedulerStep2DateTime";
 
-function TestSchedulerStep2Wrapper({ initialDate = undefined as Date | undefined, initialTime = "" }) {
+function TestSchedulerStep2Wrapper({
+  initialDate = undefined as Date | undefined,
+  initialTime = "",
+}) {
   const [date, setDate] = useState<Date | undefined>(initialDate);
   const [time, setTime] = useState(initialTime);
   const nextStep = vi.fn();
@@ -94,6 +97,19 @@ describe("SchedulerStep2DateTime", () => {
     if (futureDayButton) {
       fireEvent.click(futureDayButton);
       expect(onSelectDate).toHaveBeenCalled();
+    }
+  });
+
+  it("disables time slots that have already passed for today", () => {
+    const today = new Date();
+    render(<TestSchedulerStep2Wrapper initialDate={today} initialTime="" />);
+
+    const morningSlot = screen.queryByRole("button", { name: /09:00 AM/i });
+    if (morningSlot) {
+      const now = new Date();
+      if (now.getHours() >= 9) {
+        expect(morningSlot.hasAttribute("disabled")).toBe(true);
+      }
     }
   });
 });

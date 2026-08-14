@@ -42,7 +42,7 @@ export const inquiriesNotifications = {
     subject: string;
     message: string;
   }) {
-    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.HELLO;
+    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.INFO;
     const bodyHtml = `
       <h2 style="color: #059669; margin: 0 0 16px;">📩 New Inquiry Submitted</h2>
       <p><strong>From:</strong> ${inquiry.name} (&lt;${inquiry.email}&gt;)</p>

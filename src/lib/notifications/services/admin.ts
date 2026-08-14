@@ -3,7 +3,7 @@ import { sendEmail, wrapEmailHtml } from "../core/email";
 
 export const adminNotifications = {
   async sendLowStockAlert(productName: string, stockLeft: number) {
-    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.HELLO;
+    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.INFO;
     const isOutOfStock = stockLeft <= 0;
 
     const bodyHtml = `
@@ -27,7 +27,7 @@ export const adminNotifications = {
   },
   
   async sendNewWhatsAppAlert(customerName: string, customerPhone: string, messageContent: string) {
-    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.HELLO;
+    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || COMPANY_EMAILS.INFO;
 
     const adminUrl = process.env.ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_URL || "https://admin.sherohq.com/admin/whatsapp";
 
