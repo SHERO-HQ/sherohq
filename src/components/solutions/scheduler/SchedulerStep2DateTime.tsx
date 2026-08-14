@@ -428,8 +428,11 @@ export function SchedulerStep2DateTime({
                     </span>
                   </div>
                   {selectedLocalEquivalent && (
-                    <div className="mt-1 text-[11px] flex items-center text-emerald-800 dark:text-emerald-300 font-medium flex items-center gap-2">
-                      <Clock className="w-3.5 h-3.5" /> Matches <strong className="text-emerald-950 dark:text-emerald-100">{selectedLocalEquivalent}</strong> on your local clock
+                    <div className="pl-6 text-[11px] text-emerald-800 dark:text-emerald-300 font-medium flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                      <span>
+                        Matches <strong className="text-emerald-950 dark:text-emerald-100 font-semibold">{selectedLocalEquivalent}</strong> on your device clock
+                      </span>
                     </div>
                   )}
                 </div>
