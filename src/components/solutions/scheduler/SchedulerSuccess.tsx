@@ -14,6 +14,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import {
+  createConsultationUtcDates,
+  formatCalendarIsoUtc,
+  formatLocalEquivalent,
+} from "@/lib/consultation-time";
 
 const MEET_URL =
   process.env.NEXT_PUBLIC_CONSULTATION_MEET_URL ||
@@ -29,26 +34,20 @@ function getGoogleCalendarUrl(
   timeStr?: string,
 ) {
   if (!date) return "#";
-  const [time, period] = (timeStr || "09:00 AM").split(" ");
-  const [hoursStr, minsStr] = time.split(":");
-  let hours = parseInt(hoursStr, 10);
-  if (period === "PM" && hours !== 12) hours += 12;
-  if (period === "AM" && hours === 12) hours = 0;
+  const { startDate, endDate } = createConsultationUtcDates(
+    date,
+    timeStr || "09:00 AM",
+    45,
+  );
 
-  const startDate = new Date(date);
-  startDate.setHours(hours, parseInt(minsStr || "0", 10), 0);
-  const endDate = new Date(startDate.getTime() + 45 * 60 * 1000);
-
-  const formatIso = (d: Date) => d.toISOString().replace(/-|:|\.\d+/g, "");
-
-  const fullDescription = `${description}\n\nGoogle Meet Link: ${MEET_URL}\nDial-in: ${MEET_DIAL_IN}`;
+  const fullDescription = `${description}\n\nGoogle Meet Link: ${MEET_URL}\nDial-in: ${MEET_DIAL_IN}\n\nOfficial Time: ${timeStr} GMT+00:00 (Accra / UTC)`;
 
   const params = new URLSearchParams({
     action: "TEMPLATE",
     text: `SHERO Consultation: ${title}`,
     details: fullDescription,
     location: MEET_URL,
-    dates: `${formatIso(startDate)}/${formatIso(endDate)}`,
+    dates: `${formatCalendarIsoUtc(startDate)}/${formatCalendarIsoUtc(endDate)}`,
   });
 
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
@@ -61,17 +60,11 @@ function downloadIcsFile(
   timeStr?: string,
 ) {
   if (!date) return;
-  const [time, period] = (timeStr || "09:00 AM").split(" ");
-  const [hoursStr, minsStr] = time.split(":");
-  let hours = parseInt(hoursStr, 10);
-  if (period === "PM" && hours !== 12) hours += 12;
-  if (period === "AM" && hours === 12) hours = 0;
-
-  const startDate = new Date(date);
-  startDate.setHours(hours, parseInt(minsStr || "0", 10), 0);
-  const endDate = new Date(startDate.getTime() + 45 * 60 * 1000);
-
-  const formatIso = (d: Date) => d.toISOString().replace(/-|:|\.\d+/g, "");
+  const { startDate, endDate } = createConsultationUtcDates(
+    date,
+    timeStr || "09:00 AM",
+    45,
+  );
 
   const icsContent = [
     "BEGIN:VCALENDAR",
@@ -79,11 +72,11 @@ function downloadIcsFile(
     "PRODID:-//SHERO Technologies//EN",
     "BEGIN:VEVENT",
     `SUMMARY:SHERO Consultation: ${title}`,
-    `DESCRIPTION:${description}\\n\\nGoogle Meet: ${MEET_URL}\\nDial-in: ${MEET_DIAL_IN}`,
+    `DESCRIPTION:${description}\\n\\nGoogle Meet: ${MEET_URL}\\nDial-in: ${MEET_DIAL_IN}\\n\\nOfficial Time: ${timeStr} GMT (Accra / UTC)`,
     `LOCATION:${MEET_URL}`,
     `URL:${MEET_URL}`,
-    `DTSTART:${formatIso(startDate)}`,
-    `DTEND:${formatIso(endDate)}`,
+    `DTSTART:${formatCalendarIsoUtc(startDate)}`,
+    `DTEND:${formatCalendarIsoUtc(endDate)}`,
     "END:VEVENT",
     "END:VCALENDAR",
   ].join("\r\n");
@@ -133,6 +126,10 @@ export function SchedulerSuccess({
     setTimeout(() => setCopied(false), 2500);
   };
 
+  const localTimeEquivalent = formData.time
+    ? formatLocalEquivalent(formData.time, formData.date)
+    : null;
+
   return (
     <div className="max-w-xl mx-auto p-6 md:p-10 bg-white dark:bg-slate-900 rounded shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 text-center">
       <m.div
@@ -147,17 +144,26 @@ export function SchedulerSuccess({
         Booking Confirmed!
       </h2>
 
-      <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 mb-6 mx-auto leading-relaxed">
-        Your{" "}
-        <strong className="text-brand-secondary-600 dark:text-brand-secondary-400 font-bold">
-          {serviceTitle}
-        </strong>{" "}
-        consultation is scheduled for:
-        <span className="font-bold text-brand-secondary-600 dark:text-brand-secondary-400 block text-lg md:text-xl mt-1">
-          {formData.date && format(formData.date, "EEEE, MMMM d, yyyy")} at{" "}
-          {formData.time} GMT
-        </span>
-      </p>
+      <div className="text-sm md:text-base text-slate-600 dark:text-slate-400 mb-6 mx-auto leading-relaxed">
+        <p>
+          Your{" "}
+          <strong className="text-brand-secondary-600 dark:text-brand-secondary-400 font-bold">
+            {serviceTitle}
+          </strong>{" "}
+          consultation is scheduled for:
+        </p>
+        <div className="mt-2 p-3 bg-slate-50 dark:bg-slate-800/50 rounded border border-slate-200 dark:border-slate-800">
+          <span className="font-bold text-brand-secondary-600 dark:text-brand-secondary-400 block text-lg md:text-xl">
+            {formData.date && format(formData.date, "EEEE, MMMM d, yyyy")} at{" "}
+            {formData.time} GMT (Accra Time)
+          </span>
+          {localTimeEquivalent && (
+            <span className="text-xs text-slate-500 dark:text-slate-400 block mt-1">
+              🕒 Matches <strong>{localTimeEquivalent}</strong> on your device clock
+            </span>
+          )}
+        </div>
+      </div>
 
       {/* Google Meet Room Card */}
       <div className="p-4 mb-6 rounded border border-emerald-200 dark:border-emerald-800/60 bg-emerald-50/50 dark:bg-emerald-950/20 text-left">

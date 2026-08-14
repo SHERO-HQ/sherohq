@@ -12,6 +12,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { formatLocalEquivalent } from "@/lib/consultation-time";
 import type { ServiceType } from "./SchedulerStep1Service";
 
 interface SchedulerStep3InfoProps {
@@ -65,12 +66,18 @@ export function SchedulerStep3Info({
             {services.find((s) => s.id === formData.service)?.title}
           </span>
         </div>
-        <div className="flex items-center gap-2">
-          <CalendarIcon className="w-4 h-4 text-brand-secondary-500" />
-          <span>
-            {formData.date && format(formData.date, "MMM do")} at {formData.time}{" "}
-            GMT
-          </span>
+        <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+          <CalendarIcon className="w-4 h-4 text-brand-secondary-500 shrink-0" />
+          <div>
+            <span>
+              {formData.date && format(formData.date, "MMM do")} at {formData.time} GMT (Accra)
+            </span>
+            {formatLocalEquivalent(formData.time, formData.date) && (
+              <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                ({formatLocalEquivalent(formData.time, formData.date)} local)
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

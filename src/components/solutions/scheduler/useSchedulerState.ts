@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { scheduleConsultation } from "@/services/api";
 
+import { getAccraToday } from "@/lib/consultation-time";
+
 export function useSchedulerState() {
   const router = useRouter();
   const [step, setStep] = useState(1);
@@ -12,11 +14,9 @@ export function useSchedulerState() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const [formData, setFormData] = useState(() => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     return {
       service: "",
-      date: today as Date | undefined,
+      date: getAccraToday() as Date | undefined,
       time: "",
       firstName: "",
       lastName: "",

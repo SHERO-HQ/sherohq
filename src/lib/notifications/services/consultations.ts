@@ -29,7 +29,8 @@ export const consultationsNotifications = {
       <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin: 20px 0;">
         <p style="margin: 0 0 6px;"><strong>Service:</strong> ${serviceTitle}</p>
         <p style="margin: 0 0 6px;"><strong>Date:</strong> ${consultation.date}</p>
-        <p style="margin: 0 0 6px;"><strong>Time:</strong> ${consultation.time} GMT</p>
+        <p style="margin: 0 0 6px;"><strong>Time:</strong> ${consultation.time} GMT+00:00 (Accra / UTC)</p>
+        <p style="margin: 0 0 6px; font-size: 12px; color: #64748b;"><em>Note: All times are based on Accra / GMT+0 (UTC). Please convert to your local timezone if you are joining from another region.</em></p>
         ${consultation.phone ? `<p style="margin: 0 0 6px;"><strong>Contact Phone:</strong> ${consultation.phone}</p>` : ""}
         ${consultation.message ? `<p style="margin: 8px 0 0; color: #475569;"><em>"${consultation.message}"</em></p>` : ""}
       </div>
@@ -82,7 +83,8 @@ export const consultationsNotifications = {
       ``,
       `🛠 *Service*: ${serviceTitle}`,
       `📅 *Date*: ${consultation.date}`,
-      `⏰ *Time*: ${consultation.time} GMT`,
+      `⏰ *Time*: ${consultation.time} GMT+0 (Accra / UTC)`,
+      `ℹ️ *(All times are in GMT+00:00 / Accra. Please adjust for your local timezone)*`,
       ``,
       `📹 *Google Meet Video Call Link*:`,
       `${meetUrl}`,
@@ -126,7 +128,7 @@ export const consultationsNotifications = {
       <p><strong>Email:</strong> ${consultation.email}</p>
       <p><strong>Phone:</strong> ${consultation.phone || "N/A"}</p>
       <p><strong>Service:</strong> ${serviceTitle}</p>
-      <p><strong>Date & Time:</strong> ${consultation.date} at ${consultation.time} GMT</p>
+      <p><strong>Date & Time:</strong> ${consultation.date} at ${consultation.time} GMT (Accra / UTC)</p>
       <p><strong>Google Meet Room:</strong> <a href="${meetUrl}">${meetUrl}</a></p>
       ${consultation.message ? `<p><strong>Notes:</strong> ${consultation.message}</p>` : ""}
       <p style="text-align: center; margin-top: 20px;">
@@ -142,7 +144,7 @@ export const consultationsNotifications = {
       `📧 *Email*: ${consultation.email}`,
       `📱 *Phone*: ${consultation.phone || "N/A"}`,
       `🛠 *Service*: ${serviceTitle}`,
-      `📅 *Date & Time*: ${consultation.date} at ${consultation.time} GMT`,
+      `📅 *Date & Time*: ${consultation.date} at ${consultation.time} GMT (Accra / UTC)`,
       `📹 *Meet*: ${meetUrl}`,
       consultation.message ? `📝 *Notes*: "${consultation.message}"` : "",
     ].filter(Boolean).join("\n");
@@ -178,7 +180,7 @@ export const consultationsNotifications = {
     const bodyHtml = `
       <h1 style="color: #059669; text-align: center; margin: 0 0 16px; font-size: 18px;">Consultation Update: ${formattedStatus}</h1>
       <p>Hi ${consultation.name},</p>
-      <p>Your consultation for <strong>${serviceTitle}</strong> scheduled for <strong>${consultation.date} (${consultation.time})</strong> is now <strong>${formattedStatus}</strong>.</p>
+      <p>Your consultation for <strong>${serviceTitle}</strong> scheduled for <strong>${consultation.date} (${consultation.time} GMT / Accra Time)</strong> is now <strong>${formattedStatus}</strong>.</p>
       <p>Google Meet link: <a href="${meetUrl}" style="color: #059669;">${meetUrl}</a></p>
       <p>If you have any questions or need to reschedule, please reply directly to this email (<a href="mailto:${COMPANY_EMAILS.INFO}" style="color: #059669;">${COMPANY_EMAILS.INFO}</a>) or reach out via WhatsApp.</p>
     `;

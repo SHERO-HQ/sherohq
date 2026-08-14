@@ -84,14 +84,14 @@ function Calendar({
           "h-7 w-7 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 p-0 text-slate-900 hover:text-slate-900 dark:text-slate-200 dark:hover:text-slate-100 transition-colors cursor-pointer rounded",
         ),
 
-        // Grid / Table Styles
-        month_grid: "w-full border-collapse space-y-1 block",
-        weekdays: "flex w-full justify-between mb-2",
+        // Grid / Table Styles with 7-column CSS Grid for perfect date-weekday alignment
+        month_grid: "w-full border-collapse space-y-1",
+        weekdays: "grid grid-cols-7 w-full mb-2 justify-items-center",
         weekday:
-          "text-slate-500 rounded w-9 font-normal text-[0.8rem] dark:text-slate-400 block text-center tracking-wide",
-        weeks: "w-full space-y-1 block",
-        week: "flex w-full mt-1 justify-between",
-        day: "h-9 w-9 text-center text-sm p-0 relative focus-within:relative focus-within:z-20 block",
+          "text-slate-500 rounded w-9 font-normal text-[0.8rem] dark:text-slate-400 flex items-center justify-center tracking-wide",
+        weeks: "w-full space-y-1",
+        week: "grid grid-cols-7 w-full justify-items-center mt-1",
+        day: "h-9 w-9 text-center text-sm p-0 relative flex items-center justify-center focus-within:relative focus-within:z-20",
         day_button: cn(
           buttonVariants({ variant: "ghost" }),
           "h-9 w-9 p-0 font-normal hover:bg-slate-100 dark:hover:bg-slate-800 rounded cursor-pointer text-slate-900 dark:text-slate-200 transition-colors flex items-center justify-center m-0",
@@ -105,12 +105,12 @@ function Calendar({
         ),
         nav_button_previous: "static",
         nav_button_next: "static",
-        table: "w-full border-collapse space-y-1 block",
-        head_row: "flex w-full justify-between",
+        table: "w-full border-collapse space-y-1",
+        head_row: "grid grid-cols-7 w-full justify-items-center mb-2",
         head_cell:
-          "text-slate-500 rounded w-9 font-normal text-[0.8rem] dark:text-slate-400 block text-center",
-        row: "flex w-full mt-1 justify-between",
-        cell: "h-9 w-9 text-center text-sm p-0 relative focus-within:relative focus-within:z-20 block",
+          "text-slate-500 rounded w-9 font-normal text-[0.8rem] dark:text-slate-400 flex items-center justify-center",
+        row: "grid grid-cols-7 w-full justify-items-center mt-1",
+        cell: "h-9 w-9 text-center text-sm p-0 relative flex items-center justify-center focus-within:relative focus-within:z-20",
 
         ...classNames,
       }}
@@ -120,7 +120,7 @@ function Calendar({
         today:
           "[&>button]:bg-slate-100 [&>button]:text-slate-900 dark:[&>button]:bg-slate-800/80 dark:[&>button]:text-slate-100 [&>button]:font-semibold [&>button]:border [&>button]:border-slate-200 dark:[&>button]:border-slate-700",
         outside:
-          "[&>button]:text-slate-400 [&>button]:opacity-40 dark:[&>button]:text-slate-600 [&>button]:pointer-events-none",
+          "[&>button]:text-slate-400 [&>button]:opacity-40 dark:[&>button]:text-slate-600",
         disabled:
           "[&>button]:text-slate-300 [&>button]:opacity-30 dark:[&>button]:text-slate-700 [&>button]:!cursor-not-allowed [&>button]:pointer-events-none [&>button]:hover:bg-transparent",
         range_start:

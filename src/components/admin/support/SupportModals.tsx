@@ -100,7 +100,7 @@ export function RescheduleConsultationModal({
           </div>
           <div className="flex-1">
             <label className="block text-sm font-medium text-muted-foreground mb-1">
-              New Time
+              New Time (GMT / Accra)
             </label>
             <select
               required

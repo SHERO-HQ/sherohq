@@ -13,10 +13,19 @@ import {
   CheckCircle2,
   AlertCircle,
   Loader2,
+  Globe2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import {
+  getAccraToday,
+  isAccraPastDate,
+  isAccraTimeSlotPassed,
+  getUserTimezoneInfo,
+  formatLocalEquivalent,
+  BUSINESS_TIMEZONE_LABEL,
+} from "@/lib/consultation-time";
 
 const morningSlots = ["09:00 AM", "10:00 AM", "11:00 AM", "11:30 AM"];
 const afternoonSlots = ["01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM"];
@@ -45,6 +54,11 @@ export function SchedulerStep2DateTime({
   const [isCustomMode, setIsCustomMode] = useState(false);
   const [bookedTimes, setBookedTimes] = useState<string[]>([]);
   const [isLoadingAvailability, setIsLoadingAvailability] = useState(false);
+  const [userTz, setUserTz] = useState(() => getUserTimezoneInfo());
+
+  useEffect(() => {
+    setUserTz(getUserTimezoneInfo());
+  }, []);
 
   // Fetch already booked slots for the selected date
   useEffect(() => {
@@ -78,88 +92,31 @@ export function SchedulerStep2DateTime({
     };
   }, [date]);
 
-  const isPastDate = (d: Date) => {
-    const now = new Date();
-    const todayMidnight = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-    ).getTime();
-    const targetMidnight = new Date(
-      d.getFullYear(),
-      d.getMonth(),
-      d.getDate(),
-    ).getTime();
-    return targetMidnight < todayMidnight;
-  };
-
-  const isTimeSlotPassed = (timeSlot: string, forDate?: Date): boolean => {
-    if (!forDate) return false;
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const selectedDate = new Date(
-      forDate.getFullYear(),
-      forDate.getMonth(),
-      forDate.getDate(),
-    );
-
-    // If selected date is in the past
-    if (selectedDate.getTime() < today.getTime()) {
-      return true;
-    }
-    // If selected date is in the future, slot is available
-    if (selectedDate.getTime() > today.getTime()) {
-      return false;
-    }
-
-    // Selected date is TODAY: parse the slot's hours and minutes
-    const [timeStr, period] = timeSlot.split(" ");
-    if (!timeStr || !period) return false;
-    const [hoursStr, minsStr] = timeStr.split(":");
-    let slotHour = parseInt(hoursStr, 10);
-    const slotMinutes = parseInt(minsStr || "0", 10);
-
-    if (period === "PM" && slotHour !== 12) {
-      slotHour += 12;
-    } else if (period === "AM" && slotHour === 12) {
-      slotHour = 0;
-    }
-
-    const slotDateTime = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      slotHour,
-      slotMinutes,
-      0,
-    );
-
-    return slotDateTime.getTime() <= now.getTime();
-  };
-
   const allStandardSlots = [
     ...morningSlots,
     ...afternoonSlots,
     ...eveningSlots,
   ];
-  const isTodaySelected = date ? isSameDay(date, new Date()) : false;
+
+  const accraToday = getAccraToday();
+  const isTodaySelected = date ? isSameDay(date, accraToday) : false;
   const allSlotsPassedToday =
     isTodaySelected &&
-    allStandardSlots.every((slot) => isTimeSlotPassed(slot, date));
+    allStandardSlots.every((slot) => isAccraTimeSlotPassed(slot, date));
 
   const quickPresets = [
     {
       label: "Today",
-      date: new Date(),
+      date: accraToday,
     },
     {
       label: "Tomorrow",
-      date: addDays(new Date(), 1),
+      date: addDays(accraToday, 1),
     },
     {
       label: "Next Mon",
       date: (() => {
-        const d = new Date();
+        const d = new Date(accraToday);
         const day = d.getDay();
         const diff = day === 0 ? 1 : 8 - day;
         d.setDate(d.getDate() + diff);
@@ -177,58 +134,81 @@ export function SchedulerStep2DateTime({
   };
 
   const renderSlotButton = (slot: string) => {
-    const isPassed = isTimeSlotPassed(slot, date);
+    const isPassed = isAccraTimeSlotPassed(slot, date);
     const isBooked = bookedTimes.includes(slot);
     const isDisabled = isPassed || isBooked;
     const isSelected = time === slot;
+    const localEq = !userTz.isGmt ? formatLocalEquivalent(slot, date) : null;
 
     return (
-      <button
-        key={slot}
-        type="button"
-        disabled={isDisabled}
-        onClick={() => {
-          if (!isDisabled) {
-            onSelectTime(slot);
-            setIsCustomMode(false);
-          }
-        }}
-        className={cn(
-          "px-2.5 py-2 rounded text-xs font-semibold transition text-center border flex items-center justify-center gap-1 relative",
-          isDisabled
-            ? "bg-slate-100 dark:bg-slate-800/40 text-slate-400 dark:text-slate-600 border-slate-200 dark:border-slate-800 opacity-40 !cursor-not-allowed line-through"
-            : isSelected
-              ? "bg-brand-secondary-600 text-white border-brand-secondary-600 shadow shadow-brand-secondary-500/20 scale-[1.02] cursor-pointer"
-              : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-brand-secondary-500 hover:text-brand-secondary-500 cursor-pointer",
-        )}
-      >
-        {isSelected && !isDisabled && (
-          <CheckCircle2 className="w-3 h-3 shrink-0" />
-        )}
-        <span>{slot}</span>
+      <div key={slot} className="relative group">
+        <button
+          type="button"
+          disabled={isDisabled}
+          title={localEq ? `${slot} GMT (${localEq})` : `${slot} GMT`}
+          onClick={() => {
+            if (!isDisabled) {
+              onSelectTime(slot);
+              setIsCustomMode(false);
+            }
+          }}
+          className={cn(
+            "w-full px-2 py-2.5 rounded text-xs font-semibold transition text-center border flex flex-col items-center justify-center gap-0.5 relative",
+            isBooked && !isPassed
+              ? "bg-rose-50/50 dark:bg-rose-950/20 text-slate-400 dark:text-slate-500 border-rose-200/80 dark:border-rose-900/40 !cursor-not-allowed line-through shadow-2xs"
+              : isPassed
+                ? "bg-slate-100 dark:bg-slate-800/40 text-slate-400 dark:text-slate-600 border-slate-200 dark:border-slate-800 opacity-40 !cursor-not-allowed line-through"
+                : isSelected
+                  ? "bg-brand-secondary-600 text-white border-brand-secondary-600 shadow shadow-brand-secondary-500/20 scale-[1.02] cursor-pointer ring-2 ring-brand-secondary-500/30"
+                  : "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border-slate-200 dark:border-slate-700 hover:border-brand-secondary-500 hover:text-brand-secondary-500 dark:hover:text-brand-secondary-400 hover:shadow-xs cursor-pointer",
+          )}
+        >
+          <span className="font-bold">{slot}</span>
+          {localEq && !isDisabled && (
+            <span
+              className={cn(
+                "text-[10px] font-medium leading-tight",
+                isSelected
+                  ? "text-brand-secondary-100"
+                  : "text-slate-500 dark:text-slate-300",
+              )}
+            >
+              {localEq}
+            </span>
+          )}
+        </button>
+
+        {/* Floating Notification-Style Booked Badge */}
         {isBooked && !isPassed && (
-          <span className="text-[9px] uppercase tracking-wider text-rose-500 dark:text-rose-400 font-bold ml-1">
+          <span className="absolute -top-2 -right-1.5 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider bg-rose-500 text-white dark:bg-rose-600 rounded shadow-xs border border-white dark:border-slate-900 pointer-events-none z-10 flex items-center gap-0.5 animate-in zoom-in-75 duration-150">
             Booked
           </span>
         )}
-      </button>
+      </div>
     );
   };
 
+  const selectedLocalEquivalent = time ? formatLocalEquivalent(time, date) : null;
+
   return (
     <div className="flex flex-col h-full">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
         <div>
           <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100">
             Choose Date & Time
           </h2>
-          <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            Select your preferred consultation window. Times are in GMT.
+          <p className="text-xs md:text-sm text-slate-600 dark:text-slate-300 mt-0.5">
+            Select your preferred consultation window. <br />
+             Official times are in{" "}
+            <strong className="text-brand-secondary-600 dark:text-brand-secondary-400 font-semibold">
+              {BUSINESS_TIMEZONE_LABEL}
+            </strong>
+            .
           </p>
         </div>
 
         {/* Quick Date Presets */}
-        <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded">
+        <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded self-start sm:self-auto">
           {quickPresets.map((preset) => {
             const isSelected = date ? isSameDay(date, preset.date) : false;
             return (
@@ -250,6 +230,39 @@ export function SchedulerStep2DateTime({
         </div>
       </div>
 
+      {/* Timezone Helper Banner (Optimized for High-Contrast Dark & Light Mode) */}
+      <div className="mb-5 p-3 rounded bg-slate-50 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 flex flex-wrap items-center justify-between gap-3 text-xs shadow-xs">
+        <div className="flex items-center gap-2 font-medium text-slate-800 dark:text-slate-100">
+          <div className="p-1.5 rounded bg-brand-secondary-500/10 dark:bg-brand-secondary-500/20 text-brand-secondary-600 dark:text-brand-secondary-400 shrink-0">
+            <Globe2 className="w-4 h-4" />
+          </div>
+          <div>
+            <span className="text-slate-600 dark:text-slate-300">Reference Standard: </span>
+            <strong className="text-slate-950 dark:text-white font-bold">
+              Accra / GMT+0 (UTC)
+            </strong>
+          </div>
+        </div>
+
+        {!userTz.isGmt ? (
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 text-[11px] font-medium shadow-2xs">
+            <Clock className="w-3.5 h-3.5 text-brand-secondary-600 dark:text-brand-secondary-400 shrink-0" />
+            <span>
+              Your local timezone:{" "}
+              <strong className="text-brand-secondary-600 dark:text-brand-secondary-400 font-bold">
+                {userTz.shortLabel}
+              </strong>{" "}
+              ({userTz.locationLabel || userTz.formattedOffset})
+            </span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/60 text-emerald-800 dark:text-emerald-300 text-[11px] font-semibold">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+            <span>Your local clock matches GMT</span>
+          </div>
+        )}
+      </div>
+
       <div className="flex flex-col xl:flex-row gap-8">
         {/* Left Column: Calendar & Manual Date input */}
         <div className="flex-1 mx-auto max-w-87.5 xl:max-w-none flex flex-col gap-3">
@@ -263,16 +276,16 @@ export function SchedulerStep2DateTime({
                   onSelectDate(d);
                 }
               }}
-              disabled={isPastDate}
+              disabled={isAccraPastDate}
               className="rounded mx-auto"
             />
           </div>
 
           {/* Quick Date Selector Input Fallback */}
-          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
+          <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-300 px-1">
             <label
               htmlFor="native-date"
-              className="flex items-center gap-1 font-medium text-slate-600 dark:text-slate-400"
+              className="flex items-center gap-1 font-medium text-slate-700 dark:text-slate-300"
             >
               <CalendarIcon className="w-3.5 h-3.5 text-brand-secondary-500" />
               Or type exact date:
@@ -280,7 +293,7 @@ export function SchedulerStep2DateTime({
             <input
               id="native-date"
               type="date"
-              min={format(new Date(), "yyyy-MM-dd")}
+              min={format(accraToday, "yyyy-MM-dd")}
               value={date ? format(date, "yyyy-MM-dd") : ""}
               onChange={(e) => {
                 if (e.target.value) {
@@ -310,10 +323,10 @@ export function SchedulerStep2DateTime({
           {!date ? (
             <div className="h-48 xl:h-64 flex flex-col items-center justify-center border border-dashed border-slate-200 dark:border-slate-800 rounded text-slate-400 text-sm bg-slate-50/50 dark:bg-slate-900/50 p-6 text-center">
               <Clock className="w-8 h-8 text-slate-300 dark:text-slate-600 mb-2" />
-              <p className="font-medium text-slate-600 dark:text-slate-300">
+              <p className="font-medium text-slate-700 dark:text-slate-300">
                 Choose a date on the calendar
               </p>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                 Times will populate based on your selected date.
               </p>
             </div>
@@ -321,14 +334,14 @@ export function SchedulerStep2DateTime({
             <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300 flex-1 flex flex-col">
               {/* Notice if all slots for today have passed */}
               {allSlotsPassedToday && (
-                <div className="p-3 rounded bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 text-amber-900 dark:text-amber-300 text-xs flex items-start gap-2">
-                  <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                <div className="p-3 rounded bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 text-amber-900 dark:text-amber-200 text-xs flex items-start gap-2 shadow-xs">
+                  <AlertCircle className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-semibold">
-                      All scheduled slots for today have concluded.
+                    <p className="font-semibold text-amber-950 dark:text-amber-100">
+                      All scheduled slots for today in {userTz.city} have concluded.
                     </p>
-                    <p className="text-[11px] text-amber-700 dark:text-amber-400 mt-0.5">
-                      Please select <strong>Tomorrow</strong> or an upcoming date above.
+                    <p className="text-[11px] text-amber-800 dark:text-amber-300 mt-0.5">
+                      Please select <strong>Tomorrow</strong> or an upcoming date on the calendar.
                     </p>
                   </div>
                 </div>
@@ -336,31 +349,30 @@ export function SchedulerStep2DateTime({
 
               {/* Morning Slots */}
               <div>
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mb-2">
-                  <Sun className="w-3.5 h-3.5 text-amber-500" /> Morning
+                <span className="text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 flex items-center gap-1.5 mb-2">
+                  <Sun className="w-3.5 h-3.5 text-amber-500" /> Morning (GMT)
                 </span>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
                   {morningSlots.map((slot) => renderSlotButton(slot))}
                 </div>
               </div>
 
               {/* Afternoon Slots */}
               <div>
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mb-2">
-                  <Sunset className="w-3.5 h-3.5 text-orange-500" /> Afternoon
+                <span className="text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 flex items-center gap-1.5 mb-2">
+                  <Sunset className="w-3.5 h-3.5 text-orange-500" /> Afternoon (GMT)
                 </span>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
                   {afternoonSlots.map((slot) => renderSlotButton(slot))}
                 </div>
               </div>
 
               {/* Evening / Extended Slots */}
               <div>
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5 mb-2">
-                  <Moon className="w-3.5 h-3.5 text-indigo-400" /> Evening / After
-                  Hours
+                <span className="text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 flex items-center gap-1.5 mb-2">
+                  <Moon className="w-3.5 h-3.5 text-indigo-400" /> Evening / After Hours (GMT)
                 </span>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-1">
                   {eveningSlots.map((slot) => renderSlotButton(slot))}
                 </div>
               </div>
@@ -373,7 +385,7 @@ export function SchedulerStep2DateTime({
                     onClick={() => setIsCustomMode(true)}
                     className="text-xs font-medium text-brand-secondary-600 dark:text-brand-secondary-400 hover:underline flex items-center gap-1 cursor-pointer"
                   >
-                    Need a different time or custom window?
+                    Need a custom time window (GMT)?
                   </button>
                 ) : (
                   <form
@@ -382,7 +394,7 @@ export function SchedulerStep2DateTime({
                   >
                     <input
                       type="text"
-                      placeholder="e.g. 02:30 PM or Anytime Morning"
+                      placeholder="e.g. 02:30 PM GMT"
                       value={customTimeInput}
                       onChange={(e) => setCustomTimeInput(e.target.value)}
                       autoFocus
@@ -408,14 +420,18 @@ export function SchedulerStep2DateTime({
 
               {/* Active Selection Feedback Banner */}
               {time && (
-                <div className="mt-auto p-2.5 rounded bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/40 flex items-center gap-2 text-xs text-emerald-800 dark:text-emerald-300">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                  <span>
-                    Selected:{" "}
-                    <strong>
-                      {format(date, "EEE, MMM d")} at {time} GMT
-                    </strong>
-                  </span>
+                <div className="mt-auto p-3 rounded bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-700/60 flex flex-col gap-1 text-xs text-emerald-900 dark:text-emerald-100 animate-in fade-in duration-200 shadow-xs">
+                  <div className="flex items-center gap-2 font-bold">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                    <span>
+                      Selected: {format(date, "EEEE, MMMM d")} at {time} GMT+0
+                    </span>
+                  </div>
+                  {selectedLocalEquivalent && (
+                    <div className="mt-1 text-[11px] flex items-center text-emerald-800 dark:text-emerald-300 font-medium flex items-center gap-2">
+                      <Clock className="w-3.5 h-3.5" /> Matches <strong className="text-emerald-950 dark:text-emerald-100">{selectedLocalEquivalent}</strong> on your local clock
+                    </div>
+                  )}
                 </div>
               )}
             </div>

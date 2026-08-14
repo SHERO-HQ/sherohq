@@ -23,6 +23,7 @@ import {
 import { SchedulerStep2DateTime } from "./scheduler/SchedulerStep2DateTime";
 import { SchedulerStep3Info } from "./scheduler/SchedulerStep3Info";
 import { useSchedulerState } from "./scheduler/useSchedulerState";
+import { formatLocalEquivalent } from "@/lib/consultation-time";
 
 const services: ServiceType[] = [
   {
@@ -190,9 +191,16 @@ const Scheduler = () => {
             )}
 
             {formData.time && (
-              <div className="flex items-center font-semibold gap-2 text-sm text-slate-600 dark:text-slate-300">
-                <Clock className="w-4 h-4 text-brand-secondary-500" />
-                {formData.time} GMT
+              <div>
+                <div className="flex items-center font-semibold gap-2 text-sm text-slate-600 dark:text-slate-300">
+                  <Clock className="w-4 h-4 text-brand-secondary-500" />
+                  {formData.time} GMT (Accra)
+                </div>
+                {formatLocalEquivalent(formData.time, formData.date) && (
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 pl-6 mt-0.5">
+                    ({formatLocalEquivalent(formData.time, formData.date)} local)
+                  </div>
+                )}
               </div>
             )}
           </div>
