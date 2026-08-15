@@ -120,14 +120,39 @@ async function handleIncomingMessage(msg: any, contact: any) {
   try {
     const messageId = msg.id;
     const senderWaId = msg.from;
-    const messageType = msg.type; // 'text', 'image', 'document', etc.
+    const messageType = msg.type; // 'text', 'image', 'document', 'interactive', 'button', etc.
     let content: string | null = null;
+    let buttonId: string | null = null;
+    let buttonText: string | null = null;
 
     // Extract content based on message type
     if (msg.text?.body) {
       content = msg.text.body;
+    } else if (msg.type === "button" || msg.button) {
+      // Template Quick Reply or Button click
+      buttonText = msg.button?.text || null;
+      buttonId = msg.button?.payload || null;
+      content = buttonText || buttonId || "[Button Click]";
     } else if (msg.interactive?.button_reply) {
-      content = msg.interactive.button_reply.id;
+      // Interactive Button Reply
+      buttonId = msg.interactive.button_reply.id || null;
+      buttonText = msg.interactive.button_reply.title || null;
+      content = buttonText || buttonId || "[Button Click]";
+    } else if (msg.interactive?.list_reply) {
+      // Interactive List Reply
+      buttonId = msg.interactive.list_reply.id || null;
+      buttonText = msg.interactive.list_reply.title || null;
+      const listDesc = msg.interactive.list_reply.description;
+      content = buttonText
+        ? listDesc
+          ? `${buttonText} - ${listDesc}`
+          : buttonText
+        : buttonId || "[List Selection]";
+    } else if (msg.interactive?.nfm_reply) {
+      // WhatsApp Flows Response
+      buttonId = msg.interactive.nfm_reply.name || "flow_response";
+      buttonText = msg.interactive.nfm_reply.body || "Form Submitted";
+      content = buttonText;
     } else if (msg.image) {
       content = msg.image.caption
         ? `[Sent an Image] ${msg.image.caption}`
@@ -138,19 +163,31 @@ async function handleIncomingMessage(msg: any, contact: any) {
         : `[Sent a Video]`;
     } else if (msg.document) {
       content = msg.document.caption
-        ? `[Sent a Document] ${msg.document.caption}`
-        : `[Sent a Document]`;
+        ? `[Sent a Document: ${msg.document.filename || "file"}] ${msg.document.caption}`
+        : `[Sent a Document: ${msg.document.filename || "file"}]`;
     } else if (msg.audio) {
-      content = `[Sent Audio]`;
+      content = msg.audio.voice ? `[Sent a Voice Note]` : `[Sent Audio]`;
     } else if (msg.sticker) {
       content = `[Sent a Sticker]`;
+    } else if (msg.location) {
+      const locName = msg.location.name ? ` (${msg.location.name})` : "";
+      content = `[Shared Location${locName}: ${msg.location.latitude}, ${msg.location.longitude}]`;
+    } else if (msg.contacts) {
+      const contactNames = msg.contacts
+        .map((c: any) => c.name?.formatted_name || "Contact")
+        .join(", ");
+      content = `[Shared Contact: ${contactNames}]`;
+    } else if (msg.order) {
+      content = `[Sent an Order with ${msg.order.product_items?.length || 0} items]`;
+    } else if (msg.reaction) {
+      content = `[Reacted with ${msg.reaction.emoji || "emoji"}]`;
     }
 
     if (process.env.NODE_ENV !== "production") {
       console.log(
         `Incoming message from ${senderWaId}: [${messageType}] ${
           content || "(no text)"
-        }`,
+        }${buttonText ? ` (Button: "${buttonText}", ID: "${buttonId}")` : ""}`,
       );
     }
 
@@ -163,6 +200,9 @@ async function handleIncomingMessage(msg: any, contact: any) {
       content,
       {
         rawMessage: msg, // Store full message for debugging
+        buttonId: buttonId || undefined,
+        buttonText: buttonText || undefined,
+        buttonPayload: msg.button?.payload || undefined,
       },
     );
 
@@ -192,11 +232,15 @@ async function handleIncomingMessage(msg: any, contact: any) {
       // Only trigger if this is the first message in the last 15 mins (spam prevention)
       if (parseInt(String(recentMsgs.rows[0]?.count ?? "0")) <= 1) {
         const { notificationService } = await import("@/lib/notifications");
+        const alertContent = buttonText
+          ? `🔘 Clicked: "${buttonText}"`
+          : content || `[Sent a ${messageType}]`;
+
         await notificationService
           .sendNewWhatsAppAlert(
             contactName || "Customer",
             senderWaId,
-            content || `[Sent a ${messageType}]`,
+            alertContent,
           )
           .catch((e) =>
             console.error("Failed to send WhatsApp Email Alert", e),
@@ -207,7 +251,7 @@ async function handleIncomingMessage(msg: any, contact: any) {
           const { sendWhatsAppMessageDirect } =
             await import("@/lib/whatsapp-messages");
           const adminUrl = process.env.ADMIN_URL || process.env.NEXT_PUBLIC_ADMIN_URL || "https://admin.sherohq.com/admin/whatsapp";
-          const alertMessage = `💬 *New WhatsApp Message*\n\n*From:* ${contactName || "Customer"} (https://wa.me/${senderWaId})\n\n"${content || `[Sent a ${messageType}]`}"\n\nReply here: ${adminUrl}`;
+          const alertMessage = `💬 *New WhatsApp Message*\n\n*From:* ${contactName || "Customer"} (https://wa.me/${senderWaId})\n\n"${alertContent}"\n\nReply here: ${adminUrl}`;
           await sendWhatsAppMessageDirect(
             adminPhone,
             alertMessage,
@@ -275,15 +319,24 @@ async function handleIncomingMessage(msg: any, contact: any) {
       }
 
       // Normal Mode (No State)
-      // Try smart reply first
-      const smartReply = getSmartReply(content);
+      // Try smart reply first with both content and buttonId
+      const smartReply = getSmartReply(content, buttonId);
       const autoReplyText = smartReply?.message || undefined;
       const interactiveButtons = smartReply?.buttons;
 
       // Handle interactive button clicks to update state
-      if (content === "btn_order") {
+      const isOrderBtn =
+        buttonId === "btn_order" ||
+        content.toLowerCase().trim() === "btn_order" ||
+        content.toLowerCase().includes("order status");
+      const isSupportBtn =
+        buttonId === "btn_support" ||
+        content.toLowerCase().trim() === "btn_support" ||
+        content.toLowerCase().includes("support ticket");
+
+      if (isOrderBtn) {
         await updateWhatsAppContactState(senderWaId, "WAITING_FOR_ORDER_ID");
-      } else if (content === "btn_support") {
+      } else if (isSupportBtn) {
         await updateWhatsAppContactState(
           senderWaId,
           "WAITING_FOR_TICKET_ISSUE",

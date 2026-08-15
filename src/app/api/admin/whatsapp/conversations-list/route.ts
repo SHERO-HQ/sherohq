@@ -26,7 +26,26 @@ export async function GET(request: NextRequest) {
         SELECT DISTINCT ON (sender_wa_id)
           sender_wa_id,
           created_at as last_message_at,
-          content as last_message,
+          CASE 
+            WHEN content IS NOT NULL AND content != '[button]' AND content != '[interactive]' THEN content
+            ELSE COALESCE(
+              metadata->>'buttonText',
+              metadata->'rawMessage'->'button'->>'text',
+              metadata->'rawMessage'->'interactive'->'button_reply'->>'title',
+              metadata->'rawMessage'->'interactive'->'list_reply'->>'title',
+              metadata->'rawMessage'->'button'->>'payload',
+              content,
+              CASE 
+                WHEN message_type = 'button' THEN '🔘 Clicked button'
+                WHEN message_type = 'image' THEN '[Image]'
+                WHEN message_type = 'video' THEN '[Video]'
+                WHEN message_type = 'document' THEN '[Document]'
+                WHEN message_type = 'audio' THEN '[Audio]'
+                WHEN message_type = 'sticker' THEN '[Sticker]'
+                ELSE '[Message]'
+              END
+            )
+          END as last_message,
           direction
         FROM whatsapp_messages
         ORDER BY sender_wa_id, created_at DESC

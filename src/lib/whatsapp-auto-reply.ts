@@ -151,24 +151,41 @@ export async function sendAutoReply(
  */
 export function getSmartReply(
   customerMessage: string,
+  buttonId?: string | null,
 ): { message: string; buttons?: { id: string; title: string }[] } | null {
-  const msg = customerMessage.toLowerCase().trim();
+  const msg = (customerMessage || "").toLowerCase().trim();
+  const btn = (buttonId || "").toLowerCase().trim();
 
-  // Handle interactive button IDs explicitly
-  if (msg === "btn_shop") {
+  // Handle interactive or CTA button IDs and button titles explicitly
+  if (
+    btn === "btn_shop" ||
+    msg === "btn_shop" ||
+    msg.includes("shop products") ||
+    msg.includes("browse products")
+  ) {
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://sherohq.com";
     return {
       message:
         `Awesome! You can browse all our premium tech products right here on our store: ${siteUrl}/shop`,
     };
   }
-  if (msg === "btn_support") {
+  if (
+    btn === "btn_support" ||
+    msg === "btn_support" ||
+    msg.includes("support ticket") ||
+    msg.includes("create ticket")
+  ) {
     return {
       message:
         "We're here to help! Please reply to this message with a brief description of the issue you're facing, and I will create a support ticket for you.",
     };
   }
-  if (msg === "btn_order") {
+  if (
+    btn === "btn_order" ||
+    msg === "btn_order" ||
+    msg.includes("order status") ||
+    msg.includes("track order")
+  ) {
     return {
       message:
         "I can help you track your order! Please reply to this message with your Order ID.",

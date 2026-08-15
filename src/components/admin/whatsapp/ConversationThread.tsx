@@ -1,5 +1,5 @@
 import React from "react";
-import { Loader2, ExternalLink, Check, CheckCheck, AlertTriangle, Sparkles } from "lucide-react";
+import { Loader2, ExternalLink, Check, CheckCheck, AlertTriangle, Sparkles, MousePointerClick } from "lucide-react";
 import { ConversationMessage, BUILTIN_WHATSAPP_TEMPLATES } from "./types";
 
 interface ConversationThreadProps {
@@ -166,7 +166,43 @@ export function ConversationThread({
                         ? msg.content.match(/\[Template:\s*([^\]]+)\]/)?.[1]
                         : null);
 
-                    let displayContent = msg.content || `[${msg.message_type}]`;
+                    const rawMsg = msg.metadata?.rawMessage;
+                    const buttonText =
+                      msg.metadata?.buttonText ||
+                      rawMsg?.button?.text ||
+                      rawMsg?.interactive?.button_reply?.title ||
+                      rawMsg?.interactive?.list_reply?.title ||
+                      (msg.content &&
+                      msg.content !== `[${msg.message_type}]` &&
+                      msg.content !== "[button]" &&
+                      msg.content !== "[interactive]"
+                        ? msg.content
+                        : null) ||
+                      rawMsg?.button?.payload ||
+                      rawMsg?.interactive?.button_reply?.id;
+
+                    const isButtonClick =
+                      msg.message_type === "button" ||
+                      rawMsg?.type === "button" ||
+                      rawMsg?.interactive?.type === "button_reply" ||
+                      rawMsg?.interactive?.type === "list_reply" ||
+                      Boolean(msg.metadata?.buttonId) ||
+                      Boolean(msg.metadata?.buttonText) ||
+                      msg.content === "[button]";
+
+                    let displayContent: string = msg.content ?? "";
+                    if (
+                      isButtonClick &&
+                      (!displayContent ||
+                        displayContent === "[button]" ||
+                        displayContent === "[interactive]" ||
+                        displayContent === `[${msg.message_type}]`)
+                    ) {
+                      displayContent = buttonText || "Button Click";
+                    } else if (!displayContent) {
+                      displayContent = `[${msg.message_type}]`;
+                    }
+
                     if (
                       templateName &&
                       displayContent.trim() === `[Template: ${templateName}]`
@@ -185,6 +221,13 @@ export function ConversationThread({
                           <div className="flex items-center gap-1 text-[10px] font-semibold tracking-wide text-amber-200 dark:text-amber-300 bg-black/25 px-1.5 py-0.5 rounded w-fit mb-1.5 border border-white/10">
                             <Sparkles className="w-2.5 h-2.5 shrink-0" />
                             <span>Meta Template: {templateName}</span>
+                          </div>
+                        )}
+
+                        {isButtonClick && msg.direction === "inbound" && (
+                          <div className="flex items-center gap-1 text-[10px] font-semibold tracking-wide text-brand-secondary-500 dark:text-emerald-400 bg-brand-secondary-500/10 dark:bg-emerald-500/10 px-1.5 py-0.5 rounded w-fit mb-1.5 border border-brand-secondary-500/20 dark:border-emerald-500/20">
+                            <MousePointerClick className="w-3 h-3 shrink-0" />
+                            <span>Clicked CTA Button</span>
                           </div>
                         )}
 

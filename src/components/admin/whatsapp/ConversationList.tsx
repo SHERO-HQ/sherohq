@@ -108,7 +108,9 @@ export function ConversationList({
                             You:
                           </span>
                         )}
-                        {conv.last_message || "(no text content)"}
+                        {conv.last_message === "[button]" || conv.last_message === "[interactive]"
+                          ? "🔘 Clicked a CTA button"
+                          : conv.last_message || "(no text content)"}
                       </p>
                       {conv.unread_count > 0 ? (
                         <span className="bg-emerald-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center justify-center shrink-0 min-w-5 h-5">
