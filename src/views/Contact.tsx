@@ -11,6 +11,7 @@ import {
 import { COMPANY_EMAILS } from "@/constants/emails";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { Particles } from "@/components/ui/particles";
+import { SectionBadge } from "@/components/common/SectionBadge";
 
 const Contact = () => {
   return (
@@ -31,10 +32,9 @@ const Contact = () => {
             transition={{ duration: 0.5 }}
             className="text-center max-w-3xl mx-auto mb-10 lg:mb-14"
           >
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded bg-brand-secondary-500/10 dark:bg-brand-secondary-500/20 text-brand-secondary-600 dark:text-brand-secondary-400 text-xs font-semibold uppercase tracking-wider mb-4 border border-brand-secondary-500/20">
-              <MessagesSquare className="w-3.5 h-3.5" />
+            <SectionBadge icon={MessagesSquare} className="mb-4">
               Get In Touch
-            </div>
+            </SectionBadge>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
               Let&apos;s Redefine What&apos;s Possible
             </h1>
@@ -122,10 +122,9 @@ const Contact = () => {
             className="mt-16 pt-10 border-t border-slate-200 dark:border-slate-800"
           >
             <div className="text-center mb-10">
-              <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-500/10 border border-emerald-500/30 dark:border-emerald-500/20 rounded uppercase transition-colors duration-300">
-                <MessagesSquare className="size-4" />
+              <SectionBadge icon={MessagesSquare} className="mb-4">
                 Quick Answers
-              </span>
+              </SectionBadge>
               <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
                 Frequently Asked
               </h2>

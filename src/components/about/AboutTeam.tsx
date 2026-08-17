@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import type { TeamMember } from "@/services/api";
 import { TwitterXIcon } from "@/assets/icons/icons";
 import AppImage from "@/components/common/AppImage";
+import { SectionBadge } from "@/components/common/SectionBadge";
 
 interface TeamMemberWithPlaceholder extends TeamMember {
   isPlaceholder?: boolean;
@@ -183,10 +184,9 @@ const AboutTeam = () => {
     <section className="py-12 bg-white pattern-dots dark:bg-slate-900 overflow-hidden border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
       <div className="container px-4 md:px-6 mx-auto w-full md:max-w-10/12">
         <div className="mb-10 space-y-3">
-          <span className="inline-flex items-center gap-2 px-4 py-1 mb-2 text-[10px] uppercase font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded transition-colors duration-300">
-            <Users className="size-4" />
+          <SectionBadge icon={Users} className="mb-2">
             Our Team
-          </span>
+          </SectionBadge>
           <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100 transition-colors duration-300">
             Meet the <span className="text-brand-secondary-600">Minds</span>
           </h2>

@@ -9,6 +9,7 @@ import {
   Wrench,
   Shield,
 } from "lucide-react";
+import { SectionBadge } from "@/components/common/SectionBadge";
 import { useRef } from "react";
 import { m, useScroll, useTransform, useInView } from "motion/react";
 
@@ -150,10 +151,9 @@ const Process = () => {
           staggerDelay={0.12}
         >
           <StaggerItem yOffset={25}>
-            <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] uppercase font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded transition-colors duration-300">
-              <Workflow className="size-4" />
+            <SectionBadge icon={Workflow} className="mb-4">
               How We Work
-            </span>
+            </SectionBadge>
           </StaggerItem>
           <StaggerItem yOffset={25}>
             <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">

@@ -3,6 +3,7 @@ import React from "react";
 import { StaggerContainer, StaggerItem } from "@/components/motion/AnimateSection";
 import Reveal from "@/components/motion/Reveal";
 import { Zap, ShoppingBag, Server, MessageSquare, Code } from "lucide-react";
+import { SectionBadge } from "@/components/common/SectionBadge";
 
 import { TerminalWidget } from "./pillars/TerminalWidget";
 import { POSWidget } from "./pillars/POSWidget";
@@ -78,10 +79,9 @@ const LandingPillars = () => {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-10">
           <Reveal direction="up" distance={20}>
-            <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
-              <Zap className="size-4" />
+            <SectionBadge icon={Zap} className="mb-4">
               What We've Built
-            </span>
+            </SectionBadge>
             <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300 tracking-tight">
               Proven Platforms & Systems
             </h2>

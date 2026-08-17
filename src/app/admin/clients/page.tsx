@@ -2,7 +2,7 @@ import AdminClients from "@/views/admin/AdminClients";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Partners & Clients | Admin Dashboard",
+  title: "Clients & Partners",
   description: "Manage client proof logos and solution partners",
 };
 

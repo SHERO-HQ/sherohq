@@ -33,7 +33,7 @@ const DEFAULT_CLIENTS: ClientLogo[] = [
   {
     id: "trustcircle",
     name: "TrustCircle",
-    logoSrc: "/assets/images/clients/trustcircle.webp",
+    logoSrc: "/assets/images/clients/trustcircle.png",
   },
 ];
 
@@ -57,13 +57,7 @@ export const ClientLogoBar = () => {
   return (
     <section className="relative w-full py-12 sm:py-16 md:py-20 overflow-hidden bg-linear-to-b from-white via-slate-50/70 to-white dark:from-slate-950 dark:via-slate-900/35 dark:to-slate-950 border-y border-slate-200/50 dark:border-slate-800/50 transition-colors duration-300">
       {/* Precision Pattern Dots Grid */}
-      <div className="pointer-events-none absolute inset-0 pattern-dots opacity-50" />
-
-      {/* Silky Brand Radial Bloom */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_50%,rgba(0,180,216,0.08),transparent_100%)] dark:bg-[radial-gradient(ellipse_70%_55%_at_50%_50%,rgba(0,180,216,0.14),transparent_100%)]" />
-
-      {/* Floating Ambient Particles */}
-      <ParticleField count={6} colorVariant="single" opacity={0.12} animate />
+      <div className="pointer-events-none absolute inset-0 pattern-dots opacity-70" />
 
       <div className="container relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <m.div
@@ -77,7 +71,7 @@ export const ClientLogoBar = () => {
           <div className="inline-flex items-center gap-3">
             <span className="h-px w-8 sm:w-14 bg-linear-to-r from-transparent to-slate-300 dark:to-slate-700" />
             <p className="text-[10px] sm:text-xs font-bold font-mono uppercase tracking-wide text-slate-500 dark:text-slate-400">
-              Partners & Clients We've Worked With
+              We've Worked With
             </p>
             <span className="h-px w-8 sm:w-14 bg-linear-to-l from-transparent to-slate-300 dark:to-slate-700" />
           </div>
@@ -94,11 +88,10 @@ export const ClientLogoBar = () => {
                   <img
                     src={logoUrl}
                     alt={`${client.name} logo`}
-                    className={`h-10 sm:h-12 md:h-14 w-auto max-w-[180px] sm:max-w-[220px] object-contain opacity-90 hover:opacity-100 transition-all duration-300 hover:drop-shadow-[0_0_12px_rgba(0,180,216,0.25)] ${
-                      logoDarkUrl
+                    className={`h-10 sm:h-12 md:h-14 w-auto max-w-[180px] sm:max-w-[220px] object-contain filter grayscale opacity-60 transition-all duration-300 hover:grayscale-0 hover:opacity-100 hover:drop-shadow-[0_0_12px_rgba(0,180,216,0.25)] ${logoDarkUrl
                         ? "dark:hidden block"
-                        : "dark:brightness-115 dark:contrast-105"
-                    }`}
+                        : "dark:grayscale dark:invert dark:opacity-75 dark:hover:filter-none dark:hover:opacity-100"
+                      }`}
                     loading="eager"
                   />
 
@@ -107,7 +100,7 @@ export const ClientLogoBar = () => {
                     <img
                       src={logoDarkUrl}
                       alt={`${client.name} dark logo`}
-                      className="h-10 sm:h-12 md:h-14 w-auto max-w-[180px] sm:max-w-[220px] object-contain opacity-90 hover:opacity-100 transition-all duration-300 hidden dark:block hover:drop-shadow-[0_0_12px_rgba(0,180,216,0.3)]"
+                      className="h-10 sm:h-12 md:h-14 w-auto max-w-[180px] sm:max-w-[220px] object-contain filter grayscale opacity-70 transition-all duration-300 hidden dark:block hover:grayscale-0 hover:opacity-100 hover:drop-shadow-[0_0_12px_rgba(0,180,216,0.3)]"
                       loading="eager"
                     />
                   )}

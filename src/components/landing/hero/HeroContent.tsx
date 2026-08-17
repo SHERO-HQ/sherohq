@@ -6,6 +6,7 @@ import { m, MotionValue, Variants } from "motion/react";
 import { RocketIcon } from "@/assets/icons/icons";
 import { ArrowRight, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SectionBadge } from "@/components/common/SectionBadge";
 
 interface HeroContentProps {
   isMobile: boolean;
@@ -63,14 +64,10 @@ export const HeroContent = ({
         className="flex flex-col items-center gap-5 sm:gap-6 text-center"
       >
         {/* Top Badge */}
-        <m.div
-          variants={heroChildVariants}
-          className="inline-flex items-center gap-2 px-4 py-1.5 rounded text-xs border border-brand-secondary-500/20 bg-brand-secondary-500/5 transition-colors duration-300"
-        >
-          <RocketIcon className="size-4 text-brand-secondary-600 dark:text-brand-secondary-400" />
-          <span className="text-[.65rem] font-medium uppercase tracking-wide text-brand-secondary-600 dark:text-brand-secondary-400">
+        <m.div variants={heroChildVariants}>
+          <SectionBadge icon={RocketIcon}>
             Trusted Technology Partner
-          </span>
+          </SectionBadge>
         </m.div>
 
         {/* Main Headline */}

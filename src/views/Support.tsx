@@ -19,6 +19,7 @@ import {
   WhatsAppIcon,
 } from "@/assets/icons/icons";
 import SupportTicketForm from "@/components/support/SupportTicketForm";
+import { SectionBadge } from "@/components/common/SectionBadge";
 import Link from "next/link";
 import { COMPANY_EMAILS } from "@/constants/emails";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
@@ -63,10 +64,11 @@ const Support = () => {
             <m.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="inline-flex items-center gap-2 px-4 py-1 mb-6 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-200 dark:border-brand-secondary-500/20 uppercase transition-colors duration-300"
+              className="mb-6"
             >
-              <LifeBuoy className="size-4" />
-              <span>Customer Support</span>
+              <SectionBadge icon={LifeBuoy}>
+                Customer Support
+              </SectionBadge>
             </m.div>
             <h1 className="text-2xl md:text-4xl font-bold text-foreground mb-6 tracking-tight transition-colors duration-300">
               Get Help in <span className="text-brand-secondary-600">Minutes</span>
@@ -214,10 +216,9 @@ const Support = () => {
               </div>
 
               <div className="flex-1">
-                <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-xs font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-200 dark:border-brand-secondary-500/20 uppercase rounded transition-colors duration-300">
-                  <LifeBuoy className="size-4" />
+                <SectionBadge icon={LifeBuoy} className="mb-4">
                   Connect With Support
-                </span>
+                </SectionBadge>
                 <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4 tracking-tight transition-colors duration-300">
                   Still need help?
                 </h2>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, Calendar, Sparkles } from "lucide-react";
 import { FadeInView } from "@/components/motion/AnimateSection";
+import { SectionBadge } from "@/components/common/SectionBadge";
 
 const AboutCTA = () => {
   return (
@@ -33,10 +34,9 @@ const AboutCTA = () => {
 
             <div className="relative z-10 max-w-2xl mx-auto flex flex-col items-center">
               {/* Badge */}
-              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100/80 dark:bg-brand-secondary-500/10 border border-brand-secondary-500/30 dark:border-brand-secondary-500/20 rounded transition-colors duration-300">
-                <Sparkles className="size-3.5" />
+              <SectionBadge icon={Sparkles} className="mb-6">
                 Let's Collaborate
-              </span>
+              </SectionBadge>
 
               {/* Heading */}
               <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-4 transition-colors duration-300 leading-tight">

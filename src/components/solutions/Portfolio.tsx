@@ -7,6 +7,7 @@ import { useProjects } from "@/hooks/queries/useProjects";
 import { m } from "motion/react";
 import { Wrench } from "lucide-react";
 import { type Project } from "@/services/api";
+import { SectionBadge } from "@/components/common/SectionBadge";
 import { PortfolioCard } from "./PortfolioCard";
 import { PortfolioDrawer } from "./PortfolioDrawer";
 
@@ -111,10 +112,9 @@ const Portfolio = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-8"
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
-            <Wrench className="size-4" />
+          <SectionBadge icon={Wrench} className="mb-4">
             Our Work
-          </span>
+          </SectionBadge>
           <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
             What We've Built
           </h2>

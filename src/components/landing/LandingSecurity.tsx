@@ -1,6 +1,7 @@
 "use client";
 import { m } from "motion/react";
 import { ShieldCheck, Lock, Database, Activity, Shield } from "lucide-react";
+import { SectionBadge } from "@/components/common/SectionBadge";
 
 const securityFeatures = [
   {
@@ -46,10 +47,11 @@ const LandingSecurity = () => {
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 rounded border border-brand-primary-500/30 bg-brand-primary-500/10 px-4 py-1.5 text-[.8rem] font-medium uppercase tracking-wide text-brand-primary-400 mb-6"
+            className="mb-6"
           >
-            <ShieldCheck className="size-4" />
-            Built-In System Security
+            <SectionBadge icon={ShieldCheck} variant="primary">
+              Built-In System Security
+            </SectionBadge>
           </m.div>
           
           <m.h2

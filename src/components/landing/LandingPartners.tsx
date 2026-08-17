@@ -1,4 +1,5 @@
 import { Briefcase } from "lucide-react";
+import { SectionBadge } from "@/components/common/SectionBadge";
 
 interface Partner {
   name: string;
@@ -64,10 +65,9 @@ const LandingPartners = () => {
       <div className="pointer-events-none absolute inset-0 pattern-dots opacity-80 transition-opacity duration-300 dark:opacity-25" />
 
       <div className="container relative z-10 mx-auto mb-10 max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-        <span className="mb-4 inline-flex items-center gap-2 rounded border border-brand-secondary-500/50 bg-brand-secondary-100 px-4 py-1 text-[10px] font-semibold uppercase text-brand-secondary-600 transition-colors duration-300 dark:border-brand-secondary-800/50 dark:bg-brand-secondary-200/20 dark:text-brand-secondary-400">
-          <Briefcase className="size-4" />
+        <SectionBadge icon={Briefcase} className="mb-4">
           Trusted Brands
-        </span>
+        </SectionBadge>
         <h2 className="text-xl font-bold tracking-tight text-slate-900 transition-colors duration-300 md:text-2xl dark:text-slate-100">
           Trusted Brands We Supply & Support
         </h2>

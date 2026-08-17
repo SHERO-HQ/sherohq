@@ -1,6 +1,7 @@
 "use client";
 import { m } from "motion/react";
 import { MessageSquare, ArrowRight, Calendar, Clock, Video } from "lucide-react";
+import { SectionBadge } from "@/components/common/SectionBadge";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -67,10 +68,9 @@ const ConsultationHero = () => {
             className="flex flex-col items-start text-left"
           >
             <m.div variants={itemVariants}>
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-6 text-[.65rem] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/40 dark:border-brand-secondary-800/50 rounded uppercase tracking-wider transition-colors duration-300 shadow-sm">
-                <MessageSquare className="size-4" />
-                <span>Expert Guidance</span>
-              </div>
+              <SectionBadge icon={MessageSquare} className="mb-6 shadow-sm">
+                Expert Guidance
+              </SectionBadge>
             </m.div>
 
             <m.h1

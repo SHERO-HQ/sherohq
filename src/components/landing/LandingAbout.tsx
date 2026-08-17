@@ -8,6 +8,7 @@ import {
   Cpu,
   Globe,
   Globe2} from "lucide-react";
+import { SectionBadge } from "@/components/common/SectionBadge";
 import { } from "@/components/ui/card";
 
 const LandingAbout = () => {
@@ -29,10 +30,9 @@ const LandingAbout = () => {
           <FadeInView direction="left" delay={0}>
             <div className="w-full space-y-6">
               <div className="space-y-4">
-                <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase">
-                  <Globe className="size-4" />
+                <SectionBadge icon={Globe} className="mb-4">
                   Who We Are
-                </span>
+                </SectionBadge>
 
                 <h2 className="text-2xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 leading-tight">
                   Redefining <br />

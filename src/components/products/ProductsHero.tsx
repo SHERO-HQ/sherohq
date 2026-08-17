@@ -8,6 +8,7 @@ import {
   TrendingUp,
   ShieldCheck,
 } from "lucide-react";
+import { SectionBadge } from "@/components/common/SectionBadge";
 import { useRef, useState, useEffect } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
@@ -115,12 +116,11 @@ const ProductHero = () => {
             <m.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded border border-brand-secondary-500/20 bg-brand-secondary-500/5  mb-4"
+              className="mb-4"
             >
-              <ShoppingBag className="size-4 text-primary" />
-              <span className="text-[10px] md:text-xs font-mono font-bold tracking-widest uppercase text-primary">
+              <SectionBadge icon={ShoppingBag}>
                 Official SHERO Shop
-              </span>
+              </SectionBadge>
             </m.div>
 
             {/* Main Heading */}

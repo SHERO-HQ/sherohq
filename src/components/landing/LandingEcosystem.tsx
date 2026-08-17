@@ -2,6 +2,7 @@
 import { useRef } from "react";
 import { m, useScroll, useTransform } from "motion/react";
 import { Cpu, Code, Shield, Network } from "lucide-react";
+import { SectionBadge } from "@/components/common/SectionBadge";
 
 const nodes = [
   {
@@ -42,10 +43,11 @@ const LandingEcosystem = () => {
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 rounded border border-brand-secondary-500/30 bg-brand-secondary-100 px-4 py-1 text-[.8rem] font-medium uppercase tracking-wide text-brand-secondary-600 dark:border-brand-secondary-800/50 dark:bg-brand-secondary-900/30 dark:text-brand-secondary-400 mb-6"
+            className="mb-6"
           >
-            <Network className="size-4" />
-            The Ecosystem Advantage
+            <SectionBadge icon={Network}>
+              The Ecosystem Advantage
+            </SectionBadge>
           </m.div>
           <m.h2
             initial={{ opacity: 0, y: 20 }}

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import HeroBackground from "@/components/common/HeroBackground";
+import { SectionBadge } from "@/components/common/SectionBadge";
 
 const heroBlock = {
   hidden: { opacity: 0, y: 18 },
@@ -67,14 +68,10 @@ const SolutionsHero = () => {
           }
           className="w-full max-w-4xl flex flex-col items-center gap-5 sm:gap-6 text-center"
         >
-          <m.div
-            variants={heroItem}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded text-xs border border-brand-secondary-500/20 bg-brand-secondary-500/5 transition-colors duration-300"
-          >
-            <Code className="size-4 text-brand-secondary-500" />
-            <span className="text-[.65rem] font-semibold uppercase tracking-wide text-brand-secondary-600 dark:text-brand-secondary-400">
+          <m.div variants={heroItem}>
+            <SectionBadge icon={Code}>
               Technology That Scales
-            </span>
+            </SectionBadge>
           </m.div>
 
           <div className="relative overflow-hidden group">

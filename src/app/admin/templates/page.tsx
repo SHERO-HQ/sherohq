@@ -3,7 +3,7 @@ import AdminTemplates from "../../../views/admin/AdminTemplates";
 import ProtectedRoute from "../../../components/admin/ProtectedRoute";
 
 export const metadata: Metadata = {
-  title: "Templates Management - SHERO Admin",
+  title: "Templates",
   description: "Manage WhatsApp, Email, and SMS templates",
 };
 

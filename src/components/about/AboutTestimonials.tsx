@@ -11,6 +11,7 @@ import {
 import { useTestimonials } from "@/hooks/queries/useTestimonials";
 import { useVisibleInterval } from "@/hooks/useVisibleInterval";
 import AppImage from "@/components/common/AppImage";
+import { SectionBadge } from "@/components/common/SectionBadge";
 
 // Helper to get initials
 const getInitials = (name: string) => {
@@ -99,10 +100,9 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
 
             {/* Header Content */}
             <div className="text-center lg:text-left max-w-xl mx-auto lg:mx-0">
-              <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-2 text-[9px] font-bold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100/80 dark:bg-brand-secondary-500/10 border border-brand-secondary-500/30 dark:border-brand-secondary-500/20 rounded uppercase tracking-wider transition-colors duration-300">
-                <UserCheck className="size-4" />
+              <SectionBadge icon={UserCheck} className="mb-2">
                 Client Voices
-              </span>
+              </SectionBadge>
               <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-3 transition-colors duration-300 leading-tight">
                 Empowering Businesses, Innovators & Communities.
               </h2>

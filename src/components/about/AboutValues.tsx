@@ -2,6 +2,7 @@
 import { StaggerContainer, StaggerItem } from "@/components/motion/AnimateSection";
 import { Lightbulb, ShieldCheck, Handshake, Target, BadgeCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SectionBadge } from "@/components/common/SectionBadge";
 
 const values = [
   {
@@ -49,10 +50,9 @@ const AboutValues = () => {
 
       <div className="container px-4 md:px-6 mx-auto w-full md:max-w-7xl relative z-10">
         <div className="text-center mb-12">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-[9px] uppercase font-bold tracking-wider text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100/80 dark:bg-brand-secondary-500/10 border border-brand-secondary-500/30 dark:border-brand-secondary-500/20 rounded transition-colors duration-300">
-            <Lightbulb className="size-3.5" />
+          <SectionBadge icon={Lightbulb} className="mb-4">
             Core Values
-          </span>
+          </SectionBadge>
           <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-3 transition-colors duration-300">
             Our Core Principles
           </h2>

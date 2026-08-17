@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { m, AnimatePresence } from "motion/react";
 import { Plus, Minus, HelpCircle } from "lucide-react";
+import { SectionBadge } from "@/components/common/SectionBadge";
 import Link from "next/link";
 import { COMPANY_EMAILS } from "@/constants/emails";
 
@@ -109,10 +110,9 @@ const FAQ = () => {
       <div className="pt-8 pb-12 bg-slate-50 dark:bg-slate-950 min-h-screen">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-500/20 uppercase tracking-wider transition-colors duration-300">
-              <HelpCircle className="size-4" />
+            <SectionBadge icon={HelpCircle} className="mb-4">
               Help Center
-            </div>
+            </SectionBadge>
             <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4 tracking-tight transition-colors duration-300">
               Answers to common{" "}
               <span className="text-brand-secondary-600">Questions</span>

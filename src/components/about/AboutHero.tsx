@@ -7,6 +7,7 @@ import {
   Target,
   Star,
 } from "lucide-react";
+import { SectionBadge } from "@/components/common/SectionBadge";
 import { useRef, useState, useEffect } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
@@ -127,12 +128,11 @@ const AboutHero = () => {
             <m.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="inline-flex items-center gap-2 px-4 py-1 rounded border border-brand-secondary-500/20 bg-brand-secondary-500/5 transition-colors duration-300 mb-4"
+              className="mb-4"
             >
-              <SmartphoneCharging className="size-4 text-brand-secondary-500" />
-              <span className="text-[10px] font-semibold uppercase text-brand-secondary-600 dark:text-brand-secondary-400">
+              <SectionBadge icon={SmartphoneCharging}>
                 About SHERO
-              </span>
+              </SectionBadge>
             </m.div>
 
             {/* Main Heading */}

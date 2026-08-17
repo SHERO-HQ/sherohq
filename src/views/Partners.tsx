@@ -13,6 +13,7 @@ import {
   Workflow,
   type LucideIcon,
 } from "lucide-react";
+import { SectionBadge } from "@/components/common/SectionBadge";
 import { useRouter } from "next/navigation";
 
 const Partners = () => {
@@ -64,10 +65,9 @@ const Partners = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-3xl mx-auto mb-10"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 rounded border border-brand-secondary-500/20 uppercase transition-colors duration-300">
-              <Handshake className="size-4" />
+            <SectionBadge icon={Handshake} className="mb-4">
               Strategic Partnerships
-            </div>
+            </SectionBadge>
             <h1 className="text-3xl md:text-6xl font-bold text-slate-900 dark:text-slate-100 mb-6 tracking-tight transition-colors duration-300">
               Grow with <span className="text-brand-secondary-600">SHERO</span>
             </h1>
@@ -92,10 +92,9 @@ const Partners = () => {
           {/* Partnership Process */}
           <section className="mb-16 py-10 border-y border-slate-200 dark:border-slate-800/50">
             <div className="text-center mb-10">
-              <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
-                <Workflow className="size-4" />
+              <SectionBadge icon={Workflow} className="mb-4">
                 The Path to Partnership
-              </span>
+              </SectionBadge>
               <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 transition-colors duration-300">
                 We Grow Together
               </h2>
@@ -125,10 +124,9 @@ const Partners = () => {
           {/* Ecosystem Grid */}
           <section className="mb-16">
             <div className="text-center mb-10">
-              <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
-                <Globe2 className="size-4" />
+              <SectionBadge icon={Globe2} className="mb-4">
                 Strategic Ecosystem
-              </span>
+              </SectionBadge>
               <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
                 Expanding Reach
               </h2>
@@ -164,10 +162,9 @@ const Partners = () => {
 
             <div className="relative z-10 flex flex-col md:flex-row md:items-center md:gap-12">
               <div className="md:flex-1">
-                <div className="inline-flex items-center gap-2 px-4 py-1 mb-6 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-300 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/20 rounded uppercase transition-colors duration-300">
-                  <Handshake className="size-4" />
+                <SectionBadge icon={Handshake} className="mb-6">
                   Tiered Benefits
-                </div>
+                </SectionBadge>
                 <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-6 transition-colors duration-300">
                   Become a Solution Partner
                 </h2>

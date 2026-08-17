@@ -1,6 +1,7 @@
 import ConsultationHero from "@/components/solutions/ConsultationHero";
 import Scheduler from "@/components/solutions/Scheduler";
 import { CalendarCheckIcon, Cpu, Target, Zap } from "lucide-react";
+import { SectionBadge } from "@/components/common/SectionBadge";
 
 const Consultation = () => {
   return (
@@ -12,10 +13,9 @@ const Consultation = () => {
         <div className="absolute top-0 right-0 w-64 h-64 bg-brand-secondary-500/5 rounded-full blur-3xl" />
         <div className="container max-w-7xl mx-auto px-4">
           <div className="max-w-3xl mb-16 px-1">
-            <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
-              <Target className="size-4" />
+            <SectionBadge icon={Target} className="mb-4">
               The Framework
-            </span>
+            </SectionBadge>
             <h3 className="text-xl md:text-2xl font-bold tracking-tight dark:text-white text-slate-900 mb-3">
               Focused Expertise, Actionable Outcomes
             </h3>
@@ -49,10 +49,9 @@ const Consultation = () => {
       <section id="scheduler-section" className="py-16 px-4 bg-slate-50 dark:bg-slate-950 relative z-20">
         <div className="container max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded uppercase transition-colors duration-300">
-              <CalendarCheckIcon className="size-4" />
+            <SectionBadge icon={CalendarCheckIcon} className="mb-4">
               Book Time
-            </span>
+            </SectionBadge>
             <h2 className="text-xl md:text-2xl font-bold tracking-tight dark:text-white text-slate-900">
               Schedule A Session
             </h2>

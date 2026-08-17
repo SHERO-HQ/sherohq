@@ -38,8 +38,8 @@ const routeTitleMap: Record<string, string> = {
   "/admin/reviews": "Reviews",
   "/testimonials": "Testimonials & Feedback",
   "/admin/testimonials": "Testimonials & Feedback",
-  "/clients": "Partners & Clients",
-  "/admin/clients": "Partners & Clients",
+  "/clients": "Clients & Partners",
+  "/admin/clients": "Clients & Partners",
   "/guides": "Guides",
   "/admin/guides": "Guides",
   "/careers": "Careers & Applications",
@@ -116,7 +116,7 @@ export default function AdminLayoutClient({
     if (typeof document !== "undefined" && pathname) {
       const cleanPath = pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
       const matchedTitle = routeTitleMap[cleanPath] || "Dashboard";
-      document.title = `${matchedTitle} | SHERO`;
+      document.title = `${matchedTitle} | SHERO Admin`;
     }
   }, [pathname]);
 

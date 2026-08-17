@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import Reveal from "@/components/motion/Reveal";
+import { SectionBadge } from "@/components/common/SectionBadge";
 import Image from "next/image";
 import {
   StaggerContainer,
@@ -65,10 +66,9 @@ const AboutStory = () => {
           {/* Text Side */}
           <Reveal direction="left" distance={40} delay={0.2}>
             <div className="text-start">
-              <span className="inline-flex items-center gap-2 px-4 py-1 mb-4 text-[10px] uppercase font-semibold text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border border-brand-secondary-500/50 dark:border-brand-secondary-800/50 rounded transition-colors duration-300">
-                <Clover className="size-4" />
+              <SectionBadge icon={Clover} className="mb-4">
                 Our Story
-              </span>
+              </SectionBadge>
               <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300">
                 Driven by
                 <span className="text-brand-secondary-600 dark:text-brand-secondary-400">

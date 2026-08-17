@@ -2,6 +2,7 @@
 import React from "react";
 import { Cpu, Shield, ArrowRight, Trophy, Headset } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SectionBadge } from "@/components/common/SectionBadge";
 import NavLink from "@/components/common/NavLink";
 import { getAbsoluteUrl } from "@/utils/subdomain";
 import { FadeInView, StaggerContainer, StaggerItem } from "@/components/motion/AnimateSection";
@@ -58,10 +59,9 @@ const AboutManifesto = () => {
         <FadeInView direction="up" delay={0}>
           <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
             {/* Section Badge */}
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 text-[9px] font-bold uppercase tracking-wider text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100/80 dark:bg-brand-secondary-500/10 border border-brand-secondary-500/30 dark:border-brand-secondary-500/20 rounded transition-colors duration-300">
-              <Trophy className="size-3.5" />
+            <SectionBadge icon={Trophy} className="mb-4">
               Our Manifesto
-            </span>
+            </SectionBadge>
 
             {/* Main Headline Statement */}
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-6 transition-colors duration-300 leading-tight">
