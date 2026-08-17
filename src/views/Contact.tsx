@@ -36,7 +36,7 @@ const Contact = () => {
               Get In Touch
             </div>
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-              Let&apos;s Build Something Extraordinary
+              Let&apos;s Redefine What&apos;s Possible
             </h1>
             <p className="mt-3 text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
               Have a question, a project in mind, or need specialized enterprise tech support? Reach out and our team will get back to you promptly.

@@ -202,7 +202,7 @@ const PWAInstallBanner = () => {
                     Install SHERO
                   </p>
                   <p className="mt-1 text-[10px] text-slate-600 dark:text-slate-400 font-medium leading-relaxed">
-                    Install now for premium features and offline access on this
+                    Install now for full app capabilities and offline access on this
                     device.
                   </p>
                   <div className="mt-4 flex items-center gap-3">

@@ -76,7 +76,7 @@ export function FeedbackIdentityFields({
               <Input
                 label="Email Address"
                 type="email"
-                placeholder="john@shero.com"
+                placeholder="john@sherohq.com"
                 className="bg-transparent border-slate-200 dark:border-white/10 rounded"
                 {...register("email")}
                 error={errors.email?.message as string}

@@ -1,3 +1,5 @@
+import { COMPANY_EMAILS } from "@/constants/emails";
+
 const Privacy = () => {
   return (
     <>
@@ -88,6 +90,21 @@ const Privacy = () => {
                   demographic information not linked to any personal
                   identification information regarding visitors and users with
                   our business partners and trusted affiliates.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
+                  6. Contact & Data Requests
+                </h2>
+                <p>
+                  If you have questions about this Privacy Policy, your personal data, or wish to exercise your data rights, please contact our legal team at{" "}
+                  <a
+                    href={`mailto:${COMPANY_EMAILS.LEGAL}`}
+                    className="text-brand-secondary-600 hover:underline"
+                  >
+                    {COMPANY_EMAILS.LEGAL}
+                  </a>
                 </p>
               </section>
             </div>

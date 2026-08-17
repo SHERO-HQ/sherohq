@@ -97,7 +97,7 @@ const CartDrawer = () => {
                       Your cart is empty
                     </h3>
                     <p className="text-slate-500 dark:text-slate-400">
-                      Time to add some premium tech!
+                      Time to elevate your tech experience
                     </p>
                   </div>
                   <Button

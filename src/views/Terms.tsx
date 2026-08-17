@@ -100,7 +100,7 @@ const Terms = () => {
                     href={`mailto:${COMPANY_EMAILS.LEGAL}`}
                     className="text-brand-secondary-600 hover:underline"
                   >
-                    {COMPANY_EMAILS.SUPPORT}
+                    {COMPANY_EMAILS.LEGAL}
                   </a>
                 </p>
               </section>

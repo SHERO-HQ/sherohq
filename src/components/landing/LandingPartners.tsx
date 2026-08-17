@@ -69,7 +69,7 @@ const LandingPartners = () => {
           Trusted Brands
         </span>
         <h2 className="text-xl font-bold tracking-tight text-slate-900 transition-colors duration-300 md:text-2xl dark:text-slate-100">
-          We Supply & Support the Best
+          Trusted Brands We Supply & Support
         </h2>
       </div>
 

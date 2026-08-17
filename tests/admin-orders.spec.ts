@@ -9,7 +9,7 @@ test.describe("Admin Orders Flow", () => {
         contentType: "application/json",
         body: JSON.stringify({
           success: true,
-          admin: { id: "admin1", email: "admin@sherotech.com", role: "super_admin" }
+          admin: { id: "admin1", email: "admin@sherohq.com", role: "super_admin" }
         }),
       });
     });
@@ -73,7 +73,7 @@ test.describe("Admin Orders Flow", () => {
     const orderLink = page.getByText("ORD-1");
     if (await orderLink.isVisible()) {
       await orderLink.click();
-      
+
       // Wait for details modal or page
       const statusSelect = page.getByRole("combobox", { name: /Status/i }).or(page.locator("select[name='status']"));
       if (await statusSelect.isVisible()) {

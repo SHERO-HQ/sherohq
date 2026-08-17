@@ -104,7 +104,7 @@ const AboutStory = () => {
                 Our Mission
               </h3>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">
-                Engineering reliable hardware infrastructure and custom digital solutions that solve real operational challenges, remove friction, and empower organizations to grow with total confidence.
+                Create purposeful technology that removes barriers, expands opportunities, and enables lasting progress.
               </p>
             </div>
           </StaggerItem>
@@ -119,7 +119,7 @@ const AboutStory = () => {
                 Our Vision
               </h3>
               <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-light">
-                To be the premier technology partner across our markets, setting the global standard for engineering integrity, system reliability, and human-centric innovation.
+                A future where technology removes barriers, expands opportunities, and empowers every individual, business, and community to achieve more than they thought possible.
               </p>
             </div>
           </StaggerItem>

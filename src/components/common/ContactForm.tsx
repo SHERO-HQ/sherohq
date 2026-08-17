@@ -401,7 +401,7 @@ ${formData.message}`;
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                         className="w-full px-4 py-2 rounded border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950/50 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-secondary-500/10 focus:border-brand-secondary-500 transition"
-                        placeholder="john@shero.com"
+                        placeholder="john@sherohq.com"
                       />
                     </div>
                   </div>

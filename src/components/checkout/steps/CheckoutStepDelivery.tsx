@@ -82,7 +82,7 @@ export default function CheckoutStepDelivery() {
             id="email"
             type="email"
             label="Email Address"
-            placeholder="john@shero.com"
+            placeholder="john@sherohq.com"
             leftIcon={<Mail className="w-4 h-4" />}
             error={errors.email?.message}
             {...register("email")}

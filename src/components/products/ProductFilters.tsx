@@ -66,18 +66,18 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
 
   const priceRanges = [
     {
-      label: "Elite (Above S5,000)",
+      label: "Enterprise / Flagship (Above GHS5,000)",
       range: [5000, 1000000] as [number, number]},
     {
-      label: "Premium (S3,000 - S5,000)",
+      label: "Pro / High Performance (GHS3,000 - GHS5,000)",
       range: [3000, 5000] as [number, number]},
     {
-      label: "Mid-Tier (S1,000 - S3,000)",
+      label: "Mid-Tier (GHS1,000 - GHS3,000)",
       range: [1000, 3000] as [number, number]},
     {
-      label: "Standard (S500 - S1,000)",
+      label: "Standard (GHS500 - GHS1,000)",
       range: [500, 1000] as [number, number]},
-    { label: "Entry (Under S500)", range: [0, 500] as [number, number] },
+    { label: "Entry (Under GHS500)", range: [0, 500] as [number, number] },
   ];
 
   const handleApply = () => {

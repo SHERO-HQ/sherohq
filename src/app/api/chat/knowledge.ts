@@ -14,8 +14,8 @@ export const CATALOG_SUMMARY = `
   - HP ProBook (2800 GHS): Most affordable student option.
   - Dell Latitude 7490 (4500 GHS): High-quality business grade.
   - Dell Latitude 3120 G7 (2800 GHS): Compact and affordable.
-  - Lenovo X1 Yoga (4500 GHS): Premium 2-in-1 touchscreen.
-  - HP Elitebook 1040 G8 (6100 GHS): Premium professional.
+  - Lenovo X1 Yoga (4500 GHS): High-performance 2-in-1 touchscreen.
+  - HP Elitebook 1040 G8 (6100 GHS): Flagship business laptop.
 - Other:
   - JBL Tour Pro 2 (500 GHS): Audio/ANC.
   - Samsung Type C Adapter (80 GHS).
@@ -39,7 +39,7 @@ COMMON QUESTIONS
 
 SERVICES OFFERED
 - Managed IT Support: Remote and on-site IT management for businesses.
-- Custom Software Development: Bespoke web, mobile, and enterprise applications.
+- Custom Software Development: Tailored web, mobile, and enterprise applications.
 - Cyber Security: Network audits, vulnerability assessments, endpoint protection.
 - Cloud Solutions: Migration, hosting, and infrastructure management.
 - Hardware Sales: Laptops, networking equipment, peripherals, and accessories.

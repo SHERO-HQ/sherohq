@@ -79,9 +79,8 @@ const Footer = () => {
               />
             </NavLink>
             <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed max-w-md transition-colors duration-300">
-              Engineering the future of technology with focus on clarity, 
-              performance, and scalability with long term value to Redefine 
-              what is Possible.
+              Purposeful technology solutions built with clarity, reliability, 
+              and long-term value to redefine what&apos;s possible.
             </p>
           </div>
 

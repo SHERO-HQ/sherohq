@@ -220,7 +220,7 @@ export function ChatMessageList({
                     <Calendar size={16} className="text-brand-secondary-400" />
                     <div className="text-left">
                       <p className="text-[10px] font-bold text-brand-secondary-400 uppercase leading-none mb-1">
-                        Elite Consultation
+                        Solutions Consultation
                       </p>
                       <p className="text-xs font-medium opacity-90 tracking-tight">
                         Schedule Professional Call

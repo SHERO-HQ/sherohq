@@ -211,7 +211,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                         className="text-sm lg:text-lg text-slate-600 dark:text-slate-300 mb-8 line-clamp-3 lg:line-clamp-none leading-relaxed"
                       >
                         {currentProduct.description ||
-                          "Unlocking the next level of performance with precision engineering and state-of-the-art technology."}
+                          "Dependable performance and purposeful design, certified and backed by SHERO."}
                       </m.p>
                     </div>
 

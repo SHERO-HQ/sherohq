@@ -78,7 +78,7 @@ const Support = () => {
 
             <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
               <span className="text-xs font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-border bg-card/60">
-                2hr Response SLA
+                Responsive Direct Support
               </span>
               <span className="text-xs font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-border bg-card/60">
                 Dedicated Support Team

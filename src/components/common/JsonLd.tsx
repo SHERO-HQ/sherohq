@@ -26,7 +26,7 @@ export default function JsonLd() {
       {
         "@type": "LocalBusiness",
         "@id": `https://${COMPANY_CONTACTS.WEBSITE}/#localbusiness`,
-        "name": "SHERO Tech",
+        "name": "SHERO",
         "parentOrganization": {
           "@id": `https://${COMPANY_CONTACTS.WEBSITE}/#organization`
         },
@@ -36,10 +36,10 @@ export default function JsonLd() {
         "priceRange": "$$",
         "address": {
           "@type": "PostalAddress",
-          "streetAddress": "Shero Tech Hub, Spintex Road",
-          "addressLocality": "Accra",
-          "addressRegion": "Greater Accra",
-          "postalCode": "GA-102-3920",
+          "streetAddress": "Shero Tech Hub, Jisonayili Road",
+          "addressLocality": "Tamale",
+          "addressRegion": "Northern",
+          "postalCode": "NS-124-3920",
           "addressCountry": "GH"
         },
         "geo": {

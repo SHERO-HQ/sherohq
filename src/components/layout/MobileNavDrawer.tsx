@@ -224,7 +224,7 @@ export function MobileNavDrawer({
                   SHERO
                 </p>
                 <p className="text-center text-[9px] text-slate-400 dark:text-slate-600 font-medium">
-                  Premium Tech & Modern Solutions
+                  Purposeful Tech & Modern Solutions
                 </p>
               </div>
             </div>

@@ -25,7 +25,7 @@ const SHOP_PREVIEW_IMAGE = `${SHOP_SITE_URL}/shero.png`;
 export const metadata: Metadata = {
   title: "Shop",
   description:
-    "Browse SHERO's curated collection of premium tech products — laptops, accessories, smart devices, and more.",
+    "Browse SHERO's curated collection of verified hardware and technology essentials — laptops, accessories, smart devices, and more.",
   alternates: {
     canonical: `${SHOP_SITE_URL}/shop`,
   },
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     type: "website",
     title: "Shop | SHERO",
     description:
-      "Browse SHERO's curated collection of premium tech products — laptops, accessories, smart devices, and more.",
+      "Browse SHERO's curated collection of verified hardware and technology essentials — laptops, accessories, smart devices, and more.",
     url: `${SHOP_SITE_URL}/shop`,
     siteName: "SHERO",
     images: [
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Shop | SHERO",
     description:
-      "Browse SHERO's curated collection of premium tech products — laptops, accessories, smart devices, and more.",
+      "Browse SHERO's curated collection of verified hardware and technology essentials — laptops, accessories, smart devices, and more.",
     images: [SHOP_PREVIEW_IMAGE],
   },
 };

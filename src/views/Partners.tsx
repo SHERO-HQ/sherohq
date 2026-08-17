@@ -48,7 +48,7 @@ const Partners = () => {
   ];
 
   const benefits = [
-    "Access to premium commercial hardware at wholesale rates",
+    "Access to enterprise-grade commercial hardware at wholesale rates",
     "Priority technical support and dedicated account management",
     "Co-marketing opportunities and brand visibility",
     "Early access to new product launches and innovations",

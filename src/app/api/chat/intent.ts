@@ -356,7 +356,7 @@ export function buildFallbackReply(
     if (budget && budget < 6000)
       return `I recommend browsing our entry-level ${brand}laptops within your ${formatGhs(budget)} budget on our Products page. (AI Offline Mode)`;
     if (budget)
-      return `I've found some premium options for your ${formatGhs(budget)} budget in our store. (AI Offline Mode)`;
+      return `I've found top-tier options for your ${formatGhs(budget)} budget in our store. (AI Offline Mode)`;
     return `I can help you browse our current ${brand}laptop inventory. Please visit the Products page to see our full catalog. (AI Offline Mode)`;
   }
 

@@ -177,7 +177,7 @@ const AboutHero = () => {
               {[
                 {
                   label: "INNOVATION",
-                  sub: "Cutting Edge",
+                  sub: "Practical Innovation",
                   icon: Lightbulb,
                   color: "text-brand-secondary-500",
                 },

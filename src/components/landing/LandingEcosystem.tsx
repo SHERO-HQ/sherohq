@@ -6,8 +6,8 @@ import { Cpu, Code, Shield, Network } from "lucide-react";
 const nodes = [
   {
     id: 1,
-    title: "Premium Hardware",
-    desc: "We supply reliable, high-performance hardware foundations.",
+    title: "Reliable Hardware",
+    desc: "We supply dependable, high-performance hardware foundations.",
     icon: Cpu,
   },
   {

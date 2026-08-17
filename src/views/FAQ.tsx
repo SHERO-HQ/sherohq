@@ -3,6 +3,7 @@ import { useState } from "react";
 import { m, AnimatePresence } from "motion/react";
 import { Plus, Minus, HelpCircle } from "lucide-react";
 import Link from "next/link";
+import { COMPANY_EMAILS } from "@/constants/emails";
 
 const FAQ = () => {
   const faqs = [
@@ -86,10 +87,10 @@ const FAQ = () => {
             <>
               You can reach our technical support team via the ticketing system on your dashboard, by emailing{" "}
               <a
-                href="mailto:support@sherotech.com"
+                href={`mailto:${COMPANY_EMAILS.SUPPORT}`}
                 className="text-brand-secondary-600 hover:underline font-medium"
               >
-                support@sherotech.com
+                {COMPANY_EMAILS.SUPPORT}
               </a>
               , or through our dedicated WhatsApp support line.
             </>

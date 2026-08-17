@@ -1,6 +1,6 @@
 # SheroTech Solutions & Showcase Platform
 
-A modern, responsive platform built for **SHERO HQ Technologies**. This website showcases premium hardware, custom systems configuration, managed software solutions, and expert consultation services, all backed by a high-performance Next.js Native Architecture.
+A modern, responsive platform built for **SHERO HQ Technologies**. This website showcases reliable hardware, custom systems configuration, managed software solutions, and expert consultation services, all backed by a high-performance Next.js Native Architecture.
 
 ---
 
@@ -21,7 +21,7 @@ For detailed technical guides, architectural specifications, and API references,
 - **Next.js 16+ Native Architecture**: Unified full-stack codebase utilizing modern App Router API routes.
 - **Unified Drizzle ORM Data Layer**: Strongly typed, parameterized PostgreSQL queries across all 24+ API endpoints.
 - **Security Hardening**: Session rotation on login, per-account brute-force lockout, double-submit cookie CSRF tokens, and security headers.
-- **Premium Solutions Showcase**: Immersive displays for managed IT support, server infrastructure, custom software engineering, and procurement services.
+- **Enterprise Solutions Showcase**: Immersive displays for managed IT support, server infrastructure, custom software engineering, and procurement services.
 - **Direct Lead Generation**: Seamless client engagement with dynamic WhatsApp inquiry workflows and custom quote triggers.
 - **Multi-Factor Authentication (MFA)**: Production-grade TOTP-based security for administrative accounts.
 - **React Query State Management**: Client-server state decoupling for ultra-fast UI rendering and real-time query invalidation.

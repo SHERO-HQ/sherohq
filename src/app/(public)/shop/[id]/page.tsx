@@ -41,14 +41,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title: { absolute: "SHERO | Technology Solutions" },
       description:
-        "Premium technology solutions, hardware, and software services.",
+        "Purposeful technology solutions, reliable hardware, and software services.",
       metadataBase: new URL(siteUrl),
       alternates: { canonical: pageUrl },
       openGraph: {
         type: "website",
         title: "SHERO | Technology Solutions",
         description:
-          "Premium technology solutions, hardware, and software services.",
+          "Purposeful technology solutions, reliable hardware, and software services.",
         url: pageUrl,
         siteName: "SHERO",
         images: [
@@ -64,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         card: "summary_large_image",
         title: "SHERO | Technology Solutions",
         description:
-          "Premium technology solutions, hardware, and software services.",
+          "Purposeful technology solutions, reliable hardware, and software services.",
         images: [`${siteUrl}/shero.png`],
       },
     };

@@ -12,7 +12,7 @@ const pillars = [
     title: "Hardware",
     badge: "Infrastructure",
     description:
-      "High-performance laptops, enterprise servers, and networking equipment sourced from trusted global partners.",
+      "High-performance laptops, enterprise servers, and networking equipment sourced from authorized brand partners.",
     color: "secondary",
     href: "/products",
     linkText: "Explore Hardware",
@@ -146,7 +146,7 @@ const AboutManifesto = () => {
             &ldquo;Every interaction with SHERO should leave you with more possibilities than you had before.&rdquo;
           </p>
           <span className="inline-block text-[10px] font-mono text-slate-400 dark:text-slate-500 uppercase tracking-widest font-semibold">
-            SHERO HQ · ESTABLISHING THE STANDARD
+            SHERO HQ · EXPANDING WHAT&apos;S POSSIBLE
           </span>
         </div>
       </div>

@@ -94,7 +94,7 @@ const LandingProducts = () => {
               Featured Deals
             </span>
             <h2 className="text-xl md:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 mb-4">
-              Shop Premium Hardware
+              Explore Curated Hardware
             </h2>
             <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
               Shop laptops, phones, accessories and more with free delivery on

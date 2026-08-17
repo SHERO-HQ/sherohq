@@ -229,7 +229,7 @@ export default function ProductQuickViewModal({
                 </div>
 
                 <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed line-clamp-3">
-                  {product.description || "Premium high-quality tech hardware certified by SHERO Technologies. Backed by full warranty and fast doorstep delivery across Ghana."}
+                  {product.description || "Certified high-performance hardware backed by SHERO Technologies. Covered by full warranty with dependable doorstep delivery across Ghana."}
                 </p>
               </div>
 

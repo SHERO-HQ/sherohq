@@ -97,7 +97,7 @@ export default function ProductIdentityCard() {
             {/* Dynamic URL Path Preview */}
             <p className="text-[10px] text-muted-foreground mt-1 truncate">
               <span className="text-slate-600 select-none">Live URL: </span>
-              <span className="text-muted-foreground font-mono select-all">https://sherotech.com/products/</span>
+              <span className="text-muted-foreground font-mono select-all">https://sherohq.com/shop/</span>
               <span className="text-brand-secondary-400 font-semibold font-mono select-all">{slug || "product-slug"}</span>
             </p>
           </div>

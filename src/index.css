@@ -204,7 +204,7 @@ body {
 }
 
 .dark {
-    /* Premium Dark Mode: Deep Blue-Black Slate - IMPROVED CONTRAST */
+    /* Brand Dark Mode: Deep Blue-Black Slate - IMPROVED CONTRAST */
     --background: oklch(0.14 0.03 240);
     --foreground: oklch(0.98 0 0);
 
@@ -309,7 +309,7 @@ h6 {
         /* font-size: 12px !important; */
     }
 
-    /* Premium Patterns to replace glows */
+    /* Structured Patterns to replace glows */
     .pattern-grid-white {
         background-image: radial-gradient(circle, #e2e8f0 1px, transparent 1px);
         background-size: 24px 24px;
@@ -463,7 +463,7 @@ html.theme-transitioning :where(header,
         box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Premium Metal Chrome Reflection & Floating Utilities */
+/* Chrome Reflection & Floating Utilities */
 .chrome-sweep {
     position: relative;
     overflow: hidden;
