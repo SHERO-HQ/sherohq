@@ -76,8 +76,8 @@ export const ClientLogoBar = () => {
           {/* Section Heading with Subtle Accent Lines */}
           <div className="inline-flex items-center gap-3">
             <span className="h-px w-8 sm:w-14 bg-linear-to-r from-transparent to-slate-300 dark:to-slate-700" />
-            <p className="text-[10px] sm:text-xs font-bold font-mono uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400">
-              Teams & Companies We&apos;ve Built For
+            <p className="text-[10px] sm:text-xs font-bold font-mono uppercase tracking-wide text-slate-500 dark:text-slate-400">
+              Partners & Clients We've Worked With
             </p>
             <span className="h-px w-8 sm:w-14 bg-linear-to-l from-transparent to-slate-300 dark:to-slate-700" />
           </div>
