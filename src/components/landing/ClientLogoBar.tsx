@@ -2,14 +2,8 @@
 
 import React, { useMemo } from "react";
 import { m } from "motion/react";
-import dynamic from "next/dynamic";
 import { useClients } from "@/hooks/queries/useClients";
 import { getImageUrl } from "@/services/api";
-
-const ParticleField = dynamic(
-  () => import("@/components/common/ParticleField"),
-  { ssr: false },
-);
 
 interface ClientLogo {
   id: string;
@@ -19,30 +13,12 @@ interface ClientLogo {
   website?: string | null;
 }
 
-const DEFAULT_CLIENTS: ClientLogo[] = [
-  {
-    id: "dajrim",
-    name: "Dajrim",
-    logoSrc: "/assets/images/clients/dajrim.png",
-  },
-  {
-    id: "samakose",
-    name: "Samakose",
-    logoSrc: "/assets/images/clients/samakose.png",
-  },
-  {
-    id: "trustcircle",
-    name: "TrustCircle",
-    logoSrc: "/assets/images/clients/trustcircle.png",
-  },
-];
-
 export const ClientLogoBar = () => {
   const { data: dbClients = [] } = useClients();
 
   const clientList = useMemo<ClientLogo[]>(() => {
     if (!dbClients || dbClients.length === 0) {
-      return DEFAULT_CLIENTS;
+      return [];
     }
 
     return dbClients.map((client) => ({
@@ -53,6 +29,10 @@ export const ClientLogoBar = () => {
       website: client.website,
     }));
   }, [dbClients]);
+
+  if (clientList.length === 0) {
+    return null;
+  }
 
   return (
     <section className="relative w-full py-12 sm:py-16 md:py-20 overflow-hidden bg-linear-to-b from-white via-slate-50/70 to-white dark:from-slate-950 dark:via-slate-900/35 dark:to-slate-950 border-y border-slate-200/50 dark:border-slate-800/50 transition-colors duration-300">
