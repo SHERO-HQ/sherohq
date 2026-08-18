@@ -15,12 +15,3 @@ CREATE TABLE IF NOT EXISTS client_partners (
 
 -- Index for ordering active partners
 CREATE INDEX IF NOT EXISTS idx_client_partners_active_order ON client_partners (active, "order");
-
--- Seed initial clients if empty
-INSERT INTO client_partners (id, name, tagline, logo, category, "order", active)
-VALUES 
-('dajrim', 'Dajrim', 'Operations Platform', '/assets/images/clients/dajrim.png', 'Client', 1, true),
-('samakose', 'Samakose', 'Financial Ecosystem', '/assets/images/clients/samakose.png', 'Client', 2, true),
-('trustcircle', 'TrustCircle', 'Community Network', '/assets/images/clients/trustcircle.webp', 'Client', 3, true)
-ON CONFLICT (id) DO UPDATE 
-SET logo = EXCLUDED.logo, tagline = EXCLUDED.tagline;

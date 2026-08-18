@@ -1,4 +1,6 @@
-import Script from "next/script";
+"use client";
+
+import { useEffect } from "react";
 
 interface ThirdPartyScriptsProps {
   gaId?: string;
@@ -6,58 +8,111 @@ interface ThirdPartyScriptsProps {
 }
 
 export function ThirdPartyScripts({ gaId, fbPixelId }: ThirdPartyScriptsProps) {
+  useEffect(() => {
+    let loaded = false;
+
+    const loadScripts = () => {
+      if (loaded) return;
+      loaded = true;
+
+      // Clean up event listeners
+      window.removeEventListener("scroll", loadScripts);
+      window.removeEventListener("mousemove", loadScripts);
+      window.removeEventListener("touchstart", loadScripts);
+      window.removeEventListener("keydown", loadScripts);
+
+      // 1. Google Analytics 4
+      if (gaId) {
+        const gaScript = document.createElement("script");
+        gaScript.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+        gaScript.async = true;
+        document.head.appendChild(gaScript);
+
+        const dataLayer = ((window as any).dataLayer = (window as any).dataLayer || []);
+        function gtag(...args: any[]) {
+          dataLayer.push(args);
+        }
+        (window as any).gtag = gtag;
+        gtag("js", new Date());
+        gtag("config", gaId);
+      }
+
+      // 2. Meta (Facebook) Pixel
+      if (fbPixelId) {
+        const w = window as any;
+        if (!w.fbq) {
+          const fbqFunction: any = function (...args: any[]) {
+            if (fbqFunction.callMethod) {
+              fbqFunction.callMethod(...args);
+            } else {
+              fbqFunction.queue.push(args);
+            }
+          };
+          w.fbq = fbqFunction;
+          if (!w._fbq) w._fbq = fbqFunction;
+          fbqFunction.push = fbqFunction;
+          fbqFunction.loaded = true;
+          fbqFunction.version = "2.0";
+          fbqFunction.queue = [];
+
+          const fbScript = document.createElement("script");
+          fbScript.async = true;
+          fbScript.src = "https://connect.facebook.net/en_US/fbevents.js";
+          const firstScript = document.getElementsByTagName("script")[0];
+          if (firstScript && firstScript.parentNode) {
+            firstScript.parentNode.insertBefore(fbScript, firstScript);
+          } else {
+            document.head.appendChild(fbScript);
+          }
+        }
+
+        if (w.fbq) {
+          w.fbq("init", fbPixelId);
+          w.fbq("track", "PageView");
+        }
+      }
+    };
+
+    // Trigger on user interaction or after idle timeout
+    window.addEventListener("scroll", loadScripts, { passive: true, once: true });
+    window.addEventListener("mousemove", loadScripts, { passive: true, once: true });
+    window.addEventListener("touchstart", loadScripts, { passive: true, once: true });
+    window.addEventListener("keydown", loadScripts, { passive: true, once: true });
+
+    const idleTimer =
+      typeof window.requestIdleCallback !== "undefined"
+        ? window.requestIdleCallback(() => setTimeout(loadScripts, 2500))
+        : setTimeout(loadScripts, 3500);
+
+    return () => {
+      window.removeEventListener("scroll", loadScripts);
+      window.removeEventListener("mousemove", loadScripts);
+      window.removeEventListener("touchstart", loadScripts);
+      window.removeEventListener("keydown", loadScripts);
+      if (
+        typeof window.cancelIdleCallback !== "undefined" &&
+        typeof idleTimer === "number"
+      ) {
+        window.cancelIdleCallback(idleTimer);
+      } else {
+        clearTimeout(idleTimer as any);
+      }
+    };
+  }, [gaId, fbPixelId]);
+
   return (
     <>
-      {/* Google Analytics 4 */}
-      {gaId && (
-        <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-            strategy="lazyOnload"
-          />
-          <Script id="google-analytics" strategy="lazyOnload">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){window.dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${gaId}');
-            `}
-          </Script>
-        </>
-      )}
-
-      {/* Meta (Facebook) Pixel */}
       {fbPixelId && (
-        <>
-          <Script id="facebook-pixel" strategy="lazyOnload">
-            {`
-              !function(f,b,e,v,n,t,s)
-              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-              n.queue=[];t=b.createElement(e);t.async=!0;
-              t.src=v;s=b.getElementsByTagName(e)[0];
-              s.parentNode.insertBefore(t,s)}(window, document,'script',
-              'https://connect.facebook.net/en_US/fbevents.js');
-              fbq('init', '${fbPixelId}');
-              fbq('track', 'PageView');
-            `}
-          </Script>
-          <noscript>
-            <img
-              height="1"
-              width="1"
-              style={{ display: "none" }}
-              src={`https://www.facebook.com/tr?id=${fbPixelId}&ev=PageView&noscript=1`}
-              alt=""
-            />
-          </noscript>
-        </>
+        <noscript>
+          <img
+            height="1"
+            width="1"
+            style={{ display: "none" }}
+            src={`https://www.facebook.com/tr?id=${fbPixelId}&ev=PageView&noscript=1`}
+            alt=""
+          />
+        </noscript>
       )}
-
-      {/* 
-        Critical widgets (like a customer support chat box) can use strategy="afterInteractive"
-      */}
     </>
   );
 }

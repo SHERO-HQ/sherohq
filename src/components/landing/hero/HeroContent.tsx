@@ -2,9 +2,9 @@
 import React from "react";
 import NavLink from "@/components/common/NavLink";
 import { getAbsoluteUrl } from "@/utils/subdomain";
-import { m, MotionValue, Variants } from "motion/react";
+import { m, MotionValue } from "motion/react";
 import { RocketIcon } from "@/assets/icons/icons";
-import { ArrowRight, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionBadge } from "@/components/common/SectionBadge";
 
@@ -13,41 +13,17 @@ interface HeroContentProps {
   parallaxY: MotionValue<number>;
   parallaxOpacity: MotionValue<number>;
   parallaxScale: MotionValue<number>;
-  prefersReducedMotion: boolean;
+  prefersReducedMotion?: boolean;
   headlineLead: string;
   headlineAccent: string;
   subHeader: string;
 }
-
-const heroContainerVariants: Variants = {
-  hidden: { opacity: 1 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.02,
-    },
-  },
-};
-
-const heroChildVariants: Variants = {
-  hidden: { opacity: 1, y: 0 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-      ease: [0.16, 1, 0.3, 1] as const,
-    },
-  },
-};
 
 export const HeroContent = ({
   isMobile,
   parallaxY,
   parallaxOpacity,
   parallaxScale,
-  prefersReducedMotion,
   headlineLead,
   headlineAccent,
   subHeader,
@@ -57,44 +33,30 @@ export const HeroContent = ({
       style={isMobile ? undefined : { y: parallaxY, opacity: parallaxOpacity, scale: parallaxScale }}
       className="w-full max-w-4xl will-change-transform"
     >
-      <m.div
-        variants={heroContainerVariants}
-        initial={false}
-        animate="show"
-        className="flex flex-col items-center gap-5 sm:gap-6 text-center"
-      >
+      <div className="flex flex-col items-center gap-5 sm:gap-6 text-center">
         {/* Top Badge */}
-        <m.div variants={heroChildVariants}>
+        <div>
           <SectionBadge icon={RocketIcon}>
             Trusted Technology Partner
           </SectionBadge>
-        </m.div>
+        </div>
 
         {/* Main Headline */}
-        <m.h1
-          variants={heroChildVariants}
-          className="font-bold leading-[1.15] text-3xl sm:text-5xl md:text-6xl px-2 sm:px-0 tracking-tighter text-slate-900 dark:text-white font-sora"
-        >
+        <h1 className="font-bold leading-[1.15] text-3xl sm:text-5xl md:text-6xl px-2 sm:px-0 tracking-tighter text-slate-900 dark:text-white font-sora">
           <span>{headlineLead} </span>
           <br className="hidden sm:block" />
           <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
             {headlineAccent}
           </span>
-        </m.h1>
+        </h1>
 
         {/* Subtitle */}
-        <m.p
-          variants={heroChildVariants}
-          className="sm:text-base text-sm text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed mx-auto"
-        >
+        <p className="sm:text-base text-sm text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed mx-auto">
           {subHeader}
-        </m.p>
+        </p>
 
         {/* CTA Buttons */}
-        <m.div
-          variants={heroChildVariants}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 pt-2 sm:pt-4 w-full"
-        >
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 pt-2 sm:pt-4 w-full">
           <Button
             asChild
             variant="brandSecondary"
@@ -113,11 +75,10 @@ export const HeroContent = ({
             role="button"
             aria-label="Explore solutions"
           >
-            <span>Explore Services</span>
-            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            Explore Solutions
           </NavLink>
-        </m.div>
-      </m.div>
+        </div>
+      </div>
     </m.div>
   );
 };
