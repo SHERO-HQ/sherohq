@@ -9,6 +9,7 @@ import { getImageUrl } from "@/services/api";
 import type { Product } from "@/types/product";
 import { useProducts } from "@/hooks/queries/useProducts";
 import { getAbsoluteUrl } from "@/utils/subdomain";
+import { trackAddToCart, trackEvent } from "@/lib/tracking";
 
 export function useProductDetailState(product: Product) {
   const router = useRouter();
@@ -24,7 +25,14 @@ export function useProductDetailState(product: Product) {
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    trackEvent("ViewContent", {
+      content_ids: [product.id],
+      content_name: product.name,
+      content_type: "product",
+      value: product.price,
+      currency: "GHS"
+    });
+  }, [product.id, product.name, product.price]);
 
   const images = product.images || [product.image];
   const discount = product.originalPrice
@@ -53,6 +61,7 @@ export function useProductDetailState(product: Product) {
         category: product.category,
       });
     }
+    trackAddToCart(product);
     setIsAddedToCart(true);
     setTimeout(() => setIsAddedToCart(false), 2000);
   };

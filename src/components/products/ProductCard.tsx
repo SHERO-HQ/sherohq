@@ -10,6 +10,7 @@ import type { Product } from "@/types/product";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { WhatsAppIcon } from "@/assets/icons/icons";
 import { formatCurrency } from "@/utils/format";
+import { trackAddToCart } from "@/lib/tracking";
 
 import { getAbsoluteUrl } from "@/utils/subdomain";
 
@@ -41,6 +42,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       image: product.image,
       category: product.category,
     });
+    trackAddToCart(product);
     addNotification(
       "Added to Cart",
       `${product.name} has been added to your cart.`,

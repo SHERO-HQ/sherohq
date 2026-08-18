@@ -20,6 +20,7 @@ import { getPaymentVerificationState } from "@/lib/paymentStatus";
 import { cn } from "@/lib/utils";
 import { PaymentVerifying } from "@/components/checkout/PaymentVerifying";
 import { PaymentPending } from "@/components/checkout/PaymentPending";
+import { trackPurchase } from "@/lib/tracking";
 
 const CheckoutSuccess = () => {
   const searchParams = useSearchParams();
@@ -80,6 +81,7 @@ const CheckoutSuccess = () => {
 
         if (verificationState.status === "processing") {
           setStatus("success");
+          trackPurchase({ id: data.id, total: data.total });
           setTimeout(() => setShowRatingModal(true), 6000);
         } else if (verificationState.status === "failed") {
           setStatus("failed");
@@ -115,6 +117,7 @@ const CheckoutSuccess = () => {
         },
         (payload: any) => {
           const newStatus = payload.new.status;
+          const newOrder = payload.new;
           if (newStatus) {
             if (
               newStatus === "processing" ||
@@ -122,6 +125,7 @@ const CheckoutSuccess = () => {
               newStatus === "delivered"
             ) {
               setStatus("success");
+              trackPurchase({ id: newOrder.id, total: newOrder.total });
               setTimeout(() => setShowRatingModal(true), 6000);
             } else if (newStatus === "cancelled" || newStatus === "failed") {
               setStatus("failed");

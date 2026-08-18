@@ -119,7 +119,7 @@ const LandingProducts = () => {
                   onClick={() => setActiveCategory(category)}
                   className={`px-5 py-2 text-xs sm:text-sm font-semibold rounded whitespace-nowrap transition-all duration-200 cursor-pointer ${
                     isActive
-                      ? "bg-brand-secondary-600 text-white shadow-sm"
+                      ? "bg-brand-secondary-800 text-white shadow-sm"
                       : "text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-700/50"
                   }`}
                 >

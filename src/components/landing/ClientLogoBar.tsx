@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
+import Image from "next/image";
 import { m } from "motion/react";
 import { useClients } from "@/hooks/queries/useClients";
 import { getImageUrl } from "@/services/api";
@@ -65,13 +66,11 @@ export const ClientLogoBar = () => {
               const content = (
                 <>
                   {/* Light mode logo */}
-                  <img
+                  <Image
                     src={logoUrl}
                     alt={`${client.name} logo`}
                     width={180}
                     height={56}
-                    loading="lazy"
-                    decoding="async"
                     className={`h-10 sm:h-12 md:h-14 w-auto max-w-[180px] sm:max-w-[220px] object-contain filter grayscale opacity-60 transition-all duration-300 hover:grayscale-0 hover:opacity-100 hover:drop-shadow-[0_0_12px_rgba(0,180,216,0.25)] ${logoDarkUrl
                         ? "dark:hidden block"
                         : "dark:grayscale dark:invert dark:opacity-75 dark:hover:filter-none dark:hover:opacity-100"
@@ -80,13 +79,11 @@ export const ClientLogoBar = () => {
 
                   {/* Dedicated dark mode logo variant if provided */}
                   {logoDarkUrl && (
-                    <img
+                    <Image
                       src={logoDarkUrl}
                       alt={`${client.name} dark logo`}
                       width={180}
                       height={56}
-                      loading="lazy"
-                      decoding="async"
                       className="h-10 sm:h-12 md:h-14 w-auto max-w-[180px] sm:max-w-[220px] object-contain filter grayscale opacity-70 transition-all duration-300 hidden dark:block hover:grayscale-0 hover:opacity-100 hover:drop-shadow-[0_0_12px_rgba(0,180,216,0.3)]"
                     />
                   )}

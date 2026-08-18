@@ -18,6 +18,7 @@ import { saveOrderAccessToken } from "@/utils/orderAccess";
 import { useNotifications } from "@/hooks/useNotifications";
 import type { CheckoutInput } from "@/lib/validations/checkout";
 import { useCart } from "@/hooks/queries/useCartQuery";
+import { trackInitiateCheckout } from "@/lib/tracking";
 
 const CHECKOUT_STEPS = [
   { num: 1, title: "Cart Review" },
@@ -43,6 +44,10 @@ function CheckoutContent() {
     processPayment, handleRetryPayment, handleSwitchToOffline,
     subtotal, shipping, tax, total
   } = useCheckout();
+
+  useEffect(() => {
+    trackInitiateCheckout(total);
+  }, [total]);
 
   useEffect(() => {
     if (currentStep >= 4) return;

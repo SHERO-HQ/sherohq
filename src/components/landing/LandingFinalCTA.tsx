@@ -34,7 +34,7 @@ const LandingFinalCTA = () => {
               </Link>
               <Link
                 href="/consultation"
-                className="inline-flex items-center px-4 py-2 h-9 rounded bg-brand-secondary-600 text-white text-sm font-medium hover:bg-brand-secondary-500 transition shadow-sm hover:shadow-md shadow-brand-secondary-500/20"
+                className="inline-flex items-center px-4 py-2 h-9 rounded bg-brand-secondary-800 text-white text-sm font-medium hover:bg-brand-secondary-700 transition shadow-sm hover:shadow-md shadow-brand-secondary-500/20"
               >
                 Book a free call
                 <Phone className="w-4 h-4 ml-2" />

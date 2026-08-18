@@ -11,8 +11,10 @@ import AppImage from "@/components/common/AppImage";
 import { getImageUrl } from "@/services/api";
 import { WhatsAppIcon } from "@/assets/icons/icons";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
+import { trackAddToCart, trackEvent } from "@/lib/tracking";
 import Link from "next/link";
 import { getAbsoluteUrl } from "@/utils/subdomain";
+import React from "react";
 
 interface ProductQuickViewModalProps {
   product: Product | null;
@@ -40,6 +42,18 @@ export default function ProductQuickViewModal({
       document.body.style.overflow = "unset";
     };
   }, [isOpen]);
+
+  React.useEffect(() => {
+    if (isOpen && product) {
+      trackEvent("ViewContent", {
+        content_ids: [product.id],
+        content_name: product.name,
+        content_type: "product",
+        value: product.price,
+        currency: "GHS"
+      });
+    }
+  }, [isOpen, product]);
 
   if (!product) return null;
 
@@ -84,6 +98,7 @@ export default function ProductQuickViewModal({
         category: product.category,
       });
     }
+    trackAddToCart(product);
 
     addNotification(
       "Added to Cart",
