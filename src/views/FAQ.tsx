@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { m, AnimatePresence } from "motion/react";
 import { Plus, Minus, HelpCircle } from "lucide-react";
 import { SectionBadge } from "@/components/common/SectionBadge";
 import Link from "next/link";
@@ -109,7 +108,7 @@ const FAQ = () => {
     <>
       <div className="pt-8 pb-12 bg-slate-50 dark:bg-slate-950 min-h-screen">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
+          <div className="text-center mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both">
             <SectionBadge icon={HelpCircle} className="mb-4">
               Help Center
             </SectionBadge>
@@ -159,7 +158,7 @@ const FAQItem = ({
         className="cursor-pointer w-full flex items-center justify-between p-4 px-6 text-left hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
       >
         <span
-          className={`font-semibold pr-8 ${isOpen ? "text-brand-secondary-600 dark:text-brand-secondary-400" : ""}`}
+          className={`font-semibold pr-8 transition-colors ${isOpen ? "text-brand-secondary-600 dark:text-brand-secondary-400" : ""}`}
         >
           {question}
         </span>
@@ -171,22 +170,19 @@ const FAQItem = ({
           )}
         </span>
       </button>
-      <AnimatePresence>
-        {isOpen && (
-          <m.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden"
+      <div
+        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
+          isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div
+            className={`p-6 px-6 pt-2 leading-relaxed border-t border-slate-100 dark:border-slate-800/50 ${isOpen ? "text-slate-600 dark:text-slate-400" : ""}`}
           >
-            <div
-              className={`p-6 px-6 pt-2 leading-relaxed border-t border-slate-100 dark:border-slate-800/50 ${isOpen ? "text-slate-600 dark:text-slate-400" : ""}`}
-            >
-              {answer}
-            </div>
-          </m.div>
-        )}
-      </AnimatePresence>
+            {answer}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

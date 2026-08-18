@@ -60,23 +60,17 @@ const SolutionsHero = () => {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex flex-col items-center">
 
         {/* CENTERED TEXT SECTION */}
-        <m.div
-          variants={heroBlock}
-          initial={prefersReducedMotion ? false : "hidden"}
-          animate={
-            prefersReducedMotion ? undefined : heroReady ? "show" : "hidden"
-          }
+        <div
           className="w-full max-w-4xl flex flex-col items-center gap-5 sm:gap-6 text-center"
         >
-          <m.div variants={heroItem}>
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both">
             <SectionBadge icon={Code}>
               Technology That Scales
             </SectionBadge>
-          </m.div>
+          </div>
 
-          <div className="relative overflow-hidden group">
-            <m.h1
-              variants={heroItem}
+          <div className="relative overflow-hidden group animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both">
+            <h1
               className="font-bold font-sora leading-[1.1] text-4xl sm:text-5xl md:text-6xl lg:text-[4rem] px-2 sm:px-0 tracking-tighter text-slate-900 dark:text-white relative z-10"
             >
               <span>Software and IT</span>
@@ -84,20 +78,18 @@ const SolutionsHero = () => {
               <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-secondary-600 to-brand-primary-700 dark:from-brand-secondary-400 dark:to-brand-primary-500">
                 Built to Scale
               </span>
-            </m.h1>
+            </h1>
           </div>
 
-          <m.p
-            variants={heroItem}
-            className="sm:text-lg text-base text-slate-600 dark:text-slate-300/95 max-w-2xl leading-relaxed mx-auto"
+          <p
+            className="sm:text-lg text-base text-slate-600 dark:text-slate-300/95 max-w-2xl leading-relaxed mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-both"
           >
             From high-performance custom platforms to managed enterprise
             infrastructure, we engineer systems that grow with your business.
-          </m.p>
+          </p>
 
-          <m.div
-            variants={heroItem}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 pt-4 w-full"
+          <div
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 pt-4 w-full animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both"
           >
             <Link
               href="/consultation"
@@ -106,12 +98,11 @@ const SolutionsHero = () => {
               <span>Let's Talk</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
-          </m.div>
+          </div>
 
           {/* Features Grid below buttons */}
-          <m.div
-            variants={heroItem}
-            className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-8 lg:mt-12 w-full max-w-3xl"
+          <div
+            className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-8 lg:mt-12 w-full max-w-3xl animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500 fill-mode-both"
           >
             {features.map((feature, i) => {
               const Icon = feature.icon;
@@ -127,9 +118,9 @@ const SolutionsHero = () => {
                 </div>
               );
             })}
-          </m.div>
+          </div>
 
-        </m.div>
+        </div>
       </div>
     </header>
   );

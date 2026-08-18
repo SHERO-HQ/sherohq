@@ -36,7 +36,7 @@ const pillars = [
       "Reliable IT management and proactive infrastructure support so your team focuses on growth.",
     color: "secondary",
     href: "/solutions",
-    linkText: "Learn More",
+    linkText: "Explore Solutions",
   },
 ] as const;
 

@@ -61,24 +61,22 @@ const Support = () => {
         <div className="container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center mb-16 relative">
-            <m.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="mb-6"
+            <div
+              className="mb-6 animate-in fade-in zoom-in-95 duration-700 fill-mode-both"
             >
               <SectionBadge icon={LifeBuoy}>
                 Customer Support
               </SectionBadge>
-            </m.div>
-            <h1 className="text-2xl md:text-4xl font-bold text-foreground mb-6 tracking-tight transition-colors duration-300">
-              Get Help in <span className="text-brand-secondary-600">Minutes</span>
+            </div>
+            <h1 className="text-2xl md:text-4xl font-bold text-foreground mb-6 tracking-tight transition-colors duration-300 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both">
+              Get Help in <span className="text-brand-secondary-700 dark:text-brand-secondary-400">Minutes</span>
             </h1>
-            <p className="text-muted-foreground text-base max-w-2xl mx-auto mb-8 leading-relaxed">
+            <p className="text-muted-foreground text-base max-w-2xl mx-auto mb-8 leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-both">
               Search guides, download updates, or connect directly with our team
               for fast, reliable assistance.
             </p>
 
-            <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
+            <div className="flex flex-wrap items-center justify-center gap-3 mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both">
               <span className="text-xs font-mono uppercase tracking-wider text-slate-500 px-3 py-1.5 rounded border border-border bg-card/60">
                 Responsive Direct Support
               </span>
@@ -91,7 +89,7 @@ const Support = () => {
             </div>
 
             {/* Search */}
-            <form onSubmit={handleSearchSubmit} className="max-w-2xl mx-auto flex flex-col sm:flex-row items-center gap-4">
+            <form onSubmit={handleSearchSubmit} className="max-w-2xl mx-auto flex flex-col sm:flex-row items-center gap-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-500 fill-mode-both">
               <div className="relative w-full group">
                 <input
                   type="text"
@@ -142,7 +140,7 @@ const Support = () => {
                 >
                   <div className="absolute inset-0 bg-linear-to-r from-brand-secondary-500/5 to-brand-primary-500/5 animate-pulse" />
                   <Meh className="w-14 h-14 mx-auto mb-4 opacity-80 text-muted-foreground" />
-                  <h3 className="text-xl font-bold text-foreground mb-2">No guides found</h3>
+                  <h2 className="text-xl font-bold text-foreground mb-2">No guides found</h2>
                   <p className="text-muted-foreground text-sm max-w-md mx-auto">
                     But our AI Expert can help you with that! Press <strong className="text-foreground">Enter</strong> or click the arrow button in the search bar to ask a question.
                   </p>
@@ -178,9 +176,9 @@ const Support = () => {
                             {guide.category}
                           </span>
                         </div>
-                        <h3 className="text-xl font-bold text-foreground group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors line-clamp-2 leading-snug">
+                        <h2 className="text-xl font-bold text-foreground group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors line-clamp-2 leading-snug">
                           {guide.title}
-                        </h3>
+                        </h2>
                         <p className="text-sm text-muted-foreground mb-6 line-clamp-3 leading-relaxed mt-2">
                           {guide.summary}
                         </p>
@@ -281,17 +279,18 @@ const Support = () => {
             <h3 className="text-lg font-semibold text-foreground mb-4">Connect with our Community</h3>
             <div className="flex flex-wrap justify-center gap-4">
               {[
-                { icon: WhatsAppIcon, url: `https://chat.whatsapp.com/L3JweRUmQDBLBaxmNjIqUp` },
-                { icon: TelegramIcon, url: "https://t.me/sherohq" },
-                { icon: FacebookIcon, url: "https://web.facebook.com/sherohq1" },
-                { icon: InstagramIcon, url: "https://instagram.com/sherohq" },
-                { icon: TwitterXIcon, url: "https://twitter.com/sherohq" },
+                { icon: WhatsAppIcon, url: `https://chat.whatsapp.com/L3JweRUmQDBLBaxmNjIqUp`, label: "WhatsApp" },
+                { icon: TelegramIcon, url: "https://t.me/sherohq", label: "Telegram" },
+                { icon: FacebookIcon, url: "https://web.facebook.com/sherohq1", label: "Facebook" },
+                { icon: InstagramIcon, url: "https://instagram.com/sherohq", label: "Instagram" },
+                { icon: TwitterXIcon, url: "https://twitter.com/sherohq", label: "Twitter" },
               ].map((social, i) => (
                 <a
                   key={i}
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={social.label}
                   className="p-3 rounded-full bg-secondary text-muted-foreground hover:text-brand-secondary-600 dark:hover:text-brand-secondary-400 hover:bg-brand-secondary-500/10 border border-border transition transform hover:-translate-y-1 shadow-sm hover:shadow"
                 >
                   <social.icon className="w-5 h-5" />

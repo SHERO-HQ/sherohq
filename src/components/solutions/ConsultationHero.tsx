@@ -61,38 +61,33 @@ const ConsultationHero = () => {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
           {/* Left Column: Text Content */}
-          <m.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="show"
+          <div
             className="flex flex-col items-start text-left"
           >
-            <m.div variants={itemVariants}>
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both">
               <SectionBadge icon={MessageSquare} className="mb-6 shadow-sm">
                 Expert Guidance
               </SectionBadge>
-            </m.div>
+            </div>
 
-            <m.h1
-              variants={itemVariants}
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-[4rem] leading-[1.1] font-semibold text-slate-900 dark:text-slate-100 mb-6 tracking-tight"
+            <h1
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-[4rem] leading-[1.1] font-semibold text-slate-900 dark:text-slate-100 mb-6 tracking-tight animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both"
             >
               Accelerate Your <br />
               <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-700 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-400">
                 Technical Vision
               </span>
-            </m.h1>
+            </h1>
 
-            <m.p
-              variants={itemVariants}
-              className="text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-xl mb-10 leading-relaxed"
+            <p
+              className="text-lg sm:text-xl text-slate-600 dark:text-slate-300 max-w-xl mb-10 leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 fill-mode-both"
             >
               Book a focused session to align technology decisions, delivery
               timelines, and growth priorities with your team. Turn complex
               challenges into actionable roadmaps.
-            </m.p>
+            </p>
 
-            <m.div variants={itemVariants}>
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both">
               <button
                 onClick={scrollToScheduler}
                 className="group inline-flex items-center justify-center gap-2 px-8 py-3 text-base font-medium text-white bg-slate-900 dark:bg-white dark:text-slate-900 rounded shadow hover:shadow-xl hover:bg-slate-800 dark:hover:bg-slate-100 hover:-translate-y-0.5 transition-all duration-300"
@@ -100,8 +95,8 @@ const ConsultationHero = () => {
                 Book a Session
                 <ArrowRight className="size-5 group-hover:translate-x-1 transition-transform" />
               </button>
-            </m.div>
-          </m.div>
+            </div>
+          </div>
 
           {/* Right Column: Visual Component */}
           <m.div
@@ -124,7 +119,7 @@ const ConsultationHero = () => {
                   <Calendar className="size-7 text-brand-primary-600 dark:text-brand-primary-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Strategy Session</h3>
+                  <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Strategy Session</h2>
                   <div className="flex items-center gap-4 text-sm font-medium text-slate-500 dark:text-slate-400">
                     <span className="flex items-center gap-1.5"><Clock className="size-4" /> 30 Min</span>
                     <span className="flex items-center gap-1.5"><Video className="size-4" /> Video Call</span>

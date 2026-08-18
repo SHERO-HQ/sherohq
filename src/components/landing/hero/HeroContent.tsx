@@ -18,7 +18,7 @@ export const HeroContent = ({
   subHeader,
 }: HeroContentProps) => {
   return (
-    <div className="w-full max-w-4xl animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out">
+    <div className="w-full max-w-4xl">
       <div className="flex flex-col items-center gap-5 sm:gap-6 text-center">
         {/* Top Badge */}
         <div>

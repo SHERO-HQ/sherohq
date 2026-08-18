@@ -60,16 +60,14 @@ const Partners = () => {
       <div className="pt-8 pb-12 bg-slate-50 dark:bg-slate-950 min-h-screen">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Hero Section */}
-          <m.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center max-w-3xl mx-auto mb-10"
+          <div
+            className="text-center max-w-3xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 fill-mode-both"
           >
             <SectionBadge icon={Handshake} className="mb-4">
               Strategic Partnerships
             </SectionBadge>
-            <h1 className="text-3xl md:text-6xl font-bold text-slate-900 dark:text-slate-100 mb-6 tracking-tight transition-colors duration-300">
-              Grow with <span className="text-brand-secondary-600">SHERO</span>
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-6 tracking-tight transition-colors duration-300">
+              Grow with <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary-600 to-brand-secondary-600 dark:from-brand-primary-500 dark:to-brand-secondary-500">SHERO</span>
             </h1>
             <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
               Collaborate on technology projects, unlock distribution
@@ -87,7 +85,7 @@ const Partners = () => {
                 Co-Marketing Support
               </span>
             </div>
-          </m.div>
+          </div>
 
           {/* Partnership Process */}
           <section className="mb-16 py-10 border-y border-slate-200 dark:border-slate-800/50">
@@ -103,7 +101,7 @@ const Partners = () => {
               {steps.map((step, idx) => (
                 <div key={idx} className="relative">
                   <div className="flex items-center gap-4 mb-3">
-                    <div className="size-10 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-center font-mono font-bold text-brand-secondary-600 dark:text-brand-secondary-400">
+                    <div className="size-10 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-center font-mono font-bold text-brand-secondary-700 dark:text-brand-secondary-400">
                       0{idx + 1}
                     </div>
                     {idx < 3 && (
@@ -145,10 +143,10 @@ const Partners = () => {
                   viewport={{ once: true }}
                   className="bg-slate-50 dark:bg-slate-950 p-6 flex flex-col items-center justify-center gap-4 hover:bg-white dark:hover:bg-slate-900 transition-colors group cursor-default"
                 >
-                  <div className="flex items-center justify-center group-hover:scale-110 group-hover:text-brand-secondary-500">
-                    <partner.icon className="w-8 h-8 text-slate-400 dark:text-slate-600 group-hover:text-brand-secondary-500" />
+                  <div className="flex items-center justify-center group-hover:scale-110 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors">
+                    <partner.icon className="w-8 h-8 text-slate-500 dark:text-slate-400 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400" />
                   </div>
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-500 text-center">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 text-center">
                     {partner.name}
                   </span>
                 </m.div>
@@ -180,7 +178,7 @@ const Partners = () => {
                 </ul>
                 <button
                   onClick={handleApplyClick}
-                  className="group cursor-pointer inline-flex items-center gap-2 px-8 py-2.5 bg-brand-secondary-600 hover:bg-brand-secondary-700 text-white text-sm rounded font-semibold transition duration-300 shadow shadow-brand-secondary-500/25 hover:shadow hover:shadow-brand-secondary-500/30 hover:scale-[1.02] active:scale-95"
+                  className="group cursor-pointer inline-flex items-center gap-2 px-8 py-2.5 bg-brand-secondary-700 hover:bg-brand-secondary-800 dark:bg-brand-secondary-600 dark:hover:bg-brand-secondary-500 text-white text-sm rounded font-semibold transition duration-300 shadow shadow-brand-secondary-500/25 hover:shadow hover:shadow-brand-secondary-500/30 hover:scale-[1.02] active:scale-95"
                 >
                   <span>Start Partnership</span>
                   <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />

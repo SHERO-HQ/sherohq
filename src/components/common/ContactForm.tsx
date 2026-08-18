@@ -1,6 +1,5 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { m, AnimatePresence } from "motion/react";
 import {
   Send,
   CheckCircle2,
@@ -150,10 +149,8 @@ ${formData.message}`;
       )}
 
       {status === "success" && (
-        <m.div
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="text-center py-8 space-y-4"
+        <div
+          className="text-center py-8 space-y-4 animate-in fade-in zoom-in-95 duration-500"
         >
           <div className="w-16 h-16 bg-brand-secondary-100 dark:bg-brand-secondary-900/30 rounded-full flex items-center justify-center mx-auto shadow-md">
             <CheckCircle2 className="w-8 h-8 text-brand-secondary-600 dark:text-brand-secondary-400 animate-bounce" />
@@ -171,123 +168,110 @@ ${formData.message}`;
           >
             Send Another Message
           </Button>
-        </m.div>
+        </div>
       )}
 
       {status !== "success" && (
         <form onSubmit={handleSubmit} className="relative">
-          <AnimatePresence mode="wait" custom={direction}>
-            <m.div
-              key={step}
-              custom={direction}
-              initial={{ opacity: 0, x: direction * 15 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: direction * -15 }}
-              transition={{ duration: 0.22, ease: "easeInOut" }}
-            >
-              {/* STEP 1: ROUTING CARDS */}
-              {step === 1 && (
-                <div className="space-y-6">
-                  <div className="text-center md:text-left">
-                    <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
-                      How can we help you today?
-                    </h2>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-                      Select the option that matches your inquiry to get started.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 gap-4">
-                    {/* Option 1: Proposal (Primary Green) */}
-                    <m.button
-                      whileHover={{ scale: 1.01, y: -2 }}
-                      whileTap={{ scale: 0.99 }}
-                      type="button"
-                      onClick={() => handleSelectType("proposal")}
-                      className="group p-5 text-left rounded border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-primary-500/50 dark:hover:border-brand-primary-400/30 hover:bg-brand-primary-500/5 dark:hover:bg-brand-primary-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
-                    >
-                      <div className="p-2.5 rounded bg-brand-primary-500/10 dark:bg-brand-primary-500/10 text-brand-primary-600 dark:text-brand-primary-400 shrink-0 transition-transform group-hover:scale-105">
-                        <Code className="w-5 h-5" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-brand-primary-600 dark:group-hover:text-brand-primary-400 transition-colors flex items-center justify-between gap-2">
-                          <span>Request Proposal</span>
-                          <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-brand-primary-600 dark:group-hover:text-brand-primary-400 transition-all group-hover:translate-x-1 shrink-0" />
-                        </h4>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                          Get a custom quote for software dev, cloud migration, or managed IT SLAs.
-                        </p>
-                      </div>
-                    </m.button>
-
-                    {/* Option 2: General (Secondary Blue) */}
-                    <m.button
-                      whileHover={{ scale: 1.01, y: -2 }}
-                      whileTap={{ scale: 0.99 }}
-                      type="button"
-                      onClick={() => handleSelectType("general")}
-                      className="group p-5 text-left rounded border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30 hover:bg-brand-secondary-500/5 dark:hover:bg-brand-secondary-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
-                    >
-                      <div className="p-2.5 rounded bg-brand-secondary-500/10 dark:bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 shrink-0 transition-transform group-hover:scale-105">
-                        <HelpCircle className="w-5 h-5" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors flex items-center justify-between gap-2">
-                          <span>General Inquiry</span>
-                          <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-brand-secondary-500 dark:group-hover:text-brand-secondary-400 transition-all group-hover:translate-x-1 shrink-0" />
-                        </h4>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                          Ask quick questions about shop deliveries, local branches, or store pickups.
-                        </p>
-                      </div>
-                    </m.button>
-
-                    {/* Option 3: Support (Emerald) */}
-                    <m.button
-                      whileHover={{ scale: 1.01, y: -2 }}
-                      whileTap={{ scale: 0.99 }}
-                      type="button"
-                      onClick={() => handleSelectType("order")}
-                      className="group p-5 text-left rounded border border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-emerald-500/50 dark:hover:border-emerald-400/30 hover:bg-emerald-500/5 dark:hover:bg-emerald-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
-                    >
-                      <div className="p-2.5 rounded bg-emerald-500/10 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0 transition-transform group-hover:scale-105">
-                        <ShoppingBag className="w-5 h-5" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors flex items-center justify-between gap-2">
-                          <span>Order & Support</span>
-                          <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-all group-hover:translate-x-1 shrink-0" />
-                        </h4>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                          Troubleshoot current online order statuses or ask for product setup help.
-                        </p>
-                      </div>
-                    </m.button>
-
-                    {/* Option 4: Partnerships (Amber) */}
-                    <m.button
-                      whileHover={{ scale: 1.01, y: -2 }}
-                      whileTap={{ scale: 0.99 }}
-                      type="button"
-                      onClick={() => handleSelectType("partnership")}
-                      className="group p-5 text-left rounded border border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-amber-500/50 dark:hover:border-amber-400/30 hover:bg-amber-500/5 dark:hover:bg-amber-500/5 hover:shadow-md cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
-                    >
-                      <div className="p-2.5 rounded bg-amber-500/10 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0 transition-transform group-hover:scale-105">
-                        <Verified className="w-5 h-5" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors flex items-center justify-between gap-2">
-                          <span>Collabs & Careers</span>
-                          <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-all group-hover:translate-x-1 shrink-0" />
-                        </h4>
-                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-                          Inquire about joint venture collaborations, hardware vendor contracts, or careers.
-                        </p>
-                      </div>
-                    </m.button>
-                  </div>
+          <div
+            key={step}
+            className={`animate-in fade-in duration-300 ${direction > 0 ? "slide-in-from-right-4" : "slide-in-from-left-4"}`}
+          >
+            {/* STEP 1: ROUTING CARDS */}
+            {step === 1 && (
+              <div className="space-y-6">
+                <div className="text-center md:text-left">
+                  <h2 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
+                    How can we help you today?
+                  </h2>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                    Select the option that matches your inquiry to get started.
+                  </p>
                 </div>
-              )}
+
+                <div className="grid grid-cols-1 gap-4">
+                  {/* Option 1: Proposal (Primary Green) */}
+                  <button
+                    type="button"
+                    onClick={() => handleSelectType("proposal")}
+                    className="group p-5 text-left rounded border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-primary-500/50 dark:hover:border-brand-primary-400/30 hover:bg-brand-primary-500/5 dark:hover:bg-brand-primary-500/5 hover:shadow-md hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.99] cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+                  >
+                    <div className="p-2.5 rounded bg-brand-primary-500/10 dark:bg-brand-primary-500/10 text-brand-primary-600 dark:text-brand-primary-400 shrink-0 transition-transform group-hover:scale-105">
+                      <Code className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-brand-primary-600 dark:group-hover:text-brand-primary-400 transition-colors flex items-center justify-between gap-2">
+                        <span>Request Proposal</span>
+                        <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-brand-primary-600 dark:group-hover:text-brand-primary-400 transition-all group-hover:translate-x-1 shrink-0" />
+                      </h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                        Get a custom quote for software dev, cloud migration, or managed IT SLAs.
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* Option 2: General (Secondary Blue) */}
+                  <button
+                    type="button"
+                    onClick={() => handleSelectType("general")}
+                    className="group p-5 text-left rounded border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-brand-secondary-500/50 dark:hover:border-brand-secondary-400/30 hover:bg-brand-secondary-500/5 dark:hover:bg-brand-secondary-500/5 hover:shadow-md hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.99] cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-secondary-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+                  >
+                    <div className="p-2.5 rounded bg-brand-secondary-500/10 dark:bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 shrink-0 transition-transform group-hover:scale-105">
+                      <HelpCircle className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors flex items-center justify-between gap-2">
+                        <span>General Inquiry</span>
+                        <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-brand-secondary-500 dark:group-hover:text-brand-secondary-400 transition-all group-hover:translate-x-1 shrink-0" />
+                      </h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                        Ask quick questions about shop deliveries, local branches, or store pickups.
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* Option 3: Support (Emerald) */}
+                  <button
+                    type="button"
+                    onClick={() => handleSelectType("order")}
+                    className="group p-5 text-left rounded border border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-emerald-500/50 dark:hover:border-emerald-400/30 hover:bg-emerald-500/5 dark:hover:bg-emerald-500/5 hover:shadow-md hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.99] cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+                  >
+                    <div className="p-2.5 rounded bg-emerald-500/10 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0 transition-transform group-hover:scale-105">
+                      <ShoppingBag className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors flex items-center justify-between gap-2">
+                        <span>Order & Support</span>
+                        <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-all group-hover:translate-x-1 shrink-0" />
+                      </h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                        Troubleshoot current online order statuses or ask for product setup help.
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* Option 4: Partnerships (Amber) */}
+                  <button
+                    type="button"
+                    onClick={() => handleSelectType("partnership")}
+                    className="group p-5 text-left rounded border border-slate-200/80 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 hover:border-amber-500/50 dark:hover:border-amber-400/30 hover:bg-amber-500/5 dark:hover:bg-amber-500/5 hover:shadow-md hover:-translate-y-0.5 hover:scale-[1.01] active:scale-[0.99] cursor-pointer transition-all duration-300 flex items-start gap-4 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900"
+                  >
+                    <div className="p-2.5 rounded bg-amber-500/10 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 shrink-0 transition-transform group-hover:scale-105">
+                      <Verified className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors flex items-center justify-between gap-2">
+                        <span>Collabs & Careers</span>
+                        <ArrowRight className="w-4 h-4 text-slate-400 dark:text-slate-600 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-all group-hover:translate-x-1 shrink-0" />
+                      </h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                        Inquire about joint venture collaborations, hardware vendor contracts, or careers.
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            )}
 
               {/* STEP 2: CONTEXTUAL SPECIFICS & CONTACT DETAILS */}
               {step === 2 && (
@@ -454,8 +438,7 @@ ${formData.message}`;
                   </div>
                 </div>
               )}
-            </m.div>
-          </AnimatePresence>
+          </div>
         </form>
       )}
     </div>

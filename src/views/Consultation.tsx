@@ -16,9 +16,9 @@ const Consultation = () => {
             <SectionBadge icon={Target} className="mb-4">
               The Framework
             </SectionBadge>
-            <h3 className="text-xl md:text-2xl font-bold tracking-tight dark:text-white text-slate-900 mb-3">
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight dark:text-white text-slate-900 mb-3">
               Focused Expertise, Actionable Outcomes
-            </h3>
+            </h2>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed ">
               Our 30-minute discovery sessions are designed to isolate technical
               bottlenecks and map out a localized deployment strategy.
@@ -34,9 +34,9 @@ const Consultation = () => {
                 <div className="size-12 rounded bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                   <topic.icon className="size-6 text-brand-secondary-600 dark:text-brand-secondary-400" />
                 </div>
-                <h4 className="text-lg font-bold text-slate-900 dark:text-white mb-3">
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-3">
                   {topic.title}
-                </h4>
+                </h3>
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                   {topic.desc}
                 </p>

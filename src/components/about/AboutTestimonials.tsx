@@ -113,12 +113,14 @@ const AboutTestimonials = ({ limit }: AboutTestimonialsProps = {}) => {
               <div className="flex items-center justify-center lg:justify-start gap-4">
                 <button
                   onClick={handlePrev}
+                  aria-label="Previous testimonial"
                   className="cursor-pointer p-3 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-secondary-600 dark:hover:text-white hover:border-brand-secondary-500 transition-colors shadow-sm"
                 >
                   <ChevronLeft className="w-5 h-5" />
                 </button>
                 <button
                   onClick={handleNext}
+                  aria-label="Next testimonial"
                   className="cursor-pointer p-3 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-400 hover:text-brand-secondary-600 dark:hover:text-white hover:border-brand-secondary-500 transition-colors shadow-sm"
                 >
                   <ChevronRight className="w-5 h-5" />

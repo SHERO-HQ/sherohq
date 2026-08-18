@@ -1,6 +1,5 @@
 "use client";
 import ContactForm from "@/components/common/ContactForm";
-import { m } from "motion/react";
 import {
   Mail,
   MapPin,
@@ -26,11 +25,8 @@ const Contact = () => {
 
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Page Header (always at top) */}
-          <m.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-center max-w-3xl mx-auto mb-10 lg:mb-14"
+          <div
+            className="text-center max-w-3xl mx-auto mb-10 lg:mb-14 animate-in fade-in slide-in-from-top-4 duration-500"
           >
             <SectionBadge icon={MessagesSquare} className="mb-4">
               Get In Touch
@@ -41,15 +37,12 @@ const Contact = () => {
             <p className="mt-3 text-base text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
               Have a question, a project in mind, or need specialized enterprise tech support? Reach out and our team will get back to you promptly.
             </p>
-          </m.div>
+          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
             {/* Left Column: Contact Channels & Context */}
-            <m.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className="lg:col-span-5 space-y-6"
+            <div
+              className="lg:col-span-5 space-y-6 animate-in fade-in slide-in-from-left-8 duration-700"
             >
               <div className="space-y-3">
                 <ContactItem
@@ -82,44 +75,37 @@ const Contact = () => {
               </div>
 
               {/* Office Details Card */}
-              <m.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5, duration: 0.5 }}
-                className="p-6 bg-slate-900/5 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded relative overflow-hidden group hover:border-emerald-500/30 transition-colors duration-500"
+              <div
+                style={{ animationDelay: '0.5s' }}
+                className="p-6 bg-slate-900/5 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded relative overflow-hidden group hover:border-emerald-500/30 transition-colors duration-500 animate-in fade-in zoom-in-95 fill-mode-both"
               >
                 <div className="absolute inset-0 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity duration-700 pattern-isometric pointer-events-none" />
                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform duration-700">
                   <Globe2 className="w-16 h-16 text-emerald-500" />
                 </div>
                 <div className="relative z-10">
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                  <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-2 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                     Regional Operations & Support
-                  </h4>
+                  </h2>
                   <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                     Headquartered in Tamale, Ghana, we serve local businesses and regional hubs with specialized logistics and on-site technical deployment teams.
                   </p>
                 </div>
-              </m.div>
-            </m.div>
+              </div>
+            </div>
 
             {/* Right Column: Glass Form */}
-            <m.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="lg:col-span-7 relative"
+            <div
+              style={{ animationDelay: '0.2s' }}
+              className="lg:col-span-7 relative animate-in fade-in slide-in-from-bottom-8 duration-700 fill-mode-both"
             >
               <ContactForm />
-            </m.div>
+            </div>
           </div>
 
           {/* Quick FAQ Section */}
-          <m.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-16 pt-10 border-t border-slate-200 dark:border-slate-800"
+          <div
+            className="mt-16 pt-10 border-t border-slate-200 dark:border-slate-800 animate-in fade-in slide-in-from-bottom-4 duration-700"
           >
             <div className="text-center mb-10">
               <SectionBadge icon={MessagesSquare} className="mb-4">
@@ -135,29 +121,26 @@ const Contact = () => {
 
             <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
               {faqs.map((faq, idx) => (
-                <m.div
+                <div
                   key={idx}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1, duration: 0.5 }}
-                  className="relative p-6 rounded bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-emerald-500/30 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300 overflow-hidden group"
+                  style={{ animationDelay: `${idx * 0.1}s` }}
+                  className="relative p-6 rounded bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-emerald-500/30 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/5 transition-all duration-300 overflow-hidden group animate-in fade-in slide-in-from-bottom-4 fill-mode-both"
                 >
                   <span className="absolute -bottom-4 -right-4 text-[120px] font-black text-slate-900/5 dark:text-white/5 pointer-events-none select-none transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-12">
                     {idx + 1}
                   </span>
                   <div className="relative z-10 space-y-3">
-                    <h4 className="font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                    <h3 className="font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                       {faq.question}
-                    </h4>
+                    </h3>
                     <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                       {faq.answer}
                     </p>
                   </div>
-                </m.div>
+                </div>
               ))}
             </div>
-          </m.div>
+          </div>
         </div>
       </div>
     </>
@@ -212,10 +195,9 @@ const ContactItem = ({
   );
 
   return (
-    <m.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay, duration: 0.5 }}
+    <div
+      style={{ animationDelay: `${delay}s` }}
+      className="animate-in fade-in slide-in-from-bottom-2 duration-500 fill-mode-both"
     >
       {href ? (
         <a
@@ -229,7 +211,7 @@ const ContactItem = ({
       ) : (
         <div className="flex items-center gap-4 group">{content}</div>
       )}
-    </m.div>
+    </div>
   );
 };
 

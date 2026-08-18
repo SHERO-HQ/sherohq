@@ -140,6 +140,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
             src={getImageUrl(currentProduct.image)}
             alt=""
             fill
+            priority
             className="object-cover opacity-30 dark:opacity-20 blur-[60px] scale-150 transform-gpu"
           />
           <div className="absolute inset-0 bg-slate-50/70 dark:bg-slate-950/70 backdrop-blur-3xl" />

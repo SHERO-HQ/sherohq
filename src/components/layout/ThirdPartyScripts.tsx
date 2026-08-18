@@ -1,6 +1,7 @@
 "use client";
 
 import Script from "next/script";
+import { useEffect, useState } from "react";
 
 interface ThirdPartyScriptsProps {
   gaId?: string;
@@ -8,6 +9,26 @@ interface ThirdPartyScriptsProps {
 }
 
 export function ThirdPartyScripts({ gaId, fbPixelId }: ThirdPartyScriptsProps) {
+  const [interacted, setInteracted] = useState(false);
+
+  useEffect(() => {
+    const handleInteraction = () => setInteracted(true);
+    
+    const events = ["scroll", "click", "touchstart", "mousemove", "keydown"];
+    
+    events.forEach(event => {
+      window.addEventListener(event, handleInteraction, { once: true });
+    });
+
+    return () => {
+      events.forEach(event => {
+        window.removeEventListener(event, handleInteraction);
+      });
+    };
+  }, []);
+
+  if (!interacted) return null;
+
   return (
     <>
       {/* 1. Google Analytics 4 */}
@@ -15,9 +36,9 @@ export function ThirdPartyScripts({ gaId, fbPixelId }: ThirdPartyScriptsProps) {
         <>
           <Script
             src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-            strategy="lazyOnload"
+            strategy="afterInteractive"
           />
-          <Script id="google-analytics" strategy="lazyOnload">
+          <Script id="google-analytics" strategy="afterInteractive">
             {`
               window.dataLayer = window.dataLayer || [];
               function gtag(){window.dataLayer.push(arguments);}
@@ -31,7 +52,7 @@ export function ThirdPartyScripts({ gaId, fbPixelId }: ThirdPartyScriptsProps) {
       {/* 2. Meta (Facebook) Pixel */}
       {fbPixelId && (
         <>
-          <Script id="facebook-pixel" strategy="lazyOnload">
+          <Script id="facebook-pixel" strategy="afterInteractive">
             {`
               !function(f,b,e,v,n,t,s)
               {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
