@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { m, AnimatePresence } from "motion/react";
 import { useRouter } from "next/navigation";
 import ProductCard from "./ProductCard";
