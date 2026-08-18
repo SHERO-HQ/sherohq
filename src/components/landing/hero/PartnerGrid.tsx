@@ -20,9 +20,8 @@ const PARTNERS = [
 export const PartnerGrid = ({ prefersReducedMotion }: PartnerGridProps) => {
   return (
     <m.div
-      initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] as const }}
       className="absolute bottom-3 sm:bottom-6 md:bottom-8 left-0 right-0 w-full"
     >
       <div className="container max-w-7xl mx-auto px-4">
@@ -41,7 +40,7 @@ export const PartnerGrid = ({ prefersReducedMotion }: PartnerGridProps) => {
                 alt={`${partner.name} logo`}
                 width={120}
                 height={40}
-                className={`w-auto max-w-full object-contain filter grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300 ${
+                className={`w-auto max-w-full object-contain filter grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-[opacity,filter] duration-300 ${
                   partner.logoClassName ?? "h-7 sm:h-9"
                 } ${partner.logoDark ? "dark:hidden block" : ""}`}
                 loading="eager"
@@ -53,7 +52,7 @@ export const PartnerGrid = ({ prefersReducedMotion }: PartnerGridProps) => {
                   alt={`${partner.name} logo`}
                   width={120}
                   height={40}
-                  className={`w-auto max-w-full object-contain filter grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300 ${
+                  className={`w-auto max-w-full object-contain filter grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-[opacity,filter] duration-300 ${
                     partner.logoClassName ?? "h-7 sm:h-9"
                   } hidden dark:block`}
                   loading="eager"

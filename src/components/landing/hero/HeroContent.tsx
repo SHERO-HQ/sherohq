@@ -20,23 +20,23 @@ interface HeroContentProps {
 }
 
 const heroContainerVariants: Variants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.05,
+      staggerChildren: 0.08,
+      delayChildren: 0.02,
     },
   },
 };
 
 const heroChildVariants: Variants = {
-  hidden: { opacity: 0, y: 16 },
+  hidden: { opacity: 1, y: 0 },
   show: {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.6,
+      duration: 0.5,
       ease: [0.16, 1, 0.3, 1] as const,
     },
   },
@@ -59,7 +59,7 @@ export const HeroContent = ({
     >
       <m.div
         variants={heroContainerVariants}
-        initial={prefersReducedMotion || isMobile ? false : "hidden"}
+        initial={false}
         animate="show"
         className="flex flex-col items-center gap-5 sm:gap-6 text-center"
       >
