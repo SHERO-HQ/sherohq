@@ -1,5 +1,4 @@
 "use client";
-import { m } from "motion/react";
 import { ArrowRight, Code, Shield, Zap, Server } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";

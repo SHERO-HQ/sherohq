@@ -262,6 +262,7 @@ const ShopView = () => {
                         <span className="text-base">{categoriesWithCount.find(c => c.id === activeCategory)?.icon}</span>
                       </div>
                       <select
+                        aria-label="Filter by category"
                         value={activeCategory}
                         onChange={(e) => handleCategoryChange(e.target.value)}
                         className="w-full text-xs sm:text-sm font-bold bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded h-9 px-10 appearance-none text-slate-800 dark:text-white cursor-pointer focus:ring-2 focus:ring-brand-secondary-500/50 transition-all shadow-sm"
