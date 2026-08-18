@@ -66,6 +66,7 @@ body,
     --color-brand-primary-700: var(--brand-primary-700);
     --color-brand-primary-800: var(--brand-primary-800);
     --color-brand-primary-900: var(--brand-primary-900);
+    --color-brand-primary-950: var(--brand-primary-950);
     --color-brand-secondary: var(--brand-secondary);
     --color-brand-secondary-50: var(--brand-secondary-50);
     --color-brand-secondary-100: var(--brand-secondary-100);
@@ -77,6 +78,7 @@ body,
     --color-brand-secondary-700: var(--brand-secondary-700);
     --color-brand-secondary-800: var(--brand-secondary-800);
     --color-brand-secondary-900: var(--brand-secondary-900);
+    --color-brand-secondary-950: var(--brand-secondary-950);
     --color-chart-1: var(--chart-1);
     --color-chart-2: var(--chart-2);
     --color-chart-3: var(--chart-3);
@@ -131,6 +133,7 @@ body,
     --brand-primary-700: #043284;
     --brand-primary-800: #032869;
     --brand-primary-900: #021d4e;
+    --brand-primary-950: #011234;
 
     --brand-secondary: #05735a;
     --brand-secondary-50: #ecfdf5;
@@ -143,6 +146,7 @@ body,
     --brand-secondary-700: #047857;
     --brand-secondary-800: #065f46;
     --brand-secondary-900: #064e3b;
+    --brand-secondary-950: #022c22;
 
     --background: oklch(0.99 0.005 240);
     --foreground: oklch(0.12 0.02 240);

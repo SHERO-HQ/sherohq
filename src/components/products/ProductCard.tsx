@@ -259,7 +259,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
               }}
               disabled={!product.inStock}
               aria-label={`Buy ${product.name} now`}
-              className="flex-1 h-10 rounded bg-brand-secondary-600 text-white font-bold text-xs uppercase tracking-widest hover:bg-brand-secondary-500 disabled:opacity-50 transition cursor-pointer"
+              className="flex-1 h-10 rounded bg-brand-secondary-800 text-white font-bold text-xs uppercase tracking-widest hover:bg-brand-secondary-700 disabled:opacity-50 transition cursor-pointer"
             >
               Buy
             </button>

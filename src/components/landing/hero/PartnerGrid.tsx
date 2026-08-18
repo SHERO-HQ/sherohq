@@ -39,19 +39,25 @@ export const PartnerGrid = ({ prefersReducedMotion }: PartnerGridProps) => {
               <img
                 src={`${partner.logo}?v=2`}
                 alt={`${partner.name} logo`}
+                width={120}
+                height={40}
                 className={`w-auto max-w-full object-contain filter grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300 ${
                   partner.logoClassName ?? "h-7 sm:h-9"
                 } ${partner.logoDark ? "dark:hidden block" : ""}`}
                 loading="eager"
+                decoding="sync"
               />
               {partner.logoDark && (
                 <img
                   src={`${partner.logoDark}?v=2`}
                   alt={`${partner.name} logo`}
+                  width={120}
+                  height={40}
                   className={`w-auto max-w-full object-contain filter grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300 ${
                     partner.logoClassName ?? "h-7 sm:h-9"
                   } hidden dark:block`}
                   loading="eager"
+                  decoding="sync"
                 />
               )}
             </li>

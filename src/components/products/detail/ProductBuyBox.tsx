@@ -145,7 +145,7 @@ export function ProductBuyBox({
                 router.push("/shop/checkout");
               }}
               disabled={!product.inStock}
-              className="flex-1 px-2 h-10 bg-brand-secondary-600 text-white rounded font-semibold text-sm tracking-widest hover:bg-brand-secondary-500 transition-colors disabled:opacity-50"
+              className="flex-1 px-2 h-10 bg-brand-secondary-800 text-white rounded font-semibold text-sm tracking-widest hover:bg-brand-secondary-700 transition-colors disabled:opacity-50"
             >
               Buy
             </button>
