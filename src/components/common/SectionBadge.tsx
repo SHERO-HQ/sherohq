@@ -16,13 +16,13 @@ export interface SectionBadgeProps extends React.HTMLAttributes<HTMLElement> {
 
 const variantStyles: Record<SectionBadgeVariant, string> = {
   brand:
-    "text-brand-secondary-600 dark:text-brand-secondary-400 bg-brand-secondary-100 dark:bg-brand-secondary-200/20 border-brand-secondary-500/50 dark:border-brand-secondary-800/50",
+    "text-brand-secondary-800 dark:text-brand-secondary-300 bg-brand-secondary-100/90 dark:bg-brand-secondary-950/70 border-brand-secondary-500/40 dark:border-brand-secondary-700/60",
   primary:
-    "text-brand-primary-600 dark:text-brand-primary-400 bg-brand-primary-100 dark:bg-brand-primary-200/20 border-brand-primary-500/50 dark:border-brand-primary-800/50",
+    "text-brand-primary-800 dark:text-brand-primary-300 bg-brand-primary-100/90 dark:bg-brand-primary-950/70 border-brand-primary-500/40 dark:border-brand-primary-700/60",
   cyan:
-    "text-cyan-600 dark:text-cyan-400 bg-cyan-100 dark:bg-cyan-950/40 border-cyan-500/40 dark:border-cyan-800/50",
+    "text-cyan-800 dark:text-cyan-300 bg-cyan-100/90 dark:bg-cyan-950/70 border-cyan-500/40 dark:border-cyan-700/60",
   slate:
-    "text-slate-600 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/50 border-slate-300 dark:border-slate-700",
+    "text-slate-800 dark:text-slate-200 bg-slate-100 dark:bg-slate-800/80 border-slate-300 dark:border-slate-700",
 };
 
 const sizeStyles: Record<SectionBadgeSize, string> = {

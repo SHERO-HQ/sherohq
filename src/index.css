@@ -5,21 +5,24 @@
    preloading, zero-CLS loading, and self-hosting optimization. */
 
 /* Thin Scrollbar */
-* {
+html,
+body,
+.custom-scrollbar,
+[data-radix-scroll-area-viewport] {
     scrollbar-width: thin;
     scrollbar-color: rgb(100, 100, 100, 0.4) transparent;
 }
 
-*::-webkit-scrollbar {
+::-webkit-scrollbar {
     width: 5px;
     height: 5px;
 }
 
-*::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
     background: transparent;
 }
 
-*::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
     background-color: rgb(100, 100, 100, 0.4);
     border-radius: 9999px;
 }

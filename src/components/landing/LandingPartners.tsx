@@ -43,16 +43,20 @@ const PartnerLogo = ({ partner }: { partner: Partner }) => (
     <img
       src={partner.logo}
       alt={`${partner.name} logo`}
+      width={120}
+      height={48}
       className={`${logoImageClass(partner.logoClassName)} ${partner.logoDark ? "dark:hidden" : ""}`}
-      loading="eager"
+      loading="lazy"
       decoding="async"
     />
     {partner.logoDark && (
       <img
         src={partner.logoDark}
         alt={`${partner.name} logo`}
+        width={120}
+        height={48}
         className={`${logoImageClass(partner.logoClassName)} hidden dark:block`}
-        loading="eager"
+        loading="lazy"
         decoding="async"
       />
     )}

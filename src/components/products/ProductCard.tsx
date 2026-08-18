@@ -128,8 +128,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
           {/* Primary Action - Always Visible */}
           <button
             onClick={toggleWishlist}
-            className="w-9 h-9 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm"
-            title="Add to wishlist"
+            className="w-9 h-9 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all duration-300 shadow-sm cursor-pointer"
+            title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+            aria-label={isWishlisted ? `Remove ${product.name} from wishlist` : `Add ${product.name} to wishlist`}
           >
             <Heart
               size={16}
@@ -141,8 +142,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
           <div className="flex flex-col gap-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 translate-x-0 lg:translate-x-4 lg:group-hover:translate-x-0 transition-all duration-300 pointer-events-auto lg:pointer-events-none lg:group-hover:pointer-events-auto">
             <button
               onClick={handleQuickView}
-              className="w-9 h-9 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-brand-secondary-500 hover:text-white transition-all duration-300 shadow-sm"
+              className="w-9 h-9 rounded-full bg-white/90 dark:bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-brand-secondary-500 hover:text-white transition-all duration-300 shadow-sm cursor-pointer"
               title="Quick view"
+              aria-label={`Quick view ${product.name}`}
             >
               <Eye size={16} />
             </button>
@@ -182,7 +184,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
       <div className="p-4 flex flex-col flex-1">
         <div className="flex-1">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] font-bold font-mono text-brand-secondary-600 dark:text-brand-secondary-400 uppercase tracking-widest bg-brand-secondary-500/10 px-2 py-0.5 rounded">
+            <span className="text-[10px] font-bold font-mono text-brand-secondary-700 dark:text-brand-secondary-300 uppercase tracking-widest bg-brand-secondary-500/10 px-2 py-0.5 rounded">
               {product.category}
             </span>
             {product.rating > 0 && (
@@ -211,7 +213,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
         <div className="mt-4 pt-4 border-t border-slate-100 dark:border-white/5 flex flex-col gap-4">
           <div className="flex flex-col">
             {product.originalPrice && (
-              <span className="text-xs font-bold uppercase tracking-wider text-red-400 line-through mb-1">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 line-through mb-1">
                 {formatCurrency(product.originalPrice)}
               </span>
             )}
@@ -231,7 +233,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
             <button
               onClick={handleAddToCart}
               disabled={!product.inStock}
-              className="flex-1 h-10 rounded flex items-center justify-center gap-2 transition bg-brand-secondary-500/10 text-brand-secondary-600 dark:text-brand-secondary-400 hover:bg-brand-secondary-600 hover:text-white! disabled:opacity-50 disabled:cursor-not-allowed border border-brand-secondary-500/20 group/cart"
+              aria-label={`Add ${product.name} to cart`}
+              className="flex-1 h-10 rounded flex items-center justify-center gap-2 transition bg-brand-secondary-500/10 text-brand-secondary-700 dark:text-brand-secondary-300 hover:bg-brand-secondary-600 hover:text-white! disabled:opacity-50 disabled:cursor-not-allowed border border-brand-secondary-500/20 group/cart cursor-pointer"
             >
               <ShoppingCart
                 size={14}
@@ -255,7 +258,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
                 router.push("/shop/checkout");
               }}
               disabled={!product.inStock}
-              className="flex-1 h-10 rounded bg-brand-secondary-600 text-white font-bold text-xs uppercase tracking-widest hover:bg-brand-secondary-500 disabled:opacity-50 transition"
+              aria-label={`Buy ${product.name} now`}
+              className="flex-1 h-10 rounded bg-brand-secondary-600 text-white font-bold text-xs uppercase tracking-widest hover:bg-brand-secondary-500 disabled:opacity-50 transition cursor-pointer"
             >
               Buy
             </button>
@@ -264,6 +268,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
+              aria-label={`Inquire about ${product.name} on WhatsApp`}
               className="w-10 h-10 rounded flex items-center justify-center bg-[#25D366] text-white hover:bg-[#20bd5a] transition shrink-0"
             >
               <WhatsAppIcon className="w-4 h-4" />

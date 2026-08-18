@@ -4,7 +4,6 @@ import Link from "next/link";
 import { ShoppingCart, ArrowRight } from "lucide-react";
 import { SectionBadge } from "@/components/common/SectionBadge";
 import { useState, useMemo, useEffect } from "react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProductCard from "@/components/products/ProductCard";
 import { useProducts } from "@/hooks/queries/useProducts";
 import { defaultCategories } from "@/utils/defaultCategories";
@@ -105,23 +104,30 @@ const LandingProducts = () => {
 
         {/* Category Filter */}
         <div className="flex justify-center mb-8">
-          <Tabs
-            value={activeCategory}
-            onValueChange={setActiveCategory}
-            className="w-full"
+          <div
+            role="group"
+            aria-label="Product categories"
+            className="w-full max-w-fit mx-auto h-auto p-1 rounded-lg bg-slate-100 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 overflow-x-auto no-scrollbar justify-start sm:justify-center flex flex-nowrap gap-1"
           >
-            <TabsList className="w-full max-w-fit mx-auto h-auto p-1 bg-slate-100 dark:bg-slate-800/50 overflow-x-auto no-scrollbar justify-start sm:justify-center flex-nowrap">
-              {categories.map((category) => (
-                <TabsTrigger
+            {categories.map((category) => {
+              const isActive = activeCategory === category;
+              return (
+                <button
                   key={category}
-                  value={category}
-                  className="px-6 py-2 text-sm whitespace-nowrap data-[state=active]:bg-brand-secondary-600 data-[state=active]:text-white data-[state=active]:shadow transition duration-300"
+                  type="button"
+                  aria-pressed={isActive}
+                  onClick={() => setActiveCategory(category)}
+                  className={`px-5 py-2 text-xs sm:text-sm font-semibold rounded whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                    isActive
+                      ? "bg-brand-secondary-600 text-white shadow-sm"
+                      : "text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-700/50"
+                  }`}
                 >
                   {category}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Products Grid */}

@@ -55,11 +55,15 @@ const LandingAbout = () => {
                 delayChildren={0.15}
               >
                 {features.map((item) => (
-                  <StaggerItem key={item} xOffset={-10} yOffset={0}>
-                    <li className="flex items-center gap-3 text-slate-700 dark:text-slate-300 font-medium transition-colors duration-300">
-                      <CheckCircle2 className="w-5 h-5 text-brand-secondary-500" />
-                      {item}
-                    </li>
+                  <StaggerItem
+                    key={item}
+                    as="li"
+                    xOffset={-10}
+                    yOffset={0}
+                    className="flex items-center gap-3 text-slate-700 dark:text-slate-300 font-medium transition-colors duration-300"
+                  >
+                    <CheckCircle2 className="w-5 h-5 text-brand-secondary-500 shrink-0" />
+                    <span>{item}</span>
                   </StaggerItem>
                 ))}
               </StaggerContainer>

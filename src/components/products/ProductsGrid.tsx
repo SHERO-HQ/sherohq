@@ -1,4 +1,5 @@
 "use client";
+import React, { useState } from "react";
 import { m, AnimatePresence } from "motion/react";
 import { useRouter } from "next/navigation";
 import ProductCard from "./ProductCard";
@@ -27,6 +28,8 @@ const ProductGrid: React.FC<ProductGridProps> = ({
     3: "lg:grid-cols-3",
     4: "lg:grid-cols-4",
   };
+
+  const [visibleCount, setVisibleCount] = React.useState(12);
 
   // Loading State - Show skeleton grid
   if (loading) {
@@ -57,7 +60,11 @@ const ProductGrid: React.FC<ProductGridProps> = ({
         </p>
 
         <button
-          onClick={() => (onReset ? onReset() : router.refresh())}
+          onClick={() => {
+            setVisibleCount(12);
+            if (onReset) onReset();
+            else router.refresh();
+          }}
           className="group flex items-center gap-3 px-10 h-10 bg-brand-secondary-600 hover:bg-brand-secondary-500 text-white font-bold uppercase tracking-widest text-xs rounded shadow shadow-brand-secondary-500/20 active:scale-95 transition"
         >
           <RefreshCcw
@@ -70,29 +77,45 @@ const ProductGrid: React.FC<ProductGridProps> = ({
     );
   }
 
+  const visibleProducts = products.slice(0, visibleCount);
+  const hasMore = visibleCount < products.length;
+
   // Products Grid
   return (
-    <div
-      className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 ${gridCols[columns]} gap-x-3 gap-y-6`}
-    >
-      <AnimatePresence>
-        {products.map((product, idx) => (
-          <m.div
-            key={product.id}
-            layout={false}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{
-              duration: 0.3,
-              delay: Math.min(idx * 0.03, 0.15),
-              type: "tween",
-            }}
+    <div className="flex flex-col items-center w-full">
+      <div
+        className={`w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 ${gridCols[columns]} gap-x-3 gap-y-6`}
+      >
+        <AnimatePresence>
+          {visibleProducts.map((product, idx) => (
+            <m.div
+              key={product.id}
+              layout={false}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{
+                duration: 0.3,
+                delay: Math.min(idx * 0.03, 0.15),
+                type: "tween",
+              }}
+            >
+              <ProductCard product={product} onQuickView={onQuickView} />
+            </m.div>
+          ))}
+        </AnimatePresence>
+      </div>
+
+      {hasMore && (
+        <div className="mt-12 mb-8 flex justify-center w-full">
+          <button
+            onClick={() => setVisibleCount((prev) => prev + 12)}
+            className="px-8 py-3 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-800 rounded font-semibold text-sm hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors shadow-sm"
           >
-            <ProductCard product={product} onQuickView={onQuickView} />
-          </m.div>
-        ))}
-      </AnimatePresence>
+            Load More Products
+          </button>
+        </div>
+      )}
     </div>
   );
 };

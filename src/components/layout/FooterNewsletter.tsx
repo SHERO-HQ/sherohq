@@ -41,6 +41,7 @@ const FooterNewsletter = () => {
         <input
           type="email"
           required
+          aria-label="Email address for newsletter"
           value={newsletterEmail}
           onChange={(e) => {
             setNewsletterEmail(e.target.value);
@@ -51,6 +52,7 @@ const FooterNewsletter = () => {
         />
         <button
           type="submit"
+          aria-label="Subscribe to newsletter"
           disabled={newsletterStatus === "submitting"}
           className="absolute right-1.5 top-1.5 bottom-1.5 inline-flex items-center gap-2 px-4 bg-emerald-600/90 hover:bg-emerald-600 text-white text-xs font-bold rounded transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
         >

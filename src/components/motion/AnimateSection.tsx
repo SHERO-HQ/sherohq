@@ -28,6 +28,7 @@ interface ContainerProps {
 
 interface ItemProps {
   children: ReactNode;
+  as?: "div" | "li" | "span" | "article" | "p";
   className?: string;
   yOffset?: number;
   xOffset?: number;
@@ -133,6 +134,7 @@ export const StaggerContainer = ({
  */
 export const StaggerItem = ({
   children,
+  as = "div",
   className = "",
   yOffset = 35,
   xOffset = 0,
@@ -143,11 +145,12 @@ export const StaggerItem = ({
   const prefersReducedMotion = useReducedMotion();
   const { isInView, staggerDelay, delayChildren } = useContext(StaggerContext);
   
+  const Tag = as as any;
   const index = (props as any).index || 0;
   const delay = delayChildren + (index * staggerDelay);
 
   return (
-    <div
+    <Tag
       className={`${className} transition ease-[cubic-bezier(0.16,1,0.3,1)]`}
       style={{
         transitionDuration: prefersReducedMotion ? "10ms" : `${duration}s`,
@@ -162,7 +165,7 @@ export const StaggerItem = ({
       }}
     >
       {children}
-    </div>
+    </Tag>
   );
 };
 

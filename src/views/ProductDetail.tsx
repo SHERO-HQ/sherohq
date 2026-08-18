@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import ProductDetailView from "@/components/products/ProductDetailView";
 import { Loader2 } from "lucide-react";
 import { useProduct } from "@/hooks/queries/useProducts";
+import JsonLd from "@/components/common/JsonLd";
 
 const ProductDetail = () => {
  const { id } = useParams<{ id: string }>();
@@ -29,7 +30,12 @@ const ProductDetail = () => {
  return null;
  }
 
- return <>{product && <ProductDetailView product={product} />}</>;
+ return (
+ <>
+ {product && <JsonLd product={product} />}
+ {product && <ProductDetailView product={product} />}
+ </>
+ );
 };
 
 export default ProductDetail;

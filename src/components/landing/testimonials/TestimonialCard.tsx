@@ -54,9 +54,9 @@ export const TestimonialCard = ({ item }: TestimonialCardProps) => {
         </div>
 
         <div>
-          <h4 className="font-semibold text-slate-900 dark:text-white text-sm">
+          <h3 className="font-semibold text-slate-900 dark:text-white text-sm">
             {item.author}
-          </h4>
+          </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5">
             {item.author === "Anonymous" ? (
               "Verified Feedback"

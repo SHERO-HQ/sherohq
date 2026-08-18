@@ -55,6 +55,7 @@ export async function uploadFileToStorage(
       .upload(relativeFilePath, buffer, {
         contentType: file.type || "application/octet-stream",
         upsert: false,
+        cacheControl: "31536000",
       });
 
     if (!error) {

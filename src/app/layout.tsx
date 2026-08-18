@@ -6,6 +6,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import JsonLd from "@/components/common/JsonLd";
+import { ThirdPartyScripts } from "@/components/layout/ThirdPartyScripts";
 import "../index.css";
 
 const SITE_URL = (
@@ -107,7 +108,6 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: dark)", color: "#020617" },
   ],
   colorScheme: "light dark",
-  maximumScale: 1,
 };
 
 export default async function RootLayout({
@@ -189,6 +189,7 @@ export default async function RootLayout({
         <Analytics />
         <SpeedInsights />
         <ServiceWorkerRegistration />
+        <ThirdPartyScripts gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
       </body>
     </html>
   );

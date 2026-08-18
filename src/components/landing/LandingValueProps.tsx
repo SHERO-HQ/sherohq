@@ -29,6 +29,7 @@ const LandingValueProps = () => {
   return (
     <section className="relative w-full sm:py-2 bg-white dark:bg-slate-950 border-y border-slate-100 dark:border-slate-900 transition-colors duration-300">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="sr-only">Our Core Value Propositions</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0">
           {values.map((item, index) => {
             const borderClass = [

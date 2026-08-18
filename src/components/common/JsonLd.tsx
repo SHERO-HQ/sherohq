@@ -1,8 +1,9 @@
 import React from "react";
 import { COMPANY_CONTACTS } from "@/constants/contacts";
 import { COMPANY_EMAILS } from "@/constants/emails";
+import type { Product } from "@/types/product";
 
-export default function JsonLd() {
+export default function JsonLd({ product }: { product?: Product }) {
   const schema = {
     "@context": "https://schema.org",
     "@graph": [
@@ -87,6 +88,38 @@ export default function JsonLd() {
       }
     ]
   };
+
+  if (product) {
+    schema["@graph"].push({
+      "@type": "Product",
+      "@id": `https://${COMPANY_CONTACTS.WEBSITE}/products/${product.id}#product`,
+      "name": product.name,
+      "description": product.description || product.metaDescription || product.name,
+      "image": product.image.startsWith("http") ? product.image : `https://${COMPANY_CONTACTS.WEBSITE}${product.image}`,
+      "sku": product.sku || product.id,
+      "brand": {
+        "@type": "Brand",
+        "name": "SHERO"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": `https://${COMPANY_CONTACTS.WEBSITE}/products/${product.id}`,
+        "priceCurrency": "GHS",
+        "price": product.price.toString(),
+        "itemCondition": product.condition === "New" ? "https://schema.org/NewCondition" : "https://schema.org/UsedCondition",
+        "availability": product.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+        "seller": {
+          "@type": "Organization",
+          "@id": `https://${COMPANY_CONTACTS.WEBSITE}/#organization`
+        }
+      },
+      "aggregateRating": product.reviews > 0 ? {
+        "@type": "AggregateRating",
+        "ratingValue": product.rating.toString(),
+        "reviewCount": product.reviews.toString()
+      } : undefined
+    } as any);
+  }
 
   return (
     <script

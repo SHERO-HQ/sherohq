@@ -59,7 +59,7 @@ export const HeroContent = ({
     >
       <m.div
         variants={heroContainerVariants}
-        initial={prefersReducedMotion ? false : "hidden"}
+        initial={prefersReducedMotion || isMobile ? false : "hidden"}
         animate="show"
         className="flex flex-col items-center gap-5 sm:gap-6 text-center"
       >

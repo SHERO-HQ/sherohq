@@ -247,9 +247,9 @@ const Footer = () => {
 
         {/* MASSIVE TYPOGRAPHY (Background Layer) */}
         <div className="absolute sm:-bottom-10 bottom-10 left-1/2 -translate-x-1/2 w-full text-center pointer-events-none select-none overflow-hidden z-0 opacity-[0.03] dark:opacity-5 transition-opacity duration-300">
-          <h1 className="text-[15vw] leading-none font-bold text-slate-900/80 dark:text-white/80 font-logo tracking-wider transition-colors duration-300">
+          <p aria-hidden="true" className="text-[15vw] leading-none font-bold text-slate-900/80 dark:text-white/80 font-logo tracking-wider transition-colors duration-300">
             SHERO
-          </h1>
+          </p>
         </div>
       </div>
     </footer>
