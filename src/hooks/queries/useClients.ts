@@ -28,7 +28,7 @@ export const useCreateClient = () => {
   return useMutation({
     mutationFn: createClient,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: CLIENT_KEYS.all });
+      queryClient.invalidateQueries({ queryKey: CLIENT_KEYS.all, refetchType: "all" });
     },
   });
 };
@@ -43,8 +43,17 @@ export const useUpdateClient = () => {
       id: string;
       data: Partial<ClientPartner>;
     }) => updateClient(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: CLIENT_KEYS.all });
+    onSuccess: (updatedClient, variables) => {
+      queryClient.setQueriesData<ClientPartner[]>(
+        { queryKey: CLIENT_KEYS.all },
+        (old) =>
+          Array.isArray(old)
+            ? old.map((item) =>
+                item.id === variables.id ? { ...item, ...variables.data, ...updatedClient } : item
+              )
+            : old
+      );
+      queryClient.invalidateQueries({ queryKey: CLIENT_KEYS.all, refetchType: "all" });
     },
   });
 };
@@ -53,8 +62,13 @@ export const useDeleteClient = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteClient,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: CLIENT_KEYS.all });
+    onSuccess: (_data, deletedId) => {
+      // Immediately remove from query cache
+      queryClient.setQueriesData<ClientPartner[]>(
+        { queryKey: CLIENT_KEYS.all },
+        (old) => (Array.isArray(old) ? old.filter((item) => item.id !== deletedId) : old)
+      );
+      queryClient.invalidateQueries({ queryKey: CLIENT_KEYS.all, refetchType: "all" });
     },
   });
 };

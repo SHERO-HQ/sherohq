@@ -240,7 +240,9 @@ export interface ClientPartner {
 
 export async function fetchClients(includeAll: boolean = false): Promise<ClientPartner[]> {
   const url = includeAll ? `${API_BASE}/clients?all=true` : `${API_BASE}/clients`;
-  const response = await fetch(url);
+  const response = includeAll
+    ? await authFetch(url, { cache: "no-store" })
+    : await fetch(url, { cache: "no-store" });
   const data = await handleResponse<any>(response);
   return Array.isArray(data) ? data : data?.data || [];
 }

@@ -7,6 +7,8 @@ import { getAdminFromSession } from "@/lib/auth";
 import { v4 as uuidv4 } from "uuid";
 import { logActivity } from "@/lib/activity";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -23,9 +25,11 @@ export async function GET(request: NextRequest) {
       desc(clientPartners.createdAt)
     );
 
-    return apiResponse.success(result, 200, {
-      "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
-    });
+    const headers = includeInactive
+      ? { "Cache-Control": "no-store, no-cache, must-revalidate" }
+      : { "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300" };
+
+    return apiResponse.success(result, 200, headers);
   } catch (error) {
     console.error("Error fetching clients:", error);
     return apiResponse.error("Failed to fetch clients", 500);

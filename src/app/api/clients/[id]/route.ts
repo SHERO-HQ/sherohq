@@ -6,6 +6,8 @@ import { eq } from "drizzle-orm";
 import { getAdminFromSession } from "@/lib/auth";
 import { logActivity } from "@/lib/activity";
 
+export const dynamic = "force-dynamic";
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
