@@ -189,7 +189,10 @@ export default async function RootLayout({
         <Analytics />
         <SpeedInsights />
         <ServiceWorkerRegistration />
-        <ThirdPartyScripts gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+        <ThirdPartyScripts 
+          gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} 
+          fbPixelId={process.env.NEXT_PUBLIC_FB_PIXEL_ID}
+        />
       </body>
     </html>
   );
