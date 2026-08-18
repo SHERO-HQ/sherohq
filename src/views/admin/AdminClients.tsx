@@ -262,7 +262,7 @@ export default function AdminClients() {
               <div
                 key={client.id}
                 className={`group relative bg-card border rounded p-5 flex flex-col justify-between transition-all duration-200 hover:shadow-md ${
-                  client.active ? "border-border" : "border-border/50 opacity-60 bg-muted/20"
+                  client.active ? "border-slate-200 dark:border-slate-800" : "border-slate-200/50 dark:border-slate-800/50 opacity-60 bg-muted/20"
                 }`}
               >
                 <div>
@@ -288,7 +288,7 @@ export default function AdminClients() {
 
                   {/* Logo Preview & Info */}
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 flex items-center justify-center p-2 shrink-0">
+                    <div className="w-16 h-16 rounded bg-muted border border-slate-200 dark:border-slate-800 flex items-center justify-center p-2 shrink-0">
                       {logoUrl ? (
                         <img
                           src={logoUrl}
@@ -429,7 +429,7 @@ export default function AdminClients() {
             </label>
             <div className="flex items-center gap-3">
               {formData.logo ? (
-                <div className="w-16 h-16 rounded bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center p-2 shrink-0 relative group">
+                <div className="w-16 h-16 rounded bg-muted border border-slate-200 dark:border-slate-800 flex items-center justify-center p-2 shrink-0 relative group">
                   <img
                     src={getImageUrl(formData.logo)}
                     alt="Logo Preview"
@@ -470,7 +470,7 @@ export default function AdminClients() {
             </label>
             <div className="flex items-center gap-3">
               {formData.logoDark ? (
-                <div className="w-16 h-16 rounded bg-slate-950 border border-slate-800 flex items-center justify-center p-2 shrink-0 relative group">
+                <div className="w-16 h-16 rounded bg-card border border-slate-200 dark:border-slate-800 flex items-center justify-center p-2 shrink-0 relative group">
                   <img
                     src={getImageUrl(formData.logoDark)}
                     alt="Dark Logo Preview"

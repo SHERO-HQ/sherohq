@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch, Control } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema, type SignupInput } from "@/lib/validations/auth";
 import { useUser, useRegister } from "@/hooks/queries/useAuthQuery";
@@ -10,6 +10,74 @@ import { Mail, Lock, User, Phone, ArrowRight, Eye, EyeOff, Loader2, AlertCircle,
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+
+const PasswordRequirements = ({ control }: { control: Control<SignupInput> }) => {
+    const passwordValue = useWatch({ control, name: "password" }) || "";
+    
+    if (passwordValue.length === 0) return null;
+
+    const passwordRequirements = [
+        { label: "8+ characters", met: passwordValue.length >= 8 },
+        { label: "One uppercase letter", met: /[A-Z]/.test(passwordValue) },
+        { label: "One lowercase letter", met: /[a-z]/.test(passwordValue) },
+        { label: "One number", met: /\d/.test(passwordValue) },
+    ];
+
+    return (
+        <div className="p-2.5 rounded bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-xs space-y-1.5 animate-in fade-in duration-200">
+            <p className="font-medium text-slate-600 dark:text-slate-300 mb-1">
+                Password requirements:
+            </p>
+            <div className="grid grid-cols-2 gap-1.5 text-[.7rem]">
+                {passwordRequirements.map((req) => (
+                    <div
+                        key={req.label}
+                        className={`flex items-center gap-1.5 ${
+                            req.met
+                                ? "text-emerald-600 dark:text-emerald-400 font-medium"
+                                : "text-slate-400 dark:text-slate-500"
+                        }`}
+                    >
+                        <div
+                            className={`w-3.5 h-3.5 rounded-full flex items-center justify-center ${
+                                req.met
+                                    ? "bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400"
+                                    : "bg-slate-200 dark:bg-slate-700 text-transparent"
+                            }`}
+                        >
+                            <Check className="w-2.5 h-2.5" />
+                        </div>
+                        <span>{req.label}</span>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+const ConfirmPasswordCheck = ({ control, hasError }: { control: Control<SignupInput>, hasError: boolean }) => {
+    const passwordValue = useWatch({ control, name: "password" }) || "";
+    const confirmPasswordValue = useWatch({ control, name: "confirmPassword" }) || "";
+
+    if (confirmPasswordValue.length === 0 || hasError) return null;
+
+    const doPasswordsMatch = passwordValue.length > 0 && passwordValue === confirmPasswordValue;
+    const passwordsMismatch = passwordValue !== confirmPasswordValue;
+
+    return (
+        <div className="flex items-center gap-1.5 text-xs animate-in fade-in duration-200 px-0.5">
+            {doPasswordsMatch ? (
+                <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-medium">
+                    <Check className="w-3.5 h-3.5" /> Passwords match
+                </span>
+            ) : passwordsMismatch ? (
+                <span className="text-red-500 dark:text-red-400 flex items-center gap-1">
+                    <X className="w-3.5 h-3.5" /> Passwords do not match
+                </span>
+            ) : null}
+        </div>
+    );
+};
 
 const Signup = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -29,7 +97,7 @@ const Signup = () => {
     const {
         register,
         handleSubmit,
-        watch,
+        control,
         formState: { errors, isSubmitting },
     } = useForm<SignupInput>({
         resolver: zodResolver(signupSchema),
@@ -41,18 +109,6 @@ const Signup = () => {
             confirmPassword: "",
         },
     });
-
-    const passwordValue = watch("password") || "";
-    const confirmPasswordValue = watch("confirmPassword") || "";
-    const doPasswordsMatch = confirmPasswordValue.length > 0 && passwordValue.length > 0 && passwordValue === confirmPasswordValue;
-    const passwordsMismatch = confirmPasswordValue.length > 0 && passwordValue !== confirmPasswordValue;
-
-    const passwordRequirements = [
-        { label: "8+ characters", met: passwordValue.length >= 8 },
-        { label: "One uppercase letter", met: /[A-Z]/.test(passwordValue) },
-        { label: "One lowercase letter", met: /[a-z]/.test(passwordValue) },
-        { label: "One number", met: /\d/.test(passwordValue) },
-    ];
 
     const onSubmit = async (data: SignupInput) => {
         setError("");
@@ -164,37 +220,7 @@ const Signup = () => {
                                 }
                             />
 
-                            {/* Password requirements checklist */}
-                            {passwordValue.length > 0 && (
-                                <div className="p-2.5 rounded bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 text-xs space-y-1.5 animate-in fade-in duration-200">
-                                    <p className="font-medium text-slate-600 dark:text-slate-300 mb-1">
-                                        Password requirements:
-                                    </p>
-                                    <div className="grid grid-cols-2 gap-1.5 text-[.7rem]">
-                                        {passwordRequirements.map((req) => (
-                                            <div
-                                                key={req.label}
-                                                className={`flex items-center gap-1.5 ${
-                                                    req.met
-                                                        ? "text-emerald-600 dark:text-emerald-400 font-medium"
-                                                        : "text-slate-400 dark:text-slate-500"
-                                                }`}
-                                            >
-                                                <div
-                                                    className={`w-3.5 h-3.5 rounded-full flex items-center justify-center ${
-                                                        req.met
-                                                            ? "bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400"
-                                                            : "bg-slate-200 dark:bg-slate-700 text-transparent"
-                                                    }`}
-                                                >
-                                                    <Check className="w-2.5 h-2.5" />
-                                                </div>
-                                                <span>{req.label}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
+                            <PasswordRequirements control={control} />
                         </div>
 
                         <div className="space-y-1.5">
@@ -224,20 +250,7 @@ const Signup = () => {
                                 }
                             />
 
-                            {/* Password match check */}
-                            {confirmPasswordValue.length > 0 && !errors.confirmPassword && (
-                                <div className="flex items-center gap-1.5 text-xs animate-in fade-in duration-200 px-0.5">
-                                    {doPasswordsMatch ? (
-                                        <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-medium">
-                                            <Check className="w-3.5 h-3.5" /> Passwords match
-                                        </span>
-                                    ) : passwordsMismatch ? (
-                                        <span className="text-red-500 dark:text-red-400 flex items-center gap-1">
-                                            <X className="w-3.5 h-3.5" /> Passwords do not match
-                                        </span>
-                                    ) : null}
-                                </div>
-                            )}
+                            <ConfirmPasswordCheck control={control} hasError={!!errors.confirmPassword} />
                         </div>
 
                         <Button
@@ -276,3 +289,4 @@ const Signup = () => {
 };
 
 export default Signup;
+

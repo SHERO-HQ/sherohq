@@ -42,6 +42,12 @@ const LandingProducts = () => {
     [],
   );
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // Filter for in-stock items and shuffle for "random suggestions"
   useEffect(() => {
     if (allProducts.length > 0) {
@@ -132,14 +138,14 @@ const LandingProducts = () => {
 
         {/* Products Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 mb-4">
-          {isLoading && (
+          {(!mounted || isLoading) && (
             <>
               {[0, 1, 2, 3].map((i) => (
                 <ProductSkeleton key={`skeleton-${i}`} />
               ))}
             </>
           )}
-          {!isLoading && isError && (
+          {mounted && !isLoading && isError && (
             <div className="col-span-full">
               <ErrorState
                 message={
@@ -151,14 +157,14 @@ const LandingProducts = () => {
               />
             </div>
           )}
-          {!isLoading && !isError && filteredProducts.length > 0 && (
+          {mounted && !isLoading && !isError && filteredProducts.length > 0 && (
             <>
               {filteredProducts.slice(0, 4).map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </>
           )}
-          {!isLoading && !isError && filteredProducts.length === 0 && (
+          {mounted && !isLoading && !isError && filteredProducts.length === 0 && (
             <div className="col-span-full text-center py-12">
               <p className="text-slate-500 dark:text-slate-400 text-lg">
                 No products found in this category

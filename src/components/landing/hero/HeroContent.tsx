@@ -1,38 +1,24 @@
-"use client";
 import React from "react";
 import NavLink from "@/components/common/NavLink";
 import { getAbsoluteUrl } from "@/utils/subdomain";
-import { m, MotionValue } from "motion/react";
 import { RocketIcon } from "@/assets/icons/icons";
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionBadge } from "@/components/common/SectionBadge";
 
 interface HeroContentProps {
-  isMobile: boolean;
-  parallaxY: MotionValue<number>;
-  parallaxOpacity: MotionValue<number>;
-  parallaxScale: MotionValue<number>;
-  prefersReducedMotion?: boolean;
   headlineLead: string;
   headlineAccent: string;
   subHeader: string;
 }
 
 export const HeroContent = ({
-  isMobile,
-  parallaxY,
-  parallaxOpacity,
-  parallaxScale,
   headlineLead,
   headlineAccent,
   subHeader,
 }: HeroContentProps) => {
   return (
-    <m.div
-      style={isMobile ? undefined : { y: parallaxY, opacity: parallaxOpacity, scale: parallaxScale }}
-      className="w-full max-w-4xl will-change-transform"
-    >
+    <div className="w-full max-w-4xl animate-in fade-in slide-in-from-bottom-4 duration-300 ease-out">
       <div className="flex flex-col items-center gap-5 sm:gap-6 text-center">
         {/* Top Badge */}
         <div>
@@ -79,6 +65,6 @@ export const HeroContent = ({
           </NavLink>
         </div>
       </div>
-    </m.div>
+    </div>
   );
 };

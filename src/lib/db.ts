@@ -67,7 +67,7 @@ export function getPool(): Pool {
     host: dbConfig.host,
     port: dbConfig.port ? parseInt(String(dbConfig.port), 10) : 5432,
     database: dbConfig.database,
-    max: process.env.NODE_ENV === "production" ? 10 : 5,
+    max: process.env.NODE_ENV === "production" ? 10 : 20,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 10000,
     statement_timeout: 30000,

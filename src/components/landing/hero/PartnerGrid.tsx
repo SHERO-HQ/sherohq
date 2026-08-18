@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 
 interface PartnerGridProps {
   prefersReducedMotion?: boolean;
@@ -29,28 +30,24 @@ export const PartnerGrid = (_props: PartnerGridProps) => {
               className="flex justify-center items-center transition-transform duration-300 hover:scale-105"
               title={partner.name}
             >
-              <img
-                src={`${partner.logo}?v=2`}
+              <Image
+                src={partner.logo}
                 alt={`${partner.name} logo`}
                 width={120}
                 height={40}
                 className={`w-auto max-w-full object-contain filter grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-[opacity,filter] duration-300 ${
                   partner.logoClassName ?? "h-7 sm:h-9"
                 } ${partner.logoDark ? "dark:hidden block" : ""}`}
-                loading="eager"
-                decoding="sync"
               />
               {partner.logoDark && (
-                <img
-                  src={`${partner.logoDark}?v=2`}
+                <Image
+                  src={partner.logoDark}
                   alt={`${partner.name} logo`}
                   width={120}
                   height={40}
                   className={`w-auto max-w-full object-contain filter grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-[opacity,filter] duration-300 ${
                     partner.logoClassName ?? "h-7 sm:h-9"
                   } hidden dark:block`}
-                  loading="eager"
-                  decoding="sync"
                 />
               )}
             </li>

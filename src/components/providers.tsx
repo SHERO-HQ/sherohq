@@ -2,7 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { MotionConfig, LazyMotion, domMax } from "motion/react";
+import { MotionConfig, LazyMotion } from "motion/react";
 import { ThemeProvider } from "@/context/Theme";
 import { AdminProvider } from "@/context/AdminContext";
 
@@ -18,6 +18,8 @@ import dynamic from "next/dynamic";
 const AIChatAssistant = dynamic(() => import("@/components/ai/AIChatAssistant"), {
   ssr: false,
 });
+
+const loadFeatures = () => import("motion/react").then((res) => res.domMax);
 
 export function Providers({ children }: { children: React.ReactNode }) {
  const [queryClient] = useState(
@@ -36,7 +38,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
  return (
   <QueryClientProvider client={queryClient}>
    <MotionConfig reducedMotion="user">
-    <LazyMotion features={domMax} strict>
+    <LazyMotion features={loadFeatures} strict>
     <ThemeProvider>
       <AdminProvider>
         <DialogProvider>

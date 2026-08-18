@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { m, MotionValue } from "motion/react";
 import dynamic from "next/dynamic";
 
 const ParticleField = dynamic(
@@ -8,27 +7,12 @@ const ParticleField = dynamic(
   { ssr: false },
 );
 
-interface HeroBackgroundProps {
-  motionEnabled: boolean;
-  translateX: MotionValue<number>;
-  translateY: MotionValue<number>;
-}
-
-export const HeroBackground = ({
-  motionEnabled,
-  translateX,
-  translateY,
-}: HeroBackgroundProps) => {
+export const HeroBackground = () => {
   return (
     <>
       {/* Interactive Dot Grid Pattern */}
-      <m.div
-        style={
-          motionEnabled
-            ? { x: translateX, y: translateY }
-            : undefined
-        }
-        className="absolute inset-0 pattern-dots opacity-80 dark:opacity-60 pointer-events-none will-change-transform"
+      <div
+        className="absolute inset-0 pattern-dots opacity-80 dark:opacity-60 pointer-events-none"
       />
 
       {/* Lightweight Ambient Particles */}
