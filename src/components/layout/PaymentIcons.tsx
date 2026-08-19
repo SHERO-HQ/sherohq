@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const PaymentIcons = () => {
   const icons = [
     { name: "Visa", src: "/assets/icons/payment/visa.svg", w: 38, h: 12 },
@@ -14,13 +16,11 @@ const PaymentIcons = () => {
           className="relative px-1 transition-transform hover:scale-110 flex items-center justify-center h-8"
           title={icon.name}
         >
-          <img
+          <Image
             src={icon.src}
             alt={icon.name}
             width={icon.w}
             height={icon.h}
-            loading="lazy"
-            decoding="async"
             style={{ height: `${icon.h}px`, width: 'auto' }}
             className="object-contain w-fit mix-blend-multiply dark:mix-blend-screen transition-opacity duration-300"
           />

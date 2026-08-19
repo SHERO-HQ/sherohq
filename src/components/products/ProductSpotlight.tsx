@@ -83,7 +83,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
 
   if (isLoading || !spotlightItems.length) {
     return (
-      <div className="relative w-full h-[60vh] sm:h-[65vh] lg:h-[70vh] bg-slate-100 dark:bg-slate-900 animate-pulse rounded overflow-hidden">
+      <div className="relative w-full h-full min-h-[75vh] lg:min-h-[calc(90vh-5rem)] bg-slate-100 dark:bg-slate-900 animate-pulse rounded overflow-hidden pt-5 lg:pt-0 flex flex-col justify-center">
         <div className="absolute inset-0 flex items-center justify-center">
           <Package className="w-12 h-12 text-slate-300 animate-bounce" />
         </div>

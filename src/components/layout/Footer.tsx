@@ -68,16 +68,16 @@ const Footer = () => {
               <img
                 src="/assets/logo/shero-light.svg"
                 alt="Shero Logo"
-                width={150}
-                height={40}
+                width={163}
+                height={57}
                 className="h-10 w-auto object-contain shrink-0 dark:block hidden"
                 suppressHydrationWarning
               />
               <img
                 src="/assets/logo/shero-dark.svg"
                 alt="Shero Logo"
-                width={150}
-                height={40}
+                width={163}
+                height={57}
                 className="h-10 w-auto object-contain shrink-0 dark:hidden block"
                 suppressHydrationWarning
               />

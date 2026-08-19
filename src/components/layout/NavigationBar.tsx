@@ -77,8 +77,8 @@ const Nav = () => {
                 <img
                   src="/assets/logo/shero-light.svg"
                   alt="SHERO Logo"
-                  width={40}
-                  height={40}
+                  width={163}
+                  height={57}
                   fetchPriority="high"
                   decoding="async"
                   className="h-10 w-auto dark:block hidden"
@@ -87,8 +87,8 @@ const Nav = () => {
                 <img
                   src="/assets/logo/shero-dark.svg"
                   alt="SHERO Logo"
-                  width={40}
-                  height={40}
+                  width={163}
+                  height={57}
                   fetchPriority="high"
                   decoding="async"
                   className="h-10 w-auto dark:hidden block"
