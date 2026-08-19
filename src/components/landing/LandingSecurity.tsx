@@ -98,7 +98,7 @@ const LandingSecurity = () => {
                     <Icon className="h-6 w-6" />
                   </div>
                   <div>
-                    <h3 className="mb-2 text-xl font-semibold text-white">
+                    <h3 className="mb-2 sm:text-lg text-base font-semibold text-white">
                       {feature.title}
                     </h3>
                     <p className="text-slate-400 leading-relaxed text-sm sm:text-base">

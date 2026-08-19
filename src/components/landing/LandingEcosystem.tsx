@@ -56,9 +56,9 @@ const LandingEcosystem = () => {
             transition={{ delay: 0.1 }}
             className="text-2xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white"
           >
-            Why split vendors when you can have <br />
+            Why Split IT when you can have{" "}
             <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-600 to-brand-secondary-500 dark:from-brand-primary-400 dark:to-brand-secondary-400">
-              one unified system?
+              All-in-One
             </span>
           </m.h2>
           <m.p
@@ -68,7 +68,7 @@ const LandingEcosystem = () => {
             transition={{ delay: 0.2 }}
             className="mt-6 text-sm text-slate-600 dark:text-slate-300 leading-relaxed"
           >
-            Software engineered specifically for the hardware we supply,
+            Software redefined specifically for the hardware we supply,
             supported by the team that built it. When every piece works together
             seamlessly, businesses can move forward faster.
           </m.p>
@@ -94,7 +94,7 @@ const LandingEcosystem = () => {
             {/* Scroll Filling Line */}
             <m.div
               style={{ scaleY: scrollProgress, originY: 0 }}
-              className="absolute left-1/2 top-0 bottom-0 w-0.75 -translate-x-1/2 bg-brand-secondary-500 shadow-[0_0_12px_rgba(56,189,248,0.8)] dark:bg-brand-secondary-400"
+              className="absolute left-1/2 top-0 bottom-0 w-0.75 -translate-x-1/2 bg-brand-primary-500 shadow-[0_0_12px_rgba(16, 185, 129, 0.8)] dark:bg-brand-primary-400"
             />
           </div>
 
@@ -113,7 +113,7 @@ const LandingEcosystem = () => {
             {/* Scroll Filling Line */}
             <m.div
               style={{ scaleX: scrollProgress, originX: 0 }}
-              className="absolute top-1/2 left-0 right-0 h-0.75 -translate-y-1/2 bg-brand-secondary-500 shadow-[0_0_12px_rgba(56,189,248,0.8)] dark:bg-brand-secondary-400"
+              className="absolute top-1/2 left-0 right-0 h-0.75 -translate-y-1/2 bg-brand-primary-500 shadow-[0_0_12px_rgba(16, 185, 129, 0.8)] dark:bg-brand-primary-400"
             />
           </div>
 
@@ -143,7 +143,7 @@ const LandingEcosystem = () => {
 
                   {/* Content Card */}
                   <div className="group flex-1 w-full relative z-10 p-4 md:p-6 rounded bg-white/60 dark:bg-slate-900/40 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg shadow-sm md:text-center">
-                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors">
+                    <h3 className="sm:text-lg text-base font-bold text-slate-900 dark:text-white mb-2 group-hover:text-brand-secondary-600 dark:group-hover:text-brand-secondary-400 transition-colors">
                       {node.title}
                     </h3>
                     <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">

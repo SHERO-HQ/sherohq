@@ -83,7 +83,7 @@ const LandingPillars = () => {
               What We've Built
             </SectionBadge>
             <h2 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4 transition-colors duration-300 tracking-tight">
-              Proven Platforms & Systems
+              Platforms & Systems
             </h2>
           </Reveal>
           <Reveal direction="up" distance={40} delay={0.2}>
