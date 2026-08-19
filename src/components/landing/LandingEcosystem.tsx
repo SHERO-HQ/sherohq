@@ -54,7 +54,7 @@ const LandingEcosystem = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-2xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white"
+            className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl dark:text-white"
           >
             Why Split IT when you can have{" "}
             <span className="text-transparent bg-clip-text bg-linear-to-r from-brand-primary-600 to-brand-secondary-500 dark:from-brand-primary-400 dark:to-brand-secondary-400">

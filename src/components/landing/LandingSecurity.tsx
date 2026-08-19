@@ -59,7 +59,7 @@ const LandingSecurity = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-2xl font-bold tracking-tight text-white sm:text-4xl"
+            className="text-2xl font-bold tracking-tight text-white sm:text-3xl"
           >
             Secure By{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary-400 to-white">
