@@ -102,7 +102,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
       {/* Immersive Background: Animates based on current product */}
       <div
         key={`bg-${currentProduct.id}`}
-        className="absolute inset-0 z-0 overflow-hidden pointer-events-none animate-in fade-in duration-1000 fill-mode-both"
+        className="absolute inset-0 z-0 overflow-hidden pointer-events-none"
       >
         <AppImage
           src={getImageUrl(currentProduct.image)}
@@ -120,7 +120,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
 
       <div
         key={`content-${currentProduct.id}`}
-        className="w-full relative z-10 animate-in fade-in duration-700 fill-mode-both"
+        className="w-full relative z-10"
       >
         <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center w-full max-w-6xl mx-auto">
@@ -129,7 +129,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
               <div className="w-full lg:w-[55%] flex flex-col justify-between p-6 sm:p-10 lg:p-12 bg-white/70 dark:bg-slate-900/60 backdrop-blur-2xl border border-white/40 dark:border-white/10 rounded shadow-[0_8px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
                 <div className="max-w-xl flex flex-col justify-between h-full">
                   <div>
-                    <div className="flex items-center justify-between mb-6 animate-in slide-in-from-bottom-4 fade-in duration-500 fill-mode-both" style={{ animationDelay: '0.1s' }}>
+                    <div className="flex items-center justify-between mb-6">
                       <div className="inline-flex items-center gap-2 px-3 py-1 text-[10px] font-bold text-brand-secondary-800 dark:text-brand-secondary-200 bg-brand-secondary-200 dark:bg-brand-secondary-900/60 border border-brand-secondary-300 dark:border-brand-secondary-700/80 rounded uppercase tracking-widest shadow-sm">
                         <Star className="size-3 fill-brand-secondary-600 text-brand-secondary-600 dark:fill-brand-secondary-400 dark:text-brand-secondary-400" />
                         <span>Featured Product</span>
@@ -148,7 +148,7 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                       )}
                     </div>
 
-                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white leading-[1.1] tracking-tight mb-6 animate-in slide-in-from-bottom-4 fade-in duration-500 fill-mode-both" style={{ animationDelay: '0.2s' }}>
+                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white leading-[1.1] tracking-tight mb-6">
                       {currentProduct.name.split(" ").map((word, i) => (
                         <span
                           key={i}
@@ -163,13 +163,13 @@ const ProductSpotlight = ({ products, isLoading }: ProductSpotlightProps) => {
                       ))}
                     </h2>
 
-                    <p className="text-sm lg:text-lg text-slate-700 dark:text-slate-300 mb-8 line-clamp-3 lg:line-clamp-none leading-relaxed animate-in slide-in-from-bottom-4 fade-in duration-500 fill-mode-both" style={{ animationDelay: '0.3s' }}>
+                    <p className="text-sm lg:text-lg text-slate-700 dark:text-slate-300 mb-8 line-clamp-3 lg:line-clamp-none leading-relaxed">
                       {currentProduct.description ||
                         "Dependable performance and purposeful design, certified and backed by SHERO."}
                     </p>
                   </div>
 
-                  <div className="animate-in slide-in-from-bottom-4 fade-in duration-500 fill-mode-both" style={{ animationDelay: '0.4s' }}>
+                  <div>
                     <div className="flex flex-wrap items-center justify-between gap-6 sm:gap-8 bg-slate-50/50 dark:bg-slate-950/50 p-6 rounded border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-sm shadow-sm">
                       <div className="flex flex-col">
                         <span className="text-xs font-semibold uppercase tracking-widest text-slate-600 dark:text-slate-400 mb-1">
