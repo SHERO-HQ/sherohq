@@ -18,11 +18,9 @@ const PARTNERS = [
 
 export const PartnerGrid = (_props: PartnerGridProps) => {
   return (
-    <div className="absolute bottom-3 sm:bottom-6 md:bottom-8 left-0 right-0 w-full">
+    <div className="relative z-10 w-full pb-6 sm:pb-8 md:pb-12 mt-auto">
       <div className="container max-w-7xl mx-auto px-4">
-        <p className="text-center text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-3 sm:mb-4 font-mono">
-          We Supply
-        </p>
+       
         <ul className="grid grid-cols-4 md:flex md:flex-wrap justify-center items-center gap-x-6 gap-y-4 sm:gap-x-12 w-full opacity-90">
           {PARTNERS.map((partner) => (
             <li

@@ -23,18 +23,20 @@ const LandingHero: React.FC = () => {
 
   return (
     <header
-      className="relative min-h-[85dvh] lg:min-h-[83dvh] w-full overflow-hidden bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center pt-24 sm:pt-0 pb-48 md:pb-44 lg:pb-16"
+      className="relative min-h-[85dvh] lg:min-h-[83dvh] w-full overflow-hidden bg-slate-50 dark:bg-slate-950 flex flex-col pt-24 sm:pt-0"
       role="banner"
       aria-label="Hero section - Company mission statement"
     >
       <HeroBackground />
 
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex flex-col items-center">
-        <HeroContentComponent 
-          headlineLead={headlineLead}
-          headlineAccent={headlineAccent}
-          subHeader={HERO_CONTENT.subHeader}
-        />
+      <div className="flex-1 flex flex-col items-center justify-center w-full min-h-0 py-12">
+        <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full flex flex-col items-center">
+          <HeroContentComponent 
+            headlineLead={headlineLead}
+            headlineAccent={headlineAccent}
+            subHeader={HERO_CONTENT.subHeader}
+          />
+        </div>
       </div>
 
       <PartnerGrid />
